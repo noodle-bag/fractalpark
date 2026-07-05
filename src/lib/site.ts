@@ -3,6 +3,7 @@ export const SITE = {
   nameZh: '\u5206\u5f62\u516c\u56ed',
   url: 'https://fractalpark.com',
   domain: 'fractalpark.com',
+  repositoryUrl: 'https://github.com/noodle-bag/fractalpark',
   version: '0.4.11',
   formulaCount: 94,
   ogImage: '/opengraph-image',

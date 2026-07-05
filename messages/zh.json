@@ -17,9 +17,10 @@
   },
   "home": {
     "hero": {
+      "eyebrow": "在浏览器里使用的开源分形艺术工具",
       "title": "探索分形的无限之美",
-      "subtitle": "实时分形探索器 — 缩放无限细节, 自定义配色, 导出数学艺术作品.",
-      "tags": "WebGL 实时渲染|94 个公式|自定义配色|高清导出"
+      "subtitle": "分形公园 FractalPark 是一个基于 MIT 许可证开源的浏览器分形生成器.打开网页, 选择公式, 调整颜色, 就可以生成属于你的数学艺术作品.",
+      "tags": "MIT 开源|浏览器直接使用|94 个公式|高清导出"
     },
     "featured": {
       "title": "我的精选",
@@ -30,7 +31,8 @@
     },
     "cta": {
       "explore": "开始探索",
-      "gallery": "浏览画廊"
+      "gallery": "浏览画廊",
+      "github": "查看 GitHub"
     },
     "fullscreen": "全屏",
     "exitFullscreen": "退出全屏",
@@ -408,10 +410,10 @@
   },
   "metadata": {
     "home": {
-      "title": "分形公园 FractalPark - 分形艺术探索 | 创造与探索数字艺术",
-      "description": "使用分形公园 FractalPark 探索分形艺术的无限之美.94 个分形公式、实时 WebGL 渲染、自定义调色板, 创造令人惊叹的数字艺术作品.",
-      "ogTitle": "分形公园 FractalPark - 探索无限分形之美",
-      "ogDescription": "使用 94 个公式创造和探索迷人的分形艺术, 实时 GPU 渲染, 自定义调色板."
+      "title": "分形公园 FractalPark - 开源浏览器分形生成器",
+      "description": "分形公园 FractalPark 是一个基于 MIT 许可证开源、可在浏览器中直接使用的分形生成器, 支持 94 个公式、实时 WebGL 渲染、自定义调色板和 PNG 导出.",
+      "ogTitle": "分形公园 FractalPark - 浏览器里的开源分形艺术工具",
+      "ogDescription": "在浏览器中创作分形艺术: MIT 开源、WebGL 实时渲染、94 个公式、自定义调色板和 PNG 导出."
     },
     "explore": {
       "title": "探索分形 | 交互式分形生成器 - 分形公园 FractalPark",
@@ -424,14 +426,14 @@
       "description": "您的个人分形艺术画廊.保存、整理和分享您最喜爱的分形创作."
     },
     "about": {
-      "title": "关于 | 分形艺术与数字数学 - 分形公园 FractalPark",
-      "description": "了解分形公园 FractalPark - 基于 WebGL 的分形艺术探索工具.使用 Next.js、TypeScript 和 GPU 着色器构建, 支持实时渲染."
+      "title": "关于 | 开源浏览器分形生成器 - 分形公园 FractalPark",
+      "description": "了解分形公园 FractalPark: 一个基于 MIT 许可证开源、可在浏览器中直接使用的 WebGL 分形生成器, 支持 94 个公式、自定义调色板和 PNG 导出."
     }
   },
   "about": {
     "title": "关于分形公园 FractalPark",
-    "intro": "分形公园 FractalPark 是一个分形艺术探索项目, 将数学分形之美带到您的浏览器中.通过 WebGL 实时渲染, 您可以使用精美的调色板探索 Mandelbrot 集合的无限复杂性.",
-    "aiDescription": "分形公园 FractalPark 是一个基于浏览器的分形艺术生成器, 使用 WebGL 进行实时 GPU 渲染.它包含 94 个内置逃逸时间分形公式（Mandelbrot、Julia、Newton、Phoenix、Magnet、McMullen、有理函数、超越函数家族）、支持 Fractint .frm 语法的自定义公式编辑器、7 种 UV 变换插件、9 种着色模式, 以及高分辨率 PNG 导出功能.使用 Next.js 16、React 19、TypeScript 5 和 Tailwind CSS 构建.渲染引擎采用插件架构, 支持动态 GLSL 着色器组装和 LRU 缓存.",
+    "intro": "分形公园 FractalPark 是一个直接运行在浏览器里的开源分形艺术生成器.你不需要安装软件: 打开探索器, 选择一个公式, 调整颜色和视角, 就可以慢慢做出一张属于自己的数学艺术作品.",
+    "aiDescription": "分形公园 FractalPark 是一个基于 MIT 许可证开源的浏览器分形艺术生成器, 使用 WebGL 进行实时 GPU 渲染.它包含 94 个内置逃逸时间分形公式（Mandelbrot、Julia、Newton、Phoenix、Magnet、McMullen、有理函数、超越函数家族）、支持 Fractint .frm 语法的自定义公式编辑器、7 种 UV 变换插件、9 种着色模式, 以及高分辨率 PNG 导出功能.使用 Next.js 16、React 19、TypeScript 5 和 Tailwind CSS 构建.渲染引擎采用插件架构, 支持动态 GLSL 着色器组装和 LRU 缓存.",
     "techStack": {
       "title": "技术栈",
       "description": "基于 Next.js、WebGL 和 TypeScript 构建.GPU 着色器驱动的实时分形渲染.",
@@ -441,8 +443,10 @@
       "deployment": "部署: Vercel, 集成 Analytics 和 Speed Insights"
     },
     "openSource": {
-      "title": "开源技术",
-      "description": "分形公园 FractalPark 基于开源技术构建, 包括 Next.js、React、TypeScript、Tailwind CSS、shadcn/ui 和 CodeMirror 6.本项目探索数学、艺术与 Web 技术的交汇点."
+      "title": "开源项目",
+      "description": "分形公园 FractalPark 基于 MIT 许可证开源.源代码托管在 GitHub, 任何人都可以查看它如何工作、在本地运行、提出改进建议, 或基于这个浏览器分形引擎继续创作.",
+      "github": "GitHub 仓库",
+      "license": "MIT 许可证"
     },
     "aiFriendly": {
       "title": "AI 友好",
@@ -450,7 +454,7 @@
     },
     "vision": {
       "title": "愿景",
-      "description": "我们致力于让分形探索变得触手可及且赏心悦目.未来计划包括更多分形类型、更深层缩放能力和社区分享功能."
+      "description": "我们希望分形探索是开放、亲切、容易开始的.无论你是想生成一张图片、了解一点数学、看看代码实现, 还是基于项目继续改造, 分形公园 FractalPark 都应该是一个友好的起点."
     }
   }
 }

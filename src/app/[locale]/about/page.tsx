@@ -53,12 +53,15 @@ export default function AboutPage() {
     operatingSystem: 'Any modern web browser',
     url: SITE.url,
     description: t('aiDescription'),
+    license: 'https://opensource.org/license/mit',
+    codeRepository: SITE.repositoryUrl,
     offers: {
       '@type': 'Offer',
       price: '0',
       priceCurrency: 'USD',
     },
     featureList: [
+      'Open-source MIT-licensed browser application',
       '94 built-in fractal formulas (Mandelbrot, Julia, Newton, Phoenix, Magnet, McMullen, transcendental families)',
       'Real-time WebGL GPU rendering',
       'Custom formula editor with Fractint-style .frm compatibility and FractalPark native directives',
@@ -150,6 +153,24 @@ export default function AboutPage() {
           <p className="text-lg text-muted-foreground leading-relaxed">
             {t('openSource.description')}
           </p>
+          <div className="flex flex-wrap gap-4 text-sm">
+            <a
+              href={SITE.repositoryUrl}
+              className="text-primary hover:underline"
+              target="_blank"
+              rel="noopener noreferrer"
+            >
+              {t('openSource.github')} →
+            </a>
+            <a
+              href="https://opensource.org/license/mit"
+              className="text-primary hover:underline"
+              target="_blank"
+              rel="noopener noreferrer"
+            >
+              {t('openSource.license')} →
+            </a>
+          </div>
         </div>
 
         <div className="space-y-6">

@@ -17,9 +17,10 @@
   },
   "home": {
     "hero": {
+      "eyebrow": "Open-source fractal art in your browser",
       "title": "Explore the Infinite Beauty of Fractals",
-      "subtitle": "Real-time fractal explorer — zoom into infinite detail, customize colors, and export mathematical art.",
-      "tags": "WebGL Real-time|94 Formulas|Custom Colors|HD Export"
+      "subtitle": "FractalPark is an MIT-licensed, browser-based fractal generator for everyone. Open a tab, explore 94 formulas, tune the colors, and export your own mathematical art.",
+      "tags": "Open Source MIT|Runs in Browser|94 Formulas|HD Export"
     },
     "featured": {
       "title": "My Favorites",
@@ -30,7 +31,8 @@
     },
     "cta": {
       "explore": "Start Exploring",
-      "gallery": "View Gallery"
+      "gallery": "View Gallery",
+      "github": "View on GitHub"
     },
     "fullscreen": "Fullscreen",
     "exitFullscreen": "Exit Fullscreen",
@@ -408,10 +410,10 @@
   },
   "metadata": {
     "home": {
-      "title": "FractalPark - Fractal Art Explorer | Create & Explore Digital Art",
-      "description": "Explore the infinite beauty of fractal art with FractalPark. Create stunning digital art using 94 fractal formulas, real-time WebGL rendering, and custom color palettes.",
-      "ogTitle": "FractalPark - Explore Infinite Fractal Beauty",
-      "ogDescription": "Create and explore mesmerizing fractal art with 94 formulas, real-time GPU rendering, and custom palettes."
+      "title": "FractalPark - Open Source Browser Fractal Generator",
+      "description": "FractalPark is an open-source MIT-licensed fractal generator that runs in your browser. Explore 94 formulas, real-time WebGL rendering, custom palettes, and PNG export.",
+      "ogTitle": "FractalPark - Open Source Fractal Art in Your Browser",
+      "ogDescription": "Create fractal art in your browser with an MIT-licensed open-source WebGL explorer, 94 formulas, custom palettes, and PNG export."
     },
     "explore": {
       "title": "Explore Fractals | Interactive Fractal Generator - FractalPark",
@@ -424,14 +426,14 @@
       "description": "Your personal fractal art gallery. Save, organize and share your favorite fractal creations."
     },
     "about": {
-      "title": "About | Fractal Art & Digital Mathematics - FractalPark",
-      "description": "Learn about FractalPark - a WebGL-powered fractal art exploration tool. Built with Next.js, TypeScript and GPU shaders for real-time rendering."
+      "title": "About | Open Source Browser Fractal Generator - FractalPark",
+      "description": "Learn about FractalPark, an open-source MIT-licensed fractal generator that runs in the browser with WebGL, 94 formulas, custom palettes, and PNG export."
     }
   },
   "about": {
     "title": "About FractalPark",
-    "intro": "FractalPark is a fractal art exploration project that brings the beauty of mathematical fractals to your browser. Using WebGL for real-time rendering, you can explore the infinite complexity of the Mandelbrot set with stunning color palettes.",
-    "aiDescription": "FractalPark is a browser-based fractal art generator using WebGL for real-time GPU rendering. It features 94 built-in escape-time fractal formulas (Mandelbrot, Julia, Newton, Phoenix, Magnet, McMullen, rational, transcendental families), a custom formula editor with Fractint .frm syntax support, 7 UV transform plugins, 9 coloring modes, and high-resolution PNG export. Built with Next.js 16, React 19, TypeScript 5, and Tailwind CSS. The rendering engine uses a plugin architecture with dynamic GLSL shader assembly and LRU caching.",
+    "intro": "FractalPark is an open-source fractal art generator that runs directly in your browser. You do not need to install anything: open the explorer, choose a formula, adjust the colors, and make a piece of mathematical art at your own pace.",
+    "aiDescription": "FractalPark is an open-source MIT-licensed browser-based fractal art generator using WebGL for real-time GPU rendering. It features 94 built-in escape-time fractal formulas (Mandelbrot, Julia, Newton, Phoenix, Magnet, McMullen, rational, transcendental families), a custom formula editor with Fractint .frm syntax support, 7 UV transform plugins, 9 coloring modes, and high-resolution PNG export. Built with Next.js 16, React 19, TypeScript 5, and Tailwind CSS. The rendering engine uses a plugin architecture with dynamic GLSL shader assembly and LRU caching.",
     "techStack": {
       "title": "Technology",
       "description": "Built with Next.js, WebGL, and TypeScript. Real-time fractal rendering powered by GPU shaders.",
@@ -442,7 +444,9 @@
     },
     "openSource": {
       "title": "Open Source",
-      "description": "FractalPark is built with open source technologies including Next.js, React, TypeScript, Tailwind CSS, shadcn/ui, and CodeMirror 6. The project explores the intersection of mathematics, art, and web technology."
+      "description": "FractalPark is released under the MIT License. The source code is available on GitHub so anyone can study how it works, run it locally, suggest improvements, or build on the browser-based fractal engine.",
+      "github": "GitHub repository",
+      "license": "MIT License"
     },
     "aiFriendly": {
       "title": "AI Friendly",
@@ -450,7 +454,7 @@
     },
     "vision": {
       "title": "Vision",
-      "description": "We aim to make fractal exploration accessible and beautiful. Future plans include more fractal types, deeper zoom capabilities, and community sharing features."
+      "description": "We want fractal exploration to feel open, welcoming, and easy to start. Whether you are here to make an image, learn a bit of math, inspect the code, or remix the project, FractalPark should give you a friendly place to begin."
     }
   }
 }

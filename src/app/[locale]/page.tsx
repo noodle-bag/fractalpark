@@ -190,6 +190,9 @@ function FractalSlideshow({
 
           {/* Content */}
           <div className="absolute inset-0 z-10 flex flex-col items-center justify-center text-center px-4">
+            <p className="mb-4 rounded-full border border-white/20 bg-white/10 px-4 py-1 text-sm font-medium text-white/80 backdrop-blur">
+              {t('hero.eyebrow')}
+            </p>
             <h1 className="text-6xl md:text-7xl lg:text-8xl font-bold text-white mb-6 tracking-tight drop-shadow-lg">
               {SITE.name}
             </h1>
@@ -209,7 +212,7 @@ function FractalSlideshow({
               ))}
             </div>
 
-            <div className="flex gap-4">
+            <div className="flex flex-wrap justify-center gap-4">
               <Button
                 asChild
                 size="lg"
@@ -224,6 +227,16 @@ function FractalSlideshow({
                 className="text-lg px-8 py-6 rounded-full bg-white/10 border-white/20 text-white hover:bg-white/20"
               >
                 <Link href="/gallery">{t('cta.gallery')}</Link>
+              </Button>
+              <Button
+                asChild
+                variant="outline"
+                size="lg"
+                className="text-lg px-8 py-6 rounded-full bg-white/10 border-white/20 text-white hover:bg-white/20"
+              >
+                <a href={SITE.repositoryUrl} target="_blank" rel="noopener noreferrer">
+                  {t('cta.github')}
+                </a>
               </Button>
             </div>
 
