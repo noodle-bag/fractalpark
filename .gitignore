@@ -40,3 +40,19 @@ yarn-error.log*
 # typescript
 *.tsbuildinfo
 next-env.d.ts
+# local agent and editor state
+.codex/
+.claude/
+.cursor/
+.windsurf/
+.continue/
+.aider*
+CLAUDE.md
+PLAN.md
+AGENTS.md
+AGENTS.local.md
+*.local.md
+
+# local OS/editor metadata
+.vscode/
+.idea/
