@@ -1,0 +1,165 @@
+{
+  "version": 1,
+  "presets": [
+    {
+      "id": "preset-newton-deep-spiral",
+      "name": "Newton Deep Spiral",
+      "nameZh": "牛顿深螺旋",
+      "url": "?cx=-0.0019566414&cy=-0.0009999492&z=13526.20&rot=2.6100&fm=newton3&oc=sm&ic=bk&iter=200&pal=0&kf=-0.0585035819%2C-0.0084903157%2C0.40%2C0.0000%7C-0.0019566414%2C-0.0009999492%2C13526.20%2C2.6100",
+      "featured": true,
+      "thumbnail": "/images/gallery/presets/preset-newton-deep-spiral.jpg"
+    },
+    {
+      "id": "preset-lambda-julia-vortex",
+      "name": "Lambda Vortex",
+      "nameZh": "兰姆达漩涡",
+      "url": "?cx=-0.0733928131&cy=0.0087354502&z=1940.11&rot=-0.8400&fm=lambda&oc=sm&ic=bk&iter=200&julia=1&jre=-0.823109&jim=-1.526034&ait=1&pal=1&kf=-0.0945874237%2C0.0700451048%2C0.40%2C0.0800%7C-0.0733928131%2C0.0087354502%2C1940.11%2C-0.8400",
+      "featured": true,
+      "thumbnail": "/images/gallery/presets/preset-lambda-julia-vortex.jpg"
+    },
+    {
+      "id": "preset-spider-julia-abyss",
+      "name": "Spider Abyss",
+      "nameZh": "蜘蛛深渊",
+      "url": "?cx=-0.5919435003&cy=-0.7580010509&z=10668.23&rot=3.1416&fm=spider&oc=sm&ic=bk&iter=200&julia=1&jre=-0.231379&jim=-0.045210&pal=0&kf=-0.1327938445%2C0.0233483683%2C0.40%2C0.0000%7C-0.5919435003%2C-0.7580010509%2C10668.23%2C3.1416",
+      "featured": true,
+      "thumbnail": "/images/gallery/presets/preset-spider-julia-abyss.jpg"
+    },
+    {
+      "id": "preset-buffalo-julia-eclipse",
+      "name": "Buffalo Eclipse",
+      "nameZh": "野牛蚀",
+      "url": "?cx=0.3681550891&cy=-0.8498804503&z=2899.16&rot=-2.1200&fm=buffalo&oc=sm&ic=bk&iter=200&julia=1&jre=0.241301&jim=-0.631347&ssaa=1&ait=1&pal=0&kf=-0.0097096285%2C-0.0552073254%2C0.40%2C1.5700%7C0.3681550891%2C-0.8498804503%2C2899.16%2C-2.1200",
+      "featured": true,
+      "thumbnail": "/images/gallery/presets/preset-buffalo-julia-eclipse.jpg"
+    },
+    {
+      "id": "preset-mandelbrot-deep-escape",
+      "name": "Deep Escape",
+      "nameZh": "深渊逃脱",
+      "url": "?cx=-0.6960411892&cy=-0.0859829777&z=0.40&fm=m&oc=sm&ic=bk&iter=200&pal=0&kf=-1.8641108220%2C-0.0000051576%2C5161.05%2C0.0000%7C-0.6960411892%2C-0.0859829777%2C0.40%2C0.0000",
+      "featured": true,
+      "thumbnail": "/images/gallery/presets/preset-mandelbrot-deep-escape.jpg"
+    },
+    {
+      "id": "preset-mandelbrot-crown",
+      "name": "Mandelbrot Crown",
+      "nameZh": "曼德布罗特王冠",
+      "url": "?cx=-0.2053084172&cy=0.8992976574&z=1.10&fm=m&oc=sm&ic=bk&iter=200&ait=1&pal=0&kf=-0.2254358369%2C1.1159634109%2C10524.51%2C0.0000%7C-0.2053084172%2C0.8992976574%2C1.10%2C0.0000",
+      "featured": true,
+      "thumbnail": "/images/gallery/presets/preset-mandelbrot-crown.jpg"
+    },
+    {
+      "id": "preset-buffalo-julia-spiral-gate",
+      "name": "Buffalo Crest",
+      "nameZh": "野牛纹章",
+      "url": "?cx=-0.2659523679&cy=0.0000090499&z=4904.51&rot=-1.5700&iter=200&julia=1&jre=-0.683675&jim=0.778809&fm=buffalo&pal=0&kf=-0.4333814248%2C0.0414229849%2C0.54%2C-1.5700%7C-0.2659523679%2C0.0000090499%2C4904.51%2C-1.5700",
+      "featured": true,
+      "thumbnail": "/images/gallery/presets/preset-buffalo-julia-spiral-gate.jpg"
+    },
+    {
+      "id": "preset-lambda-julia-ice-veil",
+      "name": "Lambda Frost Bloom",
+      "nameZh": "兰姆达霜华",
+      "url": "?cx=-0.2973131624&cy=-0.0689499773&z=10841.03&iter=200&julia=1&jre=-1.693195&jim=-0.675293&fm=lambda&oc=st&grad=0.42%3A275182%2C0.51%3Affffff%2C0.62%3A000000%2C0.87%3A2ec0ff&kf=-0.3032139066%2C-0.0555956321%2C6.41%2C0.0000%7C-0.2973131624%2C-0.0689499773%2C10841.03%2C0.0000",
+      "featured": true,
+      "thumbnail": "/images/gallery/presets/preset-lambda-julia-ice-veil.jpg"
+    },
+    {
+      "id": "preset-magnet-julia-ember-reach",
+      "name": "Magnet Copper Spores",
+      "nameZh": "磁铜孢原",
+      "url": "?cx=2.1608456032&cy=-1.0973622666&z=581.81&iter=200&julia=1&jre=-0.560875&jim=0.112061&fm=magnet1&grad=0.02%3A000000%2C0.33%3Ab73779%2C0.41%3Aff8157%2C0.83%3A0d0d0d%2C1.00%3A1dd781&kf=-0.8357243774%2C-0.0127499569%2C0.0962%2C0.0000%7C2.1608456032%2C-1.0973622666%2C581.81%2C0.0000",
+      "featured": true,
+      "thumbnail": "/images/gallery/presets/preset-magnet-julia-ember-reach.jpg"
+    },
+    {
+      "id": "preset-julia-aqua-compass",
+      "name": "Porcelain Lattice",
+      "nameZh": "瓷白弧网",
+      "url": "?cx=0.4495852058&cy=-0.6288312865&z=6469.54&rot=-1.4300&iter=200&julia=1&jre=-0.256265&jim=1.194254&oc=ot&ots=x&otr=0.0500&otw=0.1800&grad=0.15%3A0a1628%2C0.34%3A4dd0e1%2C0.69%3A888888%2C0.99%3Affffff%2C1.00%3A000000&kf=0.4841054642%2C-0.6246955301%2C2.56%2C-1.4300%7C0.4495852058%2C-0.6288312865%2C6469.54%2C-1.4300",
+      "featured": true,
+      "thumbnail": "/images/gallery/presets/preset-julia-aqua-compass.jpg"
+    },
+    {
+      "id": "preset-mcmullen-azure-whorl",
+      "name": "Azure Whorl",
+      "nameZh": "蔚蓝旋核",
+      "url": "?cx=0.8155936515&cy=0.0811996647&z=21034.66&rot=2.0100&iter=200&julia=1&jre=0.090088&jim=0.000325&fm=mcMullen23&oc=st&pal=0&kf=0.8183781239%2C0.0824397024%2C7.38%2C0.0000%7C0.8155936515%2C0.0811996647%2C21034.66%2C2.0100",
+      "featured": true,
+      "thumbnail": "/images/gallery/presets/preset-mcmullen-azure-whorl.jpg"
+    },
+    {
+      "id": "preset-inverted-lambda-obsidian-knot",
+      "name": "Midnight Faultline",
+      "nameZh": "子夜断层",
+      "url": "?cx=-1.1039839987&cy=0.1429517195&z=164.73&rot=-1.1400&iter=200&julia=0&jre=-0.888615&jim=0.290854&fm=invertedLambda&ots=x&pal=0&kf=-1.1039839987%2C0.1429517195%2C14263.32%2C0.0000%7C-1.1039839987%2C0.1429517195%2C164.73%2C-1.1400",
+      "featured": true,
+      "thumbnail": "/images/gallery/presets/preset-inverted-lambda-obsidian-knot.jpg"
+    },
+    {
+      "id": "preset-circle-inversion-citrine-spine",
+      "name": "Citrine Spine",
+      "nameZh": "金髓中轴",
+      "url": "?cx=-0.0195086834&cy=-0.0593738505&z=6.66&iter=200&julia=0&jre=0.779379&jim=0.081299&fm=circleInversion&oc=ti&ic=fo&ait=1&pal=2&kf=-0.0195086834%2C-0.0593738505%2C8651.82%2C0.0000%7C-0.0195086834%2C-0.0593738505%2C6.66%2C0.0000",
+      "featured": true,
+      "thumbnail": "/images/gallery/presets/preset-circle-inversion-citrine-spine.jpg"
+    },
+    {
+      "id": "preset-rational-map-sapphire-fan",
+      "name": "Sapphire Fan",
+      "nameZh": "苍蓝扇影",
+      "url": "?cx=-1.8286425867&cy=-0.4375224911&z=1651.37&rot=0.8600&iter=200&julia=1&jre=0.170837&jim=-1.498077&fm=rationalMap1&pal=0&kf=-0.9329994101%2C-2.7132827435%2C0.0169%2C0.1100%7C-1.8286425867%2C-0.4375224911%2C1651.37%2C0.8600",
+      "featured": true,
+      "thumbnail": "/images/gallery/presets/preset-rational-map-sapphire-fan.jpg"
+    },
+    {
+      "id": "preset-perpendicular-celtic-porcelain-halo",
+      "name": "Porcelain Halo",
+      "nameZh": "瓷辉环影",
+      "url": "?cx=-0.4862500863&cy=0.3507802952&z=679.31&rot=-1.1500&iter=200&julia=1&jre=0.372803&jim=0.009613&fm=perpendicularCeltic&pal=0&kf=-0.4088916775%2C0.4549080442%2C1.33%2C-2.3500%7C-0.4862500863%2C0.3507802952%2C679.31%2C-1.1500",
+      "featured": true,
+      "thumbnail": "/images/gallery/presets/preset-perpendicular-celtic-porcelain-halo.jpg"
+    },
+    {
+      "id": "preset-burning-ship-cinder-rift",
+      "name": "Cinder Rift",
+      "nameZh": "烬谷裂隙",
+      "url": "?cx=-1.7137736225&cy=-0.0262902392&z=4.14&rot=-3.1416&iter=200&julia=0&jre=-0.700000&jim=0.270000&fm=bs&grad=0.00%3A000004%2C0.33%3A193325%2C0.65%3Aff8157%2C1.00%3Ae3e561&kf=-1.7137736225%2C-0.0262902392%2C4.14%2C-3.1416%7C-1.6631353882%2C-0.0001025868%2C1286.20%2C-3.1416",
+      "featured": true,
+      "thumbnail": "/images/gallery/presets/preset-burning-ship-cinder-rift.jpg"
+    },
+    {
+      "id": "preset-magnet-julia-rust-cross",
+      "name": "Rust Cross",
+      "nameZh": "赤锈十字",
+      "url": "?cx=-0.2603328481&cy=0.2624187603&z=7787.60&iter=200&julia=1&jre=0.414551&jim=0.392578&fm=magnet2&oc=ti&ait=1&pal=0&kf=-0.3120385777%2C0.2416367830%2C2.86%2C0.0000%7C-0.2603328481%2C0.2624187603%2C7787.60%2C0.0000",
+      "featured": true,
+      "thumbnail": "/images/gallery/presets/preset-magnet-julia-rust-cross.jpg"
+    },
+    {
+      "id": "preset-zaslavsky-penitent-mandala",
+      "name": "Penitent Mandala",
+      "nameZh": "悔过曼陀罗",
+      "url": "?cx=-0.0001757554&cy=0.0000081958&z=4.73&iter=200&julia=1&jre=0.025543&jim=0.776093&fm=zaslavskyMap&tr=kaleidoscope&pp=u_kaleidoFold%3A4&pal=0&kf=-0.0089023548%2C0.2187204140%2C0.0686%2C0.0000%7C-0.0001757554%2C0.0000081958%2C4.73%2C0.0000",
+      "featured": true,
+      "thumbnail": "/images/gallery/presets/preset-zaslavsky-penitent-mandala.jpg"
+    },
+    {
+      "id": "preset-zubieta-kaleido-amber-mandala",
+      "name": "Amber Mandala",
+      "nameZh": "琥珀曼陀罗",
+      "url": "?cx=-0.8266589419&cy=-0.1654674444&z=0.28&rot=1.1400&iter=200&julia=1&jre=0.686646&jim=-1.038208&fm=zubieta&tr=kaleidoscope&pp=u_kaleidoFold%3A7%2Cu_kaleidoCenterX%3A-0.71337890625%2Cu_kaleidoCenterY%3A-0.1595703125&pal=0&kf=-0.7077788401%2C0.0551663325%2C1338.96%2C0.9100%7C-0.8266589419%2C-0.1654674444%2C0.28%2C1.1400",
+      "featured": true,
+      "thumbnail": "/images/gallery/presets/preset-zubieta-kaleido-amber-mandala.jpg"
+    },
+    {
+      "id": "preset-airship-inversion-seafoam-wings",
+      "name": "Fluorescent Manta",
+      "nameZh": "荧光蝠鲼",
+      "url": "?cx=0.1407752390&cy=1.6099653150&z=204.64&rot=-1.5700&iter=200&julia=1&jre=0.375916&jim=-0.661560&fm=airship&tr=inversion&pp=u_invCenterX%3A0.895703125%2Cu_invCenterY%3A-0.91416015625&grad=0.15%3A040411%2C0.33%3A32b1cd%2C0.48%3A98fb9e%2C0.85%3Afafafa&kf=-1.9858675683%2C1.5404284509%2C0.18%2C-1.5700%7C0.1407752390%2C1.6099653150%2C204.64%2C-1.5700",
+      "featured": true,
+      "thumbnail": "/images/gallery/presets/preset-airship-inversion-seafoam-wings.jpg"
+    }
+  ]
+}

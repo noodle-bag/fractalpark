@@ -1,0 +1,456 @@
+{
+  "common": {
+    "nav": {
+      "home": "首页",
+      "gallery": "画廊",
+      "explore": "探索",
+      "about": "关于"
+    },
+    "language": {
+      "en": "EN",
+      "zh": "中文"
+    },
+    "footer": {
+      "copyright": "© 2026 FractalPark. 基于 MIT 许可证发布。",
+      "contact": "联系方式: "
+    }
+  },
+  "home": {
+    "hero": {
+      "title": "探索分形的无限之美",
+      "subtitle": "实时分形探索器 — 缩放无限细节, 自定义配色, 导出数学艺术作品.",
+      "tags": "WebGL 实时渲染|94 个公式|自定义配色|高清导出"
+    },
+    "featured": {
+      "title": "我的精选",
+      "empty": {
+        "description": "给你喜欢的分形加星, 它们会显示在这里.",
+        "cta": "开始探索"
+      }
+    },
+    "cta": {
+      "explore": "开始探索",
+      "gallery": "浏览画廊"
+    },
+    "fullscreen": "全屏",
+    "exitFullscreen": "退出全屏",
+    "pause": "暂停动画",
+    "play": "播放动画",
+    "previous": "上一个预设",
+    "next": "下一个预设"
+  },
+  "gallery": {
+    "title": "画廊",
+    "description": "探索精选分形, 或浏览你保存的收藏.",
+    "fullscreen": "全屏",
+    "fullscreenHint": "点击任意位置或按 Esc 关闭",
+    "addNew": "New分形",
+    "contextMenu": {
+      "rename": "重命名",
+      "delete": "删除",
+      "star": "收藏",
+      "unstar": "取消收藏"
+    },
+    "card": {
+      "deleteConfirm": {
+        "title": "删除分形?",
+        "description": "此操作不可撤销.",
+        "confirm": "删除",
+        "cancel": "取消"
+      },
+      "renameTitle": "重命名分形",
+      "renameCancel": "取消",
+      "renameSave": "保存"
+    },
+    "builtin": {
+      "badge": "精选"
+    }
+  },
+  "explore": {
+    "title": "探索",
+    "canvas": {
+      "placeholder": "WebGL 画布 — 即将推出"
+    },
+    "tabs": {
+      "formula": "公式",
+      "coloring": "着色",
+      "transform": "变换",
+      "render": "渲染",
+      "animation": "动画"
+    },
+    "formula": {
+      "select": "选择公式",
+      "search": "搜索公式...",
+      "noResults": "未找到公式",
+      "active": "当前",
+      "builtin": "内置公式",
+      "custom": "自定义公式",
+      "examples": {
+        "starterBrot": {
+          "name": "最简 Mandelbrot",
+          "description": "最基础的逃逸时间公式, 适合先看清 init / loop / bailout 的最小结构."
+        },
+        "parameterDrift": {
+          "name": "参数漂移",
+          "description": "演示 p1 / p2 参数槽位, 以及 cabs 与 |z| 的不同用法."
+        },
+        "orbitEcho": {
+          "name": "轨迹回声",
+          "description": "用 zPrev 做记忆反馈, 并推荐搭配 orbitEcho 着色查看轨道包络."
+        },
+        "fnSlotWeave": {
+          "name": "函数织流",
+          "description": "演示 fn1 / fn2 与参数槽位, 适合作为 Fractint 兼容写法模板."
+        },
+        "branchGarden": {
+          "name": "分支花园",
+          "description": "演示 if / elseif / else 分支与三角函数混合写法."
+        }
+      },
+      "customLibrary": {
+        "title": "自定义公式",
+        "new": "New",
+        "loading": "加载中...",
+        "empty": "还没有自定义公式",
+        "createFirst": "Create first formula",
+        "renameConfirm": "确认",
+        "deleteConfirm": "确定要删除这个公式吗?",
+        "maxReached": "Maximum count reached ({count})",
+        "examplesTitle": "从示例开始",
+        "examplesDescription": "先载入一个可编译的示例, 再在编辑器里改出你自己的版本."
+      },
+      "family": {
+        "all": "全部",
+        "classic": "经典",
+        "burning-ship": "燃烧船",
+        "newton": "牛顿",
+        "magnet": "磁吸",
+        "phoenix": "凤凰",
+        "transcendental": "超越函数",
+        "exotic": "奇异"
+      }
+    },
+    "controls": {
+      "colorScheme": "配色方案",
+      "iterations": "迭代次数",
+      "resetView": "重置视图",
+      "share": {
+        "label": "分享",
+        "copied": "已复制!"
+      },
+      "export": {
+        "label": "导出 PNG",
+        "button": "导出",
+        "rendering": "渲染中...",
+        "quality": "抗锯齿质量",
+        "qualityFast": "关",
+        "qualityStandard": "低",
+        "qualityHigh": "高",
+        "qualityUltra": "极致"
+      },
+      "save": {
+        "button": "保存到收藏",
+        "success": "已保存！",
+        "dialog": {
+          "title": "保存分形",
+          "name": "名称",
+          "placeholder": "输入名称...",
+          "confirm": "保存",
+          "cancel": "取消"
+        }
+      },
+      "position": "位置信息",
+      "center": "中心",
+      "zoom": "缩放",
+      "mode": {
+        "label": "分形模式",
+        "mandelbrot": "Mandelbrot 集",
+        "julia": "Julia 集"
+      },
+      "juliaC": {
+        "label": "Julia 参数 (c)",
+        "pickHint": "提示: 在 Mandelbrot 图上点击一点, 可自动设置 c 并切换到 Julia.",
+        "picked": "Julia c = {re}, {im}"
+      },
+      "formula": {
+        "label": "公式",
+        "mandelbrot": "Mandelbrot",
+        "burningShip": "Burning Ship",
+        "airship": "飞船分形",
+        "tricorn": "Tricorn",
+        "phoenix": "Phoenix",
+        "lambda": "Lambda",
+        "quadJulia": "四次 Julia",
+        "cubicMandelbrot": "三次 Mandelbrot",
+        "quarticMandelbrot": "五次 Mandelbrot",
+        "sierpinski": "谢尔宾斯基",
+        "mandelbox": "Mandelbox",
+        "multicorn4": "四角 Multicorn",
+        "multicorn5": "五角 Multicorn",
+        "multicorn6": "六角 Multicorn",
+        "multicorn7": "七角 Multicorn",
+        "chebyshev2": "切比雪夫 T2",
+        "chebyshev3": "切比雪夫 T3",
+        "chebyshev4": "切比雪夫 T4",
+        "chebyshev5": "切比雪夫 T5",
+        "perpendicularMandelbrot": "垂直 Mandelbrot",
+        "perpendicularTricorn": "垂直 Tricorn",
+        "perpendicularCeltic": "垂直凯尔特",
+        "cubicPerpendicularMandelbrot": "三次垂直 Mandelbrot",
+        "quarticPerpendicularMandelbrot": "四次垂直 Mandelbrot",
+        "rabbitJulia": "兔子 Julia",
+        "newton3": "牛顿 (三次)",
+        "newton4": "牛顿 (四次)",
+        "newtonSin": "牛顿正弦",
+        "newtonCos": "牛顿余弦",
+        "newton5": "牛顿 (五次)",
+        "newton6": "牛顿 (六次)",
+        "newtonSinh": "牛顿双曲正弦",
+        "newtonCosh": "牛顿双曲余弦",
+        "magnet1": "磁吸类型 1",
+        "magnet2": "磁吸类型 2",
+        "phoenixMulti": "多重凤凰",
+        "barnsley1": "Barnsley 1",
+        "barnsley2": "Barnsley 2",
+        "collatz": "考拉兹",
+        "spider": "蜘蛛",
+        "buffalo": "Buffalo",
+        "rationalMap1": "有理映射 1",
+        "rationalMap2": "有理映射 2",
+        "mcMullen23": "麦克马伦 2/3",
+        "mcMullen32": "麦克马伦 3/2",
+        "mcMullen34": "麦克马伦 3/4",
+        "reciprocalQuadratic": "倒数二次",
+        "reciprocalCubic": "倒数三次",
+        "invertedLambda": "反演 Lambda",
+        "novaBasin": "Nova 盆地",
+        "zaslavskyMap": "Zaslavsky 映射",
+        "henon": "Henon",
+        "ikeda": "Ikeda",
+        "zubieta": "Zubieta",
+        "expJulia": "指数 Julia",
+        "atanhMandelbrot": "反双曲正切 Mandelbrot",
+        "atanhJulia": "反双曲正切 Julia",
+        "asinhMandelbrot": "反双曲正弦 Mandelbrot",
+        "asinhJulia": "反双曲正弦 Julia",
+        "acoshMandelbrot": "反双曲余弦 Mandelbrot",
+        "acoshJulia": "反双曲余弦 Julia",
+        "cothMandelbrot": "双曲余切 Mandelbrot",
+        "cothJulia": "双曲余切 Julia",
+        "logJulia": "对数 Julia",
+        "cosMandelb": "余弦 Mandelbrot",
+        "expMandelbrot": "指数 Mandelbrot",
+        "sineMandelb": "正弦 Mandelbrot",
+        "sineJulia": "正弦 Julia",
+        "coshMandelb": "双曲余弦 Mandelbrot",
+        "sinhMandelb": "双曲正弦 Mandelbrot",
+        "coshJulia": "双曲余弦 Julia",
+        "coshSinh": "双曲余弦-正弦",
+        "cosJulia": "余弦 Julia",
+        "tanJulia": "正切 Julia",
+        "sinhJulia": "双曲正弦 Julia",
+        "heart": "心形分形",
+        "manowar": "战舰分形",
+        "biomorph": "生物形态",
+        "cactus": "仙人掌",
+        "logistic": "逻辑映射",
+        "celticMandelbrot": "凯尔特 Mandelbrot",
+        "celticBurningShip": "凯尔特燃烧船",
+        "celticMandelbar": "凯尔特 Mandelbar",
+        "burningShipImag": "燃烧船虚部",
+        "perpendicularBurningShip": "垂直燃烧船",
+        "perpendicularCelticBurningShip": "垂直凯尔特燃烧船",
+        "burningShipCubic": "三次燃烧船",
+        "burningShipQuartic": "四次燃烧船",
+        "airshipCubic": "三次飞船",
+        "newtonExp": "牛顿指数",
+        "halleyCubic": "Halley 三次",
+        "novaClassic": "经典 Nova",
+        "novaSine": "Nova 正弦",
+        "novaCos": "Nova 余弦",
+        "tetration": "迭代幂",
+        "circleInversion": "圆反演",
+        "frothyBasin": "泡沫盆地",
+        "simonBrot": "SimonBrot",
+        "rings": "环形分形"
+      },
+      "transform": {
+        "label": "变换",
+        "none": "无",
+        "kaleidoscope": "万花筒",
+        "mobius": "莫比乌斯",
+        "inversion": "反演",
+        "polar": "极坐标",
+        "sinusoidal": "正弦",
+        "spherical": "球面"
+      },
+      "coloring": {
+        "outside": "外部着色",
+        "inside": "内部着色",
+        "smooth": "平滑",
+        "orbitTrap": "轨道陷阱",
+        "orbitEcho": "轨迹回声",
+        "stripe": "条纹",
+        "binary": "二值",
+        "tia": "TIA",
+        "black": "黑色",
+        "finalOrbit": "最终轨道",
+        "atomDomain": "原子域"
+      },
+      "orbitTrap": {
+        "label": "轨道陷阱",
+        "point": "点",
+        "cross": "十字",
+        "circle": "圆",
+        "radius": "半径",
+        "width": "宽度"
+      },
+      "quality": {
+        "ssaa": "SSAA 2x2",
+        "adaptive": "自适应迭代",
+        "lighting": "光照",
+        "lightingMode": "模式",
+        "lightingModeNormalMap": "法线贴图",
+        "lightingModeDem": "距离估计",
+        "azimuth": "光照方位",
+        "elevation": "光照仰角",
+        "intensity": "光照强度"
+      },
+      "rotation": {
+        "label": "旋转"
+      },
+      "formulaParameters": "公式参数",
+      "formulaNoParameters": "该公式使用内置默认参数, 无需额外调节.",
+      "complexReal": "实部",
+      "complexImaginary": "虚部",
+      "transformParameters": "变换参数",
+      "transformNoParameters": "该变换使用内置默认参数, 无需额外调节.",
+      "transformCenter": "中心点",
+      "kaleidoFold": "折叠数量",
+      "kaleidoCenterX": "中心 X",
+      "kaleidoCenterY": "中心 Y",
+      "invRadius": "反演半径",
+      "invCenterX": "中心 X",
+      "invCenterY": "中心 Y",
+      "polarAngleScale": "角度缩放",
+      "polarRadiusScale": "半径缩放",
+      "sphericalAmount": "球面强度",
+      "ringsP": "环形参数",
+      "animation": {
+        "title": "动画",
+        "addKeyframe": "添加Keyframe",
+        "removeKeyframe": "删除",
+        "maxReached": "最多 5 个Keyframe",
+        "preview": "预览",
+        "stopPreview": "Stop",
+        "noKeyframes": "当前没有Keyframe",
+        "duration": "循环: {seconds}秒",
+        "keyframeLabel": "Keyframe {number} (缩放: {zoom})"
+      },
+      "gradient": {
+        "preset": "预设",
+        "custom": "自定义",
+        "addStop": "+ 添加色标",
+        "removeStop": "移除",
+        "presets": {
+          "inferno": "火焰",
+          "ocean": "海洋",
+          "spectrum": "彩虹",
+          "sakura": "樱花",
+          "moonlight": "月光"
+        }
+      }
+    },
+    "palettes": {
+      "inferno": "火焰",
+      "ocean": "海洋",
+      "spectrum": "彩虹",
+      "sakura": "樱花",
+      "moonlight": "月光"
+    },
+    "editor": {
+      "title": "公式编辑器",
+      "loading": "加载编辑器...",
+      "loadFailed": "编辑器加载失败",
+      "loadFailedDescription": "无法加载代码编辑器, 请刷新页面重试",
+      "compile": "编译",
+      "compiling": "编译中...",
+      "save": "保存",
+      "saved": "已保存",
+      "savedDescription": "公式 \"{name}\" 已保存到本地",
+      "saveFailed": "保存失败",
+      "saveFailedDescription": "无法保存当前公式",
+      "compileSuccess": "编译成功",
+      "compileSuccessDescription": "公式 \"{name}\" 已就绪",
+      "compileFailed": "编译失败",
+      "compileFailedDescription": "Found  {count} 个错误",
+      "compileError": "编译出错",
+      "compatibilityNotes": "兼容性提示",
+      "errors": "{count} 个错误",
+      "warnings": "{count} 个警告",
+      "infos": "{count} 个兼容提示",
+      "noErrors": "无错误",
+      "diagnostics": "实时诊断（{errors} 个错误, {warnings} 个警告, {infos} 个兼容提示）",
+      "moreIssues": "还有 {count} 个问题...",
+      "restoreLastSuccessful": "恢复上次成功版本",
+      "restoreSuccess": "已恢复",
+      "restoreSuccessDescription": "编辑器已回退到最近一次编译成功的源码",
+      "setCurrentViewAsDefault": "设当前视图为默认视图",
+      "defaultViewSet": "默认视图已更新",
+      "defaultViewSetDescription": "保存后会把当前 Explore 视图一起写入这条自定义公式.",
+      "modeCompat": "模式: Compat",
+      "modeNative": "模式: Native",
+      "line": "Line {line} 行, Line {col} 列",
+      "lines": "{count} 行",
+      "glslError": "GLSL Compile error（已映射到公式源码）",
+      "glslErrorUnmapped": "GLSL Compile error（无法映射到源码位置）"
+    }
+  },
+  "metadata": {
+    "home": {
+      "title": "分形公园 FractalPark - 分形艺术探索 | 创造与探索数字艺术",
+      "description": "使用分形公园 FractalPark 探索分形艺术的无限之美.94 个分形公式、实时 WebGL 渲染、自定义调色板, 创造令人惊叹的数字艺术作品.",
+      "ogTitle": "分形公园 FractalPark - 探索无限分形之美",
+      "ogDescription": "使用 94 个公式创造和探索迷人的分形艺术, 实时 GPU 渲染, 自定义调色板."
+    },
+    "explore": {
+      "title": "探索分形 | 交互式分形生成器 - 分形公园 FractalPark",
+      "description": "交互式分形探索器, 支持 Mandelbrot、Julia、Newton 等 94 个内置公式.实时 WebGL 渲染, 自定义颜色, 高分辨率导出.",
+      "ogTitle": "交互式分形探索器 - 分形公园 FractalPark",
+      "ogDescription": "实时探索数学之美.94 个分形公式, GPU 加速渲染."
+    },
+    "gallery": {
+      "title": "我的画廊 | 个人分形收藏 - 分形公园 FractalPark",
+      "description": "您的个人分形艺术画廊.保存、整理和分享您最喜爱的分形创作."
+    },
+    "about": {
+      "title": "关于 | 分形艺术与数字数学 - 分形公园 FractalPark",
+      "description": "了解分形公园 FractalPark - 基于 WebGL 的分形艺术探索工具.使用 Next.js、TypeScript 和 GPU 着色器构建, 支持实时渲染."
+    }
+  },
+  "about": {
+    "title": "关于分形公园 FractalPark",
+    "intro": "分形公园 FractalPark 是一个分形艺术探索项目, 将数学分形之美带到您的浏览器中.通过 WebGL 实时渲染, 您可以使用精美的调色板探索 Mandelbrot 集合的无限复杂性.",
+    "aiDescription": "分形公园 FractalPark 是一个基于浏览器的分形艺术生成器, 使用 WebGL 进行实时 GPU 渲染.它包含 94 个内置逃逸时间分形公式（Mandelbrot、Julia、Newton、Phoenix、Magnet、McMullen、有理函数、超越函数家族）、支持 Fractint .frm 语法的自定义公式编辑器、7 种 UV 变换插件、9 种着色模式, 以及高分辨率 PNG 导出功能.使用 Next.js 16、React 19、TypeScript 5 和 Tailwind CSS 构建.渲染引擎采用插件架构, 支持动态 GLSL 着色器组装和 LRU 缓存.",
+    "techStack": {
+      "title": "技术栈",
+      "description": "基于 Next.js、WebGL 和 TypeScript 构建.GPU 着色器驱动的实时分形渲染.",
+      "frontend": "前端: Next.js 16 (App Router)、React 19、TypeScript 5、Tailwind CSS 4、shadcn/ui",
+      "rendering": "渲染: WebGL 1 (GLSL 片段着色器)、插件化架构、着色器 LRU 缓存",
+      "formula": "公式系统: 自定义 Fractint .frm 解析器、CodeMirror 6 编辑器、AST 到 GLSL 转译器",
+      "deployment": "部署: Vercel, 集成 Analytics 和 Speed Insights"
+    },
+    "openSource": {
+      "title": "开源技术",
+      "description": "分形公园 FractalPark 基于开源技术构建, 包括 Next.js、React、TypeScript、Tailwind CSS、shadcn/ui 和 CodeMirror 6.本项目探索数学、艺术与 Web 技术的交汇点."
+    },
+    "aiFriendly": {
+      "title": "AI 友好",
+      "description": "本网站为 AI 助手提供结构化文档, 访问 /llms.txt 和 /llms-full.txt 可获取完整信息, 帮助 AI 工具理解和推荐分形公园 FractalPark 的功能."
+    },
+    "vision": {
+      "title": "愿景",
+      "description": "我们致力于让分形探索变得触手可及且赏心悦目.未来计划包括更多分形类型、更深层缩放能力和社区分享功能."
+    }
+  }
+}

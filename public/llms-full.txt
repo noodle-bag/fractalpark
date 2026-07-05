@@ -1,0 +1,462 @@
+# FractalPark - Complete Documentation
+
+> Fractal art exploration with real-time GPU rendering
+> Version: 0.4.11
+> Website: https://fractalpark.com
+
+---
+
+## Table of Contents
+
+1. [Overview](#overview)
+2. [Built-in Formulas](#built-in-formulas)
+3. [Transform Plugins](#transform-plugins)
+4. [Coloring Modes](#coloring-modes)
+5. [.frm Formula Syntax](#frm-formula-syntax)
+6. [URL Parameter Reference](#url-parameter-reference)
+7. [Technology Stack](#technology-stack)
+8. [API Endpoints](#api-endpoints)
+
+---
+
+## Overview
+
+FractalPark is a browser-based fractal art generator using WebGL for real-time rendering. It features a plugin architecture supporting 94 fractal formulas, custom formula editing via Fractint-style .frm compatibility and FractalPark native directives, document-first state, and a personal gallery system.
+
+### Key Capabilities
+
+- Real-time GPU-accelerated fractal rendering (WebGL 1)
+- 94 built-in escape-time and convergence-style fractal formulas
+- Custom formula editor with Fractint-style .frm parser and FractalPark native directives
+- 7 UV coordinate transforms
+- 9 coloring modes with orbit channel support
+- High-resolution PNG export (up to 4x)
+- Personal collection with localStorage persistence
+- Bilingual support (English/Chinese)
+
+---
+
+## Built-in Formulas
+
+### Classic Family (13)
+
+| ID | Name | Julia Support | Formula | Notes |
+|----|------|---------------|---------|-------|
+| mandelbrot | Mandelbrot | Yes | z = z^p + c | The classic, with adjustable power (2-5) |
+| burningShip | Burning Ship | Yes | z = (|Re(z)| + i|Im(z)|)^p + c | Absolute value before squaring |
+| tricorn | Tricorn | Yes | z = conj(z)^p + c | Complex conjugate |
+| lambda | Lambda | Yes | z = c * (z - z^2) | Parameterized variant |
+| mandelbar | Mandelbar | Yes | z = conj(z)^p + c | Similar to tricorn |
+| quadJulia | Quad Julia | Yes | z = z^4 + c | Fourth power |
+| cubicMandelbrot | Cubic | Yes | z = z^3 + c | Third power |
+| quarticMandelbrot | Quartic | Yes | z = z^5 + c | Fifth power |
+| mandelbox | Mandelbox | No | Box fold + ball fold + scale | 3D-style in 2D |
+| perpMandelbrot | Perpendicular MB | Yes | Mixed real/imaginary parts | Unique asymmetry |
+| perpBurningShip | Perpendicular BS | Yes | Perpendicular + Burning Ship | Hybrid variant |
+| celtic | Celtic | Yes | z = |Re(z^2)| - |Im(z^2)| + c | Distinctive patterns |
+| buffalo | Buffalo | Yes | Variant of Burning Ship | Similar but different bailout |
+
+### Newton Family (4)
+
+| ID | Name | Roots | Formula | Escape Type |
+|----|------|-------|---------|-------------|
+| newton3 | Newton (3rd) | 3 | z = (2*z^3 + root) / (3*z^2) | converge |
+| newton4 | Newton (4th) | 4 | z = (3*z^4 + root) / (4*z^3) | converge |
+| newtonSin | Newton Sin | Infinite | z = z - sin(z)/cos(z) | converge |
+| nova | Nova | 3 | Nova variant | converge |
+
+Newton formulas use convergence-based bailout (not escape radius).
+
+### Magnet Family (2)
+
+| ID | Name | Formula |
+|----|------|---------|
+| magnet1 | Magnet Type 1 | z = ((z + c)/(z - c))^2 |
+| magnet2 | Magnet Type 2 | More complex rational function |
+
+### Phoenix Family (2)
+
+| ID | Name | Formula |
+|----|------|---------|
+| phoenix | Phoenix | z = z^2 + c + p*zPrev (p = -0.5) |
+| phoenixMulti | Multi-Phoenix | z = z^p + c + p*zPrev (adjustable p) |
+
+Phoenix formulas use previous iteration value (zPrev).
+
+### Exotic Family (4)
+
+| ID | Name | Notes |
+|----|------|-------|
+| collatz | Collatz | 3n+1 conjecture visualization |
+| spider | Spider | Hybrid Mandelbrot/Julia behavior |
+| zubieta | Zubieta | z = |z^2 + c| variant |
+| expJulia | Exp Julia | z = exp(z) + c | Exponential transcendental |
+
+---
+
+## Transform Plugins
+
+Transforms modify UV coordinates before fractal iteration:
+
+| ID | Name | Description |
+|----|------|-------------|
+| none | None | Identity transform |
+| kaleidoscope | Kaleidoscope | Angular sector folding (3-12 folds) |
+| mobius | Möbius | (az+b)/(cz+d) complex fractional transformation |
+| inversion | Inversion | Circle inversion: r → R²/r |
+| polar | Polar | Cartesian ↔ Polar coordinate conversion |
+| sinusoidal | Sine | uv = sin(uv * amplitude) |
+| spherical | Spherical | Spherical projection: uv = uv / (r² + ε) |
+
+---
+
+## Coloring Modes
+
+### Outside Coloring (5 modes)
+
+| ID | Name | Description |
+|----|------|-------------|
+| smooth | Smooth | Standard smooth iteration coloring |
+| orbitTrap | Orbit Trap | Minimum distance to geometric shapes |
+| stripe | Stripe | Angular stripe patterns |
+| binary | Binary | Even/odd iteration bands |
+| tia | TIA | Triangle Inequality Average |
+
+### Inside Coloring (3 modes)
+
+| ID | Name | Description |
+|----|------|-------------|
+| black | Black | Solid black interior |
+| finalOrbit | Final Orbit | Color based on final angle |
+| atomDomain | Atom Domain | Minimum magnitude period proxy |
+
+---
+
+## .frm Formula Syntax
+
+FractalPark supports Fractint .frm formula syntax for custom formulas.
+
+### Basic Structure
+
+```
+FormulaName {
+  init:
+    ; Initialization code (runs once per pixel)
+    z = 0
+    
+  loop:
+    ; Iteration code (runs each iteration)
+    z = z^2 + c
+    
+  bailout:
+    ; Condition to stop iterating (return true to continue)
+    |z| < 4
+}
+```
+
+### Variables
+
+| Variable | Type | Description |
+|----------|------|-------------|
+| z | complex | Iteration variable |
+| c | complex | Complex parameter (pixel coordinate or Julia constant) |
+| pixel | complex | Original pixel coordinate |
+| p1, p2, p3 | complex/real | User-defined parameters |
+
+### Operators
+
+| Operator | Description |
+|----------|-------------|
+| +, -, *, / | Arithmetic |
+| ^ | Power (real exponent) |
+| ==, !=, <, >, <=, >= | Comparison |
+| &&, \|\|, ! | Logical |
+
+### Functions
+
+#### Complex Math
+- `sqr(z)` - Square: z²
+- `conj(z)` - Complex conjugate
+- `abs(z)` - Magnitude |z|
+- `cabs(z)` - Same as abs(z)
+- `flip(z)` - Swap real/imaginary: i*z
+- `recip(z)` - Reciprocal: 1/z
+
+#### Trigonometric
+- `sin(z), cos(z), tan(z)`
+- `sinh(z), cosh(z), tanh(z)`
+
+#### Exponential/Logarithmic
+- `exp(z)` - Exponential
+- `log(z)` - Natural logarithm
+
+#### Utility
+- `real(z)` - Real component
+- `imag(z)` - Imaginary component
+- `atan2(y, x)` - Angle in radians
+
+### Control Flow
+
+```
+if condition1
+  ; statements
+elseif condition2
+  ; statements
+else
+  ; statements
+endif
+```
+
+Note: Only single-level if/elseif/else/endif is supported (no nesting).
+
+### Examples
+
+#### Mandelbrot
+```
+Mandelbrot {
+  init:
+    z = 0
+  loop:
+    z = z^2 + c
+  bailout:
+    |z| < 4
+}
+```
+
+#### Phoenix
+```
+Phoenix {
+  init:
+    z = 0
+    y = 0
+  loop:
+    t = z
+    z = z^2 + c + p1*y
+    y = t
+  bailout:
+    |z| < 4
+}
+```
+
+#### Custom with Parameter
+```
+MyFormula {
+  init:
+    z = pixel
+  loop:
+    z = sin(z^2) + c * p1
+  bailout:
+    |z| < 100
+}
+```
+
+### Not Supported
+
+- Complex exponent `z^c` (c complex)
+- Dynamic functions `fn1-fn4`
+- Nested if statements
+- `default:` section
+- `switch` statements
+- User-defined functions
+- Arrays
+- `while` loops
+
+---
+
+## URL Parameter Reference
+
+All fractal state is URL-serializable. Share links restore exact state. The canonical implementation is `src/lib/url-params.ts`; use the compact keys below.
+
+### Position & View
+
+| Parameter | Type | Description | Example |
+|-----------|------|-------------|---------|
+| cx | float | Center X coordinate | -0.5 |
+| cy | float | Center Y coordinate | 0 |
+| z | float | Zoom level | 0.4 |
+| rot | float | Rotation (radians) | 0 |
+
+### Formula
+
+| Parameter | Type | Description | Example |
+|-----------|------|-------------|---------|
+| fm | string | Formula ID or short key. Omitted means `mandelbrot`; legacy short keys include `m`, `bs`, `tr`, `ph` | burningShip |
+| pow | float | Power parameter for supported formulas | 3 |
+| julia | 0/1 | Julia mode | 1 |
+| jre | float | Julia constant real part | -0.62 |
+| jim | float | Julia constant imaginary part | 0.41 |
+
+### Quality
+
+| Parameter | Type | Description | Example |
+|-----------|------|-------------|---------|
+| iter | integer | Max iterations | 100 |
+| ssaa | 0/1 | Enable supersampling | 1 |
+| ait | 0/1 | Enable adaptive iterations | 1 |
+
+### Coloring
+
+| Parameter | Type | Description | Example |
+|-----------|------|-------------|---------|
+| pal | integer | Palette index | 0 |
+| oc | string | Outside coloring short key or plugin ID. Built-in keys: `sm`, `ot`, `st`, `bi`, `ti` | st |
+| ic | string | Inside coloring short key or plugin ID. Built-in keys: `bk`, `fo`, `ad` | fo |
+| grad | string | Custom gradient stops as `position:hex,position:hex` | 0.00:000000,1.00:ffffff |
+| ots | string | Orbit trap shape key: `p`, `x`, `c` | x |
+| otx | float | Trap center X | 0 |
+| oty | float | Trap center Y | 0 |
+| otr | float | Trap radius | 0.35 |
+| otw | float | Trap width | 0.02 |
+
+### Lighting
+
+| Parameter | Type | Description | Example |
+|-----------|------|-------------|---------|
+| lg | 0/1 | Enable lighting | 1 |
+| lgm | string | Lighting mode: `normalMap` default or `dem` | dem |
+| lga | float | Light azimuth | 45 |
+| lge | float | Light elevation | 35 |
+| lgi | float | Light intensity | 0.65 |
+
+### Transform
+
+| Parameter | Type | Description | Example |
+|-----------|------|-------------|---------|
+| tr | string | Transform plugin ID. Omitted means `none` | kaleidoscope |
+| pp | string | Plugin parameters as `name:value,name:value`; vec2/vec3 values use `|` separators | folds:8 |
+
+### Animation Keyframes
+
+| Parameter | Type | Description |
+|-----------|------|-------------|
+| kf | string | Keyframes as `cx,cy,z,rot|cx,cy,z,rot`; requires at least two frames |
+
+### Example Share Links
+
+- https://fractalpark.com/en/explore?cx=-0.5&cy=0.25&z=12.50&fm=burningShip&oc=st&julia=1&jre=-0.620000&jim=0.410000&pal=1
+- https://fractalpark.com/en/explore?cx=-0.0019566414&cy=-0.0009999492&z=13526.20&rot=2.6100&fm=newton3&oc=sm&ic=bk&iter=200&pal=0
+- https://fractalpark.com/zh/explore?cx=-0.2973131624&cy=-0.0689499773&z=10841.03&fm=lambda&oc=st&julia=1&jre=-1.693195&jim=-0.675293&grad=0.42:275182,0.51:ffffff,0.62:000000
+
+---
+
+## Technology Stack
+
+### Frontend
+- **Framework**: Next.js 16 (App Router, Turbopack)
+- **UI Library**: React 19
+- **Language**: TypeScript 5 (strict mode)
+- **Styling**: Tailwind CSS 4 + shadcn/ui (New York style)
+- **Icons**: Lucide React
+- **i18n**: next-intl v4
+
+### Rendering
+- **Technology**: WebGL 1 (GLSL fragment shaders)
+- **Renderer**: Plugin-based FractalRenderer with LRU shader cache
+- **Features**: SSAA, DEM lighting, orbit traps
+
+### Formula System
+- **Parser**: Hand-written recursive descent parser
+- **Editor**: CodeMirror 6 with custom .frm syntax highlighting
+- **Code Gen**: AST to GLSL transpiler
+
+### Storage
+- **Personal Gallery**: localStorage (JPEG thumbnails + JSON params)
+- **Limit**: ~50 fractals / 5MB
+
+### Deployment
+- **Platform**: Vercel
+- **Analytics**: Vercel Analytics + Speed Insights
+
+---
+
+## API Endpoints
+
+### Static Endpoints
+
+| Endpoint | Description |
+|----------|-------------|
+| `/llms.txt` | Concise project overview for AI assistants |
+| `/llms-full.txt` | Complete documentation (this file) |
+| `/robots.txt` | Crawler access rules |
+| `/sitemap.xml` | XML sitemap with hreflang |
+
+### Preset API (Planned)
+
+```
+GET /api/presets
+```
+
+Returns curated preset fractal parameters as JSON. Useful for AI assistants to recommend specific fractal views.
+
+Example response:
+```json
+{
+  "presets": [
+    {
+      "id": "mandelbrot-seahorse",
+      "name": "Seahorse Valley",
+      "description": "Famous Mandelbrot zoom location",
+      "params": {
+        "formula": "mandelbrot",
+        "cx": -0.745,
+        "cy": 0.113,
+        "z": 10,
+        "iter": 500
+      }
+    }
+  ]
+}
+```
+
+---
+
+## Changelog
+
+### v0.4.11 (2026-04-24)
+- Formula language upgrade with Fractint compatibility improvements
+- FractalPark native directives, orbit channels, formula parameters, and authoring UX
+- 94 built-in formulas
+
+### v0.4.9 (2026-03-29)
+- Formula library foundation and quality pass
+- Built-in formula catalog expanded to 94 formulas
+
+### v0.4.2 (2026-02-21)
+- Custom formula editor with .frm parser
+- CodeMirror 6 integration
+
+### v0.4.0 (2026-02-20)
+- Plugin architecture (4-dimensional: formula/coloring/transform)
+- Formula Browser UI
+- 7 transform plugins
+
+### v0.3.0 (2026-02-19)
+- Advanced coloring system (5 outside + 3 inside modes)
+- DEM lighting
+- SSAA support
+
+### v0.2.0 (2026-02-16)
+- Julia sets
+- Gradient editor
+- PNG export
+
+### v0.1.0 (2026-02-15)
+- Initial release
+- Core Mandelbrot rendering
+
+---
+
+## License & Credits
+
+FractalPark is a personal project exploring the intersection of mathematics, art, and web technology.
+
+Built with open source:
+- Next.js, React, TypeScript
+- Tailwind CSS, shadcn/ui
+- CodeMirror 6
+- WebGL/GLSL
+
+---
+
+*Last updated: 2026-07-03*
+*For updates: https://github.com/noodle-bag/fractalpark*

@@ -1,0 +1,61 @@
+# FractalPark
+
+> Fractal art exploration website with real-time GPU rendering
+
+## Overview
+
+FractalPark is a web-based fractal art generator that runs entirely in the browser using WebGL. It enables users to explore, create, save, and share mathematical fractal art without installation or backend processing.
+
+## Pages
+
+- [Home](https://fractalpark.com/en): Featured fractal gallery and entry point
+- [Explore](https://fractalpark.com/en/explore): Interactive fractal renderer with 94 formulas, real-time controls, URL sharing, and export
+- [Gallery](https://fractalpark.com/en/gallery): Featured presets and personal collection manager
+- [About](https://fractalpark.com/en/about): Project information and technology stack
+
+## Core Features
+
+- **94 Built-in Formulas**: Mandelbrot, Julia, Burning Ship, Tricorn, Phoenix, Newton, Magnet, Lambda, McMullen, rational, transcendental, and more
+- **7 Transform Plugins**: Kaleidoscope, Mobius, Inversion, Polar, Sinusoidal, Spherical, None
+- **Custom Formula Editor**: Write fractal formulas using Fractint-style .frm compatibility and FractalPark native directives with real-time compilation
+- **Coloring System**: 9 coloring modes with orbit channel support
+- **Real-time Rendering**: WebGL GPU acceleration with SSAA options
+- **High-res Export**: PNG export with tiled rendering for large images
+- **Personal Gallery**: Save fractals to localStorage with thumbnails and starred favorites
+- **Bilingual**: English and Chinese support
+
+## URL Parameters
+
+Fractal state is URL-serializable. The live schema uses compact keys from `src/lib/url-params.ts`.
+
+Core view:
+- `cx`, `cy`: center coordinates
+- `z`: zoom level
+- `rot`: rotation in radians
+- `iter`: max iterations
+
+Formula and Julia:
+- `fm`: formula ID or short key (`m`, `bs`, `tr`, `ph`; omitted means Mandelbrot)
+- `julia`: `1` or `0`
+- `jre`, `jim`: Julia constant real/imaginary parts
+- `pow`: power for formulas that support it
+
+Color and render:
+- `pal`: palette index
+- `oc`: outside coloring (`sm`, `ot`, `st`, `bi`, `ti` or full plugin ID)
+- `ic`: inside coloring (`bk`, `fo`, `ad` or full plugin ID)
+- `grad`: custom gradient stops as `position:hex,position:hex`
+- `ssaa`: `1` enables SSAA
+- `ait`: `1` enables adaptive iterations
+
+Transforms, lighting, and animation:
+- `tr`: transform plugin ID
+- `pp`: plugin parameters as `name:value,name:value`
+- `ots`, `otx`, `oty`, `otr`, `otw`: orbit trap shape/position/radius/width
+- `lg`, `lgm`, `lga`, `lge`, `lgi`: lighting controls
+- `kf`: keyframes as `cx,cy,z,rot|cx,cy,z,rot`
+
+Example:
+https://fractalpark.com/en/explore?cx=-0.5&cy=0.25&z=12.50&fm=burningShip&oc=st&julia=1&jre=-0.620000&jim=0.410000&pal=1
+
+Full documentation: https://fractalpark.com/llms-full.txt

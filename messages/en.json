@@ -1,0 +1,456 @@
+{
+  "common": {
+    "nav": {
+      "home": "Home",
+      "gallery": "Gallery",
+      "explore": "Explore",
+      "about": "About"
+    },
+    "language": {
+      "en": "EN",
+      "zh": "Chinese"
+    },
+    "footer": {
+      "copyright": "© 2026 FractalPark. Released under the MIT License.",
+      "contact": "Contact:"
+    }
+  },
+  "home": {
+    "hero": {
+      "title": "Explore the Infinite Beauty of Fractals",
+      "subtitle": "Real-time fractal explorer — zoom into infinite detail, customize colors, and export mathematical art.",
+      "tags": "WebGL Real-time|94 Formulas|Custom Colors|HD Export"
+    },
+    "featured": {
+      "title": "My Favorites",
+      "empty": {
+        "description": "Star your favorite fractals to show them here.",
+        "cta": "Start Exploring"
+      }
+    },
+    "cta": {
+      "explore": "Start Exploring",
+      "gallery": "View Gallery"
+    },
+    "fullscreen": "Fullscreen",
+    "exitFullscreen": "Exit Fullscreen",
+    "pause": "Pause animation",
+    "play": "Play animation",
+    "previous": "Previous preset",
+    "next": "Next preset"
+  },
+  "gallery": {
+    "title": "Gallery",
+    "description": "Explore featured fractals or browse your saved collection.",
+    "fullscreen": "Fullscreen",
+    "fullscreenHint": "Click anywhere or press Esc to exit",
+    "addNew": "New Fractal",
+    "contextMenu": {
+      "rename": "Rename",
+      "delete": "Delete",
+      "star": "Star",
+      "unstar": "Unstar"
+    },
+    "card": {
+      "deleteConfirm": {
+        "title": "Delete fractal?",
+        "description": "This action cannot be undone.",
+        "confirm": "Delete",
+        "cancel": "Cancel"
+      },
+      "renameTitle": "Rename Fractal",
+      "renameCancel": "Cancel",
+      "renameSave": "Save"
+    },
+    "builtin": {
+      "badge": "Featured"
+    }
+  },
+  "explore": {
+    "title": "Explore",
+    "canvas": {
+      "placeholder": "WebGL Canvas — coming soon"
+    },
+    "tabs": {
+      "formula": "Formula",
+      "coloring": "Coloring",
+      "transform": "Transform",
+      "render": "Render",
+      "animation": "Animation"
+    },
+    "formula": {
+      "select": "Select Formula",
+      "search": "Search formulas...",
+      "noResults": "No formulas found",
+      "active": "Active",
+      "builtin": "Built-in",
+      "custom": "Custom",
+      "examples": {
+        "starterBrot": {
+          "name": "Starter Mandelbrot",
+          "description": "The smallest escape-time formula, useful for learning the init / loop / bailout structure first."
+        },
+        "parameterDrift": {
+          "name": "Parameter Drift",
+          "description": "Demonstrates p1 / p2 parameter slots and the difference between cabs and |z|."
+        },
+        "orbitEcho": {
+          "name": "Orbit Echo",
+          "description": "Uses zPrev as feedback memory and pairs well with orbitEcho coloring for orbit envelopes."
+        },
+        "fnSlotWeave": {
+          "name": "Fn Slot Weave",
+          "description": "Demonstrates fn1 / fn2 and parameter slots as a Fractint-compatible authoring template."
+        },
+        "branchGarden": {
+          "name": "Branch Garden",
+          "description": "Shows if / elseif / else branches mixed with trigonometric updates."
+        }
+      },
+      "customLibrary": {
+        "title": "Custom Formulas",
+        "new": "New",
+        "loading": "Loading...",
+        "empty": "No custom formulas yet",
+        "createFirst": "Create your first formula",
+        "renameConfirm": "Confirm",
+        "deleteConfirm": "Delete this formula?",
+        "maxReached": "Maximum formula limit reached ({count})",
+        "examplesTitle": "Start from Examples",
+        "examplesDescription": "Load a working example first, then reshape it into your own formula in the editor."
+      },
+      "family": {
+        "all": "All",
+        "classic": "Classic",
+        "burning-ship": "Burning Ship",
+        "newton": "Newton",
+        "magnet": "Magnet",
+        "phoenix": "Phoenix",
+        "transcendental": "Transcendental",
+        "exotic": "Exotic"
+      }
+    },
+    "controls": {
+      "colorScheme": "Color Scheme",
+      "iterations": "Iterations",
+      "resetView": "Reset View",
+      "share": {
+        "label": "Share",
+        "copied": "Copied!"
+      },
+      "export": {
+        "label": "Export PNG",
+        "button": "Export",
+        "rendering": "Rendering...",
+        "quality": "Anti-aliasing Quality",
+        "qualityFast": "Off",
+        "qualityStandard": "Low",
+        "qualityHigh": "High",
+        "qualityUltra": "Ultra"
+      },
+      "save": {
+        "button": "Save to Collection",
+        "success": "Saved!",
+        "dialog": {
+          "title": "Save Fractal",
+          "name": "Name",
+          "placeholder": "Enter a name...",
+          "confirm": "Save",
+          "cancel": "Cancel"
+        }
+      },
+      "position": "Position",
+      "center": "Center",
+      "zoom": "Zoom",
+      "mode": {
+        "label": "Fractal Mode",
+        "mandelbrot": "Mandelbrot",
+        "julia": "Julia"
+      },
+      "juliaC": {
+        "label": "Julia Parameter (c)",
+        "pickHint": "Tip: click a point on Mandelbrot to set c and switch to Julia.",
+        "picked": "Julia c = {re}, {im}"
+      },
+      "formula": {
+        "label": "Formula",
+        "mandelbrot": "Mandelbrot",
+        "burningShip": "Burning Ship",
+        "airship": "Airship",
+        "tricorn": "Tricorn",
+        "phoenix": "Phoenix",
+        "lambda": "Lambda",
+        "quadJulia": "Quad Julia",
+        "cubicMandelbrot": "Cubic",
+        "quarticMandelbrot": "Quartic",
+        "sierpinski": "Sierpinski",
+        "mandelbox": "Mandelbox",
+        "multicorn4": "Multicorn 4",
+        "multicorn5": "Multicorn 5",
+        "multicorn6": "Multicorn 6",
+        "multicorn7": "Multicorn 7",
+        "chebyshev2": "Chebyshev T2",
+        "chebyshev3": "Chebyshev T3",
+        "chebyshev4": "Chebyshev T4",
+        "chebyshev5": "Chebyshev T5",
+        "perpendicularMandelbrot": "Perpendicular Mandelbrot",
+        "perpendicularTricorn": "Perpendicular Tricorn",
+        "perpendicularCeltic": "Perpendicular Celtic",
+        "cubicPerpendicularMandelbrot": "Cubic Perpendicular Mandelbrot",
+        "quarticPerpendicularMandelbrot": "Quartic Perpendicular Mandelbrot",
+        "rabbitJulia": "Rabbit Julia",
+        "newton3": "Newton (3rd)",
+        "newton4": "Newton (4th)",
+        "newtonSin": "Newton Sin",
+        "newtonCos": "Newton Cos",
+        "newton5": "Newton (5th)",
+        "newton6": "Newton (6th)",
+        "newtonSinh": "Newton Sinh",
+        "newtonCosh": "Newton Cosh",
+        "magnet1": "Magnet Type 1",
+        "magnet2": "Magnet Type 2",
+        "phoenixMulti": "Multi-Phoenix",
+        "barnsley1": "Barnsley 1",
+        "barnsley2": "Barnsley 2",
+        "collatz": "Collatz",
+        "spider": "Spider",
+        "buffalo": "Buffalo",
+        "rationalMap1": "Rational Map 1",
+        "rationalMap2": "Rational Map 2",
+        "mcMullen23": "McMullen 2/3",
+        "mcMullen32": "McMullen 3/2",
+        "mcMullen34": "McMullen 3/4",
+        "reciprocalQuadratic": "Reciprocal Quadratic",
+        "reciprocalCubic": "Reciprocal Cubic",
+        "invertedLambda": "Inverted Lambda",
+        "novaBasin": "Nova Basin",
+        "zaslavskyMap": "Zaslavsky Map",
+        "henon": "Henon",
+        "ikeda": "Ikeda",
+        "zubieta": "Zubieta",
+        "expJulia": "Exp Julia",
+        "atanhMandelbrot": "Atanh Mandelbrot",
+        "atanhJulia": "Atanh Julia",
+        "asinhMandelbrot": "Asinh Mandelbrot",
+        "asinhJulia": "Asinh Julia",
+        "acoshMandelbrot": "Acosh Mandelbrot",
+        "acoshJulia": "Acosh Julia",
+        "cothMandelbrot": "Coth Mandelbrot",
+        "cothJulia": "Coth Julia",
+        "logJulia": "Log Julia",
+        "cosMandelb": "Cosine Mandelbrot",
+        "expMandelbrot": "Exp Mandelbrot",
+        "sineMandelb": "Sine Mandelbrot",
+        "sineJulia": "Sine Julia",
+        "coshMandelb": "Cosh Mandelbrot",
+        "sinhMandelb": "Sinh Mandelbrot",
+        "coshJulia": "Cosh Julia",
+        "coshSinh": "Cosh-Sinh",
+        "cosJulia": "Cosine Julia",
+        "tanJulia": "Tangent Julia",
+        "sinhJulia": "Sinh Julia",
+        "heart": "Heart",
+        "manowar": "Man-O-War",
+        "biomorph": "Biomorph",
+        "cactus": "Cactus",
+        "logistic": "Logistic Map",
+        "celticMandelbrot": "Celtic Mandelbrot",
+        "celticBurningShip": "Celtic Burning Ship",
+        "celticMandelbar": "Celtic Mandelbar",
+        "burningShipImag": "BS Imaginary",
+        "perpendicularBurningShip": "Perpendicular Burning Ship",
+        "perpendicularCelticBurningShip": "Perpendicular Celtic Burning Ship",
+        "burningShipCubic": "Burning Ship Cubic",
+        "burningShipQuartic": "Burning Ship Quartic",
+        "airshipCubic": "Airship Cubic",
+        "newtonExp": "Newton Exp",
+        "halleyCubic": "Halley Cubic",
+        "novaClassic": "Nova Classic",
+        "novaSine": "Nova Sine",
+        "novaCos": "Nova Cos",
+        "tetration": "Tetration",
+        "circleInversion": "Circle Inversion",
+        "frothyBasin": "Frothy Basin",
+        "simonBrot": "SimonBrot",
+        "rings": "Rings"
+      },
+      "transform": {
+        "label": "Transform",
+        "none": "None",
+        "kaleidoscope": "Kaleidoscope",
+        "mobius": "Mobius",
+        "inversion": "Inversion",
+        "polar": "Polar",
+        "sinusoidal": "Sine",
+        "spherical": "Spherical"
+      },
+      "coloring": {
+        "outside": "Outside Coloring",
+        "inside": "Inside Coloring",
+        "smooth": "Smooth",
+        "orbitTrap": "Orbit Trap",
+        "orbitEcho": "Orbit Echo",
+        "stripe": "Stripe",
+        "binary": "Binary",
+        "tia": "TIA",
+        "black": "Black",
+        "finalOrbit": "Final Orbit",
+        "atomDomain": "Atom Domain"
+      },
+      "orbitTrap": {
+        "label": "Orbit Trap",
+        "point": "Point",
+        "cross": "Cross",
+        "circle": "Circle",
+        "radius": "Radius",
+        "width": "Width"
+      },
+      "quality": {
+        "ssaa": "SSAA 2x2",
+        "adaptive": "Adaptive Iterations",
+        "lighting": "Lighting",
+        "lightingMode": "Mode",
+        "lightingModeNormalMap": "Normal Map",
+        "lightingModeDem": "Distance Estimate",
+        "azimuth": "Light Azimuth",
+        "elevation": "Light Elevation",
+        "intensity": "Light Intensity"
+      },
+      "rotation": {
+        "label": "Rotation"
+      },
+      "formulaParameters": "Formula Parameters",
+      "formulaNoParameters": "This formula uses its built-in defaults and does not need extra controls.",
+      "complexReal": "Re",
+      "complexImaginary": "Im",
+      "transformParameters": "Transform Parameters",
+      "transformNoParameters": "This transform uses its built-in defaults and does not need extra controls.",
+      "transformCenter": "Center Point",
+      "kaleidoFold": "Fold Count",
+      "kaleidoCenterX": "Center X",
+      "kaleidoCenterY": "Center Y",
+      "invRadius": "Inversion Radius",
+      "invCenterX": "Center X",
+      "invCenterY": "Center Y",
+      "polarAngleScale": "Angle Scale",
+      "polarRadiusScale": "Radius Scale",
+      "sphericalAmount": "Spherical Amount",
+      "ringsP": "Rings Parameter",
+      "animation": {
+        "title": "Animation",
+        "addKeyframe": "Add Keyframe",
+        "removeKeyframe": "Remove",
+        "maxReached": "Maximum 5 keyframes",
+        "preview": "Preview",
+        "stopPreview": "Stop",
+        "noKeyframes": "No keyframes yet",
+        "duration": "Loop: {seconds}s",
+        "keyframeLabel": "Keyframe {number} (zoom: {zoom})"
+      },
+      "gradient": {
+        "preset": "Preset",
+        "custom": "Custom",
+        "addStop": "+ Add Color Stop",
+        "removeStop": "Remove",
+        "presets": {
+          "inferno": "Inferno",
+          "ocean": "Ocean",
+          "spectrum": "Spectrum",
+          "sakura": "Sakura",
+          "moonlight": "Moonlight"
+        }
+      }
+    },
+    "palettes": {
+      "inferno": "Inferno",
+      "ocean": "Ocean",
+      "spectrum": "Spectrum",
+      "sakura": "Sakura",
+      "moonlight": "Moonlight"
+    },
+    "editor": {
+      "title": "Formula Editor",
+      "loading": "Loading editor...",
+      "loadFailed": "Editor failed to load",
+      "loadFailedDescription": "Unable to load the code editor. Please refresh the page.",
+      "compile": "Compile",
+      "compiling": "Compiling...",
+      "save": "Save",
+      "saved": "Saved",
+      "savedDescription": "Formula \"{name}\" saved locally",
+      "saveFailed": "Save Failed",
+      "saveFailedDescription": "Unable to save the current formula",
+      "compileSuccess": "Compile Successful",
+      "compileSuccessDescription": "Formula \"{name}\" is ready",
+      "compileFailed": "Compile Failed",
+      "compileFailedDescription": "{count} error(s) found",
+      "compileError": "Compile Error",
+      "compatibilityNotes": "Compatibility Notes",
+      "errors": "{count} error(s)",
+      "warnings": "{count} warning(s)",
+      "infos": "{count} compatibility note(s)",
+      "noErrors": "No errors",
+      "diagnostics": "Diagnostics ({errors} error(s), {warnings} warning(s), {infos} compatibility note(s))",
+      "moreIssues": "{count} more issue(s)...",
+      "restoreLastSuccessful": "Restore Last Successful Version",
+      "restoreSuccess": "Version Restored",
+      "restoreSuccessDescription": "The editor has been rolled back to the most recent successful source.",
+      "setCurrentViewAsDefault": "Use Current View as Default",
+      "defaultViewSet": "Default View Updated",
+      "defaultViewSetDescription": "Saving will persist the current Explore view with this custom formula.",
+      "modeCompat": "Mode: Compat",
+      "modeNative": "Mode: Native",
+      "line": "Line {line}, Column {col}",
+      "lines": "{count} lines",
+      "glslError": "GLSL compile error (mapped from formula source)",
+      "glslErrorUnmapped": "GLSL compile error (location cannot be mapped)"
+    }
+  },
+  "metadata": {
+    "home": {
+      "title": "FractalPark - Fractal Art Explorer | Create & Explore Digital Art",
+      "description": "Explore the infinite beauty of fractal art with FractalPark. Create stunning digital art using 94 fractal formulas, real-time WebGL rendering, and custom color palettes.",
+      "ogTitle": "FractalPark - Explore Infinite Fractal Beauty",
+      "ogDescription": "Create and explore mesmerizing fractal art with 94 formulas, real-time GPU rendering, and custom palettes."
+    },
+    "explore": {
+      "title": "Explore Fractals | Interactive Fractal Generator - FractalPark",
+      "description": "Interactive fractal explorer with Mandelbrot, Julia, Newton and 94 built-in formulas. Real-time WebGL rendering with custom colors and high-res export.",
+      "ogTitle": "Interactive Fractal Explorer - FractalPark",
+      "ogDescription": "Explore mathematical beauty in real-time. 94 fractal formulas, GPU-accelerated rendering."
+    },
+    "gallery": {
+      "title": "My Gallery | Personal Fractal Collection - FractalPark",
+      "description": "Your personal fractal art gallery. Save, organize and share your favorite fractal creations."
+    },
+    "about": {
+      "title": "About | Fractal Art & Digital Mathematics - FractalPark",
+      "description": "Learn about FractalPark - a WebGL-powered fractal art exploration tool. Built with Next.js, TypeScript and GPU shaders for real-time rendering."
+    }
+  },
+  "about": {
+    "title": "About FractalPark",
+    "intro": "FractalPark is a fractal art exploration project that brings the beauty of mathematical fractals to your browser. Using WebGL for real-time rendering, you can explore the infinite complexity of the Mandelbrot set with stunning color palettes.",
+    "aiDescription": "FractalPark is a browser-based fractal art generator using WebGL for real-time GPU rendering. It features 94 built-in escape-time fractal formulas (Mandelbrot, Julia, Newton, Phoenix, Magnet, McMullen, rational, transcendental families), a custom formula editor with Fractint .frm syntax support, 7 UV transform plugins, 9 coloring modes, and high-resolution PNG export. Built with Next.js 16, React 19, TypeScript 5, and Tailwind CSS. The rendering engine uses a plugin architecture with dynamic GLSL shader assembly and LRU caching.",
+    "techStack": {
+      "title": "Technology",
+      "description": "Built with Next.js, WebGL, and TypeScript. Real-time fractal rendering powered by GPU shaders.",
+      "frontend": "Frontend: Next.js 16 (App Router), React 19, TypeScript 5, Tailwind CSS 4, shadcn/ui",
+      "rendering": "Rendering: WebGL 1 (GLSL fragment shaders), plugin-based architecture, shader LRU cache",
+      "formula": "Formula System: Custom Fractint .frm parser, CodeMirror 6 editor, AST-to-GLSL transpiler",
+      "deployment": "Deployment: Vercel with Analytics and Speed Insights"
+    },
+    "openSource": {
+      "title": "Open Source",
+      "description": "FractalPark is built with open source technologies including Next.js, React, TypeScript, Tailwind CSS, shadcn/ui, and CodeMirror 6. The project explores the intersection of mathematics, art, and web technology."
+    },
+    "aiFriendly": {
+      "title": "AI Friendly",
+      "description": "This website provides structured documentation for AI assistants at /llms.txt and /llms-full.txt, enabling AI tools to understand and recommend FractalPark's features."
+    },
+    "vision": {
+      "title": "Vision",
+      "description": "We aim to make fractal exploration accessible and beautiful. Future plans include more fractal types, deeper zoom capabilities, and community sharing features."
+    }
+  }
+}
