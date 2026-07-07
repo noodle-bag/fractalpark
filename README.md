@@ -2,6 +2,8 @@
 
 FractalPark is a browser-based fractal art explorer for creating, tuning, saving, and exporting mathematical fractal images. It renders in real time with WebGL and includes built-in formula presets, custom formula editing, transform controls, coloring modes, gallery presets, and shareable URLs.
 
+[Try FractalPark online](https://www.fractalpark.com)
+
 ## Features
 
 - Real-time WebGL rendering for Mandelbrot, Julia, Newton, Phoenix, Magnet, McMullen, rational, and transcendental fractal families.
