@@ -1,6 +1,6 @@
 'use client';
 
-import { useMemo, useState } from 'react';
+import { useCallback, useMemo, useState } from 'react';
 import { documentToRuntimeParams } from '@/engine/document-adapter';
 import {
   DEFAULT_FRACTAL_DOCUMENT,
@@ -139,32 +139,48 @@ export function useExploreDocumentState(initialSearchParams: URLSearchParams): E
 
   const runtimeParams = useMemo(() => documentToRuntimeParams(document), [document]);
 
+  const updateBounds = useCallback((bounds: SceneState['bounds']) => {
+    setDocument((prev) => mergeSceneState(prev, { bounds }));
+  }, []);
+
+  const updateFormula = useCallback((patch: Partial<FormulaState>) => {
+    setDocument((prev) => mergeFormulaState(prev, patch));
+  }, []);
+
+  const updateColoring = useCallback((patch: Partial<ColoringState>) => {
+    setDocument((prev) => mergeColoringState(prev, patch));
+  }, []);
+
+  const updateTransform = useCallback((patch: Partial<TransformState>) => {
+    setDocument((prev) => mergeTransformState(prev, patch));
+  }, []);
+
+  const updateRender = useCallback((patch: Partial<RenderState>) => {
+    setDocument((prev) => mergeRenderState(prev, patch));
+  }, []);
+
+  const updateAnimation = useCallback((patch: Partial<AnimationState>) => {
+    setDocument((prev) => mergeAnimationState(prev, patch));
+  }, []);
+
+  const resetToDefault = useCallback(() => {
+    setDocument(normalizeFractalDocument(DEFAULT_FRACTAL_DOCUMENT));
+  }, []);
+
+  const loadFromDocument = useCallback((doc: FractalDocument) => {
+    setDocument(normalizeFractalDocument(doc));
+  }, []);
+
   return {
     document,
     runtimeParams,
-    updateBounds: (bounds) => {
-      setDocument((prev) => mergeSceneState(prev, { bounds }));
-    },
-    updateFormula: (patch) => {
-      setDocument((prev) => mergeFormulaState(prev, patch));
-    },
-    updateColoring: (patch) => {
-      setDocument((prev) => mergeColoringState(prev, patch));
-    },
-    updateTransform: (patch) => {
-      setDocument((prev) => mergeTransformState(prev, patch));
-    },
-    updateRender: (patch) => {
-      setDocument((prev) => mergeRenderState(prev, patch));
-    },
-    updateAnimation: (patch) => {
-      setDocument((prev) => mergeAnimationState(prev, patch));
-    },
-    resetToDefault: () => {
-      setDocument(normalizeFractalDocument(DEFAULT_FRACTAL_DOCUMENT));
-    },
-    loadFromDocument: (doc) => {
-      setDocument(normalizeFractalDocument(doc));
-    },
+    updateBounds,
+    updateFormula,
+    updateColoring,
+    updateTransform,
+    updateRender,
+    updateAnimation,
+    resetToDefault,
+    loadFromDocument,
   };
 }

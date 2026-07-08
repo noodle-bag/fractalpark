@@ -64,6 +64,7 @@ export default function FractalCanvas({
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const { glRef, isContextLost, error, resize } = useWebGL(canvasRef);
   const { render, rendererRef } = useFractalRenderer(glRef);
+  const paramsRef = useRef<FractalParams | null>(null);
 
   const { resetView } = useCanvasInteraction(canvasRef, {
     onBoundsChange: onBoundsChange ?? (() => {}),
@@ -103,6 +104,7 @@ export default function FractalCanvas({
       customGradient,
     };
 
+    paramsRef.current = params;
     resize();
     render(params);
   }, [
@@ -130,25 +132,9 @@ export default function FractalCanvas({
   useEffect(() => {
     const observer = new ResizeObserver(() => {
       resize();
-      if (rendererRef.current) {
-        render({
-          maxIterations,
-          paletteIndex,
-          bounds: bounds,
-          isJulia,
-          juliaC,
-          power,
-          formula,
-          outsideColoring,
-          insideColoring,
-          orbitTrap,
-          transformId,
-          pluginParams,
-          useSSAA,
-          adaptiveIterations,
-          lighting,
-          customGradient,
-        });
+      const params = paramsRef.current;
+      if (rendererRef.current && params) {
+        render(params);
       }
     });
 
@@ -157,27 +143,7 @@ export default function FractalCanvas({
     }
 
     return () => observer.disconnect();
-  }, [
-    resize,
-    render,
-    maxIterations,
-    paletteIndex,
-    bounds,
-    isJulia,
-    juliaC,
-    power,
-    formula,
-    outsideColoring,
-    insideColoring,
-    orbitTrap,
-    transformId,
-    pluginParams,
-    useSSAA,
-    adaptiveIterations,
-    lighting,
-    customGradient,
-    rendererRef,
-  ]);
+  }, [resize, render, rendererRef]);
 
   if (error) {
     return (
