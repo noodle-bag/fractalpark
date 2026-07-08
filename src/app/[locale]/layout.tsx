@@ -1,10 +1,17 @@
 import type { Metadata } from 'next';
 import Script from 'next/script';
 import { NextIntlClientProvider } from 'next-intl';
-import { getMessages, getTranslations } from 'next-intl/server';
+import { getMessages, getTranslations, setRequestLocale } from 'next-intl/server';
 import { LayoutProvider } from '@/components/layout/LayoutContext';
 import LayoutShell from '@/components/layout/LayoutShell';
+import { routing } from '@/i18n/routing';
 import { SITE, buildLocaleAlternates } from '@/lib/site';
+
+export const dynamicParams = false;
+
+export function generateStaticParams() {
+  return routing.locales.map((locale) => ({ locale }));
+}
 
 export async function generateMetadata({
   params,
@@ -59,9 +66,13 @@ export async function generateMetadata({
 
 export default async function LocaleLayout({
   children,
+  params,
 }: {
   children: React.ReactNode;
+  params: Promise<{ locale: string }>;
 }) {
+  const { locale } = await params;
+  setRequestLocale(locale);
   const messages = await getMessages();
 
   return (

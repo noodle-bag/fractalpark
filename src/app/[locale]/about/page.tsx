@@ -1,6 +1,5 @@
 import type { Metadata } from 'next';
-import { getTranslations } from 'next-intl/server';
-import { useTranslations } from 'next-intl';
+import { getTranslations, setRequestLocale } from 'next-intl/server';
 import { SITE, buildLocaleAlternates } from '@/lib/site';
 
 export async function generateMetadata({
@@ -41,8 +40,14 @@ export async function generateMetadata({
   };
 }
 
-export default function AboutPage() {
-  const t = useTranslations('about');
+export default async function AboutPage({
+  params,
+}: {
+  params: Promise<{ locale: string }>;
+}) {
+  const { locale } = await params;
+  setRequestLocale(locale);
+  const t = await getTranslations({ locale, namespace: 'about' });
 
   // JSON-LD structured data for SoftwareApplication
   const softwareApplicationJsonLd = {
