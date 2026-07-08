@@ -9,6 +9,7 @@
     "test": "vitest",
     "test:run": "vitest run",
     "thumbnails:presets": "node scripts/generate-thumbnails.mjs",
+    "indexnow:submit": "node --import tsx scripts/submit-indexnow.ts",
     "myfrac:cli": "node --import tsx scripts/myfrac-cli.ts"
   },
   "dependencies": {

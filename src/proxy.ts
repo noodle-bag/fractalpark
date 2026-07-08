@@ -5,6 +5,20 @@ import { routing } from './i18n/routing';
 const intlMiddleware = createMiddleware(routing);
 
 export default function proxy(request: NextRequest) {
+  const indexNowKey = process.env.INDEXNOW_KEY;
+  if (indexNowKey && request.nextUrl.pathname === `/${indexNowKey}.txt`) {
+    return new NextResponse(indexNowKey, {
+      headers: {
+        'Content-Type': 'text/plain; charset=utf-8',
+        'Cache-Control': 'public, max-age=3600',
+      },
+    });
+  }
+
+  if (request.nextUrl.pathname.endsWith('.txt')) {
+    return NextResponse.next();
+  }
+
   if (request.nextUrl.pathname === '/') {
     return NextResponse.rewrite(new URL(`/${routing.defaultLocale}`, request.url));
   }
@@ -20,5 +34,6 @@ export const config = {
   matcher: [
     '/',
     '/(en|zh)/:path*',
+    '/:path*.txt',
   ],
 };
