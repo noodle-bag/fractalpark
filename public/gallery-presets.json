@@ -160,6 +160,14 @@
       "url": "?cx=0.1407752390&cy=1.6099653150&z=204.64&rot=-1.5700&iter=200&julia=1&jre=0.375916&jim=-0.661560&fm=airship&tr=inversion&pp=u_invCenterX%3A0.895703125%2Cu_invCenterY%3A-0.91416015625&grad=0.15%3A040411%2C0.33%3A32b1cd%2C0.48%3A98fb9e%2C0.85%3Afafafa&kf=-1.9858675683%2C1.5404284509%2C0.18%2C-1.5700%7C0.1407752390%2C1.6099653150%2C204.64%2C-1.5700",
       "featured": true,
       "thumbnail": "/images/gallery/presets/preset-airship-inversion-seafoam-wings.jpg"
+    },
+    {
+      "id": "preset-newton-cosh-ember-meridian",
+      "name": "Ember Meridian",
+      "nameZh": "余烬经线",
+      "url": "?cx=0.0000094944&cy=-2.7954909613&z=1784.86&iter=200&julia=0&jre=-0.700000&jim=0.270000&fm=newtonCosh&pal=0&kf=-0.0035727551%2C-2.7947518868%2C4.25%2C0.0000%7C0.0000094944%2C-2.7954909613%2C1784.86%2C0.0000",
+      "featured": true,
+      "thumbnail": "/images/gallery/presets/preset-newton-cosh-ember-meridian.jpg"
     }
   ]
 }
