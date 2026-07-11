@@ -124,6 +124,7 @@ export function runtimeParamsToDocument(
       params: cleanRecord(split.formula ?? {}) ? { formula: split.formula } : undefined,
     },
     coloring: {
+      pipelineVersion: DEFAULT_FRACTAL_DOCUMENT.coloring.pipelineVersion,
       paletteIndex: params.paletteIndex,
       customGradient: params.customGradient,
       outsideColoringId: params.outsideColoring,
@@ -208,6 +209,7 @@ export function urlStateToDocument(
       params: state.pluginParams ? { formula: { ...state.pluginParams } } : undefined,
     },
     coloring: {
+      pipelineVersion: DEFAULT_FRACTAL_DOCUMENT.coloring.pipelineVersion,
       paletteIndex: state.palette ?? DEFAULT_FRACTAL_DOCUMENT.coloring.paletteIndex,
       customGradient: state.gradient ?? DEFAULT_FRACTAL_DOCUMENT.coloring.customGradient,
       outsideColoringId: state.outsideColoring ?? DEFAULT_FRACTAL_DOCUMENT.coloring.outsideColoringId,

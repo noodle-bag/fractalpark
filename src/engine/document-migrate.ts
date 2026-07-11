@@ -160,6 +160,10 @@ function migrateDocumentV0ToV1(doc: DeepPartial<FractalDocument>): FractalDocume
   return normalizeFractalDocument(doc);
 }
 
+function migrateDocumentV1ToV2(doc: DeepPartial<FractalDocument>): FractalDocument {
+  return normalizeFractalDocument(doc);
+}
+
 export function normalizeFractalDocument(doc: DeepPartial<FractalDocument>): FractalDocument {
   const source = isObject(doc) ? doc : {};
 
@@ -194,6 +198,7 @@ export function normalizeFractalDocument(doc: DeepPartial<FractalDocument>): Fra
         : undefined,
     },
     coloring: {
+      pipelineVersion: source.coloring?.pipelineVersion === 2 ? 2 : 1,
       paletteIndex: normalizeNumber(source.coloring?.paletteIndex, DEFAULT_FRACTAL_DOCUMENT.coloring.paletteIndex),
       customGradient:
         Array.isArray(source.coloring?.customGradient) ? [...source.coloring.customGradient] : DEFAULT_FRACTAL_DOCUMENT.coloring.customGradient,
@@ -276,6 +281,17 @@ export function migrateFractalDocument(input: unknown, fromVersion = 0): Fractal
 
     if (inputVersion === 0) {
       return migrateDocumentV0ToV1(input);
+    }
+
+    if (inputVersion === 1) {
+      return migrateDocumentV1ToV2(input);
+    }
+
+    // Future documents can still carry a complete legacy-compatible shape.
+    // Read known fields without claiming full compatibility; callers must not
+    // overwrite the source document unless the user explicitly saves it.
+    if (inputVersion > FRACTAL_DOCUMENT_SCHEMA_VERSION) {
+      return normalizeFractalDocument(input);
     }
 
     throw new Error(

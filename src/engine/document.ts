@@ -7,7 +7,9 @@ import type {
   ViewBounds,
 } from './types';
 
-export const FRACTAL_DOCUMENT_SCHEMA_VERSION = 1;
+export const FRACTAL_DOCUMENT_SCHEMA_VERSION = 2;
+
+export type ColoringPipelineVersion = 1 | 2;
 
 export interface FormulaParamsState {
   formula?: PluginParamRecord;
@@ -36,6 +38,8 @@ export interface FormulaState {
 }
 
 export interface ColoringState {
+  /** v1 preserves the legacy palette path; v2 enables the modern color pipeline. */
+  pipelineVersion: ColoringPipelineVersion;
   paletteIndex: number;
   customGradient: GradientStop[] | null;
   outsideColoringId: string;
@@ -122,6 +126,7 @@ export const DEFAULT_FRACTAL_DOCUMENT: FractalDocument = {
     power: 2,
   },
   coloring: {
+    pipelineVersion: 1,
     paletteIndex: 0,
     customGradient: null,
     outsideColoringId: 'smooth',

@@ -3,6 +3,7 @@ import { decodeParams, encodeParams } from '@/lib/url-params';
 import { buildFractalParamsFromPresetQuery } from '@/lib/gallery-presets';
 import { documentToRuntimeParams } from '@/engine/document-adapter';
 import { migrateFractalDocument, normalizeFractalDocument, normalizeRuntimeFractalParams } from '@/engine/document-migrate';
+import { FRACTAL_DOCUMENT_SCHEMA_VERSION } from '@/engine/document';
 import type { SavedFractal } from '@/engine/types';
 
 describe('document migrate / normalize', () => {
@@ -21,7 +22,8 @@ describe('document migrate / normalize', () => {
       },
     });
 
-    expect(doc.schemaVersion).toBe(1);
+    expect(doc.schemaVersion).toBe(FRACTAL_DOCUMENT_SCHEMA_VERSION);
+    expect(doc.coloring.pipelineVersion).toBe(1);
     expect(doc.scene.bounds.centerX).toBe(-0.1);
     expect(doc.scene.bounds.centerY).toBe(0);
     expect(doc.scene.bounds.zoom).toBe(0.4);
@@ -39,7 +41,7 @@ describe('document migrate / normalize', () => {
       },
     });
 
-    expect(doc.schemaVersion).toBe(1);
+    expect(doc.schemaVersion).toBe(FRACTAL_DOCUMENT_SCHEMA_VERSION);
     expect(doc.scene.bounds.centerX).toBe(-0.2);
   });
 
@@ -126,7 +128,7 @@ describe('document migrate / normalize', () => {
     const doc = migrateFractalDocument(decoded, 0);
     const runtime = documentToRuntimeParams(doc);
 
-    expect(doc.schemaVersion).toBe(1);
+    expect(doc.schemaVersion).toBe(FRACTAL_DOCUMENT_SCHEMA_VERSION);
     expect(doc.metadata?.source).toBe('shared');
     expect(doc.animation?.keyframes).toHaveLength(2);
     expect(runtime.formula).toBe('burningShip');
@@ -143,7 +145,7 @@ describe('document migrate / normalize', () => {
     const doc = migrateFractalDocument(parsed.params, 0);
     const runtime = documentToRuntimeParams(doc);
 
-    expect(doc.schemaVersion).toBe(1);
+    expect(doc.schemaVersion).toBe(FRACTAL_DOCUMENT_SCHEMA_VERSION);
     expect(runtime.formula).toBe('buffalo');
     expect(runtime.transformId).toBe('kaleidoscope');
     expect(runtime.maxIterations).toBe(300);
@@ -167,7 +169,7 @@ describe('document migrate / normalize', () => {
       render: {},
     });
 
-    expect(doc.schemaVersion).toBe(1);
+    expect(doc.schemaVersion).toBe(FRACTAL_DOCUMENT_SCHEMA_VERSION);
     expect(doc.scene.bounds.centerX).toBe(-0.123);
     expect(doc.scene.bounds.centerY).toBe(0.456);
     expect(doc.scene.bounds.zoom).toBe(8);
@@ -210,7 +212,7 @@ describe('document migrate / normalize', () => {
     const doc = migrateFractalDocument(legacy, 0);
     const runtime = documentToRuntimeParams(doc);
 
-    expect(doc.schemaVersion).toBe(1);
+    expect(doc.schemaVersion).toBe(FRACTAL_DOCUMENT_SCHEMA_VERSION);
     expect(doc.metadata?.name).toBe('Legacy Saved');
     expect(doc.metadata?.createdAt).toBe(1234567890);
     expect(doc.metadata?.source).toBe('saved');
@@ -219,23 +221,47 @@ describe('document migrate / normalize', () => {
     expect(runtime.maxIterations).toBe(280);
   });
 
-  it('throws for unsupported future FractalDocument schema versions', () => {
-    expect(() =>
-      migrateFractalDocument({
-        schemaVersion: 2,
-        scene: { bounds: { centerX: 0, centerY: 0, zoom: 1, rotation: 0 } },
-        formula: { formulaId: 'mandelbrot', isJulia: false, juliaC: [-0.7, 0.27], power: 2 },
-        coloring: {
-          paletteIndex: 0,
-          customGradient: null,
-          outsideColoringId: 'smooth',
-          insideColoringId: 'black',
-          orbitTrap: { shape: 'point', point: [0, 0], radius: 0.35, width: 0.02 },
-          lighting: { enabled: false, mode: 'normalMap', azimuth: 45, elevation: 35, intensity: 0.65 },
-        },
-        transform: { transformId: 'none' },
-        render: { maxIterations: 200, useSSAA: false, adaptiveIterations: false },
-      })
-    ).toThrow(/Unsupported FractalDocument schemaVersion: 2/);
+  it('best-effort reads known fields from future FractalDocument schema versions', () => {
+    const doc = migrateFractalDocument({
+      schemaVersion: 3,
+      scene: { bounds: { centerX: -0.25, centerY: 0, zoom: 1, rotation: 0 } },
+      formula: { formulaId: 'mandelbrot', isJulia: false, juliaC: [-0.7, 0.27], power: 2 },
+      coloring: {
+        paletteIndex: 0,
+        customGradient: null,
+        outsideColoringId: 'smooth',
+        insideColoringId: 'black',
+        orbitTrap: { shape: 'point', point: [0, 0], radius: 0.35, width: 0.02 },
+        lighting: { enabled: false, mode: 'normalMap', azimuth: 45, elevation: 35, intensity: 0.65 },
+      },
+      transform: { transformId: 'none' },
+      render: { maxIterations: 200, useSSAA: false, adaptiveIterations: false },
+    });
+
+    expect(doc.schemaVersion).toBe(FRACTAL_DOCUMENT_SCHEMA_VERSION);
+    expect(doc.scene.bounds.centerX).toBe(-0.25);
+    expect(doc.formula.formulaId).toBe('mandelbrot');
+  });
+
+  it('migrates v1 documents to pipeline v1 under the current schema', () => {
+    const doc = migrateFractalDocument({
+      schemaVersion: 1,
+      scene: { bounds: { centerX: -0.1, centerY: 0.2, zoom: 3, rotation: 0 } },
+      formula: { formulaId: 'burningShip', isJulia: false, juliaC: [-0.7, 0.27], power: 2 },
+      coloring: {
+        paletteIndex: 3,
+        customGradient: null,
+        outsideColoringId: 'smooth',
+        insideColoringId: 'black',
+        orbitTrap: { shape: 'point', point: [0, 0], radius: 0.35, width: 0.02 },
+        lighting: { enabled: false, mode: 'normalMap', azimuth: 45, elevation: 35, intensity: 0.65 },
+      },
+      transform: { transformId: 'none' },
+      render: { maxIterations: 200, useSSAA: false, adaptiveIterations: false },
+    });
+
+    expect(doc.schemaVersion).toBe(FRACTAL_DOCUMENT_SCHEMA_VERSION);
+    expect(doc.coloring.pipelineVersion).toBe(1);
+    expect(doc.formula.formulaId).toBe('burningShip');
   });
 });

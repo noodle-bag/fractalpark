@@ -1,12 +1,18 @@
 'use client';
 
 import { useRef, useEffect, useCallback, useState } from 'react';
-import { createWebGLContext, setupContextLossHandling } from '@/engine/webgl/context';
+import {
+  createWebGLContext,
+  getWebGLCapabilities,
+  setupContextLossHandling,
+  type WebGLCapabilities,
+} from '@/engine/webgl/context';
 
 export function useWebGL(canvasRef: React.RefObject<HTMLCanvasElement | null>) {
   const glRef = useRef<WebGLRenderingContext | null>(null);
   const [isContextLost, setIsContextLost] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  const [capabilities, setCapabilities] = useState<WebGLCapabilities | null>(null);
   const updateError = useCallback((nextError: string | null) => {
     queueMicrotask(() => {
       setError(nextError);
@@ -24,6 +30,7 @@ export function useWebGL(canvasRef: React.RefObject<HTMLCanvasElement | null>) {
     }
 
     glRef.current = gl;
+    setCapabilities(getWebGLCapabilities(gl));
     updateError(null);
 
     const cleanup = setupContextLossHandling(
@@ -31,11 +38,13 @@ export function useWebGL(canvasRef: React.RefObject<HTMLCanvasElement | null>) {
       () => {
         setIsContextLost(true);
         glRef.current = null;
+        setCapabilities(null);
       },
       () => {
         const restored = createWebGLContext(canvas);
         if (restored) {
           glRef.current = restored;
+          setCapabilities(getWebGLCapabilities(restored));
           setIsContextLost(false);
         }
       }
@@ -44,6 +53,7 @@ export function useWebGL(canvasRef: React.RefObject<HTMLCanvasElement | null>) {
     return () => {
       cleanup();
       glRef.current = null;
+      setCapabilities(null);
     };
   }, [canvasRef, updateError]);
 
@@ -60,5 +70,5 @@ export function useWebGL(canvasRef: React.RefObject<HTMLCanvasElement | null>) {
     }
   }, [canvasRef]);
 
-  return { glRef, isContextLost, error, resize };
+  return { glRef, isContextLost, error, capabilities, resize };
 }

@@ -1,3 +1,33 @@
+export interface WebGLCapabilities {
+  fragmentHighp: boolean;
+  maxFragmentUniformVectors: number;
+  extensions: {
+    standardDerivatives: boolean;
+    parallelShaderCompile: boolean;
+    disjointTimerQuery: boolean;
+    srgb: boolean;
+    colorBufferFloat: boolean;
+    colorBufferHalfFloat: boolean;
+  };
+}
+
+export function getWebGLCapabilities(gl: WebGLRenderingContext): WebGLCapabilities {
+  const precision = gl.getShaderPrecisionFormat(gl.FRAGMENT_SHADER, gl.HIGH_FLOAT);
+
+  return {
+    fragmentHighp: Boolean(precision && precision.precision > 0),
+    maxFragmentUniformVectors: gl.getParameter(gl.MAX_FRAGMENT_UNIFORM_VECTORS) as number,
+    extensions: {
+      standardDerivatives: gl.getExtension('OES_standard_derivatives') !== null,
+      parallelShaderCompile: gl.getExtension('KHR_parallel_shader_compile') !== null,
+      disjointTimerQuery: gl.getExtension('EXT_disjoint_timer_query') !== null,
+      srgb: gl.getExtension('EXT_sRGB') !== null,
+      colorBufferFloat: gl.getExtension('WEBGL_color_buffer_float') !== null,
+      colorBufferHalfFloat: gl.getExtension('EXT_color_buffer_half_float') !== null,
+    },
+  };
+}
+
 export function createWebGLContext(
   canvas: HTMLCanvasElement
 ): WebGLRenderingContext | null {
