@@ -34,6 +34,9 @@ export function assembleShader(combo: PluginCombination): string {
   if (formula.initGlsl) {
     defines.push('#define HAS_INIT_FORMULA');
   }
+  if (formula.distanceEstimate === 'quadratic-c') {
+    defines.push('#define HAS_ANALYTIC_DE');
+  }
 
   const allNeeded = new Set([...(outside.needsOrbitStats ?? []), ...(inside.needsOrbitStats ?? [])]);
   if (allNeeded.has('trapMin')) defines.push('#define NEED_ORBIT_TRAP');

@@ -100,6 +100,12 @@ export function ColoringPanel({
           }}>
             {t('coloring.layeredOrbit')}
           </Button>
+          <Button size="sm" variant={pipelineVersion === 2 && modernStyle?.styleId === 'orbitNebula' ? 'default' : 'outline'} onClick={() => {
+            onPipelineVersionChange(2);
+            onModernStyleChange({ ...(modernStyle ?? { styleId: 'modernSmooth', post: { toneMapping: 'soft', exposure: 0, contrast: 1, saturation: 1, temperature: 0, tint: 0, vignette: 0, dither: true } }), styleId: 'orbitNebula' });
+          }}>
+            {t('coloring.orbitNebula')}
+          </Button>
         </div>
         <p className="text-xs text-muted-foreground">
           {pipelineVersion === 1 ? t('coloring.legacyDescription') : t('coloring.modernDescription')}

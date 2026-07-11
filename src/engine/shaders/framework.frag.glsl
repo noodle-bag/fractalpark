@@ -18,7 +18,7 @@ uniform float u_rotation;
 uniform int u_maxIterations;
 uniform int u_paletteIndex;
 uniform int u_colorPipelineVersion;
-uniform int u_modernStyle; // 0=modernSmooth, 1=layeredOrbit
+uniform int u_modernStyle; // 0=modernSmooth, 1=layeredOrbit, 2=orbitNebula
 uniform bool u_isJulia;
 uniform vec2 u_juliaC;
 uniform float u_power;
@@ -123,6 +123,10 @@ vec3 applyLighting(vec3 baseColor, vec2 point, vec2 demDz, vec2 z) {
   return baseColor;
 #else
   if (u_lightingMode == 1) {
+#ifndef HAS_ANALYTIC_DE
+    return baseColor;
+#else
+    if (u_power != 2.0) return baseColor;
     // Distance Estimation: d = |z|*log|z| / |dz/dc|, normalized to pixel size
     float absZ = length(z);
     float absDz = length(demDz);
@@ -131,6 +135,7 @@ vec3 applyLighting(vec3 baseColor, vec2 point, vec2 demDz, vec2 z) {
     float normDist = dist / pixelSize;
     float lightness = clamp(pow(normDist, 0.4) * u_lightIntensity * 1.6, 0.0, 1.0);
     return baseColor * lightness;
+#endif
   } else {
     // Normal-map lighting via escapeHeight gradient
     float h = escapeHeight(point);
@@ -174,6 +179,13 @@ vec3 shadeFractal(FractalSample sample) {
     vec3 atmosphere = vec3(0.015, 0.04, 0.12) + radialSpan * vec3(0.08, 0.24, 0.42);
     vec3 detail = vec3(0.95, 0.24, 0.08) * pointTrap;
     return atmosphere + detail * (0.35 + 0.65 * fract(sample.smoothIter * 0.08));
+  }
+  if (u_modernStyle == 2) {
+    float span = clamp(sqrt(max(sample.maxRadius2, 0.0)) - sqrt(max(sample.minRadius2, 0.0)), 0.0, 5.0) * 0.2;
+    float phase = 0.5 + 0.5 * sin(sample.angleAccum * 0.18 + sample.finalAngle * 2.0);
+    float core = exp(-2.2 * abs(fract(sample.smoothIter * 0.075) - 0.5));
+    vec3 nebula = mix(vec3(0.015, 0.01, 0.08), vec3(0.04, 0.36, 0.72), phase) * (0.25 + span);
+    return nebula + core * vec3(0.8, 0.18, 0.52) * (0.2 + span);
   }
   float paletteT = fract(sample.smoothIter * 4.0);
   return modernGradientColor(paletteT);
@@ -292,8 +304,10 @@ vec3 colorAtComplex(vec2 point) {
 
     vec2 nextZ = iterateStep(z, c, zPrev, point);
     // Track dz/dc = 2*z*(dz/dc) + 1 for DEM lighting (generalised, correct for z^2+c family)
-    if (u_lightingEnabled && u_lightingMode == 1) {
+    if (u_lightingEnabled && u_lightingMode == 1 && u_power == 2.0) {
+#ifdef HAS_ANALYTIC_DE
       demDz = 2.0 * vec2(z.x * demDz.x - z.y * demDz.y, z.x * demDz.y + z.y * demDz.x) + vec2(1.0, 0.0);
+#endif
     }
     zPrev = z;
     z = nextZ;

@@ -109,7 +109,10 @@ function normalizeModernStyle(value: unknown): ShaderStyleState {
   const defaults = DEFAULT_MODERN_SMOOTH_STYLE.post;
 
   return {
-    styleId: source.styleId === 'layeredOrbit' ? 'layeredOrbit' : 'modernSmooth',
+    styleId:
+      source.styleId === 'layeredOrbit' || source.styleId === 'orbitNebula'
+        ? source.styleId
+        : 'modernSmooth',
     post: {
       toneMapping:
         post.toneMapping === 'none' || post.toneMapping === 'soft' || post.toneMapping === 'filmic'

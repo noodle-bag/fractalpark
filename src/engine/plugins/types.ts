@@ -30,6 +30,7 @@ export interface FormulaPlugin extends FractalPlugin {
   family?: string;          // grouping: 'classic' | 'newton' | 'magnet' | 'phoenix' | 'exotic'
   escapeType?: 'diverge' | 'converge';  // NEW: for Newton-type formulas
   initGlsl?: string;        // GLSL for initFormula(z, c, point) — runs once before iteration loop
+  distanceEstimate?: 'quadratic-c'; // only declared when the framework derivative is valid
 }
 
 export interface OutsideColoringPlugin extends FractalPlugin {

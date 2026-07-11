@@ -9,6 +9,7 @@ export const mandelbrotPlugin: FormulaPlugin = {
   supportsJulia: true,
   bailout: 65536.0,
   family: 'classic',
+  distanceEstimate: 'quadratic-c',
   uniforms: [],
   glsl: `
 vec2 iterateStep(vec2 z, vec2 c, vec2 zPrev, vec2 point) {

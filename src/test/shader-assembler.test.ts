@@ -122,6 +122,13 @@ describe('Shader Assembler', () => {
       expect(shader).toContain('#define CONVERGE_EPSILON');
     });
 
+    it('only enables the framework analytic distance estimate for declared formulas', () => {
+      const mandelbrot = assembleShader({ formulaId: 'mandelbrot', outsideColoringId: 'smooth', insideColoringId: 'black', transformId: 'none' });
+      const burningShip = assembleShader({ formulaId: 'burningShip', outsideColoringId: 'smooth', insideColoringId: 'black', transformId: 'none' });
+      expect(mandelbrot).toContain('#define HAS_ANALYTIC_DE');
+      expect(burningShip).not.toMatch(/^#define HAS_ANALYTIC_DE$/m);
+    });
+
     it('should not define ESCAPE_CONVERGE for diverge formulas', () => {
       const combo: PluginCombination = {
         formulaId: 'mandelbrot',

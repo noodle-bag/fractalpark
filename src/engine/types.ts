@@ -49,7 +49,7 @@ export interface PostProcessState {
 }
 
 export interface ShaderStyleState {
-  styleId: 'modernSmooth' | 'layeredOrbit';
+  styleId: 'modernSmooth' | 'layeredOrbit' | 'orbitNebula';
   post: PostProcessState;
 }
 

@@ -291,6 +291,7 @@
         "legacySmooth": "Legacy Smooth",
         "modernSmooth": "Modern Smooth",
         "layeredOrbit": "Layered Orbit",
+        "orbitNebula": "Orbit Nebula",
         "legacyDescription": "Preserves the original palette and lighting output.",
         "modernDescription": "Uses linear color, display finishing, and deterministic dither.",
         "finish": "Finish",
