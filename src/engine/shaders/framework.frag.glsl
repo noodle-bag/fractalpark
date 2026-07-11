@@ -17,6 +17,8 @@ uniform float u_zoom;
 uniform float u_rotation;
 uniform int u_maxIterations;
 uniform int u_paletteIndex;
+uniform int u_colorPipelineVersion;
+uniform int u_modernStyle; // 0=modernSmooth, 1=layeredOrbit
 uniform bool u_isJulia;
 uniform vec2 u_juliaC;
 uniform float u_power;
@@ -31,6 +33,14 @@ uniform bool u_useCustomGradient;
 uniform vec3 u_gradientColors[5];
 uniform float u_gradientPositions[5];
 uniform int u_gradientCount;
+uniform int u_postToneMapping; // 0=none, 1=soft, 2=filmic
+uniform float u_postExposure;
+uniform float u_postContrast;
+uniform float u_postSaturation;
+uniform float u_postTemperature;
+uniform float u_postTint;
+uniform float u_postVignette;
+uniform bool u_postDither;
 
 uniform int u_orbitTrapShape;
 uniform vec2 u_orbitTrapPoint;
@@ -53,6 +63,22 @@ struct OrbitStats {
   float radius2;
   float minRadius;
   float maxRadius;
+  float angleAccum;
+};
+
+struct FractalSample {
+  vec2 point;
+  vec2 c;
+  vec2 z;
+  vec2 zPrev;
+  int iter;
+  float maxIter;
+  float smoothIter;
+  float escaped;
+  float radius2;
+  float minRadius2;
+  float maxRadius2;
+  float finalAngle;
   float angleAccum;
 };
 
@@ -121,6 +147,69 @@ vec3 applyLighting(vec3 baseColor, vec2 point, vec2 demDz, vec2 z) {
     return baseColor * (0.3 + diff * u_lightIntensity);
   }
 #endif
+}
+
+vec3 srgbToLinear(vec3 color) {
+  vec3 low = color / 12.92;
+  vec3 high = pow(max((color + 0.055) / 1.055, 0.0), vec3(2.4));
+  return mix(high, low, step(color, vec3(0.04045)));
+}
+
+vec3 linearToSrgb(vec3 color) {
+  color = max(color, 0.0);
+  vec3 low = color * 12.92;
+  vec3 high = 1.055 * pow(color, vec3(1.0 / 2.4)) - 0.055;
+  return mix(high, low, step(color, vec3(0.0031308)));
+}
+
+vec3 modernGradientColor(float t) {
+  vec3 displayColor = u_useCustomGradient ? gradientColor(t) : getColor(t, u_paletteIndex);
+  return srgbToLinear(displayColor);
+}
+
+vec3 shadeFractal(FractalSample sample) {
+  if (u_modernStyle == 1) {
+    float pointTrap = clamp(exp(-length(sample.z - u_orbitTrapPoint) * 3.0), 0.0, 1.0);
+    float radialSpan = clamp(sqrt(max(sample.maxRadius2, 0.0)) - sqrt(max(sample.minRadius2, 0.0)), 0.0, 4.0) * 0.25;
+    vec3 atmosphere = vec3(0.015, 0.04, 0.12) + radialSpan * vec3(0.08, 0.24, 0.42);
+    vec3 detail = vec3(0.95, 0.24, 0.08) * pointTrap;
+    return atmosphere + detail * (0.35 + 0.65 * fract(sample.smoothIter * 0.08));
+  }
+  float paletteT = fract(sample.smoothIter * 4.0);
+  return modernGradientColor(paletteT);
+}
+
+vec3 applyModernPost(vec3 color) {
+  color *= exp2(u_postExposure);
+
+  if (u_postToneMapping == 1) {
+    color = color / (1.0 + color);
+  } else if (u_postToneMapping == 2) {
+    color = (color * (2.51 * color + 0.03)) / (color * (2.43 * color + 0.59) + 0.14);
+  }
+
+  float luma = dot(color, vec3(0.2126, 0.7152, 0.0722));
+  color = mix(vec3(luma), color, u_postSaturation);
+  color = (color - 0.5) * u_postContrast + 0.5;
+  color += vec3(u_postTemperature * 0.025, 0.0, -u_postTemperature * 0.025);
+  color += vec3(u_postTint * 0.015, -u_postTint * 0.01, u_postTint * 0.015);
+  return color;
+}
+
+vec3 finalizeOutput(vec3 color) {
+  if (u_colorPipelineVersion != 2) return color;
+
+  vec2 p = (gl_FragCoord.xy + u_tileOffset) / u_resolution;
+  float edge = 16.0 * p.x * (1.0 - p.x) * p.y * (1.0 - p.y);
+  color = applyModernPost(color);
+  color *= mix(1.0, 0.5 + 0.5 * pow(clamp(edge, 0.0, 1.0), 0.15), clamp(u_postVignette, 0.0, 1.0));
+  color = linearToSrgb(color);
+
+  if (u_postDither) {
+    float noise = fract(sin(dot(gl_FragCoord.xy + u_tileOffset, vec2(12.9898, 78.233))) * 43758.5453);
+    color += (noise - 0.5) / 255.0;
+  }
+  return clamp(color, 0.0, 1.0);
 }
 
 vec3 colorAtComplex(vec2 point) {
@@ -212,7 +301,26 @@ vec3 colorAtComplex(vec2 point) {
   }
 
   if (!escaped && iter >= u_maxIterations) {
+    if (u_colorPipelineVersion == 2) return vec3(0.0);
     return insideColor(stats);
+  }
+
+  if (u_colorPipelineVersion == 2) {
+    FractalSample sample;
+    sample.point = point;
+    sample.c = c;
+    sample.z = z;
+    sample.zPrev = zPrev;
+    sample.iter = iter;
+    sample.maxIter = float(u_maxIterations);
+    sample.smoothIter = smoothIter;
+    sample.escaped = 1.0;
+    sample.radius2 = stats.radius2;
+    sample.minRadius2 = stats.minRadius;
+    sample.maxRadius2 = stats.maxRadius;
+    sample.finalAngle = stats.finalAngle;
+    sample.angleAccum = stats.angleAccum;
+    return applyLighting(shadeFractal(sample), point, demDz, z);
   }
 
   float paletteT = outsideColor(smoothIter, iter, stats);
@@ -257,7 +365,7 @@ void main() {
         acc += colorAtUV(uv + offset);
       }
     }
-    gl_FragColor = vec4(acc / 16.0, 1.0);
+    gl_FragColor = vec4(finalizeOutput(acc / 16.0), 1.0);
   } else if (u_ssaaLevel == 9) {
     // 3×3 grid (9-tap SSAA)
     vec3 acc = vec3(0.0);
@@ -267,15 +375,15 @@ void main() {
         acc += colorAtUV(uv + offset);
       }
     }
-    gl_FragColor = vec4(acc / 9.0, 1.0);
+    gl_FragColor = vec4(finalizeOutput(acc / 9.0), 1.0);
   } else if (u_ssaaLevel == 4) {
     // 2×2 grid (4-tap SSAA) — original behavior
     vec3 c1 = colorAtUV(uv + vec2(-0.25 * px, -0.25 * px));
     vec3 c2 = colorAtUV(uv + vec2( 0.25 * px, -0.25 * px));
     vec3 c3 = colorAtUV(uv + vec2(-0.25 * px,  0.25 * px));
     vec3 c4 = colorAtUV(uv + vec2( 0.25 * px,  0.25 * px));
-    gl_FragColor = vec4((c1 + c2 + c3 + c4) * 0.25, 1.0);
+    gl_FragColor = vec4(finalizeOutput((c1 + c2 + c3 + c4) * 0.25), 1.0);
   } else {
-    gl_FragColor = vec4(colorAtUV(uv), 1.0);
+    gl_FragColor = vec4(finalizeOutput(colorAtUV(uv)), 1.0);
   }
 }

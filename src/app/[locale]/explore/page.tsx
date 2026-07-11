@@ -6,6 +6,7 @@ import { useLocale, useTranslations } from 'next-intl';
 import FractalCanvas from '@/components/fractal/FractalCanvas';
 import { FormulaPanel } from '@/components/fractal/FormulaPanel';
 import { ColoringPanel } from '@/components/fractal/ColoringPanel';
+import { DEFAULT_MODERN_SMOOTH_STYLE } from '@/engine/document';
 import { TransformPanel } from '@/components/fractal/TransformPanel';
 import { RenderPanel } from '@/components/fractal/RenderPanel';
 import { AnimationPanel } from '@/components/fractal/AnimationPanel';
@@ -291,6 +292,8 @@ function ExploreContent() {
             adaptiveIterations={adaptiveIterations}
             lighting={lighting}
             customGradient={customGradient}
+            coloringPipelineVersion={runtimeParams.coloringPipelineVersion}
+            modernColoring={runtimeParams.modernColoring}
             onBoundsChange={updateBounds}
             onPointSelect={isJulia ? undefined : handleCanvasPointSelect}
             onResetView={handleRegisterReset}
@@ -369,16 +372,27 @@ function ExploreContent() {
 
             <TabsContent value="coloring" className="mt-0 space-y-4">
               <ColoringPanel
+                pipelineVersion={document.coloring.pipelineVersion}
+                modernStyle={document.coloring.style}
                 paletteIndex={paletteIndex}
                 outsideColoring={outsideColoring}
                 insideColoring={insideColoring}
                 orbitTrap={orbitTrap}
                 customGradient={customGradient}
+                lighting={lighting}
+                onPipelineVersionChange={(pipelineVersion) =>
+                  updateColoring({
+                    pipelineVersion,
+                    style: pipelineVersion === 2 ? document.coloring.style ?? DEFAULT_MODERN_SMOOTH_STYLE : undefined,
+                  })
+                }
+                onModernStyleChange={(style) => updateColoring({ style })}
                 onPaletteChange={(index) => updateColoring({ paletteIndex: index })}
                 onOutsideColoringChange={(mode) => updateColoring({ outsideColoringId: mode })}
                 onInsideColoringChange={(mode) => updateColoring({ insideColoringId: mode })}
                 onOrbitTrapChange={(trap) => updateColoring({ orbitTrap: trap })}
                 onGradientChange={(gradient) => updateColoring({ customGradient: gradient })}
+                onLightingChange={(nextLighting) => updateColoring({ lighting: nextLighting })}
               />
             </TabsContent>
 
@@ -399,13 +413,11 @@ function ExploreContent() {
                 maxIterations={maxIterations}
                 useSSAA={useSSAA}
                 adaptiveIterations={adaptiveIterations}
-                lighting={lighting}
                 copied={copied}
                 savedCount={storageInfo.count}
                 onIterationsChange={(value) => updateRender({ maxIterations: value })}
                 onUseSSAAChange={(enabled) => updateRender({ useSSAA: enabled })}
                 onAdaptiveIterationsChange={(enabled) => updateRender({ adaptiveIterations: enabled })}
-                onLightingChange={(nextLighting) => updateColoring({ lighting: nextLighting })}
                 onResetView={handleResetView}
                 onShare={handleShare}
                 onExport={handleExport}

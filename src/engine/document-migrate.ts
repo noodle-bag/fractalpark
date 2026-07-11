@@ -1,11 +1,12 @@
 import type { FractalUrlState } from '@/lib/url-params';
-import type { PluginParamRecord, PluginParamValue, SavedFractal, FractalParams } from './types';
+import type { PluginParamRecord, PluginParamValue, SavedFractal, FractalParams, ShaderStyleState } from './types';
 import {
   DEFAULT_DOCUMENT_BOUNDS,
   DEFAULT_DOCUMENT_JULIA_C,
   DEFAULT_DOCUMENT_LIGHTING,
   DEFAULT_DOCUMENT_ORBIT_TRAP,
   DEFAULT_FRACTAL_DOCUMENT,
+  DEFAULT_MODERN_SMOOTH_STYLE,
   FRACTAL_DOCUMENT_SCHEMA_VERSION,
   type FractalDocument,
 } from './document';
@@ -102,6 +103,29 @@ function normalizePluginParamRecord(value: unknown): PluginParamRecord | undefin
   return Object.keys(normalized).length > 0 ? normalized : undefined;
 }
 
+function normalizeModernStyle(value: unknown): ShaderStyleState {
+  const source = isObject(value) ? value : {};
+  const post = isObject(source.post) ? source.post : {};
+  const defaults = DEFAULT_MODERN_SMOOTH_STYLE.post;
+
+  return {
+    styleId: source.styleId === 'layeredOrbit' ? 'layeredOrbit' : 'modernSmooth',
+    post: {
+      toneMapping:
+        post.toneMapping === 'none' || post.toneMapping === 'soft' || post.toneMapping === 'filmic'
+          ? post.toneMapping
+          : 'soft',
+      exposure: normalizeNumber(post.exposure, defaults.exposure),
+      contrast: Math.max(0, normalizeNumber(post.contrast, defaults.contrast)),
+      saturation: Math.max(0, normalizeNumber(post.saturation, defaults.saturation)),
+      temperature: normalizeNumber(post.temperature, defaults.temperature),
+      tint: normalizeNumber(post.tint, defaults.tint),
+      vignette: Math.max(0, normalizeNumber(post.vignette, defaults.vignette)),
+      dither: typeof post.dither === 'boolean' ? post.dither : defaults.dither,
+    },
+  };
+}
+
 export function normalizeRuntimeFractalParams(input: unknown): FractalParams {
   const defaults = documentToRuntimeParams(DEFAULT_FRACTAL_DOCUMENT);
   const source = isObject(input) ? input : {};
@@ -109,6 +133,9 @@ export function normalizeRuntimeFractalParams(input: unknown): FractalParams {
   const orbitTrap = isObject(source.orbitTrap) ? source.orbitTrap : {};
   const lighting = isObject(source.lighting) ? source.lighting : {};
   const pluginParams = normalizePluginParamRecord(source.pluginParams) ?? defaults.pluginParams;
+  const modernColoring = isObject(source.modernColoring)
+    ? (source.modernColoring as unknown as FractalParams['modernColoring'])
+    : undefined;
 
   return documentToRuntimeParams(
     normalizeFractalDocument(
@@ -151,6 +178,8 @@ export function normalizeRuntimeFractalParams(input: unknown): FractalParams {
           elevation: normalizeNumber(lighting.elevation, defaults.lighting.elevation),
           intensity: normalizeNumber(lighting.intensity, defaults.lighting.intensity),
         },
+        coloringPipelineVersion: source.coloringPipelineVersion === 2 ? 2 : undefined,
+        modernColoring,
       })
     )
   );
@@ -232,6 +261,7 @@ export function normalizeFractalDocument(doc: DeepPartial<FractalDocument>): Fra
         elevation: normalizeNumber(source.coloring?.lighting?.elevation, DEFAULT_DOCUMENT_LIGHTING.elevation),
         intensity: normalizeNumber(source.coloring?.lighting?.intensity, DEFAULT_DOCUMENT_LIGHTING.intensity),
       },
+      style: source.coloring?.pipelineVersion === 2 ? normalizeModernStyle(source.coloring.style) : undefined,
       params: source.coloring?.params
         ? {
             outside: normalizePluginParamRecord(source.coloring.params.outside),

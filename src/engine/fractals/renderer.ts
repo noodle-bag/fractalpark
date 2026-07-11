@@ -153,6 +153,8 @@ export class FractalRenderer {
     if (uniforms.u_rotation) gl.uniform1f(uniforms.u_rotation, params.bounds.rotation ?? 0);
     if (uniforms.u_maxIterations) gl.uniform1i(uniforms.u_maxIterations, params.maxIterations);
     if (uniforms.u_paletteIndex) gl.uniform1i(uniforms.u_paletteIndex, params.paletteIndex);
+    if (uniforms.u_colorPipelineVersion) gl.uniform1i(uniforms.u_colorPipelineVersion, params.coloringPipelineVersion === 2 ? 2 : 1);
+    if (uniforms.u_modernStyle) gl.uniform1i(uniforms.u_modernStyle, params.modernColoring?.styleId === 'layeredOrbit' ? 1 : 0);
     if (uniforms.u_isJulia) gl.uniform1i(uniforms.u_isJulia, params.isJulia ? 1 : 0);
     if (uniforms.u_juliaC) gl.uniform2f(uniforms.u_juliaC, params.juliaC[0], params.juliaC[1]);
     if (uniforms.u_power) gl.uniform1f(uniforms.u_power, params.power);
@@ -173,6 +175,21 @@ export class FractalRenderer {
     if (uniforms.u_orbitTrapWidth) gl.uniform1f(uniforms.u_orbitTrapWidth, params.orbitTrap.width);
 
     this.setGradientUniforms(uniforms, params.customGradient);
+
+    const post = params.modernColoring?.post;
+    if (uniforms.u_postToneMapping) {
+      gl.uniform1i(
+        uniforms.u_postToneMapping,
+        post?.toneMapping === 'filmic' ? 2 : post?.toneMapping === 'none' ? 0 : 1
+      );
+    }
+    if (uniforms.u_postExposure) gl.uniform1f(uniforms.u_postExposure, post?.exposure ?? 0);
+    if (uniforms.u_postContrast) gl.uniform1f(uniforms.u_postContrast, post?.contrast ?? 1);
+    if (uniforms.u_postSaturation) gl.uniform1f(uniforms.u_postSaturation, post?.saturation ?? 1);
+    if (uniforms.u_postTemperature) gl.uniform1f(uniforms.u_postTemperature, post?.temperature ?? 0);
+    if (uniforms.u_postTint) gl.uniform1f(uniforms.u_postTint, post?.tint ?? 0);
+    if (uniforms.u_postVignette) gl.uniform1f(uniforms.u_postVignette, post?.vignette ?? 0);
+    if (uniforms.u_postDither) gl.uniform1i(uniforms.u_postDither, post?.dither === false ? 0 : 1);
 
     const formula = pluginRegistry.getFormula(combo.formulaId);
     const outside = pluginRegistry.getOutsideColoring(combo.outsideColoringId);

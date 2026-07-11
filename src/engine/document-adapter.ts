@@ -7,6 +7,7 @@ import {
   DEFAULT_DOCUMENT_LIGHTING,
   DEFAULT_DOCUMENT_ORBIT_TRAP,
   DEFAULT_FRACTAL_DOCUMENT,
+  DEFAULT_MODERN_SMOOTH_STYLE,
   type AnimationState,
   type FractalDocument,
   type FractalDocumentMetadata,
@@ -124,13 +125,14 @@ export function runtimeParamsToDocument(
       params: cleanRecord(split.formula ?? {}) ? { formula: split.formula } : undefined,
     },
     coloring: {
-      pipelineVersion: DEFAULT_FRACTAL_DOCUMENT.coloring.pipelineVersion,
+      pipelineVersion: params.coloringPipelineVersion ?? DEFAULT_FRACTAL_DOCUMENT.coloring.pipelineVersion,
       paletteIndex: params.paletteIndex,
       customGradient: params.customGradient,
       outsideColoringId: params.outsideColoring,
       insideColoringId: params.insideColoring,
       orbitTrap: params.orbitTrap,
       lighting: params.lighting,
+      style: params.coloringPipelineVersion === 2 ? params.modernColoring ?? DEFAULT_MODERN_SMOOTH_STYLE : undefined,
       params:
         split.outside || split.inside
           ? {
@@ -176,6 +178,12 @@ export function documentToRuntimeParams(doc: FractalDocument): FractalParams {
     useSSAA: doc.render.useSSAA,
     adaptiveIterations: doc.render.adaptiveIterations,
     lighting: doc.coloring.lighting,
+    ...(doc.coloring.pipelineVersion === 2
+      ? {
+          coloringPipelineVersion: 2 as const,
+          modernColoring: doc.coloring.style,
+        }
+      : {}),
   };
 }
 
@@ -209,13 +217,14 @@ export function urlStateToDocument(
       params: state.pluginParams ? { formula: { ...state.pluginParams } } : undefined,
     },
     coloring: {
-      pipelineVersion: DEFAULT_FRACTAL_DOCUMENT.coloring.pipelineVersion,
+      pipelineVersion: state.coloringPipelineVersion ?? DEFAULT_FRACTAL_DOCUMENT.coloring.pipelineVersion,
       paletteIndex: state.palette ?? DEFAULT_FRACTAL_DOCUMENT.coloring.paletteIndex,
       customGradient: state.gradient ?? DEFAULT_FRACTAL_DOCUMENT.coloring.customGradient,
       outsideColoringId: state.outsideColoring ?? DEFAULT_FRACTAL_DOCUMENT.coloring.outsideColoringId,
       insideColoringId: state.insideColoring ?? DEFAULT_FRACTAL_DOCUMENT.coloring.insideColoringId,
       orbitTrap: state.orbitTrap ?? DEFAULT_DOCUMENT_ORBIT_TRAP,
       lighting: state.lighting ?? DEFAULT_DOCUMENT_LIGHTING,
+      style: state.coloringPipelineVersion === 2 ? state.modernColoring : undefined,
     },
     transform: {
       transformId: state.transformId ?? DEFAULT_FRACTAL_DOCUMENT.transform.transformId,

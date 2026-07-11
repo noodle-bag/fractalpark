@@ -4,6 +4,7 @@ import { buildFractalParamsFromPresetQuery } from '@/lib/gallery-presets';
 import { documentToRuntimeParams } from '@/engine/document-adapter';
 import { migrateFractalDocument, normalizeFractalDocument, normalizeRuntimeFractalParams } from '@/engine/document-migrate';
 import { FRACTAL_DOCUMENT_SCHEMA_VERSION } from '@/engine/document';
+import { DEFAULT_MODERN_SMOOTH_STYLE } from '@/engine/document';
 import type { SavedFractal } from '@/engine/types';
 
 describe('document migrate / normalize', () => {
@@ -87,6 +88,42 @@ describe('document migrate / normalize', () => {
     expect(runtime.bounds.zoom).toBe(0.4);
     expect(runtime.orbitTrap.shape).toBe('circle');
     expect(runtime.orbitTrap.radius).toBe(0);
+  });
+
+  it('normalizes modern coloring post state and keeps it on the runtime path', () => {
+    const document = normalizeFractalDocument({
+      coloring: {
+        pipelineVersion: 2,
+        style: {
+          styleId: 'unknown-style',
+          post: { toneMapping: 'unknown', exposure: 0.75, contrast: -1, dither: false },
+        } as never,
+      },
+    });
+
+    expect(document.coloring.pipelineVersion).toBe(2);
+    expect(document.coloring.style).toEqual({
+      styleId: 'modernSmooth',
+      post: {
+        ...DEFAULT_MODERN_SMOOTH_STYLE.post,
+        exposure: 0.75,
+        contrast: 0,
+        dither: false,
+      },
+    });
+    expect(documentToRuntimeParams(document).coloringPipelineVersion).toBe(2);
+  });
+
+  it('preserves the supported layered orbit style', () => {
+    const document = normalizeFractalDocument({
+      coloring: {
+        pipelineVersion: 2,
+        style: { styleId: 'layeredOrbit', post: DEFAULT_MODERN_SMOOTH_STYLE.post },
+      },
+    });
+
+    expect(document.coloring.style?.styleId).toBe('layeredOrbit');
+    expect(documentToRuntimeParams(document).modernColoring?.styleId).toBe('layeredOrbit');
   });
 
   it('preserves vector plugin params during runtime normalization', () => {

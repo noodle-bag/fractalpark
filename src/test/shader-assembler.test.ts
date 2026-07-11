@@ -93,6 +93,23 @@ describe('Shader Assembler', () => {
       expect(shader).toContain('getColor');
     });
 
+    it('should include the modern color output bridge without changing the cache key', () => {
+      const combo: PluginCombination = {
+        formulaId: 'mandelbrot',
+        outsideColoringId: 'smooth',
+        insideColoringId: 'black',
+        transformId: 'none',
+      };
+      const shader = assembleShader(combo);
+      expect(shader).toContain('uniform int u_colorPipelineVersion;');
+      expect(shader).toContain('struct FractalSample');
+      expect(shader).toContain('vec3 shadeFractal(FractalSample sample)');
+      expect(shader).toContain('vec3 finalizeOutput(vec3 color)');
+      expect(shader).toContain('uniform int u_modernStyle;');
+      expect(shader).toContain('sample.z - u_orbitTrapPoint');
+      expect(makeCacheKey(combo)).toBe('mandelbrot|smooth|black|none');
+    });
+
     it('should define ESCAPE_CONVERGE for Newton formulas', () => {
       const combo: PluginCombination = {
         formulaId: 'newton3',

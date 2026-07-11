@@ -1,4 +1,4 @@
-import type { FractalDocument } from '@/engine/document';
+import { DEFAULT_MODERN_SMOOTH_STYLE, type FractalDocument } from '@/engine/document';
 import { documentToRuntimeParams, runtimeParamsToDocument } from '@/engine/document-adapter';
 import type {
   FractalFormula,
@@ -13,6 +13,7 @@ import type {
   PluginParamRecord,
   PluginParamValue,
   SavedFractal,
+  ShaderStyleState,
 } from '@/engine/types';
 import { pluginRegistry } from '@/engine/plugins/registry';
 
@@ -116,6 +117,8 @@ export interface FractalUrlState {
   gradient?: GradientStop[];
   palette?: number;
   keyframes?: Keyframe[];
+  coloringPipelineVersion?: 2;
+  modernColoring?: ShaderStyleState;
 }
 
 function clonePluginParamValue(value: PluginParamValue): PluginParamValue {
@@ -276,6 +279,11 @@ export function encodeParams(state: FractalUrlState): URLSearchParams {
       .join('|');
     params.set('kf', encoded);
   }
+  if (state.coloringPipelineVersion === 2) {
+    params.set('sty', 'ms');
+    const post = state.modernColoring?.post ?? DEFAULT_MODERN_SMOOTH_STYLE.post;
+    params.set('cs', [post.toneMapping, post.exposure, post.contrast, post.saturation, post.temperature, post.tint, post.vignette, post.dither ? 1 : 0].join('|'));
+  }
 
   return params;
 }
@@ -312,6 +320,8 @@ export function decodeParams(searchParams: URLSearchParams): FractalUrlState {
   const pal = searchParams.get('pal');
   const grad = searchParams.get('grad');
   const kf = searchParams.get('kf');
+  const sty = searchParams.get('sty');
+  const cs = searchParams.get('cs');
 
   if (cx !== null) { const v = parseFloat(cx); if (!isNaN(v)) state.centerX = v; }
   if (cy !== null) { const v = parseFloat(cy); if (!isNaN(v)) state.centerY = v; }
@@ -451,6 +461,28 @@ export function decodeParams(searchParams: URLSearchParams): FractalUrlState {
       // Invalid keyframe data, ignore
     }
   }
+  if (sty === 'ms') {
+    const defaults = DEFAULT_MODERN_SMOOTH_STYLE.post;
+    const parts = cs?.split('|') ?? [];
+    const numberAt = (index: number, fallback: number) => {
+      const value = parseFloat(parts[index] ?? '');
+      return Number.isFinite(value) ? value : fallback;
+    };
+    state.coloringPipelineVersion = 2;
+    state.modernColoring = {
+      styleId: 'modernSmooth',
+      post: {
+        toneMapping: parts[0] === 'none' || parts[0] === 'filmic' ? parts[0] : 'soft',
+        exposure: numberAt(1, defaults.exposure),
+        contrast: numberAt(2, defaults.contrast),
+        saturation: numberAt(3, defaults.saturation),
+        temperature: numberAt(4, defaults.temperature),
+        tint: numberAt(5, defaults.tint),
+        vignette: numberAt(6, defaults.vignette),
+        dither: parts[7] === '0' ? false : defaults.dither,
+      },
+    };
+  }
 
   return state;
 }
@@ -477,6 +509,8 @@ export function documentToUrlState(doc: FractalDocument): FractalUrlState {
     useSSAA: runtime.useSSAA,
     adaptiveIterations: runtime.adaptiveIterations,
     lighting: runtime.lighting,
+    coloringPipelineVersion: runtime.coloringPipelineVersion,
+    modernColoring: runtime.modernColoring,
     palette: runtime.customGradient ? undefined : runtime.paletteIndex,
     gradient: runtime.customGradient ?? undefined,
     keyframes: doc.animation?.keyframes,

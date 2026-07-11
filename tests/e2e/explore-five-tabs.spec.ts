@@ -119,8 +119,6 @@ test.describe('Render Tab', () => {
     // Adaptive iterations toggle
     await expect(page.locator('#adaptive-toggle')).toBeVisible();
 
-    // Lighting toggle
-    await expect(page.locator('#lighting-toggle')).toBeVisible();
   });
 
   test('should display action buttons', async ({ page }) => {
@@ -135,6 +133,7 @@ test.describe('Render Tab', () => {
   });
 
   test('should show lighting controls when lighting is enabled', async ({ page }) => {
+    await page.getByRole('tab', { name: /coloring/i }).click();
     const lightingToggle = page.locator('#lighting-toggle');
     await lightingToggle.click();
 

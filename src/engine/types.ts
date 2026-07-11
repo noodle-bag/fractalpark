@@ -35,6 +35,24 @@ export interface LightingConfig {
   intensity: number;
 }
 
+export type ToneMappingMode = 'none' | 'soft' | 'filmic';
+
+export interface PostProcessState {
+  toneMapping: ToneMappingMode;
+  exposure: number;
+  contrast: number;
+  saturation: number;
+  temperature: number;
+  tint: number;
+  vignette: number;
+  dither: boolean;
+}
+
+export interface ShaderStyleState {
+  styleId: 'modernSmooth' | 'layeredOrbit';
+  post: PostProcessState;
+}
+
 export type PluginParamVector2 = [number, number];
 export type PluginParamVector3 = [number, number, number];
 export type PluginParamValue = number | boolean | PluginParamVector2 | PluginParamVector3;
@@ -58,6 +76,9 @@ export interface FractalParams {
   ssaaLevel?: number; // 0=off, 4=2x2, 9=3x3, 16=4x4; overrides useSSAA when set
   adaptiveIterations: boolean;
   lighting: LightingConfig;
+  /** Present only when the document explicitly opts into the modern color path. */
+  coloringPipelineVersion?: 2;
+  modernColoring?: ShaderStyleState;
   /** Internal: tiled export info. u_resolution = full image; u_tileOffset = pixel offset. */
   _tileInfo?: { fullWidth: number; fullHeight: number; offsetX: number; offsetY: number };
 }

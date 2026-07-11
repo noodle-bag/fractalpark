@@ -4,6 +4,7 @@ import type {
   LightingConfig,
   OrbitTrapConfig,
   PluginParamRecord,
+  ShaderStyleState,
   ViewBounds,
 } from './types';
 
@@ -46,6 +47,8 @@ export interface ColoringState {
   insideColoringId: string;
   orbitTrap: OrbitTrapConfig;
   lighting: LightingConfig;
+  /** Modern style configuration. Ignored while pipelineVersion is 1. */
+  style?: ShaderStyleState;
   params?: ColoringParamsState;
 }
 
@@ -112,6 +115,20 @@ export const DEFAULT_DOCUMENT_LIGHTING: LightingConfig = {
   azimuth: 45,
   elevation: 35,
   intensity: 0.65,
+};
+
+export const DEFAULT_MODERN_SMOOTH_STYLE: ShaderStyleState = {
+  styleId: 'modernSmooth',
+  post: {
+    toneMapping: 'soft',
+    exposure: 0,
+    contrast: 1,
+    saturation: 1,
+    temperature: 0,
+    tint: 0,
+    vignette: 0,
+    dither: true,
+  },
 };
 
 export const DEFAULT_FRACTAL_DOCUMENT: FractalDocument = {

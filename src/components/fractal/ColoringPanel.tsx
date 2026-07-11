@@ -5,42 +5,66 @@ import { Button } from '@/components/ui/button';
 import { Switch } from '@/components/ui/switch';
 import { Label } from '@/components/ui/label';
 import { Slider } from '@/components/ui/slider';
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { ColorSchemeSelector } from './ColorSchemeSelector';
 import { GradientEditor } from './GradientEditor';
 import type {
   GradientStop,
   InsideColoringMode,
+  LightingConfig,
   OrbitTrapConfig,
   OutsideColoringMode,
+  ShaderStyleState,
 } from '@/engine/types';
 
 interface ColoringPanelProps {
+  pipelineVersion: 1 | 2;
+  modernStyle?: ShaderStyleState;
   paletteIndex: number;
   outsideColoring: OutsideColoringMode;
   insideColoring: InsideColoringMode;
   orbitTrap: OrbitTrapConfig;
   customGradient: GradientStop[] | null;
+  lighting: LightingConfig;
+  onPipelineVersionChange: (version: 1 | 2) => void;
+  onModernStyleChange: (style: ShaderStyleState) => void;
   onPaletteChange: (index: number) => void;
   onOutsideColoringChange: (mode: OutsideColoringMode) => void;
   onInsideColoringChange: (mode: InsideColoringMode) => void;
   onOrbitTrapChange: (trap: OrbitTrapConfig) => void;
   onGradientChange: (gradient: GradientStop[] | null) => void;
+  onLightingChange: (lighting: LightingConfig) => void;
 }
 
 export function ColoringPanel({
+  pipelineVersion,
+  modernStyle,
   paletteIndex,
   outsideColoring,
   insideColoring,
   orbitTrap,
   customGradient,
+  lighting,
+  onPipelineVersionChange,
+  onModernStyleChange,
   onPaletteChange,
   onOutsideColoringChange,
   onInsideColoringChange,
   onOrbitTrapChange,
   onGradientChange,
+  onLightingChange,
 }: ColoringPanelProps) {
   const t = useTranslations('explore.controls');
   const useCustomGradient = customGradient !== null;
+  const post = modernStyle?.post;
+
+  const updatePost = (patch: Partial<ShaderStyleState['post']>) => {
+    if (!modernStyle) return;
+    onModernStyleChange({
+      ...modernStyle,
+      post: { ...modernStyle.post, ...patch },
+    });
+  };
 
   const handleToggleGradient = (enabled: boolean) => {
     if (enabled) {
@@ -59,6 +83,30 @@ export function ColoringPanel({
   return (
     <div className="space-y-6">
       <div className="space-y-3 rounded-lg border p-3 bg-muted/30">
+        <label className="text-sm font-medium leading-none">{t('coloring.style')}</label>
+        <div className="grid grid-cols-2 gap-2">
+          <Button size="sm" variant={pipelineVersion === 1 ? 'default' : 'outline'} onClick={() => onPipelineVersionChange(1)}>
+            {t('coloring.legacySmooth')}
+          </Button>
+          <Button size="sm" variant={pipelineVersion === 2 && modernStyle?.styleId === 'modernSmooth' ? 'default' : 'outline'} onClick={() => {
+            onPipelineVersionChange(2);
+            if (modernStyle) onModernStyleChange({ ...modernStyle, styleId: 'modernSmooth' });
+          }}>
+            {t('coloring.modernSmooth')}
+          </Button>
+          <Button size="sm" variant={pipelineVersion === 2 && modernStyle?.styleId === 'layeredOrbit' ? 'default' : 'outline'} onClick={() => {
+            onPipelineVersionChange(2);
+            onModernStyleChange({ ...(modernStyle ?? { styleId: 'modernSmooth', post: { toneMapping: 'soft', exposure: 0, contrast: 1, saturation: 1, temperature: 0, tint: 0, vignette: 0, dither: true } }), styleId: 'layeredOrbit' });
+          }}>
+            {t('coloring.layeredOrbit')}
+          </Button>
+        </div>
+        <p className="text-xs text-muted-foreground">
+          {pipelineVersion === 1 ? t('coloring.legacyDescription') : t('coloring.modernDescription')}
+        </p>
+      </div>
+
+      {pipelineVersion === 1 && <div className="space-y-3 rounded-lg border p-3 bg-muted/30">
         <label className="text-sm font-medium leading-none">{t('coloring.outside')}</label>
         <div className="grid grid-cols-2 gap-2">
           {([
@@ -141,7 +189,7 @@ export function ColoringPanel({
             </div>
           </div>
         )}
-      </div>
+      </div>}
 
       <div className="space-y-3 rounded-lg border p-3 bg-muted/30">
         <div className="flex items-center justify-between">
@@ -166,6 +214,59 @@ export function ColoringPanel({
           <ColorSchemeSelector value={paletteIndex} onChange={onPaletteChange} />
         )}
       </div>
+
+      <div className="space-y-3 rounded-lg border p-3 bg-muted/30">
+        <div className="flex items-center justify-between">
+          <Label htmlFor="lighting-toggle" className="text-sm font-medium leading-none">{t('quality.lighting')}</Label>
+          <Switch id="lighting-toggle" checked={lighting.enabled} onCheckedChange={(enabled) => onLightingChange({ ...lighting, enabled })} />
+        </div>
+        {lighting.enabled && <>
+          <Select value={lighting.mode} onValueChange={(mode) => onLightingChange({ ...lighting, mode: mode as LightingConfig['mode'] })}>
+            <SelectTrigger className="h-8 text-xs"><SelectValue /></SelectTrigger>
+            <SelectContent>
+              <SelectItem value="normalMap">{t('quality.lightingModeNormalMap')}</SelectItem>
+              <SelectItem value="dem">{t('quality.lightingModeDem')}</SelectItem>
+            </SelectContent>
+          </Select>
+          {lighting.mode === 'normalMap' && <>
+            <div className="space-y-1"><Label htmlFor="light-azimuth" className="text-xs text-muted-foreground">{t('quality.azimuth')}</Label><Slider id="light-azimuth" value={[lighting.azimuth]} onValueChange={(v) => onLightingChange({ ...lighting, azimuth: v[0] })} min={0} max={360} step={1} /></div>
+            <div className="space-y-1"><Label htmlFor="light-elevation" className="text-xs text-muted-foreground">{t('quality.elevation')}</Label><Slider id="light-elevation" value={[lighting.elevation]} onValueChange={(v) => onLightingChange({ ...lighting, elevation: v[0] })} min={5} max={85} step={1} /></div>
+          </>}
+          <div className="space-y-1"><Label htmlFor="light-intensity" className="text-xs text-muted-foreground">{t('quality.intensity')}</Label><Slider id="light-intensity" value={[lighting.intensity]} onValueChange={(v) => onLightingChange({ ...lighting, intensity: v[0] })} min={0} max={1} step={0.01} /></div>
+        </>}
+      </div>
+
+      {pipelineVersion === 2 && post && (
+        <div className="space-y-3 rounded-lg border p-3 bg-muted/30">
+          <label className="text-sm font-medium leading-none">{t('coloring.finish')}</label>
+          <div className="space-y-1">
+            <Label htmlFor="color-exposure" className="text-xs text-muted-foreground">{t('coloring.exposure')}</Label>
+            <Slider id="color-exposure" value={[post.exposure]} onValueChange={(v) => updatePost({ exposure: v[0] })} min={-3} max={3} step={0.05} />
+          </div>
+          <div className="space-y-1">
+            <Label htmlFor="color-contrast" className="text-xs text-muted-foreground">{t('coloring.contrast')}</Label>
+            <Slider id="color-contrast" value={[post.contrast]} onValueChange={(v) => updatePost({ contrast: v[0] })} min={0} max={2} step={0.05} />
+          </div>
+          <div className="space-y-1">
+            <Label htmlFor="color-saturation" className="text-xs text-muted-foreground">{t('coloring.saturation')}</Label>
+            <Slider id="color-saturation" value={[post.saturation]} onValueChange={(v) => updatePost({ saturation: v[0] })} min={0} max={2} step={0.05} />
+          </div>
+          <div className="space-y-1">
+            <Label className="text-xs text-muted-foreground">{t('coloring.toneMapping')}</Label>
+            <div className="grid grid-cols-3 gap-2">
+              {(['none', 'soft', 'filmic'] as const).map((toneMapping) => (
+                <Button key={toneMapping} size="sm" variant={post.toneMapping === toneMapping ? 'default' : 'outline'} onClick={() => updatePost({ toneMapping })}>
+                  {t(`coloring.toneMapping${toneMapping[0].toUpperCase()}${toneMapping.slice(1)}`)}
+                </Button>
+              ))}
+            </div>
+          </div>
+          <div className="flex items-center justify-between gap-3">
+            <Label htmlFor="color-dither" className="text-xs text-muted-foreground">{t('coloring.dither')}</Label>
+            <Switch id="color-dither" checked={post.dither} onCheckedChange={(dither) => updatePost({ dither })} />
+          </div>
+        </div>
+      )}
     </div>
   );
 }

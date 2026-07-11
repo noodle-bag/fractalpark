@@ -13,6 +13,7 @@ import type {
   OrbitTrapConfig,
   OutsideColoringMode,
   PluginParamRecord,
+  ShaderStyleState,
   ViewBounds,
 } from '@/engine/types';
 
@@ -33,6 +34,8 @@ interface FractalCanvasProps {
   adaptiveIterations: boolean;
   lighting: LightingConfig;
   customGradient: GradientStop[] | null;
+  coloringPipelineVersion?: 2;
+  modernColoring?: ShaderStyleState;
   onBoundsChange?: (bounds: ViewBounds) => void;
   onPointSelect?: (point: [number, number]) => void;
   onResetView?: (resetFn: () => void) => void;
@@ -56,6 +59,8 @@ export default function FractalCanvas({
   adaptiveIterations,
   lighting,
   customGradient,
+  coloringPipelineVersion,
+  modernColoring,
   onBoundsChange,
   onPointSelect,
   onResetView,
@@ -101,6 +106,8 @@ export default function FractalCanvas({
       adaptiveIterations,
       lighting,
       customGradient,
+      coloringPipelineVersion,
+      modernColoring,
     };
 
     resize();
@@ -122,6 +129,8 @@ export default function FractalCanvas({
     adaptiveIterations,
     lighting,
     customGradient,
+    coloringPipelineVersion,
+    modernColoring,
     resize,
     render,
     rendererRef,
@@ -148,6 +157,8 @@ export default function FractalCanvas({
           adaptiveIterations,
           lighting,
           customGradient,
+          coloringPipelineVersion,
+          modernColoring,
         });
       }
     });
@@ -176,6 +187,8 @@ export default function FractalCanvas({
     adaptiveIterations,
     lighting,
     customGradient,
+    coloringPipelineVersion,
+    modernColoring,
     rendererRef,
   ]);
 

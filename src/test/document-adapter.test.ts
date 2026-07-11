@@ -6,6 +6,7 @@ import {
   runtimeParamsToDocument,
   urlStateToDocument,
 } from '@/engine/document-adapter';
+import { DEFAULT_MODERN_SMOOTH_STYLE } from '@/engine/document';
 
 describe('document adapter', () => {
   beforeAll(() => {
@@ -110,5 +111,38 @@ describe('document adapter', () => {
     expect(doc.formula.params?.formula).toEqual({ u_unknownCustomParam: 3.5 });
     expect(doc.animation?.keyframes).toHaveLength(2);
     expect(doc.render.maxIterations).toBe(200);
+  });
+
+  it('round-trips explicit modern coloring without changing legacy runtime fields', () => {
+    const runtime: FractalParams = {
+      maxIterations: 200,
+      paletteIndex: 0,
+      bounds: { centerX: -0.5, centerY: 0, zoom: 0.4 },
+      isJulia: false,
+      juliaC: [-0.7, 0.27],
+      power: 2,
+      customGradient: null,
+      formula: 'mandelbrot',
+      outsideColoring: 'smooth',
+      insideColoring: 'black',
+      orbitTrap: { shape: 'point', point: [0, 0], radius: 0.35, width: 0.02 },
+      useSSAA: false,
+      adaptiveIterations: false,
+      lighting: { enabled: false, mode: 'normalMap', azimuth: 45, elevation: 35, intensity: 0.65 },
+      coloringPipelineVersion: 2,
+      modernColoring: {
+        ...DEFAULT_MODERN_SMOOTH_STYLE,
+        post: { ...DEFAULT_MODERN_SMOOTH_STYLE.post, exposure: 1.25, toneMapping: 'filmic' },
+      },
+    };
+
+    const document = runtimeParamsToDocument(runtime);
+    expect(document.coloring.pipelineVersion).toBe(2);
+    expect(document.coloring.style?.post.exposure).toBe(1.25);
+    expect(documentToRuntimeParams(document)).toMatchObject({
+      ...runtime,
+      bounds: { ...runtime.bounds, rotation: 0 },
+      transformId: 'none',
+    });
   });
 });

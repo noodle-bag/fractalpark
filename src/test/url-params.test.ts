@@ -3,9 +3,22 @@ import { registerBuiltins } from '@/engine/plugins/builtins/index';
 import { compileFrm } from '@/engine/frm/compile';
 import { pluginRegistry } from '@/engine/plugins/registry';
 import { runtimeParamsToDocument } from '@/engine/document-adapter';
+import { DEFAULT_MODERN_SMOOTH_STYLE } from '@/engine/document';
 import { decodeParams, documentToExploreHref, documentToUrlState, encodeParams, savedFractalToHref } from '@/lib/url-params';
 
 describe('url params m3 protocol', () => {
+  it('round-trips the modern smooth style through compact URL state', () => {
+    const query = encodeParams({
+      coloringPipelineVersion: 2,
+      modernColoring: {
+        ...DEFAULT_MODERN_SMOOTH_STYLE,
+        post: { ...DEFAULT_MODERN_SMOOTH_STYLE.post, exposure: 0.8, toneMapping: 'filmic', dither: false },
+      },
+    });
+    const decoded = decodeParams(query);
+    expect(decoded.coloringPipelineVersion).toBe(2);
+    expect(decoded.modernColoring?.post).toMatchObject({ exposure: 0.8, toneMapping: 'filmic', dither: false });
+  });
   beforeAll(() => {
     registerBuiltins();
     const compiled = compileFrm(`FnSlotWeave {
