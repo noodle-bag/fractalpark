@@ -8,6 +8,7 @@ import { Slider } from '@/components/ui/slider';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { ColorSchemeSelector } from './ColorSchemeSelector';
 import { GradientEditor } from './GradientEditor';
+import { MODERN_STYLE_DEFINITIONS } from '@/engine/coloring/styles';
 import type {
   GradientStop,
   InsideColoringMode,
@@ -88,30 +89,14 @@ export function ColoringPanel({
           <Button size="sm" variant={pipelineVersion === 1 ? 'default' : 'outline'} onClick={() => onPipelineVersionChange(1)}>
             {t('coloring.legacySmooth')}
           </Button>
-          <Button size="sm" variant={pipelineVersion === 2 && modernStyle?.styleId === 'modernSmooth' ? 'default' : 'outline'} onClick={() => {
-            onPipelineVersionChange(2);
-            if (modernStyle) onModernStyleChange({ ...modernStyle, styleId: 'modernSmooth' });
-          }}>
-            {t('coloring.modernSmooth')}
-          </Button>
-          <Button size="sm" variant={pipelineVersion === 2 && modernStyle?.styleId === 'layeredOrbit' ? 'default' : 'outline'} onClick={() => {
-            onPipelineVersionChange(2);
-            onModernStyleChange({ ...(modernStyle ?? { styleId: 'modernSmooth', post: { toneMapping: 'soft', exposure: 0, contrast: 1, saturation: 1, temperature: 0, tint: 0, vignette: 0, dither: true } }), styleId: 'layeredOrbit' });
-          }}>
-            {t('coloring.layeredOrbit')}
-          </Button>
-          <Button size="sm" variant={pipelineVersion === 2 && modernStyle?.styleId === 'orbitNebula' ? 'default' : 'outline'} onClick={() => {
-            onPipelineVersionChange(2);
-            onModernStyleChange({ ...(modernStyle ?? { styleId: 'modernSmooth', post: { toneMapping: 'soft', exposure: 0, contrast: 1, saturation: 1, temperature: 0, tint: 0, vignette: 0, dither: true } }), styleId: 'orbitNebula' });
-          }}>
-            {t('coloring.orbitNebula')}
-          </Button>
-          <Button size="sm" variant={pipelineVersion === 2 && modernStyle?.styleId === 'contourField' ? 'default' : 'outline'} onClick={() => {
-            onPipelineVersionChange(2);
-            onModernStyleChange({ ...(modernStyle ?? { styleId: 'modernSmooth', post: { toneMapping: 'soft', exposure: 0, contrast: 1, saturation: 1, temperature: 0, tint: 0, vignette: 0, dither: true } }), styleId: 'contourField' });
-          }}>
-            {t('coloring.contourField')}
-          </Button>
+          {MODERN_STYLE_DEFINITIONS.map((style) => (
+            <Button key={style.id} size="sm" variant={pipelineVersion === 2 && modernStyle?.styleId === style.id ? 'default' : 'outline'} onClick={() => {
+              onPipelineVersionChange(2);
+              onModernStyleChange({ ...(modernStyle ?? { styleId: 'modernSmooth', post: { toneMapping: 'soft', exposure: 0, contrast: 1, saturation: 1, temperature: 0, tint: 0, vignette: 0, dither: true } }), styleId: style.id });
+            }}>
+              {t(style.nameKey)}
+            </Button>
+          ))}
         </div>
         <p className="text-xs text-muted-foreground">
           {pipelineVersion === 1 ? t('coloring.legacyDescription') : t('coloring.modernDescription')}

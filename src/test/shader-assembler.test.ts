@@ -3,6 +3,7 @@ import { assembleShader, makeCacheKey } from '@/engine/shaders/assembler';
 import { pluginRegistry } from '@/engine/plugins/registry';
 import { registerBuiltins } from '@/engine/plugins/builtins/index';
 import type { PluginCombination } from '@/engine/plugins/types';
+import { getModernStyleShaderIndex } from '@/engine/coloring/styles';
 
 describe('Shader Assembler', () => {
   beforeAll(() => {
@@ -36,6 +37,13 @@ describe('Shader Assembler', () => {
       });
       expect(key1).not.toBe(key2);
     });
+  });
+
+  it('maps modern style IDs to stable uniform indices', () => {
+    expect(getModernStyleShaderIndex('modernSmooth')).toBe(0);
+    expect(getModernStyleShaderIndex('layeredOrbit')).toBe(1);
+    expect(getModernStyleShaderIndex('orbitNebula')).toBe(2);
+    expect(getModernStyleShaderIndex('contourField')).toBe(3);
   });
 
   describe('assembleShader', () => {

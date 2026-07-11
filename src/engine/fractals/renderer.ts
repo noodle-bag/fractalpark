@@ -3,6 +3,7 @@ import { assembleShader, makeCacheKey } from '../shaders/assembler';
 import { ShaderCache } from '../shaders/cache';
 import { pluginRegistry } from '../plugins/registry';
 import type { PluginCombination, PluginUniformDescriptor } from '../plugins/types';
+import { getModernStyleShaderIndex } from '../coloring/styles';
 
 const ORBIT_TRAP_SHAPE_TO_UNIFORM: Record<string, number> = {
   point: 0,
@@ -155,10 +156,7 @@ export class FractalRenderer {
     if (uniforms.u_paletteIndex) gl.uniform1i(uniforms.u_paletteIndex, params.paletteIndex);
     if (uniforms.u_colorPipelineVersion) gl.uniform1i(uniforms.u_colorPipelineVersion, params.coloringPipelineVersion === 2 ? 2 : 1);
     if (uniforms.u_modernStyle) {
-      gl.uniform1i(
-        uniforms.u_modernStyle,
-        params.modernColoring?.styleId === 'layeredOrbit' ? 1 : params.modernColoring?.styleId === 'orbitNebula' ? 2 : params.modernColoring?.styleId === 'contourField' ? 3 : 0
-      );
+      gl.uniform1i(uniforms.u_modernStyle, getModernStyleShaderIndex(params.modernColoring?.styleId));
     }
     if (uniforms.u_isJulia) gl.uniform1i(uniforms.u_isJulia, params.isJulia ? 1 : 0);
     if (uniforms.u_juliaC) gl.uniform2f(uniforms.u_juliaC, params.juliaC[0], params.juliaC[1]);
