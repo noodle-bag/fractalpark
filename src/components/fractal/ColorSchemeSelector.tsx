@@ -2,47 +2,55 @@
 
 import { useTranslations } from 'next-intl';
 import { cn } from '@/lib/utils';
+import { PALETTES } from '@/engine/palettes';
 
 interface ColorSchemeSelectorProps {
   value: number;
   onChange: (index: number) => void;
 }
 
-const schemes = [
-  { key: 'inferno', gradient: 'from-red-900 via-orange-500 to-yellow-300' },
-  { key: 'ocean', gradient: 'from-blue-900 via-cyan-500 to-white' },
-  { key: 'spectrum', gradient: 'from-red-500 via-green-500 to-blue-500' },
-  { key: 'sakura', gradient: 'from-pink-300 via-white to-purple-200' },
-  { key: 'moonlight', gradient: 'from-slate-900 via-blue-300 to-white' },
-];
+const categoryOrder = ['sequential', 'cyclic', 'diverging', 'artistic', 'legacy'] as const;
 
 export function ColorSchemeSelector({ value, onChange }: ColorSchemeSelectorProps) {
-  const t = useTranslations('explore.palettes');
+  const t = useTranslations();
 
   return (
-    <div className="grid grid-cols-5 gap-2">
-      {schemes.map((scheme, index) => (
-        <button
-          key={scheme.key}
-          onClick={() => onChange(index)}
-          className={cn(
-            'group flex flex-col items-center gap-1 focus:outline-none',
-            value === index ? 'opacity-100' : 'opacity-70 hover:opacity-100'
-          )}
-          aria-label={t(scheme.key)}
-        >
-          <div
-            className={cn(
-              'h-8 w-full rounded-md bg-gradient-to-r shadow-sm transition-all',
-              scheme.gradient,
-              value === index ? 'ring-2 ring-primary ring-offset-2' : 'group-hover:ring-1 group-hover:ring-primary/50'
-            )}
-          />
-          <span className="text-[10px] font-medium text-muted-foreground">
-            {t(scheme.key)}
-          </span>
-        </button>
-      ))}
+    <div className="space-y-3">
+      {categoryOrder.map((category) => {
+        const palettes = PALETTES.filter((palette) => palette.category === category);
+        return (
+          <div key={category} className="space-y-1.5">
+            <div className="text-[10px] font-medium uppercase text-muted-foreground">
+              {t(`explore.paletteCategories.${category}`)}
+            </div>
+            <div className="grid grid-cols-3 gap-2">
+              {palettes.map((palette) => (
+                <button
+                  key={palette.index}
+                  type="button"
+                  onClick={() => onChange(palette.index)}
+                  className={cn(
+                    'group flex min-w-0 flex-col items-center gap-1 focus:outline-none',
+                    value === palette.index ? 'opacity-100' : 'opacity-70 hover:opacity-100'
+                  )}
+                  aria-label={t(palette.key)}
+                >
+                  <span
+                    className={cn(
+                      'h-8 w-full rounded-md shadow-sm transition-all',
+                      value === palette.index ? 'ring-2 ring-primary ring-offset-2' : 'group-hover:ring-1 group-hover:ring-primary/50'
+                    )}
+                    style={{ background: `linear-gradient(to right, ${palette.colors.join(', ')})` }}
+                  />
+                  <span className="w-full truncate text-center text-[10px] font-medium text-muted-foreground">
+                    {t(palette.key)}
+                  </span>
+                </button>
+              ))}
+            </div>
+          </div>
+        );
+      })}
     </div>
   );
 }

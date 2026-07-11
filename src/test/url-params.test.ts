@@ -180,6 +180,13 @@ bailout:
     });
   });
 
+  it('round-trips extended palette indices', () => {
+    const encoded = encodeParams({ palette: 16 });
+
+    expect(encoded.get('pal')).toBe('16');
+    expect(decodeParams(encoded).palette).toBe(16);
+  });
+
   it('projects FractalDocument to URL state and href', () => {
     const document = runtimeParamsToDocument({
       maxIterations: 420,

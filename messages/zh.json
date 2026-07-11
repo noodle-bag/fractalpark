@@ -368,7 +368,26 @@
       "ocean": "海洋",
       "spectrum": "彩虹",
       "sakura": "樱花",
-      "moonlight": "月光"
+      "moonlight": "月光",
+      "magma": "岩浆",
+      "viridis": "翠紫",
+      "batlow": "巴特洛",
+      "fire": "烈焰",
+      "deepOcean": "深海",
+      "twilight": "暮光",
+      "romaO": "罗马环",
+      "vik": "维克",
+      "berlin": "柏林",
+      "copperPatina": "铜绿",
+      "aurora": "极光",
+      "porcelain": "青瓷"
+    },
+    "paletteCategories": {
+      "legacy": "经典",
+      "sequential": "连续",
+      "cyclic": "循环",
+      "diverging": "发散",
+      "artistic": "艺术"
     },
     "editor": {
       "title": "公式编辑器",

@@ -368,7 +368,26 @@
       "ocean": "Ocean",
       "spectrum": "Spectrum",
       "sakura": "Sakura",
-      "moonlight": "Moonlight"
+      "moonlight": "Moonlight",
+      "magma": "Magma",
+      "viridis": "Viridis",
+      "batlow": "Batlow",
+      "fire": "Fire",
+      "deepOcean": "Deep Ocean",
+      "twilight": "Twilight",
+      "romaO": "RomaO",
+      "vik": "Vik",
+      "berlin": "Berlin",
+      "copperPatina": "Copper Patina",
+      "aurora": "Aurora",
+      "porcelain": "Porcelain"
+    },
+    "paletteCategories": {
+      "legacy": "Legacy",
+      "sequential": "Sequential",
+      "cyclic": "Cyclic",
+      "diverging": "Diverging",
+      "artistic": "Artistic"
     },
     "editor": {
       "title": "Formula Editor",

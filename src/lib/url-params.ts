@@ -15,6 +15,7 @@ import type {
   SavedFractal,
 } from '@/engine/types';
 import { pluginRegistry } from '@/engine/plugins/registry';
+import { PALETTES } from '@/engine/palettes';
 
 // Custom formula ID prefixes
 const CUSTOM_FORMULA_PREFIXES = ['frm-', 'custom-'];
@@ -411,7 +412,10 @@ export function decodeParams(searchParams: URLSearchParams): FractalUrlState {
     };
   }
   if (rot !== null) { const v = parseFloat(rot); if (!isNaN(v)) state.rotation = v; }
-  if (pal !== null) { const v = parseInt(pal, 10); if (!isNaN(v) && v >= 0 && v <= 4) state.palette = v; }
+  if (pal !== null) {
+    const value = parseInt(pal, 10);
+    if (PALETTES.some((palette) => palette.index === value)) state.palette = value;
+  }
   if (grad !== null) {
     try {
       const stops: GradientStop[] = grad.split(',').map((part) => {

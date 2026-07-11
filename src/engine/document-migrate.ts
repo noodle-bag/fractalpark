@@ -58,6 +58,7 @@ function looksLikeUrlState(value: unknown): value is FractalUrlState {
       'zoom' in value ||
       'formula' in value ||
       'iterations' in value ||
+      'palette' in value ||
       'keyframes' in value)
   );
 }

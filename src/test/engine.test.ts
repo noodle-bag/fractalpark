@@ -3,13 +3,13 @@ import { PALETTES } from '@/engine/palettes';
 import type { FractalParams, ViewBounds } from '@/engine/types';
 
 describe('Palettes', () => {
-  it('should have exactly 5 palettes', () => {
-    expect(PALETTES).toHaveLength(5);
+  it('should have exactly 17 palettes', () => {
+    expect(PALETTES).toHaveLength(17);
   });
 
-  it('should have unique indices 0-4', () => {
+  it('should have unique contiguous indices', () => {
     const indices = PALETTES.map((p) => p.index);
-    expect(indices).toEqual([0, 1, 2, 3, 4]);
+    expect(indices).toEqual(Array.from({ length: 17 }, (_, index) => index));
   });
 
   it('should have non-empty names and keys', () => {
@@ -17,6 +17,8 @@ describe('Palettes', () => {
       expect(palette.name.length).toBeGreaterThan(0);
       expect(palette.key.length).toBeGreaterThan(0);
       expect(palette.key).toContain('explore.palettes.');
+      expect(palette.colors).toHaveLength(5);
+      expect(palette.colors.every((color) => /^#[0-9a-f]{6}$/i.test(color))).toBe(true);
     }
   });
 
@@ -27,6 +29,10 @@ describe('Palettes', () => {
     expect(names).toContain('Spectrum');
     expect(names).toContain('Sakura');
     expect(names).toContain('Moonlight');
+    expect(names).toContain('Magma');
+    expect(names).toContain('Twilight');
+    expect(names).toContain('Copper Patina');
+    expect(names).toContain('Porcelain');
   });
 });
 

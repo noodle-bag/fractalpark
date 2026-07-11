@@ -66,6 +66,8 @@ export interface ColorPalette {
   index: number;
   name: string;
   key: string;
+  category: 'legacy' | 'sequential' | 'cyclic' | 'diverging' | 'artistic';
+  colors: readonly string[];
 }
 
 export interface WebGLResources {

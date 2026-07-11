@@ -135,6 +135,13 @@ describe('document migrate / normalize', () => {
     expect(runtime.maxIterations).toBe(640);
   });
 
+  it('recognizes a palette-only decoded URL state', () => {
+    const decoded = decodeParams(new URLSearchParams('pal=16'));
+    const runtime = documentToRuntimeParams(migrateFractalDocument(decoded, 0));
+
+    expect(runtime.paletteIndex).toBe(16);
+  });
+
   it('migrates builtin preset query through document and back to runtime', () => {
     const parsed = buildFractalParamsFromPresetQuery(
       'cx=-0.5&cy=0&z=2.00&iter=300&fm=buffalo&tr=kaleidoscope'
