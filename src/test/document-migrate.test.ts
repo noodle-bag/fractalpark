@@ -104,6 +104,7 @@ describe('document migrate / normalize', () => {
     expect(document.coloring.pipelineVersion).toBe(2);
     expect(document.coloring.style).toEqual({
       styleId: 'modernSmooth',
+      detail: DEFAULT_MODERN_SMOOTH_STYLE.detail,
       post: {
         ...DEFAULT_MODERN_SMOOTH_STYLE.post,
         exposure: 0.75,
@@ -118,7 +119,11 @@ describe('document migrate / normalize', () => {
     const document = normalizeFractalDocument({
       coloring: {
         pipelineVersion: 2,
-        style: { styleId: 'layeredOrbit', post: DEFAULT_MODERN_SMOOTH_STYLE.post },
+        style: {
+          styleId: 'layeredOrbit',
+          detail: DEFAULT_MODERN_SMOOTH_STYLE.detail,
+          post: DEFAULT_MODERN_SMOOTH_STYLE.post,
+        },
       },
     });
 
@@ -172,6 +177,24 @@ describe('document migrate / normalize', () => {
     expect(runtime.outsideColoring).toBe('orbitTrap');
     expect(runtime.insideColoring).toBe('atomDomain');
     expect(runtime.maxIterations).toBe(640);
+  });
+
+  it('recognizes a style-only shared URL as URL state', () => {
+    const doc = migrateFractalDocument(
+      decodeParams(encodeParams({
+        coloringPipelineVersion: 2,
+        modernColoring: {
+          ...DEFAULT_MODERN_SMOOTH_STYLE,
+          styleId: 'layeredOrbit',
+          detail: { scale: 2, amount: 1.5, softness: 0.25 },
+        },
+      })),
+      0
+    );
+
+    expect(doc.coloring.pipelineVersion).toBe(2);
+    expect(doc.coloring.style?.styleId).toBe('layeredOrbit');
+    expect(doc.coloring.style?.detail).toEqual({ scale: 2, amount: 1.5, softness: 0.25 });
   });
 
   it('migrates builtin preset query through document and back to runtime', () => {

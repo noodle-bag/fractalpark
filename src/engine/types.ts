@@ -50,6 +50,11 @@ export interface PostProcessState {
 
 export interface ShaderStyleState {
   styleId: 'modernSmooth' | 'layeredOrbit' | 'orbitNebula' | 'contourField';
+  detail: {
+    scale: number;
+    amount: number;
+    softness: number;
+  };
   post: PostProcessState;
 }
 

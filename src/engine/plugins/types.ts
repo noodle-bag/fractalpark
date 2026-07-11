@@ -54,4 +54,5 @@ export interface PluginCombination {
   outsideColoringId: string;
   insideColoringId: string;
   transformId: string;
+  modernStyleId?: string;
 }

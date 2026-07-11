@@ -12,11 +12,15 @@ describe('url params m3 protocol', () => {
       coloringPipelineVersion: 2,
       modernColoring: {
         ...DEFAULT_MODERN_SMOOTH_STYLE,
+        styleId: 'layeredOrbit',
+        detail: { scale: 2.5, amount: 1.4, softness: 0.2 },
         post: { ...DEFAULT_MODERN_SMOOTH_STYLE.post, exposure: 0.8, toneMapping: 'filmic', dither: false },
       },
     });
     const decoded = decodeParams(query);
     expect(decoded.coloringPipelineVersion).toBe(2);
+    expect(decoded.modernColoring?.styleId).toBe('layeredOrbit');
+    expect(decoded.modernColoring?.detail).toEqual({ scale: 2.5, amount: 1.4, softness: 0.2 });
     expect(decoded.modernColoring?.post).toMatchObject({ exposure: 0.8, toneMapping: 'filmic', dither: false });
   });
   beforeAll(() => {

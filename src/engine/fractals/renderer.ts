@@ -116,6 +116,7 @@ export class FractalRenderer {
       outsideColoringId: params.outsideColoring,
       insideColoringId: params.insideColoring,
       transformId: params.transformId ?? 'none',
+      modernStyleId: params.coloringPipelineVersion === 2 ? params.modernColoring?.styleId : undefined,
     };
 
     const key = makeCacheKey(combo);
@@ -180,6 +181,10 @@ export class FractalRenderer {
     this.setGradientUniforms(uniforms, params.customGradient);
 
     const post = params.modernColoring?.post;
+    const detail = params.modernColoring?.detail;
+    if (uniforms.u_detailScale) gl.uniform1f(uniforms.u_detailScale, detail?.scale ?? 1);
+    if (uniforms.u_detailAmount) gl.uniform1f(uniforms.u_detailAmount, detail?.amount ?? 1);
+    if (uniforms.u_detailSoftness) gl.uniform1f(uniforms.u_detailSoftness, detail?.softness ?? 0.5);
     if (uniforms.u_postToneMapping) {
       gl.uniform1i(
         uniforms.u_postToneMapping,

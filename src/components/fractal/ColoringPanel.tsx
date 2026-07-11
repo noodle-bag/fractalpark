@@ -8,7 +8,9 @@ import { Slider } from '@/components/ui/slider';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { ColorSchemeSelector } from './ColorSchemeSelector';
 import { GradientEditor } from './GradientEditor';
-import { MODERN_STYLE_DEFINITIONS } from '@/engine/coloring/styles';
+import { MODERN_STYLE_DEFINITIONS, resolveModernStyleCompatibility } from '@/engine/coloring/styles';
+import { pluginRegistry } from '@/engine/plugins/registry';
+import { DEFAULT_MODERN_SMOOTH_STYLE } from '@/engine/document';
 import type {
   GradientStop,
   InsideColoringMode,
@@ -20,6 +22,7 @@ import type {
 
 interface ColoringPanelProps {
   pipelineVersion: 1 | 2;
+  formulaId: string;
   modernStyle?: ShaderStyleState;
   paletteIndex: number;
   outsideColoring: OutsideColoringMode;
@@ -39,6 +42,7 @@ interface ColoringPanelProps {
 
 export function ColoringPanel({
   pipelineVersion,
+  formulaId,
   modernStyle,
   paletteIndex,
   outsideColoring,
@@ -58,6 +62,7 @@ export function ColoringPanel({
   const t = useTranslations('explore.controls');
   const useCustomGradient = customGradient !== null;
   const post = modernStyle?.post;
+  const contourFallback = resolveModernStyleCompatibility(modernStyle?.styleId, pluginRegistry.getFormula(formulaId)) === 'smoothFallback';
 
   const updatePost = (patch: Partial<ShaderStyleState['post']>) => {
     if (!modernStyle) return;
@@ -65,6 +70,11 @@ export function ColoringPanel({
       ...modernStyle,
       post: { ...modernStyle.post, ...patch },
     });
+  };
+
+  const updateDetail = (patch: Partial<ShaderStyleState['detail']>) => {
+    if (!modernStyle) return;
+    onModernStyleChange({ ...modernStyle, detail: { ...modernStyle.detail, ...patch } });
   };
 
   const handleToggleGradient = (enabled: boolean) => {
@@ -92,7 +102,7 @@ export function ColoringPanel({
           {MODERN_STYLE_DEFINITIONS.map((style) => (
             <Button key={style.id} size="sm" variant={pipelineVersion === 2 && modernStyle?.styleId === style.id ? 'default' : 'outline'} onClick={() => {
               onPipelineVersionChange(2);
-              onModernStyleChange({ ...(modernStyle ?? { styleId: 'modernSmooth', post: { toneMapping: 'soft', exposure: 0, contrast: 1, saturation: 1, temperature: 0, tint: 0, vignette: 0, dither: true } }), styleId: style.id });
+              onModernStyleChange({ ...(modernStyle ?? DEFAULT_MODERN_SMOOTH_STYLE), styleId: style.id });
             }}>
               {t(style.nameKey)}
             </Button>
@@ -101,7 +111,21 @@ export function ColoringPanel({
         <p className="text-xs text-muted-foreground">
           {pipelineVersion === 1 ? t('coloring.legacyDescription') : t('coloring.modernDescription')}
         </p>
+        {contourFallback && <p className="text-xs text-amber-600 dark:text-amber-400">{t('coloring.smoothFallback')}</p>}
       </div>
+
+      {pipelineVersion === 2 && modernStyle && (modernStyle.styleId === 'layeredOrbit' || modernStyle.styleId === 'orbitNebula') && (
+        <div className="space-y-3 rounded-lg border p-3 bg-muted/30">
+          <label className="text-sm font-medium leading-none">{t('coloring.detail')}</label>
+          {modernStyle.styleId === 'layeredOrbit' && <>
+            <div className="space-y-1"><Label htmlFor="detail-point-x" className="text-xs text-muted-foreground">{t('coloring.pointX')}</Label><Slider id="detail-point-x" value={[orbitTrap.point[0]]} onValueChange={(v) => onOrbitTrapChange({ ...orbitTrap, point: [v[0], orbitTrap.point[1]] })} min={-2} max={2} step={0.01} /></div>
+            <div className="space-y-1"><Label htmlFor="detail-point-y" className="text-xs text-muted-foreground">{t('coloring.pointY')}</Label><Slider id="detail-point-y" value={[orbitTrap.point[1]]} onValueChange={(v) => onOrbitTrapChange({ ...orbitTrap, point: [orbitTrap.point[0], v[0]] })} min={-2} max={2} step={0.01} /></div>
+          </>}
+          <div className="space-y-1"><Label htmlFor="detail-scale" className="text-xs text-muted-foreground">{t('coloring.detailScale')}</Label><Slider id="detail-scale" value={[modernStyle.detail.scale]} onValueChange={(v) => updateDetail({ scale: v[0] })} min={0.1} max={8} step={0.05} /></div>
+          <div className="space-y-1"><Label htmlFor="detail-amount" className="text-xs text-muted-foreground">{t('coloring.detailAmount')}</Label><Slider id="detail-amount" value={[modernStyle.detail.amount]} onValueChange={(v) => updateDetail({ amount: v[0] })} min={0} max={3} step={0.05} /></div>
+          <div className="space-y-1"><Label htmlFor="detail-softness" className="text-xs text-muted-foreground">{t('coloring.detailSoftness')}</Label><Slider id="detail-softness" value={[modernStyle.detail.softness]} onValueChange={(v) => updateDetail({ softness: v[0] })} min={0.01} max={2} step={0.01} /></div>
+        </div>
+      )}
 
       {pipelineVersion === 1 && <div className="space-y-3 rounded-lg border p-3 bg-muted/30">
         <label className="text-sm font-medium leading-none">{t('coloring.outside')}</label>

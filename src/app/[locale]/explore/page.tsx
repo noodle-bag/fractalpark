@@ -373,6 +373,7 @@ function ExploreContent() {
             <TabsContent value="coloring" className="mt-0 space-y-4">
               <ColoringPanel
                 pipelineVersion={document.coloring.pipelineVersion}
+                formulaId={formula}
                 modernStyle={document.coloring.style}
                 paletteIndex={paletteIndex}
                 outsideColoring={outsideColoring}

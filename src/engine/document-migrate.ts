@@ -59,7 +59,9 @@ function looksLikeUrlState(value: unknown): value is FractalUrlState {
       'zoom' in value ||
       'formula' in value ||
       'iterations' in value ||
-      'keyframes' in value)
+      'keyframes' in value ||
+      'coloringPipelineVersion' in value ||
+      'modernColoring' in value)
   );
 }
 
@@ -106,6 +108,7 @@ function normalizePluginParamRecord(value: unknown): PluginParamRecord | undefin
 function normalizeModernStyle(value: unknown): ShaderStyleState {
   const source = isObject(value) ? value : {};
   const post = isObject(source.post) ? source.post : {};
+  const detail = isObject(source.detail) ? source.detail : {};
   const defaults = DEFAULT_MODERN_SMOOTH_STYLE.post;
 
   return {
@@ -113,6 +116,11 @@ function normalizeModernStyle(value: unknown): ShaderStyleState {
       source.styleId === 'layeredOrbit' || source.styleId === 'orbitNebula' || source.styleId === 'contourField'
         ? source.styleId
         : 'modernSmooth',
+    detail: {
+      scale: Math.max(0.01, normalizeNumber(detail.scale, DEFAULT_MODERN_SMOOTH_STYLE.detail.scale)),
+      amount: Math.max(0, normalizeNumber(detail.amount, DEFAULT_MODERN_SMOOTH_STYLE.detail.amount)),
+      softness: Math.max(0.001, normalizeNumber(detail.softness, DEFAULT_MODERN_SMOOTH_STYLE.detail.softness)),
+    },
     post: {
       toneMapping:
         post.toneMapping === 'none' || post.toneMapping === 'soft' || post.toneMapping === 'filmic'

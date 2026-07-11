@@ -119,6 +119,11 @@ export const DEFAULT_DOCUMENT_LIGHTING: LightingConfig = {
 
 export const DEFAULT_MODERN_SMOOTH_STYLE: ShaderStyleState = {
   styleId: 'modernSmooth',
+  detail: {
+    scale: 1,
+    amount: 1,
+    softness: 0.5,
+  },
   post: {
     toneMapping: 'soft',
     exposure: 0,

@@ -41,6 +41,9 @@ uniform float u_postTemperature;
 uniform float u_postTint;
 uniform float u_postVignette;
 uniform bool u_postDither;
+uniform float u_detailScale;
+uniform float u_detailAmount;
+uniform float u_detailSoftness;
 
 uniform int u_orbitTrapShape;
 uniform vec2 u_orbitTrapPoint;
@@ -64,7 +67,6 @@ struct OrbitStats {
   float minRadius;
   float maxRadius;
   float angleAccum;
-  float formulaDistance;
 };
 
 struct FractalSample {
@@ -81,6 +83,9 @@ struct FractalSample {
   float maxRadius2;
   float finalAngle;
   float angleAccum;
+  float formulaDistance;
+  float pointTrap;
+  float radialStability;
 };
 
 /* INJECT_COMPLEX_MATH */
@@ -175,14 +180,14 @@ vec3 modernGradientColor(float t) {
 
 vec3 shadeFractal(FractalSample sample) {
   if (u_modernStyle == 1) {
-    float pointTrap = clamp(exp(-length(sample.z - u_orbitTrapPoint) * 3.0), 0.0, 1.0);
-    float radialSpan = clamp(sqrt(max(sample.maxRadius2, 0.0)) - sqrt(max(sample.minRadius2, 0.0)), 0.0, 4.0) * 0.25;
+    float pointTrap = exp(-sample.pointTrap / max(u_detailSoftness, 0.001)) * u_detailAmount;
+    float radialSpan = clamp(sample.radialStability, 0.0, 1.0);
     vec3 atmosphere = vec3(0.015, 0.04, 0.12) + radialSpan * vec3(0.08, 0.24, 0.42);
     vec3 detail = vec3(0.95, 0.24, 0.08) * pointTrap;
     return atmosphere + detail * (0.35 + 0.65 * fract(sample.smoothIter * 0.08));
   }
   if (u_modernStyle == 2) {
-    float span = clamp(sqrt(max(sample.maxRadius2, 0.0)) - sqrt(max(sample.minRadius2, 0.0)), 0.0, 5.0) * 0.2;
+    float span = clamp(sample.radialStability * u_detailScale, 0.0, 1.0) * u_detailAmount;
     float phase = 0.5 + 0.5 * sin(sample.angleAccum * 0.18 + sample.finalAngle * 2.0);
     float core = exp(-2.2 * abs(fract(sample.smoothIter * 0.075) - 0.5));
     vec3 nebula = mix(vec3(0.015, 0.01, 0.08), vec3(0.04, 0.36, 0.72), phase) * (0.25 + span);
@@ -247,6 +252,7 @@ vec3 colorAtComplex(vec2 point) {
   float smoothIter = 0.0;
   bool escaped = false;
   vec2 demDz = vec2(0.0); // dz/dc for DEM, tracked only when needed
+  /* INJECT_MEASUREMENT_INIT */
 
   OrbitStats stats;
   stats.trapMin = 1e9;
@@ -276,6 +282,7 @@ vec3 colorAtComplex(vec2 point) {
     stats.minRadius = min(stats.minRadius, zz);
     stats.maxRadius = max(stats.maxRadius, zz);
     stats.angleAccum += angle;
+    /* INJECT_MEASUREMENT_UPDATE */
 
 #ifdef ESCAPE_CONVERGE
     float diff = length(z - zPrev);
@@ -311,7 +318,12 @@ vec3 colorAtComplex(vec2 point) {
 
     vec2 nextZ = iterateStep(z, c, zPrev, point);
     // Track dz/dc = 2*z*(dz/dc) + 1 for DEM lighting (generalised, correct for z^2+c family)
-    if ((u_lightingEnabled && u_lightingMode == 1 || u_modernStyle == 3) && u_power == 2.0) {
+#ifdef MEASURE_DISTANCE_ESTIMATE
+    bool needsDerivative = true;
+#else
+    bool needsDerivative = false;
+#endif
+    if ((u_lightingEnabled && u_lightingMode == 1 || needsDerivative) && u_power == 2.0) {
 #ifdef HAS_ANALYTIC_DE
       demDz = 2.0 * vec2(z.x * demDz.x - z.y * demDz.y, z.x * demDz.y + z.y * demDz.x) + vec2(1.0, 0.0);
 #endif
@@ -342,6 +354,9 @@ vec3 colorAtComplex(vec2 point) {
     sample.finalAngle = stats.finalAngle;
     sample.angleAccum = stats.angleAccum;
     sample.formulaDistance = 0.0;
+    sample.pointTrap = 0.0;
+    sample.radialStability = 0.0;
+    /* INJECT_MEASUREMENT_FINALIZE */
 #ifdef HAS_ANALYTIC_DE
     if (u_power == 2.0 && length(demDz) > 0.0) sample.formulaDistance = length(z) * log(max(length(z), 1.00001)) / length(demDz);
 #endif

@@ -3,6 +3,7 @@ import { pluginRegistry } from '../plugins/registry';
 import frameworkTemplate from './framework.frag.glsl';
 import complexMathLib from './complex-math.glsl';
 import paletteLib from './palettes.glsl';
+import { MODERN_STYLE_DEFINITIONS } from '../coloring/styles';
 
 const ORBIT_TRAP_GLSL = `
 float orbitTrapDistance(vec2 z) {
@@ -18,6 +19,7 @@ export function assembleShader(combo: PluginCombination): string {
   const outside = pluginRegistry.getOutsideColoring(combo.outsideColoringId);
   const inside = pluginRegistry.getInsideColoring(combo.insideColoringId);
   const transform = pluginRegistry.getTransform(combo.transformId);
+  const style = combo.modernStyleId ? MODERN_STYLE_DEFINITIONS.find((entry) => entry.id === combo.modernStyleId) : undefined;
 
   if (!formula || !outside || !inside || !transform) {
     throw new Error(
@@ -37,6 +39,11 @@ export function assembleShader(combo: PluginCombination): string {
   if (formula.distanceEstimate === 'quadratic-c') {
     defines.push('#define HAS_ANALYTIC_DE');
   }
+  if (style?.requiredMeasurements.includes('distanceEstimate')) {
+    defines.push('#define MEASURE_DISTANCE_ESTIMATE');
+  }
+  if (style?.requiredMeasurements.includes('pointTrap')) defines.push('#define MEASURE_POINT_TRAP');
+  if (style?.requiredMeasurements.includes('radialStability')) defines.push('#define MEASURE_RADIAL_STABILITY');
 
   const allNeeded = new Set([...(outside.needsOrbitStats ?? []), ...(inside.needsOrbitStats ?? [])]);
   if (allNeeded.has('trapMin')) defines.push('#define NEED_ORBIT_TRAP');
@@ -65,9 +72,27 @@ export function assembleShader(combo: PluginCombination): string {
   shader = shader.replace('/* INJECT_OUTSIDE_COLORING */', outside.glsl);
   shader = shader.replace('/* INJECT_INSIDE_COLORING */', inside.glsl);
 
+  const measurementInit: string[] = [];
+  const measurementUpdate: string[] = [];
+  const measurementFinalize: string[] = [];
+  if (style?.requiredMeasurements.includes('pointTrap')) {
+    measurementInit.push('float measuredPointTrap = 1e9;');
+    measurementUpdate.push('measuredPointTrap = min(measuredPointTrap, length(z - u_orbitTrapPoint) * u_detailScale);');
+    measurementFinalize.push('sample.pointTrap = measuredPointTrap;');
+  }
+  if (style?.requiredMeasurements.includes('radialStability')) {
+    measurementInit.push('float measuredRadialDelta = 0.0;', 'float measuredPrevRadius = sqrt(max(dot(z, z), 0.0));', 'float measuredRadialCount = 0.0;');
+    measurementUpdate.push('float measuredRadius = sqrt(max(zz, 0.0));', 'measuredRadialDelta += abs(measuredRadius - measuredPrevRadius);', 'measuredPrevRadius = measuredRadius;', 'measuredRadialCount += 1.0;');
+    measurementFinalize.push('sample.radialStability = measuredRadialDelta / max(measuredRadialCount, 1.0);');
+  }
+  shader = shader.replace('/* INJECT_MEASUREMENT_INIT */', measurementInit.join('\n  '));
+  shader = shader.replace('/* INJECT_MEASUREMENT_UPDATE */', measurementUpdate.join('\n    '));
+  shader = shader.replace('/* INJECT_MEASUREMENT_FINALIZE */', measurementFinalize.join('\n    '));
+
   return shader;
 }
 
 export function makeCacheKey(combo: PluginCombination): ShaderCacheKey {
-  return `${combo.formulaId}|${combo.outsideColoringId}|${combo.insideColoringId}|${combo.transformId}`;
+  const base = `${combo.formulaId}|${combo.outsideColoringId}|${combo.insideColoringId}|${combo.transformId}`;
+  return combo.modernStyleId ? `${base}|${combo.modernStyleId}` : base;
 }

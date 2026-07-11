@@ -280,9 +280,10 @@ export function encodeParams(state: FractalUrlState): URLSearchParams {
     params.set('kf', encoded);
   }
   if (state.coloringPipelineVersion === 2) {
-    params.set('sty', 'ms');
+    params.set('sty', state.modernColoring?.styleId ?? 'modernSmooth');
     const post = state.modernColoring?.post ?? DEFAULT_MODERN_SMOOTH_STYLE.post;
-    params.set('cs', [post.toneMapping, post.exposure, post.contrast, post.saturation, post.temperature, post.tint, post.vignette, post.dither ? 1 : 0].join('|'));
+    const detail = state.modernColoring?.detail ?? DEFAULT_MODERN_SMOOTH_STYLE.detail;
+    params.set('cs', [post.toneMapping, post.exposure, post.contrast, post.saturation, post.temperature, post.tint, post.vignette, post.dither ? 1 : 0, detail.scale, detail.amount, detail.softness].join('|'));
   }
 
   return params;
@@ -461,7 +462,7 @@ export function decodeParams(searchParams: URLSearchParams): FractalUrlState {
       // Invalid keyframe data, ignore
     }
   }
-  if (sty === 'ms') {
+  if (sty !== null) {
     const defaults = DEFAULT_MODERN_SMOOTH_STYLE.post;
     const parts = cs?.split('|') ?? [];
     const numberAt = (index: number, fallback: number) => {
@@ -470,7 +471,15 @@ export function decodeParams(searchParams: URLSearchParams): FractalUrlState {
     };
     state.coloringPipelineVersion = 2;
     state.modernColoring = {
-      styleId: 'modernSmooth',
+      styleId:
+        sty === 'layeredOrbit' || sty === 'orbitNebula' || sty === 'contourField'
+          ? sty
+          : 'modernSmooth',
+      detail: {
+        scale: numberAt(8, DEFAULT_MODERN_SMOOTH_STYLE.detail.scale),
+        amount: numberAt(9, DEFAULT_MODERN_SMOOTH_STYLE.detail.amount),
+        softness: numberAt(10, DEFAULT_MODERN_SMOOTH_STYLE.detail.softness),
+      },
       post: {
         toneMapping: parts[0] === 'none' || parts[0] === 'filmic' ? parts[0] : 'soft',
         exposure: numberAt(1, defaults.exposure),

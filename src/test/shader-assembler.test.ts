@@ -3,7 +3,8 @@ import { assembleShader, makeCacheKey } from '@/engine/shaders/assembler';
 import { pluginRegistry } from '@/engine/plugins/registry';
 import { registerBuiltins } from '@/engine/plugins/builtins/index';
 import type { PluginCombination } from '@/engine/plugins/types';
-import { getModernStyleShaderIndex } from '@/engine/coloring/styles';
+import { getModernStyleShaderIndex, resolveModernStyleCompatibility } from '@/engine/coloring/styles';
+import { MEASUREMENT_DEFINITIONS } from '@/engine/coloring/measurements';
 
 describe('Shader Assembler', () => {
   beforeAll(() => {
@@ -37,6 +38,12 @@ describe('Shader Assembler', () => {
       });
       expect(key1).not.toBe(key2);
     });
+
+    it('adds style only when it changes shader structure', () => {
+      const base = { formulaId: 'mandelbrot', outsideColoringId: 'smooth', insideColoringId: 'black', transformId: 'none' };
+      expect(makeCacheKey(base)).toBe('mandelbrot|smooth|black|none');
+      expect(makeCacheKey({ ...base, modernStyleId: 'contourField' })).toBe('mandelbrot|smooth|black|none|contourField');
+    });
   });
 
   it('maps modern style IDs to stable uniform indices', () => {
@@ -44,6 +51,9 @@ describe('Shader Assembler', () => {
     expect(getModernStyleShaderIndex('layeredOrbit')).toBe(1);
     expect(getModernStyleShaderIndex('orbitNebula')).toBe(2);
     expect(getModernStyleShaderIndex('contourField')).toBe(3);
+    expect(MEASUREMENT_DEFINITIONS.find((measurement) => measurement.id === 'distanceEstimate')?.requiresDistanceEstimate).toBe(true);
+    expect(resolveModernStyleCompatibility('contourField', pluginRegistry.getFormula('burningShip'))).toBe('smoothFallback');
+    expect(resolveModernStyleCompatibility('contourField', pluginRegistry.getFormula('mandelbrot'))).toBe('supported');
   });
 
   describe('assembleShader', () => {
@@ -114,9 +124,20 @@ describe('Shader Assembler', () => {
       expect(shader).toContain('vec3 shadeFractal(FractalSample sample)');
       expect(shader).toContain('vec3 finalizeOutput(vec3 color)');
       expect(shader).toContain('uniform int u_modernStyle;');
-      expect(shader).toContain('sample.z - u_orbitTrapPoint');
       expect(shader).toContain('sample.formulaDistance');
       expect(makeCacheKey(combo)).toBe('mandelbrot|smooth|black|none');
+    });
+
+    it('injects only the measurements required by the selected modern style', () => {
+      const base = { formulaId: 'mandelbrot', outsideColoringId: 'smooth', insideColoringId: 'black', transformId: 'none' };
+      const smooth = assembleShader({ ...base, modernStyleId: 'modernSmooth' });
+      const layered = assembleShader({ ...base, modernStyleId: 'layeredOrbit' });
+      expect(smooth).not.toContain('#define MEASURE_POINT_TRAP');
+      expect(smooth).not.toContain('float measuredPointTrap = 1e9;');
+      expect(layered).toContain('#define MEASURE_POINT_TRAP');
+      expect(layered).toContain('#define MEASURE_RADIAL_STABILITY');
+      expect(layered).toContain('float measuredPointTrap = 1e9;');
+      expect(layered).toContain('sample.radialStability = measuredRadialDelta');
     });
 
     it('should define ESCAPE_CONVERGE for Newton formulas', () => {
