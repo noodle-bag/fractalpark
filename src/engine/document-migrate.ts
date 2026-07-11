@@ -110,7 +110,7 @@ function normalizeModernStyle(value: unknown): ShaderStyleState {
 
   return {
     styleId:
-      source.styleId === 'layeredOrbit' || source.styleId === 'orbitNebula'
+      source.styleId === 'layeredOrbit' || source.styleId === 'orbitNebula' || source.styleId === 'contourField'
         ? source.styleId
         : 'modernSmooth',
     post: {

@@ -292,6 +292,7 @@
         "modernSmooth": "Modern Smooth",
         "layeredOrbit": "Layered Orbit",
         "orbitNebula": "Orbit Nebula",
+        "contourField": "Contour Field",
         "legacyDescription": "Preserves the original palette and lighting output.",
         "modernDescription": "Uses linear color, display finishing, and deterministic dither.",
         "finish": "Finish",

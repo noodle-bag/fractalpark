@@ -18,7 +18,7 @@ uniform float u_rotation;
 uniform int u_maxIterations;
 uniform int u_paletteIndex;
 uniform int u_colorPipelineVersion;
-uniform int u_modernStyle; // 0=modernSmooth, 1=layeredOrbit, 2=orbitNebula
+uniform int u_modernStyle; // 0=modernSmooth, 1=layeredOrbit, 2=orbitNebula, 3=contourField
 uniform bool u_isJulia;
 uniform vec2 u_juliaC;
 uniform float u_power;
@@ -64,6 +64,7 @@ struct OrbitStats {
   float minRadius;
   float maxRadius;
   float angleAccum;
+  float formulaDistance;
 };
 
 struct FractalSample {
@@ -187,6 +188,12 @@ vec3 shadeFractal(FractalSample sample) {
     vec3 nebula = mix(vec3(0.015, 0.01, 0.08), vec3(0.04, 0.36, 0.72), phase) * (0.25 + span);
     return nebula + core * vec3(0.8, 0.18, 0.52) * (0.2 + span);
   }
+  if (u_modernStyle == 3) {
+#ifdef HAS_ANALYTIC_DE
+    float contour = 0.5 + 0.5 * cos(22.0 * log(max(sample.formulaDistance, 0.000001)));
+    return mix(vec3(0.01, 0.025, 0.06), vec3(0.18, 0.8, 0.95), contour);
+#endif
+  }
   float paletteT = fract(sample.smoothIter * 4.0);
   return modernGradientColor(paletteT);
 }
@@ -304,7 +311,7 @@ vec3 colorAtComplex(vec2 point) {
 
     vec2 nextZ = iterateStep(z, c, zPrev, point);
     // Track dz/dc = 2*z*(dz/dc) + 1 for DEM lighting (generalised, correct for z^2+c family)
-    if (u_lightingEnabled && u_lightingMode == 1 && u_power == 2.0) {
+    if ((u_lightingEnabled && u_lightingMode == 1 || u_modernStyle == 3) && u_power == 2.0) {
 #ifdef HAS_ANALYTIC_DE
       demDz = 2.0 * vec2(z.x * demDz.x - z.y * demDz.y, z.x * demDz.y + z.y * demDz.x) + vec2(1.0, 0.0);
 #endif
@@ -334,6 +341,10 @@ vec3 colorAtComplex(vec2 point) {
     sample.maxRadius2 = stats.maxRadius;
     sample.finalAngle = stats.finalAngle;
     sample.angleAccum = stats.angleAccum;
+    sample.formulaDistance = 0.0;
+#ifdef HAS_ANALYTIC_DE
+    if (u_power == 2.0 && length(demDz) > 0.0) sample.formulaDistance = length(z) * log(max(length(z), 1.00001)) / length(demDz);
+#endif
     return applyLighting(shadeFractal(sample), point, demDz, z);
   }
 

@@ -292,6 +292,7 @@
         "modernSmooth": "现代平滑",
         "layeredOrbit": "分层轨道",
         "orbitNebula": "轨道星云",
+        "contourField": "等高线场",
         "legacyDescription": "保留原有调色板和光照输出。",
         "modernDescription": "使用线性色彩、显示收尾和确定性抖动。",
         "finish": "收尾",

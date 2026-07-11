@@ -107,6 +107,7 @@ describe('Shader Assembler', () => {
       expect(shader).toContain('vec3 finalizeOutput(vec3 color)');
       expect(shader).toContain('uniform int u_modernStyle;');
       expect(shader).toContain('sample.z - u_orbitTrapPoint');
+      expect(shader).toContain('sample.formulaDistance');
       expect(makeCacheKey(combo)).toBe('mandelbrot|smooth|black|none');
     });
 

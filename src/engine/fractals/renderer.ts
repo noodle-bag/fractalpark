@@ -157,7 +157,7 @@ export class FractalRenderer {
     if (uniforms.u_modernStyle) {
       gl.uniform1i(
         uniforms.u_modernStyle,
-        params.modernColoring?.styleId === 'layeredOrbit' ? 1 : params.modernColoring?.styleId === 'orbitNebula' ? 2 : 0
+        params.modernColoring?.styleId === 'layeredOrbit' ? 1 : params.modernColoring?.styleId === 'orbitNebula' ? 2 : params.modernColoring?.styleId === 'contourField' ? 3 : 0
       );
     }
     if (uniforms.u_isJulia) gl.uniform1i(uniforms.u_isJulia, params.isJulia ? 1 : 0);
