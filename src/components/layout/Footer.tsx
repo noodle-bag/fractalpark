@@ -9,8 +9,8 @@ export default function Footer() {
         <p>{t('copyright')}</p>
         <p>
           {t('contact')}{' '}
-          <a href="mailto:routes.repute.7c@icloud.com" className="underline hover:text-foreground transition-colors">
-            routes.repute.7c@icloud.com
+          <a href="mailto:contact@fractalpark.com" className="underline hover:text-foreground transition-colors">
+            contact@fractalpark.com
           </a>
         </p>
       </div>
