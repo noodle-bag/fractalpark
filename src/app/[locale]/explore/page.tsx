@@ -344,17 +344,20 @@ function ExploreContent() {
         </button>
       </div>
 
-      <div className={`w-full lg:w-[30%] xl:w-[25%] border-t lg:border-t-0 lg:border-l bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60 overflow-y-auto ${isPanelCollapsed ? 'hidden lg:block' : ''}`}>
-        <div className="p-4">
+      <div
+        data-testid="explore-controls-panel"
+        className={`w-full lg:w-[clamp(380px,30vw,480px)] lg:shrink-0 border-t lg:border-t-0 lg:border-l bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60 overflow-y-auto ${isPanelCollapsed ? 'hidden lg:block' : ''}`}
+      >
+        <div className="p-3 xl:p-4">
           <PositionSummaryPanel bounds={bounds} />
 
           <Tabs defaultValue="formula" className="w-full mt-4">
-            <TabsList className="w-full grid grid-cols-5 mb-4 h-auto">
-              <TabsTrigger value="formula" className="px-1 py-1.5 text-[11px] sm:text-xs xl:text-sm">{t('tabs.formula')}</TabsTrigger>
-              <TabsTrigger value="coloring" className="px-1 py-1.5 text-[11px] sm:text-xs xl:text-sm">{t('tabs.coloring')}</TabsTrigger>
-              <TabsTrigger value="transform" className="px-1 py-1.5 text-[11px] sm:text-xs xl:text-sm">{t('tabs.transform')}</TabsTrigger>
-              <TabsTrigger value="render" className="px-1 py-1.5 text-[11px] sm:text-xs xl:text-sm">{t('tabs.render')}</TabsTrigger>
-              <TabsTrigger value="animation" className="px-1 py-1.5 text-[11px] sm:text-xs xl:text-sm">{t('tabs.animation')}</TabsTrigger>
+            <TabsList data-testid="explore-main-tabs" className="w-full grid grid-cols-5 gap-0 mb-3 h-auto">
+              <TabsTrigger value="formula" className="min-w-0 px-0.5 py-1.5 text-[11px] sm:text-xs">{t('tabs.formula')}</TabsTrigger>
+              <TabsTrigger value="coloring" className="min-w-0 px-0.5 py-1.5 text-[11px] sm:text-xs">{t('tabs.coloring')}</TabsTrigger>
+              <TabsTrigger value="transform" className="min-w-0 px-0.5 py-1.5 text-[11px] sm:text-xs">{t('tabs.transform')}</TabsTrigger>
+              <TabsTrigger value="render" className="min-w-0 px-0.5 py-1.5 text-[11px] sm:text-xs">{t('tabs.render')}</TabsTrigger>
+              <TabsTrigger value="animation" className="min-w-0 px-0.5 py-1.5 text-[11px] sm:text-xs">{t('tabs.animation')}</TabsTrigger>
             </TabsList>
             
             <TabsContent value="formula" className="mt-0 space-y-4">

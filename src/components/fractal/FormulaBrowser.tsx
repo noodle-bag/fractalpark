@@ -119,18 +119,18 @@ export function FormulaBrowser({ currentFormula, onFormulaChange }: FormulaBrows
   return (
     <div className="flex flex-col h-full">
       {/* Search input */}
-      <div className="relative mb-3">
+      <div className="relative mb-2.5">
         <Search className="absolute left-2.5 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
         <Input
           placeholder={t('formula.search')}
           value={searchQuery}
           onChange={(e) => setSearchQuery(e.target.value)}
-          className="pl-9 h-9"
+          className="h-8 pl-8 text-sm"
         />
       </div>
 
       {/* Family filter tabs */}
-      <div className="flex flex-wrap gap-1 mb-3">
+      <div data-testid="formula-family-filters" className="flex flex-wrap gap-1 mb-2.5">
         {FAMILY_ORDER.map((family) => (
           <Button
             key={family}
@@ -138,7 +138,7 @@ export function FormulaBrowser({ currentFormula, onFormulaChange }: FormulaBrows
             size="sm"
             onClick={() => setUserSelectedFamily(family)}
             className={cn(
-              'h-7 px-2 text-xs capitalize',
+              'h-6 px-1.5 text-[11px] capitalize',
               selectedFamily === family && 'bg-primary text-primary-foreground'
             )}
           >
@@ -160,13 +160,13 @@ export function FormulaBrowser({ currentFormula, onFormulaChange }: FormulaBrows
           </div>
         ) : selectedFamily === 'all' && !searchQuery ? (
           // Grouped view when showing all
-          <div className="space-y-4">
+          <div className="space-y-3">
             {sortedFamilies.map((family) => (
               <div key={family}>
-                <h4 className="text-xs font-medium text-muted-foreground uppercase tracking-wider mb-2">
+                <h4 className="mb-1.5 text-[11px] font-medium uppercase tracking-wider text-muted-foreground">
                   {t(`formula.family.${family}`)}
                 </h4>
-                <div className="grid grid-cols-1 gap-1.5">
+                <div className="grid grid-cols-1 gap-1">
                   {groupedFormulas[family].map((formula) => (
                     <FormulaCard
                       key={formula.id}
@@ -182,7 +182,7 @@ export function FormulaBrowser({ currentFormula, onFormulaChange }: FormulaBrows
           </div>
         ) : (
           // Flat list when filtering
-          <div className="grid grid-cols-1 gap-1.5">
+          <div className="grid grid-cols-1 gap-1">
             {filteredFormulas.map((formula) => (
               <FormulaCard
                 key={formula.id}
@@ -216,7 +216,7 @@ function FormulaCard({ formula, isActive, onClick, t }: FormulaCardProps) {
     <button
       onClick={onClick}
       className={cn(
-        'w-full text-left p-2.5 rounded-md border transition-all duration-150',
+        'w-full rounded-md border p-2 text-left transition-all duration-150',
         'hover:bg-accent hover:border-accent-foreground/20',
         isActive && 'bg-primary/10 border-primary/50 ring-1 ring-primary/30'
       )}
@@ -225,7 +225,7 @@ function FormulaCard({ formula, isActive, onClick, t }: FormulaCardProps) {
         {/* Thumbnail placeholder */}
         <div
           className={cn(
-            'w-10 h-10 rounded border flex items-center justify-center text-lg shrink-0',
+            'flex h-9 w-9 shrink-0 items-center justify-center rounded border text-base',
             isActive ? 'bg-primary/20 border-primary/30' : 'bg-muted border-border'
           )}
         >
@@ -234,7 +234,7 @@ function FormulaCard({ formula, isActive, onClick, t }: FormulaCardProps) {
 
         <div className="flex-1 min-w-0">
           <div className="flex items-center gap-1.5 flex-wrap">
-            <span className="font-medium text-sm truncate">
+            <span className="truncate text-[13px] font-medium">
               {formula.source === 'frm' || formula.source === 'custom'
                 ? formula.name
                 : t(`controls.formula.${formula.id}`)}
