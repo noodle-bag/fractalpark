@@ -60,6 +60,15 @@ function mergeColoringState(prev: FractalDocument, patch: Partial<ColoringState>
       ...patch,
       orbitTrap: patch.orbitTrap ? { ...prev.coloring.orbitTrap, ...patch.orbitTrap } : prev.coloring.orbitTrap,
       lighting: patch.lighting ? { ...prev.coloring.lighting, ...patch.lighting } : prev.coloring.lighting,
+      adjustments: patch.adjustments
+        ? {
+            ...prev.coloring.adjustments,
+            ...patch.adjustments,
+            curves: patch.adjustments.curves
+              ? { ...prev.coloring.adjustments.curves, ...patch.adjustments.curves }
+              : prev.coloring.adjustments.curves,
+          }
+        : prev.coloring.adjustments,
       params: hasParamsPatch
         ? {
             ...prev.coloring.params,

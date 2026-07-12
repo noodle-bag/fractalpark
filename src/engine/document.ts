@@ -1,5 +1,6 @@
 import type {
   GradientStop,
+  ColorAdjustmentsConfig,
   Keyframe,
   LightingConfig,
   OrbitTrapConfig,
@@ -7,7 +8,7 @@ import type {
   ViewBounds,
 } from './types';
 
-export const FRACTAL_DOCUMENT_SCHEMA_VERSION = 1;
+export const FRACTAL_DOCUMENT_SCHEMA_VERSION = 2;
 
 export interface FormulaParamsState {
   formula?: PluginParamRecord;
@@ -42,6 +43,7 @@ export interface ColoringState {
   insideColoringId: string;
   orbitTrap: OrbitTrapConfig;
   lighting: LightingConfig;
+  adjustments: ColorAdjustmentsConfig;
   params?: ColoringParamsState;
 }
 
@@ -110,6 +112,36 @@ export const DEFAULT_DOCUMENT_LIGHTING: LightingConfig = {
   intensity: 0.65,
 };
 
+export function createDefaultColorAdjustments(): ColorAdjustmentsConfig {
+  return {
+    exposure: 0,
+    contrast: 0,
+    brightness: 0,
+    gamma: 1,
+    saturation: 0,
+    vibrance: 0,
+    hue: 0,
+    curves: {
+      red: [0, 0.25, 0.5, 0.75, 1],
+      green: [0, 0.25, 0.5, 0.75, 1],
+      blue: [0, 0.25, 0.5, 0.75, 1],
+    },
+    invert: false,
+  };
+}
+
+export function cloneColorAdjustments(adjustments?: ColorAdjustmentsConfig): ColorAdjustmentsConfig {
+  const source = adjustments ?? createDefaultColorAdjustments();
+  return {
+    ...source,
+    curves: {
+      red: [...source.curves.red],
+      green: [...source.curves.green],
+      blue: [...source.curves.blue],
+    },
+  };
+}
+
 export const DEFAULT_FRACTAL_DOCUMENT: FractalDocument = {
   schemaVersion: FRACTAL_DOCUMENT_SCHEMA_VERSION,
   scene: {
@@ -128,6 +160,7 @@ export const DEFAULT_FRACTAL_DOCUMENT: FractalDocument = {
     insideColoringId: 'black',
     orbitTrap: DEFAULT_DOCUMENT_ORBIT_TRAP,
     lighting: DEFAULT_DOCUMENT_LIGHTING,
+    adjustments: createDefaultColorAdjustments(),
   },
   transform: {
     transformId: 'none',

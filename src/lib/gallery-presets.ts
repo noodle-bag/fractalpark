@@ -162,6 +162,7 @@ export function buildFractalParamsFromPresetQuery(query: string): ParsedPresetQu
       elevation: 35,
       intensity: 0.65,
     },
+    colorAdjustments: decoded.colorAdjustments,
     transformId: decoded.transformId || 'none',
     pluginParams: decoded.pluginParams || {},
 

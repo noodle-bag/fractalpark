@@ -1,6 +1,7 @@
 import { describe, expect, it } from 'vitest';
 import presetsFile from '../../public/gallery-presets.json';
 import {
+  buildFractalParamsFromPresetQuery,
   builtinPresetConfigToExploreHref,
   builtinPresetToGalleryHref,
   findBuiltinPresetConfigById,
@@ -40,5 +41,14 @@ describe('gallery preset shortlinks', () => {
 
     expect(href.startsWith('/en/explore?')).toBe(true);
     expect(href).toContain('fm=newton3');
+  });
+
+  it('preserves color adjustments from builtin preset query strings', () => {
+    const { params } = buildFractalParamsFromPresetQuery('fm=mandelbrot&ex=0.75&hue=-20&inv=1&cr=0,0.2,0.5,0.8,1');
+
+    expect(params.colorAdjustments?.exposure).toBe(0.75);
+    expect(params.colorAdjustments?.hue).toBe(-20);
+    expect(params.colorAdjustments?.invert).toBe(true);
+    expect(params.colorAdjustments?.curves.red).toEqual([0, 0.2, 0.5, 0.8, 1]);
   });
 });

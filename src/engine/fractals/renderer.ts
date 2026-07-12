@@ -3,6 +3,7 @@ import { assembleShader, makeCacheKey } from '../shaders/assembler';
 import { ShaderCache } from '../shaders/cache';
 import { pluginRegistry } from '../plugins/registry';
 import type { PluginCombination, PluginUniformDescriptor } from '../plugins/types';
+import { createDefaultColorAdjustments } from '../document';
 
 const ORBIT_TRAP_SHAPE_TO_UNIFORM: Record<string, number> = {
   point: 0,
@@ -17,6 +18,20 @@ function hexToRgb(hex: string): [number, number, number] {
     parseInt(h.substring(2, 4), 16) / 255,
     parseInt(h.substring(4, 6), 16) / 255,
   ];
+}
+
+function hasColorAdjustments(adjustments: NonNullable<FractalParams['colorAdjustments']>): boolean {
+  return adjustments.exposure !== 0
+    || adjustments.contrast !== 0
+    || adjustments.brightness !== 0
+    || adjustments.gamma !== 1
+    || adjustments.saturation !== 0
+    || adjustments.vibrance !== 0
+    || adjustments.hue !== 0
+    || adjustments.invert
+    || adjustments.curves.red.some((value, index) => value !== index * 0.25)
+    || adjustments.curves.green.some((value, index) => value !== index * 0.25)
+    || adjustments.curves.blue.some((value, index) => value !== index * 0.25);
 }
 
 export class FractalRenderer {
@@ -166,6 +181,23 @@ export class FractalRenderer {
     if (uniforms.u_lightAzimuth) gl.uniform1f(uniforms.u_lightAzimuth, (params.lighting.azimuth * Math.PI) / 180);
     if (uniforms.u_lightElevation) gl.uniform1f(uniforms.u_lightElevation, (params.lighting.elevation * Math.PI) / 180);
     if (uniforms.u_lightIntensity) gl.uniform1f(uniforms.u_lightIntensity, params.lighting.intensity);
+
+    const adjustments = params.colorAdjustments ?? createDefaultColorAdjustments();
+    if (uniforms.u_adjustmentsEnabled) gl.uniform1i(uniforms.u_adjustmentsEnabled, hasColorAdjustments(adjustments) ? 1 : 0);
+    if (uniforms.u_adjustExposure) gl.uniform1f(uniforms.u_adjustExposure, adjustments.exposure);
+    if (uniforms.u_adjustContrast) gl.uniform1f(uniforms.u_adjustContrast, adjustments.contrast);
+    if (uniforms.u_adjustBrightness) gl.uniform1f(uniforms.u_adjustBrightness, adjustments.brightness);
+    if (uniforms.u_adjustGamma) gl.uniform1f(uniforms.u_adjustGamma, adjustments.gamma);
+    if (uniforms.u_adjustSaturation) gl.uniform1f(uniforms.u_adjustSaturation, adjustments.saturation);
+    if (uniforms.u_adjustVibrance) gl.uniform1f(uniforms.u_adjustVibrance, adjustments.vibrance);
+    if (uniforms.u_adjustHue) gl.uniform1f(uniforms.u_adjustHue, adjustments.hue);
+    if (uniforms.u_adjustInvert) gl.uniform1i(uniforms.u_adjustInvert, adjustments.invert ? 1 : 0);
+    for (let i = 0; i < 5; i++) {
+      const location = uniforms[`u_rgbCurvePoints[${i}]`];
+      if (location) {
+        gl.uniform3f(location, adjustments.curves.red[i], adjustments.curves.green[i], adjustments.curves.blue[i]);
+      }
+    }
 
     if (uniforms.u_orbitTrapShape) gl.uniform1i(uniforms.u_orbitTrapShape, ORBIT_TRAP_SHAPE_TO_UNIFORM[params.orbitTrap.shape] ?? 0);
     if (uniforms.u_orbitTrapPoint) gl.uniform2f(uniforms.u_orbitTrapPoint, params.orbitTrap.point[0], params.orbitTrap.point[1]);

@@ -6,6 +6,7 @@ import {
   runtimeParamsToDocument,
   urlStateToDocument,
 } from '@/engine/document-adapter';
+import { createDefaultColorAdjustments } from '@/engine/document';
 
 describe('document adapter', () => {
   beforeAll(() => {
@@ -53,6 +54,15 @@ describe('document adapter', () => {
         elevation: 38,
         intensity: 0.72,
       },
+      colorAdjustments: {
+        ...createDefaultColorAdjustments(),
+        exposure: 0.75,
+        hue: -20,
+        curves: {
+          ...createDefaultColorAdjustments().curves,
+          red: [0, 0.2, 0.5, 0.8, 1],
+        },
+      },
     };
 
     const keyframes: Keyframe[] = [
@@ -75,6 +85,7 @@ describe('document adapter', () => {
     expect(doc.transform.params?.transform).toEqual({ u_kaleidoFold: 8 });
     expect(doc.animation?.keyframes).toHaveLength(2);
     expect(doc.metadata?.source).toBe('saved');
+    expect(doc.coloring.adjustments.exposure).toBe(0.75);
 
     const roundTripped = documentToRuntimeParams(doc);
 
@@ -110,5 +121,14 @@ describe('document adapter', () => {
     expect(doc.formula.params?.formula).toEqual({ u_unknownCustomParam: 3.5 });
     expect(doc.animation?.keyframes).toHaveLength(2);
     expect(doc.render.maxIterations).toBe(200);
+  });
+
+  it('defensively adapts legacy documents without color adjustments', () => {
+    const legacy = urlStateToDocument({ formula: 'mandelbrot' });
+    delete (legacy.coloring as Partial<typeof legacy.coloring>).adjustments;
+
+    const runtime = documentToRuntimeParams(legacy);
+
+    expect(runtime.colorAdjustments).toEqual(createDefaultColorAdjustments());
   });
 });

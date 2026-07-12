@@ -27,6 +27,16 @@ uniform bool u_useCustomGradient;
 uniform vec3 u_gradientColors[5];
 uniform float u_gradientPositions[5];
 uniform int u_gradientCount;
+uniform bool u_adjustmentsEnabled;
+uniform float u_adjustExposure;
+uniform float u_adjustContrast;
+uniform float u_adjustBrightness;
+uniform float u_adjustGamma;
+uniform float u_adjustSaturation;
+uniform float u_adjustVibrance;
+uniform float u_adjustHue;
+uniform bool u_adjustInvert;
+uniform vec3 u_rgbCurvePoints[5];
 
 uniform int u_orbitTrapShape;
 uniform vec2 u_orbitTrapPoint;
@@ -239,11 +249,68 @@ vec3 colorAtUV(vec2 uv) {
   return colorAtComplex(mapUVToComplex(uv));
 }
 
+float sampleCurve(float value, float p0, float p1, float p2, float p3, float p4) {
+  float scaled = clamp(value, 0.0, 1.0) * 4.0;
+  if (scaled < 1.0) return mix(p0, p1, scaled);
+  if (scaled < 2.0) return mix(p1, p2, scaled - 1.0);
+  if (scaled < 3.0) return mix(p2, p3, scaled - 2.0);
+  return mix(p3, p4, scaled - 3.0);
+}
+
+vec3 applyRgbCurves(vec3 color) {
+  return vec3(
+    sampleCurve(color.r, u_rgbCurvePoints[0].r, u_rgbCurvePoints[1].r, u_rgbCurvePoints[2].r, u_rgbCurvePoints[3].r, u_rgbCurvePoints[4].r),
+    sampleCurve(color.g, u_rgbCurvePoints[0].g, u_rgbCurvePoints[1].g, u_rgbCurvePoints[2].g, u_rgbCurvePoints[3].g, u_rgbCurvePoints[4].g),
+    sampleCurve(color.b, u_rgbCurvePoints[0].b, u_rgbCurvePoints[1].b, u_rgbCurvePoints[2].b, u_rgbCurvePoints[3].b, u_rgbCurvePoints[4].b)
+  );
+}
+
+vec3 rotateHue(vec3 color, float angle) {
+  const mat3 rgbToYiq = mat3(
+    0.299, 0.596, 0.211,
+    0.587, -0.274, -0.523,
+    0.114, -0.322, 0.312
+  );
+  const mat3 yiqToRgb = mat3(
+    1.0, 1.0, 1.0,
+    0.956, -0.272, -1.106,
+    0.621, -0.647, 1.703
+  );
+  vec3 yiq = rgbToYiq * color;
+  float c = cos(angle);
+  float s = sin(angle);
+  yiq.yz = mat2(c, -s, s, c) * yiq.yz;
+  return yiqToRgb * yiq;
+}
+
+vec3 applyColorAdjustments(vec3 color) {
+  if (!u_adjustmentsEnabled) return clamp(color, 0.0, 1.0);
+  color = max(color, vec3(0.0)) * exp2(u_adjustExposure);
+  color += vec3(u_adjustBrightness * 0.005);
+  color = (color - 0.5) * (1.0 + u_adjustContrast * 0.01) + 0.5;
+  color = pow(max(color, vec3(0.0)), vec3(1.0 / max(u_adjustGamma, 0.25)));
+
+  float maxChannel = max(color.r, max(color.g, color.b));
+  float minChannel = min(color.r, min(color.g, color.b));
+  float chroma = clamp(maxChannel - minChannel, 0.0, 1.0);
+  float luminance = dot(color, vec3(0.2126, 0.7152, 0.0722));
+  float vibranceFactor = 1.0 + u_adjustVibrance * 0.01 * (1.0 - chroma);
+  color = mix(vec3(luminance), color, max(vibranceFactor, 0.0));
+
+  luminance = dot(color, vec3(0.2126, 0.7152, 0.0722));
+  color = mix(vec3(luminance), color, max(1.0 + u_adjustSaturation * 0.01, 0.0));
+  if (abs(u_adjustHue) > 0.001) color = rotateHue(color, radians(u_adjustHue));
+  color = applyRgbCurves(clamp(color, 0.0, 1.0));
+  if (u_adjustInvert) color = vec3(1.0) - color;
+  return clamp(color, 0.0, 1.0);
+}
+
 void main() {
   // u_tileOffset shifts gl_FragCoord for tiled export; u_resolution is always the full image size
   vec2 uv = (gl_FragCoord.xy + u_tileOffset - u_resolution * 0.5) / min(u_resolution.x, u_resolution.y);
   float px = 1.0 / min(u_resolution.x, u_resolution.y);
 
+  vec3 resolvedColor;
   if (u_ssaaLevel == 16) {
     // 4×4 grid (16-tap SSAA)
     vec3 acc = vec3(0.0);
@@ -253,7 +320,7 @@ void main() {
         acc += colorAtUV(uv + offset);
       }
     }
-    gl_FragColor = vec4(acc / 16.0, 1.0);
+    resolvedColor = acc / 16.0;
   } else if (u_ssaaLevel == 9) {
     // 3×3 grid (9-tap SSAA)
     vec3 acc = vec3(0.0);
@@ -263,15 +330,16 @@ void main() {
         acc += colorAtUV(uv + offset);
       }
     }
-    gl_FragColor = vec4(acc / 9.0, 1.0);
+    resolvedColor = acc / 9.0;
   } else if (u_ssaaLevel == 4) {
     // 2×2 grid (4-tap SSAA) — original behavior
     vec3 c1 = colorAtUV(uv + vec2(-0.25 * px, -0.25 * px));
     vec3 c2 = colorAtUV(uv + vec2( 0.25 * px, -0.25 * px));
     vec3 c3 = colorAtUV(uv + vec2(-0.25 * px,  0.25 * px));
     vec3 c4 = colorAtUV(uv + vec2( 0.25 * px,  0.25 * px));
-    gl_FragColor = vec4((c1 + c2 + c3 + c4) * 0.25, 1.0);
+    resolvedColor = (c1 + c2 + c3 + c4) * 0.25;
   } else {
-    gl_FragColor = vec4(colorAtUV(uv), 1.0);
+    resolvedColor = colorAtUV(uv);
   }
+  gl_FragColor = vec4(applyColorAdjustments(resolvedColor), 1.0);
 }

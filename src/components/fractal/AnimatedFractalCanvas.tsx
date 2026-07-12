@@ -180,6 +180,7 @@ export default function AnimatedFractalCanvas({
     params.adaptiveIterations,
     params.lighting,
     params.customGradient,
+    params.colorAdjustments,
     render,
   ]);
 

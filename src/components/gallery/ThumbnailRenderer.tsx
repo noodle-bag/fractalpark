@@ -34,6 +34,7 @@ export function ThumbnailRenderer({ params }: ThumbnailRendererProps) {
         adaptiveIterations={params.adaptiveIterations}
         lighting={params.lighting}
         customGradient={params.customGradient}
+        colorAdjustments={params.colorAdjustments}
         onBoundsChange={setBounds}
       />
     </div>

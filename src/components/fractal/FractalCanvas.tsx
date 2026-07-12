@@ -7,6 +7,7 @@ import { useCanvasInteraction } from '@/hooks/useCanvasInteraction';
 import type {
   FractalFormula,
   FractalParams,
+  ColorAdjustmentsConfig,
   GradientStop,
   InsideColoringMode,
   LightingConfig,
@@ -33,6 +34,7 @@ interface FractalCanvasProps {
   adaptiveIterations: boolean;
   lighting: LightingConfig;
   customGradient: GradientStop[] | null;
+  colorAdjustments?: ColorAdjustmentsConfig;
   onBoundsChange?: (bounds: ViewBounds) => void;
   onPointSelect?: (point: [number, number]) => void;
   onResetView?: (resetFn: () => void) => void;
@@ -56,6 +58,7 @@ export default function FractalCanvas({
   adaptiveIterations,
   lighting,
   customGradient,
+  colorAdjustments,
   onBoundsChange,
   onPointSelect,
   onResetView,
@@ -102,6 +105,7 @@ export default function FractalCanvas({
       adaptiveIterations,
       lighting,
       customGradient,
+      colorAdjustments,
     };
 
     paramsRef.current = params;
@@ -124,6 +128,7 @@ export default function FractalCanvas({
     adaptiveIterations,
     lighting,
     customGradient,
+    colorAdjustments,
     resize,
     render,
     rendererRef,

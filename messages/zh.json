@@ -299,6 +299,24 @@
         "finalOrbit": "最终轨道",
         "atomDomain": "原子域"
       },
+      "adjustments": {
+        "title": "色彩调整",
+        "exposure": "曝光",
+        "contrast": "对比度",
+        "brightness": "亮度",
+        "gamma": "Gamma",
+        "saturation": "饱和度",
+        "vibrance": "自然饱和度",
+        "hue": "色相",
+        "curves": "RGB 曲线",
+        "red": "红",
+        "green": "绿",
+        "blue": "蓝",
+        "invert": "反相",
+        "reset": "重置",
+        "resetChannel": "重置通道",
+        "point": "控制点"
+      },
       "orbitTrap": {
         "label": "轨道陷阱",
         "point": "点",

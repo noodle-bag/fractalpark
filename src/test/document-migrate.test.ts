@@ -6,7 +6,7 @@ import { migrateFractalDocument, normalizeFractalDocument, normalizeRuntimeFract
 import type { SavedFractal } from '@/engine/types';
 
 describe('document migrate / normalize', () => {
-  it('normalizes partial documents to schema v1 defaults', () => {
+  it('normalizes partial documents to schema v2 defaults', () => {
     const doc = normalizeFractalDocument({
       scene: {
         bounds: {
@@ -21,12 +21,14 @@ describe('document migrate / normalize', () => {
       },
     });
 
-    expect(doc.schemaVersion).toBe(1);
+    expect(doc.schemaVersion).toBe(2);
     expect(doc.scene.bounds.centerX).toBe(-0.1);
     expect(doc.scene.bounds.centerY).toBe(0);
     expect(doc.scene.bounds.zoom).toBe(0.4);
     expect(doc.render.maxIterations).toBe(320);
     expect(doc.transform.transformId).toBe('none');
+    expect(doc.coloring.adjustments.gamma).toBe(1);
+    expect(doc.coloring.adjustments.curves.red).toEqual([0, 0.25, 0.5, 0.75, 1]);
   });
 
   it('normalizes any document-like input to the current schema version', () => {
@@ -39,7 +41,7 @@ describe('document migrate / normalize', () => {
       },
     });
 
-    expect(doc.schemaVersion).toBe(1);
+    expect(doc.schemaVersion).toBe(2);
     expect(doc.scene.bounds.centerX).toBe(-0.2);
   });
 
@@ -54,6 +56,11 @@ describe('document migrate / normalize', () => {
           radius: -5,
           width: -0.1,
         },
+        adjustments: {
+          exposure: 99,
+          gamma: 0,
+          curves: { red: [-1, 0.2, 0.5, 0.8, 2] },
+        },
       },
     });
 
@@ -61,6 +68,9 @@ describe('document migrate / normalize', () => {
     expect(doc.render.maxIterations).toBe(1);
     expect(doc.coloring.orbitTrap.radius).toBe(0);
     expect(doc.coloring.orbitTrap.width).toBe(0);
+    expect(doc.coloring.adjustments.exposure).toBe(3);
+    expect(doc.coloring.adjustments.gamma).toBe(0.25);
+    expect(doc.coloring.adjustments.curves.red).toEqual([0, 0.2, 0.5, 0.8, 1]);
   });
 
   it('normalizes partial runtime params for defensive read paths', () => {
@@ -126,7 +136,7 @@ describe('document migrate / normalize', () => {
     const doc = migrateFractalDocument(decoded, 0);
     const runtime = documentToRuntimeParams(doc);
 
-    expect(doc.schemaVersion).toBe(1);
+    expect(doc.schemaVersion).toBe(2);
     expect(doc.metadata?.source).toBe('shared');
     expect(doc.animation?.keyframes).toHaveLength(2);
     expect(runtime.formula).toBe('burningShip');
@@ -150,7 +160,7 @@ describe('document migrate / normalize', () => {
     const doc = migrateFractalDocument(parsed.params, 0);
     const runtime = documentToRuntimeParams(doc);
 
-    expect(doc.schemaVersion).toBe(1);
+    expect(doc.schemaVersion).toBe(2);
     expect(runtime.formula).toBe('buffalo');
     expect(runtime.transformId).toBe('kaleidoscope');
     expect(runtime.maxIterations).toBe(300);
@@ -174,11 +184,37 @@ describe('document migrate / normalize', () => {
       render: {},
     });
 
-    expect(doc.schemaVersion).toBe(1);
+    expect(doc.schemaVersion).toBe(2);
     expect(doc.scene.bounds.centerX).toBe(-0.123);
     expect(doc.scene.bounds.centerY).toBe(0.456);
     expect(doc.scene.bounds.zoom).toBe(8);
     expect(doc.formula.formulaId).toBe('phoenix');
+  });
+
+  it('migrates schema v1 with independent identity curve arrays', () => {
+    const legacy = {
+      schemaVersion: 1,
+      scene: { bounds: { centerX: 0, centerY: 0, zoom: 1, rotation: 0 } },
+      formula: { formulaId: 'mandelbrot', isJulia: false, juliaC: [-0.7, 0.27], power: 2 },
+      coloring: {
+        paletteIndex: 0,
+        customGradient: null,
+        outsideColoringId: 'smooth',
+        insideColoringId: 'black',
+        orbitTrap: { shape: 'point', point: [0, 0], radius: 0.35, width: 0.02 },
+        lighting: { enabled: false, mode: 'normalMap', azimuth: 45, elevation: 35, intensity: 0.65 },
+      },
+      transform: { transformId: 'none' },
+      render: { maxIterations: 200, useSSAA: false, adaptiveIterations: false },
+    };
+
+    const first = migrateFractalDocument(legacy);
+    const second = migrateFractalDocument(legacy);
+    first.coloring.adjustments.curves.red[1] = 0.1;
+
+    expect(first.schemaVersion).toBe(2);
+    expect(second.coloring.adjustments.curves.red[1]).toBe(0.25);
+    expect(migrateFractalDocument(second)).toEqual(second);
   });
 
   it('migrates legacy saved fractals through document and preserves metadata', () => {
@@ -217,19 +253,20 @@ describe('document migrate / normalize', () => {
     const doc = migrateFractalDocument(legacy, 0);
     const runtime = documentToRuntimeParams(doc);
 
-    expect(doc.schemaVersion).toBe(1);
+    expect(doc.schemaVersion).toBe(2);
     expect(doc.metadata?.name).toBe('Legacy Saved');
     expect(doc.metadata?.createdAt).toBe(1234567890);
     expect(doc.metadata?.source).toBe('saved');
     expect(doc.animation?.keyframes).toHaveLength(2);
     expect(runtime.bounds.centerX).toBe(0.25);
     expect(runtime.maxIterations).toBe(280);
+    expect(runtime.colorAdjustments?.exposure).toBe(0);
   });
 
   it('throws for unsupported future FractalDocument schema versions', () => {
     expect(() =>
       migrateFractalDocument({
-        schemaVersion: 2,
+        schemaVersion: 3,
         scene: { bounds: { centerX: 0, centerY: 0, zoom: 1, rotation: 0 } },
         formula: { formulaId: 'mandelbrot', isJulia: false, juliaC: [-0.7, 0.27], power: 2 },
         coloring: {
@@ -243,6 +280,6 @@ describe('document migrate / normalize', () => {
         transform: { transformId: 'none' },
         render: { maxIterations: 200, useSSAA: false, adaptiveIterations: false },
       })
-    ).toThrow(/Unsupported FractalDocument schemaVersion: 2/);
+    ).toThrow(/Unsupported FractalDocument schemaVersion: 3/);
   });
 });

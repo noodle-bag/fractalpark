@@ -4,6 +4,7 @@ import { compileFrm } from '@/engine/frm/compile';
 import { pluginRegistry } from '@/engine/plugins/registry';
 import { runtimeParamsToDocument } from '@/engine/document-adapter';
 import { decodeParams, documentToExploreHref, documentToUrlState, encodeParams, savedFractalToHref } from '@/lib/url-params';
+import { createDefaultColorAdjustments } from '@/engine/document';
 
 describe('url params m3 protocol', () => {
   beforeAll(() => {
@@ -83,6 +84,7 @@ bailout:
         elevation: 35,
         intensity: 0.65,
       },
+      colorAdjustments: createDefaultColorAdjustments(),
     });
 
     expect(params.has('fm')).toBe(false);
@@ -95,6 +97,42 @@ bailout:
     expect(params.has('lga')).toBe(false);
     expect(params.has('lge')).toBe(false);
     expect(params.has('lgi')).toBe(false);
+    expect(params.has('ex')).toBe(false);
+    expect(params.has('cr')).toBe(false);
+  });
+
+  it('round-trips color adjustments and channel curves', () => {
+    const adjustments = createDefaultColorAdjustments();
+    const encoded = encodeParams({
+      colorAdjustments: {
+        ...adjustments,
+        exposure: 1.25,
+        contrast: 20,
+        gamma: 1.2,
+        vibrance: 35,
+        hue: -30,
+        invert: true,
+        curves: { ...adjustments.curves, red: [0, 0.18, 0.5, 0.82, 1] },
+      },
+    });
+    const decoded = decodeParams(encoded).colorAdjustments;
+
+    expect(decoded?.exposure).toBe(1.25);
+    expect(decoded?.contrast).toBe(20);
+    expect(decoded?.gamma).toBe(1.2);
+    expect(decoded?.vibrance).toBe(35);
+    expect(decoded?.hue).toBe(-30);
+    expect(decoded?.invert).toBe(true);
+    expect(decoded?.curves.red).toEqual([0, 0.18, 0.5, 0.82, 1]);
+    expect(encoded.has('cg')).toBe(false);
+  });
+
+  it('ignores malformed RGB curves while preserving valid adjustment fields', () => {
+    const decoded = decodeParams(new URLSearchParams('ex=9&gm=0&cr=0,0.5,1'));
+
+    expect(decoded.colorAdjustments?.exposure).toBe(3);
+    expect(decoded.colorAdjustments?.gamma).toBe(0.25);
+    expect(decoded.colorAdjustments?.curves.red).toEqual([0, 0.25, 0.5, 0.75, 1]);
   });
 
   it('decodes plugin formula IDs without registry validation', () => {

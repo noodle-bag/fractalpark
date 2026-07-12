@@ -7,6 +7,7 @@ import {
   DEFAULT_DOCUMENT_LIGHTING,
   DEFAULT_DOCUMENT_ORBIT_TRAP,
   DEFAULT_FRACTAL_DOCUMENT,
+  cloneColorAdjustments,
   type AnimationState,
   type FractalDocument,
   type FractalDocumentMetadata,
@@ -130,6 +131,7 @@ export function runtimeParamsToDocument(
       insideColoringId: params.insideColoring,
       orbitTrap: params.orbitTrap,
       lighting: params.lighting,
+      adjustments: cloneColorAdjustments(params.colorAdjustments ?? DEFAULT_FRACTAL_DOCUMENT.coloring.adjustments),
       params:
         split.outside || split.inside
           ? {
@@ -175,6 +177,7 @@ export function documentToRuntimeParams(doc: FractalDocument): FractalParams {
     useSSAA: doc.render.useSSAA,
     adaptiveIterations: doc.render.adaptiveIterations,
     lighting: doc.coloring.lighting,
+    colorAdjustments: cloneColorAdjustments(doc.coloring.adjustments),
   };
 }
 
@@ -214,6 +217,7 @@ export function urlStateToDocument(
       insideColoringId: state.insideColoring ?? DEFAULT_FRACTAL_DOCUMENT.coloring.insideColoringId,
       orbitTrap: state.orbitTrap ?? DEFAULT_DOCUMENT_ORBIT_TRAP,
       lighting: state.lighting ?? DEFAULT_DOCUMENT_LIGHTING,
+      adjustments: cloneColorAdjustments(state.colorAdjustments ?? DEFAULT_FRACTAL_DOCUMENT.coloring.adjustments),
     },
     transform: {
       transformId: state.transformId ?? DEFAULT_FRACTAL_DOCUMENT.transform.transformId,

@@ -7,7 +7,9 @@ import { Label } from '@/components/ui/label';
 import { Slider } from '@/components/ui/slider';
 import { ColorSchemeSelector } from './ColorSchemeSelector';
 import { GradientEditor } from './GradientEditor';
+import { ColorAdjustmentsPanel } from './ColorAdjustmentsPanel';
 import type {
+  ColorAdjustmentsConfig,
   GradientStop,
   InsideColoringMode,
   OrbitTrapConfig,
@@ -20,11 +22,13 @@ interface ColoringPanelProps {
   insideColoring: InsideColoringMode;
   orbitTrap: OrbitTrapConfig;
   customGradient: GradientStop[] | null;
+  colorAdjustments: ColorAdjustmentsConfig;
   onPaletteChange: (index: number) => void;
   onOutsideColoringChange: (mode: OutsideColoringMode) => void;
   onInsideColoringChange: (mode: InsideColoringMode) => void;
   onOrbitTrapChange: (trap: OrbitTrapConfig) => void;
   onGradientChange: (gradient: GradientStop[] | null) => void;
+  onColorAdjustmentsChange: (adjustments: ColorAdjustmentsConfig) => void;
 }
 
 export function ColoringPanel({
@@ -33,11 +37,13 @@ export function ColoringPanel({
   insideColoring,
   orbitTrap,
   customGradient,
+  colorAdjustments,
   onPaletteChange,
   onOutsideColoringChange,
   onInsideColoringChange,
   onOrbitTrapChange,
   onGradientChange,
+  onColorAdjustmentsChange,
 }: ColoringPanelProps) {
   const t = useTranslations('explore.controls');
   const useCustomGradient = customGradient !== null;
@@ -166,6 +172,8 @@ export function ColoringPanel({
           <ColorSchemeSelector value={paletteIndex} onChange={onPaletteChange} />
         )}
       </div>
+
+      <ColorAdjustmentsPanel value={colorAdjustments} onChange={onColorAdjustmentsChange} />
     </div>
   );
 }

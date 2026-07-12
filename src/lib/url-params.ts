@@ -1,8 +1,10 @@
-import type { FractalDocument } from '@/engine/document';
+import { createDefaultColorAdjustments, type FractalDocument } from '@/engine/document';
 import { documentToRuntimeParams, runtimeParamsToDocument } from '@/engine/document-adapter';
 import type {
   FractalFormula,
   FractalParams,
+  ColorAdjustmentsConfig,
+  RgbCurve,
   GradientStop,
   InsideColoringMode,
   Keyframe,
@@ -114,6 +116,7 @@ export interface FractalUrlState {
   useSSAA?: boolean;
   adaptiveIterations?: boolean;
   lighting?: LightingConfig;
+  colorAdjustments?: ColorAdjustmentsConfig;
   gradient?: GradientStop[];
   palette?: number;
   keyframes?: Keyframe[];
@@ -163,6 +166,21 @@ function parsePluginParamValue(raw: string): PluginParamValue | undefined {
 
   const numeric = parseFloat(raw);
   return Number.isFinite(numeric) ? numeric : undefined;
+}
+
+function encodeCurve(curve: RgbCurve): string {
+  return curve.map((value) => Number(value.toFixed(3))).join(',');
+}
+
+function isIdentityCurve(curve: RgbCurve): boolean {
+  return curve.every((value, index) => Math.abs(value - index * 0.25) < 0.0005);
+}
+
+function parseCurve(raw: string | null): RgbCurve | undefined {
+  if (raw === null) return undefined;
+  const values = raw.split(',').map(Number);
+  if (values.length !== 5 || values.some((value) => !Number.isFinite(value))) return undefined;
+  return values.map((value) => Math.min(1, Math.max(0, value))) as RgbCurve;
 }
 
 /**
@@ -256,6 +274,20 @@ export function encodeParams(state: FractalUrlState): URLSearchParams {
     if (Math.abs(state.lighting.elevation - 35) > 0.01) params.set('lge', state.lighting.elevation.toFixed(2));
     if (Math.abs(state.lighting.intensity - 0.65) > 0.01) params.set('lgi', state.lighting.intensity.toFixed(2));
   }
+  if (state.colorAdjustments !== undefined) {
+    const adjustments = state.colorAdjustments;
+    if (Math.abs(adjustments.exposure) > 0.001) params.set('ex', adjustments.exposure.toFixed(2));
+    if (Math.abs(adjustments.contrast) > 0.01) params.set('ct', adjustments.contrast.toFixed(1));
+    if (Math.abs(adjustments.brightness) > 0.01) params.set('br', adjustments.brightness.toFixed(1));
+    if (Math.abs(adjustments.gamma - 1) > 0.001) params.set('gm', adjustments.gamma.toFixed(2));
+    if (Math.abs(adjustments.saturation) > 0.01) params.set('sat', adjustments.saturation.toFixed(1));
+    if (Math.abs(adjustments.vibrance) > 0.01) params.set('vib', adjustments.vibrance.toFixed(1));
+    if (Math.abs(adjustments.hue) > 0.01) params.set('hue', adjustments.hue.toFixed(1));
+    if (adjustments.invert) params.set('inv', '1');
+    if (!isIdentityCurve(adjustments.curves.red)) params.set('cr', encodeCurve(adjustments.curves.red));
+    if (!isIdentityCurve(adjustments.curves.green)) params.set('cg', encodeCurve(adjustments.curves.green));
+    if (!isIdentityCurve(adjustments.curves.blue)) params.set('cb', encodeCurve(adjustments.curves.blue));
+  }
   if (state.palette !== undefined) params.set('pal', String(state.palette));
   if (state.gradient) {
     // Compact format: "pos:hex,pos:hex,..."
@@ -309,6 +341,17 @@ export function decodeParams(searchParams: URLSearchParams): FractalUrlState {
   const lga = searchParams.get('lga');
   const lge = searchParams.get('lge');
   const lgi = searchParams.get('lgi');
+  const ex = searchParams.get('ex');
+  const ct = searchParams.get('ct');
+  const br = searchParams.get('br');
+  const gm = searchParams.get('gm');
+  const sat = searchParams.get('sat');
+  const vib = searchParams.get('vib');
+  const hue = searchParams.get('hue');
+  const inv = searchParams.get('inv');
+  const cr = searchParams.get('cr');
+  const cg = searchParams.get('cg');
+  const cb = searchParams.get('cb');
   const rot = searchParams.get('rot');
   const pal = searchParams.get('pal');
   const grad = searchParams.get('grad');
@@ -411,6 +454,28 @@ export function decodeParams(searchParams: URLSearchParams): FractalUrlState {
       intensity: Number.isFinite(intensity) ? intensity : 0.65,
     };
   }
+  if ([ex, ct, br, gm, sat, vib, hue, inv, cr, cg, cb].some((value) => value !== null)) {
+    const defaults = createDefaultColorAdjustments();
+    const finiteOr = (raw: string | null, fallback: number) => {
+      const value = raw === null ? fallback : Number(raw);
+      return Number.isFinite(value) ? value : fallback;
+    };
+    state.colorAdjustments = {
+      exposure: Math.min(3, Math.max(-3, finiteOr(ex, defaults.exposure))),
+      contrast: Math.min(100, Math.max(-100, finiteOr(ct, defaults.contrast))),
+      brightness: Math.min(100, Math.max(-100, finiteOr(br, defaults.brightness))),
+      gamma: Math.min(4, Math.max(0.25, finiteOr(gm, defaults.gamma))),
+      saturation: Math.min(100, Math.max(-100, finiteOr(sat, defaults.saturation))),
+      vibrance: Math.min(100, Math.max(-100, finiteOr(vib, defaults.vibrance))),
+      hue: Math.min(180, Math.max(-180, finiteOr(hue, defaults.hue))),
+      invert: inv === '1',
+      curves: {
+        red: parseCurve(cr) ?? defaults.curves.red,
+        green: parseCurve(cg) ?? defaults.curves.green,
+        blue: parseCurve(cb) ?? defaults.curves.blue,
+      },
+    };
+  }
   if (rot !== null) { const v = parseFloat(rot); if (!isNaN(v)) state.rotation = v; }
   if (pal !== null) {
     const value = parseInt(pal, 10);
@@ -481,6 +546,7 @@ export function documentToUrlState(doc: FractalDocument): FractalUrlState {
     useSSAA: runtime.useSSAA,
     adaptiveIterations: runtime.adaptiveIterations,
     lighting: runtime.lighting,
+    colorAdjustments: runtime.colorAdjustments,
     palette: runtime.customGradient ? undefined : runtime.paletteIndex,
     gradient: runtime.customGradient ?? undefined,
     keyframes: doc.animation?.keyframes,

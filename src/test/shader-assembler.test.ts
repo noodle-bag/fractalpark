@@ -93,6 +93,21 @@ describe('Shader Assembler', () => {
       expect(shader).toContain('getColor');
     });
 
+    it('should apply uniform-driven color adjustments after SSAA resolve', () => {
+      const shader = assembleShader({
+        formulaId: 'mandelbrot',
+        outsideColoringId: 'smooth',
+        insideColoringId: 'black',
+        transformId: 'none',
+      });
+
+      expect(shader).toContain('uniform vec3 u_rgbCurvePoints[5]');
+      expect(shader).toContain('if (!u_adjustmentsEnabled) return clamp(color, 0.0, 1.0);');
+      expect(shader).toContain('vec3 applyColorAdjustments(vec3 color)');
+      expect(shader).toContain('resolvedColor = acc / 16.0;');
+      expect(shader).toContain('applyColorAdjustments(resolvedColor)');
+    });
+
     it('should define ESCAPE_CONVERGE for Newton formulas', () => {
       const combo: PluginCombination = {
         formulaId: 'newton3',

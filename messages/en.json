@@ -299,6 +299,24 @@
         "finalOrbit": "Final Orbit",
         "atomDomain": "Atom Domain"
       },
+      "adjustments": {
+        "title": "Color Adjustments",
+        "exposure": "Exposure",
+        "contrast": "Contrast",
+        "brightness": "Brightness",
+        "gamma": "Gamma",
+        "saturation": "Saturation",
+        "vibrance": "Vibrance",
+        "hue": "Hue",
+        "curves": "RGB Curves",
+        "red": "R",
+        "green": "G",
+        "blue": "B",
+        "invert": "Invert",
+        "reset": "Reset",
+        "resetChannel": "Reset Channel",
+        "point": "point"
+      },
       "orbitTrap": {
         "label": "Orbit Trap",
         "point": "Point",

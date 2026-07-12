@@ -35,6 +35,26 @@ export interface LightingConfig {
   intensity: number;
 }
 
+export type RgbCurve = [number, number, number, number, number];
+
+export interface RgbCurvesConfig {
+  red: RgbCurve;
+  green: RgbCurve;
+  blue: RgbCurve;
+}
+
+export interface ColorAdjustmentsConfig {
+  exposure: number;
+  contrast: number;
+  brightness: number;
+  gamma: number;
+  saturation: number;
+  vibrance: number;
+  hue: number;
+  curves: RgbCurvesConfig;
+  invert: boolean;
+}
+
 export type PluginParamVector2 = [number, number];
 export type PluginParamVector3 = [number, number, number];
 export type PluginParamValue = number | boolean | PluginParamVector2 | PluginParamVector3;
@@ -58,6 +78,7 @@ export interface FractalParams {
   ssaaLevel?: number; // 0=off, 4=2x2, 9=3x3, 16=4x4; overrides useSSAA when set
   adaptiveIterations: boolean;
   lighting: LightingConfig;
+  colorAdjustments?: ColorAdjustmentsConfig;
   /** Internal: tiled export info. u_resolution = full image; u_tileOffset = pixel offset. */
   _tileInfo?: { fullWidth: number; fullHeight: number; offsetX: number; offsetY: number };
 }

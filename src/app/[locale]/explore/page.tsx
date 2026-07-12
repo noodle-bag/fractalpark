@@ -51,6 +51,7 @@ function ExploreContent() {
     adaptiveIterations,
     lighting,
     customGradient,
+    colorAdjustments = document.coloring.adjustments,
   } = runtimeParams;
   const [copied, setCopied] = useState(false);
   const [pickToast, setPickToast] = useState<string | null>(null);
@@ -173,6 +174,7 @@ function ExploreContent() {
           adaptiveIterations,
           lighting,
           customGradient,
+          colorAdjustments,
         },
       width,
       height,
@@ -195,6 +197,7 @@ function ExploreContent() {
     adaptiveIterations,
     lighting,
     customGradient,
+    colorAdjustments,
   ]);
 
   const handleCanvasReady = useCallback((canvas: HTMLCanvasElement) => {
@@ -291,6 +294,7 @@ function ExploreContent() {
             adaptiveIterations={adaptiveIterations}
             lighting={lighting}
             customGradient={customGradient}
+            colorAdjustments={colorAdjustments}
             onBoundsChange={updateBounds}
             onPointSelect={isJulia ? undefined : handleCanvasPointSelect}
             onResetView={handleRegisterReset}
@@ -316,6 +320,7 @@ function ExploreContent() {
               adaptiveIterations,
               lighting,
               customGradient,
+              colorAdjustments,
             }}
             keyframes={keyframes}
           />
@@ -374,11 +379,13 @@ function ExploreContent() {
                 insideColoring={insideColoring}
                 orbitTrap={orbitTrap}
                 customGradient={customGradient}
+                colorAdjustments={colorAdjustments}
                 onPaletteChange={(index) => updateColoring({ paletteIndex: index })}
                 onOutsideColoringChange={(mode) => updateColoring({ outsideColoringId: mode })}
                 onInsideColoringChange={(mode) => updateColoring({ insideColoringId: mode })}
                 onOrbitTrapChange={(trap) => updateColoring({ orbitTrap: trap })}
                 onGradientChange={(gradient) => updateColoring({ customGradient: gradient })}
+                onColorAdjustmentsChange={(adjustments) => updateColoring({ adjustments })}
               />
             </TabsContent>
 

@@ -7,6 +7,7 @@ import {
   DEFAULT_DOCUMENT_ORBIT_TRAP,
   DEFAULT_FRACTAL_DOCUMENT,
   FRACTAL_DOCUMENT_SCHEMA_VERSION,
+  createDefaultColorAdjustments,
   type FractalDocument,
 } from './document';
 import { documentToRuntimeParams, runtimeParamsToDocument, urlStateToDocument } from './document-adapter';
@@ -65,6 +66,37 @@ function looksLikeUrlState(value: unknown): value is FractalUrlState {
 
 function normalizeNumber(value: unknown, fallback: number): number {
   return typeof value === 'number' && Number.isFinite(value) ? value : fallback;
+}
+
+function clampNumber(value: unknown, fallback: number, min: number, max: number): number {
+  return Math.min(max, Math.max(min, normalizeNumber(value, fallback)));
+}
+
+function normalizeCurve(value: unknown, fallback: [number, number, number, number, number]): [number, number, number, number, number] {
+  if (!Array.isArray(value) || value.length !== 5) return [...fallback];
+  return value.map((entry, index) => clampNumber(entry, fallback[index], 0, 1)) as [number, number, number, number, number];
+}
+
+function normalizeColorAdjustments(value: unknown) {
+  const defaults = createDefaultColorAdjustments();
+  const source = isObject(value) ? value : {};
+  const curves = isObject(source.curves) ? source.curves : {};
+
+  return {
+    exposure: clampNumber(source.exposure, defaults.exposure, -3, 3),
+    contrast: clampNumber(source.contrast, defaults.contrast, -100, 100),
+    brightness: clampNumber(source.brightness, defaults.brightness, -100, 100),
+    gamma: clampNumber(source.gamma, defaults.gamma, 0.25, 4),
+    saturation: clampNumber(source.saturation, defaults.saturation, -100, 100),
+    vibrance: clampNumber(source.vibrance, defaults.vibrance, -100, 100),
+    hue: clampNumber(source.hue, defaults.hue, -180, 180),
+    curves: {
+      red: normalizeCurve(curves.red, defaults.curves.red),
+      green: normalizeCurve(curves.green, defaults.curves.green),
+      blue: normalizeCurve(curves.blue, defaults.curves.blue),
+    },
+    invert: typeof source.invert === 'boolean' ? source.invert : defaults.invert,
+  };
 }
 
 function normalizePluginParamValue(value: unknown): PluginParamValue | undefined {
@@ -152,12 +184,13 @@ export function normalizeRuntimeFractalParams(input: unknown): FractalParams {
           elevation: normalizeNumber(lighting.elevation, defaults.lighting.elevation),
           intensity: normalizeNumber(lighting.intensity, defaults.lighting.intensity),
         },
+        colorAdjustments: normalizeColorAdjustments(source.colorAdjustments),
       })
     )
   );
 }
 
-function migrateDocumentV0ToV1(doc: DeepPartial<FractalDocument>): FractalDocument {
+function migrateLegacyDocument(doc: DeepPartial<FractalDocument>): FractalDocument {
   return normalizeFractalDocument(doc);
 }
 
@@ -228,6 +261,7 @@ export function normalizeFractalDocument(doc: DeepPartial<FractalDocument>): Fra
         elevation: normalizeNumber(source.coloring?.lighting?.elevation, DEFAULT_DOCUMENT_LIGHTING.elevation),
         intensity: normalizeNumber(source.coloring?.lighting?.intensity, DEFAULT_DOCUMENT_LIGHTING.intensity),
       },
+      adjustments: normalizeColorAdjustments(source.coloring?.adjustments),
       params: source.coloring?.params
         ? {
             outside: normalizePluginParamRecord(source.coloring.params.outside),
@@ -275,8 +309,8 @@ export function migrateFractalDocument(input: unknown, fromVersion = 0): Fractal
       return normalizeFractalDocument(input);
     }
 
-    if (inputVersion === 0) {
-      return migrateDocumentV0ToV1(input);
+    if (inputVersion === 0 || inputVersion === 1) {
+      return migrateLegacyDocument(input);
     }
 
     throw new Error(
@@ -306,11 +340,11 @@ export function migrateFractalDocument(input: unknown, fromVersion = 0): Fractal
       );
     }
 
-    return migrateDocumentV0ToV1(runtimeParamsToDocument(input));
+    return migrateLegacyDocument(runtimeParamsToDocument(input));
   }
 
   if (looksLikeUrlState(input)) {
-    return migrateDocumentV0ToV1(
+    return migrateLegacyDocument(
       urlStateToDocument(input, {
         metadata: { source: 'shared' },
       })
@@ -324,5 +358,5 @@ export function migrateFractalDocument(input: unknown, fromVersion = 0): Fractal
     );
   }
 
-  return migrateDocumentV0ToV1(DEFAULT_FRACTAL_DOCUMENT);
+  return migrateLegacyDocument(DEFAULT_FRACTAL_DOCUMENT);
 }
