@@ -595,23 +595,23 @@
   "metadata": {
     "home": {
       "title": "分形公园 FractalPark - 开源浏览器分形生成器",
-      "description": "分形公园 FractalPark 是一个基于 MIT 许可证开源、可在浏览器中直接使用的分形生成器, 支持 94 个公式、实时 WebGL 渲染、自定义调色板和 PNG 导出.",
+      "description": "分形公园 FractalPark 是一个基于 MIT 许可证开源、可在浏览器中直接使用的分形生成器, 支持 94 个公式、实时 WebGL 渲染、自定义调色板和 PNG 导出.内置 Fractint .frm 公式编辑器, 采用 AST 到 GLSL 转译流水线与插件化着色器架构, 完全免费无需安装.",
       "ogTitle": "分形公园 FractalPark - 浏览器里的开源分形艺术工具",
       "ogDescription": "在浏览器中创作分形艺术: MIT 开源、WebGL 实时渲染、94 个公式、自定义调色板和 PNG 导出."
     },
     "explore": {
       "title": "探索分形 | 交互式分形生成器 - 分形公园 FractalPark",
-      "description": "交互式分形探索器, 支持 Mandelbrot、Julia、Newton 等 94 个内置公式.实时 WebGL 渲染, 自定义颜色, 高分辨率导出.",
+      "description": "交互式分形探索器, 支持 Mandelbrot、Julia、Newton 等 94 个内置公式.实时 WebGL 渲染, 7 种着色模式, 自定义调色板, 高分辨率 PNG 导出.内置 Fractint .frm 公式编辑器, 采用 AST 到 GLSL 转译流水线与插件化着色器架构, 完全免费开源无需安装.",
       "ogTitle": "交互式分形探索器 - 分形公园 FractalPark",
       "ogDescription": "实时探索数学之美.94 个分形公式, GPU 加速渲染."
     },
     "gallery": {
       "title": "我的画廊 | 个人分形收藏 - 分形公园 FractalPark",
-      "description": "您的个人分形艺术画廊.保存、整理和分享您最喜爱的分形创作."
+      "description": "您的个人分形艺术画廊.保存、整理和分享您最喜爱的分形创作.基于 Fractint .frm 公式编辑器与 AST 到 GLSL 转译流水线, 支持 94 个内置公式和自定义公式编辑, 实时 WebGL 渲染, 7 种着色模式, 自定义调色板, 高分辨率 PNG 导出, 完全免费开源无需安装任何软件."
     },
     "about": {
       "title": "关于 | 开源浏览器分形生成器 - 分形公园 FractalPark",
-      "description": "了解分形公园 FractalPark: 一个基于 MIT 许可证开源、可在浏览器中直接使用的 WebGL 分形生成器, 支持 94 个公式、自定义调色板和 PNG 导出."
+      "description": "了解分形公园 FractalPark: 一个基于 MIT 许可证开源、可在浏览器中直接使用的 WebGL 分形生成器, 支持 94 个公式、自定义调色板和 PNG 导出.核心技术: Fractint .frm 公式编辑器, AST 到 GLSL 转译流水线, 插件化着色器架构, 完全免费开源无需安装."
     }
   },
   "about": {
