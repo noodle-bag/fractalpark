@@ -50,9 +50,13 @@ export default async function AboutPage({
   const t = await getTranslations({ locale, namespace: 'about' });
 
   // JSON-LD structured data for SoftwareApplication
+  // Extends the shared base schema with About-page-specific fields
+  // (datePublished, softwareVersion, richer featureList).
+  // The @id matches the homepage schema so Google treats them as the same entity.
   const softwareApplicationJsonLd = {
     '@context': 'https://schema.org',
     '@type': 'SoftwareApplication',
+    '@id': `${SITE.url}/#software`,
     name: SITE.name,
     applicationCategory: 'GraphicsApplication',
     operatingSystem: 'Any modern web browser',

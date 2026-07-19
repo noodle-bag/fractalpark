@@ -39,7 +39,106 @@
     "pause": "Pause animation",
     "play": "Play animation",
     "previous": "Previous preset",
-    "next": "Next preset"
+    "next": "Next preset",
+    "seo": {
+      "whatIsHeading": "What is FractalPark?",
+      "whatIsAnswer": "FractalPark is a free, open-source (MIT-licensed) fractal generator that runs entirely in your web browser. It lets you explore 94 different fractal formulas — including the Mandelbrot set, Julia sets, Burning Ship, Newton, Phoenix, and more — color them with 7 different algorithms, and export high-resolution PNG images up to 4× zoom, all without installing any software.",
+      "howToHeading": "How to Generate Your First Fractal",
+      "howToSteps": [
+        "Open the Explore page and pick a formula — the classic Mandelbrot set is a good start.",
+        "Drag on the canvas to pan and scroll to zoom into the fractal boundary where the detail lives.",
+        "Switch to the Coloring tab and try smooth iteration, orbit traps, or a custom gradient.",
+        "Open the Render tab to enable SSAA anti-aliasing and adaptive iteration depth.",
+        "Click Export to download a high-resolution PNG, or Share to copy a link that restores the exact view."
+      ],
+      "familiesHeading": "94 Formulas Across 7 Families",
+      "familiesIntro": "Every formula is implemented in GLSL with both Mandelbrot and Julia modes. Click any formula name in the explorer to load it with sensible defaults.",
+      "familiesTable": {
+        "colFamily": "Family",
+        "colExamples": "Examples",
+        "colCharacter": "Character",
+        "rows": {
+          "classic": {
+            "name": "Classic",
+            "examples": "Mandelbrot, Julia, Multibrot",
+            "character": "Iconic escape-time sets; cardioid and seahorse valley"
+          },
+          "burningShip": {
+            "name": "Burning Ship",
+            "examples": "Burning Ship, Burning Ship Julia",
+            "character": "Asymmetric, ship-like silhouettes from abs() folding"
+          },
+          "newton": {
+            "name": "Newton",
+            "examples": "Newton (z³-1), Nova",
+            "character": "Root-basin attractors; smooth basins with fractal boundaries"
+          },
+          "phoenix": {
+            "name": "Phoenix",
+            "examples": "Phoenix, Phoenix Julia",
+            "character": "Feathered, flame-like filaments from a recurrence term"
+          },
+          "transcendental": {
+            "name": "Transcendental",
+            "examples": "Exp(z), Sin(z), Cos(z)",
+            "character": "Periodic bands and exponential swirls"
+          },
+          "magnet": {
+            "name": "Magnet",
+            "examples": "Magnet Type I, Magnet Type II",
+            "character": "Dense cores with orbit chains; tight self-similarity"
+          },
+          "exotic": {
+            "name": "Exotic",
+            "examples": "Tricorn, Celtic, Buffalo",
+            "character": "Conjugate and hybrid variants with unusual symmetries"
+          }
+        }
+      },
+      "featuresHeading": "What You Can Do with FractalPark",
+      "features": [
+        "94 GLSL fractal formulas with Mandelbrot and Julia modes",
+        "7 coloring modes including smooth iteration, orbit traps, and custom gradients",
+        "Real-time WebGL rendering at 60 fps on any modern device",
+        "High-resolution PNG export up to 4× with SSAA anti-aliasing",
+        "Shareable URLs that restore the exact view and parameters",
+        "Custom formula editor with AST validation and live preview"
+      ],
+      "faqHeading": "Frequently Asked Questions",
+      "faq": {
+        "free": {
+          "q": "Is FractalPark free?",
+          "a": "Yes. FractalPark is completely free and open-source under the MIT license. You can use it for personal, educational, or commercial purposes without any cost."
+        },
+        "chinese": {
+          "q": "Does FractalPark support Chinese?",
+          "a": "Yes. FractalPark is fully bilingual — both the interface and the content are available in English and Simplified Chinese."
+        },
+        "export": {
+          "q": "How do I export a fractal as a PNG?",
+          "a": "Open the Render tab in the explorer, choose a scale (1×, 2×, or 4×), and click Export. FractalPark will render the image at high resolution with SSAA anti-aliasing and download it as a PNG file."
+        },
+        "formulas": {
+          "q": "How many fractal formulas does FractalPark include?",
+          "a": "FractalPark ships with 94 fractal formulas organized into 7 families: Classic, Burning Ship, Newton, Phoenix, Transcendental, Magnet, and Exotic. Each formula supports both Mandelbrot and Julia modes."
+        },
+        "share": {
+          "q": "Can I share a fractal I created?",
+          "a": "Yes. Every view in FractalPark has a unique URL that encodes the formula, position, zoom, coloring, and all other parameters. Click Share to copy the link — anyone who opens it will see the exact same fractal."
+        },
+        "opensource": {
+          "q": "Is FractalPark open source?",
+          "a": "Yes. The entire codebase is MIT-licensed and available on GitHub.",
+          "linkText": "View the FractalPark repository on GitHub"
+        }
+      },
+      "linksHeading": "Get Started",
+      "links": {
+        "explore": "Open the Fractal Explorer",
+        "gallery": "Browse the Gallery",
+        "about": "About FractalPark"
+      }
+    }
   },
   "gallery": {
     "title": "Gallery",
@@ -425,6 +524,72 @@
       "lines": "{count} lines",
       "glslError": "GLSL compile error (mapped from formula source)",
       "glslErrorUnmapped": "GLSL compile error (location cannot be mapped)"
+    },
+    "seo": {
+      "heading": "FractalPark Explorer — Free In-Browser Fractal Generator",
+      "intro": "FractalPark is a free, open-source (MIT) WebGL fractal generator that runs entirely in your browser. Explore 94 fractal formulas across 7 families — from the classic Mandelbrot and Julia sets to Burning Ship, Newton, Phoenix, and exotic transcendental attractors — and export high-resolution PNG images up to 4× without installing anything.",
+      "howToHeading": "How to Generate Your First Fractal",
+      "howToSteps": [
+        "Pick a formula from the Formula tab — try the classic Mandelbrot set to start.",
+        "Drag on the canvas to pan, scroll to zoom into the boundary region where detail lives.",
+        "Switch to the Coloring tab and try smooth iteration, orbit traps, or a custom gradient.",
+        "Open the Render tab to enable anti-aliasing (SSAA) and adaptive iteration depth.",
+        "Click Export to download a high-resolution PNG, or Share to copy a link that restores the exact view."
+      ],
+      "familiesHeading": "94 Formulas Across 7 Families",
+      "familiesIntro": "Every formula is implemented in GLSL with both Mandelbrot and Julia modes. Click any formula name in the explorer to load it with sensible defaults.",
+      "familiesTable": {
+        "colFamily": "Family",
+        "colExamples": "Examples",
+        "colCharacter": "Character",
+        "rows": {
+          "classic": {
+            "name": "Classic",
+            "examples": "Mandelbrot, Julia, Multibrot",
+            "character": "Iconic escape-time sets; cardioid and seahorse valley"
+          },
+          "burningShip": {
+            "name": "Burning Ship",
+            "examples": "Burning Ship, Burning Ship Julia",
+            "character": "Asymmetric, ship-like silhouettes from abs() folding"
+          },
+          "newton": {
+            "name": "Newton",
+            "examples": "Newton (z³-1), Nova",
+            "character": "Root-basin attractors; smooth basins with fractal boundaries"
+          },
+          "phoenix": {
+            "name": "Phoenix",
+            "examples": "Phoenix, Phoenix Julia",
+            "character": "Feathered, flame-like filaments from a recurrence term"
+          },
+          "transcendental": {
+            "name": "Transcendental",
+            "examples": "Exp(z), Sin(z), Cos(z)",
+            "character": "Periodic bands and exponential swirls"
+          },
+          "magnet": {
+            "name": "Magnet",
+            "examples": "Magnet Type I, Magnet Type II",
+            "character": "Dense cores with orbit chains; tight self-similarity"
+          },
+          "exotic": {
+            "name": "Exotic",
+            "examples": "Tricorn, Celtic, Buffalo",
+            "character": "Conjugate and hybrid variants with unusual symmetries"
+          }
+        }
+      },
+      "featuresHeading": "What You Can Do",
+      "features": [
+        "94 GLSL fractal formulas with Mandelbrot and Julia modes",
+        "7 coloring modes including smooth iteration, orbit traps, and custom gradients",
+        "Real-time WebGL rendering at 60 fps on any modern device",
+        "High-resolution PNG export up to 4× with SSAA anti-aliasing",
+        "Shareable URLs that restore the exact view and parameters",
+        "Custom formula editor with AST validation and live preview"
+      ],
+      "noScriptNotice": "The interactive fractal explorer requires JavaScript and WebGL. The content above describes what the tool does; please enable JavaScript to use it."
     }
   },
   "metadata": {
