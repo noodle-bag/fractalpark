@@ -39,7 +39,106 @@
     "pause": "暂停动画",
     "play": "播放动画",
     "previous": "上一个预设",
-    "next": "下一个预设"
+    "next": "下一个预设",
+    "seo": {
+      "whatIsHeading": "什么是 FractalPark？",
+      "whatIsAnswer": "FractalPark 是一个免费、开源（MIT 协议）的浏览器分形生成器。它让你在网页中直接探索 94 种分形公式——包括 Mandelbrot 集、Julia 集、Burning Ship、Newton、Phoenix 等——用 7 种不同的着色算法上色，并可导出高达 4 倍分辨率的高清 PNG 图片，全程无需安装任何软件。",
+      "howToHeading": "如何生成你的第一个分形",
+      "howToSteps": [
+        "打开「探索」页面并选择一个公式——建议从经典的 Mandelbrot 集开始。",
+        "在画布上拖拽平移、滚动缩放，深入到分形边界探索最丰富的细节。",
+        "切换到「着色」标签，尝试平滑迭代、轨道陷阱或自定义渐变。",
+        "打开「渲染」标签，启用 SSAA 抗锯齿和自适应迭代深度。",
+        "点击「导出」下载高清 PNG，或点击「分享」复制一个能精确恢复当前视角的链接。"
+      ],
+      "familiesHeading": "7 大族共 94 种分形公式",
+      "familiesIntro": "每个公式都用 GLSL 实现，并同时支持 Mandelbrot 与 Julia 两种模式。点击公式名即可加载其推荐默认参数。",
+      "familiesTable": {
+        "colFamily": "族",
+        "colExamples": "代表公式",
+        "colCharacter": "视觉特征",
+        "rows": {
+          "classic": {
+            "name": "经典",
+            "examples": "Mandelbrot、Julia、Multibrot",
+            "character": "经典逃逸时间集；心形线与海马谷"
+          },
+          "burningShip": {
+            "name": "燃烧船",
+            "examples": "Burning Ship、Burning Ship Julia",
+            "character": "经 abs() 折叠产生的不对称船形轮廓"
+          },
+          "newton": {
+            "name": "牛顿",
+            "examples": "Newton (z³-1)、Nova",
+            "character": "根盆地吸引子；光滑盆地与分形边界"
+          },
+          "phoenix": {
+            "name": "凤凰",
+            "examples": "Phoenix、Phoenix Julia",
+            "character": "递推项产生的羽毛状、火焰状细丝"
+          },
+          "transcendental": {
+            "name": "超越",
+            "examples": "Exp(z)、Sin(z)、Cos(z)",
+            "character": "周期性条带与指数涡旋"
+          },
+          "magnet": {
+            "name": "磁石",
+            "examples": "Magnet Type I、Magnet Type II",
+            "character": "致密核心与轨道链；强自相似性"
+          },
+          "exotic": {
+            "name": "奇异",
+            "examples": "Tricorn、Celtic、Buffalo",
+            "character": "共轭与混合变体，呈现非常规对称"
+          }
+        }
+      },
+      "featuresHeading": "FractalPark 能做什么",
+      "features": [
+        "94 种 GLSL 分形公式，支持 Mandelbrot 与 Julia 两种模式",
+        "7 种着色模式：平滑迭代、轨道陷阱、自定义渐变等",
+        "WebGL 实时渲染，现代设备上 60 fps 流畅交互",
+        "高达 4 倍分辨率的 PNG 导出，支持 SSAA 抗锯齿",
+        "可分享 URL，精确保存视角与所有参数",
+        "自定义公式编辑器，带 AST 校验与实时预览"
+      ],
+      "faqHeading": "常见问题",
+      "faq": {
+        "free": {
+          "q": "FractalPark 免费吗？",
+          "a": "是的，FractalPark 完全免费并以 MIT 协议开源。你可以将它用于个人、教学或商业用途，无需支付任何费用。"
+        },
+        "chinese": {
+          "q": "FractalPark 支持中文吗？",
+          "a": "支持。FractalPark 完全双语——界面和内容均提供英文和简体中文版本。"
+        },
+        "export": {
+          "q": "如何导出 PNG 图片？",
+          "a": "在探索器中打开「渲染」标签，选择比例（1×、2× 或 4×），然后点击「导出」。FractalPark 会以 SSAA 抗锯齿渲染高分辨率图像并下载为 PNG 文件。"
+        },
+        "formulas": {
+          "q": "FractalPark 内置多少种分形公式？",
+          "a": "FractalPark 内置 94 种分形公式，分为 7 大族：经典、燃烧船、牛顿、凤凰、超越、磁石和奇异。每种公式都支持 Mandelbrot 和 Julia 两种模式。"
+        },
+        "share": {
+          "q": "我可以分享自己创作的分形吗？",
+          "a": "可以。FractalPark 中的每个视角都有一个唯一的 URL，编码了公式、位置、缩放、着色等所有参数。点击「分享」复制链接——任何人打开它都能看到完全相同的分形。"
+        },
+        "opensource": {
+          "q": "FractalPark 是开源的吗？",
+          "a": "是的。整个代码库都以 MIT 协议开源，托管在 GitHub 上。",
+          "linkText": "在 GitHub 上查看 FractalPark 仓库"
+        }
+      },
+      "linksHeading": "开始使用",
+      "links": {
+        "explore": "打开分形探索器",
+        "gallery": "浏览分形画廊",
+        "about": "关于 FractalPark"
+      }
+    }
   },
   "gallery": {
     "title": "画廊",
@@ -425,6 +524,72 @@
       "lines": "{count} 行",
       "glslError": "GLSL Compile error（已映射到公式源码）",
       "glslErrorUnmapped": "GLSL Compile error（无法映射到源码位置）"
+    },
+    "seo": {
+      "heading": "FractalPark 分形探索器 — 免费浏览器分形生成器",
+      "intro": "FractalPark 是一个免费、开源（MIT 协议）的 WebGL 分形生成器，完全在浏览器中运行。探索 7 大族共 94 种分形公式——从经典的 Mandelbrot 集和 Julia 集，到 Burning Ship、Newton、Phoenix 以及更奇异的双曲与超越吸引子——并可一键导出高达 4 倍分辨率的高清 PNG 图片，无需安装任何软件。",
+      "howToHeading": "如何生成你的第一个分形",
+      "howToSteps": [
+        "在「公式」标签中选择一个公式——建议从经典的 Mandelbrot 集开始。",
+        "在画布上拖拽平移、滚动缩放，深入到边界区域探索最丰富的细节。",
+        "切换到「着色」标签，尝试平滑迭代、轨道陷阱或自定义渐变。",
+        "打开「渲染」标签，启用抗锯齿（SSAA）和自适应迭代深度。",
+        "点击「导出」下载高清 PNG，或点击「分享」复制一个能精确恢复当前视角的链接。"
+      ],
+      "familiesHeading": "7 大族共 94 种分形公式",
+      "familiesIntro": "每个公式都用 GLSL 实现，并同时支持 Mandelbrot 与 Julia 两种模式。点击公式名即可加载其推荐默认参数。",
+      "familiesTable": {
+        "colFamily": "族",
+        "colExamples": "代表公式",
+        "colCharacter": "视觉特征",
+        "rows": {
+          "classic": {
+            "name": "经典",
+            "examples": "Mandelbrot、Julia、Multibrot",
+            "character": "经典逃逸时间集；心形线与海马谷"
+          },
+          "burningShip": {
+            "name": "燃烧船",
+            "examples": "Burning Ship、Burning Ship Julia",
+            "character": "经 abs() 折叠产生的不对称船形轮廓"
+          },
+          "newton": {
+            "name": "牛顿",
+            "examples": "Newton (z³-1)、Nova",
+            "character": "根盆地吸引子；光滑盆地与分形边界"
+          },
+          "phoenix": {
+            "name": "凤凰",
+            "examples": "Phoenix、Phoenix Julia",
+            "character": "递推项产生的羽毛状、火焰状细丝"
+          },
+          "transcendental": {
+            "name": "超越",
+            "examples": "Exp(z)、Sin(z)、Cos(z)",
+            "character": "周期性条带与指数涡旋"
+          },
+          "magnet": {
+            "name": "磁石",
+            "examples": "Magnet Type I、Magnet Type II",
+            "character": "致密核心与轨道链；强自相似性"
+          },
+          "exotic": {
+            "name": "奇异",
+            "examples": "Tricorn、Celtic、Buffalo",
+            "character": "共轭与混合变体，呈现非常规对称"
+          }
+        }
+      },
+      "featuresHeading": "主要功能",
+      "features": [
+        "94 种 GLSL 分形公式，支持 Mandelbrot 与 Julia 两种模式",
+        "7 种着色模式：平滑迭代、轨道陷阱、自定义渐变等",
+        "WebGL 实时渲染，现代设备上 60 fps 流畅交互",
+        "高达 4 倍分辨率的 PNG 导出，支持 SSAA 抗锯齿",
+        "可分享 URL，精确保存视角与所有参数",
+        "自定义公式编辑器，带 AST 校验与实时预览"
+      ],
+      "noScriptNotice": "交互式分形探索器需要启用 JavaScript 和 WebGL。上方内容描述了工具的功能；请启用 JavaScript 以使用完整功能。"
     }
   },
   "metadata": {

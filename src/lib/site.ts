@@ -1,8 +1,8 @@
 export const SITE = {
   name: 'FractalPark',
   nameZh: '\u5206\u5f62\u516c\u56ed',
-  url: 'https://fractalpark.com',
-  domain: 'fractalpark.com',
+  url: 'https://www.fractalpark.com',
+  domain: 'www.fractalpark.com',
   repositoryUrl: 'https://github.com/noodle-bag/fractalpark',
   version: '0.4.11',
   formulaCount: 94,
