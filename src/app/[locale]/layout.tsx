@@ -6,6 +6,7 @@ import { LayoutProvider } from '@/components/layout/LayoutContext';
 import LayoutShell from '@/components/layout/LayoutShell';
 import { routing } from '@/i18n/routing';
 import { SITE, buildLocaleAlternates } from '@/lib/site';
+import { websiteJsonLd, renderJsonLd } from '@/lib/json-ld';
 
 export const dynamicParams = false;
 
@@ -77,6 +78,11 @@ export default async function LocaleLayout({
 
   return (
     <>
+      {/* WebSite JSON-LD — site-wide entity declaration for AI crawlers & Google KG */}
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: renderJsonLd(websiteJsonLd) }}
+      />
       <Script id="microsoft-clarity" strategy="afterInteractive">
         {`(function(c,l,a,r,i,t,y){
               c[a]=c[a]||function(){(c[a].q=c[a].q||[]).push(arguments)};
