@@ -3,6 +3,7 @@ import type { Metadata } from 'next';
 import { Analytics } from '@vercel/analytics/next';
 import { SpeedInsights } from '@vercel/speed-insights/next';
 import { GoogleAnalytics } from '@/components/analytics/GoogleAnalytics';
+import { PageViewTracker } from '@/components/analytics/PageViewTracker';
 import { SITE } from '@/lib/site';
 import './globals.css';
 
@@ -16,6 +17,7 @@ export default function RootLayout({ children }: { children: ReactNode }) {
       <body className="antialiased">
         {children}
         <GoogleAnalytics />
+        <PageViewTracker />
         <Analytics />
         <SpeedInsights />
       </body>

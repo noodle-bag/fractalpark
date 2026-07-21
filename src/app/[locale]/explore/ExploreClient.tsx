@@ -13,6 +13,7 @@ import { PositionSummaryPanel } from '@/components/fractal/PositionSummaryPanel'
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { documentToExploreHref } from '@/lib/url-params';
 import { exportFractal } from '@/lib/export-fractal';
+import { trackEvent } from '@/components/analytics/PageViewTracker';
 import { captureThumbnail } from '@/lib/capture-thumbnail';
 import { useExploreDocumentState } from '@/hooks/useExploreDocumentState';
 import { useSavedFractals } from '@/hooks/useSavedFractals';
@@ -143,6 +144,7 @@ function ExploreClient() {
     try {
       await navigator.clipboard.writeText(window.location.href);
       setCopied(true);
+      trackEvent('share_link', { page: 'explore' });
       setTimeout(() => setCopied(false), 2000);
     } catch {
       // Fallback: silent fail
@@ -152,6 +154,7 @@ function ExploreClient() {
   const handleExport = useCallback(async (scale: number, ssaaLevel?: number) => {
     const width = canvasElRef.current?.clientWidth ?? 1200;
     const height = canvasElRef.current?.clientHeight ?? 800;
+    trackEvent('export_fractal', { scale, ssaa: ssaaLevel ?? 0, formula });
     // Determine SSAA level: explicit export quality, or fallback to preview toggle
     const effectiveSsaaLevel = ssaaLevel ?? (useSSAA || scale > 1 ? 4 : 0);
     await exportFractal(
@@ -206,14 +209,17 @@ function ExploreClient() {
       ? captureThumbnail(canvasElRef.current)
       : '';
     saveDocument(name, document, thumbnail);
+    trackEvent('save_fractal', { formula });
   }, [
     document,
     saveDocument,
+    formula,
   ]);
 
   // Handle formula change - reset to formula's default bounds
   const handleFormulaChange = useCallback((newFormula: string) => {
     updateFormula({ formulaId: newFormula });
+    trackEvent('change_formula', { formula: newFormula });
     const defaultBounds = getDefaultBounds(newFormula);
     updateBounds(defaultBounds);
   }, [updateBounds, updateFormula]);
