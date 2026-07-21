@@ -9,6 +9,7 @@ import { useGalleryItems } from '@/hooks/useGalleryItems';
 import type { GalleryItem } from '@/hooks/useGalleryItems';
 import { builtinPresetToGalleryHref } from '@/lib/gallery-presets';
 import { savedFractalToHref } from '@/lib/url-params';
+import { trackEvent } from '@/components/analytics/PageViewTracker';
 
 // Lazy load AnimatedFractalCanvas to avoid importing in main bundle
 const AnimatedFractalCanvas = lazy(() => import('@/components/fractal/AnimatedFractalCanvas'));
@@ -20,6 +21,21 @@ export default function GalleryPageClient() {
   const [hoveredId, setHoveredId] = useState<string | null>(null);
   const [fullscreenFractal, setFullscreenFractal] = useState<GalleryItem | null>(null);
   const t = useTranslations('gallery');
+
+  // Wrapped handlers with analytics
+  const handleToggleStar = (id: string) => {
+    toggleStar(id);
+    trackEvent('star_fractal', { source: 'gallery' });
+  };
+
+  const handleOpenFractal = (item: GalleryItem) => {
+    trackEvent('open_from_gallery', { is_builtin: item.isBuiltin ?? false });
+  };
+
+  const handleFullscreen = (item: GalleryItem) => {
+    setFullscreenFractal(item);
+    trackEvent('fullscreen_toggle', { page: 'gallery', action: 'open' });
+  };
 
   // Empty state - no items at all (builtin or user)
   if (!isLoading && items.length === 0) {
@@ -60,10 +76,11 @@ export default function GalleryPageClient() {
               : savedFractalToHref(item, locale)}
             isHovered={hoveredId === item.id}
             onHoverChange={(isHovered) => setHoveredId(isHovered ? item.id : null)}
-            onToggleStar={toggleStar}
+            onToggleStar={() => handleToggleStar(item.id)}
             onDelete={remove}
             onRename={rename}
-            onFullscreen={setFullscreenFractal}
+            onFullscreen={() => handleFullscreen(item)}
+            onOpen={() => handleOpenFractal(item)}
             isBuiltin={item.isBuiltin}
             featured={item.featured}
           />

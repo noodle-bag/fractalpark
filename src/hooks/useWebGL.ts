@@ -2,6 +2,7 @@
 
 import { useRef, useEffect, useCallback, useState } from 'react';
 import { createWebGLContext, setupContextLossHandling } from '@/engine/webgl/context';
+import { trackEvent } from '@/components/analytics/PageViewTracker';
 
 export function useWebGL(canvasRef: React.RefObject<HTMLCanvasElement | null>) {
   const glRef = useRef<WebGLRenderingContext | null>(null);
@@ -20,6 +21,7 @@ export function useWebGL(canvasRef: React.RefObject<HTMLCanvasElement | null>) {
     const gl = createWebGLContext(canvas);
     if (!gl) {
       updateError('WebGL is not supported on this device');
+      trackEvent('error_webgl_unsupported', { page: window.location.pathname });
       return;
     }
 

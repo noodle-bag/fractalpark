@@ -27,6 +27,7 @@ import type { FRMSourceMap } from '@/engine/frm/sourcemap';
 import { detectFormulaDialect } from '@/engine/frm/source-directives';
 import { pluginRegistry } from '@/engine/plugins/registry';
 import type { ViewBounds } from '@/engine/types';
+import { trackEvent } from '@/components/analytics/PageViewTracker';
 
 import type { EditorView } from '@codemirror/view';
 import type { Extension } from '@codemirror/state';
@@ -421,6 +422,8 @@ export function FormulaEditor({
       });
       return;
     }
+
+    trackEvent('custom_formula_save', { name });
 
     toast({
       title: t('saved'),

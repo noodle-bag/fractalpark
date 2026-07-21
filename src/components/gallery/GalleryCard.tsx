@@ -39,6 +39,7 @@ interface GalleryCardProps {
   onDelete: (id: string) => void;
   onRename: (id: string, name: string) => void;
   onFullscreen: (fractal: GalleryItem) => void;
+  onOpen?: () => void;
   isBuiltin?: boolean;
   featured?: boolean;
 }
@@ -52,6 +53,7 @@ export function GalleryCard({
   onDelete,
   onRename,
   onFullscreen,
+  onOpen,
   isBuiltin = false,
   featured = false,
 }: GalleryCardProps) {
@@ -103,6 +105,7 @@ export function GalleryCard({
       <a
         ref={containerRef}
         href={href}
+        onClick={onOpen}
         className="relative block aspect-square overflow-hidden group"
         onMouseEnter={() => onHoverChange(true)}
         onMouseLeave={() => onHoverChange(false)}

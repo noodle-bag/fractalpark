@@ -109,6 +109,7 @@ function ExploreClient() {
 
   const handleJuliaModeChange = useCallback((julia: boolean) => {
     updateFormula({ isJulia: julia });
+    trackEvent('julia_mode_toggle', { mode: julia ? 'julia' : 'mandelbrot' });
     if (julia) {
       updateBounds({ centerX: 0, centerY: 0, zoom: 0.4, rotation: bounds.rotation });
     } else {
@@ -202,6 +203,10 @@ function ExploreClient() {
 
   const handleCanvasReady = useCallback((canvas: HTMLCanvasElement) => {
     canvasElRef.current = canvas;
+    // Track first render complete (new user activation signal)
+    if (!initializedRef.current) {
+      trackEvent('first_render_complete', { page: 'explore' });
+    }
   }, []);
 
   const handleSave = useCallback((name: string) => {
@@ -423,7 +428,12 @@ function ExploreClient() {
               <AnimationPanel
                 keyframes={keyframes}
                 bounds={bounds}
-                onKeyframesChange={(nextKeyframes) => updateAnimation({ keyframes: nextKeyframes })}
+                onKeyframesChange={(nextKeyframes) => {
+                  if (nextKeyframes.length > keyframes.length) {
+                    trackEvent('add_keyframe', { count: nextKeyframes.length });
+                  }
+                  updateAnimation({ keyframes: nextKeyframes });
+                }}
                 onPreviewToggle={setIsPreviewPlaying}
                 isPreviewPlaying={isPreviewPlaying}
                 onBoundsChange={updateBounds}
