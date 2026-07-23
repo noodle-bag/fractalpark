@@ -31,6 +31,13 @@ test.describe('Explore Five-Tab Structure', () => {
     await expect(animationTab).toBeVisible();
   });
 
+  test('should open directly into the creative workspace without the SEO intro', async ({ page }) => {
+    await expect(page.locator('#explore-seo-intro')).toHaveCount(0);
+    await expect(
+      page.getByRole('heading', { name: /free in-browser fractal generator/i })
+    ).toHaveCount(0);
+  });
+
   test('should display position summary above tabs', async ({ page }) => {
     // Position summary should always be visible regardless of active tab
     await expect(page.getByText(/center/i)).toBeVisible();
