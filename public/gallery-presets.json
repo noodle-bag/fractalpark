@@ -200,6 +200,14 @@
       "url": "?cx=0.1709451110&cy=0.1028700153&z=48.86&rot=-0.9700&iter=200&julia=1&jre=-0.221851&jim=-0.300000&fm=magnet2&lg=1&lgm=dem&lga=62.00&lge=84.00&lgi=0.82&pal=10&kf=0.1728795029%2C0.1020901948%2C0.12%2C2.2800%7C0.1709451110%2C0.1028700153%2C48.86%2C-0.9700",
       "featured": true,
       "thumbnail": "/images/gallery/presets/preset-magnet-julia-moonstone-reef.jpg"
+    },
+    {
+      "id": "preset-phoenix-multi-ember-compass",
+      "name": "Ember Compass",
+      "nameZh": "烬火罗盘",
+      "url": "?cx=-0.0623946798&cy=0.0737228971&z=3.75&rot=3.1416&iter=200&julia=1&jre=0.011133&jim=0.137402&fm=phoenixMulti&pp=u_phoenixMultiP%3A-1.05&pal=8&kf=-0.0623946798%2C0.0737228971%2C11142.89%2C0.3200%7C-0.0623946798%2C0.0737228971%2C3.75%2C3.1416",
+      "featured": true,
+      "thumbnail": "/images/gallery/presets/preset-phoenix-multi-ember-compass.jpg"
     }
   ]
 }
