@@ -1,7 +1,7 @@
 # FractalPark - Complete Documentation
 
 > Fractal art exploration with real-time GPU rendering
-> Version: 0.4.11
+> Version: 0.4.12
 > Website: https://fractalpark.com
 
 ---
@@ -411,6 +411,12 @@ Example response:
 ---
 
 ## Changelog
+
+### v0.4.12 (2026-07-25)
+- Fractal Document v2 and project Envelope v1 contracts with tolerant readers
+- Portable `.fractal.json` project download and import, including custom FRM assets
+- Persistent Explore artwork actions: gallery save, project download/import, PNG export, and full reset
+- Document-first gallery storage with legacy saved artworks still readable
 
 ### v0.4.11 (2026-04-24)
 - Formula language upgrade with Fractint compatibility improvements
