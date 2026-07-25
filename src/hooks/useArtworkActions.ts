@@ -5,6 +5,10 @@ import { useCallback, useRef, useState } from 'react';
 import { trackEvent } from '@/components/analytics/PageViewTracker';
 import type { FractalDocument } from '@/engine/document';
 import { createRenderSnapshot } from '@/engine/render-snapshot';
+import {
+  getArtworkAnalyticsContext,
+  getProjectFileSizeBucket,
+} from '@/lib/artwork-analytics';
 import { captureThumbnail } from '@/lib/capture-thumbnail';
 import {
   commitPreparedFractalProjectImport,
@@ -88,7 +92,10 @@ export function useArtworkActions({
         fail('save', 'save-failed');
         return false;
       }
-      trackEvent('save_fractal', { formula: document.formula.formulaId });
+      trackEvent('save_fractal', {
+        formula: document.formula.formulaId,
+        ...getArtworkAnalyticsContext(document),
+      });
       succeed('save');
       return true;
     } catch {
@@ -114,7 +121,13 @@ export function useArtworkActions({
         serialized.value,
         createFractalProjectFilename(document.metadata?.name)
       );
-      trackEvent('project_download', { formula: document.formula.formulaId });
+      trackEvent('project_download', {
+        formula: document.formula.formulaId,
+        file_size_bucket: getProjectFileSizeBucket(
+          new TextEncoder().encode(serialized.value).byteLength
+        ),
+        ...getArtworkAnalyticsContext(document),
+      });
       succeed('download');
       return true;
     } catch {
@@ -128,19 +141,31 @@ export function useArtworkActions({
     try {
       if (file.size > FRACTAL_PROJECT_FILE_MAX_BYTES) {
         fail('import', 'file-too-large');
-        trackEvent('project_import_failed', { code: 'file-too-large' });
+        trackEvent('project_import_failed', {
+          error_code: 'file-too-large',
+          file_size_bucket: getProjectFileSizeBucket(file.size),
+          ...getArtworkAnalyticsContext(document),
+        });
         return false;
       }
       const parsed = parseFractalProjectJson(await file.text());
       if (!parsed.success) {
         const code = parsed.errors[0]?.code ?? 'invalid-envelope';
         fail('import', code);
-        trackEvent('project_import_failed', { code });
+        trackEvent('project_import_failed', {
+          error_code: code,
+          file_size_bucket: getProjectFileSizeBucket(file.size),
+          ...getArtworkAnalyticsContext(document),
+        });
         return false;
       }
       if (parsed.value.mode === 'readonly-future') {
         fail('import', 'future-document');
-        trackEvent('project_import_failed', { code: 'future-document' });
+        trackEvent('project_import_failed', {
+          error_code: 'future-document',
+          file_size_bucket: getProjectFileSizeBucket(file.size),
+          ...getArtworkAnalyticsContext(document),
+        });
         return false;
       }
       const prepared = await prepareFractalProjectImport(
@@ -150,27 +175,41 @@ export function useArtworkActions({
       if (!prepared.success) {
         const code = prepared.errors[0]?.code ?? 'invalid-envelope';
         fail('import', code);
-        trackEvent('project_import_failed', { code });
+        trackEvent('project_import_failed', {
+          error_code: code,
+          file_size_bucket: getProjectFileSizeBucket(file.size),
+          ...getArtworkAnalyticsContext(document),
+        });
         return false;
       }
       const committed = commitPreparedFractalProjectImport(prepared.value, loadDocument);
       if (!committed.success) {
         fail('import', committed.code);
-        trackEvent('project_import_failed', { code: committed.code });
+        trackEvent('project_import_failed', {
+          error_code: committed.code,
+          file_size_bucket: getProjectFileSizeBucket(file.size),
+          ...getArtworkAnalyticsContext(document),
+        });
         return false;
       }
       trackEvent('project_import', {
         formula: prepared.value.document.formula.formulaId,
         custom_formula_count: prepared.value.formulasToAdd.length,
+        file_size_bucket: getProjectFileSizeBucket(file.size),
+        ...getArtworkAnalyticsContext(prepared.value.document),
       });
       succeed('import');
       return true;
     } catch {
       fail('import', 'invalid-envelope');
-      trackEvent('project_import_failed', { code: 'invalid-envelope' });
+      trackEvent('project_import_failed', {
+        error_code: 'invalid-envelope',
+        file_size_bucket: getProjectFileSizeBucket(file.size),
+        ...getArtworkAnalyticsContext(document),
+      });
       return false;
     }
-  }, [begin, fail, loadDocument, succeed]);
+  }, [begin, document, fail, loadDocument, succeed]);
 
   const exportPng = useCallback(async (scale: number, ssaaLevel: number) => {
     if (!begin('export')) return false;
@@ -188,6 +227,7 @@ export function useArtworkActions({
         scale,
         ssaa: ssaaLevel,
         formula: document.formula.formulaId,
+        ...getArtworkAnalyticsContext(document),
       });
       succeed('export');
       return true;
