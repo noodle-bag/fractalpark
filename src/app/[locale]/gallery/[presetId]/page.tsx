@@ -4,7 +4,7 @@ import {
   findBuiltinPresetConfigById,
   parseGalleryPresetsFile,
 } from '@/lib/gallery-presets';
-import { notFound, redirect } from 'next/navigation';
+import { notFound, permanentRedirect } from 'next/navigation';
 
 interface GalleryPresetShortlinkPageProps {
   params: Promise<{
@@ -24,5 +24,5 @@ export default async function GalleryPresetShortlinkPage({
     notFound();
   }
 
-  redirect(builtinPresetConfigToExploreHref(preset, locale));
+  permanentRedirect(builtinPresetConfigToExploreHref(preset, locale));
 }
