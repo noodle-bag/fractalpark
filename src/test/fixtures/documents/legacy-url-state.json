@@ -1,0 +1,10 @@
+{
+  "centerX": -0.743643,
+  "centerY": 0.131826,
+  "zoom": 1250,
+  "iterations": 640,
+  "formula": "burningShip",
+  "palette": 2,
+  "outsideColoring": "orbitTrap",
+  "insideColoring": "atomDomain"
+}

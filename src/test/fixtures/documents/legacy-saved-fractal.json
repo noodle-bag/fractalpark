@@ -1,0 +1,63 @@
+{
+  "id": "legacy-saved-1",
+  "name": "Legacy Saved Artwork",
+  "createdAt": 1721865600000,
+  "thumbnail": "data:image/jpeg;base64,fixture",
+  "starred": true,
+  "params": {
+    "maxIterations": 280,
+    "paletteIndex": 1,
+    "bounds": {
+      "centerX": 0.25,
+      "centerY": -0.1,
+      "zoom": 3,
+      "rotation": 0.2
+    },
+    "isJulia": false,
+    "juliaC": [-0.7, 0.27],
+    "power": 2,
+    "customGradient": null,
+    "formula": "mandelbrot",
+    "outsideColoring": "smooth",
+    "insideColoring": "black",
+    "transformId": "none",
+    "pluginParams": {},
+    "orbitTrap": {
+      "shape": "point",
+      "point": [0, 0],
+      "radius": 0.35,
+      "width": 0.02
+    },
+    "useSSAA": false,
+    "adaptiveIterations": false,
+    "lighting": {
+      "enabled": false,
+      "mode": "normalMap",
+      "azimuth": 45,
+      "elevation": 35,
+      "intensity": 0.65
+    }
+  },
+  "animation": {
+    "keyframes": [
+      {
+        "id": "legacy-a",
+        "bounds": {
+          "centerX": 0,
+          "centerY": 0,
+          "zoom": 1,
+          "rotation": 0
+        }
+      },
+      {
+        "id": "legacy-b",
+        "bounds": {
+          "centerX": 0.1,
+          "centerY": -0.1,
+          "zoom": 2,
+          "rotation": 0
+        }
+      }
+    ]
+  }
+}
