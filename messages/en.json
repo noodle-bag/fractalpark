@@ -303,32 +303,6 @@
     "controls": {
       "colorScheme": "Color Scheme",
       "iterations": "Iterations",
-      "resetView": "Reset View",
-      "share": {
-        "label": "Share",
-        "copied": "Copied!"
-      },
-      "export": {
-        "label": "Export PNG",
-        "button": "Export",
-        "rendering": "Rendering...",
-        "quality": "Anti-aliasing Quality",
-        "qualityFast": "Off",
-        "qualityStandard": "Low",
-        "qualityHigh": "High",
-        "qualityUltra": "Ultra"
-      },
-      "save": {
-        "button": "Save to Collection",
-        "success": "Saved!",
-        "dialog": {
-          "title": "Save Fractal",
-          "name": "Name",
-          "placeholder": "Enter a name...",
-          "confirm": "Save",
-          "cancel": "Cancel"
-        }
-      },
       "position": "Position",
       "center": "Center",
       "zoom": "Zoom",

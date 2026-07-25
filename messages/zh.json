@@ -303,32 +303,6 @@
     "controls": {
       "colorScheme": "配色方案",
       "iterations": "迭代次数",
-      "resetView": "重置视图",
-      "share": {
-        "label": "分享",
-        "copied": "已复制!"
-      },
-      "export": {
-        "label": "导出 PNG",
-        "button": "导出",
-        "rendering": "渲染中...",
-        "quality": "抗锯齿质量",
-        "qualityFast": "关",
-        "qualityStandard": "低",
-        "qualityHigh": "高",
-        "qualityUltra": "极致"
-      },
-      "save": {
-        "button": "保存到收藏",
-        "success": "已保存！",
-        "dialog": {
-          "title": "保存分形",
-          "name": "名称",
-          "placeholder": "输入名称...",
-          "confirm": "保存",
-          "cancel": "取消"
-        }
-      },
       "position": "位置信息",
       "center": "中心",
       "zoom": "缩放",
