@@ -179,6 +179,75 @@
       "render": "渲染",
       "animation": "动画"
     },
+    "artworkActions": {
+      "common": {
+        "cancel": "取消"
+      },
+      "save": {
+        "label": "保存到画廊",
+        "title": "保存作品",
+        "name": "名称",
+        "placeholder": "输入名称...",
+        "confirm": "保存",
+        "pending": "保存中..."
+      },
+      "download": {
+        "label": "下载项目"
+      },
+      "import": {
+        "label": "导入项目",
+        "dropHint": "将 .fractal.json 文件拖放到这里"
+      },
+      "export": {
+        "label": "导出 PNG",
+        "title": "导出 PNG",
+        "scale": "尺寸",
+        "quality": "抗锯齿质量",
+        "qualityOff": "关闭",
+        "qualityLow": "低",
+        "qualityHigh": "高",
+        "qualityUltra": "极致",
+        "confirm": "导出",
+        "pending": "渲染中..."
+      },
+      "reset": {
+        "label": "重置作品",
+        "title": "重置所有设置？",
+        "description": "当前作品将恢复为默认预设，包括公式、视图、样式、渲染和动画设置。已保存到画廊的作品和自定义公式库不会被删除。",
+        "cancel": "取消",
+        "confirm": "重置"
+      },
+      "status": {
+        "save": {
+          "success": "已保存到画廊。"
+        },
+        "download": {
+          "success": "项目已下载。"
+        },
+        "import": {
+          "success": "项目已导入。"
+        },
+        "export": {
+          "success": "PNG 已导出。"
+        }
+      },
+      "errors": {
+        "invalid-json": "所选文件不是有效的 JSON。",
+        "file-too-large": "项目文件过大。",
+        "invalid-envelope": "所选文件不是有效的 FractalPark 项目。",
+        "source-too-large": "内嵌的自定义公式过大。",
+        "missing-formula-asset": "项目缺少自定义公式源代码。",
+        "asset-hash-mismatch": "自定义公式源代码未通过完整性校验。",
+        "asset-compile-failed": "无法编译内嵌的自定义公式。",
+        "future-document": "此项目由更新版本的 FractalPark 创建，当前版本无法编辑。",
+        "invalid-formula-storage": "无法安全更新你的自定义公式库。",
+        "formula-limit-reached": "你的自定义公式库已满。",
+        "formula-commit-failed": "无法安装自定义公式，所有更改均已撤销。",
+        "save-failed": "无法保存作品。",
+        "download-failed": "无法下载项目。",
+        "export-failed": "无法导出 PNG。"
+      }
+    },
     "formula": {
       "select": "选择公式",
       "search": "搜索公式...",

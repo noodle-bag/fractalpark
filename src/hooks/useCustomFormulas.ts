@@ -16,18 +16,16 @@ import {
   type FormulaExperienceHint,
 } from '@/engine/frm/authoring';
 import { pluginRegistry } from '@/engine/plugins/registry';
+import {
+  CUSTOM_FORMULAS_CHANGED_EVENT,
+  CUSTOM_FORMULAS_STORAGE_KEY,
+  MAX_CUSTOM_FORMULAS,
+  readPersistedCustomFormulas,
+  type PersistedCustomFormula,
+} from '@/lib/custom-formula-storage';
 
-export const CUSTOM_FORMULAS_STORAGE_KEY = 'myfrac-custom-formulas';
-const MAX_FORMULAS = 50;
-
-export interface CustomFormula {
-  id: string;
-  name: string;
-  source: string;
-  experienceHint?: FormulaExperienceHint;
-  createdAt: number;
-  updatedAt: number;
-}
+export { CUSTOM_FORMULAS_STORAGE_KEY } from '@/lib/custom-formula-storage';
+export type CustomFormula = PersistedCustomFormula;
 
 export interface CustomFormulaWithPlugin extends CustomFormula {
   plugin?: FormulaPlugin;
@@ -65,13 +63,10 @@ export function useCustomFormulas(): UseCustomFormulasReturn {
   const [formulas, setFormulas] = useState<CustomFormulaWithPlugin[]>([]);
   const [isLoading, setIsLoading] = useState(true);
 
-  // Load formulas from localStorage on mount
   useEffect(() => {
-    try {
-      const stored = localStorage.getItem(CUSTOM_FORMULAS_STORAGE_KEY);
-      if (stored) {
-        const parsed: CustomFormula[] = JSON.parse(stored);
-        // Compile each formula
+    const loadFormulas = () => {
+      try {
+        const parsed = readPersistedCustomFormulas();
         const withPlugins = parsed.map((f) => {
           const result = compileFrm(f.source, f.id);
           const effectiveHint = mergeFormulaExperienceHints(
@@ -90,12 +85,18 @@ export function useCustomFormulas(): UseCustomFormulasReturn {
           return { ...f, experienceHint: effectiveHint, error: result.errors.join('; ') };
         });
         setFormulas(withPlugins);
+      } catch (error) {
+        console.error('Failed to load custom formulas:', error);
+      } finally {
+        setIsLoading(false);
       }
-    } catch (error) {
-      console.error('Failed to load custom formulas:', error);
-    } finally {
-      setIsLoading(false);
-    }
+    };
+
+    loadFormulas();
+    window.addEventListener(CUSTOM_FORMULAS_CHANGED_EVENT, loadFormulas);
+    return () => {
+      window.removeEventListener(CUSTOM_FORMULAS_CHANGED_EVENT, loadFormulas);
+    };
   }, []);
 
   // Save formulas to localStorage
@@ -114,8 +115,8 @@ export function useCustomFormulas(): UseCustomFormulasReturn {
       experienceHint?: FormulaExperienceHint,
       existingId?: string
     ): { success: boolean; error?: string } => {
-      if (!existingId && formulas.length >= MAX_FORMULAS) {
-        return { success: false, error: `Maximum count reached (${MAX_FORMULAS})` };
+      if (!existingId && formulas.length >= MAX_CUSTOM_FORMULAS) {
+        return { success: false, error: `Maximum count reached (${MAX_CUSTOM_FORMULAS})` };
       }
 
       const existingFormula = existingId ? formulas.find(formula => formula.id === existingId) : undefined;
@@ -244,8 +245,8 @@ export function useCustomFormulas(): UseCustomFormulasReturn {
     deleteFormula,
     renameFormula,
     recompileAll,
-    canAddMore: formulas.length < MAX_FORMULAS,
-    remainingSlots: MAX_FORMULAS - formulas.length,
+    canAddMore: formulas.length < MAX_CUSTOM_FORMULAS,
+    remainingSlots: MAX_CUSTOM_FORMULAS - formulas.length,
   };
 }
 

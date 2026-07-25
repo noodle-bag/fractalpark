@@ -12,38 +12,8 @@ import {
 } from '@/lib/artwork-repository';
 import {
   createFractalDocumentEnvelope,
-  type LocalFormulaAsset,
 } from '@/lib/fractal-file';
-import { CUSTOM_FORMULAS_STORAGE_KEY } from './useCustomFormulas';
-
-function readLocalFormulaAssets(): LocalFormulaAsset[] {
-  if (typeof window === 'undefined') return [];
-  try {
-    const raw = localStorage.getItem(CUSTOM_FORMULAS_STORAGE_KEY);
-    if (!raw) return [];
-    const parsed: unknown = JSON.parse(raw);
-    if (!Array.isArray(parsed)) return [];
-    return parsed.flatMap((value) => {
-      if (
-        typeof value === 'object' &&
-        value !== null &&
-        'id' in value &&
-        'source' in value &&
-        typeof value.id === 'string' &&
-        typeof value.source === 'string'
-      ) {
-        return [{
-          id: value.id,
-          name: 'name' in value && typeof value.name === 'string' ? value.name : undefined,
-          source: value.source,
-        }];
-      }
-      return [];
-    });
-  } catch {
-    return [];
-  }
-}
+import { readLocalFormulaAssets } from '@/lib/custom-formula-storage';
 
 export function useArtworks() {
   const [repository] = useState(() => new ArtworkRepository());

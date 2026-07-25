@@ -10,13 +10,12 @@ import { TransformPanel } from '@/components/fractal/TransformPanel';
 import { RenderPanel } from '@/components/fractal/RenderPanel';
 import { AnimationPanel } from '@/components/fractal/AnimationPanel';
 import { PositionSummaryPanel } from '@/components/fractal/PositionSummaryPanel';
+import { ArtworkActions } from '@/components/fractal/ArtworkActions';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { documentToExploreHref } from '@/lib/url-params';
-import { exportFractal } from '@/lib/export-fractal';
 import { trackEvent } from '@/components/analytics/PageViewTracker';
-import { captureThumbnail } from '@/lib/capture-thumbnail';
 import { useExploreDocumentState } from '@/hooks/useExploreDocumentState';
-import { useArtworks } from '@/hooks/useArtworks';
+import { useArtworkActions } from '@/hooks/useArtworkActions';
 import AnimatedFractalCanvas from '@/components/fractal/AnimatedFractalCanvas';
 import { ChevronDown, ChevronUp } from 'lucide-react';
 import { DEFAULT_FRACTAL_DOCUMENT } from '@/engine/document';
@@ -53,7 +52,6 @@ function ExploreClient() {
     lighting,
     customGradient,
   } = runtimeParams;
-  const [copied, setCopied] = useState(false);
   const [pickToast, setPickToast] = useState<string | null>(null);
   const keyframes = useMemo(
     () => document.animation?.viewKeyframes ?? [],
@@ -61,10 +59,8 @@ function ExploreClient() {
   );
   const [isPreviewPlaying, setIsPreviewPlaying] = useState(false);
   const [isPanelCollapsed, setIsPanelCollapsed] = useState(false);
-  const resetViewRef = useRef<(() => void) | null>(null);
   const canvasElRef = useRef<HTMLCanvasElement | null>(null);
   const pickToastTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
-  const { saveDocument, storageInfo } = useArtworks();
 
   const effectiveIterations = useMemo(() => {
     if (!adaptiveIterations) return maxIterations;
@@ -97,18 +93,22 @@ function ExploreClient() {
     router,
   ]);
 
-  const handleResetView = useCallback(() => {
-    loadFromDocument({
-      ...DEFAULT_FRACTAL_DOCUMENT,
-      animation: document.animation,
-      assets: document.assets,
-      metadata: document.metadata,
-    });
-  }, [document.animation, document.assets, document.metadata, loadFromDocument]);
+  const handleLoadDocument = useCallback((nextDocument: typeof document) => {
+    setIsPreviewPlaying(false);
+    loadFromDocument(nextDocument);
+  }, [loadFromDocument]);
 
-  const handleRegisterReset = useCallback((fn: () => void) => {
-    resetViewRef.current = fn;
-  }, []);
+  const handleResetView = useCallback(() => {
+    handleLoadDocument(DEFAULT_FRACTAL_DOCUMENT);
+  }, [handleLoadDocument]);
+
+  const getCanvas = useCallback(() => canvasElRef.current, []);
+  const artworkActions = useArtworkActions({
+    document,
+    effectiveIterations,
+    getCanvas,
+    loadDocument: handleLoadDocument,
+  });
 
   const handleJuliaModeChange = useCallback((julia: boolean) => {
     updateFormula({ isJulia: julia });
@@ -144,66 +144,6 @@ function ExploreClient() {
     };
   }, []);
 
-  const handleShare = useCallback(async () => {
-    try {
-      await navigator.clipboard.writeText(window.location.href);
-      setCopied(true);
-      trackEvent('share_link', { page: 'explore' });
-      setTimeout(() => setCopied(false), 2000);
-    } catch {
-      // Fallback: silent fail
-    }
-  }, []);
-
-  const handleExport = useCallback(async (scale: number, ssaaLevel?: number) => {
-    const width = canvasElRef.current?.clientWidth ?? 1200;
-    const height = canvasElRef.current?.clientHeight ?? 800;
-    trackEvent('export_fractal', { scale, ssaa: ssaaLevel ?? 0, formula });
-    // Determine SSAA level: explicit export quality, or fallback to preview toggle
-    const effectiveSsaaLevel = ssaaLevel ?? (useSSAA || scale > 1 ? 4 : 0);
-    await exportFractal(
-        {
-          maxIterations: effectiveIterations,
-          paletteIndex,
-          bounds,
-          isJulia,
-          juliaC,
-          power,
-          formula,
-          outsideColoring,
-          insideColoring,
-          transformId,
-          pluginParams,
-          orbitTrap,
-          useSSAA: effectiveSsaaLevel > 0,
-          ssaaLevel: effectiveSsaaLevel,
-          adaptiveIterations,
-          lighting,
-          customGradient,
-        },
-      width,
-      height,
-      scale
-    );
-  }, [
-    effectiveIterations,
-    paletteIndex,
-    bounds,
-    isJulia,
-    juliaC,
-    power,
-    formula,
-    outsideColoring,
-    insideColoring,
-    transformId,
-    pluginParams,
-    orbitTrap,
-    useSSAA,
-    adaptiveIterations,
-    lighting,
-    customGradient,
-  ]);
-
   const handleCanvasReady = useCallback((canvas: HTMLCanvasElement) => {
     canvasElRef.current = canvas;
     // Track first render complete (new user activation signal)
@@ -211,21 +151,6 @@ function ExploreClient() {
       trackEvent('first_render_complete', { page: 'explore' });
     }
   }, []);
-
-  const handleSave = useCallback(async (name: string): Promise<boolean> => {
-    const thumbnail = canvasElRef.current
-      ? captureThumbnail(canvasElRef.current)
-      : '';
-    const result = await saveDocument(name, document, thumbnail);
-    if (result.success) {
-      trackEvent('save_fractal', { formula });
-    }
-    return result.success;
-  }, [
-    document,
-    saveDocument,
-    formula,
-  ]);
 
   // Handle formula change - reset to formula's default bounds
   const handleFormulaChange = useCallback((newFormula: string) => {
@@ -310,7 +235,6 @@ function ExploreClient() {
             customGradient={customGradient}
             onBoundsChange={updateBounds}
             onPointSelect={isJulia ? undefined : handleCanvasPointSelect}
-            onResetView={handleRegisterReset}
             onCanvasReady={handleCanvasReady}
           />
         )}
@@ -342,6 +266,16 @@ function ExploreClient() {
             {pickToast}
           </div>
         )}
+        <ArtworkActions
+          status={artworkActions.status}
+          savedCount={artworkActions.savedCount}
+          onClearStatus={artworkActions.clearStatus}
+          onSave={artworkActions.save}
+          onDownload={artworkActions.download}
+          onImport={artworkActions.importFile}
+          onExport={artworkActions.exportPng}
+          onReset={handleResetView}
+        />
 
         {/* Mobile: toggle controls panel button */}
         <button
@@ -417,16 +351,10 @@ function ExploreClient() {
                 useSSAA={useSSAA}
                 adaptiveIterations={adaptiveIterations}
                 lighting={lighting}
-                copied={copied}
-                savedCount={storageInfo.count}
                 onIterationsChange={(value) => updateRender({ maxIterations: value })}
                 onUseSSAAChange={(enabled) => updateRender({ useSSAA: enabled })}
                 onAdaptiveIterationsChange={(enabled) => updateRender({ adaptiveIterations: enabled })}
                 onLightingChange={(nextLighting) => updateColoring({ lighting: nextLighting })}
-                onResetView={handleResetView}
-                onShare={handleShare}
-                onExport={handleExport}
-                onSave={handleSave}
               />
             </TabsContent>
 

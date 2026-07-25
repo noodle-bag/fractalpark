@@ -1,5 +1,5 @@
 import { FractalRenderer } from '@/engine/fractals/renderer';
-import type { FractalParams } from '@/engine/types';
+import type { RenderSnapshot } from '@/engine/render-snapshot';
 
 /** Choose tile size based on SSAA level; returns 0 to skip tiling. */
 function chooseTileSize(ssaaLevel: number, totalPixels: number): number {
@@ -14,7 +14,7 @@ function chooseTileSize(ssaaLevel: number, totalPixels: number): number {
 }
 
 export async function exportFractal(
-  params: FractalParams,
+  params: RenderSnapshot,
   canvasWidth: number,
   canvasHeight: number,
   scale: number

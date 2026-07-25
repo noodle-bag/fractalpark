@@ -35,7 +35,6 @@ interface FractalCanvasProps {
   customGradient: GradientStop[] | null;
   onBoundsChange?: (bounds: ViewBounds) => void;
   onPointSelect?: (point: [number, number]) => void;
-  onResetView?: (resetFn: () => void) => void;
   onCanvasReady?: (canvas: HTMLCanvasElement) => void;
 }
 
@@ -58,7 +57,6 @@ export default function FractalCanvas({
   customGradient,
   onBoundsChange,
   onPointSelect,
-  onResetView,
   onCanvasReady,
 }: FractalCanvasProps) {
   const canvasRef = useRef<HTMLCanvasElement>(null);
@@ -66,15 +64,11 @@ export default function FractalCanvas({
   const { render, rendererRef } = useFractalRenderer(glRef);
   const paramsRef = useRef<FractalParams | null>(null);
 
-  const { resetView } = useCanvasInteraction(canvasRef, {
+  useCanvasInteraction(canvasRef, {
     onBoundsChange: onBoundsChange ?? (() => {}),
     initialBounds: bounds,
     onPointSelect,
   });
-
-  useEffect(() => {
-    onResetView?.(resetView);
-  }, [resetView, onResetView]);
 
   useEffect(() => {
     if (canvasRef.current) {

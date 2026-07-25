@@ -179,6 +179,75 @@
       "render": "Render",
       "animation": "Animation"
     },
+    "artworkActions": {
+      "common": {
+        "cancel": "Cancel"
+      },
+      "save": {
+        "label": "Save to Gallery",
+        "title": "Save Artwork",
+        "name": "Name",
+        "placeholder": "Enter a name...",
+        "confirm": "Save",
+        "pending": "Saving..."
+      },
+      "download": {
+        "label": "Download Project"
+      },
+      "import": {
+        "label": "Import Project",
+        "dropHint": "Drop a .fractal.json file here"
+      },
+      "export": {
+        "label": "Export PNG",
+        "title": "Export PNG",
+        "scale": "Size",
+        "quality": "Anti-aliasing Quality",
+        "qualityOff": "Off",
+        "qualityLow": "Low",
+        "qualityHigh": "High",
+        "qualityUltra": "Ultra",
+        "confirm": "Export",
+        "pending": "Rendering..."
+      },
+      "reset": {
+        "label": "Reset Artwork",
+        "title": "Reset all settings?",
+        "description": "This artwork will return to the default preset, including its formula, view, style, render, and animation settings. Saved gallery items and your custom formula library will not be deleted.",
+        "cancel": "Cancel",
+        "confirm": "Reset"
+      },
+      "status": {
+        "save": {
+          "success": "Saved to Gallery."
+        },
+        "download": {
+          "success": "Project downloaded."
+        },
+        "import": {
+          "success": "Project imported."
+        },
+        "export": {
+          "success": "PNG exported."
+        }
+      },
+      "errors": {
+        "invalid-json": "The selected file is not valid JSON.",
+        "file-too-large": "The project file is too large.",
+        "invalid-envelope": "The selected file is not a valid FractalPark project.",
+        "source-too-large": "The embedded custom formula is too large.",
+        "missing-formula-asset": "The project is missing its custom formula source.",
+        "asset-hash-mismatch": "The custom formula source failed its integrity check.",
+        "asset-compile-failed": "The embedded custom formula could not be compiled.",
+        "future-document": "This project was created by a newer FractalPark version and cannot be edited here.",
+        "invalid-formula-storage": "Your custom formula library could not be updated safely.",
+        "formula-limit-reached": "Your custom formula library is full.",
+        "formula-commit-failed": "The custom formula could not be installed. No changes were kept.",
+        "save-failed": "The artwork could not be saved.",
+        "download-failed": "The project could not be downloaded.",
+        "export-failed": "The PNG could not be exported."
+      }
+    },
     "formula": {
       "select": "Select Formula",
       "search": "Search formulas...",
