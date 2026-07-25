@@ -14,9 +14,15 @@ import {
 } from '@/engine/document';
 import { migrateFractalDocument, normalizeFractalDocument } from '@/engine/document-migrate';
 import type { FractalParams } from '@/engine/types';
+import { readArtworkDocumentById } from '@/lib/artwork-repository';
 import { decodeParams } from '@/lib/url-params';
 
 function createInitialDocument(searchParams: URLSearchParams): FractalDocument {
+  const artworkId = searchParams.get('artwork');
+  if (artworkId) {
+    const artworkDocument = readArtworkDocumentById(artworkId);
+    if (artworkDocument) return artworkDocument;
+  }
   return migrateFractalDocument(decodeParams(searchParams), 0);
 }
 

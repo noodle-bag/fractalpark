@@ -17,7 +17,7 @@ import {
 } from '@/engine/frm/authoring';
 import { pluginRegistry } from '@/engine/plugins/registry';
 
-const STORAGE_KEY = 'myfrac-custom-formulas';
+export const CUSTOM_FORMULAS_STORAGE_KEY = 'myfrac-custom-formulas';
 const MAX_FORMULAS = 50;
 
 export interface CustomFormula {
@@ -68,7 +68,7 @@ export function useCustomFormulas(): UseCustomFormulasReturn {
   // Load formulas from localStorage on mount
   useEffect(() => {
     try {
-      const stored = localStorage.getItem(STORAGE_KEY);
+      const stored = localStorage.getItem(CUSTOM_FORMULAS_STORAGE_KEY);
       if (stored) {
         const parsed: CustomFormula[] = JSON.parse(stored);
         // Compile each formula
@@ -101,7 +101,7 @@ export function useCustomFormulas(): UseCustomFormulasReturn {
   // Save formulas to localStorage
   const persistFormulas = useCallback((formulasToSave: CustomFormula[]) => {
     try {
-      localStorage.setItem(STORAGE_KEY, JSON.stringify(formulasToSave));
+      localStorage.setItem(CUSTOM_FORMULAS_STORAGE_KEY, JSON.stringify(formulasToSave));
     } catch (error) {
       console.error('Failed to save custom formulas:', error);
     }

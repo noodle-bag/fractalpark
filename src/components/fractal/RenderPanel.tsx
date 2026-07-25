@@ -31,7 +31,7 @@ interface RenderPanelProps {
   onResetView: () => void;
   onShare: () => void;
   onExport: (scale: number, ssaaLevel: number) => Promise<void>;
-  onSave?: (name: string) => void;
+  onSave?: (name: string) => Promise<boolean>;
 }
 
 export function RenderPanel({
@@ -57,6 +57,22 @@ export function RenderPanel({
   const [saveDialogOpen, setSaveDialogOpen] = useState(false);
   const [saveName, setSaveName] = useState('');
   const [saveSuccess, setSaveSuccess] = useState(false);
+  const [saving, setSaving] = useState(false);
+
+  const handleSaveSubmit = async () => {
+    const name = saveName.trim();
+    if (!name || !onSave || saving) return;
+    setSaving(true);
+    try {
+      const success = await onSave(name);
+      if (!success) return;
+      setSaveDialogOpen(false);
+      setSaveSuccess(true);
+      setTimeout(() => setSaveSuccess(false), 2000);
+    } finally {
+      setSaving(false);
+    }
+  };
 
   return (
     <div className="space-y-6">
@@ -252,12 +268,9 @@ export function RenderPanel({
               value={saveName}
               onChange={(e) => setSaveName(e.target.value)}
               placeholder={t('save.dialog.placeholder')}
-              onKeyDown={(e) => {
+              onKeyDown={async (e) => {
                 if (e.key === 'Enter' && saveName.trim()) {
-                  onSave?.(saveName.trim());
-                  setSaveDialogOpen(false);
-                  setSaveSuccess(true);
-                  setTimeout(() => setSaveSuccess(false), 2000);
+                  await handleSaveSubmit();
                 }
               }}
             />
@@ -270,14 +283,8 @@ export function RenderPanel({
               {t('save.dialog.cancel')}
             </Button>
             <Button
-              onClick={() => {
-                if (saveName.trim()) {
-                  onSave?.(saveName.trim());
-                  setSaveDialogOpen(false);
-                  setSaveSuccess(true);
-                  setTimeout(() => setSaveSuccess(false), 2000);
-                }
-              }}
+              disabled={saving}
+              onClick={handleSaveSubmit}
             >
               {t('save.dialog.confirm')}
             </Button>

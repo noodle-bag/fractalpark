@@ -1,7 +1,9 @@
 import { act, renderHook } from '@testing-library/react';
-import { beforeAll, describe, expect, it } from 'vitest';
+import { beforeAll, describe, expect, it, vi } from 'vitest';
 import { registerBuiltins } from '@/engine/plugins/builtins/index';
 import { useExploreDocumentState } from '@/hooks/useExploreDocumentState';
+import { ARTWORK_STORAGE_KEY } from '@/lib/artwork-repository';
+import envelopeFixture from './fixtures/documents/envelope-v1.json';
 
 describe('useExploreDocumentState', () => {
   beforeAll(() => {
@@ -80,5 +82,39 @@ describe('useExploreDocumentState', () => {
     });
     expect(result.current.runtimeParams.maxIterations).toBe(420);
     expect(result.current.runtimeParams.useSSAA).toBe(true);
+  });
+
+  it('opens a Document artwork from the current storage key', () => {
+    const storage = new Map<string, string>([
+      [
+        ARTWORK_STORAGE_KEY,
+        JSON.stringify([
+          {
+            recordVersion: 1,
+            id: 'document-open',
+            name: 'Document Open',
+            envelope: envelopeFixture,
+            createdAt: 1,
+            updatedAt: 2,
+            thumbnail: '',
+            starred: false,
+          },
+        ]),
+      ],
+    ]);
+    vi.stubGlobal('localStorage', {
+      getItem: (key: string) => storage.get(key) ?? null,
+      setItem: (key: string, value: string) => storage.set(key, value),
+      removeItem: (key: string) => storage.delete(key),
+      clear: () => storage.clear(),
+    });
+
+    const { result } = renderHook(() =>
+      useExploreDocumentState(new URLSearchParams('artwork=document-open'))
+    );
+
+    expect(result.current.document.formula.formulaId).toBe('custom-fixture');
+    expect(result.current.document.assets?.formula?.hash).toMatch(/^[a-f0-9]{64}$/);
+    expect(result.current.runtimeParams.maxIterations).toBe(200);
   });
 });

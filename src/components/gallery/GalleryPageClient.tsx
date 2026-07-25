@@ -73,7 +73,9 @@ export default function GalleryPageClient() {
             fractal={item}
             href={item.isBuiltin
               ? builtinPresetToGalleryHref(item.id, locale)
-              : savedFractalToHref(item, locale)}
+              : item.storageFormat === 'document'
+                ? `/${locale}/explore?artwork=${encodeURIComponent(item.id)}`
+                : savedFractalToHref(item, locale)}
             isHovered={hoveredId === item.id}
             onHoverChange={(isHovered) => setHoveredId(isHovered ? item.id : null)}
             onToggleStar={() => handleToggleStar(item.id)}

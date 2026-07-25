@@ -2,14 +2,20 @@
 
 import { useMemo, useState, useCallback } from 'react';
 import { useBuiltinPresets } from './useBuiltinPresets';
-import { useSavedFractals } from './useSavedFractals';
+import { useArtworks } from './useArtworks';
+import { migrateFractalDocument } from '@/engine/document-migrate';
 import { presetToSavedFractal } from '@/lib/gallery-presets';
 import type { GalleryPreset } from '@/lib/gallery-presets';
 import type { SavedFractal } from '@/engine/types';
+import type { FractalDocument } from '@/engine/document';
 
 export interface GalleryItem extends SavedFractal {
   isBuiltin: boolean;
   featured: boolean;
+  document: FractalDocument;
+  storageFormat: 'builtin' | 'legacy' | 'document';
+  readOnly: boolean;
+  updatedAt?: number;
 }
 
 interface UseGalleryItemsOptions {
@@ -58,11 +64,11 @@ export function useGalleryItems(options: UseGalleryItemsOptions): UseGalleryItem
   });
 
   const {
-    fractals: userFractals,
+    artworks: userFractals,
     toggleStar: toggleUserStar,
     remove,
     rename,
-  } = useSavedFractals();
+  } = useArtworks();
 
   const [starredBuiltins, setStarredBuiltins] = useState<Set<string>>(loadStarredBuiltins);
 
@@ -87,15 +93,21 @@ export function useGalleryItems(options: UseGalleryItemsOptions): UseGalleryItem
 
   const items = useMemo<GalleryItem[]>(() => {
     // Convert builtin presets to GalleryItem format
-    const builtinItems: GalleryItem[] = builtinPresets.map((preset: GalleryPreset) => ({
-      ...presetToSavedFractal(preset),
-      starred: starredBuiltins.has(preset.id),
-      isBuiltin: true,
-      featured: preset.featured,
-    }));
+    const builtinItems: GalleryItem[] = builtinPresets.map((preset: GalleryPreset) => {
+      const saved = presetToSavedFractal(preset);
+      return {
+        ...saved,
+        document: migrateFractalDocument(saved),
+        starred: starredBuiltins.has(preset.id),
+        isBuiltin: true,
+        featured: preset.featured,
+        storageFormat: 'builtin',
+        readOnly: false,
+      };
+    });
 
     // Convert user fractals to GalleryItem format
-    const userItems: GalleryItem[] = userFractals.map((fractal: SavedFractal) => ({
+    const userItems: GalleryItem[] = userFractals.map((fractal) => ({
       ...fractal,
       isBuiltin: false,
       featured: false,

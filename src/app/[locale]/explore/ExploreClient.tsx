@@ -16,7 +16,7 @@ import { exportFractal } from '@/lib/export-fractal';
 import { trackEvent } from '@/components/analytics/PageViewTracker';
 import { captureThumbnail } from '@/lib/capture-thumbnail';
 import { useExploreDocumentState } from '@/hooks/useExploreDocumentState';
-import { useSavedFractals } from '@/hooks/useSavedFractals';
+import { useArtworks } from '@/hooks/useArtworks';
 import AnimatedFractalCanvas from '@/components/fractal/AnimatedFractalCanvas';
 import { ChevronDown, ChevronUp } from 'lucide-react';
 import { DEFAULT_FRACTAL_DOCUMENT } from '@/engine/document';
@@ -64,7 +64,7 @@ function ExploreClient() {
   const resetViewRef = useRef<(() => void) | null>(null);
   const canvasElRef = useRef<HTMLCanvasElement | null>(null);
   const pickToastTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
-  const { saveDocument, storageInfo } = useSavedFractals();
+  const { saveDocument, storageInfo } = useArtworks();
 
   const effectiveIterations = useMemo(() => {
     if (!adaptiveIterations) return maxIterations;
@@ -212,12 +212,15 @@ function ExploreClient() {
     }
   }, []);
 
-  const handleSave = useCallback((name: string) => {
+  const handleSave = useCallback(async (name: string): Promise<boolean> => {
     const thumbnail = canvasElRef.current
       ? captureThumbnail(canvasElRef.current)
       : '';
-    saveDocument(name, document, thumbnail);
-    trackEvent('save_fractal', { formula });
+    const result = await saveDocument(name, document, thumbnail);
+    if (result.success) {
+      trackEvent('save_fractal', { formula });
+    }
+    return result.success;
   }, [
     document,
     saveDocument,
