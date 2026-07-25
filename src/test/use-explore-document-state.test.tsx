@@ -84,6 +84,109 @@ describe('useExploreDocumentState', () => {
     expect(result.current.runtimeParams.useSSAA).toBe(true);
   });
 
+  it('applies a built-in default profile without changing excluded domains', () => {
+    const { result } = renderHook(() => useExploreDocumentState(new URLSearchParams()));
+
+    act(() => {
+      result.current.updateBounds({ centerX: 2, centerY: -3, zoom: 9, rotation: 0.5 });
+      result.current.updateFormula({
+        formulaId: 'phoenix',
+        isJulia: true,
+        juliaC: [0.4, -0.6],
+        power: 4,
+        params: { formula: { u_phoenixP: -0.25 } },
+      });
+      result.current.updateColoring({
+        pipelineVersion: 2,
+        paletteIndex: 9,
+        outsideColoringId: 'orbitTrap',
+        insideColoringId: 'finalOrbit',
+        style: {
+          styleId: 'bands',
+          detail: { scale: 2 },
+        },
+        params: {
+          outside: { u_outsideStale: 1 },
+          inside: { u_insideStale: 2 },
+          coloringScript: { u_scriptStale: 3 },
+        },
+      });
+      result.current.updateTransform({
+        transformId: 'kaleidoscope',
+        params: { transform: { u_kaleidoFold: 7 } },
+      });
+      result.current.updateRender({
+        maxIterations: 640,
+        useSSAA: true,
+        adaptiveIterations: true,
+      });
+      result.current.updateAnimation({
+        viewKeyframes: [
+          { id: 'a', bounds: { centerX: 0, centerY: 0, zoom: 1, rotation: 0 } },
+          { id: 'b', bounds: { centerX: 1, centerY: 1, zoom: 2, rotation: 0.2 } },
+        ],
+      });
+    });
+
+    act(() => {
+      result.current.selectBuiltInFormula('tricorn');
+    });
+
+    expect(result.current.document.scene.bounds).toEqual({
+      centerX: -0.12,
+      centerY: 0,
+      zoom: 0.65,
+      rotation: 0.5,
+    });
+    expect(result.current.document.formula).toEqual({
+      formulaId: 'tricorn',
+      isJulia: false,
+      juliaC: [-0.7, 0.27],
+      power: 2,
+      params: { formula: undefined },
+    });
+    expect(result.current.document.coloring).toMatchObject({
+      pipelineVersion: 1,
+      paletteIndex: 0,
+      customGradient: null,
+      outsideColoringId: 'smooth',
+      insideColoringId: 'black',
+      orbitTrap: {
+        shape: 'point',
+        point: [0, 0],
+        radius: 0.35,
+        width: 0.02,
+      },
+      lighting: {
+        enabled: false,
+        mode: 'normalMap',
+        azimuth: 45,
+        elevation: 35,
+        intensity: 0.65,
+      },
+      params: {
+        outside: undefined,
+        inside: undefined,
+        coloringScript: undefined,
+      },
+    });
+    expect(result.current.document.coloring.style).toBeUndefined();
+    expect(result.current.runtimeParams.pluginParams).toEqual({
+      u_kaleidoFold: 7,
+    });
+
+    expect(result.current.document.transform).toEqual({
+      transformId: 'kaleidoscope',
+      params: { transform: { u_kaleidoFold: 7 } },
+    });
+    expect(result.current.document.render).toEqual({
+      maxIterations: 640,
+      useSSAA: true,
+      adaptiveIterations: true,
+    });
+    expect(result.current.document.animation?.viewKeyframes).toHaveLength(2);
+  });
+
   it('opens a Document artwork from the current storage key', () => {
     const storage = new Map<string, string>([
       [

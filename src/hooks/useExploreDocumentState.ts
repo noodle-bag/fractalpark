@@ -16,6 +16,7 @@ import { migrateFractalDocument, normalizeFractalDocument } from '@/engine/docum
 import type { FractalParams } from '@/engine/types';
 import { readArtworkDocumentById } from '@/lib/artwork-repository';
 import { decodeParams } from '@/lib/url-params';
+import { getFormulaSelectionDefaults } from '@/engine/plugins/formula-catalog';
 
 function createInitialDocument(searchParams: URLSearchParams): FractalDocument {
   const artworkId = searchParams.get('artwork');
@@ -137,6 +138,7 @@ export interface ExploreDocumentState {
   updateTransform: (patch: Partial<TransformState>) => void;
   updateRender: (patch: Partial<RenderState>) => void;
   updateAnimation: (patch: Partial<AnimationState>) => void;
+  selectBuiltInFormula: (formulaId: string) => void;
   resetToDefault: () => void;
   loadFromDocument: (doc: FractalDocument) => void;
 }
@@ -170,6 +172,19 @@ export function useExploreDocumentState(initialSearchParams: URLSearchParams): E
     setDocument((prev) => mergeAnimationState(prev, patch));
   }, []);
 
+  const selectBuiltInFormula = useCallback((formulaId: string) => {
+    const selection = getFormulaSelectionDefaults(formulaId);
+
+    setDocument((prev) => {
+      const withFormula = mergeFormulaState(prev, selection.formula);
+      const withColoring = selection.coloring
+        ? mergeColoringState(withFormula, selection.coloring)
+        : withFormula;
+
+      return mergeSceneState(withColoring, { bounds: selection.bounds });
+    });
+  }, []);
+
   const resetToDefault = useCallback(() => {
     setDocument(normalizeFractalDocument(DEFAULT_FRACTAL_DOCUMENT));
   }, []);
@@ -187,6 +202,7 @@ export function useExploreDocumentState(initialSearchParams: URLSearchParams): E
     updateTransform,
     updateRender,
     updateAnimation,
+    selectBuiltInFormula,
     resetToDefault,
     loadFromDocument,
   };

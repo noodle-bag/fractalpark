@@ -1,5 +1,10 @@
 import { describe, it, expect, beforeAll } from 'vitest';
-import { FORMULA_CATALOG, getDefaultBounds, getFormulaMetadata } from '@/engine/plugins/formula-catalog';
+import {
+  FORMULA_CATALOG,
+  getDefaultBounds,
+  getFormulaMetadata,
+  getFormulaSelectionDefaults,
+} from '@/engine/plugins/formula-catalog';
 import { pluginRegistry } from '@/engine/plugins/registry';
 import { registerBuiltins } from '@/engine/plugins/builtins/index';
 
@@ -125,6 +130,70 @@ describe('Formula Catalog', () => {
       centerX: -0.5,
       centerY: 0,
       zoom: 0.4,
+    });
+  });
+
+  it('provides the URL-derived formula and coloring defaults for Tricorn', () => {
+    expect(getFormulaMetadata('tricorn')?.defaultProfile).toEqual({
+      formula: {
+        isJulia: false,
+        juliaC: [-0.7, 0.27],
+        power: 2,
+        params: { formula: {} },
+      },
+      coloring: {
+        pipelineVersion: 1,
+        paletteIndex: 0,
+        customGradient: null,
+        outsideColoringId: 'smooth',
+        insideColoringId: 'black',
+        orbitTrap: {
+          shape: 'point',
+          point: [0, 0],
+          radius: 0.35,
+          width: 0.02,
+        },
+        lighting: {
+          enabled: false,
+          mode: 'normalMap',
+          azimuth: 45,
+          elevation: 35,
+          intensity: 0.65,
+        },
+        params: {
+          outside: {},
+          inside: {},
+        },
+      },
+    });
+  });
+
+  it('builds clearing patches for explicit profiles and preserves fallback behavior', () => {
+    expect(getFormulaSelectionDefaults('tricorn')).toMatchObject({
+      bounds: { centerX: -0.12, centerY: 0, zoom: 0.65 },
+      formula: {
+        formulaId: 'tricorn',
+        isJulia: false,
+        juliaC: [-0.7, 0.27],
+        power: 2,
+        params: { formula: {} },
+      },
+      coloring: {
+        paletteIndex: 0,
+        customGradient: null,
+        outsideColoringId: 'smooth',
+        insideColoringId: 'black',
+        params: {
+          outside: {},
+          inside: {},
+          coloringScript: {},
+        },
+      },
+    });
+
+    expect(getFormulaSelectionDefaults('mandelbrot')).toEqual({
+      bounds: { centerX: -0.5, centerY: 0, zoom: 0.4 },
+      formula: { formulaId: 'mandelbrot' },
     });
   });
 });

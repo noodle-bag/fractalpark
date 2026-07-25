@@ -1,13 +1,26 @@
+import type { ColoringState, FormulaState } from '../document';
 import type { ViewBounds } from '../types';
+
+export interface FormulaDefaultProfile {
+  formula: Omit<FormulaState, 'formulaId'>;
+  coloring: ColoringState;
+}
 
 export interface FormulaMetadata {
   id: string;
   family: 'classic' | 'burning-ship' | 'newton' | 'magnet' | 'phoenix' | 'transcendental' | 'exotic';
   defaultBounds: ViewBounds;
   suggestedPalette: number;
+  defaultProfile?: FormulaDefaultProfile;
   thumbnailParams?: Record<string, number>;
   difficulty: 'easy' | 'medium' | 'hard';
   description?: string;
+}
+
+export interface FormulaSelectionDefaults {
+  bounds: ViewBounds;
+  formula: Partial<FormulaState> & Pick<FormulaState, 'formulaId'>;
+  coloring?: Partial<ColoringState>;
 }
 
 export const FORMULA_CATALOG: FormulaMetadata[] = [
@@ -33,6 +46,38 @@ export const FORMULA_CATALOG: FormulaMetadata[] = [
     family: 'classic',
     defaultBounds: { centerX: -0.12, centerY: 0, zoom: 0.65 },
     suggestedPalette: 0,
+    defaultProfile: {
+      formula: {
+        isJulia: false,
+        juliaC: [-0.7, 0.27],
+        power: 2,
+        params: { formula: {} },
+      },
+      coloring: {
+        pipelineVersion: 1,
+        paletteIndex: 0,
+        customGradient: null,
+        outsideColoringId: 'smooth',
+        insideColoringId: 'black',
+        orbitTrap: {
+          shape: 'point',
+          point: [0, 0],
+          radius: 0.35,
+          width: 0.02,
+        },
+        lighting: {
+          enabled: false,
+          mode: 'normalMap',
+          azimuth: 45,
+          elevation: 35,
+          intensity: 0.65,
+        },
+        params: {
+          outside: {},
+          inside: {},
+        },
+      },
+    },
     difficulty: 'easy',
     description: 'Tricorn (conjugate Mandelbrot)',
   },
@@ -795,4 +840,37 @@ export function getFormulaMetadata(id: string): FormulaMetadata | undefined {
 export function getDefaultBounds(id: string): ViewBounds {
   const meta = getFormulaMetadata(id);
   return meta?.defaultBounds ?? { centerX: -0.5, centerY: 0, zoom: 0.4 };
+}
+
+export function getFormulaSelectionDefaults(id: string): FormulaSelectionDefaults {
+  const metadata = getFormulaMetadata(id);
+  const bounds = metadata?.defaultBounds ?? { centerX: -0.5, centerY: 0, zoom: 0.4 };
+  const profile = metadata?.defaultProfile;
+
+  if (!profile) {
+    return {
+      bounds,
+      formula: { formulaId: id },
+    };
+  }
+
+  return {
+    bounds,
+    formula: {
+      formulaId: id,
+      ...profile.formula,
+      params: {
+        formula: profile.formula.params?.formula ?? {},
+      },
+    },
+    coloring: {
+      ...profile.coloring,
+      style: profile.coloring.style,
+      params: {
+        outside: profile.coloring.params?.outside ?? {},
+        inside: profile.coloring.params?.inside ?? {},
+        coloringScript: profile.coloring.params?.coloringScript ?? {},
+      },
+    },
+  };
 }

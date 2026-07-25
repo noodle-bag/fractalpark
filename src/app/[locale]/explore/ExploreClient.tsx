@@ -31,7 +31,7 @@ function ExploreClient() {
   const initializedRef = useRef(false);
   const debounceRef = useRef<ReturnType<typeof setTimeout> | null>(null);
 
-  const { document, runtimeParams, updateBounds, updateFormula, updateColoring, updateTransform, updateRender, updateAnimation, loadFromDocument } =
+  const { document, runtimeParams, updateBounds, updateFormula, updateColoring, updateTransform, updateRender, updateAnimation, selectBuiltInFormula, loadFromDocument } =
     useExploreDocumentState(new URLSearchParams(searchParams.toString()));
 
   const {
@@ -154,11 +154,9 @@ function ExploreClient() {
 
   // Handle formula change - reset to formula's default bounds
   const handleFormulaChange = useCallback((newFormula: string) => {
-    updateFormula({ formulaId: newFormula });
+    selectBuiltInFormula(newFormula);
     trackEvent('change_formula', { formula: newFormula });
-    const defaultBounds = getDefaultBounds(newFormula);
-    updateBounds(defaultBounds);
-  }, [updateBounds, updateFormula]);
+  }, [selectBuiltInFormula]);
 
   const handleFormulaParamChange = useCallback((name: string, value: PluginParamValue) => {
     updateFormula({
