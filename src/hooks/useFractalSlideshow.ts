@@ -15,6 +15,8 @@ interface UseFractalSlideshowOptions {
 }
 
 interface UseFractalSlideshowReturn {
+  // Whether the first real gallery preset has replaced the hidden placeholder
+  isReady: boolean;
   // Which fractal is on each canvas
   fractalA: SavedFractal;
   fractalB: SavedFractal | null;
@@ -209,8 +211,10 @@ export function useFractalSlideshow({
   const activeA = phase === 'PLAYING_A' || phase === 'CROSSFADE_TO_B' || phase === 'CROSSFADE_TO_A';
   const activeB = phase === 'PLAYING_B' || phase === 'CROSSFADE_TO_B' || phase === 'CROSSFADE_TO_A';
   const canNavigate = phase === 'PLAYING_A' || phase === 'PLAYING_B';
+  const isReady = fractalA.id !== PLACEHOLDER_FRACTAL.id;
 
   return {
+    isReady,
     fractalA,
     fractalB,
     activeA,

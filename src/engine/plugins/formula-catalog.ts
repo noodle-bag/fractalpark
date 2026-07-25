@@ -44,7 +44,7 @@ export const FORMULA_CATALOG: FormulaMetadata[] = [
   {
     id: 'tricorn',
     family: 'classic',
-    defaultBounds: { centerX: -0.12, centerY: 0, zoom: 0.65 },
+    defaultBounds: { centerX: -0.2481627018, centerY: 0.1162892546, zoom: 0.22 },
     suggestedPalette: 0,
     defaultProfile: {
       formula: {

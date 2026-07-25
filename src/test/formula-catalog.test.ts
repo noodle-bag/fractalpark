@@ -65,7 +65,11 @@ describe('Formula Catalog', () => {
   });
 
   it('should avoid generic template bounds for key catalog formulas', () => {
-    expect(getFormulaMetadata('tricorn')?.defaultBounds).toEqual({ centerX: -0.12, centerY: 0, zoom: 0.65 });
+    expect(getFormulaMetadata('tricorn')?.defaultBounds).toEqual({
+      centerX: -0.2481627018,
+      centerY: 0.1162892546,
+      zoom: 0.22,
+    });
     expect(getFormulaMetadata('phoenix')?.defaultBounds).toEqual({ centerX: -0.35, centerY: 0, zoom: 0.55 });
     expect(getFormulaMetadata('quadJulia')?.defaultBounds).toEqual({ centerX: 0, centerY: 0, zoom: 0.85 });
     expect(getFormulaMetadata('cubicMandelbrot')?.defaultBounds).toEqual({ centerX: -0.15, centerY: 0, zoom: 0.55 });
@@ -170,7 +174,7 @@ describe('Formula Catalog', () => {
 
   it('builds clearing patches for explicit profiles and preserves fallback behavior', () => {
     expect(getFormulaSelectionDefaults('tricorn')).toMatchObject({
-      bounds: { centerX: -0.12, centerY: 0, zoom: 0.65 },
+      bounds: { centerX: -0.2481627018, centerY: 0.1162892546, zoom: 0.22 },
       formula: {
         formulaId: 'tricorn',
         isJulia: false,

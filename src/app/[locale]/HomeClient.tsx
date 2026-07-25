@@ -107,6 +107,7 @@ function FractalSlideshow({
   // Lower dprScale on mobile to reduce GPU load on smaller devices
   const dprScale = typeof window !== 'undefined' && window.innerWidth < 768 ? 0.4 : 0.5;
   const {
+    isReady,
     fractalA,
     fractalB,
     activeA,
@@ -141,24 +142,26 @@ function FractalSlideshow({
       <div className="absolute inset-0 bg-black" />
 
       {/* Canvas A */}
-      <div
-        className="absolute inset-0 pointer-events-none"
-        style={{ opacity: opacityA, transition: transitionStyle, zIndex: opacityB > 0 ? 0 : 1 }}
-      >
-        <Suspense fallback={null}>
-          <AnimatedFractalCanvas
-            params={{ ...fractalA.params, bounds: boundsA }}
-            keyframes={fractalA.animation?.keyframes}
-            dprScale={dprScale}
-            active={activeA && !isPaused}
-            resetOnStop={false}
-            maxIterationsClamp={300}
-            className="w-full h-full"
-            onLoopComplete={loopA}
-            onFrame={setBoundsA}
-          />
-        </Suspense>
-      </div>
+      {isReady && (
+        <div
+          className="absolute inset-0 pointer-events-none"
+          style={{ opacity: opacityA, transition: transitionStyle, zIndex: opacityB > 0 ? 0 : 1 }}
+        >
+          <Suspense fallback={null}>
+            <AnimatedFractalCanvas
+              params={{ ...fractalA.params, bounds: boundsA }}
+              keyframes={fractalA.animation?.keyframes}
+              dprScale={dprScale}
+              active={activeA && !isPaused}
+              resetOnStop={false}
+              maxIterationsClamp={300}
+              className="w-full h-full"
+              onLoopComplete={loopA}
+              onFrame={setBoundsA}
+            />
+          </Suspense>
+        </div>
+      )}
 
       {/* Canvas B */}
       {fractalB && (

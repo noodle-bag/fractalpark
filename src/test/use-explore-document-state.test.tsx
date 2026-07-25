@@ -133,9 +133,9 @@ describe('useExploreDocumentState', () => {
     });
 
     expect(result.current.document.scene.bounds).toEqual({
-      centerX: -0.12,
-      centerY: 0,
-      zoom: 0.65,
+      centerX: -0.2481627018,
+      centerY: 0.1162892546,
+      zoom: 0.22,
       rotation: 0.5,
     });
     expect(result.current.document.formula).toEqual({
