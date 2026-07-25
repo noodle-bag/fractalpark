@@ -68,4 +68,14 @@ describe('useFractalSlideshow', () => {
     expect(result.current.fractalA).toBe(FIRST_PRESET);
     expect(result.current.boundsA).toEqual(FIRST_PRESET.params.bounds);
   });
+
+  it('is ready on the first render when a server-provided preset is available', () => {
+    const { result } = renderHook(() =>
+      useFractalSlideshow({ fractals: [FIRST_PRESET] })
+    );
+
+    expect(result.current.isReady).toBe(true);
+    expect(result.current.fractalA).toBe(FIRST_PRESET);
+    expect(result.current.boundsA).toEqual(FIRST_PRESET.params.bounds);
+  });
 });

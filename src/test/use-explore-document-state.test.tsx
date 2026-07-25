@@ -187,6 +187,74 @@ describe('useExploreDocumentState', () => {
     expect(result.current.document.animation?.viewKeyframes).toHaveLength(2);
   });
 
+  it('applies the Quad Julia URL profile while preserving transform, render, and animation', () => {
+    const searchParams = new URLSearchParams(
+      'fm=phoenix&tr=kaleidoscope&iter=640&ssaa=1&ait=1'
+    );
+    const { result } = renderHook(() => useExploreDocumentState(searchParams));
+
+    act(() => {
+      result.current.updateFormula({
+        isJulia: true,
+        juliaC: [0.4, -0.6],
+        power: 4,
+        params: { formula: { u_staleFormulaParam: 1 } },
+      });
+      result.current.updateColoring({
+        pipelineVersion: 2,
+        paletteIndex: 9,
+        outsideColoringId: 'orbitTrap',
+        insideColoringId: 'finalOrbit',
+        params: {
+          outside: { u_staleOutsideParam: 1 },
+          inside: { u_staleInsideParam: 2 },
+        },
+      });
+      result.current.updateAnimation({
+        viewKeyframes: [
+          { id: 'a', bounds: { centerX: 0, centerY: 0, zoom: 1, rotation: 0 } },
+          { id: 'b', bounds: { centerX: 1, centerY: 1, zoom: 2, rotation: 0.2 } },
+        ],
+      });
+    });
+
+    act(() => {
+      result.current.selectBuiltInFormula('quadJulia');
+    });
+
+    expect(result.current.document.scene.bounds).toEqual({
+      centerX: 0,
+      centerY: 0,
+      zoom: 0.27,
+      rotation: 0,
+    });
+    expect(result.current.document.formula).toEqual({
+      formulaId: 'quadJulia',
+      isJulia: false,
+      juliaC: [-0.7, 0.27],
+      power: 2,
+      params: { formula: undefined },
+    });
+    expect(result.current.document.coloring).toMatchObject({
+      pipelineVersion: 1,
+      paletteIndex: 0,
+      customGradient: null,
+      outsideColoringId: 'smooth',
+      insideColoringId: 'black',
+      params: {
+        outside: undefined,
+        inside: undefined,
+      },
+    });
+    expect(result.current.document.transform.transformId).toBe('kaleidoscope');
+    expect(result.current.document.render).toEqual({
+      maxIterations: 640,
+      useSSAA: true,
+      adaptiveIterations: true,
+    });
+    expect(result.current.document.animation?.viewKeyframes).toHaveLength(2);
+  });
+
   it('opens a Document artwork from the current storage key', () => {
     const storage = new Map<string, string>([
       [

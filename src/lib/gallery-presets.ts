@@ -203,6 +203,17 @@ function parsePresetConfig(config: GalleryPresetConfig): GalleryPreset {
 }
 
 /**
+ * Convert one validated preset config into a localized runtime preset.
+ * Useful for server-rendered surfaces that need a real preset on the first frame.
+ */
+export function galleryPresetConfigToPreset(
+  config: GalleryPresetConfig,
+  locale: string
+): GalleryPreset {
+  return applyLocale([parsePresetConfig(config)], locale)[0];
+}
+
+/**
  * Apply locale to preset names
  */
 function applyLocale(presets: GalleryPreset[], locale: string): GalleryPreset[] {

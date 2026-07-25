@@ -4,6 +4,7 @@ import {
   builtinPresetConfigToExploreHref,
   builtinPresetToGalleryHref,
   findBuiltinPresetConfigById,
+  galleryPresetConfigToPreset,
   parseGalleryPresetsFile,
 } from '@/lib/gallery-presets';
 
@@ -40,5 +41,15 @@ describe('gallery preset shortlinks', () => {
 
     expect(href.startsWith('/en/explore?')).toBe(true);
     expect(href).toContain('fm=newton3');
+  });
+
+  it('builds a localized runtime preset for a server-rendered first frame', () => {
+    const config = parseGalleryPresetsFile(presetsFile).presets[0];
+    const preset = galleryPresetConfigToPreset(config, 'zh');
+
+    expect(preset.id).toBe(config.id);
+    expect(preset.name).toBe(config.nameZh);
+    expect(preset.thumbnail).toBe(config.thumbnail);
+    expect(preset.params.formula).not.toBe('');
   });
 });

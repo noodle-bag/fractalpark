@@ -31,18 +31,25 @@ function shuffleArray<T>(array: T[]): T[] {
  * Hook to get gallery presets for homepage slideshow.
  * Loads from gallery-presets.json (same source as the gallery page).
  */
-function useHomepagePresets(): SavedFractal[] {
+function useHomepagePresets(initialFractal: SavedFractal | null): SavedFractal[] {
   const locale = useLocale();
   const { presets } = useBuiltinPresets({ locale });
 
   return useMemo(() => {
-    if (presets.length === 0) return [];
+    if (presets.length === 0) return initialFractal ? [initialFractal] : [];
     const fractals = presets.map(presetToSavedFractal);
-    return shuffleArray(fractals);
-  }, [presets]);
+    if (!initialFractal) return shuffleArray(fractals);
+
+    const remainingFractals = fractals.filter((fractal) => fractal.id !== initialFractal.id);
+    return [initialFractal, ...shuffleArray(remainingFractals)];
+  }, [initialFractal, presets]);
 }
 
-export default function HomeClient() {
+interface HomeClientProps {
+  initialFractal: SavedFractal | null;
+}
+
+export default function HomeClient({ initialFractal }: HomeClientProps) {
   const { setConfig } = useLayout();
   const [isFullscreen, setIsFullscreen] = useState(false);
   const [isPaused, setIsPaused] = useState(false);
@@ -77,6 +84,7 @@ export default function HomeClient() {
   return (
     <div className="fixed inset-0 bg-black">
       <FractalSlideshow
+        initialFractal={initialFractal}
         isFullscreen={isFullscreen}
         onToggleFullscreen={toggleFullscreen}
         isPaused={isPaused}
@@ -91,6 +99,7 @@ export default function HomeClient() {
  * Mobile devices use dprScale=0.5 to reduce GPU load.
  */
 interface FractalSlideshowProps {
+  initialFractal: SavedFractal | null;
   isFullscreen: boolean;
   onToggleFullscreen: () => void;
   isPaused: boolean;
@@ -98,12 +107,13 @@ interface FractalSlideshowProps {
 }
 
 function FractalSlideshow({
+  initialFractal,
   isFullscreen,
   onToggleFullscreen,
   isPaused,
   onTogglePause,
 }: FractalSlideshowProps) {
-  const fractals = useHomepagePresets();
+  const fractals = useHomepagePresets(initialFractal);
   // Lower dprScale on mobile to reduce GPU load on smaller devices
   const dprScale = typeof window !== 'undefined' && window.innerWidth < 768 ? 0.4 : 0.5;
   const {
@@ -145,7 +155,14 @@ function FractalSlideshow({
       {isReady && (
         <div
           className="absolute inset-0 pointer-events-none"
-          style={{ opacity: opacityA, transition: transitionStyle, zIndex: opacityB > 0 ? 0 : 1 }}
+          style={{
+            opacity: opacityA,
+            transition: transitionStyle,
+            zIndex: opacityB > 0 ? 0 : 1,
+            backgroundImage: fractalA.thumbnail ? `url("${fractalA.thumbnail}")` : undefined,
+            backgroundPosition: 'center',
+            backgroundSize: 'cover',
+          }}
         >
           <Suspense fallback={null}>
             <AnimatedFractalCanvas

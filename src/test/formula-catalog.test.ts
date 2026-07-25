@@ -71,7 +71,12 @@ describe('Formula Catalog', () => {
       zoom: 0.22,
     });
     expect(getFormulaMetadata('phoenix')?.defaultBounds).toEqual({ centerX: -0.35, centerY: 0, zoom: 0.55 });
-    expect(getFormulaMetadata('quadJulia')?.defaultBounds).toEqual({ centerX: 0, centerY: 0, zoom: 0.85 });
+    expect(getFormulaMetadata('quadJulia')?.defaultBounds).toEqual({
+      centerX: 0,
+      centerY: 0,
+      zoom: 0.27,
+      rotation: 0,
+    });
     expect(getFormulaMetadata('cubicMandelbrot')?.defaultBounds).toEqual({ centerX: -0.15, centerY: 0, zoom: 0.55 });
     expect(getFormulaMetadata('quarticMandelbrot')?.defaultBounds).toEqual({ centerX: -0.1, centerY: 0, zoom: 0.6 });
     expect(getFormulaMetadata('mandelbox')?.defaultBounds).toEqual({ centerX: 0, centerY: 0, zoom: 0.65 });
@@ -172,11 +177,68 @@ describe('Formula Catalog', () => {
     });
   });
 
+  it('provides the URL-derived formula and coloring defaults for Quad Julia', () => {
+    expect(getFormulaMetadata('quadJulia')?.defaultProfile).toEqual({
+      formula: {
+        isJulia: false,
+        juliaC: [-0.7, 0.27],
+        power: 2,
+        params: { formula: {} },
+      },
+      coloring: {
+        pipelineVersion: 1,
+        paletteIndex: 0,
+        customGradient: null,
+        outsideColoringId: 'smooth',
+        insideColoringId: 'black',
+        orbitTrap: {
+          shape: 'point',
+          point: [0, 0],
+          radius: 0.35,
+          width: 0.02,
+        },
+        lighting: {
+          enabled: false,
+          mode: 'normalMap',
+          azimuth: 45,
+          elevation: 35,
+          intensity: 0.65,
+        },
+        params: {
+          outside: {},
+          inside: {},
+        },
+      },
+    });
+  });
+
   it('builds clearing patches for explicit profiles and preserves fallback behavior', () => {
     expect(getFormulaSelectionDefaults('tricorn')).toMatchObject({
       bounds: { centerX: -0.2481627018, centerY: 0.1162892546, zoom: 0.22 },
       formula: {
         formulaId: 'tricorn',
+        isJulia: false,
+        juliaC: [-0.7, 0.27],
+        power: 2,
+        params: { formula: {} },
+      },
+      coloring: {
+        paletteIndex: 0,
+        customGradient: null,
+        outsideColoringId: 'smooth',
+        insideColoringId: 'black',
+        params: {
+          outside: {},
+          inside: {},
+          coloringScript: {},
+        },
+      },
+    });
+
+    expect(getFormulaSelectionDefaults('quadJulia')).toMatchObject({
+      bounds: { centerX: 0, centerY: 0, zoom: 0.27, rotation: 0 },
+      formula: {
+        formulaId: 'quadJulia',
         isJulia: false,
         juliaC: [-0.7, 0.27],
         power: 2,

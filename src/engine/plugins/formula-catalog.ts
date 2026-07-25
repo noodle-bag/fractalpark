@@ -102,8 +102,40 @@ export const FORMULA_CATALOG: FormulaMetadata[] = [
   {
     id: 'quadJulia',
     family: 'classic',
-    defaultBounds: { centerX: 0, centerY: 0, zoom: 0.85 },
+    defaultBounds: { centerX: 0, centerY: 0, zoom: 0.27, rotation: 0 },
     suggestedPalette: 1,
+    defaultProfile: {
+      formula: {
+        isJulia: false,
+        juliaC: [-0.7, 0.27],
+        power: 2,
+        params: { formula: {} },
+      },
+      coloring: {
+        pipelineVersion: 1,
+        paletteIndex: 0,
+        customGradient: null,
+        outsideColoringId: 'smooth',
+        insideColoringId: 'black',
+        orbitTrap: {
+          shape: 'point',
+          point: [0, 0],
+          radius: 0.35,
+          width: 0.02,
+        },
+        lighting: {
+          enabled: false,
+          mode: 'normalMap',
+          azimuth: 45,
+          elevation: 35,
+          intensity: 0.65,
+        },
+        params: {
+          outside: {},
+          inside: {},
+        },
+      },
+    },
     difficulty: 'easy',
     description: 'Quartic Julia set',
   },

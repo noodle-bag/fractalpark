@@ -1,6 +1,12 @@
 import HomeClient from './HomeClient';
 import HomeSeo from './HomeSeo';
 import { softwareApplicationJsonLd, renderJsonLd } from '@/lib/json-ld';
+import {
+  galleryPresetConfigToPreset,
+  parseGalleryPresetsFile,
+  presetToSavedFractal,
+} from '@/lib/gallery-presets';
+import presetsFile from '../../../public/gallery-presets.json';
 
 /**
  * Homepage — server component wrapper.
@@ -21,6 +27,12 @@ export default async function HomePage({
 }: {
   params: Promise<{ locale: string }>;
 }) {
+  const { locale } = await params;
+  const firstPresetConfig = parseGalleryPresetsFile(presetsFile).presets[0];
+  const initialFractal = firstPresetConfig
+    ? presetToSavedFractal(galleryPresetConfigToPreset(firstPresetConfig, locale))
+    : null;
+
   return (
     <>
       {/* SoftwareApplication JSON-LD — homepage is the canonical software entity page */}
@@ -28,7 +40,7 @@ export default async function HomePage({
         type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: renderJsonLd(softwareApplicationJsonLd) }}
       />
-      <HomeClient />
+      <HomeClient initialFractal={initialFractal} />
       <HomeSeo params={params} />
     </>
   );
