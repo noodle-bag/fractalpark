@@ -583,8 +583,8 @@ function applyFormulaFamilySwap(document: FractalDocument, config: NormalizedCam
 
 function applyAnimationSeedVariant(document: FractalDocument, config: NormalizedCampaignConfig, rng: () => number, trace: MutationTraceStep[]): void {
   if (config.mutation.strengths.animation === 'off') return;
-  if (!document.animation?.keyframes || document.animation.keyframes.length < 2) return;
-  const last = document.animation.keyframes[document.animation.keyframes.length - 1];
+  if (!document.animation?.viewKeyframes || document.animation.viewKeyframes.length < 2) return;
+  const last = document.animation.viewKeyframes[document.animation.viewKeyframes.length - 1];
   last.bounds.zoom = Math.max(0.02, Number((last.bounds.zoom * pickFrom([0.85, 1.15, 1.35], rng, 1)).toFixed(6)));
   last.bounds.rotation = Number(((last.bounds.rotation ?? 0) + randomBetween(-0.25, 0.25, rng)).toFixed(4));
   trace.push({

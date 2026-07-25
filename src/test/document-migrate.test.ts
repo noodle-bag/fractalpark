@@ -6,7 +6,7 @@ import { migrateFractalDocument, normalizeFractalDocument, normalizeRuntimeFract
 import type { SavedFractal } from '@/engine/types';
 
 describe('document migrate / normalize', () => {
-  it('normalizes partial documents to schema v1 defaults', () => {
+  it('normalizes partial documents to schema v2 defaults', () => {
     const doc = normalizeFractalDocument({
       scene: {
         bounds: {
@@ -21,7 +21,8 @@ describe('document migrate / normalize', () => {
       },
     });
 
-    expect(doc.schemaVersion).toBe(1);
+    expect(doc.schemaVersion).toBe(2);
+    expect(doc.coloring.pipelineVersion).toBe(1);
     expect(doc.scene.bounds.centerX).toBe(-0.1);
     expect(doc.scene.bounds.centerY).toBe(0);
     expect(doc.scene.bounds.zoom).toBe(0.4);
@@ -29,18 +30,17 @@ describe('document migrate / normalize', () => {
     expect(doc.transform.transformId).toBe('none');
   });
 
-  it('normalizes any document-like input to the current schema version', () => {
-    const doc = normalizeFractalDocument({
-      schemaVersion: 999,
-      scene: {
-        bounds: {
-          centerX: -0.2,
+  it('refuses to normalize future document versions', () => {
+    expect(() =>
+      normalizeFractalDocument({
+        schemaVersion: 999,
+        scene: {
+          bounds: {
+            centerX: -0.2,
+          },
         },
-      },
-    });
-
-    expect(doc.schemaVersion).toBe(1);
-    expect(doc.scene.bounds.centerX).toBe(-0.2);
+      } as never)
+    ).toThrow(/Cannot normalize future FractalDocument schemaVersion: 999/);
   });
 
   it('clamps out-of-range values during normalization', () => {
@@ -126,9 +126,9 @@ describe('document migrate / normalize', () => {
     const doc = migrateFractalDocument(decoded, 0);
     const runtime = documentToRuntimeParams(doc);
 
-    expect(doc.schemaVersion).toBe(1);
+    expect(doc.schemaVersion).toBe(2);
     expect(doc.metadata?.source).toBe('shared');
-    expect(doc.animation?.keyframes).toHaveLength(2);
+    expect(doc.animation?.viewKeyframes).toHaveLength(2);
     expect(runtime.formula).toBe('burningShip');
     expect(runtime.outsideColoring).toBe('orbitTrap');
     expect(runtime.insideColoring).toBe('atomDomain');
@@ -150,7 +150,7 @@ describe('document migrate / normalize', () => {
     const doc = migrateFractalDocument(parsed.params, 0);
     const runtime = documentToRuntimeParams(doc);
 
-    expect(doc.schemaVersion).toBe(1);
+    expect(doc.schemaVersion).toBe(2);
     expect(runtime.formula).toBe('buffalo');
     expect(runtime.transformId).toBe('kaleidoscope');
     expect(runtime.maxIterations).toBe(300);
@@ -174,7 +174,7 @@ describe('document migrate / normalize', () => {
       render: {},
     });
 
-    expect(doc.schemaVersion).toBe(1);
+    expect(doc.schemaVersion).toBe(2);
     expect(doc.scene.bounds.centerX).toBe(-0.123);
     expect(doc.scene.bounds.centerY).toBe(0.456);
     expect(doc.scene.bounds.zoom).toBe(8);
@@ -217,11 +217,11 @@ describe('document migrate / normalize', () => {
     const doc = migrateFractalDocument(legacy, 0);
     const runtime = documentToRuntimeParams(doc);
 
-    expect(doc.schemaVersion).toBe(1);
+    expect(doc.schemaVersion).toBe(2);
     expect(doc.metadata?.name).toBe('Legacy Saved');
     expect(doc.metadata?.createdAt).toBe(1234567890);
     expect(doc.metadata?.source).toBe('saved');
-    expect(doc.animation?.keyframes).toHaveLength(2);
+    expect(doc.animation?.viewKeyframes).toHaveLength(2);
     expect(runtime.bounds.centerX).toBe(0.25);
     expect(runtime.maxIterations).toBe(280);
   });
@@ -229,7 +229,7 @@ describe('document migrate / normalize', () => {
   it('throws for unsupported future FractalDocument schema versions', () => {
     expect(() =>
       migrateFractalDocument({
-        schemaVersion: 2,
+        schemaVersion: 3,
         scene: { bounds: { centerX: 0, centerY: 0, zoom: 1, rotation: 0 } },
         formula: { formulaId: 'mandelbrot', isJulia: false, juliaC: [-0.7, 0.27], power: 2 },
         coloring: {
@@ -243,6 +243,6 @@ describe('document migrate / normalize', () => {
         transform: { transformId: 'none' },
         render: { maxIterations: 200, useSSAA: false, adaptiveIterations: false },
       })
-    ).toThrow(/Unsupported FractalDocument schemaVersion: 2/);
+    ).toThrow(/Unsupported FractalDocument schemaVersion: 3/);
   });
 });

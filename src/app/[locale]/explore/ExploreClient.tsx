@@ -55,7 +55,10 @@ function ExploreClient() {
   } = runtimeParams;
   const [copied, setCopied] = useState(false);
   const [pickToast, setPickToast] = useState<string | null>(null);
-  const keyframes = useMemo(() => document.animation?.keyframes ?? [], [document.animation?.keyframes]);
+  const keyframes = useMemo(
+    () => document.animation?.viewKeyframes ?? [],
+    [document.animation?.viewKeyframes]
+  );
   const [isPreviewPlaying, setIsPreviewPlaying] = useState(false);
   const [isPanelCollapsed, setIsPanelCollapsed] = useState(false);
   const resetViewRef = useRef<(() => void) | null>(null);
@@ -432,7 +435,7 @@ function ExploreClient() {
                   if (nextKeyframes.length > keyframes.length) {
                     trackEvent('add_keyframe', { count: nextKeyframes.length });
                   }
-                  updateAnimation({ keyframes: nextKeyframes });
+                  updateAnimation({ viewKeyframes: nextKeyframes });
                 }}
                 onPreviewToggle={setIsPreviewPlaying}
                 isPreviewPlaying={isPreviewPlaying}

@@ -388,7 +388,7 @@ function scoreImageMetrics(metrics: ImageMetrics, document: FractalDocument, tar
   const edgeScore = normalizeScore(metrics.edgeDensity, 0.03, 0.24) * 18;
   const centerScore = (1 - Math.abs(clamp(metrics.centerEnergyRatio, 0, 3) - 1) / 2) * 10;
   const colorDisciplineScore = (1 - normalizeScore(metrics.colorfulness, 48, 110)) * 10;
-  const animationPotential = (((document.animation?.keyframes.length ?? 0) > 1 ? 1 : 0) + (document.scene.bounds.zoom > 20 ? 0.5 : 0)) * 3;
+  const animationPotential = (((document.animation?.viewKeyframes?.length ?? 0) > 1 ? 1 : 0) + (document.scene.bounds.zoom > 20 ? 0.5 : 0)) * 3;
 
   const structuralMystery =
     normalizeScore(metrics.entropy, 2.9, 3.9) * 4 +
@@ -415,7 +415,7 @@ function scoreImageMetrics(metrics: ImageMetrics, document: FractalDocument, tar
   if (document.scene.bounds.zoom >= 25 || metrics.entropy >= 3.25) labels.push('dive-ready');
   if (metrics.colorfulness > 72 && metrics.entropy < 3.0) labels.push('decorative-heavy');
   if (metrics.entropy < 2.5 || metrics.edgeDensity < 0.03) labels.push('information-exhausts-quickly');
-  if ((document.animation?.keyframes.length ?? 0) > 1) labels.push('animation-ready');
+  if ((document.animation?.viewKeyframes?.length ?? 0) > 1) labels.push('animation-ready');
   labels.push(...targetTags.portfolioRole.filter((tag) => !labels.includes(tag)));
 
   let total =

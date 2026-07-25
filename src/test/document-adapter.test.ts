@@ -73,7 +73,7 @@ describe('document adapter', () => {
 
     expect(doc.formula.params?.formula).toEqual({ u_phoenixP: -0.33, u_p1: [0.125, -0.25] });
     expect(doc.transform.params?.transform).toEqual({ u_kaleidoFold: 8 });
-    expect(doc.animation?.keyframes).toHaveLength(2);
+    expect(doc.animation?.viewKeyframes).toHaveLength(2);
     expect(doc.metadata?.source).toBe('saved');
 
     const roundTripped = documentToRuntimeParams(doc);
@@ -108,7 +108,7 @@ describe('document adapter', () => {
     expect(doc.formula.formulaId).toBe('buffalo');
     expect(doc.coloring.outsideColoringId).toBe('tia');
     expect(doc.formula.params?.formula).toEqual({ u_unknownCustomParam: 3.5 });
-    expect(doc.animation?.keyframes).toHaveLength(2);
+    expect(doc.animation?.viewKeyframes).toHaveLength(2);
     expect(doc.render.maxIterations).toBe(200);
   });
 });

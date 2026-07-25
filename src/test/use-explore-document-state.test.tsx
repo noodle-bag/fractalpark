@@ -57,7 +57,7 @@ describe('useExploreDocumentState', () => {
       });
       result.current.updateRender({ maxIterations: 420, useSSAA: true, adaptiveIterations: true });
       result.current.updateAnimation({
-        keyframes: [
+        viewKeyframes: [
           { id: 'k1', bounds: { centerX: 0, centerY: 0, zoom: 1, rotation: 0 } },
           { id: 'k2', bounds: { centerX: 1, centerY: 1, zoom: 2, rotation: 0.2 } },
         ],
@@ -68,7 +68,7 @@ describe('useExploreDocumentState', () => {
     expect(result.current.document.formula.params?.formula).toEqual({ u_phoenixP: -0.33, u_p1: [0.2, -0.15] });
     expect(result.current.document.coloring.params?.outside).toEqual({ u_orbitTrapHueShift: 0.4 });
     expect(result.current.document.transform.params?.transform).toEqual({ u_kaleidoFold: 7 });
-    expect(result.current.document.animation?.keyframes).toHaveLength(2);
+    expect(result.current.document.animation?.viewKeyframes).toHaveLength(2);
 
     expect(result.current.runtimeParams.formula).toBe('phoenix');
     expect(result.current.runtimeParams.transformId).toBe('kaleidoscope');

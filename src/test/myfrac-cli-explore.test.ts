@@ -19,7 +19,7 @@ afterEach(() => {
 });
 
 const baseDocument = {
-  schemaVersion: 1,
+  schemaVersion: 2,
   scene: {
     bounds: { centerX: -0.5, centerY: 0, zoom: 0.4, rotation: 0 },
   },
@@ -30,6 +30,7 @@ const baseDocument = {
     power: 2,
   },
   coloring: {
+    pipelineVersion: 1,
     paletteIndex: 0,
     customGradient: null,
     outsideColoringId: 'smooth',
@@ -39,7 +40,7 @@ const baseDocument = {
   },
   transform: { transformId: 'none' },
   render: { maxIterations: 200, adaptiveIterations: false, useSSAA: false },
-  animation: { keyframes: [] },
+  animation: { viewKeyframes: [] },
   metadata: {},
   assets: {},
 };

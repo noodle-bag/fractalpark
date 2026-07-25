@@ -1,5 +1,5 @@
 import { pluginRegistry } from './plugins/registry';
-import type { FractalParams, PluginParamRecord, PluginParamValue } from './types';
+import type { FractalParams, KeyframeAnimation, PluginParamRecord, PluginParamValue } from './types';
 import type { FractalUrlState } from '@/lib/url-params';
 import {
   DEFAULT_DOCUMENT_BOUNDS,
@@ -102,9 +102,15 @@ function flattenPluginParams(doc: FractalDocument): PluginParamRecord | undefine
 
 export function runtimeParamsToDocument(
   params: FractalParams,
-  extras?: { animation?: AnimationState; metadata?: FractalDocumentMetadata }
+  extras?: { animation?: AnimationState | KeyframeAnimation; metadata?: FractalDocumentMetadata }
 ): FractalDocument {
   const split = splitPluginParams(params);
+  const animation = extras?.animation;
+  const normalizedAnimation = animation
+    ? 'keyframes' in animation
+      ? { viewKeyframes: animation.keyframes }
+      : animation
+    : undefined;
 
   return {
     schemaVersion: DEFAULT_FRACTAL_DOCUMENT.schemaVersion,
@@ -124,6 +130,7 @@ export function runtimeParamsToDocument(
       params: cleanRecord(split.formula ?? {}) ? { formula: split.formula } : undefined,
     },
     coloring: {
+      pipelineVersion: 1,
       paletteIndex: params.paletteIndex,
       customGradient: params.customGradient,
       outsideColoringId: params.outsideColoring,
@@ -147,7 +154,7 @@ export function runtimeParamsToDocument(
       useSSAA: params.useSSAA,
       adaptiveIterations: params.adaptiveIterations,
     },
-    animation: extras?.animation,
+    animation: normalizedAnimation,
     metadata: extras?.metadata,
   };
 }
@@ -208,6 +215,7 @@ export function urlStateToDocument(
       params: state.pluginParams ? { formula: { ...state.pluginParams } } : undefined,
     },
     coloring: {
+      pipelineVersion: 1,
       paletteIndex: state.palette ?? DEFAULT_FRACTAL_DOCUMENT.coloring.paletteIndex,
       customGradient: state.gradient ?? DEFAULT_FRACTAL_DOCUMENT.coloring.customGradient,
       outsideColoringId: state.outsideColoring ?? DEFAULT_FRACTAL_DOCUMENT.coloring.outsideColoringId,
@@ -223,7 +231,7 @@ export function urlStateToDocument(
       useSSAA: state.useSSAA ?? DEFAULT_FRACTAL_DOCUMENT.render.useSSAA,
       adaptiveIterations: state.adaptiveIterations ?? DEFAULT_FRACTAL_DOCUMENT.render.adaptiveIterations,
     },
-    animation: state.keyframes && state.keyframes.length > 0 ? { keyframes: state.keyframes } : undefined,
+    animation: state.keyframes && state.keyframes.length > 0 ? { viewKeyframes: state.keyframes } : undefined,
     metadata: extras?.metadata,
   };
 }

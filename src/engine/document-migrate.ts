@@ -1,5 +1,5 @@
 import type { FractalUrlState } from '@/lib/url-params';
-import type { PluginParamRecord, PluginParamValue, SavedFractal, FractalParams } from './types';
+import type { FractalParams, Keyframe, PluginParamRecord, PluginParamValue, SavedFractal } from './types';
 import {
   DEFAULT_DOCUMENT_BOUNDS,
   DEFAULT_DOCUMENT_JULIA_C,
@@ -7,6 +7,10 @@ import {
   DEFAULT_DOCUMENT_ORBIT_TRAP,
   DEFAULT_FRACTAL_DOCUMENT,
   FRACTAL_DOCUMENT_SCHEMA_VERSION,
+  type AnimationTrack,
+  type AssetReference,
+  type ColorPostState,
+  type ColoringStyleState,
   type FractalDocument,
 } from './document';
 import { documentToRuntimeParams, runtimeParamsToDocument, urlStateToDocument } from './document-adapter';
@@ -19,7 +23,9 @@ function isObject(value: unknown): value is Record<string, unknown> {
   return typeof value === 'object' && value !== null;
 }
 
-function isFractalDocument(value: unknown): value is FractalDocument {
+export function hasFractalDocumentShape(value: unknown): value is Record<string, unknown> & {
+  schemaVersion: number;
+} {
   return (
     isObject(value) &&
     typeof value.schemaVersion === 'number' &&
@@ -103,6 +109,117 @@ function normalizePluginParamRecord(value: unknown): PluginParamRecord | undefin
   return Object.keys(normalized).length > 0 ? normalized : undefined;
 }
 
+function normalizeRgbCurve(value: unknown): [number, number, number, number, number] | undefined {
+  if (!Array.isArray(value) || value.length !== 5) {
+    return undefined;
+  }
+
+  const normalized = value.map((entry) => normalizeNumber(entry, NaN));
+  return normalized.every(Number.isFinite)
+    ? (normalized as [number, number, number, number, number])
+    : undefined;
+}
+
+function normalizeColoringStyle(value: unknown): ColoringStyleState | undefined {
+  if (!isObject(value) || typeof value.styleId !== 'string') {
+    return undefined;
+  }
+
+  const detail = isObject(value.detail)
+    ? {
+        scale: typeof value.detail.scale === 'number' && Number.isFinite(value.detail.scale) ? value.detail.scale : undefined,
+        amount: typeof value.detail.amount === 'number' && Number.isFinite(value.detail.amount) ? value.detail.amount : undefined,
+        softness:
+          typeof value.detail.softness === 'number' && Number.isFinite(value.detail.softness)
+            ? value.detail.softness
+            : undefined,
+      }
+    : undefined;
+  const post: ColorPostState | undefined = isObject(value.post)
+    ? {
+        toneMapping:
+          value.post.toneMapping === 'none' || value.post.toneMapping === 'soft' || value.post.toneMapping === 'filmic'
+            ? value.post.toneMapping
+            : undefined,
+        exposure: typeof value.post.exposure === 'number' && Number.isFinite(value.post.exposure) ? value.post.exposure : undefined,
+        contrast: typeof value.post.contrast === 'number' && Number.isFinite(value.post.contrast) ? value.post.contrast : undefined,
+        brightness:
+          typeof value.post.brightness === 'number' && Number.isFinite(value.post.brightness)
+            ? value.post.brightness
+            : undefined,
+        gamma: typeof value.post.gamma === 'number' && Number.isFinite(value.post.gamma) ? value.post.gamma : undefined,
+        saturation:
+          typeof value.post.saturation === 'number' && Number.isFinite(value.post.saturation)
+            ? value.post.saturation
+            : undefined,
+        vibrance:
+          typeof value.post.vibrance === 'number' && Number.isFinite(value.post.vibrance)
+            ? value.post.vibrance
+            : undefined,
+        hue: typeof value.post.hue === 'number' && Number.isFinite(value.post.hue) ? value.post.hue : undefined,
+        temperature:
+          typeof value.post.temperature === 'number' && Number.isFinite(value.post.temperature)
+            ? value.post.temperature
+            : undefined,
+        tint: typeof value.post.tint === 'number' && Number.isFinite(value.post.tint) ? value.post.tint : undefined,
+        vignette:
+          typeof value.post.vignette === 'number' && Number.isFinite(value.post.vignette)
+            ? value.post.vignette
+            : undefined,
+        dither: typeof value.post.dither === 'boolean' ? value.post.dither : undefined,
+        invert: typeof value.post.invert === 'boolean' ? value.post.invert : undefined,
+        curves: isObject(value.post.curves)
+          ? {
+              red: normalizeRgbCurve(value.post.curves.red),
+              green: normalizeRgbCurve(value.post.curves.green),
+              blue: normalizeRgbCurve(value.post.curves.blue),
+            }
+          : undefined,
+      }
+    : undefined;
+
+  return {
+    styleId: value.styleId,
+    detail,
+    post,
+  };
+}
+
+function normalizeAnimationTracks(value: unknown): AnimationTrack[] | undefined {
+  if (!Array.isArray(value)) {
+    return undefined;
+  }
+
+  const tracks = value.flatMap((track) => {
+    if (!isObject(track) || typeof track.id !== 'string' || typeof track.targetId !== 'string' || !Array.isArray(track.keyframes)) {
+      return [];
+    }
+
+    const keyframes = track.keyframes.flatMap((keyframe) => {
+      if (!isObject(keyframe) || typeof keyframe.time !== 'number' || !Number.isFinite(keyframe.time)) {
+        return [];
+      }
+      const normalizedValue = normalizePluginParamValue(keyframe.value);
+      return normalizedValue === undefined ? [] : [{ time: keyframe.time, value: normalizedValue }];
+    });
+
+    return [{ id: track.id, targetId: track.targetId, keyframes }];
+  });
+
+  return tracks.length > 0 ? tracks : undefined;
+}
+
+function normalizeAssetReference(value: unknown): AssetReference | undefined {
+  if (!isObject(value) || typeof value.id !== 'string') {
+    return undefined;
+  }
+
+  return {
+    id: value.id,
+    hash: typeof value.hash === 'string' ? value.hash : undefined,
+  };
+}
+
 export function normalizeRuntimeFractalParams(input: unknown): FractalParams {
   const defaults = documentToRuntimeParams(DEFAULT_FRACTAL_DOCUMENT);
   const source = isObject(input) ? input : {};
@@ -157,12 +274,30 @@ export function normalizeRuntimeFractalParams(input: unknown): FractalParams {
   );
 }
 
-function migrateDocumentV0ToV1(doc: DeepPartial<FractalDocument>): FractalDocument {
+function migrateDocumentToV2(doc: DeepPartial<FractalDocument>): FractalDocument {
   return normalizeFractalDocument(doc);
 }
 
 export function normalizeFractalDocument(doc: DeepPartial<FractalDocument>): FractalDocument {
+  if (
+    isObject(doc) &&
+    typeof doc.schemaVersion === 'number' &&
+    Math.trunc(doc.schemaVersion) > FRACTAL_DOCUMENT_SCHEMA_VERSION
+  ) {
+    throw new Error(
+      `Cannot normalize future FractalDocument schemaVersion: ${doc.schemaVersion}. ` +
+        `Current supported version is ${FRACTAL_DOCUMENT_SCHEMA_VERSION}.`
+    );
+  }
+
   const source = isObject(doc) ? doc : {};
+  const animation = isObject(source.animation) ? source.animation as Record<string, unknown> : undefined;
+  const legacyAssets = isObject(source.assets) ? source.assets as Record<string, unknown> : undefined;
+  const viewKeyframes = Array.isArray(animation?.viewKeyframes)
+    ? animation.viewKeyframes
+    : Array.isArray(animation?.keyframes)
+      ? animation.keyframes
+      : undefined;
 
   return {
     schemaVersion: FRACTAL_DOCUMENT_SCHEMA_VERSION,
@@ -195,6 +330,7 @@ export function normalizeFractalDocument(doc: DeepPartial<FractalDocument>): Fra
         : undefined,
     },
     coloring: {
+      pipelineVersion: source.coloring?.pipelineVersion === 2 ? 2 : 1,
       paletteIndex: normalizeNumber(source.coloring?.paletteIndex, DEFAULT_FRACTAL_DOCUMENT.coloring.paletteIndex),
       customGradient:
         Array.isArray(source.coloring?.customGradient) ? [...source.coloring.customGradient] : DEFAULT_FRACTAL_DOCUMENT.coloring.customGradient,
@@ -228,6 +364,7 @@ export function normalizeFractalDocument(doc: DeepPartial<FractalDocument>): Fra
         elevation: normalizeNumber(source.coloring?.lighting?.elevation, DEFAULT_DOCUMENT_LIGHTING.elevation),
         intensity: normalizeNumber(source.coloring?.lighting?.intensity, DEFAULT_DOCUMENT_LIGHTING.intensity),
       },
+      style: normalizeColoringStyle(source.coloring?.style),
       params: source.coloring?.params
         ? {
             outside: normalizePluginParamRecord(source.coloring.params.outside),
@@ -259,24 +396,39 @@ export function normalizeFractalDocument(doc: DeepPartial<FractalDocument>): Fra
           : DEFAULT_FRACTAL_DOCUMENT.render.adaptiveIterations,
     },
     animation:
-      source.animation && Array.isArray(source.animation.keyframes)
-        ? { keyframes: [...source.animation.keyframes] }
+      viewKeyframes || animation?.tracks
+        ? {
+            viewKeyframes: viewKeyframes ? [...viewKeyframes] as Keyframe[] : undefined,
+            tracks: normalizeAnimationTracks(animation?.tracks),
+          }
         : undefined,
-    assets: source.assets ? { ...source.assets } : undefined,
+    assets: legacyAssets
+      ? {
+          formula:
+            normalizeAssetReference(legacyAssets.formula) ??
+            (typeof legacyAssets.formulaScriptId === 'string' ? { id: legacyAssets.formulaScriptId } : undefined),
+          colorScript:
+            normalizeAssetReference(legacyAssets.colorScript) ??
+            (typeof legacyAssets.colorScriptId === 'string' ? { id: legacyAssets.colorScriptId } : undefined),
+          animationScript:
+            normalizeAssetReference(legacyAssets.animationScript) ??
+            (typeof legacyAssets.animationScriptId === 'string' ? { id: legacyAssets.animationScriptId } : undefined),
+        }
+      : undefined,
     metadata: source.metadata ? { ...source.metadata } : undefined,
   };
 }
 
 export function migrateFractalDocument(input: unknown, fromVersion = 0): FractalDocument {
-  if (isFractalDocument(input)) {
+  if (hasFractalDocumentShape(input)) {
     const inputVersion = Math.trunc(input.schemaVersion);
 
     if (inputVersion === FRACTAL_DOCUMENT_SCHEMA_VERSION) {
-      return normalizeFractalDocument(input);
+      return normalizeFractalDocument(input as DeepPartial<FractalDocument>);
     }
 
-    if (inputVersion === 0) {
-      return migrateDocumentV0ToV1(input);
+    if (inputVersion === 0 || inputVersion === 1) {
+      return migrateDocumentToV2(input as DeepPartial<FractalDocument>);
     }
 
     throw new Error(
@@ -306,11 +458,11 @@ export function migrateFractalDocument(input: unknown, fromVersion = 0): Fractal
       );
     }
 
-    return migrateDocumentV0ToV1(runtimeParamsToDocument(input));
+    return migrateDocumentToV2(runtimeParamsToDocument(input));
   }
 
   if (looksLikeUrlState(input)) {
-    return migrateDocumentV0ToV1(
+    return migrateDocumentToV2(
       urlStateToDocument(input, {
         metadata: { source: 'shared' },
       })
@@ -324,5 +476,5 @@ export function migrateFractalDocument(input: unknown, fromVersion = 0): Fractal
     );
   }
 
-  return migrateDocumentV0ToV1(DEFAULT_FRACTAL_DOCUMENT);
+  return migrateDocumentToV2(DEFAULT_FRACTAL_DOCUMENT);
 }

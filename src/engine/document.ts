@@ -4,10 +4,13 @@ import type {
   LightingConfig,
   OrbitTrapConfig,
   PluginParamRecord,
+  PluginParamValue,
   ViewBounds,
 } from './types';
 
-export const FRACTAL_DOCUMENT_SCHEMA_VERSION = 1;
+export const FRACTAL_DOCUMENT_SCHEMA_VERSION = 2 as const;
+
+export type ColoringPipelineVersion = 1 | 2;
 
 export interface FormulaParamsState {
   formula?: PluginParamRecord;
@@ -35,13 +38,51 @@ export interface FormulaState {
   params?: FormulaParamsState;
 }
 
+export interface ColoringStyleDetailState {
+  scale?: number;
+  amount?: number;
+  softness?: number;
+}
+
+export type ToneMappingMode = 'none' | 'soft' | 'filmic';
+export type RgbCurve = [number, number, number, number, number];
+
+export interface ColorPostState {
+  toneMapping?: ToneMappingMode;
+  exposure?: number;
+  contrast?: number;
+  brightness?: number;
+  gamma?: number;
+  saturation?: number;
+  vibrance?: number;
+  hue?: number;
+  temperature?: number;
+  tint?: number;
+  vignette?: number;
+  dither?: boolean;
+  invert?: boolean;
+  curves?: {
+    red?: RgbCurve;
+    green?: RgbCurve;
+    blue?: RgbCurve;
+  };
+}
+
+export interface ColoringStyleState {
+  styleId: string;
+  detail?: ColoringStyleDetailState;
+  post?: ColorPostState;
+}
+
 export interface ColoringState {
+  pipelineVersion: ColoringPipelineVersion;
   paletteIndex: number;
   customGradient: GradientStop[] | null;
   outsideColoringId: string;
   insideColoringId: string;
   orbitTrap: OrbitTrapConfig;
   lighting: LightingConfig;
+  style?: ColoringStyleState;
   params?: ColoringParamsState;
 }
 
@@ -57,25 +98,42 @@ export interface RenderState {
 }
 
 export interface AnimationState {
-  keyframes: Keyframe[];
+  viewKeyframes?: Keyframe[];
+  tracks?: AnimationTrack[];
 }
 
-// Reserved for future use (M4.11+). M4.8a does not require write-path support.
+export interface AnimationTrackKeyframe {
+  time: number;
+  value: PluginParamValue;
+}
+
+export interface AnimationTrack {
+  id: string;
+  targetId: string;
+  keyframes: AnimationTrackKeyframe[];
+}
+
+export interface AssetReference {
+  id: string;
+  hash?: string;
+}
+
 export interface AssetState {
-  formulaScriptId?: string;
-  colorScriptId?: string;
-  animationScriptId?: string;
+  formula?: AssetReference;
+  colorScript?: AssetReference;
+  animationScript?: AssetReference;
 }
 
 export interface FractalDocumentMetadata {
   name?: string;
   createdAt?: number;
   updatedAt?: number;
-  source?: 'builtin' | 'saved' | 'shared' | 'imported';
+  source?: 'builtin' | 'saved' | 'imported' | 'remix' | 'shared';
+  sourceId?: string;
 }
 
-export interface FractalDocument {
-  schemaVersion: number;
+export interface FractalDocumentV2 {
+  schemaVersion: typeof FRACTAL_DOCUMENT_SCHEMA_VERSION;
   scene: SceneState;
   formula: FormulaState;
   coloring: ColoringState;
@@ -85,6 +143,8 @@ export interface FractalDocument {
   assets?: AssetState;
   metadata?: FractalDocumentMetadata;
 }
+
+export type FractalDocument = FractalDocumentV2;
 
 export const DEFAULT_DOCUMENT_BOUNDS: ViewBounds = {
   centerX: -0.5,
@@ -122,6 +182,7 @@ export const DEFAULT_FRACTAL_DOCUMENT: FractalDocument = {
     power: 2,
   },
   coloring: {
+    pipelineVersion: 1,
     paletteIndex: 0,
     customGradient: null,
     outsideColoringId: 'smooth',

@@ -90,7 +90,9 @@ export function useSavedFractals() {
         createdAt: Date.now(),
         thumbnail,
         starred: false,
-        animation: document.animation ? { keyframes: document.animation.keyframes } : undefined,
+        animation: document.animation?.viewKeyframes
+          ? { keyframes: document.animation.viewKeyframes }
+          : undefined,
       };
       update((prev) => [...prev, entry]);
       return id;

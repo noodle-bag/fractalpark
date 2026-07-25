@@ -483,7 +483,7 @@ export function documentToUrlState(doc: FractalDocument): FractalUrlState {
     lighting: runtime.lighting,
     palette: runtime.customGradient ? undefined : runtime.paletteIndex,
     gradient: runtime.customGradient ?? undefined,
-    keyframes: doc.animation?.keyframes,
+    keyframes: doc.animation?.viewKeyframes,
   };
 }
 

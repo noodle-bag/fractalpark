@@ -83,7 +83,7 @@ describe('myfrac cli doc commands', () => {
     expect(result.ok).toBe(true);
     expect(result.data.source.sourceFormat).toBe('saved-fractal');
     expect(result.data.document.metadata?.name).toBe('Saved');
-    expect(result.data.document.animation?.keyframes).toHaveLength(2);
+    expect(result.data.document.animation?.viewKeyframes).toHaveLength(2);
   });
 
   it('accepts FractalDocument payloads for from-saved', () => {
