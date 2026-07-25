@@ -81,14 +81,11 @@ test.describe('Saved Fractal Gallery Workflow', () => {
     await page.goto('/en/explore');
     await waitForFractalCanvasReady(page);
 
-    // Save to Collection is in the Render tab
-    await page.getByRole('tab', { name: /render/i }).click();
-
-    await page.getByRole('button', { name: /save to collection/i }).click();
+    await page.getByRole('button', { name: /save to gallery/i }).click();
     await page.getByLabel('Name').fill(fractalName);
     await page.getByRole('button', { name: /^Save$/ }).click();
 
-    await expect(page.getByRole('button', { name: /saved!/i })).toBeVisible({ timeout: 5000 });
+    await expect(page.getByText('Saved to Gallery.')).toBeVisible({ timeout: 5000 });
 
     await page.goto('/en/gallery');
     await expect(page.locator('a', { hasText: fractalName }).first()).toBeVisible({ timeout: 15000 });

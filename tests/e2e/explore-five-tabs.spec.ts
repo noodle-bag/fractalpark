@@ -54,6 +54,25 @@ test.describe('Explore Five-Tab Structure', () => {
     }
   });
 
+  test('should keep artwork actions visible across every tab and hide Share', async ({ page }) => {
+    const actions = [
+      /save to gallery/i,
+      /download project/i,
+      /import project/i,
+      /export png/i,
+      /reset artwork/i,
+    ];
+
+    for (const tabName of ['formula', 'coloring', 'transform', 'render', 'animation']) {
+      await page.getByRole('tab', { name: new RegExp(tabName, 'i') }).click();
+      for (const actionName of actions) {
+        await expect(page.getByRole('button', { name: actionName })).toBeVisible();
+      }
+    }
+
+    await expect(page.getByRole('button', { name: /share|copy/i })).toHaveCount(0);
+  });
+
   test('formula tab should be default active tab', async ({ page }) => {
     const formulaTab = page.getByRole('tab', { name: /formula/i });
     await expect(formulaTab).toHaveAttribute('data-state', 'active');
@@ -128,17 +147,6 @@ test.describe('Render Tab', () => {
 
     // Lighting toggle
     await expect(page.locator('#lighting-toggle')).toBeVisible();
-  });
-
-  test('should display action buttons', async ({ page }) => {
-    // Reset view button
-    await expect(page.getByRole('button', { name: /reset/i })).toBeVisible();
-
-    // Share button
-    await expect(page.getByRole('button', { name: /share|copy/i })).toBeVisible();
-
-    // Save button
-    await expect(page.getByRole('button', { name: /save/i })).toBeVisible();
   });
 
   test('should show lighting controls when lighting is enabled', async ({ page }) => {
