@@ -47,7 +47,7 @@
     "assets": {
       "formula": {
         "id": "custom-fixture",
-        "hash": "817639e9c638b8fae35ae06b76be5c30901eff9d38da26da4e63c750f3e19018"
+        "hash": "ac80cc1d331227c747d94150f6542474e1b90e4fb779ce8dbc1b3288f308cfad"
       }
     }
   },
@@ -57,8 +57,8 @@
         "id": "custom-fixture",
         "language": "frm",
         "name": "Custom Fixture",
-        "source": "formula CustomFixture { init: z = pixel; loop: z = z * z + pixel; bailout: |z| > 4; }",
-        "hash": "817639e9c638b8fae35ae06b76be5c30901eff9d38da26da4e63c750f3e19018"
+        "source": "CustomFixture {\ninit:\n  z = pixel\nloop:\n  z = z^2 + c\nbailout:\n  |z| < 4\n}",
+        "hash": "ac80cc1d331227c747d94150f6542474e1b90e4fb779ce8dbc1b3288f308cfad"
       }
     ]
   }
