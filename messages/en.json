@@ -255,6 +255,14 @@
       "active": "Active",
       "builtin": "Built-in",
       "custom": "Custom",
+      "resolution": {
+        "loading": "Loading formula...",
+        "notFound": "The custom formula “{formula}” is not available on this device.",
+        "storageInvalid": "Your custom formula library could not be read safely.",
+        "idConflict": "The custom formula ID “{formula}” conflicts with a built-in formula.",
+        "compileFailed": "The custom formula “{formula}” could not be compiled.",
+        "unavailable": "The formula “{formula}” could not be loaded."
+      },
       "examples": {
         "starterBrot": {
           "name": "Starter Mandelbrot",

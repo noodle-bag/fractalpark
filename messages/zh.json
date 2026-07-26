@@ -255,6 +255,14 @@
       "active": "当前",
       "builtin": "内置公式",
       "custom": "自定义公式",
+      "resolution": {
+        "loading": "正在加载公式...",
+        "notFound": "当前设备上没有自定义公式“{formula}”。",
+        "storageInvalid": "无法安全读取你的自定义公式库。",
+        "idConflict": "自定义公式 ID“{formula}”与内置公式冲突。",
+        "compileFailed": "无法编译自定义公式“{formula}”。",
+        "unavailable": "无法加载公式“{formula}”。"
+      },
       "examples": {
         "starterBrot": {
           "name": "最简 Mandelbrot",

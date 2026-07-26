@@ -113,16 +113,17 @@ bailout:
     await expect(page).toHaveURL(/[?&]fm=/, { timeout: 5000 });
   });
 
-  test('should fallback to mandelbrot for unknown formula in URL', async ({ page }) => {
+  test('should report an unknown local formula without falling back', async ({ page }) => {
     // Navigate with a non-existent custom formula ID
     await page.goto('/en/explore?fm=frm-nonexistent');
 
-    // Wait for page to load
-    await waitForFractalCanvasReady(page);
-    
-    // Verify fallback warning in console (we can't easily test console output,
-    // but the page should load without errors)
-    await expect(page.locator('text=Error')).not.toBeVisible();
+    await expect(
+      page.getByText(
+        'The custom formula “frm-nonexistent” is not available on this device.'
+      )
+    ).toBeVisible({ timeout: 15000 });
+    await expect(page.locator('[data-testid="fractal-canvas"]')).not.toBeVisible();
+    await expect(page).toHaveURL(/[?&]fm=frm-nonexistent/);
   });
 
   test('should persist custom formulas across reloads', async ({ page }) => {

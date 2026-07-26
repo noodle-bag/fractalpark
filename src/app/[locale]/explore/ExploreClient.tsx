@@ -17,11 +17,28 @@ import { trackEvent } from '@/components/analytics/PageViewTracker';
 import { useExploreDocumentState } from '@/hooks/useExploreDocumentState';
 import { useArtworkActions } from '@/hooks/useArtworkActions';
 import AnimatedFractalCanvas from '@/components/fractal/AnimatedFractalCanvas';
-import { ChevronDown, ChevronUp } from 'lucide-react';
+import { AlertTriangle, ChevronDown, ChevronUp } from 'lucide-react';
 import { DEFAULT_FRACTAL_DOCUMENT } from '@/engine/document';
 import type { FormulaSelectionRequest } from '@/engine/frm/authoring';
 import { getDefaultBounds } from '@/engine/plugins/formula-catalog';
 import type { PluginParamRecord, PluginParamValue } from '@/engine/types';
+import {
+  CUSTOM_FORMULAS_CHANGED_EVENT,
+  readPersistedCustomFormulas,
+} from '@/lib/custom-formula-storage';
+import {
+  resolveFormulaReference,
+  type FormulaResolution,
+} from '@/lib/formula-resolver';
+
+type ExploreFormulaResolution =
+  | FormulaResolution
+  | {
+      success: false;
+      formulaId: string;
+      code: 'storage-invalid';
+      errors: string[];
+    };
 
 function ExploreClient() {
   const locale = useLocale();
@@ -59,6 +76,8 @@ function ExploreClient() {
   );
   const [isPreviewPlaying, setIsPreviewPlaying] = useState(false);
   const [isPanelCollapsed, setIsPanelCollapsed] = useState(false);
+  const [formulaResolution, setFormulaResolution] =
+    useState<ExploreFormulaResolution | null>(null);
   const canvasElRef = useRef<HTMLCanvasElement | null>(null);
   const pickToastTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
 
@@ -73,6 +92,39 @@ function ExploreClient() {
   useEffect(() => {
     initializedRef.current = true;
   }, []);
+
+  useEffect(() => {
+    const resolveCurrentFormula = () => {
+      try {
+        setFormulaResolution(
+          resolveFormulaReference(formula, readPersistedCustomFormulas())
+        );
+      } catch (error) {
+        setFormulaResolution({
+          success: false,
+          formulaId: formula,
+          code: 'storage-invalid',
+          errors: [
+            error instanceof Error
+              ? error.message
+              : 'Custom formula storage is invalid.',
+          ],
+        });
+      }
+    };
+
+    resolveCurrentFormula();
+    window.addEventListener(
+      CUSTOM_FORMULAS_CHANGED_EVENT,
+      resolveCurrentFormula
+    );
+    return () => {
+      window.removeEventListener(
+        CUSTOM_FORMULAS_CHANGED_EVENT,
+        resolveCurrentFormula
+      );
+    };
+  }, [formula]);
 
   // Debounced URL update
   useEffect(() => {
@@ -210,10 +262,49 @@ function ExploreClient() {
     });
   }, [document.transform.params?.transform, updateTransform]);
 
+  const formulaResolutionMatches =
+    formulaResolution?.formulaId === formula;
+  const isFormulaReady =
+    formulaResolutionMatches && formulaResolution?.success === true;
+  let formulaResolutionMessage = t('formula.resolution.loading');
+
+  if (
+    formulaResolutionMatches &&
+    formulaResolution &&
+    !formulaResolution.success
+  ) {
+    switch (formulaResolution.code) {
+      case 'formula-not-found':
+        formulaResolutionMessage = t('formula.resolution.notFound', {
+          formula,
+        });
+        break;
+      case 'storage-invalid':
+        formulaResolutionMessage = t('formula.resolution.storageInvalid');
+        break;
+      case 'builtin-id-conflict':
+        formulaResolutionMessage = t('formula.resolution.idConflict', {
+          formula,
+        });
+        break;
+      case 'compile-failed':
+        formulaResolutionMessage = t('formula.resolution.compileFailed', {
+          formula,
+        });
+        break;
+      case 'builtin-unavailable':
+      case 'registration-failed':
+        formulaResolutionMessage = t('formula.resolution.unavailable', {
+          formula,
+        });
+        break;
+    }
+  }
+
   return (
     <div className="flex flex-col lg:flex-row h-[calc(100dvh-4rem)] overflow-hidden">
       <div className={`relative bg-black lg:flex-1 ${isPanelCollapsed ? 'flex-1' : 'min-h-[50vh] lg:min-h-0'}`}>
-        {!isPreviewPlaying && (
+        {isFormulaReady && !isPreviewPlaying && (
           <FractalCanvas
             paletteIndex={paletteIndex}
             maxIterations={effectiveIterations}
@@ -236,7 +327,7 @@ function ExploreClient() {
             onCanvasReady={handleCanvasReady}
           />
         )}
-        {isPreviewPlaying && (
+        {isFormulaReady && isPreviewPlaying && (
           <AnimatedFractalCanvas
             params={{
               maxIterations: effectiveIterations,
@@ -258,6 +349,16 @@ function ExploreClient() {
             }}
             keyframes={keyframes}
           />
+        )}
+        {!isFormulaReady && (
+          <div className="flex h-full w-full items-center justify-center bg-neutral-950 p-8 text-center text-neutral-200">
+            <div className="max-w-md">
+              {formulaResolutionMatches && formulaResolution && !formulaResolution.success && (
+                <AlertTriangle className="mx-auto mb-3 h-6 w-6 text-amber-400" />
+              )}
+              <p>{formulaResolutionMessage}</p>
+            </div>
+          </div>
         )}
         {pickToast && (
           <div className="pointer-events-none absolute left-3 top-3 rounded-md border border-white/20 bg-black/70 px-3 py-1.5 text-xs font-mono text-white shadow-sm backdrop-blur-sm">
