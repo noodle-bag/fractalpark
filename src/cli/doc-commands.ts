@@ -3,10 +3,12 @@ import path from 'node:path';
 import { registerBuiltins } from '@/engine/plugins/builtins';
 import type { FractalDocument } from '@/engine/document';
 import { migrateFractalDocument } from '@/engine/document-migrate';
-import { buildFractalParamsFromPresetQuery, parseGalleryPresetsFile } from '@/lib/gallery-presets';
+import {
+  buildCanonicalPresetDocument,
+  parseGalleryPresetsFile,
+} from '@/lib/gallery-presets';
 import { decodeParams, documentToExploreHref } from '@/lib/url-params';
 import { SITE } from '@/lib/site';
-import { runtimeParamsToDocument } from '@/engine/document-adapter';
 
 type JsonRecord = Record<string, unknown>;
 
@@ -182,10 +184,7 @@ export function docFromPreset(args: { id: string; presetsPath?: string }) {
   }
 
   const { config, resolvedPath } = findPresetConfigById(args.id, args.presetsPath);
-  const { params, keyframes } = buildFractalParamsFromPresetQuery(config.url);
-  const document = migrateFractalDocument(
-    runtimeParamsToDocument(params, keyframes ? { animation: { keyframes } } : undefined)
-  );
+  const document = buildCanonicalPresetDocument(config);
 
   return createSuccess('doc from-preset', {
     document,
