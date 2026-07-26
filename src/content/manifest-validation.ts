@@ -2,6 +2,7 @@ import type { FormulaMetadata } from '@/engine/plugins/formula-catalog';
 import type { FormulaPlugin } from '@/engine/plugins/types';
 import type { GalleryPresetConfig } from '@/lib/gallery-presets';
 import { buildCanonicalPresetDocument } from '@/lib/gallery-presets';
+import { renderMathToHtml } from '@/lib/math';
 import type { ArtworkContentEntry } from './artwork-manifest';
 import type { FormulaContentEntry } from './formula-manifest';
 
@@ -153,6 +154,15 @@ export function validateContentManifests({
       if (item.tex.trim() === '' || item.plainText.trim() === '') {
         throw new Error(
           `Math ${entry.formulaId}.${item.id} needs TeX and plain text`
+        );
+      }
+      try {
+        renderMathToHtml(item.tex);
+      } catch (error) {
+        const reason =
+          error instanceof Error ? error.message : 'unknown KaTeX error';
+        throw new Error(
+          `Math ${entry.formulaId}.${item.id} cannot render: ${reason}`
         );
       }
     }

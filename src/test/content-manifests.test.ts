@@ -106,6 +106,15 @@ describe('formula and artwork content manifests', () => {
     ).toThrow(/Unknown uniform u_missingUniform/);
   });
 
+  it('rejects formula TeX that KaTeX cannot render', () => {
+    const formulas = structuredClone(FORMULA_CONTENT_MANIFEST);
+    formulas[0].math[0].tex = '\\notARealCommand{';
+
+    expect(() =>
+      validateContentManifests(buildValidationInput({ formulas }))
+    ).toThrow(/Math mandelbrot\.iteration cannot render/);
+  });
+
   it('rejects artwork slugs that do not begin with the owning formula slug', () => {
     const artworks = structuredClone(ARTWORK_CONTENT_MANIFEST);
     artworks[0].slug = 'mandelbrot-deep-spiral';
