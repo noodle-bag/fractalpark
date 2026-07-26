@@ -168,6 +168,191 @@
     }
   },
   "formulas": {
+    "frmGuide": {
+      "eyebrow": "FRM 公式语言",
+      "title": "用 FRM 编写分形公式",
+      "intro": "了解 FractalPark 经过测试的 FRM 语法子集，理解源码如何转为 GPU 着色器，并使用与编辑器完全共享的三个示例逐步写出可运行公式。",
+      "contentsLabel": "本页目录",
+      "copy": {
+        "copy": "复制",
+        "copied": "已复制",
+        "error": "复制失败"
+      },
+      "sections": {
+        "what-is-frm": {
+          "title": "什么是 FRM",
+          "body": [
+            "FRM 是一种紧凑的文本格式，用来描述迭代分形。一个公式分别规定轨道的初始状态、每轮重复执行的计算，以及决定是否继续迭代的条件。",
+            "这种格式源自 Fractint 生态。公式文件让使用者不必重新构建渲染程序，也能交换和修改实验。FractalPark 将这种创作方式带入浏览器，但只说明自身经过测试的语法子集，不宣称完整兼容。"
+          ],
+          "historyPrefix": "关于这一体系更广泛的起源与历史，可参阅",
+          "historyLink": "Fractint 项目网站"
+        },
+        "support": {
+          "title": "FractalPark 的 FRM 支持",
+          "intro": "FractalPark 会对明确限定的 FRM 子集进行词法分析、解析、校验和编译。下表区分可直接使用的语法、采用 FractalPark 语义的写法，以及当前工作流无法保真的内容。",
+          "table": {
+            "level": "级别",
+            "meaning": "含义",
+            "scope": "v0.4.13 范围"
+          },
+          "levels": {
+            "supported": {
+              "label": "支持",
+              "meaning": "已有编译器测试覆盖，可以直接使用，无须额外说明语义差异。"
+            },
+            "adapted": {
+              "label": "适配",
+              "meaning": "可以使用，但采用有说明的 FractalPark 语义，或属于 FractalPark 扩展。"
+            },
+            "unsupported": {
+              "label": "暂不支持",
+              "meaning": "当前编译器或文件流程无法保真处理；会明确拒绝，而不会静默改写。"
+            }
+          },
+          "items": {
+            "single-formula": "每份源码包含一个公式声明",
+            "core-sections": "init、loop 和 bailout 三个区段",
+            "variables": "赋值与用户变量",
+            "expressions": "实数和复数常量；算术、比较、逻辑、单目与模长表达式",
+            "conditionals": "if / elseif / else / endif 条件分支",
+            "builtins": "z、c、pixel、zPrev、p1–p5、常量及经过测试的内置函数",
+            "comments": "FRM 注释",
+            "diagnostics": "结构化诊断与 FRM 到 GLSL 的源码映射",
+            "ismand": "ismand 映射到 FractalPark 当前的 Mandelbrot / Julia 运行模式",
+            "function-slots": "fn1–fn4 使用编译期函数分派",
+            "native-directives": "@mode: native、@default-view 和 @default-coloring 是 FractalPark 扩展；默认值指令仅在 native 模式生效",
+            "multi-formula-files": "在同一文件的多个公式之间进行选择",
+            "dialect-conversion": "自动转换经典 Fractint 方言",
+            "arbitrary-directives": "任意源码指令",
+            "non-ascii-identifiers": "非 ASCII 标识符",
+            "user-functions": "用户自定义函数或宏",
+            "preprocessor": "预处理器功能",
+            "rejected-constructs": "当前编译流水线拒绝的其他写法"
+          },
+          "disclaimer": "这是经过测试的兼容性基线，不代表完整兼容 Fractint。编译器能力变化时，本表及其测试必须在同一项改动中同步更新。"
+        },
+        "anatomy": {
+          "title": "公式结构",
+          "intro": "FractalPark FRM 由一个具名公式声明和三个明确区段组成，它们共同定义每个像素对应的状态迭代过程。",
+          "parts": {
+            "init": "每个像素只运行一次。在这里设置轨道初值和所需的辅助变量。",
+            "loop": "每轮迭代运行一次。更新 z，以及下一轮仍需使用的其他状态。",
+            "bailout": "返回是否继续迭代的条件。条件变为假时，当前点已经逃逸。"
+          },
+          "note": "这些区段名是语法结构而非注释；缺少或拼错任何一个都会产生诊断信息。"
+        },
+        "syntax": {
+          "title": "语法指南",
+          "intro": "这门语言有意保持精简：表达式描述复数运算，语句更新轨道状态，控制流则从不同更新方式中做出选择。",
+          "topics": {
+            "sections": {
+              "title": "声明与区段",
+              "body": "用大括号包住一个具名公式，并依次编写 init:、loop: 和 bailout:。"
+            },
+            "values": {
+              "title": "数值与变量",
+              "body": "可以使用 0.15 这样的实数、(0.05, -0.02) 这样的复数对、内置轨道值，或自行赋值的变量。"
+            },
+            "operators": {
+              "title": "表达式",
+              "body": "可以组合算术、乘方、比较、逻辑、单目运算、|z| 模长语法，以及经过测试的复函数。"
+            },
+            "control-flow": {
+              "title": "控制流",
+              "body": "当轨道更新取决于条件时，可使用 if、elseif、else 和 endif；所有分支块必须完整闭合。"
+            },
+            "builtins": {
+              "title": "内置名称",
+              "body": "核心名称包括 z、c、pixel、zPrev、p1–p5、pi、e、maxit、ismand、fn1–fn4，以及编译器测试覆盖的函数。"
+            },
+            "comments": {
+              "title": "注释与指令",
+              "body": "分号注释用于说明源码。已识别的 @ 指令配置 FractalPark native 行为；未知指令不会被静默忽略。"
+            }
+          }
+        },
+        "pipeline": {
+          "title": "FRM → AST → GLSL 流水线",
+          "intro": "FractalPark 不会把 FRM 文本直接拼入着色器，而是让源码经过分阶段编译，从而保持语法、语义、生成代码和诊断之间的对应关系。",
+          "steps": {
+            "source": {
+              "title": "FRM 源码",
+              "body": "来自编辑器、粘贴或本地文件的原始文本，是编译流程的权威输入。"
+            },
+            "tokens": {
+              "title": "词法单元",
+              "body": "词法分析器识别名称、数字、运算符、区段标记、注释和指令，同时保留源码位置。"
+            },
+            "ast": {
+              "title": "解析后的 AST",
+              "body": "解析器构建结构化公式树，并报告格式错误的声明、表达式和控制流块。"
+            },
+            "validation": {
+              "title": "校验与规范形式",
+              "body": "校验器检查名称、类型、区段和受支持语义，通过后才建立规范化公式。"
+            },
+            "glsl": {
+              "title": "GLSL 与源码映射",
+              "body": "代码生成器输出着色器函数，并记录生成 GLSL 到原始 FRM 位置的映射。"
+            },
+            "plugin": {
+              "title": "公式插件",
+              "body": "编译成功后，公式会转成渲染器和着色器组装系统共同使用的标准插件契约。"
+            }
+          },
+          "note": "统一的编译器契约让 Explore、独立 Editor、已保存自定义公式、示例与测试始终走同一条实现路径。"
+        },
+        "tutorials": {
+          "title": "渐进式教程",
+          "intro": "三个示例从最小二次公式逐步扩展到参数和状态反馈。每段源码都直接读取共享示例注册表，并在测试中实际编译。",
+          "lesson": "第 {number} 课",
+          "goals": {
+            "starter-brot": "重点：公式声明与 init / loop / bailout 结构。先确认最小版本能够编译，再尝试修改指数或逃逸阈值。",
+            "parameter-drift": "重点：p1 与 p2 参数槽、复数常量，以及把 cabs(z) 作为显式模长函数。",
+            "orbit-echo": "重点：用 zPrev 取得上一轮轨道状态。无需手动维护第二个状态变量，也能引入记忆反馈。"
+          },
+          "editorNote": "下一实现单元中的独立 FRM Editor 会通过稳定 ID 打开完全相同的示例，公式源码不会写进 URL。"
+        },
+        "diagnostics": {
+          "title": "错误与诊断",
+          "intro": "编译会在最早出现不安全状态的阶段停止，并提供面向源码的错误信息。被拒绝的语法不会被改写成一个只是看起来相似的结果。",
+          "items": {
+            "lexer": {
+              "title": "词法错误",
+              "body": "意外字符和不支持的标识符会连同行号、列号一起报告。"
+            },
+            "parser": {
+              "title": "解析错误",
+              "body": "格式错误的区段、表达式或控制流块会在语义校验之前被诊断。"
+            },
+            "validator": {
+              "title": "校验错误",
+              "body": "未知变量、无效赋值、类型不匹配和未支持语义都会阻止代码生成。"
+            },
+            "source-map": {
+              "title": "着色器源码映射",
+              "body": "生成的 GLSL 保留位置映射，可将着色器编译失败定位回原始 FRM 代码。"
+            }
+          },
+          "note": "修复错误时应从第一条信息开始；后续诊断往往只是同一个缺失符号或无效表达式引发的连锁结果。"
+        },
+        "next-steps": {
+          "title": "示例、下一步与参考资料",
+          "exploreTitle": "先在完整渲染环境中观察",
+          "exploreBody": "打开 Explore，比较内置公式的行为、着色、变换、动画和导出控制，再开始编写自定义公式。",
+          "exploreCta": "打开 Explore",
+          "editorNote": "独立 FRM Editor 将作为专注的创作空间，用于编译、预览、导入和保存当前设备上的自定义公式。",
+          "referencesTitle": "参考资料",
+          "referencesIntro": "历史背景与实现细节分开链接，以明确区分 Fractint 传承和 FractalPark 当前的编译器契约。",
+          "references": {
+            "fractint-project": "Fractint 项目与历史",
+            "fractalpark-frm-source": "FractalPark FRM 编译器源码",
+            "fractalpark-repository": "FractalPark 源代码仓库"
+          }
+        }
+      }
+    },
     "entries": {
       "mandelbrot": {
         "title": "曼德布罗特集",
@@ -1222,6 +1407,11 @@
     "about": {
       "title": "关于 | 开源浏览器分形生成器 - 分形公园 FractalPark",
       "description": "了解分形公园 FractalPark: 一个基于 MIT 许可证开源、可在浏览器中直接使用的 WebGL 分形生成器, 支持 94 个公式、自定义调色板和 PNG 导出.核心技术: Fractint .frm 公式编辑器, AST 到 GLSL 转译流水线, 插件化着色器架构, 完全免费开源无需安装, 支持中英文双语界面."
+    },
+    "frmGuide": {
+      "title": "FRM 指南 | 编写自定义分形公式 - 分形公园 FractalPark",
+      "description": "学习 FractalPark 经过测试的 FRM 语法、兼容级别、AST 到 GLSL 编译流水线、错误诊断，以及三个实际通过编译测试的自定义公式示例。",
+      "imageAlt": "FractalPark FRM 公式语言指南"
     }
   },
   "about": {

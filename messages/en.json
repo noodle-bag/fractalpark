@@ -168,6 +168,191 @@
     }
   },
   "formulas": {
+    "frmGuide": {
+      "eyebrow": "FRM formula language",
+      "title": "Write Fractals with FRM",
+      "intro": "Learn FractalPark's tested FRM subset, understand how source becomes a GPU shader, and build three working formulas from the same examples used by the editor.",
+      "contentsLabel": "On this page",
+      "copy": {
+        "copy": "Copy",
+        "copied": "Copied",
+        "error": "Copy failed"
+      },
+      "sections": {
+        "what-is-frm": {
+          "title": "What Is FRM",
+          "body": [
+            "FRM is a compact, text-based way to describe an iterative fractal. A formula names its starting state, the calculation repeated for each orbit, and the condition that decides whether iteration continues.",
+            "The format grew out of the Fractint ecosystem, where formula files made it possible to exchange experiments without rebuilding the rendering program. FractalPark carries that authoring idea into a browser workflow while documenting its own tested subset instead of claiming complete compatibility."
+          ],
+          "historyPrefix": "For the wider project's origins and history, see the",
+          "historyLink": "Fractint project site"
+        },
+        "support": {
+          "title": "FRM Support in FractalPark",
+          "intro": "FractalPark tokenizes, parses, validates, and compiles a deliberate FRM subset. The table separates constructs that work directly, constructs with documented FractalPark semantics, and constructs the current workflow cannot preserve.",
+          "table": {
+            "level": "Level",
+            "meaning": "Meaning",
+            "scope": "v0.4.13 scope"
+          },
+          "levels": {
+            "supported": {
+              "label": "Supported",
+              "meaning": "Covered by compiler tests and usable without a semantic qualification."
+            },
+            "adapted": {
+              "label": "Adapted",
+              "meaning": "Accepted with a documented semantic difference or as a FractalPark extension."
+            },
+            "unsupported": {
+              "label": "Unsupported",
+              "meaning": "Not preserved by the current compiler or file workflow; rejected rather than silently rewritten."
+            }
+          },
+          "items": {
+            "single-formula": "One formula declaration per source document",
+            "core-sections": "init, loop, and bailout sections",
+            "variables": "Assignments and user variables",
+            "expressions": "Real and complex literals; arithmetic, comparison, logical, unary, and magnitude expressions",
+            "conditionals": "if / elseif / else / endif branches",
+            "builtins": "z, c, pixel, zPrev, p1–p5, constants, and tested built-in functions",
+            "comments": "FRM comments",
+            "diagnostics": "Structured diagnostics and FRM-to-GLSL source mapping",
+            "ismand": "ismand maps to FractalPark's current Mandelbrot/Julia runtime mode",
+            "function-slots": "fn1–fn4 use compile-time function dispatch",
+            "native-directives": "@mode: native, @default-view, and @default-coloring are FractalPark extensions; default directives apply only in native mode",
+            "multi-formula-files": "Selecting among multiple formulas in one file",
+            "dialect-conversion": "Automatic conversion of classic Fractint dialects",
+            "arbitrary-directives": "Arbitrary source directives",
+            "non-ascii-identifiers": "Non-ASCII identifiers",
+            "user-functions": "User-defined functions or macros",
+            "preprocessor": "Preprocessor features",
+            "rejected-constructs": "Any construct rejected by the current compile pipeline"
+          },
+          "disclaimer": "This is a tested compatibility baseline, not a claim of full Fractint compatibility. When the compiler changes, this matrix and its tests must change together."
+        },
+        "anatomy": {
+          "title": "Formula Anatomy",
+          "intro": "A FractalPark FRM formula has one named declaration and three explicit sections. Together they define the state transition for every pixel.",
+          "parts": {
+            "init": "Runs once for a pixel. Set the initial orbit value and any helper variables here.",
+            "loop": "Runs once per iteration. Update z and any state that the next iteration needs.",
+            "bailout": "Returns the condition for continuing the orbit. When it becomes false, the point has escaped."
+          },
+          "note": "The section names are structural, not comments: omitting or misspelling one produces a diagnostic."
+        },
+        "syntax": {
+          "title": "Syntax Guide",
+          "intro": "The language stays intentionally small: expressions describe complex arithmetic, statements update orbit state, and control flow selects among updates.",
+          "topics": {
+            "sections": {
+              "title": "Declaration and sections",
+              "body": "Wrap one named formula in braces, then write init:, loop:, and bailout: in that order."
+            },
+            "values": {
+              "title": "Values and variables",
+              "body": "Use real numbers such as 0.15, complex pairs such as (0.05, -0.02), built-in orbit values, or your own assigned variables."
+            },
+            "operators": {
+              "title": "Expressions",
+              "body": "Arithmetic, powers, comparisons, logical operators, unary operators, |z| magnitude syntax, and tested complex functions can be combined."
+            },
+            "control-flow": {
+              "title": "Control flow",
+              "body": "Use if, elseif, else, and endif when an orbit update depends on a condition. Blocks must be balanced."
+            },
+            "builtins": {
+              "title": "Built-ins",
+              "body": "Core names include z, c, pixel, zPrev, p1–p5, pi, e, maxit, ismand, fn1–fn4, and the functions covered by compiler tests."
+            },
+            "comments": {
+              "title": "Comments and directives",
+              "body": "Semicolon comments document source. Recognized @ directives configure FractalPark native behavior; unknown directives are not silently ignored."
+            }
+          }
+        },
+        "pipeline": {
+          "title": "FRM to AST to GLSL Pipeline",
+          "intro": "FractalPark does not paste FRM text into a shader. It passes source through a staged compiler so syntax, meaning, generated code, and diagnostics stay connected.",
+          "steps": {
+            "source": {
+              "title": "FRM source",
+              "body": "The exact text from the editor, paste, or local file is the authoritative input."
+            },
+            "tokens": {
+              "title": "Lexer tokens",
+              "body": "The lexer recognizes names, numbers, operators, section markers, comments, and directives while retaining source locations."
+            },
+            "ast": {
+              "title": "Parsed AST",
+              "body": "The parser builds a structured formula tree and reports malformed declarations, expressions, and control-flow blocks."
+            },
+            "validation": {
+              "title": "Validation and canonical form",
+              "body": "The validator checks names, types, sections, and supported semantics before a canonical formula is created."
+            },
+            "glsl": {
+              "title": "GLSL and source map",
+              "body": "Code generation emits shader functions and records mappings from generated GLSL back to FRM source."
+            },
+            "plugin": {
+              "title": "Formula plugin",
+              "body": "A successful compile becomes the same formula-plugin contract used by the renderer and shader assembly system."
+            }
+          },
+          "note": "The shared compiler contract keeps Explore, the standalone Editor, saved custom formulas, examples, and tests on one implementation path."
+        },
+        "tutorials": {
+          "title": "Progressive Tutorials",
+          "intro": "These examples advance from the smallest quadratic formula to parameters and stateful feedback. Each source block is taken directly from the shared example registry and compiled during tests.",
+          "lesson": "Lesson {number}",
+          "goals": {
+            "starter-brot": "Focus: the declaration and the init / loop / bailout structure. Change the exponent or escape threshold only after this version compiles.",
+            "parameter-drift": "Focus: p1 and p2 parameter slots, a complex literal, and cabs(z) as an explicit magnitude function.",
+            "orbit-echo": "Focus: zPrev as the previous orbit state. Feedback adds memory without introducing a second manually managed state variable."
+          },
+          "editorNote": "The standalone FRM Editor will open these same examples by stable ID in the next implementation unit; formula source will not be embedded in the URL."
+        },
+        "diagnostics": {
+          "title": "Errors and Diagnostics",
+          "intro": "Compilation stops at the earliest unsafe stage and reports source-oriented messages. A rejected construct is never rewritten into something that merely looks similar.",
+          "items": {
+            "lexer": {
+              "title": "Lexical errors",
+              "body": "Unexpected characters and unsupported identifiers are reported with their line and column."
+            },
+            "parser": {
+              "title": "Parse errors",
+              "body": "Malformed sections, expressions, or control-flow blocks are diagnosed before semantic validation."
+            },
+            "validator": {
+              "title": "Validation errors",
+              "body": "Unknown variables, invalid assignments, type mismatches, and unsupported semantics prevent code generation."
+            },
+            "source-map": {
+              "title": "Shader source mapping",
+              "body": "Generated GLSL retains mappings that can point a shader compilation failure back to the originating FRM location."
+            }
+          },
+          "note": "When fixing an error, start with the first reported message: later diagnostics can be consequences of the same missing token or invalid expression."
+        },
+        "next-steps": {
+          "title": "Examples, Next Steps, and References",
+          "exploreTitle": "See the renderer in context",
+          "exploreBody": "Open Explore to compare built-in formula behavior, coloring, transforms, animation, and export controls before writing a custom formula.",
+          "exploreCta": "Open Explore",
+          "editorNote": "The dedicated FRM Editor is planned as the focused authoring workspace for compiling, previewing, importing, and saving local formulas.",
+          "referencesTitle": "References",
+          "referencesIntro": "Historical context and implementation details are linked separately so the guide can distinguish the Fractint lineage from FractalPark's current compiler contract.",
+          "references": {
+            "fractint-project": "Fractint project and history",
+            "fractalpark-frm-source": "FractalPark FRM compiler source",
+            "fractalpark-repository": "FractalPark source repository"
+          }
+        }
+      }
+    },
     "entries": {
       "mandelbrot": {
         "title": "Mandelbrot Set",
@@ -1222,6 +1407,11 @@
     "about": {
       "title": "About | Open Source Browser Fractal Generator - FractalPark",
       "description": "Learn about FractalPark, an open-source MIT-licensed fractal generator that runs in the browser with WebGL, 94 formulas, custom palettes, and PNG export."
+    },
+    "frmGuide": {
+      "title": "FRM Guide | Write Custom Fractal Formulas - FractalPark",
+      "description": "Learn FractalPark's tested FRM syntax, compatibility levels, AST-to-GLSL compiler pipeline, diagnostics, and three compile-checked custom formula examples.",
+      "imageAlt": "FractalPark FRM formula language guide"
     }
   },
   "about": {
