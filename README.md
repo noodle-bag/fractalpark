@@ -48,6 +48,7 @@ npm run test:run  # Run Vitest once
 ## Project Layout
 
 ```text
+docs/              Architecture specifications, ADRs, and release test plans
 messages/          UI translations
 public/            Static assets and gallery preset data
 src/app/           Next.js routes
@@ -58,6 +59,12 @@ src/lib/           Shared utilities
 src/test/          Vitest tests
 tests/e2e/         Playwright smoke tests
 ```
+
+## Architecture and Specifications
+
+See the [documentation index](docs/README.md) for the durable Document format,
+cross-surface content model, architecture decisions, and active release
+regression plans.
 
 ## License
 
