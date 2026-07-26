@@ -167,6 +167,565 @@
       "badge": "Featured"
     }
   },
+  "formulas": {
+    "entries": {
+      "mandelbrot": {
+        "title": "Mandelbrot Set",
+        "summary": "The foundational quadratic parameter set, built by testing which complex values keep an orbit bounded.",
+        "math": {
+          "iteration": {
+            "label": "Quadratic iteration",
+            "explanation": "Start at zero and repeatedly square the current value before adding the fixed complex parameter c."
+          }
+        },
+        "visualCharacteristics": "A cardioid-shaped body opens into bulbs, filaments, spirals, and repeating miniature copies along its boundary.",
+        "faq": {
+          "membership": {
+            "question": "What decides whether a point belongs to the Mandelbrot set?",
+            "answer": "A parameter belongs when its orbit, starting from zero, remains bounded under repeated quadratic iteration."
+          },
+          "julia-mode": {
+            "question": "How is a Julia set related to this formula?",
+            "answer": "A Julia set fixes c and varies the starting point, while the Mandelbrot set varies c from a fixed starting point."
+          }
+        }
+      },
+      "lambda": {
+        "title": "Lambda Fractal",
+        "summary": "A complex logistic map whose parameter controls the multiplication and folding of each orbit.",
+        "math": {
+          "iteration": {
+            "label": "Complex logistic iteration",
+            "explanation": "FractalPark offsets the stored orbit by one half, multiplies the two complementary factors, and scales them by c."
+          }
+        },
+        "visualCharacteristics": "Rounded lobes, branching channels, and vortex-like Julia structures appear as the complex multiplier changes.",
+        "faq": {
+          "parameter-role": {
+            "question": "What does lambda control?",
+            "answer": "Lambda is the complex multiplier that changes both the growth and rotation of the orbit."
+          },
+          "julia-mode": {
+            "question": "Why does Julia mode look especially varied?",
+            "answer": "Fixing a complex lambda exposes the boundary between starting points with different long-term behavior."
+          }
+        }
+      },
+      "mandelbox": {
+        "title": "Mandelbox",
+        "summary": "A two-dimensional Mandelbox-inspired map that alternates box and radial folds before scaling the orbit.",
+        "math": {
+          "iteration": {
+            "label": "Fold-and-scale iteration",
+            "explanation": "The orbit is folded against a box, folded again by radius, scaled, and then translated by c."
+          }
+        },
+        "visualCharacteristics": "Hard-edged chambers, nested fortifications, and dimensional-looking corridors emerge from repeated folds.",
+        "parameters": {
+          "scale": "Scale controls how strongly the folded orbit expands or reverses before c is added."
+        },
+        "faq": {
+          "folds": {
+            "question": "What are box and ball folds?",
+            "answer": "They are geometric transformations that reflect coordinates across box boundaries and rescale points by radius."
+          },
+          "dimension": {
+            "question": "Is this the three-dimensional Mandelbox?",
+            "answer": "No. FractalPark renders a two-dimensional map inspired by the same fold-and-scale construction."
+          }
+        }
+      },
+      "perpendicular-celtic": {
+        "title": "Perpendicular Celtic",
+        "summary": "A folded quadratic map that applies absolute values before and after squaring to create interlocking structure.",
+        "math": {
+          "iteration": {
+            "label": "Perpendicular Celtic iteration",
+            "explanation": "The real input is folded, the complex value is squared, and the resulting real component is folded again."
+          }
+        },
+        "visualCharacteristics": "Braided bands, mirrored arches, and porcelain-like loops form around sharply folded boundaries.",
+        "faq": {
+          "folding": {
+            "question": "Why are absolute values used twice?",
+            "answer": "The two folds alter different stages of the quadratic map and create its characteristic interlocking symmetry."
+          },
+          "symmetry": {
+            "question": "Is it simply a rotated Burning Ship?",
+            "answer": "No. Its component folds occur in a different order, so its orbit geometry and symmetries are distinct."
+          }
+        }
+      },
+      "quartic-julia": {
+        "title": "Quartic Julia",
+        "summary": "A fourth-degree Julia-family map in which each iteration raises z to the fourth power before adding c.",
+        "math": {
+          "iteration": {
+            "label": "Quartic iteration",
+            "explanation": "The fourth power multiplies angular structure and produces fourfold tendencies around many features."
+          }
+        },
+        "visualCharacteristics": "Fine seals, branching rosettes, and four-way filament systems replace the quadratic family's simpler branching.",
+        "faq": {
+          "name": {
+            "question": "Why is this called Quartic Julia?",
+            "answer": "Its iteration uses z to the fourth power; the public name states that degree explicitly."
+          },
+          "constant": {
+            "question": "What does c change?",
+            "answer": "The fixed complex constant c determines the connectedness, symmetry, and detailed shape of the Julia set."
+          }
+        }
+      },
+      "burning-ship": {
+        "title": "Burning Ship",
+        "summary": "A quadratic escape-time fractal that folds both coordinate components before squaring.",
+        "math": {
+          "iteration": {
+            "label": "Absolute-value quadratic iteration",
+            "explanation": "Both real and imaginary components are made nonnegative before the usual quadratic step."
+          }
+        },
+        "visualCharacteristics": "Dark ship-like silhouettes sit above layered ridges, chimneys, and highly asymmetric coastal detail.",
+        "faq": {
+          "difference": {
+            "question": "How does it differ from the Mandelbrot set?",
+            "answer": "The component-wise absolute value breaks the Mandelbrot set's rotational balance and creates a distinct folded boundary."
+          },
+          "orientation": {
+            "question": "Why can the ship appear upside down?",
+            "answer": "Screen coordinates and artistic rotation can change its displayed orientation without changing the underlying set."
+          }
+        }
+      },
+      "airship": {
+        "title": "Airship",
+        "summary": "A Burning Ship relative with an asymmetric coordinate fold that reshapes the quadratic orbit.",
+        "math": {
+          "iteration": {
+            "label": "Airship fold",
+            "explanation": "The real component is folded while the imaginary component couples x to the absolute value of y."
+          }
+        },
+        "visualCharacteristics": "Wing-like lobes and airborne silhouettes stretch from narrow seams, especially under spatial transforms.",
+        "faq": {
+          "folding": {
+            "question": "How is the Airship fold different?",
+            "answer": "It folds x directly and builds the other coordinate from x times the absolute value of y instead of folding both independently."
+          },
+          "transform": {
+            "question": "Does the formula require an inversion transform?",
+            "answer": "No. Inversion can create striking compositions, but the Airship formula is complete without a view transform."
+          }
+        }
+      },
+      "newton-3": {
+        "title": "Newton Fractal for z³ − 1",
+        "summary": "A convergence fractal that applies Newton's root-finding method to the three roots of z cubed minus one.",
+        "math": {
+          "iteration": {
+            "label": "Newton iteration",
+            "explanation": "Each step subtracts the polynomial value divided by its derivative, moving z toward a root."
+          }
+        },
+        "visualCharacteristics": "Three colored basins meet along infinitely intricate boundaries filled with spirals and repeated root patterns.",
+        "faq": {
+          "basins": {
+            "question": "What do the main regions represent?",
+            "answer": "Each basin contains starting points that converge to the same one of the polynomial's three roots."
+          },
+          "escape": {
+            "question": "Is this an escape-time fractal?",
+            "answer": "It is primarily a convergence fractal, classified by which root an orbit approaches and how quickly."
+          }
+        }
+      },
+      "newton-cosh": {
+        "title": "Newton Cosh",
+        "summary": "Newton's method applied to the transcendental equation cosh z equals one.",
+        "math": {
+          "iteration": {
+            "label": "Newton iteration for cosh",
+            "explanation": "The correction divides cosh(z) minus one by sinh(z), the derivative of cosh."
+          }
+        },
+        "visualCharacteristics": "Repeating horizontal root bands bend into fine meridians and complex basin boundaries.",
+        "faq": {
+          "target": {
+            "question": "What equation is being solved?",
+            "answer": "The iteration seeks complex solutions of cosh(z) = 1."
+          },
+          "singularities": {
+            "question": "Why are some regions extremely sensitive?",
+            "answer": "The Newton correction becomes unstable near points where sinh(z), the denominator, is close to zero."
+          }
+        }
+      },
+      "magnet-type-1": {
+        "title": "Magnet Type 1",
+        "summary": "A rational map whose squared quotient produces dense magnetic-looking basins and orbit chains.",
+        "math": {
+          "iteration": {
+            "label": "Type 1 rational iteration",
+            "explanation": "The orbit squares the ratio between z plus c and z minus c."
+          }
+        },
+        "visualCharacteristics": "Compact cores trail bead-like chains, spores, and nested rings around sharp rational-map boundaries.",
+        "faq": {
+          "name": {
+            "question": "Why is it called Magnet?",
+            "answer": "The traditional name reflects the clustered, field-like appearance of many rendered parameter choices."
+          },
+          "poles": {
+            "question": "What happens near z = c?",
+            "answer": "The denominator approaches zero, creating a pole that strongly redirects nearby orbits."
+          }
+        }
+      },
+      "magnet-type-2": {
+        "title": "Magnet Type 2",
+        "summary": "A second rational Magnet map that places z squared in both parts of the defining quotient.",
+        "math": {
+          "iteration": {
+            "label": "Type 2 rational iteration",
+            "explanation": "Square z first, form the ratio with plus and minus c, and square that ratio again."
+          }
+        },
+        "visualCharacteristics": "Crosses, reefs, rings, and tightly packed lobes appear with stronger repeated symmetry than Type 1.",
+        "faq": {
+          "difference": {
+            "question": "How does Type 2 differ from Type 1?",
+            "answer": "Type 2 uses z squared inside the quotient, adding another layer of symmetry and nonlinear folding."
+          },
+          "poles": {
+            "question": "Where do its poles occur?",
+            "answer": "Poles occur where z squared equals c, so their positions depend on the square roots of the parameter."
+          }
+        }
+      },
+      "multi-phoenix": {
+        "title": "Multi-Phoenix",
+        "summary": "A memory-dependent quadratic recurrence that feeds the previous orbit value into the next step.",
+        "math": {
+          "iteration": {
+            "label": "Phoenix recurrence",
+            "explanation": "In addition to z squared and c, each step adds the previous z value multiplied by p."
+          }
+        },
+        "visualCharacteristics": "Feathered spokes, flame-like fans, and compass structures emerge from the recurrence's one-step memory.",
+        "parameters": {
+          "memory": "The memory coefficient p controls the strength and direction of the previous orbit value's influence."
+        },
+        "faq": {
+          "memory": {
+            "question": "Why does this formula need the previous value?",
+            "answer": "The recurrence is second-order: its next state depends on both the current and immediately preceding orbit values."
+          },
+          "initial-state": {
+            "question": "Does the initial previous value matter?",
+            "answer": "Yes. The recurrence must define both its current and previous starting states for deterministic behavior."
+          }
+        }
+      },
+      "cosh-mandelbrot": {
+        "title": "Cosh Mandelbrot",
+        "summary": "A transcendental escape-time map that replaces polynomial squaring with the complex hyperbolic cosine.",
+        "math": {
+          "iteration": {
+            "label": "Hyperbolic cosine iteration",
+            "explanation": "Each step evaluates complex cosh at the current orbit value and then adds c."
+          }
+        },
+        "visualCharacteristics": "Periodic plumes, layered fans, and repeating vertical structures reflect the transcendental function's growth.",
+        "faq": {
+          "periodicity": {
+            "question": "Why do patterns repeat vertically?",
+            "answer": "Complex hyperbolic cosine is periodic in the imaginary direction, so related orbit structures recur."
+          },
+          "growth": {
+            "question": "Why do many points escape rapidly?",
+            "answer": "The exponential terms inside cosh can grow very quickly for parts of the complex plane."
+          }
+        }
+      },
+      "buffalo": {
+        "title": "Buffalo",
+        "summary": "A folded quadratic variant that combines absolute coordinate squares with a signed cross term.",
+        "math": {
+          "iteration": {
+            "label": "Buffalo iteration",
+            "explanation": "The squared coordinate magnitudes form the real part while the imaginary part keeps x and folds y."
+          }
+        },
+        "visualCharacteristics": "Horned crests, eclipses, and mirrored gates grow from broad folded lobes.",
+        "faq": {
+          "folding": {
+            "question": "Which part of the orbit is folded?",
+            "answer": "The formula uses absolute coordinate magnitudes and folds the imaginary coordinate within the cross term."
+          },
+          "julia-mode": {
+            "question": "Can Buffalo produce Julia sets?",
+            "answer": "Yes. Fixing c and varying the starting point reveals connected and disconnected Buffalo Julia structures."
+          }
+        }
+      },
+      "circle-inversion": {
+        "title": "Circle Inversion",
+        "summary": "A reciprocal quadratic map that sends small values far away and large values back toward the origin.",
+        "math": {
+          "iteration": {
+            "label": "Reciprocal quadratic iteration",
+            "explanation": "Each step takes the reciprocal of z squared before adding c."
+          }
+        },
+        "visualCharacteristics": "Circular spines, nested rings, and sharp axial structures gather around the reciprocal singularity.",
+        "faq": {
+          "origin": {
+            "question": "Why is the origin special?",
+            "answer": "The reciprocal of z squared is undefined at zero, making the origin a pole of the map."
+          },
+          "singularity": {
+            "question": "How does FractalPark handle values near zero?",
+            "answer": "The renderer uses a small numerical safeguard while preserving the pole's visible influence on nearby orbits."
+          }
+        }
+      },
+      "inverted-lambda": {
+        "title": "Inverted Lambda",
+        "summary": "A hybrid map that adds a reciprocal quadratic term to the complex logistic recurrence.",
+        "math": {
+          "iteration": {
+            "label": "Lambda-reciprocal iteration",
+            "explanation": "The ordinary lambda term is combined with a reciprocal correction centered on z squared plus c."
+          }
+        },
+        "visualCharacteristics": "Knots, fault lines, and broken logistic lobes form around poles introduced by the reciprocal term.",
+        "faq": {
+          "inversion": {
+            "question": "What is inverted in this formula?",
+            "answer": "A reciprocal term is added to the lambda map; the name describes that rational contribution rather than a view transform."
+          },
+          "poles": {
+            "question": "Where can poles occur?",
+            "answer": "They occur where z squared plus c approaches zero."
+          }
+        }
+      },
+      "mcmullen-2-3": {
+        "title": "McMullen 2–3 Map",
+        "summary": "A rational map combining a quadratic term with an inverse cubic term.",
+        "math": {
+          "iteration": {
+            "label": "McMullen 2–3 iteration",
+            "explanation": "The map adds z squared to c divided by z cubed, balancing polynomial growth with a pole."
+          }
+        },
+        "visualCharacteristics": "Whorls, necklaces, and nested annular structures gather around a central reciprocal singularity.",
+        "faq": {
+          "exponents": {
+            "question": "What do 2 and 3 mean in the name?",
+            "answer": "They are the exponents of the polynomial term z squared and the reciprocal term one over z cubed."
+          },
+          "singularity": {
+            "question": "Why is z = 0 singular?",
+            "answer": "The inverse cubic term divides by z cubed, so it has a pole at the origin."
+          }
+        }
+      },
+      "rational-map-1": {
+        "title": "Rational Map 1",
+        "summary": "A compact rational iteration that divides z squared by z plus c.",
+        "math": {
+          "iteration": {
+            "label": "Rational iteration",
+            "explanation": "The quadratic numerator is reshaped by a moving denominator whose pole depends on c."
+          }
+        },
+        "visualCharacteristics": "Fans, blades, and curved channels radiate from the map's parameter-dependent pole.",
+        "faq": {
+          "rational": {
+            "question": "What makes this a rational map?",
+            "answer": "Its iteration is a quotient of two complex polynomials rather than a polynomial alone."
+          },
+          "pole": {
+            "question": "Where is the pole?",
+            "answer": "The denominator vanishes at z = -c."
+          }
+        }
+      },
+      "spider": {
+        "title": "Spider",
+        "summary": "A rational quadratic hybrid that adds c divided by z to the familiar squared orbit.",
+        "math": {
+          "iteration": {
+            "label": "Spider iteration",
+            "explanation": "The reciprocal term pulls the quadratic orbit around a pole at zero."
+          }
+        },
+        "visualCharacteristics": "Long legs, abyssal filaments, and web-like junctions radiate from narrow central structures.",
+        "faq": {
+          "zero": {
+            "question": "What happens at z = 0?",
+            "answer": "The reciprocal term is singular there, so the implementation uses a stable fallback for values extremely close to zero."
+          },
+          "filaments": {
+            "question": "What creates the spider-like legs?",
+            "answer": "The competition between quadratic expansion and reciprocal attraction stretches the boundary into long filaments."
+          }
+        }
+      },
+      "zaslavsky-map": {
+        "title": "Zaslavsky Map",
+        "summary": "A complex sinusoidal map that combines a nonlinear swirl with a fixed rotation and translation.",
+        "math": {
+          "iteration": {
+            "label": "Sinusoidal rotation map",
+            "explanation": "A sine perturbation bends z, a fixed complex multiplier rotates it, and c translates the result."
+          }
+        },
+        "visualCharacteristics": "Swirling arms and mandala-like rings become especially pronounced when paired with kaleidoscopic transforms.",
+        "faq": {
+          "rotation": {
+            "question": "Where does the rotation come from?",
+            "answer": "The map multiplies the perturbed orbit by a unit complex number with angle 0.55 radians."
+          },
+          "transform": {
+            "question": "Is kaleidoscope part of the formula?",
+            "answer": "No. Kaleidoscope is an optional spatial transform applied outside the formula iteration."
+          }
+        }
+      },
+      "zubieta": {
+        "title": "Zubieta",
+        "summary": "A quadratic map that folds both components of z squared plus c into the nonnegative quadrant.",
+        "math": {
+          "iteration": {
+            "label": "Component-folded iteration",
+            "explanation": "After the quadratic step and addition of c, absolute value is applied separately to both components."
+          }
+        },
+        "visualCharacteristics": "Mirrored wedges, compact mandalas, and tiled lobes reflect the strong component-wise fold.",
+        "faq": {
+          "absolute-value": {
+            "question": "Is the absolute value a complex magnitude?",
+            "answer": "No. FractalPark applies absolute value separately to the real and imaginary components."
+          },
+          "symmetry": {
+            "question": "Why is the image strongly mirrored?",
+            "answer": "Folding both output components into one quadrant repeatedly imposes multiple reflection symmetries."
+          }
+        }
+      }
+    }
+  },
+  "artworks": {
+    "entries": {
+      "preset-newton-deep-spiral": {
+        "summary": "A deep Newton-basin descent where three root regions twist into a compact spiral.",
+        "visualNote": "Fine alternating bands tighten toward the center while the rotated frame keeps the motion diagonal."
+      },
+      "preset-lambda-julia-vortex": {
+        "summary": "A Lambda Julia vortex built from a long zoom into a folded boundary.",
+        "visualNote": "Dark channels divide pale curved blades that seem to circulate around an off-center eye."
+      },
+      "preset-spider-julia-abyss": {
+        "summary": "A Spider Julia view suspended over a narrow rational-map abyss.",
+        "visualNote": "Threadlike legs cross broad dark space and converge on a minute, highly magnified junction."
+      },
+      "preset-buffalo-julia-eclipse": {
+        "summary": "A Buffalo Julia composition shaped like a luminous body passing through shadow.",
+        "visualNote": "Folded crescents and granular edges create the impression of an eclipse within a tilted field."
+      },
+      "preset-mandelbrot-deep-escape": {
+        "summary": "A quiet Mandelbrot view that pulls back from an extreme boundary journey.",
+        "visualNote": "The wide final frame contrasts with the hidden depth encoded in its animated path."
+      },
+      "preset-mandelbrot-crown": {
+        "summary": "A crown-like Mandelbrot boundary assembled from repeated bulbs and narrow filaments.",
+        "visualNote": "Arched points rise around a dark central mass with small satellite details along every edge."
+      },
+      "preset-buffalo-julia-spiral-gate": {
+        "summary": "A Buffalo Julia gate whose folded arms close around a tiny spiral threshold.",
+        "visualNote": "Strong bilateral structure is offset by a quarter-turn composition and a sharply magnified center."
+      },
+      "preset-lambda-julia-ice-veil": {
+        "summary": "A Lambda Julia boundary rendered as a cool translucent bloom.",
+        "visualNote": "White seams and cyan edges emerge between violet and black fields like frost on glass."
+      },
+      "preset-magnet-julia-ember-reach": {
+        "summary": "A Magnet Type 1 Julia scene with warm spores reaching across a dark field.",
+        "visualNote": "Copper and magenta clusters branch toward isolated green accents inside a custom gradient."
+      },
+      "preset-julia-aqua-compass": {
+        "summary": "A Mandelbrot-family Julia lattice arranged like a porcelain compass.",
+        "visualNote": "Orbit-trap lines draw pale geometric arcs over aqua and graphite layers."
+      },
+      "preset-mcmullen-azure-whorl": {
+        "summary": "A McMullen 2–3 Julia whorl uncovered at very high magnification.",
+        "visualNote": "Azure curls repeat around a small rational-map singularity, with rotation emphasizing their sweep."
+      },
+      "preset-inverted-lambda-obsidian-knot": {
+        "summary": "An Inverted Lambda fault line tied into a compact obsidian knot.",
+        "visualNote": "Reciprocal breaks interrupt smooth logistic curves and produce sharp black seams."
+      },
+      "preset-circle-inversion-citrine-spine": {
+        "summary": "A Circle Inversion axis glowing with citrine-colored reciprocal structure.",
+        "visualNote": "Concentric details accumulate around a bright central spine and a near-symmetric frame."
+      },
+      "preset-rational-map-sapphire-fan": {
+        "summary": "A Rational Map 1 Julia fan opened across a sapphire-toned plane.",
+        "visualNote": "Long blades radiate from a pole-influenced center while rotation turns the array into a sweeping fan."
+      },
+      "preset-perpendicular-celtic-porcelain-halo": {
+        "summary": "A Perpendicular Celtic Julia halo formed from folded porcelain bands.",
+        "visualNote": "Smooth pale rings intersect at sharp folded seams in a rotated, tightly magnified composition."
+      },
+      "preset-burning-ship-cinder-rift": {
+        "summary": "A Burning Ship rift lit by cinder orange and mineral green.",
+        "visualNote": "Layered cliffs descend into a dark channel while the custom gradient separates ridges from ash."
+      },
+      "preset-magnet-julia-rust-cross": {
+        "summary": "A Magnet Type 2 Julia cross weathered into rust-colored symmetry.",
+        "visualNote": "Four dense arms meet at a precise center, surrounded by fine rational-map texture."
+      },
+      "preset-zaslavsky-penitent-mandala": {
+        "summary": "A Zaslavsky swirl folded into a restrained four-part mandala.",
+        "visualNote": "The kaleidoscope transform repeats curved orbit bands around a small meditative center."
+      },
+      "preset-zubieta-kaleido-amber-mandala": {
+        "summary": "A Zubieta Julia fold expanded into a seven-part amber mandala.",
+        "visualNote": "Component symmetry and kaleidoscopic repetition create layered petals around an offset center."
+      },
+      "preset-airship-inversion-seafoam-wings": {
+        "summary": "An Airship Julia form inverted into broad fluorescent manta wings.",
+        "visualNote": "Seafoam and cyan edges float against near-black space while inversion opens the central silhouette."
+      },
+      "preset-newton-cosh-ember-meridian": {
+        "summary": "A Newton Cosh basin traced along a glowing vertical meridian.",
+        "visualNote": "Repeating transcendental bands narrow into ember-colored seams at deep magnification."
+      },
+      "preset-mandelbox-cobalt-bastion": {
+        "summary": "A folded Mandelbox-inspired bastion rendered in dense cobalt layers.",
+        "visualNote": "Hard corners and nested chambers give the flat map an architectural sense of depth."
+      },
+      "preset-cosh-mandelbrot-gilded-plumes": {
+        "summary": "A Cosh Mandelbrot Julia field spreading into gilded transcendental plumes.",
+        "visualNote": "Repeating feather bands fan outward while the rotated frame breaks their vertical periodicity."
+      },
+      "preset-quad-julia-ivory-filigree-seal": {
+        "summary": "A Quartic Julia seal woven from ivory filigree and fourfold branching.",
+        "visualNote": "Fine pale threads close into a compact emblem against darker binary-coloring regions."
+      },
+      "preset-magnet-julia-moonstone-reef": {
+        "summary": "A Magnet Type 2 Julia reef illuminated like polished moonstone.",
+        "visualNote": "Distance-estimated lighting reveals raised ridges and small cavities across the rational-map surface."
+      },
+      "preset-phoenix-multi-ember-compass": {
+        "summary": "A Multi-Phoenix Julia compass driven by a strong negative memory term.",
+        "visualNote": "Four ember spokes and recurving feather details surround a stable central hub."
+      }
+    }
+  },
   "explore": {
     "title": "Explore",
     "canvas": {

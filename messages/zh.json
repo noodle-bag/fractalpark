@@ -167,6 +167,565 @@
       "badge": "精选"
     }
   },
+  "formulas": {
+    "entries": {
+      "mandelbrot": {
+        "title": "曼德布罗特集",
+        "summary": "经典的二次参数集，通过判断不同复参数对应的轨道是否保持有界来形成。",
+        "math": {
+          "iteration": {
+            "label": "二次迭代",
+            "explanation": "从零开始，每一步先将当前复数平方，再加上固定参数 c。"
+          }
+        },
+        "visualCharacteristics": "心形主区域向外连接圆瓣、细丝、螺旋以及沿边界反复出现的微型副本。",
+        "faq": {
+          "membership": {
+            "question": "如何判断一个点属于曼德布罗特集？",
+            "answer": "以零为初值反复进行二次迭代，如果轨道始终保持有界，对应参数就属于这个集合。"
+          },
+          "julia-mode": {
+            "question": "Julia 集与这个公式有什么关系？",
+            "answer": "Julia 集固定 c 并改变初值；曼德布罗特集则固定初值为零并改变 c。"
+          }
+        }
+      },
+      "lambda": {
+        "title": "兰姆达分形",
+        "summary": "一种复数 Logistic 映射，复参数控制轨道每一步的放大、旋转与折叠。",
+        "math": {
+          "iteration": {
+            "label": "复 Logistic 迭代",
+            "explanation": "FractalPark 将存储的轨道值平移二分之一，把两个互补因子相乘，再乘以 c。"
+          }
+        },
+        "visualCharacteristics": "随着复乘数变化，会出现圆润瓣体、分叉通道和漩涡状 Julia 结构。",
+        "faq": {
+          "parameter-role": {
+            "question": "lambda 参数控制什么？",
+            "answer": "lambda 是复乘数，同时改变轨道增长速度和旋转方向。"
+          },
+          "julia-mode": {
+            "question": "为什么它的 Julia 模式变化丰富？",
+            "answer": "固定复数 lambda 后，不同初值的长期行为边界会完整显现出来。"
+          }
+        }
+      },
+      "mandelbox": {
+        "title": "曼德盒",
+        "summary": "受 Mandelbox 启发的二维映射，先后进行盒折叠与径向折叠，再缩放轨道。",
+        "math": {
+          "iteration": {
+            "label": "折叠与缩放迭代",
+            "explanation": "轨道先按盒边界反射，再按半径折叠，经过缩放后加上 c。"
+          }
+        },
+        "visualCharacteristics": "反复折叠会形成硬朗的腔室、嵌套堡垒和具有空间感的走廊。",
+        "parameters": {
+          "scale": "缩放参数决定折叠后的轨道在加上 c 之前扩张、收缩或反向的强度。"
+        },
+        "faq": {
+          "folds": {
+            "question": "什么是盒折叠与球折叠？",
+            "answer": "它们分别沿盒边界反射坐标，并根据点到原点的半径重新缩放。"
+          },
+          "dimension": {
+            "question": "这是三维 Mandelbox 吗？",
+            "answer": "不是。FractalPark 渲染的是采用相似折叠与缩放思想的二维映射。"
+          }
+        }
+      },
+      "perpendicular-celtic": {
+        "title": "垂直凯尔特",
+        "summary": "一种折叠二次映射，在平方前后使用绝对值，形成相互咬合的结构。",
+        "math": {
+          "iteration": {
+            "label": "垂直凯尔特迭代",
+            "explanation": "先折叠输入的实部，再对复数平方，最后再次折叠结果的实部。"
+          }
+        },
+        "visualCharacteristics": "镜像拱门与编织状带条围绕锐利的折叠边界，形成瓷器般的环纹。",
+        "faq": {
+          "folding": {
+            "question": "为什么要两次使用绝对值？",
+            "answer": "两次折叠作用在二次映射的不同阶段，由此产生特有的交织对称。"
+          },
+          "symmetry": {
+            "question": "它只是旋转后的燃烧船吗？",
+            "answer": "不是。它的分量折叠顺序不同，因此轨道几何与对称性也不同。"
+          }
+        }
+      },
+      "quartic-julia": {
+        "title": "四次 Julia",
+        "summary": "一种四次 Julia 族映射，每一步先把 z 提升到四次方，再加上 c。",
+        "math": {
+          "iteration": {
+            "label": "四次迭代",
+            "explanation": "四次幂会增强角向结构，使许多局部呈现明显的四重趋势。"
+          }
+        },
+        "visualCharacteristics": "细密印章、分枝花饰和四向丝线取代了二次族更简单的分叉。",
+        "faq": {
+          "name": {
+            "question": "为什么称为四次 Julia？",
+            "answer": "因为迭代使用 z 的四次方，公开名称直接说明了它的次数。"
+          },
+          "constant": {
+            "question": "常数 c 会改变什么？",
+            "answer": "固定复常数 c 决定 Julia 集的连通性、对称性和细节形态。"
+          }
+        }
+      },
+      "burning-ship": {
+        "title": "燃烧船",
+        "summary": "一种二次逃逸时间分形，在平方前先折叠实部和虚部。",
+        "math": {
+          "iteration": {
+            "label": "绝对值二次迭代",
+            "explanation": "先将实部和虚部都变为非负，再执行通常的二次迭代。"
+          }
+        },
+        "visualCharacteristics": "深色船体上方叠起山脊、烟囱和高度不对称的海岸状细节。",
+        "faq": {
+          "difference": {
+            "question": "它与曼德布罗特集有什么区别？",
+            "answer": "逐分量绝对值打破了曼德布罗特集的旋转平衡，形成独特的折叠边界。"
+          },
+          "orientation": {
+            "question": "为什么船体有时看起来是倒置的？",
+            "answer": "屏幕坐标和艺术旋转会改变展示方向，但不会改变集合本身。"
+          }
+        }
+      },
+      "airship": {
+        "title": "飞艇",
+        "summary": "燃烧船的近亲，通过不对称坐标折叠重塑二次轨道。",
+        "math": {
+          "iteration": {
+            "label": "飞艇折叠",
+            "explanation": "折叠实部，同时用 x 与 y 绝对值的乘积构造另一个分量。"
+          }
+        },
+        "visualCharacteristics": "翼状瓣体和漂浮轮廓从狭窄接缝伸展，在空间变换下尤其醒目。",
+        "faq": {
+          "folding": {
+            "question": "飞艇折叠有什么不同？",
+            "answer": "它直接折叠 x，并以 x 乘以 y 的绝对值构造另一坐标，而不是独立折叠两个分量。"
+          },
+          "transform": {
+            "question": "这个公式必须使用反演变换吗？",
+            "answer": "不需要。反演能产生醒目的构图，但飞艇公式本身已经完整。"
+          }
+        }
+      },
+      "newton-3": {
+        "title": "z³ − 1 牛顿分形",
+        "summary": "把牛顿求根法应用于 z 的三次方减一所得到的收敛分形。",
+        "math": {
+          "iteration": {
+            "label": "牛顿迭代",
+            "explanation": "每一步用多项式值除以导数作为修正量，使 z 向某个根移动。"
+          }
+        },
+        "visualCharacteristics": "三个根盆地在无限复杂的边界相交，其间布满螺旋和重复根纹。",
+        "faq": {
+          "basins": {
+            "question": "主要色块分别表示什么？",
+            "answer": "每个盆地包含最终收敛到同一个三次多项式根的初始点。"
+          },
+          "escape": {
+            "question": "这是逃逸时间分形吗？",
+            "answer": "它主要是收敛分形，按轨道趋近哪个根以及收敛速度分类。"
+          }
+        }
+      },
+      "newton-cosh": {
+        "title": "双曲余弦牛顿分形",
+        "summary": "把牛顿法应用于复方程 cosh z 等于一。",
+        "math": {
+          "iteration": {
+            "label": "cosh 牛顿迭代",
+            "explanation": "修正量是 cosh(z) 减一除以它的导数 sinh(z)。"
+          }
+        },
+        "visualCharacteristics": "重复的水平根带弯曲成细密经线，并由复杂盆地边界分隔。",
+        "faq": {
+          "target": {
+            "question": "这个迭代求解什么方程？",
+            "answer": "它寻找 cosh(z) = 1 的复数解。"
+          },
+          "singularities": {
+            "question": "为什么有些区域非常敏感？",
+            "answer": "当分母 sinh(z) 接近零时，牛顿修正会变得不稳定。"
+          }
+        }
+      },
+      "magnet-type-1": {
+        "title": "磁石类型 1",
+        "summary": "一种有理映射，商的平方形成致密的磁场状盆地和轨道链。",
+        "math": {
+          "iteration": {
+            "label": "类型 1 有理迭代",
+            "explanation": "轨道计算 z 加 c 与 z 减 c 的比值，再把比值平方。"
+          }
+        },
+        "visualCharacteristics": "紧凑核心周围拖出珠链、孢子和嵌套圆环，边界十分锐利。",
+        "faq": {
+          "name": {
+            "question": "为什么叫磁石？",
+            "answer": "传统名称来自许多参数下成簇、类似场线的视觉外观。"
+          },
+          "poles": {
+            "question": "靠近 z = c 时会发生什么？",
+            "answer": "分母趋近零，形成会强烈改变附近轨道方向的极点。"
+          }
+        }
+      },
+      "magnet-type-2": {
+        "title": "磁石类型 2",
+        "summary": "第二种磁石有理映射，在定义商的分子和分母中都使用 z 的平方。",
+        "math": {
+          "iteration": {
+            "label": "类型 2 有理迭代",
+            "explanation": "先平方 z，与正负 c 组成比值，再把整个比值平方。"
+          }
+        },
+        "visualCharacteristics": "十字、礁石、环带和紧密瓣体表现出比类型 1 更强的重复对称。",
+        "faq": {
+          "difference": {
+            "question": "类型 2 与类型 1 有何区别？",
+            "answer": "类型 2 在商内部使用 z 的平方，增加了一层对称与非线性折叠。"
+          },
+          "poles": {
+            "question": "它的极点在哪里？",
+            "answer": "当 z 的平方等于 c 时出现极点，其位置取决于参数的平方根。"
+          }
+        }
+      },
+      "multi-phoenix": {
+        "title": "多重凤凰",
+        "summary": "一种带记忆的二次递推，把上一个轨道值反馈到下一步。",
+        "math": {
+          "iteration": {
+            "label": "凤凰递推",
+            "explanation": "除 z 的平方和 c 外，每一步还加上由 p 加权的前一个 z 值。"
+          }
+        },
+        "visualCharacteristics": "一步记忆产生羽毛状辐条、火焰扇面和罗盘结构。",
+        "parameters": {
+          "memory": "记忆系数 p 控制前一轨道值影响的强度与方向。"
+        },
+        "faq": {
+          "memory": {
+            "question": "为什么公式需要前一个值？",
+            "answer": "这是二阶递推，下一状态同时依赖当前值和紧邻的前一值。"
+          },
+          "initial-state": {
+            "question": "初始的前一值重要吗？",
+            "answer": "重要。为了得到确定结果，递推必须同时定义当前和前一个初始状态。"
+          }
+        }
+      },
+      "cosh-mandelbrot": {
+        "title": "双曲余弦曼德布罗特",
+        "summary": "一种超越逃逸时间映射，以复双曲余弦代替多项式平方。",
+        "math": {
+          "iteration": {
+            "label": "双曲余弦迭代",
+            "explanation": "每一步对当前轨道值计算复 cosh，再加上 c。"
+          }
+        },
+        "visualCharacteristics": "周期羽片、层叠扇面和重复纵向结构体现了超越函数的增长特征。",
+        "faq": {
+          "periodicity": {
+            "question": "为什么图案沿虚轴重复？",
+            "answer": "复双曲余弦在虚方向具有周期性，因此相关轨道结构会重复出现。"
+          },
+          "growth": {
+            "question": "为什么许多点会快速逃逸？",
+            "answer": "cosh 内部的指数项在复平面的某些区域增长很快。"
+          }
+        }
+      },
+      "buffalo": {
+        "title": "野牛",
+        "summary": "一种折叠二次变体，把坐标绝对值的平方与带符号交叉项结合。",
+        "math": {
+          "iteration": {
+            "label": "野牛迭代",
+            "explanation": "实部由坐标模平方之差构成，虚部保留 x 并折叠 y。"
+          }
+        },
+        "visualCharacteristics": "宽阔折叠瓣体向外长出犄角状纹章、蚀影和镜像门廊。",
+        "faq": {
+          "folding": {
+            "question": "轨道的哪一部分被折叠？",
+            "answer": "公式使用坐标的绝对值平方，并在交叉项中折叠虚坐标。"
+          },
+          "julia-mode": {
+            "question": "野牛公式能生成 Julia 集吗？",
+            "answer": "可以。固定 c、改变初始点可以呈现连通或不连通的野牛 Julia 结构。"
+          }
+        }
+      },
+      "circle-inversion": {
+        "title": "圆反演",
+        "summary": "一种倒数二次映射，把小数值推向远处，也把大数值拉回原点附近。",
+        "math": {
+          "iteration": {
+            "label": "倒数二次迭代",
+            "explanation": "每一步先取 z 平方的倒数，再加上 c。"
+          }
+        },
+        "visualCharacteristics": "同心环、圆形脊线和锐利轴向结构聚集在倒数奇点周围。",
+        "faq": {
+          "origin": {
+            "question": "为什么原点很特殊？",
+            "answer": "z 平方的倒数在零点无定义，因此原点是这个映射的极点。"
+          },
+          "singularity": {
+            "question": "FractalPark 如何处理接近零的值？",
+            "answer": "渲染器使用很小的数值保护，同时保留极点对附近轨道的可见影响。"
+          }
+        }
+      },
+      "inverted-lambda": {
+        "title": "反演兰姆达",
+        "summary": "一种混合映射，在复 Logistic 递推中加入倒数二次项。",
+        "math": {
+          "iteration": {
+            "label": "兰姆达倒数迭代",
+            "explanation": "普通兰姆达项与以 z 平方加 c 为分母的倒数修正结合。"
+          }
+        },
+        "visualCharacteristics": "倒数项引入的极点打断平滑 Logistic 瓣体，形成结扣与断层。",
+        "faq": {
+          "inversion": {
+            "question": "这个公式反演了什么？",
+            "answer": "它给兰姆达映射增加倒数项；名称描述有理贡献，而不是视图变换。"
+          },
+          "poles": {
+            "question": "极点可能在哪里出现？",
+            "answer": "当 z 的平方加 c 接近零时会出现极点。"
+          }
+        }
+      },
+      "mcmullen-2-3": {
+        "title": "McMullen 2–3 映射",
+        "summary": "一种把二次项与三次倒数项结合的有理映射。",
+        "math": {
+          "iteration": {
+            "label": "McMullen 2–3 迭代",
+            "explanation": "映射把 z 的平方与 c 除以 z 的三次方相加，在多项式增长与极点之间取得张力。"
+          }
+        },
+        "visualCharacteristics": "涡旋、项链和嵌套环带围绕中心倒数奇点排列。",
+        "faq": {
+          "exponents": {
+            "question": "名称中的 2 和 3 表示什么？",
+            "answer": "它们分别是多项式项 z 的二次方和倒数项分母 z 的三次方。"
+          },
+          "singularity": {
+            "question": "为什么 z = 0 是奇点？",
+            "answer": "倒数三次项除以 z 的三次方，因此在原点具有极点。"
+          }
+        }
+      },
+      "rational-map-1": {
+        "title": "有理映射 1",
+        "summary": "一种紧凑的有理迭代，以 z 平方除以 z 加 c。",
+        "math": {
+          "iteration": {
+            "label": "有理迭代",
+            "explanation": "二次分子被随参数移动的分母重塑，分母的极点位置取决于 c。"
+          }
+        },
+        "visualCharacteristics": "扇叶、刀锋和弯曲通道从受极点影响的中心向外辐射。",
+        "faq": {
+          "rational": {
+            "question": "为什么称为有理映射？",
+            "answer": "它的迭代是两个复多项式之商，而不是单独一个多项式。"
+          },
+          "pole": {
+            "question": "极点在哪里？",
+            "answer": "当 z = -c 时分母为零。"
+          }
+        }
+      },
+      "spider": {
+        "title": "蜘蛛",
+        "summary": "一种有理二次混合映射，在熟悉的平方轨道上加上 c 除以 z。",
+        "math": {
+          "iteration": {
+            "label": "蜘蛛迭代",
+            "explanation": "倒数项把二次轨道拉向位于零点的极点附近。"
+          }
+        },
+        "visualCharacteristics": "细长蛛腿、深渊状丝线和网状节点从狭窄中心结构向外伸展。",
+        "faq": {
+          "zero": {
+            "question": "z = 0 时会发生什么？",
+            "answer": "倒数项在这里奇异，因此实现会为极接近零的数值采用稳定后备处理。"
+          },
+          "filaments": {
+            "question": "蛛腿状丝线从何而来？",
+            "answer": "二次扩张与倒数吸引之间的竞争把边界拉成长丝。"
+          }
+        }
+      },
+      "zaslavsky-map": {
+        "title": "Zaslavsky 映射",
+        "summary": "一种复正弦映射，把非线性涡旋、固定旋转和平移组合起来。",
+        "math": {
+          "iteration": {
+            "label": "正弦旋转映射",
+            "explanation": "正弦扰动先弯曲 z，固定复乘数负责旋转，最后由 c 平移。"
+          }
+        },
+        "visualCharacteristics": "涡旋臂和曼陀罗环在配合万花筒变换时尤其明显。",
+        "faq": {
+          "rotation": {
+            "question": "旋转从何而来？",
+            "answer": "映射把扰动后的轨道乘以辐角为 0.55 的单位复数。"
+          },
+          "transform": {
+            "question": "万花筒是公式的一部分吗？",
+            "answer": "不是。万花筒是在公式迭代之外应用的可选空间变换。"
+          }
+        }
+      },
+      "zubieta": {
+        "title": "Zubieta",
+        "summary": "一种二次映射，把 z 平方加 c 的两个分量都折叠到非负象限。",
+        "math": {
+          "iteration": {
+            "label": "分量折叠迭代",
+            "explanation": "完成二次运算并加上 c 后，分别对实部和虚部取绝对值。"
+          }
+        },
+        "visualCharacteristics": "强烈的逐分量折叠产生镜像楔形、紧凑曼陀罗和铺排瓣体。",
+        "faq": {
+          "absolute-value": {
+            "question": "这里的绝对值是复数模长吗？",
+            "answer": "不是。FractalPark 分别对实部和虚部取绝对值。"
+          },
+          "symmetry": {
+            "question": "为什么画面镜像感很强？",
+            "answer": "反复把两个输出分量折叠进同一象限，会施加多重反射对称。"
+          }
+        }
+      }
+    }
+  },
+  "artworks": {
+    "entries": {
+      "preset-newton-deep-spiral": {
+        "summary": "沿牛顿根盆地深入下降，三个根区域扭结成紧凑螺旋。",
+        "visualNote": "交替细带向中心收紧，旋转构图让整体运动保持斜向张力。"
+      },
+      "preset-lambda-julia-vortex": {
+        "summary": "在折叠边界上长距离放大形成的兰姆达 Julia 漩涡。",
+        "visualNote": "深色通道分开浅色弯刃，仿佛围绕偏心风眼旋转。"
+      },
+      "preset-spider-julia-abyss": {
+        "summary": "悬于狭窄有理映射深渊之上的蜘蛛 Julia 景象。",
+        "visualNote": "丝状长腿穿过大片暗域，汇聚到高度放大的微小节点。"
+      },
+      "preset-buffalo-julia-eclipse": {
+        "summary": "折叠成发光天体穿越阴影形态的野牛 Julia 构图。",
+        "visualNote": "弯月折痕和颗粒边缘在倾斜画面中营造出蚀影感。"
+      },
+      "preset-mandelbrot-deep-escape": {
+        "summary": "从极深边界旅程中抽离出来的安静曼德布罗特视图。",
+        "visualNote": "宽阔终景与动画路径中隐藏的深度形成强烈反差。"
+      },
+      "preset-mandelbrot-crown": {
+        "summary": "由重复圆瓣和狭长细丝组成的曼德布罗特王冠。",
+        "visualNote": "拱形尖端围绕深色中心抬起，每条边缘都附着微小卫星细节。"
+      },
+      "preset-buffalo-julia-spiral-gate": {
+        "summary": "折叠双臂围住微小螺旋门槛的野牛 Julia 门廊。",
+        "visualNote": "强烈双侧结构配合四分之一转向，并把视线压向高度放大的中心。"
+      },
+      "preset-lambda-julia-ice-veil": {
+        "summary": "呈现为冷色半透明花簇的兰姆达 Julia 边界。",
+        "visualNote": "白色接缝和青色边缘从紫黑区域间浮现，如同玻璃结霜。"
+      },
+      "preset-magnet-julia-ember-reach": {
+        "summary": "暖色孢子伸展于暗场中的磁石类型 1 Julia 景象。",
+        "visualNote": "铜色与洋红簇向孤立绿色亮点分枝，层次来自自定义渐变。"
+      },
+      "preset-julia-aqua-compass": {
+        "summary": "排列成瓷白罗盘的曼德布罗特族 Julia 网格。",
+        "visualNote": "轨道陷阱在水蓝与石墨色层面上勾勒出浅色几何弧线。"
+      },
+      "preset-mcmullen-azure-whorl": {
+        "summary": "在极高倍率下显现的 McMullen 2–3 Julia 蔚蓝涡旋。",
+        "visualNote": "蓝色卷曲围绕微小有理奇点重复，画面旋转强化了扫动感。"
+      },
+      "preset-inverted-lambda-obsidian-knot": {
+        "summary": "缠结成紧凑黑曜石结扣的反演兰姆达断层。",
+        "visualNote": "倒数断裂切断平滑 Logistic 曲线，形成锐利黑色接缝。"
+      },
+      "preset-circle-inversion-citrine-spine": {
+        "summary": "闪耀黄水晶色倒数结构的圆反演中轴。",
+        "visualNote": "同心细节围绕明亮脊线累积，整体构图接近轴对称。"
+      },
+      "preset-rational-map-sapphire-fan": {
+        "summary": "在蓝宝石色平面上展开的有理映射 1 Julia 扇面。",
+        "visualNote": "长刃从受极点影响的中心辐射，旋转让阵列形成横扫式扇形。"
+      },
+      "preset-perpendicular-celtic-porcelain-halo": {
+        "summary": "由折叠瓷白带条构成的垂直凯尔特 Julia 光环。",
+        "visualNote": "平滑浅色环在锐利折缝相交，紧密放大并带有旋转角度。"
+      },
+      "preset-burning-ship-cinder-rift": {
+        "summary": "被余烬橙与矿物绿照亮的燃烧船裂谷。",
+        "visualNote": "层叠山崖向深色通道下降，自定义渐变将山脊与灰烬分开。"
+      },
+      "preset-magnet-julia-rust-cross": {
+        "summary": "被锈色对称侵蚀的磁石类型 2 Julia 十字。",
+        "visualNote": "四条致密臂在精确中心汇合，周围布满细小有理纹理。"
+      },
+      "preset-zaslavsky-penitent-mandala": {
+        "summary": "被折叠成克制四分曼陀罗的 Zaslavsky 涡旋。",
+        "visualNote": "万花筒变换让弯曲轨道带围绕微小、沉静的中心重复。"
+      },
+      "preset-zubieta-kaleido-amber-mandala": {
+        "summary": "扩展成七分琥珀曼陀罗的 Zubieta Julia 折叠。",
+        "visualNote": "分量对称与万花筒重复在偏心位置周围生成层叠花瓣。"
+      },
+      "preset-airship-inversion-seafoam-wings": {
+        "summary": "经反演展开成宽阔荧光蝠鲼翼面的飞艇 Julia 形态。",
+        "visualNote": "海沫绿与青色边缘漂浮在近黑空间，反演打开中央轮廓。"
+      },
+      "preset-newton-cosh-ember-meridian": {
+        "summary": "沿发光竖直经线描绘的双曲余弦牛顿盆地。",
+        "visualNote": "重复超越函数带在深度放大处收窄成余烬色接缝。"
+      },
+      "preset-mandelbox-cobalt-bastion": {
+        "summary": "以致密钴蓝层次渲染的曼德盒折叠堡阵。",
+        "visualNote": "硬朗转角和嵌套腔室让二维映射呈现建筑般的深度。"
+      },
+      "preset-cosh-mandelbrot-gilded-plumes": {
+        "summary": "铺展成鎏金超越羽片的双曲余弦曼德布罗特 Julia 场。",
+        "visualNote": "重复羽带向外展开，旋转构图打破了它们的纵向周期感。"
+      },
+      "preset-quad-julia-ivory-filigree-seal": {
+        "summary": "由象牙色细丝和四重分枝编织成的四次 Julia 印章。",
+        "visualNote": "浅色细线在深色二值着色区域上闭合成紧凑徽记。"
+      },
+      "preset-magnet-julia-moonstone-reef": {
+        "summary": "如抛光月岩般被照亮的磁石类型 2 Julia 礁石。",
+        "visualNote": "距离估算光照揭示有理映射表面的隆起脊线和细小空腔。"
+      },
+      "preset-phoenix-multi-ember-compass": {
+        "summary": "由强负记忆项驱动的多重凤凰 Julia 烬火罗盘。",
+        "visualNote": "四条余烬辐条与回卷羽毛细节围绕稳定中心轮毂。"
+      }
+    }
+  },
   "explore": {
     "title": "探索",
     "canvas": {
