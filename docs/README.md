@@ -10,6 +10,15 @@ govern FractalPark development.
 - [Fractal Content and Creation Model](specs/fractal-content-and-creation-model.md)
   defines the cross-surface source-of-truth, projection, and evolution rules
   for formulas, published presets, local artwork, and FRM authoring.
+- [Formula Content Manifest and FRM Surface Contract](specs/formula-content-manifest.md)
+  freezes Formula Atlas identities, canonical formula state, FRM Guide
+  compatibility language, and the standalone Editor boundary.
+- [Artwork and Location Route Contract](specs/artwork-and-location-routes.md)
+  freezes published artwork identities and routes, Gallery and local-artwork
+  boundaries, image licensing, and the future named-location namespace.
+- [Analytics Event Schema v1](specs/analytics-events-v1.md) registers existing
+  events and defines the Formula Atlas, FRM, artwork, and Remix event
+  contracts.
 
 ## Architecture Decision Records
 
@@ -19,6 +28,8 @@ govern FractalPark development.
   under Document v2.
 - [ADR 0003](adr/0003-unified-fractal-content-model.md): one canonical state
   model with surface-specific read projections.
+- [ADR 0004](adr/0004-remix-source-metadata.md): namespaced Remix provenance
+  carried outside the legacy rendering-state URL codec.
 
 ## Test Plans
 
