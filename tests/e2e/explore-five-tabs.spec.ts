@@ -49,7 +49,7 @@ test.describe('Explore Five-Tab Structure', () => {
 
     for (const name of tabNames) {
       await page.getByRole('tab', { name: new RegExp(name, 'i') }).click();
-      const panel = page.getByRole('tabpanel');
+      const panel = page.getByRole('tabpanel', { name: new RegExp(name, 'i') });
       await expect(panel).toBeVisible();
     }
   });
@@ -127,7 +127,7 @@ test.describe('Coloring Tab', () => {
     await gradientSwitch.click();
 
     // After enabling custom gradient, URL should contain gradient data
-    await expect(page).toHaveURL(/[?&]gd=/, { timeout: 5000 });
+    await expect(page).toHaveURL(/[?&]grad=/, { timeout: 5000 });
   });
 });
 

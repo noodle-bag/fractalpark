@@ -142,6 +142,17 @@ describe('document migrate / normalize', () => {
     expect(runtime.paletteIndex).toBe(16);
   });
 
+  it.each([
+    ['outside coloring', 'oc=st', (runtime) => runtime.outsideColoring, 'stripe'],
+    ['transform', 'tr=mobius', (runtime) => runtime.transformId, 'mobius'],
+    ['gradient', 'grad=0.00:000004,1.00:fcfdbf', (runtime) => runtime.customGradient?.length, 2],
+  ] as const)('recognizes a %s-only decoded URL state', (_label, query, select, expected) => {
+    const decoded = decodeParams(new URLSearchParams(query));
+    const runtime = documentToRuntimeParams(migrateFractalDocument(decoded, 0));
+
+    expect(select(runtime)).toBe(expected);
+  });
+
   it('migrates builtin preset query through document and back to runtime', () => {
     const parsed = buildFractalParamsFromPresetQuery(
       'cx=-0.5&cy=0&z=2.00&iter=300&fm=buffalo&tr=kaleidoscope'

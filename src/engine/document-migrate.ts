@@ -62,8 +62,22 @@ function looksLikeUrlState(value: unknown): value is FractalUrlState {
     ('centerX' in value ||
       'centerY' in value ||
       'zoom' in value ||
-      'formula' in value ||
+      'rotation' in value ||
       'iterations' in value ||
+      'julia' in value ||
+      'juliaRe' in value ||
+      'juliaIm' in value ||
+      'power' in value ||
+      'formula' in value ||
+      'outsideColoring' in value ||
+      'insideColoring' in value ||
+      'transformId' in value ||
+      'pluginParams' in value ||
+      'orbitTrap' in value ||
+      'useSSAA' in value ||
+      'adaptiveIterations' in value ||
+      'lighting' in value ||
+      'gradient' in value ||
       'palette' in value ||
       'keyframes' in value)
   );

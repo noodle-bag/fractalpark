@@ -59,6 +59,9 @@ test.describe('Artwork portability', () => {
   test('rejects malformed imports without changing the current artwork', async ({ page }) => {
     await page.goto('/en/explore?oc=st');
     await waitForFractalCanvasReady(page);
+    await expect(page).toHaveURL(/[?&]cx=.*[?&]oc=st(?:[&#]|$)/, {
+      timeout: 5000,
+    });
     const before = page.url();
 
     const chooserPromise = page.waitForEvent('filechooser');

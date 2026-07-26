@@ -8,6 +8,16 @@ async function waitForFractalCanvasReady(page: Page) {
   await page.waitForTimeout(500);
 }
 
+async function formulaCard(page: Page, name: string) {
+  await page.getByRole('button', {
+    name: new RegExp(`^${name}$`, 'i'),
+  }).click();
+  await page.getByPlaceholder('Search formulas...').fill(name);
+  return page.getByRole('button', {
+    name: new RegExp(`^${name} Julia(?: Active)? `, 'i'),
+  });
+}
+
 test.describe('Formula Switching', () => {
   test.beforeEach(async ({ page }) => {
     // Navigate to explore page
@@ -34,17 +44,11 @@ test.describe('Formula Switching', () => {
     }
 
     // Find and click burning ship formula
-    const burningShip = page.getByRole('button', { name: /Burning Ship/i });
-    if (await burningShip.isVisible().catch(() => false)) {
-      await burningShip.click();
+    const burningShip = await formulaCard(page, 'Burning Ship');
+    await expect(burningShip).toBeVisible();
+    await burningShip.click();
 
-      // Wait for URL to update (debounced 500ms + buffer)
-      await page.waitForTimeout(1000);
-
-      // Verify URL updated (uses short key 'bs' for burningShip)
-      const url = page.url();
-      expect(url).toContain('fm=bs');
-    }
+    await expect(page).toHaveURL(/[?&]fm=bs(?:[&#]|$)/, { timeout: 5000 });
   });
 
   test('should switch to tricorn formula', async ({ page }) => {
@@ -72,15 +76,11 @@ test.describe('Formula Switching', () => {
       await formulaTab.click();
     }
 
-    const phoenix = page.getByRole('button', { name: /Phoenix/i });
-    if (await phoenix.isVisible().catch(() => false)) {
-      await phoenix.click();
-      await page.waitForTimeout(500);
-      
-      // Verify URL updated (uses short key 'ph' for phoenix)
-      const url = page.url();
-      expect(url).toContain('fm=ph');
-    }
+    const phoenix = await formulaCard(page, 'Phoenix');
+    await expect(phoenix).toBeVisible();
+    await phoenix.click();
+
+    await expect(page).toHaveURL(/[?&]fm=ph(?:[&#]|$)/, { timeout: 5000 });
   });
 
   test('should switch to Newton formula', async ({ page }) => {
@@ -112,18 +112,12 @@ test.describe('Formula Switching', () => {
     if (await formulaTab.isVisible().catch(() => false)) {
       await formulaTab.click();
       
-      const burningShip = page.getByRole('button', { name: /Burning Ship/i });
-      if (await burningShip.isVisible().catch(() => false)) {
-        await burningShip.click();
+      const burningShip = await formulaCard(page, 'Burning Ship');
+      await expect(burningShip).toBeVisible();
+      await burningShip.click();
 
-        // Wait for URL to update (debounced 500ms + buffer)
-        await page.waitForTimeout(1000);
-
-        // Verify formula changed (view bounds reset to formula defaults)
-        const url = page.url();
-        expect(url).toContain('fm=bs');
-        // Note: switching formulas resets view to formula's default bounds
-      }
+      // Switching formulas resets view to formula defaults.
+      await expect(page).toHaveURL(/[?&]fm=bs(?:[&#]|$)/, { timeout: 5000 });
     }
   });
 
