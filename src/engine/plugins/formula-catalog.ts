@@ -1615,6 +1615,14 @@ export function getFormulaSelectionDefaults(id: string): FormulaSelectionDefault
     return {
       bounds,
       formula: { formulaId: id },
+      ...(metadata
+        ? {
+            coloring: {
+              paletteIndex: metadata.suggestedPalette,
+              customGradient: null,
+            },
+          }
+        : {}),
     };
   }
 

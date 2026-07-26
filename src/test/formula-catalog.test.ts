@@ -1592,6 +1592,10 @@ describe('Formula Catalog', () => {
     expect(getFormulaSelectionDefaults('phoenix')).toEqual({
       bounds: { centerX: -0.35, centerY: 0, zoom: 0.55 },
       formula: { formulaId: 'phoenix' },
+      coloring: {
+        paletteIndex: 2,
+        customGradient: null,
+      },
     });
   });
 });

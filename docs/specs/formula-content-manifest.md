@@ -213,7 +213,9 @@ Assets, metadata, coloring pipeline-only state, and animation tracks are not
 part of the legacy query codec. The formula builder must not rely on those
 fields. Contract tests compare the normalized supported projection after
 `documentToExploreHref` and decode; they do not require byte-identical query
-ordering.
+ordering. Plugin parameters equal to their registered descriptor defaults may
+be omitted from the query; round-trip checks resolve an omitted value through
+the same descriptor before comparing runtime behavior.
 
 ## Formula Manifest Validation
 

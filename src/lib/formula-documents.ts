@@ -5,10 +5,38 @@ import {
   type FractalDocument,
 } from '@/engine/document';
 import { normalizeFractalDocument } from '@/engine/document-migrate';
+import { registerBuiltins } from '@/engine/plugins/builtins';
 import {
   getFormulaMetadata,
   getFormulaSelectionDefaults,
 } from '@/engine/plugins/formula-catalog';
+import { pluginRegistry } from '@/engine/plugins/registry';
+import type {
+  PluginParamRecord,
+  PluginParamValue,
+} from '@/engine/types';
+
+function clonePluginParamValue(value: PluginParamValue): PluginParamValue {
+  return Array.isArray(value)
+    ? [...value] as PluginParamValue
+    : value;
+}
+
+function getBuiltinFormulaUniformDefaults(formulaId: string): PluginParamRecord {
+  registerBuiltins({ quiet: true });
+  const plugin = pluginRegistry.getFormula(formulaId);
+
+  if (!plugin || plugin.source !== 'builtin') {
+    throw new Error(`Built-in formula plugin is unavailable: ${formulaId}`);
+  }
+
+  return Object.fromEntries(
+    plugin.uniforms.map((uniform) => [
+      uniform.name,
+      clonePluginParamValue(uniform.default as PluginParamValue),
+    ])
+  );
+}
 
 function mergeFormulaSelection(
   current: FormulaState,
@@ -72,8 +100,22 @@ export function applyFormulaSelectionDefaults(
   document: FractalDocument,
   formulaId: string
 ): FractalDocument {
+  const metadata = getFormulaMetadata(formulaId);
+  if (!metadata) {
+    throw new Error(`Unknown built-in formula: ${formulaId}`);
+  }
+
   const selection = getFormulaSelectionDefaults(formulaId);
-  const formula = mergeFormulaSelection(document.formula, selection.formula);
+  const uniformDefaults = getBuiltinFormulaUniformDefaults(formulaId);
+  const formulaPatch = metadata.defaultProfile
+    ? selection.formula
+    : {
+        ...selection.formula,
+        params: {
+          formula: uniformDefaults,
+        },
+      };
+  const formula = mergeFormulaSelection(document.formula, formulaPatch);
   const coloring = selection.coloring
     ? mergeColoringSelection(document.coloring, selection.coloring)
     : document.coloring;
