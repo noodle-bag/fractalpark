@@ -1,4 +1,8 @@
 import type { MetadataRoute } from 'next';
+import {
+  PUBLISHED_FORMULA_GUIDES,
+  formulaGuidePath,
+} from '@/content/formula-guides';
 import { routing } from '@/i18n/routing';
 import { SITE } from '@/lib/site';
 
@@ -12,6 +16,7 @@ export default function sitemap(): MetadataRoute.Sitemap {
     '/formulas/frm',
     '/formulas/editor',
     '/about',
+    ...PUBLISHED_FORMULA_GUIDES.map(formulaGuidePath),
   ];
 
   const entries: MetadataRoute.Sitemap = [];

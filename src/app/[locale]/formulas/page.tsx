@@ -120,7 +120,7 @@ export default async function FormulaAtlasPage({
         '@type': 'ListItem',
         position: index + 1,
         name: formulaT(entry.metadata.id),
-        url: `${SITE.url}${entry.exploreHref}`,
+        url: `${SITE.url}${entry.destinationHref}`,
       })),
     },
   };
@@ -277,7 +277,11 @@ export default async function FormulaAtlasPage({
                         entry={entry}
                         key={entry.metadata.id}
                         name={formulaT(entry.metadata.id)}
-                        openLabel={t('guides.open')}
+                        openLabel={
+                          entry.guideHref
+                            ? t('guides.read')
+                            : t('guides.explore')
+                        }
                         summary={entryT(`${entry.guide.slug}.summary`)}
                       />
                     ))}
@@ -326,15 +330,15 @@ export default async function FormulaAtlasPage({
                 <ul className="grid gap-2 sm:grid-cols-2 lg:grid-cols-3">
                   {family.formulas.map((entry) => (
                     <li data-formula-id={entry.metadata.id} key={entry.metadata.id}>
-                      <Link
+                      <a
                         className="group flex min-h-12 items-center justify-between gap-3 rounded-lg border px-4 py-3 text-sm transition-colors hover:border-foreground/30 hover:bg-muted/30"
-                        href={entry.exploreHref}
+                        href={entry.destinationHref}
                       >
                         <span className="font-medium">
                           {formulaT(entry.metadata.id)}
                         </span>
                         <span className="flex items-center gap-2 text-xs text-muted-foreground">
-                          {entry.guide ? (
+                          {entry.guideHref ? (
                             <Badge variant="secondary">
                               {t('directory.guideBadge')}
                             </Badge>
@@ -344,7 +348,7 @@ export default async function FormulaAtlasPage({
                             className="size-4 transition-transform group-hover:translate-x-0.5"
                           />
                         </span>
-                      </Link>
+                      </a>
                     </li>
                   ))}
                 </ul>
@@ -458,10 +462,10 @@ function GuideCard({
         {summary}
       </p>
       <Button asChild className="mt-5 w-fit px-0" variant="link">
-        <Link href={entry.exploreHref}>
+        <a href={entry.destinationHref}>
           {openLabel}
           <ArrowRight aria-hidden />
-        </Link>
+        </a>
       </Button>
     </article>
   );

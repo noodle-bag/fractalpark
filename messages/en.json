@@ -227,8 +227,9 @@
       "guides": {
         "eyebrow": "21 selected formulas",
         "title": "In-depth guide set",
-        "intro": "These formulas are the frozen guide set selected from FractalPark's published artwork. Their canonical views are ready to explore while the dedicated editorial pages are delivered in the next content steps.",
-        "open": "Explore canonical view"
+        "intro": "These formulas are the frozen guide set selected from FractalPark's published artwork. Four validation guides are now available; the remaining canonical views stay ready to explore while their editorial pages are completed.",
+        "read": "Read guide",
+        "explore": "Explore canonical view"
       },
       "directory": {
         "eyebrow": "Complete catalog",
@@ -243,6 +244,37 @@
         "description": "Use the Explorer for built-in formulas, or open the local FRM Editor when you want to define the iteration yourself.",
         "explore": "Open Explorer",
         "editor": "Open Formula Editor"
+      }
+    },
+    "guide": {
+      "breadcrumbLabel": "Breadcrumb",
+      "breadcrumbHome": "Home",
+      "breadcrumbFormulas": "Formulas",
+      "openExplorer": "Open in Explorer",
+      "viewArtwork": "View artwork",
+      "difficulty": {
+        "easy": "Easy",
+        "medium": "Medium",
+        "hard": "Hard"
+      },
+      "sections": {
+        "overview": "Overview",
+        "mathematics": "The Mathematics",
+        "history": "History",
+        "visualCharacteristics": "Visual Characteristics",
+        "parameters": "Parameters",
+        "remix": "Remix and Examples",
+        "related": "Related Formulas",
+        "faq": "Frequently Asked Questions",
+        "references": "References"
+      },
+      "parameterLabels": {
+        "scale": "Scale"
+      },
+      "remix": {
+        "title": "Start from the canonical Document",
+        "description": "Open the same approved formula state used by this guide, then change the view, coloring, transforms, or animation in the interactive Explorer.",
+        "cta": "Remix in Explorer"
       }
     },
     "frmGuide": {
@@ -435,6 +467,9 @@
       "mandelbrot": {
         "title": "Mandelbrot Set",
         "summary": "The foundational quadratic parameter set, built by testing which complex values keep an orbit bounded.",
+        "overview": "The Mandelbrot set treats each point in the complex plane as the parameter c and follows the orbit from z = 0. Its simple recurrence produces a connected map of stable regions and an endlessly detailed boundary, making it a practical starting point for understanding escape-time fractals.",
+        "imageAlt": "Canonical FractalPark rendering of the Mandelbrot set",
+        "imageCaption": "The approved canonical Mandelbrot Document rendered by FractalPark.",
         "math": {
           "iteration": {
             "label": "Quadratic iteration",
@@ -477,6 +512,9 @@
       "mandelbox": {
         "title": "Mandelbox",
         "summary": "A two-dimensional Mandelbox-inspired map that alternates box and radial folds before scaling the orbit.",
+        "overview": "FractalPark's Mandelbox formula adapts the fold-and-scale idea to a two-dimensional complex-plane renderer. Box folds reflect coordinates, a radial fold changes scale around the origin, and repeated application builds a map with unusually architectural depth.",
+        "imageAlt": "Canonical FractalPark rendering of the two-dimensional Mandelbox-inspired map",
+        "imageCaption": "The approved canonical Mandelbox Document rendered by FractalPark.",
         "math": {
           "iteration": {
             "label": "Fold-and-scale iteration",
@@ -543,6 +581,9 @@
       "burning-ship": {
         "title": "Burning Ship",
         "summary": "A quadratic escape-time fractal that folds both coordinate components before squaring.",
+        "overview": "The Burning Ship changes the familiar quadratic recurrence by taking the absolute value of both coordinate components before each square. That small fold removes the Mandelbrot set's balance and creates steep ridges, repeated ship-like silhouettes, and strongly directional detail.",
+        "imageAlt": "Canonical FractalPark rendering of the Burning Ship fractal",
+        "imageCaption": "The approved canonical Burning Ship Document rendered by FractalPark.",
         "math": {
           "iteration": {
             "label": "Absolute-value quadratic iteration",
@@ -585,6 +626,9 @@
       "newton-3": {
         "title": "Newton Fractal for z³ − 1",
         "summary": "A convergence fractal that applies Newton's root-finding method to the three roots of z cubed minus one.",
+        "overview": "Instead of asking whether an orbit escapes, this formula asks which root of z³ − 1 Newton's method reaches from each starting point. The resulting three basins are easy to identify, while their shared boundary reveals extreme sensitivity to the initial value.",
+        "imageAlt": "Canonical FractalPark rendering of the Newton fractal for z cubed minus one",
+        "imageCaption": "The approved canonical Newton 3 Document rendered by FractalPark.",
         "math": {
           "iteration": {
             "label": "Newton iteration",

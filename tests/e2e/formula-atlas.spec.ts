@@ -14,6 +14,16 @@ test.describe('Formula Atlas', () => {
     ).toBeVisible();
     await expect(page.locator('[data-formula-id]')).toHaveCount(94);
     await expect(page.locator('[data-guide-formula-id]')).toHaveCount(21);
+    await expect(
+      page.locator(
+        '[data-guide-formula-id="mandelbrot"] a[href="/en/formulas/mandelbrot"]'
+      )
+    ).toHaveCount(1);
+    await expect(
+      page.locator(
+        '[data-guide-formula-id="lambda"] a[href^="/en/explore?"]'
+      )
+    ).toHaveCount(1);
     await expect(page.locator('section[id^="family-"]')).toHaveCount(7);
     await expect(
       page.getByRole('link', { name: 'Learn FRM' })

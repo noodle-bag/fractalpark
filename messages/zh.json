@@ -227,8 +227,9 @@
       "guides": {
         "eyebrow": "21 个精选公式",
         "title": "深度 Guide 集合",
-        "intro": "这些公式是从 FractalPark 已发布作品中冻结的 Guide 集合。现在即可探索其 canonical 视图，后续内容提交会交付独立编辑页面。",
-        "open": "探索 canonical 视图"
+        "intro": "这些公式是从 FractalPark 已发布作品中冻结的 Guide 集合。目前已发布 4 个验证指南；其余公式在编辑页面完成前仍可直接打开 canonical 视图。",
+        "read": "阅读指南",
+        "explore": "探索 canonical 视图"
       },
       "directory": {
         "eyebrow": "完整目录",
@@ -243,6 +244,37 @@
         "description": "使用探索器体验内置公式；当你想亲自定义迭代时，可以进入本地 FRM 编辑器。",
         "explore": "打开探索器",
         "editor": "打开公式编辑器"
+      }
+    },
+    "guide": {
+      "breadcrumbLabel": "面包屑导航",
+      "breadcrumbHome": "首页",
+      "breadcrumbFormulas": "公式",
+      "openExplorer": "在探索器中打开",
+      "viewArtwork": "查看作品",
+      "difficulty": {
+        "easy": "入门",
+        "medium": "进阶",
+        "hard": "高级"
+      },
+      "sections": {
+        "overview": "概览",
+        "mathematics": "数学原理",
+        "history": "历史",
+        "visualCharacteristics": "视觉特征",
+        "parameters": "参数",
+        "remix": "再创作与示例",
+        "related": "相关公式",
+        "faq": "常见问题",
+        "references": "参考资料"
+      },
+      "parameterLabels": {
+        "scale": "缩放"
+      },
+      "remix": {
+        "title": "从 canonical Document 开始",
+        "description": "打开本指南使用的同一份已审定公式状态，再在交互式探索器中调整视图、着色、变换或动画。",
+        "cta": "在探索器中再创作"
       }
     },
     "frmGuide": {
@@ -435,6 +467,9 @@
       "mandelbrot": {
         "title": "曼德布罗特集",
         "summary": "经典的二次参数集，通过判断不同复参数对应的轨道是否保持有界来形成。",
+        "overview": "曼德布罗特集把复平面上的每个点视为参数 c，并从 z = 0 开始跟踪轨道。这个简洁递推式形成了稳定区域连通、边界细节无穷的图景，是理解逃逸时间分形的实用起点。",
+        "imageAlt": "FractalPark 渲染的曼德布罗特集 canonical 视图",
+        "imageCaption": "FractalPark 根据已审定的曼德布罗特 Document 渲染。",
         "math": {
           "iteration": {
             "label": "二次迭代",
@@ -477,6 +512,9 @@
       "mandelbox": {
         "title": "曼德盒",
         "summary": "受 Mandelbox 启发的二维映射，先后进行盒折叠与径向折叠，再缩放轨道。",
+        "overview": "FractalPark 的曼德盒公式把折叠与缩放思想适配到二维复平面渲染器。盒折叠反射坐标，径向折叠改变原点附近的尺度，反复应用后形成具有建筑感和空间深度的图景。",
+        "imageAlt": "FractalPark 渲染的二维曼德盒 canonical 视图",
+        "imageCaption": "FractalPark 根据已审定的曼德盒 Document 渲染。",
         "math": {
           "iteration": {
             "label": "折叠与缩放迭代",
@@ -543,6 +581,9 @@
       "burning-ship": {
         "title": "燃烧船",
         "summary": "一种二次逃逸时间分形，在平方前先折叠实部和虚部。",
+        "overview": "燃烧船在熟悉的二次递推中加入一个变化：每次平方前先分别对两个坐标分量取绝对值。这个小小的折叠打破了曼德布罗特集的平衡，产生陡峭山脊、重复船形和方向性很强的细节。",
+        "imageAlt": "FractalPark 渲染的燃烧船分形 canonical 视图",
+        "imageCaption": "FractalPark 根据已审定的燃烧船 Document 渲染。",
         "math": {
           "iteration": {
             "label": "绝对值二次迭代",
@@ -585,6 +626,9 @@
       "newton-3": {
         "title": "z³ − 1 牛顿分形",
         "summary": "把牛顿求根法应用于 z 的三次方减一所得到的收敛分形。",
+        "overview": "这个公式并不判断轨道是否逃逸，而是观察牛顿法从每个初值最终抵达 z³ − 1 的哪个根。三个收敛盆地容易辨认，而它们共用的边界揭示了结果对初值的极端敏感性。",
+        "imageAlt": "FractalPark 渲染的 z 的三次方减一牛顿分形 canonical 视图",
+        "imageCaption": "FractalPark 根据已审定的 Newton 3 Document 渲染。",
         "math": {
           "iteration": {
             "label": "牛顿迭代",

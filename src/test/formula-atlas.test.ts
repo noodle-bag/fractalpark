@@ -3,6 +3,7 @@ import {
   buildFormulaAtlas,
   FORMULA_FAMILY_ORDER,
 } from '@/content/formula-atlas';
+import { FORMULA_GUIDE_VALIDATION_IDS } from '@/content/formula-guides';
 import { decodeParams } from '@/lib/url-params';
 
 describe('Formula Atlas projection', () => {
@@ -29,6 +30,24 @@ describe('Formula Atlas projection', () => {
 
       expect(url.pathname).toBe('/zh/explore');
       expect(decoded.formula ?? 'mandelbrot').toBe(entry.metadata.id);
+    }
+  });
+
+  it('routes only the four published validation guides to editorial pages', () => {
+    const atlas = buildFormulaAtlas('en');
+    const publishedGuides = atlas.guides.filter(({ guideHref }) => guideHref);
+
+    expect(publishedGuides.map(({ metadata }) => metadata.id)).toEqual(
+      expect.arrayContaining([...FORMULA_GUIDE_VALIDATION_IDS])
+    );
+    expect(publishedGuides).toHaveLength(4);
+
+    for (const entry of atlas.formulas) {
+      expect(entry.destinationHref).toBe(
+        entry.guideHref
+          ? `/en${entry.guideHref}`
+          : entry.exploreHref
+      );
     }
   });
 
