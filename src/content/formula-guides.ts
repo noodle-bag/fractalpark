@@ -39,6 +39,12 @@ export function formulaGuidePath(
 
 export function formulaGuideImagePath(
   entry: FormulaContentEntry
-): `/images/formulas/${string}.jpg` {
-  return `/images/formulas/${entry.slug}.jpg`;
+): `/images/formulas/guides/${string}.jpg` {
+  return `/images/formulas/guides/${entry.slug}.jpg`;
+}
+
+export function formulaGuideOpenGraphImagePath(
+  entry: FormulaContentEntry
+): `/images/formulas/og/${string}.jpg` {
+  return `/images/formulas/og/${entry.slug}.jpg`;
 }

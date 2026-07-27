@@ -6,9 +6,15 @@ import type { FractalParams, ViewBounds } from '@/engine/types';
 
 interface ThumbnailRendererProps {
   params: FractalParams;
+  height?: number;
+  width?: number;
 }
 
-export function ThumbnailRenderer({ params }: ThumbnailRendererProps) {
+export function ThumbnailRenderer({
+  params,
+  height = 600,
+  width = 600,
+}: ThumbnailRendererProps) {
   const [bounds, setBounds] = useState<ViewBounds>(params.bounds);
 
   useEffect(() => {
@@ -16,7 +22,11 @@ export function ThumbnailRenderer({ params }: ThumbnailRendererProps) {
   }, [params]);
 
   return (
-    <div className="w-[600px] h-[600px] bg-black">
+    <div
+      className="shrink-0 bg-black"
+      data-testid="thumbnail-renderer"
+      style={{ height, width }}
+    >
       <FractalCanvas
         paletteIndex={params.paletteIndex}
         maxIterations={params.maxIterations}

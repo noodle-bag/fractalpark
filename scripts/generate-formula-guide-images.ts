@@ -5,6 +5,7 @@ import { chromium, type Page } from 'playwright';
 import {
   PUBLISHED_FORMULA_GUIDES,
   formulaGuideImagePath,
+  formulaGuideOpenGraphImagePath,
 } from '@/content/formula-guides';
 import { FORMULA_CONTENT_MANIFEST } from '@/content/formula-manifest';
 import { getFormulaMetadata } from '@/engine/plugins/formula-catalog';
@@ -15,12 +16,30 @@ const projectRoot = process.cwd();
 const port = Number(process.env.FORMULA_IMAGE_PORT ?? 3001);
 const baseUrl =
   process.env.BASE_URL ?? `http://127.0.0.1:${String(port)}`;
-const width = 1200;
-const height = 630;
 const quality = 0.92;
+const imageVariants = [
+  {
+    width: 1200,
+    height: 750,
+    path: formulaGuideImagePath,
+  },
+  {
+    width: 1200,
+    height: 630,
+    path: formulaGuideOpenGraphImagePath,
+  },
+] as const;
 
 function hasArg(name: string): boolean {
   return process.argv.slice(2).includes(name);
+}
+
+function getArgValue(name: string): string | undefined {
+  const prefix = `${name}=`;
+  return process.argv
+    .slice(2)
+    .find((argument) => argument.startsWith(prefix))
+    ?.slice(prefix.length);
 }
 
 async function isServerReady(): Promise<boolean> {
@@ -69,18 +88,46 @@ async function ensureServer() {
   throw new Error(`Timed out waiting for ${baseUrl}`);
 }
 
-async function renderJpeg(page: Page, formulaId: string): Promise<Buffer> {
+async function renderJpeg(
+  page: Page,
+  formulaId: string,
+  output: { width: number; height: number }
+): Promise<Buffer> {
   const canonicalDocument = buildFormulaDefaultDocument(formulaId);
   const exploreHref = documentToExploreHref(canonicalDocument, 'en');
-  const thumbnailHref = exploreHref.replace('/explore?', '/thumbnail?');
+  const dimensions = {
+    width: output.width,
+    height: output.height,
+  };
+  const thumbnailUrl = new URL(
+    exploreHref.replace('/explore?', '/thumbnail?'),
+    baseUrl
+  );
+  thumbnailUrl.searchParams.set('renderWidth', String(output.width));
+  thumbnailUrl.searchParams.set('renderHeight', String(output.height));
 
-  await page.goto(new URL(thumbnailHref, baseUrl).toString(), {
+  await page.goto(thumbnailUrl.toString(), {
     waitUntil: 'domcontentloaded',
     timeout: 60_000,
   });
 
   const canvas = page.locator('[data-testid="fractal-canvas"]');
   await canvas.waitFor({ state: 'visible', timeout: 30_000 });
+  await page.waitForFunction(
+    ({ width, height }) => {
+      const element = document.querySelector(
+        '[data-testid="fractal-canvas"]'
+      );
+
+      return (
+        element instanceof HTMLCanvasElement &&
+        element.width === width &&
+        element.height === height
+      );
+    },
+    dimensions,
+    { timeout: 30_000 }
+  );
   await page.waitForTimeout(1_200);
 
   const dataUrl = await canvas.evaluate(
@@ -107,7 +154,7 @@ async function renderJpeg(page: Page, formulaId: string): Promise<Buffer> {
       );
       return exportCanvas.toDataURL('image/jpeg', output.quality);
     },
-    { width, height, quality }
+    { ...dimensions, quality }
   );
 
   return Buffer.from(
@@ -133,19 +180,28 @@ async function main(): Promise<void> {
 
   const force = hasArg('--force');
   const missingOnly = hasArg('--missing-only');
+  const selectedSlug = getArgValue('--slug');
 
   if (force && missingOnly) {
     throw new Error('Use either --force or --missing-only, not both.');
   }
 
-  const allOutputs = PUBLISHED_FORMULA_GUIDES.map((entry) => ({
-    entry,
-    outputPath: path.join(
-      projectRoot,
-      'public',
-      formulaGuideImagePath(entry)
-    ),
-  }));
+  const selectedGuides = selectedSlug
+    ? PUBLISHED_FORMULA_GUIDES.filter(({ slug }) => slug === selectedSlug)
+    : PUBLISHED_FORMULA_GUIDES;
+
+  if (selectedGuides.length === 0) {
+    throw new Error(`Unknown formula guide slug: ${selectedSlug}`);
+  }
+
+  const allOutputs = selectedGuides.flatMap((entry) =>
+    imageVariants.map((variant) => ({
+      entry,
+      variant,
+      publicPath: variant.path(entry),
+      outputPath: path.join(projectRoot, 'public', variant.path(entry)),
+    }))
+  );
   const existing = allOutputs.filter(({ outputPath }) =>
     fs.existsSync(outputPath)
   );
@@ -179,17 +235,17 @@ async function main(): Promise<void> {
     ],
   });
   const context = await browser.newContext({
-    viewport: { width, height },
+    viewport: { width: 1280, height: 814 },
   });
   const page = await context.newPage();
 
   try {
-    for (const { entry, outputPath } of outputs) {
-      const jpeg = await renderJpeg(page, entry.formulaId);
+    for (const { entry, outputPath, publicPath, variant } of outputs) {
+      const jpeg = await renderJpeg(page, entry.formulaId, variant);
       fs.mkdirSync(path.dirname(outputPath), { recursive: true });
       fs.writeFileSync(outputPath, jpeg);
       console.log(
-        `[formula-images] Saved ${formulaGuideImagePath(entry)} (${(
+        `[formula-images] Saved ${publicPath} (${variant.width}x${variant.height}, ${(
           jpeg.length / 1024
         ).toFixed(1)} KB)`
       );

@@ -7,6 +7,7 @@ import {
   PUBLISHED_FORMULA_GUIDES,
   PUBLISHED_FORMULA_GUIDE_IDS,
   formulaGuideImagePath,
+  formulaGuideOpenGraphImagePath,
   formulaGuidePath,
   getPublishedFormulaGuideBySlug,
 } from '@/content/formula-guides';
@@ -109,7 +110,10 @@ describe('published formula guides', () => {
       expect(getPublishedFormulaGuideBySlug(entry.slug)).toBe(entry);
       expect(formulaGuidePath(entry)).toBe(`/formulas/${entry.slug}`);
       expect(formulaGuideImagePath(entry)).toBe(
-        `/images/formulas/${entry.slug}.jpg`
+        `/images/formulas/guides/${entry.slug}.jpg`
+      );
+      expect(formulaGuideOpenGraphImagePath(entry)).toBe(
+        `/images/formulas/og/${entry.slug}.jpg`
       );
     }
 
@@ -148,20 +152,40 @@ describe('published formula guides', () => {
     );
   });
 
-  it('ships a non-empty JPEG for every published guide', () => {
+  it('ships unstretched guide and Open Graph JPEGs for every published guide', () => {
     for (const entry of PUBLISHED_FORMULA_GUIDES) {
-      const image = readFileSync(
+      const guideImage = readFileSync(
         path.join(
           process.cwd(),
           'public',
           formulaGuideImagePath(entry)
         )
       );
+      const openGraphImage = readFileSync(
+        path.join(
+          process.cwd(),
+          'public',
+          formulaGuideOpenGraphImagePath(entry)
+        )
+      );
 
-      expect(image.length, entry.slug).toBeGreaterThan(30_000);
-      expect([...image.subarray(0, 2)], entry.slug).toEqual([0xff, 0xd8]);
-      expect([...image.subarray(-2)], entry.slug).toEqual([0xff, 0xd9]);
-      expect(readJpegDimensions(image), entry.slug).toEqual({
+      expect(guideImage.length, entry.slug).toBeGreaterThan(30_000);
+      expect([...guideImage.subarray(0, 2)], entry.slug).toEqual([
+        0xff, 0xd8,
+      ]);
+      expect([...guideImage.subarray(-2)], entry.slug).toEqual([0xff, 0xd9]);
+      expect(readJpegDimensions(guideImage), entry.slug).toEqual({
+        width: 1200,
+        height: 750,
+      });
+      expect(openGraphImage.length, entry.slug).toBeGreaterThan(30_000);
+      expect([...openGraphImage.subarray(0, 2)], entry.slug).toEqual([
+        0xff, 0xd8,
+      ]);
+      expect([...openGraphImage.subarray(-2)], entry.slug).toEqual([
+        0xff, 0xd9,
+      ]);
+      expect(readJpegDimensions(openGraphImage), entry.slug).toEqual({
         width: 1200,
         height: 630,
       });

@@ -66,6 +66,10 @@ test.describe('Formula guides', () => {
       'href',
       'https://www.fractalpark.com/zh/formulas/mandelbrot'
     );
+    await expect(page.locator('meta[property="og:image"]')).toHaveAttribute(
+      'content',
+      'https://www.fractalpark.com/images/formulas/og/mandelbrot.jpg'
+    );
 
     await context.close();
   });
@@ -88,6 +92,69 @@ test.describe('Formula guides', () => {
     await expect(
       page.getByRole('link', { name: '在探索器中再创作' })
     ).toHaveAttribute('href', /^\/zh\/explore\?/);
+  });
+
+  test('renders formula images at their native target aspect ratios', async ({
+    page,
+  }) => {
+    await page.goto('/en/formulas/mandelbrot');
+
+    const heroImage = page.getByTestId('formula-guide-hero-image');
+    await expect(heroImage).toHaveAttribute('width', '1200');
+    await expect(heroImage).toHaveAttribute('height', '750');
+    await expect(heroImage).toHaveAttribute(
+      'src',
+      /images%2Fformulas%2Fguides%2Fmandelbrot\.jpg/
+    );
+    await expect
+      .poll(async () => {
+        const ratios = await heroImage.evaluate((image) => {
+          if (!(image instanceof HTMLImageElement) || image.naturalHeight === 0) {
+            return null;
+          }
+
+          return {
+            naturalRatio: image.naturalWidth / image.naturalHeight,
+            renderedRatio:
+              image.getBoundingClientRect().width /
+              image.getBoundingClientRect().height,
+          };
+        });
+
+        return (
+          ratios !== null &&
+          Math.abs(ratios.naturalRatio - 1.6) < 0.005 &&
+          Math.abs(ratios.renderedRatio - 1.6) < 0.005
+        );
+      })
+      .toBe(true);
+
+    const exploreHref = await page
+      .getByRole('link', { name: 'Open in Explorer' })
+      .getAttribute('href');
+    expect(exploreHref).toBeTruthy();
+
+    const thumbnailHref = exploreHref
+      ?.replace('/explore?', '/thumbnail?')
+      .concat('&renderWidth=1200&renderHeight=750');
+    await page.goto(thumbnailHref!);
+
+    const canvas = page.getByTestId('fractal-canvas');
+    await expect
+      .poll(() =>
+        canvas.evaluate((element) => ({
+          bitmapHeight: element.height,
+          bitmapWidth: element.width,
+          renderedHeight: element.clientHeight,
+          renderedWidth: element.clientWidth,
+        }))
+      )
+      .toEqual({
+        bitmapHeight: 750,
+        bitmapWidth: 1200,
+        renderedHeight: 750,
+        renderedWidth: 1200,
+      });
   });
 
   test('does not create a thin page for a non-guide formula', async ({ request }) => {

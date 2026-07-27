@@ -17,6 +17,7 @@ import { Button } from '@/components/ui/button';
 import {
   PUBLISHED_FORMULA_GUIDES,
   formulaGuideImagePath,
+  formulaGuideOpenGraphImagePath,
   formulaGuidePath,
   getPublishedFormulaGuideBySlug,
   isPublishedFormulaGuideId,
@@ -62,7 +63,7 @@ export async function generateMetadata({
     namespace: `formulas.entries.${entry.slug}`,
   });
   const path = formulaGuidePath(entry);
-  const image = `${SITE.url}${formulaGuideImagePath(entry)}`;
+  const image = `${SITE.url}${formulaGuideOpenGraphImagePath(entry)}`;
 
   return {
     title: t('title'),
@@ -172,7 +173,7 @@ export default async function FormulaGuidePage({
       '@type': 'ImageObject',
       url: `${SITE.url}${imagePath}`,
       width: 1200,
-      height: 630,
+      height: 750,
     },
     breadcrumb: {
       '@type': 'BreadcrumbList',
@@ -248,8 +249,9 @@ export default async function FormulaGuidePage({
             <figure className="overflow-hidden rounded-2xl border bg-muted shadow-sm">
               <Image
                 alt={t('imageAlt')}
-                className="aspect-[16/10] h-auto w-full object-cover"
-                height={630}
+                className="h-auto w-full"
+                data-testid="formula-guide-hero-image"
+                height={750}
                 priority
                 sizes="(min-width: 1024px) 42vw, 100vw"
                 src={imagePath}
