@@ -273,10 +273,16 @@ function ExploreClient() {
     router,
   ]);
 
+  const clearHandoffFailure = useCallback(() => {
+    setHandoffError(null);
+    setHandoffTargetId(null);
+  }, []);
+
   const handleLoadDocument = useCallback((nextDocument: typeof document) => {
+    clearHandoffFailure();
     setIsPreviewPlaying(false);
     loadFromDocument(nextDocument);
-  }, [loadFromDocument]);
+  }, [clearHandoffFailure, loadFromDocument]);
 
   const handleResetView = useCallback(() => {
     handleLoadDocument(DEFAULT_FRACTAL_DOCUMENT);
@@ -334,9 +340,10 @@ function ExploreClient() {
 
   // Handle formula change - reset to formula's default bounds
   const handleFormulaChange = useCallback((newFormula: string) => {
+    clearHandoffFailure();
     selectBuiltInFormula(newFormula);
     trackEvent('change_formula', { formula: newFormula });
-  }, [selectBuiltInFormula]);
+  }, [clearHandoffFailure, selectBuiltInFormula]);
 
   const handleFormulaParamChange = useCallback((name: string, value: PluginParamValue) => {
     updateFormula({
@@ -350,6 +357,7 @@ function ExploreClient() {
   }, [document.formula.params?.formula, updateFormula]);
 
   const handleCustomFormulaSelect = useCallback((selection: FormulaSelectionRequest) => {
+    clearHandoffFailure();
     updateFormula({ formulaId: selection.formulaId });
 
     const targetBounds = selection.experienceHint?.bounds ?? getDefaultBounds(selection.formulaId);
@@ -361,7 +369,7 @@ function ExploreClient() {
         ...selection.experienceHint.coloring,
       });
     }
-  }, [updateBounds, updateColoring, updateFormula]);
+  }, [clearHandoffFailure, updateBounds, updateColoring, updateFormula]);
 
   // Handle transform change
   const handleTransformChange = useCallback((newTransform: string) => {

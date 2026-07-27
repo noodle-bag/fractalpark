@@ -43,7 +43,14 @@ test.describe('standalone FRM editor', () => {
     await expect(page.getByRole('button', { name: 'New', exact: true })).toBeVisible();
     await expect(page.getByRole('button', { name: 'Examples', exact: true })).toBeVisible();
     await expect(page.getByRole('button', { name: 'My Formulas', exact: true })).toBeVisible();
+    await expect(page.getByTestId('frm-editor-mode')).toHaveAttribute(
+      'aria-selected',
+      'true'
+    );
+    await expect(page.getByTestId('frm-editor-panel')).toBeVisible();
+    await expect(page.getByTestId('frm-editor-preview')).toBeHidden();
 
+    await page.getByRole('button', { name: 'Examples', exact: true }).click();
     page.once('dialog', async (dialog) => {
       expect(dialog.type()).toBe('confirm');
       await dialog.dismiss();
@@ -61,6 +68,14 @@ test.describe('standalone FRM editor', () => {
       'href',
       /\/en\/formulas\/editor$/
     );
+
+    await page.getByTestId('frm-preview-mode').click();
+    await expect(page.getByTestId('frm-preview-mode')).toHaveAttribute(
+      'aria-selected',
+      'true'
+    );
+    await expect(page.getByTestId('frm-editor-panel')).toBeHidden();
+    await expect(page.getByTestId('frm-editor-preview')).toBeVisible();
   });
 
   test('saves locally and consumes the one-time handoff in Explore', async ({ page }) => {
@@ -112,7 +127,50 @@ test.describe('standalone FRM editor', () => {
         )
       ).toBeVisible();
       await expect(page.getByTestId('fractal-canvas')).toHaveCount(0);
+
+      await page.getByRole('button', { name: /^Mandelbrot/ }).click();
+      await expect(page.getByTestId('fractal-canvas')).toBeVisible();
+      await expect(
+        page.getByText(
+          formulaId === 'mandelbrot'
+            ? /custom formula library could not be read safely/i
+            : /not available on this device/i
+        )
+      ).toHaveCount(0);
     }
+  });
+
+  test('protects an unsaved draft during browser history traversal', async ({
+    page,
+  }) => {
+    await page.goto('/en/formulas/frm');
+    await page
+      .locator('a[href="/en/formulas/editor?example=starter-brot"]')
+      .first()
+      .click();
+    await expect(page.locator('.cm-content')).toContainText('StarterBrot');
+
+    const dismissed = new Promise<void>((resolve) => {
+      page.once('dialog', async (dialog) => {
+        expect(dialog.type()).toBe('confirm');
+        await dialog.dismiss();
+        resolve();
+      });
+    });
+    await page.evaluate(() => window.history.back());
+    await dismissed;
+
+    await expect(page).toHaveURL(
+      /\/en\/formulas\/editor\?example=starter-brot$/
+    );
+    await expect(page.locator('.cm-content')).toContainText('StarterBrot');
+
+    page.once('dialog', async (dialog) => {
+      expect(dialog.type()).toBe('confirm');
+      await dialog.accept();
+    });
+    await page.evaluate(() => window.history.back());
+    await expect(page).toHaveURL(/\/en\/formulas\/frm$/);
   });
 
   test('treats a changed default view as an unsaved draft change', async ({ page }) => {

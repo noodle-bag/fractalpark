@@ -49,6 +49,8 @@ interface CompiledPreview {
   source: string;
 }
 
+const HISTORY_GUARD_KEY = '__fractalparkFrmEditorGuard';
+
 function experienceHintKey(hint?: FormulaExperienceHint): string {
   return JSON.stringify([
     hint?.bounds?.centerX ?? null,
@@ -102,8 +104,9 @@ export function FrmEditorWorkspace() {
   const [bounds, setBounds] = useState(
     initialDraft.hint?.bounds ?? DEFAULT_FRACTAL_DOCUMENT.scene.bounds
   );
-  const [showExamples, setShowExamples] = useState(true);
-  const [showLibrary, setShowLibrary] = useState(true);
+  const [showExamples, setShowExamples] = useState(false);
+  const [showLibrary, setShowLibrary] = useState(false);
+  const [mobileMode, setMobileMode] = useState<'editor' | 'preview'>('editor');
 
   const currentHintKey = experienceHintKey(hint);
   const isDirty =
@@ -206,6 +209,43 @@ export function FrmEditorWorkspace() {
     };
     document.addEventListener('click', protectNavigation, true);
     return () => document.removeEventListener('click', protectNavigation, true);
+  }, [isDirty, t]);
+
+  // A same-URL sentinel lets us stop App Router traversal before the draft unmounts.
+  useEffect(() => {
+    if (!isDirty) return;
+
+    const editorUrl = window.location.href;
+    const guardState = {
+      ...window.history.state,
+      [HISTORY_GUARD_KEY]: true,
+    };
+    let allowNextTraversal = false;
+
+    if (!window.history.state?.[HISTORY_GUARD_KEY]) {
+      window.history.pushState(guardState, '', editorUrl);
+    }
+
+    const protectHistoryNavigation = (event: PopStateEvent) => {
+      if (allowNextTraversal) {
+        allowNextTraversal = false;
+        return;
+      }
+      if (event.state?.[HISTORY_GUARD_KEY]) return;
+
+      event.stopImmediatePropagation();
+      if (window.confirm(t('leaveConfirm'))) {
+        allowNextTraversal = true;
+        window.history.back();
+        return;
+      }
+
+      window.history.pushState(guardState, '', editorUrl);
+    };
+
+    window.addEventListener('popstate', protectHistoryNavigation, true);
+    return () =>
+      window.removeEventListener('popstate', protectHistoryNavigation, true);
   }, [isDirty, t]);
 
   const mutationErrorMessage = useCallback(
@@ -369,8 +409,41 @@ export function FrmEditorWorkspace() {
         </Button>
       </div>
 
+      <div
+        aria-label={t('viewModes')}
+        className="mb-5 grid grid-cols-2 rounded-lg border p-1 lg:hidden"
+        role="tablist"
+      >
+        <Button
+          aria-controls="frm-editor-panel"
+          aria-selected={mobileMode === 'editor'}
+          data-testid="frm-editor-mode"
+          onClick={() => setMobileMode('editor')}
+          role="tab"
+          variant={mobileMode === 'editor' ? 'secondary' : 'ghost'}
+        >
+          {t('editorMode')}
+        </Button>
+        <Button
+          aria-controls="frm-preview-panel"
+          aria-selected={mobileMode === 'preview'}
+          data-testid="frm-preview-mode"
+          onClick={() => setMobileMode('preview')}
+          role="tab"
+          variant={mobileMode === 'preview' ? 'secondary' : 'ghost'}
+        >
+          {t('previewMode')}
+        </Button>
+      </div>
+
       <div className="grid gap-6 lg:grid-cols-[3fr_2fr]">
-        <div className="min-w-0 space-y-4">
+        <div
+          className={`min-w-0 space-y-4 ${
+            mobileMode === 'editor' ? 'block' : 'hidden lg:block'
+          }`}
+          data-testid="frm-editor-panel"
+          id="frm-editor-panel"
+        >
           <details
             className="rounded-lg border p-4"
             id="frm-editor-examples"
@@ -454,6 +527,7 @@ export function FrmEditorWorkspace() {
             onCompile={(plugin, effectiveHint) => {
               setCompiledPreview({ plugin, source });
               setHint(effectiveHint);
+              setMobileMode('preview');
               setBounds(
                 effectiveHint?.bounds ??
                   DEFAULT_FRACTAL_DOCUMENT.scene.bounds
@@ -467,8 +541,11 @@ export function FrmEditorWorkspace() {
         </div>
 
         <aside
-          className="min-h-[420px] rounded-xl border bg-black p-3"
+          className={`min-h-[420px] rounded-xl border bg-black p-3 ${
+            mobileMode === 'preview' ? 'block' : 'hidden lg:block'
+          }`}
           data-testid="frm-editor-preview"
+          id="frm-preview-panel"
         >
           <div className="mb-3 flex items-center justify-between gap-3 text-sm text-white">
             <span>{t('preview')}</span>
