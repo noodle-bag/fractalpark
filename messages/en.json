@@ -227,7 +227,7 @@
       "guides": {
         "eyebrow": "21 selected formulas",
         "title": "In-depth guide set",
-        "intro": "These formulas are the frozen guide set selected from FractalPark's published artwork. Four validation guides are now available; the remaining canonical views stay ready to explore while their editorial pages are completed.",
+        "intro": "These 21 formulas are the frozen guide set selected from FractalPark's published artwork. Every guide now pairs original bilingual context with the same canonical state used by its image and Explorer destination.",
         "read": "Read guide",
         "explore": "Explore canonical view"
       },
@@ -269,7 +269,8 @@
         "references": "References"
       },
       "parameterLabels": {
-        "scale": "Scale"
+        "scale": "Scale",
+        "memory": "Memory"
       },
       "remix": {
         "title": "Start from the canonical Document",
@@ -491,6 +492,9 @@
       "lambda": {
         "title": "Lambda Fractal",
         "summary": "A complex logistic map whose parameter controls the multiplication and folding of each orbit.",
+        "overview": "The Lambda formula brings the logistic map into the complex plane. FractalPark evaluates a centered product whose two factors pull in opposite directions, then lets the complex parameter control both growth and rotation, making the family especially responsive in Julia mode.",
+        "imageAlt": "Canonical FractalPark rendering of the Lambda fractal",
+        "imageCaption": "The approved canonical Lambda Document rendered by FractalPark.",
         "math": {
           "iteration": {
             "label": "Complex logistic iteration",
@@ -539,6 +543,9 @@
       "perpendicular-celtic": {
         "title": "Perpendicular Celtic",
         "summary": "A folded quadratic map that applies absolute values before and after squaring to create interlocking structure.",
+        "overview": "Perpendicular Celtic rearranges the folds of a quadratic orbit instead of merely rotating another formula. Folding the real input before squaring and the real output afterward repeatedly redirects the boundary into braided, interlocking forms.",
+        "imageAlt": "Canonical FractalPark rendering of the Perpendicular Celtic fractal",
+        "imageCaption": "The approved canonical Perpendicular Celtic Document rendered by FractalPark.",
         "math": {
           "iteration": {
             "label": "Perpendicular Celtic iteration",
@@ -560,6 +567,9 @@
       "quartic-julia": {
         "title": "Quartic Julia",
         "summary": "A fourth-degree Julia-family map in which each iteration raises z to the fourth power before adding c.",
+        "overview": "Quartic Julia fixes a complex constant and follows every starting point under a fourth-degree polynomial. Raising z to the fourth power multiplies angles more aggressively than the quadratic case, producing four-way branching and compact ornamental boundaries.",
+        "imageAlt": "Canonical FractalPark rendering of the Quartic Julia fractal",
+        "imageCaption": "The approved canonical Quartic Julia Document rendered by FractalPark.",
         "math": {
           "iteration": {
             "label": "Quartic iteration",
@@ -605,6 +615,9 @@
       "airship": {
         "title": "Airship",
         "summary": "A Burning Ship relative with an asymmetric coordinate fold that reshapes the quadratic orbit.",
+        "overview": "Airship keeps the escape-time rhythm of a folded quadratic map but couples its coordinates asymmetrically. The result is neither a rotated Burning Ship nor a view effect: its winged silhouettes come from how x and the folded y component enter the orbit itself.",
+        "imageAlt": "Canonical FractalPark rendering of the Airship fractal",
+        "imageCaption": "The approved canonical Airship Document rendered by FractalPark.",
         "math": {
           "iteration": {
             "label": "Airship fold",
@@ -650,6 +663,9 @@
       "newton-cosh": {
         "title": "Newton Cosh",
         "summary": "Newton's method applied to the transcendental equation cosh z equals one.",
+        "overview": "Newton Cosh turns a numerical root finder into a map of complex starting points. Because cosh is transcendental and its roots repeat along the imaginary direction, the page reveals a layered family of convergence basins rather than the finite root arrangement of a polynomial.",
+        "imageAlt": "Canonical FractalPark rendering of Newton's method for cosh z equals one",
+        "imageCaption": "The approved canonical Newton Cosh Document rendered by FractalPark.",
         "math": {
           "iteration": {
             "label": "Newton iteration for cosh",
@@ -671,6 +687,9 @@
       "magnet-type-1": {
         "title": "Magnet Type 1",
         "summary": "A rational map whose squared quotient produces dense magnetic-looking basins and orbit chains.",
+        "overview": "Magnet Type 1 evolves each point through a squared ratio whose numerator and denominator shift in opposite directions around c. Zeros and poles compete across the plane, concentrating the orbit into compact basins separated by bead-like chains.",
+        "imageAlt": "Canonical FractalPark rendering of the Magnet Type 1 fractal",
+        "imageCaption": "The approved canonical Magnet Type 1 Document rendered by FractalPark.",
         "math": {
           "iteration": {
             "label": "Type 1 rational iteration",
@@ -692,6 +711,9 @@
       "magnet-type-2": {
         "title": "Magnet Type 2",
         "summary": "A second rational Magnet map that places z squared in both parts of the defining quotient.",
+        "overview": "Magnet Type 2 inserts z squared inside the rational quotient before squaring the result again. That extra degree duplicates poles and folds angular structure, giving the map a more emphatic cross-like symmetry than Magnet Type 1.",
+        "imageAlt": "Canonical FractalPark rendering of the Magnet Type 2 fractal",
+        "imageCaption": "The approved canonical Magnet Type 2 Document rendered by FractalPark.",
         "math": {
           "iteration": {
             "label": "Type 2 rational iteration",
@@ -713,6 +735,9 @@
       "multi-phoenix": {
         "title": "Multi-Phoenix",
         "summary": "A memory-dependent quadratic recurrence that feeds the previous orbit value into the next step.",
+        "overview": "Multi-Phoenix is not determined by the current z value alone. It carries one step of orbit memory and feeds that previous value back through a complex coefficient, so changing the memory term reshapes both the direction and persistence of each feature.",
+        "imageAlt": "Canonical FractalPark rendering of the Multi-Phoenix fractal",
+        "imageCaption": "The approved canonical Multi-Phoenix Document rendered by FractalPark.",
         "math": {
           "iteration": {
             "label": "Phoenix recurrence",
@@ -737,6 +762,9 @@
       "cosh-mandelbrot": {
         "title": "Cosh Mandelbrot",
         "summary": "A transcendental escape-time map that replaces polynomial squaring with the complex hyperbolic cosine.",
+        "overview": "Cosh Mandelbrot explores bounded and escaping behavior when a transcendental function drives the orbit. Complex hyperbolic cosine combines exponential growth with imaginary periodicity, so the resulting parameter plane repeats in one direction while expanding rapidly in another.",
+        "imageAlt": "Canonical FractalPark rendering of the Cosh Mandelbrot fractal",
+        "imageCaption": "The approved canonical Cosh Mandelbrot Document rendered by FractalPark.",
         "math": {
           "iteration": {
             "label": "Hyperbolic cosine iteration",
@@ -758,6 +786,9 @@
       "buffalo": {
         "title": "Buffalo",
         "summary": "A folded quadratic variant that combines absolute coordinate squares with a signed cross term.",
+        "overview": "Buffalo separates the quadratic step into coordinate operations and folds selected components with absolute values. The retained sign in the cross term distinguishes it from other ship-like variants and produces broad, horned lobes with mirrored internal gates.",
+        "imageAlt": "Canonical FractalPark rendering of the Buffalo fractal",
+        "imageCaption": "The approved canonical Buffalo Document rendered by FractalPark.",
         "math": {
           "iteration": {
             "label": "Buffalo iteration",
@@ -779,6 +810,9 @@
       "circle-inversion": {
         "title": "Circle Inversion",
         "summary": "A reciprocal quadratic map that sends small values far away and large values back toward the origin.",
+        "overview": "Circle Inversion replaces polynomial expansion with a reciprocal quadratic step. Values near zero are thrown outward while large values are compressed, creating an orbit that continually exchanges near and far regions around a central pole.",
+        "imageAlt": "Canonical FractalPark rendering of the Circle Inversion fractal",
+        "imageCaption": "The approved canonical Circle Inversion Document rendered by FractalPark.",
         "math": {
           "iteration": {
             "label": "Reciprocal quadratic iteration",
@@ -800,6 +834,9 @@
       "inverted-lambda": {
         "title": "Inverted Lambda",
         "summary": "A hybrid map that adds a reciprocal quadratic term to the complex logistic recurrence.",
+        "overview": "Inverted Lambda combines the smooth multiplication of a complex logistic map with a rational correction. The reciprocal term introduces movable poles into the orbit, breaking rounded Lambda lobes into knots, seams, and abrupt changes of scale.",
+        "imageAlt": "Canonical FractalPark rendering of the Inverted Lambda fractal",
+        "imageCaption": "The approved canonical Inverted Lambda Document rendered by FractalPark.",
         "math": {
           "iteration": {
             "label": "Lambda-reciprocal iteration",
@@ -821,6 +858,9 @@
       "mcmullen-2-3": {
         "title": "McMullen 2–3 Map",
         "summary": "A rational map combining a quadratic term with an inverse cubic term.",
+        "overview": "The McMullen 2–3 map balances two opposing tendencies: z squared pushes large values outward, while an inverse cubic term dominates near zero. Their competition organizes the plane into nested rings, necklaces, and channels around a singular center.",
+        "imageAlt": "Canonical FractalPark rendering of the McMullen 2–3 map",
+        "imageCaption": "The approved canonical McMullen 2–3 Document rendered by FractalPark.",
         "math": {
           "iteration": {
             "label": "McMullen 2–3 iteration",
@@ -842,6 +882,9 @@
       "rational-map-1": {
         "title": "Rational Map 1",
         "summary": "A compact rational iteration that divides z squared by z plus c.",
+        "overview": "Rational Map 1 modifies quadratic growth with a denominator that moves with c. Its zero and parameter-dependent pole organize nearby trajectories into curved fans and channels, making small changes near the pole especially visible.",
+        "imageAlt": "Canonical FractalPark rendering of Rational Map 1",
+        "imageCaption": "The approved canonical Rational Map 1 Document rendered by FractalPark.",
         "math": {
           "iteration": {
             "label": "Rational iteration",
@@ -863,6 +906,9 @@
       "spider": {
         "title": "Spider",
         "summary": "A rational quadratic hybrid that adds c divided by z to the familiar squared orbit.",
+        "overview": "Spider adds a reciprocal pull to the outward growth of a quadratic orbit. Near zero the rational term has strong influence; farther away z squared dominates, stretching the boundary between those behaviors into long legs and web-like junctions.",
+        "imageAlt": "Canonical FractalPark rendering of the Spider fractal",
+        "imageCaption": "The approved canonical Spider Document rendered by FractalPark.",
         "math": {
           "iteration": {
             "label": "Spider iteration",
@@ -884,6 +930,9 @@
       "zaslavsky-map": {
         "title": "Zaslavsky Map",
         "summary": "A complex sinusoidal map that combines a nonlinear swirl with a fixed rotation and translation.",
+        "overview": "Zaslavsky Map bends each orbit with a sine perturbation, rotates the result by a fixed complex phase, and then adds c. Unlike a polynomial escape map, its character comes from the interaction of periodic bending and steady angular drift.",
+        "imageAlt": "Canonical FractalPark rendering of the Zaslavsky Map",
+        "imageCaption": "The approved canonical Zaslavsky Map Document rendered by FractalPark.",
         "math": {
           "iteration": {
             "label": "Sinusoidal rotation map",
@@ -905,6 +954,9 @@
       "zubieta": {
         "title": "Zubieta",
         "summary": "A quadratic map that folds both components of z squared plus c into the nonnegative quadrant.",
+        "overview": "Zubieta performs the familiar quadratic update and then folds the real and imaginary outputs independently. Repeating that component-wise absolute value continually reuses one quadrant, building strong reflection symmetries without reducing the value to a complex magnitude.",
+        "imageAlt": "Canonical FractalPark rendering of the Zubieta fractal",
+        "imageCaption": "The approved canonical Zubieta Document rendered by FractalPark.",
         "math": {
           "iteration": {
             "label": "Component-folded iteration",

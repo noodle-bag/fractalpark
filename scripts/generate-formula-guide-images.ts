@@ -132,7 +132,13 @@ async function main(): Promise<void> {
   }
 
   const force = hasArg('--force');
-  const outputs = PUBLISHED_FORMULA_GUIDES.map((entry) => ({
+  const missingOnly = hasArg('--missing-only');
+
+  if (force && missingOnly) {
+    throw new Error('Use either --force or --missing-only, not both.');
+  }
+
+  const allOutputs = PUBLISHED_FORMULA_GUIDES.map((entry) => ({
     entry,
     outputPath: path.join(
       projectRoot,
@@ -140,14 +146,25 @@ async function main(): Promise<void> {
       formulaGuideImagePath(entry)
     ),
   }));
-  const existing = outputs.filter(({ outputPath }) =>
+  const existing = allOutputs.filter(({ outputPath }) =>
     fs.existsSync(outputPath)
   );
 
   if (existing.length > 0 && !force) {
-    throw new Error(
-      `Refusing to overwrite ${existing.length} existing image(s). Re-run with --force after review.`
-    );
+    if (!missingOnly) {
+      throw new Error(
+        `Refusing to overwrite ${existing.length} existing image(s). Use --missing-only to preserve them, or --force after review.`
+      );
+    }
+  }
+
+  const outputs = missingOnly
+    ? allOutputs.filter(({ outputPath }) => !fs.existsSync(outputPath))
+    : allOutputs;
+
+  if (outputs.length === 0) {
+    console.log('[formula-images] No missing formula guide images.');
+    return;
   }
 
   const stopServer = await ensureServer();

@@ -21,8 +21,11 @@ test.describe('Formula Atlas', () => {
     ).toHaveCount(1);
     await expect(
       page.locator(
-        '[data-guide-formula-id="lambda"] a[href^="/en/explore?"]'
+        '[data-guide-formula-id="lambda"] a[href="/en/formulas/lambda"]'
       )
+    ).toHaveCount(1);
+    await expect(
+      page.locator('[data-formula-id="tricorn"] a[href^="/en/explore?"]')
     ).toHaveCount(1);
     await expect(page.locator('section[id^="family-"]')).toHaveCount(7);
     await expect(

@@ -1,37 +1,23 @@
 import {
-  getFormulaContentById,
   getFormulaContentBySlug,
+  FORMULA_CONTENT_MANIFEST,
   type FormulaContentEntry,
 } from './formula-manifest';
 
-export const FORMULA_GUIDE_VALIDATION_IDS = [
-  'mandelbrot',
-  'burningShip',
-  'newton3',
-  'mandelbox',
-] as const;
+export const PUBLISHED_FORMULA_GUIDES: readonly FormulaContentEntry[] =
+  FORMULA_CONTENT_MANIFEST;
 
-export type PublishedFormulaGuideId =
-  (typeof FORMULA_GUIDE_VALIDATION_IDS)[number];
-
-const publishedFormulaGuideIds = new Set<string>(
-  FORMULA_GUIDE_VALIDATION_IDS
+export const PUBLISHED_FORMULA_GUIDE_IDS = PUBLISHED_FORMULA_GUIDES.map(
+  ({ formulaId }) => formulaId
 );
 
-export const PUBLISHED_FORMULA_GUIDES: readonly FormulaContentEntry[] =
-  FORMULA_GUIDE_VALIDATION_IDS.map((formulaId) => {
-    const entry = getFormulaContentById(formulaId);
-
-    if (!entry) {
-      throw new Error(`Missing formula guide content: ${formulaId}`);
-    }
-
-    return entry;
-  });
+const publishedFormulaGuideIds = new Set<string>(
+  PUBLISHED_FORMULA_GUIDE_IDS
+);
 
 export function isPublishedFormulaGuideId(
   formulaId: string
-): formulaId is PublishedFormulaGuideId {
+): boolean {
   return publishedFormulaGuideIds.has(formulaId);
 }
 

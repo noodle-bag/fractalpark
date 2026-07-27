@@ -227,7 +227,7 @@
       "guides": {
         "eyebrow": "21 个精选公式",
         "title": "深度 Guide 集合",
-        "intro": "这些公式是从 FractalPark 已发布作品中冻结的 Guide 集合。目前已发布 4 个验证指南；其余公式在编辑页面完成前仍可直接打开 canonical 视图。",
+        "intro": "这 21 个公式是从 FractalPark 已发布作品中冻结的 Guide 集合。每个指南都以原创双语内容说明公式，并与图片及探索器入口共用同一 canonical 状态。",
         "read": "阅读指南",
         "explore": "探索 canonical 视图"
       },
@@ -269,7 +269,8 @@
         "references": "参考资料"
       },
       "parameterLabels": {
-        "scale": "缩放"
+        "scale": "缩放",
+        "memory": "记忆系数"
       },
       "remix": {
         "title": "从 canonical Document 开始",
@@ -491,6 +492,9 @@
       "lambda": {
         "title": "兰姆达分形",
         "summary": "一种复数 Logistic 映射，复参数控制轨道每一步的放大、旋转与折叠。",
+        "overview": "兰姆达公式把 Logistic 映射带入复平面。FractalPark 计算一对方向相反的中心化因子，再由复参数同时控制增长和旋转；因此这一族在 Julia 模式下对参数变化尤其敏感。",
+        "imageAlt": "FractalPark 的兰姆达分形 canonical 渲染图",
+        "imageCaption": "FractalPark 根据已确认的 canonical 兰姆达 Document 渲染。",
         "math": {
           "iteration": {
             "label": "复 Logistic 迭代",
@@ -539,6 +543,9 @@
       "perpendicular-celtic": {
         "title": "垂直凯尔特",
         "summary": "一种折叠二次映射，在平方前后使用绝对值，形成相互咬合的结构。",
+        "overview": "垂直凯尔特重新安排了二次轨道中的折叠步骤，并非把另一种公式简单旋转。实部在平方前先折叠，平方后的实部再折叠一次，边界因此不断转向并编织成相扣纹样。",
+        "imageAlt": "FractalPark 的垂直凯尔特分形 canonical 渲染图",
+        "imageCaption": "FractalPark 根据已确认的 canonical 垂直凯尔特 Document 渲染。",
         "math": {
           "iteration": {
             "label": "垂直凯尔特迭代",
@@ -560,6 +567,9 @@
       "quartic-julia": {
         "title": "四次 Julia",
         "summary": "一种四次 Julia 族映射，每一步先把 z 提升到四次方，再加上 c。",
+        "overview": "四次 Julia 固定一个复常数，观察不同起点在四次多项式下的轨道。与二次情形相比，四次幂更强地放大角度关系，因而形成四向分枝和紧凑的装饰性边界。",
+        "imageAlt": "FractalPark 的四次 Julia 分形 canonical 渲染图",
+        "imageCaption": "FractalPark 根据已确认的 canonical 四次 Julia Document 渲染。",
         "math": {
           "iteration": {
             "label": "四次迭代",
@@ -605,6 +615,9 @@
       "airship": {
         "title": "飞艇",
         "summary": "燃烧船的近亲，通过不对称坐标折叠重塑二次轨道。",
+        "overview": "飞艇保留折叠二次映射的逃逸节奏，却以不对称方式耦合坐标。它不是旋转后的燃烧船，也不是视图特效；翼状轮廓直接来自 x 与折叠后的 y 如何进入轨道。",
+        "imageAlt": "FractalPark 的飞艇分形 canonical 渲染图",
+        "imageCaption": "FractalPark 根据已确认的 canonical 飞艇 Document 渲染。",
         "math": {
           "iteration": {
             "label": "飞艇折叠",
@@ -650,6 +663,9 @@
       "newton-cosh": {
         "title": "双曲余弦牛顿分形",
         "summary": "把牛顿法应用于复方程 cosh z 等于一。",
+        "overview": "双曲余弦牛顿分形把数值求根过程变成复平面起点的地图。由于 cosh 是超越函数，且其根沿虚轴方向周期重复，画面呈现层叠的收敛盆地，而不是多项式有限根的排列。",
+        "imageAlt": "FractalPark 对 cosh z 等于一应用牛顿法的 canonical 渲染图",
+        "imageCaption": "FractalPark 根据已确认的 canonical 双曲余弦牛顿 Document 渲染。",
         "math": {
           "iteration": {
             "label": "cosh 牛顿迭代",
@@ -671,6 +687,9 @@
       "magnet-type-1": {
         "title": "磁石类型 1",
         "summary": "一种有理映射，商的平方形成致密的磁场状盆地和轨道链。",
+        "overview": "磁石类型 1 让每个点通过一个平方后的商演化，分子与分母围绕 c 向相反方向偏移。零点与极点在平面上竞争，把轨道聚集成紧凑盆地，并以珠链状边界分隔。",
+        "imageAlt": "FractalPark 的磁石类型 1 分形 canonical 渲染图",
+        "imageCaption": "FractalPark 根据已确认的 canonical 磁石类型 1 Document 渲染。",
         "math": {
           "iteration": {
             "label": "类型 1 有理迭代",
@@ -692,6 +711,9 @@
       "magnet-type-2": {
         "title": "磁石类型 2",
         "summary": "第二种磁石有理映射，在定义商的分子和分母中都使用 z 的平方。",
+        "overview": "磁石类型 2 先把 z 平方放入有理商，再将商整体平方。额外的次数复制了极点并折叠角向结构，因此比磁石类型 1 呈现更强烈的十字对称。",
+        "imageAlt": "FractalPark 的磁石类型 2 分形 canonical 渲染图",
+        "imageCaption": "FractalPark 根据已确认的 canonical 磁石类型 2 Document 渲染。",
         "math": {
           "iteration": {
             "label": "类型 2 有理迭代",
@@ -713,6 +735,9 @@
       "multi-phoenix": {
         "title": "多重凤凰",
         "summary": "一种带记忆的二次递推，把上一个轨道值反馈到下一步。",
+        "overview": "多重凤凰不只由当前 z 决定。它保留一步轨道记忆，并通过复系数把前一个值反馈回来；调整记忆项会同时改变图形的方向性与结构延续程度。",
+        "imageAlt": "FractalPark 的多重凤凰分形 canonical 渲染图",
+        "imageCaption": "FractalPark 根据已确认的 canonical 多重凤凰 Document 渲染。",
         "math": {
           "iteration": {
             "label": "凤凰递推",
@@ -737,6 +762,9 @@
       "cosh-mandelbrot": {
         "title": "双曲余弦曼德布罗特",
         "summary": "一种超越逃逸时间映射，以复双曲余弦代替多项式平方。",
+        "overview": "双曲余弦曼德布罗特研究由超越函数驱动的有界与逃逸行为。复双曲余弦兼有指数增长和虚方向周期性，因此参数平面会在一个方向重复，同时在另一个方向迅速扩张。",
+        "imageAlt": "FractalPark 的双曲余弦曼德布罗特 canonical 渲染图",
+        "imageCaption": "FractalPark 根据已确认的 canonical 双曲余弦曼德布罗特 Document 渲染。",
         "math": {
           "iteration": {
             "label": "双曲余弦迭代",
@@ -758,6 +786,9 @@
       "buffalo": {
         "title": "野牛",
         "summary": "一种折叠二次变体，把坐标绝对值的平方与带符号交叉项结合。",
+        "overview": "野牛把二次步骤拆成坐标运算，并用绝对值折叠其中部分分量。交叉项保留的符号使它区别于其他船形变体，形成宽阔的角状瓣体和镜像内门。",
+        "imageAlt": "FractalPark 的野牛分形 canonical 渲染图",
+        "imageCaption": "FractalPark 根据已确认的 canonical 野牛 Document 渲染。",
         "math": {
           "iteration": {
             "label": "野牛迭代",
@@ -779,6 +810,9 @@
       "circle-inversion": {
         "title": "圆反演",
         "summary": "一种倒数二次映射，把小数值推向远处，也把大数值拉回原点附近。",
+        "overview": "圆反演用倒数二次步骤取代多项式扩张。靠近零的值被推向远处，较大的值又被压回中心附近，轨道因此围绕中心极点不断交换近区与远区。",
+        "imageAlt": "FractalPark 的圆反演分形 canonical 渲染图",
+        "imageCaption": "FractalPark 根据已确认的 canonical 圆反演 Document 渲染。",
         "math": {
           "iteration": {
             "label": "倒数二次迭代",
@@ -800,6 +834,9 @@
       "inverted-lambda": {
         "title": "反演兰姆达",
         "summary": "一种混合映射，在复 Logistic 递推中加入倒数二次项。",
+        "overview": "反演兰姆达把复 Logistic 映射的平滑乘法与有理修正结合。倒数项把可移动极点引入轨道，使圆润的兰姆达瓣体断裂成结扣、接缝和突变尺度。",
+        "imageAlt": "FractalPark 的反演兰姆达分形 canonical 渲染图",
+        "imageCaption": "FractalPark 根据已确认的 canonical 反演兰姆达 Document 渲染。",
         "math": {
           "iteration": {
             "label": "兰姆达倒数迭代",
@@ -821,6 +858,9 @@
       "mcmullen-2-3": {
         "title": "McMullen 2–3 映射",
         "summary": "一种把二次项与三次倒数项结合的有理映射。",
+        "overview": "McMullen 2–3 映射平衡两种相反趋势：z 的平方把大数值向外推，三次倒数项则在零附近占主导。两者竞争，使平面围绕中心奇点排列出嵌套圆环、项链和通道。",
+        "imageAlt": "FractalPark 的 McMullen 2–3 映射 canonical 渲染图",
+        "imageCaption": "FractalPark 根据已确认的 canonical McMullen 2–3 Document 渲染。",
         "math": {
           "iteration": {
             "label": "McMullen 2–3 迭代",
@@ -842,6 +882,9 @@
       "rational-map-1": {
         "title": "有理映射 1",
         "summary": "一种紧凑的有理迭代，以 z 平方除以 z 加 c。",
+        "overview": "有理映射 1 用一个随 c 移动的分母修正二次增长。它的零点和参数相关极点把附近轨道组织成弯曲扇面与通道，因此极点周围的细小变化格外清晰。",
+        "imageAlt": "FractalPark 的有理映射 1 canonical 渲染图",
+        "imageCaption": "FractalPark 根据已确认的 canonical 有理映射 1 Document 渲染。",
         "math": {
           "iteration": {
             "label": "有理迭代",
@@ -863,6 +906,9 @@
       "spider": {
         "title": "蜘蛛",
         "summary": "一种有理二次混合映射，在熟悉的平方轨道上加上 c 除以 z。",
+        "overview": "蜘蛛在二次轨道的向外增长中加入倒数拉力。靠近零时有理项影响强烈，远处则由 z 的平方主导；两种行为之间的边界被拉成长腿与网状节点。",
+        "imageAlt": "FractalPark 的蜘蛛分形 canonical 渲染图",
+        "imageCaption": "FractalPark 根据已确认的 canonical 蜘蛛 Document 渲染。",
         "math": {
           "iteration": {
             "label": "蜘蛛迭代",
@@ -884,6 +930,9 @@
       "zaslavsky-map": {
         "title": "Zaslavsky 映射",
         "summary": "一种复正弦映射，把非线性涡旋、固定旋转和平移组合起来。",
+        "overview": "Zaslavsky 映射先用正弦扰动弯折轨道，再以固定复相位旋转，最后加上 c。它不同于多项式逃逸映射，主要特征来自周期弯折与持续角向漂移的相互作用。",
+        "imageAlt": "FractalPark 的 Zaslavsky 映射 canonical 渲染图",
+        "imageCaption": "FractalPark 根据已确认的 canonical Zaslavsky 映射 Document 渲染。",
         "math": {
           "iteration": {
             "label": "正弦旋转映射",
@@ -905,6 +954,9 @@
       "zubieta": {
         "title": "Zubieta",
         "summary": "一种二次映射，把 z 平方加 c 的两个分量都折叠到非负象限。",
+        "overview": "Zubieta 先完成熟悉的二次更新，再分别折叠输出的实部和虚部。逐分量绝对值反复复用同一象限，形成强烈的反射对称，同时又不会把复数值缩成单一模长。",
+        "imageAlt": "FractalPark 的 Zubieta 分形 canonical 渲染图",
+        "imageCaption": "FractalPark 根据已确认的 canonical Zubieta Document 渲染。",
         "math": {
           "iteration": {
             "label": "分量折叠迭代",

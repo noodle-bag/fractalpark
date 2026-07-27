@@ -1,10 +1,27 @@
 import { expect, test } from '@playwright/test';
 
-const validationSlugs = [
+const publishedSlugs = [
   'mandelbrot',
-  'burning-ship',
-  'newton-3',
+  'lambda',
   'mandelbox',
+  'perpendicular-celtic',
+  'quartic-julia',
+  'burning-ship',
+  'airship',
+  'newton-3',
+  'newton-cosh',
+  'magnet-type-1',
+  'magnet-type-2',
+  'multi-phoenix',
+  'cosh-mandelbrot',
+  'buffalo',
+  'circle-inversion',
+  'inverted-lambda',
+  'mcmullen-2-3',
+  'rational-map-1',
+  'spider',
+  'zaslavsky-map',
+  'zubieta',
 ] as const;
 
 test.describe('Formula guides', () => {
@@ -53,10 +70,10 @@ test.describe('Formula guides', () => {
     await context.close();
   });
 
-  test('publishes all four validation routes and keeps Chinese content localized', async ({
+  test('publishes all 21 guide routes and keeps Chinese content localized', async ({
     page,
   }) => {
-    for (const slug of validationSlugs) {
+    for (const slug of publishedSlugs) {
       const response = await page.goto(`/en/formulas/${slug}`);
       expect(response?.status(), slug).toBe(200);
     }
@@ -73,17 +90,15 @@ test.describe('Formula guides', () => {
     ).toHaveAttribute('href', /^\/zh\/explore\?/);
   });
 
-  test('does not publish the remaining guide identities yet', async ({
-    request,
-  }) => {
-    const response = await request.get('/en/formulas/lambda');
+  test('does not create a thin page for a non-guide formula', async ({ request }) => {
+    const response = await request.get('/en/formulas/tricorn');
 
     expect(response.status()).toBe(404);
   });
 
   test('keeps the guide layout within a mobile viewport', async ({ page }) => {
     await page.setViewportSize({ width: 390, height: 844 });
-    await page.goto('/en/formulas/mandelbox');
+    await page.goto('/en/formulas/mcmullen-2-3');
 
     const overflow = await page.evaluate(
       () => document.documentElement.scrollWidth - window.innerWidth

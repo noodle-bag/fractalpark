@@ -3,7 +3,7 @@ import {
   buildFormulaAtlas,
   FORMULA_FAMILY_ORDER,
 } from '@/content/formula-atlas';
-import { FORMULA_GUIDE_VALIDATION_IDS } from '@/content/formula-guides';
+import { PUBLISHED_FORMULA_GUIDE_IDS } from '@/content/formula-guides';
 import { decodeParams } from '@/lib/url-params';
 
 describe('Formula Atlas projection', () => {
@@ -33,14 +33,14 @@ describe('Formula Atlas projection', () => {
     }
   });
 
-  it('routes only the four published validation guides to editorial pages', () => {
+  it('routes all 21 published guides to editorial pages', () => {
     const atlas = buildFormulaAtlas('en');
     const publishedGuides = atlas.guides.filter(({ guideHref }) => guideHref);
 
     expect(publishedGuides.map(({ metadata }) => metadata.id)).toEqual(
-      expect.arrayContaining([...FORMULA_GUIDE_VALIDATION_IDS])
+      expect.arrayContaining(PUBLISHED_FORMULA_GUIDE_IDS)
     );
-    expect(publishedGuides).toHaveLength(4);
+    expect(publishedGuides).toHaveLength(21);
 
     for (const entry of atlas.formulas) {
       expect(entry.destinationHref).toBe(
