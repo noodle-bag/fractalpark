@@ -3,6 +3,7 @@
     "nav": {
       "home": "首页",
       "gallery": "画廊",
+      "formulas": "公式",
       "explore": "探索",
       "about": "关于"
     },
@@ -11,6 +12,7 @@
       "zh": "中文"
     },
     "footer": {
+      "formulas": "公式图鉴",
       "copyright": "© 2026 FractalPark. 基于 MIT 许可证发布。",
       "contact": "联系方式: "
     }
@@ -32,6 +34,7 @@
     "cta": {
       "explore": "开始探索",
       "gallery": "浏览画廊",
+      "formulas": "浏览公式图鉴",
       "github": "查看 GitHub"
     },
     "fullscreen": "全屏",
@@ -136,6 +139,7 @@
       "links": {
         "explore": "打开分形探索器",
         "gallery": "浏览分形画廊",
+        "formulas": "浏览公式图鉴",
         "about": "关于 FractalPark"
       }
     }
@@ -168,6 +172,79 @@
     }
   },
   "formulas": {
+    "index": {
+      "breadcrumbLabel": "面包屑导航",
+      "breadcrumbHome": "首页",
+      "breadcrumb": "公式",
+      "eyebrow": "公式图鉴",
+      "title": "公式图鉴",
+      "intro": "浏览 FractalPark 横跨七个族的全部 94 个内置公式。你可以从 canonical 视图开始探索，查看 21 个深度 Guide 档案，或通过 FRM 学习编写自己的公式。",
+      "stats": {
+        "formulas": "公式",
+        "families": "公式族",
+        "guides": "Guide 档案"
+      },
+      "capabilities": {
+        "eyebrow": "为探索而建",
+        "title": "一份目录，多种创作路径",
+        "intro": "每个条目都来自交互式探索器共用的公式目录与已确认默认状态。",
+        "items": {
+          "realtime": {
+            "title": "实时 WebGL",
+            "description": "在浏览器中直接打开任意公式，使用 GPU 加速渲染探索其边界细节。"
+          },
+          "canonical": {
+            "title": "Canonical 起始视图",
+            "description": "每个目标链接都由权威公式 Document 生成，包含视角、参数和着色状态。"
+          },
+          "server": {
+            "title": "服务端可读目录",
+            "description": "七个公式族与 94 个目标链接全部存在于初始 HTML 中，不依赖客户端搜索或筛选。"
+          }
+        }
+      },
+      "families": {
+        "eyebrow": "七个公式族",
+        "title": "选择一种数学性格",
+        "intro": "公式族按照迭代结构与视觉行为组织。各族数量直接来自当前内置公式目录。",
+        "descriptions": {
+          "classic": "二次、多项式、Julia、Multicorn 及相关逃逸时间基础公式。",
+          "burning-ship": "使用绝对值折叠产生锐利船体、脊线与火焰状边界的映射。",
+          "newton": "收敛到不同根并把复平面划分为彩色吸引域的求根系统。",
+          "magnet": "包含极点、稠密边界与磁性吸引域结构的有理映射。",
+          "phoenix": "依赖上一轮轨道状态、以记忆项塑造下一步迭代的公式。",
+          "transcendental": "指数、三角、双曲与对数复映射。",
+          "exotic": "倒数、有理、圆反演、幂塔及其他混合构造。"
+        }
+      },
+      "frm": {
+        "eyebrow": "创作自己的公式",
+        "title": "使用 FRM 学习并编写公式",
+        "description": "FRM 是 FractalPark 经过测试的文本创作路径。先阅读兼容指南和通过编译验证的示例，再在独立编辑器中本地编写与预览公式。",
+        "learn": "学习 FRM",
+        "openEditor": "打开公式编辑器"
+      },
+      "guides": {
+        "eyebrow": "21 个精选公式",
+        "title": "深度 Guide 集合",
+        "intro": "这些公式是从 FractalPark 已发布作品中冻结的 Guide 集合。现在即可探索其 canonical 视图，后续内容提交会交付独立编辑页面。",
+        "open": "探索 canonical 视图"
+      },
+      "directory": {
+        "eyebrow": "完整目录",
+        "title": "全部 94 个公式",
+        "intro": "完整目录按公式族分组并由服务端输出。每个链接都以当前语言打开公式的 canonical 探索器状态。",
+        "familyCount": "{count} 个公式",
+        "backToFamilies": "返回公式族概览",
+        "guideBadge": "Guide"
+      },
+      "cta": {
+        "title": "从内置公式开始，或编写自己的公式",
+        "description": "使用探索器体验内置公式；当你想亲自定义迭代时，可以进入本地 FRM 编辑器。",
+        "explore": "打开探索器",
+        "editor": "打开公式编辑器"
+      }
+    },
     "frmGuide": {
       "eyebrow": "FRM 公式语言",
       "title": "用 FRM 编写分形公式",
@@ -1456,6 +1533,11 @@
     "about": {
       "title": "关于 | 开源浏览器分形生成器 - 分形公园 FractalPark",
       "description": "了解分形公园 FractalPark: 一个基于 MIT 许可证开源、可在浏览器中直接使用的 WebGL 分形生成器, 支持 94 个公式、自定义调色板和 PNG 导出.核心技术: Fractint .frm 公式编辑器, AST 到 GLSL 转译流水线, 插件化着色器架构, 完全免费开源无需安装, 支持中英文双语界面."
+    },
+    "formulaAtlas": {
+      "title": "公式图鉴 | 94 个分形公式 - 分形公园 FractalPark",
+      "description": "浏览 FractalPark 横跨七个公式族的全部 94 个公式、21 个精选 Guide 档案与 FRM 创作入口，并在 WebGL 探索器中打开 canonical 公式状态。",
+      "imageAlt": "包含 94 个内置公式的 FractalPark 公式图鉴"
     },
     "frmEditor": {
       "title": "FRM 编辑器 | FractalPark",

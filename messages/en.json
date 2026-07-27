@@ -3,6 +3,7 @@
     "nav": {
       "home": "Home",
       "gallery": "Gallery",
+      "formulas": "Formulas",
       "explore": "Explore",
       "about": "About"
     },
@@ -11,6 +12,7 @@
       "zh": "Chinese"
     },
     "footer": {
+      "formulas": "Formula Atlas",
       "copyright": "© 2026 FractalPark. Released under the MIT License.",
       "contact": "Contact:"
     }
@@ -32,6 +34,7 @@
     "cta": {
       "explore": "Start Exploring",
       "gallery": "View Gallery",
+      "formulas": "Browse Formula Atlas",
       "github": "View on GitHub"
     },
     "fullscreen": "Fullscreen",
@@ -136,6 +139,7 @@
       "links": {
         "explore": "Open the Fractal Explorer",
         "gallery": "Browse the Gallery",
+        "formulas": "Browse the Formula Atlas",
         "about": "About FractalPark"
       }
     }
@@ -168,6 +172,79 @@
     }
   },
   "formulas": {
+    "index": {
+      "breadcrumbLabel": "Breadcrumb",
+      "breadcrumbHome": "Home",
+      "breadcrumb": "Formulas",
+      "eyebrow": "Formula Atlas",
+      "title": "Formula Atlas",
+      "intro": "Explore FractalPark's complete catalog of 94 built-in formulas across seven families. Start with a canonical view, follow one of 21 in-depth guide profiles, or learn to write your own formula with FRM.",
+      "stats": {
+        "formulas": "Formulas",
+        "families": "Families",
+        "guides": "Guide profiles"
+      },
+      "capabilities": {
+        "eyebrow": "Built for exploration",
+        "title": "One catalog, many ways to create",
+        "intro": "Every entry is derived from the same formula catalog and approved default state used by the interactive Explorer.",
+        "items": {
+          "realtime": {
+            "title": "Real-time WebGL",
+            "description": "Open any formula directly in the browser and explore its boundary with GPU-accelerated rendering."
+          },
+          "canonical": {
+            "title": "Canonical starting views",
+            "description": "Each destination is generated from the authoritative formula Document, including its view, parameters, and coloring."
+          },
+          "server": {
+            "title": "Server-readable directory",
+            "description": "All seven families and 94 destinations remain available in the initial HTML without client-side search or filtering."
+          }
+        }
+      },
+      "families": {
+        "eyebrow": "Seven families",
+        "title": "Choose a mathematical character",
+        "intro": "Families organize formulas by their iteration structure and visual behavior. Counts come directly from the current built-in catalog.",
+        "descriptions": {
+          "classic": "Quadratic, polynomial, Julia, multicorn, and related escape-time foundations.",
+          "burning-ship": "Folded absolute-value maps with sharp hulls, ridges, and flame-like boundaries.",
+          "newton": "Convergent root-finding systems that divide the plane into colored basins.",
+          "magnet": "Rational maps with poles, dense boundaries, and magnetic basin structures.",
+          "phoenix": "Memory-dependent iterations whose previous orbit state shapes the next step.",
+          "transcendental": "Exponential, trigonometric, hyperbolic, and logarithmic complex maps.",
+          "exotic": "Reciprocal, rational, inversion, tetration, and other hybrid constructions."
+        }
+      },
+      "frm": {
+        "eyebrow": "Create your own",
+        "title": "Learn and write formulas with FRM",
+        "description": "FRM is FractalPark's tested text-based authoring path. Read the compatibility guide, study compile-checked examples, then write and preview a formula locally in the standalone editor.",
+        "learn": "Learn FRM",
+        "openEditor": "Open Formula Editor"
+      },
+      "guides": {
+        "eyebrow": "21 selected formulas",
+        "title": "In-depth guide set",
+        "intro": "These formulas are the frozen guide set selected from FractalPark's published artwork. Their canonical views are ready to explore while the dedicated editorial pages are delivered in the next content steps.",
+        "open": "Explore canonical view"
+      },
+      "directory": {
+        "eyebrow": "Complete catalog",
+        "title": "All 94 formulas",
+        "intro": "The full directory is grouped by family and rendered on the server. Every link opens the formula with its canonical localized Explorer state.",
+        "familyCount": "{count, plural, one {# formula} other {# formulas}}",
+        "backToFamilies": "Family overview",
+        "guideBadge": "Guide"
+      },
+      "cta": {
+        "title": "Start from a formula or write your own",
+        "description": "Use the Explorer for built-in formulas, or open the local FRM Editor when you want to define the iteration yourself.",
+        "explore": "Open Explorer",
+        "editor": "Open Formula Editor"
+      }
+    },
     "frmGuide": {
       "eyebrow": "FRM formula language",
       "title": "Write Fractals with FRM",
@@ -1456,6 +1533,11 @@
     "about": {
       "title": "About | Open Source Browser Fractal Generator - FractalPark",
       "description": "Learn about FractalPark, an open-source MIT-licensed fractal generator that runs in the browser with WebGL, 94 formulas, custom palettes, and PNG export."
+    },
+    "formulaAtlas": {
+      "title": "Formula Atlas | 94 Fractal Formulas - FractalPark",
+      "description": "Browse all 94 FractalPark formulas across seven families, explore 21 selected guide profiles, learn FRM, and open canonical formula states in the WebGL Explorer.",
+      "imageAlt": "FractalPark Formula Atlas with 94 built-in formulas"
     },
     "frmEditor": {
       "title": "FRM Editor | FractalPark",

@@ -130,6 +130,9 @@ export default async function HomeSeo({
           <Link href="/gallery">{t('links.gallery')}</Link>
         </li>
         <li>
+          <Link href="/formulas">{t('links.formulas')}</Link>
+        </li>
+        <li>
           <Link href="/about">{t('links.about')}</Link>
         </li>
       </ul>

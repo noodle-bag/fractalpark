@@ -254,6 +254,14 @@ function FractalSlideshow({
                 size="lg"
                 className="text-lg px-8 py-6 rounded-full bg-white/10 border-white/20 text-white hover:bg-white/20"
               >
+                <Link href="/formulas">{t('cta.formulas')}</Link>
+              </Button>
+              <Button
+                asChild
+                variant="outline"
+                size="lg"
+                className="text-lg px-8 py-6 rounded-full bg-white/10 border-white/20 text-white hover:bg-white/20"
+              >
                 <a href={SITE.repositoryUrl} target="_blank" rel="noopener noreferrer">
                   {t('cta.github')}
                 </a>

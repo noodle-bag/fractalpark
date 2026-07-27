@@ -34,9 +34,14 @@ export default function Navbar() {
   const links = [
     { href: '/', label: t('home') },
     { href: '/gallery', label: t('gallery') },
+    { href: '/formulas', label: t('formulas') },
     { href: '/explore', label: t('explore') },
     { href: '/about', label: t('about') },
   ];
+  const isActive = (href: string) =>
+    href === '/'
+      ? pathname === href
+      : pathname === href || pathname.startsWith(`${href}/`);
 
   return (
     <header
@@ -67,10 +72,13 @@ export default function Navbar() {
                     className={cn(
                       navigationMenuTriggerStyle(),
                       navbarTransparent && 'bg-transparent text-white hover:bg-white/10 hover:text-white',
-                      pathname === link.href && !navbarTransparent && 'bg-accent text-accent-foreground'
+                      isActive(link.href) && !navbarTransparent && 'bg-accent text-accent-foreground'
                     )}
                   >
-                    <Link href={link.href}>
+                    <Link
+                      aria-current={isActive(link.href) ? 'page' : undefined}
+                      href={link.href}
+                    >
                       {link.label}
                     </Link>
                   </NavigationMenuLink>
@@ -109,10 +117,11 @@ export default function Navbar() {
                     href={link.href}
                     className={cn(
                       'text-lg font-medium transition-colors hover:text-primary pl-2',
-                      pathname === link.href
+                      isActive(link.href)
                         ? 'text-primary'
                         : 'text-muted-foreground'
                     )}
+                    aria-current={isActive(link.href) ? 'page' : undefined}
                     onClick={() => setIsOpen(false)}
                   >
                     {link.label}
