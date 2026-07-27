@@ -4,7 +4,7 @@ import { SITE } from '@/lib/site';
 
 export default function sitemap(): MetadataRoute.Sitemap {
   const locales = routing.locales;
-  const pages = ['', '/explore', '/gallery', '/about'];
+  const pages = ['', '/explore', '/gallery', '/about', '/formulas/editor'];
 
   const entries: MetadataRoute.Sitemap = [];
 

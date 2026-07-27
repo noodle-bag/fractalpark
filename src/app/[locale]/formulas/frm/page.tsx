@@ -325,7 +325,15 @@ export default async function FrmGuidePage({
                       {exampleT(`${tutorial.example.nameKey}`)}
                     </h3>
                   </div>
-                  <Badge variant="secondary">{tutorial.id}</Badge>
+                  <div className="flex flex-wrap items-center gap-2">
+                    <Badge variant="secondary">{tutorial.id}</Badge>
+                    <Button asChild size="sm" variant="outline">
+                      <Link href={tutorial.editorPath}>
+                        {t('sections.tutorials.openInEditor')}
+                        <ArrowRight className="ml-1 size-3" />
+                      </Link>
+                    </Button>
+                  </div>
                 </div>
                 <p className="leading-7 text-muted-foreground">
                   {exampleT(`${tutorial.example.descriptionKey}`)}

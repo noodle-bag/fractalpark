@@ -307,12 +307,13 @@
           "title": "Progressive Tutorials",
           "intro": "These examples advance from the smallest quadratic formula to parameters and stateful feedback. Each source block is taken directly from the shared example registry and compiled during tests.",
           "lesson": "Lesson {number}",
+          "openInEditor": "Open in FRM Editor",
           "goals": {
             "starter-brot": "Focus: the declaration and the init / loop / bailout structure. Change the exponent or escape threshold only after this version compiles.",
             "parameter-drift": "Focus: p1 and p2 parameter slots, a complex literal, and cabs(z) as an explicit magnitude function.",
             "orbit-echo": "Focus: zPrev as the previous orbit state. Feedback adds memory without introducing a second manually managed state variable."
           },
-          "editorNote": "The standalone FRM Editor will open these same examples by stable ID in the next implementation unit; formula source will not be embedded in the URL."
+          "editorNote": "The FRM Editor opens these same compile-checked examples by stable ID. Formula source remains local and is never embedded in the URL."
         },
         "diagnostics": {
           "title": "Errors and Diagnostics",
@@ -342,7 +343,7 @@
           "exploreTitle": "See the renderer in context",
           "exploreBody": "Open Explore to compare built-in formula behavior, coloring, transforms, animation, and export controls before writing a custom formula.",
           "exploreCta": "Open Explore",
-          "editorNote": "The dedicated FRM Editor is planned as the focused authoring workspace for compiling, previewing, importing, and saving local formulas.",
+          "editorNote": "Use the dedicated FRM Editor to compile, preview, import, download, and save local formulas before handing one off to Explore.",
           "referencesTitle": "References",
           "referencesIntro": "Historical context and implementation details are linked separately so the guide can distinguish the Fractint lineage from FractalPark's current compiler contract.",
           "references": {
@@ -1031,6 +1032,7 @@
       },
       "customLibrary": {
         "title": "Custom Formulas",
+        "openStandaloneEditor": "FRM Editor",
         "new": "New",
         "loading": "Loading...",
         "empty": "No custom formulas yet",
@@ -1038,6 +1040,9 @@
         "renameConfirm": "Confirm",
         "deleteConfirm": "Delete this formula?",
         "maxReached": "Maximum formula limit reached ({count})",
+        "formulaNotFound": "That local formula no longer exists.",
+        "storageUnavailable": "The local formula library could not be updated.",
+        "compileFailed": "The formula could not be compiled.",
         "examplesTitle": "Start from Examples",
         "examplesDescription": "Load a working example first, then reshape it into your own formula in the editor."
       },
@@ -1387,6 +1392,47 @@
       "noScriptNotice": "The interactive fractal explorer requires JavaScript and WebGL. The content above describes what the tool does; please enable JavaScript to use it."
     }
   },
+  "frmEditor": {
+    "title": "FRM Editor",
+    "description": "Write, compile, preview, and save FRM formulas locally in your browser.",
+    "breadcrumb": "Breadcrumb",
+    "crumbGuide": "FRM Guide",
+    "beta": "Beta",
+    "localOnly": "Your source, preview, and saved formulas remain on this device. FRM compatibility is deliberately limited.",
+    "guide": "Read the FRM Guide",
+    "noJsTitle": "FRM Editor requires JavaScript",
+    "noJs": "This page explains the local FRM workflow. Enable JavaScript to edit, compile, and preview formulas.",
+    "actions": "Editor actions",
+    "new": "New",
+    "examples": "Examples",
+    "myFormulas": "My Formulas",
+    "loading": "Loading local formulas…",
+    "empty": "No saved formulas on this device.",
+    "import": "Import .frm",
+    "download": "Download .frm",
+    "saveOpen": "Save and Open in Explorer",
+    "preview": "Compiled preview",
+    "previewEmpty": "Compile a valid formula to update this preview.",
+    "previewStale": "The source has changed. This is the last successful preview; compile again before saving or opening it.",
+    "reset": "Reset view",
+    "unknownExample": "That example is not available. Start with a blank local formula instead.",
+    "replaceConfirm": "Replace the current unsaved draft?",
+    "leaveConfirm": "Leave this editor and discard unsaved draft changes?",
+    "saved": "Saved locally.",
+    "saveError": "The formula could not be saved locally.",
+    "errors": {
+      "maxCount": "Maximum formula limit reached ({count}).",
+      "formulaNotFound": "That local formula no longer exists.",
+      "storageUnavailable": "The local formula library could not be updated.",
+      "compileFailed": "The formula could not be compiled."
+    },
+    "compileFirst": "Compile this source successfully before opening it in Explorer.",
+    "source": {
+      "multiple": "This source contains more than one top-level formula. FractalPark compiles one formula at a time and has preserved the full source without truncating it.",
+      "trailing": "This source contains unsupported content after the formula. FractalPark has preserved the full source and will not compile only the first part."
+    },
+    "file": { "extension": "Choose a .frm file.", "size": "FRM files must be 256 KiB or smaller.", "encoding": "The file must be valid UTF-8." }
+  },
   "metadata": {
     "home": {
       "title": "FractalPark - Open Source Browser Fractal Generator",
@@ -1407,6 +1453,10 @@
     "about": {
       "title": "About | Open Source Browser Fractal Generator - FractalPark",
       "description": "Learn about FractalPark, an open-source MIT-licensed fractal generator that runs in the browser with WebGL, 94 formulas, custom palettes, and PNG export."
+    },
+    "frmEditor": {
+      "title": "FRM Editor | FractalPark",
+      "description": "Write, compile, preview, and save FRM formulas locally in your browser."
     },
     "frmGuide": {
       "title": "FRM Guide | Write Custom Fractal Formulas - FractalPark",

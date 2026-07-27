@@ -307,12 +307,13 @@
           "title": "渐进式教程",
           "intro": "三个示例从最小二次公式逐步扩展到参数和状态反馈。每段源码都直接读取共享示例注册表，并在测试中实际编译。",
           "lesson": "第 {number} 课",
+          "openInEditor": "在 FRM 编辑器中打开",
           "goals": {
             "starter-brot": "重点：公式声明与 init / loop / bailout 结构。先确认最小版本能够编译，再尝试修改指数或逃逸阈值。",
             "parameter-drift": "重点：p1 与 p2 参数槽、复数常量，以及把 cabs(z) 作为显式模长函数。",
             "orbit-echo": "重点：用 zPrev 取得上一轮轨道状态。无需手动维护第二个状态变量，也能引入记忆反馈。"
           },
-          "editorNote": "下一实现单元中的独立 FRM Editor 会通过稳定 ID 打开完全相同的示例，公式源码不会写进 URL。"
+          "editorNote": "FRM 编辑器通过稳定 ID 打开这三个实际通过编译测试的示例。公式源码只留在本地，绝不会写入 URL。"
         },
         "diagnostics": {
           "title": "错误与诊断",
@@ -342,7 +343,7 @@
           "exploreTitle": "先在完整渲染环境中观察",
           "exploreBody": "打开 Explore，比较内置公式的行为、着色、变换、动画和导出控制，再开始编写自定义公式。",
           "exploreCta": "打开 Explore",
-          "editorNote": "独立 FRM Editor 将作为专注的创作空间，用于编译、预览、导入和保存当前设备上的自定义公式。",
+          "editorNote": "使用独立 FRM 编辑器编译、预览、导入、下载并在本地保存公式，再把所选公式交给 Explore。",
           "referencesTitle": "参考资料",
           "referencesIntro": "历史背景与实现细节分开链接，以明确区分 Fractint 传承和 FractalPark 当前的编译器契约。",
           "references": {
@@ -1031,13 +1032,17 @@
       },
       "customLibrary": {
         "title": "自定义公式",
-        "new": "New",
+        "openStandaloneEditor": "FRM 编辑器",
+        "new": "新建",
         "loading": "加载中...",
         "empty": "还没有自定义公式",
-        "createFirst": "Create first formula",
+        "createFirst": "创建第一个公式",
         "renameConfirm": "确认",
-        "deleteConfirm": "确定要删除这个公式吗?",
-        "maxReached": "Maximum count reached ({count})",
+        "deleteConfirm": "确定要删除这个公式吗？",
+        "maxReached": "已达到公式数量上限（{count} 条）",
+        "formulaNotFound": "该本地公式已不存在。",
+        "storageUnavailable": "无法更新本地公式库。",
+        "compileFailed": "无法编译该公式。",
         "examplesTitle": "从示例开始",
         "examplesDescription": "先载入一个可编译的示例, 再在编辑器里改出你自己的版本."
       },
@@ -1387,6 +1392,47 @@
       "noScriptNotice": "交互式分形探索器需要启用 JavaScript 和 WebGL。上方内容描述了工具的功能；请启用 JavaScript 以使用完整功能。"
     }
   },
+  "frmEditor": {
+    "title": "FRM 编辑器",
+    "description": "在浏览器中本地编写、编译、预览和保存 FRM 公式。",
+    "breadcrumb": "面包屑导航",
+    "crumbGuide": "FRM 指南",
+    "beta": "测试版",
+    "localOnly": "源代码、预览和已保存的公式仅保留在当前设备。FRM 兼容性有明确限制。",
+    "guide": "阅读 FRM 指南",
+    "noJsTitle": "FRM 编辑器需要 JavaScript",
+    "noJs": "本页介绍本地 FRM 工作流。请启用 JavaScript 以编辑、编译和预览公式。",
+    "actions": "编辑器操作",
+    "new": "新建",
+    "examples": "示例",
+    "myFormulas": "我的公式",
+    "loading": "正在加载本地公式…",
+    "empty": "此设备上还没有保存的公式。",
+    "import": "导入 .frm",
+    "download": "下载 .frm",
+    "saveOpen": "保存并在探索器中打开",
+    "preview": "已编译预览",
+    "previewEmpty": "成功编译有效公式后将更新预览。",
+    "previewStale": "源代码已改变。这里保留上一次成功预览；重新编译前不能保存或在探索器中打开。",
+    "reset": "重置视图",
+    "unknownExample": "该示例不可用。请从空白本地公式开始。",
+    "replaceConfirm": "要替换当前未保存的草稿吗？",
+    "leaveConfirm": "要离开编辑器并放弃未保存的草稿修改吗？",
+    "saved": "已本地保存。",
+    "saveError": "无法在本地保存公式。",
+    "errors": {
+      "maxCount": "已达到公式数量上限（{count} 条）。",
+      "formulaNotFound": "该本地公式已不存在。",
+      "storageUnavailable": "无法更新本地公式库。",
+      "compileFailed": "无法编译该公式。"
+    },
+    "compileFirst": "请先成功编译源代码，再在探索器中打开。",
+    "source": {
+      "multiple": "源代码包含多个顶层公式。FractalPark 每次只编译一个公式，并已完整保留源码，不会静默截断。",
+      "trailing": "公式后还存在不受支持的内容。FractalPark 已完整保留源码，不会只编译前半部分。"
+    },
+    "file": { "extension": "请选择 .frm 文件。", "size": "FRM 文件不得超过 256 KiB。", "encoding": "文件必须为有效 UTF-8。" }
+  },
   "metadata": {
     "home": {
       "title": "分形公园 FractalPark - 开源浏览器分形生成器",
@@ -1407,6 +1453,10 @@
     "about": {
       "title": "关于 | 开源浏览器分形生成器 - 分形公园 FractalPark",
       "description": "了解分形公园 FractalPark: 一个基于 MIT 许可证开源、可在浏览器中直接使用的 WebGL 分形生成器, 支持 94 个公式、自定义调色板和 PNG 导出.核心技术: Fractint .frm 公式编辑器, AST 到 GLSL 转译流水线, 插件化着色器架构, 完全免费开源无需安装, 支持中英文双语界面."
+    },
+    "frmEditor": {
+      "title": "FRM 编辑器 | FractalPark",
+      "description": "在浏览器中本地编写、编译、预览和保存 FRM 公式。"
     },
     "frmGuide": {
       "title": "FRM 指南 | 编写自定义分形公式 - 分形公园 FractalPark",

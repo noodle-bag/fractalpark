@@ -49,7 +49,9 @@ test.describe('Custom Formula Workflow', () => {
     await page.getByRole('button', { name: /^Save$/ }).click();
 
     // Verify formula appears in list (default name is "MyFormula")
-    await page.waitForSelector('text=MyFormula', { timeout: 5000 });
+    await expect(
+      page.getByRole('button', { name: /^MyFormula$/ }).first()
+    ).toBeVisible({ timeout: 15000 });
   });
 
   test('should handle compilation errors gracefully', async ({ page }) => {
@@ -127,6 +129,7 @@ bailout:
   });
 
   test('should persist custom formulas across reloads', async ({ page }) => {
+    test.setTimeout(120_000);
     // Create a formula
     await page.getByRole('tab', { name: /formula/i }).click();
     await page.getByRole('tab', { name: /custom/i }).click();
@@ -144,6 +147,8 @@ bailout:
     await compileBtn4.click();
     await page.waitForSelector('text=Compile Successful', { timeout: 10000 });
     await page.getByRole('button', { name: /^Save$/ }).click();
+    await expect(page).toHaveURL(/[?&]fm=custom-/, { timeout: 10000 });
+    await page.waitForTimeout(750);
     
     // Reload page
     await page.reload();

@@ -8,7 +8,7 @@
 'use client';
 
 import React, { useState } from 'react';
-import { useTranslations } from 'next-intl';
+import { useLocale, useTranslations } from 'next-intl';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
@@ -20,13 +20,20 @@ import {
   AlertCircle, 
   CheckCircle,
   Code,
+  ExternalLink,
 } from 'lucide-react';
-import { useCustomFormulas, type CustomFormulaWithPlugin } from '@/hooks/useCustomFormulas';
+
+import {
+  useCustomFormulas,
+  type CustomFormulaMutationResult,
+  type CustomFormulaWithPlugin,
+} from '@/hooks/useCustomFormulas';
 import { FormulaEditor } from './FormulaEditor';
 import type { FormulaPlugin } from '@/engine/plugins/types';
 import type { FormulaExperienceHint } from '@/engine/frm/authoring';
 import { CUSTOM_FORMULA_EXAMPLES } from '@/engine/frm/example-library';
 import type { ViewBounds } from '@/engine/types';
+import { MAX_CUSTOM_FORMULAS } from '@/lib/custom-formula-storage';
 
 interface CustomFormulaListProps {
   currentBounds?: ViewBounds;
@@ -36,6 +43,7 @@ interface CustomFormulaListProps {
 export function CustomFormulaList({ currentBounds, onSelectFormula }: CustomFormulaListProps) {
   const t = useTranslations('explore');
   const customT = useTranslations('explore.formula.customLibrary');
+  const locale = useLocale();
   const { 
     formulas, 
     isLoading, 
@@ -51,8 +59,31 @@ export function CustomFormulaList({ currentBounds, onSelectFormula }: CustomForm
   const [editorExperienceHint, setEditorExperienceHint] = useState<FormulaExperienceHint | undefined>(undefined);
   const [renamingId, setRenamingId] = useState<string | null>(null);
   const [newName, setNewName] = useState('');
+  const [actionError, setActionError] = useState('');
+
+  const localizeMutationResult = (
+    result: CustomFormulaMutationResult
+  ): CustomFormulaMutationResult => {
+    if (result.success) return result;
+    const error = (() => {
+      switch (result.code) {
+        case 'max-count':
+          return customT('maxReached', { count: MAX_CUSTOM_FORMULAS });
+        case 'formula-not-found':
+          return customT('formulaNotFound');
+        case 'storage-unavailable':
+          return customT('storageUnavailable');
+        case 'compile-failed':
+          return result.error ?? customT('compileFailed');
+        default:
+          return result.error ?? customT('storageUnavailable');
+      }
+    })();
+    return { ...result, error };
+  };
 
   const openBlankEditor = () => {
+    setActionError('');
     setEditingFormulaId(undefined);
     setEditorSource(undefined);
     setEditorExperienceHint(undefined);
@@ -60,6 +91,7 @@ export function CustomFormulaList({ currentBounds, onSelectFormula }: CustomForm
   };
 
   const openFormulaEditor = (formula?: CustomFormulaWithPlugin) => {
+    setActionError('');
     setEditingFormulaId(formula?.id);
     setEditorSource(formula?.source);
     setEditorExperienceHint(formula?.experienceHint);
@@ -67,24 +99,38 @@ export function CustomFormulaList({ currentBounds, onSelectFormula }: CustomForm
   };
 
   const handleSave = (name: string, source: string, experienceHint?: FormulaExperienceHint) => {
-    const result = saveFormula(name, source, experienceHint, editingFormulaId);
+    const result = localizeMutationResult(
+      saveFormula(name, source, experienceHint, editingFormulaId)
+    );
     if (result.success) {
+      setActionError('');
+      if (result.plugin) {
+        onSelectFormula?.(result.plugin, result.experienceHint);
+      }
       setShowEditor(false);
       setEditingFormulaId(undefined);
+    } else {
+      setActionError(result.error ?? '');
     }
     return result;
   };
 
   const handleDelete = (id: string) => {
     if (confirm(customT('deleteConfirm'))) {
-      deleteFormula(id);
+      const result = localizeMutationResult(deleteFormula(id));
+      setActionError(result.success ? '' : result.error ?? '');
     }
   };
 
   const handleRename = (id: string) => {
     if (newName.trim()) {
-      renameFormula(id, newName.trim());
+      const result = localizeMutationResult(renameFormula(id, newName.trim()));
+      if (!result.success) {
+        setActionError(result.error ?? '');
+        return;
+      }
     }
+    setActionError('');
     setRenamingId(null);
     setNewName('');
   };
@@ -118,10 +164,16 @@ export function CustomFormulaList({ currentBounds, onSelectFormula }: CustomForm
 
   return (
     <Card>
-      <CardHeader className="flex flex-row items-center justify-between">
+      <CardHeader className="flex flex-row flex-wrap items-center justify-between gap-3">
         <CardTitle className="text-lg">{customT('title')}</CardTitle>
         <div className="flex items-center gap-2">
-          <Badge variant="secondary">{formulas.length}/{50}</Badge>
+          <Button asChild size="sm" variant="outline">
+            <a href={`/${locale}/formulas/editor`}>
+              <ExternalLink className="mr-1 size-3" />
+              {customT('openStandaloneEditor')}
+            </a>
+          </Button>
+          <Badge variant="secondary">{formulas.length}/{MAX_CUSTOM_FORMULAS}</Badge>
           {canAddMore && (
             <Button size="sm" onClick={openBlankEditor}>
               <Plus className="w-4 h-4 mr-1" />
@@ -132,6 +184,11 @@ export function CustomFormulaList({ currentBounds, onSelectFormula }: CustomForm
       </CardHeader>
 
       <CardContent className="space-y-4">
+        {actionError && (
+          <p role="alert" className="text-sm text-destructive">
+            {actionError}
+          </p>
+        )}
         <div className="rounded-lg border border-dashed p-3 bg-muted/30">
           <div className="mb-3">
             <div className="text-sm font-medium">{customT('examplesTitle')}</div>
@@ -265,7 +322,7 @@ export function CustomFormulaList({ currentBounds, onSelectFormula }: CustomForm
 
         {!canAddMore && (
           <p className="text-sm text-muted-foreground mt-4 text-center">
-            {customT('maxReached', { count: 50 })}
+            {customT('maxReached', { count: MAX_CUSTOM_FORMULAS })}
           </p>
         )}
       </CardContent>

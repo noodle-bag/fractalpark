@@ -27,6 +27,10 @@ import {
   readPersistedCustomFormulas,
 } from '@/lib/custom-formula-storage';
 import {
+  parseEditorToExploreIntent,
+  stripEditorToExploreIntent,
+} from '@/lib/frm-editor';
+import {
   resolveFormulaReference,
   type FormulaResolution,
 } from '@/lib/formula-resolver';
@@ -45,7 +49,11 @@ function ExploreClient() {
   const t = useTranslations('explore');
   const searchParams = useSearchParams();
   const router = useRouter();
+  const initialHandoffIntentRef = useRef(
+    parseEditorToExploreIntent(new URLSearchParams(searchParams.toString()))
+  );
   const initializedRef = useRef(false);
+  const handoffConsumedRef = useRef<string | null>(null);
   const debounceRef = useRef<ReturnType<typeof setTimeout> | null>(null);
 
   const { document, runtimeParams, updateBounds, updateFormula, updateColoring, updateTransform, updateRender, updateAnimation, selectBuiltInFormula, loadFromDocument } =
@@ -78,6 +86,26 @@ function ExploreClient() {
   const [isPanelCollapsed, setIsPanelCollapsed] = useState(false);
   const [formulaResolution, setFormulaResolution] =
     useState<ExploreFormulaResolution | null>(null);
+  const [handoffTargetId, setHandoffTargetId] = useState<string | null>(() =>
+    initialHandoffIntentRef.current.status === 'valid'
+      ? initialHandoffIntentRef.current.formulaId
+      : null
+  );
+  const [handoffError, setHandoffError] =
+    useState<ExploreFormulaResolution | null>(() => {
+      const intent = initialHandoffIntentRef.current;
+      if (intent.status !== 'invalid') return null;
+      return {
+        success: false,
+        formulaId: intent.formulaId,
+        code: 'storage-invalid',
+        errors: [
+          intent.reason === 'missing'
+            ? 'Missing custom formula handoff.'
+            : 'Invalid custom formula handoff.',
+        ],
+      };
+    });
   const canvasElRef = useRef<HTMLCanvasElement | null>(null);
   const pickToastTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
 
@@ -92,6 +120,94 @@ function ExploreClient() {
   useEffect(() => {
     initializedRef.current = true;
   }, []);
+
+  // This one-time identity handoff is intentionally separate from the URL codec.
+  useEffect(() => {
+    const currentParams = new URLSearchParams(searchParams.toString());
+    const intent = parseEditorToExploreIntent(currentParams);
+    if (intent.status === 'none') return;
+
+    const handoffKey = `${intent.status}:${intent.formulaId}`;
+    if (handoffConsumedRef.current === handoffKey) return;
+    handoffConsumedRef.current = handoffKey;
+
+    if (intent.status === 'invalid') {
+      queueMicrotask(() => {
+        setHandoffTargetId(null);
+        setHandoffError({
+          success: false,
+          formulaId: intent.formulaId,
+          code: 'storage-invalid',
+          errors: [
+            intent.reason === 'missing'
+              ? 'Missing custom formula handoff.'
+              : 'Invalid custom formula handoff.',
+          ],
+        });
+        router.replace(
+          stripEditorToExploreIntent(locale, currentParams),
+          { scroll: false }
+        );
+      });
+      return;
+    }
+
+    try {
+      const resolution = resolveFormulaReference(
+        intent.formulaId,
+        readPersistedCustomFormulas()
+      );
+      if (!resolution.success) {
+        queueMicrotask(() => {
+          setHandoffTargetId(null);
+          setHandoffError(resolution);
+          router.replace(
+            stripEditorToExploreIntent(locale, currentParams),
+            { scroll: false }
+          );
+        });
+        return;
+      }
+
+      queueMicrotask(() => {
+        setHandoffTargetId(intent.formulaId);
+        setHandoffError(null);
+        updateFormula({ formulaId: intent.formulaId });
+        updateBounds(
+          resolution.experienceHint?.bounds ??
+            getDefaultBounds(intent.formulaId)
+        );
+        if (resolution.experienceHint?.coloring) {
+          updateColoring({
+            customGradient: null,
+            ...resolution.experienceHint.coloring,
+          });
+        }
+        router.replace(
+          stripEditorToExploreIntent(locale, currentParams),
+          { scroll: false }
+        );
+      });
+    } catch (error) {
+      queueMicrotask(() => {
+        setHandoffTargetId(null);
+        setHandoffError({
+          success: false,
+          formulaId: intent.formulaId,
+          code: 'storage-invalid',
+          errors: [
+            error instanceof Error
+              ? error.message
+              : 'Custom formula storage is invalid.',
+          ],
+        });
+        router.replace(
+          stripEditorToExploreIntent(locale, currentParams),
+          { scroll: false }
+        );
+      });
+    }
+  }, [locale, router, searchParams, updateBounds, updateColoring, updateFormula]);
 
   useEffect(() => {
     const resolveCurrentFormula = () => {
@@ -125,6 +241,18 @@ function ExploreClient() {
       );
     };
   }, [formula]);
+
+  useEffect(() => {
+    if (
+      !handoffTargetId ||
+      formula !== handoffTargetId ||
+      !formulaResolution?.success ||
+      formulaResolution.formulaId !== handoffTargetId
+    ) {
+      return;
+    }
+    queueMicrotask(() => setHandoffTargetId(null));
+  }, [formula, formulaResolution, handoffTargetId]);
 
   // Debounced URL update
   useEffect(() => {
@@ -262,21 +390,25 @@ function ExploreClient() {
     });
   }, [document.transform.params?.transform, updateTransform]);
 
+  const activeResolution = handoffError ?? formulaResolution;
+  const isHandoffPending = Boolean(handoffTargetId);
   const formulaResolutionMatches =
+    !handoffError &&
+    !isHandoffPending &&
     formulaResolution?.formulaId === formula;
   const isFormulaReady =
-    formulaResolutionMatches && formulaResolution?.success === true;
+    !handoffError && formulaResolutionMatches && formulaResolution?.success === true;
   let formulaResolutionMessage = t('formula.resolution.loading');
 
   if (
-    formulaResolutionMatches &&
-    formulaResolution &&
-    !formulaResolution.success
+    !isHandoffPending &&
+    activeResolution &&
+    !activeResolution.success
   ) {
-    switch (formulaResolution.code) {
+    switch (activeResolution.code) {
       case 'formula-not-found':
         formulaResolutionMessage = t('formula.resolution.notFound', {
-          formula,
+          formula: activeResolution.formulaId,
         });
         break;
       case 'storage-invalid':
@@ -284,18 +416,18 @@ function ExploreClient() {
         break;
       case 'builtin-id-conflict':
         formulaResolutionMessage = t('formula.resolution.idConflict', {
-          formula,
+          formula: activeResolution.formulaId,
         });
         break;
       case 'compile-failed':
         formulaResolutionMessage = t('formula.resolution.compileFailed', {
-          formula,
+          formula: activeResolution.formulaId,
         });
         break;
       case 'builtin-unavailable':
       case 'registration-failed':
         formulaResolutionMessage = t('formula.resolution.unavailable', {
-          formula,
+          formula: activeResolution.formulaId,
         });
         break;
     }
@@ -353,7 +485,7 @@ function ExploreClient() {
         {!isFormulaReady && (
           <div className="flex h-full w-full items-center justify-center bg-neutral-950 p-8 text-center text-neutral-200">
             <div className="max-w-md">
-              {formulaResolutionMatches && formulaResolution && !formulaResolution.success && (
+              {activeResolution && !activeResolution.success && (
                 <AlertTriangle className="mx-auto mb-3 h-6 w-6 text-amber-400" />
               )}
               <p>{formulaResolutionMessage}</p>

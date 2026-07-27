@@ -107,6 +107,12 @@ export const FRM_GUIDE_TUTORIALS: readonly FrmGuideTutorial[] =
     };
   });
 
+export function getFrmGuideTutorialById(
+  id: string
+): FrmGuideTutorial | undefined {
+  return FRM_GUIDE_TUTORIALS.find((tutorial) => tutorial.id === id);
+}
+
 export const FRM_GUIDE_REFERENCES = [
   {
     id: 'fractint-project',
