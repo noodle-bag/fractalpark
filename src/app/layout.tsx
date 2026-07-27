@@ -9,6 +9,11 @@ import './globals.css';
 
 export const metadata: Metadata = {
   metadataBase: new URL(SITE.url),
+  verification: {
+    other: {
+      'baidu-site-verification': 'codeva-oDeAJImLT1',
+    },
+  },
 };
 
 export default function RootLayout({ children }: { children: ReactNode }) {
