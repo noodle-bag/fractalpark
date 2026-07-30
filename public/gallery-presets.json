@@ -208,6 +208,14 @@
       "url": "?cx=-0.0623946798&cy=0.0737228971&z=3.75&rot=3.1416&iter=200&julia=1&jre=0.011133&jim=0.137402&fm=phoenixMulti&pp=u_phoenixMultiP%3A-1.05&pal=8&kf=-0.0623946798%2C0.0737228971%2C11142.89%2C0.3200%7C-0.0623946798%2C0.0737228971%2C3.75%2C3.1416",
       "featured": true,
       "thumbnail": "/images/gallery/presets/preset-phoenix-multi-ember-compass.jpg"
+    },
+    {
+      "id": "preset-burning-ship-imag-frostfire-moth",
+      "name": "Frostfire Moth",
+      "nameZh": "霜焰蝶影",
+      "url": "?cx=-0.2715328382&cy=-0.0000036629&z=0.45&rot=1.5600&iter=350&julia=1&jre=-0.233972&jim=-0.707603&fm=burningShipImag&pal=12&kf=-0.2715328382%2C-0.0000036629%2C1278.25%2C1.5600%7C-0.2715328382%2C-0.0000036629%2C0.45%2C1.5600",
+      "featured": true,
+      "thumbnail": "/images/gallery/presets/preset-burning-ship-imag-frostfire-moth.jpg"
     }
   ]
 }
