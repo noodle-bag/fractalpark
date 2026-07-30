@@ -133,6 +133,26 @@ describe('published formula guides', () => {
     }
   });
 
+  it('publishes only History sections backed by manifest sources', () => {
+    const entriesWithHistory = PUBLISHED_FORMULA_GUIDES.filter(
+      ({ history }) => history
+    );
+
+    expect(entriesWithHistory).toHaveLength(17);
+    expect(entriesWithHistory.map(({ formulaId }) => formulaId)).not.toContain(
+      'airship'
+    );
+    expect(entriesWithHistory.map(({ formulaId }) => formulaId)).not.toContain(
+      'newtonCosh'
+    );
+    expect(entriesWithHistory.map(({ formulaId }) => formulaId)).not.toContain(
+      'rationalMap1'
+    );
+    expect(entriesWithHistory.map(({ formulaId }) => formulaId)).not.toContain(
+      'spider'
+    );
+  });
+
   it('adds every published guide to the localized sitemap', () => {
     const urls = sitemap().map(({ url }) => url);
     const formulaGuideUrls = urls.filter((url) =>

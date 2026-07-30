@@ -33,6 +33,7 @@ import {
 } from '@/lib/gallery-presets';
 import { renderJsonLd } from '@/lib/json-ld';
 import { SITE, buildLocaleAlternates } from '@/lib/site';
+import { splitProseParagraphs } from '@/lib/content-text';
 import { documentToExploreHref } from '@/lib/url-params';
 
 interface FormulaGuidePageProps {
@@ -271,9 +272,10 @@ export default async function FormulaGuidePage({
           id="overview"
           title={guideT('sections.overview')}
         >
-          <p className="max-w-4xl text-lg leading-8 text-muted-foreground">
-            {t('overview')}
-          </p>
+          <ProseParagraphs
+            className="max-w-4xl space-y-4 text-lg leading-8 text-muted-foreground"
+            text={t('overview')}
+          />
         </GuideSection>
 
         <GuideSection
@@ -295,9 +297,10 @@ export default async function FormulaGuidePage({
                   plainText={item.plainText}
                   tex={item.tex}
                 />
-                <p className="leading-7 text-muted-foreground">
-                  {t(`math.${item.id}.explanation`)}
-                </p>
+                <ProseParagraphs
+                  className="space-y-3 leading-7 text-muted-foreground"
+                  text={t(`math.${item.id}.explanation`)}
+                />
               </article>
             ))}
           </div>
@@ -309,9 +312,10 @@ export default async function FormulaGuidePage({
             id="history"
             title={guideT('sections.history')}
           >
-            <p className="max-w-4xl text-lg leading-8 text-muted-foreground">
-              {t('history')}
-            </p>
+            <ProseParagraphs
+              className="max-w-4xl space-y-4 text-lg leading-8 text-muted-foreground"
+              text={t('history')}
+            />
           </GuideSection>
         ) : null}
 
@@ -320,9 +324,10 @@ export default async function FormulaGuidePage({
           id="visual-characteristics"
           title={guideT('sections.visualCharacteristics')}
         >
-          <p className="max-w-4xl text-lg leading-8 text-muted-foreground">
-            {t('visualCharacteristics')}
-          </p>
+          <ProseParagraphs
+            className="max-w-4xl space-y-4 text-lg leading-8 text-muted-foreground"
+            text={t('visualCharacteristics')}
+          />
         </GuideSection>
 
         {entry.parameters?.length ? (
@@ -434,9 +439,10 @@ export default async function FormulaGuidePage({
                 <h3 className="font-semibold">
                   {t(`faq.${faqId}.question`)}
                 </h3>
-                <p className="mt-3 leading-7 text-muted-foreground">
-                  {t(`faq.${faqId}.answer`)}
-                </p>
+                <ProseParagraphs
+                  className="mt-3 space-y-3 leading-7 text-muted-foreground"
+                  text={t(`faq.${faqId}.answer`)}
+                />
               </article>
             ))}
           </div>
@@ -467,6 +473,22 @@ export default async function FormulaGuidePage({
         ) : null}
       </div>
     </main>
+  );
+}
+
+function ProseParagraphs({
+  className,
+  text,
+}: {
+  className: string;
+  text: string;
+}) {
+  return (
+    <div className={className}>
+      {splitProseParagraphs(text).map((paragraph, index) => (
+        <p key={index}>{paragraph}</p>
+      ))}
+    </div>
   );
 }
 

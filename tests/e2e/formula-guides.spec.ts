@@ -42,6 +42,11 @@ test.describe('Formula guides', () => {
     await expect(
       page.getByRole('heading', { level: 2, name: 'The Mathematics' })
     ).toBeVisible();
+    await expect(page.locator('#overview p')).toHaveCount(3);
+    await expect(
+      page.getByRole('heading', { level: 2, name: 'History' })
+    ).toBeVisible();
+    await expect(page.locator('#history p')).toHaveCount(4);
     await expect(page.locator('[role="math"]')).toHaveCount(1);
     await expect(
       page.getByRole('heading', {
