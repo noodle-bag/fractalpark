@@ -137,6 +137,17 @@ is not the canonical model for new published preset or persistence work.
 - Playback controls shared with artwork pages come from one component or one
   controller contract; Drift keeps only Play/Pause, Previous, and Next.
 
+### Gallery and artwork playback
+
+- Gallery cards retain their static published images for SSR, no-JavaScript,
+  touch, non-animated presets, and WebGL failure. Hover-capable pointers may
+  lazy-load only the currently hovered animated preset.
+- Published artwork pages automatically play the current artwork after
+  hydration, both inline and after View Fullscreen. The page has no separate
+  Play action; fullscreen keeps Pause/Resume and Exit controls.
+- Opening fullscreen replaces the inline renderer instead of keeping two
+  WebGL contexts alive for the same artwork.
+
 ### Formula Atlas and formula pages
 
 - Formula identity and defaults come from the catalog and canonical formula

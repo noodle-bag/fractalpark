@@ -4,6 +4,11 @@ import {
   findBuiltinPresetConfigById,
   parseGalleryPresetsFile,
 } from '@/lib/gallery-presets';
+import {
+  artworkPagePath,
+  isPublishedArtworkPagePresetId,
+} from '@/content/artwork-pages';
+import { getArtworkContentByPresetId } from '@/content/artwork-manifest';
 import { notFound, permanentRedirect } from 'next/navigation';
 
 interface GalleryPresetDefaultLocaleShortlinkPageProps {
@@ -21,6 +26,12 @@ export default async function GalleryPresetDefaultLocaleShortlinkPage({
 
   if (!preset) {
     notFound();
+  }
+
+  if (isPublishedArtworkPagePresetId(preset.id)) {
+    const content = getArtworkContentByPresetId(preset.id);
+    if (!content) notFound();
+    permanentRedirect(`/en${artworkPagePath(content)}`);
   }
 
   permanentRedirect(builtinPresetConfigToExploreHref(preset, 'en'));

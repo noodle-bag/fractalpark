@@ -15,6 +15,7 @@ export interface AnimatedFractalCanvasProps {
   keyframes?: Keyframe[];          // Animation keyframes (if provided, animates)
   dprScale?: number;               // DPR scale factor (default: 1.0)
   active?: boolean;                // Whether to render (default: true)
+  paused?: boolean;                // Pause animation without disposing the renderer
   resetOnStop?: boolean;           // Reset progress when stopped (default: true). Set false to resume from current position.
   maxIterationsClamp?: number;     // Cap maxIterations (e.g. 300 for homepage)
   className?: string;
@@ -37,6 +38,7 @@ export default function AnimatedFractalCanvas({
   keyframes = [],
   dprScale = 1.0,
   active = true,
+  paused = false,
   resetOnStop = true,
   maxIterationsClamp,
   className,
@@ -148,7 +150,7 @@ export default function AnimatedFractalCanvas({
     keyframes,
     onFrame: handleFrame,
     onLoopComplete,
-    active: active && keyframes.length >= 2,
+    active: active && !paused && keyframes.length >= 2,
     resetOnStop,
   });
 

@@ -1,13 +1,21 @@
 'use client';
 
 import { useEffect, useState, lazy, Suspense, useCallback, useMemo } from 'react';
-import { useTranslations, useLocale } from 'next-intl';
+import { useTranslations } from 'next-intl';
 import { Pause, Play, SkipBack, SkipForward } from 'lucide-react';
 import { useLayout } from '@/components/layout/LayoutContext';
-import { useFractalSlideshow } from '@/hooks/useFractalSlideshow';
-import { useBuiltinPresets } from '@/hooks/useBuiltinPresets';
-import { presetToSavedFractal } from '@/lib/gallery-presets';
-import type { SavedFractal } from '@/engine/types';
+import {
+  useFractalSlideshow,
+  type SlideshowArtwork,
+} from '@/hooks/useFractalSlideshow';
+import {
+  buildPublishedArtworkPlayback,
+  type PublishedArtwork,
+} from '@/lib/published-artworks';
+import {
+  PLAYBACK_CONTROL_BAR_CLASS,
+  PLAYBACK_CONTROL_BUTTON_CLASS,
+} from '@/components/fractal/playback-controls';
 
 // Lazy load AnimatedFractalCanvas to reduce initial bundle
 const AnimatedFractalCanvas = lazy(() => import('@/components/fractal/AnimatedFractalCanvas'));
@@ -25,21 +33,21 @@ function shuffleArray<T>(array: T[]): T[] {
 }
 
 /**
- * Hook to get gallery presets for the Drift slideshow.
- * Loads from gallery-presets.json (same source as the gallery page) and
- * shuffles the whole collection, so the opening slide is a random preset
- * on every visit. The shuffle only happens after the client-side fetch
- * resolves, so SSR and hydration both render the deterministic empty
- * (black) shell — no hydration mismatch.
+ * Project and shuffle the server-provided published collection after mount,
+ * so SSR and hydration both render the deterministic empty black shell.
  */
-function useDriftPresets(): SavedFractal[] {
-  const locale = useLocale();
-  const { presets } = useBuiltinPresets({ locale });
+function useDriftArtworks(artworks: PublishedArtwork[]): SlideshowArtwork[] {
+  const playbackArtworks = useMemo(
+    () => artworks.map(buildPublishedArtworkPlayback),
+    [artworks]
+  );
+  const [shuffledArtworks, setShuffledArtworks] = useState<SlideshowArtwork[]>([]);
 
-  return useMemo(() => {
-    if (presets.length === 0) return [];
-    return shuffleArray(presets.map(presetToSavedFractal));
-  }, [presets]);
+  useEffect(() => {
+    setShuffledArtworks(shuffleArray(playbackArtworks));
+  }, [playbackArtworks]);
+
+  return shuffledArtworks;
 }
 
 /**
@@ -50,7 +58,11 @@ function useDriftPresets(): SavedFractal[] {
  * immersive state. The only controls are Play/Pause, Previous, and Next in a
  * bottom bar; the transparent navbar stays on top as the way out.
  */
-export default function DriftClient() {
+interface DriftClientProps {
+  artworks: PublishedArtwork[];
+}
+
+export default function DriftClient({ artworks }: DriftClientProps) {
   const { setConfig } = useLayout();
   const [isPaused, setIsPaused] = useState(false);
 
@@ -67,7 +79,11 @@ export default function DriftClient() {
 
   return (
     <div className="fixed inset-0 bg-black">
-      <DriftSlideshow isPaused={isPaused} onTogglePause={togglePause} />
+      <DriftSlideshow
+        artworks={artworks}
+        isPaused={isPaused}
+        onTogglePause={togglePause}
+      />
     </div>
   );
 }
@@ -77,12 +93,13 @@ export default function DriftClient() {
  * Mobile devices use dprScale=0.5 to reduce GPU load.
  */
 interface DriftSlideshowProps {
+  artworks: PublishedArtwork[];
   isPaused: boolean;
   onTogglePause: () => void;
 }
 
-function DriftSlideshow({ isPaused, onTogglePause }: DriftSlideshowProps) {
-  const fractals = useDriftPresets();
+function DriftSlideshow({ artworks, isPaused, onTogglePause }: DriftSlideshowProps) {
+  const fractals = useDriftArtworks(artworks);
   // Lower dprScale on mobile to reduce GPU load on smaller devices
   const dprScale = typeof window !== 'undefined' && window.innerWidth < 768 ? 0.4 : 0.5;
   const {
@@ -175,10 +192,10 @@ function DriftSlideshow({ isPaused, onTogglePause }: DriftSlideshowProps) {
       {/* Bottom control bar — the only chrome on this page.
           Exactly three accessible controls: Play/Pause, Previous, Next. */}
       <div className="absolute bottom-4 left-0 right-0 z-10 flex justify-center px-4">
-        <div className="flex items-center justify-center gap-3 rounded-full bg-black/20 px-4 py-3 backdrop-blur-sm">
+        <div className={PLAYBACK_CONTROL_BAR_CLASS}>
           <button
             onClick={onTogglePause}
-            className="inline-flex items-center rounded-full bg-white/10 p-3 text-white transition-colors hover:bg-white/20"
+            className={PLAYBACK_CONTROL_BUTTON_CLASS}
             title={isPaused ? t('play') : t('pause')}
             aria-label={isPaused ? t('play') : t('pause')}
           >
@@ -187,7 +204,7 @@ function DriftSlideshow({ isPaused, onTogglePause }: DriftSlideshowProps) {
           <button
             onClick={goPrevious}
             disabled={isPaused || !canNavigate || !canGoPrevious}
-            className="inline-flex items-center rounded-full bg-white/10 p-3 text-white transition-colors hover:bg-white/20 disabled:cursor-not-allowed disabled:opacity-40"
+            className={PLAYBACK_CONTROL_BUTTON_CLASS}
             title={t('previous')}
             aria-label={t('previous')}
           >
@@ -196,7 +213,7 @@ function DriftSlideshow({ isPaused, onTogglePause }: DriftSlideshowProps) {
           <button
             onClick={goNext}
             disabled={isPaused || !canNavigate || !isReady}
-            className="inline-flex items-center rounded-full bg-white/10 p-3 text-white transition-colors hover:bg-white/20 disabled:cursor-not-allowed disabled:opacity-40"
+            className={PLAYBACK_CONTROL_BUTTON_CLASS}
             title={t('next')}
             aria-label={t('next')}
           >

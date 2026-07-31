@@ -10,6 +10,7 @@ import {
 import {
   buildPublishedArtwork,
   buildPublishedArtworkCollection,
+  buildPublishedArtworkPlayback,
 } from '@/lib/published-artworks';
 import { documentToExploreHref, fractalParamsToHref } from '@/lib/url-params';
 
@@ -56,6 +57,7 @@ describe('fractal content model', () => {
     expect(english[0].name).toBe(parsed.presets[0].name);
     expect(chinese[0].name).toBe(parsed.presets[0].nameZh);
     expect(chinese[0].document).toEqual(english[0].document);
+    expect(english.every((artwork) => artwork.slug.length > 0)).toBe(true);
   });
 
   it('projects the same canonical document for every published consumer', () => {
@@ -65,5 +67,16 @@ describe('fractal content model', () => {
     expect(artwork.presetId).toBe(config.id);
     expect(artwork.document).toEqual(buildCanonicalPresetDocument(config));
     expect(artwork.thumbnail).toBe(config.thumbnail);
+    expect(artwork.formulaId).toBe(artwork.document.formula.formulaId);
+  });
+
+  it('projects Drift playback from the published artwork document', () => {
+    const config = parseGalleryPresetsFile(presetsFile).presets[0];
+    const artwork = buildPublishedArtwork(config, 'en');
+    const playback = buildPublishedArtworkPlayback(artwork);
+
+    expect(playback.id).toBe(artwork.presetId);
+    expect(playback.params).toEqual(documentToRuntimeParams(artwork.document));
+    expect(playback.animation.keyframes.length).toBeGreaterThanOrEqual(2);
   });
 });

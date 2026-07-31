@@ -19,15 +19,23 @@
   },
   "gallery": {
     "title": "画廊",
-    "description": "探索精选分形, 或浏览你保存的收藏.",
-    "fullscreen": "全屏",
-    "fullscreenHint": "点击任意位置或按 Esc 关闭",
-    "addNew": "New分形",
+    "viewsLabel": "画廊视图",
+    "collection": {
+      "title": "FractalPark 作品集",
+      "description": "浏览 FractalPark 已发布的完整作品集。"
+    },
+    "mine": {
+      "title": "我的作品",
+      "description": "这些作品保存在当前设备的此浏览器中。",
+      "create": "在探索器中创作",
+      "emptyTitle": "尚无已保存作品",
+      "emptyDescription": "前往探索器创作并保存分形，建立仅存于当前设备的作品集。",
+      "actions": "{name} 的操作"
+    },
     "contextMenu": {
+      "restore": "在探索器中恢复",
       "rename": "重命名",
-      "delete": "删除",
-      "star": "收藏",
-      "unstar": "取消收藏"
+      "delete": "删除"
     },
     "card": {
       "deleteConfirm": {
@@ -39,9 +47,6 @@
       "renameTitle": "重命名分形",
       "renameCancel": "取消",
       "renameSave": "保存"
-    },
-    "builtin": {
-      "badge": "精选"
     }
   },
   "formulas": {
@@ -868,6 +873,39 @@
     }
   },
   "artworks": {
+    "page": {
+      "metadataTitle": "{title} | FractalPark 作品",
+      "imageAlt": "FractalPark 已发布作品《{title}》",
+      "breadcrumbLabel": "面包屑导航",
+      "breadcrumbHome": "首页",
+      "breadcrumbGallery": "画廊",
+      "eyebrow": "已发布作品",
+      "createdBy": "由 {creator} 创作",
+      "license": "图像采用 CC BY 4.0 许可",
+      "licenseScope": "CC BY 4.0 仅适用于分形作品图像层。FractalPark 源代码继续采用 MIT 许可证；站点正文、界面、Logo 与商标不属于该图像许可范围。",
+      "remix": "在探索器中 Remix",
+      "copy": "复制页面链接",
+      "copied": "链接已复制",
+      "copyError": "复制失败",
+      "visualNote": "视觉特征",
+      "related": "相关作品",
+      "customGradient": "自定义渐变",
+      "viewer": {
+        "viewFullscreen": "全屏查看",
+        "resume": "继续播放动画",
+        "pause": "暂停动画",
+        "minimize": "退出全屏",
+        "closeHint": "点击背景或按 Esc 退出"
+      },
+      "state": {
+        "title": "作品状态",
+        "formula": "公式",
+        "zoom": "缩放",
+        "iterations": "最大迭代次数",
+        "coloring": "着色",
+        "coloringValue": "{palette}；{outside} / {inside}；{transform} 变换"
+      }
+    },
     "entries": {
       "preset-newton-deep-spiral": {
         "summary": "沿牛顿根盆地深入下降，三个根区域扭结成紧凑螺旋。",

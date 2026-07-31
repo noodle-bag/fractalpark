@@ -11,8 +11,9 @@ const outputDir = resolve(projectRoot, 'public/images/gallery/presets');
 
 const DEFAULT_PORT = Number(process.env.THUMBNAIL_PORT || 3001);
 const BASE_URL = process.env.BASE_URL || `http://127.0.0.1:${DEFAULT_PORT}`;
-const THUMBNAIL_SIZE = 600;
-const THUMBNAIL_QUALITY = 0.9;
+const THUMBNAIL_WIDTH = 1920;
+const THUMBNAIL_HEIGHT = 1200;
+const THUMBNAIL_QUALITY = 0.92;
 
 function parseArgs(argv) {
   const options = {
@@ -59,6 +60,35 @@ function thumbnailPublicPath(presetId) {
 
 function thumbnailFilePath(presetId) {
   return resolve(outputDir, `${presetId}.jpg`);
+}
+
+function hasExpectedThumbnailDimensions(outputPath) {
+  if (!existsSync(outputPath)) return false;
+
+  const image = readFileSync(outputPath);
+  const startOfFrameMarkers = new Set([
+    0xc0, 0xc1, 0xc2, 0xc3, 0xc5, 0xc6, 0xc7, 0xc9, 0xca, 0xcb, 0xcd, 0xce,
+    0xcf,
+  ]);
+  let offset = 2;
+
+  while (offset + 8 < image.length) {
+    if (image[offset] !== 0xff) {
+      offset += 1;
+      continue;
+    }
+    const marker = image[offset + 1];
+    offset += 2;
+    if (startOfFrameMarkers.has(marker)) {
+      return image.readUInt16BE(offset + 5) === THUMBNAIL_WIDTH
+        && image.readUInt16BE(offset + 3) === THUMBNAIL_HEIGHT;
+    }
+    if (marker !== 0xd8 && marker !== 0xd9) {
+      offset += image.readUInt16BE(offset);
+    }
+  }
+
+  return false;
 }
 
 async function isServerReady(baseUrl) {
@@ -142,30 +172,34 @@ async function waitForCanvasReady(page) {
 
 async function captureCanvasJpeg(canvasHandle) {
   const dataUrl = await canvasHandle.evaluate(
-    (canvas, { size, quality }) => {
+    (canvas, { width, height, quality }) => {
       if (!(canvas instanceof HTMLCanvasElement)) {
         throw new Error('Thumbnail canvas not found');
       }
       const exportCanvas = document.createElement('canvas');
-      exportCanvas.width = size;
-      exportCanvas.height = size;
+      exportCanvas.width = width;
+      exportCanvas.height = height;
 
       const ctx = exportCanvas.getContext('2d');
       if (!ctx) {
         throw new Error('Failed to create 2D context for thumbnail export');
       }
 
-      ctx.drawImage(canvas, 0, 0, size, size);
+      ctx.drawImage(canvas, 0, 0, width, height);
       return exportCanvas.toDataURL('image/jpeg', quality);
     },
-    { size: THUMBNAIL_SIZE, quality: THUMBNAIL_QUALITY }
+    {
+      width: THUMBNAIL_WIDTH,
+      height: THUMBNAIL_HEIGHT,
+      quality: THUMBNAIL_QUALITY,
+    }
   );
 
   return Buffer.from(dataUrl.replace(/^data:image\/jpeg;base64,/, ''), 'base64');
 }
 
 async function renderPresetThumbnail(page, preset) {
-  const renderUrl = `${BASE_URL}/en/thumbnail${preset.url}`;
+  const renderUrl = `${BASE_URL}/en/thumbnail${preset.url}&renderWidth=${THUMBNAIL_WIDTH}&renderHeight=${THUMBNAIL_HEIGHT}&renderSSAA=1`;
   console.log(`[thumbnails] Rendering ${preset.id} -> ${renderUrl}`);
 
   await page.goto(renderUrl, {
@@ -209,7 +243,10 @@ async function main() {
     ],
   });
   const context = await browser.newContext({
-    viewport: { width: 1440, height: 960 },
+    viewport: {
+      width: THUMBNAIL_WIDTH + 64,
+      height: THUMBNAIL_HEIGHT + 64,
+    },
   });
   const page = await context.newPage();
   page.on('console', (message) => {
@@ -230,7 +267,7 @@ async function main() {
       const shouldRender =
         options.force ||
         preset.thumbnail !== publicPath ||
-        !existsSync(outputPath);
+        !hasExpectedThumbnailDimensions(outputPath);
 
       if (!shouldRender) {
         console.log(`[thumbnails] Skipping ${preset.id} (already linked)`);

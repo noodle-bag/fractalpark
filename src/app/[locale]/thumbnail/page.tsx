@@ -34,9 +34,10 @@ export default async function ThumbnailPage({
   const params = new URLSearchParams();
   const renderWidth = parseRenderDimension(resolved.renderWidth);
   const renderHeight = parseRenderDimension(resolved.renderHeight);
+  const useSSAA = resolved.renderSSAA === '1';
 
   for (const [key, value] of Object.entries(resolved)) {
-    if (key === 'renderWidth' || key === 'renderHeight') {
+    if (key === 'renderWidth' || key === 'renderHeight' || key === 'renderSSAA') {
       continue;
     }
 
@@ -56,6 +57,7 @@ export default async function ThumbnailPage({
       <ThumbnailRenderer
         height={renderHeight}
         params={fractalParams}
+        useSSAA={useSSAA}
         width={renderWidth}
       />
     </main>

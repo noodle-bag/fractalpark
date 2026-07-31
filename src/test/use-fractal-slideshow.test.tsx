@@ -1,9 +1,11 @@
 import { act, renderHook } from '@testing-library/react';
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
-import type { SavedFractal } from '@/engine/types';
-import { useFractalSlideshow } from '@/hooks/useFractalSlideshow';
+import {
+  useFractalSlideshow,
+  type SlideshowArtwork,
+} from '@/hooks/useFractalSlideshow';
 
-const FIRST_PRESET: SavedFractal = {
+const FIRST_PRESET: SlideshowArtwork = {
   id: 'first-real-preset',
   name: 'First Real Preset',
   params: {
@@ -30,9 +32,7 @@ const FIRST_PRESET: SavedFractal = {
     transformId: 'none',
     pluginParams: {},
   },
-  createdAt: 1,
   thumbnail: '',
-  starred: false,
 };
 
 describe('useFractalSlideshow', () => {
@@ -50,7 +50,7 @@ describe('useFractalSlideshow', () => {
 
   it('keeps the placeholder hidden until the first real preset is installed', () => {
     const { result, rerender } = renderHook(
-      ({ fractals }: { fractals: SavedFractal[] }) =>
+      ({ fractals }: { fractals: SlideshowArtwork[] }) =>
         useFractalSlideshow({ fractals }),
       {
         initialProps: { fractals: [] },
