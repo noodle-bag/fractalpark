@@ -1,7 +1,8 @@
 'use client';
 
 import Image from 'next/image';
-import { lazy, Suspense, useEffect, useState } from 'react';
+import { lazy, Suspense, useEffect, useRef, useState } from 'react';
+import { flushSync } from 'react-dom';
 import { Maximize2, Minimize2, Pause, Play } from 'lucide-react';
 import type { PublishedArtworkPlayback } from '@/lib/published-artworks';
 import {
@@ -33,29 +34,54 @@ export function ArtworkViewer({
 }: ArtworkViewerProps) {
   const [isOpen, setIsOpen] = useState(false);
   const [isPaused, setIsPaused] = useState(false);
+  const dialogRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
     if (!isOpen) return;
 
     const handleKeyDown = (event: KeyboardEvent) => {
-      if (event.key === 'Escape') setIsOpen(false);
+      if (event.key === 'Escape') {
+        if (document.fullscreenElement === dialogRef.current) {
+          void document.exitFullscreen();
+        }
+        setIsOpen(false);
+        setIsPaused(false);
+      }
+    };
+    const handleFullscreenChange = () => {
+      if (document.fullscreenElement !== dialogRef.current) {
+        setIsOpen(false);
+        setIsPaused(false);
+      }
     };
     const previousOverflow = document.body.style.overflow;
     document.body.style.overflow = 'hidden';
     window.addEventListener('keydown', handleKeyDown);
+    document.addEventListener('fullscreenchange', handleFullscreenChange);
 
     return () => {
       document.body.style.overflow = previousOverflow;
       window.removeEventListener('keydown', handleKeyDown);
+      document.removeEventListener('fullscreenchange', handleFullscreenChange);
     };
   }, [isOpen]);
 
   function openViewer() {
-    setIsPaused(false);
-    setIsOpen(true);
+    flushSync(() => {
+      setIsPaused(false);
+      setIsOpen(true);
+    });
+    const dialog = dialogRef.current;
+    if (!dialog?.requestFullscreen) return;
+    void dialog.requestFullscreen().catch(() => {
+      // Keep the full-viewport dialog as a fallback when the API is unavailable.
+    });
   }
 
   function closeViewer() {
+    if (document.fullscreenElement === dialogRef.current) {
+      void document.exitFullscreen();
+    }
     setIsOpen(false);
     setIsPaused(false);
   }
@@ -95,6 +121,7 @@ export function ArtworkViewer({
 
       {isOpen ? (
         <div
+          ref={dialogRef}
           role="dialog"
           aria-modal="true"
           aria-label={artwork.name}

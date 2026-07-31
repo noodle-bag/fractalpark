@@ -173,13 +173,16 @@ remove the Hero fallback, text, formula link, or Remix action.
 
 - The Hero lazy-loads an animated canvas after hydration and automatically
   loops only the current artwork over its static poster fallback.
-- View Fullscreen opens the same artwork and starts fullscreen playback
-  automatically. There is no separate Play action on the page.
+- View Fullscreen uses the browser Fullscreen API, opens the same artwork, and
+  starts playback automatically. A full-viewport dialog remains the fallback
+  when the API is unavailable. There is no separate Play action on the page.
 - Controls reuse the homepage's restrained circular, translucent visual
   language.
 - Fullscreen artwork playback exposes Pause/Resume and Minimize/Exit, not Previous/Next,
   progress, speed, editing, or automatic artwork changes.
 - Background click and Escape close the fullscreen presentation.
+- Leaving browser fullscreen by any native control also closes the artwork
+  dialog and releases its renderer.
 
 ## Creator and License
 

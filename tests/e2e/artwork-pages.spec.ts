@@ -1,4 +1,5 @@
 import { expect, test } from '@playwright/test';
+import { ARTWORK_CONTENT_MANIFEST } from '../../src/content/artwork-manifest';
 
 const englishPath = '/en/gallery/newton-3-deep-spiral';
 const chinesePath = '/zh/gallery/newton-cosh-ember-meridian';
@@ -84,6 +85,9 @@ test.describe('Artwork validation pages', () => {
 
     const dialog = page.getByRole('dialog', { name: 'Newton Deep Spiral' });
     await expect(dialog).toBeVisible();
+    await expect.poll(() => page.evaluate(() => (
+      document.fullscreenElement?.getAttribute('role')
+    ))).toBe('dialog');
     await expect(dialog.locator('canvas')).toBeVisible({ timeout: 15000 });
     await expect(dialog.getByRole('button', { name: 'Exit fullscreen' })).toBeVisible();
     await expect(dialog.getByRole('button', { name: /Previous|Next/ })).toHaveCount(0);
@@ -96,6 +100,27 @@ test.describe('Artwork validation pages', () => {
     await expect(dialog.getByRole('button', { name: 'Pause animation' })).toBeVisible();
     await page.keyboard.press('Escape');
     await expect(dialog).toHaveCount(0);
+    await expect.poll(() => page.evaluate(() => document.fullscreenElement)).toBeNull();
+  });
+
+  test('publishes every localized artwork URL in the runtime sitemap', async ({
+    request,
+  }) => {
+    const response = await request.get('/sitemap.xml');
+    expect(response.status()).toBe(200);
+    const body = await response.text();
+    const artworkLocations = [...body.matchAll(
+      /<loc>https:\/\/www\.fractalpark\.com\/(?:en|zh)\/gallery\/[^<]+<\/loc>/g
+    )];
+
+    expect(artworkLocations).toHaveLength(52);
+    for (const locale of ['en', 'zh']) {
+      for (const { slug } of ARTWORK_CONTENT_MANIFEST) {
+        expect(body).toContain(
+          `<loc>https://www.fractalpark.com/${locale}/gallery/${slug}</loc>`
+        );
+      }
+    }
   });
 
   test('keeps the artwork layout within a mobile viewport', async ({ page }) => {
