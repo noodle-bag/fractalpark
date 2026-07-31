@@ -892,7 +892,7 @@
       "customGradient": "Custom gradient",
       "viewer": {
         "viewFullscreen": "View fullscreen",
-        "play": "Play animation",
+        "resume": "Resume animation",
         "pause": "Pause animation",
         "minimize": "Exit fullscreen",
         "closeHint": "Click the background or press Esc to exit"

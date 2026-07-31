@@ -4,7 +4,6 @@ import Image from 'next/image';
 import { lazy, Suspense, useEffect, useState } from 'react';
 import { Maximize2, Minimize2, Pause, Play } from 'lucide-react';
 import type { PublishedArtworkPlayback } from '@/lib/published-artworks';
-import type { ViewBounds } from '@/engine/types';
 import {
   PLAYBACK_CONTROL_BAR_CLASS,
   PLAYBACK_CONTROL_BUTTON_CLASS,
@@ -20,7 +19,7 @@ interface ArtworkViewerProps {
   imagePath: string;
   labels: {
     viewFullscreen: string;
-    play: string;
+    resume: string;
     pause: string;
     minimize: string;
     closeHint: string;
@@ -33,10 +32,7 @@ export function ArtworkViewer({
   labels,
 }: ArtworkViewerProps) {
   const [isOpen, setIsOpen] = useState(false);
-  const [isPlaying, setIsPlaying] = useState(false);
   const [isPaused, setIsPaused] = useState(false);
-  const [canvasVisible, setCanvasVisible] = useState(false);
-  const [bounds, setBounds] = useState<ViewBounds>(artwork.params.bounds);
 
   useEffect(() => {
     if (!isOpen) return;
@@ -54,26 +50,14 @@ export function ArtworkViewer({
     };
   }, [isOpen]);
 
-  useEffect(() => {
-    if (!isPlaying) return;
-
-    const timer = window.setTimeout(() => setCanvasVisible(true), 180);
-    return () => window.clearTimeout(timer);
-  }, [isPlaying]);
-
-  function openViewer(play: boolean) {
-    setBounds(artwork.params.bounds);
+  function openViewer() {
     setIsPaused(false);
-    setCanvasVisible(false);
-    setIsPlaying(play);
     setIsOpen(true);
   }
 
   function closeViewer() {
     setIsOpen(false);
-    setIsPlaying(false);
     setIsPaused(false);
-    setCanvasVisible(false);
   }
 
   return (
@@ -88,15 +72,23 @@ export function ArtworkViewer({
             className="object-cover"
             sizes="(min-width: 1280px) 1152px, (min-width: 768px) calc(100vw - 64px), calc(100vw - 40px)"
           />
+          {!isOpen ? (
+            <div className="pointer-events-none absolute inset-0">
+              <Suspense fallback={null}>
+                <AnimatedFractalCanvas
+                  params={artwork.params}
+                  keyframes={artwork.animation.keyframes}
+                  dprScale={0.75}
+                  className="h-full w-full"
+                />
+              </Suspense>
+            </div>
+          ) : null}
         </div>
         <div className="mt-4 flex flex-wrap gap-3">
-          <Button type="button" variant="outline" onClick={() => openViewer(false)}>
+          <Button type="button" variant="outline" onClick={openViewer}>
             <Maximize2 aria-hidden />
             {labels.viewFullscreen}
-          </Button>
-          <Button type="button" onClick={() => openViewer(true)}>
-            <Play aria-hidden />
-            {labels.play}
           </Button>
         </div>
       </figure>
@@ -120,54 +112,33 @@ export function ArtworkViewer({
             sizes="100vw"
           />
 
-          {isPlaying ? (
-            <div
-              className="pointer-events-none absolute inset-0 transition-opacity duration-700"
-              style={{ opacity: canvasVisible ? 1 : 0 }}
-            >
-              <Suspense fallback={null}>
-                <AnimatedFractalCanvas
-                  params={{ ...artwork.params, bounds }}
-                  keyframes={isPaused ? undefined : artwork.animation.keyframes}
-                  dprScale={0.75}
-                  resetOnStop={false}
-                  className="h-full w-full"
-                  onFrame={setBounds}
-                />
-              </Suspense>
-            </div>
-          ) : null}
+          <div className="pointer-events-none absolute inset-0">
+            <Suspense fallback={null}>
+              <AnimatedFractalCanvas
+                params={artwork.params}
+                keyframes={artwork.animation.keyframes}
+                dprScale={0.75}
+                paused={isPaused}
+                resetOnStop={false}
+                className="h-full w-full"
+              />
+            </Suspense>
+          </div>
 
           <div className="absolute bottom-4 left-0 right-0 flex flex-col items-center gap-3 px-4">
             <div className={PLAYBACK_CONTROL_BAR_CLASS}>
-              {isPlaying ? (
-                <button
-                  type="button"
-                  className={PLAYBACK_CONTROL_BUTTON_CLASS}
-                  aria-label={isPaused ? labels.play : labels.pause}
-                  title={isPaused ? labels.play : labels.pause}
-                  onClick={(event) => {
-                    event.stopPropagation();
-                    setIsPaused((paused) => !paused);
-                  }}
-                >
-                  {isPaused ? <Play className="h-4 w-4" /> : <Pause className="h-4 w-4" />}
-                </button>
-              ) : (
-                <button
-                  type="button"
-                  className={PLAYBACK_CONTROL_BUTTON_CLASS}
-                  aria-label={labels.play}
-                  title={labels.play}
-                  onClick={(event) => {
-                    event.stopPropagation();
-                    setCanvasVisible(false);
-                    setIsPlaying(true);
-                  }}
-                >
-                  <Play className="h-4 w-4" />
-                </button>
-              )}
+              <button
+                type="button"
+                className={PLAYBACK_CONTROL_BUTTON_CLASS}
+                aria-label={isPaused ? labels.resume : labels.pause}
+                title={isPaused ? labels.resume : labels.pause}
+                onClick={(event) => {
+                  event.stopPropagation();
+                  setIsPaused((paused) => !paused);
+                }}
+              >
+                {isPaused ? <Play className="h-4 w-4" /> : <Pause className="h-4 w-4" />}
+              </button>
               <button
                 type="button"
                 className={PLAYBACK_CONTROL_BUTTON_CLASS}

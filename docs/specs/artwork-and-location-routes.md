@@ -154,7 +154,8 @@ structured data, or server-rendered user content.
 
 Every published artwork page provides:
 
-1. breadcrumb, localized title, summary, and a static 16:10 Hero;
+1. breadcrumb, localized title, summary, and a 16:10 animated Hero with a
+   static poster fallback;
 2. visible creator credit and image license;
 3. optional single-artwork playback and fullscreen viewing;
 4. formula and state summary derived from the canonical Document;
@@ -164,18 +165,19 @@ Every published artwork page provides:
 8. Copy page link;
 9. at least two configured related artworks.
 
-The static page, metadata, and Remix link do not depend on WebGL or client
-JavaScript. Playback is a lazy client enhancement. Its failure cannot remove
-the Hero, text, formula link, or Remix action.
+The static page, poster, metadata, and Remix link do not depend on WebGL or
+client JavaScript. Playback is a lazy client enhancement. Its failure cannot
+remove the Hero fallback, text, formula link, or Remix action.
 
 ### Playback
 
-- View Fullscreen opens the static high-resolution poster without autoplay.
-- Play lazy-loads the animated canvas, fades from the poster to the first
-  keyframe, and loops only the current artwork.
+- The Hero lazy-loads an animated canvas after hydration and automatically
+  loops only the current artwork over its static poster fallback.
+- View Fullscreen opens the same artwork and starts fullscreen playback
+  automatically. There is no separate Play action on the page.
 - Controls reuse the homepage's restrained circular, translucent visual
   language.
-- Artwork pages expose Play/Pause and Minimize/Exit, not Previous/Next,
+- Fullscreen artwork playback exposes Pause/Resume and Minimize/Exit, not Previous/Next,
   progress, speed, editing, or automatic artwork changes.
 - Background click and Escape close the fullscreen presentation.
 
@@ -213,8 +215,10 @@ Artwork `ImageObject` structured data must match visible content:
 - Default and server-rendered.
 - Contains all 26 official works in preset source order.
 - Official cards navigate only to canonical artwork pages.
-- No Featured or Built-in badge, star action, management menu, Gallery
-  fullscreen, or hover WebGL playback.
+- No Featured or Built-in badge, star action, management menu, or Gallery
+  fullscreen. On hover-capable pointers, an animated preset lazy-loads WebGL
+  only for the hovered card; static presets and all fallback states keep the
+  published image.
 - The `featured` field and legacy star data may remain temporarily for
   compatibility but cannot affect order or rendering.
 
@@ -239,11 +243,8 @@ responsive page gutters and 16 to 20 pixel gaps.
 | Available width | Columns |
 |---|---:|
 | below 640 px | 1 |
-| 640-899 px | 2 |
-| 900-1199 px | 3 |
-| 1200-1599 px | 4 |
-| 1600-2199 px | 5 |
-| 2200 px and above | 6 |
+| 640-1023 px | 2 |
+| 1024 px and above | 3 |
 
 The last row never stretches individual cards. Official images use native
 16:10 containers. Legacy local images use a neutral background and
@@ -258,6 +259,8 @@ Cards are image-led and visually restrained:
   heavy overlay;
 - hover lift of at most two pixels, image scale no greater than 1.015, and a
   subtle shadow change;
+- animated presets play only while their card is hovered and release their
+  renderer when the pointer leaves;
 - explicit focus-visible treatment and no simulated touch hover.
 
 Published static images are true 16:10 renders of at least 1920 by 1200

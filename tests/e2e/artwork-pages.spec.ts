@@ -74,25 +74,24 @@ test.describe('Artwork validation pages', () => {
     await context.close();
   });
 
-  test('opens a static viewer first and loads only the current artwork when Play is requested', async ({
+  test('autoplays the current artwork inline and in fullscreen without a Play action', async ({
     page,
   }) => {
     await page.goto(englishPath);
+    await expect(page.locator('figure canvas')).toBeVisible({ timeout: 15000 });
+    await expect(page.getByRole('button', { name: 'Play animation' })).toHaveCount(0);
     await page.getByRole('button', { name: 'View fullscreen' }).click();
 
     const dialog = page.getByRole('dialog', { name: 'Newton Deep Spiral' });
     await expect(dialog).toBeVisible();
-    await expect(dialog.locator('canvas')).toHaveCount(0);
-    await expect(dialog.getByRole('button', { name: 'Play animation' })).toBeVisible();
+    await expect(dialog.locator('canvas')).toBeVisible({ timeout: 15000 });
     await expect(dialog.getByRole('button', { name: 'Exit fullscreen' })).toBeVisible();
     await expect(dialog.getByRole('button', { name: /Previous|Next/ })).toHaveCount(0);
 
-    await dialog.getByRole('button', { name: 'Play animation' }).click();
-    await expect(dialog.locator('canvas')).toBeVisible({ timeout: 15000 });
     await expect(dialog.getByRole('button', { name: 'Pause animation' })).toBeVisible();
     await dialog.getByRole('button', { name: 'Pause animation' }).click();
     await expect(dialog.locator('canvas')).toBeVisible();
-    await dialog.getByRole('button', { name: 'Play animation' }).click();
+    await dialog.getByRole('button', { name: 'Resume animation' }).click();
     await expect(dialog.locator('canvas')).toBeVisible();
     await expect(dialog.getByRole('button', { name: 'Pause animation' })).toBeVisible();
     await page.keyboard.press('Escape');

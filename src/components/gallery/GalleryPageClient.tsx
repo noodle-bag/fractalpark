@@ -138,7 +138,7 @@ function GalleryViewLink({
 
 function ArtworkGrid({ children }: { children: React.ReactNode }) {
   return (
-    <div className="grid grid-cols-1 gap-4 px-4 sm:grid-cols-2 sm:px-6 min-[900px]:grid-cols-3 min-[1200px]:grid-cols-4 min-[1600px]:grid-cols-5 min-[2200px]:grid-cols-6 xl:gap-5 xl:px-8">
+    <div className="grid grid-cols-1 gap-4 px-4 sm:grid-cols-2 sm:px-6 lg:grid-cols-3 xl:gap-5 xl:px-8">
       {children}
     </div>
   );

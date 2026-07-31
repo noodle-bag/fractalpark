@@ -288,7 +288,7 @@ export default async function ArtworkPage({ params }: ArtworkPageProps) {
           imagePath={artwork.thumbnail}
           labels={{
             viewFullscreen: pageT('viewer.viewFullscreen'),
-            play: pageT('viewer.play'),
+            resume: pageT('viewer.resume'),
             pause: pageT('viewer.pause'),
             minimize: pageT('viewer.minimize'),
             closeHint: pageT('viewer.closeHint'),
