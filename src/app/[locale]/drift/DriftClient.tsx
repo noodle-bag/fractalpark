@@ -26,24 +26,20 @@ function shuffleArray<T>(array: T[]): T[] {
 
 /**
  * Hook to get gallery presets for the Drift slideshow.
- * Loads from gallery-presets.json (same source as the gallery page).
+ * Loads from gallery-presets.json (same source as the gallery page) and
+ * shuffles the whole collection, so the opening slide is a random preset
+ * on every visit. The shuffle only happens after the client-side fetch
+ * resolves, so SSR and hydration both render the deterministic empty
+ * (black) shell — no hydration mismatch.
  */
-function useDriftPresets(initialFractal: SavedFractal | null): SavedFractal[] {
+function useDriftPresets(): SavedFractal[] {
   const locale = useLocale();
   const { presets } = useBuiltinPresets({ locale });
 
   return useMemo(() => {
-    if (presets.length === 0) return initialFractal ? [initialFractal] : [];
-    const fractals = presets.map(presetToSavedFractal);
-    if (!initialFractal) return shuffleArray(fractals);
-
-    const remainingFractals = fractals.filter((fractal) => fractal.id !== initialFractal.id);
-    return [initialFractal, ...shuffleArray(remainingFractals)];
-  }, [initialFractal, presets]);
-}
-
-interface DriftClientProps {
-  initialFractal: SavedFractal | null;
+    if (presets.length === 0) return [];
+    return shuffleArray(presets.map(presetToSavedFractal));
+  }, [presets]);
 }
 
 /**
@@ -54,7 +50,7 @@ interface DriftClientProps {
  * immersive state. The only controls are Play/Pause, Previous, and Next in a
  * bottom bar; the transparent navbar stays on top as the way out.
  */
-export default function DriftClient({ initialFractal }: DriftClientProps) {
+export default function DriftClient() {
   const { setConfig } = useLayout();
   const [isPaused, setIsPaused] = useState(false);
 
@@ -71,11 +67,7 @@ export default function DriftClient({ initialFractal }: DriftClientProps) {
 
   return (
     <div className="fixed inset-0 bg-black">
-      <DriftSlideshow
-        initialFractal={initialFractal}
-        isPaused={isPaused}
-        onTogglePause={togglePause}
-      />
+      <DriftSlideshow isPaused={isPaused} onTogglePause={togglePause} />
     </div>
   );
 }
@@ -85,17 +77,12 @@ export default function DriftClient({ initialFractal }: DriftClientProps) {
  * Mobile devices use dprScale=0.5 to reduce GPU load.
  */
 interface DriftSlideshowProps {
-  initialFractal: SavedFractal | null;
   isPaused: boolean;
   onTogglePause: () => void;
 }
 
-function DriftSlideshow({
-  initialFractal,
-  isPaused,
-  onTogglePause,
-}: DriftSlideshowProps) {
-  const fractals = useDriftPresets(initialFractal);
+function DriftSlideshow({ isPaused, onTogglePause }: DriftSlideshowProps) {
+  const fractals = useDriftPresets();
   // Lower dprScale on mobile to reduce GPU load on smaller devices
   const dprScale = typeof window !== 'undefined' && window.innerWidth < 768 ? 0.4 : 0.5;
   const {
@@ -208,7 +195,7 @@ function DriftSlideshow({
           </button>
           <button
             onClick={goNext}
-            disabled={isPaused || !canNavigate}
+            disabled={isPaused || !canNavigate || !isReady}
             className="inline-flex items-center rounded-full bg-white/10 p-3 text-white transition-colors hover:bg-white/20 disabled:cursor-not-allowed disabled:opacity-40"
             title={t('next')}
             aria-label={t('next')}
