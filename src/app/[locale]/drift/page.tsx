@@ -1,12 +1,6 @@
 import type { Metadata } from 'next';
 import { getTranslations, setRequestLocale } from 'next-intl/server';
 import { SITE, buildLocaleAlternates } from '@/lib/site';
-import {
-  galleryPresetConfigToPreset,
-  parseGalleryPresetsFile,
-  presetToSavedFractal,
-} from '@/lib/gallery-presets';
-import presetsFile from '../../../../public/gallery-presets.json';
 import DriftClient from './DriftClient';
 
 /**
@@ -67,10 +61,8 @@ export default async function DriftPage({
 }) {
   const { locale } = await params;
   setRequestLocale(locale);
-  const firstPresetConfig = parseGalleryPresetsFile(presetsFile).presets[0];
-  const initialFractal = firstPresetConfig
-    ? presetToSavedFractal(galleryPresetConfigToPreset(firstPresetConfig, locale))
-    : null;
 
-  return <DriftClient initialFractal={initialFractal} />;
+  // No server-picked opening slide: the client shuffles the published
+  // collection after load, so every visit starts from a random preset.
+  return <DriftClient />;
 }
