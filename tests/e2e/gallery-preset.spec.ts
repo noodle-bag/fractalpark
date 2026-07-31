@@ -1,7 +1,7 @@
 import { test, expect, type Page } from '@playwright/test';
 
 async function waitForGalleryPresetLinks(page: Page) {
-  const presetLinks = page.locator('a[href*="/explore?"]');
+  const presetLinks = page.locator('a[href^="/en/gallery/preset-"]');
   await expect(presetLinks.first()).toBeVisible({ timeout: 15000 });
   return presetLinks;
 }
@@ -21,19 +21,23 @@ test.describe('Gallery Preset Navigation', () => {
     const href = await firstPresetLink.getAttribute('href');
 
     expect(href).toBeTruthy();
-    expect(href).toContain('/en/explore?');
+    expect(href).toContain('/en/gallery/preset-');
+    const redirect = await page.request.get(href!, { maxRedirects: 0 });
+    const expectedLocation = redirect.headers().location;
+    expect(redirect.status()).toBe(308);
+    expect(expectedLocation).toMatch(/^\/en\/explore\?/);
 
     await firstPresetLink.click();
 
     await waitForFractalCanvasReady(page);
 
-    expect(page.url()).toBe(new URL(href!, page.url()).toString());
+    expect(page.url()).toBe(new URL(expectedLocation!, page.url()).toString());
   });
 
   test('featured preset should show a static thumbnail and navigate with a matching href', async ({ page }) => {
     await page.goto('/en/gallery');
 
-    const featuredCard = page.locator('a[href*="/explore?"]').filter({ hasText: 'Featured' }).first();
+    const featuredCard = page.locator('a[href^="/en/gallery/preset-"]').filter({ hasText: 'Featured' }).first();
     await expect(featuredCard).toBeVisible({ timeout: 15000 });
 
     const thumbnail = featuredCard.locator('img').first();
@@ -42,11 +46,15 @@ test.describe('Gallery Preset Navigation', () => {
 
     const href = await featuredCard.getAttribute('href');
     expect(href).toBeTruthy();
-    expect(href).toContain('/en/explore?');
+    expect(href).toContain('/en/gallery/preset-');
+    const redirect = await page.request.get(href!, { maxRedirects: 0 });
+    const expectedLocation = redirect.headers().location;
+    expect(redirect.status()).toBe(308);
+    expect(expectedLocation).toMatch(/^\/en\/explore\?/);
 
     await featuredCard.click();
     await waitForFractalCanvasReady(page);
 
-    expect(page.url()).toBe(new URL(href!, page.url()).toString());
+    expect(page.url()).toBe(new URL(expectedLocation!, page.url()).toString());
   });
 });

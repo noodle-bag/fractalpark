@@ -1,28 +1,32 @@
 # FractalPark
 
-> Fractal art exploration website with real-time GPU rendering
+> FractalPark is an open-source, formula-first fractal knowledge and creation platform with growing Fractint-compatible FRM support, working to bring Fractint’s formula heritage into the modern browser.
 
 ## Overview
 
-FractalPark is a web-based fractal art generator that runs entirely in the browser using WebGL. It enables users to explore, create, save, and share mathematical fractal art without installation or backend processing.
+FractalPark is a free, open-source (MIT) WebGL application that runs entirely in the browser. It enables users to explore, learn, create, save, and share mathematical fractal art without installation, accounts, or backend processing. The default entry point is Explore, the interactive fractal workspace.
 
 ## Pages
 
-- [Home](https://fractalpark.com/en): Featured fractal gallery and entry point
-- [Explore](https://fractalpark.com/en/explore): Interactive fractal renderer with 94 formulas, real-time controls, URL sharing, and export
-- [Gallery](https://fractalpark.com/en/gallery): Featured presets and personal collection manager
-- [About](https://fractalpark.com/en/about): Project information and technology stack
+- [Explore](https://www.fractalpark.com/en/explore): Default landing and interactive fractal workspace with 94 formulas, real-time controls, URL sharing, and PNG export
+- [Formula Atlas](https://www.fractalpark.com/en/formulas): Directory of 94 built-in formulas across 7 families, linking to 21 in-depth Formula Guides
+- [FRM Guide](https://www.fractalpark.com/en/formulas/frm): Fractint-compatible FRM language guide — development, support matrix, core syntax, and tutorials
+- [FRM Editor](https://www.fractalpark.com/en/formulas/editor): Standalone FRM authoring workflow with import, diagnostics, and preview
+- [Gallery](https://www.fractalpark.com/en/gallery): Published preset collection and on-device personal artworks
+- [Drift](https://www.fractalpark.com/en/drift): Immersive full-viewport preset slideshow (experiential page; marked `noindex, follow`, excluded from the sitemap)
+- [About](https://www.fractalpark.com/en/about): Project facts, current boundaries, future directions, and open-source details
 
 ## Core Features
 
-- **94 Built-in Formulas**: Mandelbrot, Julia, Burning Ship, Tricorn, Phoenix, Newton, Magnet, Lambda, McMullen, rational, transcendental, and more
+- **94 Built-in Formulas**: Mandelbrot, Julia, Burning Ship, Tricorn, Phoenix, Newton, Magnet, Lambda, McMullen, rational, transcendental, and more, across 7 families
+- **21 Formula Guides**: In-depth bilingual guides with math, history, visual character, and live examples
+- **Fractint-compatible FRM**: Custom formula editor using Fractint-style .frm compatibility and FractalPark native directives with real-time compilation (a growing, tested subset — not a complete Fractint reimplementation)
 - **7 Transform Plugins**: Kaleidoscope, Mobius, Inversion, Polar, Sinusoidal, Spherical, None
-- **Custom Formula Editor**: Write fractal formulas using Fractint-style .frm compatibility and FractalPark native directives with real-time compilation
 - **Coloring System**: 9 coloring modes with orbit channel support
 - **Real-time Rendering**: WebGL GPU acceleration with SSAA options
-- **High-res Export**: PNG export with tiled rendering for large images
-- **Personal Gallery**: Save fractals to localStorage with thumbnails and starred favorites
-- **Bilingual**: English and Chinese support
+- **High-res Export**: PNG export with tiled rendering for large images, up to 4x
+- **Personal Gallery**: Artworks saved to localStorage on the current device (no accounts, no cloud sync)
+- **Bilingual**: English and Simplified Chinese support
 
 ## URL Parameters
 
@@ -56,6 +60,6 @@ Transforms, lighting, and animation:
 - `kf`: keyframes as `cx,cy,z,rot|cx,cy,z,rot`
 
 Example:
-https://fractalpark.com/en/explore?cx=-0.5&cy=0.25&z=12.50&fm=burningShip&oc=st&julia=1&jre=-0.620000&jim=0.410000&pal=1
+https://www.fractalpark.com/en/explore?cx=-0.5&cy=0.25&z=12.50&fm=burningShip&oc=st&julia=1&jre=-0.620000&jim=0.410000&pal=1
 
-Full documentation: https://fractalpark.com/llms-full.txt
+Full documentation: https://www.fractalpark.com/llms-full.txt

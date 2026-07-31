@@ -15,7 +15,6 @@ test.describe('Animation URL Restore', () => {
     await waitForFractalCanvasReady(page);
 
     await page.getByRole('tab', { name: /animation/i }).click();
-    await page.getByRole('button', { name: /animation/i }).click();
 
     await expect(page.getByRole('button', { name: /preview/i })).toBeEnabled();
     await expect(page.getByText(/Keyframe 1|Keyframe 1/)).toBeVisible();
@@ -29,7 +28,6 @@ test.describe('Animation URL Restore', () => {
     await waitForFractalCanvasReady(page);
 
     await page.getByRole('tab', { name: /animation/i }).click();
-    await page.getByRole('button', { name: /animation/i }).click();
     await expect(page.getByRole('button', { name: /preview/i })).toBeEnabled();
     await expect(page.getByText(/Keyframe 1|Keyframe 1/)).toBeVisible();
     await expect(page.getByText(/Keyframe 2|Keyframe 2/)).toBeVisible();

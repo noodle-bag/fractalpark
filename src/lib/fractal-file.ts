@@ -1,4 +1,3 @@
-import { compileFrm } from '@/engine/frm/compile';
 import {
   FRACTAL_DOCUMENT_ENVELOPE_VERSION,
   readFractalDocumentEnvelope,
@@ -10,6 +9,7 @@ import { normalizeFractalDocument } from '@/engine/document-migrate';
 import type { FractalDocument } from '@/engine/document';
 import { FORMULA_CATALOG } from '@/engine/plugins/formula-catalog';
 import { pluginRegistry } from '@/engine/plugins/registry';
+import { resolveCustomFormula } from '@/lib/formula-resolver';
 
 export const FRACTAL_PROJECT_FILE_MAX_BYTES = 1024 * 1024;
 export const PORTABLE_FORMULA_SOURCE_MAX_BYTES = 256 * 1024;
@@ -371,11 +371,14 @@ export async function prepareFractalProjectImport(
       resolvedId = deriveImportedFormulaId(asset.hash, occupiedIds);
     }
 
-    const compileResult = compileFrm(asset.source, resolvedId);
-    if (!compileResult.success || !compileResult.plugin) {
+    const resolution = resolveCustomFormula(
+      { id: resolvedId, source: asset.source },
+      { register: false }
+    );
+    if (!resolution.success) {
       return failure(
         'asset-compile-failed',
-        compileResult.errors.join('; ') || `Formula asset could not be compiled: ${asset.id}.`,
+        resolution.errors.join('; '),
         `formula:${asset.id}`
       );
     }
@@ -390,7 +393,7 @@ export async function prepareFractalProjectImport(
     idMap.set(asset.id, resolvedId);
     formulasToAdd.push({
       id: resolvedId,
-      name: asset.name ?? compileResult.plugin.name,
+      name: asset.name ?? resolution.plugin.name,
       source: asset.source,
       hash: asset.hash,
     });

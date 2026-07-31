@@ -1,28 +1,34 @@
+<!-- BEGIN GENERATED public-project -->
+
 # FractalPark
 
-FractalPark is a browser-based fractal art explorer for creating, tuning, saving, and exporting mathematical fractal images. It renders in real time with WebGL and includes built-in formula presets, custom formula editing, transform controls, coloring modes, gallery presets, and shareable URLs.
+FractalPark is an open-source, formula-first fractal knowledge and creation platform with growing Fractint-compatible FRM support, working to bring Fractint’s formula heritage into the modern browser.
 
-[Try FractalPark online](https://www.fractalpark.com)
+![The Mandelbrot set rendered in real time by the FractalPark WebGL engine](public/images/formulas/guides/mandelbrot.jpg)
 
-## Features
+**[Open Explore](https://www.fractalpark.com/en/explore) · [Browse the Formula Atlas](https://www.fractalpark.com/en/formulas) · [Read the FRM Guide](https://www.fractalpark.com/en/formulas/frm) · [Visit the Gallery](https://www.fractalpark.com/en/gallery)**
 
-- Real-time WebGL rendering for Mandelbrot, Julia, Newton, Phoenix, Magnet, McMullen, rational, and transcendental fractal families.
-- Custom formula editor with Fractint-style `.frm` entry support and FractalPark native directives.
-- Transform controls, coloring modes, gradients, supersampling, distance estimation, and lighting options.
-- Built-in gallery presets plus a local browser gallery for user-saved fractals.
-- URL-serializable state for sharing and restoring exact views.
-- High-resolution PNG export.
-- Internationalized UI with English and Chinese locales.
+## Available today
 
-## Tech Stack
+- **Discover formulas** — Browse the Formula Atlas: 94 built-in formulas across 7 families, with 21 in-depth Formula Guides covering the math, history, and visual character of the classics.
+- **Create in the browser** — Explore and render in real time with WebGL: Mandelbrot and Julia modes for every formula, 7 transforms, 9 coloring modes, gradients, lighting, and keyframe animation.
+- **Author FRM** — Write custom formulas in the Fractint-compatible FRM language with the Guide and standalone Editor: AST validation, live GLSL preview, and clear diagnostics.
+- **Save and export** — Save artworks on this device, restore exact views from shareable URLs, and export high-resolution PNG images up to 4× with SSAA anti-aliasing.
 
-- Next.js 16 App Router
-- React 19
-- TypeScript 5
-- WebGL 1 and GLSL fragment shaders
-- Tailwind CSS 4
-- next-intl
-- Vitest and Playwright
+## Current boundaries
+
+- Growing Fractint-compatible FRM support: a practical, tested subset of the Fractint formula language runs today — not a complete Fractint reimplementation.
+- Artworks and custom formulas are stored locally on your device. There are no accounts, no cloud sync, and no server-side sharing.
+- The interface is bilingual in English and Simplified Chinese.
+
+On the roadmap (not released):
+
+- Working to bring Fractint’s historical formula archive into the modern browser over time.
+- Deeper coloring, animation, and zoom capabilities are on the roadmap but not released.
+
+FractalPark is released under the [MIT License](https://opensource.org/license/mit).
+
+<!-- END GENERATED public-project -->
 
 ## Getting Started
 
@@ -48,6 +54,7 @@ npm run test:run  # Run Vitest once
 ## Project Layout
 
 ```text
+docs/              Architecture specifications, ADRs, and release test plans
 messages/          UI translations
 public/            Static assets and gallery preset data
 src/app/           Next.js routes
@@ -58,6 +65,12 @@ src/lib/           Shared utilities
 src/test/          Vitest tests
 tests/e2e/         Playwright smoke tests
 ```
+
+## Architecture and Specifications
+
+See the [documentation index](docs/README.md) for the durable Document format,
+cross-surface content model, architecture decisions, and active release
+regression plans.
 
 ## License
 

@@ -17,18 +17,43 @@ import { trackEvent } from '@/components/analytics/PageViewTracker';
 import { useExploreDocumentState } from '@/hooks/useExploreDocumentState';
 import { useArtworkActions } from '@/hooks/useArtworkActions';
 import AnimatedFractalCanvas from '@/components/fractal/AnimatedFractalCanvas';
-import { ChevronDown, ChevronUp } from 'lucide-react';
+import { AlertTriangle, ChevronDown, ChevronUp } from 'lucide-react';
 import { DEFAULT_FRACTAL_DOCUMENT } from '@/engine/document';
 import type { FormulaSelectionRequest } from '@/engine/frm/authoring';
 import { getDefaultBounds } from '@/engine/plugins/formula-catalog';
 import type { PluginParamRecord, PluginParamValue } from '@/engine/types';
+import {
+  CUSTOM_FORMULAS_CHANGED_EVENT,
+  readPersistedCustomFormulas,
+} from '@/lib/custom-formula-storage';
+import {
+  parseEditorToExploreIntent,
+  stripEditorToExploreIntent,
+} from '@/lib/frm-editor';
+import {
+  resolveFormulaReference,
+  type FormulaResolution,
+} from '@/lib/formula-resolver';
 
-function ExploreClient() {
+type ExploreFormulaResolution =
+  | FormulaResolution
+  | {
+      success: false;
+      formulaId: string;
+      code: 'storage-invalid';
+      errors: string[];
+    };
+
+function ExploreClient({ posterImage }: { posterImage?: string }) {
   const locale = useLocale();
   const t = useTranslations('explore');
   const searchParams = useSearchParams();
   const router = useRouter();
+  const initialHandoffIntentRef = useRef(
+    parseEditorToExploreIntent(new URLSearchParams(searchParams.toString()))
+  );
   const initializedRef = useRef(false);
+  const handoffConsumedRef = useRef<string | null>(null);
   const debounceRef = useRef<ReturnType<typeof setTimeout> | null>(null);
 
   const { document, runtimeParams, updateBounds, updateFormula, updateColoring, updateTransform, updateRender, updateAnimation, selectBuiltInFormula, loadFromDocument } =
@@ -59,6 +84,28 @@ function ExploreClient() {
   );
   const [isPreviewPlaying, setIsPreviewPlaying] = useState(false);
   const [isPanelCollapsed, setIsPanelCollapsed] = useState(false);
+  const [formulaResolution, setFormulaResolution] =
+    useState<ExploreFormulaResolution | null>(null);
+  const [handoffTargetId, setHandoffTargetId] = useState<string | null>(() =>
+    initialHandoffIntentRef.current.status === 'valid'
+      ? initialHandoffIntentRef.current.formulaId
+      : null
+  );
+  const [handoffError, setHandoffError] =
+    useState<ExploreFormulaResolution | null>(() => {
+      const intent = initialHandoffIntentRef.current;
+      if (intent.status !== 'invalid') return null;
+      return {
+        success: false,
+        formulaId: intent.formulaId,
+        code: 'storage-invalid',
+        errors: [
+          intent.reason === 'missing'
+            ? 'Missing custom formula handoff.'
+            : 'Invalid custom formula handoff.',
+        ],
+      };
+    });
   const canvasElRef = useRef<HTMLCanvasElement | null>(null);
   const pickToastTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
 
@@ -73,6 +120,139 @@ function ExploreClient() {
   useEffect(() => {
     initializedRef.current = true;
   }, []);
+
+  // This one-time identity handoff is intentionally separate from the URL codec.
+  useEffect(() => {
+    const currentParams = new URLSearchParams(searchParams.toString());
+    const intent = parseEditorToExploreIntent(currentParams);
+    if (intent.status === 'none') return;
+
+    const handoffKey = `${intent.status}:${intent.formulaId}`;
+    if (handoffConsumedRef.current === handoffKey) return;
+    handoffConsumedRef.current = handoffKey;
+
+    if (intent.status === 'invalid') {
+      queueMicrotask(() => {
+        setHandoffTargetId(null);
+        setHandoffError({
+          success: false,
+          formulaId: intent.formulaId,
+          code: 'storage-invalid',
+          errors: [
+            intent.reason === 'missing'
+              ? 'Missing custom formula handoff.'
+              : 'Invalid custom formula handoff.',
+          ],
+        });
+        router.replace(
+          stripEditorToExploreIntent(locale, currentParams),
+          { scroll: false }
+        );
+      });
+      return;
+    }
+
+    try {
+      const resolution = resolveFormulaReference(
+        intent.formulaId,
+        readPersistedCustomFormulas()
+      );
+      if (!resolution.success) {
+        queueMicrotask(() => {
+          setHandoffTargetId(null);
+          setHandoffError(resolution);
+          router.replace(
+            stripEditorToExploreIntent(locale, currentParams),
+            { scroll: false }
+          );
+        });
+        return;
+      }
+
+      queueMicrotask(() => {
+        setHandoffTargetId(intent.formulaId);
+        setHandoffError(null);
+        updateFormula({ formulaId: intent.formulaId });
+        updateBounds(
+          resolution.experienceHint?.bounds ??
+            getDefaultBounds(intent.formulaId)
+        );
+        if (resolution.experienceHint?.coloring) {
+          updateColoring({
+            customGradient: null,
+            ...resolution.experienceHint.coloring,
+          });
+        }
+        router.replace(
+          stripEditorToExploreIntent(locale, currentParams),
+          { scroll: false }
+        );
+      });
+    } catch (error) {
+      queueMicrotask(() => {
+        setHandoffTargetId(null);
+        setHandoffError({
+          success: false,
+          formulaId: intent.formulaId,
+          code: 'storage-invalid',
+          errors: [
+            error instanceof Error
+              ? error.message
+              : 'Custom formula storage is invalid.',
+          ],
+        });
+        router.replace(
+          stripEditorToExploreIntent(locale, currentParams),
+          { scroll: false }
+        );
+      });
+    }
+  }, [locale, router, searchParams, updateBounds, updateColoring, updateFormula]);
+
+  useEffect(() => {
+    const resolveCurrentFormula = () => {
+      try {
+        setFormulaResolution(
+          resolveFormulaReference(formula, readPersistedCustomFormulas())
+        );
+      } catch (error) {
+        setFormulaResolution({
+          success: false,
+          formulaId: formula,
+          code: 'storage-invalid',
+          errors: [
+            error instanceof Error
+              ? error.message
+              : 'Custom formula storage is invalid.',
+          ],
+        });
+      }
+    };
+
+    resolveCurrentFormula();
+    window.addEventListener(
+      CUSTOM_FORMULAS_CHANGED_EVENT,
+      resolveCurrentFormula
+    );
+    return () => {
+      window.removeEventListener(
+        CUSTOM_FORMULAS_CHANGED_EVENT,
+        resolveCurrentFormula
+      );
+    };
+  }, [formula]);
+
+  useEffect(() => {
+    if (
+      !handoffTargetId ||
+      formula !== handoffTargetId ||
+      !formulaResolution?.success ||
+      formulaResolution.formulaId !== handoffTargetId
+    ) {
+      return;
+    }
+    queueMicrotask(() => setHandoffTargetId(null));
+  }, [formula, formulaResolution, handoffTargetId]);
 
   // Debounced URL update
   useEffect(() => {
@@ -93,10 +273,16 @@ function ExploreClient() {
     router,
   ]);
 
+  const clearHandoffFailure = useCallback(() => {
+    setHandoffError(null);
+    setHandoffTargetId(null);
+  }, []);
+
   const handleLoadDocument = useCallback((nextDocument: typeof document) => {
+    clearHandoffFailure();
     setIsPreviewPlaying(false);
     loadFromDocument(nextDocument);
-  }, [loadFromDocument]);
+  }, [clearHandoffFailure, loadFromDocument]);
 
   const handleResetView = useCallback(() => {
     handleLoadDocument(DEFAULT_FRACTAL_DOCUMENT);
@@ -154,9 +340,10 @@ function ExploreClient() {
 
   // Handle formula change - reset to formula's default bounds
   const handleFormulaChange = useCallback((newFormula: string) => {
+    clearHandoffFailure();
     selectBuiltInFormula(newFormula);
     trackEvent('change_formula', { formula: newFormula });
-  }, [selectBuiltInFormula]);
+  }, [clearHandoffFailure, selectBuiltInFormula]);
 
   const handleFormulaParamChange = useCallback((name: string, value: PluginParamValue) => {
     updateFormula({
@@ -170,6 +357,7 @@ function ExploreClient() {
   }, [document.formula.params?.formula, updateFormula]);
 
   const handleCustomFormulaSelect = useCallback((selection: FormulaSelectionRequest) => {
+    clearHandoffFailure();
     updateFormula({ formulaId: selection.formulaId });
 
     const targetBounds = selection.experienceHint?.bounds ?? getDefaultBounds(selection.formulaId);
@@ -181,7 +369,7 @@ function ExploreClient() {
         ...selection.experienceHint.coloring,
       });
     }
-  }, [updateBounds, updateColoring, updateFormula]);
+  }, [clearHandoffFailure, updateBounds, updateColoring, updateFormula]);
 
   // Handle transform change
   const handleTransformChange = useCallback((newTransform: string) => {
@@ -210,10 +398,60 @@ function ExploreClient() {
     });
   }, [document.transform.params?.transform, updateTransform]);
 
+  const activeResolution = handoffError ?? formulaResolution;
+  const isHandoffPending = Boolean(handoffTargetId);
+  const formulaResolutionMatches =
+    !handoffError &&
+    !isHandoffPending &&
+    formulaResolution?.formulaId === formula;
+  const isFormulaReady =
+    !handoffError && formulaResolutionMatches && formulaResolution?.success === true;
+  let formulaResolutionMessage = t('formula.resolution.loading');
+
+  if (
+    !isHandoffPending &&
+    activeResolution &&
+    !activeResolution.success
+  ) {
+    switch (activeResolution.code) {
+      case 'formula-not-found':
+        formulaResolutionMessage = t('formula.resolution.notFound', {
+          formula: activeResolution.formulaId,
+        });
+        break;
+      case 'storage-invalid':
+        formulaResolutionMessage = t('formula.resolution.storageInvalid');
+        break;
+      case 'builtin-id-conflict':
+        formulaResolutionMessage = t('formula.resolution.idConflict', {
+          formula: activeResolution.formulaId,
+        });
+        break;
+      case 'compile-failed':
+        formulaResolutionMessage = t('formula.resolution.compileFailed', {
+          formula: activeResolution.formulaId,
+        });
+        break;
+      case 'builtin-unavailable':
+      case 'registration-failed':
+        formulaResolutionMessage = t('formula.resolution.unavailable', {
+          formula: activeResolution.formulaId,
+        });
+        break;
+    }
+  }
+
   return (
     <div className="flex flex-col lg:flex-row h-[calc(100dvh-4rem)] overflow-hidden">
-      <div className={`relative bg-black lg:flex-1 ${isPanelCollapsed ? 'flex-1' : 'min-h-[50vh] lg:min-h-0'}`}>
-        {!isPreviewPlaying && (
+      <div
+        className={`relative bg-black lg:flex-1 ${isPanelCollapsed ? 'flex-1' : 'min-h-[50vh] lg:min-h-0'}`}
+        style={posterImage ? {
+          backgroundImage: `url("${posterImage}")`,
+          backgroundPosition: 'center',
+          backgroundSize: 'cover',
+        } : undefined}
+      >
+        {isFormulaReady && !isPreviewPlaying && (
           <FractalCanvas
             paletteIndex={paletteIndex}
             maxIterations={effectiveIterations}
@@ -236,7 +474,7 @@ function ExploreClient() {
             onCanvasReady={handleCanvasReady}
           />
         )}
-        {isPreviewPlaying && (
+        {isFormulaReady && isPreviewPlaying && (
           <AnimatedFractalCanvas
             params={{
               maxIterations: effectiveIterations,
@@ -258,6 +496,16 @@ function ExploreClient() {
             }}
             keyframes={keyframes}
           />
+        )}
+        {!isFormulaReady && (
+          <div className="flex h-full w-full items-center justify-center bg-neutral-950 p-8 text-center text-neutral-200">
+            <div className="max-w-md">
+              {activeResolution && !activeResolution.success && (
+                <AlertTriangle className="mx-auto mb-3 h-6 w-6 text-amber-400" />
+              )}
+              <p>{formulaResolutionMessage}</p>
+            </div>
+          </div>
         )}
         {pickToast && (
           <div className="pointer-events-none absolute left-3 top-3 rounded-md border border-white/20 bg-black/70 px-3 py-1.5 text-xs font-mono text-white shadow-sm backdrop-blur-sm">

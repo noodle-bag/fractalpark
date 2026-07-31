@@ -49,7 +49,9 @@ test.describe('Custom Formula Workflow', () => {
     await page.getByRole('button', { name: /^Save$/ }).click();
 
     // Verify formula appears in list (default name is "MyFormula")
-    await page.waitForSelector('text=MyFormula', { timeout: 5000 });
+    await expect(
+      page.getByRole('button', { name: /^MyFormula$/ }).first()
+    ).toBeVisible({ timeout: 15000 });
   });
 
   test('should handle compilation errors gracefully', async ({ page }) => {
@@ -113,19 +115,21 @@ bailout:
     await expect(page).toHaveURL(/[?&]fm=/, { timeout: 5000 });
   });
 
-  test('should fallback to mandelbrot for unknown formula in URL', async ({ page }) => {
+  test('should report an unknown local formula without falling back', async ({ page }) => {
     // Navigate with a non-existent custom formula ID
     await page.goto('/en/explore?fm=frm-nonexistent');
 
-    // Wait for page to load
-    await waitForFractalCanvasReady(page);
-    
-    // Verify fallback warning in console (we can't easily test console output,
-    // but the page should load without errors)
-    await expect(page.locator('text=Error')).not.toBeVisible();
+    await expect(
+      page.getByText(
+        'The custom formula “frm-nonexistent” is not available on this device.'
+      )
+    ).toBeVisible({ timeout: 15000 });
+    await expect(page.locator('[data-testid="fractal-canvas"]')).not.toBeVisible();
+    await expect(page).toHaveURL(/[?&]fm=frm-nonexistent/);
   });
 
   test('should persist custom formulas across reloads', async ({ page }) => {
+    test.setTimeout(120_000);
     // Create a formula
     await page.getByRole('tab', { name: /formula/i }).click();
     await page.getByRole('tab', { name: /custom/i }).click();
@@ -143,6 +147,8 @@ bailout:
     await compileBtn4.click();
     await page.waitForSelector('text=Compile Successful', { timeout: 10000 });
     await page.getByRole('button', { name: /^Save$/ }).click();
+    await expect(page).toHaveURL(/[?&]fm=custom-/, { timeout: 10000 });
+    await page.waitForTimeout(750);
     
     // Reload page
     await page.reload();

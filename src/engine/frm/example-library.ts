@@ -8,6 +8,14 @@ export interface FormulaExample {
   experienceHint?: FormulaExperienceHint;
 }
 
+export const FRM_GUIDE_EXAMPLE_IDS = [
+  'starter-brot',
+  'parameter-drift',
+  'orbit-echo',
+] as const;
+
+export type FrmGuideExampleId = (typeof FRM_GUIDE_EXAMPLE_IDS)[number];
+
 export const CUSTOM_FORMULA_EXAMPLES: FormulaExample[] = [
   {
     id: 'starter-brot',
@@ -146,3 +154,9 @@ bailout:
     },
   },
 ];
+
+export function getFormulaExampleById(
+  id: string
+): FormulaExample | undefined {
+  return CUSTOM_FORMULA_EXAMPLES.find((example) => example.id === id);
+}

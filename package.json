@@ -9,8 +9,11 @@
     "test": "vitest",
     "test:run": "vitest run",
     "thumbnails:presets": "node scripts/generate-thumbnails.mjs",
+    "images:formula-guides": "node --import tsx scripts/generate-formula-guide-images.ts",
     "indexnow:submit": "node --import tsx scripts/submit-indexnow.ts",
-    "myfrac:cli": "node --import tsx scripts/myfrac-cli.ts"
+    "myfrac:cli": "node --import tsx scripts/myfrac-cli.ts",
+    "readme:generate": "node --import tsx scripts/generate-readme.ts --write",
+    "readme:check": "node --import tsx scripts/generate-readme.ts --check"
   },
   "dependencies": {
     "@codemirror/commands": "^6.10.2",
@@ -24,6 +27,7 @@
     "@vercel/speed-insights": "^1.3.1",
     "class-variance-authority": "^0.7.1",
     "clsx": "^2.1.1",
+    "katex": "^0.18.1",
     "lucide-react": "^0.564.0",
     "next": "16.1.6",
     "next-intl": "^4.8.2",

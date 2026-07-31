@@ -1,19 +1,22 @@
+import { PUBLIC_PROJECT } from '@/content/public-project';
 import { SITE } from '@/lib/site';
 
 /**
  * Centralized JSON-LD structured data for FractalPark.
  *
- * Three canonical schemas, deployed at different layers:
+ * Two canonical schemas:
  *
- *  - `websiteJsonLd`           → root [locale] layout (every page)
- *  - `softwareApplicationJsonLd` → homepage (and any product-focused page)
- *  - About page keeps its own, more detailed SoftwareApplication variant
- *    (extends the base with datePublished, softwareVersion, richer featureList)
+ *  - `websiteJsonLd`                    → [locale] layout (every page)
+ *  - `buildSoftwareApplicationJsonLd()` → Explore landing (the default product
+ *    entity page) and the About page (which adds a small set of page-consistent
+ *    extensions such as datePublished and programmingLanguage)
  *
- * Why a single source of truth:
- *  - Stable `@id` values let Google / AI crawlers deduplicate the entity
- *    across pages, which is what actually builds Knowledge Graph presence.
- *  - Prevents drift between homepage / about / explore schemas.
+ * Why a single builder:
+ *  - One stable `@id` (`/#software`) lets Google / AI crawlers deduplicate the
+ *    entity across pages, which is what actually builds Knowledge Graph
+ *    presence.
+ *  - Feature facts come from the public-project content contract, so the
+ *    numbers cannot drift between Explore, About, README, and llms.txt.
  */
 
 const baseUrl = SITE.url;
@@ -30,8 +33,7 @@ export const websiteJsonLd = {
   name: SITE.name,
   alternateName: SITE.nameZh,
   url: baseUrl,
-  description:
-    'Free, open-source (MIT) WebGL fractal generator that runs entirely in the browser. Explore 94 fractal formulas with real-time rendering and high-resolution PNG export.',
+  description: PUBLIC_PROJECT.tagline,
   inLanguage: ['en', 'zh-CN'],
   publisher: {
     '@type': 'Organization',
@@ -41,60 +43,77 @@ export const websiteJsonLd = {
   },
 } as const;
 
+export interface SoftwareApplicationJsonLdOptions {
+  /**
+   * Localized product description. Callers should pass the
+   * `publicProject.aiDescription` message with contract numbers applied.
+   * Defaults to the approved English tagline.
+   */
+  description?: string;
+}
+
 /**
- * SoftwareApplication schema — emitted on the homepage.
- * Tells Google and AI answer engines "this site is a software product",
- * enabling rich results and accurate AI summaries.
+ * SoftwareApplication schema — the product entity. Emitted on the Explore
+ * landing page; the About page spreads this object and appends its
+ * page-consistent extensions (datePublished, programmingLanguage, …).
  */
-export const softwareApplicationJsonLd = {
-  '@context': 'https://schema.org',
-  '@type': 'SoftwareApplication',
-  '@id': `${baseUrl}/#software`,
-  name: SITE.name,
-  alternateName: SITE.nameZh,
-  url: baseUrl,
-  description:
-    'Free, open-source MIT-licensed browser fractal generator featuring 94 formulas, real-time WebGL rendering, and high-resolution PNG export up to 4×.',
-  applicationCategory: 'GraphicsApplication',
-  applicationSubCategory: 'Fractal generator',
-  operatingSystem: 'Any (web browser with WebGL 1.0)',
-  browserRequirements: 'Requires WebGL 1.0',
-  softwareVersion: SITE.version,
-  license: 'https://opensource.org/license/mit',
-  codeRepository: SITE.repositoryUrl,
-  screenshot: ogImage,
-  image: ogImage,
-  isAccessibleForFree: true,
-  inLanguage: ['en', 'zh-CN'],
-  featureList: [
-    '94 GLSL fractal formulas across 7 families (Classic, Burning Ship, Newton, Phoenix, Transcendental, Magnet, Exotic)',
-    'Mandelbrot and Julia modes for every formula',
-    'Real-time WebGL rendering at 60 fps',
-    '7 coloring modes including smooth iteration, orbit traps, and custom gradients',
-    'High-resolution PNG export up to 4× with SSAA anti-aliasing',
-    'Shareable URLs that encode the exact view and parameters',
-    'Custom formula editor with AST validation and live preview',
-    'Bilingual interface (English and Simplified Chinese)',
-  ],
-  offers: {
-    '@type': 'Offer',
-    price: '0',
-    priceCurrency: 'USD',
-    availability: 'https://schema.org/InStock',
-  },
-  author: {
-    '@type': 'Organization',
-    '@id': `${baseUrl}/#organization`,
-    name: `${SITE.name} Project`,
+export function buildSoftwareApplicationJsonLd(
+  options: SoftwareApplicationJsonLdOptions = {}
+) {
+  const { facts } = PUBLIC_PROJECT;
+
+  return {
+    '@context': 'https://schema.org',
+    '@type': 'SoftwareApplication',
+    '@id': `${baseUrl}/#software`,
+    name: SITE.name,
+    alternateName: SITE.nameZh,
     url: baseUrl,
-  },
-  publisher: {
-    '@type': 'Organization',
-    '@id': `${baseUrl}/#organization`,
-    name: `${SITE.name} Project`,
-    url: baseUrl,
-  },
-} as const;
+    description: options.description ?? PUBLIC_PROJECT.tagline,
+    applicationCategory: 'GraphicsApplication',
+    applicationSubCategory: 'Fractal generator',
+    operatingSystem: 'Any (web browser with WebGL 1.0)',
+    browserRequirements: 'Requires WebGL 1.0',
+    softwareVersion: PUBLIC_PROJECT.version,
+    license: PUBLIC_PROJECT.license.url,
+    codeRepository: PUBLIC_PROJECT.repositoryUrl,
+    screenshot: ogImage,
+    image: ogImage,
+    isAccessibleForFree: true,
+    inLanguage: ['en', 'zh-CN'],
+    featureList: [
+      `${facts.formulaCount} GLSL fractal formulas across ${facts.formulaFamilyCount} families (Classic, Burning Ship, Newton, Phoenix, Transcendental, Magnet, Exotic)`,
+      'Mandelbrot and Julia modes for every formula',
+      'Real-time WebGL rendering',
+      `${facts.coloringModeCount} coloring modes including smooth iteration, orbit traps, and custom gradients`,
+      `${facts.transformCount} UV transform plugins`,
+      'Fractint-compatible FRM formula language with a Guide and standalone Editor',
+      `${facts.formulaGuideCount} in-depth Formula Guides`,
+      `High-resolution PNG export up to ${facts.maxExportScale}× with SSAA anti-aliasing`,
+      'Shareable URLs that encode the exact view and parameters',
+      'Local on-device artwork storage; no account required',
+      'Bilingual interface (English and Simplified Chinese)',
+    ],
+    offers: {
+      '@type': 'Offer',
+      price: '0',
+      priceCurrency: 'USD',
+      availability: 'https://schema.org/InStock',
+    },
+    author: {
+      '@type': 'Organization',
+      '@id': `${baseUrl}/#organization`,
+      name: `${SITE.name} Project`,
+      url: baseUrl,
+    },
+    publisher: {
+      '@type': 'Organization',
+      '@id': `${baseUrl}/#organization`,
+      name: `${SITE.name} Project`,
+      url: baseUrl,
+    },
+  } as const;
+}
 
 /**
  * Helper: serialize a JSON-LD object for use inside <script type="application/ld+json">.

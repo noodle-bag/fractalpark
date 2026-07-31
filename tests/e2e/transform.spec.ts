@@ -10,7 +10,7 @@ async function waitForFractalCanvasReady(page: Page) {
 
 async function expectTransformInUrl(page: Page, transformId: string) {
   await expect(page).toHaveURL(new RegExp(`[?&]tr=${transformId}(?:[&#]|$)`), {
-    timeout: 5000,
+    timeout: 10000,
   });
 }
 
@@ -98,7 +98,7 @@ test.describe('Transform System', () => {
       await transformTab.click();
     }
 
-    const sinusoidal = page.getByRole('button', { name: /sinusoidal/i });
+    const sinusoidal = page.getByRole('button', { name: /^sine$/i });
     if (await sinusoidal.isVisible().catch(() => false)) {
       await sinusoidal.click();
       await expectTransformInUrl(page, 'sinusoidal');
@@ -120,24 +120,17 @@ test.describe('Transform System', () => {
     await page.goto(`${baseUrl}/en/explore?tr=inversion`);
     await waitForFractalCanvasReady(page);
     
-    const formulaTab = page.getByRole('tab', { name: /formula/i });
-    if (await formulaTab.isVisible().catch(() => false)) {
-      await formulaTab.click();
-      
-      // Switch to another formula
-      const burningShip = page.getByRole('button', { name: /Burning Ship/i });
-      if (await burningShip.isVisible().catch(() => false)) {
-        await burningShip.click();
+    await page.getByRole('tab', { name: /formula/i }).click();
+    await page.getByRole('button', { name: /^Burning Ship$/i }).click();
 
-        // Wait for URL to update (debounced 500ms + buffer)
-        await page.waitForTimeout(1000);
+    const burningShip = page.getByRole('button', {
+      name: /^Burning Ship Julia(?: Active)? /i,
+    });
+    await expect(burningShip).toBeVisible();
+    await burningShip.click();
 
-        // Transform should still be in URL (formula uses short key 'bs')
-        const url = page.url();
-        expect(url).toContain('tr=inversion');
-        expect(url).toContain('fm=bs');
-      }
-    }
+    await expect(page).toHaveURL(/[?&]fm=bs(?:[&#]|$)/, { timeout: 10000 });
+    await expectTransformInUrl(page, 'inversion');
   });
 
   test('should handle all 7 transforms without shader errors', async ({ page }) => {

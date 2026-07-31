@@ -24,6 +24,17 @@ import LanguageSwitcher from './LanguageSwitcher';
 import { useLayout } from './LayoutContext';
 import { SITE } from '@/lib/site';
 
+/**
+ * Static rainbow gradient label for the Drift nav entry.
+ *
+ * The gradient lives in globals.css (`.nav-rainbow`): solid violet by
+ * default, upgraded to static gradient text inside an @supports guard for
+ * background-clip: text. No animation, no glow; focus/active state is also
+ * conveyed by font weight + aria-current, never by color alone. Screen
+ * readers get plain "Drift" text.
+ */
+const rainbowTextClass = 'nav-rainbow font-semibold';
+
 export default function Navbar() {
   const t = useTranslations('common.nav');
   const pathname = usePathname();
@@ -32,11 +43,14 @@ export default function Navbar() {
   const { navbarTransparent } = config;
 
   const links = [
-    { href: '/', label: t('home') },
+    { href: '/drift', label: t('drift'), rainbow: true },
     { href: '/gallery', label: t('gallery') },
+    { href: '/formulas', label: t('formulas') },
     { href: '/explore', label: t('explore') },
     { href: '/about', label: t('about') },
   ];
+  const isActive = (href: string) =>
+    pathname === href || pathname.startsWith(`${href}/`);
 
   return (
     <header
@@ -48,8 +62,9 @@ export default function Navbar() {
       )}
     >
       <div className="container mx-auto flex h-16 items-center justify-between px-4">
+        {/* Brand link goes to the canonical Explore landing */}
         <Link
-          href="/"
+          href="/explore"
           className={cn(
             'text-2xl font-bold tracking-tight',
             navbarTransparent ? 'text-white' : 'text-foreground'
@@ -67,11 +82,18 @@ export default function Navbar() {
                     className={cn(
                       navigationMenuTriggerStyle(),
                       navbarTransparent && 'bg-transparent text-white hover:bg-white/10 hover:text-white',
-                      pathname === link.href && !navbarTransparent && 'bg-accent text-accent-foreground'
+                      isActive(link.href) && !navbarTransparent && 'bg-accent text-accent-foreground'
                     )}
                   >
-                    <Link href={link.href}>
-                      {link.label}
+                    <Link
+                      aria-current={isActive(link.href) ? 'page' : undefined}
+                      href={link.href}
+                    >
+                      {link.rainbow ? (
+                        <span className={rainbowTextClass}>{link.label}</span>
+                      ) : (
+                        link.label
+                      )}
                     </Link>
                   </NavigationMenuLink>
                 </NavigationMenuItem>
@@ -109,13 +131,18 @@ export default function Navbar() {
                     href={link.href}
                     className={cn(
                       'text-lg font-medium transition-colors hover:text-primary pl-2',
-                      pathname === link.href
+                      isActive(link.href)
                         ? 'text-primary'
                         : 'text-muted-foreground'
                     )}
+                    aria-current={isActive(link.href) ? 'page' : undefined}
                     onClick={() => setIsOpen(false)}
                   >
-                    {link.label}
+                    {link.rainbow ? (
+                      <span className={rainbowTextClass}>{link.label}</span>
+                    ) : (
+                      link.label
+                    )}
                   </Link>
                 ))}
               </div>

@@ -3,9 +3,17 @@
  * Load and parse preset configurations from JSON
  */
 
+import type { FractalDocument } from '@/engine/document';
+import {
+  documentToRuntimeParams,
+  runtimeParamsToDocument,
+} from '@/engine/document-adapter';
+import {
+  normalizeFractalDocument,
+  normalizeRuntimeFractalParams,
+} from '@/engine/document-migrate';
 import type { FractalParams, ViewBounds, Keyframe } from '@/engine/types';
-import { normalizeRuntimeFractalParams } from '@/engine/document-migrate';
-import { decodeParams, fractalParamsToHref } from './url-params';
+import { decodeParams, documentToExploreHref } from './url-params';
 
 export interface GalleryPresetConfig {
   id: string;
@@ -85,9 +93,7 @@ export function builtinPresetConfigToExploreHref(
   config: GalleryPresetConfig,
   locale: string
 ): string {
-  const { params, keyframes } = buildFractalParamsFromPresetQuery(config.url);
-
-  return fractalParamsToHref(params, locale, keyframes);
+  return documentToExploreHref(buildCanonicalPresetDocument(config), locale);
 }
 
 interface ParsedPresetQuery {
@@ -187,15 +193,28 @@ export function buildFractalParamsFromPresetQuery(query: string): ParsedPresetQu
   };
 }
 
-function parsePresetConfig(config: GalleryPresetConfig): GalleryPreset {
+export function buildCanonicalPresetDocument(
+  config: GalleryPresetConfig
+): FractalDocument {
   const { params, keyframes } = buildFractalParamsFromPresetQuery(config.url);
+
+  return normalizeFractalDocument(
+    runtimeParamsToDocument(
+      params,
+      keyframes ? { animation: { keyframes } } : undefined
+    )
+  );
+}
+
+function parsePresetConfig(config: GalleryPresetConfig): GalleryPreset {
+  const document = buildCanonicalPresetDocument(config);
 
   return {
     id: config.id,
     name: config.name,
     nameZh: config.nameZh,
-    params,
-    keyframes,
+    params: documentToRuntimeParams(document),
+    keyframes: document.animation?.viewKeyframes,
     thumbnail: config.thumbnail,
     isBuiltin: true,
     featured: config.featured ?? false,

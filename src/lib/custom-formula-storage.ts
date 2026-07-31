@@ -1,11 +1,11 @@
 import type { FractalDocument } from '@/engine/document';
-import { compileFrm } from '@/engine/frm/compile';
 import type { FormulaExperienceHint } from '@/engine/frm/authoring';
 import { pluginRegistry } from '@/engine/plugins/registry';
 import type {
   LocalFormulaAsset,
   PreparedFractalProjectImport,
 } from '@/lib/fractal-file';
+import { resolveCustomFormula } from '@/lib/formula-resolver';
 
 export const CUSTOM_FORMULAS_STORAGE_KEY = 'myfrac-custom-formulas';
 export const CUSTOM_FORMULAS_CHANGED_EVENT = 'fractalpark:custom-formulas-changed';
@@ -88,22 +88,29 @@ export function commitPreparedFractalProjectImport(
     return { success: false, code: 'formula-limit-reached' };
   }
 
-  const compiled = prepared.formulasToAdd.map((formula) => {
-    const result = compileFrm(formula.source, formula.id);
-    return result.success && result.plugin ? result.plugin : null;
-  });
-  if (compiled.some((plugin) => plugin === null)) {
+  const resolved = prepared.formulasToAdd.map((formula) =>
+    resolveCustomFormula(formula, { register: false })
+  );
+  if (resolved.some((resolution) => !resolution.success)) {
     return { success: false, code: 'formula-commit-failed' };
   }
 
   const now = Date.now();
-  const additions: PersistedCustomFormula[] = prepared.formulasToAdd.map((formula) => ({
-    id: formula.id,
-    name: formula.name ?? formula.id,
-    source: formula.source,
-    createdAt: now,
-    updatedAt: now,
-  }));
+  const additions: PersistedCustomFormula[] = prepared.formulasToAdd.map(
+    (formula, index) => {
+      const resolution = resolved[index];
+      return {
+        id: formula.id,
+        name: formula.name ?? formula.id,
+        source: formula.source,
+        experienceHint: resolution.success
+          ? resolution.experienceHint
+          : undefined,
+        createdAt: now,
+        updatedAt: now,
+      };
+    }
+  );
   const registeredIds: string[] = [];
 
   try {
@@ -111,11 +118,12 @@ export function commitPreparedFractalProjectImport(
       CUSTOM_FORMULAS_STORAGE_KEY,
       JSON.stringify([...existing, ...additions])
     );
-    for (const plugin of compiled) {
-      if (plugin) {
-        pluginRegistry.register(plugin);
-        registeredIds.push(plugin.id);
+    for (const formula of additions) {
+      const resolution = resolveCustomFormula(formula);
+      if (!resolution.success) {
+        throw new Error(resolution.errors.join('; '));
       }
+      registeredIds.push(resolution.formulaId);
     }
     loadDocument(prepared.document);
     notifyCustomFormulasChanged();

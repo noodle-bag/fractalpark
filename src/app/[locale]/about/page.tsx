@@ -1,5 +1,8 @@
 import type { Metadata } from 'next';
 import { getTranslations, setRequestLocale } from 'next-intl/server';
+import { Link } from '@/i18n/routing';
+import { PUBLIC_PROJECT } from '@/content/public-project';
+import { buildSoftwareApplicationJsonLd, renderJsonLd } from '@/lib/json-ld';
 import { SITE, buildLocaleAlternates } from '@/lib/site';
 
 export async function generateMetadata({
@@ -16,7 +19,7 @@ export async function generateMetadata({
     title: t('title'),
     description: t('description'),
     keywords: locale === 'zh'
-      ? ['\u5206\u5f62\u827a\u672f', '\u6570\u5b57\u827a\u672f', 'WebGL', 'Next.js', '\u751f\u6210\u827a\u672f', '\u6570\u5b66\u827a\u672f', '\u66fc\u5fb7\u5e03\u7f57\u7279', '\u6731\u5229\u4e9a\u96c6']
+      ? ['分形艺术', '数字艺术', 'WebGL', 'Next.js', '生成艺术', '数学艺术', '曼德博罗特', '朱利亚集']
       : ['fractal art', 'digital art', 'webgl', 'next.js', 'generative art', 'mathematical art', 'mandelbrot', 'julia'],
     alternates: {
       canonical: `/${locale}/about`,
@@ -40,6 +43,15 @@ export async function generateMetadata({
   };
 }
 
+/**
+ * About — driven by the public-project content contract
+ * (src/content/public-project.ts + messages `publicProject.*`), the same
+ * source that generates the GitHub README product block. Positioning,
+ * the four current capabilities, Fractint boundaries/direction, numbers,
+ * license, CTAs, and the hero image must not drift between the two surfaces;
+ * README-only developer sections (Getting Started, scripts, layout) are
+ * intentionally not duplicated here.
+ */
 export default async function AboutPage({
   params,
 }: {
@@ -48,93 +60,101 @@ export default async function AboutPage({
   const { locale } = await params;
   setRequestLocale(locale);
   const t = await getTranslations({ locale, namespace: 'about' });
+  const tp = await getTranslations({ locale, namespace: 'publicProject' });
+  const facts = PUBLIC_PROJECT.facts;
+  const hero = PUBLIC_PROJECT.heroImage;
 
-  // JSON-LD structured data for SoftwareApplication
-  // Extends the shared base schema with About-page-specific fields
-  // (datePublished, softwareVersion, richer featureList).
-  // The @id matches the homepage schema so Google treats them as the same entity.
+  // Shared builder keeps the same stable @id and fact base as the Explore
+  // landing; About only appends page-consistent extension fields.
   const softwareApplicationJsonLd = {
-    '@context': 'https://schema.org',
-    '@type': 'SoftwareApplication',
-    '@id': `${SITE.url}/#software`,
-    name: SITE.name,
-    applicationCategory: 'GraphicsApplication',
-    operatingSystem: 'Any modern web browser',
-    url: SITE.url,
-    description: t('aiDescription'),
-    license: 'https://opensource.org/license/mit',
-    codeRepository: SITE.repositoryUrl,
-    offers: {
-      '@type': 'Offer',
-      price: '0',
-      priceCurrency: 'USD',
-    },
-    featureList: [
-      'Open-source MIT-licensed browser application',
-      '94 built-in fractal formulas (Mandelbrot, Julia, Newton, Phoenix, Magnet, McMullen, transcendental families)',
-      'Real-time WebGL GPU rendering',
-      'Custom formula editor with Fractint-style .frm compatibility and FractalPark native directives',
-      '7 transform plugins (Kaleidoscope, Möbius, Inversion, Polar, etc.)',
-      '9 coloring modes with orbit channel support',
-      'High-resolution PNG export up to 4x',
-      'Personal gallery with localStorage persistence',
-      'Bilingual support (English/Chinese)',
-    ],
+    ...buildSoftwareApplicationJsonLd({
+      description: tp('aiDescription', { ...facts }),
+    }),
     softwareRequirements: 'WebGL 1.0 enabled browser',
     programmingLanguage: ['TypeScript', 'GLSL'],
-    author: {
-      '@type': 'Organization',
-      name: `${SITE.name} Project`,
-    },
     datePublished: '2026-02-15',
-    softwareVersion: SITE.version,
   };
 
   return (
-    <div className="container mx-auto py-24 px-6 max-w-3xl">
+    <div className="container mx-auto max-w-3xl px-6 py-24">
       {/* JSON-LD Structured Data */}
       <script
         type="application/ld+json"
-        dangerouslySetInnerHTML={{ __html: JSON.stringify(softwareApplicationJsonLd) }}
+        dangerouslySetInnerHTML={{ __html: renderJsonLd(softwareApplicationJsonLd) }}
       />
 
       <div className="space-y-16">
-        <div className="space-y-6 text-center">
+        <div className="space-y-6">
           <h1 className="text-4xl font-bold tracking-tight sm:text-5xl">{t('title')}</h1>
-          <p className="text-xl text-muted-foreground leading-relaxed">
-            {t('intro')}
+          <p className="text-xl leading-relaxed text-muted-foreground">
+            {tp('tagline')}
           </p>
+          {/* Real product render shared with the GitHub README hero */}
+          {/* eslint-disable-next-line @next/next/no-img-element */}
+          <img
+            src={hero.src}
+            width={hero.width}
+            height={hero.height}
+            alt={tp('heroAlt')}
+            className="w-full rounded-lg border border-border"
+          />
         </div>
 
-        {/* Machine-readable technical description (also human-friendly) */}
-        <div className="space-y-6 bg-muted/30 rounded-lg p-6">
-          <h2 className="text-2xl font-semibold tracking-tight">{t('aiFriendly.title')}</h2>
-          <p className="text-lg text-muted-foreground leading-relaxed">
-            {t('aiFriendly.description')}
+        <div className="space-y-6">
+          <h2 className="text-2xl font-semibold tracking-tight">{tp('capabilitiesHeading')}</h2>
+          <p className="text-lg leading-relaxed text-muted-foreground">
+            {tp('definition', { ...facts })}
           </p>
-          <div className="flex gap-4 text-sm">
-            <a 
-              href="/llms.txt" 
-              className="text-primary hover:underline"
-              target="_blank"
-              rel="noopener noreferrer"
-            >
-              llms.txt →
-            </a>
-            <a 
-              href="/llms-full.txt" 
-              className="text-primary hover:underline"
-              target="_blank"
-              rel="noopener noreferrer"
-            >
-              llms-full.txt →
-            </a>
+          <ul className="space-y-6">
+            {PUBLIC_PROJECT.capabilities.map((capability) => (
+              <li key={capability.id} className="space-y-1">
+                <Link
+                  href={capability.href}
+                  className="text-lg font-medium text-primary underline-offset-4 hover:underline"
+                >
+                  {tp(`capabilities.${capability.id}.title`)}
+                </Link>
+                <p className="text-muted-foreground leading-relaxed">
+                  {tp(`capabilities.${capability.id}.summary`)}
+                </p>
+              </li>
+            ))}
+          </ul>
+          <div className="flex flex-wrap gap-4 text-sm">
+            {PUBLIC_PROJECT.ctas.map((cta) => (
+              <Link
+                key={cta.id}
+                href={cta.href}
+                className="text-primary underline-offset-4 hover:underline"
+              >
+                {tp(`cta.${cta.id}`)} →
+              </Link>
+            ))}
+          </div>
+        </div>
+
+        <div className="space-y-6">
+          <h2 className="text-2xl font-semibold tracking-tight">{tp('boundariesHeading')}</h2>
+          <div className="space-y-3">
+            <h3 className="text-lg font-medium">{tp('currentHeading')}</h3>
+            <ul className="list-disc space-y-2 pl-6 text-muted-foreground">
+              <li>{tp('boundaries.current.0')}</li>
+              <li>{tp('boundaries.current.1')}</li>
+              <li>{tp('boundaries.current.2')}</li>
+            </ul>
+          </div>
+          <div className="space-y-3">
+            <h3 className="text-lg font-medium">{tp('futureHeading')}</h3>
+            <ul className="list-disc space-y-2 pl-6 text-muted-foreground">
+              <li>{tp('boundaries.future.0')}</li>
+              <li>{tp('boundaries.future.1')}</li>
+            </ul>
           </div>
         </div>
 
         <div className="space-y-6">
           <h2 className="text-2xl font-semibold tracking-tight">{t('techStack.title')}</h2>
-          <p className="text-lg text-muted-foreground leading-relaxed">
+          <p className="text-lg leading-relaxed text-muted-foreground">
             {t('techStack.description')}
           </p>
           <ul className="space-y-3 text-muted-foreground">
@@ -150,16 +170,12 @@ export default async function AboutPage({
               <span className="text-primary">•</span>
               {t('techStack.formula')}
             </li>
-            <li className="flex items-start gap-2">
-              <span className="text-primary">•</span>
-              {t('techStack.deployment')}
-            </li>
           </ul>
         </div>
 
         <div className="space-y-6">
           <h2 className="text-2xl font-semibold tracking-tight">{t('openSource.title')}</h2>
-          <p className="text-lg text-muted-foreground leading-relaxed">
+          <p className="text-lg leading-relaxed text-muted-foreground">
             {t('openSource.description')}
           </p>
           <div className="flex flex-wrap gap-4 text-sm">
@@ -172,7 +188,7 @@ export default async function AboutPage({
               {t('openSource.github')} →
             </a>
             <a
-              href="https://opensource.org/license/mit"
+              href={PUBLIC_PROJECT.license.url}
               className="text-primary hover:underline"
               target="_blank"
               rel="noopener noreferrer"
@@ -180,13 +196,6 @@ export default async function AboutPage({
               {t('openSource.license')} →
             </a>
           </div>
-        </div>
-
-        <div className="space-y-6">
-          <h2 className="text-2xl font-semibold tracking-tight">{t('vision.title')}</h2>
-          <p className="text-lg text-muted-foreground leading-relaxed">
-            {t('vision.description')}
-          </p>
         </div>
       </div>
     </div>

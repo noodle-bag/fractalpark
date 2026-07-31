@@ -26,6 +26,13 @@ export default defineConfig({
     environment: 'jsdom',
     setupFiles: ['./src/test/setup.ts'],
     exclude: ['tests/e2e/**', 'node_modules/**'],
+    server: {
+      deps: {
+        // Let Vite transform next-intl so its 'next/*' subpath imports
+        // resolve through the exports map (middleware/navigation tests).
+        inline: ['next-intl', 'use-intl'],
+      },
+    },
   },
   resolve: {
     alias: {

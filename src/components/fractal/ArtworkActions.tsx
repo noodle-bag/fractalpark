@@ -118,7 +118,7 @@ export function ArtworkActions({
 
   return (
     <>
-      <div className="absolute bottom-[calc(env(safe-area-inset-bottom)+4rem)] left-3 right-16 z-20 lg:bottom-auto lg:left-auto lg:right-3 lg:top-3">
+      <div className="absolute right-3 top-3 z-20">
         <div className="ml-auto flex w-fit max-w-full flex-wrap items-center gap-1 rounded-xl border border-white/15 bg-black/65 p-1.5 text-white shadow-lg backdrop-blur-md">
           <ActionButton
             label={t('save.label')}

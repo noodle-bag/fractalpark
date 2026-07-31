@@ -1,3 +1,4 @@
+@import "katex/dist/katex.min.css";
 @import "tailwindcss";
 @import "tw-animate-css";
 @import "shadcn/tailwind.css";
@@ -124,5 +125,71 @@
   body {
     @apply bg-background text-foreground;
     @apply bg-background text-foreground;
+  }
+}
+
+@layer components {
+  .frm-code .tok-keyword {
+    @apply text-violet-700 dark:text-violet-300;
+  }
+  .frm-code .tok-typeName {
+    @apply text-sky-700 dark:text-sky-300;
+  }
+  .frm-code .tok-variableName {
+    @apply text-foreground;
+  }
+  .frm-code .tok-number {
+    @apply text-amber-700 dark:text-amber-300;
+  }
+  .frm-code .tok-operator {
+    @apply text-rose-700 dark:text-rose-300;
+  }
+  .frm-code .tok-punctuation {
+    @apply text-muted-foreground;
+  }
+  .frm-code .tok-comment {
+    @apply text-emerald-700 italic dark:text-emerald-300;
+  }
+}
+
+@media print {
+  .content-copy-button {
+    display: none;
+  }
+
+  .frm-code-block,
+  .math-block {
+    break-inside: avoid;
+    overflow: visible;
+  }
+
+  .frm-code-block pre {
+    overflow: visible;
+    white-space: pre-wrap;
+  }
+}
+
+/* Drift nav entry: static rainbow label.
+   Solid violet fallback; gradient text only when background-clip: text works.
+   Deliberately static (no animation/glow) so it stays readable on Light,
+   Dark, and transparent headers without relying on color alone. */
+.nav-rainbow {
+  color: #7c3aed;
+}
+
+@supports ((-webkit-background-clip: text) or (background-clip: text)) {
+  .nav-rainbow {
+    background-image: linear-gradient(
+      90deg,
+      #dc2626,
+      #ea580c,
+      #ca8a04,
+      #059669,
+      #2563eb,
+      #7c3aed
+    );
+    -webkit-background-clip: text;
+    background-clip: text;
+    color: transparent;
   }
 }

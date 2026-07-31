@@ -91,13 +91,16 @@ interface FormulaEditorProps {
   initialSource?: string;
   initialExperienceHint?: FormulaExperienceHint;
   currentBounds?: ViewBounds;
+  sourcePreflightError?: string;
   onCompile?: (plugin: FormulaPlugin, experienceHint?: FormulaExperienceHint) => void;
+  onSourceChange?: (source: string) => void;
+  onExperienceHintChange?: (experienceHint?: FormulaExperienceHint) => void;
   onSave?: (
     name: string,
     source: string,
     experienceHint?: FormulaExperienceHint,
     formulaId?: string,
-  ) => { success: boolean; error?: string } | void;
+  ) => { success: boolean; error?: string; id?: string } | void;
   onClose?: () => void;
 }
 
@@ -135,7 +138,10 @@ export function FormulaEditor({
   initialSource = DEFAULT_SOURCE,
   initialExperienceHint,
   currentBounds,
+  sourcePreflightError,
   onCompile,
+  onSourceChange,
+  onExperienceHintChange,
   onSave,
   onClose,
 }: FormulaEditorProps) {
@@ -179,9 +185,11 @@ export function FormulaEditor({
             insert: nextSource,
           },
         });
+        return;
       }
     }
-  }, []);
+    onSourceChange?.(nextSource);
+  }, [onSourceChange]);
 
   // Stable callback ref for the linter to avoid recreating the editor
   const errorsCallbackRef = useRef<(errors: EditorError[]) => void>(() => {});
@@ -273,6 +281,7 @@ export function FormulaEditor({
               if (update.docChanged) {
                 const newSource = update.state.doc.toString();
                 setSource(newSource);
+                onSourceChange?.(newSource);
                 lastSourceRef.current = newSource;
                 setCompileResult(null);
               }
@@ -310,6 +319,7 @@ export function FormulaEditor({
   }, []); // eslint-disable-line react-hooks/exhaustive-deps
 
   const handleCompile = useCallback(async () => {
+    if (sourcePreflightError) return;
     setIsCompiling(true);
     setCompileResult(null);
 
@@ -408,7 +418,7 @@ export function FormulaEditor({
     } finally {
       setIsCompiling(false);
     }
-  }, [experienceHint, source, onCompile, toast, t]);
+  }, [experienceHint, source, sourcePreflightError, onCompile, toast, t]);
 
   const handleSave = useCallback(() => {
     const name = compileResult?.plugin?.name || 'Untitled';
@@ -436,32 +446,54 @@ export function FormulaEditor({
 
     replaceSource(lastSuccessfulSource);
     setExperienceHint(lastSuccessfulHint);
+    onExperienceHintChange?.(lastSuccessfulHint);
     toast({
       title: t('restoreSuccess'),
       description: t('restoreSuccessDescription'),
     });
-  }, [lastSuccessfulHint, lastSuccessfulSource, replaceSource, t, toast]);
+  }, [
+    lastSuccessfulHint,
+    lastSuccessfulSource,
+    onExperienceHintChange,
+    replaceSource,
+    t,
+    toast,
+  ]);
 
   const handleSetCurrentViewAsDefault = useCallback(() => {
     if (!currentBounds) {
       return;
     }
 
-    setExperienceHint(prev => ({
-      ...prev,
+    const nextHint: FormulaExperienceHint = {
+      ...(compileResult?.effectiveExperienceHint ?? experienceHint),
       bounds: {
         centerX: currentBounds.centerX,
         centerY: currentBounds.centerY,
         zoom: currentBounds.zoom,
         rotation: currentBounds.rotation ?? 0,
       },
-    }));
+    };
+    setExperienceHint(nextHint);
+    setCompileResult((current) =>
+      current
+        ? { ...current, effectiveExperienceHint: nextHint }
+        : current
+    );
+    onExperienceHintChange?.(nextHint);
 
     toast({
       title: t('defaultViewSet'),
       description: t('defaultViewSetDescription'),
     });
-  }, [currentBounds, t, toast]);
+  }, [
+    compileResult?.effectiveExperienceHint,
+    currentBounds,
+    experienceHint,
+    onExperienceHintChange,
+    t,
+    toast,
+  ]);
 
   const errorCount = editorErrors.filter(e => e.severity === 'error').length;
   const warningCount = editorErrors.filter(e => e.severity === 'warning').length;
@@ -492,7 +524,11 @@ export function FormulaEditor({
                 {t('infos', { count: infoCount })}
               </span>
             )}
-            {errorCount === 0 && warningCount === 0 && infoCount === 0 && isEditorReady && (
+            {errorCount === 0 &&
+              warningCount === 0 &&
+              infoCount === 0 &&
+              !sourcePreflightError &&
+              isEditorReady && (
               <span className="text-green-500 flex items-center gap-1">
                 <CheckCircle className="w-4 h-4" />
                 {t('noErrors')}
@@ -523,6 +559,13 @@ export function FormulaEditor({
             <Loader2 className="w-6 h-6 animate-spin mr-2" />
             {t('loading')}
           </div>
+        )}
+
+        {sourcePreflightError && (
+          <Alert variant="destructive" data-testid="frm-source-preflight-error">
+            <AlertCircle className="h-4 w-4" />
+            <AlertDescription>{sourcePreflightError}</AlertDescription>
+          </Alert>
         )}
 
         {/* Real-time error list */}
@@ -650,7 +693,12 @@ export function FormulaEditor({
         <div className="flex gap-2">
           <Button
             onClick={handleCompile}
-            disabled={isCompiling || !isEditorReady || errorCount > 0}
+            disabled={
+              isCompiling ||
+              !isEditorReady ||
+              errorCount > 0 ||
+              Boolean(sourcePreflightError)
+            }
           >
             {isCompiling ? (
               <>

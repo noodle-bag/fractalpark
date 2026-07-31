@@ -9,12 +9,7 @@
 
 import { useState, useEffect, useCallback } from 'react';
 import type { FormulaPlugin } from '@/engine/plugins/types';
-import { compileFrm } from '@/engine/frm/compile';
-import {
-  formulaMetadataToExperienceHint,
-  mergeFormulaExperienceHints,
-  type FormulaExperienceHint,
-} from '@/engine/frm/authoring';
+import type { FormulaExperienceHint } from '@/engine/frm/authoring';
 import { pluginRegistry } from '@/engine/plugins/registry';
 import {
   CUSTOM_FORMULAS_CHANGED_EVENT,
@@ -23,12 +18,28 @@ import {
   readPersistedCustomFormulas,
   type PersistedCustomFormula,
 } from '@/lib/custom-formula-storage';
+import { resolveCustomFormula } from '@/lib/formula-resolver';
 
 export { CUSTOM_FORMULAS_STORAGE_KEY } from '@/lib/custom-formula-storage';
 export type CustomFormula = PersistedCustomFormula;
 
 export interface CustomFormulaWithPlugin extends CustomFormula {
   plugin?: FormulaPlugin;
+  error?: string;
+}
+
+export type CustomFormulaMutationErrorCode =
+  | 'max-count'
+  | 'formula-not-found'
+  | 'storage-unavailable'
+  | 'compile-failed';
+
+export interface CustomFormulaMutationResult {
+  success: boolean;
+  id?: string;
+  plugin?: FormulaPlugin;
+  experienceHint?: FormulaExperienceHint;
+  code?: CustomFormulaMutationErrorCode;
   error?: string;
 }
 
@@ -43,6 +54,24 @@ function toPersistedFormula(formula: CustomFormulaWithPlugin): CustomFormula {
   };
 }
 
+function resolvePersistedFormula(
+  formula: CustomFormula
+): CustomFormulaWithPlugin {
+  const resolution = resolveCustomFormula(formula);
+  if (!resolution.success) {
+    return {
+      ...formula,
+      error: resolution.errors.join('; '),
+    };
+  }
+
+  return {
+    ...formula,
+    experienceHint: resolution.experienceHint,
+    plugin: resolution.plugin,
+  };
+}
+
 interface UseCustomFormulasReturn {
   formulas: CustomFormulaWithPlugin[];
   isLoading: boolean;
@@ -51,9 +80,9 @@ interface UseCustomFormulasReturn {
     source: string,
     experienceHint?: FormulaExperienceHint,
     existingId?: string
-  ) => { success: boolean; error?: string };
-  deleteFormula: (id: string) => void;
-  renameFormula: (id: string, newName: string) => { success: boolean; error?: string };
+  ) => CustomFormulaMutationResult;
+  deleteFormula: (id: string) => CustomFormulaMutationResult;
+  renameFormula: (id: string, newName: string) => CustomFormulaMutationResult;
   recompileAll: () => void;
   canAddMore: boolean;
   remainingSlots: number;
@@ -67,23 +96,7 @@ export function useCustomFormulas(): UseCustomFormulasReturn {
     const loadFormulas = () => {
       try {
         const parsed = readPersistedCustomFormulas();
-        const withPlugins = parsed.map((f) => {
-          const result = compileFrm(f.source, f.id);
-          const effectiveHint = mergeFormulaExperienceHints(
-            f.experienceHint,
-            formulaMetadataToExperienceHint(result.canonicalFormula?.metadata),
-          );
-          if (result.success && result.plugin) {
-            // Register with plugin registry
-            try {
-              pluginRegistry.register(result.plugin);
-            } catch {
-              // May already be registered
-            }
-            return { ...f, experienceHint: effectiveHint, plugin: result.plugin };
-          }
-          return { ...f, experienceHint: effectiveHint, error: result.errors.join('; ') };
-        });
+        const withPlugins = parsed.map(resolvePersistedFormula);
         setFormulas(withPlugins);
       } catch (error) {
         console.error('Failed to load custom formulas:', error);
@@ -103,8 +116,10 @@ export function useCustomFormulas(): UseCustomFormulasReturn {
   const persistFormulas = useCallback((formulasToSave: CustomFormula[]) => {
     try {
       localStorage.setItem(CUSTOM_FORMULAS_STORAGE_KEY, JSON.stringify(formulasToSave));
+      return true;
     } catch (error) {
       console.error('Failed to save custom formulas:', error);
+      return false;
     }
   }, []);
 
@@ -114,66 +129,81 @@ export function useCustomFormulas(): UseCustomFormulasReturn {
       source: string,
       experienceHint?: FormulaExperienceHint,
       existingId?: string
-    ): { success: boolean; error?: string } => {
+    ): CustomFormulaMutationResult => {
       if (!existingId && formulas.length >= MAX_CUSTOM_FORMULAS) {
-        return { success: false, error: `Maximum count reached (${MAX_CUSTOM_FORMULAS})` };
+        return { success: false, code: 'max-count' };
       }
 
       const existingFormula = existingId ? formulas.find(formula => formula.id === existingId) : undefined;
       if (existingId && !existingFormula) {
-        return { success: false, error: 'Formula does not exist' };
+        return { success: false, code: 'formula-not-found' };
       }
 
       const id = existingId ?? `custom-${Date.now()}`;
 
-      // Compile with the persistent id so plugin.id matches CustomFormula.id
-      const result = compileFrm(source, id);
-      if (!result.success) {
-        return { success: false, error: result.errors.join('; ') };
+      const resolution = resolveCustomFormula({ id, source, experienceHint });
+      if (!resolution.success) {
+        return {
+          success: false,
+          code: 'compile-failed',
+          error: resolution.errors.join('; '),
+        };
       }
-
-      const effectiveHint = mergeFormulaExperienceHints(
-        experienceHint,
-        formulaMetadataToExperienceHint(result.canonicalFormula?.metadata),
-      );
 
       const newFormula: CustomFormula = {
         id,
         name,
         source,
-        experienceHint: effectiveHint,
+        experienceHint: resolution.experienceHint,
         createdAt: existingFormula?.createdAt ?? Date.now(),
         updatedAt: Date.now(),
       };
 
-      // Register plugin
-      if (result.plugin) {
-        try {
-          pluginRegistry.register(result.plugin);
-        } catch (error) {
-          console.warn('Failed to register plugin:', error);
-        }
-      }
-
       const updated = existingFormula
         ? formulas.map((formula) =>
             formula.id === id
-              ? { ...newFormula, plugin: result.plugin }
+              ? { ...newFormula, plugin: resolution.plugin }
               : formula
           )
-        : [...formulas, { ...newFormula, plugin: result.plugin }];
+        : [...formulas, { ...newFormula, plugin: resolution.plugin }];
+      if (!persistFormulas(updated.map(toPersistedFormula))) {
+        try {
+          if (existingFormula) {
+            resolveCustomFormula(existingFormula);
+          } else {
+            pluginRegistry.unregister('formula', id);
+          }
+        } catch (error) {
+          console.warn('Failed to roll back formula registration:', error);
+        }
+        return { success: false, code: 'storage-unavailable' };
+      }
       setFormulas(updated);
-      persistFormulas(updated.map(toPersistedFormula));
 
-      return { success: true };
+      window.dispatchEvent(new Event(CUSTOM_FORMULAS_CHANGED_EVENT));
+      return {
+        success: true,
+        id,
+        plugin: resolution.plugin,
+        experienceHint: resolution.experienceHint,
+      };
     },
     [formulas, persistFormulas]
   );
 
   const deleteFormula = useCallback(
-    (id: string) => {
+    (id: string): CustomFormulaMutationResult => {
       const formula = formulas.find((f) => f.id === id);
-      if (formula?.plugin) {
+      if (!formula) {
+        return { success: false, code: 'formula-not-found' };
+      }
+
+      const updated = formulas.filter((f) => f.id !== id);
+      if (!persistFormulas(updated.map(toPersistedFormula))) {
+        return { success: false, code: 'storage-unavailable' };
+      }
+
+      if (formula.plugin) {
         try {
           pluginRegistry.unregister('formula', formula.plugin.id);
         } catch (error) {
@@ -181,58 +211,43 @@ export function useCustomFormulas(): UseCustomFormulasReturn {
         }
       }
 
-      const updated = formulas.filter((f) => f.id !== id);
       setFormulas(updated);
-      persistFormulas(updated.map(toPersistedFormula));
+      window.dispatchEvent(new Event(CUSTOM_FORMULAS_CHANGED_EVENT));
+      return { success: true, id };
     },
     [formulas, persistFormulas]
   );
 
   const renameFormula = useCallback(
-    (id: string, newName: string): { success: boolean; error?: string } => {
+    (id: string, newName: string): CustomFormulaMutationResult => {
       const formula = formulas.find((f) => f.id === id);
       if (!formula) {
-        return { success: false, error: 'Formula does not exist' };
+        return { success: false, code: 'formula-not-found' };
       }
 
-      const updated = formulas.map((f) => {
-        if (f.id === id) {
-          const updatedFormula = { ...f, name: newName, updatedAt: Date.now() };
-          // Recompile with new name
-          const result = compileFrm(f.source, f.id);
-          if (result.success && result.plugin) {
-            return { ...updatedFormula, plugin: result.plugin, error: undefined };
-          }
-          return { ...updatedFormula, error: result.errors.join('; ') };
-        }
-        return f;
-      });
+      const updated = formulas.map((f) =>
+        f.id === id
+          ? { ...f, name: newName, updatedAt: Date.now() }
+          : f
+      );
+
+      if (!persistFormulas(updated.map(toPersistedFormula))) {
+        return { success: false, code: 'storage-unavailable' };
+      }
 
       setFormulas(updated);
-      persistFormulas(updated.map(toPersistedFormula));
-
-      return { success: true };
+      window.dispatchEvent(new Event(CUSTOM_FORMULAS_CHANGED_EVENT));
+      return { success: true, id };
     },
     [formulas, persistFormulas]
   );
 
   const recompileAll = useCallback(() => {
-    const updated = formulas.map((f) => {
-      const result = compileFrm(f.source, f.id);
-      const effectiveHint = mergeFormulaExperienceHints(
-        f.experienceHint,
-        formulaMetadataToExperienceHint(result.canonicalFormula?.metadata),
-      );
-      if (result.success && result.plugin) {
-        // Re-register
-        try {
-          pluginRegistry.register(result.plugin);
-        } catch {
-          // May already exist
-        }
-        return { ...f, experienceHint: effectiveHint, plugin: result.plugin, error: undefined };
-      }
-      return { ...f, experienceHint: effectiveHint, error: result.errors.join('; ') };
+    const updated = formulas.map((formula) => {
+      const resolved = resolvePersistedFormula(formula);
+      return resolved.plugin
+        ? { ...resolved, error: undefined }
+        : resolved;
     });
 
     setFormulas(updated);
