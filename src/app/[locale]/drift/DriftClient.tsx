@@ -195,7 +195,7 @@ function DriftSlideshow({ isPaused, onTogglePause }: DriftSlideshowProps) {
           </button>
           <button
             onClick={goNext}
-            disabled={isPaused || !canNavigate}
+            disabled={isPaused || !canNavigate || !isReady}
             className="inline-flex items-center rounded-full bg-white/10 p-3 text-white transition-colors hover:bg-white/20 disabled:cursor-not-allowed disabled:opacity-40"
             title={t('next')}
             aria-label={t('next')}

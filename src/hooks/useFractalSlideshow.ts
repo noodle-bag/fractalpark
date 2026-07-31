@@ -171,6 +171,10 @@ export function useFractalSlideshow({
   }, [phase, fractalA.id, fractalB?.id, pickNext, recordAdvance, transitionTo]);
 
   const goNext = useCallback(() => {
+    // Presets may still be loading (fractalA is the placeholder): refuse to
+    // advance, otherwise the placeholder would be pushed onto canvas B and
+    // history, stalling the slideshow on a static image.
+    if (fractalsRef.current.length === 0) return;
     const currentId = phase === 'PLAYING_A' ? fractalA.id : phase === 'PLAYING_B' ? fractalB?.id ?? '' : '';
     if (!currentId) return;
     const next = pickNext(currentId);
