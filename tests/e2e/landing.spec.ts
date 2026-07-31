@@ -212,4 +212,17 @@ test.describe('Indexable surface files', () => {
     expect(body).toContain('noindex, follow');
     expect(body).not.toContain('https://fractalpark.com');
   });
+
+  test('does not advertise HTTP Link alternates that resolve to 404', async ({
+    request,
+  }) => {
+    // next-intl's middleware Link headers would point x-default at the
+    // unprefixed path (/explore, /drift), which intentionally 404s.
+    for (const path of ['/en/explore', '/en/drift', '/zh/explore']) {
+      const response = await request.get(path);
+      expect(response.headers()['link'] ?? '', path).not.toContain(
+        'rel="alternate"'
+      );
+    }
+  });
 });

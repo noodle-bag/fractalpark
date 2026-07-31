@@ -65,4 +65,12 @@ describe('proxy legacy entry redirects', () => {
     const response = proxy(requestFor('https://www.fractalpark.com/llms.txt'));
     expect(response.status).not.toBe(301);
   });
+
+  it('does not emit HTTP Link alternate headers', () => {
+    // The middleware's Link alternates would advertise x-default at the
+    // unprefixed path (/explore, /drift), which intentionally 404s — the
+    // HTML-head alternates own the correct x-default → /en/... mapping.
+    const response = proxy(requestFor('https://www.fractalpark.com/en/explore'));
+    expect(response.headers.get('link')).toBeNull();
+  });
 });

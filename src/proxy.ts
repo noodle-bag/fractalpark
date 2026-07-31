@@ -2,7 +2,11 @@ import createMiddleware from 'next-intl/middleware';
 import { NextResponse, type NextRequest } from 'next/server';
 import { routing } from './i18n/routing';
 
-const intlMiddleware = createMiddleware(routing);
+// Disable the middleware's HTTP `Link` alternate headers: their x-default
+// targets the unprefixed path (/explore, /drift), which is intentionally a
+// 404 — unprefixed page paths no longer resolve. HTML-head alternates (owned
+// by our metadata) already carry the correct x-default → /en/... mapping.
+const intlMiddleware = createMiddleware({ ...routing, alternateLinks: false });
 
 /**
  * Legacy entry points permanently moved to the canonical Explore landing.
