@@ -168,3 +168,28 @@
     white-space: pre-wrap;
   }
 }
+
+/* Drift nav entry: static rainbow label.
+   Solid violet fallback; gradient text only when background-clip: text works.
+   Deliberately static (no animation/glow) so it stays readable on Light,
+   Dark, and transparent headers without relying on color alone. */
+.nav-rainbow {
+  color: #7c3aed;
+}
+
+@supports ((-webkit-background-clip: text) or (background-clip: text)) {
+  .nav-rainbow {
+    background-image: linear-gradient(
+      90deg,
+      #dc2626,
+      #ea580c,
+      #ca8a04,
+      #059669,
+      #2563eb,
+      #7c3aed
+    );
+    -webkit-background-clip: text;
+    background-clip: text;
+    color: transparent;
+  }
+}

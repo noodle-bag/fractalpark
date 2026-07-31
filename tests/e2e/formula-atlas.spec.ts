@@ -63,11 +63,24 @@ test.describe('Formula Atlas', () => {
     await expect(mobileFormulasLink).toHaveAttribute('aria-current', 'page');
   });
 
-  test('exposes Formula Atlas from the homepage', async ({ page }) => {
-    await page.goto('/en');
+  test('exposes Formula Atlas from the Explore landing', async ({ page }) => {
+    await page.goto('/en/explore');
 
+    // Navbar keeps a stable Formulas entry on the default landing.
     await expect(
-      page.getByRole('link', { name: 'Browse Formula Atlas' })
+      page.locator('header a[href="/en/formulas"]').first()
+    ).toBeVisible();
+
+    // The visible SSR product content links to the Formula Atlas.
+    await expect(
+      page.getByRole('link', {
+        name: 'Formula Atlas — every formula with math, history, and live examples',
+      })
     ).toHaveAttribute('href', '/en/formulas');
+
+    // Footer keeps the Formula Atlas discovery entry.
+    await expect(page.locator('footer a[href="/en/formulas"]')).toContainText(
+      'Formula Atlas'
+    );
   });
 });

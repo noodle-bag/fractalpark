@@ -1,44 +1,28 @@
 import type { MetadataRoute } from 'next';
 import {
-  PUBLISHED_FORMULA_GUIDES,
-  formulaGuidePath,
-} from '@/content/formula-guides';
+  INDEXABLE_PAGE_PATHS,
+  buildIndexableAlternates,
+} from '@/lib/indexable-pages';
 import { routing } from '@/i18n/routing';
 import { SITE } from '@/lib/site';
 
+/**
+ * Sitemap of canonical indexable URLs only.
+ *
+ * - Excludes the `/en` and `/zh` 301 redirect sources and the `noindex`
+ *   `/[locale]/drift` route (see src/lib/indexable-pages.ts).
+ * - No `lastModified` unless a real significant content update time is known,
+ *   and no `priority`/`changeFrequency` hints that search engines ignore.
+ */
 export default function sitemap(): MetadataRoute.Sitemap {
-  const locales = routing.locales;
-  const pages = [
-    '',
-    '/explore',
-    '/gallery',
-    '/formulas',
-    '/formulas/frm',
-    '/formulas/editor',
-    '/about',
-    ...PUBLISHED_FORMULA_GUIDES.map(formulaGuidePath),
-  ];
-
   const entries: MetadataRoute.Sitemap = [];
 
-  for (const locale of locales) {
-    for (const page of pages) {
-      const url = `${SITE.url}/${locale}${page}`;
-      const alternates: Record<string, string> = {};
-
-      // Add hreflang alternates for all other locales
-      for (const altLocale of locales) {
-        alternates[altLocale] = `${SITE.url}/${altLocale}${page}`;
-      }
-      alternates['x-default'] = `${SITE.url}/en${page}`;
-
+  for (const locale of routing.locales) {
+    for (const page of INDEXABLE_PAGE_PATHS) {
       entries.push({
-        url,
-        lastModified: new Date(),
-        changeFrequency: page === '' ? 'weekly' : 'monthly',
-        priority: page === '' ? 1.0 : 0.8,
+        url: `${SITE.url}/${locale}${page}`,
         alternates: {
-          languages: alternates,
+          languages: buildIndexableAlternates(page),
         },
       });
     }

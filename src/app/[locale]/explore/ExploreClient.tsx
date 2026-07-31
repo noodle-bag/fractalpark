@@ -44,7 +44,7 @@ type ExploreFormulaResolution =
       errors: string[];
     };
 
-function ExploreClient() {
+function ExploreClient({ posterImage }: { posterImage?: string }) {
   const locale = useLocale();
   const t = useTranslations('explore');
   const searchParams = useSearchParams();
@@ -443,7 +443,14 @@ function ExploreClient() {
 
   return (
     <div className="flex flex-col lg:flex-row h-[calc(100dvh-4rem)] overflow-hidden">
-      <div className={`relative bg-black lg:flex-1 ${isPanelCollapsed ? 'flex-1' : 'min-h-[50vh] lg:min-h-0'}`}>
+      <div
+        className={`relative bg-black lg:flex-1 ${isPanelCollapsed ? 'flex-1' : 'min-h-[50vh] lg:min-h-0'}`}
+        style={posterImage ? {
+          backgroundImage: `url("${posterImage}")`,
+          backgroundPosition: 'center',
+          backgroundSize: 'cover',
+        } : undefined}
+      >
         {isFormulaReady && !isPreviewPlaying && (
           <FractalCanvas
             paletteIndex={paletteIndex}

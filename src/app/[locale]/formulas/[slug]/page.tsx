@@ -183,7 +183,7 @@ export default async function FormulaGuidePage({
           '@type': 'ListItem',
           position: 1,
           name: guideT('breadcrumbHome'),
-          item: `${SITE.url}/${locale}`,
+          item: `${SITE.url}/${locale}/explore`,
         },
         {
           '@type': 'ListItem',
@@ -214,7 +214,7 @@ export default async function FormulaGuidePage({
             aria-label={guideT('breadcrumbLabel')}
             className="mb-8 text-sm text-muted-foreground"
           >
-            <Link className="hover:text-foreground" href="/">
+            <Link className="hover:text-foreground" href="/explore">
               {guideT('breadcrumbHome')}
             </Link>
             <span className="mx-2">/</span>

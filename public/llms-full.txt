@@ -2,20 +2,21 @@
 
 > Fractal art exploration with real-time GPU rendering
 > Version: 0.4.12
-> Website: https://fractalpark.com
+> Website: https://www.fractalpark.com
 
 ---
 
 ## Table of Contents
 
 1. [Overview](#overview)
-2. [Built-in Formulas](#built-in-formulas)
-3. [Transform Plugins](#transform-plugins)
-4. [Coloring Modes](#coloring-modes)
-5. [.frm Formula Syntax](#frm-formula-syntax)
-6. [URL Parameter Reference](#url-parameter-reference)
-7. [Technology Stack](#technology-stack)
-8. [API Endpoints](#api-endpoints)
+2. [Site Pages](#site-pages)
+3. [Built-in Formulas](#built-in-formulas)
+4. [Transform Plugins](#transform-plugins)
+5. [Coloring Modes](#coloring-modes)
+6. [.frm Formula Syntax](#frm-formula-syntax)
+7. [URL Parameter Reference](#url-parameter-reference)
+8. [Technology Stack](#technology-stack)
+9. [API Endpoints](#api-endpoints)
 
 ---
 
@@ -33,6 +34,25 @@ FractalPark is a browser-based fractal art generator using WebGL for real-time r
 - High-resolution PNG export (up to 4x)
 - Personal collection with localStorage persistence
 - Bilingual support (English/Chinese)
+
+---
+
+## Site Pages
+
+Canonical host is `https://www.fractalpark.com`. Explore is the default landing; the legacy locale roots `/en` and `/zh` respond with a permanent HTTP 301 to the corresponding Explore URL.
+
+| Page | URL | Notes |
+|------|-----|-------|
+| Explore (default landing) | https://www.fractalpark.com/en/explore | Interactive workspace and canonical product page |
+| Formula Atlas | https://www.fractalpark.com/en/formulas | 94 formulas across 7 families |
+| Formula Guides | https://www.fractalpark.com/en/formulas/mandelbrot | 21 in-depth guides; replace the slug for each formula |
+| FRM Guide | https://www.fractalpark.com/en/formulas/frm | Fractint-compatible FRM language guide |
+| FRM Editor | https://www.fractalpark.com/en/formulas/editor | Standalone FRM authoring workflow |
+| Gallery | https://www.fractalpark.com/en/gallery | Published presets and on-device artworks |
+| Drift | https://www.fractalpark.com/en/drift | Immersive preset slideshow; `noindex, follow`, excluded from the sitemap |
+| About | https://www.fractalpark.com/en/about | Project facts, boundaries, and license |
+
+Every page also exists under `/zh` with Simplified Chinese content and `zh-CN` document language.
 
 ---
 
@@ -333,9 +353,9 @@ All fractal state is URL-serializable. Share links restore exact state. The cano
 
 ### Example Share Links
 
-- https://fractalpark.com/en/explore?cx=-0.5&cy=0.25&z=12.50&fm=burningShip&oc=st&julia=1&jre=-0.620000&jim=0.410000&pal=1
-- https://fractalpark.com/en/explore?cx=-0.0019566414&cy=-0.0009999492&z=13526.20&rot=2.6100&fm=newton3&oc=sm&ic=bk&iter=200&pal=0
-- https://fractalpark.com/zh/explore?cx=-0.2973131624&cy=-0.0689499773&z=10841.03&fm=lambda&oc=st&julia=1&jre=-1.693195&jim=-0.675293&grad=0.42:275182,0.51:ffffff,0.62:000000
+- https://www.fractalpark.com/en/explore?cx=-0.5&cy=0.25&z=12.50&fm=burningShip&oc=st&julia=1&jre=-0.620000&jim=0.410000&pal=1
+- https://www.fractalpark.com/en/explore?cx=-0.0019566414&cy=-0.0009999492&z=13526.20&rot=2.6100&fm=newton3&oc=sm&ic=bk&iter=200&pal=0
+- https://www.fractalpark.com/zh/explore?cx=-0.2973131624&cy=-0.0689499773&z=10841.03&fm=lambda&oc=st&julia=1&jre=-1.693195&jim=-0.675293&grad=0.42:275182,0.51:ffffff,0.62:000000
 
 ---
 

@@ -2,10 +2,14 @@ import type { Metadata } from 'next';
 import Script from 'next/script';
 import { NextIntlClientProvider } from 'next-intl';
 import { getMessages, getTranslations, setRequestLocale } from 'next-intl/server';
+import { Analytics } from '@vercel/analytics/next';
+import { SpeedInsights } from '@vercel/speed-insights/next';
+import { GoogleAnalytics } from '@/components/analytics/GoogleAnalytics';
+import { PageViewTracker } from '@/components/analytics/PageViewTracker';
 import { LayoutProvider } from '@/components/layout/LayoutContext';
 import LayoutShell from '@/components/layout/LayoutShell';
 import { routing } from '@/i18n/routing';
-import { SITE, buildLocaleAlternates } from '@/lib/site';
+import { SITE } from '@/lib/site';
 import { websiteJsonLd, renderJsonLd } from '@/lib/json-ld';
 
 export const dynamicParams = false;
@@ -14,13 +18,24 @@ export function generateStaticParams() {
   return routing.locales.map((locale) => ({ locale }));
 }
 
+/**
+ * Localized document language for the initial server HTML:
+ * English pages render `<html lang="en">`, Chinese pages `<html lang="zh-CN">`.
+ * Never fix the root document to a single language and never patch lang from
+ * client-side scripts — crawlers (incl. Bingbot/Baiduspider) must see the
+ * correct value without executing JavaScript.
+ */
+export function htmlLangForLocale(locale: string): string {
+  return locale === 'zh' ? 'zh-CN' : 'en';
+}
+
 export async function generateMetadata({
   params,
 }: {
   params: Promise<{ locale: string }>;
 }): Promise<Metadata> {
   const { locale } = await params;
-  const t = await getTranslations({ locale, namespace: 'metadata.home' });
+  const t = await getTranslations({ locale, namespace: 'metadata.explore' });
   const baseUrl = SITE.url;
   const image = `${SITE.url}${SITE.ogImage}`;
 
@@ -28,18 +43,14 @@ export async function generateMetadata({
     title: t('title'),
     description: t('description'),
     keywords: locale === 'zh'
-      ? ['\u5206\u5f62', '\u5206\u5f62\u827a\u672f', '\u6570\u5b57\u827a\u672f', '\u66fc\u5fb7\u5e03\u7f57\u7279', '\u6731\u5229\u4e9a\u96c6', 'WebGL', '\u751f\u6210\u827a\u672f', '\u6570\u5b66\u827a\u672f']
+      ? ['分形', '分形艺术', '数字艺术', '曼德博罗特', '朱利亚集', 'WebGL', '生成艺术', '数学艺术']
       : ['fractal', 'fractal art', 'digital art', 'mandelbrot', 'julia', 'webgl', 'generative art', 'mathematical art'],
     authors: [{ name: SITE.name }],
     metadataBase: new URL(baseUrl),
-    alternates: {
-      canonical: `/${locale}`,
-      languages: buildLocaleAlternates(),
-    },
     openGraph: {
       title: t('ogTitle'),
       description: t('ogDescription'),
-      url: `${baseUrl}/${locale}`,
+      url: `${baseUrl}/${locale}/explore`,
       siteName: SITE.name,
       locale: locale === 'zh' ? 'zh_CN' : 'en_US',
       type: 'website',
@@ -50,17 +61,6 @@ export async function generateMetadata({
       title: t('ogTitle'),
       description: t('ogDescription'),
       images: [image],
-    },
-    robots: {
-      index: true,
-      follow: true,
-      googleBot: {
-        index: true,
-        follow: true,
-        'max-video-preview': -1,
-        'max-image-preview': 'large',
-        'max-snippet': -1,
-      },
     },
   };
 }
@@ -77,24 +77,30 @@ export default async function LocaleLayout({
   const messages = await getMessages();
 
   return (
-    <>
-      {/* WebSite JSON-LD — site-wide entity declaration for AI crawlers & Google KG */}
-      <script
-        type="application/ld+json"
-        dangerouslySetInnerHTML={{ __html: renderJsonLd(websiteJsonLd) }}
-      />
-      <Script id="microsoft-clarity" strategy="afterInteractive">
-        {`(function(c,l,a,r,i,t,y){
+    <html lang={htmlLangForLocale(locale)}>
+      <body className="antialiased">
+        {/* WebSite JSON-LD — site-wide entity declaration for AI crawlers & Google KG */}
+        <script
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{ __html: renderJsonLd(websiteJsonLd) }}
+        />
+        <Script id="microsoft-clarity" strategy="afterInteractive">
+          {`(function(c,l,a,r,i,t,y){
               c[a]=c[a]||function(){(c[a].q=c[a].q||[]).push(arguments)};
               t=l.createElement(r);t.async=1;t.src="https://www.clarity.ms/tag/"+i;
               y=l.getElementsByTagName(r)[0];y.parentNode.insertBefore(t,y);
           })(window, document, "clarity", "script", "xewn83hqvo");`}
-      </Script>
-      <NextIntlClientProvider messages={messages}>
-        <LayoutProvider>
-          <LayoutShell>{children}</LayoutShell>
-        </LayoutProvider>
-      </NextIntlClientProvider>
-    </>
+        </Script>
+        <NextIntlClientProvider messages={messages}>
+          <LayoutProvider>
+            <LayoutShell>{children}</LayoutShell>
+          </LayoutProvider>
+        </NextIntlClientProvider>
+        <GoogleAnalytics />
+        <PageViewTracker />
+        <Analytics />
+        <SpeedInsights />
+      </body>
+    </html>
   );
 }

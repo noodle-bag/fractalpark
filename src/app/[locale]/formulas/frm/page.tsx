@@ -93,7 +93,7 @@ export default async function FrmGuidePage({
           '@type': 'ListItem',
           position: 1,
           name: guideT('breadcrumbHome'),
-          item: `${SITE.url}/${locale}`,
+          item: `${SITE.url}/${locale}/explore`,
         },
         {
           '@type': 'ListItem',

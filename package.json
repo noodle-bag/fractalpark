@@ -11,7 +11,9 @@
     "thumbnails:presets": "node scripts/generate-thumbnails.mjs",
     "images:formula-guides": "node --import tsx scripts/generate-formula-guide-images.ts",
     "indexnow:submit": "node --import tsx scripts/submit-indexnow.ts",
-    "myfrac:cli": "node --import tsx scripts/myfrac-cli.ts"
+    "myfrac:cli": "node --import tsx scripts/myfrac-cli.ts",
+    "readme:generate": "node --import tsx scripts/generate-readme.ts --write",
+    "readme:check": "node --import tsx scripts/generate-readme.ts --check"
   },
   "dependencies": {
     "@codemirror/commands": "^6.10.2",

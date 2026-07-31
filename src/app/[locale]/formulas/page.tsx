@@ -103,7 +103,7 @@ export default async function FormulaAtlasPage({
           '@type': 'ListItem',
           position: 1,
           name: t('breadcrumbHome'),
-          item: `${SITE.url}/${locale}`,
+          item: `${SITE.url}/${locale}/explore`,
         },
         {
           '@type': 'ListItem',
@@ -138,7 +138,7 @@ export default async function FormulaAtlasPage({
             aria-label={t('breadcrumbLabel')}
             className="mb-8 text-sm text-muted-foreground"
           >
-            <Link className="hover:text-foreground" href="/">
+            <Link className="hover:text-foreground" href="/explore">
               {t('breadcrumbHome')}
             </Link>
             <span className="mx-2">/</span>

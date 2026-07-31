@@ -1,7 +1,7 @@
 {
   "common": {
     "nav": {
-      "home": "Home",
+      "drift": "Drift",
       "gallery": "Gallery",
       "formulas": "Formulas",
       "explore": "Explore",
@@ -15,133 +15,6 @@
       "formulas": "Formula Atlas",
       "copyright": "© 2026 FractalPark. Released under the MIT License.",
       "contact": "Contact:"
-    }
-  },
-  "home": {
-    "hero": {
-      "eyebrow": "Open-source fractal art in your browser",
-      "title": "Explore the Infinite Beauty of Fractals",
-      "subtitle": "FractalPark is an MIT-licensed, browser-based fractal generator for everyone. Open a tab, explore 94 formulas, tune the colors, and export your own mathematical art.",
-      "tags": "Open Source MIT|Runs in Browser|94 Formulas|HD Export"
-    },
-    "featured": {
-      "title": "My Favorites",
-      "empty": {
-        "description": "Star your favorite fractals to show them here.",
-        "cta": "Start Exploring"
-      }
-    },
-    "cta": {
-      "explore": "Start Exploring",
-      "gallery": "View Gallery",
-      "formulas": "Browse Formula Atlas",
-      "github": "View on GitHub"
-    },
-    "fullscreen": "Fullscreen",
-    "exitFullscreen": "Exit Fullscreen",
-    "pause": "Pause animation",
-    "play": "Play animation",
-    "previous": "Previous preset",
-    "next": "Next preset",
-    "seo": {
-      "whatIsHeading": "What is FractalPark?",
-      "whatIsAnswer": "FractalPark is a free, open-source (MIT-licensed) fractal generator that runs entirely in your web browser. It lets you explore 94 different fractal formulas — including the Mandelbrot set, Julia sets, Burning Ship, Newton, Phoenix, and more — color them with 7 different algorithms, and export high-resolution PNG images up to 4× zoom, all without installing any software.",
-      "howToHeading": "How to Generate Your First Fractal",
-      "howToSteps": [
-        "Open the Explore page and pick a formula — the classic Mandelbrot set is a good start.",
-        "Drag on the canvas to pan and scroll to zoom into the fractal boundary where the detail lives.",
-        "Switch to the Coloring tab and try smooth iteration, orbit traps, or a custom gradient.",
-        "Open the Render tab to enable SSAA anti-aliasing and adaptive iteration depth.",
-        "Click Export to download a high-resolution PNG, or Share to copy a link that restores the exact view."
-      ],
-      "familiesHeading": "94 Formulas Across 7 Families",
-      "familiesIntro": "Every formula is implemented in GLSL with both Mandelbrot and Julia modes. Click any formula name in the explorer to load it with sensible defaults.",
-      "familiesTable": {
-        "colFamily": "Family",
-        "colExamples": "Examples",
-        "colCharacter": "Character",
-        "rows": {
-          "classic": {
-            "name": "Classic",
-            "examples": "Mandelbrot, Julia, Multibrot",
-            "character": "Iconic escape-time sets; cardioid and seahorse valley"
-          },
-          "burningShip": {
-            "name": "Burning Ship",
-            "examples": "Burning Ship, Burning Ship Julia",
-            "character": "Asymmetric, ship-like silhouettes from abs() folding"
-          },
-          "newton": {
-            "name": "Newton",
-            "examples": "Newton (z³-1), Nova",
-            "character": "Root-basin attractors; smooth basins with fractal boundaries"
-          },
-          "phoenix": {
-            "name": "Phoenix",
-            "examples": "Phoenix, Phoenix Julia",
-            "character": "Feathered, flame-like filaments from a recurrence term"
-          },
-          "transcendental": {
-            "name": "Transcendental",
-            "examples": "Exp(z), Sin(z), Cos(z)",
-            "character": "Periodic bands and exponential swirls"
-          },
-          "magnet": {
-            "name": "Magnet",
-            "examples": "Magnet Type I, Magnet Type II",
-            "character": "Dense cores with orbit chains; tight self-similarity"
-          },
-          "exotic": {
-            "name": "Exotic",
-            "examples": "Tricorn, Celtic, Buffalo",
-            "character": "Conjugate and hybrid variants with unusual symmetries"
-          }
-        }
-      },
-      "featuresHeading": "What You Can Do with FractalPark",
-      "features": [
-        "94 GLSL fractal formulas with Mandelbrot and Julia modes",
-        "7 coloring modes including smooth iteration, orbit traps, and custom gradients",
-        "Real-time WebGL rendering at 60 fps on any modern device",
-        "High-resolution PNG export up to 4× with SSAA anti-aliasing",
-        "Shareable URLs that restore the exact view and parameters",
-        "Custom formula editor with AST validation and live preview"
-      ],
-      "faqHeading": "Frequently Asked Questions",
-      "faq": {
-        "free": {
-          "q": "Is FractalPark free?",
-          "a": "Yes. FractalPark is completely free and open-source under the MIT license. You can use it for personal, educational, or commercial purposes without any cost."
-        },
-        "chinese": {
-          "q": "Does FractalPark support Chinese?",
-          "a": "Yes. FractalPark is fully bilingual — both the interface and the content are available in English and Simplified Chinese."
-        },
-        "export": {
-          "q": "How do I export a fractal as a PNG?",
-          "a": "Open the Render tab in the explorer, choose a scale (1×, 2×, or 4×), and click Export. FractalPark will render the image at high resolution with SSAA anti-aliasing and download it as a PNG file."
-        },
-        "formulas": {
-          "q": "How many fractal formulas does FractalPark include?",
-          "a": "FractalPark ships with 94 fractal formulas organized into 7 families: Classic, Burning Ship, Newton, Phoenix, Transcendental, Magnet, and Exotic. Each formula supports both Mandelbrot and Julia modes."
-        },
-        "share": {
-          "q": "Can I share a fractal I created?",
-          "a": "Yes. Every view in FractalPark has a unique URL that encodes the formula, position, zoom, coloring, and all other parameters. Click Share to copy the link — anyone who opens it will see the exact same fractal."
-        },
-        "opensource": {
-          "q": "Is FractalPark open source?",
-          "a": "Yes. The entire codebase is MIT-licensed and available on GitHub.",
-          "linkText": "View the FractalPark repository on GitHub"
-        }
-      },
-      "linksHeading": "Get Started",
-      "links": {
-        "explore": "Open the Fractal Explorer",
-        "gallery": "Browse the Gallery",
-        "formulas": "Browse the Formula Atlas",
-        "about": "About FractalPark"
-      }
     }
   },
   "gallery": {
@@ -1515,71 +1388,20 @@
       "glslError": "GLSL compile error (mapped from formula source)",
       "glslErrorUnmapped": "GLSL compile error (location cannot be mapped)"
     },
-    "seo": {
-      "heading": "FractalPark Explorer — Free In-Browser Fractal Generator",
-      "intro": "FractalPark is a free, open-source (MIT) WebGL fractal generator that runs entirely in your browser. Explore 94 fractal formulas across 7 families — from the classic Mandelbrot and Julia sets to Burning Ship, Newton, Phoenix, and exotic transcendental attractors — and export high-resolution PNG images up to 4× without installing anything.",
-      "howToHeading": "How to Generate Your First Fractal",
-      "howToSteps": [
-        "Pick a formula from the Formula tab — try the classic Mandelbrot set to start.",
-        "Drag on the canvas to pan, scroll to zoom into the boundary region where detail lives.",
-        "Switch to the Coloring tab and try smooth iteration, orbit traps, or a custom gradient.",
-        "Open the Render tab to enable anti-aliasing (SSAA) and adaptive iteration depth.",
-        "Click Export to download a high-resolution PNG, or Share to copy a link that restores the exact view."
-      ],
-      "familiesHeading": "94 Formulas Across 7 Families",
-      "familiesIntro": "Every formula is implemented in GLSL with both Mandelbrot and Julia modes. Click any formula name in the explorer to load it with sensible defaults.",
-      "familiesTable": {
-        "colFamily": "Family",
-        "colExamples": "Examples",
-        "colCharacter": "Character",
-        "rows": {
-          "classic": {
-            "name": "Classic",
-            "examples": "Mandelbrot, Julia, Multibrot",
-            "character": "Iconic escape-time sets; cardioid and seahorse valley"
-          },
-          "burningShip": {
-            "name": "Burning Ship",
-            "examples": "Burning Ship, Burning Ship Julia",
-            "character": "Asymmetric, ship-like silhouettes from abs() folding"
-          },
-          "newton": {
-            "name": "Newton",
-            "examples": "Newton (z³-1), Nova",
-            "character": "Root-basin attractors; smooth basins with fractal boundaries"
-          },
-          "phoenix": {
-            "name": "Phoenix",
-            "examples": "Phoenix, Phoenix Julia",
-            "character": "Feathered, flame-like filaments from a recurrence term"
-          },
-          "transcendental": {
-            "name": "Transcendental",
-            "examples": "Exp(z), Sin(z), Cos(z)",
-            "character": "Periodic bands and exponential swirls"
-          },
-          "magnet": {
-            "name": "Magnet",
-            "examples": "Magnet Type I, Magnet Type II",
-            "character": "Dense cores with orbit chains; tight self-similarity"
-          },
-          "exotic": {
-            "name": "Exotic",
-            "examples": "Tricorn, Celtic, Buffalo",
-            "character": "Conjugate and hybrid variants with unusual symmetries"
-          }
-        }
+    "landing": {
+      "heading": "FractalPark: open-source fractal generator in your browser",
+      "whatIsHeading": "What is FractalPark?",
+      "whatIsAnswer": "FractalPark is a free, open-source (MIT) fractal knowledge and creation platform that runs entirely in your browser. It renders {formulaCount} built-in formulas in real time with WebGL, supports Fractint-compatible FRM authoring, and exports high-resolution PNG images — no installation, no account, no server processing.",
+      "capabilitiesHeading": "Core capabilities",
+      "capabilitiesIntro": "{formulaCount} formulas across {formulaFamilyCount} families · {formulaGuideCount} in-depth Formula Guides · {transformCount} transforms · {coloringModeCount} coloring modes · shareable URLs · PNG export up to {maxExportScale}×",
+      "linksHeading": "Keep exploring",
+      "links": {
+        "formulas": "Formula Atlas — every formula with math, history, and live examples",
+        "frmGuide": "FRM Guide — write Fractint-compatible formulas in the browser",
+        "drift": "Drift — sit back with an immersive preset slideshow",
+        "about": "About — project facts, boundaries, and open-source details"
       },
-      "featuresHeading": "What You Can Do",
-      "features": [
-        "94 GLSL fractal formulas with Mandelbrot and Julia modes",
-        "7 coloring modes including smooth iteration, orbit traps, and custom gradients",
-        "Real-time WebGL rendering at 60 fps on any modern device",
-        "High-resolution PNG export up to 4× with SSAA anti-aliasing",
-        "Shareable URLs that restore the exact view and parameters",
-        "Custom formula editor with AST validation and live preview"
-      ],
-      "noScriptNotice": "The interactive fractal explorer requires JavaScript and WebGL. The content above describes what the tool does; please enable JavaScript to use it."
+      "posterAlt": "Static preview of a Mandelbrot fractal rendered by FractalPark"
     }
   },
   "frmEditor": {
@@ -1631,17 +1453,11 @@
     }
   },
   "metadata": {
-    "home": {
-      "title": "FractalPark - Open Source Browser Fractal Generator",
-      "description": "FractalPark is an open-source MIT-licensed fractal generator that runs in your browser. Explore 94 formulas, real-time WebGL rendering, custom palettes, and PNG export.",
-      "ogTitle": "FractalPark - Open Source Fractal Art in Your Browser",
-      "ogDescription": "Create fractal art in your browser with an MIT-licensed open-source WebGL explorer, 94 formulas, custom palettes, and PNG export."
-    },
     "explore": {
-      "title": "Explore Fractals | Interactive Fractal Generator - FractalPark",
-      "description": "Interactive fractal explorer with Mandelbrot, Julia, Newton and 94 built-in formulas. Real-time WebGL rendering with custom colors and high-res export.",
-      "ogTitle": "Interactive Fractal Explorer - FractalPark",
-      "ogDescription": "Explore mathematical beauty in real-time. 94 fractal formulas, GPU-accelerated rendering."
+      "title": "FractalPark — Open-source browser fractal generator",
+      "description": "Open-source, formula-first fractal knowledge and creation platform in your browser: 94 built-in formulas, real-time WebGL rendering, Fractint-compatible FRM authoring, and high-resolution PNG export.",
+      "ogTitle": "FractalPark — Open-source fractal art in your browser",
+      "ogDescription": "Create fractal art in your browser: 94 formulas, real-time WebGL rendering, FRM authoring, high-resolution PNG export."
     },
     "gallery": {
       "title": "My Gallery | Personal Fractal Collection - FractalPark",
@@ -1664,11 +1480,16 @@
       "title": "FRM Guide | Write Custom Fractal Formulas - FractalPark",
       "description": "Learn FractalPark's tested FRM syntax, compatibility levels, AST-to-GLSL compiler pipeline, diagnostics, and three compile-checked custom formula examples.",
       "imageAlt": "FractalPark FRM formula language guide"
+    },
+    "drift": {
+      "title": "Drift — Immersive fractal slideshow | FractalPark",
+      "description": "A hands-free, full-viewport drift through published FractalPark fractal presets, rendered live in WebGL. Lean back and watch the math move.",
+      "ogTitle": "Drift — Immersive fractal slideshow",
+      "ogDescription": "Full-viewport ambient playback of FractalPark fractal presets."
     }
   },
   "about": {
     "title": "About FractalPark",
-    "intro": "FractalPark is an open-source fractal art generator that runs directly in your browser. You do not need to install anything: open the explorer, choose a formula, adjust the colors, and make a piece of mathematical art at your own pace.",
     "aiDescription": "FractalPark is an open-source MIT-licensed browser-based fractal art generator using WebGL for real-time GPU rendering. It features 94 built-in escape-time fractal formulas (Mandelbrot, Julia, Newton, Phoenix, Magnet, McMullen, rational, transcendental families), a custom formula editor with Fractint .frm syntax support, 7 UV transform plugins, 9 coloring modes, and high-resolution PNG export. Built with Next.js 16, React 19, TypeScript 5, and Tailwind CSS. The rendering engine uses a plugin architecture with dynamic GLSL shader assembly and LRU caching.",
     "techStack": {
       "title": "Technology",
@@ -1687,10 +1508,58 @@
     "aiFriendly": {
       "title": "AI Friendly",
       "description": "This website provides structured documentation for AI assistants at /llms.txt and /llms-full.txt, enabling AI tools to understand and recommend FractalPark's features."
+    }
+  },
+  "drift": {
+    "pause": "Pause animation",
+    "play": "Play animation",
+    "previous": "Previous preset",
+    "next": "Next preset"
+  },
+  "publicProject": {
+    "tagline": "FractalPark is an open-source, formula-first fractal knowledge and creation platform with growing Fractint-compatible FRM support, working to bring Fractint’s formula heritage into the modern browser.",
+    "definition": "FractalPark is a free, open-source (MIT) WebGL application for exploring, learning, and creating fractal art. It ships {formulaCount} built-in formulas across {formulaFamilyCount} families, {formulaGuideCount} in-depth Formula Guides, a Fractint-compatible FRM language with a Guide and standalone Editor, and a personal Gallery — all running locally in your browser.",
+    "aiDescription": "FractalPark is an open-source MIT-licensed browser fractal generator using WebGL for real-time GPU rendering. It features {formulaCount} built-in fractal formulas across {formulaFamilyCount} families, {formulaGuideCount} Formula Guides, a Fractint-compatible FRM editor with AST-to-GLSL transpilation, {transformCount} UV transform plugins, {coloringModeCount} coloring modes, shareable URLs, local artwork storage, and high-resolution PNG export up to {maxExportScale}x. Built with Next.js, React, and TypeScript.",
+    "capabilitiesHeading": "What you can do today",
+    "capabilities": {
+      "discover": {
+        "title": "Discover formulas",
+        "summary": "Browse the Formula Atlas: 94 built-in formulas across 7 families, with 21 in-depth Formula Guides covering the math, history, and visual character of the classics."
+      },
+      "create": {
+        "title": "Create in the browser",
+        "summary": "Explore and render in real time with WebGL: Mandelbrot and Julia modes for every formula, 7 transforms, 9 coloring modes, gradients, lighting, and keyframe animation."
+      },
+      "authorFrm": {
+        "title": "Author FRM",
+        "summary": "Write custom formulas in the Fractint-compatible FRM language with the Guide and standalone Editor: AST validation, live GLSL preview, and clear diagnostics."
+      },
+      "saveExport": {
+        "title": "Save and export",
+        "summary": "Save artworks on this device, restore exact views from shareable URLs, and export high-resolution PNG images up to 4× with SSAA anti-aliasing."
+      }
     },
-    "vision": {
-      "title": "Vision",
-      "description": "We want fractal exploration to feel open, welcoming, and easy to start. Whether you are here to make an image, learn a bit of math, inspect the code, or remix the project, FractalPark should give you a friendly place to begin."
+    "boundariesHeading": "Current boundaries and future directions",
+    "currentHeading": "Available today",
+    "futureHeading": "On the roadmap",
+    "boundaries": {
+      "current": {
+        "0": "Growing Fractint-compatible FRM support: a practical, tested subset of the Fractint formula language runs today — not a complete Fractint reimplementation.",
+        "1": "Artworks and custom formulas are stored locally on your device. There are no accounts, no cloud sync, and no server-side sharing.",
+        "2": "The interface is bilingual in English and Simplified Chinese."
+      },
+      "future": {
+        "0": "Working to bring Fractint’s historical formula archive into the modern browser over time.",
+        "1": "Deeper coloring, animation, and zoom capabilities are on the roadmap but not released."
+      }
+    },
+    "licenseLine": "FractalPark is released under the MIT License.",
+    "heroAlt": "The Mandelbrot set rendered in real time by the FractalPark WebGL engine",
+    "cta": {
+      "explore": "Open Explore",
+      "formulas": "Browse the Formula Atlas",
+      "frmGuide": "Read the FRM Guide",
+      "gallery": "Visit the Gallery"
     }
   }
 }

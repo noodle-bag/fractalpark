@@ -1,4 +1,4 @@
-import { routing } from '@/i18n/routing';
+import { buildIndexableUrls } from '@/lib/indexable-pages';
 import { SITE } from '@/lib/site';
 
 type Args = {
@@ -46,11 +46,9 @@ function parseArgs(argv: string[]): Args {
 }
 
 function buildSitemapUrls(baseUrl: string): string[] {
-  const pages = ['', '/explore', '/gallery', '/about'];
-
-  return routing.locales.flatMap((locale) =>
-    pages.map((page) => `${baseUrl}/${locale}${page}`)
-  );
+  // Default submission set = the same canonical indexable URL set as
+  // src/app/sitemap.ts. Pass --url explicitly for changed-URL submissions.
+  return buildIndexableUrls(baseUrl);
 }
 
 async function main(): Promise<void> {

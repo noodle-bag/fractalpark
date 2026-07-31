@@ -8,7 +8,7 @@
 ## Purpose
 
 FractalPark presents the same formulas and artwork through multiple surfaces:
-the homepage slideshow, Formula Atlas, Gallery, artwork pages, Explore, the
+the Drift playback page, Formula Atlas, Gallery, artwork pages, Explore, the
 FRM Editor, generated thumbnails, and exported projects. These surfaces must
 not create independent representations of the same rendering or authoring
 state.
@@ -40,7 +40,7 @@ default formula state, preset state, ordering rule, or custom-formula store.
 |---|---|---|
 | Built-in formula identity, family, capabilities, and approved defaults | `src/engine/plugins/formula-catalog.ts` and the plugin registry | Explore, Formula Atlas, formula pages, canonical formula documents |
 | Formula editorial content, public slug, references, and relationships | `FormulaContentManifest` plus locale messages | Formula Atlas and formula pages |
-| Published preset identity, order, localized title, state query, animation input, and asset path | `public/gallery-presets.json` | Homepage, Collection, artwork pages, playback, Remix, thumbnail generation |
+| Published preset identity, order, localized title, state query, animation input, and asset path | `public/gallery-presets.json` | Drift, Collection, artwork pages, playback, Remix, thumbnail generation |
 | Published artwork editorial content, public slug, license metadata, and relationships | `ArtworkContentManifest` plus locale messages | Collection, artwork pages, sitemap, structured data |
 | Durable render state | `FractalDocument` | Renderer, URL adapters, artwork storage, playback projections, exports |
 | Local saved artwork | `ArtworkRepository` and Envelope v1 | My Works and Explore |
@@ -72,7 +72,7 @@ Consumers must not patch the result with page-specific visual defaults.
 
 A single preset document builder parses a validated
 `GalleryPresetConfig.url` and produces the canonical `FractalDocument` for
-that preset. Parsing a preset query directly in the homepage, Gallery,
+that preset. Parsing a preset query directly in Drift, Gallery,
 artwork page, playback component, or thumbnail script is prohibited.
 
 A published artwork projection joins, by `presetId`:
@@ -117,13 +117,25 @@ is not the canonical model for new published preset or persistence work.
 
 ## Surface Contracts
 
-### Homepage
+### Explore landing
 
-- Uses the shared published-preset projection and playback component.
+- Explore is the default landing and the canonical product entity page; the
+  legacy locale roots respond with an explicit HTTP 301 to it.
+- Product metadata, Open Graph, and the shared `SoftwareApplication` JSON-LD
+  are owned by Explore; facts come from the public-project content contract.
+- Visible, bilingual SSR product content follows the workspace; a fixed-size
+  static poster precedes WebGL progressive enhancement. Crawler-only hidden
+  copy is prohibited.
+
+### Drift playback
+
+- Drift hosts the immersive published-preset slideshow migrated from the
+  legacy homepage; it is `noindex, follow` and excluded from the sitemap.
+- Uses the shared published-preset projection and playback controller.
 - May choose a presentation order without changing Collection order.
 - Does not parse preset URLs or manufacture a separate artwork record.
 - Playback controls shared with artwork pages come from one component or one
-  controller contract.
+  controller contract; Drift keeps only Play/Pause, Previous, and Next.
 
 ### Formula Atlas and formula pages
 
@@ -184,7 +196,7 @@ Before implementation, a P0 scope change must identify impact on:
 - Document and URL compatibility;
 - local storage and imported files;
 - SSR, metadata, sitemap, and canonical routes;
-- homepage, Gallery, artwork, Explore, and Editor consumers;
+- Drift, Gallery, artwork, Explore, and Editor consumers;
 - generated assets and visual baselines.
 
 ## Required Contract Tests
@@ -196,7 +208,7 @@ At minimum, automated tests must prove:
 - all manifest references resolve to authoritative records;
 - every published preset has one content entry and one canonical document;
 - Collection order equals preset source order;
-- homepage, artwork-page, Remix, and thumbnail projections identify the same
+- Drift, artwork-page, Remix, and thumbnail projections identify the same
   preset and canonical state;
 - Editor and Explore resolve the same persisted custom formula;
 - legacy artwork, Document v1/v2, future read-only documents, legacy URLs, and
