@@ -34,27 +34,17 @@ test.describe('Gallery Preset Navigation', () => {
     expect(page.url()).toBe(new URL(expectedLocation!, page.url()).toString());
   });
 
-  test('featured preset should show a static thumbnail and navigate with a matching href', async ({ page }) => {
+  test('collection should render all published works as static cards without legacy controls', async ({ page }) => {
     await page.goto('/en/gallery');
 
-    const featuredCard = page.locator('a[href^="/en/gallery/preset-"]').filter({ hasText: 'Featured' }).first();
-    await expect(featuredCard).toBeVisible({ timeout: 15000 });
+    const presetLinks = await waitForGalleryPresetLinks(page);
+    await expect(presetLinks).toHaveCount(26);
 
-    const thumbnail = featuredCard.locator('img').first();
+    const thumbnail = presetLinks.first().locator('img').first();
     await expect(thumbnail).toBeVisible();
     await expect(thumbnail).toHaveAttribute('src', /\/images\/gallery\/presets\/|^data:image\//);
-
-    const href = await featuredCard.getAttribute('href');
-    expect(href).toBeTruthy();
-    expect(href).toContain('/en/gallery/preset-');
-    const redirect = await page.request.get(href!, { maxRedirects: 0 });
-    const expectedLocation = redirect.headers().location;
-    expect(redirect.status()).toBe(308);
-    expect(expectedLocation).toMatch(/^\/en\/explore\?/);
-
-    await featuredCard.click();
-    await waitForFractalCanvasReady(page);
-
-    expect(page.url()).toBe(new URL(expectedLocation!, page.url()).toString());
+    await expect(page.getByText('Featured')).toHaveCount(0);
+    await expect(page.getByRole('button', { name: /star|fullscreen/i })).toHaveCount(0);
+    await expect(page.locator('[data-testid="fractal-canvas"]')).toHaveCount(0);
   });
 });

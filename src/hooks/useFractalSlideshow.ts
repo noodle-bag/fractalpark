@@ -1,7 +1,19 @@
 'use client';
 
 import { useState, useCallback, useRef, useEffect } from 'react';
-import type { SavedFractal, ViewBounds } from '@/engine/types';
+import type {
+  FractalParams,
+  KeyframeAnimation,
+  ViewBounds,
+} from '@/engine/types';
+
+export interface SlideshowArtwork {
+  id: string;
+  name: string;
+  params: FractalParams;
+  thumbnail?: string;
+  animation?: KeyframeAnimation;
+}
 
 /**
  * Simplified state: no per-frame progress tracking.
@@ -10,7 +22,7 @@ import type { SavedFractal, ViewBounds } from '@/engine/types';
 type SlidePhase = 'PLAYING_A' | 'CROSSFADE_TO_B' | 'PLAYING_B' | 'CROSSFADE_TO_A';
 
 interface UseFractalSlideshowOptions {
-  fractals: SavedFractal[];
+  fractals: SlideshowArtwork[];
   crossfadeDuration?: number; // milliseconds, default 2000
 }
 
@@ -18,8 +30,8 @@ interface UseFractalSlideshowReturn {
   // Whether the first real gallery preset has replaced the hidden placeholder
   isReady: boolean;
   // Which fractal is on each canvas
-  fractalA: SavedFractal;
-  fractalB: SavedFractal | null;
+  fractalA: SlideshowArtwork;
+  fractalB: SlideshowArtwork | null;
   // Whether each canvas should be active (rendering WebGL)
   activeA: boolean;
   activeB: boolean;
@@ -40,7 +52,7 @@ interface UseFractalSlideshowReturn {
   goNext: () => void;
 }
 
-const PLACEHOLDER_FRACTAL: SavedFractal = {
+const PLACEHOLDER_FRACTAL: SlideshowArtwork = {
   id: 'placeholder',
   name: 'Placeholder',
   params: {
@@ -61,9 +73,7 @@ const PLACEHOLDER_FRACTAL: SavedFractal = {
     transformId: 'none',
     pluginParams: {},
   },
-  createdAt: Date.now(),
   thumbnail: '',
-  starred: false,
 };
 
 /**
@@ -83,15 +93,15 @@ export function useFractalSlideshow({
   const initialFractal = fractals.length > 0 ? fractals[0] : PLACEHOLDER_FRACTAL;
 
   const [phase, setPhase] = useState<SlidePhase>('PLAYING_A');
-  const [fractalA, setFractalA] = useState<SavedFractal>(initialFractal);
-  const [fractalB, setFractalB] = useState<SavedFractal | null>(null);
+  const [fractalA, setFractalA] = useState<SlideshowArtwork>(initialFractal);
+  const [fractalB, setFractalB] = useState<SlideshowArtwork | null>(null);
 
   const [boundsA, setBoundsA] = useState<ViewBounds>(initialFractal.params.bounds);
   const [boundsB, setBoundsB] = useState<ViewBounds>({ centerX: 0, centerY: 0, zoom: 1, rotation: 0 });
 
   const crossfadeTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
   const fractalsRef = useRef(fractals);
-  const historyRef = useRef<SavedFractal[]>(initialFractal.id === PLACEHOLDER_FRACTAL.id ? [] : [initialFractal]);
+  const historyRef = useRef<SlideshowArtwork[]>(initialFractal.id === PLACEHOLDER_FRACTAL.id ? [] : [initialFractal]);
   const [historyIndex, setHistoryIndex] = useState(0);
   useEffect(() => {
     fractalsRef.current = fractals;
@@ -118,21 +128,21 @@ export function useFractalSlideshow({
   }, [fractals]);
 
   // Pick next fractal (random, avoid repeating current)
-  const pickNext = useCallback((currentId: string): SavedFractal => {
+  const pickNext = useCallback((currentId: string): SlideshowArtwork => {
     const pool = fractalsRef.current;
     if (pool.length <= 1) return pool[0] || PLACEHOLDER_FRACTAL;
     const others = pool.filter((f) => f.id !== currentId);
     return others[Math.floor(Math.random() * others.length)];
   }, []);
 
-  const recordAdvance = useCallback((next: SavedFractal) => {
+  const recordAdvance = useCallback((next: SlideshowArtwork) => {
     const trimmed = historyRef.current.slice(0, historyIndex + 1);
     trimmed.push(next);
     historyRef.current = trimmed;
     setHistoryIndex(trimmed.length - 1);
   }, [historyIndex]);
 
-  const recordPrevious = useCallback((): SavedFractal | null => {
+  const recordPrevious = useCallback((): SlideshowArtwork | null => {
     if (historyIndex <= 0) return null;
     const nextIndex = historyIndex - 1;
     const previous = historyRef.current[nextIndex] ?? null;
@@ -141,7 +151,7 @@ export function useFractalSlideshow({
     return previous;
   }, [historyIndex]);
 
-  const transitionTo = useCallback((next: SavedFractal) => {
+  const transitionTo = useCallback((next: SlideshowArtwork) => {
     if (phase === 'PLAYING_A') {
       setFractalB(next);
       requestAnimationFrame(() => {

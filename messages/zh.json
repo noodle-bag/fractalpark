@@ -19,15 +19,23 @@
   },
   "gallery": {
     "title": "画廊",
-    "description": "探索精选分形, 或浏览你保存的收藏.",
-    "fullscreen": "全屏",
-    "fullscreenHint": "点击任意位置或按 Esc 关闭",
-    "addNew": "New分形",
+    "viewsLabel": "画廊视图",
+    "collection": {
+      "title": "FractalPark 作品集",
+      "description": "浏览 FractalPark 已发布的完整作品集。"
+    },
+    "mine": {
+      "title": "我的作品",
+      "description": "这些作品保存在当前设备的此浏览器中。",
+      "create": "在探索器中创作",
+      "emptyTitle": "尚无已保存作品",
+      "emptyDescription": "前往探索器创作并保存分形，建立仅存于当前设备的作品集。",
+      "actions": "{name} 的操作"
+    },
     "contextMenu": {
+      "restore": "在探索器中恢复",
       "rename": "重命名",
-      "delete": "删除",
-      "star": "收藏",
-      "unstar": "取消收藏"
+      "delete": "删除"
     },
     "card": {
       "deleteConfirm": {
@@ -39,9 +47,6 @@
       "renameTitle": "重命名分形",
       "renameCancel": "取消",
       "renameSave": "保存"
-    },
-    "builtin": {
-      "badge": "精选"
     }
   },
   "formulas": {

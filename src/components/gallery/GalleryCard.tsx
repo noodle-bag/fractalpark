@@ -1,12 +1,12 @@
 'use client';
 
-import { useState, useCallback, useRef, lazy, Suspense } from 'react';
-import { useTranslations } from 'next-intl';
+import { useCallback, useState } from 'react';
 import Image from 'next/image';
-import { Star, Maximize2, Film, MoreHorizontal, Pencil, Trash2 } from 'lucide-react';
-import { cn } from '@/lib/utils';
-import type { GalleryItem } from '@/hooks/useGalleryItems';
-import { BuiltinBadge } from './BuiltinBadge';
+import Link from 'next/link';
+import { useTranslations } from 'next-intl';
+import { MoreHorizontal, Pencil, RotateCcw, Trash2 } from 'lucide-react';
+import type { ArtworkGalleryItem } from '@/lib/artwork-repository';
+import type { PublishedArtwork } from '@/lib/published-artworks';
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -25,280 +25,169 @@ import {
   AlertDialogTitle,
 } from '@/components/ui/alert-dialog';
 import { Input } from '@/components/ui/input';
-import { PresetThumbnail } from './PresetThumbnail';
 
-// Lazy load AnimatedFractalCanvas to avoid bundling in main chunk
-const AnimatedFractalCanvas = lazy(() => import('@/components/fractal/AnimatedFractalCanvas'));
-
-interface GalleryCardProps {
-  fractal: GalleryItem;
+interface PublishedArtworkCardProps {
+  artwork: PublishedArtwork;
   href: string;
-  isHovered: boolean;
-  onHoverChange: (isHovered: boolean) => void;
-  onToggleStar: (id: string) => void;
-  onDelete: (id: string) => void;
-  onRename: (id: string, name: string) => void;
-  onFullscreen: (fractal: GalleryItem) => void;
   onOpen?: () => void;
-  isBuiltin?: boolean;
-  featured?: boolean;
 }
 
-export function GalleryCard({
-  fractal,
+export function PublishedArtworkCard({
+  artwork,
   href,
-  isHovered,
-  onHoverChange,
-  onToggleStar,
+  onOpen,
+}: PublishedArtworkCardProps) {
+  return (
+    <article>
+      <Link href={href} onClick={onOpen} className="group block">
+        <div className="relative aspect-[16/10] overflow-hidden rounded-lg bg-muted">
+          {artwork.thumbnail ? (
+            <Image
+              src={artwork.thumbnail}
+              alt=""
+              fill
+              unoptimized
+              className="object-cover transition-transform duration-300 group-hover:scale-[1.02]"
+              sizes="(max-width: 639px) 100vw, (max-width: 899px) 50vw, (max-width: 1199px) 33vw, (max-width: 1599px) 25vw, (max-width: 2199px) 20vw, 17vw"
+            />
+          ) : (
+            <div className="h-full w-full bg-gradient-to-br from-slate-800 via-slate-700 to-slate-600" />
+          )}
+        </div>
+        <h2 className="mt-3 truncate font-medium group-hover:underline">
+          {artwork.name}
+        </h2>
+      </Link>
+    </article>
+  );
+}
+
+interface LocalArtworkCardProps {
+  artwork: ArtworkGalleryItem;
+  href: string;
+  onDelete: (id: string) => unknown;
+  onRename: (id: string, name: string) => unknown;
+  onOpen?: () => void;
+}
+
+export function LocalArtworkCard({
+  artwork,
+  href,
   onDelete,
   onRename,
-  onFullscreen,
   onOpen,
-  isBuiltin = false,
-  featured = false,
-}: GalleryCardProps) {
+}: LocalArtworkCardProps) {
   const t = useTranslations('gallery');
+  const [menuOpen, setMenuOpen] = useState(false);
   const [isEditing, setIsEditing] = useState(false);
-  const [editName, setEditName] = useState(fractal.name);
+  const [editName, setEditName] = useState(artwork.name);
   const [showDeleteDialog, setShowDeleteDialog] = useState(false);
-  const [contextMenuOpen, setContextMenuOpen] = useState(false);
-  const [isTouching, setIsTouching] = useState(false);
-  const longPressTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
-  const containerRef = useRef<HTMLAnchorElement>(null);
-
-  const hasAnimation = (fractal.animation?.keyframes.length ?? 0) >= 2;
-  const shouldShowAnimation = isHovered && hasAnimation;
 
   const handleRenameSubmit = useCallback(() => {
     const trimmed = editName.trim();
-    if (trimmed && trimmed !== fractal.name) {
-      onRename(fractal.id, trimmed);
+    if (trimmed && trimmed !== artwork.name) {
+      onRename(artwork.id, trimmed);
     } else {
-      setEditName(fractal.name);
+      setEditName(artwork.name);
     }
     setIsEditing(false);
-  }, [editName, fractal.name, fractal.id, onRename]);
-
-  // Long press handling for mobile
-  const handleTouchStart = useCallback(() => {
-    setIsTouching(true);
-    longPressTimer.current = setTimeout(() => {
-      setContextMenuOpen(true);
-    }, 500);
-  }, []);
-
-  const handleTouchEnd = useCallback(() => {
-    setIsTouching(false);
-    if (longPressTimer.current) {
-      clearTimeout(longPressTimer.current);
-      longPressTimer.current = null;
-    }
-  }, []);
-
-  const handleContextMenu = useCallback((e: React.MouseEvent) => {
-    e.preventDefault();
-    setContextMenuOpen(true);
-  }, []);
+  }, [artwork.id, artwork.name, editName, onRename]);
 
   return (
-    <>
-      <a
-        ref={containerRef}
+    <article className="relative">
+      <Link
         href={href}
         onClick={onOpen}
-        className="relative block aspect-square overflow-hidden group"
-        onMouseEnter={() => onHoverChange(true)}
-        onMouseLeave={() => onHoverChange(false)}
-        onContextMenu={handleContextMenu}
-        onTouchStart={handleTouchStart}
-        onTouchEnd={handleTouchEnd}
-        onTouchMove={handleTouchEnd}
+        onContextMenu={(event) => {
+          event.preventDefault();
+          setMenuOpen(true);
+        }}
+        className="group block"
       >
-        {/* Static thumbnail */}
-        <div
-          className={cn(
-            'absolute inset-0 transition-opacity duration-300',
-            shouldShowAnimation ? 'opacity-0' : 'opacity-100'
-          )}
-        >
-          {fractal.thumbnail ? (
+        <div className="relative aspect-[16/10] overflow-hidden rounded-lg bg-gradient-to-br from-slate-800 via-slate-700 to-slate-600">
+          {artwork.thumbnail && (
             <Image
-              src={fractal.thumbnail}
-              alt={fractal.name}
+              src={artwork.thumbnail}
+              alt=""
               fill
               unoptimized
-              className="object-cover"
-              sizes="(max-width: 375px) 50vw, (max-width: 600px) 33vw, (max-width: 768px) 25vw, (max-width: 1024px) 16vw, 11vw"
+              className="object-cover transition-transform duration-300 group-hover:scale-[1.02]"
+              sizes="(max-width: 639px) 100vw, (max-width: 899px) 50vw, (max-width: 1199px) 33vw, (max-width: 1599px) 25vw, (max-width: 2199px) 20vw, 17vw"
             />
-          ) : isBuiltin ? (
-            <PresetThumbnail
-              params={fractal.params}
-              presetId={fractal.id}
-              className="w-full h-full"
-            />
-          ) : (
-            <div className="w-full h-full bg-gradient-to-br from-slate-800 via-slate-700 to-slate-600" />
           )}
         </div>
+        <h2 className="mt-3 truncate pr-10 font-medium group-hover:underline">
+          {artwork.name}
+        </h2>
+      </Link>
 
-        {/* Animated canvas (only when hovered and has animation) */}
-        {shouldShowAnimation && (
-          <div className="absolute inset-0">
-            <Suspense fallback={null}>
-              <AnimatedFractalCanvas
-                params={fractal.params}
-                keyframes={fractal.animation!.keyframes}
-                dprScale={0.5}
-                active={true}
-                className="w-full h-full"
-              />
-            </Suspense>
-          </div>
-        )}
+      <DropdownMenu open={menuOpen} onOpenChange={setMenuOpen}>
+        <DropdownMenuTrigger asChild>
+          <button
+            type="button"
+            aria-label={t('mine.actions', { name: artwork.name })}
+            className="absolute bottom-0 right-0 rounded-full p-2 text-muted-foreground transition-colors hover:bg-muted hover:text-foreground"
+          >
+            <MoreHorizontal className="h-4 w-4" />
+          </button>
+        </DropdownMenuTrigger>
+        <DropdownMenuContent align="end">
+          <DropdownMenuItem asChild>
+            <Link href={href} onClick={onOpen}>
+              <RotateCcw className="mr-2 h-4 w-4" />
+              {t('contextMenu.restore')}
+            </Link>
+          </DropdownMenuItem>
+          <DropdownMenuItem
+            onClick={() => {
+              setEditName(artwork.name);
+              setIsEditing(true);
+            }}
+          >
+            <Pencil className="mr-2 h-4 w-4" />
+            {t('contextMenu.rename')}
+          </DropdownMenuItem>
+          <DropdownMenuSeparator />
+          <DropdownMenuItem
+            onClick={() => setShowDeleteDialog(true)}
+            className="text-destructive focus:text-destructive"
+          >
+            <Trash2 className="mr-2 h-4 w-4" />
+            {t('contextMenu.delete')}
+          </DropdownMenuItem>
+        </DropdownMenuContent>
+      </DropdownMenu>
 
-        {/* Animation indicator */}
-        {hasAnimation && (
-          <div className="absolute bottom-1.5 left-1.5 pointer-events-none">
-            <Film className="h-3.5 w-3.5 text-white/70 drop-shadow-md" />
-          </div>
-        )}
-
-        {/* Card name overlay */}
-        <div className="absolute bottom-0 left-0 right-0 bg-gradient-to-t from-black/70 to-transparent px-2 py-1.5 pointer-events-none">
-          <span className="text-xs text-white/90 truncate block">{fractal.name}</span>
-        </div>
-
-        {/* Builtin badge */}
-        {isBuiltin && featured && <BuiltinBadge />}
-
-        {/* Star button — visible on hover/touch or when starred */}
-        <button
-          onClick={(e) => {
-            e.preventDefault();
-            e.stopPropagation();
-            onToggleStar(fractal.id);
-          }}
-          className={cn(
-            'absolute top-1.5 right-1.5 p-2 rounded-full',
-            'bg-black/40 hover:bg-black/60',
-            'transition-opacity duration-200',
-            fractal.starred || isHovered || isTouching ? 'opacity-100' : 'opacity-0'
-          )}
-        >
-          <Star
-            className={cn(
-              'h-3.5 w-3.5',
-              fractal.starred ? 'fill-yellow-400 text-yellow-400' : 'text-white'
-            )}
-          />
-        </button>
-
-        {/* Fullscreen button — visible on hover/touch */}
-        <button
-          onClick={(e) => {
-            e.preventDefault();
-            e.stopPropagation();
-            onFullscreen(fractal);
-          }}
-          className={cn(
-            'absolute bottom-1.5 right-1.5 p-2 rounded-full',
-            'bg-black/40 hover:bg-black/60',
-            'transition-opacity duration-200',
-            isHovered || isTouching ? 'opacity-100' : 'opacity-0'
-          )}
-        >
-          <Maximize2 className="h-3.5 w-3.5 text-white" />
-        </button>
-
-        {/* Context menu trigger — visible on hover/touch */}
-        <DropdownMenu open={contextMenuOpen} onOpenChange={setContextMenuOpen}>
-          <DropdownMenuTrigger asChild>
-            <button
-              className={cn(
-                'absolute top-1.5 left-1.5 p-2 rounded-full bg-black/40 hover:bg-black/60 transition-opacity',
-                isHovered || isTouching ? 'opacity-100' : 'opacity-0'
-              )}
-              onClick={(e) => {
-                e.preventDefault();
-                e.stopPropagation();
-              }}
-            >
-              <MoreHorizontal className="h-3.5 w-3.5 text-white" />
-            </button>
-          </DropdownMenuTrigger>
-          <DropdownMenuContent align="start" onClick={(e) => e.stopPropagation()}>
-            <DropdownMenuItem
-              onClick={(e) => {
-                e.preventDefault();
-                e.stopPropagation();
-                onToggleStar(fractal.id);
-              }}
-            >
-              <Star className={cn('mr-2 h-4 w-4', fractal.starred && 'fill-yellow-400 text-yellow-400')} />
-              {fractal.starred ? t('contextMenu.unstar') : t('contextMenu.star')}
-            </DropdownMenuItem>
-            {!isBuiltin && (
-              <>
-                <DropdownMenuItem
-                  onClick={(e) => {
-                    e.preventDefault();
-                    e.stopPropagation();
-                    setEditName(fractal.name);
-                    setIsEditing(true);
-                  }}
-                >
-                  <Pencil className="mr-2 h-4 w-4" />
-                  {t('contextMenu.rename')}
-                </DropdownMenuItem>
-                <DropdownMenuSeparator />
-                <DropdownMenuItem
-                  onClick={(e) => {
-                    e.preventDefault();
-                    e.stopPropagation();
-                    setShowDeleteDialog(true);
-                  }}
-                  className="text-destructive focus:text-destructive"
-                >
-                  <Trash2 className="mr-2 h-4 w-4" />
-                  {t('contextMenu.delete')}
-                </DropdownMenuItem>
-              </>
-            )}
-          </DropdownMenuContent>
-        </DropdownMenu>
-      </a>
-
-      {/* Rename Dialog */}
       {isEditing && (
         <div
           className="fixed inset-0 z-50 flex items-center justify-center bg-black/50"
-          onClick={(e) => {
-            if (e.target === e.currentTarget) {
-              setIsEditing(false);
-            }
+          onClick={(event) => {
+            if (event.target === event.currentTarget) setIsEditing(false);
           }}
         >
-          <div className="bg-background p-4 rounded-lg shadow-lg max-w-sm w-full mx-4">
-            <h3 className="text-lg font-semibold mb-3">{t('card.renameTitle')}</h3>
+          <div className="mx-4 w-full max-w-sm rounded-lg bg-background p-4 shadow-lg">
+            <h3 className="mb-3 text-lg font-semibold">{t('card.renameTitle')}</h3>
             <Input
               value={editName}
-              onChange={(e) => setEditName(e.target.value)}
-              onKeyDown={(e) => {
-                if (e.key === 'Enter') handleRenameSubmit();
-                if (e.key === 'Escape') setIsEditing(false);
+              onChange={(event) => setEditName(event.target.value)}
+              onKeyDown={(event) => {
+                if (event.key === 'Enter') handleRenameSubmit();
+                if (event.key === 'Escape') setIsEditing(false);
               }}
               className="mb-4"
               autoFocus
             />
             <div className="flex justify-end gap-2">
               <button
+                type="button"
                 className="px-4 py-2 text-sm text-muted-foreground hover:text-foreground"
                 onClick={() => setIsEditing(false)}
               >
                 {t('card.renameCancel')}
               </button>
               <button
-                className="px-4 py-2 text-sm bg-primary text-primary-foreground rounded"
+                type="button"
+                className="rounded bg-primary px-4 py-2 text-sm text-primary-foreground"
                 onClick={handleRenameSubmit}
               >
                 {t('card.renameSave')}
@@ -308,7 +197,6 @@ export function GalleryCard({
         </div>
       )}
 
-      {/* Delete Confirmation */}
       <AlertDialog open={showDeleteDialog} onOpenChange={setShowDeleteDialog}>
         <AlertDialogContent>
           <AlertDialogHeader>
@@ -320,7 +208,7 @@ export function GalleryCard({
           <AlertDialogFooter>
             <AlertDialogCancel>{t('card.deleteConfirm.cancel')}</AlertDialogCancel>
             <AlertDialogAction
-              onClick={() => onDelete(fractal.id)}
+              onClick={() => onDelete(artwork.id)}
               className="bg-destructive text-destructive-foreground hover:bg-destructive/90"
             >
               {t('card.deleteConfirm.confirm')}
@@ -328,6 +216,6 @@ export function GalleryCard({
           </AlertDialogFooter>
         </AlertDialogContent>
       </AlertDialog>
-    </>
+    </article>
   );
 }

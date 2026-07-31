@@ -1,5 +1,8 @@
 import type { Metadata } from 'next';
 import { getTranslations, setRequestLocale } from 'next-intl/server';
+import presetsFile from '../../../../public/gallery-presets.json';
+import { registerBuiltins } from '@/engine/plugins/builtins';
+import { buildPublishedArtworkCollection } from '@/lib/published-artworks';
 import { SITE, buildLocaleAlternates } from '@/lib/site';
 import DriftClient from './DriftClient';
 
@@ -61,8 +64,8 @@ export default async function DriftPage({
 }) {
   const { locale } = await params;
   setRequestLocale(locale);
+  registerBuiltins({ quiet: true });
+  const artworks = buildPublishedArtworkCollection(presetsFile, locale);
 
-  // No server-picked opening slide: the client shuffles the published
-  // collection after load, so every visit starts from a random preset.
-  return <DriftClient />;
+  return <DriftClient artworks={artworks} />;
 }

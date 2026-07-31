@@ -19,15 +19,23 @@
   },
   "gallery": {
     "title": "Gallery",
-    "description": "Explore featured fractals or browse your saved collection.",
-    "fullscreen": "Fullscreen",
-    "fullscreenHint": "Click anywhere or press Esc to exit",
-    "addNew": "New Fractal",
+    "viewsLabel": "Gallery views",
+    "collection": {
+      "title": "FractalPark Collection",
+      "description": "Explore the complete collection of published FractalPark artworks."
+    },
+    "mine": {
+      "title": "My Works",
+      "description": "Works saved in this browser on this device.",
+      "create": "Create in Explorer",
+      "emptyTitle": "No saved works yet",
+      "emptyDescription": "Create a fractal in Explorer and save it to build your device-local collection.",
+      "actions": "Actions for {name}"
+    },
     "contextMenu": {
+      "restore": "Restore in Explorer",
       "rename": "Rename",
-      "delete": "Delete",
-      "star": "Star",
-      "unstar": "Unstar"
+      "delete": "Delete"
     },
     "card": {
       "deleteConfirm": {
@@ -39,9 +47,6 @@
       "renameTitle": "Rename Fractal",
       "renameCancel": "Cancel",
       "renameSave": "Save"
-    },
-    "builtin": {
-      "badge": "Featured"
     }
   },
   "formulas": {

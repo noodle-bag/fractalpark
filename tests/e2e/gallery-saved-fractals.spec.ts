@@ -87,7 +87,7 @@ test.describe('Saved Fractal Gallery Workflow', () => {
 
     await expect(page.getByText('Saved to Gallery.')).toBeVisible({ timeout: 5000 });
 
-    await page.goto('/en/gallery');
+    await page.goto('/en/gallery?view=mine');
     await expect(page.locator('a', { hasText: fractalName }).first()).toBeVisible({ timeout: 15000 });
   });
 
@@ -95,7 +95,7 @@ test.describe('Saved Fractal Gallery Workflow', () => {
     const fractalName = 'E2E Delete Me';
 
     await seedSavedFractals(page, [buildSeedFractal(fractalName)]);
-    await page.goto('/en/gallery');
+    await page.goto('/en/gallery?view=mine');
 
     const card = page.locator('a', { hasText: fractalName }).first();
     await expect(card).toBeVisible({ timeout: 15000 });

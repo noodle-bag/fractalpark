@@ -1,160 +1,139 @@
 'use client';
 
-import { useState, useEffect, lazy, Suspense } from 'react';
+import Link from 'next/link';
 import { useLocale, useTranslations } from 'next-intl';
 import { Plus } from 'lucide-react';
-import { useRouter } from 'next/navigation';
-import { GalleryCard } from '@/components/gallery/GalleryCard';
-import { useGalleryItems } from '@/hooks/useGalleryItems';
-import type { GalleryItem } from '@/hooks/useGalleryItems';
+import { LocalArtworkCard, PublishedArtworkCard } from './GalleryCard';
+import { useArtworks } from '@/hooks/useArtworks';
 import { builtinPresetToGalleryHref } from '@/lib/gallery-presets';
+import type { PublishedArtwork } from '@/lib/published-artworks';
 import { savedFractalToHref } from '@/lib/url-params';
 import { trackEvent } from '@/components/analytics/PageViewTracker';
+import { cn } from '@/lib/utils';
 
-// Lazy load AnimatedFractalCanvas to avoid importing in main bundle
-const AnimatedFractalCanvas = lazy(() => import('@/components/fractal/AnimatedFractalCanvas'));
+type GalleryView = 'collection' | 'mine';
 
-export default function GalleryPageClient() {
+interface GalleryPageClientProps {
+  artworks: PublishedArtwork[];
+  initialView: GalleryView;
+}
+
+export default function GalleryPageClient({
+  artworks,
+  initialView,
+}: GalleryPageClientProps) {
   const locale = useLocale();
-  const router = useRouter();
-  const { items, isLoading, toggleStar, remove, rename } = useGalleryItems({ locale });
-  const [hoveredId, setHoveredId] = useState<string | null>(null);
-  const [fullscreenFractal, setFullscreenFractal] = useState<GalleryItem | null>(null);
   const t = useTranslations('gallery');
-
-  // Wrapped handlers with analytics
-  const handleToggleStar = (id: string) => {
-    toggleStar(id);
-    trackEvent('star_fractal', { source: 'gallery' });
-  };
-
-  const handleOpenFractal = (item: GalleryItem) => {
-    trackEvent('open_from_gallery', { is_builtin: item.isBuiltin ?? false });
-  };
-
-  const handleFullscreen = (item: GalleryItem) => {
-    setFullscreenFractal(item);
-    trackEvent('fullscreen_toggle', { page: 'gallery', action: 'open' });
-  };
-
-  // Empty state - no items at all (builtin or user)
-  if (!isLoading && items.length === 0) {
-    return (
-      <div className="min-h-[60vh] flex items-center justify-center px-4">
-        <button
-          onClick={() => router.push(`/${locale}/explore`)}
-          className="aspect-square w-48 bg-muted/50 flex items-center justify-center
-                     hover:bg-muted transition-colors cursor-pointer"
-        >
-          <Plus className="h-12 w-12 text-muted-foreground" />
-        </button>
-      </div>
-    );
-  }
+  const { artworks: localArtworks, remove, rename } = useArtworks();
+  const isCollection = initialView === 'collection';
 
   return (
-    <>
-      {/* Page header */}
-      <div className="px-4 pt-6 pb-4 max-w-7xl mx-auto">
-        <h1 className="text-2xl font-bold">{t('title')}</h1>
-        <p className="text-muted-foreground mt-1">{t('description')}</p>
-      </div>
+    <main className="pb-10">
+      <header className="px-4 pb-6 pt-8 sm:px-6 xl:px-8">
+        <h1 className="text-3xl font-semibold tracking-tight">{t('title')}</h1>
+        <p className="mt-2 max-w-2xl text-muted-foreground">
+          {isCollection ? t('collection.description') : t('mine.description')}
+        </p>
 
-      {/* Grid with responsive columns */}
-      <div
-        className="grid gap-2 px-4 pb-8 max-w-7xl mx-auto"
-        style={{
-          gridTemplateColumns: 'repeat(auto-fill, minmax(150px, 1fr))',
-        }}
-      >
-        {items.map((item) => (
-          <GalleryCard
-            key={item.id}
-            fractal={item}
-            href={item.isBuiltin
-              ? builtinPresetToGalleryHref(item.id, locale)
-              : item.storageFormat === 'document'
-                ? `/${locale}/explore?artwork=${encodeURIComponent(item.id)}`
-                : savedFractalToHref(item, locale)}
-            isHovered={hoveredId === item.id}
-            onHoverChange={(isHovered) => setHoveredId(isHovered ? item.id : null)}
-            onToggleStar={() => handleToggleStar(item.id)}
-            onDelete={remove}
-            onRename={rename}
-            onFullscreen={() => handleFullscreen(item)}
-            onOpen={() => handleOpenFractal(item)}
-            isBuiltin={item.isBuiltin}
-            featured={item.featured}
-          />
-        ))}
+        <nav className="mt-6 flex gap-2" aria-label={t('viewsLabel')}>
+          <GalleryViewLink
+            active={isCollection}
+            href={`/${locale}/gallery`}
+          >
+            {t('collection.title')}
+          </GalleryViewLink>
+          <GalleryViewLink
+            active={!isCollection}
+            href={`/${locale}/gallery?view=mine`}
+          >
+            {t('mine.title')}
+          </GalleryViewLink>
+        </nav>
+      </header>
 
-        {/* Add new fractal tile */}
-        <button
-          onClick={() => router.push(`/${locale}/explore`)}
-          className="aspect-square bg-muted/50 flex items-center justify-center
-                     hover:bg-muted transition-colors cursor-pointer"
-        >
-          <Plus className="h-8 w-8 text-muted-foreground" />
-        </button>
-      </div>
-
-      {/* Fullscreen overlay */}
-      {fullscreenFractal && (
-        <FullscreenOverlay
-          fractal={fullscreenFractal}
-          onClose={() => setFullscreenFractal(null)}
-        />
+      {isCollection ? (
+        <ArtworkGrid>
+          {artworks.map((artwork) => (
+            <PublishedArtworkCard
+              key={artwork.presetId}
+              artwork={artwork}
+              href={builtinPresetToGalleryHref(artwork.presetId, locale)}
+              onOpen={() => trackEvent('open_from_gallery', { is_builtin: true })}
+            />
+          ))}
+        </ArtworkGrid>
+      ) : localArtworks.length > 0 ? (
+        <>
+          <div className="mb-5 flex justify-end px-4 sm:px-6 xl:px-8">
+            <Link
+              href={`/${locale}/explore`}
+              className="inline-flex items-center gap-2 rounded-md border px-4 py-2 text-sm font-medium transition-colors hover:bg-muted"
+            >
+              <Plus className="h-4 w-4" />
+              {t('mine.create')}
+            </Link>
+          </div>
+          <ArtworkGrid>
+            {localArtworks.map((artwork) => (
+              <LocalArtworkCard
+                key={artwork.id}
+                artwork={artwork}
+                href={artwork.storageFormat === 'document'
+                  ? `/${locale}/explore?artwork=${encodeURIComponent(artwork.id)}`
+                  : savedFractalToHref(artwork, locale)}
+                onDelete={remove}
+                onRename={rename}
+                onOpen={() => trackEvent('open_from_gallery', { is_builtin: false })}
+              />
+            ))}
+          </ArtworkGrid>
+        </>
+      ) : (
+        <section className="mx-4 flex min-h-72 flex-col items-center justify-center rounded-lg border border-dashed px-6 text-center sm:mx-6 xl:mx-8">
+          <h2 className="text-xl font-semibold">{t('mine.emptyTitle')}</h2>
+          <p className="mt-2 max-w-md text-muted-foreground">{t('mine.emptyDescription')}</p>
+          <Link
+            href={`/${locale}/explore`}
+            className="mt-5 inline-flex items-center gap-2 rounded-md bg-primary px-4 py-2 text-sm font-medium text-primary-foreground"
+          >
+            <Plus className="h-4 w-4" />
+            {t('mine.create')}
+          </Link>
+        </section>
       )}
-    </>
+    </main>
   );
 }
 
-interface FullscreenOverlayProps {
-  fractal: GalleryItem;
-  onClose: () => void;
+function GalleryViewLink({
+  active,
+  href,
+  children,
+}: {
+  active: boolean;
+  href: string;
+  children: React.ReactNode;
+}) {
+  return (
+    <Link
+      href={href}
+      aria-current={active ? 'page' : undefined}
+      className={cn(
+        'rounded-full px-4 py-2 text-sm font-medium transition-colors',
+        active
+          ? 'bg-foreground text-background'
+          : 'bg-muted text-muted-foreground hover:text-foreground'
+      )}
+    >
+      {children}
+    </Link>
+  );
 }
 
-function FullscreenOverlay({ fractal, onClose }: FullscreenOverlayProps) {
-  const t = useTranslations('gallery');
-
-  // Handle Esc key to close
-  useEffect(() => {
-    const handleKeyDown = (e: KeyboardEvent) => {
-      if (e.key === 'Escape') onClose();
-    };
-    window.addEventListener('keydown', handleKeyDown);
-    return () => window.removeEventListener('keydown', handleKeyDown);
-  }, [onClose]);
-
-  // Simple rule: if preset has keyframes, animate in fullscreen; otherwise show static
-  const shouldAutoplay = (fractal.animation?.keyframes.length ?? 0) >= 2;
-
-  // Lower dprScale on mobile to reduce GPU load (high-DPR screens at dprScale=1 is very expensive)
-  const dprScale = typeof window !== 'undefined' && window.innerWidth < 768 ? 0.5 : 1.0;
-
+function ArtworkGrid({ children }: { children: React.ReactNode }) {
   return (
-    <div
-      className="fixed inset-0 z-50 bg-black cursor-pointer"
-      onClick={onClose}
-    >
-      <Suspense fallback={
-        <div className="w-full h-full flex items-center justify-center text-white/50">
-          Loading...
-        </div>
-      }>
-        <AnimatedFractalCanvas
-          params={fractal.params}
-          keyframes={shouldAutoplay ? fractal.animation!.keyframes : undefined}
-          dprScale={dprScale}
-          active={true}
-          className="w-full h-full"
-        />
-      </Suspense>
-
-      {/* Hint text */}
-      <div className="absolute bottom-4 left-0 right-0 text-center text-white/50 text-sm pointer-events-none">
-        {t('fullscreenHint')}
-      </div>
+    <div className="grid grid-cols-1 gap-4 px-4 sm:grid-cols-2 sm:px-6 min-[900px]:grid-cols-3 min-[1200px]:grid-cols-4 min-[1600px]:grid-cols-5 min-[2200px]:grid-cols-6 xl:gap-5 xl:px-8">
+      {children}
     </div>
   );
 }

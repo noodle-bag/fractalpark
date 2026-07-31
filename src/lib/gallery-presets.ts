@@ -206,6 +206,21 @@ export function buildCanonicalPresetDocument(
   );
 }
 
+export function buildPresetPlaybackKeyframes(
+  document: FractalDocument,
+  presetId: string
+): Keyframe[] {
+  const explicitKeyframes = document.animation?.viewKeyframes;
+  if (explicitKeyframes && explicitKeyframes.length >= 2) {
+    return explicitKeyframes;
+  }
+
+  return generateDriftKeyframes(
+    documentToRuntimeParams(document),
+    presetId
+  ).keyframes;
+}
+
 function parsePresetConfig(config: GalleryPresetConfig): GalleryPreset {
   const document = buildCanonicalPresetDocument(config);
 
@@ -264,6 +279,11 @@ export function presetToSavedFractal(preset: GalleryPreset): {
   animation?: { keyframes: Array<{ id: string; bounds: ViewBounds }> };
   isBuiltin: true;
 } {
+  const document = runtimeParamsToDocument(
+    preset.params,
+    preset.keyframes ? { animation: { keyframes: preset.keyframes } } : undefined
+  );
+
   return {
     id: preset.id,
     name: preset.name,
@@ -273,9 +293,9 @@ export function presetToSavedFractal(preset: GalleryPreset): {
     starred: false, // User can star them
     isBuiltin: true,
     // Use explicit keyframes from URL if present, otherwise generate drift
-    animation: preset.keyframes && preset.keyframes.length >= 2
-      ? { keyframes: preset.keyframes }
-      : generateDriftKeyframes(preset.params, preset.id),
+    animation: {
+      keyframes: buildPresetPlaybackKeyframes(document, preset.id),
+    },
   };
 }
 
