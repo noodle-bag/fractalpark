@@ -1,5 +1,6 @@
 import {
   getArtworkContentByPresetId,
+  getArtworkContentBySlug,
   type ArtworkContentEntry,
 } from '@/content/artwork-manifest';
 import type { FractalDocument } from '@/engine/document';
@@ -80,4 +81,26 @@ export function buildPublishedArtworkCollection(
   return parseGalleryPresetsFile(input).presets.map((config) =>
     buildPublishedArtwork(config, locale)
   );
+}
+
+export function buildPublishedArtworkByPresetId(
+  input: unknown,
+  presetId: string,
+  locale: string
+): PublishedArtwork | undefined {
+  const config = parseGalleryPresetsFile(input).presets.find(
+    (preset) => preset.id === presetId
+  );
+  return config ? buildPublishedArtwork(config, locale) : undefined;
+}
+
+export function buildPublishedArtworkBySlug(
+  input: unknown,
+  slug: string,
+  locale: string
+): PublishedArtwork | undefined {
+  const content = getArtworkContentBySlug(slug);
+  return content
+    ? buildPublishedArtworkByPresetId(input, content.presetId, locale)
+    : undefined;
 }

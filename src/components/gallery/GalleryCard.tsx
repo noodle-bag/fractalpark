@@ -39,15 +39,15 @@ export function PublishedArtworkCard({
 }: PublishedArtworkCardProps) {
   return (
     <article>
-      <Link href={href} onClick={onOpen} className="group block">
-        <div className="relative aspect-[16/10] overflow-hidden rounded-lg bg-muted">
+      <Link href={href} onClick={onOpen} className="group block rounded-lg focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2">
+        <div className="relative aspect-[16/10] overflow-hidden rounded-lg border bg-muted shadow-sm transition-transform duration-300 group-hover:-translate-y-0.5 group-hover:shadow-md">
           {artwork.thumbnail ? (
             <Image
               src={artwork.thumbnail}
               alt=""
               fill
               unoptimized
-              className="object-cover transition-transform duration-300 group-hover:scale-[1.02]"
+              className="object-cover transition-transform duration-300 group-hover:scale-[1.015]"
               sizes="(max-width: 639px) 100vw, (max-width: 899px) 50vw, (max-width: 1199px) 33vw, (max-width: 1599px) 25vw, (max-width: 2199px) 20vw, 17vw"
             />
           ) : (
@@ -102,16 +102,16 @@ export function LocalArtworkCard({
           event.preventDefault();
           setMenuOpen(true);
         }}
-        className="group block"
+        className="group block rounded-lg focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2"
       >
-        <div className="relative aspect-[16/10] overflow-hidden rounded-lg bg-gradient-to-br from-slate-800 via-slate-700 to-slate-600">
+        <div className="relative aspect-[16/10] overflow-hidden rounded-lg border bg-gradient-to-br from-slate-800 via-slate-700 to-slate-600 shadow-sm transition-transform duration-300 group-hover:-translate-y-0.5 group-hover:shadow-md">
           {artwork.thumbnail && (
             <Image
               src={artwork.thumbnail}
               alt=""
               fill
               unoptimized
-              className="object-cover transition-transform duration-300 group-hover:scale-[1.02]"
+              className="object-contain"
               sizes="(max-width: 639px) 100vw, (max-width: 899px) 50vw, (max-width: 1199px) 33vw, (max-width: 1599px) 25vw, (max-width: 2199px) 20vw, 17vw"
             />
           )}

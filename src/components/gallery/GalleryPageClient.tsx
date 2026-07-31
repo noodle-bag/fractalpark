@@ -4,6 +4,10 @@ import Link from 'next/link';
 import { useLocale, useTranslations } from 'next-intl';
 import { Plus } from 'lucide-react';
 import { LocalArtworkCard, PublishedArtworkCard } from './GalleryCard';
+import {
+  artworkPagePath,
+  isPublishedArtworkPagePresetId,
+} from '@/content/artwork-pages';
 import { useArtworks } from '@/hooks/useArtworks';
 import { builtinPresetToGalleryHref } from '@/lib/gallery-presets';
 import type { PublishedArtwork } from '@/lib/published-artworks';
@@ -57,7 +61,9 @@ export default function GalleryPageClient({
             <PublishedArtworkCard
               key={artwork.presetId}
               artwork={artwork}
-              href={builtinPresetToGalleryHref(artwork.presetId, locale)}
+              href={isPublishedArtworkPagePresetId(artwork.presetId)
+                ? `/${locale}${artworkPagePath(artwork.content)}`
+                : builtinPresetToGalleryHref(artwork.presetId, locale)}
               onOpen={() => trackEvent('open_from_gallery', { is_builtin: true })}
             />
           ))}

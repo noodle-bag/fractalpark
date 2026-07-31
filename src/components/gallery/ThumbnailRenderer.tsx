@@ -8,12 +8,14 @@ interface ThumbnailRendererProps {
   params: FractalParams;
   height?: number;
   width?: number;
+  useSSAA?: boolean;
 }
 
 export function ThumbnailRenderer({
   params,
   height = 600,
   width = 600,
+  useSSAA = false,
 }: ThumbnailRendererProps) {
   const [bounds, setBounds] = useState<ViewBounds>(params.bounds);
 
@@ -40,7 +42,7 @@ export function ThumbnailRenderer({
         orbitTrap={params.orbitTrap}
         transformId={params.transformId}
         pluginParams={params.pluginParams}
-        useSSAA={false}
+        useSSAA={useSSAA}
         adaptiveIterations={params.adaptiveIterations}
         lighting={params.lighting}
         customGradient={params.customGradient}

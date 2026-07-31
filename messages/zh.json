@@ -873,6 +873,39 @@
     }
   },
   "artworks": {
+    "page": {
+      "metadataTitle": "{title} | FractalPark 作品",
+      "imageAlt": "FractalPark 已发布作品《{title}》",
+      "breadcrumbLabel": "面包屑导航",
+      "breadcrumbHome": "首页",
+      "breadcrumbGallery": "画廊",
+      "eyebrow": "已发布作品",
+      "createdBy": "由 {creator} 创作",
+      "license": "图像采用 CC BY 4.0 许可",
+      "licenseScope": "CC BY 4.0 仅适用于分形作品图像层。FractalPark 源代码继续采用 MIT 许可证；站点正文、界面、Logo 与商标不属于该图像许可范围。",
+      "remix": "在探索器中 Remix",
+      "copy": "复制页面链接",
+      "copied": "链接已复制",
+      "copyError": "复制失败",
+      "visualNote": "视觉特征",
+      "related": "相关作品",
+      "customGradient": "自定义渐变",
+      "viewer": {
+        "viewFullscreen": "全屏查看",
+        "play": "播放动画",
+        "pause": "暂停动画",
+        "minimize": "退出全屏",
+        "closeHint": "点击背景或按 Esc 退出"
+      },
+      "state": {
+        "title": "作品状态",
+        "formula": "公式",
+        "zoom": "缩放",
+        "iterations": "最大迭代次数",
+        "coloring": "着色",
+        "coloringValue": "{palette}；{outside} / {inside}；{transform} 变换"
+      }
+    },
     "entries": {
       "preset-newton-deep-spiral": {
         "summary": "沿牛顿根盆地深入下降，三个根区域扭结成紧凑螺旋。",

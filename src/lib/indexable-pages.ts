@@ -2,6 +2,10 @@ import {
   PUBLISHED_FORMULA_GUIDES,
   formulaGuidePath,
 } from '@/content/formula-guides';
+import {
+  PUBLISHED_ARTWORK_PAGES,
+  artworkPagePath,
+} from '@/content/artwork-pages';
 import { routing } from '@/i18n/routing';
 import { SITE } from '@/lib/site';
 
@@ -25,6 +29,7 @@ export const INDEXABLE_PAGE_PATHS: readonly string[] = [
   '/formulas/editor',
   '/about',
   ...PUBLISHED_FORMULA_GUIDES.map(formulaGuidePath),
+  ...PUBLISHED_ARTWORK_PAGES.map(artworkPagePath),
 ];
 
 /** All canonical indexable absolute URLs, every locale × page. */

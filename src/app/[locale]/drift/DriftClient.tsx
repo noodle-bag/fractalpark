@@ -12,6 +12,10 @@ import {
   buildPublishedArtworkPlayback,
   type PublishedArtwork,
 } from '@/lib/published-artworks';
+import {
+  PLAYBACK_CONTROL_BAR_CLASS,
+  PLAYBACK_CONTROL_BUTTON_CLASS,
+} from '@/components/fractal/playback-controls';
 
 // Lazy load AnimatedFractalCanvas to reduce initial bundle
 const AnimatedFractalCanvas = lazy(() => import('@/components/fractal/AnimatedFractalCanvas'));
@@ -188,10 +192,10 @@ function DriftSlideshow({ artworks, isPaused, onTogglePause }: DriftSlideshowPro
       {/* Bottom control bar — the only chrome on this page.
           Exactly three accessible controls: Play/Pause, Previous, Next. */}
       <div className="absolute bottom-4 left-0 right-0 z-10 flex justify-center px-4">
-        <div className="flex items-center justify-center gap-3 rounded-full bg-black/20 px-4 py-3 backdrop-blur-sm">
+        <div className={PLAYBACK_CONTROL_BAR_CLASS}>
           <button
             onClick={onTogglePause}
-            className="inline-flex items-center rounded-full bg-white/10 p-3 text-white transition-colors hover:bg-white/20"
+            className={PLAYBACK_CONTROL_BUTTON_CLASS}
             title={isPaused ? t('play') : t('pause')}
             aria-label={isPaused ? t('play') : t('pause')}
           >
@@ -200,7 +204,7 @@ function DriftSlideshow({ artworks, isPaused, onTogglePause }: DriftSlideshowPro
           <button
             onClick={goPrevious}
             disabled={isPaused || !canNavigate || !canGoPrevious}
-            className="inline-flex items-center rounded-full bg-white/10 p-3 text-white transition-colors hover:bg-white/20 disabled:cursor-not-allowed disabled:opacity-40"
+            className={PLAYBACK_CONTROL_BUTTON_CLASS}
             title={t('previous')}
             aria-label={t('previous')}
           >
@@ -209,7 +213,7 @@ function DriftSlideshow({ artworks, isPaused, onTogglePause }: DriftSlideshowPro
           <button
             onClick={goNext}
             disabled={isPaused || !canNavigate || !isReady}
-            className="inline-flex items-center rounded-full bg-white/10 p-3 text-white transition-colors hover:bg-white/20 disabled:cursor-not-allowed disabled:opacity-40"
+            className={PLAYBACK_CONTROL_BUTTON_CLASS}
             title={t('next')}
             aria-label={t('next')}
           >

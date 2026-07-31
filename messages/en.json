@@ -873,6 +873,39 @@
     }
   },
   "artworks": {
+    "page": {
+      "metadataTitle": "{title} | FractalPark Artwork",
+      "imageAlt": "{title}, a published FractalPark artwork",
+      "breadcrumbLabel": "Breadcrumb",
+      "breadcrumbHome": "Home",
+      "breadcrumbGallery": "Gallery",
+      "eyebrow": "Published artwork",
+      "createdBy": "Created by {creator}",
+      "license": "Image licensed under CC BY 4.0",
+      "licenseScope": "CC BY 4.0 applies to the fractal artwork image layer. FractalPark source code remains MIT licensed; site prose, interface, logo, and trademarks are not included in the image license.",
+      "remix": "Remix in Explorer",
+      "copy": "Copy page link",
+      "copied": "Link copied",
+      "copyError": "Copy failed",
+      "visualNote": "Visual character",
+      "related": "Related artworks",
+      "customGradient": "Custom gradient",
+      "viewer": {
+        "viewFullscreen": "View fullscreen",
+        "play": "Play animation",
+        "pause": "Pause animation",
+        "minimize": "Exit fullscreen",
+        "closeHint": "Click the background or press Esc to exit"
+      },
+      "state": {
+        "title": "Artwork state",
+        "formula": "Formula",
+        "zoom": "Zoom",
+        "iterations": "Maximum iterations",
+        "coloring": "Coloring",
+        "coloringValue": "{palette}; {outside} / {inside}; {transform} transform"
+      }
+    },
     "entries": {
       "preset-newton-deep-spiral": {
         "summary": "A deep Newton-basin descent where three root regions twist into a compact spiral.",
