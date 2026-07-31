@@ -13,6 +13,7 @@ import {
   FRM_SYNTAX_TOPIC_IDS,
 } from '@/content/frm-guide';
 import { Link } from '@/i18n/routing';
+import { renderJsonLd } from '@/lib/json-ld';
 import { SITE, buildLocaleAlternates } from '@/lib/site';
 
 const GUIDE_PATH = '/formulas/frm';
@@ -74,6 +75,41 @@ export default async function FrmGuidePage({
     locale,
     namespace: 'explore',
   });
+  const guideT = await getTranslations({
+    locale,
+    namespace: 'formulas.guide',
+  });
+  const guideUrl = `${SITE.url}/${locale}${GUIDE_PATH}`;
+  const jsonLd = {
+    '@context': 'https://schema.org',
+    '@type': 'WebPage',
+    name: t('title'),
+    description: t('intro'),
+    url: guideUrl,
+    breadcrumb: {
+      '@type': 'BreadcrumbList',
+      itemListElement: [
+        {
+          '@type': 'ListItem',
+          position: 1,
+          name: guideT('breadcrumbHome'),
+          item: `${SITE.url}/${locale}`,
+        },
+        {
+          '@type': 'ListItem',
+          position: 2,
+          name: guideT('breadcrumbFormulas'),
+          item: `${SITE.url}/${locale}/formulas`,
+        },
+        {
+          '@type': 'ListItem',
+          position: 3,
+          name: t('title'),
+          item: guideUrl,
+        },
+      ],
+    },
+  };
   const copyLabels = {
     copy: t('copy.copy'),
     copied: t('copy.copied'),
@@ -82,6 +118,10 @@ export default async function FrmGuidePage({
 
   return (
     <main className="mx-auto w-full max-w-6xl px-5 py-16 sm:px-8 sm:py-20 lg:py-24">
+      <script
+        dangerouslySetInnerHTML={{ __html: renderJsonLd(jsonLd) }}
+        type="application/ld+json"
+      />
       <header className="mx-auto max-w-4xl space-y-6 text-center">
         <Badge variant="outline">{t('eyebrow')}</Badge>
         <div className="space-y-4">

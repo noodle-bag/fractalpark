@@ -21,6 +21,43 @@ test.describe('FRM Guide', () => {
     await expect(page.getByText('starter-brot', { exact: true })).toBeVisible();
     await expect(page.getByText('parameter-drift', { exact: true })).toBeVisible();
     await expect(page.getByText('orbit-echo', { exact: true })).toBeVisible();
+
+    const jsonLd = await page
+      .locator('script[type="application/ld+json"]')
+      .allTextContents();
+    const webPage = jsonLd
+      .map((value) => JSON.parse(value))
+      .find((value) => value['@type'] === 'WebPage');
+
+    expect(webPage).toMatchObject({
+      '@context': 'https://schema.org',
+      '@type': 'WebPage',
+      name: 'Write Fractals with FRM',
+      url: 'https://www.fractalpark.com/en/formulas/frm',
+      breadcrumb: {
+        '@type': 'BreadcrumbList',
+        itemListElement: [
+          {
+            '@type': 'ListItem',
+            position: 1,
+            name: 'Home',
+            item: 'https://www.fractalpark.com/en',
+          },
+          {
+            '@type': 'ListItem',
+            position: 2,
+            name: 'Formulas',
+            item: 'https://www.fractalpark.com/en/formulas',
+          },
+          {
+            '@type': 'ListItem',
+            position: 3,
+            name: 'Write Fractals with FRM',
+            item: 'https://www.fractalpark.com/en/formulas/frm',
+          },
+        ],
+      },
+    });
   });
 
   test('keeps the Chinese learning content available without JavaScript', async ({
