@@ -62,6 +62,35 @@ function thumbnailFilePath(presetId) {
   return resolve(outputDir, `${presetId}.jpg`);
 }
 
+function hasExpectedThumbnailDimensions(outputPath) {
+  if (!existsSync(outputPath)) return false;
+
+  const image = readFileSync(outputPath);
+  const startOfFrameMarkers = new Set([
+    0xc0, 0xc1, 0xc2, 0xc3, 0xc5, 0xc6, 0xc7, 0xc9, 0xca, 0xcb, 0xcd, 0xce,
+    0xcf,
+  ]);
+  let offset = 2;
+
+  while (offset + 8 < image.length) {
+    if (image[offset] !== 0xff) {
+      offset += 1;
+      continue;
+    }
+    const marker = image[offset + 1];
+    offset += 2;
+    if (startOfFrameMarkers.has(marker)) {
+      return image.readUInt16BE(offset + 5) === THUMBNAIL_WIDTH
+        && image.readUInt16BE(offset + 3) === THUMBNAIL_HEIGHT;
+    }
+    if (marker !== 0xd8 && marker !== 0xd9) {
+      offset += image.readUInt16BE(offset);
+    }
+  }
+
+  return false;
+}
+
 async function isServerReady(baseUrl) {
   try {
     const response = await fetch(baseUrl, { redirect: 'manual' });
@@ -238,7 +267,7 @@ async function main() {
       const shouldRender =
         options.force ||
         preset.thumbnail !== publicPath ||
-        !existsSync(outputPath);
+        !hasExpectedThumbnailDimensions(outputPath);
 
       if (!shouldRender) {
         console.log(`[thumbnails] Skipping ${preset.id} (already linked)`);

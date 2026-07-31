@@ -1,4 +1,5 @@
 import { test, expect, type Page } from '@playwright/test';
+import { ARTWORK_CONTENT_MANIFEST } from '../../src/content/artwork-manifest';
 
 async function waitForGalleryPresetLinks(page: Page) {
   const presetLinks = page.locator('main a[href^="/en/gallery/"]');
@@ -7,7 +8,7 @@ async function waitForGalleryPresetLinks(page: Page) {
 }
 
 test.describe('Gallery Preset Navigation', () => {
-  test('published validation artwork should navigate directly to its canonical page', async ({ page }) => {
+  test('published artwork should navigate directly to its canonical page', async ({ page }) => {
     await page.goto('/en/gallery');
 
     const presetLinks = await waitForGalleryPresetLinks(page);
@@ -27,6 +28,11 @@ test.describe('Gallery Preset Navigation', () => {
 
     const presetLinks = await waitForGalleryPresetLinks(page);
     await expect(presetLinks).toHaveCount(26);
+    expect(await presetLinks.evaluateAll((links) =>
+      links.map((link) => link.getAttribute('href'))
+    )).toEqual(
+      ARTWORK_CONTENT_MANIFEST.map(({ slug }) => `/en/gallery/${slug}`)
+    );
 
     const thumbnail = presetLinks.first().locator('img').first();
     await expect(thumbnail).toBeVisible();

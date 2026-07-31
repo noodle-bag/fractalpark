@@ -5,6 +5,7 @@ import enMessages from '../../messages/en.json';
 import zhMessages from '../../messages/zh.json';
 import presetsFile from '../../public/gallery-presets.json';
 import sitemap from '@/app/sitemap';
+import { ARTWORK_CONTENT_MANIFEST } from '@/content/artwork-manifest';
 import {
   PUBLISHED_ARTWORK_PAGES,
   PUBLISHED_ARTWORK_PAGE_PRESET_IDS,
@@ -48,22 +49,19 @@ function readJpegDimensions(image: Buffer): { width: number; height: number } {
   throw new Error('JPEG dimensions not found');
 }
 
-describe('published artwork validation pages', () => {
-  it('publishes the frozen two-artwork validation set', () => {
-    expect(PUBLISHED_ARTWORK_PAGE_PRESET_IDS).toEqual([
-      'preset-newton-deep-spiral',
-      'preset-newton-cosh-ember-meridian',
-    ]);
-    expect(PUBLISHED_ARTWORK_PAGES.map(({ slug }) => slug)).toEqual([
-      'newton-3-deep-spiral',
-      'newton-cosh-ember-meridian',
-    ]);
+describe('published artwork pages', () => {
+  it('publishes the complete frozen artwork manifest in source order', () => {
+    expect(PUBLISHED_ARTWORK_PAGE_PRESET_IDS).toEqual(
+      ARTWORK_CONTENT_MANIFEST.map(({ presetId }) => presetId)
+    );
+    expect(PUBLISHED_ARTWORK_PAGES).toEqual(ARTWORK_CONTENT_MANIFEST);
+    expect(PUBLISHED_ARTWORK_PAGES).toHaveLength(26);
     for (const entry of PUBLISHED_ARTWORK_PAGES) {
       expect(getPublishedArtworkPageBySlug(entry.slug)).toBe(entry);
       expect(isPublishedArtworkPagePresetId(entry.presetId)).toBe(true);
       expect(artworkPagePath(entry)).toBe(`/gallery/${entry.slug}`);
     }
-    expect(getPublishedArtworkPageBySlug('lambda-vortex')).toBeUndefined();
+    expect(getPublishedArtworkPageBySlug('unknown-artwork')).toBeUndefined();
   });
 
   it('projects page and playback data from the same canonical artwork', () => {
@@ -79,7 +77,7 @@ describe('published artwork validation pages', () => {
     }
   });
 
-  it('keeps validation content complete in both locales', () => {
+  it('keeps all artwork content complete in both locales', () => {
     for (const entry of PUBLISHED_ARTWORK_PAGES) {
       for (const messages of [enMessages, zhMessages]) {
         const content = messages.artworks.entries[entry.presetId];
@@ -89,7 +87,7 @@ describe('published artwork validation pages', () => {
     }
   });
 
-  it('adds only the validation artwork pages to the localized sitemap', () => {
+  it('adds all artwork pages to the localized sitemap', () => {
     const urls = sitemap().map(({ url }) => url);
     const artworkUrls = urls.filter((url) => /\/(?:en|zh)\/gallery\/.+$/.test(url));
     const expected = ['en', 'zh'].flatMap((locale) =>
@@ -99,11 +97,11 @@ describe('published artwork validation pages', () => {
     );
 
     expect(artworkUrls).toEqual(expected);
-    expect(artworkUrls).toHaveLength(4);
-    expect(urls).not.toContain('https://www.fractalpark.com/en/gallery/lambda-vortex');
+    expect(artworkUrls).toHaveLength(52);
+    expect(urls).toContain('https://www.fractalpark.com/en/gallery/lambda-vortex');
   });
 
-  it('ships true 1920 by 1200 validation JPEGs', () => {
+  it('ships true 1920 by 1200 JPEGs for every artwork', () => {
     for (const entry of PUBLISHED_ARTWORK_PAGES) {
       const image = readFileSync(path.join(
         process.cwd(),
