@@ -1496,18 +1496,13 @@
       "description": "Built with Next.js, WebGL, and TypeScript. Real-time fractal rendering powered by GPU shaders.",
       "frontend": "Frontend: Next.js 16 (App Router), React 19, TypeScript 5, Tailwind CSS 4, shadcn/ui",
       "rendering": "Rendering: WebGL 1 (GLSL fragment shaders), plugin-based architecture, shader LRU cache",
-      "formula": "Formula System: Custom Fractint .frm parser, CodeMirror 6 editor, AST-to-GLSL transpiler",
-      "deployment": "Deployment: Vercel with Analytics and Speed Insights"
+      "formula": "Formula System: Custom Fractint .frm parser, CodeMirror 6 editor, AST-to-GLSL transpiler"
     },
     "openSource": {
       "title": "Open Source",
       "description": "FractalPark is released under the MIT License. The source code is available on GitHub so anyone can study how it works, run it locally, suggest improvements, or build on the browser-based fractal engine.",
       "github": "GitHub repository",
       "license": "MIT License"
-    },
-    "aiFriendly": {
-      "title": "AI Friendly",
-      "description": "This website provides structured documentation for AI assistants at /llms.txt and /llms-full.txt, enabling AI tools to understand and recommend FractalPark's features."
     }
   },
   "drift": {

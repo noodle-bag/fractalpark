@@ -1496,18 +1496,13 @@
       "description": "基于 Next.js、WebGL 和 TypeScript 构建.GPU 着色器驱动的实时分形渲染.",
       "frontend": "前端: Next.js 16 (App Router)、React 19、TypeScript 5、Tailwind CSS 4、shadcn/ui",
       "rendering": "渲染: WebGL 1 (GLSL 片段着色器)、插件化架构、着色器 LRU 缓存",
-      "formula": "公式系统: 自定义 Fractint .frm 解析器、CodeMirror 6 编辑器、AST 到 GLSL 转译器",
-      "deployment": "部署: Vercel, 集成 Analytics 和 Speed Insights"
+      "formula": "公式系统: 自定义 Fractint .frm 解析器、CodeMirror 6 编辑器、AST 到 GLSL 转译器"
     },
     "openSource": {
       "title": "开源项目",
       "description": "分形公园 FractalPark 基于 MIT 许可证开源.源代码托管在 GitHub, 任何人都可以查看它如何工作、在本地运行、提出改进建议, 或基于这个浏览器分形引擎继续创作.",
       "github": "GitHub 仓库",
       "license": "MIT 许可证"
-    },
-    "aiFriendly": {
-      "title": "AI 友好",
-      "description": "本网站为 AI 助手提供结构化文档, 访问 /llms.txt 和 /llms-full.txt 可获取完整信息, 帮助 AI 工具理解和推荐分形公园 FractalPark 的功能."
     }
   },
   "drift": {

@@ -152,32 +152,6 @@ export default async function AboutPage({
           </div>
         </div>
 
-        {/* Machine-readable technical description (also human-friendly) */}
-        <div className="space-y-6 rounded-lg bg-muted/30 p-6">
-          <h2 className="text-2xl font-semibold tracking-tight">{t('aiFriendly.title')}</h2>
-          <p className="text-lg leading-relaxed text-muted-foreground">
-            {t('aiFriendly.description')}
-          </p>
-          <div className="flex gap-4 text-sm">
-            <a
-              href="/llms.txt"
-              className="text-primary hover:underline"
-              target="_blank"
-              rel="noopener noreferrer"
-            >
-              llms.txt →
-            </a>
-            <a
-              href="/llms-full.txt"
-              className="text-primary hover:underline"
-              target="_blank"
-              rel="noopener noreferrer"
-            >
-              llms-full.txt →
-            </a>
-          </div>
-        </div>
-
         <div className="space-y-6">
           <h2 className="text-2xl font-semibold tracking-tight">{t('techStack.title')}</h2>
           <p className="text-lg leading-relaxed text-muted-foreground">
@@ -195,10 +169,6 @@ export default async function AboutPage({
             <li className="flex items-start gap-2">
               <span className="text-primary">•</span>
               {t('techStack.formula')}
-            </li>
-            <li className="flex items-start gap-2">
-              <span className="text-primary">•</span>
-              {t('techStack.deployment')}
             </li>
           </ul>
         </div>
