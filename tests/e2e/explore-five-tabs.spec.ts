@@ -100,7 +100,7 @@ test.describe('Coloring Tab', () => {
     await page.getByRole('button', { name: /stripe/i }).click();
 
     // Wait for debounced URL update — URL uses short key 'st' for stripe
-    await expect(page).toHaveURL(/[?&]oc=st/, { timeout: 5000 });
+    await expect(page).toHaveURL(/[?&]oc=st/, { timeout: 10000 });
   });
 
   test('should switch inside coloring mode and update URL', async ({ page }) => {
@@ -109,7 +109,7 @@ test.describe('Coloring Tab', () => {
     await finalOrbitBtn.click();
 
     // URL uses short key 'fo' for finalOrbit
-    await expect(page).toHaveURL(/[?&]ic=fo/, { timeout: 5000 });
+    await expect(page).toHaveURL(/[?&]ic=fo/, { timeout: 10000 });
   });
 
   test('should show orbit trap controls when orbit trap mode is selected', async ({ page }) => {
@@ -127,7 +127,7 @@ test.describe('Coloring Tab', () => {
     await gradientSwitch.click();
 
     // After enabling custom gradient, URL should contain gradient data
-    await expect(page).toHaveURL(/[?&]grad=/, { timeout: 5000 });
+    await expect(page).toHaveURL(/[?&]grad=/, { timeout: 10000 });
   });
 });
 

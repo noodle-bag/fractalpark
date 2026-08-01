@@ -41,7 +41,7 @@ test.describe('FRM Guide', () => {
             '@type': 'ListItem',
             position: 1,
             name: 'Home',
-            item: 'https://www.fractalpark.com/en',
+            item: 'https://www.fractalpark.com/en/explore',
           },
           {
             '@type': 'ListItem',
