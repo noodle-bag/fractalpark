@@ -16,15 +16,21 @@ import { migrateFractalDocument, normalizeFractalDocument } from '@/engine/docum
 import type { FractalParams } from '@/engine/types';
 import { readArtworkDocumentById } from '@/lib/artwork-repository';
 import { applyFormulaSelectionDefaults } from '@/lib/formula-documents';
+import { applyRemixSource, parseRemixSource } from '@/lib/remix-source';
 import { decodeParams } from '@/lib/url-params';
 
 function createInitialDocument(searchParams: URLSearchParams): FractalDocument {
   const artworkId = searchParams.get('artwork');
+  let document: FractalDocument;
   if (artworkId) {
     const artworkDocument = readArtworkDocumentById(artworkId);
-    if (artworkDocument) return artworkDocument;
+    if (artworkDocument) {
+      document = artworkDocument;
+      return applyRemixSource(document, parseRemixSource(searchParams));
+    }
   }
-  return migrateFractalDocument(decodeParams(searchParams), 0);
+  document = migrateFractalDocument(decodeParams(searchParams), 0);
+  return applyRemixSource(document, parseRemixSource(searchParams));
 }
 
 function mergeSceneState(prev: FractalDocument, patch: Partial<SceneState>): FractalDocument {

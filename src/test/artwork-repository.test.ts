@@ -146,6 +146,29 @@ describe('ArtworkRepository', () => {
     });
   });
 
+  it('preserves namespaced Remix provenance when saving a derived artwork', () => {
+    const remixEnvelope = structuredClone(ENVELOPE);
+    remixEnvelope.document.metadata = {
+      ...remixEnvelope.document.metadata,
+      source: 'remix',
+      sourceId: 'formula:mandelbrot',
+    };
+
+    const result = repository.save({
+      name: 'Remixed Artwork',
+      envelope: remixEnvelope,
+      thumbnail: '',
+    });
+
+    expect(result.success).toBe(true);
+    const stored = JSON.parse(storage.getItem(ARTWORK_STORAGE_KEY) ?? '[]');
+    expect(stored[0].envelope.document.metadata).toMatchObject({
+      name: 'Remixed Artwork',
+      source: 'remix',
+      sourceId: 'formula:mandelbrot',
+    });
+  });
+
   it('updates records in their original storage keys without migrating them', () => {
     storage.setItem(LEGACY_ARTWORK_STORAGE_KEY, JSON.stringify([legacyFixture]));
     storage.setItem(ARTWORK_STORAGE_KEY, JSON.stringify([currentRecord()]));

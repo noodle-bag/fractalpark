@@ -112,6 +112,40 @@ describe('fractal project files', () => {
     expect(result.value.assets).toBeUndefined();
   });
 
+  it('preserves Remix provenance through project serialization', async () => {
+    const document: FractalDocument = {
+      ...CURRENT_DOCUMENT,
+      metadata: {
+        ...CURRENT_DOCUMENT.metadata,
+        source: 'remix',
+        sourceId: 'formula:mandelbrot',
+      },
+    };
+    const envelope = await createFractalDocumentEnvelope(document, []);
+
+    expect(envelope.success).toBe(true);
+    if (!envelope.success) return;
+    const serialized = serializeFractalProject(envelope.value);
+    expect(serialized.success).toBe(true);
+    if (!serialized.success) return;
+    const parsed = parseFractalProjectJson(serialized.value);
+
+    expect(parsed).toMatchObject({
+      success: true,
+      value: {
+        mode: 'editable',
+        envelope: {
+          document: {
+            metadata: {
+              source: 'remix',
+              sourceId: 'formula:mandelbrot',
+            },
+          },
+        },
+      },
+    });
+  });
+
   it('collects a custom formula with its exact SHA-256 hash', async () => {
     const document = {
       ...documentV2,

@@ -3,6 +3,7 @@ import {
   type FormulaMetadata,
 } from '@/engine/plugins/formula-catalog';
 import { buildFormulaDefaultDocument } from '@/lib/formula-documents';
+import { appendRemixSource } from '@/lib/remix-source';
 import { documentToExploreHref } from '@/lib/url-params';
 import {
   FORMULA_CONTENT_MANIFEST,
@@ -63,9 +64,12 @@ export function buildFormulaAtlas(locale: string): FormulaAtlas {
       guide && isPublishedFormulaGuideId(metadata.id)
         ? formulaGuidePath(guide)
         : undefined;
-    const exploreHref = documentToExploreHref(
-      buildFormulaDefaultDocument(metadata.id),
-      locale
+    const exploreHref = appendRemixSource(
+      documentToExploreHref(
+        buildFormulaDefaultDocument(metadata.id),
+        locale
+      ),
+      { type: 'formula', id: metadata.id }
     );
 
     return {

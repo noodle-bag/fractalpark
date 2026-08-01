@@ -317,7 +317,8 @@ export class ArtworkRepository {
             name: input.name,
             createdAt,
             updatedAt: createdAt,
-            source: 'saved',
+            source:
+              document.metadata?.source === 'remix' ? 'remix' : 'saved',
           },
         },
       },
