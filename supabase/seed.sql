@@ -1,0 +1,10 @@
+-- FractalPark v0.4.15 seed data contract.
+--
+-- Rules:
+-- - Seeds are synthetic only. Real user data, real email addresses, and
+--   production content are never seeded.
+-- - Staging uses the same synthetic seed; production is never seeded.
+-- - `supabase db reset` replays migrations and then this file.
+--
+-- The six creation-loop tables land with the schema migration commit.
+-- Until then this file intentionally contains no inserts.
