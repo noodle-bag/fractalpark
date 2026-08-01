@@ -146,3 +146,14 @@ fingerprint.
 - saved artwork and project round trips retain `source` and `sourceId`;
 - legacy URLs and Documents without Remix metadata remain unchanged;
 - one initiating click emits one `start_remix` event.
+
+## Amendment (v0.4.15): Publication Source Type
+
+The namespaced provenance model defined here extends to a third source
+type, `publication:<publicationId>`, for remixes of community-published
+works. The same rules apply: the namespace stays inside `sourceId`, the
+value is validated against the real published revision, and frozen values
+are never rewritten. The cloud-side validation and provenance semantics are
+frozen in [Web Creation Loop v1](../specs/web-creation-loop-v1.md); session
+and trust boundaries are decided in
+[ADR 0005](0005-same-origin-cloud-session.md).

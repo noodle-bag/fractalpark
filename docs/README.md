@@ -16,6 +16,9 @@ govern FractalPark development.
 - [Artwork and Location Route Contract](specs/artwork-and-location-routes.md)
   freezes published artwork identities and routes, Gallery and local-artwork
   boundaries, image licensing, and the future named-location namespace.
+- [Web Creation Loop v1](specs/web-creation-loop-v1.md) freezes the
+  same-origin cloud creation contracts: identity, private drafts, community
+  publication, idempotency, quotas, and permissions.
 - [Analytics Event Schema v1](specs/analytics-events-v1.md) registers existing
   events and defines the Formula Atlas, FRM, artwork, and Remix event
   contracts.
@@ -30,11 +33,16 @@ govern FractalPark development.
   model with surface-specific read projections.
 - [ADR 0004](adr/0004-remix-source-metadata.md): namespaced Remix provenance
   carried outside the legacy rendering-state URL codec.
+- [ADR 0005](adr/0005-same-origin-cloud-session.md): cloud identity stays
+  behind a strict same-origin BFF session; the browser never holds tokens.
 
 ## Test Plans
 
 - [v0.4.13 Regression Matrix](testing/v0.4.13-regression-matrix.md) defines
   commit, slice, and release gates for the Formula Atlas and artwork release.
+- [v0.4.15 Regression Matrix](testing/v0.4.15-regression-matrix.md) defines
+  commit, pull request, and production enablement gates for the web creation
+  loop release.
 
 ## Maintenance
 

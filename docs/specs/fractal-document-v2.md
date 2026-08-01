@@ -158,9 +158,22 @@ write entry points must reject `readonly-future`. The raw input remains
 available for lossless re-download. Converting it into an editable current
 copy requires an explicit user action that warns about unknown-field loss.
 
+## Cloud write profile
+
+v0.4.15 keeps this schema unchanged and adds a server-side validation
+profile, `CloudArtworkEnvelopeV1`, for cloud drafts and publications. The
+profile reuses the readers and the 1 MiB limit defined here, adds runtime
+allowlists, budgets, canonical-byte accounting, and server-verified
+provenance, and rejects future read-only or uncanonicalizable input for
+cloud writes. Local reads and imports keep the behavior defined in this
+document. The profile and its rejection semantics are frozen in
+[Web Creation Loop v1](web-creation-loop-v1.md).
+
 ## Deferred work
 
 v0.4.12 does not define a link codec, compressed or fragment URLs, checksums,
 short links, cloud sync, Smart PNG, modern Coloring UI/shaders, automatic
 drafts, or parameter-animation behavior. Legacy query URLs remain readable but
-do not gain Document v2 fields.
+do not gain Document v2 fields. v0.4.15 defines the cloud lifecycle of
+Envelope v1 in [Web Creation Loop v1](web-creation-loop-v1.md) without
+changing this schema.

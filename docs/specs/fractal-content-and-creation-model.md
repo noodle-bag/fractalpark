@@ -44,6 +44,9 @@ default formula state, preset state, ordering rule, or custom-formula store.
 | Published artwork editorial content, public slug, license metadata, and relationships | `ArtworkContentManifest` plus locale messages | Collection, artwork pages, sitemap, structured data |
 | Durable render state | `FractalDocument` | Renderer, URL adapters, artwork storage, playback projections, exports |
 | Local saved artwork | `ArtworkRepository` and Envelope v1 | My Works and Explore |
+| Cloud private drafts | `artwork_drafts` (server, owner-scoped) | My Works Drafts, cloud save and reopen |
+| Public community revisions | `artwork_publications` (server) | Community, public artwork pages, Remix |
+| Cloud identity and session | Auth user record and sealed server session (ADR 0005) | Same-origin Auth API, owner-scoped RPC |
 | Local custom formula source and experience hint | `custom-formula-storage` | FRM Editor, Explore formula resolver, project import/export |
 | FRM syntax and compatibility behavior | lexer, parser, validator, type system, code generator, and `compileFrm` tests | FRM Editor, FRM Guide, examples |
 
@@ -163,6 +166,23 @@ is not the canonical model for new published preset or persistence work.
 - A shared card layout may accept separate published and local view models;
   it must not erase their different navigation and management permissions.
 
+### Cloud creation surfaces
+
+Cloud drafts and community publications extend this model without creating
+new artwork facts. The durable render state stays `FractalDocument`; the
+server tables own lifecycle, ownership, and permission metadata plus the
+same Envelope v1 payload. Cloud boundaries, state machines, and the
+permission matrix are frozen in
+[Web Creation Loop v1](web-creation-loop-v1.md); session mechanics are
+decided in [ADR 0005](../adr/0005-same-origin-cloud-session.md).
+
+- My Works gains owner-only Drafts and Published views alongside the
+  anonymous On this device view.
+- Community consumes the published projection from `artwork_publications`
+  only; private drafts and local artwork never become public content.
+- Remix provenance keeps ADR 0004 namespaced semantics and gains a stable
+  `publication` source type.
+
 ### Artwork pages
 
 - Join published preset state with artwork content by stable `presetId`.
@@ -226,5 +246,6 @@ At minimum, automated tests must prove:
   missing local formula IDs retain their documented behavior.
 
 Release-specific coverage and execution gates are defined in the active test
-plan, beginning with
+plan: [v0.4.15 Regression Matrix](../testing/v0.4.15-regression-matrix.md),
+succeeding
 [v0.4.13 Regression Matrix](../testing/v0.4.13-regression-matrix.md).
