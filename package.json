@@ -1,6 +1,6 @@
 {
   "name": "fractalpark",
-  "version": "0.4.12",
+  "version": "0.4.13",
   "scripts": {
     "dev": "next dev",
     "build": "next build --webpack",

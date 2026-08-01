@@ -1,7 +1,7 @@
 # FractalPark - Complete Documentation
 
 > Fractal art exploration with real-time GPU rendering
-> Version: 0.4.12
+> Version: 0.4.13
 > Website: https://www.fractalpark.com
 
 ---
@@ -432,6 +432,14 @@ Example response:
 
 ## Changelog
 
+### v0.4.13 (2026-08-01)
+- Formula Atlas with 94 formulas, 21 bilingual Formula Guides, an FRM Guide, and the standalone beta FRM Editor
+- Explore as the default landing page, with the immersive preset slideshow moved to the noindex Drift route
+- FractalPark Collection and 26 localized artwork pages with canonical URLs, CC BY 4.0 renders, and native fullscreen playback
+- Remix provenance retained in saved artwork metadata, plus content analytics for learning-to-creation journeys
+- Shared public product facts across README, About, metadata, JSON-LD, sitemap, and llms documentation
+- Compatibility retained for legacy Explore URLs, saved artworks, project files, and custom formulas
+
 ### v0.4.12 (2026-07-25)
 - Fractal Document v2 and project Envelope v1 contracts with tolerant readers
 - Portable `.fractal.json` project download and import, including custom FRM assets
@@ -484,5 +492,5 @@ Built with open source:
 
 ---
 
-*Last updated: 2026-07-03*
+*Last updated: 2026-08-01*
 *For updates: https://github.com/noodle-bag/fractalpark*

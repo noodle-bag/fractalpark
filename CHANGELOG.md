@@ -1,5 +1,22 @@
 # Changelog
 
+## 0.4.13 - 2026-08-01
+
+### Added
+
+- Added the bilingual Formula Atlas with 94 formulas across 7 families, 21 in-depth Formula Guides, canonical formula visuals, and localized metadata.
+- Added an SSR FRM Guide and standalone beta FRM Editor with shared examples, diagnostics, local `.frm` import/export, preview, and device-local formula storage.
+- Added the FractalPark Collection with 26 localized artwork pages, canonical artwork URLs, CC BY 4.0 render licensing, 16:10 assets, related works, and native fullscreen playback.
+- Added Remix provenance for formula and preset entry points, preserving namespaced source metadata when remixed artworks are saved.
+- Added content analytics for formula, FRM, artwork, Remix, editor, example, and copy-link journeys.
+
+### Changed
+
+- Explore is now the default localized landing page, while the former preset slideshow is available as the immersive, noindex Drift experience.
+- Gallery now separates the public FractalPark Collection from device-local My Works and uses a responsive 1/2/3-column artwork grid with hover playback on supported pointers.
+- Public product facts, README/About content, JSON-LD, sitemap, crawler guidance, and llms documentation now share the same formula-first product contract.
+- Legacy Explore URLs, saved artworks, Fractal Document v1/v2 data, project imports, and custom formulas remain compatible.
+
 ## 0.4.12 - 2026-07-25
 
 ### Added
