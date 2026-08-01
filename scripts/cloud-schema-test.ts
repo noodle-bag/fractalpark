@@ -16,6 +16,7 @@
  */
 
 import { execFileSync } from 'node:child_process';
+import { randomUUID } from 'node:crypto';
 
 interface LocalKeys {
   apiUrl: string;
@@ -230,19 +231,24 @@ async function main(): Promise<void> {
       'withdrawn with envelope present',
     );
     psqlFails(
+      `insert into public.artwork_publications (${base}, status, hidden_at) values (${vals.replace(`'{}'`, 'null')}, 'hidden', now())`,
+      'hidden with envelope cleared',
+    );
+    psqlFails(
       `insert into public.artwork_publications (${base}, license) values (${vals}, 'CC0')`,
       'license other than CC-BY-4.0',
     );
   });
 
   await test('constraint battery: operations, counters, cleanup jobs', () => {
+    const opKey = randomUUID();
     psql(
       `insert into public.artwork_operations (idempotency_key, owner_id, operation_type, request_hash)
-       values ('11111111-1111-4111-8111-111111111111', '${OWNER_A}', 'save_draft', repeat('a', 64))`,
+       values ('${opKey}', '${OWNER_A}', 'save_draft', repeat('a', 64))`,
     );
     psqlFails(
       `insert into public.artwork_operations (idempotency_key, owner_id, operation_type, request_hash)
-       values ('11111111-1111-4111-8111-111111111111', '${OWNER_A}', 'save_draft', repeat('b', 64))`,
+       values ('${opKey}', '${OWNER_A}', 'save_draft', repeat('b', 64))`,
       'duplicate (owner_id, idempotency_key)',
     );
     psqlFails(
@@ -258,61 +264,79 @@ async function main(): Promise<void> {
   });
 
   await test('frozen-field trigger: drafts', () => {
+    const draftId = randomUUID();
     psql(
       `insert into public.artwork_drafts (id, owner_id, title, envelope)
-       values ('22222222-2222-4222-8222-222222222222', '${OWNER_A}', 'draft one', '{}')`,
+       values ('${draftId}', '${OWNER_A}', 'draft one', '{}')`,
     );
     psqlFails(
-      `update public.artwork_drafts set owner_id = '${OWNER_B}' where id = '22222222-2222-4222-8222-222222222222'`,
+      `update public.artwork_drafts set owner_id = '${OWNER_B}' where id = '${draftId}'`,
       'owner reassignment',
     );
     psqlFails(
-      `update public.artwork_drafts set remix_source_id = 'formula:x', remix_source_type = 'formula' where id = '22222222-2222-4222-8222-222222222222'`,
+      `update public.artwork_drafts set remix_source_id = 'formula:x', remix_source_type = 'formula' where id = '${draftId}'`,
       'provenance rewrite',
     );
     psqlFails(
-      `update public.artwork_drafts set revision = revision + 2 where id = '22222222-2222-4222-8222-222222222222'`,
+      `update public.artwork_drafts set revision = revision + 2 where id = '${draftId}'`,
       'revision jumping by two',
     );
     psql(
-      `update public.artwork_drafts set title = 'draft one v2', revision = revision + 1 where id = '22222222-2222-4222-8222-222222222222'`,
+      `update public.artwork_drafts set title = 'draft one v2', revision = revision + 1 where id = '${draftId}'`,
     );
     const after = psql(
-      `select title || ':' || revision from public.artwork_drafts where id = '22222222-2222-4222-8222-222222222222'`,
+      `select title || ':' || revision from public.artwork_drafts where id = '${draftId}'`,
     );
     assert(after === 'draft one v2:2', `expected draft one v2:2, got ${after}`);
   });
 
   await test('frozen-field trigger: publications and the privileged flag', () => {
+    const pubId = randomUUID();
     psql(
       `insert into public.artwork_publications (id, owner_id, author_display_name, title, envelope, rights_attestation_version, license_version, rights_attested_at)
-       values ('33333333-3333-4333-8333-333333333333', '${OWNER_A}', 'Author', 'Pub', '{}', 'v1', 'v1', now())`,
+       values ('${pubId}', '${OWNER_A}', 'Author', 'Pub', '{}', 'v1', 'v1', now())`,
     );
     psqlFails(
-      `update public.artwork_publications set title = 'renamed' where id = '33333333-3333-4333-8333-333333333333'`,
+      `update public.artwork_publications set title = 'renamed' where id = '${pubId}'`,
       'title rewrite',
     );
     psqlFails(
-      `update public.artwork_publications set owner_id = null where id = '33333333-3333-4333-8333-333333333333'`,
-      'owner nullify without flag',
+      `update public.artwork_publications set owner_id = '${OWNER_B}' where id = '${pubId}'`,
+      'owner reassignment',
     );
     psqlFails(
-      `update public.artwork_publications set envelope = null where id = '33333333-3333-4333-8333-333333333333'`,
+      `update public.artwork_publications set envelope = null where id = '${pubId}'`,
       'envelope clear without flag',
     );
     // Lifecycle updates stay allowed without the flag.
     psql(
-      `update public.artwork_publications set status = 'hidden', hidden_at = now() where id = '33333333-3333-4333-8333-333333333333'`,
+      `update public.artwork_publications set status = 'hidden', hidden_at = now() where id = '${pubId}'`,
     );
-    // Privileged withdrawal: clears content, nulls nothing else.
+    // The privileged flag may clear content but never rewrite it.
+    psqlFails(
+      `begin; set local fractalpark.privileged_mutation = 'on';
+       update public.artwork_publications set title = 'HijackedTitle' where id = '${pubId}'; commit;`,
+      'privileged title rewrite',
+    );
+    psqlFails(
+      `begin; set local fractalpark.privileged_mutation = 'on';
+       update public.artwork_publications set envelope = '{"evil": true}' where id = '${pubId}'; commit;`,
+      'privileged envelope rewrite',
+    );
+    psqlFails(
+      `begin; set local fractalpark.privileged_mutation = 'on';
+       update public.artwork_publications set description = 'spam' where id = '${pubId}'; commit;`,
+      'privileged description rewrite',
+    );
+    // Privileged withdrawal: clears content, keeps the tombstone.
     psql(
       `begin; set local fractalpark.privileged_mutation = 'on';
        update public.artwork_publications
        set status = 'withdrawn', withdrawn_at = now(), envelope = null, description = null
-       where id = '33333333-3333-4333-8333-333333333333'; commit;`,
+       where id = '${pubId}'; commit;`,
     );
     const status = psql(
-      `select status || ':' || coalesce(envelope::text, 'null') from public.artwork_publications where id = '33333333-3333-4333-8333-333333333333'`,
+      `select status || ':' || coalesce(envelope::text, 'null') from public.artwork_publications where id = '${pubId}'`,
     );
     assert(status === 'withdrawn:null', `expected withdrawn:null, got ${status}`);
   });
@@ -345,7 +369,7 @@ async function main(): Promise<void> {
     ];
     for (const row of rows) {
       const [name, secdef, config] = row.split(':');
-      assert(config.includes('search_path='), `search_path not pinned on ${name}: ${config}`);
+      assert(config.includes('search_path=""'), `search_path not pinned to empty on ${name}: ${config}`);
       if (definerExpected.includes(name)) {
         assert(secdef === 'true', `${name} should be security definer`);
       }
@@ -366,6 +390,64 @@ async function main(): Promise<void> {
     assert(draftPolicies === '0', 'draft-thumbnails must have no user-facing policies');
   });
 
+  await test('retention purges delete only eligible rows', () => {
+    const RUN = randomUUID().replace(/-/g, '');
+    const h = (c: string): string => (RUN + c.repeat(64)).slice(0, 64);
+    // 48-hour counter purge: an untouched counter is deleted, a live one stays.
+    psql(
+      `insert into public.rate_limit_counters (policy_key, subject_hash, window_started_at, count, updated_at)
+       values ('otp_email_minute', '${h('d')}', now() - interval '49 hours', 1, now() - interval '49 hours'),
+              ('otp_email_minute', '${h('e')}', now(), 1, now())`,
+    );
+    const purgedCounters = psql(`select public.fractalpark_purge_rate_limit_counters()`);
+    assert(purgedCounters === '1', `expected 1 purged counter, got ${purgedCounters}`);
+    const remaining = psql(
+      `select count(*) from public.rate_limit_counters where subject_hash in ('${h('d')}', '${h('e')}')`,
+    );
+    assert(remaining === '1', `expected live counter to survive, got ${remaining}`);
+
+    // 30-day operation purge: only terminal save/delete operations old enough.
+    psql(
+      `insert into public.artwork_operations (idempotency_key, owner_id, operation_type, request_hash, status, created_at)
+       values ('${randomUUID()}', '${OWNER_A}', 'save_draft', '${h('f')}', 'succeeded', now() - interval '31 days'),
+              ('${randomUUID()}', '${OWNER_A}', 'publish_draft', '${h('1')}', 'succeeded', now() - interval '31 days'),
+              ('${randomUUID()}', '${OWNER_A}', 'save_draft', '${h('2')}', 'succeeded', now())`,
+    );
+    const purgedOps = psql(`select public.fractalpark_purge_expired_operations()`);
+    assert(purgedOps === '1', `expected 1 purged operation, got ${purgedOps}`);
+    const surviving = psql(
+      `select count(*) from public.artwork_operations where request_hash in ('${h('1')}', '${h('2')}')`,
+    );
+    assert(surviving === '2', `publish and recent operations must survive, got ${surviving}`);
+  });
+
+  await test('account deletion: auth user delete nullifies owner refs and cascades drafts', () => {
+    // Spec sections 4.3 / 4.4 / 10.2: deleting the auth user must cascade
+    // drafts and null owner_id on publications and operations. The FK
+    // SET NULL fires the frozen-field triggers; they must allow nullify.
+    const draftCountBefore = psql(
+      `select count(*) from public.artwork_drafts where owner_id = '${OWNER_A}'`,
+    );
+    assert(draftCountBefore !== '0', 'fixture draft missing');
+    psql(`delete from auth.users where id = '${OWNER_A}'`);
+    const draftsAfter = psql(
+      `select count(*) from public.artwork_drafts where owner_id = '${OWNER_A}'`,
+    );
+    assert(draftsAfter === '0', `drafts not cascaded: ${draftsAfter}`);
+    const pubOwner = psql(
+      `select count(*) from public.artwork_publications where owner_id is null`,
+    );
+    assert(pubOwner !== '0', 'publication owner_id not nulled');
+    const opOwner = psql(
+      `select count(*) from public.artwork_operations where owner_id = '${OWNER_A}'`,
+    );
+    assert(opOwner === '0', `operation owner_id not nulled: ${opOwner}`);
+    const opSurvives = psql(`select count(*) from public.artwork_operations where owner_id is null`);
+    assert(opSurvives !== '0', 'operations should survive with null owner');
+    // Fixture hygiene: remove the second fixture user too.
+    psql(`delete from auth.users where id = '${OWNER_B}'`);
+  });
+
   console.log('== API layer: roles, RPC grants, counters, cleanup, storage ==');
 
   await test('anon cannot select base tables', async () => {
@@ -374,6 +456,8 @@ async function main(): Promise<void> {
       assert(res.status === 401 || res.status === 403, `anon select ${table}: expected 401/403, got ${res.status}`);
     }
   });
+
+  let userJwt = '';
 
   await test('real authenticated user cannot select or insert base tables directly', async () => {
     const email = `schema-test-${Date.now()}@example.com`;
@@ -399,6 +483,18 @@ async function main(): Promise<void> {
       body: JSON.stringify({ title: 'x', envelope: {} }),
     });
     assert(ins.status === 401 || ins.status === 403, `user insert: expected 401/403, got ${ins.status}`);
+    const upd = await fetch(`${keys.apiUrl}/rest/v1/artwork_drafts?id=eq.${randomUUID()}`, {
+      method: 'PATCH',
+      headers: { apikey: keys.anonKey, authorization: `Bearer ${userKey}`, 'content-type': 'application/json' },
+      body: JSON.stringify({ title: 'y' }),
+    });
+    assert(upd.status === 401 || upd.status === 403, `user update: expected 401/403, got ${upd.status}`);
+    const del = await fetch(`${keys.apiUrl}/rest/v1/artwork_drafts?id=eq.${randomUUID()}`, {
+      method: 'DELETE',
+      headers: { apikey: keys.anonKey, authorization: `Bearer ${userKey}` },
+    });
+    assert(del.status === 401 || del.status === 403, `user delete: expected 401/403, got ${del.status}`);
+    userJwt = userKey;
   });
 
   await test('fractalpark_schema_version is callable by anon', async () => {
@@ -414,6 +510,18 @@ async function main(): Promise<void> {
     });
     assert(denied.status === 401 || denied.status === 403, `anon consume: ${denied.status}`);
 
+    // Invalid arguments fail loud, never silently break or deny limiting.
+    for (const bad of [
+      { p_limit: 0, p_window_seconds: 60 },
+      { p_limit: -1, p_window_seconds: 60 },
+      { p_limit: 1, p_window_seconds: 0 },
+    ]) {
+      const res = await rpc(keys, 'fractalpark_rate_limit_consume', keys.serviceKey, {
+        p_policy_key: 'otp_email_minute', p_subject_hash: 'y'.repeat(64), ...bad,
+      });
+      assert(res.status === 400, `bad args ${JSON.stringify(bad)}: expected 400, got ${res.status}`);
+    }
+
     const subject = `${Date.now()}`.padStart(64, '0');
     const call = () =>
       rpc(keys, 'fractalpark_rate_limit_consume', keys.serviceKey, {
@@ -425,6 +533,19 @@ async function main(): Promise<void> {
     assert(first[0].allowed === true, 'first call should pass');
     assert(second[0].allowed === true, 'second call should pass');
     assert(third[0].allowed === false && third[0].retry_after > 0, `third call should be limited with retryAfter, got ${JSON.stringify(third[0])}`);
+  });
+
+  await test('rate_limit_consume resets an expired window', async () => {
+    const subject = randomUUID().replace(/-/g, '').padEnd(64, '0').slice(0, 64);
+    psql(
+      `insert into public.rate_limit_counters (policy_key, subject_hash, window_started_at, count, updated_at)
+       values ('otp_ip_hour', '${subject}', now() - interval '2 hours', 20, now() - interval '2 hours')`,
+    );
+    const res = await rpc(keys, 'fractalpark_rate_limit_consume', keys.serviceKey, {
+      p_policy_key: 'otp_ip_hour', p_subject_hash: subject, p_limit: 20, p_window_seconds: 3600,
+    });
+    const body = (await res.json()) as Array<{ allowed: boolean; retry_after: number }>;
+    assert(body[0].allowed === true, `expired window should reset and allow, got ${JSON.stringify(body[0])}`);
   });
 
   await test('cleanup job lifecycle: claim, complete success, retry, exhaust', async () => {
@@ -506,6 +627,11 @@ async function main(): Promise<void> {
       headers: { apikey: keys.anonKey, authorization: `Bearer ${keys.anonKey}` },
     });
     assert(readDraft.status === 400 || readDraft.status === 401 || readDraft.status === 403 || readDraft.status === 404, `anon read draft bucket: ${readDraft.status}`);
+    assert(userJwt !== '', 'user JWT missing for draft bucket check');
+    const readDraftUser = await fetch(`${keys.apiUrl}/storage/v1/object/draft-thumbnails/${draftPath}`, {
+      headers: { apikey: keys.anonKey, authorization: `Bearer ${userJwt}` },
+    });
+    assert(readDraftUser.status === 400 || readDraftUser.status === 401 || readDraftUser.status === 403 || readDraftUser.status === 404, `authenticated read draft bucket: ${readDraftUser.status}`);
   });
 
   console.log(`\n${passed} passed, ${failed} failed`);

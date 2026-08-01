@@ -8,8 +8,10 @@
 -- auth commit and are not part of this migration.
 --
 -- Design notes:
--- - No IF NOT EXISTS on schema objects: unsafe re-execution must fail loudly
---   (spec section 9).
+-- - Table and index creation deliberately has no IF NOT EXISTS: unsafe
+--   re-execution must fail loudly (spec section 9). Functions use
+--   create-or-replace so later forward migrations can redefine them; a
+--   replayed file still fails on its first create table.
 -- - Base tables expose no direct DML or SELECT to anon/authenticated. All
 --   access flows through RPCs (spec section 10.1). service_role bypasses RLS
 --   and receives explicit table grants for fixture and cleanup paths.
@@ -77,7 +79,7 @@ create table public.artwork_publications (
   check (withdrawn_at is null or withdrawn_at >= published_at),
   check (
     (status = 'published' and hidden_at is null and withdrawn_at is null and envelope is not null)
-    or (status = 'hidden' and hidden_at is not null and withdrawn_at is null)
+    or (status = 'hidden' and hidden_at is not null and withdrawn_at is null and envelope is not null)
     or (status = 'withdrawn' and withdrawn_at is not null and envelope is null and description is null)
   )
 );
@@ -208,9 +210,12 @@ create trigger artwork_drafts_frozen before update on public.artwork_drafts
   for each row execute function public.fractalpark_drafts_frozen_fields();
 
 -- Frozen fields on publications. Lifecycle columns (status, timestamps,
--- moderation, thumbnail diagnostics) stay mutable; content columns change
--- only inside a privileged lifecycle mutation (withdraw clears envelope and
--- description; account deletion nulls owner_id).
+-- moderation, thumbnail diagnostics) stay mutable. Frozen columns never
+-- change. Privileged lifecycle mutations (session flag
+-- fractalpark.privileged_mutation = 'on', set with SET LOCAL inside the
+-- owning function) may additionally clear envelope/description to null
+-- (withdrawal). owner_id may only ever be nulled (account deletion /
+-- FK ON DELETE SET NULL), never reassigned, in any context.
 create or replace function public.fractalpark_publications_frozen_fields()
 returns trigger
 language plpgsql
@@ -222,6 +227,7 @@ declare
 begin
   if new.id <> old.id
      or new.author_display_name <> old.author_display_name
+     or new.title <> old.title
      or new.published_at <> old.published_at
      or new.rights_attestation_version <> old.rights_attestation_version
      or new.license_version <> old.license_version
@@ -232,17 +238,20 @@ begin
      or new.remix_source_id is distinct from old.remix_source_id then
     raise exception 'frozen publication field update rejected';
   end if;
+  if new.owner_id is not null and new.owner_id <> old.owner_id then
+    raise exception 'owner_id may only be nulled';
+  end if;
   if not privileged then
-    if new.owner_id is distinct from old.owner_id
-       or new.title <> old.title
-       or new.description is distinct from old.description
-       or new.envelope is distinct from old.envelope then
+    if new.envelope is distinct from old.envelope
+       or new.description is distinct from old.description then
       raise exception 'publication content update rejected outside lifecycle mutation';
     end if;
   else
-    -- Even privileged mutations may only null owner_id, never reassign it.
-    if new.owner_id is not null and new.owner_id <> old.owner_id then
-      raise exception 'owner_id may only be nulled';
+    -- Privileged lifecycle mutations may only clear content, never rewrite
+    -- it: withdrawal clears envelope and description to null.
+    if (new.envelope is not null and new.envelope is distinct from old.envelope)
+       or (new.description is not null and new.description is distinct from old.description) then
+      raise exception 'lifecycle mutations may only clear publication content';
     end if;
   end if;
   return new;
@@ -253,7 +262,9 @@ create trigger artwork_publications_frozen before update on public.artwork_publi
   for each row execute function public.fractalpark_publications_frozen_fields();
 
 -- artwork_operations: identity and idempotency fields are frozen; only the
--- result, status, and backup-email phase may advance.
+-- result, status, and backup-email phase may advance. owner_id is not
+-- frozen (spec section 4.4 nulls it when the auth user is removed), but it
+-- may only be nulled, never reassigned.
 create or replace function public.fractalpark_operations_frozen_fields()
 returns trigger
 language plpgsql
@@ -262,11 +273,13 @@ as $$
 begin
   if new.id <> old.id
      or new.idempotency_key <> old.idempotency_key
-     or new.owner_id is distinct from old.owner_id
      or new.operation_type <> old.operation_type
      or new.request_hash <> old.request_hash
      or new.created_at <> old.created_at then
     raise exception 'frozen operation field update rejected';
+  end if;
+  if new.owner_id is not null and new.owner_id <> old.owner_id then
+    raise exception 'owner_id may only be nulled';
   end if;
   return new;
 end;
@@ -294,6 +307,9 @@ alter table public.resource_cleanup_jobs force row level security;
 
 -- No policies are created for anon or authenticated: with no grants and no
 -- policies, base tables are unreachable outside RPCs and the service role.
+-- Defense in depth: they may not create objects in the public schema either.
+
+revoke create on schema public from anon, authenticated;
 
 revoke all on public.profiles from anon, authenticated;
 revoke all on public.artwork_drafts from anon, authenticated;
@@ -345,6 +361,13 @@ declare
   v_count integer;
   v_window_end timestamptz;
 begin
+  if p_limit is null or p_limit < 1 then
+    raise exception 'rate limit must be a positive integer';
+  end if;
+  if p_window_seconds is null or p_window_seconds < 1 then
+    raise exception 'rate limit window must be a positive number of seconds';
+  end if;
+
   insert into public.rate_limit_counters (policy_key, subject_hash, window_started_at, count, updated_at)
   values (p_policy_key, p_subject_hash, v_now, 0, v_now)
   on conflict (policy_key, subject_hash) do nothing;
@@ -366,7 +389,7 @@ begin
 
   if v_count >= p_limit then
     return query select false,
-      greatest(0, extract(epoch from (v_window_end - v_now))::integer);
+      greatest(1, ceil(extract(epoch from (v_window_end - v_now)))::integer);
     return;
   end if;
 
@@ -491,7 +514,7 @@ begin
     update public.resource_cleanup_jobs j
     set status = 'pending',
         error_code = p_error_code,
-        next_attempt_at = now() + (least(5 * power(2, v_attempts), 1440) || ' minutes')::interval,
+        next_attempt_at = now() + (least(5 * power(2, greatest(v_attempts - 1, 0)), 1440) || ' minutes')::interval,
         updated_at = now()
     where j.id = p_job_id;
   end if;
