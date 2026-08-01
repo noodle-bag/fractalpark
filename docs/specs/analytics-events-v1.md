@@ -3,6 +3,7 @@
 - Status: Accepted
 - Date: 2026-07-26
 - Target release: FractalPark v0.4.13
+- Extended in: FractalPark v0.4.15
 - Scope: FractalPark first-party product analytics
 
 ## Purpose
@@ -89,7 +90,9 @@ Sent from the user's Remix activation before navigation.
 
 `source_type` must agree with the authoritative source that resolves
 `source_id`. This click event does not replace
-[Remix provenance metadata](../adr/0004-remix-source-metadata.md).
+[Remix provenance metadata](../adr/0004-remix-source-metadata.md). Community
+artwork Remix activations do not emit this event; they emit
+`community_remix_started` (v0.4.15).
 
 ### `open_formula_editor`
 
@@ -146,7 +149,15 @@ the same role as the published `preset_id`.
 | `community_remix_started` | Remix activated on a community artwork | `publication_id` |
 | `publication_withdrawn` | Owner withdrawal completed | — |
 | `account_deletion_started` | Step-up confirmed and deletion operation created | — |
-| `backup_email_result` | Backup email terminal state reached | `status`: `sent`, `failed`, `unknown`, or `skipped_rate_limit` |
+| `backup_email_result` | An operation reaches its final backup-email state | `status`: `sent`, `failed`, `unknown`, or `skipped_rate_limit` |
+
+`backup_email_result` fires once per operation at its final state: a
+`failed` attempt retried into `sent` within the same operation emits only
+the closing `sent`.
+
+A community Remix activation emits `community_remix_started` only; it never
+emits `start_remix`, which remains scoped to `formula` and `preset`
+sources.
 
 Content-view deduplication follows the same Strict Mode guard as the v0.4.13
 content events. Operation events fire once per completed server operation;

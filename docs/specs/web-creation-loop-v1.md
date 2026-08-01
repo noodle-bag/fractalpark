@@ -162,8 +162,8 @@ Six tables and two storage buckets carry the cloud state.
   and the derived thumbnail may change.
 - `published → hidden` and `hidden → published` are maintainer actions
   through the controlled data panel. Hidden removes public access and new
-  remixes immediately, keeps the envelope for restoration, and deletes or
-  disables the public thumbnail.
+  remixes immediately, keeps the envelope for restoration, and deletes the
+  public thumbnail through a registered cleanup job.
 - `published | hidden → withdrawn` is triggered by the owner or by account
   deletion, is permanent, and clears envelope, description, and thumbnail,
   leaving a minimal tombstone: artwork ID, title, attribution snapshot,
@@ -243,10 +243,11 @@ Six tables and two storage buckets carry the cloud state.
 
 ### 4.7 Storage buckets
 
-- `draft-thumbnails`: private. Client uploads are decoded, validated for
-  real format, dimensions, and bytes, and re-encoded through a fixed
-  JPEG/WebP pipeline before writing. Client MIME types, extensions, and
-  size claims are never trusted. Owner-only reads use signed URLs valid for
+- `draft-thumbnails`: private. Thumbnails arrive base64-encoded inside the
+  JSON save request, are decoded, validated for real format, dimensions,
+  and bytes, and re-encoded through a fixed JPEG/WebP pipeline before
+  writing. Client MIME types, extensions, and size claims are never
+  trusted. Owner-only reads use signed URLs valid for
   5 minutes. A private thumbnail never becomes public.
 - `publication-thumbnails`: publicly readable, server-only writable. Public
   thumbnails are produced only by the controlled server render path from the
@@ -262,23 +263,28 @@ FractalPark Route Handlers.
 
 | Method | Path | Responsibility |
 |---|---|---|
-| POST | `/auth/otp/request` | Rate-limit, challenge check, OTP request |
-| POST | `/auth/otp/verify` | Verify OTP and establish the HttpOnly session |
-| POST | `/auth/session/refresh` | Server-side refresh and cookie rotation |
-| POST | `/auth/logout` | Revoke the current auth session and clear the cookie |
-| GET/PATCH | `/profile` | Read/update own minimal profile |
-| GET/POST | `/drafts` | Owner draft list / create |
-| GET/PATCH/DELETE | `/drafts/[draftId]` | Owner read, optimistic-concurrency update, delete |
-| POST | `/drafts/[draftId]/publish` | Create an immutable publication from a stated revision |
-| GET | `/community` | Stable-cursor list of `published` works |
-| GET | `/publications/[publicationId]` | Published detail, download, and remix input |
-| POST | `/publications/[publicationId]/withdraw` | Permanent owner withdrawal |
-| POST | `/account/delete` | Start idempotent account deletion after step-up OTP |
+| POST | `/api/creation/auth/otp/request` | Rate-limit, challenge check, OTP request |
+| POST | `/api/creation/auth/otp/verify` | Verify OTP and establish the HttpOnly session |
+| POST | `/api/creation/auth/session/refresh` | Server-side refresh and cookie rotation |
+| POST | `/api/creation/auth/logout` | Revoke the current auth session and clear the cookie |
+| GET/PATCH | `/api/creation/profile` | Read/update own minimal profile |
+| GET/POST | `/api/creation/drafts` | Owner draft list / create |
+| GET/PATCH/DELETE | `/api/creation/drafts/[draftId]` | Owner read, optimistic-concurrency update, delete |
+| POST | `/api/creation/drafts/[draftId]/publish` | Create an immutable publication from a stated revision |
+| GET | `/api/creation/community` | Stable-cursor list of `published` works |
+| GET | `/api/creation/publications/[publicationId]` | Published detail, download, and remix input |
+| POST | `/api/creation/publications/[publicationId]/withdraw` | Permanent owner withdrawal |
+| POST | `/api/creation/account/delete` | Start idempotent account deletion after step-up OTP |
 
 ### 5.1 General request contract
 
-- Writes accept JSON only, enforce a request-body byte limit, reject
-  cross-site `Origin`/`Host` mismatches, and have no GET side effects.
+- Writes accept JSON only, reject cross-site `Origin`/`Host` mismatches,
+  and have no GET side effects. Request bodies are capped at 2 MiB for
+  draft save (a 1 MiB envelope plus a base64 thumbnail and metadata
+  margin) and 16 KiB for every other write. Private draft thumbnails
+  travel as base64 inside the JSON save request; there is no separate
+  upload endpoint. The server decodes, validates, and re-encodes before
+  storage.
   `SameSite=Lax` is a supplementary line, never the CSRF check itself.
 - Post-login continuation accepts only server-issued operation tokens and an
   in-site allowlist; arbitrary `returnTo` URLs are rejected.
@@ -565,6 +571,8 @@ interface StoredArtworkRecordV2 {
 - All v0.4.15 Community single-work pages are `noindex, follow`, stay out of
   sitemap and IndexNow, and remain crawlable so engines can read the
   directive. The official Gallery/Collection indexing contract is unchanged.
+- Community pages emit `ImageObject` structured data following the community
+  rule in [Artwork and Location Route Contract](artwork-and-location-routes.md).
 - Hidden and withdrawn works return a uniform `404` to ordinary reads;
   owner-only safe status comes from the private API.
 

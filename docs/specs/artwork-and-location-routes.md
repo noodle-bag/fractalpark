@@ -3,6 +3,7 @@
 - Status: Accepted
 - Date: 2026-07-26
 - Target release: FractalPark v0.4.13
+- Extended in: FractalPark v0.4.15
 - Scope: Published artwork, Gallery, local artwork, and future named locations
 
 ## Purpose
@@ -132,7 +133,7 @@ prohibited.
 
 ## Public Route Contract
 
-| Incoming route | v0.4.13 behavior |
+| Incoming route | Behavior |
 |---|---|
 | `/[locale]/gallery` | Canonical, indexable FractalPark Collection |
 | `/[locale]/gallery?view=mine` | Client-selected My Works view; canonical remains the query-free Gallery |
@@ -198,6 +199,13 @@ is:
 <Artwork title> — FractalPark — CC BY 4.0
 ```
 
+For community publications the visible credit uses the frozen author
+attribution snapshot:
+
+```text
+<Artwork title> — <author display name> — CC BY 4.0
+```
+
 The license covers the fractal image layer only. It does not relicense source
 code, prose, UI, the FractalPark logo, or trademarks. Code remains under the
 repository's MIT license.
@@ -216,6 +224,11 @@ Artwork `ImageObject` structured data must match visible content:
 - `license` is `https://creativecommons.org/licenses/by/4.0/`;
 - `contentUrl` is crawlable;
 - branded composites state that CC BY covers only the fractal artwork layer.
+
+Community artwork pages emit `ImageObject` with `creator` as a `Person`
+named by the frozen author attribution snapshot, `creditText` equal to the
+visible community credit, the same CC BY 4.0 `license`, and a crawlable
+`contentUrl`. Hidden and withdrawn pages emit no `ImageObject`.
 
 ## Gallery Information Architecture
 

@@ -151,9 +151,16 @@ fingerprint.
 
 The namespaced provenance model defined here extends to a third source
 type, `publication:<publicationId>`, for remixes of community-published
-works. The same rules apply: the namespace stays inside `sourceId`, the
-value is validated against the real published revision, and frozen values
-are never rewritten. The cloud-side validation and provenance semantics are
-frozen in [Web Creation Loop v1](../specs/web-creation-loop-v1.md); session
-and trust boundaries are decided in
-[ADR 0005](0005-same-origin-cloud-session.md).
+works. This amendment supersedes three body statements: the parser accepts
+one of three known prefixes; validation resolves `publication` IDs against
+the real published revision through the server; and the required tests
+extend to all three source types. All other rules apply unchanged: the
+namespace stays inside `sourceId`, values are immutable once written, and
+frozen values are never rewritten. The cloud-side validation and provenance
+semantics are frozen in
+[Web Creation Loop v1](../specs/web-creation-loop-v1.md); session and trust
+boundaries are decided in [ADR 0005](0005-same-origin-cloud-session.md).
+
+Community Remix activations emit `community_remix_started` instead of
+`start_remix`; the one-click-one-event rule moves to that event on the
+community surface.
