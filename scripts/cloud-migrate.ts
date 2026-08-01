@@ -33,9 +33,13 @@ function parseArgs(argv: string[]): { target: Target; confirm: boolean } {
   let target: Target | null = null;
   let confirm = false;
   for (const arg of argv) {
-    if (arg === '--local') target = 'local';
-    else if (arg === '--linked') target = 'linked';
-    else if (arg === '--confirm') confirm = true;
+    if (arg === '--local' || arg === '--linked') {
+      if (target !== null && target !== arg.slice(2)) {
+        console.error('Specify exactly one target: --local or --linked');
+        process.exit(2);
+      }
+      target = arg.slice(2) as Target;
+    } else if (arg === '--confirm') confirm = true;
     else {
       console.error(`Unknown argument: ${arg}`);
       process.exit(2);
@@ -120,9 +124,17 @@ function main(): void {
   console.log('==> Applying migrations...');
   const upArgs =
     target === 'local'
-      ? ['supabase', 'migration', 'up']
+      ? ['supabase', 'migration', 'up', '--local']
       : ['supabase', 'db', 'push'];
-  execFileSync('npx', upArgs, { stdio: 'inherit' });
+  try {
+    execFileSync('npx', upArgs, { stdio: 'inherit' });
+  } catch {
+    console.error(
+      '==> Migration failed. Fail closed: inspect the output above, recover ' +
+        'the database per the rollback boundary, and re-run explicitly.',
+    );
+    process.exit(1);
+  }
   console.log('==> Done. Record the applied versions in the pull request evidence.');
 }
 

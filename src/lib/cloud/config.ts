@@ -78,8 +78,14 @@ function requireValue(name: string): string {
 }
 
 function parsePort(name: string, raw: string): number {
+  if (!/^\d{1,5}$/.test(raw)) {
+    throw new CloudConfigError(
+      'cloud_config_invalid',
+      `Cloud configuration is invalid: ${name} must be a TCP port number.`,
+    );
+  }
   const port = Number.parseInt(raw, 10);
-  if (!Number.isInteger(port) || port < 1 || port > 65535) {
+  if (port < 1 || port > 65535) {
     throw new CloudConfigError(
       'cloud_config_invalid',
       `Cloud configuration is invalid: ${name} must be a TCP port number.`,
@@ -96,7 +102,16 @@ function parsePort(name: string, raw: string): number {
 export function getSupabaseConfig(): SupabaseConfig {
   requireEnabled();
   const url = requireValue('SUPABASE_URL');
-  if (!/^https:\/\/.+/.test(url)) {
+  let parsed: URL;
+  try {
+    parsed = new URL(url);
+  } catch {
+    throw new CloudConfigError(
+      'cloud_config_invalid',
+      'Cloud configuration is invalid: SUPABASE_URL must be an https URL.',
+    );
+  }
+  if (parsed.protocol !== 'https:' || parsed.hostname === '') {
     throw new CloudConfigError(
       'cloud_config_invalid',
       'Cloud configuration is invalid: SUPABASE_URL must be an https URL.',

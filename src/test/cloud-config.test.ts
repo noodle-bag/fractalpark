@@ -130,6 +130,33 @@ describe('getSupabaseConfig', () => {
     }
   });
 
+  it('rejects malformed and empty-host https URLs', () => {
+    process.env.FRACTALPARK_CREATION_CLOUD_ENABLED = 'true';
+    for (const bad of ['https:// ', 'https://', 'not a url']) {
+      process.env.SUPABASE_URL = bad;
+      try {
+        getSupabaseConfig();
+        expect.unreachable(`should have thrown for ${bad}`);
+      } catch (error) {
+        expect((error as CloudConfigError).code).toBe('cloud_config_invalid');
+      }
+    }
+  });
+
+  it('treats whitespace-only values as missing', () => {
+    process.env.FRACTALPARK_CREATION_CLOUD_ENABLED = 'true';
+    process.env.SUPABASE_URL = '   ';
+    try {
+      getSupabaseConfig();
+      expect.unreachable('should have thrown');
+    } catch (error) {
+      const err = error as CloudConfigError;
+      expect(err.code).toBe('cloud_config_missing');
+      expect(err.message).toContain('SUPABASE_URL');
+      expect(err.message).not.toContain('   "');
+    }
+  });
+
   it('returns the config when the environment is complete', () => {
     enableCompleteCloudEnv();
     const config = getSupabaseConfig();
@@ -193,8 +220,15 @@ describe('getSmtpConfig', () => {
     process.env.FRACTALPARK_SMTP_PASSWORD = 'secret';
     expect(getSmtpConfig().port).toBe(465);
 
-    process.env.FRACTALPARK_SMTP_PORT = 'not-a-port';
-    expect(() => getSmtpConfig()).toThrowError(CloudConfigError);
+    for (const bad of ['not-a-port', '465abc', '465.9', ' 465', '0', '65536']) {
+      process.env.FRACTALPARK_SMTP_PORT = bad;
+      try {
+        getSmtpConfig();
+        expect.unreachable(`should have thrown for ${bad}`);
+      } catch (error) {
+        expect((error as CloudConfigError).code).toBe('cloud_config_invalid');
+      }
+    }
   });
 });
 

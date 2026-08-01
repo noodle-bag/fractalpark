@@ -26,22 +26,15 @@ import { execFileSync } from 'node:child_process';
 import { readdirSync } from 'node:fs';
 import { join } from 'node:path';
 
+import { CLOUD_SERVER_ONLY_VARIABLES } from '../src/lib/cloud/config';
+
 const REQUIRED_WHEN_ENABLED = [
   'SUPABASE_URL',
   'SUPABASE_PUBLISHABLE_KEY',
   'SUPABASE_SERVICE_ROLE_KEY',
   'FRACTALPARK_SESSION_ENCRYPTION_KEY',
   'FRACTALPARK_RATE_LIMIT_HMAC_KEY',
-] as const;
-
-const OPTIONAL_SERVER_ONLY = [
   'CRON_SECRET',
-  'FRACTALPARK_ARTWORK_EMAIL_BACKUP_ENABLED',
-  'FRACTALPARK_SMTP_HOST',
-  'FRACTALPARK_SMTP_PORT',
-  'FRACTALPARK_SMTP_USER',
-  'FRACTALPARK_SMTP_PASSWORD',
-  'SUPABASE_DB_URL',
 ] as const;
 
 function checkEnvContract(): boolean {
@@ -52,16 +45,17 @@ function checkEnvContract(): boolean {
 
   let ok = true;
 
-  const publicLeaks = Object.keys(process.env).filter(
-    (name) =>
-      name.startsWith('NEXT_PUBLIC_') &&
-      /SUPABASE|CREATION_CLOUD|RATE_LIMIT|SESSION_ENCRYPTION|SMTP/i.test(name),
-  );
+  // Leak detection derives from the single source of truth in
+  // src/lib/cloud/config.ts: every server-only cloud variable is forbidden
+  // with a NEXT_PUBLIC_ prefix.
+  const publicLeaks = CLOUD_SERVER_ONLY_VARIABLES.filter(
+    (name) => process.env[`NEXT_PUBLIC_${name}`] !== undefined,
+  ).map((name) => `NEXT_PUBLIC_${name}`);
   if (publicLeaks.length > 0) {
     ok = false;
     for (const name of publicLeaks) {
       console.error(
-        `    FAIL: ${name} looks like a cloud variable with a public prefix. Cloud variables are server-only.`,
+        `    FAIL: ${name} is a cloud variable with a public prefix. Cloud variables are server-only.`,
       );
     }
   }
@@ -80,7 +74,7 @@ function checkEnvContract(): boolean {
     const backupEnabled =
       process.env.FRACTALPARK_ARTWORK_EMAIL_BACKUP_ENABLED === 'true';
     if (backupEnabled) {
-      const smtpMissing = OPTIONAL_SERVER_ONLY.filter(
+      const smtpMissing = CLOUD_SERVER_ONLY_VARIABLES.filter(
         (name) =>
           name.startsWith('FRACTALPARK_SMTP_') &&
           (!process.env[name] || process.env[name]!.trim() === ''),
@@ -91,7 +85,7 @@ function checkEnvContract(): boolean {
       }
     }
   } else {
-    const setCloudVars = [...REQUIRED_WHEN_ENABLED, ...OPTIONAL_SERVER_ONLY].filter(
+    const setCloudVars = CLOUD_SERVER_ONLY_VARIABLES.filter(
       (name) => process.env[name] && process.env[name]!.trim() !== '',
     );
     console.log(
@@ -133,14 +127,31 @@ function checkSchemaParity(target: 'local' | 'linked'): boolean {
       .join('\n'),
   );
 
-  const appliedVersions = new Set(
-    Array.from(out.matchAll(/\b(\d{14})\b/g)).map((m) => m[1]),
-  );
+  // The CLI table merges repo files into the output: the Local column is the
+  // version of every migration FILE, the Remote column is the version
+  // actually APPLIED on the target database (empty when unapplied). Only the
+  // Remote column may count as "applied" — trusting the Local column makes
+  // drift undetectable (verified against CLI 2.111.0).
+  const appliedVersions = new Set<string>();
+  for (const line of out.split('\n')) {
+    const row = line.match(/`([^`]*)`\s*\|\s*`([^`]*)`/);
+    if (!row) continue;
+    const applied = row[2].trim();
+    if (/^\d{14}$/.test(applied)) appliedVersions.add(applied);
+  }
   const missing = repoVersions.filter((v) => !appliedVersions.has(v));
+  const extra = [...appliedVersions].filter((v) => !repoVersions.includes(v));
   if (missing.length > 0) {
     console.error(
       `    FAIL: repo migrations not applied on ${target}: ${missing.join(', ')}. ` +
         'Fail closed: run the migration owner tool instead of letting the app reconcile.',
+    );
+    return false;
+  }
+  if (extra.length > 0) {
+    console.error(
+      `    FAIL: ${target} database has applied migrations with no repo file: ${extra.join(', ')}. ` +
+        'Fail closed: the deployment is older than the schema and must not reconcile.',
     );
     return false;
   }
