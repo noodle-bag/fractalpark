@@ -169,15 +169,17 @@
   }
 }
 
-/* Drift nav entry: static rainbow label.
+/* Static rainbow label shared by playful discovery affordances.
    Solid violet fallback; gradient text only when background-clip: text works.
    Deliberately static (no animation/glow) so it stays readable on Light,
    Dark, and transparent headers without relying on color alone. */
+.rainbow-text,
 .nav-rainbow {
   color: #7c3aed;
 }
 
 @supports ((-webkit-background-clip: text) or (background-clip: text)) {
+  .rainbow-text,
   .nav-rainbow {
     background-image: linear-gradient(
       90deg,

@@ -53,7 +53,7 @@ export function FormulaPanel({
             {t('controls.mode.label')}
           </Label>
           <div className="flex items-center gap-2">
-            <span className="text-xs text-muted-foreground">
+            <span className="rainbow-text text-xs font-semibold">
               {isJulia ? t('controls.mode.julia') : t('controls.mode.mandelbrot')}
             </span>
             <Switch id="julia-mode" checked={isJulia} onCheckedChange={onJuliaModeChange} />

@@ -34,6 +34,33 @@ bailout:
     }
   });
 
+  it('highlights both formula modes without changing the switch semantics', () => {
+    const props = {
+      juliaC: [-0.7, 0.27] as [number, number],
+      currentFormula: 'mandelbrot',
+      currentBounds: { centerX: -0.5, centerY: 0, zoom: 0.4, rotation: 0 },
+      onJuliaModeChange: () => {},
+      onJuliaCChange: () => {},
+      onFormulaChange: () => {},
+      onFormulaParamChange: () => {},
+    };
+    const { rerender } = render(<FormulaPanel {...props} isJulia={false} />);
+
+    expect(screen.getByText('controls.mode.mandelbrot')).toHaveClass(
+      'rainbow-text',
+      'font-semibold'
+    );
+    expect(screen.getByRole('switch')).toHaveAccessibleName('controls.mode.label');
+
+    rerender(<FormulaPanel {...props} isJulia />);
+
+    expect(screen.getByText('controls.mode.julia')).toHaveClass(
+      'rainbow-text',
+      'font-semibold'
+    );
+    expect(screen.getByRole('switch')).toHaveAccessibleName('controls.mode.label');
+  });
+
   it('renders builtin formula sliders from plugin descriptors', () => {
     render(
       <FormulaPanel
