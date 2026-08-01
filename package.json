@@ -18,7 +18,8 @@
     "db:stop": "supabase stop",
     "db:reset": "supabase db reset",
     "db:migrate": "node --import tsx scripts/cloud-migrate.ts",
-    "db:preflight": "node --import tsx scripts/cloud-preflight.ts"
+    "db:preflight": "node --import tsx scripts/cloud-preflight.ts",
+    "db:test": "node --import tsx scripts/cloud-schema-test.ts"
   },
   "dependencies": {
     "@codemirror/commands": "^6.10.2",

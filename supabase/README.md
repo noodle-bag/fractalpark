@@ -25,6 +25,9 @@ npm run db:start       # start the local stack (Docker required)
 npm run db:preflight -- --local   # env contract + schema parity
 npm run db:migrate -- --local --confirm   # apply pending migrations
 npm run db:reset       # replay migrations + seed from scratch
+npm run db:test        # schema/RLS/policy test battery (constraints,
+                       # frozen-field triggers, grants, RPC boundaries,
+                       # counters, cleanup lifecycle, storage posture)
 npm run db:stop        # stop the stack
 ```
 
