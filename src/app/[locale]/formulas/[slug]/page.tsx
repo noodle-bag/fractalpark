@@ -12,6 +12,10 @@ import { notFound } from 'next/navigation';
 import { getTranslations, setRequestLocale } from 'next-intl/server';
 import presetsFile from '../../../../../public/gallery-presets.json';
 import { MathBlock } from '@/components/content/MathBlock';
+import {
+  ContentViewTracker,
+  TrackedContentLink,
+} from '@/components/analytics/ContentAnalytics';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import {
@@ -34,6 +38,7 @@ import {
 import { renderJsonLd } from '@/lib/json-ld';
 import { SITE, buildLocaleAlternates } from '@/lib/site';
 import { splitProseParagraphs } from '@/lib/content-text';
+import { appendRemixSource } from '@/lib/remix-source';
 import { documentToExploreHref } from '@/lib/url-params';
 
 interface FormulaGuidePageProps {
@@ -122,6 +127,10 @@ export default async function FormulaGuidePage({
     locale,
     namespace: 'formulas.guide',
   });
+  const atlasT = await getTranslations({
+    locale,
+    namespace: 'formulas.index',
+  });
   const formulaT = await getTranslations({
     locale,
     namespace: 'explore.controls.formula',
@@ -131,7 +140,11 @@ export default async function FormulaGuidePage({
     namespace: 'explore.formula.family',
   });
   const canonicalDocument = buildFormulaDefaultDocument(entry.formulaId);
-  const exploreHref = documentToExploreHref(canonicalDocument, locale);
+  const exploreHref = appendRemixSource(
+    documentToExploreHref(canonicalDocument, locale),
+    { type: 'formula', id: entry.formulaId }
+  );
+  const editorHref = `/${locale}/formulas/editor`;
   const path = formulaGuidePath(entry);
   const imagePath = formulaGuideImagePath(entry);
   const pageUrl = `${SITE.url}/${locale}${path}`;
@@ -203,6 +216,10 @@ export default async function FormulaGuidePage({
 
   return (
     <main className="pb-24">
+      <ContentViewTracker
+        eventName="view_formula"
+        eventParams={{ formula_id: entry.formulaId, locale }}
+      />
       <script
         dangerouslySetInnerHTML={{ __html: renderJsonLd(jsonLd) }}
         type="application/ld+json"
@@ -240,10 +257,17 @@ export default async function FormulaGuidePage({
                 {t('summary')}
               </p>
               <Button asChild className="mt-8" size="lg">
-                <a href={exploreHref}>
+                <TrackedContentLink
+                  eventName="start_remix"
+                  eventParams={{
+                    source_type: 'formula',
+                    source_id: entry.formulaId,
+                  }}
+                  href={exploreHref}
+                >
                   {guideT('openExplorer')}
                   <ArrowRight aria-hidden />
-                </a>
+                </TrackedContentLink>
               </Button>
             </div>
 
@@ -361,12 +385,30 @@ export default async function FormulaGuidePage({
             <p className="mt-3 max-w-3xl leading-7 text-muted-foreground">
               {guideT('remix.description')}
             </p>
-            <Button asChild className="mt-5">
-              <a href={exploreHref}>
-                {guideT('remix.cta')}
-                <ArrowRight aria-hidden />
-              </a>
-            </Button>
+            <div className="mt-5 flex flex-wrap gap-3">
+              <Button asChild>
+                <TrackedContentLink
+                  eventName="start_remix"
+                  eventParams={{
+                    source_type: 'formula',
+                    source_id: entry.formulaId,
+                  }}
+                  href={exploreHref}
+                >
+                  {guideT('remix.cta')}
+                  <ArrowRight aria-hidden />
+                </TrackedContentLink>
+              </Button>
+              <Button asChild variant="outline">
+                <TrackedContentLink
+                  eventName="open_formula_editor"
+                  eventParams={{ source_page: 'formula', locale }}
+                  href={editorHref}
+                >
+                  {atlasT('frm.openEditor')}
+                </TrackedContentLink>
+              </Button>
+            </div>
           </div>
 
           <div className="mt-8 grid gap-5 md:grid-cols-2 lg:grid-cols-3">
@@ -391,13 +433,18 @@ export default async function FormulaGuidePage({
                       ? artwork.nameZh
                       : artwork.name}
                   </h3>
-                  <Link
+                  <TrackedContentLink
                     className="mt-3 inline-flex items-center gap-1.5 text-sm font-medium text-primary hover:underline"
-                    href={builtinPresetToGalleryHref(artwork.id)}
+                    eventName="open_example"
+                    eventParams={{
+                      formula_id: entry.formulaId,
+                      preset_id: artwork.id,
+                    }}
+                    href={`/${locale}${builtinPresetToGalleryHref(artwork.id)}`}
                   >
                     {guideT('viewArtwork')}
                     <ArrowRight aria-hidden className="size-4" />
-                  </Link>
+                  </TrackedContentLink>
                 </div>
               </article>
             ))}

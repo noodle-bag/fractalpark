@@ -9,6 +9,7 @@ import {
   Sparkles,
 } from 'lucide-react';
 import { getTranslations, setRequestLocale } from 'next-intl/server';
+import { TrackedContentLink } from '@/components/analytics/ContentAnalytics';
 import {
   buildFormulaAtlas,
   type FormulaAtlasGuideEntry,
@@ -250,7 +251,13 @@ export default async function FormulaAtlasPage({
                 className="border-background/30 bg-transparent text-background hover:bg-background/10 hover:text-background"
                 variant="outline"
               >
-                <Link href={FRM_EDITOR_PATH}>{t('frm.openEditor')}</Link>
+                <TrackedContentLink
+                  eventName="open_formula_editor"
+                  eventParams={{ source_page: 'atlas', locale }}
+                  href={`/${locale}${FRM_EDITOR_PATH}`}
+                >
+                  {t('frm.openEditor')}
+                </TrackedContentLink>
               </Button>
             </div>
           </div>
@@ -376,7 +383,13 @@ export default async function FormulaAtlasPage({
               <Link href="/explore">{t('cta.explore')}</Link>
             </Button>
             <Button asChild variant="outline">
-              <Link href={FRM_EDITOR_PATH}>{t('cta.editor')}</Link>
+              <TrackedContentLink
+                eventName="open_formula_editor"
+                eventParams={{ source_page: 'atlas', locale }}
+                href={`/${locale}${FRM_EDITOR_PATH}`}
+              >
+                {t('cta.editor')}
+              </TrackedContentLink>
             </Button>
           </div>
         </section>

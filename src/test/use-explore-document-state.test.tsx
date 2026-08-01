@@ -25,6 +25,39 @@ describe('useExploreDocumentState', () => {
     expect(result.current.runtimeParams.useSSAA).toBe(true);
   });
 
+  it('consumes a valid Remix source without changing decoded render state', () => {
+    const baseline = renderHook(() =>
+      useExploreDocumentState(new URLSearchParams('fm=tricorn&z=4'))
+    );
+    const remixed = renderHook(() =>
+      useExploreDocumentState(
+        new URLSearchParams(
+          'fm=tricorn&z=4&remix=formula%3Atricorn'
+        )
+      )
+    );
+
+    expect(remixed.result.current.runtimeParams).toEqual(
+      baseline.result.current.runtimeParams
+    );
+    expect(remixed.result.current.document.metadata).toMatchObject({
+      source: 'remix',
+      sourceId: 'formula:tricorn',
+    });
+  });
+
+  it('ignores an invalid Remix source for legacy URL compatibility', () => {
+    const { result } = renderHook(() =>
+      useExploreDocumentState(
+        new URLSearchParams('fm=tricorn&remix=formula%3Aunknown')
+      )
+    );
+
+    expect(result.current.document.formula.formulaId).toBe('tricorn');
+    expect(result.current.document.metadata?.source).toBe('shared');
+    expect(result.current.document.metadata?.sourceId).toBeUndefined();
+  });
+
   it('updates document domains and keeps runtime params in sync', () => {
     const { result } = renderHook(() => useExploreDocumentState(new URLSearchParams()));
 

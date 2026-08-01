@@ -30,6 +30,9 @@ describe('Formula Atlas projection', () => {
 
       expect(url.pathname).toBe('/zh/explore');
       expect(decoded.formula ?? 'mandelbrot').toBe(entry.metadata.id);
+      expect(url.searchParams.get('remix')).toBe(
+        `formula:${entry.metadata.id}`
+      );
     }
   });
 

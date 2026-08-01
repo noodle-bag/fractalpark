@@ -3,8 +3,10 @@
 import { Check, Copy, TriangleAlert } from 'lucide-react';
 import { useEffect, useRef, useState } from 'react';
 import { Button } from '@/components/ui/button';
+import { trackEvent } from '@/components/analytics/PageViewTracker';
 
 interface CopyPageLinkButtonProps {
+  presetId: string;
   labels: {
     copy: string;
     copied: string;
@@ -14,7 +16,10 @@ interface CopyPageLinkButtonProps {
 
 type CopyStatus = 'idle' | 'copied' | 'error';
 
-export function CopyPageLinkButton({ labels }: CopyPageLinkButtonProps) {
+export function CopyPageLinkButton({
+  labels,
+  presetId,
+}: CopyPageLinkButtonProps) {
   const [status, setStatus] = useState<CopyStatus>('idle');
   const resetTimer = useRef<number | null>(null);
 
@@ -32,6 +37,7 @@ export function CopyPageLinkButton({ labels }: CopyPageLinkButtonProps) {
         throw new Error('Clipboard API is unavailable');
       }
       await navigator.clipboard.writeText(window.location.href);
+      trackEvent('copy_page_link', { preset_id: presetId });
       setStatus('copied');
     } catch {
       setStatus('error');

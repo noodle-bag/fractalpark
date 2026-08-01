@@ -1,6 +1,10 @@
 import type { Metadata } from 'next';
 import { ArrowRight, CircleAlert, GitBranch, TerminalSquare } from 'lucide-react';
 import { getTranslations, setRequestLocale } from 'next-intl/server';
+import {
+  ContentViewTracker,
+  TrackedContentLink,
+} from '@/components/analytics/ContentAnalytics';
 import { FrmCodeBlock } from '@/components/content/FrmCodeBlock';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
@@ -118,6 +122,10 @@ export default async function FrmGuidePage({
 
   return (
     <main className="mx-auto w-full max-w-6xl px-5 py-16 sm:px-8 sm:py-20 lg:py-24">
+      <ContentViewTracker
+        eventName="view_frm_guide"
+        eventParams={{ locale }}
+      />
       <script
         dangerouslySetInnerHTML={{ __html: renderJsonLd(jsonLd) }}
         type="application/ld+json"
@@ -368,10 +376,18 @@ export default async function FrmGuidePage({
                   <div className="flex flex-wrap items-center gap-2">
                     <Badge variant="secondary">{tutorial.id}</Badge>
                     <Button asChild size="sm" variant="outline">
-                      <Link href={tutorial.editorPath}>
+                      <TrackedContentLink
+                        eventName="open_formula_editor"
+                        eventParams={{
+                          source_page: 'frm_guide',
+                          example_id: tutorial.id,
+                          locale,
+                        }}
+                        href={`/${locale}${tutorial.editorPath}`}
+                      >
                         {t('sections.tutorials.openInEditor')}
                         <ArrowRight className="ml-1 size-3" />
-                      </Link>
+                      </TrackedContentLink>
                     </Button>
                   </div>
                 </div>

@@ -6,6 +6,10 @@ import { getTranslations, setRequestLocale } from 'next-intl/server';
 import presetsFile from '../../../../../public/gallery-presets.json';
 import { ArtworkViewer } from '@/components/artwork/ArtworkViewer';
 import { CopyPageLinkButton } from '@/components/artwork/CopyPageLinkButton';
+import {
+  ContentViewTracker,
+  TrackedContentLink,
+} from '@/components/analytics/ContentAnalytics';
 import { Button } from '@/components/ui/button';
 import {
   PUBLISHED_ARTWORK_PAGES,
@@ -34,6 +38,7 @@ import {
 } from '@/lib/published-artworks';
 import { SITE, buildLocaleAlternates } from '@/lib/site';
 import { documentToExploreHref } from '@/lib/url-params';
+import { appendRemixSource } from '@/lib/remix-source';
 
 const ARTWORK_CREATOR = 'FractalPark';
 const ARTWORK_LICENSE_URL = 'https://creativecommons.org/licenses/by/4.0/';
@@ -165,7 +170,10 @@ export default async function ArtworkPage({ params }: ArtworkPageProps) {
   );
   const paletteKey = palette?.key.split('.').at(-1);
   const paletteName = paletteKey ? paletteT(paletteKey) : pageT('customGradient');
-  const exploreHref = documentToExploreHref(artwork.document, locale);
+  const exploreHref = appendRemixSource(
+    documentToExploreHref(artwork.document, locale),
+    { type: 'preset', id: artwork.presetId }
+  );
   const collection = buildPublishedArtworkCollection(presetsFile, locale);
   const related = artwork.content.relatedPresetIds.map((presetId) => {
     const relatedArtwork = collection.find((item) => item.presetId === presetId);
@@ -222,6 +230,10 @@ export default async function ArtworkPage({ params }: ArtworkPageProps) {
 
   return (
     <main className="pb-24">
+      <ContentViewTracker
+        eventName="view_artwork"
+        eventParams={{ preset_id: artwork.presetId, locale }}
+      />
       <script
         type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: renderJsonLd(jsonLd) }}
@@ -266,12 +278,20 @@ export default async function ArtworkPage({ params }: ArtworkPageProps) {
           </div>
           <div className="mt-8 flex flex-wrap gap-3">
             <Button asChild size="lg">
-              <a href={exploreHref}>
+              <TrackedContentLink
+                eventName="start_remix"
+                eventParams={{
+                  source_type: 'preset',
+                  source_id: artwork.presetId,
+                }}
+                href={exploreHref}
+              >
                 {pageT('remix')}
                 <ArrowRight aria-hidden />
-              </a>
+              </TrackedContentLink>
             </Button>
             <CopyPageLinkButton
+              presetId={artwork.presetId}
               labels={{
                 copy: pageT('copy'),
                 copied: pageT('copied'),
