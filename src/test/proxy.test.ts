@@ -1,6 +1,6 @@
 import { describe, expect, it } from 'vitest';
 import { NextRequest } from 'next/server';
-import proxy from '@/proxy';
+import proxy, { config as proxyConfig } from '@/proxy';
 
 /**
  * Proxy (middleware) tests — legacy entry points migrate to the canonical
@@ -72,5 +72,20 @@ describe('proxy legacy entry redirects', () => {
     // HTML-head alternates own the correct x-default → /en/... mapping.
     const response = proxy(requestFor('https://www.fractalpark.com/en/explore'));
     expect(response.headers.get('link')).toBeNull();
+  });
+
+  it('leaves the cloud session cookie untouched on public routes (ADR 0005)', () => {
+    // Auth refresh lives only inside the Auth/private Route Handlers; the
+    // locale proxy performs no auth work and never rotates session cookies.
+    const request = requestFor('https://www.fractalpark.com/en/explore');
+    request.cookies.set('fp_creation_session', 'sealed-test-value');
+    const response = proxy(request);
+    expect(response.headers.get('set-cookie') ?? '').not.toContain('fp_creation_session');
+  });
+
+  it('never runs on cloud API routes', () => {
+    // Route selection is owned by the matcher; /api is absent by contract so
+    // the locale layer can never intercept, cache, or rewrite Auth traffic.
+    expect(JSON.stringify(proxyConfig.matcher)).not.toContain('api');
   });
 });

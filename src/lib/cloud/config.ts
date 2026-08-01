@@ -111,10 +111,13 @@ export function getSupabaseConfig(): SupabaseConfig {
       'Cloud configuration is invalid: SUPABASE_URL must be an https URL.',
     );
   }
-  if (parsed.protocol !== 'https:' || parsed.hostname === '') {
+  const localHttp =
+    parsed.protocol === 'http:' &&
+    ['localhost', '127.0.0.1', '[::1]'].includes(parsed.hostname.toLowerCase());
+  if ((parsed.protocol !== 'https:' && !localHttp) || parsed.hostname === '') {
     throw new CloudConfigError(
       'cloud_config_invalid',
-      'Cloud configuration is invalid: SUPABASE_URL must be an https URL.',
+      'Cloud configuration is invalid: SUPABASE_URL must be an https URL (http is allowed only for the local development stack).',
     );
   }
   return {

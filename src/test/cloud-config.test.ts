@@ -130,6 +130,23 @@ describe('getSupabaseConfig', () => {
     }
   });
 
+  it('allows http only for the local development stack', () => {
+    process.env.FRACTALPARK_CREATION_CLOUD_ENABLED = 'true';
+    process.env.SUPABASE_PUBLISHABLE_KEY = 'publishable-test-key';
+    process.env.SUPABASE_SERVICE_ROLE_KEY = 'service-role-test-key';
+    for (const url of ['http://localhost:54321', 'http://127.0.0.1:54321', 'http://[::1]:54321']) {
+      process.env.SUPABASE_URL = url;
+      expect(getSupabaseConfig().url).toBe(url);
+    }
+    process.env.SUPABASE_URL = 'http://169.254.169.254:54321';
+    try {
+      getSupabaseConfig();
+      expect.unreachable('should have thrown');
+    } catch (error) {
+      expect((error as CloudConfigError).code).toBe('cloud_config_invalid');
+    }
+  });
+
   it('rejects malformed and empty-host https URLs', () => {
     process.env.FRACTALPARK_CREATION_CLOUD_ENABLED = 'true';
     for (const bad of ['https:// ', 'https://', 'not a url']) {

@@ -43,4 +43,11 @@ enable_signup = true
 enable_signup = true
 double_confirm_changes = true
 enable_confirmations = false
-# Local OTP codes are readable through Inbucket; no SMTP is configured here.
+# Local OTP codes are readable through Mailpit; no SMTP is configured here.
+
+# Passwordless sign-in uses a six-digit code (spec section 3), so the
+# magic-link template renders {{ .Token }} instead of a link. The staging
+# project carries the same template (set through the Management API).
+[auth.email.template.magic_link]
+subject = "Your FractalPark sign-in code"
+content_path = "./supabase/templates/magic-link.html"
