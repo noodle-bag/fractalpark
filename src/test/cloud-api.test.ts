@@ -142,6 +142,19 @@ describe('readJsonBody', () => {
     await expect(readJsonBody(req('/x', { method: 'POST', body: '{"a":1}' }))).rejects.toMatchObject({
       code: 'validation_failed',
     });
+    // Prefix lookalikes are not the auth contract.
+    await expect(
+      readJsonBody(
+        req('/x', { method: 'POST', headers: { 'content-type': 'application/json-patch+json' }, body: '{"a":1}' }),
+      ),
+    ).rejects.toMatchObject({ code: 'validation_failed' });
+  });
+
+  it('accepts a JSON content type with parameters', async () => {
+    const body = await readJsonBody(
+      req('/x', { method: 'POST', headers: { 'content-type': 'application/json; charset=utf-8' }, body: '{"a":1}' }),
+    );
+    expect(body).toEqual({ a: 1 });
   });
 
   it('rejects malformed JSON and non-object payloads', async () => {
@@ -181,14 +194,16 @@ describe('toErrorResponse', () => {
 });
 
 describe('extractClientIp', () => {
-  it('prefers the platform-verified header, then fallbacks, then the shared bucket', () => {
+  it('trusts only the platform-verified header; client-controllable headers fall into the shared bucket', () => {
     expect(
       extractClientIp(
         new Headers({ 'x-vercel-forwarded-for': '1.2.3.4, 5.6.7.8', 'x-forwarded-for': '9.9.9.9' }),
       ),
     ).toBe('1.2.3.4');
-    expect(extractClientIp(new Headers({ 'x-forwarded-for': '9.9.9.9, 8.8.8.8' }))).toBe('9.9.9.9');
-    expect(extractClientIp(new Headers({ 'x-real-ip': '7.7.7.7' }))).toBe('7.7.7.7');
+    // x-forwarded-for / x-real-ip are client-controllable and never trusted:
+    // unsourced requests share the single 'unknown' bucket (spec section 4.5).
+    expect(extractClientIp(new Headers({ 'x-forwarded-for': '9.9.9.9, 8.8.8.8' }))).toBe('unknown');
+    expect(extractClientIp(new Headers({ 'x-real-ip': '7.7.7.7' }))).toBe('unknown');
     expect(extractClientIp(new Headers())).toBe('unknown');
   });
 });

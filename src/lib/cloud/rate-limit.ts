@@ -48,19 +48,18 @@ export function hashRateLimitSubject(subject: string): string {
 }
 
 /**
- * Extract the client IP from platform-verified request headers. On Vercel
- * the platform-populated `x-vercel-forwarded-for` is authoritative; plain
- * `x-forwarded-for` / `x-real-ip` are fallbacks for other hosts. Anything
- * else maps to a single shared bucket ('unknown') so unsourced traffic is
- * still rate limited instead of bypassing it.
+ * Extract the client IP from platform-verified request data only (spec
+ * §4.5): on Vercel that is the platform-populated `x-vercel-forwarded-for`.
+ * Client-controllable headers (`x-forwarded-for`, `x-real-ip`) are never
+ * trusted — trusting them would let a caller mint fresh IPs to bypass the
+ * per-IP window. Unsourced requests (local development, non-Vercel hosts)
+ * share the single 'unknown' bucket so they are still rate limited, never
+ * unlimited; on a non-Vercel host that shared bucket is the documented
+ * fail-closed behavior.
  */
 export function extractClientIp(headers: Headers): string {
   const vercel = headers.get('x-vercel-forwarded-for')?.split(',')[0]?.trim();
   if (vercel) return vercel;
-  const forwarded = headers.get('x-forwarded-for')?.split(',')[0]?.trim();
-  if (forwarded) return forwarded;
-  const real = headers.get('x-real-ip')?.trim();
-  if (real) return real;
   return 'unknown';
 }
 

@@ -17,11 +17,13 @@ import { getSupabaseConfig } from './config';
 
 export class AuthProviderError extends Error {
   readonly status: number;
+  readonly retryAfter?: number;
 
-  constructor(status: number, message: string) {
+  constructor(status: number, message: string, retryAfter?: number) {
     super(message);
     this.name = 'AuthProviderError';
     this.status = status;
+    this.retryAfter = retryAfter;
   }
 }
 
@@ -68,6 +70,13 @@ async function authFetch(
   });
 }
 
+function parseRetryAfter(res: Response): number | undefined {
+  const raw = res.headers.get('retry-after');
+  if (!raw) return undefined;
+  const seconds = Number(raw);
+  return Number.isFinite(seconds) && seconds >= 0 ? Math.ceil(seconds) : undefined;
+}
+
 /**
  * Send a six-digit OTP to the email. GoTrue deliberately answers 200 even
  * for unknown emails when confirmation is required, so this never leaks
@@ -85,7 +94,7 @@ export async function requestEmailOtp(email: string): Promise<void> {
     throw new AuthProviderError(503, 'identity provider unreachable');
   }
   if (!res.ok) {
-    throw new AuthProviderError(res.status, 'identity provider rejected the OTP request');
+    throw new AuthProviderError(res.status, 'identity provider rejected the OTP request', parseRetryAfter(res));
   }
 }
 
@@ -134,18 +143,31 @@ export async function refreshProviderSession(refreshToken: string): Promise<Prov
 }
 
 /**
- * Revoke the provider session (and its refresh token) on logout. Network
- * failures do not block the local cookie clear — the caller still drops the
- * sealed cookie, and the orphaned access token expires on its own.
+ * Revoke the provider session (and its refresh token) on logout. The access
+ * token may already be expired, in which case GoTrue rejects the logout and
+ * the refresh token would stay alive — so on a non-OK response the refresh
+ * token is burned through a refresh exchange (rotation invalidates it; the
+ * new pair is discarded). Network failures do not block the local cookie
+ * clear: the caller still drops the sealed cookie, and an orphaned access
+ * token expires on its own.
  */
-export async function revokeProviderSession(accessToken: string): Promise<void> {
+export async function revokeProviderSession(accessToken: string, refreshToken?: string): Promise<void> {
   try {
-    await authFetch('/logout', {
+    const res = await authFetch('/logout', {
       method: 'POST',
       headers: { authorization: `Bearer ${accessToken}` },
       body: JSON.stringify({ scope: 'global' }),
     });
+    if (res.ok) return;
   } catch {
-    // Best effort by contract: local cookie clear is the security boundary.
+    // Network failure: local cookie clear is the security boundary.
+    return;
+  }
+  if (refreshToken) {
+    try {
+      await refreshProviderSession(refreshToken);
+    } catch {
+      // Already dead at the provider — the desired end state.
+    }
   }
 }

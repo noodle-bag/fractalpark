@@ -52,7 +52,7 @@ export async function POST(request: Request): Promise<Response> {
     return jsonOk(request, { ok: true });
   } catch (error) {
     if (error instanceof AuthProviderError && error.status === 429) {
-      return jsonError(request, 'rate_limited');
+      return jsonError(request, 'rate_limited', error.retryAfter);
     }
     return toErrorResponse(request, error);
   }

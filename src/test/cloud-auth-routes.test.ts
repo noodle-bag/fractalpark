@@ -193,15 +193,19 @@ describe('POST /api/creation/auth/otp/request', () => {
     expect(fetchCalls).toHaveLength(0);
   });
 
-  it('maps a provider 429 to the generic rate_limited and other failures to 503', async () => {
+  it('maps a provider 429 to the generic rate_limited, passing through Retry-After', async () => {
     stubFetch((call) => {
       if (call.url.includes('fractalpark_rate_limit_consume')) {
         return new Response(JSON.stringify([{ allowed: true, retry_after: 0 }]), { status: 200 });
       }
-      return new Response('slow down', { status: 429 });
+      return new Response('slow down', { status: 429, headers: { 'retry-after': '30' } });
     });
     const limited = await otpRequestPOST(postJson('/api/creation/auth/otp/request', { email: 'a@b.co' }));
     expect(limited.status).toBe(429);
+    expect(limited.headers.get('retry-after')).toBe('30');
+    const body = (await limited.json()) as { error: { code: string; retryAfter: number } };
+    expect(body.error.code).toBe('rate_limited');
+    expect(body.error.retryAfter).toBe(30);
 
     stubFetch((call) => {
       if (call.url.includes('fractalpark_rate_limit_consume')) {
@@ -410,6 +414,33 @@ describe('POST /api/creation/auth/logout', () => {
     expect(fetchCalls).toHaveLength(1);
     expect(fetchCalls[0].url).toBe(`${SUPABASE_URL}/auth/v1/logout`);
     expect(fetchCalls[0].authorization).toBe('Bearer AT-1');
+    // A successful revoke needs no refresh-token burn.
+    expect(fetchCalls.some((c) => c.url.includes('grant_type=refresh_token'))).toBe(false);
+  });
+
+  it('burns the refresh token when the provider rejects the access-token revoke', async () => {
+    // The access token may already be expired at logout: GoTrue then
+    // rejects /logout, and the refresh token is destroyed through a
+    // refresh exchange instead (rotation invalidates it; the pair is
+    // discarded) so no zombie session survives logout.
+    stubFetch((call) => {
+      if (call.url === `${SUPABASE_URL}/auth/v1/logout`) {
+        return new Response(JSON.stringify({ error: 'invalid token' }), { status: 403 });
+      }
+      if (call.url.includes('grant_type=refresh_token')) {
+        return new Response(JSON.stringify(providerSession('user-1', 'AT-X', 'RT-X')), { status: 200 });
+      }
+      return new Response('unmatched', { status: 500 });
+    });
+    const res = await logoutPOST(
+      postJson('/api/creation/auth/logout', {}, { cookie: cookieHeader(sessionPayload()) }),
+    );
+    expect(res.status).toBe(204);
+    expect(res.headers.get('set-cookie')).toContain('Max-Age=0');
+    expect(fetchCalls).toHaveLength(2);
+    expect(fetchCalls[0].url).toBe(`${SUPABASE_URL}/auth/v1/logout`);
+    expect(fetchCalls[1].url).toContain('grant_type=refresh_token');
+    expect((fetchCalls[1].body as { refresh_token: string }).refresh_token).toBe('RT-1');
   });
 
   it('is idempotent: a missing cookie still answers 204 with a clearing cookie', async () => {

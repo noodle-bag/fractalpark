@@ -186,8 +186,10 @@ export const AUTH_BODY_LIMIT_BYTES = 16 * 1024;
  * malformed JSON, and non-object payloads all map to stable product errors.
  */
 export async function readJsonBody(request: Request, limitBytes = AUTH_BODY_LIMIT_BYTES): Promise<Record<string, unknown>> {
-  const contentType = request.headers.get('content-type') ?? '';
-  if (!contentType.toLowerCase().startsWith('application/json')) {
+  // Exact media type (parameters allowed), not a prefix: json-patch+json
+  // and friends are not the auth contract.
+  const contentType = (request.headers.get('content-type') ?? '').split(';')[0]?.trim().toLowerCase() ?? '';
+  if (contentType !== 'application/json') {
     throw new CloudApiError('validation_failed');
   }
   const declared = Number(request.headers.get('content-length') ?? '0');
@@ -195,7 +197,7 @@ export async function readJsonBody(request: Request, limitBytes = AUTH_BODY_LIMI
     throw new CloudApiError('payload_too_large');
   }
   const text = await request.text();
-  if (text.length > limitBytes) {
+  if (Buffer.byteLength(text, 'utf8') > limitBytes) {
     throw new CloudApiError('payload_too_large');
   }
   let parsed: unknown;

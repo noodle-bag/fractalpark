@@ -33,7 +33,7 @@ export async function POST(request: Request): Promise<Response> {
     if (raw) {
       try {
         const session = unsealSession(raw);
-        await revokeProviderSession(session.accessToken);
+        await revokeProviderSession(session.accessToken, session.refreshToken);
       } catch (error) {
         if (!(error instanceof SessionSealError)) {
           throw error;

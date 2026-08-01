@@ -18,7 +18,7 @@
  * This module performs no work at import time and never logs secret values.
  */
 
-import { createCipheriv, createDecipheriv, createHash, randomBytes, timingSafeEqual } from 'node:crypto';
+import { createCipheriv, createDecipheriv, createHash, randomBytes } from 'node:crypto';
 
 import { getSessionEncryptionKey } from './config';
 
@@ -156,15 +156,4 @@ export function serializeSessionCookie(value: string, options: CookieOptions): s
 /** Serialize a clearing cookie (logout / failed refresh / tamper recovery). */
 export function serializeSessionClearCookie(host: string): string {
   return serializeSessionCookie('', { host, maxAgeSeconds: 0 });
-}
-
-/**
- * Constant-time comparison for cookie rotation tests and replay checks:
- * two sealed values for the same payload still differ (random IV), so this
- * is only used to detect exact-value replay, never payload equality.
- */
-export function sealedValuesEqual(a: string, b: string): boolean {
-  const ba = Buffer.from(a);
-  const bb = Buffer.from(b);
-  return ba.length === bb.length && timingSafeEqual(ba, bb);
 }

@@ -88,7 +88,11 @@ export async function resolveRequestSession(
   } catch (error) {
     if (error instanceof AuthProviderError && error.status >= 400 && error.status < 500) {
       // Refresh token expired, rotated away, or revoked: the session is
-      // dead; the caller clears the cookie.
+      // dead; the caller clears the cookie. Note: two concurrent requests
+      // racing one refresh token make the loser land here — the provider's
+      // refresh-token reuse interval (10s on local and staging) absorbs
+      // legitimate multi-tab races; a rejection beyond that window is a
+      // real replay/dead session and stays fail-closed.
       throw new CloudApiError('unauthenticated');
     }
     throw new CloudApiError('unavailable');
