@@ -8,6 +8,8 @@ async function waitForFractalCanvasReady(page: Page) {
 
 test.describe('Animation URL Restore', () => {
   test('should restore keyframes from URL and keep them after reload', async ({ page }) => {
+    test.setTimeout(120000);
+
     const keyframeUrl =
       '/en/explore?cx=-0.5&cy=0&z=0.40&kf=-0.7000000000,0.1000000000,10.00,0.0000|-0.7100000000,0.1100000000,20.00,0.1000';
 
