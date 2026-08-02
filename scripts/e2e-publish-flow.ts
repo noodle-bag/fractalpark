@@ -4,6 +4,7 @@
  * publish (replay) -> publications list -> withdraw -> tombstone.
  * Run: node --import tsx scripts/e2e-publish-flow.ts
  */
+export {};
 
 const BASE = 'http://localhost:3100';
 const MAILPIT = 'http://127.0.0.1:54324';
@@ -168,7 +169,40 @@ async function main(): Promise<void> {
   assert(!!mine && mine.status === 'published', 'publication listed as published');
   assert(mine?.license === 'CC-BY-4.0' && mine.authorDisplayName === 'E2E Publisher', 'frozen license + attribution snapshot');
 
-  // 6. Withdraw leaves the minimal tombstone
+  // 6. Community public reads: anonymous, no-store, published only
+  const communityList = await fetch(`${BASE}/api/creation/community`);
+  const communityBody = (await communityList.json()) as { items: { id: string }[]; nextCursor: string | null };
+  assert(communityList.status === 200, `community list ${communityList.status}`);
+  assert(communityList.headers.get('cache-control')?.includes('no-store') ?? false, 'community list is no-store');
+  assert(communityBody.items.some((item) => item.id === publicationId), 'published work appears in the community list');
+
+  const communityDetail = await fetch(`${BASE}/api/creation/publications/${publicationId}`);
+  const detailBody = (await communityDetail.json()) as { envelope?: unknown; authorDisplayName?: string };
+  assert(communityDetail.status === 200 && !!detailBody.envelope, 'community detail carries the frozen envelope');
+  assert(communityDetail.headers.get('cache-control')?.includes('no-store') ?? false, 'community detail is no-store');
+
+  // 7. Remix from the community detail into a new draft with publication provenance
+  const remixRes = await api('/api/creation/drafts', cookie, {
+    method: 'POST',
+    headers: { 'idempotency-key': crypto.randomUUID() },
+    body: JSON.stringify({
+      envelope: detailBody.envelope,
+      remixSourceType: 'publication',
+      remixSourceId: publicationId,
+    }),
+  });
+  const remixBody = (await remixRes.json()) as { draftId?: string };
+  assert(remixRes.status === 201 && typeof remixBody.draftId === 'string', `remix draft created ${remixRes.status}`);
+  const remixDraft = (await (
+    await api(`/api/creation/drafts/${remixBody.draftId}`, cookie)
+  ).json()) as { draft?: { remixSource?: { type: string; id: string } | null } };
+  assert(
+    remixDraft.draft?.remixSource?.type === 'publication' &&
+      remixDraft.draft.remixSource.id === publicationId,
+    'remix provenance recorded as the source publication',
+  );
+
+  // 8. Withdraw leaves the minimal tombstone and the public reads 404
   const withdraw = await api(`/api/creation/publications/${publicationId}/withdraw`, cookie, {
     method: 'POST',
     headers: { 'idempotency-key': crypto.randomUUID() },
@@ -180,6 +214,12 @@ async function main(): Promise<void> {
   };
   const tomb = pubsAfter.publications.find((p) => p.id === publicationId);
   assert(tomb?.status === 'withdrawn' && tomb.description === null, 'tombstone: withdrawn, description cleared');
+
+  const goneDetail = await fetch(`${BASE}/api/creation/publications/${publicationId}`);
+  assert(goneDetail.status === 404, 'withdrawn work 404s on the public detail');
+  const goneList = await fetch(`${BASE}/api/creation/community`);
+  const goneBody = (await goneList.json()) as { items: { id: string }[] };
+  assert(!goneBody.items.some((item) => item.id === publicationId), 'withdrawn work leaves the community list');
 
   console.log(`\n${passed} passed, ${failed} failed`);
   if (failed > 0) process.exit(1);

@@ -278,6 +278,7 @@ FractalPark Route Handlers.
 | GET/POST | `/api/creation/drafts` | Owner draft list / create |
 | GET/PATCH/DELETE | `/api/creation/drafts/[draftId]` | Owner read, optimistic-concurrency update, delete |
 | POST | `/api/creation/drafts/[draftId]/publish` | Create an immutable publication from a stated revision |
+| GET | `/api/creation/publications` | Owner publication list with lifecycle states |
 | GET | `/api/creation/community` | Stable-cursor list of `published` works |
 | GET | `/api/creation/publications/[publicationId]` | Published detail, download, and remix input |
 | POST | `/api/creation/publications/[publicationId]/withdraw` | Permanent owner withdrawal |
@@ -517,14 +518,21 @@ The local recovery record is `StoredArtworkRecordV2`:
 
 ```ts
 interface StoredArtworkRecordV2 {
-  cloudDraftId: string | null;
-  cloudRevision: number | null;
-  cloudPublicationId: string | null;
-  lastCloudSavedAt: number | null;
-  sourcePublicationId: string | null;
+  recordVersion: 2;
+  cloud: {
+    draftId: string;
+    revision: number;
+    syncedAt: number; // local epoch ms of the last successful sync
+  } | null;
   // ...existing local artwork fields
 }
 ```
+
+The nested `cloud` binding is the implemented form of the earlier flat
+sketch (`cloudDraftId`/`cloudRevision`/`cloudPublicationId`); semantics are
+unchanged. A publication link is not stored on the local record: after a
+successful Publish the source draft is gone and the binding is cleared, so
+the record returns to the plain local state.
 
 - Legacy and v1 records keep reading. New writes write v2 only. No
   background rewrite of older records.
@@ -532,13 +540,13 @@ interface StoredArtworkRecordV2 {
   de-duplicate through the stable binding. First cloud save, repeat Save,
   save-as, conflict fork, Continue editing, and Remix are distinct tested
   paths; cloud deletion never deletes the local copy.
-- After a successful Publish, the local record clears
-  `cloudDraftId`/`cloudRevision` and writes `cloudPublicationId`; that record
-  now represents the published snapshot and never overwrites the
-  publication again.
+- After a successful Publish, the local record clears the whole `cloud`
+  binding; that record now stands for the published snapshot lineage and
+  never overwrites the publication again.
 - Continue editing, saving from a Published work, and another user's Remix
-  all fork a new local v2 ID bound through `sourcePublicationId`; an
-  explicit Save then assigns a new `cloudDraftId`.
+  all fork a new local v2 ID whose cloud provenance travels through the
+  new draft's `remix_source` (type `publication`); an explicit Save then
+  assigns a new binding.
 - The database never treats a browser-local artwork ID as an authorization
   fact; every cloud read/write re-checks the owner session.
 

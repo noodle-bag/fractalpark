@@ -5,6 +5,7 @@ import { useLocale, useTranslations } from 'next-intl';
 import { Plus } from 'lucide-react';
 import { LocalArtworkCard, PublishedArtworkCard } from './GalleryCard';
 import { MyWorksCloud } from './MyWorksCloud';
+import { CommunityGrid } from './CommunityGrid';
 import {
   artworkPagePath,
   isPublishedArtworkPagePresetId,
@@ -16,7 +17,7 @@ import { savedFractalToHref } from '@/lib/url-params';
 import { trackEvent } from '@/components/analytics/PageViewTracker';
 import { cn } from '@/lib/utils';
 
-type GalleryView = 'collection' | 'mine';
+type GalleryView = 'collection' | 'mine' | 'community';
 
 interface GalleryPageClientProps {
   artworks: PublishedArtwork[];
@@ -31,13 +32,18 @@ export default function GalleryPageClient({
   const t = useTranslations('gallery');
   const { artworks: localArtworks, remove, rename } = useArtworks();
   const isCollection = initialView === 'collection';
+  const isCommunity = initialView === 'community';
 
   return (
     <main className="pb-10">
       <header className="px-4 pb-6 pt-8 sm:px-6 xl:px-8">
         <h1 className="text-3xl font-semibold tracking-tight">{t('title')}</h1>
         <p className="mt-2 max-w-2xl text-muted-foreground">
-          {isCollection ? t('collection.description') : t('mine.description')}
+          {isCollection
+            ? t('collection.description')
+            : isCommunity
+              ? t('community.description')
+              : t('mine.description')}
         </p>
 
         <nav className="mt-6 flex gap-2" aria-label={t('viewsLabel')}>
@@ -48,7 +54,13 @@ export default function GalleryPageClient({
             {t('collection.title')}
           </GalleryViewLink>
           <GalleryViewLink
-            active={!isCollection}
+            active={isCommunity}
+            href={`/${locale}/gallery?view=community`}
+          >
+            {t('community.title')}
+          </GalleryViewLink>
+          <GalleryViewLink
+            active={!isCollection && !isCommunity}
             href={`/${locale}/gallery?view=mine`}
           >
             {t('mine.title')}
@@ -56,7 +68,9 @@ export default function GalleryPageClient({
         </nav>
       </header>
 
-      {isCollection ? (
+      {isCommunity ? (
+        <CommunityGrid />
+      ) : isCollection ? (
         <ArtworkGrid>
           {artworks.map((artwork) => (
             <PublishedArtworkCard

@@ -73,6 +73,31 @@
         "offline": "You appear to be offline.",
         "generic": "Publishing failed. Nothing was published; the draft is still yours."
       }
+    },
+    "community": {
+      "backToCommunity": "← Community",
+      "byline": "by {author} · {date}",
+      "thumbnailPending": "Artwork image coming from the server render pipeline",
+      "licenseLabel": "License:",
+      "licenseValue": "The fractal image layer is under",
+      "sourceLabel": "Source:",
+      "sourcePublication": "Remixed from another community artwork",
+      "sourcePreset": "Remixed from the FractalPark Collection ({id})",
+      "sourceFormula": "Remixed from formula {id}",
+      "remix": "Remix",
+      "remixing": "Remixing…",
+      "signInToSyncRemix": "Sign in to keep remixes in the cloud",
+      "copyLink": "Copy link",
+      "copied": "Copied",
+      "reportPrefix": "Something wrong with this artwork? Report or takedown:",
+      "loadMore": "Load more",
+      "loading": "Loading…",
+      "emptyTitle": "Nothing here yet",
+      "emptyDescription": "Published artworks will show up here. Yours could be the first.",
+      "errors": {
+        "generic": "That did not work. Try again.",
+        "loadFailed": "The community list could not be loaded. Try again in a moment."
+      }
     }
   },
   "common": {
@@ -99,6 +124,10 @@
     "collection": {
       "title": "FractalPark Collection",
       "description": "Explore the complete collection of published FractalPark artworks."
+    },
+    "community": {
+      "title": "Community",
+      "description": "Artworks published by creators under CC BY 4.0. Open one to remix it into your own draft."
     },
     "mine": {
       "title": "My Works",

@@ -117,9 +117,14 @@ export function buildSoftwareApplicationJsonLd(
 
 /**
  * Helper: serialize a JSON-LD object for use inside <script type="application/ld+json">.
- * JSON.stringify with the default replacer is safe here because the schema
- * contains no user-controlled strings.
+ * Angle brackets and ampersands become JSON unicode escapes, so embedded
+ * user-controlled strings — community titles, descriptions, author display
+ * names — can never break out of the script element. Semantically
+ * identical JSON.
  */
 export function renderJsonLd(data: object): string {
-  return JSON.stringify(data);
+  return JSON.stringify(data)
+    .replace(/</g, '\\u003c')
+    .replace(/>/g, '\\u003e')
+    .replace(/&/g, '\\u0026');
 }

@@ -73,6 +73,31 @@
         "offline": "网络好像断了。",
         "generic": "发布失败，什么都没有发布出去，草稿还是你的。"
       }
+    },
+    "community": {
+      "backToCommunity": "← 社区",
+      "byline": "{author} · {date}",
+      "thumbnailPending": "作品图像将由服务端渲染管线生成",
+      "licenseLabel": "许可：",
+      "licenseValue": "分形图像层基于",
+      "sourceLabel": "来源：",
+      "sourcePublication": "二创自另一件社区作品",
+      "sourcePreset": "二创自 FractalPark 收藏（{id}）",
+      "sourceFormula": "二创自公式 {id}",
+      "remix": "二创",
+      "remixing": "二创中…",
+      "signInToSyncRemix": "登录后二创会存进云端",
+      "copyLink": "复制链接",
+      "copied": "已复制",
+      "reportPrefix": "这件作品有问题？举报或下架请联系：",
+      "loadMore": "加载更多",
+      "loading": "加载中…",
+      "emptyTitle": "这里还空着",
+      "emptyDescription": "发布的作品会出现在这里。你的可以是第一件。",
+      "errors": {
+        "generic": "没成功，再试一次。",
+        "loadFailed": "社区列表加载失败，稍后再试。"
+      }
     }
   },
   "common": {
@@ -99,6 +124,10 @@
     "collection": {
       "title": "FractalPark 作品集",
       "description": "浏览 FractalPark 已发布的完整作品集。"
+    },
+    "community": {
+      "title": "社区",
+      "description": "创作者们以 CC BY 4.0 发布的作品。打开一件，把它二创成你自己的草稿。"
     },
     "mine": {
       "title": "我的作品",

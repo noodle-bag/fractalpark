@@ -18,7 +18,7 @@ export default async function GalleryPage({
   return (
     <GalleryPageClient
       artworks={artworks}
-      initialView={view === 'mine' ? 'mine' : 'collection'}
+      initialView={view === 'mine' ? 'mine' : view === 'community' ? 'community' : 'collection'}
     />
   );
 }

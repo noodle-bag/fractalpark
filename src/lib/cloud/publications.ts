@@ -123,6 +123,9 @@ export async function getProfile(ownerId: string): Promise<ProfileDto> {
 }
 
 const CONTROL_PATTERN = /[\u0000-\u001f\u007f-\u009f\u200b\u200e\u200f\u061c\u202a-\u202e\u2066-\u2069]/;
+/** Descriptions may span lines; every other control character stays banned. */
+const DESCRIPTION_CONTROL_PATTERN =
+  /[\u0000-\u0009\u000b-\u001f\u007f-\u009f\u200b\u200e\u200f\u061c\u202a-\u202e\u2066-\u2069]/;
 
 /** Validate and persist the display name (1–40 plain-text characters). */
 export async function setDisplayName(ownerId: string, displayName: string): Promise<ProfileDto> {
@@ -249,7 +252,7 @@ export function validatePublicationText(title: string, description: string): boo
     t.length <= PUBLISH_TITLE_MAX &&
     d.length <= PUBLISH_DESCRIPTION_MAX &&
     !CONTROL_PATTERN.test(t) &&
-    !CONTROL_PATTERN.test(d)
+    !DESCRIPTION_CONTROL_PATTERN.test(d)
   );
 }
 

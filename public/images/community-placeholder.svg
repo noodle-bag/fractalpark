@@ -1,0 +1,11 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="800" height="600" viewBox="0 0 800 600" role="img" aria-label="FractalPark community artwork placeholder">
+  <rect width="800" height="600" fill="#0b1020"/>
+  <g fill="none" stroke="#3b82f6" stroke-opacity="0.55" stroke-width="1.5">
+    <circle cx="400" cy="300" r="180"/>
+    <circle cx="400" cy="300" r="135"/>
+    <circle cx="400" cy="300" r="95"/>
+    <circle cx="400" cy="300" r="60"/>
+    <path d="M400 120 L400 480 M220 300 L580 300 M273 173 L527 427 M273 427 L527 173" stroke-opacity="0.3"/>
+  </g>
+  <text x="400" y="552" text-anchor="middle" font-family="ui-sans-serif, system-ui, sans-serif" font-size="22" fill="#94a3b8">FractalPark Community</text>
+</svg>

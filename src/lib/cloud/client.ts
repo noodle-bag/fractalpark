@@ -289,3 +289,40 @@ export async function withdrawPublication(publicationId: string): Promise<Withdr
     body: JSON.stringify({}),
   });
 }
+
+// ---------------------------------------------------------------------------
+// Community (anonymous public reads, no-store)
+// ---------------------------------------------------------------------------
+
+export interface CommunityListItem {
+  id: string;
+  title: string;
+  description: string | null;
+  authorDisplayName: string;
+  license: string;
+  licenseScope: string;
+  thumbnailStatus: 'pending' | 'ready' | 'failed';
+  remixSource: { type: string; id: string } | null;
+  publishedAt: string;
+}
+
+export interface CommunityPage {
+  items: CommunityListItem[];
+  nextCursor: string | null;
+}
+
+export async function listCommunity(cursor?: string, limit?: number): Promise<CommunityPage> {
+  const params = new URLSearchParams();
+  if (cursor) params.set('cursor', cursor);
+  if (limit) params.set('limit', String(limit));
+  const query = params.toString();
+  return call<CommunityPage>(`/api/creation/community${query ? `?${query}` : ''}`);
+}
+
+export interface CommunityDetail extends CommunityListItem {
+  envelope: unknown;
+}
+
+export async function getCommunityPublication(publicationId: string): Promise<CommunityDetail> {
+  return call<CommunityDetail>(`/api/creation/publications/${publicationId}`);
+}

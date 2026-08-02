@@ -70,3 +70,15 @@ describe('WebSite JSON-LD', () => {
     expect(websiteJsonLd.inLanguage).toEqual(['en', 'zh-CN']);
   });
 });
+
+describe('renderJsonLd UGC safety', () => {
+  it('neutralizes script breakout and markup in user-controlled strings', () => {
+    const hostile = '</script><script>alert(1)</script><em>markup</em>&"quoted"';
+    const rendered = renderJsonLd({ name: hostile });
+    expect(rendered).not.toContain('</script>');
+    expect(rendered).not.toContain('<em>');
+    expect(rendered).not.toContain('<');
+    // The escapes are semantically identical JSON once parsed.
+    expect(JSON.parse(rendered)).toEqual({ name: hostile });
+  });
+});

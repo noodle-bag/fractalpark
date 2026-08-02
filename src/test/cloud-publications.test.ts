@@ -56,7 +56,8 @@ describe('publication attestation + metadata contracts', () => {
   it('rejects control characters and bidi overrides in public metadata', () => {
     expect(validatePublicationText('bad\ntitle', '')).toBe(false);
     expect(validatePublicationText('ok', 'has\ttab')).toBe(false);
+    expect(validatePublicationText('ok', 'line one\nline two')).toBe(true);
     expect(validatePublicationText('spoof\u202efty', '')).toBe(false);
-    expect(validatePublicationText('ok', 'zero\u200bwidth'.replace('\u200b', ''))).toBe(true);
+    expect(validatePublicationText('ok', 'zero\u200bwidth')).toBe(false);
   });
 });
