@@ -3,14 +3,15 @@
 - Status: Accepted
 - Date: 2026-07-26
 - Target release: FractalPark v0.4.13
+- Extended in: FractalPark v0.4.15
 - Scope: FractalPark first-party product analytics
 
 ## Purpose
 
 This schema registers existing events and freezes the v0.4.13 Formula Atlas,
-FRM, artwork, and Remix events. It preserves the page-view correction
-introduced before v0.4.13: query-only Explore state changes are not page
-views.
+FRM, artwork, and Remix events, plus the v0.4.15 web-creation-loop events.
+It preserves the page-view correction introduced before v0.4.13: query-only
+Explore state changes are not page views.
 
 This document defines event meaning, properties, trigger timing, lifecycle,
 and deduplication. Analytics never owns product state or provenance.
@@ -89,7 +90,9 @@ Sent from the user's Remix activation before navigation.
 
 `source_type` must agree with the authoritative source that resolves
 `source_id`. This click event does not replace
-[Remix provenance metadata](../adr/0004-remix-source-metadata.md).
+[Remix provenance metadata](../adr/0004-remix-source-metadata.md). Community
+artwork Remix activations do not emit this event; they emit
+`community_remix_started` (v0.4.15).
 
 ### `open_formula_editor`
 
@@ -126,6 +129,39 @@ artwork example.
 
 FRM tutorial selection is represented by `open_formula_editor` with
 `example_id`, not by this event.
+
+## v0.4.15 Web Creation Loop Events
+
+These events fire only while the cloud feature is enabled for the
+environment. They never carry emails, IPs, cookies, tokens, envelopes,
+attachments, draft titles, or cloud record IDs. `community_artwork_viewed`
+and `community_remix_started` use the public `publication_id`, which plays
+the same role as the published `preset_id`.
+
+| Event | Trigger | Properties |
+|---|---|---|
+| `auth_otp_requested` | Same-origin OTP request accepted for sending | `locale` |
+| `auth_otp_verified` | OTP verified and session established | `locale` |
+| `cloud_draft_saved` | Cloud draft save succeeded | `is_first_save` |
+| `cloud_draft_conflict` | Save rejected by `revision_conflict` | — |
+| `artwork_published` | Publication created | — |
+| `community_artwork_viewed` | Community artwork page hydrated | `publication_id`, `locale` |
+| `community_remix_started` | Remix activated on a community artwork | `publication_id` |
+| `publication_withdrawn` | Owner withdrawal completed | — |
+| `account_deletion_started` | Step-up confirmed and deletion operation created | — |
+| `backup_email_result` | An operation reaches its final backup-email state | `status`: `sent`, `failed`, `unknown`, or `skipped_rate_limit` |
+
+`backup_email_result` fires once per operation at its final state: a
+`failed` attempt retried into `sent` within the same operation emits only
+the closing `sent`.
+
+A community Remix activation emits `community_remix_started` only; it never
+emits `start_remix`, which remains scoped to `formula` and `preset`
+sources.
+
+Content-view deduplication follows the same Strict Mode guard as the v0.4.13
+content events. Operation events fire once per completed server operation;
+retries and idempotent replays do not re-emit.
 
 ## Deduplication
 
@@ -202,6 +238,13 @@ joined by `formula_id`/`source_id`; artwork conversion is joined by
 `preset_id`/`source_id`. Analytics reports do not write back into application
 state.
 
+The v0.4.15 creation-loop funnel is:
+
+```text
+auth_otp_requested -> auth_otp_verified -> cloud_draft_saved
+  -> artwork_published -> community_artwork_viewed -> community_remix_started
+```
+
 ## Verification
 
 Automated or browser tests must prove:
@@ -215,4 +258,8 @@ Automated or browser tests must prove:
 - removed Gallery star and fullscreen UI no longer sends deprecated events;
 - analytics unavailability does not change the user-visible action result;
 - no new payload contains source code, a render-state query, or local
-  identifiers.
+  identifiers;
+- no v0.4.15 payload contains an email, IP, cookie, token, envelope,
+  attachment, private draft title, or cloud record ID other than the public
+  `publication_id`;
+- cloud events are inert while the feature switch is off.

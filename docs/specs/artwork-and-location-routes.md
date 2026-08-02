@@ -3,6 +3,7 @@
 - Status: Accepted
 - Date: 2026-07-26
 - Target release: FractalPark v0.4.13
+- Extended in: FractalPark v0.4.15
 - Scope: Published artwork, Gallery, local artwork, and future named locations
 
 ## Purpose
@@ -132,13 +133,14 @@ prohibited.
 
 ## Public Route Contract
 
-| Incoming route | v0.4.13 behavior |
+| Incoming route | Behavior |
 |---|---|
 | `/[locale]/gallery` | Canonical, indexable FractalPark Collection |
 | `/[locale]/gallery?view=mine` | Client-selected My Works view; canonical remains the query-free Gallery |
 | `/[locale]/gallery/[canonical-slug]` | Canonical, indexable artwork page |
 | `/[locale]/gallery/[presetId]` | Permanent redirect to the same-locale canonical artwork slug |
 | `/gallery/[presetId]` | Permanent redirect to `/en/gallery/[canonical-slug]` |
+| `/[locale]/gallery/community/[publicationId]` | v0.4.15 community artwork page; `noindex, follow`, excluded from sitemap and IndexNow |
 | unknown preset ID or artwork slug | Not found; never redirect to Explore or a different artwork |
 
 The two locales share the same ASCII slug. A title correction does not change
@@ -197,9 +199,23 @@ is:
 <Artwork title> — FractalPark — CC BY 4.0
 ```
 
+For community publications the visible credit uses the frozen author
+attribution snapshot:
+
+```text
+<Artwork title> — <author display name> — CC BY 4.0
+```
+
 The license covers the fractal image layer only. It does not relicense source
 code, prose, UI, the FractalPark logo, or trademarks. Code remains under the
 repository's MIT license.
+
+Community publications carry the same image-layer CC BY 4.0 with the frozen
+author attribution snapshot instead of the collection creator constant, and
+their pages add a Report/Takedown mail entry to `contact@fractalpark.com`.
+Withdrawal stops discovery and new remixes without revoking rights already
+granted; the lifecycle contract is defined in
+[Web Creation Loop v1](web-creation-loop-v1.md).
 
 Artwork `ImageObject` structured data must match visible content:
 
@@ -209,9 +225,15 @@ Artwork `ImageObject` structured data must match visible content:
 - `contentUrl` is crawlable;
 - branded composites state that CC BY covers only the fractal artwork layer.
 
+Community artwork pages emit `ImageObject` with `creator` as a `Person`
+named by the frozen author attribution snapshot, `creditText` equal to the
+visible community credit, the same CC BY 4.0 `license`, and a crawlable
+`contentUrl`. Hidden and withdrawn pages emit no `ImageObject`.
+
 ## Gallery Information Architecture
 
-`/[locale]/gallery` has two explicit views:
+`/[locale]/gallery` has two explicit views in v0.4.13; v0.4.15 adds a third,
+Community:
 
 ### FractalPark Collection
 
@@ -234,9 +256,23 @@ Artwork `ImageObject` structured data must match visible content:
 - Does not insert published presets into the local repository.
 - Preserves legacy and Envelope-backed local artwork through existing
   compatibility readers.
+- v0.4.15 adds owner-only Drafts and Published groups after sign-in; the
+  anonymous On this device group remains. Drafts and Published read from the
+  server-side owner-scoped tables defined in
+  [Web Creation Loop v1](web-creation-loop-v1.md).
 
-The two views may share a card component only through explicit published and
-local view models. A universal persistence-shaped card model is prohibited.
+### Community
+
+- v0.4.15 adds the Community view for user-published revisions.
+- Cards read only `published` rows through the server projection; private
+  drafts, hidden, and withdrawn works never appear.
+- Cards navigate to `/[locale]/gallery/community/[publicationId]`.
+- The list uses the stable cursor `(published_at desc, id desc)` with a
+  default page size of 24 and a server hard cap of 50.
+
+The views may share a card component only through explicit published,
+community, and local view models. A universal persistence-shaped card model
+is prohibited.
 
 ## Gallery Layout and Card Presentation
 
