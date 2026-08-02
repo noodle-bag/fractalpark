@@ -109,10 +109,6 @@ function requestHash(parts: Record<string, unknown>): string {
 
 export interface ProfileDto {
   displayName: string | null;
-}
-
-export interface ProfileDto {
-  displayName: string | null;
   backupEmailMode: 'off' | 'publish_only' | 'save_and_publish';
 }
 

@@ -20,11 +20,19 @@ export type BackupEmailStatus =
   | 'not_requested'
   | 'sent'
   | 'failed'
+  | 'unknown'
   | 'skipped_rate_limit';
 
-export const BACKUP_USER_DAY_QUOTA = 30;
+export const BACKUP_USER_DAY_QUOTA = 20;
 /** Email attachment cap from the spec; the envelope JSON must fit under it. */
 export const BACKUP_ATTACHMENT_MAX_BYTES = 1024 * 1024;
+
+/** The save path hands over the canonical JSON string; publish hands the
+ * parsed object. Normalize so the attachment is ALWAYS the envelope object —
+ * a string input must never be serialized as a JSON string literal (B1). */
+function normalizeEnvelope(envelope: unknown): unknown {
+  return typeof envelope === 'string' ? JSON.parse(envelope) : envelope;
+}
 
 interface ProfileModeRow {
   backup_email_mode: 'off' | 'publish_only' | 'save_and_publish';
@@ -187,22 +195,28 @@ export async function runArtworkBackup(input: {
     const mark = (status: BackupEmailStatus, sentAt?: string) =>
       markBackupStatus(input.ownerId, operationId, status, sentAt).catch(() => undefined);
 
-    if (!(await consumeBackupQuota(input.ownerId))) {
-      await mark('skipped_rate_limit');
-      return 'skipped_rate_limit';
-    }
-
+    // Definitive pre-send failures answer `failed` WITHOUT burning quota —
+    // the spec counts actual SMTP attempts (N5).
     const email = await getAccountEmail(input.ownerId);
     if (!email) {
       await mark('failed');
       return 'failed';
     }
 
-    const attachmentJson = JSON.stringify(JSON.parse(canonicalStringify(input.envelope)), null, 2);
+    const attachmentJson = JSON.stringify(
+      JSON.parse(canonicalStringify(normalizeEnvelope(input.envelope))),
+      null,
+      2,
+    );
     const attachmentBytes = Buffer.from(attachmentJson, 'utf8');
     if (attachmentBytes.byteLength > BACKUP_ATTACHMENT_MAX_BYTES) {
       await mark('failed');
       return 'failed';
+    }
+
+    if (!(await consumeBackupQuota(input.ownerId))) {
+      await mark('skipped_rate_limit');
+      return 'skipped_rate_limit';
     }
 
     const { subject, text } = buildBackupText(input);
@@ -214,9 +228,16 @@ export async function runArtworkBackup(input: {
         attachmentBytes,
         attachmentFilename: backupFilename(input.title),
       });
-    } catch {
-      await mark('failed');
-      return 'failed';
+    } catch (error) {
+      // A transport throw means acceptance could not be reliably recorded:
+      // the honest status is `unknown`, not `failed` (N2). The message stays
+      // server-side for diagnostics; it never reaches the client.
+      console.error(
+        '[backup] artwork backup send failed:',
+        error instanceof Error ? error.message : 'unknown transport error',
+      );
+      await mark('unknown');
+      return 'unknown';
     }
     const sentAt = new Date().toISOString();
     await mark('sent', sentAt);

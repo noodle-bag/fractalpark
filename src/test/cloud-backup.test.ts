@@ -17,6 +17,7 @@ describe('artwork backup email chain', () => {
     expect(backupFilename('weird<>:"/\\|?*name')).toBe('weirdname.fractal.json');
     expect(backupFilename('   ')).toBe('artwork.fractal.json');
     expect(backupFilename('深海 Spiral №7')).toBe('深海 Spiral 7.fractal.json');
+    expect(backupFilename('ab	c')).toBe('abc.fractal.json');
     expect(backupFilename('x'.repeat(200)).endsWith('.fractal.json')).toBe(true);
     expect(backupFilename('x'.repeat(200)).length).toBeLessThanOrEqual(60 + '.fractal.json'.length);
   });

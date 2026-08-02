@@ -273,6 +273,7 @@ async function main(): Promise<void> {
   interface MailpitMessage {
     Text?: string;
     Subject?: string;
+    To?: { Address: string }[];
     Attachments?: { FileName: string; Size: number }[];
   }
   let backupMail: MailpitMessage | null = null;
@@ -289,9 +290,62 @@ async function main(): Promise<void> {
   }
   assert(!!backupMail, 'backup email arrived in Mailpit');
   assert(backupMail?.Subject?.includes('Backup Proof') ?? false, 'backup subject carries the title');
+  assert(
+    backupMail?.To?.some((t) => t.Address === EMAIL) ?? false,
+    'backup goes only to the account email',
+  );
   const attachment = backupMail?.Attachments?.find((a) => a.FileName.endsWith('.fractal.json'));
   assert(!!attachment && attachment.Size > 100, 'backup carries the .fractal.json attachment');
   assert(backupMail?.Text?.includes('CC BY 4.0') ?? false, 'publish backup notes the CC BY 4.0 image layer');
+
+  // Attachment CONTENT: must parse as the canonical envelope OBJECT — a
+  // string-literal top level here is the B1 regression.
+  const mailId = (await (
+    await fetch(`${MAILPIT}/api/v1/messages?limit=1`)
+  ).json()) as { messages: { ID: string }[] };
+  const part = await fetch(`${MAILPIT}/api/v1/message/${mailId.messages[0].ID}/part/2`);
+  const parsedAttachment = JSON.parse(await part.text()) as Record<string, unknown>;
+  assert(
+    typeof parsedAttachment === 'object' && parsedAttachment !== null && !Array.isArray(parsedAttachment),
+    'attachment top level is an object, not a string literal',
+  );
+  assert(
+    'document' in parsedAttachment || 'metadata' in parsedAttachment || 'envelopeVersion' in parsedAttachment,
+    'attachment carries the canonical envelope shape',
+  );
+
+  // save_and_publish: a plain cloud SAVE must also email, with a valid
+  // object-shaped attachment (the path B1 broke).
+  await api('/api/creation/profile', cookie, {
+    method: 'PATCH',
+    body: JSON.stringify({ backupEmailMode: 'save_and_publish' }),
+  });
+  await fetch(`${MAILPIT}/api/v1/messages`, { method: 'DELETE' });
+  const draft3 = await api('/api/creation/drafts', cookie, {
+    method: 'POST',
+    headers: { 'idempotency-key': crypto.randomUUID() },
+    body: JSON.stringify({ envelope }),
+  });
+  const draft3Body = (await draft3.json()) as { backupEmailStatus?: string };
+  assert(draft3Body.backupEmailStatus === 'sent', `save_and_publish emails on save (${draft3Body.backupEmailStatus})`);
+  let savePartText = '';
+  for (let i = 0; i < 20; i++) {
+    const list = (await (
+      await fetch(`${MAILPIT}/api/v1/messages?limit=1`)
+    ).json()) as { messages?: { ID: string }[] };
+    const id = list.messages?.[0]?.ID;
+    if (id) {
+      const savePart = await fetch(`${MAILPIT}/api/v1/message/${id}/part/2`);
+      savePartText = await savePart.text();
+      break;
+    }
+    await new Promise((r) => setTimeout(r, 500));
+  }
+  const saveAttachment = JSON.parse(savePartText) as Record<string, unknown>;
+  assert(
+    typeof saveAttachment === 'object' && saveAttachment !== null && 'document' in saveAttachment,
+    'save-path attachment is the canonical envelope object (B1 regression)',
+  );
 
   console.log(`\n${passed} passed, ${failed} failed`);
   if (failed > 0) process.exit(1);
