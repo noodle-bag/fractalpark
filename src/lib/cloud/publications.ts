@@ -122,10 +122,11 @@ export async function getProfile(ownerId: string): Promise<ProfileDto> {
   return { displayName: rows[0]?.display_name ?? null };
 }
 
-const CONTROL_PATTERN = /[\u0000-\u001f\u007f-\u009f\u200b\u200e\u200f\u061c\u202a-\u202e\u2066-\u2069]/;
+const CONTROL_PATTERN =
+  /[\u0000-\u001f\u007f-\u009f\u200b-\u200f\u061c\u2028-\u202e\u2060\u2066-\u2069\ufeff]/;
 /** Descriptions may span lines; every other control character stays banned. */
 const DESCRIPTION_CONTROL_PATTERN =
-  /[\u0000-\u0009\u000b-\u001f\u007f-\u009f\u200b\u200e\u200f\u061c\u202a-\u202e\u2066-\u2069]/;
+  /[\u0000-\u0009\u000b-\u001f\u007f-\u009f\u200b-\u200f\u061c\u2028-\u202e\u2060\u2066-\u2069\ufeff]/;
 
 /** Validate and persist the display name (1–40 plain-text characters). */
 export async function setDisplayName(ownerId: string, displayName: string): Promise<ProfileDto> {

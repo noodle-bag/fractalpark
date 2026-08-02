@@ -9,6 +9,7 @@ import { DraftServiceError } from '@/lib/cloud/drafts';
 import { Link } from '@/i18n/routing';
 import { renderJsonLd } from '@/lib/json-ld';
 import { SITE } from '@/lib/site';
+import { cache } from 'react';
 
 export const dynamic = 'force-dynamic';
 
@@ -28,9 +29,12 @@ async function loadPublication(publicationId: string): Promise<CommunityDetailDt
   }
 }
 
+/** generateMetadata and the page share one PostgREST read per render. */
+const loadPublicationCached = cache(loadPublication);
+
 export async function generateMetadata({ params }: PageProps): Promise<Metadata> {
   const { publicationId } = await params;
-  const publication = await loadPublication(publicationId);
+  const publication = await loadPublicationCached(publicationId);
   if (!publication) return {};
   return {
     title: publication.title,
@@ -44,7 +48,7 @@ export default async function CommunityArtworkPage({ params }: PageProps) {
   const { locale, publicationId } = await params;
   setRequestLocale(locale);
   const t = await getTranslations('cloud.community');
-  const publication = await loadPublication(publicationId);
+  const publication = await loadPublicationCached(publicationId);
   if (!publication) notFound();
 
   const pageUrl = `${SITE.url}/${locale}/gallery/community/${publication.id}`;

@@ -9,7 +9,7 @@ import {
 } from '@/lib/cloud/community';
 
 const ROW = {
-  id: 'pub-1',
+  id: '11111111-2222-4333-8444-555555555555',
   title: 'Nebula',
   description: null,
   author_display_name: 'A',
@@ -49,6 +49,13 @@ describe('community cursor', () => {
     expect(decodeCommunityCursor('not-base64-json')).toBeNull();
     expect(decodeCommunityCursor(Buffer.from('["not-a-date","x"]').toString('base64url'))).toBeNull();
     expect(decodeCommunityCursor(Buffer.from('{"a":1}').toString('base64url'))).toBeNull();
+    // Parseable-but-hostile shapes (Date.parse is lenient; PostgREST is not).
+    expect(decodeCommunityCursor(Buffer.from('["Aug 02, 2026","x"]').toString('base64url'))).toBeNull();
+    expect(
+      decodeCommunityCursor(
+        Buffer.from('["2026-08-02T08:00:00.000Z","not-a-uuid"]').toString('base64url'),
+      ),
+    ).toBeNull();
   });
 
   it('pages with a +1 lookahead and emits the next cursor only when more rows exist', async () => {
@@ -60,7 +67,16 @@ describe('community cursor', () => {
     stubRows(full);
     const page = await listCommunity(null, COMMUNITY_DEFAULT_PAGE);
     expect(page.items).toHaveLength(COMMUNITY_DEFAULT_PAGE);
-    expect(page.nextCursor).not.toBeNull();
+    // The cursor encodes the LAST row of the truncated page, not the +1
+    // lookahead row.
+    const lastItem = page.items[page.items.length - 1];
+    expect(page.nextCursor).toBe(
+      encodeCommunityCursor({ published_at: lastItem.publishedAt, id: lastItem.id }),
+    );
+    // The PostgREST query pins the published-only filter and the stable order.
+    const url = String((vi.mocked(fetch).mock.calls[0] as unknown[])[0]);
+    expect(url).toContain('status=eq.published');
+    expect(url).toContain('order=published_at.desc,id.desc');
 
     stubRows(full.slice(0, 3));
     const tail = await listCommunity(null, COMMUNITY_DEFAULT_PAGE);

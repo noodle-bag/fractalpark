@@ -84,6 +84,9 @@ export function encodeCommunityCursor(row: { published_at: string; id: string })
   return Buffer.from(JSON.stringify([row.published_at, row.id]), 'utf8').toString('base64url');
 }
 
+const ISO_TIMESTAMP_PATTERN = /^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}(\.\d+)?(Z|[+-]\d{2}:\d{2})$/;
+const UUID_PATTERN = /^[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}$/;
+
 export function decodeCommunityCursor(raw: string): { publishedAt: string; id: string } | null {
   try {
     const parsed = JSON.parse(Buffer.from(raw, 'base64url').toString('utf8')) as unknown;
@@ -92,7 +95,11 @@ export function decodeCommunityCursor(raw: string): { publishedAt: string; id: s
       parsed.length === 2 &&
       typeof parsed[0] === 'string' &&
       typeof parsed[1] === 'string' &&
-      !Number.isNaN(Date.parse(parsed[0]))
+      // Strict shapes: a parseable-but-hostile cursor (commas, parens) must
+      // never reach the PostgREST `or=(...)` tree; anything else answers
+      // validation_failed instead of surfacing a 503.
+      ISO_TIMESTAMP_PATTERN.test(parsed[0]) &&
+      UUID_PATTERN.test(parsed[1])
     ) {
       return { publishedAt: parsed[0], id: parsed[1] };
     }

@@ -288,7 +288,7 @@ export async function deleteDraft(args: {
 /** True when a publication source resolves to a live published row. */
 export async function publicationSourceExists(publicationId: string): Promise<boolean> {
   const rows = await postgrestJson<Array<{ id: string }>>(
-    `artwork_publications?select=id&id=eq.${publicationId}&status=eq.published&limit=1`,
+    `artwork_publications?select=id&id=eq.${encodeURIComponent(publicationId)}&status=eq.published&limit=1`,
   );
   return rows.length > 0;
 }

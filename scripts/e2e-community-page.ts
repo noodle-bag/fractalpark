@@ -53,7 +53,7 @@ async function main(): Promise<void> {
     headers: { 'idempotency-key': crypto.randomUUID() },
     body: JSON.stringify({
       expectedRevision: 1,
-      title: 'SSR "Quoted" <Title> & Friends',
+      title: 'SSR "Quoted" <Title> & </script>Friends',
       description: 'Line one.\nLine two with <em>markup</em>.',
       attestationVersion: '2026-08-02.v1',
     }),
@@ -64,7 +64,7 @@ async function main(): Promise<void> {
   const checks: Array<[string, boolean]> = [
     ['page 200', page.status === 200],
     ['noindex,follow', html.includes('noindex') && html.includes('follow')],
-    ['title text escaped', html.includes('SSR &quot;Quoted&quot; &lt;Title&gt; &amp; Friends') || (html.includes('SSR') && !html.includes('<Title>'))],
+    ['title text escaped', html.includes('SSR') && !html.includes('<Title>') && !html.includes('</script>Friends')],
     ['no raw injected markup', !html.includes('<em>markup</em>')],
     ['ImageObject JSON-LD with Person creator', html.includes('"@type":"ImageObject"') && html.includes('"@type":"Person"') && html.includes('SSR Author')],
     ['license link', html.includes('creativecommons.org/licenses/by/4.0/')],

@@ -221,6 +221,18 @@ async function main(): Promise<void> {
   const goneBody = (await goneList.json()) as { items: { id: string }[] };
   assert(!goneBody.items.some((item) => item.id === publicationId), 'withdrawn work leaves the community list');
 
+  // 9. Remixing a withdrawn work is refused (provenance must be published)
+  const lateRemix = await api('/api/creation/drafts', cookie, {
+    method: 'POST',
+    headers: { 'idempotency-key': crypto.randomUUID() },
+    body: JSON.stringify({
+      envelope: detailBody.envelope,
+      remixSourceType: 'publication',
+      remixSourceId: publicationId,
+    }),
+  });
+  assert(lateRemix.status === 400, `remix of withdrawn refused (${lateRemix.status})`);
+
   console.log(`\n${passed} passed, ${failed} failed`);
   if (failed > 0) process.exit(1);
 }

@@ -55,6 +55,8 @@ export function parseRemixSource(body: Record<string, unknown>): RemixSourceInpu
 export async function assertProvenanceResolves(source: RemixSourceInput | null): Promise<void> {
   if (!source) return;
   if (source.type === 'publication') {
+    // Malformed ids answer validation_failed instead of a PostgREST 400.
+    requireUuid(source.id);
     if (!(await publicationSourceExists(source.id))) {
       throw new CloudApiError('validation_failed');
     }
