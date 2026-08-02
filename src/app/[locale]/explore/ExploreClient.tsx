@@ -294,6 +294,7 @@ function ExploreClient({ posterImage }: { posterImage?: string }) {
     effectiveIterations,
     getCanvas,
     loadDocument: handleLoadDocument,
+    currentArtworkId: searchParams.get('artwork'),
   });
 
   const handleJuliaModeChange = useCallback((julia: boolean) => {
@@ -514,6 +515,7 @@ function ExploreClient({ posterImage }: { posterImage?: string }) {
         )}
         <ArtworkActions
           status={artworkActions.status}
+          cloudPhase={artworkActions.cloudPhase}
           savedCount={artworkActions.savedCount}
           onClearStatus={artworkActions.clearStatus}
           onSave={artworkActions.save}

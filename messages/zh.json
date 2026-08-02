@@ -1,4 +1,115 @@
 {
+  "cloud": {
+    "otp": {
+      "title": "登录以同步",
+      "emailDescription": "输入邮箱，我们会发给你一枚六位登录码，无需密码。",
+      "codeDescription": "输入刚发送到邮箱的六位验证码。",
+      "emailLabel": "邮箱",
+      "emailPlaceholder": "you@example.com",
+      "codeLabel": "六位验证码",
+      "sendCode": "发送验证码",
+      "sending": "发送中…",
+      "verify": "登录",
+      "verifying": "登录中…",
+      "resend": "重新发送",
+      "errors": {
+        "wrongCode": "验证码不对，请核对邮件后重试。",
+        "rateLimited": "尝试太频繁了，稍等片刻再试。",
+        "offline": "网络好像断了，检查连接后重试。",
+        "disabled": "当前部署未开启云端同步。",
+        "generic": "出了点问题，请重试。"
+      }
+    },
+    "myWorks": {
+      "signInHint": "登录即可跨设备同步草稿；本机上的作品无论如何都会保留。",
+      "signIn": "登录以同步",
+      "signOut": "退出登录",
+      "draftsTitle": "云端草稿",
+      "publishedTitle": "已发布",
+      "publishedEmpty": "还没有发布过作品。发布功能将随社区更新到来。",
+      "draftsEmpty": "还没有云端草稿。登录状态下保存作品后会出现在这里。",
+      "loading": "正在加载草稿…",
+      "refresh": "刷新",
+      "delete": "删除",
+      "confirmDelete": "永久删除这份云端草稿？本机上的副本不受影响。",
+      "confirmOverwrite": "本机上的副本有从未同步到云端的改动，打开云端草稿会覆盖它们。继续？",
+      "confirmWithdraw": "永久撤回这件作品？它会立刻从社区消失且无法恢复。已经授予既有二创的许可继续有效。",
+      "publish": "发布",
+      "withdraw": "撤回",
+      "withdrawn": "已撤回",
+      "backupLabel": "备份邮件",
+      "backupModes": {
+        "off": "关闭",
+        "publish_only": "发布时",
+        "save_and_publish": "每次保存 + 发布"
+      },
+      "backupNotice": "备份邮件会附上完整的 .fractal.json：所有参数、视角和自定义公式都在里面。一旦寄出，FractalPark 无法收回。",
+      "backupConfirm": "我明白，开启",
+      "backupCancel": "先不了",
+      "publishedMeta": "{license} · 发布于 {date}",
+      "withdrawnMeta": "已于 {date} 撤回",
+      "importTitle": "本机作品，尚未同步",
+      "import": "同步到云端",
+      "importing": "同步中…",
+      "meta": "第 {revision} 版 · {date}",
+      "errors": {
+        "unavailable": "云端同步暂时不可用，稍后再试。",
+        "quota_exceeded": "云端存储已满，删除一些草稿腾出空间。",
+        "offline": "网络好像断了。",
+        "not_found": "这份草稿已经不存在了。",
+        "unauthenticated": "登录已过期，请重新登录。",
+        "invalid_envelope": "这份作品没能通过云端校验。",
+        "rate_limited": "慢一点，稍后再试。"
+      }
+    },
+    "publish": {
+      "title": "发布到社区",
+      "description": "发布会把这一版永远冻结。你在这里确认的内容，就是世界看到的样子。",
+      "displayNameLabel": "展示名",
+      "displayNamePlaceholder": "作为创作者显示的名字",
+      "displayNameHint": "会显示在你发布的所有作品上。之后可以改，但已发布的作品保留当时的名字。",
+      "titleLabel": "标题",
+      "descriptionLabel": "描述（可选）",
+      "attestation": "这是我创作的作品，我同意以 CC BY 4.0 许可渲染图像，允许他人在署名的前提下分享和二创。",
+      "immutableHint": "发布后作品与文字都不能再改。继续创作通过二创分叉；撤回是永久的。",
+      "cancel": "取消",
+      "confirm": "发布",
+      "publishing": "发布中…",
+      "errors": {
+        "rateLimited": "今天发布得够多了，明天再来。",
+        "formulaAssets": "这件作品用了自定义公式，暂时不能发布。",
+        "revisionConflict": "草稿在你打开对话框后变过，关掉重试。",
+        "validation": "检查一下展示名、标题和描述，再试一次。",
+        "offline": "网络好像断了。",
+        "generic": "发布失败，什么都没有发布出去，草稿还是你的。"
+      }
+    },
+    "community": {
+      "backToCommunity": "← 社区",
+      "byline": "{author} · {date}",
+      "thumbnailPending": "作品图像将由服务端渲染管线生成",
+      "licenseLabel": "许可：",
+      "licenseValue": "分形图像层基于",
+      "sourceLabel": "来源：",
+      "sourcePublication": "二创自另一件社区作品",
+      "sourcePreset": "二创自 FractalPark 收藏（{id}）",
+      "sourceFormula": "二创自公式 {id}",
+      "remix": "二创",
+      "remixing": "二创中…",
+      "signInToSyncRemix": "登录后二创会存进云端",
+      "copyLink": "复制链接",
+      "copied": "已复制",
+      "reportPrefix": "这件作品有问题？举报或下架请联系：",
+      "loadMore": "加载更多",
+      "loading": "加载中…",
+      "emptyTitle": "这里还空着",
+      "emptyDescription": "发布的作品会出现在这里。你的可以是第一件。",
+      "errors": {
+        "generic": "没成功，再试一次。",
+        "loadFailed": "社区列表加载失败，稍后再试。"
+      }
+    }
+  },
   "common": {
     "nav": {
       "drift": "沉浸播放",
@@ -23,6 +134,10 @@
     "collection": {
       "title": "FractalPark 作品集",
       "description": "浏览 FractalPark 已发布的完整作品集。"
+    },
+    "community": {
+      "title": "社区",
+      "description": "创作者们以 CC BY 4.0 发布的作品。打开一件，把它二创成你自己的草稿。"
     },
     "mine": {
       "title": "我的作品",
@@ -1028,6 +1143,13 @@
     "artworkActions": {
       "common": {
         "cancel": "取消"
+      },
+      "cloud": {
+        "syncing": "正在同步到云端…",
+        "synced": "已同步到云端。",
+        "failed": "已保存到本机；云端同步失败，再次保存可重试。",
+        "conflict": "这份草稿在别处被修改过。请先重新载入再保存，否则后续保存只保留在本机。",
+        "quota": "已保存到本机；云端存储已满。"
       },
       "save": {
         "label": "保存到画廊",

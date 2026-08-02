@@ -6,6 +6,7 @@ import type { FractalDocument } from '@/engine/document';
 import type { FractalDocumentEnvelopeV1 } from '@/engine/document-envelope';
 import {
   ArtworkRepository,
+  type ArtworkCloudBinding,
   type ArtworkGalleryItem,
   type ArtworkRepositoryResult,
   type ArtworkRepositorySnapshot,
@@ -89,6 +90,29 @@ export function useArtworks() {
     [refresh, repository]
   );
 
+  const updateArtwork = useCallback(
+    (id: string, name: string, envelope: FractalDocumentEnvelopeV1, thumbnail: string) => {
+      const result = repository.updateArtwork(id, { name, envelope, thumbnail });
+      if (result.success) refresh();
+      return result;
+    },
+    [refresh, repository]
+  );
+
+  const bindCloud = useCallback(
+    (id: string, binding: ArtworkCloudBinding | null) => {
+      const result = repository.bindCloud(id, binding);
+      if (result.success) refresh();
+      return result;
+    },
+    [refresh, repository]
+  );
+
+  const readById = useCallback(
+    (id: string): ArtworkGalleryItem | undefined => repository.readById(id),
+    [repository]
+  );
+
   const starred = useMemo(
     () => snapshot.items.filter((item) => item.starred),
     [snapshot.items]
@@ -103,6 +127,9 @@ export function useArtworks() {
     remove,
     rename,
     toggleStar,
+    updateArtwork,
+    bindCloud,
+    readById,
     storageInfo: {
       count: snapshot.items.length,
       usedBytes: snapshot.usedBytes,

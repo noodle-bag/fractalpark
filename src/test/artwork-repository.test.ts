@@ -125,12 +125,13 @@ describe('ArtworkRepository', () => {
     const stored = JSON.parse(storage.getItem(ARTWORK_STORAGE_KEY) ?? '[]');
     expect(stored).toHaveLength(1);
     expect(stored[0]).toMatchObject({
-      recordVersion: 1,
+      recordVersion: 2,
       id: 'new-artwork-id',
       name: 'New Artwork',
       createdAt: 500,
       updatedAt: 500,
       starred: false,
+      cloud: null,
       envelope: {
         envelopeVersion: 1,
         document: {

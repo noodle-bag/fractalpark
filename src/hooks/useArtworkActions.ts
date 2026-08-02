@@ -3,13 +3,16 @@
 import { useCallback, useRef, useState } from 'react';
 
 import { trackEvent } from '@/components/analytics/PageViewTracker';
+import { useCloudSession } from '@/components/cloud/CloudSessionProvider';
 import type { FractalDocument } from '@/engine/document';
 import { createRenderSnapshot } from '@/engine/render-snapshot';
 import {
   getArtworkAnalyticsContext,
   getProjectFileSizeBucket,
 } from '@/lib/artwork-analytics';
+import type { ArtworkCloudBinding } from '@/lib/artwork-repository';
 import { captureThumbnail } from '@/lib/capture-thumbnail';
+import { syncArtworkToCloud } from '@/lib/cloud/sync';
 import {
   commitPreparedFractalProjectImport,
   readLocalFormulaAssets,
@@ -38,6 +41,14 @@ export type ArtworkActionErrorCode =
   | 'download-failed'
   | 'export-failed';
 
+export type CloudSyncPhase =
+  | 'idle'
+  | 'syncing'
+  | 'synced'
+  | 'failed'
+  | 'conflict'
+  | 'quota';
+
 export type ArtworkActionStatus =
   | { phase: 'idle' }
   | { phase: 'pending'; operation: ArtworkOperation }
@@ -49,6 +60,8 @@ interface UseArtworkActionsOptions {
   effectiveIterations: number;
   getCanvas: () => HTMLCanvasElement | null;
   loadDocument: (document: FractalDocument) => void;
+  /** Local record the editor was opened from, when any (save updates it in place). */
+  currentArtworkId?: string | null;
 }
 
 export function useArtworkActions({
@@ -56,10 +69,17 @@ export function useArtworkActions({
   effectiveIterations,
   getCanvas,
   loadDocument,
+  currentArtworkId = null,
 }: UseArtworkActionsOptions) {
   const [status, setStatus] = useState<ArtworkActionStatus>({ phase: 'idle' });
+  const [cloudPhase, setCloudPhase] = useState<CloudSyncPhase>('idle');
   const pendingRef = useRef(false);
-  const { saveDocument, storageInfo } = useArtworks();
+  // Holds a successful cloud binding whose local write failed (storage
+  // full/blocked), so the next save PATCHes the same draft instead of
+  // creating a duplicate.
+  const pendingBindingRef = useRef<{ localId: string; binding: ArtworkCloudBinding } | null>(null);
+  const { saveDocument, updateArtwork, bindCloud, readById, storageInfo } = useArtworks();
+  const { state: cloudSession } = useCloudSession();
 
   const begin = useCallback((operation: ArtworkOperation) => {
     if (pendingRef.current) return false;
@@ -84,25 +104,85 @@ export function useArtworkActions({
 
   const save = useCallback(async (name: string) => {
     if (!begin('save')) return false;
+    setCloudPhase('idle');
     try {
       const canvas = getCanvas();
       const thumbnail = canvas ? captureThumbnail(canvas) : '';
-      const result = await saveDocument(name, document, thumbnail);
-      if (!result.success) {
+      const envelopeResult = await createFractalDocumentEnvelope(document, readLocalFormulaAssets());
+      if (!envelopeResult.success) {
         fail('save', 'save-failed');
         return false;
+      }
+      const envelope = envelopeResult.value;
+
+      // Single-write discipline: the local recovery copy is written first
+      // and is the durable fact; cloud sync layers on afterwards and its
+      // failure never erases the local success.
+      const existing = currentArtworkId ? readById(currentArtworkId) : undefined;
+      let localId: string;
+      if (existing && existing.storageFormat === 'document') {
+        const updated = updateArtwork(existing.id, name, envelope, thumbnail);
+        if (!updated.success) {
+          fail('save', 'save-failed');
+          return false;
+        }
+        localId = existing.id;
+      } else {
+        const result = await saveDocument(name, document, thumbnail);
+        if (!result.success) {
+          fail('save', 'save-failed');
+          return false;
+        }
+        localId = result.value.id;
+      }
+      let binding = existing?.cloud ?? null;
+      if (!binding && pendingBindingRef.current?.localId === localId) {
+        binding = pendingBindingRef.current.binding;
       }
       trackEvent('save_fractal', {
         formula: document.formula.formulaId,
         ...getArtworkAnalyticsContext(document),
       });
+
+      if (cloudSession.status === 'authenticated') {
+        setCloudPhase('syncing');
+        const outcome = await syncArtworkToCloud({ envelope, thumbnail, binding });
+        switch (outcome.kind) {
+          case 'synced': {
+            const wrote = bindCloud(localId, outcome.binding);
+            if (wrote.success) {
+              pendingBindingRef.current = null;
+              setCloudPhase('synced');
+            } else {
+              // The cloud draft exists; only the local binding write failed.
+              // Keep it in memory so the next save PATCHes this draft.
+              pendingBindingRef.current = { localId, binding: outcome.binding };
+              setCloudPhase('failed');
+            }
+            break;
+          }
+          case 'conflict':
+            setCloudPhase('conflict');
+            break;
+          case 'quota':
+            setCloudPhase('quota');
+            break;
+          case 'disabled':
+            setCloudPhase('idle');
+            break;
+          default:
+            setCloudPhase('failed');
+        }
+        binding = outcome.kind === 'synced' ? outcome.binding : binding;
+      }
+
       succeed('save');
       return true;
     } catch {
       fail('save', 'save-failed');
       return false;
     }
-  }, [begin, document, fail, getCanvas, saveDocument, succeed]);
+  }, [begin, bindCloud, cloudSession.status, currentArtworkId, document, fail, getCanvas, readById, saveDocument, succeed, updateArtwork]);
 
   const download = useCallback(async () => {
     if (!begin('download')) return false;
@@ -239,6 +319,7 @@ export function useArtworkActions({
 
   return {
     status,
+    cloudPhase,
     clearStatus,
     save,
     download,

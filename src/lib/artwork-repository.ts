@@ -10,6 +10,7 @@ import type { KeyframeAnimation, SavedFractal } from '@/engine/types';
 export const LEGACY_ARTWORK_STORAGE_KEY = 'myfrac-saved-fractals';
 export const ARTWORK_STORAGE_KEY = 'fractalpark-artworks-v1';
 export const ARTWORK_RECORD_VERSION = 1 as const;
+export const ARTWORK_RECORD_VERSION_V2 = 2 as const;
 
 export interface StoredArtworkRecordV1 {
   recordVersion: typeof ARTWORK_RECORD_VERSION;
@@ -22,11 +23,28 @@ export interface StoredArtworkRecordV1 {
   starred: boolean;
 }
 
+/**
+ * Cloud binding of a local recovery copy (spec: local/cloud binding). The
+ * local record stays the durable recovery fact; the binding only records
+ * which cloud draft it mirrors and at which revision.
+ */
+export interface ArtworkCloudBinding {
+  draftId: string;
+  revision: number;
+  syncedAt: number;
+}
+
+export interface StoredArtworkRecordV2 extends Omit<StoredArtworkRecordV1, 'recordVersion'> {
+  recordVersion: typeof ARTWORK_RECORD_VERSION_V2;
+  cloud: ArtworkCloudBinding | null;
+}
+
 export interface ArtworkGalleryItem extends SavedFractal {
   document: FractalDocument;
   storageFormat: 'legacy' | 'document';
   readOnly: boolean;
   updatedAt?: number;
+  cloud: ArtworkCloudBinding | null;
 }
 
 export type ArtworkStorageErrorCode =
@@ -164,13 +182,29 @@ function projectLegacyArtwork(value: unknown): ArtworkGalleryItem | undefined {
     document,
     storageFormat: 'legacy',
     readOnly: false,
+    cloud: null,
   };
+}
+
+function readCloudBinding(value: unknown): ArtworkCloudBinding | null {
+  if (!isObject(value)) return null;
+  if (
+    typeof value.draftId === 'string' &&
+    typeof value.revision === 'number' &&
+    Number.isInteger(value.revision) &&
+    value.revision >= 1 &&
+    typeof value.syncedAt === 'number'
+  ) {
+    return { draftId: value.draftId, revision: value.revision, syncedAt: value.syncedAt };
+  }
+  return null;
 }
 
 function projectCurrentArtwork(value: unknown): ArtworkGalleryItem | undefined {
   if (
     !isObject(value) ||
-    value.recordVersion !== ARTWORK_RECORD_VERSION ||
+    (value.recordVersion !== ARTWORK_RECORD_VERSION &&
+      value.recordVersion !== ARTWORK_RECORD_VERSION_V2) ||
     typeof value.id !== 'string' ||
     typeof value.name !== 'string' ||
     typeof value.createdAt !== 'number' ||
@@ -202,6 +236,7 @@ function projectCurrentArtwork(value: unknown): ArtworkGalleryItem | undefined {
     document,
     storageFormat: 'document',
     readOnly: envelopeResult.mode === 'readonly-future',
+    cloud: value.recordVersion === ARTWORK_RECORD_VERSION_V2 ? readCloudBinding(value.cloud) : null,
   };
 }
 
@@ -304,8 +339,8 @@ export class ArtworkRepository {
     const createdAt = this.now();
     const id = this.createId();
     const document = envelopeResult.envelope.document;
-    const record: StoredArtworkRecordV1 = {
-      recordVersion: ARTWORK_RECORD_VERSION,
+    const record: StoredArtworkRecordV2 = {
+      recordVersion: ARTWORK_RECORD_VERSION_V2,
       id,
       name: input.name,
       envelope: {
@@ -326,6 +361,7 @@ export class ArtworkRepository {
       updatedAt: createdAt,
       thumbnail: input.thumbnail,
       starred: false,
+      cloud: null,
     };
 
     const writeResult = this.write(ARTWORK_STORAGE_KEY, [...current.raw, record]);
@@ -344,6 +380,64 @@ export class ArtworkRepository {
 
   remove(id: string): ArtworkRepositoryResult<void> {
     return this.updateById(id, () => undefined);
+  }
+
+  /** Record, refresh, or clear (null) the cloud binding of a local copy. */
+  bindCloud(id: string, binding: ArtworkCloudBinding | null): ArtworkRepositoryResult<void> {
+    return this.updateById(id, (value, format) => {
+      if (format === 'legacy') return value;
+      return {
+        ...value,
+        recordVersion: ARTWORK_RECORD_VERSION_V2,
+        cloud: binding
+          ? { draftId: binding.draftId, revision: binding.revision, syncedAt: binding.syncedAt }
+          : null,
+      };
+    });
+  }
+
+  /**
+   * Overwrite the content of a document record in place (save-again of a
+   * bound draft, or hydration when a cloud draft is opened). The binding,
+   * star, and identity are preserved; only artwork facts move.
+   */
+  updateArtwork(
+    id: string,
+    input: SaveArtworkInput,
+  ): ArtworkRepositoryResult<void> {
+    const envelopeResult = readFractalDocumentEnvelope(input.envelope);
+    if (envelopeResult.mode !== 'editable') {
+      return {
+        success: false,
+        errors: [{
+          code: 'invalid-artwork',
+          message: 'Only editable current-version envelopes can be saved.',
+        }],
+      };
+    }
+    return this.updateById(id, (value, format) => {
+      if (format === 'legacy') return value;
+      const updatedAt = this.now();
+      const document = envelopeResult.envelope.document;
+      return {
+        ...value,
+        recordVersion: ARTWORK_RECORD_VERSION_V2,
+        name: input.name,
+        envelope: {
+          ...envelopeResult.envelope,
+          document: {
+            ...document,
+            metadata: {
+              ...document.metadata,
+              name: input.name,
+              updatedAt,
+            },
+          },
+        },
+        updatedAt,
+        thumbnail: input.thumbnail,
+      };
+    });
   }
 
   rename(id: string, name: string): ArtworkRepositoryResult<void> {

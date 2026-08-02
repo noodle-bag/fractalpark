@@ -1,4 +1,114 @@
 {
+  "cloud": {
+    "otp": {
+      "title": "Sign in to sync",
+      "emailDescription": "Enter your email and we will send you a six-digit sign-in code. No password needed.",
+      "codeDescription": "Enter the six-digit code from the email we just sent you.",
+      "emailLabel": "Email",
+      "emailPlaceholder": "you@example.com",
+      "codeLabel": "Six-digit code",
+      "sendCode": "Send code",
+      "sending": "Sending…",
+      "verify": "Sign in",
+      "verifying": "Signing in…",
+      "resend": "Resend code",
+      "errors": {
+        "wrongCode": "That code is not right. Check the email and try again.",
+        "rateLimited": "Too many attempts. Please wait a moment and try again.",
+        "offline": "You appear to be offline. Check your connection and try again.",
+        "disabled": "Cloud sync is not available on this deployment.",
+        "generic": "Something went wrong. Please try again."
+      }
+    },
+    "myWorks": {
+      "signInHint": "Sign in to sync drafts across devices. Your artworks on this device stay put either way.",
+      "signIn": "Sign in to sync",
+      "signOut": "Sign out",
+      "draftsTitle": "Cloud drafts",
+      "publishedTitle": "Published",
+      "publishedEmpty": "Nothing published yet. Publishing arrives with the Community update.",
+      "draftsEmpty": "No cloud drafts yet. Save an artwork while signed in and it lands here.",
+      "loading": "Loading drafts…",
+      "refresh": "Refresh",
+      "delete": "Delete",
+      "confirmDelete": "Delete this cloud draft permanently? The copy on this device is not affected.",
+      "confirmOverwrite": "The copy on this device has changes that never reached the cloud. Opening the cloud draft replaces them. Continue?",
+      "confirmWithdraw": "Withdraw this artwork permanently? It disappears from the Community immediately and cannot be restored. The license already granted to existing remixes stays in effect.",
+      "publish": "Publish",
+      "withdraw": "Withdraw",
+      "backupLabel": "Backup emails",
+      "backupModes": {
+        "off": "Off",
+        "publish_only": "On publish",
+        "save_and_publish": "Every save + publish"
+      },
+      "backupNotice": "The backup email attaches the complete .fractal.json: every parameter, the view, and any custom formulas. FractalPark cannot retract it once delivered.",
+      "backupConfirm": "I understand, turn it on",
+      "backupCancel": "Not now",
+      "publishedMeta": "{license} · published {date}",
+      "withdrawnMeta": "Withdrawn {date}",
+      "importTitle": "On this device, not yet synced",
+      "import": "Sync to cloud",
+      "importing": "Syncing…",
+      "meta": "rev {revision} · {date}",
+      "errors": {
+        "unavailable": "Cloud sync is unavailable right now. Try again in a moment.",
+        "quota_exceeded": "Your cloud storage is full. Delete some drafts to make room.",
+        "offline": "You appear to be offline.",
+        "not_found": "That draft no longer exists.",
+        "unauthenticated": "Your session expired. Sign in again.",
+        "invalid_envelope": "This artwork could not be validated for the cloud.",
+        "rate_limited": "Slow down a little and try again."
+      }
+    },
+    "publish": {
+      "title": "Publish to the Community",
+      "description": "Publishing freezes this revision forever. What you confirm here is what the world sees.",
+      "displayNameLabel": "Display name",
+      "displayNamePlaceholder": "How you appear as the artist",
+      "displayNameHint": "Shown on everything you publish. You can change it later; already published works keep the old name.",
+      "titleLabel": "Title",
+      "descriptionLabel": "Description (optional)",
+      "attestation": "I created this artwork, and I license the rendered image under CC BY 4.0 so others can share and remix it with attribution.",
+      "immutableHint": "Once published, the artwork and its text cannot be edited. Continued work forks through remix; withdrawal is permanent.",
+      "cancel": "Cancel",
+      "confirm": "Publish",
+      "publishing": "Publishing…",
+      "errors": {
+        "rateLimited": "You have published a lot today. Try again tomorrow.",
+        "formulaAssets": "This artwork uses a custom formula, which cannot be published yet.",
+        "revisionConflict": "This draft changed since you opened the dialog. Close it and try again.",
+        "validation": "Check the display name, title, and description, then try again.",
+        "offline": "You appear to be offline.",
+        "generic": "Publishing failed. Nothing was published; the draft is still yours."
+      }
+    },
+    "community": {
+      "backToCommunity": "← Community",
+      "byline": "by {author} · {date}",
+      "thumbnailPending": "Artwork image coming from the server render pipeline",
+      "licenseLabel": "License:",
+      "licenseValue": "The fractal image layer is under",
+      "sourceLabel": "Source:",
+      "sourcePublication": "Remixed from another community artwork",
+      "sourcePreset": "Remixed from the FractalPark Collection ({id})",
+      "sourceFormula": "Remixed from formula {id}",
+      "remix": "Remix",
+      "remixing": "Remixing…",
+      "signInToSyncRemix": "Sign in to keep remixes in the cloud",
+      "copyLink": "Copy link",
+      "copied": "Copied",
+      "reportPrefix": "Something wrong with this artwork? Report or takedown:",
+      "loadMore": "Load more",
+      "loading": "Loading…",
+      "emptyTitle": "Nothing here yet",
+      "emptyDescription": "Published artworks will show up here. Yours could be the first.",
+      "errors": {
+        "generic": "That did not work. Try again.",
+        "loadFailed": "The community list could not be loaded. Try again in a moment."
+      }
+    }
+  },
   "common": {
     "nav": {
       "drift": "Drift",
@@ -23,6 +133,10 @@
     "collection": {
       "title": "FractalPark Collection",
       "description": "Explore the complete collection of published FractalPark artworks."
+    },
+    "community": {
+      "title": "Community",
+      "description": "Artworks published by creators under CC BY 4.0. Open one to remix it into your own draft."
     },
     "mine": {
       "title": "My Works",
@@ -1028,6 +1142,13 @@
     "artworkActions": {
       "common": {
         "cancel": "Cancel"
+      },
+      "cloud": {
+        "syncing": "Syncing to cloud…",
+        "synced": "Synced to cloud.",
+        "failed": "Saved on this device; cloud sync failed — save again to retry.",
+        "conflict": "This draft changed elsewhere. Reload it before saving, or your next save stays local-only.",
+        "quota": "Saved on this device; your cloud storage is full."
       },
       "save": {
         "label": "Save to Gallery",
