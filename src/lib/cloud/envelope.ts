@@ -40,6 +40,10 @@ export const CLOUD_MAX_GRADIENT_STOPS = 64;
 export const CLOUD_MAX_VIEW_KEYFRAMES = 256;
 export const CLOUD_MAX_ANIMATION_TRACKS = 16;
 export const CLOUD_MAX_TRACK_KEYFRAMES = 256;
+export const CLOUD_PLUGIN_PARAMS_MAX_ENTRIES = 32;
+export const CLOUD_PLUGIN_PARAM_KEY_MAX_LENGTH = 64;
+export const CLOUD_PLUGIN_PARAM_STRING_MAX_LENGTH = 256;
+export const CLOUD_PLUGIN_PARAM_NUMBER_MAGNITUDE = 1e12;
 
 export interface CloudEnvelopeAcceptance {
   /** Canonical server re-serialization (sorted keys); the only persisted form. */
@@ -104,6 +108,40 @@ export function projectTitle(document: FractalDocument): string {
   const raw = typeof document.metadata?.name === 'string' ? document.metadata.name.trim() : '';
   const name = raw.length > 0 ? raw : 'Untitled';
   return name.slice(0, 80);
+}
+
+/** Budget-check every plugin parameter record present in the raw document. */
+function checkPluginParams(rawDoc: Record<string, unknown> | undefined): CloudEnvelopeResult | null {
+  if (!rawDoc || typeof rawDoc !== 'object') return null;
+  const containers = [
+    rawDoc.formula,
+    rawDoc.coloring,
+    rawDoc.transform,
+    rawDoc.render,
+  ] as Array<Record<string, unknown> | undefined>;
+  for (const container of containers) {
+    const params = container?.params;
+    if (params === undefined || params === null) continue;
+    if (typeof params !== 'object' || Array.isArray(params)) {
+      return reject('Plugin params must be an object.');
+    }
+    const entries = Object.entries(params as Record<string, unknown>);
+    if (entries.length > CLOUD_PLUGIN_PARAMS_MAX_ENTRIES) {
+      return reject('Plugin params exceed the entry budget.');
+    }
+    for (const [key, value] of entries) {
+      if (key.length > CLOUD_PLUGIN_PARAM_KEY_MAX_LENGTH) {
+        return reject('Plugin param key exceeds the length budget.');
+      }
+      if (typeof value === 'number' && (!Number.isFinite(value) || Math.abs(value) > CLOUD_PLUGIN_PARAM_NUMBER_MAGNITUDE)) {
+        return reject('Plugin param number is outside the allowed range.');
+      }
+      if (typeof value === 'string' && value.length > CLOUD_PLUGIN_PARAM_STRING_MAX_LENGTH) {
+        return reject('Plugin param string exceeds the length budget.');
+      }
+    }
+  }
+  return null;
 }
 
 /**
@@ -291,6 +329,13 @@ export function validateCloudEnvelopeV1(input: unknown, inputBytes: number): Clo
       }
     }
   }
+
+  // Plugin parameter budgets (spec section 8): the reader's lenient
+  // normalizePluginParamRecord drops non-finite values, so params are
+  // budget-checked on the raw document: entry count, key length, and
+  // string/number magnitudes.
+  const paramsCheck = checkPluginParams(rawDoc);
+  if (paramsCheck) return paramsCheck;
 
   // Canonical server re-serialization; only this form is persisted, and
   // config_bytes derives from it (never from client claims).

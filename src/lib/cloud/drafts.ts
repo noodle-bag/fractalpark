@@ -9,6 +9,8 @@
  * '<code>: <message>' and only the code prefix crosses to the client.
  */
 
+import { randomUUID } from 'node:crypto';
+
 import { CloudApiError } from './api';
 import { getSupabaseConfig } from './config';
 
@@ -71,7 +73,9 @@ function mapRpcError(raw: string): DraftServiceError {
     case 'not_found':
       return new DraftServiceError('not_found');
     default:
-      return new DraftServiceError('unavailable', raw.slice(0, 120));
+      // Unknown RPC failures are our bug, never the client's; do not keep
+      // the raw message (future-proof against accidental leakage).
+      return new DraftServiceError('unavailable');
   }
 }
 
@@ -323,7 +327,11 @@ export async function storeDraftThumbnail(args: {
   }
 
   const { url, serviceRoleKey } = getSupabaseConfig();
-  const path = `${args.ownerId}/${args.draftId}.${magic.extension}`;
+  // Every upload lands at a fresh path: a replace never overwrites the old
+  // object in place, so an RPC failure afterwards can safely delete the new
+  // orphan while the draft keeps its previous thumbnail; on success the RPC
+  // registers the old path for cleanup.
+  const path = `${args.ownerId}/${args.draftId}-${randomUUID().slice(0, 8)}.${magic.extension}`;
   const response = await fetch(`${url}/storage/v1/object/draft-thumbnails/${path}`, {
     method: 'POST',
     headers: {

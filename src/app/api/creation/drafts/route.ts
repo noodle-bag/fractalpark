@@ -20,6 +20,7 @@ import {
 import {
   createDraft,
   deleteDraftThumbnailObject,
+  DraftServiceError,
   listDrafts,
   storeDraftThumbnail,
   toDraftApiError,
@@ -107,7 +108,12 @@ export async function POST(request: Request): Promise<Response> {
         rotationHeaders(rotatedSetCookie),
       );
     } catch (error) {
-      if (thumbnailPath) {
+      // On idempotency_conflict the draft id may already belong to an
+      // existing draft whose thumbnail lives at the same path; never delete
+      // in that case. Other failures only orphan the fresh upload.
+      const isIdConflict =
+        error instanceof DraftServiceError && error.code === 'idempotency_conflict';
+      if (thumbnailPath && !isIdConflict) {
         await deleteDraftThumbnailObject(thumbnailPath);
       }
       throw error;

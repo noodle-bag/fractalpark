@@ -784,6 +784,61 @@ async function main(): Promise<void> {
     psql(`delete from public.artwork_operations where owner_id = '${RPC_OWNER_B}'`);
   });
 
+  await test('draft_update quotas serialize under concurrency (per-owner advisory lock)', async () => {
+    // Two drafts at 60 bytes each (used 120), storage quota 170: each
+    // concurrent update wants +40. Serialized, exactly one may succeed
+    // (160 <= 170; the loser then sees 160 and +40 = 200 > 170). Without
+    // per-owner serialization both would pass their checks and total 200.
+    const mkDraft = async () => {
+      const key = crypto.randomUUID();
+      const res = await rpc(keys, 'fractalpark_draft_create', keys.serviceKey, {
+        p_owner_id: RPC_OWNER_B,
+        p_idempotency_key: key,
+        p_request_hash: `hash-${key}`,
+        p_title: 'concurrency',
+        p_envelope: { envelopeVersion: 1 },
+        p_thumbnail_path: null,
+        p_config_bytes: 60,
+        p_thumbnail_bytes: 0,
+      });
+      const body = JSON.parse(await res.text()) as { draft: { id: string } };
+      return body.draft.id;
+    };
+    const draft1 = await mkDraft();
+    const draft2 = await mkDraft();
+
+    const update = (draftId: string, key: string) =>
+      rpc(keys, 'fractalpark_draft_update', keys.serviceKey, {
+        p_owner_id: RPC_OWNER_B,
+        p_draft_id: draftId,
+        p_idempotency_key: key,
+        p_request_hash: `hash-${key}`,
+        p_expected_revision: 1,
+        p_title: 'bigger',
+        p_envelope: { envelopeVersion: 1, document: { schemaVersion: 2, note: 'bigger' } },
+        p_thumbnail_path: null,
+        p_config_bytes: 100,
+        p_thumbnail_bytes: 0,
+        p_storage_quota_bytes: 170,
+      });
+    const [r1, r2] = await Promise.all([
+      update(draft1, crypto.randomUUID()),
+      update(draft2, crypto.randomUUID()),
+    ]);
+    const winner = r1.status === 200 ? r1 : r2.status === 200 ? r2 : null;
+    const loser = winner === r1 ? r2 : r1;
+    assert(winner !== null && loser.status !== 200, `expected exactly one success, got ${r1.status}/${r2.status}`);
+    const loserBody = await loser.text();
+    assert(loserBody.includes('quota_exceeded'), `loser must be quota_exceeded: ${loserBody}`);
+    const total = psql(
+      `select coalesce(sum(config_bytes + thumbnail_bytes), 0) from public.artwork_drafts where owner_id = '${RPC_OWNER_B}'`,
+    );
+    assert(total === '160', `final storage must be 160, got ${total}`);
+
+    psql(`delete from public.artwork_drafts where owner_id = '${RPC_OWNER_B}'`);
+    psql(`delete from public.artwork_operations where owner_id = '${RPC_OWNER_B}'`);
+  });
+
   await test('draft_delete: permanent, thumbnail cleanup job registered, uniform not_found', async () => {
     const createKey = crypto.randomUUID();
     const thumbPath = `${RPC_OWNER_A}/cleanup-${Date.now()}.png`;

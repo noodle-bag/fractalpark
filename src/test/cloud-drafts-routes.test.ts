@@ -351,6 +351,22 @@ describe('POST /api/creation/drafts', () => {
     expect(orphanDelete).toBeDefined();
   });
 
+  it('does not delete the uploaded thumbnail when the RPC reports idempotency_conflict', async () => {
+    // A conflict means the draft id may belong to an existing draft whose
+    // thumbnail lives at the same path; deleting would be self-harm.
+    const png = Buffer.from([0x89, 0x50, 0x4e, 0x47, 1, 2, 3, 4]).toString('base64');
+    stubFetch((call) => {
+      if (call.url.includes('rpc/fractalpark_draft_create')) {
+        return rpcError('idempotency_conflict: concurrent request did not converge');
+      }
+      return defaultRespond(call);
+    });
+    const res = await draftsPOST(postJson('/api/creation/drafts', envelopeBody({ thumbnail: png }), AUTH_HEADERS()));
+    expect(res.status).toBe(409);
+    expect(fetchCalls.some((c) => c.url.includes('/storage/v1/object/') && c.method === 'POST')).toBe(true);
+    expect(fetchCalls.some((c) => c.url.includes('/storage/v1/object/') && c.method === 'DELETE')).toBe(false);
+  });
+
   it('rejects a thumbnail with invalid magic bytes', async () => {
     const notAnImage = Buffer.from('this is not an image').toString('base64');
     const res = await draftsPOST(

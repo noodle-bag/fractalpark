@@ -130,6 +130,41 @@ describe('validateCloudEnvelopeV1', () => {
     expect(validateCloudEnvelopeV1(tooBig, inputBytes(tooBig)).ok).toBe(false);
   });
 
+  it('enforces plugin param budgets on the raw document', () => {
+    const manyParams = envelopeOf({
+      formula: {
+        ...DEFAULT_FRACTAL_DOCUMENT.formula,
+        params: Object.fromEntries(Array.from({ length: 33 }, (_, i) => [`p${i}`, 1])),
+      },
+    });
+    expect(validateCloudEnvelopeV1(manyParams, inputBytes(manyParams)).ok).toBe(false);
+
+    const longKey = envelopeOf({
+      formula: { ...DEFAULT_FRACTAL_DOCUMENT.formula, params: { ['k'.repeat(65)]: 1 } },
+    });
+    expect(validateCloudEnvelopeV1(longKey, inputBytes(longKey)).ok).toBe(false);
+
+    const hugeNumber = envelopeOf({
+      formula: { ...DEFAULT_FRACTAL_DOCUMENT.formula, params: { a: 1e13 } },
+    });
+    expect(validateCloudEnvelopeV1(hugeNumber, inputBytes(hugeNumber)).ok).toBe(false);
+
+    const nanParam = envelopeOf({
+      formula: { ...DEFAULT_FRACTAL_DOCUMENT.formula, params: { a: Number.NaN } },
+    });
+    expect(validateCloudEnvelopeV1(nanParam, inputBytes(nanParam)).ok).toBe(false);
+
+    const longString = envelopeOf({
+      formula: { ...DEFAULT_FRACTAL_DOCUMENT.formula, params: { a: 's'.repeat(257) } },
+    });
+    expect(validateCloudEnvelopeV1(longString, inputBytes(longString)).ok).toBe(false);
+
+    const okParams = envelopeOf({
+      formula: { ...DEFAULT_FRACTAL_DOCUMENT.formula, params: { stripeDensity: 4, offset: 0.5 } },
+    });
+    expect(validateCloudEnvelopeV1(okParams, inputBytes(okParams)).ok).toBe(true);
+  });
+
   it('projects the title from the envelope artwork name', () => {
     const named = envelopeOf({ metadata: { name: '  深空螺旋  ' } });
     const result = validateCloudEnvelopeV1(named, inputBytes(named));
