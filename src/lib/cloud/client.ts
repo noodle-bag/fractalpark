@@ -212,3 +212,80 @@ export async function deleteDraft(draftId: string): Promise<void> {
     headers: { 'idempotency-key': crypto.randomUUID() },
   });
 }
+
+// ---------------------------------------------------------------------------
+// Publications & profile (v0.4.15 commit 7)
+// ---------------------------------------------------------------------------
+
+export interface CloudProfile {
+  displayName: string | null;
+}
+
+export async function getProfile(): Promise<CloudProfile> {
+  return call<CloudProfile>('/api/creation/profile');
+}
+
+export async function setDisplayName(displayName: string): Promise<CloudProfile> {
+  return call('/api/creation/profile', {
+    method: 'PATCH',
+    body: JSON.stringify({ displayName }),
+  });
+}
+
+export interface CloudPublicationSummary {
+  id: string;
+  title: string;
+  description: string | null;
+  status: 'published' | 'hidden' | 'withdrawn';
+  authorDisplayName: string;
+  license: string;
+  licenseScope: string;
+  thumbnailStatus: 'pending' | 'ready' | 'failed';
+  remixSource: { type: string; id: string } | null;
+  publishedAt: string;
+  withdrawnAt: string | null;
+}
+
+export async function listPublications(): Promise<CloudPublicationSummary[]> {
+  const body = await call<{ publications: CloudPublicationSummary[] }>('/api/creation/publications');
+  return body.publications;
+}
+
+export interface PublishInput {
+  expectedRevision: number;
+  title: string;
+  description: string;
+  attestationVersion: string;
+}
+
+export interface PublishResult {
+  publicationId: string;
+  status: 'published';
+  title: string;
+  thumbnailStatus: 'pending';
+  publishedAt: string;
+  replayed?: boolean;
+}
+
+export async function publishDraft(draftId: string, input: PublishInput): Promise<PublishResult> {
+  return call(`/api/creation/drafts/${draftId}/publish`, {
+    method: 'POST',
+    headers: { 'idempotency-key': crypto.randomUUID() },
+    body: JSON.stringify(input),
+  });
+}
+
+export interface WithdrawResult {
+  publicationId: string;
+  status: 'withdrawn';
+  withdrawnAt: string;
+  replayed?: boolean;
+}
+
+export async function withdrawPublication(publicationId: string): Promise<WithdrawResult> {
+  return call(`/api/creation/publications/${publicationId}/withdraw`, {
+    method: 'POST',
+    headers: { 'idempotency-key': crypto.randomUUID() },
+    body: JSON.stringify({}),
+  });
+}

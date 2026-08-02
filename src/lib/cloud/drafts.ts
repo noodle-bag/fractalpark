@@ -21,12 +21,14 @@ const DRAFT_DETAIL_SELECT = `${DRAFT_SUMMARY_SELECT},envelope,thumbnail_path`;
 export class DraftServiceError extends Error {
   readonly code: string;
   readonly status?: number;
+  readonly retryAfter?: number;
 
-  constructor(code: string, message?: string, status?: number) {
+  constructor(code: string, message?: string, status?: number, retryAfter?: number) {
     super(message ?? code);
     this.name = 'DraftServiceError';
     this.code = code;
     this.status = status;
+    this.retryAfter = retryAfter;
   }
 }
 

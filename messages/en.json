@@ -33,6 +33,11 @@
       "delete": "Delete",
       "confirmDelete": "Delete this cloud draft permanently? The copy on this device is not affected.",
       "confirmOverwrite": "The copy on this device has changes that never reached the cloud. Opening the cloud draft replaces them. Continue?",
+      "confirmWithdraw": "Withdraw this artwork permanently? It disappears from the Community immediately and cannot be restored. The license already granted to existing remixes stays in effect.",
+      "publish": "Publish",
+      "withdraw": "Withdraw",
+      "publishedMeta": "{license} · published {date}",
+      "withdrawnMeta": "Withdrawn {date}",
       "importTitle": "On this device, not yet synced",
       "import": "Sync to cloud",
       "importing": "Syncing…",
@@ -45,6 +50,28 @@
         "unauthenticated": "Your session expired. Sign in again.",
         "invalid_envelope": "This artwork could not be validated for the cloud.",
         "rate_limited": "Slow down a little and try again."
+      }
+    },
+    "publish": {
+      "title": "Publish to the Community",
+      "description": "Publishing freezes this revision forever. What you confirm here is what the world sees.",
+      "displayNameLabel": "Display name",
+      "displayNamePlaceholder": "How you appear as the artist",
+      "displayNameHint": "Shown on everything you publish. You can change it later; already published works keep the old name.",
+      "titleLabel": "Title",
+      "descriptionLabel": "Description (optional)",
+      "attestation": "I created this artwork, and I license the rendered image under CC BY 4.0 so others can share and remix it with attribution.",
+      "immutableHint": "Once published, the artwork and its text cannot be edited. Continued work forks through remix; withdrawal is permanent.",
+      "cancel": "Cancel",
+      "confirm": "Publish",
+      "publishing": "Publishing…",
+      "errors": {
+        "rateLimited": "You have published a lot today. Try again tomorrow.",
+        "formulaAssets": "This artwork uses a custom formula, which cannot be published yet.",
+        "revisionConflict": "This draft changed since you opened the dialog. Close it and try again.",
+        "validation": "Check the display name, title, and description, then try again.",
+        "offline": "You appear to be offline.",
+        "generic": "Publishing failed. Nothing was published; the draft is still yours."
       }
     }
   },

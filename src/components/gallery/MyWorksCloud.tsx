@@ -15,10 +15,18 @@ import { CloudUpload, LogOut, RefreshCw, Trash2 } from 'lucide-react';
 
 import { useCloudSession } from '@/components/cloud/CloudSessionProvider';
 import { useArtworks } from '@/hooks/useArtworks';
-import { CloudClientError, listDrafts, type CloudDraftSummary } from '@/lib/cloud/client';
+import {
+  CloudClientError,
+  listDrafts,
+  listPublications,
+  withdrawPublication,
+  type CloudDraftSummary,
+  type CloudPublicationSummary,
+} from '@/lib/cloud/client';
 import { deleteDraft, importArtworkToCloud, openCloudDraft } from '@/lib/cloud/sync';
 import { createFractalDocumentEnvelope } from '@/lib/fractal-file';
 import { readLocalFormulaAssets } from '@/lib/custom-formula-storage';
+import { PublishDialog } from './PublishDialog';
 
 const ERROR_KEYS = new Set([
   'unavailable',
@@ -43,6 +51,8 @@ export function MyWorksCloud() {
   const { artworks: localArtworks, saveEnvelope, updateArtwork, bindCloud } = useArtworks();
 
   const [drafts, setDrafts] = useState<CloudDraftSummary[] | null>(null);
+  const [publications, setPublications] = useState<CloudPublicationSummary[] | null>(null);
+  const [publishTarget, setPublishTarget] = useState<CloudDraftSummary | null>(null);
   const [error, setError] = useState<string | null>(null);
   const [busyId, setBusyId] = useState<string | null>(null);
 
@@ -51,7 +61,9 @@ export function MyWorksCloud() {
   const refreshDrafts = useCallback(async () => {
     try {
       setError(null);
-      setDrafts(await listDrafts());
+      const [draftList, publicationList] = await Promise.all([listDrafts(), listPublications()]);
+      setDrafts(draftList);
+      setPublications(publicationList);
     } catch (value) {
       setError(value instanceof CloudClientError ? value.code : 'unavailable');
     }
@@ -62,8 +74,37 @@ export function MyWorksCloud() {
       void refreshDrafts();
     } else {
       setDrafts(null);
+      setPublications(null);
     }
   }, [authenticated, refreshDrafts]);
+
+  /** After publishing, the source draft is gone server-side: clear the
+   * local copy's binding so it returns to the plain local state. */
+  const handlePublished = useCallback(() => {
+    if (publishTarget) {
+      const bound = localArtworks.find((item) => item.cloud?.draftId === publishTarget.id);
+      if (bound) bindCloud(bound.id, null);
+    }
+    setPublishTarget(null);
+    void refreshDrafts();
+  }, [bindCloud, localArtworks, publishTarget, refreshDrafts]);
+
+  const withdraw = useCallback(
+    async (publicationId: string) => {
+      if (!window.confirm(t('confirmWithdraw'))) return;
+      setBusyId(publicationId);
+      setError(null);
+      try {
+        await withdrawPublication(publicationId);
+        await refreshDrafts();
+      } catch (value) {
+        setError(value instanceof CloudClientError ? value.code : 'unavailable');
+      } finally {
+        setBusyId(null);
+      }
+    },
+    [refreshDrafts, t],
+  );
 
   const openDraft = useCallback(
     async (draftId: string) => {
@@ -103,7 +144,7 @@ export function MyWorksCloud() {
         setBusyId(null);
       }
     },
-    [bindCloud, localArtworks, locale, router, saveEnvelope, updateArtwork],
+    [bindCloud, localArtworks, locale, router, saveEnvelope, t, updateArtwork],
   );
 
   const removeDraft = useCallback(
@@ -226,6 +267,14 @@ export function MyWorksCloud() {
               </button>
               <button
                 type="button"
+                onClick={() => setPublishTarget(draft)}
+                disabled={busyId === draft.id}
+                className="rounded-md border px-3 py-1.5 text-xs font-medium transition-colors hover:bg-muted disabled:opacity-50"
+              >
+                {t('publish')}
+              </button>
+              <button
+                type="button"
                 aria-label={t('delete')}
                 title={t('delete')}
                 onClick={() => void removeDraft(draft.id)}
@@ -241,10 +290,57 @@ export function MyWorksCloud() {
 
       <div>
         <h2 className="text-xl font-semibold">{t('publishedTitle')}</h2>
-        <p className="mt-2 rounded-lg border border-dashed px-6 py-5 text-sm text-muted-foreground">
-          {t('publishedEmpty')}
-        </p>
+        {publications === null ? (
+          <p className="mt-2 text-sm text-muted-foreground">{t('loading')}</p>
+        ) : publications.length === 0 ? (
+          <p className="mt-2 rounded-lg border border-dashed px-6 py-5 text-sm text-muted-foreground">
+            {t('publishedEmpty')}
+          </p>
+        ) : (
+          <ul className="mt-2 divide-y rounded-lg border">
+            {publications.map((publication) => (
+              <li
+                key={publication.id}
+                className="flex items-center justify-between gap-3 px-4 py-3"
+              >
+                <div className="min-w-0 flex-1">
+                  <span className="block truncate font-medium">{publication.title}</span>
+                  <span className="block text-xs text-muted-foreground">
+                    {publication.status === 'withdrawn'
+                      ? t('withdrawnMeta', {
+                          date: new Date(publication.withdrawnAt ?? publication.publishedAt).toLocaleDateString(
+                            locale === 'zh' ? 'zh-CN' : 'en-US',
+                          ),
+                        })
+                      : t('publishedMeta', {
+                          license: publication.license,
+                          date: new Date(publication.publishedAt).toLocaleDateString(
+                            locale === 'zh' ? 'zh-CN' : 'en-US',
+                          ),
+                        })}
+                  </span>
+                </div>
+                {publication.status === 'published' && (
+                  <button
+                    type="button"
+                    onClick={() => void withdraw(publication.id)}
+                    disabled={busyId === publication.id}
+                    className="rounded-md border px-3 py-1.5 text-xs font-medium transition-colors hover:bg-muted disabled:opacity-50"
+                  >
+                    {t('withdraw')}
+                  </button>
+                )}
+              </li>
+            ))}
+          </ul>
+        )}
       </div>
+
+      <PublishDialog
+        draft={publishTarget}
+        onClose={() => setPublishTarget(null)}
+        onPublished={handlePublished}
+      />
 
       {unboundLocal.length > 0 && (
         <div>

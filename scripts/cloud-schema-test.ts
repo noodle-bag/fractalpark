@@ -893,6 +893,285 @@ async function main(): Promise<void> {
     psql(`delete from public.artwork_operations where idempotency_key in ('${createKey}', '${deleteKey}')`);
   });
 
+  // ------------------------------------------------------------------
+  // Publication RPCs (commit 7): publish, withdraw, lifecycle invariants
+  // ------------------------------------------------------------------
+  const PUB_OWNER = await createUser(keys, 'pub');
+  psql(
+    `insert into public.profiles (user_id, display_name) values ('${PUB_OWNER}', 'Publisher')
+     on conflict (user_id) do update set display_name = 'Publisher'`,
+  );
+
+  async function makeDraft(title: string): Promise<{ id: string; revision: number }> {
+    const key = crypto.randomUUID();
+    const res = await rpc(keys, 'fractalpark_draft_create', keys.serviceKey, {
+      p_owner_id: PUB_OWNER,
+      p_idempotency_key: key,
+      p_request_hash: `hash-${key}`,
+      p_title: title,
+      p_envelope: { envelopeVersion: 1, document: { meta: title } },
+      p_thumbnail_path: null,
+      p_config_bytes: 48,
+      p_thumbnail_bytes: 0,
+    });
+    const body = JSON.parse(await res.text()) as { draft: { id: string; revision: number } };
+    assert(res.status === 200, `makeDraft: ${res.status}`);
+    return { id: body.draft.id, revision: body.draft.revision };
+  }
+
+  async function publish(
+    draftId: string,
+    revision: number,
+    opts: { quota?: number; attestation?: string } = {},
+  ): Promise<Response> {
+    const key = crypto.randomUUID();
+    return rpc(keys, 'fractalpark_publish_draft', keys.serviceKey, {
+      p_owner_id: PUB_OWNER,
+      p_idempotency_key: key,
+      p_request_hash: `hash-${key}`,
+      p_draft_id: draftId,
+      p_expected_revision: revision,
+      p_title: 'public title',
+      p_description: 'public description',
+      p_envelope: { envelopeVersion: 1, document: { meta: 'public title' } },
+      p_config_bytes: 48,
+      p_rights_attestation_version: opts.attestation ?? '2026-08-02.v1',
+      p_license_version: 'CC-BY-4.0',
+      ...(opts.quota !== undefined ? { p_publish_quota: opts.quota } : {}),
+    });
+  }
+
+  await test('publish: requires a display name before the first publish', async () => {
+    const lonely = await createUser(keys, 'lonely');
+    const key = crypto.randomUUID();
+    const mkRes = await rpc(keys, 'fractalpark_draft_create', keys.serviceKey, {
+      p_owner_id: lonely,
+      p_idempotency_key: key,
+      p_request_hash: `hash-${key}`,
+      p_title: 'lonely draft',
+      p_envelope: { envelopeVersion: 1 },
+      p_thumbnail_path: null,
+      p_config_bytes: 8,
+      p_thumbnail_bytes: 0,
+    });
+    const made = JSON.parse(await mkRes.text()) as { draft: { id: string } };
+    const pubKey = crypto.randomUUID();
+    const res = await rpc(keys, 'fractalpark_publish_draft', keys.serviceKey, {
+      p_owner_id: lonely,
+      p_idempotency_key: pubKey,
+      p_request_hash: `hash-${pubKey}`,
+      p_draft_id: made.draft.id,
+      p_expected_revision: 1,
+      p_title: 't',
+      p_description: '',
+      p_envelope: { envelopeVersion: 1 },
+      p_config_bytes: 8,
+      p_rights_attestation_version: 'v1',
+      p_license_version: 'CC-BY-4.0',
+    });
+    const body = await res.text();
+    assert(res.status !== 200 && body.includes('validation_failed'), `no display name: ${res.status} ${body}`);
+    const stillThere = psql(`select count(*) from public.artwork_drafts where id = '${made.draft.id}'`);
+    assert(stillThere === '1', 'failed publish must keep the source draft');
+  });
+
+  await test('publish: immutable publication, source draft deleted, replay returns original', async () => {
+    const draft = await makeDraft('to publish');
+    const key = crypto.randomUUID();
+    const res = await rpc(keys, 'fractalpark_publish_draft', keys.serviceKey, {
+      p_owner_id: PUB_OWNER,
+      p_idempotency_key: key,
+      p_request_hash: `hash-${key}`,
+      p_draft_id: draft.id,
+      p_expected_revision: draft.revision,
+      p_title: 'immutable one',
+      p_description: 'frozen forever',
+      p_envelope: { envelopeVersion: 1, document: { meta: 'immutable one' } },
+      p_config_bytes: 48,
+      p_rights_attestation_version: '2026-08-02.v1',
+      p_license_version: 'CC-BY-4.0',
+    });
+    const body = JSON.parse(await res.text()) as { publication_id: string; status: string; thumbnail_status: string };
+    assert(res.status === 200 && body.status === 'published', `publish: ${res.status}`);
+    assert(body.thumbnail_status === 'pending', 'public thumbnails start as pending placeholder');
+    const pub = psql(
+      `select author_display_name || '|' || license || '|' || license_scope || '|' || rights_attestation_version || '|' || status
+       from public.artwork_publications where id = '${body.publication_id}'`,
+    );
+    assert(pub === 'Publisher|CC-BY-4.0|artwork_image|2026-08-02.v1|published', `frozen snapshot: ${pub}`);
+    const gone = psql(`select count(*) from public.artwork_drafts where id = '${draft.id}'`);
+    assert(gone === '0', 'source draft must be deleted on success');
+
+    const replayRes = await rpc(keys, 'fractalpark_publish_draft', keys.serviceKey, {
+      p_owner_id: PUB_OWNER,
+      p_idempotency_key: key,
+      p_request_hash: `hash-${key}`,
+      p_draft_id: draft.id,
+      p_expected_revision: draft.revision,
+      p_title: 'immutable one',
+      p_description: 'frozen forever',
+      p_envelope: { envelopeVersion: 1, document: { meta: 'immutable one' } },
+      p_config_bytes: 48,
+      p_rights_attestation_version: '2026-08-02.v1',
+      p_license_version: 'CC-BY-4.0',
+    });
+    const replayed = JSON.parse(await replayRes.text()) as { replayed: boolean; publication_id: string };
+    assert(replayed.replayed === true && replayed.publication_id === body.publication_id, 'publish replay returns the original publication');
+    const count = psql(`select count(*) from public.artwork_publications where owner_id = '${PUB_OWNER}'`);
+    assert(count === '1', 'replay must not duplicate the publication');
+
+    psqlFails(
+      `update public.artwork_publications set title = 'renamed' where id = '${body.publication_id}'`,
+      'frozen title update',
+    );
+  });
+
+  await test('publish: revision conflict and 24h quota consumed atomically', async () => {
+    // A dedicated owner so the shared publish counter starts empty.
+    const quotaOwner = await createUser(keys, 'quota');
+    psql(
+      `insert into public.profiles (user_id, display_name) values ('${quotaOwner}', 'Quota')
+       on conflict (user_id) do update set display_name = 'Quota'`,
+    );
+    async function makeQuotaDraft(title: string): Promise<{ id: string; revision: number }> {
+      const key = crypto.randomUUID();
+      const res = await rpc(keys, 'fractalpark_draft_create', keys.serviceKey, {
+        p_owner_id: quotaOwner,
+        p_idempotency_key: key,
+        p_request_hash: `hash-${key}`,
+        p_title: title,
+        p_envelope: { envelopeVersion: 1 },
+        p_thumbnail_path: null,
+        p_config_bytes: 8,
+        p_thumbnail_bytes: 0,
+      });
+      const body = JSON.parse(await res.text()) as { draft: { id: string; revision: number } };
+      return { id: body.draft.id, revision: body.draft.revision };
+    }
+    async function quotaPublish(draftId: string, revision: number, quota?: number): Promise<Response> {
+      const key = crypto.randomUUID();
+      return rpc(keys, 'fractalpark_publish_draft', keys.serviceKey, {
+        p_owner_id: quotaOwner,
+        p_idempotency_key: key,
+        p_request_hash: `hash-${key}`,
+        p_draft_id: draftId,
+        p_expected_revision: revision,
+        p_title: 'quota piece',
+        p_description: '',
+        p_envelope: { envelopeVersion: 1 },
+        p_config_bytes: 8,
+        p_rights_attestation_version: '2026-08-02.v1',
+        p_license_version: 'CC-BY-4.0',
+        ...(quota !== undefined ? { p_publish_quota: quota } : {}),
+      });
+    }
+
+    const first = await makeQuotaDraft('quota one');
+    const badRev = await quotaPublish(first.id, 99);
+    const badBody = await badRev.text();
+    assert(badRev.status !== 200 && badBody.includes('revision_conflict'), `stale revision: ${badRev.status} ${badBody}`);
+
+    const okRes = await quotaPublish(first.id, first.revision, 1);
+    assert(okRes.status === 200, `first publish within quota: ${okRes.status} ${await okRes.text()}`);
+    const second = await makeQuotaDraft('quota two');
+    const blocked = await quotaPublish(second.id, second.revision, 1);
+    const blockedBody = await blocked.text();
+    assert(blocked.status !== 200 && blockedBody.includes('rate_limited'), `quota: ${blocked.status} ${blockedBody}`);
+    const surviving = psql(`select count(*) from public.artwork_drafts where id = '${second.id}'`);
+    assert(surviving === '1', 'rate-limited publish keeps the source draft');
+  });
+
+  await test('publish: provenance frozen from the draft, not from the client', async () => {
+    const key = crypto.randomUUID();
+    const mkRes = await rpc(keys, 'fractalpark_draft_create', keys.serviceKey, {
+      p_owner_id: PUB_OWNER,
+      p_idempotency_key: key,
+      p_request_hash: `hash-${key}`,
+      p_title: 'remixed',
+      p_envelope: { envelopeVersion: 1 },
+      p_thumbnail_path: null,
+      p_config_bytes: 8,
+      p_thumbnail_bytes: 0,
+      p_remix_source_type: 'preset',
+      p_remix_source_id: 'gallery-nebula',
+    });
+    const made = JSON.parse(await mkRes.text()) as { draft: { id: string } };
+    const res = await publish(made.draft.id, 1);
+    const body = JSON.parse(await res.text()) as { publication_id: string };
+    assert(res.status === 200, `publish remixed: ${res.status} ${JSON.stringify(body)}`);
+    const prov = psql(
+      `select remix_source_type || '|' || remix_source_id from public.artwork_publications where id = '${body.publication_id}'`,
+    );
+    assert(prov === 'preset|gallery-nebula', `provenance frozen from the draft: ${prov}`);
+  });
+
+  await test('withdraw: tombstone, content cleared, idempotent, uniform foreign not_found', async () => {
+    const draft = await makeDraft('to withdraw');
+    const pubRes = await publish(draft.id, draft.revision);
+    const pub = JSON.parse(await pubRes.text()) as { publication_id: string };
+    assert(pubRes.status === 200, `seed publish: ${pubRes.status}`);
+
+    const wKey = crypto.randomUUID();
+    const wRes = await rpc(keys, 'fractalpark_withdraw_publication', keys.serviceKey, {
+      p_owner_id: PUB_OWNER,
+      p_idempotency_key: wKey,
+      p_request_hash: `hash-${wKey}`,
+      p_publication_id: pub.publication_id,
+    });
+    const wBody = JSON.parse(await wRes.text()) as { status: string };
+    assert(wRes.status === 200 && wBody.status === 'withdrawn', `withdraw: ${wRes.status}`);
+    const tomb = psql(
+      `select status || '|' || coalesce(envelope::text, 'null') || '|' || coalesce(description, 'null') || '|' || coalesce(thumbnail_path, 'null')
+       from public.artwork_publications where id = '${pub.publication_id}'`,
+    );
+    assert(tomb === 'withdrawn|null|null|null', `tombstone: ${tomb}`);
+    const hasTime = psql(`select withdrawn_at is not null from public.artwork_publications where id = '${pub.publication_id}'`);
+    assert(hasTime === 't', 'withdrawn_at recorded');
+
+    const againKey = crypto.randomUUID();
+    const again = await rpc(keys, 'fractalpark_withdraw_publication', keys.serviceKey, {
+      p_owner_id: PUB_OWNER,
+      p_idempotency_key: againKey,
+      p_request_hash: `hash-${againKey}`,
+      p_publication_id: pub.publication_id,
+    });
+    const againBody = JSON.parse(await again.text()) as { status: string };
+    assert(again.status === 200 && againBody.status === 'withdrawn', 'repeat withdraw is an idempotent no-op');
+
+    const foreign = await rpc(keys, 'fractalpark_withdraw_publication', keys.serviceKey, {
+      p_owner_id: RPC_OWNER_B,
+      p_idempotency_key: crypto.randomUUID(),
+      p_request_hash: 'hash-foreign-withdraw-padding-32chars',
+      p_publication_id: pub.publication_id,
+    });
+    const foreignBody = await foreign.text();
+    assert(foreign.status !== 200 && foreignBody.includes('not_found'), `foreign withdraw: ${foreign.status} ${foreignBody}`);
+  });
+
+  await test('publication RPCs are not executable by anon', async () => {
+    const res = await rpc(keys, 'fractalpark_publish_draft', keys.anonKey, {
+      p_owner_id: PUB_OWNER,
+      p_idempotency_key: crypto.randomUUID(),
+      p_request_hash: 'hash-anon',
+      p_draft_id: crypto.randomUUID(),
+      p_expected_revision: 1,
+      p_title: 'x',
+      p_description: '',
+      p_envelope: { envelopeVersion: 1 },
+      p_config_bytes: 1,
+      p_rights_attestation_version: 'v1',
+      p_license_version: 'CC-BY-4.0',
+    });
+    assert(res.status !== 200, `anon must not execute publish: ${res.status}`);
+    const wRes = await rpc(keys, 'fractalpark_withdraw_publication', keys.anonKey, {
+      p_owner_id: PUB_OWNER,
+      p_idempotency_key: crypto.randomUUID(),
+      p_request_hash: 'hash-anon',
+      p_publication_id: crypto.randomUUID(),
+    });
+    assert(wRes.status !== 200, `anon must not execute withdraw: ${wRes.status}`);
+  });
+
   await test('draft RPCs are not executable by anon or authenticated', async () => {
     const anonRes = await rpc(keys, 'fractalpark_draft_create', keys.anonKey, {
       p_owner_id: RPC_OWNER_A,
