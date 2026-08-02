@@ -21,7 +21,7 @@ function memoryStorage(): Storage {
   };
 }
 
-const ENVELOPE = { envelopeVersion: 1, document: DEFAULT_FRACTAL_DOCUMENT };
+const ENVELOPE = { envelopeVersion: 1 as const, document: DEFAULT_FRACTAL_DOCUMENT };
 const BINDING: ArtworkCloudBinding = { draftId: 'd-1', revision: 3, syncedAt: 1234567890 };
 
 describe('StoredArtworkRecordV2', () => {

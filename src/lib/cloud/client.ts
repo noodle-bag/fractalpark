@@ -20,6 +20,9 @@ export type CloudClientErrorCode =
   | 'rate_limited'
   | 'idempotency_conflict'
   | 'revision_conflict'
+  | 'otp_invalid'
+  | 'payload_too_large'
+  | 'formula_assets_not_publishable'
   | 'unavailable';
 
 export class CloudClientError extends Error {
@@ -45,6 +48,9 @@ const API_CODES = new Set<CloudClientErrorCode>([
   'rate_limited',
   'idempotency_conflict',
   'revision_conflict',
+  'otp_invalid',
+  'payload_too_large',
+  'formula_assets_not_publishable',
   'unavailable',
 ]);
 

@@ -10,6 +10,7 @@ import {
   getArtworkAnalyticsContext,
   getProjectFileSizeBucket,
 } from '@/lib/artwork-analytics';
+import type { ArtworkCloudBinding } from '@/lib/artwork-repository';
 import { captureThumbnail } from '@/lib/capture-thumbnail';
 import { syncArtworkToCloud } from '@/lib/cloud/sync';
 import {
@@ -73,6 +74,10 @@ export function useArtworkActions({
   const [status, setStatus] = useState<ArtworkActionStatus>({ phase: 'idle' });
   const [cloudPhase, setCloudPhase] = useState<CloudSyncPhase>('idle');
   const pendingRef = useRef(false);
+  // Holds a successful cloud binding whose local write failed (storage
+  // full/blocked), so the next save PATCHes the same draft instead of
+  // creating a duplicate.
+  const pendingBindingRef = useRef<{ localId: string; binding: ArtworkCloudBinding } | null>(null);
   const { saveDocument, updateArtwork, bindCloud, readById, storageInfo } = useArtworks();
   const { state: cloudSession } = useCloudSession();
 
@@ -115,7 +120,6 @@ export function useArtworkActions({
       // failure never erases the local success.
       const existing = currentArtworkId ? readById(currentArtworkId) : undefined;
       let localId: string;
-      let binding = existing?.cloud ?? null;
       if (existing && existing.storageFormat === 'document') {
         const updated = updateArtwork(existing.id, name, envelope, thumbnail);
         if (!updated.success) {
@@ -131,6 +135,10 @@ export function useArtworkActions({
         }
         localId = result.value.id;
       }
+      let binding = existing?.cloud ?? null;
+      if (!binding && pendingBindingRef.current?.localId === localId) {
+        binding = pendingBindingRef.current.binding;
+      }
       trackEvent('save_fractal', {
         formula: document.formula.formulaId,
         ...getArtworkAnalyticsContext(document),
@@ -140,10 +148,19 @@ export function useArtworkActions({
         setCloudPhase('syncing');
         const outcome = await syncArtworkToCloud({ envelope, thumbnail, binding });
         switch (outcome.kind) {
-          case 'synced':
-            bindCloud(localId, outcome.binding);
-            setCloudPhase('synced');
+          case 'synced': {
+            const wrote = bindCloud(localId, outcome.binding);
+            if (wrote.success) {
+              pendingBindingRef.current = null;
+              setCloudPhase('synced');
+            } else {
+              // The cloud draft exists; only the local binding write failed.
+              // Keep it in memory so the next save PATCHes this draft.
+              pendingBindingRef.current = { localId, binding: outcome.binding };
+              setCloudPhase('failed');
+            }
             break;
+          }
           case 'conflict':
             setCloudPhase('conflict');
             break;

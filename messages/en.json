@@ -32,6 +32,7 @@
       "refresh": "Refresh",
       "delete": "Delete",
       "confirmDelete": "Delete this cloud draft permanently? The copy on this device is not affected.",
+      "confirmOverwrite": "The copy on this device has changes that never reached the cloud. Opening the cloud draft replaces them. Continue?",
       "importTitle": "On this device, not yet synced",
       "import": "Sync to cloud",
       "importing": "Syncing…",

@@ -20,6 +20,21 @@ import { deleteDraft, importArtworkToCloud, openCloudDraft } from '@/lib/cloud/s
 import { createFractalDocumentEnvelope } from '@/lib/fractal-file';
 import { readLocalFormulaAssets } from '@/lib/custom-formula-storage';
 
+const ERROR_KEYS = new Set([
+  'unavailable',
+  'quota_exceeded',
+  'offline',
+  'not_found',
+  'unauthenticated',
+  'invalid_envelope',
+  'rate_limited',
+]);
+
+/** Map any client error code to a message key that actually exists. */
+function errorKey(code: string): string {
+  return ERROR_KEYS.has(code) ? `errors.${code}` : 'errors.unavailable';
+}
+
 export function MyWorksCloud() {
   const t = useTranslations('cloud.myWorks');
   const locale = useLocale();
@@ -59,6 +74,16 @@ export function MyWorksCloud() {
         // Hydrate the local recovery copy: refresh the bound record when
         // one exists, otherwise create a new local record and bind it.
         const bound = localArtworks.find((item) => item.cloud?.draftId === draftId);
+        // Guard: if the local copy has edits made after the last successful
+        // sync (e.g. the user kept saving through a revision conflict), the
+        // cloud version would silently destroy them — confirm first.
+        if (
+          bound?.cloud &&
+          (bound.updatedAt ?? 0) > bound.cloud.syncedAt &&
+          !window.confirm(t('confirmOverwrite'))
+        ) {
+          return;
+        }
         const name = detail.title || 'Untitled';
         let localId: string;
         if (bound) {
@@ -173,7 +198,7 @@ export function MyWorksCloud() {
         </div>
       </div>
 
-      {error && <p className="text-sm text-destructive">{t(`errors.${error}`, { fallback: t('errors.unavailable') })}</p>}
+      {error && <p className="text-sm text-destructive">{t(errorKey(error))}</p>}
 
       {drafts === null ? (
         <p className="text-sm text-muted-foreground">{t('loading')}</p>

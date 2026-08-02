@@ -32,6 +32,7 @@
       "refresh": "刷新",
       "delete": "删除",
       "confirmDelete": "永久删除这份云端草稿？本机上的副本不受影响。",
+      "confirmOverwrite": "本机上的副本有从未同步到云端的改动，打开云端草稿会覆盖它们。继续？",
       "importTitle": "本机作品，尚未同步",
       "import": "同步到云端",
       "importing": "同步中…",

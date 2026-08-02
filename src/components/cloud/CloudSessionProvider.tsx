@@ -84,6 +84,7 @@ function OtpDialog({ open, onClose, onVerified }: {
           case 'cloud_disabled':
             return t('errors.disabled');
           case 'unauthenticated':
+          case 'otp_invalid':
             return t('errors.wrongCode');
           default:
             return t('errors.generic');
