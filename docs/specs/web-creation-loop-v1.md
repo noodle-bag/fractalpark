@@ -244,11 +244,18 @@ Six tables and two storage buckets carry the cloud state.
 ### 4.7 Storage buckets
 
 - `draft-thumbnails`: private. Thumbnails arrive base64-encoded inside the
-  JSON save request, are decoded, validated for real format, dimensions,
-  and bytes, and re-encoded through a fixed JPEG/WebP pipeline before
-  writing. Client MIME types, extensions, and size claims are never
-  trusted. Owner-only reads use signed URLs valid for
-  5 minutes. A private thumbnail never becomes public.
+  JSON save request, are validated by magic-byte sniffing (PNG, JPEG, or
+  WebP) and a 500 KB byte cap, and are stored as received; client MIME
+  types, extensions, and size claims are never trusted. Owner-only reads
+  use signed URLs valid for 5 minutes. A private thumbnail never becomes
+  public.
+  - Decision (2026-08-02, owner-approved): pixel-level decode/re-encode is
+    intentionally omitted for the private bucket. The blast radius is
+    owner-only (an uploader can only affect their own thumbnails), and
+    public thumbnails below never ingest client image bytes, so no
+    client-controlled image content ever reaches other users. If draft
+    thumbnails ever gain a cross-user display path, pixel re-encoding
+    becomes mandatory at that boundary.
 - `publication-thumbnails`: publicly readable, server-only writable. Public
   thumbnails are produced only by the controlled server render path from the
   immutable publication envelope; before generation and after failure the
