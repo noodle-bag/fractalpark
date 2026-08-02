@@ -634,6 +634,224 @@ async function main(): Promise<void> {
     assert(readDraftUser.status === 400 || readDraftUser.status === 401 || readDraftUser.status === 403 || readDraftUser.status === 404, `authenticated read draft bucket: ${readDraftUser.status}`);
   });
 
+  console.log('== draft owner RPCs (v0.4.15 commit 5) ==');
+
+  // Dedicated users: the shared fixtures may have been deleted by the
+  // account-deletion battery above, and profiles references auth.users.
+  const RPC_OWNER_A = await createUser(keys, 'rpc-a');
+  const RPC_OWNER_B = await createUser(keys, 'rpc-b');
+
+  await test('draft_create: draft + operation atomically, replay converges, hash conflict rejects', async () => {
+    const key = crypto.randomUUID();
+    const args = {
+      p_owner_id: RPC_OWNER_A,
+      p_idempotency_key: key,
+      p_request_hash: `hash-${key}`,
+      p_title: 'RPC draft',
+      p_envelope: { envelopeVersion: 1, document: { schemaVersion: 2 } },
+      p_thumbnail_path: null,
+      p_config_bytes: 128,
+      p_thumbnail_bytes: 0,
+      p_remix_source_type: null,
+      p_remix_source_id: null,
+    };
+    const createRes = await rpc(keys, 'fractalpark_draft_create', keys.serviceKey, args);
+    const createBody = await createRes.text();
+    assert(createRes.status === 200, `create: ${createRes.status} ${createBody}`);
+    const created = JSON.parse(createBody) as { replayed: boolean; draft: { id: string; revision: number } };
+    assert(created.replayed === false, 'first create must not replay');
+    assert(created.draft.revision === 1, 'revision starts at 1');
+
+    const replayRes = await rpc(keys, 'fractalpark_draft_create', keys.serviceKey, args);
+    const replayed = (await replayRes.json()) as { replayed: boolean; draft_id: string; revision: number };
+    assert(replayRes.status === 200 && replayed.replayed === true, `replay: ${replayRes.status}`);
+    assert(replayed.draft_id === created.draft.id && replayed.revision === 1, 'replay returns the original result');
+
+    const count = psql(
+      `select count(*) from public.artwork_drafts where id = '${created.draft.id}'`,
+    );
+    assert(count === '1', 'replay must not duplicate the draft');
+    const opCount = psql(
+      `select count(*) from public.artwork_operations where owner_id = '${RPC_OWNER_A}' and idempotency_key = '${key}'`,
+    );
+    assert(opCount === '1', 'exactly one operation row per (owner, key)');
+
+    const conflictRes = await rpc(keys, 'fractalpark_draft_create', keys.serviceKey, {
+      ...args,
+      p_request_hash: `other-${key}`,
+    });
+    const conflictBody = await conflictRes.text();
+    assert(conflictRes.status !== 200 && conflictBody.includes('idempotency_conflict'), `hash conflict: ${conflictRes.status} ${conflictBody}`);
+
+    psql(`delete from public.artwork_drafts where id = '${created.draft.id}'`);
+    psql(`delete from public.artwork_operations where owner_id = '${RPC_OWNER_A}' and idempotency_key = '${key}'`);
+  });
+
+  await test('draft_update: optimistic revision contract and frozen-trigger compatibility', async () => {
+    const createKey = crypto.randomUUID();
+    const createRes = await rpc(keys, 'fractalpark_draft_create', keys.serviceKey, {
+      p_owner_id: RPC_OWNER_A,
+      p_idempotency_key: createKey,
+      p_request_hash: `hash-${createKey}`,
+      p_title: 'to update',
+      p_envelope: { envelopeVersion: 1, document: { schemaVersion: 2 } },
+      p_thumbnail_path: null,
+      p_config_bytes: 64,
+      p_thumbnail_bytes: 0,
+    });
+    const created = JSON.parse(await createRes.text()) as { draft: { id: string } };
+    const draftId = created.draft.id;
+
+    const wrongRes = await rpc(keys, 'fractalpark_draft_update', keys.serviceKey, {
+      p_owner_id: RPC_OWNER_A,
+      p_draft_id: draftId,
+      p_idempotency_key: crypto.randomUUID(),
+      p_request_hash: 'hash-wrong-rev',
+      p_expected_revision: 5,
+      p_title: 'x',
+      p_envelope: { envelopeVersion: 1 },
+      p_thumbnail_path: null,
+      p_config_bytes: 64,
+      p_thumbnail_bytes: 0,
+    });
+    const wrongBody = await wrongRes.text();
+    assert(wrongRes.status !== 200 && wrongBody.includes('revision_conflict'), `wrong revision: ${wrongRes.status} ${wrongBody}`);
+
+    const updateKey = crypto.randomUUID();
+    const okRes = await rpc(keys, 'fractalpark_draft_update', keys.serviceKey, {
+      p_owner_id: RPC_OWNER_A,
+      p_draft_id: draftId,
+      p_idempotency_key: updateKey,
+      p_request_hash: `hash-${updateKey}`,
+      p_expected_revision: 1,
+      p_title: 'updated',
+      p_envelope: { envelopeVersion: 1, document: { schemaVersion: 2, note: 'v2' } },
+      p_thumbnail_path: null,
+      p_config_bytes: 80,
+      p_thumbnail_bytes: 0,
+    });
+    const okBody = await okRes.text();
+    assert(okRes.status === 200, `update: ${okRes.status} ${okBody}`);
+    const updated = JSON.parse(okBody) as { draft: { revision: number; title: string } };
+    assert(updated.draft.revision === 2 && updated.draft.title === 'updated', 'revision increments by exactly one');
+
+    const replayRes = await rpc(keys, 'fractalpark_draft_update', keys.serviceKey, {
+      p_owner_id: RPC_OWNER_A,
+      p_draft_id: draftId,
+      p_idempotency_key: updateKey,
+      p_request_hash: `hash-${updateKey}`,
+      p_expected_revision: 1,
+      p_title: 'updated',
+      p_envelope: { envelopeVersion: 1, document: { schemaVersion: 2, note: 'v2' } },
+      p_thumbnail_path: null,
+      p_config_bytes: 80,
+      p_thumbnail_bytes: 0,
+    });
+    const replayed = JSON.parse(await replayRes.text()) as { replayed: boolean; revision: number };
+    assert(replayed.replayed === true && replayed.revision === 2, 'update replay returns the stored revision');
+    const finalRev = psql(`select revision from public.artwork_drafts where id = '${draftId}'`);
+    assert(finalRev === '2', 'replay must not re-increment');
+
+    psql(`delete from public.artwork_drafts where id = '${draftId}'`);
+    psql(`delete from public.artwork_operations where draft_id = '${draftId}' or idempotency_key in ('${createKey}', '${updateKey}')`);
+  });
+
+  await test('draft_create quotas: count and storage enforced with test-tunable limits', async () => {
+    const quotaArgs = (key: string, bytes: number) => ({
+      p_owner_id: RPC_OWNER_B,
+      p_idempotency_key: key,
+      p_request_hash: `hash-${key}`,
+      p_title: 'quota',
+      p_envelope: { envelopeVersion: 1 },
+      p_thumbnail_path: null,
+      p_config_bytes: bytes,
+      p_thumbnail_bytes: 0,
+      p_draft_quota: 1,
+      p_storage_quota_bytes: 150,
+    });
+    const first = await rpc(keys, 'fractalpark_draft_create', keys.serviceKey, quotaArgs(crypto.randomUUID(), 100));
+    assert(first.status === 200, `first quota draft: ${first.status} ${await first.text()}`);
+    const countLimited = await rpc(keys, 'fractalpark_draft_create', keys.serviceKey, quotaArgs(crypto.randomUUID(), 10));
+    const countBody = await countLimited.text();
+    assert(countLimited.status !== 200 && countBody.includes('quota_exceeded'), `count quota: ${countLimited.status} ${countBody}`);
+
+    psql(`delete from public.artwork_drafts where owner_id = '${RPC_OWNER_B}'`);
+    psql(`delete from public.artwork_operations where owner_id = '${RPC_OWNER_B}'`);
+
+    const storageLimited = await rpc(keys, 'fractalpark_draft_create', keys.serviceKey, quotaArgs(crypto.randomUUID(), 200));
+    const storageBody = await storageLimited.text();
+    assert(storageLimited.status !== 200 && storageBody.includes('quota_exceeded'), `storage quota: ${storageLimited.status} ${storageBody}`);
+    psql(`delete from public.artwork_operations where owner_id = '${RPC_OWNER_B}'`);
+  });
+
+  await test('draft_delete: permanent, thumbnail cleanup job registered, uniform not_found', async () => {
+    const createKey = crypto.randomUUID();
+    const thumbPath = `${RPC_OWNER_A}/cleanup-${Date.now()}.png`;
+    const createRes = await rpc(keys, 'fractalpark_draft_create', keys.serviceKey, {
+      p_owner_id: RPC_OWNER_A,
+      p_idempotency_key: createKey,
+      p_request_hash: `hash-${createKey}`,
+      p_title: 'to delete',
+      p_envelope: { envelopeVersion: 1 },
+      p_thumbnail_path: thumbPath,
+      p_config_bytes: 32,
+      p_thumbnail_bytes: 16,
+    });
+    const created = JSON.parse(await createRes.text()) as { draft: { id: string } };
+    const draftId = created.draft.id;
+
+    const deleteKey = crypto.randomUUID();
+    const delRes = await rpc(keys, 'fractalpark_draft_delete', keys.serviceKey, {
+      p_owner_id: RPC_OWNER_A,
+      p_draft_id: draftId,
+      p_idempotency_key: deleteKey,
+      p_request_hash: `hash-${deleteKey}`,
+    });
+    const delBody = await delRes.text();
+    assert(delRes.status === 200, `delete: ${delRes.status} ${delBody}`);
+    const gone = psql(`select count(*) from public.artwork_drafts where id = '${draftId}'`);
+    assert(gone === '0', 'draft row must be gone');
+    const jobCount = psql(
+      `select count(*) from public.resource_cleanup_jobs where resource_type = 'draft_thumbnail' and resource_key = '${thumbPath}'`,
+    );
+    assert(jobCount === '1', 'cleanup job registered for the thumbnail');
+
+    const replayRes = await rpc(keys, 'fractalpark_draft_delete', keys.serviceKey, {
+      p_owner_id: RPC_OWNER_A,
+      p_draft_id: draftId,
+      p_idempotency_key: deleteKey,
+      p_request_hash: `hash-${deleteKey}`,
+    });
+    const replayed = JSON.parse(await replayRes.text()) as { replayed: boolean; deleted: boolean };
+    assert(replayed.replayed === true && replayed.deleted === true, 'delete replay returns the original result');
+
+    const foreignRes = await rpc(keys, 'fractalpark_draft_delete', keys.serviceKey, {
+      p_owner_id: RPC_OWNER_B,
+      p_draft_id: draftId,
+      p_idempotency_key: crypto.randomUUID(),
+      p_request_hash: 'hash-foreign',
+    });
+    const foreignBody = await foreignRes.text();
+    assert(foreignRes.status !== 200 && foreignBody.includes('not_found'), `foreign delete must be uniform not_found: ${foreignRes.status} ${foreignBody}`);
+
+    psql(`delete from public.resource_cleanup_jobs where resource_key = '${thumbPath}'`);
+    psql(`delete from public.artwork_operations where idempotency_key in ('${createKey}', '${deleteKey}')`);
+  });
+
+  await test('draft RPCs are not executable by anon or authenticated', async () => {
+    const anonRes = await rpc(keys, 'fractalpark_draft_create', keys.anonKey, {
+      p_owner_id: RPC_OWNER_A,
+      p_idempotency_key: crypto.randomUUID(),
+      p_request_hash: 'hash-anon',
+      p_title: 'anon',
+      p_envelope: { envelopeVersion: 1 },
+      p_thumbnail_path: null,
+      p_config_bytes: 1,
+      p_thumbnail_bytes: 0,
+    });
+    assert(anonRes.status !== 200, `anon must not execute draft_create: ${anonRes.status}`);
+  });
+
   console.log(`\n${passed} passed, ${failed} failed`);
   if (failed > 0) {
     console.error('FAILURES:\n' + failures.map((f) => `  - ${f}`).join('\n'));
