@@ -47,7 +47,7 @@
       "backupCancel": "Not now",
       "publishedMeta": "{license} · published {date}",
       "withdrawnMeta": "Withdrawn {date}",
-      "hiddenMeta": "Hidden by moderation · published {date} · only you can see this row",
+      "hiddenMeta": "Hidden by moderation · published {date} · in the app, only you can see this row",
       "importTitle": "On this device, not yet synced",
       "import": "Sync to cloud",
       "importing": "Syncing…",

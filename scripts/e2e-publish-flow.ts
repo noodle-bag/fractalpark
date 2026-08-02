@@ -288,8 +288,8 @@ async function main(): Promise<void> {
   });
   assert(lateRemix.status === 400, `remix of withdrawn refused (${lateRemix.status})`);
 
-  // 9b. Maintainer moderation chain on the FIRST publication is exercised
-  // below, right before its withdrawal (see "moderation" section).
+  // 9b. The maintainer moderation chain ran at 7b (before withdrawal):
+  // hide -> 404 -> off-list -> remix refused -> idempotent re-hide -> restore.
 
   // 10. Backup email chain (Mailpit as the SMTP provider). Mode default off:
   // the earlier publish reported not_requested. Turn on publish_only, then

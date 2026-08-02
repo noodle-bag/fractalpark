@@ -48,7 +48,7 @@
       "backupCancel": "先不了",
       "publishedMeta": "{license} · 发布于 {date}",
       "withdrawnMeta": "已于 {date} 撤回",
-      "hiddenMeta": "已被平台隐藏 · 发布于 {date} · 只有你能看到这一行",
+      "hiddenMeta": "已被平台隐藏 · 发布于 {date} · 应用内只有你能看到这一行",
       "importTitle": "本机作品，尚未同步",
       "import": "同步到云端",
       "importing": "同步中…",
