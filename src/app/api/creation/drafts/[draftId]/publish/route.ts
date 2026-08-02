@@ -15,6 +15,7 @@ import {
   assertSameOrigin,
   CloudApiError,
   jsonOk,
+  readJsonBody,
   toErrorResponse,
 } from '@/lib/cloud/api';
 import { DraftServiceError, getDraft } from '@/lib/cloud/drafts';
@@ -62,12 +63,7 @@ export async function POST(
     const idempotencyKey = request.headers.get('idempotency-key');
     if (!idempotencyKey) throw new CloudApiError('validation_failed');
 
-    let body: unknown;
-    try {
-      body = await request.json();
-    } catch {
-      throw new CloudApiError('validation_failed');
-    }
+    const body: unknown = await readJsonBody(request);
     const parsed = body as {
       expectedRevision?: unknown;
       title?: unknown;
@@ -105,7 +101,7 @@ export async function POST(
       }
       throw error;
     }
-    const envelopeBytes = JSON.stringify(draft.envelope ?? null).length;
+    const envelopeBytes = Buffer.byteLength(JSON.stringify(draft.envelope ?? null), 'utf8');
     const verdict = validateCloudEnvelopeV1(draft.envelope, envelopeBytes);
     if (!verdict.ok) throw new CloudApiError('invalid_envelope');
     if (verdict.value.hasPortableFormulas) {

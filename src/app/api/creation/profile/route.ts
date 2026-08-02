@@ -9,6 +9,7 @@ import {
   assertSameOrigin,
   CloudApiError,
   jsonOk,
+  readJsonBody,
   toErrorResponse,
 } from '@/lib/cloud/api';
 import { DraftServiceError } from '@/lib/cloud/drafts';
@@ -48,12 +49,7 @@ export async function PATCH(request: Request): Promise<Response> {
     assertCloudEnabled();
     assertSameOrigin(request);
     const { session, rotatedSetCookie } = await resolveRequestSession(request);
-    let body: unknown;
-    try {
-      body = await request.json();
-    } catch {
-      throw new CloudApiError('validation_failed');
-    }
+    const body: unknown = await readJsonBody(request);
     const displayName =
       typeof (body as { displayName?: unknown })?.displayName === 'string'
         ? (body as { displayName: string }).displayName

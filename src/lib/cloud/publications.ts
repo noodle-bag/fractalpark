@@ -13,12 +13,16 @@
 
 import { createHash } from 'node:crypto';
 
-import { RIGHTS_ATTESTATION_VERSION } from './attestation';
 import { getSupabaseConfig } from './config';
 import { canonicalStringify } from './envelope';
 import { DraftServiceError } from './drafts';
 
-export { RIGHTS_ATTESTATION_VERSION };
+/**
+ * Current rights attestation version the client must confirm at publish.
+ * This module is the source of truth; `src/lib/cloud/attestation.ts` is
+ * the browser-safe mirror, and the two are locked equal by a unit test.
+ */
+export const RIGHTS_ATTESTATION_VERSION = '2026-08-02.v1';
 /** Current license display version frozen onto every publication. */
 export const LICENSE_VERSION = 'CC-BY-4.0';
 
@@ -118,14 +122,17 @@ export async function getProfile(ownerId: string): Promise<ProfileDto> {
   return { displayName: rows[0]?.display_name ?? null };
 }
 
+const CONTROL_PATTERN = /[\u0000-\u001f\u007f-\u009f\u200b\u200e\u200f\u061c\u202a-\u202e\u2066-\u2069]/;
+
 /** Validate and persist the display name (1–40 plain-text characters). */
 export async function setDisplayName(ownerId: string, displayName: string): Promise<ProfileDto> {
   const trimmed = displayName.trim();
   if (trimmed.length < 1 || trimmed.length > DISPLAY_NAME_MAX) {
     throw new DraftServiceError('validation_failed');
   }
-  // Plain text only: no control characters, no bidi/format overrides.
-  if (/[\u0000-\u001f\u007f-\u009f\u202a-\u202e\u2066-\u2069]/.test(trimmed)) {
+  // Plain text only: no control characters, no bidi/format overrides or
+  // zero-width spoofing glyphs.
+  if (CONTROL_PATTERN.test(trimmed)) {
     throw new DraftServiceError('validation_failed');
   }
   const response = await postgrest('profiles', {
@@ -235,15 +242,14 @@ interface PublishRpcResult {
 
 /** Plain-text validation for public metadata (title/description). */
 export function validatePublicationText(title: string, description: string): boolean {
-  const controlPattern = /[\u0000-\u001f\u007f-\u009f\u202a-\u202e\u2066-\u2069]/;
   const t = title.trim();
   const d = description.trim();
   return (
     t.length >= 1 &&
     t.length <= PUBLISH_TITLE_MAX &&
     d.length <= PUBLISH_DESCRIPTION_MAX &&
-    !controlPattern.test(t) &&
-    !controlPattern.test(d)
+    !CONTROL_PATTERN.test(t) &&
+    !CONTROL_PATTERN.test(d)
   );
 }
 

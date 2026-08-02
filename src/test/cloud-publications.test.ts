@@ -1,17 +1,43 @@
-import { describe, expect, it } from 'vitest';
+import { afterEach, describe, expect, it, vi } from 'vitest';
 
-import { RIGHTS_ATTESTATION_VERSION } from '@/lib/cloud/attestation';
+import { RIGHTS_ATTESTATION_VERSION as CLIENT_MIRROR } from '@/lib/cloud/attestation';
 import {
   LICENSE_VERSION,
-  RIGHTS_ATTESTATION_VERSION as SERVER_VERSION,
+  publishDraft,
+  RIGHTS_ATTESTATION_VERSION,
   validatePublicationText,
 } from '@/lib/cloud/publications';
+import { DraftServiceError } from '@/lib/cloud/drafts';
 
 describe('publication attestation + metadata contracts', () => {
-  it('client and server share one attestation version', () => {
-    expect(SERVER_VERSION).toBe(RIGHTS_ATTESTATION_VERSION);
+  afterEach(() => {
+    vi.unstubAllGlobals();
+  });
+
+  it('locks the client mirror to the server attestation version', () => {
+    // publications.ts is the source of truth; attestation.ts is the
+    // browser mirror. A drift between them breaks publish UX at runtime.
+    expect(CLIENT_MIRROR).toBe(RIGHTS_ATTESTATION_VERSION);
     expect(RIGHTS_ATTESTATION_VERSION).toMatch(/^\d{4}-\d{2}-\d{2}\.v\d+$/);
     expect(LICENSE_VERSION).toBe('CC-BY-4.0');
+  });
+
+  it('rejects a stale attestation version before any network call', async () => {
+    const fetchSpy = vi.fn();
+    vi.stubGlobal('fetch', fetchSpy);
+    await expect(
+      publishDraft('owner-1', {
+        draftId: 'draft-1',
+        expectedRevision: 1,
+        title: 't',
+        description: '',
+        canonicalEnvelope: { envelopeVersion: 1 },
+        configBytes: 8,
+        attestationVersion: '1999-01-01.v1',
+        idempotencyKey: crypto.randomUUID(),
+      }),
+    ).rejects.toMatchObject({ code: 'validation_failed' } satisfies Partial<DraftServiceError>);
+    expect(fetchSpy).not.toHaveBeenCalled();
   });
 
   it('accepts ordinary bilingual metadata', () => {
