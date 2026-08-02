@@ -450,6 +450,12 @@ TypeScript or RPC branches:
 | Read/modify rate-limit counters | Deny | Deny | Deny | Allow |
 | Read/advance cleanup jobs | Deny | Safe summary via own operations | Deny by default | Allow |
 
+The controlled panel mechanism for hide/restore is the service-role-only
+RPC `artwork_publication_set_moderation(publication_id, 'hide' | 'restore',
+reason)` — idempotent per target state, terminal-state rejecting, and the
+only writer of `hidden_at`/`moderation_reason`. Operator procedure lives in
+`docs/runbooks/moderation.md`.
+
 ### 10.1 Enforcement layers
 
 - The browser calls only FractalPark's same-origin Auth and artwork APIs.

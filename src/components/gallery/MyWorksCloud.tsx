@@ -384,15 +384,21 @@ export function MyWorksCloud() {
                             locale === 'zh' ? 'zh-CN' : 'en-US',
                           ),
                         })
-                      : t('publishedMeta', {
-                          license: publication.license,
-                          date: new Date(publication.publishedAt).toLocaleDateString(
-                            locale === 'zh' ? 'zh-CN' : 'en-US',
-                          ),
-                        })}
+                      : publication.status === 'hidden'
+                        ? t('hiddenMeta', {
+                            date: new Date(publication.publishedAt).toLocaleDateString(
+                              locale === 'zh' ? 'zh-CN' : 'en-US',
+                            ),
+                          })
+                        : t('publishedMeta', {
+                            license: publication.license,
+                            date: new Date(publication.publishedAt).toLocaleDateString(
+                              locale === 'zh' ? 'zh-CN' : 'en-US',
+                            ),
+                          })}
                   </span>
                 </div>
-                {publication.status === 'published' && (
+                {(publication.status === 'published' || publication.status === 'hidden') && (
                   <button
                     type="button"
                     onClick={() => void withdraw(publication.id)}

@@ -1186,6 +1186,98 @@ async function main(): Promise<void> {
     assert(anonRes.status !== 200, `anon must not execute draft_create: ${anonRes.status}`);
   });
 
+  await test('moderation: hide keeps the envelope, records reason, registers thumbnail cleanup', async () => {
+    const draft = await makeDraft('to hide');
+    const pubRes = await publish(draft.id, draft.revision);
+    const pub = JSON.parse(await pubRes.text()) as { publication_id: string };
+    assert(pubRes.status === 200, `seed publish: ${pubRes.status}`);
+    // Give the publication a thumbnail path so the cleanup job has a target.
+    psql(`update public.artwork_publications set thumbnail_path = 'pub-thumbs/${pub.publication_id}.webp' where id = '${pub.publication_id}'`);
+
+    const hide = await rpc(keys, 'artwork_publication_set_moderation', keys.serviceKey, {
+      p_publication_id: pub.publication_id,
+      p_action: 'hide',
+      p_reason: 'takedown request #42',
+    });
+    const hideBody = JSON.parse(await hide.text()) as { status: string; hidden_at?: string };
+    assert(hide.status === 200 && hideBody.status === 'hidden', `hide: ${hide.status}`);
+    const row = psql(
+      `select status || '|' || (envelope is not null) || '|' || coalesce(moderation_reason, 'null') || '|' || (hidden_at is not null)
+       from public.artwork_publications where id = '${pub.publication_id}'`,
+    );
+    assert(row === 'hidden|true|takedown request #42|true', `hidden row: ${row}`);
+    const job = psql(
+      `select resource_type || '|' || resource_key from public.resource_cleanup_jobs
+       where resource_key = 'pub-thumbs/${pub.publication_id}.webp'`,
+    );
+    assert(job === 'publication_thumbnail|pub-thumbs/' + pub.publication_id + '.webp', `cleanup job: ${job}`);
+
+    // Idempotent replay: second hide with a new reason only refreshes the reason.
+    const again = await rpc(keys, 'artwork_publication_set_moderation', keys.serviceKey, {
+      p_publication_id: pub.publication_id,
+      p_action: 'hide',
+      p_reason: 'confirmed violation',
+    });
+    const againBody = JSON.parse(await again.text()) as { status: string; replayed?: boolean };
+    assert(again.status === 200 && againBody.replayed === true, `replay hide: ${again.status}`);
+    const reason = psql(`select moderation_reason from public.artwork_publications where id = '${pub.publication_id}'`);
+    assert(reason === 'confirmed violation', `reason refreshed: ${reason}`);
+    const jobCount = psql(
+      `select count(*) from public.resource_cleanup_jobs where resource_key = 'pub-thumbs/${pub.publication_id}.webp'`,
+    );
+    assert(jobCount === '1', 'replay hide registers no duplicate cleanup job');
+
+    // Restore: back to published, hidden_at cleared, reason kept as record.
+    const restore = await rpc(keys, 'artwork_publication_set_moderation', keys.serviceKey, {
+      p_publication_id: pub.publication_id,
+      p_action: 'restore',
+    });
+    const restoreBody = JSON.parse(await restore.text()) as { status: string };
+    assert(restore.status === 200 && restoreBody.status === 'published', `restore: ${restore.status}`);
+    const restored = psql(
+      `select status || '|' || coalesce(hidden_at::text, 'null') || '|' || coalesce(moderation_reason, 'null')
+       from public.artwork_publications where id = '${pub.publication_id}'`,
+    );
+    assert(restored === 'published|null|confirmed violation', `restored row: ${restored}`);
+  });
+
+  await test('moderation: withdrawn works reject hide and restore', async () => {
+    const draft = await makeDraft('to withdraw then moderate');
+    const pubRes = await publish(draft.id, draft.revision);
+    const pub = JSON.parse(await pubRes.text()) as { publication_id: string };
+    const wKey = crypto.randomUUID();
+    await rpc(keys, 'fractalpark_withdraw_publication', keys.serviceKey, {
+      p_owner_id: PUB_OWNER,
+      p_idempotency_key: wKey,
+      p_request_hash: `hash-${wKey}`,
+      p_publication_id: pub.publication_id,
+    });
+    const hide = await rpc(keys, 'artwork_publication_set_moderation', keys.serviceKey, {
+      p_publication_id: pub.publication_id,
+      p_action: 'hide',
+    });
+    const hideBody = await hide.text();
+    assert(hide.status !== 200 && hideBody.includes('invalid_state'), `hide withdrawn: ${hide.status} ${hideBody}`);
+    const restore = await rpc(keys, 'artwork_publication_set_moderation', keys.serviceKey, {
+      p_publication_id: pub.publication_id,
+      p_action: 'restore',
+    });
+    assert(restore.status !== 200, `restore withdrawn: ${restore.status}`);
+  });
+
+  await test('moderation RPC is not executable by anon or authenticated', async () => {
+    const draft = await makeDraft('moderation grants');
+    const pubRes = await publish(draft.id, draft.revision);
+    const pub = JSON.parse(await pubRes.text()) as { publication_id: string };
+    const anonRes = await rpc(keys, 'artwork_publication_set_moderation', keys.anonKey, {
+      p_publication_id: pub.publication_id,
+      p_action: 'hide',
+    });
+    assert(anonRes.status !== 200, `anon must not moderate: ${anonRes.status}`);
+    const status = psql(`select status from public.artwork_publications where id = '${pub.publication_id}'`);
+    assert(status === 'published', 'anon attempt changed nothing');
+  });
+
   console.log(`\n${passed} passed, ${failed} failed`);
   if (failed > 0) {
     console.error('FAILURES:\n' + failures.map((f) => `  - ${f}`).join('\n'));
