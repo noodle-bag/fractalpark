@@ -1,4 +1,52 @@
 {
+  "cloud": {
+    "otp": {
+      "title": "登录以同步",
+      "emailDescription": "输入邮箱，我们会发给你一枚六位登录码，无需密码。",
+      "codeDescription": "输入刚发送到邮箱的六位验证码。",
+      "emailLabel": "邮箱",
+      "emailPlaceholder": "you@example.com",
+      "codeLabel": "六位验证码",
+      "sendCode": "发送验证码",
+      "sending": "发送中…",
+      "verify": "登录",
+      "verifying": "登录中…",
+      "resend": "重新发送",
+      "errors": {
+        "wrongCode": "验证码不对，请核对邮件后重试。",
+        "rateLimited": "尝试太频繁了，稍等片刻再试。",
+        "offline": "网络好像断了，检查连接后重试。",
+        "disabled": "当前部署未开启云端同步。",
+        "generic": "出了点问题，请重试。"
+      }
+    },
+    "myWorks": {
+      "signInHint": "登录即可跨设备同步草稿；本机上的作品无论如何都会保留。",
+      "signIn": "登录以同步",
+      "signOut": "退出登录",
+      "draftsTitle": "云端草稿",
+      "publishedTitle": "已发布",
+      "publishedEmpty": "还没有发布过作品。发布功能将随社区更新到来。",
+      "draftsEmpty": "还没有云端草稿。登录状态下保存作品后会出现在这里。",
+      "loading": "正在加载草稿…",
+      "refresh": "刷新",
+      "delete": "删除",
+      "confirmDelete": "永久删除这份云端草稿？本机上的副本不受影响。",
+      "importTitle": "本机作品，尚未同步",
+      "import": "同步到云端",
+      "importing": "同步中…",
+      "meta": "第 {revision} 版 · {date}",
+      "errors": {
+        "unavailable": "云端同步暂时不可用，稍后再试。",
+        "quota_exceeded": "云端存储已满，删除一些草稿腾出空间。",
+        "offline": "网络好像断了。",
+        "not_found": "这份草稿已经不存在了。",
+        "unauthenticated": "登录已过期，请重新登录。",
+        "invalid_envelope": "这份作品没能通过云端校验。",
+        "rate_limited": "慢一点，稍后再试。"
+      }
+    }
+  },
   "common": {
     "nav": {
       "drift": "沉浸播放",
@@ -1028,6 +1076,13 @@
     "artworkActions": {
       "common": {
         "cancel": "取消"
+      },
+      "cloud": {
+        "syncing": "正在同步到云端…",
+        "synced": "已同步到云端。",
+        "failed": "已保存到本机；云端同步失败，再次保存可重试。",
+        "conflict": "这份草稿在别处被修改过。请先重新载入再保存，否则后续保存只保留在本机。",
+        "quota": "已保存到本机；云端存储已满。"
       },
       "save": {
         "label": "保存到画廊",

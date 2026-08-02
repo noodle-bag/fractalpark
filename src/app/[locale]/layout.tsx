@@ -6,6 +6,7 @@ import { Analytics } from '@vercel/analytics/next';
 import { SpeedInsights } from '@vercel/speed-insights/next';
 import { GoogleAnalytics } from '@/components/analytics/GoogleAnalytics';
 import { PageViewTracker } from '@/components/analytics/PageViewTracker';
+import { CloudSessionProvider } from '@/components/cloud/CloudSessionProvider';
 import { LayoutProvider } from '@/components/layout/LayoutContext';
 import LayoutShell from '@/components/layout/LayoutShell';
 import { routing } from '@/i18n/routing';
@@ -93,7 +94,9 @@ export default async function LocaleLayout({
         </Script>
         <NextIntlClientProvider messages={messages}>
           <LayoutProvider>
-            <LayoutShell>{children}</LayoutShell>
+            <CloudSessionProvider>
+              <LayoutShell>{children}</LayoutShell>
+            </CloudSessionProvider>
           </LayoutProvider>
         </NextIntlClientProvider>
         <GoogleAnalytics />

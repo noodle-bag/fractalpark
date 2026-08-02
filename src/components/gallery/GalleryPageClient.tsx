@@ -4,6 +4,7 @@ import Link from 'next/link';
 import { useLocale, useTranslations } from 'next-intl';
 import { Plus } from 'lucide-react';
 import { LocalArtworkCard, PublishedArtworkCard } from './GalleryCard';
+import { MyWorksCloud } from './MyWorksCloud';
 import {
   artworkPagePath,
   isPublishedArtworkPagePresetId,
@@ -68,7 +69,10 @@ export default function GalleryPageClient({
             />
           ))}
         </ArtworkGrid>
-      ) : localArtworks.length > 0 ? (
+      ) : (
+        <>
+          <MyWorksCloud />
+          {localArtworks.length > 0 ? (
         <>
           <div className="mb-5 flex justify-end px-4 sm:px-6 xl:px-8">
             <Link
@@ -95,7 +99,7 @@ export default function GalleryPageClient({
           </ArtworkGrid>
         </>
       ) : (
-        <section className="mx-4 flex min-h-72 flex-col items-center justify-center rounded-lg border border-dashed px-6 text-center sm:mx-6 xl:mx-8">
+        <section className="mx-4 flex min-h-72 flex-col items-center justify-center rounded-lg border border-dashed px-6 text-center sm:mx-6 xl:px-8">
           <h2 className="text-xl font-semibold">{t('mine.emptyTitle')}</h2>
           <p className="mt-2 max-w-md text-muted-foreground">{t('mine.emptyDescription')}</p>
           <Link
@@ -106,6 +110,8 @@ export default function GalleryPageClient({
             {t('mine.create')}
           </Link>
         </section>
+      )}
+        </>
       )}
     </main>
   );

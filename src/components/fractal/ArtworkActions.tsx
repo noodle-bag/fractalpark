@@ -32,13 +32,15 @@ import {
 } from '@/components/ui/dialog';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
-import type {
+import {
   ArtworkActionStatus,
   ArtworkOperation,
+  CloudSyncPhase,
 } from '@/hooks/useArtworkActions';
 
 interface ArtworkActionsProps {
   status: ArtworkActionStatus;
+  cloudPhase?: CloudSyncPhase;
   savedCount: number;
   onClearStatus: () => void;
   onSave: (name: string) => Promise<boolean>;
@@ -57,6 +59,7 @@ const ACTION_ICONS = {
 
 export function ArtworkActions({
   status,
+  cloudPhase = 'idle',
   savedCount,
   onClearStatus,
   onSave,
@@ -115,6 +118,10 @@ export function ArtworkActions({
       : status.phase === 'error'
         ? t(`errors.${status.code}`)
         : null;
+  const cloudText =
+    status.phase === 'success' && status.operation === 'save' && cloudPhase !== 'idle'
+      ? t(`cloud.${cloudPhase}`)
+      : null;
 
   return (
     <>
@@ -195,6 +202,11 @@ export function ArtworkActions({
             aria-live="polite"
           >
             {statusText}
+            {cloudText && (
+              <span className="mt-1 block border-t border-white/10 pt-1 opacity-90">
+                {cloudText}
+              </span>
+            )}
           </div>
         )}
       </div>
