@@ -128,6 +128,7 @@ async function main(): Promise<void> {
     publicationId?: string;
     status?: string;
     thumbnailStatus?: string;
+    backupEmailStatus?: string;
   };
   assert(
     publishRes.status === 201 && publishBody.status === 'published',
@@ -232,6 +233,65 @@ async function main(): Promise<void> {
     }),
   });
   assert(lateRemix.status === 400, `remix of withdrawn refused (${lateRemix.status})`);
+
+  // 10. Backup email chain (Mailpit as the SMTP provider). Mode default off:
+  // the earlier publish reported not_requested. Turn on publish_only, then
+  // publish again and expect a real email with the .fractal.json attachment.
+  const firstBackupStatus = publishBody.backupEmailStatus;
+  assert(firstBackupStatus === 'not_requested', `backup default off (${firstBackupStatus})`);
+
+  await fetch(`${MAILPIT}/api/v1/messages`, { method: 'DELETE' });
+  const modeRes = await api('/api/creation/profile', cookie, {
+    method: 'PATCH',
+    body: JSON.stringify({ backupEmailMode: 'publish_only' }),
+  });
+  assert(modeRes.status === 200, `backup mode set ${modeRes.status}`);
+
+  const draft2 = await api('/api/creation/drafts', cookie, {
+    method: 'POST',
+    headers: { 'idempotency-key': crypto.randomUUID() },
+    body: JSON.stringify({ envelope }),
+  });
+  const draft2Body = (await draft2.json()) as { draftId: string; backupEmailStatus?: string };
+  assert(
+    draft2Body.backupEmailStatus === 'not_requested',
+    'publish_only mode does not email on save',
+  );
+  const publish2 = await api(`/api/creation/drafts/${draft2Body.draftId}/publish`, cookie, {
+    method: 'POST',
+    headers: { 'idempotency-key': crypto.randomUUID() },
+    body: JSON.stringify({
+      expectedRevision: 1,
+      title: 'Backup Proof',
+      description: '',
+      attestationVersion: '2026-08-02.v1',
+    }),
+  });
+  const publish2Body = (await publish2.json()) as { backupEmailStatus?: string };
+  assert(publish2Body.backupEmailStatus === 'sent', `publish backup sent (${publish2Body.backupEmailStatus})`);
+
+  interface MailpitMessage {
+    Text?: string;
+    Subject?: string;
+    Attachments?: { FileName: string; Size: number }[];
+  }
+  let backupMail: MailpitMessage | null = null;
+  for (let i = 0; i < 20; i++) {
+    const list = (await (
+      await fetch(`${MAILPIT}/api/v1/messages?limit=1`)
+    ).json()) as { messages?: { ID: string }[] };
+    const id = list.messages?.[0]?.ID;
+    if (id) {
+      backupMail = (await (await fetch(`${MAILPIT}/api/v1/message/${id}`)).json()) as MailpitMessage;
+      break;
+    }
+    await new Promise((r) => setTimeout(r, 500));
+  }
+  assert(!!backupMail, 'backup email arrived in Mailpit');
+  assert(backupMail?.Subject?.includes('Backup Proof') ?? false, 'backup subject carries the title');
+  const attachment = backupMail?.Attachments?.find((a) => a.FileName.endsWith('.fractal.json'));
+  assert(!!attachment && attachment.Size > 100, 'backup carries the .fractal.json attachment');
+  assert(backupMail?.Text?.includes('CC BY 4.0') ?? false, 'publish backup notes the CC BY 4.0 image layer');
 
   console.log(`\n${passed} passed, ${failed} failed`);
   if (failed > 0) process.exit(1);

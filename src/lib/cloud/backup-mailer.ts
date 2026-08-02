@@ -48,11 +48,14 @@ export async function sendArtworkBackupEmail(options: {
   attachmentFilename: string;
 }): Promise<BackupMailResult> {
   const smtp = getSmtpConfig();
+  // The local development stack (Mailpit) speaks plain SMTP; every real
+  // provider connection keeps mandatory TLS.
+  const isLocal = ['localhost', '127.0.0.1', '[::1]'].includes(smtp.host.toLowerCase());
   const transport = createTransport({
     host: smtp.host,
     port: smtp.port,
     secure: smtp.port === 465,
-    requireTLS: true,
+    requireTLS: !isLocal,
     auth: { user: smtp.user, pass: smtp.password },
   });
   let info;

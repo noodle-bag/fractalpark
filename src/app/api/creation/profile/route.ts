@@ -13,7 +13,7 @@ import {
   toErrorResponse,
 } from '@/lib/cloud/api';
 import { DraftServiceError } from '@/lib/cloud/drafts';
-import { getProfile, setDisplayName } from '@/lib/cloud/publications';
+import { getProfile, setBackupEmailMode, setDisplayName } from '@/lib/cloud/publications';
 import { resolveRequestSession } from '@/lib/cloud/request-session';
 
 export const runtime = 'nodejs';
@@ -50,6 +50,14 @@ export async function PATCH(request: Request): Promise<Response> {
     assertSameOrigin(request);
     const { session, rotatedSetCookie } = await resolveRequestSession(request);
     const body: unknown = await readJsonBody(request);
+    const parsed = body as {
+      displayName?: unknown;
+      backupEmailMode?: unknown;
+    };
+    if (typeof parsed.backupEmailMode === 'string') {
+      const profile = await setBackupEmailMode(session.userId, parsed.backupEmailMode as never);
+      return jsonOk(request, profile, 200, rotationHeaders(rotatedSetCookie));
+    }
     const displayName =
       typeof (body as { displayName?: unknown })?.displayName === 'string'
         ? (body as { displayName: string }).displayName

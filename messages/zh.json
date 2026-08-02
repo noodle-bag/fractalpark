@@ -36,6 +36,16 @@
       "confirmWithdraw": "永久撤回这件作品？它会立刻从社区消失且无法恢复。已经授予既有二创的许可继续有效。",
       "publish": "发布",
       "withdraw": "撤回",
+      "withdrawn": "已撤回",
+      "backupLabel": "备份邮件",
+      "backupModes": {
+        "off": "关闭",
+        "publish_only": "发布时",
+        "save_and_publish": "每次保存 + 发布"
+      },
+      "backupNotice": "备份邮件会附上完整的 .fractal.json：所有参数、视角和自定义公式都在里面。一旦寄出，FractalPark 无法收回。",
+      "backupConfirm": "我明白，开启",
+      "backupCancel": "先不了",
       "publishedMeta": "{license} · 发布于 {date}",
       "withdrawnMeta": "已于 {date} 撤回",
       "importTitle": "本机作品，尚未同步",

@@ -26,6 +26,7 @@ import {
   updateDraft,
 } from '@/lib/cloud/drafts';
 import { consumeRateLimit } from '@/lib/cloud/rate-limit';
+import { runArtworkBackup } from '@/lib/cloud/backup';
 import { resolveRequestSession } from '@/lib/cloud/request-session';
 import {
   draftRequestHash,
@@ -126,9 +127,21 @@ export async function PATCH(request: Request, context: RouteContext): Promise<Re
         configBytes: input.configBytes,
         thumbnailBytes,
       });
+      // Backup email fires only on a fresh write, never on a replay.
+      const backupEmailStatus = result.replayed
+        ? 'not_requested'
+        : await runArtworkBackup({
+            ownerId: session.userId,
+            idempotencyKey,
+            trigger: 'save',
+            title: input.title,
+            revision: result.revision,
+            envelope: input.canonicalEnvelope,
+            siteUrl: new URL(request.url).origin,
+          });
       return jsonOk(
         request,
-        { draftId: result.draftId, revision: result.revision, envelope: result.envelope },
+        { draftId: result.draftId, revision: result.revision, envelope: result.envelope, backupEmailStatus },
         200,
         rotationHeaders(rotatedSetCookie),
       );

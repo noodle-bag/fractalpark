@@ -17,11 +17,14 @@ import { useCloudSession } from '@/components/cloud/CloudSessionProvider';
 import { useArtworks } from '@/hooks/useArtworks';
 import {
   CloudClientError,
+  getProfile,
   listDrafts,
   listPublications,
+  setBackupEmailMode,
   withdrawPublication,
   type CloudDraftSummary,
   type CloudPublicationSummary,
+  type Profile,
 } from '@/lib/cloud/client';
 import { deleteDraft, importArtworkToCloud, openCloudDraft } from '@/lib/cloud/sync';
 import { createFractalDocumentEnvelope } from '@/lib/fractal-file';
@@ -53,6 +56,8 @@ export function MyWorksCloud() {
   const [drafts, setDrafts] = useState<CloudDraftSummary[] | null>(null);
   const [publications, setPublications] = useState<CloudPublicationSummary[] | null>(null);
   const [publishTarget, setPublishTarget] = useState<CloudDraftSummary | null>(null);
+  const [backupMode, setBackupMode] = useState<Profile['backupEmailMode']>('off');
+  const [backupNotice, setBackupNotice] = useState<Profile['backupEmailMode'] | null>(null);
   const [error, setError] = useState<string | null>(null);
   const [busyId, setBusyId] = useState<string | null>(null);
 
@@ -61,9 +66,14 @@ export function MyWorksCloud() {
   const refreshDrafts = useCallback(async () => {
     try {
       setError(null);
-      const [draftList, publicationList] = await Promise.all([listDrafts(), listPublications()]);
+      const [draftList, publicationList, profile] = await Promise.all([
+        listDrafts(),
+        listPublications(),
+        getProfile(),
+      ]);
       setDrafts(draftList);
       setPublications(publicationList);
+      setBackupMode(profile.backupEmailMode);
     } catch (value) {
       setError(value instanceof CloudClientError ? value.code : 'unavailable');
     }
@@ -104,6 +114,27 @@ export function MyWorksCloud() {
       }
     },
     [refreshDrafts, t],
+  );
+
+  const changeBackupMode = useCallback(
+    async (next: Profile['backupEmailMode'], confirmed: boolean) => {
+      if (next !== 'off' && !confirmed) {
+        // Enabling requires the explicit attachment-content notice first.
+        setBackupNotice(next);
+        return;
+      }
+      setBackupNotice(null);
+      setBusyId('backup');
+      try {
+        const profile = await setBackupEmailMode(next);
+        setBackupMode(profile.backupEmailMode);
+      } catch {
+        setError('unavailable');
+      } finally {
+        setBusyId(null);
+      }
+    },
+    [],
   );
 
   const openDraft = useCallback(
@@ -217,6 +248,47 @@ export function MyWorksCloud() {
 
   return (
     <section className="mx-4 mb-8 space-y-6 sm:mx-6 xl:mx-8">
+      <div className="rounded-lg border px-4 py-3 text-sm">
+        <div className="flex flex-wrap items-center gap-2">
+          <span className="font-medium">{t('backupLabel')}</span>
+          {(['off', 'publish_only', 'save_and_publish'] as const).map((mode) => (
+            <button
+              key={mode}
+              type="button"
+              disabled={busyId === 'backup'}
+              onClick={() => void changeBackupMode(mode, false)}
+              className={`rounded-full px-3 py-1 text-xs font-medium transition-colors ${
+                backupMode === mode
+                  ? 'bg-foreground text-background'
+                  : 'bg-muted text-muted-foreground hover:text-foreground'
+              }`}
+            >
+              {t(`backupModes.${mode}`)}
+            </button>
+          ))}
+        </div>
+        {backupNotice && (
+          <div className="mt-3 rounded-md border border-amber-500/40 bg-amber-500/10 p-3">
+            <p className="text-xs leading-relaxed">{t('backupNotice')}</p>
+            <div className="mt-2 flex gap-2">
+              <button
+                type="button"
+                onClick={() => void changeBackupMode(backupNotice, true)}
+                className="rounded-md bg-primary px-3 py-1 text-xs font-medium text-primary-foreground"
+              >
+                {t('backupConfirm')}
+              </button>
+              <button
+                type="button"
+                onClick={() => setBackupNotice(null)}
+                className="rounded-md border px-3 py-1 text-xs font-medium"
+              >
+                {t('backupCancel')}
+              </button>
+            </div>
+          </div>
+        )}
+      </div>
       <div className="flex items-center justify-between">
         <h2 className="text-xl font-semibold">{t('draftsTitle')}</h2>
         <div className="flex items-center gap-2">

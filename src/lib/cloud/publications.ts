@@ -111,15 +111,30 @@ export interface ProfileDto {
   displayName: string | null;
 }
 
+export interface ProfileDto {
+  displayName: string | null;
+  backupEmailMode: 'off' | 'publish_only' | 'save_and_publish';
+}
+
+const PROFILE_SELECT = 'display_name,backup_email_mode';
+
 interface ProfileRow {
   display_name: string | null;
+  backup_email_mode: 'off' | 'publish_only' | 'save_and_publish';
+}
+
+function toProfileDto(row: ProfileRow | undefined): ProfileDto {
+  return {
+    displayName: row?.display_name ?? null,
+    backupEmailMode: row?.backup_email_mode ?? 'off',
+  };
 }
 
 export async function getProfile(ownerId: string): Promise<ProfileDto> {
   const rows = await postgrestJson<ProfileRow[]>(
-    `profiles?user_id=eq.${ownerId}&select=display_name`,
+    `profiles?user_id=eq.${ownerId}&select=${PROFILE_SELECT}&limit=1`,
   );
-  return { displayName: rows[0]?.display_name ?? null };
+  return toProfileDto(rows[0]);
 }
 
 const CONTROL_PATTERN =
@@ -147,7 +162,26 @@ export async function setDisplayName(ownerId: string, displayName: string): Prom
   if (!response.ok) {
     throw new DraftServiceError('unavailable', `PostgREST ${response.status}`, response.status);
   }
-  return { displayName: trimmed };
+  return getProfile(ownerId);
+}
+
+/** Persist the backup email mode (off | publish_only | save_and_publish). */
+export async function setBackupEmailMode(
+  ownerId: string,
+  mode: ProfileDto['backupEmailMode'],
+): Promise<ProfileDto> {
+  if (!['off', 'publish_only', 'save_and_publish'].includes(mode)) {
+    throw new DraftServiceError('validation_failed');
+  }
+  const response = await postgrest('profiles', {
+    method: 'POST',
+    headers: { prefer: 'resolution=merge-duplicates' },
+    body: { user_id: ownerId, backup_email_mode: mode },
+  });
+  if (!response.ok) {
+    throw new DraftServiceError('unavailable', `PostgREST ${response.status}`, response.status);
+  }
+  return getProfile(ownerId);
 }
 
 // ---------------------------------------------------------------------------

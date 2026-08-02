@@ -217,18 +217,28 @@ export async function deleteDraft(draftId: string): Promise<void> {
 // Publications & profile (v0.4.15 commit 7)
 // ---------------------------------------------------------------------------
 
-export interface CloudProfile {
+export interface Profile {
   displayName: string | null;
+  backupEmailMode: 'off' | 'publish_only' | 'save_and_publish';
 }
 
-export async function getProfile(): Promise<CloudProfile> {
-  return call<CloudProfile>('/api/creation/profile');
+export async function getProfile(): Promise<Profile> {
+  return call('/api/creation/profile');
 }
 
-export async function setDisplayName(displayName: string): Promise<CloudProfile> {
+export async function setDisplayName(displayName: string): Promise<Profile> {
   return call('/api/creation/profile', {
     method: 'PATCH',
     body: JSON.stringify({ displayName }),
+  });
+}
+
+export async function setBackupEmailMode(
+  backupEmailMode: Profile['backupEmailMode'],
+): Promise<Profile> {
+  return call('/api/creation/profile', {
+    method: 'PATCH',
+    body: JSON.stringify({ backupEmailMode }),
   });
 }
 

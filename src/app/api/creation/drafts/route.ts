@@ -25,6 +25,7 @@ import {
   storeDraftThumbnail,
   toDraftApiError,
 } from '@/lib/cloud/drafts';
+import { runArtworkBackup } from '@/lib/cloud/backup';
 import { resolveRequestSession } from '@/lib/cloud/request-session';
 import {
   assertProvenanceResolves,
@@ -101,9 +102,21 @@ export async function POST(request: Request): Promise<Response> {
         remixSourceId: input.remixSource?.id ?? null,
       });
       const status = result.replayed ? 200 : 201;
+      // Backup email fires only on a fresh write, never on a replay.
+      const backupEmailStatus = result.replayed
+        ? 'not_requested'
+        : await runArtworkBackup({
+            ownerId: session.userId,
+            idempotencyKey,
+            trigger: 'save',
+            title: input.title,
+            revision: result.revision,
+            envelope: input.canonicalEnvelope,
+            siteUrl: new URL(request.url).origin,
+          });
       return jsonOk(
         request,
-        { draftId: result.draftId, revision: result.revision, envelope: result.envelope },
+        { draftId: result.draftId, revision: result.revision, envelope: result.envelope, backupEmailStatus },
         status,
         rotationHeaders(rotatedSetCookie),
       );

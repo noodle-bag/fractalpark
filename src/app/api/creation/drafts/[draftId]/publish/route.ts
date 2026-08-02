@@ -20,6 +20,7 @@ import {
 } from '@/lib/cloud/api';
 import { DraftServiceError, getDraft } from '@/lib/cloud/drafts';
 import { validateCloudEnvelopeV1 } from '@/lib/cloud/envelope';
+import { runArtworkBackup } from '@/lib/cloud/backup';
 import { findPublishReplay, publishDraft } from '@/lib/cloud/publications';
 import { resolveRequestSession } from '@/lib/cloud/request-session';
 
@@ -118,7 +119,20 @@ export async function POST(
       attestationVersion: parsed.attestationVersion,
       idempotencyKey,
     });
-    return jsonOk(request, result, 201, rotationHeaders(rotatedSetCookie));
+    // Backup email fires only on a fresh publish, never on a replay.
+    const backupEmailStatus = result.replayed
+      ? 'not_requested'
+      : await runArtworkBackup({
+          ownerId: session.userId,
+          idempotencyKey,
+          trigger: 'publish',
+          title: parsed.title.trim(),
+          revision: parsed.expectedRevision,
+          envelope: JSON.parse(verdict.value.canonicalJson),
+          publicationId: result.publicationId,
+          siteUrl: new URL(request.url).origin,
+        });
+    return jsonOk(request, { ...result, backupEmailStatus }, 201, rotationHeaders(rotatedSetCookie));
   } catch (error) {
     if (error instanceof DraftServiceError) return toErrorResponse(request, toApiError(error));
     return toErrorResponse(request, error);

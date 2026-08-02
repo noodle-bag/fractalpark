@@ -36,6 +36,15 @@
       "confirmWithdraw": "Withdraw this artwork permanently? It disappears from the Community immediately and cannot be restored. The license already granted to existing remixes stays in effect.",
       "publish": "Publish",
       "withdraw": "Withdraw",
+      "backupLabel": "Backup emails",
+      "backupModes": {
+        "off": "Off",
+        "publish_only": "On publish",
+        "save_and_publish": "Every save + publish"
+      },
+      "backupNotice": "The backup email attaches the complete .fractal.json: every parameter, the view, and any custom formulas. FractalPark cannot retract it once delivered.",
+      "backupConfirm": "I understand, turn it on",
+      "backupCancel": "Not now",
       "publishedMeta": "{license} · published {date}",
       "withdrawnMeta": "Withdrawn {date}",
       "importTitle": "On this device, not yet synced",
