@@ -24,12 +24,24 @@ import {
 import { BackupMailError, sendArtworkBackupEmail } from '@/lib/cloud/backup-mailer';
 import { getCronSecret } from '@/lib/cloud/config';
 import { consumeRateLimit } from '@/lib/cloud/rate-limit';
+import { createHash, timingSafeEqual } from 'node:crypto';
 
 export const runtime = 'nodejs';
 export const dynamic = 'force-dynamic';
 
 /** Maintainer test mailbox (staging rule: synthetic/maintainer mailboxes only). */
 const PROBE_RECIPIENT = 'noreply@fractalpark.com';
+
+/**
+ * Constant-time bearer check (hash both sides to equalize length first):
+ * the secret is high-entropy and TLS noise already blurs timing, so this is
+ * defense in depth, not a load-bearing control.
+ */
+function bearerMatches(authorization: string, secret: string): boolean {
+  const provided = createHash('sha256').update(authorization).digest();
+  const expected = createHash('sha256').update(`Bearer ${secret}`).digest();
+  return timingSafeEqual(provided, expected);
+}
 
 /** Deterministic ~1.05 MB synthetic .fractal.json for the attachment path. */
 function buildProbePayload(): Buffer {
@@ -44,7 +56,7 @@ export async function POST(request: Request): Promise<Response> {
   try {
     assertCloudEnabled();
     const authorization = request.headers.get('authorization') ?? '';
-    if (authorization !== `Bearer ${getCronSecret()}`) {
+    if (!bearerMatches(authorization, getCronSecret())) {
       throw new CloudApiError('unauthenticated');
     }
 

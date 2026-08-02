@@ -19,9 +19,15 @@ import { getSmtpConfig } from './config';
 export const BACKUP_SENDER = 'FractalPark <noreply@fractalpark.com>';
 
 export class BackupMailError extends Error {
-  constructor(message: string) {
+  /** Original transport error, kept server-side for diagnostics; never sent to clients. */
+  readonly cause?: unknown;
+
+  constructor(message: string, cause?: unknown) {
     super(message);
     this.name = 'BackupMailError';
+    if (cause !== undefined) {
+      this.cause = cause;
+    }
   }
 }
 
@@ -46,6 +52,7 @@ export async function sendArtworkBackupEmail(options: {
     host: smtp.host,
     port: smtp.port,
     secure: smtp.port === 465,
+    requireTLS: true,
     auth: { user: smtp.user, pass: smtp.password },
   });
   let info;
@@ -64,7 +71,7 @@ export async function sendArtworkBackupEmail(options: {
       ],
     });
   } catch (error) {
-    throw new BackupMailError(error instanceof Error ? error.message : 'SMTP send failed');
+    throw new BackupMailError(error instanceof Error ? error.message : 'SMTP send failed', error);
   } finally {
     transport.close();
   }

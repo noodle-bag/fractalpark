@@ -143,4 +143,42 @@ describe('POST /api/creation/internal/smtp-probe', () => {
     expect(body.error.message).not.toContain('535');
     expect(closeMock).toHaveBeenCalled();
   });
+
+  it('fails closed with 503 when CRON_SECRET is not configured', async () => {
+    delete process.env.CRON_SECRET;
+    const res = await smtpProbePOST(probeRequest());
+    expect(res.status).toBe(503);
+    expect(sendMailMock).not.toHaveBeenCalled();
+  });
+
+  it('fails closed with 503 and does not send when the rate-limit backend rejects', async () => {
+    stubFetch(() => {
+      throw new TypeError('fetch failed');
+    });
+    const res = await smtpProbePOST(probeRequest());
+    expect(res.status).toBe(503);
+    expect(sendMailMock).not.toHaveBeenCalled();
+  });
+
+  it('ignores any request body: recipient, subject and attachment are not injectable', async () => {
+    const malicious = new Request('https://fractalpark.com/api/creation/internal/smtp-probe', {
+      method: 'POST',
+      headers: {
+        host: 'fractalpark.com',
+        authorization: `Bearer ${CRON_SECRET}`,
+        'content-type': 'application/json',
+      },
+      body: JSON.stringify({
+        to: 'victim@example.com',
+        subject: 'pwned',
+        attachments: [{ filename: 'evil.exe', content: 'x' }],
+      }),
+    });
+    const res = await smtpProbePOST(malicious);
+    expect(res.status).toBe(200);
+    const mail = sendMailMock.mock.calls[0][0] as { to: string; subject: string; attachments: Array<{ filename: string }> };
+    expect(mail.to).toBe('noreply@fractalpark.com');
+    expect(mail.subject).not.toBe('pwned');
+    expect(mail.attachments[0].filename).toBe('probe.fractal.json');
+  });
 });
