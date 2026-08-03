@@ -548,6 +548,11 @@ tombstones.
 
 ## 11. Local–Cloud Binding
 
+> **Superseded by [ADR 0006](../adr/0006-cloud-authoritative-creation-persistence.md)
+> in v0.4.16.** The binding below is the accurate record of v0.4.15. From
+> v0.4.16 the cloud draft is the only persistence; see §17. This section is
+> kept for historical reference and rollback reasoning.
+
 The local recovery record is `StoredArtworkRecordV2`:
 
 ```ts
@@ -669,3 +674,74 @@ or private draft titles. Operational correlation IDs are not analytics IDs.
   unlisted sharing, in-site report/appeal workflows, an admin UI, a
   standalone Studio or `/my-works` page, or Community featuring and indexing
   promotion.
+
+## 17. Cloud-Authoritative Persistence (v0.4.16)
+
+Introduced by [ADR 0006](../adr/0006-cloud-authoritative-creation-persistence.md).
+This section supersedes §11 for runtime behavior; §11 remains as history.
+
+- **Sole persistence.** `artwork_drafts` (Envelope + revision) is the only
+  artwork fact. Runtime code must not read, write, or delete the legacy keys
+  `fractalpark-artworks-v1`, `myfrac-saved-fractals`, or
+  `myfrac-custom-formulas`; no compatibility reader, migration wizard, or
+  double-write window ships. A static guard plus a Playwright storage probe
+  (matrix A1–A3) enforce this.
+- **Explore identity.** `?draft=<uuid>` is a lookup hint only; the owner API
+  re-verifies the session per call and returns one uniform `not_found` for
+  foreign or missing ids. `?artwork=<localId>` is removed from the runtime
+  contract. Plain URL state still carries anonymous transient creation.
+- **Five session states.** `loading` / `disabled` (switch off) /
+  `unavailable` (transport or service failure) / `anonymous` /
+  `authenticated`. UI must never render `unavailable` as `anonymous`.
+- **First frame.** While session or a `?draft=` fetch is unresolved, SSR and
+  the first client frame render one deterministic placeholder shell: no
+  private data, never a default fractal impersonating content; transitions
+  happen only after mount.
+- **Save intent.** Anonymous Save freezes the envelope/title/thumbnail at
+  click time, opens the contextual OTP, and resumes that exact intent after
+  verification. Intents live only in React memory. Publish intent first
+  ensures a saved cloud draft, then opens the existing publish dialog.
+- **Idempotency.** Draft and formula create/update/delete reuse the v0.4.15
+  operation gate: `Idempotency-Key` + request hash + stored replay; a lost
+  create response never duplicates a record.
+- **Conflicts.** Revision conflicts never auto-merge or overwrite; the UI
+  offers explicit reload-remote and save-as-new exits.
+- **Failure honesty.** Cloud failure, offline, quota, and session expiry
+  never report a successful save; Download remains the user-controlled
+  offline exit.
+- **Sign out.** Keeps the in-memory canvas but strips the private draft
+  identity; the next Save asks for OTP again.
+
+### 17.1 Custom formulas (cloud)
+
+`custom_formulas` is the My Formulas authority: UUID identity, owner, name,
+source, canonical experience hint, revision, byte size, timestamps. Runtime
+formula ids are `custom-<uuid>`. Contracts (all new in v0.4.16):
+
+- 50 records per account; UTF-8 source ≤ 64 KiB — enforced server-side with
+  stable error codes and negative tests (these are new limits, not inherited
+  ones; drafts keep their own 1 MiB / 100-record budgets).
+- Base table denies browser DML; same-origin owner API + narrow RPCs provide
+  list (summary only) / detail / save / delete with revision, quota, rate
+  limit, and idempotency; account deletion removes formulas in the staged
+  flow.
+- create/update validate name, source bytes, experience hint, built-in ID
+  conflict, and `compileFrm` server-side before writing canonical facts.
+- Artwork envelopes snapshot the referenced formula source/hash; opening a
+  draft compiles the embedded asset and never follows later library edits or
+  deletion. `.fractal.json` import registers assets in memory only; `.frm`
+  import stays an editor memory draft; only an explicit Save Formula writes
+  the library.
+
+### 17.2 Custom-formula publication
+
+The blanket `formula_assets_not_publishable` rejection is replaced by strict
+acceptance: exactly one referenced asset, hash match, ≤ 64 KiB, server-side
+compile success. The immutable publication snapshot freezes source/hash,
+license `MIT`, scope `formula_source`, and the source-attestation version —
+separate from the image layer's CC BY 4.0. The publish dialog requires an
+explicit author confirmation that the source becomes public and licensed
+under MIT; the server refuses without it. Withdrawal/deletion stops new
+reads, downloads, and remixes but does not retroactively revoke granted
+licenses; existing derivatives keep minimal provenance. Built-in-only
+publications keep null/not-applicable formula license fields (no backfill).

@@ -249,3 +249,22 @@ Release-specific coverage and execution gates are defined in the active test
 plan: [v0.4.15 Regression Matrix](../testing/v0.4.15-regression-matrix.md),
 succeeding
 [v0.4.13 Regression Matrix](../testing/v0.4.13-regression-matrix.md).
+
+## Custom Formula Persistence (v0.4.16)
+
+With ADR 0006 the source-of-truth map gains one row: **My Formulas** is owned
+by the cloud `custom_formulas` table (owner-scoped, revisioned). The browser
+holds only session-scoped caches and in-memory registrations; no browser
+storage is a persistence fact. Surfaces consume formulas through two named
+boundaries:
+
+- **Library boundary** — owner list (summary) / detail reads and
+  revision-checked writes through the same-origin formula API.
+- **Snapshot boundary** — an artwork envelope embeds the referenced formula
+  source/hash at save time; draft rendering compiles the embedded asset and
+  is immune to later library changes. Publication freezes the same snapshot
+  publicly under the MIT license (scope `formula_source`), independent of
+  the image layer's CC BY 4.0.
+
+No surface may reintroduce a browser-persisted formula store or a second
+compile/registry path for persisted formulas.
