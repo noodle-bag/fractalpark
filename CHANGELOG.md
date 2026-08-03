@@ -1,5 +1,23 @@
 # Changelog
 
+## 0.4.15 - 2026-08-03
+
+### Added
+
+- Added optional cloud accounts with passwordless email sign-in: a one-time code, an encrypted HttpOnly session cookie, and sign-out.
+- Added private cloud drafts with autosave-friendly optimistic concurrency, per-account quotas, idempotent writes, and cross-device continuation; local saves stay device-local and bound to their cloud copy.
+- Added Community publishing: a rights attestation, CC BY 4.0 rendered-image licensing, remix provenance, public artwork pages, a no-store Community list, and Continue-editing/Remix forks.
+- Added optional artwork backup emails (off by default) that send the portable `.fractal.json` on publish, or on every manual save, with an explicit unencrypted-attachment notice.
+- Added account self-service: profile display name, backup-email preferences, and a two-step account deletion that withdraws publications, deletes drafts, ends sessions, and keeps only a tombstone attribution plus a minimal audit row.
+- Added maintainer moderation: hide/restore for published works through a controlled, audited RPC, with a Report/Takedown entry on every public artwork page.
+- Added the Privacy Policy, Terms of Service, and Community Rules pages, linked from the footer on every page.
+- Added operator tooling: a cleanup worker, a logical cloud backup/restore pair with UUID remapping, and runbooks for moderation, backup/recovery, and production enablement.
+
+### Changed
+
+- Gallery's My Works now shows cloud drafts and published states alongside local works when signed in.
+- Publish now presents the public-visibility, attribution, and withdrawal boundaries before the first publish.
+
 ## 0.4.13 - 2026-08-01
 
 ### Added
