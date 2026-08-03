@@ -78,12 +78,15 @@
       "publishing": "发布中…",
       "errors": {
         "rateLimited": "今天发布得够多了，明天再来。",
-        "formulaAssets": "这件作品用了自定义公式，暂时不能发布。",
         "revisionConflict": "草稿在你打开对话框后变过，关掉重试。",
         "validation": "检查一下展示名、标题和描述，再试一次。",
         "offline": "网络好像断了。",
-        "generic": "发布失败，什么都没有发布出去，草稿还是你的。"
-      }
+        "generic": "发布失败，什么都没有发布出去，草稿还是你的。",
+        "formulaCompile": "公式源码未通过服务端校验。请打开草稿修正公式后重试。"
+      },
+      "formulaNoticeTitle": "这件作品使用了你的自定义公式",
+      "formulaNoticeBody": "发布后，公式源码将以 MIT 许可证公开：任何人都可以阅读、复制和复用。公开展示的公式名称与描述来自公式元数据，而非此表单。作品本身仍遵循上方许可证。",
+      "formulaNoticeLink": "在 opensource.org 阅读 MIT 许可证"
     },
     "community": {
       "backToCommunity": "← 社区",
@@ -108,7 +111,11 @@
       "errors": {
         "generic": "没成功，再试一次。",
         "loadFailed": "社区列表加载失败，稍后再试。"
-      }
+      },
+      "licenseFormulaValue": "配置与公式源码采用",
+      "formulaSourceLabel": "公式源码",
+      "formulaSourceValue": "「{name}」（FRM，MIT）",
+      "formulaSourceDownload": "下载 .frm"
     },
     "accountDeletion": {
       "title": "删除账号",
@@ -489,6 +496,27 @@
             "fractalpark-frm-source": "FractalPark FRM 编译器源码",
             "fractalpark-repository": "FractalPark 源代码仓库"
           }
+        },
+        "sharing": {
+          "title": "分享与发布",
+          "intro": "你写的公式默认是私有的，除非你明确选择分享。公式有三种流转方式——每一种都由你显式触发，没有静默发生。",
+          "points": {
+            "private": {
+              "title": "默认私有",
+              "body": "公式保存在你的云端库中，仅自己可见。保存的作品会把公式源码副本存进草稿里，所以作品打开时永远是你离开时的样子。"
+            },
+            "download": {
+              "title": "下载 .frm 文件",
+              "body": "你的公式是纯文本。随时从「我的公式」下载，自己留一份——不需要导出申请，不需要等待。"
+            },
+            "publish": {
+              "title": "发布作品，分享源码",
+              "body": "发布使用了自定义公式的作品，会以 MIT 许可证公开公式源码：任何人都可以阅读、复制并在其上继续创作。社区页面会展示来自元数据的公式名，并提供源码下载。对已发布的作品而言，这一步不可撤销。"
+            }
+          },
+          "mitPrefix": "完整的",
+          "mitLink": "MIT 许可证文本见 opensource.org",
+          "mitSuffix": "。"
         }
       }
     },
@@ -1608,7 +1636,8 @@
     "draft": {
       "loading": "正在打开你的草稿…",
       "notFound": "找不到这份草稿。它可能已被删除，或属于其他账号。",
-      "unavailable": "暂时无法打开这份草稿，请稍后再试。"
+      "unavailable": "暂时无法打开这份草稿，请稍后再试。",
+      "retry": "重试"
     }
   },
   "frmEditor": {

@@ -14,7 +14,7 @@ export default function ExploreError({
   }, [error]);
 
   return (
-    <div className="flex h-[calc(100vh-3rem)] items-center justify-center p-8">
+    <div className="flex h-[calc(100dvh-3rem)] items-center justify-center p-8">
       <div className="text-center space-y-4 max-w-md">
         <h2 className="text-xl font-semibold">Failed to load explorer</h2>
         <p className="text-muted-foreground text-sm">{error.message}</p>

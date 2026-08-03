@@ -77,10 +77,26 @@ test.describe('Artwork portability', () => {
     expect(page.url()).toBe(before);
   });
 
-  test('cancels reset without mutation and confirms a full reset', async ({ page }) => {
+  test('ignores legacy localStorage keys (spec §17 storage probe)', async ({ page }) => {
+    // Legacy artwork storage is dead bytes in v0.4.16: never read, never
+    // migrated, never clobbered. Seeding it must change nothing.
     await page.addInitScript(
       ({ artworkKey, formulaKey }) => {
-        localStorage.setItem(artworkKey, '[]');
+        localStorage.setItem(
+          artworkKey,
+          JSON.stringify([
+            {
+              recordVersion: 1,
+              id: 'legacy-entry',
+              name: 'Legacy Entry',
+              envelope: {},
+              createdAt: 1,
+              updatedAt: 1,
+              thumbnail: '',
+              starred: false,
+            },
+          ])
+        );
         localStorage.setItem(formulaKey, '[]');
       },
       {
@@ -101,6 +117,11 @@ test.describe('Artwork portability', () => {
     await page.getByRole('button', { name: /^reset$/i }).click();
     await expect(page).not.toHaveURL(/[?&]oc=st/, { timeout: 5000 });
 
+    // Gallery never renders the legacy entry.
+    await page.goto('/en/gallery?view=mine');
+    await expect(page.getByText('Legacy Entry')).toHaveCount(0);
+
+    // The seeded bytes are untouched — no migration, no clobber.
     const persisted = await page.evaluate(
       ({ artworkKey, formulaKey }) => ({
         artworks: localStorage.getItem(artworkKey),
@@ -111,6 +132,7 @@ test.describe('Artwork portability', () => {
         formulaKey: CUSTOM_FORMULAS_STORAGE_KEY,
       }
     );
-    expect(persisted).toEqual({ artworks: '[]', formulas: '[]' });
+    expect(persisted.artworks).toContain('legacy-entry');
+    expect(persisted.formulas).toBe('[]');
   });
 });

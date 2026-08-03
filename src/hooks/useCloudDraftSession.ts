@@ -112,7 +112,9 @@ export function useCloudDraftSession() {
     async (
       input: SaveInput,
       identityOverride?: CloudDraftIdentity | null,
-    ): Promise<{ ok: true; identity: CloudDraftIdentity } | { ok: false }> => {
+    ): Promise<
+      { ok: true; identity: CloudDraftIdentity } | { ok: false; phase: DraftSavePhase }
+    > => {
       // identityOverride lets save-as-new pass null synchronously — React
       // state would still hold the old identity within this tick.
       const currentIdentity = identityOverride !== undefined ? identityOverride : identity;
@@ -120,7 +122,7 @@ export function useCloudDraftSession() {
       const envelopeResult = await createFractalDocumentEnvelope(input.document, input.formulaAssets);
       if (!envelopeResult.success) {
         setSavePhase('failed');
-        return { ok: false };
+        return { ok: false, phase: 'failed' };
       }
       const envelope: FractalDocumentEnvelopeV1 = envelopeResult.value;
       try {
@@ -155,22 +157,22 @@ export function useCloudDraftSession() {
           switch (error.code) {
             case 'revision_conflict':
               setSavePhase('conflict');
-              return { ok: false };
+              return { ok: false, phase: 'conflict' };
             case 'quota_exceeded':
               setSavePhase('quota');
-              return { ok: false };
+              return { ok: false, phase: 'quota' };
             case 'unauthenticated':
               setSavePhase('session_expired');
-              return { ok: false };
+              return { ok: false, phase: 'session_expired' };
             case 'offline':
               setSavePhase('offline');
-              return { ok: false };
+              return { ok: false, phase: 'offline' };
             default:
               break;
           }
         }
         setSavePhase('failed');
-        return { ok: false };
+        return { ok: false, phase: 'failed' };
       }
     },
     [identity],

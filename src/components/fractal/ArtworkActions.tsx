@@ -53,6 +53,8 @@ interface ArtworkActionsProps {
    *  local edits as a brand-new draft. No silent overwrite either way. */
   onConflictReload?: () => void;
   onConflictSaveAsNew?: () => void;
+  /** Disables both conflict exits while one is in flight (review N2). */
+  conflictBusy?: boolean;
 }
 
 const ACTION_ICONS = {
@@ -74,6 +76,7 @@ export function ArtworkActions({
   onReset,
   onConflictReload,
   onConflictSaveAsNew,
+  conflictBusy = false,
 }: ArtworkActionsProps) {
   const t = useTranslations('explore.artworkActions');
   const fileInputRef = useRef<HTMLInputElement>(null);
@@ -219,14 +222,16 @@ export function ArtworkActions({
                 <button
                   type="button"
                   onClick={onConflictReload}
-                  className="rounded border border-white/25 px-2 py-1 text-[11px] hover:bg-white/10"
+                  disabled={conflictBusy}
+                  className="rounded border border-white/25 px-2 py-1 text-[11px] hover:bg-white/10 disabled:opacity-50"
                 >
                   {t('conflict.reload')}
                 </button>
                 <button
                   type="button"
                   onClick={onConflictSaveAsNew}
-                  className="rounded border border-white/25 px-2 py-1 text-[11px] hover:bg-white/10"
+                  disabled={conflictBusy}
+                  className="rounded border border-white/25 px-2 py-1 text-[11px] hover:bg-white/10 disabled:opacity-50"
                 >
                   {t('conflict.saveAsNew')}
                 </button>

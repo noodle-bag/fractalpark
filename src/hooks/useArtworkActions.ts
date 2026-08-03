@@ -13,7 +13,7 @@ import {
 } from '@/lib/artwork-analytics';
 import { captureThumbnail } from '@/lib/capture-thumbnail';
 import {
-  readLocalFormulaAssets,
+  readEffectiveFormulaAssets,
 } from '@/lib/custom-formula-storage';
 import { resolveCustomFormula } from '@/lib/formula-resolver';
 import { exportFractal } from '@/lib/export-fractal';
@@ -24,6 +24,7 @@ import {
   downloadFractalProjectFile,
   parseFractalProjectJson,
   serializeFractalProject,
+  sha256Hex,
   type FractalProjectErrorCode,
   type LocalFormulaAsset,
 } from '@/lib/fractal-file';
@@ -67,7 +68,23 @@ interface SaveInput {
 /** Cloud-draft save surface owned by useCloudDraftSession (spec §17). */
 export interface CloudDraftSaveSurface {
   identity: CloudDraftIdentity | null;
-  saveDraft: (input: SaveInput) => Promise<{ ok: true; identity: CloudDraftIdentity } | { ok: false }>;
+  saveDraft: (
+    input: SaveInput,
+  ) => Promise<
+    | { ok: true; identity: CloudDraftIdentity }
+    | {
+        ok: false;
+        phase:
+          | 'failed'
+          | 'conflict'
+          | 'quota'
+          | 'offline'
+          | 'session_expired'
+          | 'idle'
+          | 'saving'
+          | 'saved';
+      }
+  >;
   savePhase:
     | 'idle'
     | 'saving'
@@ -124,6 +141,8 @@ export function useArtworkActions({
     setStatus({ phase: 'idle' });
   }, []);
 
+  const resetCloudPhase = useCallback(() => setCloudPhase('idle'), []);
+
   const save = useCallback(async (name: string) => {
     if (!begin('save')) return false;
     setCloudPhase('idle');
@@ -137,7 +156,7 @@ export function useArtworkActions({
       name,
       document,
       thumbnail,
-      formulaAssets: readLocalFormulaAssets(),
+      formulaAssets: readEffectiveFormulaAssets(),
     };
 
     const execute = async (): Promise<boolean> => {
@@ -153,26 +172,28 @@ export function useArtworkActions({
         if (!hadIdentity) onDraftCreated?.(result.identity);
         succeed('save');
         return true;
+      } else {
+        // Mirror the phase the hook actually landed on — returned, not read
+        // from render-time state (first-conflict classification bug, review).
+        switch (result.phase) {
+          case 'conflict':
+            setCloudPhase('conflict');
+            break;
+          case 'quota':
+            setCloudPhase('quota');
+            break;
+          case 'offline':
+            setCloudPhase('offline');
+            break;
+          case 'session_expired':
+            setCloudPhase('session-expired');
+            break;
+          default:
+            setCloudPhase('failed');
+        }
+        fail('save', 'save-failed');
+        return false;
       }
-      // The hook already classified the failure; mirror it verbatim.
-      switch (cloudDraft.savePhase) {
-        case 'conflict':
-          setCloudPhase('conflict');
-          break;
-        case 'quota':
-          setCloudPhase('quota');
-          break;
-        case 'offline':
-          setCloudPhase('offline');
-          break;
-        case 'session_expired':
-          setCloudPhase('session-expired');
-          break;
-        default:
-          setCloudPhase('failed');
-      }
-      fail('save', 'save-failed');
-      return false;
     };
 
     if (cloudSession.status === 'authenticated') {
@@ -198,7 +219,7 @@ export function useArtworkActions({
   const download = useCallback(async () => {
     if (!begin('download')) return false;
     try {
-      const envelope = await createFractalDocumentEnvelope(document, readLocalFormulaAssets());
+      const envelope = await createFractalDocumentEnvelope(document, readEffectiveFormulaAssets());
       if (!envelope.success) {
         fail('download', envelope.errors[0]?.code ?? 'download-failed');
         return false;
@@ -260,8 +281,14 @@ export function useArtworkActions({
         return false;
       }
       // Transient import (v0.4.16): formula assets register in memory for
-      // this session only — nothing touches local formula storage.
+      // this session only — nothing touches local formula storage. Hashes
+      // are verified first (review follow-up): bytes must match the
+      // envelope's claim before anything registers.
       for (const asset of parsed.value.envelope.assets?.formulas ?? []) {
+        if (asset.hash && asset.hash !== (await sha256Hex(asset.source))) {
+          fail('import', 'invalid-envelope');
+          return false;
+        }
         const resolved = resolveCustomFormula({ id: asset.id, source: asset.source });
         if (!resolved.success) {
           fail('import', 'asset-compile-failed');
@@ -318,6 +345,7 @@ export function useArtworkActions({
     status,
     cloudPhase,
     clearStatus,
+    resetCloudPhase,
     save,
     download,
     importFile,

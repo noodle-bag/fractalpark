@@ -56,6 +56,17 @@ function failure(
   };
 }
 
+/** Session-scoped asset bytes (v0.4.16): every successfully registered
+ *  in-memory formula keeps its source here so envelope creation (save,
+ *  download, export) includes it even when local formula storage is empty
+ *  — the cross-device draft case (review P1). Session-only, never
+ *  persisted. */
+const sessionAssets = new Map<string, { id: string; source: string }>();
+
+export function readSessionFormulaAssets(): Array<{ id: string; source: string }> {
+  return [...sessionAssets.values()].map((asset) => ({ ...asset }));
+}
+
 export function resolveCustomFormula(
   formula: ResolvableCustomFormula,
   options: ResolveCustomFormulaOptions = {}
@@ -85,6 +96,7 @@ export function resolveCustomFormula(
   if (options.register !== false) {
     try {
       pluginRegistry.register(result.plugin);
+      sessionAssets.set(formula.id, { id: formula.id, source: formula.source });
     } catch (error) {
       return failure(formula.id, 'registration-failed', [
         error instanceof Error

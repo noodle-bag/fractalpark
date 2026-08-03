@@ -5,7 +5,7 @@ import type {
   LocalFormulaAsset,
   PreparedFractalProjectImport,
 } from '@/lib/fractal-file';
-import { resolveCustomFormula } from '@/lib/formula-resolver';
+import { readSessionFormulaAssets, resolveCustomFormula } from '@/lib/formula-resolver';
 
 export const CUSTOM_FORMULAS_STORAGE_KEY = 'myfrac-custom-formulas';
 export const CUSTOM_FORMULAS_CHANGED_EVENT = 'fractalpark:custom-formulas-changed';
@@ -65,6 +65,17 @@ export function readLocalFormulaAssets(): LocalFormulaAsset[] {
   } catch {
     return [];
   }
+}
+
+/** Effective assets for envelope creation (v0.4.16 review P1): local
+ *  library plus session-registered in-memory bytes (cloud draft loads,
+ *  transient imports). Session entries win on id collision — they are the
+ *  bytes the current canvas was actually built from. */
+export function readEffectiveFormulaAssets(): LocalFormulaAsset[] {
+  const merged = new Map<string, LocalFormulaAsset>();
+  for (const asset of readLocalFormulaAssets()) merged.set(asset.id, asset);
+  for (const asset of readSessionFormulaAssets()) merged.set(asset.id, asset);
+  return [...merged.values()];
 }
 
 export function notifyCustomFormulasChanged(): void {

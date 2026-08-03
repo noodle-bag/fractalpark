@@ -1,10 +1,11 @@
 import { test, expect, type Page } from '@playwright/test';
 
 /**
- * Cloud drafts journey (v0.4.15 PR 2 / commit 6) against the real local
- * Supabase stack: anonymous local save, contextual OTP sign-in (code read
- * from Mailpit), import to cloud, open draft, save again (revision moves),
- * delete. Runs only with the stack up and .env.local present.
+ * Cloud drafts journey (v0.4.16 cloud-first): anonymous save triggers the
+ * OTP dialog and the frozen write resumes after verification; the draft
+ * identity pins to `?draft=`; reopening loads from the cloud; a second
+ * save moves the revision; delete clears the row. Runs only with the real
+ * local Supabase stack up and .env.local present (Mailpit on :54324).
  */
 
 async function waitForFractalCanvasReady(page: Page) {
@@ -26,66 +27,61 @@ async function readOtpCode(page: Page): Promise<string> {
   throw new Error('no OTP email');
 }
 
+async function completeOtp(page: Page, email: string) {
+  await page.getByLabel(/email/i).fill(email);
+  await page.getByRole('button', { name: /send code/i }).click();
+  const code = await readOtpCode(page);
+  await page.getByLabel(/six-digit code/i).fill(code);
+  await page.getByRole('button', { name: /^sign in$/i }).click();
+}
+
 test.describe('Cloud drafts journey', () => {
-  test('anonymous save, sign in, sync, edit, delete', async ({ page }) => {
+  test('anonymous save resumes after OTP, revision moves, delete', async ({ page }) => {
     test.setTimeout(240000);
     const email = `cloud-e2e-${Date.now()}@example.com`;
     const artworkName = `E2E Cloud ${Date.now() % 100000}`;
 
-    // 1. Anonymous: save works locally, no cloud affordance in the toast.
+    // 1. Anonymous save: the OTP dialog opens instead of any local write.
     await page.goto('/en/explore');
     await waitForFractalCanvasReady(page);
     await page.getByRole('button', { name: /save to gallery/i }).click();
     await page.getByLabel(/name/i).fill(artworkName);
     await page.getByRole('button', { name: /^save$/i }).click();
-    await expect(page.getByText(/saved to gallery/i)).toBeVisible({ timeout: 15000 });
-    await expect(page.getByText(/synced to cloud/i)).toHaveCount(0);
+    await expect(page.getByLabel(/email/i)).toBeVisible({ timeout: 15000 });
 
-    // 2. My Works anonymous: sign-in card visible, no drafts section.
+    // 2. Complete OTP: the frozen save resumes and lands in the cloud.
+    await completeOtp(page, email);
+    await expect(page.getByText(/saved to your cloud/i)).toBeVisible({ timeout: 30000 });
+    await page.waitForURL(/[?&]draft=/, { timeout: 20000 });
+
+    // 3. My Works lists the new cloud draft at revision 1.
     await page.goto('/en/gallery?view=mine');
-    await expect(page.getByRole('button', { name: /sign in to sync/i })).toBeVisible();
-    await expect(page.getByText('Cloud drafts')).toHaveCount(0);
-
-    // 3. Contextual OTP: email -> Mailpit code -> signed in.
-    await page.getByRole('button', { name: /sign in to sync/i }).click();
-    await page.getByLabel(/email/i).fill(email);
-    await page.getByRole('button', { name: /send code/i }).click();
-    const code = await readOtpCode(page);
-    await page.getByLabel(/six-digit code/i).fill(code);
-    await page.getByRole('button', { name: /^sign in$/i }).click();
-    await expect(page.getByText('Cloud drafts')).toBeVisible({ timeout: 15000 });
-    await expect(page.getByText(/no cloud drafts yet/i)).toBeVisible();
-
-    // 4. The local artwork from step 1 is offered for sync; import it.
-    await expect(page.getByText(/not yet synced/i)).toBeVisible();
-    await page.getByRole('button', { name: /sync to cloud/i }).first().click();
-    // The draft row is a button ("{title} rev N · date"); the local card is
-    // a link — scoping by role avoids strict-mode ambiguity.
     const draftRow = page.getByRole('button', { name: new RegExp(artworkName) });
     await expect(draftRow).toBeVisible({ timeout: 20000 });
-    await expect(page.getByText(/rev 1/)).toBeVisible();
+    await expect(page.getByText(/rev 1/i)).toBeVisible();
 
-    // 5. Open the draft: lands in the editor through the local recovery copy.
+    // 4. Open the draft: Explore loads it from the cloud via ?draft=.
     await draftRow.click();
-    await page.waitForURL(/\/en\/explore\?artwork=/, { timeout: 20000 });
+    await page.waitForURL(/\/en\/explore\?.*draft=/, { timeout: 20000 });
     await waitForFractalCanvasReady(page);
 
-    // 6. Save again: in-place update, cloud revision moves to 2.
+    // 5. Save again while signed in: in-place update, revision moves to 2.
     await page.getByRole('button', { name: /save to gallery/i }).click();
     await page.getByLabel(/name/i).fill(`${artworkName} v2`);
     await page.getByRole('button', { name: /^save$/i }).click();
-    await expect(page.getByText(/synced to cloud/i)).toBeVisible({ timeout: 20000 });
+    await expect(page.getByText(/saved to your cloud/i)).toBeVisible({ timeout: 20000 });
 
-    // 7. My Works shows the moved revision.
+    // 6. My Works shows the moved revision.
     await page.goto('/en/gallery?view=mine');
-    await expect(page.getByRole('button', { name: new RegExp(`${artworkName} v2`) })).toBeVisible({ timeout: 15000 });
-    await expect(page.getByText(/rev 2/)).toBeVisible();
+    await expect(
+      page.getByRole('button', { name: new RegExp(`${artworkName} v2`) }),
+    ).toBeVisible({ timeout: 15000 });
+    await expect(page.getByText(/rev 2/i)).toBeVisible();
 
-    // 8. Delete the cloud draft; the local copy stays and can re-sync.
+    // 7. Delete the cloud draft: the row is gone, no local copy remains.
     page.on('dialog', (dialog) => void dialog.accept());
     await page.getByRole('button', { name: /^delete$/i }).click();
     await expect(page.getByText(/no cloud drafts yet/i)).toBeVisible({ timeout: 15000 });
-    await expect(page.getByText(/not yet synced/i)).toBeVisible();
-    await expect(page.getByRole('heading', { name: `${artworkName} v2` })).toBeVisible();
+    await expect(page.getByRole('button', { name: new RegExp(artworkName) })).toHaveCount(0);
   });
 });

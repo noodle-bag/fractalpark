@@ -28,7 +28,7 @@ import type { PluginParamRecord, PluginParamValue } from '@/engine/types';
 import {
   CUSTOM_FORMULAS_CHANGED_EVENT,
   readPersistedCustomFormulas,
-  readLocalFormulaAssets,
+  readEffectiveFormulaAssets,
 } from '@/lib/custom-formula-storage';
 import { captureThumbnail } from '@/lib/capture-thumbnail';
 import { readFractalDocumentEnvelope } from '@/engine/document-envelope';
@@ -268,6 +268,8 @@ function ExploreClient({ posterImage }: { posterImage?: string }) {
   const draftParam = searchParams.get('draft');
   const draftLoadConsumedRef = useRef<string | null>(null);
   const prevSessionStatusRef = useRef(cloudSessionState.status);
+  // Double-fire guard for the conflict exits (review N2).
+  const [conflictBusy, setConflictBusy] = useState(false);
 
   const pinDraftParam = useCallback(
     (draftId: string | null) => {
@@ -290,6 +292,10 @@ function ExploreClient({ posterImage }: { posterImage?: string }) {
 
     if (debounceRef.current) clearTimeout(debounceRef.current);
     debounceRef.current = setTimeout(() => {
+      // Never project while a ?draft= load is unresolved: rebuilding the
+      // URL from the canvas would erase the param before identity lands
+      // and the draft would silently never load (review N1).
+      if (draftParam && !cloudDraft.identity) return;
       const newUrl = documentToExploreHref(document, locale);
       const withDraft = cloudDraft.identity
         ? `${newUrl}${newUrl.includes('?') ? '&' : '?'}draft=${cloudDraft.identity.id}`
@@ -305,6 +311,7 @@ function ExploreClient({ posterImage }: { posterImage?: string }) {
     locale,
     router,
     cloudDraft.identity,
+    draftParam,
   ]);
 
   // Anonymous remix handoff consumption (spec §17 transient): a one-shot
@@ -327,25 +334,48 @@ function ExploreClient({ posterImage }: { posterImage?: string }) {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [remixParam]);
 
+  const clearHandoffFailure = useCallback(() => {
+    setHandoffError(null);
+    setHandoffTargetId(null);
+  }, []);
+
+  const handleLoadDocument = useCallback((nextDocument: typeof document) => {
+    clearHandoffFailure();
+    setIsPreviewPlaying(false);
+    loadFromDocument(nextDocument);
+  }, [clearHandoffFailure, loadFromDocument]);
+
   // `?draft=` cloud session load: waits for the session probe, then loads
   // the draft and registers its formula assets in memory so the referenced
-  // custom formula resolves. Loading never impersonates content — a failed
-  // load surfaces the hook's loadState, the default fractal stays.
+  // custom formula resolves. The in-flight guard (not the consumed ref)
+  // prevents duplicate fires; the consumed ref is set on success so a
+  // transient failure stays retryable (review N4).
+  const draftLoadInFlightRef = useRef<string | null>(null);
+  const attemptDraftLoad = useCallback(
+    (draftId: string) => {
+      if (draftLoadInFlightRef.current === draftId) return;
+      draftLoadInFlightRef.current = draftId;
+      void cloudDraft.loadDraft(draftId).then((loaded) => {
+        draftLoadInFlightRef.current = null;
+        if (!loaded) return;
+        draftLoadConsumedRef.current = draftId;
+        for (const asset of loaded.formulaAssets) {
+          resolveCustomFormula({ id: asset.id, source: asset.source });
+        }
+        handleLoadDocument(loaded.document);
+      });
+    },
+    [cloudDraft, handleLoadDocument],
+  );
+
   useEffect(() => {
     if (!draftParam) return;
     if (draftLoadConsumedRef.current === draftParam) return;
     if (cloudSessionState.status === 'loading') return;
     if (cloudSessionState.status !== 'authenticated') return;
-    draftLoadConsumedRef.current = draftParam;
-    void cloudDraft.loadDraft(draftParam).then((loaded) => {
-      if (!loaded) return;
-      for (const asset of loaded.formulaAssets) {
-        resolveCustomFormula({ id: asset.id, source: asset.source });
-      }
-      handleLoadDocument(loaded.document);
-    });
+    attemptDraftLoad(draftParam);
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [draftParam, cloudSessionState.status]);
+  }, [draftParam, cloudSessionState.status, attemptDraftLoad]);
 
   // Sign-out / session loss clears the draft identity but never the canvas:
   // the user keeps looking at exactly what they were editing (spec §17).
@@ -360,20 +390,14 @@ function ExploreClient({ posterImage }: { posterImage?: string }) {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [cloudSessionState.status]);
 
-  const clearHandoffFailure = useCallback(() => {
-    setHandoffError(null);
-    setHandoffTargetId(null);
-  }, []);
-
-  const handleLoadDocument = useCallback((nextDocument: typeof document) => {
-    clearHandoffFailure();
-    setIsPreviewPlaying(false);
-    loadFromDocument(nextDocument);
-  }, [clearHandoffFailure, loadFromDocument]);
-
   const handleResetView = useCallback(() => {
+    // Reset means a fresh canvas — the draft session ends with it, so a
+    // later save creates a new draft instead of silently overwriting the
+    // one that was just on screen (review follow-up).
+    cloudDraft.clearIdentity();
+    if (draftParam) pinDraftParam(null);
     handleLoadDocument(DEFAULT_FRACTAL_DOCUMENT);
-  }, [handleLoadDocument]);
+  }, [cloudDraft, draftParam, handleLoadDocument, pinDraftParam]);
 
   const getCanvas = useCallback(() => canvasElRef.current, []);
 
@@ -542,8 +566,14 @@ function ExploreClient({ posterImage }: { posterImage?: string }) {
         } : undefined}
       >
         {/* Cloud draft session states (spec §17): loading shows an honest
-            shell; failures never fake a default canvas. */}
-        {cloudDraft.loadState === 'loading' && (
+            shell; failures never fake a default canvas. The probe window
+            (draftParam present, session still resolving) counts as loading
+            so the default canvas cannot be edited under it (review N5). */}
+        {(cloudDraft.loadState === 'loading' ||
+          (draftParam !== null &&
+            cloudDraft.identity === null &&
+            cloudDraft.loadState !== 'not_found' &&
+            cloudDraft.loadState !== 'unavailable')) && (
           <div className="absolute inset-0 z-30 flex items-center justify-center bg-black/70 text-sm text-neutral-200 backdrop-blur-sm" role="status">
             {t('draft.loading')}
           </div>
@@ -551,6 +581,15 @@ function ExploreClient({ posterImage }: { posterImage?: string }) {
         {(cloudDraft.loadState === 'not_found' || cloudDraft.loadState === 'unavailable') && (
           <div className="absolute left-3 top-3 z-30 max-w-sm rounded-md border border-amber-400/40 bg-amber-950/85 px-3 py-2 text-xs text-amber-100 shadow-lg backdrop-blur-md" role="alert">
             {cloudDraft.loadState === 'not_found' ? t('draft.notFound') : t('draft.unavailable')}
+            {cloudDraft.loadState === 'unavailable' && draftParam && (
+              <button
+                type="button"
+                onClick={() => attemptDraftLoad(draftParam)}
+                className="ml-2 underline underline-offset-2 hover:text-white"
+              >
+                {t('draft.retry')}
+              </button>
+            )}
           </div>
         )}
         {cloudDraft.identity && cloudDraft.draftTitle && cloudDraft.loadState === 'ready' && (
@@ -630,16 +669,25 @@ function ExploreClient({ posterImage }: { posterImage?: string }) {
           onExport={artworkActions.exportPng}
           onReset={handleResetView}
           onConflictReload={() => {
+            // Reload discards the in-memory edits that conflicted — confirm
+            // first (review N3), and guard against double-fire (N2).
+            if (conflictBusy) return;
+            if (!window.confirm(t('artworkActions.conflict.discardConfirm'))) return;
+            setConflictBusy(true);
             void cloudDraft.reloadConflictDraft().then((loaded) => {
+              setConflictBusy(false);
               if (!loaded) return;
               for (const asset of loaded.formulaAssets) {
                 resolveCustomFormula({ id: asset.id, source: asset.source });
               }
               handleLoadDocument(loaded.document);
               artworkActions.clearStatus();
+              artworkActions.resetCloudPhase();
             });
           }}
           onConflictSaveAsNew={() => {
+            if (conflictBusy) return;
+            setConflictBusy(true);
             const name = cloudDraft.draftTitle ?? 'Untitled';
             const canvas = getCanvas();
             void cloudDraft
@@ -647,15 +695,18 @@ function ExploreClient({ posterImage }: { posterImage?: string }) {
                 name,
                 document,
                 thumbnail: canvas ? captureThumbnail(canvas) : '',
-                formulaAssets: readLocalFormulaAssets(),
+                formulaAssets: readEffectiveFormulaAssets(),
               })
               .then((result) => {
+                setConflictBusy(false);
                 if (result.ok) {
                   pinDraftParam(result.identity.id);
                   artworkActions.clearStatus();
+                  artworkActions.resetCloudPhase();
                 }
               });
           }}
+          conflictBusy={conflictBusy}
         />
 
         {/* Mobile: toggle controls panel button */}
