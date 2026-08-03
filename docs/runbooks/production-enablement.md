@@ -46,6 +46,14 @@ to the maintainer.
 - [ ] `FRACTALPARK_SESSION_ENCRYPTION_KEY` — fresh 32-byte key, never
       reused from staging
 - [ ] `FRACTALPARK_RATE_LIMIT_HMAC_KEY` — same rule
+- [ ] `CRON_SECRET` — protects the internal health-check endpoint
+      (`/api/creation/internal/smtp-probe`); schedule a monitored ping
+      against it so a dead SMTP channel pages a human instead of
+      surfacing as user-facing backup-email failures.
+- [ ] Schedule the cleanup worker (`npm run cleanup:worker` one pass per
+      run) on a short interval — it is a manual script, not a daemon;
+      nothing drains thumbnail jobs or finalizes deletions until it runs.
+      Interval guidance: 5–15 minutes.
 - [ ] Auth → URL Configuration: site URL + redirect allow-list match the
       production domain exactly.
 

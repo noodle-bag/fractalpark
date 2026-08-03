@@ -1756,7 +1756,7 @@
       "s2h": "What we never collect",
       "s2b": "No passwords — sign-in codes go to your email and expire.\n\nNo advertising trackers, no cross-site profiling cookies, no sale or sharing of personal data with data brokers.\n\nAnalytics never carry your email, IP address, artwork titles, draft contents, or any identifier that points back at you.",
       "s3h": "Cookies",
-      "s3b": "Exactly one: an encrypted, HttpOnly session cookie that keeps you signed in. It is not readable by other sites and is deleted when you sign out or delete your account.",
+      "s3b": "Two, both boring. An encrypted, HttpOnly session cookie keeps you signed in; a small NEXT_LOCALE cookie remembers your language. Neither is readable by other sites, and both are deleted when you sign out, delete your account, or clear your browser data.",
       "s4h": "Analytics",
       "s4b": "We use aggregate, privacy-limited usage analytics to understand which features help people (for example: a publish succeeded, a guide was opened). Events follow a fixed schema that forbids emails, IPs, titles, and artwork content.",
       "s5h": "Email we send",
