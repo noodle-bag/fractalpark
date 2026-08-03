@@ -54,7 +54,13 @@ export default async function CommunityArtworkPage({ params }: PageProps) {
   if (!publication) notFound();
 
   const pageUrl = `${SITE.url}/${locale}/gallery/community/${publication.id}`;
-  const creditText = `${publication.title} — ${publication.authorDisplayName} — CC BY 4.0`;
+  // Dual licensing on formula publications (review): the rendered image
+  // stays CC BY 4.0, the formula source is MIT.
+  const creditText = `${publication.title} — ${publication.authorDisplayName} — ${
+    publication.license === FORMULA_PUBLICATION_LICENSE
+      ? 'CC BY 4.0; formula source MIT'
+      : 'CC BY 4.0'
+  }`;
 
   // Formula publications (spec §17.2): MIT-licensed, with a public source
   // download whose display name comes from the compiled formula metadata.
@@ -123,6 +129,11 @@ export default async function CommunityArtworkPage({ params }: PageProps) {
             {formulaInfo ? (
               <>
                 {t('licenseFormulaValue')}{' '}
+                <a href={CC_BY_URL} target="_blank" rel="noreferrer" className="underline">
+                  CC BY 4.0
+                </a>
+                {' · '}
+                {t('licenseFormulaSourceValue')}{' '}
                 <a href={MIT_LICENSE_URL} target="_blank" rel="noreferrer" className="underline">
                   MIT
                 </a>

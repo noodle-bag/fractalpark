@@ -123,7 +123,7 @@ export async function POST(
         JSON.parse(verdict.value.canonicalJson),
       );
       if (!formulaVerdict.ok) {
-        throw new CloudApiError(formulaVerdict.code as 'invalid_envelope');
+        throw new CloudApiError(formulaVerdict.code);
       }
       license = FORMULA_PUBLICATION_LICENSE;
     }

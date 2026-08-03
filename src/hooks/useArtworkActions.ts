@@ -156,7 +156,7 @@ export function useArtworkActions({
       name,
       document,
       thumbnail,
-      formulaAssets: readEffectiveFormulaAssets(),
+      formulaAssets: readEffectiveFormulaAssets(document.formula.formulaId),
     };
 
     const execute = async (): Promise<boolean> => {
@@ -219,7 +219,7 @@ export function useArtworkActions({
   const download = useCallback(async () => {
     if (!begin('download')) return false;
     try {
-      const envelope = await createFractalDocumentEnvelope(document, readEffectiveFormulaAssets());
+      const envelope = await createFractalDocumentEnvelope(document, readEffectiveFormulaAssets(document.formula.formulaId));
       if (!envelope.success) {
         fail('download', envelope.errors[0]?.code ?? 'download-failed');
         return false;

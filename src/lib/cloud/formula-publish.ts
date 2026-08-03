@@ -17,8 +17,11 @@ import { compileFrm } from '@/engine/frm/compile';
 import { registerBuiltins } from '@/engine/plugins/builtins';
 import { getFormulaMetadata } from '@/engine/plugins/formula-catalog';
 
-/** §17.1 contract: portable formula source cap, mirrored from the API. */
-export const FORMULA_SOURCE_MAX_BYTES = 64 * 1024;
+/** §17.1 contract: portable formula source cap — the same 256 KiB the
+ *  envelope validator and the private formula API enforce, so anything
+ *  savable stays publishable (review: 64 KiB here stranded 64–256 KiB
+ *  formulas behind an unexplained publish rejection). */
+export const FORMULA_SOURCE_MAX_BYTES = 256 * 1024;
 
 export type FormulaPublishVerdict =
   | { ok: true; formulaId: string; formulaName: string }

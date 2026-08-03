@@ -32,7 +32,12 @@ async function completeOtp(page: Page, email: string) {
   await page.getByRole('button', { name: /send code/i }).click();
   const code = await readOtpCode(page);
   await page.getByLabel(/six-digit code/i).fill(code);
-  await page.getByRole('button', { name: /^sign in$/i }).click();
+  // Scoped to the dialog: the navbar's anonymous-state "Sign in" button
+  // matches the same regex while the OTP dialog is open (review blocking).
+  await page
+    .getByRole('dialog')
+    .getByRole('button', { name: /^sign in$/i })
+    .click();
 }
 
 test.describe('Cloud drafts journey', () => {

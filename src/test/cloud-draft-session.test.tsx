@@ -60,6 +60,9 @@ describe('useCloudDraftSession (spec §17)', () => {
     await act(async () => {
       const outcome = await result.current.saveDraft(makeInput());
       expect(outcome.ok).toBe(false);
+      // B1 regression lock: the classified phase rides the return value —
+      // the UI must never read render-time state for this.
+      if (!outcome.ok) expect(outcome.phase).toBe('conflict');
     });
     expect(result.current.savePhase).toBe('conflict');
     expect(updateDraftMock.mock.calls[0][0]).toBe('d-1');
@@ -69,22 +72,26 @@ describe('useCloudDraftSession (spec §17)', () => {
   it('maps quota, offline, and expired sessions to distinct phases', async () => {
     const { result } = renderHook(() => useCloudDraftSession());
     createDraftMock.mockRejectedValueOnce(new CloudClientError('quota_exceeded'));
+    let outcome!: Awaited<ReturnType<typeof result.current.saveDraft>>;
     await act(async () => {
-      await result.current.saveDraft(makeInput());
+      outcome = await result.current.saveDraft(makeInput());
     });
     expect(result.current.savePhase).toBe('quota');
+    if (!outcome.ok) expect(outcome.phase).toBe('quota');
 
     createDraftMock.mockRejectedValueOnce(new CloudClientError('offline'));
     await act(async () => {
-      await result.current.saveDraft(makeInput());
+      outcome = await result.current.saveDraft(makeInput());
     });
     expect(result.current.savePhase).toBe('offline');
+    if (!outcome.ok) expect(outcome.phase).toBe('offline');
 
     createDraftMock.mockRejectedValueOnce(new CloudClientError('unauthenticated'));
     await act(async () => {
-      await result.current.saveDraft(makeInput());
+      outcome = await result.current.saveDraft(makeInput());
     });
     expect(result.current.savePhase).toBe('session_expired');
+    if (!outcome.ok) expect(outcome.phase).toBe('session_expired');
   });
 
   it('save-as-new creates synchronously even while state still holds the old identity', async () => {

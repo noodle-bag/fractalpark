@@ -70,12 +70,17 @@ export function readLocalFormulaAssets(): LocalFormulaAsset[] {
 /** Effective assets for envelope creation (v0.4.16 review P1): local
  *  library plus session-registered in-memory bytes (cloud draft loads,
  *  transient imports). Session entries win on id collision — they are the
- *  bytes the current canvas was actually built from. */
-export function readEffectiveFormulaAssets(): LocalFormulaAsset[] {
+ *  bytes the current canvas was actually built from. Only formulas the
+ *  document actually references are bundled (review: carrying every
+ *  session asset broke the single-asset publish gate). */
+export function readEffectiveFormulaAssets(referencedFormulaId?: string): LocalFormulaAsset[] {
   const merged = new Map<string, LocalFormulaAsset>();
   for (const asset of readLocalFormulaAssets()) merged.set(asset.id, asset);
   for (const asset of readSessionFormulaAssets()) merged.set(asset.id, asset);
-  return [...merged.values()];
+  const all = [...merged.values()];
+  return referencedFormulaId === undefined
+    ? all
+    : all.filter((asset) => asset.id === referencedFormulaId);
 }
 
 export function notifyCustomFormulasChanged(): void {

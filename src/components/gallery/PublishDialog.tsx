@@ -79,7 +79,9 @@ export function PublishDialog({ draft, onClose, onPublished }: PublishDialogProp
           read.mode === 'editable' && (read.envelope.assets?.formulas?.length ?? 0) > 0,
         );
       })
-      .catch(() => setHasFormula(false));
+      // Probe failure = unknown, and unknown warns: publishing with the MIT
+      // notice visible is always the safe side (review).
+      .catch(() => setHasFormula(true));
   }, [draft]);
 
   const submit = useCallback(async () => {
@@ -110,6 +112,10 @@ export function PublishDialog({ draft, onClose, onPublished }: PublishDialogProp
       case 'rate_limited':
         return t('errors.rateLimited');
       case 'formula_compile_failed':
+        return t('errors.formulaCompile');
+      case 'formula_builtin_conflict':
+        return t('errors.formulaBuiltinConflict');
+      case 'invalid_envelope':
         return t('errors.formulaCompile');
       case 'revision_conflict':
         return t('errors.revisionConflict');

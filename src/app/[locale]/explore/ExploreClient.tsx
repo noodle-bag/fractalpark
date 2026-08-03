@@ -268,7 +268,7 @@ function ExploreClient({ posterImage }: { posterImage?: string }) {
   // Cloud-authoritative draft session (ADR 0006): ?draft= loads from the
   // cloud, save writes the cloud, identity lives here and in the URL.
   const cloudDraft = useCloudDraftSession();
-  const { state: cloudSessionState } = useCloudSession();
+  const { state: cloudSessionState, openSignIn } = useCloudSession();
   const cloudFormulas = useCloudFormulaLibrary();
   const draftParam = searchParams.get('draft');
   const draftLoadConsumedRef = useRef<string | null>(null);
@@ -589,16 +589,41 @@ function ExploreClient({ posterImage }: { posterImage?: string }) {
         } : undefined}
       >
         {/* Cloud draft session states (spec §17): loading shows an honest
-            shell; failures never fake a default canvas. The probe window
-            (draftParam present, session still resolving) counts as loading
-            so the default canvas cannot be edited under it (review N5). */}
+            shell; failures never fake a default canvas. The shell only
+            covers windows where a load can actually happen (session
+            probing or an authenticated fetch in flight) — a resolved
+            anonymous/unavailable session shows guidance instead of a
+            permanent spinner (review blocking). */}
         {(cloudDraft.loadState === 'loading' ||
           (draftParam !== null &&
             cloudDraft.identity === null &&
             cloudDraft.loadState !== 'not_found' &&
-            cloudDraft.loadState !== 'unavailable')) && (
+            cloudDraft.loadState !== 'unavailable' &&
+            (cloudSessionState.status === 'loading' ||
+              cloudSessionState.status === 'authenticated'))) && (
           <div className="absolute inset-0 z-30 flex items-center justify-center bg-black/70 text-sm text-neutral-200 backdrop-blur-sm" role="status">
             {t('draft.loading')}
+          </div>
+        )}
+        {draftParam !== null &&
+          cloudDraft.identity === null &&
+          (cloudSessionState.status === 'anonymous' ||
+            cloudSessionState.status === 'unavailable') && (
+          <div className="absolute left-3 top-3 z-30 max-w-sm rounded-md border border-white/20 bg-black/75 px-3 py-2 text-xs text-neutral-100 shadow-lg backdrop-blur-md" role="status">
+            {cloudSessionState.status === 'anonymous' ? (
+              <>
+                {t('draft.signInToOpen')}{' '}
+                <button
+                  type="button"
+                  onClick={() => openSignIn()}
+                  className="underline underline-offset-2 hover:text-white"
+                >
+                  {t('draft.signIn')}
+                </button>
+              </>
+            ) : (
+              t('draft.unavailable')
+            )}
           </div>
         )}
         {(cloudDraft.loadState === 'not_found' || cloudDraft.loadState === 'unavailable') && (
@@ -718,7 +743,7 @@ function ExploreClient({ posterImage }: { posterImage?: string }) {
                 name,
                 document,
                 thumbnail: canvas ? captureThumbnail(canvas) : '',
-                formulaAssets: readEffectiveFormulaAssets(),
+                formulaAssets: readEffectiveFormulaAssets(document.formula.formulaId),
               })
               .then((result) => {
                 setConflictBusy(false);
