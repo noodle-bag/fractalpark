@@ -16,8 +16,13 @@ vi.mock('@/lib/cloud/client', () => ({
   verifyAccountDeletion: vi.fn(async () => ({
     operationId: '11111111-1111-4111-8111-111111111111',
     expiresAt: new Date(Date.now() + 600_000).toISOString(),
+    deletionStage: 'stepped_up',
   })),
-  deleteAccount: vi.fn(async () => ({ status: 'deleting' })),
+  deleteAccount: vi.fn(async () => ({
+    status: 'deleting',
+    draftsDeleted: 0,
+    publicationsWithdrawn: 0,
+  })),
 }));
 
 /**

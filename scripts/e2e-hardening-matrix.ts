@@ -272,7 +272,7 @@ async function main(): Promise<void> {
     headers: { 'idempotency-key': crypto.randomUUID() },
     body: JSON.stringify({ envelope: huge }),
   });
-  assert(overCap.status === 413 || overCap.status === 422, `over-cap envelope rejected (${overCap.status})`);
+  assert(overCap.status === 422, `over-cap envelope rejected with invalid_envelope (${overCap.status})`);
   // Community limit above the hard cap is rejected (spec 13: 400, not clamp).
   const tooBig = await api('/api/creation/community?limit=999', null);
   assert(tooBig.status === 400, `community limit=999 -> 400 (${tooBig.status})`);
@@ -284,6 +284,17 @@ async function main(): Promise<void> {
   assert(page.status === 200, `public artwork page renders (${page.status})`);
   assert(!html.includes('<script>alert(1)</script>'), 'public page: no raw hostile <script> in HTML');
   assert(!html.includes('<img src=x onerror'), 'public page: no raw hostile tag formation');
+  // Positive form: the title is RENDERED in escaped form, not dropped (a
+  // page that silently swallows the title would pass the negative probes).
+  assert(
+    html.includes('&lt;script&gt;alert(1)&lt;/script&gt;'),
+    'public page: title renders in escaped form (not dropped)',
+  );
+  // The byline display name gets the same treatment.
+  assert(
+    html.includes('Matrix &lt;b&gt;Tester&lt;/b&gt;') || html.includes('Matrix \\u003cb\\u003eTester\\u003c/b\\u003e'),
+    'public page: hostile display name renders escaped',
+  );
   // The community API itself transports plain text; SSR/JSON-LD escape at
   // render. Assert the API round-trips the title so the page assertion
   // above is meaningful.
@@ -292,6 +303,16 @@ async function main(): Promise<void> {
   };
   const hit = (communityItem.items ?? []).find((i) => i.id === pub.publicationId);
   assert((hit?.title ?? '').includes('alert(1)'), 'community API returns the raw plain-text title');
+
+  // ---- 7. Session revocation (last: kills device2's provider session) ----
+  // After device A's global logout, device B's access cookie still resolves
+  // (section 4) but its refresh is dead: an explicit refresh attempt must
+  // answer 401, completing the bounded-zombie contract (spec 10.2).
+  const refreshB = await api('/api/creation/auth/session/refresh', device2, {
+    method: 'POST',
+    body: '{}',
+  });
+  assert(refreshB.status === 401, `device B cannot renew after global logout (${refreshB.status})`);
 
   console.log(`\n${passed} passed, ${failed} failed`);
   if (failed > 0) {
