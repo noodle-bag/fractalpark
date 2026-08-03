@@ -23,10 +23,11 @@ import {
 import { DEFAULT_FRACTAL_DOCUMENT } from '@/engine/document';
 import type { FormulaExperienceHint } from '@/engine/frm/authoring';
 import type { FormulaPlugin } from '@/engine/plugins/types';
+import { useCloudSession } from '@/components/cloud/CloudSessionProvider';
 import {
-  useCustomFormulas,
-  type CustomFormulaMutationResult,
-} from '@/hooks/useCustomFormulas';
+  useCloudFormulaLibrary,
+  type FormulaMutationResult,
+} from '@/hooks/useCloudFormulaLibrary';
 import { MAX_CUSTOM_FORMULAS } from '@/lib/custom-formula-storage';
 import {
   createFrmDownload,
@@ -85,7 +86,13 @@ export function FrmEditorWorkspace() {
   });
   const lastExampleRequestRef = useRef(initialDraft.requestedExample);
 
-  const { formulas, isLoading, saveFormula, canAddMore } = useCustomFormulas();
+  const { state: cloudSession } = useCloudSession();
+  const {
+    formulas,
+    isLoading,
+    saveFormula,
+    getDetail,
+  } = useCloudFormulaLibrary();
   const [source, setSource] = useState(initialDraft.source);
   const [savedSource, setSavedSource] = useState<string | null>(null);
   const [savedHintKey, setSavedHintKey] = useState(
@@ -249,16 +256,18 @@ export function FrmEditorWorkspace() {
   }, [isDirty, t]);
 
   const mutationErrorMessage = useCallback(
-    (result: CustomFormulaMutationResult): string => {
+    (result: FormulaMutationResult): string => {
       switch (result.code) {
-        case 'max-count':
+        case 'quota':
           return t('errors.maxCount', { count: MAX_CUSTOM_FORMULAS });
-        case 'formula-not-found':
+        case 'conflict':
+          return t('errors.conflict');
+        case 'not_found':
           return t('errors.formulaNotFound');
-        case 'storage-unavailable':
-          return t('errors.storageUnavailable');
         case 'compile-failed':
-          return result.error ?? t('errors.compileFailed');
+          return t('errors.compileFailed');
+        case 'builtin-conflict':
+          return t('errors.builtinConflict');
         default:
           return result.error ?? t('saveError');
       }
@@ -267,30 +276,34 @@ export function FrmEditorWorkspace() {
   );
 
   const save = useCallback(
-    (
+    async (
       name: string,
       currentSource: string,
       experienceHint?: FormulaExperienceHint,
       id?: string
-    ) => {
-      const result = saveFormula(
+    ): Promise<{ success: boolean; error?: string; id?: string; silent?: boolean }> => {
+      const result = await saveFormula({
         name,
-        currentSource,
+        source: currentSource,
         experienceHint,
-        id ?? recordId
-      );
+        formulaId: id ?? recordId,
+      });
       if (result.success) {
-        setRecordId(result.id);
+        setRecordId(result.formulaId);
         setSavedSource(currentSource);
         setSavedHintKey(experienceHintKey(experienceHint));
         setHint(experienceHint);
         setNotice(t('saved'));
-        return result;
-      } else {
-        const error = mutationErrorMessage(result);
-        setNotice(error);
-        return { ...result, error };
+        return { success: true, id: result.formulaId };
       }
+      if (result.code === 'auth-intent') {
+        // OTP dialog owns the UI; the frozen write resumes after sign-in.
+        setNotice('');
+        return { success: true, silent: true };
+      }
+      const error = mutationErrorMessage(result);
+      setNotice(error);
+      return { success: false, error };
     },
     [mutationErrorMessage, recordId, saveFormula, t]
   );
@@ -329,15 +342,17 @@ export function FrmEditorWorkspace() {
       setNotice(t('compileFirst'));
       return;
     }
-    const result = save(
+    void save(
       compiledPreview.plugin.name,
       source,
       hint,
       recordId
-    );
-    if (result.success && result.id) {
-      router.push(editorToExploreHref(locale, result.id));
-    }
+    ).then((result) => {
+      // auth-intent (silent) leaves navigation to the post-OTP resume.
+      if (result.success && !result.silent && result.id) {
+        router.push(editorToExploreHref(locale, result.id));
+      }
+    });
   }, [compiledPreview, hint, locale, recordId, router, save, source, t]);
 
   return (
@@ -356,7 +371,6 @@ export function FrmEditorWorkspace() {
 
       <div className="mb-5 flex flex-wrap gap-2" aria-label={t('actions')}>
         <Button
-          disabled={!canAddMore}
           onClick={() => loadSource(DEFAULT_SOURCE)}
           variant="outline"
         >
@@ -485,31 +499,36 @@ export function FrmEditorWorkspace() {
               {t('myFormulas')}
             </summary>
             <div className="mt-3 grid gap-2">
-              {isLoading ? (
+              {cloudSession.status !== 'authenticated' ? (
+                <p className="text-sm text-muted-foreground">{t('librarySignIn')}</p>
+              ) : isLoading ? (
                 t('loading')
               ) : formulas.length ? (
                 formulas.map((formula) => (
                   <button
                     className="rounded border p-2 text-left hover:bg-muted"
                     key={formula.id}
-                    onClick={() =>
-                      loadSource(
-                        formula.source,
-                        formula.experienceHint,
-                        formula.id
-                      )
-                    }
+                    onClick={() => {
+                      void getDetail(formula.id).then((detail) => {
+                        if (!detail) {
+                          setNotice(t('saveError'));
+                          return;
+                        }
+                        loadSource(
+                          detail.source,
+                          (detail.experienceHint ?? undefined) as
+                            | FormulaExperienceHint
+                            | undefined,
+                          detail.id
+                        );
+                      });
+                    }}
                     type="button"
                   >
                     <span className="flex items-center gap-2">
                       <FolderOpen className="size-4 shrink-0" />
                       <span className="truncate">{formula.name}</span>
                     </span>
-                    {formula.error && (
-                      <span className="mt-1 block text-xs text-destructive">
-                        {formula.error}
-                      </span>
-                    )}
                   </button>
                 ))
               ) : (

@@ -100,7 +100,10 @@ interface FormulaEditorProps {
     source: string,
     experienceHint?: FormulaExperienceHint,
     formulaId?: string,
-  ) => { success: boolean; error?: string; id?: string } | void;
+  ) =>
+    | { success: boolean; error?: string; id?: string; silent?: boolean }
+    | Promise<{ success: boolean; error?: string; id?: string; silent?: boolean }>
+    | void;
   onClose?: () => void;
 }
 
@@ -420,10 +423,14 @@ export function FormulaEditor({
     }
   }, [experienceHint, source, sourcePreflightError, onCompile, toast, t]);
 
-  const handleSave = useCallback(() => {
+  const handleSave = useCallback(async () => {
     const name = compileResult?.plugin?.name || 'Untitled';
     const effectiveHint = compileResult?.effectiveExperienceHint ?? experienceHint;
-    const saveResult = onSave?.(name, source, effectiveHint, formulaId);
+    const saveResult = await onSave?.(name, source, effectiveHint, formulaId);
+    if (saveResult && 'silent' in saveResult && saveResult.silent) {
+      // A sign-in intent owns the UI now (v0.4.16): no toast either way.
+      return;
+    }
     if (saveResult && saveResult.success === false) {
       toast({
         title: t('saveFailed'),
@@ -714,7 +721,7 @@ export function FormulaEditor({
           </Button>
 
           {compileResult?.success && (
-            <Button variant="outline" onClick={handleSave}>
+            <Button variant="outline" onClick={() => void handleSave()}>
               <Save className="w-4 h-4 mr-2" />
               {t('save')}
             </Button>

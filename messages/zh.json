@@ -1337,7 +1337,13 @@
         "storageUnavailable": "无法更新本地公式库。",
         "compileFailed": "无法编译该公式。",
         "examplesTitle": "从示例开始",
-        "examplesDescription": "先载入一个可编译的示例, 再在编辑器里改出你自己的版本."
+        "examplesDescription": "先载入一个可编译的示例, 再在编辑器里改出你自己的版本.",
+        "signInHint": "登录后公式保存在云端库，可在任意设备继续。",
+        "signIn": "登录",
+        "unavailableHint": "公式库暂不可用，请稍后再试。",
+        "unavailable": "公式库暂不可用。",
+        "conflict": "该公式已在别处被修改，请刷新后重试。",
+        "builtinConflict": "该 id 已被内置公式占用，请改名后重试。"
       },
       "family": {
         "all": "全部",
@@ -1675,7 +1681,9 @@
       "maxCount": "已达到公式数量上限（{count} 条）。",
       "formulaNotFound": "该本地公式已不存在。",
       "storageUnavailable": "无法更新本地公式库。",
-      "compileFailed": "无法编译该公式。"
+      "compileFailed": "无法编译该公式。",
+      "conflict": "该公式已在别处被修改，请刷新后重试。",
+      "builtinConflict": "该 id 已被内置公式占用。"
     },
     "compileFirst": "请先成功编译源代码，再在探索器中打开。",
     "source": {
@@ -1686,7 +1694,8 @@
       "extension": "请选择 .frm 文件。",
       "size": "FRM 文件不得超过 256 KiB。",
       "encoding": "文件必须为有效 UTF-8。"
-    }
+    },
+    "librarySignIn": "登录后可打开你的云端公式库。"
   },
   "metadata": {
     "explore": {

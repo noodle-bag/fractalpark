@@ -17,6 +17,7 @@ import { trackEvent } from '@/components/analytics/PageViewTracker';
 import { useExploreDocumentState } from '@/hooks/useExploreDocumentState';
 import { useArtworkActions } from '@/hooks/useArtworkActions';
 import { useCloudDraftSession } from '@/hooks/useCloudDraftSession';
+import { useCloudFormulaLibrary } from '@/hooks/useCloudFormulaLibrary';
 import { useCloudSession } from '@/components/cloud/CloudSessionProvider';
 import { resolveCustomFormula } from '@/lib/formula-resolver';
 import AnimatedFractalCanvas from '@/components/fractal/AnimatedFractalCanvas';
@@ -27,7 +28,6 @@ import { getDefaultBounds } from '@/engine/plugins/formula-catalog';
 import type { PluginParamRecord, PluginParamValue } from '@/engine/types';
 import {
   CUSTOM_FORMULAS_CHANGED_EVENT,
-  readPersistedCustomFormulas,
   readEffectiveFormulaAssets,
 } from '@/lib/custom-formula-storage';
 import { captureThumbnail } from '@/lib/capture-thumbnail';
@@ -39,6 +39,7 @@ import {
 } from '@/lib/frm-editor';
 import {
   resolveFormulaReference,
+  readSessionFormulaAssets,
   type FormulaResolution,
 } from '@/lib/formula-resolver';
 
@@ -162,7 +163,7 @@ function ExploreClient({ posterImage }: { posterImage?: string }) {
     try {
       const resolution = resolveFormulaReference(
         intent.formulaId,
-        readPersistedCustomFormulas()
+        readSessionFormulaAssets()
       );
       if (!resolution.success) {
         queueMicrotask(() => {
@@ -220,7 +221,10 @@ function ExploreClient({ posterImage }: { posterImage?: string }) {
     const resolveCurrentFormula = () => {
       try {
         setFormulaResolution(
-          resolveFormulaReference(formula, readPersistedCustomFormulas())
+          // v0.4.16: session-registered sources replace the local library;
+          // the registry's transient fallback covers formulas registered
+          // by draft loads and editor visits this session.
+          resolveFormulaReference(formula, readSessionFormulaAssets())
         );
       } catch (error) {
         setFormulaResolution({
@@ -265,11 +269,31 @@ function ExploreClient({ posterImage }: { posterImage?: string }) {
   // cloud, save writes the cloud, identity lives here and in the URL.
   const cloudDraft = useCloudDraftSession();
   const { state: cloudSessionState } = useCloudSession();
+  const cloudFormulas = useCloudFormulaLibrary();
   const draftParam = searchParams.get('draft');
   const draftLoadConsumedRef = useRef<string | null>(null);
   const prevSessionStatusRef = useRef(cloudSessionState.status);
   // Double-fire guard for the conflict exits (review N2).
   const [conflictBusy, setConflictBusy] = useState(false);
+
+  // Cloud rescue (v0.4.16): a custom formula this session has never seen
+  // (fresh tab, cross-device library) resolves once its cloud detail is
+  // fetched and registered — then the resolution effect re-runs cleanly.
+  const rescueInFlightRef = useRef<string | null>(null);
+  useEffect(() => {
+    if (formulaResolution?.success !== false) return;
+    if (formulaResolution.code !== 'formula-not-found') return;
+    if (cloudSessionState.status !== 'authenticated') return;
+    const target = formulaResolution.formulaId;
+    if (rescueInFlightRef.current === target) return;
+    rescueInFlightRef.current = target;
+    void cloudFormulas.ensureRegistered(target).then((ok) => {
+      rescueInFlightRef.current = null;
+      if (!ok) return;
+      setFormulaResolution(resolveFormulaReference(target, readSessionFormulaAssets()));
+    });
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [formulaResolution, cloudSessionState.status]);
 
   const pinDraftParam = useCallback(
     (draftId: string | null) => {
@@ -374,7 +398,6 @@ function ExploreClient({ posterImage }: { posterImage?: string }) {
     if (cloudSessionState.status === 'loading') return;
     if (cloudSessionState.status !== 'authenticated') return;
     attemptDraftLoad(draftParam);
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [draftParam, cloudSessionState.status, attemptDraftLoad]);
 
   // Sign-out / session loss clears the draft identity but never the canvas:

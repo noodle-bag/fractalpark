@@ -373,3 +373,80 @@ export interface CommunityDetail extends CommunityListItem {
 export async function getCommunityPublication(publicationId: string): Promise<CommunityDetail> {
   return call<CommunityDetail>(`/api/creation/publications/${publicationId}`);
 }
+
+// ---------------------------------------------------------------------------
+// Custom formula cloud library (v0.4.16, spec §17.1)
+
+export interface CloudCustomFormulaSummary {
+  id: string;
+  name: string;
+  revision: number;
+  sourceBytes: number;
+  hasExperienceHint: boolean;
+  createdAt: string;
+  updatedAt: string;
+}
+
+export interface CloudCustomFormulaDetail extends CloudCustomFormulaSummary {
+  source: string;
+  experienceHint: unknown | null;
+}
+
+export async function listCustomFormulas(): Promise<CloudCustomFormulaSummary[]> {
+  const data = await call<{ formulas: CloudCustomFormulaSummary[] }>(
+    '/api/creation/custom-formulas',
+  );
+  return data.formulas;
+}
+
+export async function getCustomFormula(
+  formulaId: string,
+): Promise<CloudCustomFormulaDetail> {
+  const data = await call<{ formula: CloudCustomFormulaDetail }>(
+    `/api/creation/custom-formulas/${formulaId}`,
+  );
+  return data.formula;
+}
+
+export async function createCustomFormula(input: {
+  name: string;
+  source: string;
+  experienceHint?: unknown;
+}): Promise<{ formulaId: string; revision: number }> {
+  return call('/api/creation/custom-formulas', {
+    method: 'POST',
+    headers: { 'idempotency-key': crypto.randomUUID() },
+    body: JSON.stringify({
+      name: input.name,
+      source: input.source,
+      ...(input.experienceHint !== undefined ? { experienceHint: input.experienceHint } : {}),
+    }),
+  });
+}
+
+export async function updateCustomFormula(
+  formulaId: string,
+  input: {
+    expectedRevision: number;
+    name?: string;
+    source?: string;
+    experienceHint?: unknown;
+  },
+): Promise<{ formulaId: string; revision: number }> {
+  return call(`/api/creation/custom-formulas/${formulaId}`, {
+    method: 'PATCH',
+    headers: { 'idempotency-key': crypto.randomUUID() },
+    body: JSON.stringify(input),
+  });
+}
+
+export async function deleteCustomFormula(
+  formulaId: string,
+  expectedRevision: number,
+): Promise<void> {
+  return call(`/api/creation/custom-formulas/${formulaId}`, {
+    method: 'DELETE',
+    headers: { 'idempotency-key': crypto.randomUUID() },
+    body: JSON.stringify({ expectedRevision }),
+  });
+}

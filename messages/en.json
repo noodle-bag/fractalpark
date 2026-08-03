@@ -1336,7 +1336,13 @@
         "storageUnavailable": "The local formula library could not be updated.",
         "compileFailed": "The formula could not be compiled.",
         "examplesTitle": "Start from Examples",
-        "examplesDescription": "Load a working example first, then reshape it into your own formula in the editor."
+        "examplesDescription": "Load a working example first, then reshape it into your own formula in the editor.",
+        "signInHint": "Sign in to keep formulas in your cloud library and pick them up on any device.",
+        "signIn": "Sign in",
+        "unavailableHint": "The formula library is unavailable right now. Try again shortly.",
+        "unavailable": "The formula library is unavailable right now.",
+        "conflict": "This formula changed elsewhere. Reload and try again.",
+        "builtinConflict": "This id is reserved by a built-in formula. Rename yours and try again."
       },
       "family": {
         "all": "All",
@@ -1674,7 +1680,9 @@
       "maxCount": "Maximum formula limit reached ({count}).",
       "formulaNotFound": "That local formula no longer exists.",
       "storageUnavailable": "The local formula library could not be updated.",
-      "compileFailed": "The formula could not be compiled."
+      "compileFailed": "The formula could not be compiled.",
+      "conflict": "This formula changed elsewhere. Reload and try again.",
+      "builtinConflict": "This id is reserved by a built-in formula."
     },
     "compileFirst": "Compile this source successfully before opening it in Explorer.",
     "source": {
@@ -1685,7 +1693,8 @@
       "extension": "Choose a .frm file.",
       "size": "FRM files must be 256 KiB or smaller.",
       "encoding": "The file must be valid UTF-8."
-    }
+    },
+    "librarySignIn": "Sign in to open your cloud formula library."
   },
   "metadata": {
     "explore": {
