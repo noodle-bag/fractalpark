@@ -21,7 +21,7 @@
       }
     },
     "myWorks": {
-      "signInHint": "登录即可跨设备同步草稿；本机上的作品无论如何都会保留。",
+      "signInHint": "登录后草稿存入云端库，可在任意设备继续。",
       "signIn": "登录以同步",
       "draftsTitle": "云端草稿",
       "publishedTitle": "已发布",
@@ -30,8 +30,7 @@
       "loading": "正在加载草稿…",
       "refresh": "刷新",
       "delete": "删除",
-      "confirmDelete": "永久删除这份云端草稿？本机上的副本不受影响。",
-      "confirmOverwrite": "本机上的副本有从未同步到云端的改动，打开云端草稿会覆盖它们。继续？",
+      "confirmDelete": "永久删除这个云端草稿？此操作不可撤销。",
       "confirmWithdraw": "永久撤回这件作品？它会立刻从社区消失且无法恢复。已经授予既有二创的许可继续有效。",
       "publish": "发布",
       "withdraw": "撤回",
@@ -48,7 +47,6 @@
       "publishedMeta": "{license} · 发布于 {date}",
       "withdrawnMeta": "已于 {date} 撤回",
       "hiddenMeta": "已被平台隐藏 · 发布于 {date} · 应用内只有你能看到这一行",
-      "importTitle": "本机作品，尚未同步",
       "import": "同步到云端",
       "importing": "同步中…",
       "meta": "第 {revision} 版 · {date}",
@@ -87,7 +85,8 @@
       },
       "formulaNoticeTitle": "这件作品使用了你的自定义公式",
       "formulaNoticeBody": "发布后，公式源码将以 MIT 许可证公开：任何人都可以阅读、复制和复用。公开展示的公式名称与描述来自公式元数据，而非此表单。渲染图像仍采用 CC BY 4.0。",
-      "formulaNoticeLink": "在 opensource.org 阅读 MIT 许可证"
+      "formulaNoticeLink": "在 opensource.org 阅读 MIT 许可证",
+      "licensePendingNote": "预检未完成。许可证由服务端在发布时最终确定：不含自定义公式的作品采用 CC BY 4.0；含自定义公式的作品另以 MIT 公开公式源码。"
     },
     "community": {
       "backToCommunity": "← 社区",
@@ -185,7 +184,7 @@
     },
     "mine": {
       "title": "我的作品",
-      "description": "这些作品保存在当前设备的此浏览器中。",
+      "description": "保存在你云端库中的作品。",
       "create": "在探索器中创作",
       "emptyTitle": "尚无已保存作品",
       "emptyDescription": "前往探索器创作并保存分形，建立仅存于当前设备的作品集。",
@@ -1297,7 +1296,7 @@
       "custom": "自定义公式",
       "resolution": {
         "loading": "正在加载公式...",
-        "notFound": "当前设备上没有自定义公式“{formula}”。",
+        "notFound": "自定义公式「{formula}」加载失败。",
         "storageInvalid": "无法安全读取你的自定义公式库。",
         "idConflict": "自定义公式 ID“{formula}”与内置公式冲突。",
         "compileFailed": "无法编译自定义公式“{formula}”。",
@@ -1335,7 +1334,7 @@
         "renameConfirm": "确认",
         "deleteConfirm": "确定要删除这个公式吗？",
         "maxReached": "已达到公式数量上限（{count} 条）",
-        "formulaNotFound": "该本地公式已不存在。",
+        "formulaNotFound": "该公式已不在你的云端库中。",
         "storageUnavailable": "无法更新本地公式库。",
         "compileFailed": "无法编译该公式。",
         "examplesTitle": "从示例开始",
@@ -1629,7 +1628,7 @@
     "landing": {
       "heading": "FractalPark 分形公园: 浏览器里的开源分形生成器",
       "whatIsHeading": "什么是 FractalPark 分形公园?",
-      "whatIsAnswer": "FractalPark 分形公园是一个免费开源（MIT）的分形知识与创作平台, 完全运行在浏览器中.它用 WebGL 实时渲染 {formulaCount} 个内置公式, 支持 Fractint 兼容的 FRM 公式编辑, 并可导出高分辨率 PNG 图像——无需安装、无需账号、不经过服务器处理.",
+      "whatIsAnswer": "FractalPark 是一个免费、开源（MIT）的分形知识与创作平台，完全在浏览器中用 WebGL 渲染：内置 {formulaCount} 个公式、兼容 Fractint 的 FRM 创作、高分辨率 PNG 导出。创作无需账号；保存作品和公式需邮箱登录，存入你的私有云端库。",
       "capabilitiesHeading": "核心能力",
       "capabilitiesIntro": "{formulaCount} 个公式、{formulaFamilyCount} 个家族 · {formulaGuideCount} 篇深度公式指南 · {transformCount} 种变换 · {coloringModeCount} 种着色模式 · 可分享 URL · 最高 {maxExportScale}× PNG 导出",
       "linksHeading": "继续了解",
@@ -1652,11 +1651,11 @@
   },
   "frmEditor": {
     "title": "FRM 编辑器",
-    "description": "在浏览器中本地编写、编译、预览和保存 FRM 公式。",
+    "description": "在浏览器中编写、编译、预览 FRM 公式，并保存到你的云端库。",
     "breadcrumb": "面包屑导航",
     "crumbGuide": "FRM 指南",
     "beta": "测试版",
-    "localOnly": "源代码、预览和已保存的公式仅保留在当前设备。FRM 兼容性有明确限制。",
+    "localOnly": "源码和预览只留在当前标签页，直到你保存到云端库。FRM 兼容性是有意收窄的。",
     "guide": "阅读 FRM 指南",
     "noJsTitle": "FRM 编辑器需要 JavaScript",
     "noJs": "本页介绍本地 FRM 工作流。请启用 JavaScript 以编辑、编译和预览公式。",
@@ -1665,7 +1664,7 @@
     "examples": "示例",
     "myFormulas": "我的公式",
     "loading": "正在加载本地公式…",
-    "empty": "此设备上还没有保存的公式。",
+    "empty": "还没有保存的公式。",
     "import": "导入 .frm",
     "download": "下载 .frm",
     "saveOpen": "保存并在探索器中打开",
@@ -1723,7 +1722,7 @@
     },
     "frmEditor": {
       "title": "FRM 编辑器 | FractalPark",
-      "description": "在浏览器中本地编写、编译、预览和保存 FRM 公式。"
+      "description": "在浏览器中编写、编译、预览 FRM 公式，并保存到你的云端库。"
     },
     "frmGuide": {
       "title": "FRM 指南 | 编写自定义分形公式 - 分形公园 FractalPark",
@@ -1762,7 +1761,7 @@
   },
   "publicProject": {
     "tagline": "FractalPark 分形公园是一个开源、公式优先的分形知识与创作平台, 正在不断扩展 Fractint 兼容的 FRM 支持, 致力于把 Fractint 的公式遗产带入现代浏览器.",
-    "definition": "FractalPark 分形公园是一个免费开源（MIT）的 WebGL 应用, 用于探索、学习和创作分形艺术.它内置 {formulaCount} 个公式、{formulaFamilyCount} 个家族、{formulaGuideCount} 篇深度公式指南, 提供 Fractint 兼容的 FRM 语言及配套指南和独立编辑器, 还有个人画廊——全部在浏览器本地运行.",
+    "definition": "FractalPark 是一个免费、开源（MIT）的 WebGL 应用，用于探索、学习和创作分形艺术。内置 {formulaCount} 个公式（{formulaFamilyCount} 个族）、{formulaGuideCount} 篇深度公式指南、兼容 Fractint 的 FRM 语言（含指南和独立编辑器）以及社区画廊。渲染在浏览器中进行；保存作品和公式需邮箱登录，存入私有云端库。",
     "aiDescription": "FractalPark 分形公园是基于 MIT 许可证开源的浏览器分形生成器, 使用 WebGL 实时 GPU 渲染.内置 {formulaCount} 个分形公式、{formulaFamilyCount} 个家族、{formulaGuideCount} 篇公式指南, 提供 Fractint 兼容 FRM 编辑器（AST 到 GLSL 转译）、{transformCount} 种 UV 变换插件、{coloringModeCount} 种着色模式, 支持可分享 URL、本地作品保存与最高 {maxExportScale}x 高分辨率 PNG 导出.使用 Next.js、React 和 TypeScript 构建.",
     "capabilitiesHeading": "今天就能做什么",
     "capabilities": {
@@ -1780,7 +1779,7 @@
       },
       "saveExport": {
         "title": "保存与导出",
-        "summary": "作品保存在本机, 可通过可分享 URL 精确恢复视角, 并以 SSAA 抗锯齿导出最高 4× 高分辨率 PNG 图像."
+        "summary": "邮箱登录即可把作品和公式存入云端库、发布到社区画廊，也可用可分享 URL 精确还原视角，或以最高 4 倍 SSAA 抗锯齿导出高分辨率 PNG。"
       }
     },
     "boundariesHeading": "当前边界与未来方向",
@@ -1789,7 +1788,7 @@
     "boundaries": {
       "current": {
         "0": "不断扩展的 Fractint 兼容 FRM 支持: 今天可用的是一个经过实测的 Fractint 公式语言子集——不是完整的 Fractint 复刻.",
-        "1": "作品与自定义公式保存在本机.没有账号体系, 没有云端同步, 也没有服务端分享.",
+        "1": "创作无需账号。保存使用邮箱一次性验证码登录，作品和公式存入你的私有云端库；发布始终显式触发，携带自定义公式的作品会同时以 MIT 许可证公开公式源码。",
         "2": "界面支持英文与简体中文双语."
       },
       "future": {

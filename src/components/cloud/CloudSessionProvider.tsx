@@ -35,7 +35,7 @@ interface CloudSessionContextValue {
   state: CloudSessionState;
   /** Opens the OTP dialog. An optional intent runs once after verification;
    *  it lives only in React memory — never storage, URL, or analytics. */
-  openSignIn: (intent?: () => void | Promise<void>) => void;
+  openSignIn: (intent?: () => void | Promise<void>, onDropped?: () => void) => void;
   signOut: () => Promise<void>;
   refresh: () => Promise<void>;
 }
@@ -210,6 +210,9 @@ export function CloudSessionProvider({ children }: { children: React.ReactNode }
   // At most one intent at a time; opening sign-in again replaces it, and
   // cancelling the dialog discards it without executing (DEC-0416-04).
   const intentRef = useRef<(() => void | Promise<void>) | null>(null);
+  // Fired when a queued intent is dropped (dialog closed without verifying,
+  // or replaced by a newer intent) so awaiting callers can settle.
+  const intentDroppedRef = useRef<(() => void) | null>(null);
 
   const refresh = useCallback(async () => {
     try {
@@ -248,8 +251,11 @@ export function CloudSessionProvider({ children }: { children: React.ReactNode }
     };
   }, []);
 
-  const openSignIn = useCallback((intent?: () => void | Promise<void>) => {
+  const openSignIn = useCallback((intent?: () => void | Promise<void>, onDropped?: () => void) => {
+    // A newer intent replaces the previous one — settle the old awaiter.
+    intentDroppedRef.current?.();
     intentRef.current = intent ?? null;
+    intentDroppedRef.current = intent ? (onDropped ?? null) : null;
     setSignInOpen(true);
   }, []);
 
@@ -275,11 +281,15 @@ export function CloudSessionProvider({ children }: { children: React.ReactNode }
         onClose={() => {
           setSignInOpen(false);
           intentRef.current = null;
+          const dropped = intentDroppedRef.current;
+          intentDroppedRef.current = null;
+          dropped?.();
         }}
         onVerified={(userId) => {
           setSignInOpen(false);
           const intent = intentRef.current;
           intentRef.current = null;
+          intentDroppedRef.current = null;
           // verifyOtp already returned the fresh session — adopt it directly
           // instead of a second probe that could flap to 'unavailable' on a
           // transient failure right after a successful sign-in.

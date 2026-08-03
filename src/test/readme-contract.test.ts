@@ -61,7 +61,8 @@ describe('README generator', () => {
   it('does not present future directions as shipped capabilities', () => {
     const block = buildReadmeProductBlock();
     expect(block).toContain('On the roadmap (not released):');
-    // Boundaries must explicitly negate accounts/cloud, not claim them.
-    expect(block).toContain('no accounts, no cloud sync');
+    // Boundaries must state the account/cloud model honestly (v0.4.16).
+    expect(block).toContain('Creating needs no account');
+    expect(block).toContain('private cloud library');
   });
 });

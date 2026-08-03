@@ -135,12 +135,9 @@ export function CustomFormulaList({ currentBounds, onSelectFormula }: CustomForm
       setEditingFormulaId(undefined);
       return { success: true, id: result.formulaId };
     }
-    if (result.code === 'auth-intent') {
-      // The OTP dialog is now the pending UI; close the editor quietly.
-      setShowEditor(false);
-      setEditingFormulaId(undefined);
-      setActionError('');
-      return { success: true, silent: true };
+    if (result.code === 'auth-cancelled') {
+      // Dialog closed without verifying — nothing saved, nothing to say.
+      return { success: false, silent: true };
     }
     const message = localizeError(result);
     setActionError(message);

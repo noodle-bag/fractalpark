@@ -296,10 +296,9 @@ export function FrmEditorWorkspace() {
         setNotice(t('saved'));
         return { success: true, id: result.formulaId };
       }
-      if (result.code === 'auth-intent') {
-        // OTP dialog owns the UI; the frozen write resumes after sign-in.
-        setNotice('');
-        return { success: true, silent: true };
+      if (result.code === 'auth-cancelled') {
+        // Dialog closed without verifying — nothing saved, nothing to say.
+        return { success: false, silent: true };
       }
       const error = mutationErrorMessage(result);
       setNotice(error);

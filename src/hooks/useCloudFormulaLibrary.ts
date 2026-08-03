@@ -28,7 +28,7 @@ import type { FormulaExperienceHint } from '@/engine/frm/authoring';
 
 export type FormulaMutationCode =
   | 'ok'
-  | 'auth-intent'
+  | 'auth-cancelled'
   | 'quota'
   | 'conflict'
   | 'not_found'
@@ -173,6 +173,9 @@ export function useCloudFormulaLibrary(): CloudFormulaLibrary {
               ? { experienceHint: input.experienceHint }
               : {}),
           });
+          // Prefill the revision map before refresh so a failed refresh can
+          // never strand the new id behind false not_found results (N1).
+          revisionsRef.current.set(result.formulaId, result.revision);
           resolveCustomFormula({ id: result.formulaId, source: input.source });
           await refresh();
           return { success: true, code: 'ok', formulaId: result.formulaId };
@@ -183,11 +186,16 @@ export function useCloudFormulaLibrary(): CloudFormulaLibrary {
 
       if (session.status === 'authenticated') return execute();
       if (session.status === 'anonymous') {
-        // Frozen write + single intent: after OTP the exact same bytes save.
-        openSignIn(() => {
-          void execute();
+        // Frozen write + single intent: the returned promise settles with
+        // the REAL outcome after OTP (success carries the new id, so callers
+        // can adopt recordId and avoid duplicate creates), or with
+        // 'auth-cancelled' when the dialog closes without verifying.
+        return new Promise<FormulaMutationResult>((resolve) => {
+          openSignIn(
+            () => execute().then(resolve),
+            () => resolve({ success: false, code: 'auth-cancelled' }),
+          );
         });
-        return { success: false, code: 'auth-intent' };
       }
       return { success: false, code: 'unavailable' };
     },

@@ -49,9 +49,10 @@ export function PublishDialog({ draft, onClose, onPublished }: PublishDialogProp
   const [attested, setAttested] = useState(false);
   const [pending, setPending] = useState(false);
   const [error, setError] = useState<string | null>(null);
-  // True when the draft carries a portable formula asset: publishing then
-  // freezes under MIT and the FRM source becomes public (spec §17.2).
+  // True when the draft carries a portable formula asset (spec §17.2).
   const [hasFormula, setHasFormula] = useState(false);
+  // True when the probe could not decide — warn neutrally, never assert.
+  const [probeFailed, setProbeFailed] = useState(false);
 
   // Reset and probe the profile whenever a new draft is targeted.
   useEffect(() => {
@@ -79,9 +80,9 @@ export function PublishDialog({ draft, onClose, onPublished }: PublishDialogProp
           read.mode === 'editable' && (read.envelope.assets?.formulas?.length ?? 0) > 0,
         );
       })
-      // Probe failure = unknown, and unknown warns: publishing with the MIT
-      // notice visible is always the safe side (review).
-      .catch(() => setHasFormula(true));
+      // Probe failure = unknown: warn neutrally (license is finalized
+      // server-side) instead of either silence or a false MIT claim (N16).
+      .catch(() => setProbeFailed(true));
   }, [draft]);
 
   const submit = useCallback(async () => {
@@ -182,6 +183,11 @@ export function PublishDialog({ draft, onClose, onPublished }: PublishDialogProp
                 {t('formulaNoticeLink')}
               </a>
             </div>
+          )}
+          {!hasFormula && probeFailed && (
+            <p className="rounded-md border border-white/15 bg-white/5 p-2.5 text-xs text-muted-foreground">
+              {t('licensePendingNote')}
+            </p>
           )}
           <label className="flex items-start gap-2 text-sm">
             <input

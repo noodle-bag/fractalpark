@@ -117,6 +117,12 @@ function ExploreClient({ posterImage }: { posterImage?: string }) {
   const canvasElRef = useRef<HTMLCanvasElement | null>(null);
   const pickToastTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
 
+  // Cloud surfaces hoist above every consumer effect (deps evaluate at
+  // render time — declaring them later would be a TDZ crash).
+  const cloudDraft = useCloudDraftSession();
+  const { state: cloudSessionState, openSignIn } = useCloudSession();
+  const cloudFormulas = useCloudFormulaLibrary();
+
   const effectiveIterations = useMemo(() => {
     if (!adaptiveIterations) return maxIterations;
     const zoomFactor = Math.log2(Math.max(bounds.zoom, 0.0001));
@@ -166,6 +172,49 @@ function ExploreClient({ posterImage }: { posterImage?: string }) {
         readSessionFormulaAssets()
       );
       if (!resolution.success) {
+        // Cloud rescue (N13): a fresh tab has an empty session registry —
+        // the formula may still live in the owner's cloud library.
+        if (
+          resolution.code === 'formula-not-found' &&
+          cloudSessionState.status === 'authenticated'
+        ) {
+          void cloudFormulas.ensureRegistered(intent.formulaId).then((ok) => {
+            const retry = ok
+              ? resolveFormulaReference(intent.formulaId, readSessionFormulaAssets())
+              : resolution;
+            if (retry.success) {
+              queueMicrotask(() => {
+                setHandoffTargetId(intent.formulaId);
+                setHandoffError(null);
+                updateFormula({ formulaId: intent.formulaId });
+                updateBounds(
+                  retry.experienceHint?.bounds ??
+                    getDefaultBounds(intent.formulaId)
+                );
+                if (retry.experienceHint?.coloring) {
+                  updateColoring({
+                    customGradient: null,
+                    ...retry.experienceHint.coloring,
+                  });
+                }
+                router.replace(
+                  stripEditorToExploreIntent(locale, currentParams),
+                  { scroll: false }
+                );
+              });
+            } else {
+              queueMicrotask(() => {
+                setHandoffTargetId(null);
+                setHandoffError(retry);
+                router.replace(
+                  stripEditorToExploreIntent(locale, currentParams),
+                  { scroll: false }
+                );
+              });
+            }
+          });
+          return;
+        }
         queueMicrotask(() => {
           setHandoffTargetId(null);
           setHandoffError(resolution);
@@ -267,9 +316,6 @@ function ExploreClient({ posterImage }: { posterImage?: string }) {
 
   // Cloud-authoritative draft session (ADR 0006): ?draft= loads from the
   // cloud, save writes the cloud, identity lives here and in the URL.
-  const cloudDraft = useCloudDraftSession();
-  const { state: cloudSessionState, openSignIn } = useCloudSession();
-  const cloudFormulas = useCloudFormulaLibrary();
   const draftParam = searchParams.get('draft');
   const draftLoadConsumedRef = useRef<string | null>(null);
   const prevSessionStatusRef = useRef(cloudSessionState.status);
@@ -288,12 +334,17 @@ function ExploreClient({ posterImage }: { posterImage?: string }) {
     if (rescueInFlightRef.current === target) return;
     rescueInFlightRef.current = target;
     void cloudFormulas.ensureRegistered(target).then((ok) => {
+      // Guard both the slot and the current formula: a late resolve from a
+      // previous target must neither clear another rescue's marker nor
+      // overwrite the resolution of the formula the user moved to (N11).
+      if (rescueInFlightRef.current !== target) return;
       rescueInFlightRef.current = null;
       if (!ok) return;
+      if (formula !== target) return;
       setFormulaResolution(resolveFormulaReference(target, readSessionFormulaAssets()));
     });
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [formulaResolution, cloudSessionState.status]);
+  }, [formulaResolution, cloudSessionState.status, formula]);
 
   const pinDraftParam = useCallback(
     (draftId: string | null) => {

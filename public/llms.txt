@@ -4,7 +4,7 @@
 
 ## Overview
 
-FractalPark is a free, open-source (MIT) WebGL application that runs entirely in the browser. It enables users to explore, learn, create, save, and share mathematical fractal art without installation, accounts, or backend processing. The default entry point is Explore, the interactive fractal workspace.
+FractalPark is a free, open-source (MIT) WebGL application that renders entirely in the browser. Anyone can explore, learn, and create mathematical fractal art without installation or an account; saving artworks and custom formulas uses email one-time-code sign-in and a private cloud library, and publishing to the community gallery is always explicit. The default entry point is Explore, the interactive fractal workspace.
 
 ## Pages
 
@@ -12,7 +12,7 @@ FractalPark is a free, open-source (MIT) WebGL application that runs entirely in
 - [Formula Atlas](https://www.fractalpark.com/en/formulas): Directory of 94 built-in formulas across 7 families, linking to 21 in-depth Formula Guides
 - [FRM Guide](https://www.fractalpark.com/en/formulas/frm): Fractint-compatible FRM language guide — development, support matrix, core syntax, and tutorials
 - [FRM Editor](https://www.fractalpark.com/en/formulas/editor): Standalone FRM authoring workflow with import, diagnostics, and preview
-- [Gallery](https://www.fractalpark.com/en/gallery): Published preset collection and on-device personal artworks
+- [Gallery](https://www.fractalpark.com/en/gallery): Published preset collection, community gallery, and the owner's cloud artworks
 - [Drift](https://www.fractalpark.com/en/drift): Immersive full-viewport preset slideshow (experiential page; marked `noindex, follow`, excluded from the sitemap)
 - [About](https://www.fractalpark.com/en/about): Project facts, current boundaries, future directions, and open-source details
 
@@ -25,7 +25,8 @@ FractalPark is a free, open-source (MIT) WebGL application that runs entirely in
 - **Coloring System**: 9 coloring modes with orbit channel support
 - **Real-time Rendering**: WebGL GPU acceleration with SSAA options
 - **High-res Export**: PNG export with tiled rendering for large images, up to 4x
-- **Personal Gallery**: Artworks saved to localStorage on the current device (no accounts, no cloud sync)
+- **Cloud Library**: Artworks and custom formulas saved behind email one-time-code sign-in (no passwords); anonymous creation stays fully usable
+- **Community Gallery**: Explicit publishing under CC BY 4.0; artworks using a custom formula also publish the formula source under MIT
 - **Bilingual**: English and Simplified Chinese support
 
 ## URL Parameters

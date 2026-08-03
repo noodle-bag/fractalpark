@@ -21,7 +21,7 @@
       }
     },
     "myWorks": {
-      "signInHint": "Sign in to sync drafts across devices. Your artworks on this device stay put either way.",
+      "signInHint": "Sign in to keep drafts in your cloud library and pick them up on any device.",
       "signIn": "Sign in to sync",
       "draftsTitle": "Cloud drafts",
       "publishedTitle": "Published",
@@ -30,8 +30,7 @@
       "loading": "Loading drafts…",
       "refresh": "Refresh",
       "delete": "Delete",
-      "confirmDelete": "Delete this cloud draft permanently? The copy on this device is not affected.",
-      "confirmOverwrite": "The copy on this device has changes that never reached the cloud. Opening the cloud draft replaces them. Continue?",
+      "confirmDelete": "Delete this cloud draft permanently? This cannot be undone.",
       "confirmWithdraw": "Withdraw this artwork permanently? It disappears from the Community immediately and cannot be restored. The license already granted to existing remixes stays in effect.",
       "publish": "Publish",
       "withdraw": "Withdraw",
@@ -47,7 +46,6 @@
       "publishedMeta": "{license} · published {date}",
       "withdrawnMeta": "Withdrawn {date}",
       "hiddenMeta": "Hidden by moderation · published {date} · in the app, only you can see this row",
-      "importTitle": "On this device, not yet synced",
       "import": "Sync to cloud",
       "importing": "Syncing…",
       "meta": "rev {revision} · {date}",
@@ -86,7 +84,8 @@
       },
       "formulaNoticeTitle": "This artwork uses your custom formula",
       "formulaNoticeBody": "Publishing makes the formula source code public under the MIT License: anyone may read, copy, and reuse it. The formula name and description shown publicly come from the formula metadata, not from this form. The rendered image stays under CC BY 4.0.",
-      "formulaNoticeLink": "Read the MIT License at opensource.org"
+      "formulaNoticeLink": "Read the MIT License at opensource.org",
+      "licensePendingNote": "Could not pre-check this draft. Licensing is finalized by the server at publish time: artworks without custom formulas publish under CC BY 4.0; a custom formula adds MIT for its source."
     },
     "community": {
       "backToCommunity": "← Community",
@@ -184,7 +183,7 @@
     },
     "mine": {
       "title": "My Works",
-      "description": "Works saved in this browser on this device.",
+      "description": "Works saved to your cloud library.",
       "create": "Create in Explorer",
       "emptyTitle": "No saved works yet",
       "emptyDescription": "Create a fractal in Explorer and save it to build your device-local collection.",
@@ -1296,7 +1295,7 @@
       "custom": "Custom",
       "resolution": {
         "loading": "Loading formula...",
-        "notFound": "The custom formula “{formula}” is not available on this device.",
+        "notFound": "The custom formula “{formula}” could not be loaded.",
         "storageInvalid": "Your custom formula library could not be read safely.",
         "idConflict": "The custom formula ID “{formula}” conflicts with a built-in formula.",
         "compileFailed": "The custom formula “{formula}” could not be compiled.",
@@ -1334,7 +1333,7 @@
         "renameConfirm": "Confirm",
         "deleteConfirm": "Delete this formula?",
         "maxReached": "Maximum formula limit reached ({count})",
-        "formulaNotFound": "That local formula no longer exists.",
+        "formulaNotFound": "That formula no longer exists in your cloud library.",
         "storageUnavailable": "The local formula library could not be updated.",
         "compileFailed": "The formula could not be compiled.",
         "examplesTitle": "Start from Examples",
@@ -1628,7 +1627,7 @@
     "landing": {
       "heading": "FractalPark: open-source fractal generator in your browser",
       "whatIsHeading": "What is FractalPark?",
-      "whatIsAnswer": "FractalPark is a free, open-source (MIT) fractal knowledge and creation platform that runs entirely in your browser. It renders {formulaCount} built-in formulas in real time with WebGL, supports Fractint-compatible FRM authoring, and exports high-resolution PNG images — no installation, no account, no server processing.",
+      "whatIsAnswer": "FractalPark is a free, open-source (MIT) fractal knowledge and creation platform that renders entirely in your browser with WebGL: {formulaCount} built-in formulas, Fractint-compatible FRM authoring, and high-resolution PNG export. Creating needs no account; saving artworks and formulas uses email sign-in and a private cloud library.",
       "capabilitiesHeading": "Core capabilities",
       "capabilitiesIntro": "{formulaCount} formulas across {formulaFamilyCount} families · {formulaGuideCount} in-depth Formula Guides · {transformCount} transforms · {coloringModeCount} coloring modes · shareable URLs · PNG export up to {maxExportScale}×",
       "linksHeading": "Keep exploring",
@@ -1651,11 +1650,11 @@
   },
   "frmEditor": {
     "title": "FRM Editor",
-    "description": "Write, compile, preview, and save FRM formulas locally in your browser.",
+    "description": "Write, compile, and preview FRM formulas in your browser; save them to your cloud library.",
     "breadcrumb": "Breadcrumb",
     "crumbGuide": "FRM Guide",
     "beta": "Beta",
-    "localOnly": "Your source, preview, and saved formulas remain on this device. FRM compatibility is deliberately limited.",
+    "localOnly": "Your source and preview stay in this tab until you save to your cloud library. FRM compatibility is deliberately limited.",
     "guide": "Read the FRM Guide",
     "noJsTitle": "FRM Editor requires JavaScript",
     "noJs": "This page explains the local FRM workflow. Enable JavaScript to edit, compile, and preview formulas.",
@@ -1664,7 +1663,7 @@
     "examples": "Examples",
     "myFormulas": "My Formulas",
     "loading": "Loading local formulas…",
-    "empty": "No saved formulas on this device.",
+    "empty": "No saved formulas yet.",
     "import": "Import .frm",
     "download": "Download .frm",
     "saveOpen": "Save and Open in Explorer",
@@ -1722,7 +1721,7 @@
     },
     "frmEditor": {
       "title": "FRM Editor | FractalPark",
-      "description": "Write, compile, preview, and save FRM formulas locally in your browser."
+      "description": "Write, compile, and preview FRM formulas in your browser; save them to your cloud library."
     },
     "frmGuide": {
       "title": "FRM Guide | Write Custom Fractal Formulas - FractalPark",
@@ -1761,7 +1760,7 @@
   },
   "publicProject": {
     "tagline": "FractalPark is an open-source, formula-first fractal knowledge and creation platform with growing Fractint-compatible FRM support, working to bring Fractint’s formula heritage into the modern browser.",
-    "definition": "FractalPark is a free, open-source (MIT) WebGL application for exploring, learning, and creating fractal art. It ships {formulaCount} built-in formulas across {formulaFamilyCount} families, {formulaGuideCount} in-depth Formula Guides, a Fractint-compatible FRM language with a Guide and standalone Editor, and a personal Gallery — all running locally in your browser.",
+    "definition": "FractalPark is a free, open-source (MIT) WebGL application for exploring, learning, and creating fractal art. It ships {formulaCount} built-in formulas across {formulaFamilyCount} families, {formulaGuideCount} in-depth Formula Guides, a Fractint-compatible FRM language with a Guide and standalone Editor, and a community Gallery. Rendering runs in your browser; saving works and formulas uses email sign-in and a private cloud library.",
     "aiDescription": "FractalPark is an open-source MIT-licensed browser fractal generator using WebGL for real-time GPU rendering. It features {formulaCount} built-in fractal formulas across {formulaFamilyCount} families, {formulaGuideCount} Formula Guides, a Fractint-compatible FRM editor with AST-to-GLSL transpilation, {transformCount} UV transform plugins, {coloringModeCount} coloring modes, shareable URLs, local artwork storage, and high-resolution PNG export up to {maxExportScale}x. Built with Next.js, React, and TypeScript.",
     "capabilitiesHeading": "What you can do today",
     "capabilities": {
@@ -1778,8 +1777,8 @@
         "summary": "Write custom formulas in the Fractint-compatible FRM language with the Guide and standalone Editor: AST validation, live GLSL preview, and clear diagnostics."
       },
       "saveExport": {
-        "title": "Save and export",
-        "summary": "Save artworks on this device, restore exact views from shareable URLs, and export high-resolution PNG images up to 4× with SSAA anti-aliasing."
+        "title": "Save and share",
+        "summary": "Save artworks and custom formulas to your private cloud with email sign-in and pick them up on any device, publish pieces to the community gallery, or create anonymously and export high-resolution PNG images up to 4× with SSAA anti-aliasing."
       }
     },
     "boundariesHeading": "Current boundaries and future directions",
@@ -1788,7 +1787,7 @@
     "boundaries": {
       "current": {
         "0": "Growing Fractint-compatible FRM support: a practical, tested subset of the Fractint formula language runs today — not a complete Fractint reimplementation.",
-        "1": "Artworks and custom formulas are stored locally on your device. There are no accounts, no cloud sync, and no server-side sharing.",
+        "1": "Creating needs no account. Saving artworks and formulas uses email one-time-code sign-in and stores them in your private cloud library; publishing is always explicit, and artworks carrying a custom formula publish its source under the MIT license.",
         "2": "The interface is bilingual in English and Simplified Chinese."
       },
       "future": {
