@@ -112,7 +112,8 @@ as $$
 declare
   v_op public.artwork_operations%rowtype;
 begin
-  perform pg_advisory_xact_lock(hashtextextended(p_owner_id::text, 11));
+  -- Seed 0 matches every owner write RPC (see confirm below).
+  perform pg_advisory_xact_lock(hashtextextended(p_owner_id::text, 0));
 
   -- A locked deletion is already running: the flow is idempotently
   -- retryable, but a new proof is meaningless.
@@ -175,7 +176,11 @@ declare
   v_drafts integer := 0;
   v_pubs integer := 0;
 begin
-  perform pg_advisory_xact_lock(hashtextextended(p_owner_id::text, 11));
+  -- Seed 0 matches every owner write RPC: confirm waits for in-flight
+  -- writes to commit (their drafts enter this transaction's snapshot and
+  -- are deleted), and no write can slip between the gate check and the
+  -- lock (review N1: closes the check-then-act race).
+  perform pg_advisory_xact_lock(hashtextextended(p_owner_id::text, 0));
 
   select * into v_op
     from public.artwork_operations
@@ -277,8 +282,9 @@ grant execute on function public.fractalpark_account_deletion_step_up(uuid, uuid
 grant execute on function public.fractalpark_account_deletion_confirm(uuid, uuid, interval)
   to service_role;
 
--- Finalize runs only after the auth user is physically removed by the
--- cleanup worker (storage first, spec 10.2). It closes the operation and
+-- Finalize runs right before the worker physically removes the auth user
+-- (storage first, spec 10.2): the owner check below must run while the
+-- operations row's owner_id still matches. It closes the operation and
 -- purges the owner's older operations, keeping the active delete_account
 -- operation as the audit record (spec 4.4). Idempotent.
 create or replace function public.fractalpark_account_deletion_finalize(

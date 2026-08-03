@@ -14,7 +14,8 @@ export interface PostgrestOptions {
 
 export async function postgrest(path: string, options: PostgrestOptions = {}): Promise<Response> {
   const { url, serviceRoleKey } = getSupabaseConfig();
-  const response = await fetch(`${url}/rest/v1/${path}`, {
+  const normalized = path.startsWith('/') ? path.slice(1) : path;
+  const response = await fetch(`${url}/rest/v1/${normalized}`, {
     method: options.method ?? 'GET',
     headers: {
       apikey: serviceRoleKey,

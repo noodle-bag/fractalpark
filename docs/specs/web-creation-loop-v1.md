@@ -524,10 +524,16 @@ only writer of `hidden_at`/`moderation_reason`. Operator procedure lives in
   `account_deleting`), it cannot refresh, and its reads return only what
   the confirm transaction left behind — nothing — until the short
   access-token TTL expires. The cleanup worker
-  (`scripts/cleanup-worker.ts`) drains thumbnail jobs first, then removes
-  the auth user and calls `fractalpark_account_deletion_finalize`, which
-  closes the operation and purges older operations while keeping the
-  audit row.
+  (`scripts/cleanup-worker.ts`) drains thumbnail jobs first, then calls
+  `fractalpark_account_deletion_finalize` (close op + purge older
+  operations, keep the audit row — the owner check must run while the id
+  still matches) and immediately removes the auth user physically. The
+  gate therefore stays closed until finalize; the physical removal
+  follows within milliseconds in the normal path, and a worker that
+  cannot finish keeps retrying instead of restoring access early.
+  Session revocation writes the provider's auth schema directly, so a
+  GoTrue upgrade must re-run the deletion drill
+  (`scripts/e2e-account-deletion.ts`) as its regression.
 - All writes go through the FractalPark API; RLS is the second enforcement
   boundary.
 
