@@ -46,8 +46,6 @@
       "publishedMeta": "{license} · published {date}",
       "withdrawnMeta": "Withdrawn {date}",
       "hiddenMeta": "Hidden by moderation · published {date} · in the app, only you can see this row",
-      "import": "Sync to cloud",
-      "importing": "Syncing…",
       "meta": "rev {revision} · {date}",
       "errors": {
         "unavailable": "Cloud sync is unavailable right now. Try again in a moment.",
@@ -185,8 +183,6 @@
       "title": "My Works",
       "description": "Works saved to your cloud library.",
       "create": "Create in Explorer",
-      "emptyTitle": "No saved works yet",
-      "emptyDescription": "Create a fractal in Explorer and save it to build your device-local collection.",
       "actions": "Actions for {name}"
     },
     "contextMenu": {
@@ -1334,7 +1330,6 @@
         "deleteConfirm": "Delete this formula?",
         "maxReached": "Maximum formula limit reached ({count})",
         "formulaNotFound": "That formula no longer exists in your cloud library.",
-        "storageUnavailable": "The local formula library could not be updated.",
         "compileFailed": "The formula could not be compiled.",
         "examplesTitle": "Start from Examples",
         "examplesDescription": "Load a working example first, then reshape it into your own formula in the editor.",
@@ -1657,12 +1652,12 @@
     "localOnly": "Your source and preview stay in this tab until you save to your cloud library. FRM compatibility is deliberately limited.",
     "guide": "Read the FRM Guide",
     "noJsTitle": "FRM Editor requires JavaScript",
-    "noJs": "This page explains the local FRM workflow. Enable JavaScript to edit, compile, and preview formulas.",
+    "noJs": "This page explains the FRM workflow. Enable JavaScript to edit, compile, and preview formulas.",
     "actions": "Editor actions",
     "new": "New",
     "examples": "Examples",
     "myFormulas": "My Formulas",
-    "loading": "Loading local formulas…",
+    "loading": "Loading your formula library…",
     "empty": "No saved formulas yet.",
     "import": "Import .frm",
     "download": "Download .frm",
@@ -1761,7 +1756,7 @@
   "publicProject": {
     "tagline": "FractalPark is an open-source, formula-first fractal knowledge and creation platform with growing Fractint-compatible FRM support, working to bring Fractint’s formula heritage into the modern browser.",
     "definition": "FractalPark is a free, open-source (MIT) WebGL application for exploring, learning, and creating fractal art. It ships {formulaCount} built-in formulas across {formulaFamilyCount} families, {formulaGuideCount} in-depth Formula Guides, a Fractint-compatible FRM language with a Guide and standalone Editor, and a community Gallery. Rendering runs in your browser; saving works and formulas uses email sign-in and a private cloud library.",
-    "aiDescription": "FractalPark is an open-source MIT-licensed browser fractal generator using WebGL for real-time GPU rendering. It features {formulaCount} built-in fractal formulas across {formulaFamilyCount} families, {formulaGuideCount} Formula Guides, a Fractint-compatible FRM editor with AST-to-GLSL transpilation, {transformCount} UV transform plugins, {coloringModeCount} coloring modes, shareable URLs, local artwork storage, and high-resolution PNG export up to {maxExportScale}x. Built with Next.js, React, and TypeScript.",
+    "aiDescription": "FractalPark is an open-source MIT-licensed browser fractal generator using WebGL for real-time GPU rendering. It features {formulaCount} built-in fractal formulas across {formulaFamilyCount} families, {formulaGuideCount} Formula Guides, a Fractint-compatible FRM editor with AST-to-GLSL transpilation, {transformCount} UV transform plugins, {coloringModeCount} coloring modes, shareable URLs, an email sign-in cloud library for artworks and formulas, community publishing, and high-resolution PNG export up to {maxExportScale}x. Built with Next.js, React, and TypeScript.",
     "capabilitiesHeading": "What you can do today",
     "capabilities": {
       "discover": {

@@ -34,9 +34,6 @@ export type ArtworkOperation = 'save' | 'download' | 'import' | 'export';
 export type ArtworkActionErrorCode =
   | FractalProjectErrorCode
   | 'future-document'
-  | 'invalid-formula-storage'
-  | 'formula-limit-reached'
-  | 'formula-commit-failed'
   | 'save-failed'
   | 'cloud-unavailable'
   | 'download-failed'

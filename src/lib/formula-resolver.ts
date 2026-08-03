@@ -114,8 +114,11 @@ export function resolveCustomFormula(
   if (options.register !== false) {
     try {
       pluginRegistry.register(result.plugin);
+      // Dispatch only for genuinely new ids: re-registering the same id
+      // must not re-signal (pairs with the register:false fix — B1).
+      const isNew = !sessionAssets.has(formula.id);
       sessionAssets.set(formula.id, { id: formula.id, source: formula.source });
-      if (typeof window !== 'undefined') {
+      if (isNew && typeof window !== 'undefined') {
         window.dispatchEvent(new Event(CUSTOM_FORMULAS_CHANGED_EVENT));
       }
     } catch (error) {
@@ -178,5 +181,8 @@ export function resolveFormulaReference(
     ]);
   }
 
-  return resolveCustomFormula(customFormula);
+  // register:false — the formula listed in session assets was registered
+  // when it entered; re-registering here would re-dispatch the changed
+  // event and self-excite the resolution listener (review B1 storm).
+  return resolveCustomFormula(customFormula, { register: false });
 }

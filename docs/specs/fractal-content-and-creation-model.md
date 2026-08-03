@@ -43,11 +43,11 @@ default formula state, preset state, ordering rule, or custom-formula store.
 | Published preset identity, order, localized title, state query, animation input, and asset path | `public/gallery-presets.json` | Drift, Collection, artwork pages, playback, Remix, thumbnail generation |
 | Published artwork editorial content, public slug, license metadata, and relationships | `ArtworkContentManifest` plus locale messages | Collection, artwork pages, sitemap, structured data |
 | Durable render state | `FractalDocument` | Renderer, URL adapters, artwork storage, playback projections, exports |
-| Local saved artwork | `ArtworkRepository` and Envelope v1 | My Works and Explore |
+| ~~Local saved artwork~~ (retired v0.4.16; superseded by cloud drafts) | — | — |
 | Cloud private drafts | `artwork_drafts` (server, owner-scoped) | My Works Drafts, cloud save and reopen |
 | Public community revisions | `artwork_publications` (server) | Community, public artwork pages, Remix |
 | Cloud identity and session | Auth user record and sealed server session (ADR 0005) | Same-origin Auth API, owner-scoped RPC |
-| Local custom formula source and experience hint | `custom-formula-storage` | FRM Editor, Explore formula resolver, project import/export |
+| Custom formula source and experience hint | `custom_formulas` cloud library + session registration (ADR 0006) | FRM Editor, Explore formula resolver, project import/export |
 | FRM syntax and compatibility behavior | lexer, parser, validator, type system, code generator, and `compileFrm` tests | FRM Editor, FRM Guide, examples |
 
 Content manifests may reference runtime entities by stable ID but must not
