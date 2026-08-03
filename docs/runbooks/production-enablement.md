@@ -66,9 +66,9 @@ to the maintainer.
 4. Withdraw it; public page 404s.
 5. Turn on backup email (staging first); publish; attachment arrives.
 6. Delete the test account; drafts gone, sessions dead, audit row kept.
-7. Run `docs/testing/v0.4.15-regression-matrix.md`'s hardening matrix
-   against production once (it is read-only for existing data; it creates
-   and deletes its own fixtures).
+7. Run `scripts/e2e-hardening-matrix.ts` against **staging** (it needs
+   mailbox access for OTP codes, so it cannot run against production
+   mailboxes; staging coverage is the contract).
 
 ## 5. Rollback
 
