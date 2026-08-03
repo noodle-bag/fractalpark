@@ -133,6 +133,7 @@ Six tables and two storage buckets carry the cloud state.
   Anonymous users, other users, and maintainers cannot read private drafts.
 - Drafts may carry portable formula assets; those drafts can be saved,
   opened, exported, and emailed, but cannot be published to Community.
+  *(Superseded in v0.4.16: strict formula-asset publication acceptance — see §17.2.)*
 - Deletion is permanent and cleans up the private thumbnail.
 
 ### 4.3 `artwork_publications`
@@ -330,7 +331,7 @@ emails, IPs, tokens, and envelope contents are never sent to the client.
 | `otp_invalid` | 400 | Wrong or expired code; the response never reveals whether the email is registered |
 | `payload_too_large` | 413 | Body or envelope above the byte limit |
 | `invalid_envelope` | 422 | `CloudArtworkEnvelopeV1` rejection |
-| `formula_assets_not_publishable` | 422 | Envelope carries portable formula source |
+| `formula_assets_not_publishable` | 422 | Envelope carries portable formula source *(v0.4.16: blanket rejection superseded by §17.2 strict acceptance; acceptance-failure codes are frozen in the implementation commit)* |
 | `quota_exceeded` | 422 | Draft count or account storage quota reached; nothing is auto-deleted |
 | `revision_conflict` | 409 | Expected revision mismatch |
 | `idempotency_conflict` | 409 | Same key with a different request hash |
@@ -597,6 +598,7 @@ the record returns to the plain local state.
   trademarks. Withdrawal does not retroactively revoke grants.
 - Private drafts and exports may carry portable formula assets. Community
   Publish rejects any envelope containing them.
+  *(Superseded in v0.4.16 — see §17.2.)*
 - The remix provenance namespace from ADR 0004 gains a stable `publication`
   source type. Frozen semantics — namespaced IDs, validation, immutability —
   follow ADR 0004; the concrete TypeScript name and URL code organization
@@ -679,6 +681,9 @@ or private draft titles. Operational correlation IDs are not analytics IDs.
 
 Introduced by [ADR 0006](../adr/0006-cloud-authoritative-creation-persistence.md).
 This section supersedes §11 for runtime behavior; §11 remains as history.
+Where §2 and §8 describe local-first persistence that conflicts with this
+section, this section governs current behavior (the older text remains the
+record of v0.4.15).
 
 - **Sole persistence.** `artwork_drafts` (Envelope + revision) is the only
   artwork fact. Runtime code must not read, write, or delete the legacy keys

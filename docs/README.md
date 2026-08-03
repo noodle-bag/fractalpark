@@ -34,19 +34,21 @@ govern FractalPark development.
 - [ADR 0004](adr/0004-remix-source-metadata.md): namespaced Remix provenance
   carried outside the legacy rendering-state URL codec.
 - [ADR 0005](adr/0005-same-origin-cloud-session.md): cloud identity stays
+  behind a strict same-origin BFF session; the browser never holds tokens.
 - [ADR 0006](adr/0006-cloud-authoritative-creation-persistence.md): cloud
   draft is the only persistence; My Formulas move to the cloud; one-time
-  clean cut of business localStorage
-  behind a strict same-origin BFF session; the browser never holds tokens.
+  clean cut of business localStorage.
 
 ## Test Plans
 
 - [v0.4.13 Regression Matrix](testing/v0.4.13-regression-matrix.md) defines
   commit, slice, and release gates for the Formula Atlas and artwork release.
 - [v0.4.15 Regression Matrix](testing/v0.4.15-regression-matrix.md) defines
-- [v0.4.16 Regression Matrix](testing/v0.4.16-regression-matrix.md) defines
   commit, pull request, and production enablement gates for the web creation
   loop release.
+- [v0.4.16 Regression Matrix](testing/v0.4.16-regression-matrix.md) defines
+  commit and release gates for cloud-first navigation and the unified
+  creation experience.
 
 ## Maintenance
 
