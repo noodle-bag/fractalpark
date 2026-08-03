@@ -82,10 +82,11 @@
         "validation": "检查一下展示名、标题和描述，再试一次。",
         "offline": "网络好像断了。",
         "generic": "发布失败，什么都没有发布出去，草稿还是你的。",
-        "formulaCompile": "公式源码未通过服务端校验。请打开草稿修正公式后重试。"
+        "formulaCompile": "公式源码未通过服务端校验。请打开草稿修正公式后重试。",
+        "formulaBuiltinConflict": "公式 id 与内置公式冲突。请在「我的公式」中改名后重试。"
       },
       "formulaNoticeTitle": "这件作品使用了你的自定义公式",
-      "formulaNoticeBody": "发布后，公式源码将以 MIT 许可证公开：任何人都可以阅读、复制和复用。公开展示的公式名称与描述来自公式元数据，而非此表单。作品本身仍遵循上方许可证。",
+      "formulaNoticeBody": "发布后，公式源码将以 MIT 许可证公开：任何人都可以阅读、复制和复用。公开展示的公式名称与描述来自公式元数据，而非此表单。渲染图像仍采用 CC BY 4.0。",
       "formulaNoticeLink": "在 opensource.org 阅读 MIT 许可证"
     },
     "community": {
@@ -112,10 +113,11 @@
         "generic": "没成功，再试一次。",
         "loadFailed": "社区列表加载失败，稍后再试。"
       },
-      "licenseFormulaValue": "配置与公式源码采用",
+      "licenseFormulaValue": "作品采用",
       "formulaSourceLabel": "公式源码",
       "formulaSourceValue": "「{name}」（FRM，MIT）",
-      "formulaSourceDownload": "下载 .frm"
+      "formulaSourceDownload": "下载 .frm",
+      "licenseFormulaSourceValue": "公式源码采用"
     },
     "accountDeletion": {
       "title": "删除账号",
@@ -1643,7 +1645,9 @@
       "loading": "正在打开你的草稿…",
       "notFound": "找不到这份草稿。它可能已被删除，或属于其他账号。",
       "unavailable": "暂时无法打开这份草稿，请稍后再试。",
-      "retry": "重试"
+      "retry": "重试",
+      "signInToOpen": "这个草稿保存在云端库中。",
+      "signIn": "登录后打开"
     }
   },
   "frmEditor": {

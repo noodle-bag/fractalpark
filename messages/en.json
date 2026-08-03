@@ -81,10 +81,11 @@
         "validation": "Check the display name, title, and description, then try again.",
         "offline": "You appear to be offline.",
         "generic": "Publishing failed. Nothing was published; the draft is still yours.",
-        "formulaCompile": "The formula source failed server-side validation. Open the draft, fix the formula, and try again."
+        "formulaCompile": "The formula source failed server-side validation. Open the draft, fix the formula, and try again.",
+        "formulaBuiltinConflict": "The formula id collides with a built-in formula. Rename it in My Formulas and try again."
       },
       "formulaNoticeTitle": "This artwork uses your custom formula",
-      "formulaNoticeBody": "Publishing makes the formula source code public under the MIT License: anyone may read, copy, and reuse it. The formula name and description shown publicly come from the formula metadata, not from this form. The artwork itself stays under the license above.",
+      "formulaNoticeBody": "Publishing makes the formula source code public under the MIT License: anyone may read, copy, and reuse it. The formula name and description shown publicly come from the formula metadata, not from this form. The rendered image stays under CC BY 4.0.",
       "formulaNoticeLink": "Read the MIT License at opensource.org"
     },
     "community": {
@@ -111,10 +112,11 @@
         "generic": "That did not work. Try again.",
         "loadFailed": "The community list could not be loaded. Try again in a moment."
       },
-      "licenseFormulaValue": "Configuration and formula source under",
+      "licenseFormulaValue": "Artwork under",
       "formulaSourceLabel": "Formula source",
       "formulaSourceValue": "“{name}” (FRM, MIT)",
-      "formulaSourceDownload": "Download .frm"
+      "formulaSourceDownload": "Download .frm",
+      "licenseFormulaSourceValue": "formula source under"
     },
     "accountDeletion": {
       "title": "Delete account",
@@ -1642,7 +1644,9 @@
       "loading": "Opening your draft…",
       "notFound": "This draft could not be found. It may have been deleted, or it belongs to another account.",
       "unavailable": "This draft could not be opened right now. Try again shortly.",
-      "retry": "Retry"
+      "retry": "Retry",
+      "signInToOpen": "This draft lives in a cloud library.",
+      "signIn": "Sign in to open it"
     }
   },
   "frmEditor": {
