@@ -213,6 +213,16 @@ export function MyWorksCloud() {
     );
   }
 
+  if (state.status === 'unavailable') {
+    // Never a frozen impersonation of the signed-in workspace (ADR 0006):
+    // the outage is stated, nothing spins forever.
+    return (
+      <section className="mx-4 mb-6 rounded-lg border border-dashed px-6 py-5 sm:mx-6 xl:mx-8">
+        <p className="text-sm text-muted-foreground">{t('unavailableHint')}</p>
+      </section>
+    );
+  }
+
   const unboundLocal = localArtworks.filter((item) => item.storageFormat === 'document' && !item.cloud);
 
   return (

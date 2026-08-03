@@ -23,7 +23,6 @@
     "myWorks": {
       "signInHint": "Sign in to sync drafts across devices. Your artworks on this device stay put either way.",
       "signIn": "Sign in to sync",
-      "signOut": "Sign out",
       "draftsTitle": "Cloud drafts",
       "publishedTitle": "Published",
       "publishedEmpty": "Nothing published yet. Publishing arrives with the Community update.",
@@ -60,7 +59,8 @@
         "unauthenticated": "Your session expired. Sign in again.",
         "invalid_envelope": "This artwork could not be validated for the cloud.",
         "rate_limited": "Slow down a little and try again."
-      }
+      },
+      "unavailableHint": "Cloud sync is unavailable right now. Your drafts are safe; try again shortly."
     },
     "publish": {
       "title": "Publish to the Community",
@@ -155,7 +155,6 @@
       "label": "Language"
     },
     "footer": {
-      "formulas": "Formula Atlas",
       "copyright": "© 2026 FractalPark. Released under the MIT License.",
       "contact": "Contact:",
       "privacy": "Privacy",

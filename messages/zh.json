@@ -23,7 +23,6 @@
     "myWorks": {
       "signInHint": "登录即可跨设备同步草稿；本机上的作品无论如何都会保留。",
       "signIn": "登录以同步",
-      "signOut": "退出登录",
       "draftsTitle": "云端草稿",
       "publishedTitle": "已发布",
       "publishedEmpty": "还没有发布过作品。发布功能将随社区更新到来。",
@@ -61,7 +60,8 @@
         "unauthenticated": "登录已过期，请重新登录。",
         "invalid_envelope": "这份作品没能通过云端校验。",
         "rate_limited": "慢一点，稍后再试。"
-      }
+      },
+      "unavailableHint": "云服务暂不可用。你的草稿是安全的，请稍后再试。"
     },
     "publish": {
       "title": "发布到社区",
@@ -156,7 +156,6 @@
       "label": "语言"
     },
     "footer": {
-      "formulas": "公式图鉴",
       "copyright": "© 2026 FractalPark. 基于 MIT 许可证发布。",
       "contact": "联系方式: ",
       "privacy": "隐私",

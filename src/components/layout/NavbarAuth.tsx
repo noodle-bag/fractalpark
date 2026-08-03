@@ -18,10 +18,12 @@ export default function NavbarAuth() {
   const { state, openSignIn, signOut } = useCloudSession();
 
   if (state.status === 'loading') {
+    // Sized to the real button (icon + label + padding) so the swap does
+    // not shift the navbar in either locale.
     return (
       <div
         data-testid="navbar-auth-skeleton"
-        className="h-9 w-20 animate-pulse rounded-md bg-muted"
+        className="h-11 w-[7.5rem] animate-pulse rounded-md bg-muted sm:h-9"
         aria-hidden="true"
       />
     );

@@ -276,13 +276,15 @@ export function CloudSessionProvider({ children }: { children: React.ReactNode }
           setSignInOpen(false);
           intentRef.current = null;
         }}
-        onVerified={() => {
+        onVerified={(userId) => {
           setSignInOpen(false);
           const intent = intentRef.current;
           intentRef.current = null;
-          void refresh().then(() => {
-            if (intent) void intent();
-          });
+          // verifyOtp already returned the fresh session — adopt it directly
+          // instead of a second probe that could flap to 'unavailable' on a
+          // transient failure right after a successful sign-in.
+          setState({ status: 'authenticated', userId });
+          if (intent) void intent();
         }}
       />
     </CloudSessionContext.Provider>
