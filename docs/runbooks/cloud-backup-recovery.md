@@ -81,6 +81,15 @@ inserting rows in FK order. It finishes with per-table row counts
 
 ## Drill record
 
+2026-08-03 (production enablement): full smoke against production — OTP
+sign-in via the real Feishu SMTP channel, draft create, publish, public
+page, withdraw → 404, staged account deletion, worker finalize. Verified
+in the database: draft/profile/auth-identity erased, publication tombstone
+(title + attribution, owner nulled), delete_account audit row `succeeded`,
+cleanup job `succeeded`. One gap found and fixed in this runbook: the
+GoTrue mailer template step was missing, so the first OTP email carried a
+magic link instead of a code.
+
 2026-08-03 (commit 13), two directions rehearsed:
 
 - **Local full cycle** — seeded stack → `backup-cloud.ts` (21 profiles /

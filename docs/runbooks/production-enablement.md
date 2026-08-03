@@ -30,13 +30,22 @@ to the maintainer.
 
 - [ ] GoTrue custom SMTP configured (Authentication → SMTP) — the default
       shared sender is rate-limited and lands in spam; OTP sign-in depends
-      on this.
+      on this. FractalPark uses `smtp.feishu.cn:465` with
+      `noreply@fractalpark.com`.
+- [ ] GoTrue mailer template switched from the default magic link to the
+      sign-in code — without this the OTP email contains a link to the
+      homepage and NO code (verified the hard way on 2026-08-03). Copy the
+      staging values: subject `Your FractalPark sign-in code`, body
+      containing `{{ .Token }}` in a large font, plus
+      `mailer_autoconfirm=true`, `mailer_otp_length=6`,
+      `mailer_otp_exp=3600`. All via `PATCH
+      /v1/projects/{ref}/config/auth`.
 - [ ] `FRACTALPARK_SMTP_*` set for the backup-email channel (separate
       credentials from GoTrue's, per spec 9).
 - [ ] `FRACTALPARK_ARTWORK_EMAIL_BACKUP_ENABLED` left **unset** until the
       first real backup email has been smoke-tested on staging.
 - [ ] Send one OTP to a real mailbox; confirm delivery time and spam
-      folder behavior.
+      folder behavior — and that the email shows a six-digit code.
 
 ## 3. Application environment (Vercel)
 
