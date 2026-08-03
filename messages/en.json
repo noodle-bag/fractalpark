@@ -48,32 +48,6 @@
       "publishedMeta": "{license} · published {date}",
       "withdrawnMeta": "Withdrawn {date}",
       "hiddenMeta": "Hidden by moderation · published {date} · in the app, only you can see this row",
-      "accountDeletion": {
-        "title": "Delete account",
-        "intro": "Deleting your account is permanent. We will ask for a fresh email code and a final confirmation.",
-        "start": "Start account deletion",
-        "working": "Working…",
-        "codeSent": "We sent a fresh 6-digit code to your account email. Enter it to continue.",
-        "codePlaceholder": "123456",
-        "verify": "Verify",
-        "cancel": "Cancel",
-        "confirmWarning": "Last step. Type your account email to confirm permanent deletion:",
-        "consequenceDrafts": "All cloud drafts are deleted permanently.",
-        "consequencePublications": "Published works are withdrawn and keep only an attribution record.",
-        "consequenceLicense": "Licenses already granted to remixes stay in effect.",
-        "emailPlaceholder": "you@example.com",
-        "confirmButton": "Delete my account permanently",
-        "doneTitle": "Account deleted",
-        "doneBody": "Your account and private data are being removed. You have been signed out.",
-        "errors": {
-          "otp_invalid": "That code did not work. Check it and try again.",
-          "step_up_expired": "The code session expired. Start again to get a new code.",
-          "account_deleting": "Account deletion is already in progress.",
-          "rate_limited": "Too many attempts. Wait a bit and try again.",
-          "unauthenticated": "Sign in again to continue.",
-          "generic": "Something went wrong. Try again."
-        }
-      },
       "importTitle": "On this device, not yet synced",
       "import": "Sync to cloud",
       "importing": "Syncing…",
@@ -133,6 +107,32 @@
       "errors": {
         "generic": "That did not work. Try again.",
         "loadFailed": "The community list could not be loaded. Try again in a moment."
+      }
+    },
+    "accountDeletion": {
+      "title": "Delete account",
+      "intro": "Deleting your account is permanent. We will ask for a fresh email code and a final confirmation.",
+      "start": "Start account deletion",
+      "working": "Working…",
+      "codeSent": "We sent a fresh 6-digit code to your account email. Enter it to continue.",
+      "codePlaceholder": "123456",
+      "verify": "Verify",
+      "cancel": "Cancel",
+      "confirmWarning": "Last step. Type your account email to confirm permanent deletion:",
+      "consequenceDrafts": "All cloud drafts are deleted permanently.",
+      "consequencePublications": "Published works are withdrawn and keep only an attribution record.",
+      "consequenceLicense": "Licenses already granted to remixes stay in effect.",
+      "emailPlaceholder": "you@example.com",
+      "confirmButton": "Delete my account permanently",
+      "doneTitle": "Account deleted",
+      "doneBody": "Your account and private data are being removed. You have been signed out.",
+      "errors": {
+        "otp_invalid": "That code did not work. Check it and try again.",
+        "step_up_expired": "The code session expired. Start again to get a new code.",
+        "account_deleting": "Account deletion is already in progress.",
+        "rate_limited": "Too many attempts. Wait a bit and try again.",
+        "unauthenticated": "Sign in again to continue.",
+        "generic": "Something went wrong. Try again."
       }
     }
   },

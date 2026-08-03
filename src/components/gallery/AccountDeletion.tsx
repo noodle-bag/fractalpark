@@ -94,9 +94,12 @@ export default function AccountDeletion() {
       )}
       {stage === 'code' && (
         <>
-          <p className="mt-1 text-muted-foreground">{t('codeSent')}</p>
+          <label htmlFor="account-delete-code" className="mt-1 block text-muted-foreground">
+            {t('codeSent')}
+          </label>
           <div className="mt-2 flex flex-wrap items-center gap-2">
             <input
+              id="account-delete-code"
               value={code}
               onChange={(e) => setCode(e.target.value)}
               inputMode="numeric"
@@ -125,7 +128,9 @@ export default function AccountDeletion() {
       )}
       {stage === 'confirm' && (
         <>
-          <p className="mt-1 text-muted-foreground">{t('confirmWarning')}</p>
+          <label htmlFor="account-delete-email" className="mt-1 block text-muted-foreground">
+            {t('confirmWarning')}
+          </label>
           <ul className="mt-1 list-inside list-disc text-muted-foreground">
             <li>{t('consequenceDrafts')}</li>
             <li>{t('consequencePublications')}</li>
@@ -133,6 +138,7 @@ export default function AccountDeletion() {
           </ul>
           <div className="mt-2 flex flex-wrap items-center gap-2">
             <input
+              id="account-delete-email"
               value={confirmEmail}
               onChange={(e) => setConfirmEmail(e.target.value)}
               inputMode="email"
