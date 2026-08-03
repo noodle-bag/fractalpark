@@ -5,7 +5,7 @@
 ### Added
 
 - Added optional cloud accounts with passwordless email sign-in: a one-time code, an encrypted HttpOnly session cookie, and sign-out.
-- Added private cloud drafts with autosave-friendly optimistic concurrency, per-account quotas, idempotent writes, and cross-device continuation; local saves stay device-local and bound to their cloud copy.
+- Added private cloud drafts with optimistic concurrency, per-account quotas, idempotent writes, and cross-device continuation; local saves stay device-local and bound to their cloud copy.
 - Added Community publishing: a rights attestation, CC BY 4.0 rendered-image licensing, remix provenance, public artwork pages, a no-store Community list, and Continue-editing/Remix forks.
 - Added optional artwork backup emails (off by default) that send the portable `.fractal.json` on publish, or on every manual save, with an explicit unencrypted-attachment notice.
 - Added account self-service: profile display name, backup-email preferences, and a two-step account deletion that withdraws publications, deletes drafts, ends sessions, and keeps only a tombstone attribution plus a minimal audit row.

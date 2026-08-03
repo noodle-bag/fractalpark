@@ -28,6 +28,9 @@ export const INDEXABLE_PAGE_PATHS: readonly string[] = [
   '/formulas/frm',
   '/formulas/editor',
   '/about',
+  '/privacy',
+  '/terms',
+  '/community-rules',
   ...PUBLISHED_FORMULA_GUIDES.map(formulaGuidePath),
   ...PUBLISHED_ARTWORK_PAGES.map(artworkPagePath),
 ];
