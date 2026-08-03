@@ -43,7 +43,7 @@ export default async function ExplorePage({
       />
       <Suspense
         fallback={
-          <div className="relative h-[calc(100dvh-4rem)] overflow-hidden bg-black">
+          <div className="relative h-[calc(100dvh-3rem)] overflow-hidden bg-black">
             {/* Static poster: fixed dimensions + descriptive alt; replaced by
                 the WebGL workspace once the client bundle hydrates. */}
             {/* eslint-disable-next-line @next/next/no-img-element */}

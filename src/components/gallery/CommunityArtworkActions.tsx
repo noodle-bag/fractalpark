@@ -82,7 +82,7 @@ export function CommunityArtworkActions({
       {state.status === 'anonymous' ? (
         <button
           type="button"
-          onClick={openSignIn}
+          onClick={() => openSignIn()}
           className="inline-flex items-center gap-2 rounded-md border px-4 py-2 text-sm font-medium transition-colors hover:bg-muted"
         >
           {t('signInToSyncRemix')}

@@ -1181,11 +1181,13 @@
         "cancel": "取消"
       },
       "cloud": {
-        "syncing": "正在同步到云端…",
-        "synced": "已同步到云端。",
-        "failed": "已保存到本机；云端同步失败，再次保存可重试。",
-        "conflict": "这份草稿在别处被修改过。请先重新载入再保存，否则后续保存只保留在本机。",
-        "quota": "已保存到本机；云端存储已满。"
+        "syncing": "正在保存到你的云端…",
+        "synced": "已保存到你的云端。",
+        "failed": "云端保存失败——你的修改未被存储，请重试。",
+        "conflict": "这份草稿已在别处被修改。可以加载远端版本，或把当前修改另存为新草稿。",
+        "quota": "云端存储已满。删除一些草稿以腾出空间。",
+        "offline": "当前似乎已离线，修改未被保存。",
+        "session-expired": "会话已过期，请重新登录后再保存。"
       },
       "save": {
         "label": "保存到画廊",
@@ -1249,7 +1251,12 @@
         "formula-commit-failed": "无法安装自定义公式，所有更改均已撤销。",
         "save-failed": "无法保存作品。",
         "download-failed": "无法下载项目。",
-        "export-failed": "无法导出 PNG。"
+        "export-failed": "无法导出 PNG。",
+        "cloud-unavailable": "云服务暂不可用——你的修改未被保存。"
+      },
+      "conflict": {
+        "reload": "加载远端版本",
+        "saveAsNew": "另存为新草稿"
       }
     },
     "formula": {
@@ -1598,6 +1605,11 @@
         "about": "关于——项目事实、边界与开源信息"
       },
       "posterAlt": "FractalPark 渲染的 Mandelbrot 分形静态预览图"
+    },
+    "draft": {
+      "loading": "正在打开你的草稿…",
+      "notFound": "找不到这份草稿。它可能已被删除，或属于其他账号。",
+      "unavailable": "暂时无法打开这份草稿，请稍后再试。"
     }
   },
   "frmEditor": {

@@ -48,6 +48,10 @@ interface ArtworkActionsProps {
   onImport: (file: File) => Promise<boolean>;
   onExport: (scale: number, ssaaLevel: number) => Promise<boolean>;
   onReset: () => void;
+  /** Revision-conflict exits (spec §17): adopt the remote version, or keep
+   *  local edits as a brand-new draft. No silent overwrite either way. */
+  onConflictReload?: () => void;
+  onConflictSaveAsNew?: () => void;
 }
 
 const ACTION_ICONS = {
@@ -67,6 +71,8 @@ export function ArtworkActions({
   onImport,
   onExport,
   onReset,
+  onConflictReload,
+  onConflictSaveAsNew,
 }: ArtworkActionsProps) {
   const t = useTranslations('explore.artworkActions');
   const fileInputRef = useRef<HTMLInputElement>(null);
@@ -205,6 +211,24 @@ export function ArtworkActions({
             {cloudText && (
               <span className="mt-1 block border-t border-white/10 pt-1 opacity-90">
                 {cloudText}
+              </span>
+            )}
+            {cloudPhase === 'conflict' && onConflictReload && onConflictSaveAsNew && (
+              <span className="mt-1.5 flex gap-2">
+                <button
+                  type="button"
+                  onClick={onConflictReload}
+                  className="rounded border border-white/25 px-2 py-1 text-[11px] hover:bg-white/10"
+                >
+                  {t('conflict.reload')}
+                </button>
+                <button
+                  type="button"
+                  onClick={onConflictSaveAsNew}
+                  className="rounded border border-white/25 px-2 py-1 text-[11px] hover:bg-white/10"
+                >
+                  {t('conflict.saveAsNew')}
+                </button>
               </span>
             )}
           </div>

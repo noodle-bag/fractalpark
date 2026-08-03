@@ -16,6 +16,9 @@ import { documentToExploreHref } from '@/lib/url-params';
 import { trackEvent } from '@/components/analytics/PageViewTracker';
 import { useExploreDocumentState } from '@/hooks/useExploreDocumentState';
 import { useArtworkActions } from '@/hooks/useArtworkActions';
+import { useCloudDraftSession } from '@/hooks/useCloudDraftSession';
+import { useCloudSession } from '@/components/cloud/CloudSessionProvider';
+import { resolveCustomFormula } from '@/lib/formula-resolver';
 import AnimatedFractalCanvas from '@/components/fractal/AnimatedFractalCanvas';
 import { AlertTriangle, ChevronDown, ChevronUp } from 'lucide-react';
 import { DEFAULT_FRACTAL_DOCUMENT } from '@/engine/document';
@@ -25,7 +28,9 @@ import type { PluginParamRecord, PluginParamValue } from '@/engine/types';
 import {
   CUSTOM_FORMULAS_CHANGED_EVENT,
   readPersistedCustomFormulas,
+  readLocalFormulaAssets,
 } from '@/lib/custom-formula-storage';
+import { captureThumbnail } from '@/lib/capture-thumbnail';
 import {
   parseEditorToExploreIntent,
   stripEditorToExploreIntent,
@@ -254,14 +259,40 @@ function ExploreClient({ posterImage }: { posterImage?: string }) {
     queueMicrotask(() => setHandoffTargetId(null));
   }, [formula, formulaResolution, handoffTargetId]);
 
-  // Debounced URL update
+  // Cloud-authoritative draft session (ADR 0006): ?draft= loads from the
+  // cloud, save writes the cloud, identity lives here and in the URL.
+  const cloudDraft = useCloudDraftSession();
+  const { state: cloudSessionState } = useCloudSession();
+  const draftParam = searchParams.get('draft');
+  const draftLoadConsumedRef = useRef<string | null>(null);
+  const prevSessionStatusRef = useRef(cloudSessionState.status);
+
+  const pinDraftParam = useCallback(
+    (draftId: string | null) => {
+      const params = new URLSearchParams(window.location.search);
+      if (draftId) {
+        params.set('draft', draftId);
+      } else {
+        params.delete('draft');
+      }
+      const query = params.toString();
+      router.replace(`/${locale}/explore${query ? `?${query}` : ''}`, { scroll: false });
+    },
+    [locale, router],
+  );
+
+  // Debounced URL update — keeps the draft identity pinned so a refresh
+  // reopens the same cloud draft (spec §17: Explore identity is the URL).
   useEffect(() => {
     if (!initializedRef.current) return;
 
     if (debounceRef.current) clearTimeout(debounceRef.current);
     debounceRef.current = setTimeout(() => {
       const newUrl = documentToExploreHref(document, locale);
-      router.replace(newUrl, { scroll: false });
+      const withDraft = cloudDraft.identity
+        ? `${newUrl}${newUrl.includes('?') ? '&' : '?'}draft=${cloudDraft.identity.id}`
+        : newUrl;
+      router.replace(withDraft, { scroll: false });
     }, 500);
 
     return () => {
@@ -271,7 +302,41 @@ function ExploreClient({ posterImage }: { posterImage?: string }) {
     document,
     locale,
     router,
+    cloudDraft.identity,
   ]);
+
+  // `?draft=` cloud session load: waits for the session probe, then loads
+  // the draft and registers its formula assets in memory so the referenced
+  // custom formula resolves. Loading never impersonates content — a failed
+  // load surfaces the hook's loadState, the default fractal stays.
+  useEffect(() => {
+    if (!draftParam) return;
+    if (draftLoadConsumedRef.current === draftParam) return;
+    if (cloudSessionState.status === 'loading') return;
+    if (cloudSessionState.status !== 'authenticated') return;
+    draftLoadConsumedRef.current = draftParam;
+    void cloudDraft.loadDraft(draftParam).then((loaded) => {
+      if (!loaded) return;
+      for (const asset of loaded.formulaAssets) {
+        resolveCustomFormula({ id: asset.id, source: asset.source });
+      }
+      handleLoadDocument(loaded.document);
+    });
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [draftParam, cloudSessionState.status]);
+
+  // Sign-out / session loss clears the draft identity but never the canvas:
+  // the user keeps looking at exactly what they were editing (spec §17).
+  useEffect(() => {
+    const previous = prevSessionStatusRef.current;
+    prevSessionStatusRef.current = cloudSessionState.status;
+    if (previous === 'authenticated' && cloudSessionState.status !== 'authenticated') {
+      cloudDraft.clearIdentity();
+      draftLoadConsumedRef.current = null;
+      if (draftParam) pinDraftParam(null);
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [cloudSessionState.status]);
 
   const clearHandoffFailure = useCallback(() => {
     setHandoffError(null);
@@ -289,12 +354,14 @@ function ExploreClient({ posterImage }: { posterImage?: string }) {
   }, [handleLoadDocument]);
 
   const getCanvas = useCallback(() => canvasElRef.current, []);
+
   const artworkActions = useArtworkActions({
     document,
     effectiveIterations,
     getCanvas,
     loadDocument: handleLoadDocument,
-    currentArtworkId: searchParams.get('artwork'),
+    cloudDraft,
+    onDraftCreated: (created) => pinDraftParam(created.id),
   });
 
   const handleJuliaModeChange = useCallback((julia: boolean) => {
@@ -443,7 +510,7 @@ function ExploreClient({ posterImage }: { posterImage?: string }) {
   }
 
   return (
-    <div className="flex flex-col lg:flex-row h-[calc(100dvh-4rem)] overflow-hidden">
+    <div className="flex flex-col lg:flex-row h-[calc(100dvh-3rem)] overflow-hidden">
       <div
         className={`relative bg-black lg:flex-1 ${isPanelCollapsed ? 'flex-1' : 'min-h-[50vh] lg:min-h-0'}`}
         style={posterImage ? {
@@ -452,6 +519,23 @@ function ExploreClient({ posterImage }: { posterImage?: string }) {
           backgroundSize: 'cover',
         } : undefined}
       >
+        {/* Cloud draft session states (spec §17): loading shows an honest
+            shell; failures never fake a default canvas. */}
+        {cloudDraft.loadState === 'loading' && (
+          <div className="absolute inset-0 z-30 flex items-center justify-center bg-black/70 text-sm text-neutral-200 backdrop-blur-sm" role="status">
+            {t('draft.loading')}
+          </div>
+        )}
+        {(cloudDraft.loadState === 'not_found' || cloudDraft.loadState === 'unavailable') && (
+          <div className="absolute left-3 top-3 z-30 max-w-sm rounded-md border border-amber-400/40 bg-amber-950/85 px-3 py-2 text-xs text-amber-100 shadow-lg backdrop-blur-md" role="alert">
+            {cloudDraft.loadState === 'not_found' ? t('draft.notFound') : t('draft.unavailable')}
+          </div>
+        )}
+        {cloudDraft.identity && cloudDraft.draftTitle && cloudDraft.loadState === 'ready' && (
+          <div className="absolute left-3 top-3 z-20 rounded-md border border-white/15 bg-black/55 px-2.5 py-1 text-xs text-neutral-200 backdrop-blur-md">
+            {cloudDraft.draftTitle}
+          </div>
+        )}
         {isFormulaReady && !isPreviewPlaying && (
           <FractalCanvas
             paletteIndex={paletteIndex}
@@ -523,6 +607,33 @@ function ExploreClient({ posterImage }: { posterImage?: string }) {
           onImport={artworkActions.importFile}
           onExport={artworkActions.exportPng}
           onReset={handleResetView}
+          onConflictReload={() => {
+            void cloudDraft.reloadConflictDraft().then((loaded) => {
+              if (!loaded) return;
+              for (const asset of loaded.formulaAssets) {
+                resolveCustomFormula({ id: asset.id, source: asset.source });
+              }
+              handleLoadDocument(loaded.document);
+              artworkActions.clearStatus();
+            });
+          }}
+          onConflictSaveAsNew={() => {
+            const name = cloudDraft.draftTitle ?? 'Untitled';
+            const canvas = getCanvas();
+            void cloudDraft
+              .saveAsNewDraft({
+                name,
+                document,
+                thumbnail: canvas ? captureThumbnail(canvas) : '',
+                formulaAssets: readLocalFormulaAssets(),
+              })
+              .then((result) => {
+                if (result.ok) {
+                  pinDraftParam(result.identity.id);
+                  artworkActions.clearStatus();
+                }
+              });
+          }}
         />
 
         {/* Mobile: toggle controls panel button */}

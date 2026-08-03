@@ -9,7 +9,7 @@
  * its current behavior.
  */
 
-import { createContext, useCallback, useContext, useEffect, useMemo, useState } from 'react';
+import { createContext, useCallback, useContext, useEffect, useMemo, useRef, useState } from 'react';
 import { useTranslations } from 'next-intl';
 
 import { CloudClientError, getSession, logout, requestOtp, verifyOtp } from '@/lib/cloud/client';
@@ -33,7 +33,9 @@ export type CloudSessionState =
 
 interface CloudSessionContextValue {
   state: CloudSessionState;
-  openSignIn: () => void;
+  /** Opens the OTP dialog. An optional intent runs once after verification;
+   *  it lives only in React memory — never storage, URL, or analytics. */
+  openSignIn: (intent?: () => void | Promise<void>) => void;
   signOut: () => Promise<void>;
   refresh: () => Promise<void>;
 }
@@ -205,6 +207,9 @@ function OtpDialog({ open, onClose, onVerified }: {
 export function CloudSessionProvider({ children }: { children: React.ReactNode }) {
   const [state, setState] = useState<CloudSessionState>({ status: 'loading' });
   const [signInOpen, setSignInOpen] = useState(false);
+  // At most one intent at a time; opening sign-in again replaces it, and
+  // cancelling the dialog discards it without executing (DEC-0416-04).
+  const intentRef = useRef<(() => void | Promise<void>) | null>(null);
 
   const refresh = useCallback(async () => {
     try {
@@ -243,7 +248,10 @@ export function CloudSessionProvider({ children }: { children: React.ReactNode }
     };
   }, []);
 
-  const openSignIn = useCallback(() => setSignInOpen(true), []);
+  const openSignIn = useCallback((intent?: () => void | Promise<void>) => {
+    intentRef.current = intent ?? null;
+    setSignInOpen(true);
+  }, []);
 
   const signOut = useCallback(async () => {
     try {
@@ -264,10 +272,17 @@ export function CloudSessionProvider({ children }: { children: React.ReactNode }
       {children}
       <OtpDialog
         open={signInOpen}
-        onClose={() => setSignInOpen(false)}
+        onClose={() => {
+          setSignInOpen(false);
+          intentRef.current = null;
+        }}
         onVerified={() => {
           setSignInOpen(false);
-          void refresh();
+          const intent = intentRef.current;
+          intentRef.current = null;
+          void refresh().then(() => {
+            if (intent) void intent();
+          });
         }}
       />
     </CloudSessionContext.Provider>

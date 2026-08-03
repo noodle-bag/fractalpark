@@ -26,7 +26,7 @@ import {
   type CloudPublicationSummary,
   type Profile,
 } from '@/lib/cloud/client';
-import { deleteDraft, importArtworkToCloud, openCloudDraft } from '@/lib/cloud/sync';
+import { deleteDraft, importArtworkToCloud } from '@/lib/cloud/sync';
 import { createFractalDocumentEnvelope } from '@/lib/fractal-file';
 import { readLocalFormulaAssets } from '@/lib/custom-formula-storage';
 import { PublishDialog } from './PublishDialog';
@@ -51,7 +51,7 @@ export function MyWorksCloud() {
   const locale = useLocale();
   const router = useRouter();
   const { state, openSignIn } = useCloudSession();
-  const { artworks: localArtworks, saveEnvelope, updateArtwork, bindCloud } = useArtworks();
+  const { artworks: localArtworks, bindCloud } = useArtworks();
 
   const [drafts, setDrafts] = useState<CloudDraftSummary[] | null>(null);
   const [publications, setPublications] = useState<CloudPublicationSummary[] | null>(null);
@@ -138,44 +138,13 @@ export function MyWorksCloud() {
   );
 
   const openDraft = useCallback(
-    async (draftId: string) => {
-      setBusyId(draftId);
-      setError(null);
-      try {
-        const detail = await openCloudDraft(draftId);
-        // Hydrate the local recovery copy: refresh the bound record when
-        // one exists, otherwise create a new local record and bind it.
-        const bound = localArtworks.find((item) => item.cloud?.draftId === draftId);
-        // Guard: if the local copy has edits made after the last successful
-        // sync (e.g. the user kept saving through a revision conflict), the
-        // cloud version would silently destroy them — confirm first.
-        if (
-          bound?.cloud &&
-          (bound.updatedAt ?? 0) > bound.cloud.syncedAt &&
-          !window.confirm(t('confirmOverwrite'))
-        ) {
-          return;
-        }
-        const name = detail.title || 'Untitled';
-        let localId: string;
-        if (bound) {
-          const updated = updateArtwork(bound.id, name, detail.envelope as never, bound.thumbnail);
-          if (!updated.success) throw new CloudClientError('unavailable');
-          localId = bound.id;
-        } else {
-          const saved = saveEnvelope(name, detail.envelope as never, '');
-          if (!saved.success) throw new CloudClientError('unavailable');
-          localId = saved.value.id;
-        }
-        bindCloud(localId, { draftId, revision: detail.revision, syncedAt: Date.now() });
-        router.push(`/${locale}/explore?artwork=${encodeURIComponent(localId)}`);
-      } catch (value) {
-        setError(value instanceof CloudClientError ? value.code : 'unavailable');
-      } finally {
-        setBusyId(null);
-      }
+    (draftId: string) => {
+      // v0.4.16 (review-merged fix): open drafts straight in Explore via
+      // `?draft=` — no local hydration, no `?artwork=` round-trip. The
+      // Explore loader registers envelope formula assets in memory.
+      router.push(`/${locale}/explore?draft=${encodeURIComponent(draftId)}`);
     },
-    [bindCloud, localArtworks, locale, router, saveEnvelope, t, updateArtwork],
+    [locale, router],
   );
 
   const removeDraft = useCallback(
@@ -235,7 +204,7 @@ export function MyWorksCloud() {
         <p className="text-sm text-muted-foreground">{t('signInHint')}</p>
         <button
           type="button"
-          onClick={openSignIn}
+          onClick={() => openSignIn()}
           className="mt-3 rounded-md border px-4 py-2 text-sm font-medium transition-colors hover:bg-muted"
         >
           {t('signIn')}
