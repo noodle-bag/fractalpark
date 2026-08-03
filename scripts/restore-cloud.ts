@@ -21,6 +21,7 @@
 
 export {};
 
+import { createHash } from 'node:crypto';
 import { readFileSync, writeFileSync } from 'node:fs';
 import { join } from 'node:path';
 
@@ -50,6 +51,23 @@ function load(name: string): Row[] {
   return JSON.parse(readFileSync(join(IN as string, `${name}.json`), 'utf8')) as Row[];
 }
 
+// Refuse to restore from a corrupted or truncated export: every payload
+// file must hash to its manifest entry (review: restore previously trusted
+// the files blindly).
+function verifyManifest(): void {
+  const manifest = JSON.parse(readFileSync(join(IN as string, 'manifest.json'), 'utf8')) as {
+    files: Record<string, { rows: number; sha256: string }>;
+  };
+  for (const [name, entry] of Object.entries(manifest.files)) {
+    const text = readFileSync(join(IN as string, `${name}.json`), 'utf8');
+    const digest = createHash('sha256').update(text).digest('hex');
+    if (digest !== entry.sha256) {
+      throw new Error(`manifest checksum mismatch for ${name}.json — export is corrupt, aborting`);
+    }
+  }
+  console.log(`manifest verified (${Object.keys(manifest.files).length} files)`);
+}
+
 async function adminCreateUser(email: string): Promise<{ id: string; existed: boolean }> {
   const res = await fetch(`${SUPABASE_URL}/auth/v1/admin/users`, {
     method: 'POST',
@@ -66,9 +84,12 @@ async function adminCreateUser(email: string): Promise<{ id: string; existed: bo
   }
   // 422/email_exists: adopt the existing account's id.
   const list = await fetch(
-    `${SUPABASE_URL}/auth/v1/admin/users?filter=${encodeURIComponent(email)}&per_page=50`,
+    `${SUPABASE_URL}/auth/v1/admin/users?filter=${encodeURIComponent(email)}&per_page=1000`,
     { headers: { apikey: SERVICE_KEY as string, authorization: `Bearer ${SERVICE_KEY}` } },
   );
+  // NOTE: the fallback scans one page of 1000 admin users; on a target with
+  // more identities a pre-existing account could be missed (the create then
+  // 422s again and the restore aborts loudly — acceptable, never silent).
   const body = (await list.json()) as { users?: Array<{ id: string; email?: string }> };
   const match = (body.users ?? []).find((u) => (u.email ?? '').toLowerCase() === email.toLowerCase());
   if (!match) throw new Error(`auth import failed for ${email}: ${res.status}`);
@@ -119,6 +140,7 @@ function remapRows(rows: Row[], remap: Map<string, string>): Row[] {
 }
 
 async function main(): Promise<void> {
+  verifyManifest();
   const authUsers = load('auth_users');
   const remap = new Map<string, string>();
   console.log(`auth identities: ${authUsers.length}`);
@@ -135,26 +157,32 @@ async function main(): Promise<void> {
     }
   }
   writeFileSync(
-    join(IN as string, 'uuid-remap.json'),
+    join(IN as string, DRY_RUN ? 'uuid-remap.dryrun.json' : 'uuid-remap.json'),
     JSON.stringify(Object.fromEntries(remap), null, 2),
   );
   console.log(`uuid remap: ${remap.size} identities re-keyed`);
 
-  const order: Array<[string, string[]]> = [
-    ['profiles', ['user_id']],
-    ['artwork_drafts', ['owner_id']],
-    ['artwork_publications', ['owner_id']],
-    ['artwork_operations', ['owner_id', 'created_by']],
-    ['resource_cleanup_jobs', ['owner_id']],
-  ];
-  for (const [table] of order) {
+  // FK order: profiles -> drafts -> publications -> operations -> jobs.
+  // remapRows rewrites every auth-user reference (owner_id, user_id, and
+  // the defensive created_by/updated_by/owner variants) through the map.
+  const order = [
+    'profiles',
+    'artwork_drafts',
+    'artwork_publications',
+    'artwork_operations',
+    'resource_cleanup_jobs',
+  ] as const;
+  for (const table of order) {
     const rows = remapRows(load(table), remap);
     if (!DRY_RUN) {
       await postgrestInsert(table, rows);
     }
     const expected = rows.length;
     const actual = DRY_RUN ? expected : await postgrestCount(table);
-    const ok = expected === actual || (!DRY_RUN && actual >= expected);
+    // Strict equality: on the fresh target this runbook mandates, anything
+    // else (ignore-duplicates skipping a same-PK row, pre-existing rows)
+    // is a divergence to investigate, not a pass.
+    const ok = expected === actual;
     console.log(
       `${ok ? 'ok' : 'FAIL'}  ${table}: backup ${expected}, target ${actual}${DRY_RUN ? ' (dry run)' : ''}`,
     );

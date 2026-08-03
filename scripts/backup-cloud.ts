@@ -3,15 +3,17 @@
  * byte the web creation loop owns, in a form a fresh project can re-ingest.
  *
  * What is exported (per docs/runbooks/cloud-backup-recovery.md):
- *  - public.creator_profiles, artwork_drafts, artwork_publications,
- *    artwork_operations       (durable rows, original ids preserved)
+ *  - public.profiles, artwork_drafts, artwork_publications,
+ *    artwork_operations, resource_cleanup_jobs
+ *                                   (durable rows, original ids preserved)
  *  - auth identities          (id <-> email map for the UUID-remap path;
  *    credentials themselves only ever live in platform backups)
  *  - storage object listings  (draft-thumbnails + publication-thumbnails:
  *    paths, sizes, mtimes — objects themselves are re-downloadable by path
  *    and re-uploadable verbatim)
- *  - supabase_migrations.schema_migrations (migration history)
- *  - manifest.json            (counts + sha256 per file, schema fingerprint)
+ *  - supabase_migrations.schema_migrations (management mode) or the repo's
+ *    migration set (postgrest mode)
+ *  - manifest.json            (counts + sha256 per file, mode, source)
  *
  * Two read modes:
  *  --mode=postgrest   SUPABASE_URL + SUPABASE_SERVICE_ROLE_KEY (default;
@@ -50,15 +52,15 @@ if (!OUT) {
   process.exit(1);
 }
 
-const TABLES = [
-  'profiles',
-  'artwork_drafts',
-  'artwork_publications',
-  'artwork_operations',
+const TABLES: ReadonlyArray<readonly [table: string, orderBy: string]> = [
+  ['profiles', 'user_id'],
+  ['artwork_drafts', 'id'],
+  ['artwork_publications', 'id'],
+  ['artwork_operations', 'id'],
   // The cleanup-job audit trail is durable history; rate_limit_counters is
   // deliberately excluded (ephemeral — restoring it would only resurrect
   // stale limits).
-  'resource_cleanup_jobs',
+  ['resource_cleanup_jobs', 'id'],
 ] as const;
 
 const BUCKETS = ['draft-thumbnails', 'publication-thumbnails'] as const;
@@ -85,8 +87,26 @@ async function postgrestGet(path: string): Promise<unknown> {
   return res.json();
 }
 
-async function postgrestTable(table: string): Promise<BackupRow[]> {
-  return (await postgrestGet(`${table}?select=*`)) as BackupRow[];
+async function postgrestTable(table: string, orderBy: string): Promise<BackupRow[]> {
+  // PGRST_DB_MAX_ROWS silently truncates unpaged reads (1000 on the local
+  // stack): page explicitly so the manifest row count cannot lie.
+  const { url, key } = postgrestConfig();
+  const rows: BackupRow[] = [];
+  const PAGE = 1000;
+  for (;;) {
+    const res = await fetch(`${url}/rest/v1/${table}?select=*&order=${orderBy}.asc`, {
+      headers: {
+        apikey: key,
+        authorization: `Bearer ${key}`,
+        'range-unit': 'items',
+        range: `${rows.length}-${rows.length + PAGE - 1}`,
+      },
+    });
+    if (!res.ok) throw new Error(`postgrest ${table} -> ${res.status}`);
+    const batch = (await res.json()) as BackupRow[];
+    rows.push(...batch);
+    if (batch.length < PAGE) return rows;
+  }
 }
 
 async function postgrestAuthUsers(): Promise<BackupRow[]> {
@@ -221,8 +241,10 @@ async function main(): Promise<void> {
     console.log(`ok  ${name}: ${rows.length} rows`);
   }
 
-  for (const table of TABLES) {
-    await dump(table, () => (MODE === 'management' ? managementTable(table) : postgrestTable(table)));
+  for (const [table, orderBy] of TABLES) {
+    await dump(table, () =>
+      MODE === 'management' ? managementTable(table) : postgrestTable(table, orderBy),
+    );
   }
   await dump('auth_users', () => (MODE === 'management' ? managementAuthUsers() : postgrestAuthUsers()));
   for (const bucket of BUCKETS) {

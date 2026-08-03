@@ -107,15 +107,16 @@ release and after any restore-code change.
 ## Ops alerts (what must page a human)
 
 - **Cleanup jobs stuck**: any `resource_cleanup_jobs` row in `failed`, or
-  `processing`/`waiting` older than 24h. Query:
+  `pending`/`processing` rows whose `updated_at` is older than 24h. Query:
   `select status, count(*) from resource_cleanup_jobs group by status;`
-  The cleanup worker's `waiting_for_storage_cleanup` requeue burns the
-  shared retry budget (~8 attempts ≈ 10.6h backoff) — if a deletion
-  hits that ceiling the job fails permanently and the account is never
-  physically removed. Manual path: fix storage, `update
-  resource_cleanup_jobs set status='waiting', attempts=0 where id=...`,
-  re-run the worker, then `fractalpark_account_deletion_finalize` +
-  GoTrue admin delete per docs/specs/web-creation-loop-v1.md §10.2.
+  The cleanup worker's `waiting_for_storage_cleanup` requeue (an error
+  code in `last_error`, not a status) burns the shared retry budget
+  (~8 attempts ≈ 10.6h backoff) — if a deletion hits that ceiling the job
+  fails permanently and the account is never physically removed. Manual
+  path: fix storage, `update resource_cleanup_jobs set status='pending',
+  attempts=0 where id=...`, re-run the worker, then
+  `fractalpark_account_deletion_finalize` + GoTrue admin delete per
+  docs/specs/web-creation-loop-v1.md §10.2.
 - **Deletion op open > 24h**: `select * from artwork_operations where
   operation_type='delete_account' and status='processing';` — confirm +
   worker + finalize should converge in minutes.
