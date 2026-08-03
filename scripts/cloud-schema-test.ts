@@ -1454,6 +1454,20 @@ async function main(): Promise<void> {
       p_proof_key: crypto.randomUUID(),
     });
     assert(res.status !== 200, `anon step-up denied: ${res.status}`);
+    const confirm = await rpc(keys, 'fractalpark_account_deletion_confirm', keys.anonKey, {
+      p_owner_id: RPC_OWNER_A,
+      p_operation_id: crypto.randomUUID(),
+    });
+    assert(confirm.status !== 200, `anon confirm denied: ${confirm.status}`);
+    const finalize = await rpc(keys, 'fractalpark_account_deletion_finalize', keys.anonKey, {
+      p_owner_id: RPC_OWNER_A,
+      p_operation_id: crypto.randomUUID(),
+    });
+    assert(finalize.status !== 200, `anon finalize denied: ${finalize.status}`);
+    const revoke = await rpc(keys, 'fractalpark_revoke_user_sessions', keys.anonKey, {
+      p_owner_id: RPC_OWNER_A,
+    });
+    assert(revoke.status !== 200, `anon revoke denied: ${revoke.status}`);
   });
 
   console.log(`\n${passed} passed, ${failed} failed`);
