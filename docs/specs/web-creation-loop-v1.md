@@ -516,11 +516,14 @@ only writer of `hidden_at`/`moderation_reason`. Operator procedure lives in
   owner RPC already calls — raises `account_deleting` while a locked
   deletion exists. OTP requests for the account email are silently refused
   (generic response; the account state stays private). Session revocation
-  is the provider's global logout (every refresh token dies); an unexpired
-  sealed access cookie on another device is a bounded zombie — it cannot
-  write (the gate rejects with `account_deleting`) and its reads return
-  only what the confirm transaction left behind — nothing — until the
-  short access-token TTL expires. The cleanup worker
+  removes every refresh token row from the auth schema
+  (`fractalpark_revoke_user_sessions`; GoTrue has no admin per-user logout
+  endpoint on v2.194, and its rotation-reuse grace would resurrect a
+  merely-flagged chain); an unexpired sealed access cookie on another
+  device is a bounded zombie — it cannot write (the gate rejects with
+  `account_deleting`), it cannot refresh, and its reads return only what
+  the confirm transaction left behind — nothing — until the short
+  access-token TTL expires. The cleanup worker
   (`scripts/cleanup-worker.ts`) drains thumbnail jobs first, then removes
   the auth user and calls `fractalpark_account_deletion_finalize`, which
   closes the operation and purges older operations while keeping the

@@ -193,24 +193,3 @@ export async function adminFindUserIdByEmail(email: string): Promise<string | nu
   const match = (body.users ?? []).find((u) => (u.email ?? '').toLowerCase() === needle);
   return match?.id ?? null;
 }
-
-/**
- * Revoke every session of a user (account deletion). GoTrue admin logout
- * kills all refresh tokens; existing access tokens die within their short
- * TTL and the deletion gate blocks new writes immediately.
- */
-export async function adminLogoutUser(userId: string): Promise<void> {
-  const { url, serviceRoleKey } = getSupabaseConfig();
-  const res = await fetch(`${url}/auth/v1/admin/users/${userId}/logout`, {
-    method: 'POST',
-    headers: {
-      apikey: serviceRoleKey,
-      authorization: `Bearer ${serviceRoleKey}`,
-      'content-type': 'application/json',
-    },
-    cache: 'no-store',
-  });
-  if (!res.ok) {
-    throw new AuthProviderError(res.status, 'identity provider rejected the session revocation');
-  }
-}

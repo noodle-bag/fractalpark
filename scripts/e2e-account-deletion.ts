@@ -201,6 +201,13 @@ async function main(): Promise<void> {
     zombieWrite.status === 409 && zombieBody.error?.code === 'account_deleting',
     `zombie write blocked by the gate (${zombieWrite.status})`,
   );
+  // Refresh tokens are revoked in the auth schema at confirm time — the
+  // zombie cannot renew itself and dies with its access token.
+  const refresh = await api('/api/creation/auth/session/refresh', cookie, {
+    method: 'POST',
+    body: '{}',
+  });
+  assert(refresh.status === 401, `refresh token revoked (${refresh.status})`);
 
   // 7. OTP request for the deleted email is silently refused (generic 200,
   //    and no new code email arrives). Wait out the provider's per-email

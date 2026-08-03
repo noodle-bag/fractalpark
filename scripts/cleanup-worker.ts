@@ -20,11 +20,14 @@
 export {};
 
 const SUPABASE_URL = process.env.SUPABASE_URL ?? 'http://127.0.0.1:54321';
-const SERVICE_KEY = process.env.SUPABASE_SERVICE_ROLE_KEY;
-if (!SERVICE_KEY) {
-  console.error('SUPABASE_SERVICE_ROLE_KEY must be set (use the local stack service key)');
-  process.exit(1);
+function requireServiceKey(): string {
+  const key = process.env.SUPABASE_SERVICE_ROLE_KEY;
+  if (!key) {
+    throw new Error('SUPABASE_SERVICE_ROLE_KEY must be set (use the local stack service key)');
+  }
+  return key;
 }
+const SERVICE_KEY = requireServiceKey();
 
 interface CleanupJob {
   id: string;

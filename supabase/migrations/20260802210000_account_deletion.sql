@@ -326,3 +326,35 @@ revoke execute on function public.fractalpark_account_deletion_finalize(uuid, uu
   from public, anon, authenticated;
 grant execute on function public.fractalpark_account_deletion_finalize(uuid, uuid)
   to service_role;
+
+-- Session revocation for account deletion. GoTrue v2.194 has no admin
+-- per-user logout endpoint (POST /admin/users/{id}/logout is 404), and its
+-- refresh-token reuse grace would resurrect a merely-revoked token chain:
+-- a revoked parent refreshed within the reuse interval is treated as a
+-- legitimate rotation and issues a fresh child. Removal has no grace.
+-- Sealed access cookies remain bounded zombies per spec 10.2.
+create or replace function public.fractalpark_revoke_user_sessions(
+  p_owner_id uuid
+)
+returns integer
+language plpgsql
+security definer
+set search_path = ''
+as $$
+declare
+  v_count integer;
+begin
+  if p_owner_id is null then
+    raise exception 'not_found: owner is required';
+  end if;
+  delete from auth.refresh_tokens t
+  where t.user_id = p_owner_id::text;
+  get diagnostics v_count = row_count;
+  return v_count;
+end;
+$$;
+
+revoke execute on function public.fractalpark_revoke_user_sessions(uuid)
+  from public, anon, authenticated;
+grant execute on function public.fractalpark_revoke_user_sessions(uuid)
+  to service_role;

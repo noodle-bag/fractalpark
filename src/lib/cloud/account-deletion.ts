@@ -12,7 +12,7 @@
 
 import { postgrest, getAccountEmail, hasActiveDeletion } from './postgrest';
 import { consumeRateLimit } from './rate-limit';
-import { AuthProviderError, adminLogoutUser, requestEmailOtp, verifyEmailOtp } from './supabase-auth';
+import { AuthProviderError, requestEmailOtp, verifyEmailOtp } from './supabase-auth';
 
 export class AccountDeletionError extends Error {
   constructor(
@@ -153,7 +153,9 @@ export async function confirmAccountDeletion(
   // that happened; the deletion gate already blocks all writes, and stale
   // access tokens die within their short TTL.
   try {
-    await adminLogoutUser(ownerId);
+    await callDeletionRpc<number>('fractalpark_revoke_user_sessions', {
+      p_owner_id: ownerId,
+    });
   } catch (error) {
     console.error(
       '[account-deletion] session revocation failed after confirm:',
