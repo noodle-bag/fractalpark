@@ -27,6 +27,7 @@ import { Label } from '@/components/ui/label';
 export type CloudSessionState =
   | { status: 'loading' }
   | { status: 'disabled' }
+  | { status: 'unavailable' }
   | { status: 'anonymous' }
   | { status: 'authenticated'; userId: string };
 
@@ -214,9 +215,10 @@ export function CloudSessionProvider({ children }: { children: React.ReactNode }
         setState({ status: 'disabled' });
         return;
       }
-      // Transport/config failures degrade to hiding cloud affordances; the
-      // local workflow is unaffected and the next mount re-probes.
-      setState({ status: 'disabled' });
+      // Transport/config failures are 'unavailable' (ADR 0006): never
+      // rendered as anonymous, so a sign-in prompt never lies during an
+      // outage. The next mount re-probes.
+      setState({ status: 'unavailable' });
     }
   }, []);
 
@@ -227,11 +229,14 @@ export function CloudSessionProvider({ children }: { children: React.ReactNode }
         if (cancelled) return;
         setState(session ? { status: 'authenticated', userId: session.userId } : { status: 'anonymous' });
       })
-      .catch(() => {
+      .catch((error) => {
         if (cancelled) return;
-        // cloud_disabled and transport/config failures both degrade to
-        // hiding cloud affordances; the next mount re-probes.
-        setState({ status: 'disabled' });
+        if (error instanceof CloudClientError && error.code === 'cloud_disabled') {
+          setState({ status: 'disabled' });
+          return;
+        }
+        // Transport/config failures are 'unavailable', not anonymous.
+        setState({ status: 'unavailable' });
       });
     return () => {
       cancelled = true;

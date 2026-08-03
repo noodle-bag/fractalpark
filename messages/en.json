@@ -2,7 +2,7 @@
   "cloud": {
     "otp": {
       "title": "Sign in to sync",
-      "emailDescription": "Enter your email and we will send you a six-digit sign-in code. No password needed.",
+      "emailDescription": "Sign in to save artworks to your private cloud, pick them up on any device, and publish to Community. Saving and publishing need an account; exploring, creating, and downloading work without one.",
       "codeDescription": "Enter the six-digit code from the email we just sent you.",
       "emailLabel": "Email",
       "emailPlaceholder": "you@example.com",
@@ -142,11 +142,17 @@
       "gallery": "Gallery",
       "formulas": "Formulas",
       "explore": "Explore",
-      "about": "About"
+      "about": "About",
+      "tagline": "an open-source, formula-first fractal knowledge and creation platform",
+      "signIn": "Sign in",
+      "signOut": "Sign out",
+      "cloudUnavailable": "Cloud unavailable",
+      "menu": "Menu"
     },
     "language": {
       "en": "EN",
-      "zh": "Chinese"
+      "zh": "Chinese",
+      "label": "Language"
     },
     "footer": {
       "formulas": "Formula Atlas",

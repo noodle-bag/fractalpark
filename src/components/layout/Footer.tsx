@@ -7,14 +7,6 @@ export default function Footer() {
   return (
     <footer className="border-t border-border bg-white py-6 text-center text-sm text-muted-foreground">
       <div className="container mx-auto px-4 space-y-1">
-        <p>
-          <Link
-            className="underline transition-colors hover:text-foreground"
-            href="/formulas"
-          >
-            {t('formulas')}
-          </Link>
-        </p>
         <p className="space-x-4">
           <Link className="underline transition-colors hover:text-foreground" href="/privacy">
             {t('privacy')}

@@ -21,6 +21,7 @@ import {
   SheetTrigger,
 } from '@/components/ui/sheet';
 import LanguageSwitcher from './LanguageSwitcher';
+import NavbarAuth from './NavbarAuth';
 import { useLayout } from './LayoutContext';
 import { SITE } from '@/lib/site';
 
@@ -61,19 +62,30 @@ export default function Navbar() {
           : 'border-b border-border bg-white/80 backdrop-blur-sm'
       )}
     >
-      <div className="container mx-auto flex h-16 items-center justify-between px-4">
-        {/* Brand link goes to the canonical Explore landing */}
-        <Link
-          href="/explore"
-          className={cn(
-            'text-2xl font-bold tracking-tight',
-            navbarTransparent ? 'text-white' : 'text-foreground'
-          )}
-        >
-          {SITE.name}
-        </Link>
+      <div className="container mx-auto flex h-12 items-center justify-between px-4">
+        {/* Brand link goes to the canonical Explore landing; the tagline is
+            wide-screen only (the mobile Sheet carries the full sentence). */}
+        <div className="flex min-w-0 items-baseline gap-2.5">
+          <Link
+            href="/explore"
+            className={cn(
+              'shrink-0 text-xl font-bold tracking-tight',
+              navbarTransparent ? 'text-white' : 'text-foreground'
+            )}
+          >
+            {SITE.name}
+          </Link>
+          <span
+            className={cn(
+              'hidden truncate text-[11px] font-normal lg:inline',
+              navbarTransparent ? 'text-white/60' : 'text-muted-foreground'
+            )}
+          >
+            {t('tagline')}
+          </span>
+        </div>
 
-        <div className="hidden md:flex md:items-center md:gap-6">
+        <div className="hidden md:flex md:items-center md:gap-4">
           <NavigationMenu>
             <NavigationMenuList>
               {links.map((link) => (
@@ -103,26 +115,33 @@ export default function Navbar() {
           <div className={navbarTransparent ? 'text-white' : ''}>
             <LanguageSwitcher />
           </div>
+          <div className={navbarTransparent ? 'text-white' : ''}>
+            <NavbarAuth />
+          </div>
         </div>
 
-        <div className="flex items-center gap-4 md:hidden">
+        <div className="flex items-center gap-2 md:hidden">
           <div className={navbarTransparent ? 'text-white' : ''}>
             <LanguageSwitcher />
+          </div>
+          <div className={navbarTransparent ? 'text-white' : ''}>
+            <NavbarAuth />
           </div>
           <Sheet open={isOpen} onOpenChange={setIsOpen}>
             <SheetTrigger asChild>
               <Button
                 variant="ghost"
                 size="icon"
-                className={navbarTransparent ? 'text-white hover:bg-white/10' : ''}
+                aria-label={t('menu')}
+                className={cn('min-h-11 min-w-11', navbarTransparent ? 'text-white hover:bg-white/10' : '')}
               >
                 <Menu className="h-6 w-6" />
-                <span className="sr-only">Toggle menu</span>
               </Button>
             </SheetTrigger>
             <SheetContent side="right" className="w-[280px] sm:max-w-xs">
               <SheetHeader>
                 <SheetTitle className="text-left pl-1">{SITE.name}</SheetTitle>
+                <p className="pl-1 text-left text-xs text-muted-foreground">{t('tagline')}</p>
               </SheetHeader>
               <div className="mt-8 flex flex-col gap-4 pl-1">
                 {links.map((link) => (

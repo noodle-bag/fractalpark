@@ -2,7 +2,7 @@
   "cloud": {
     "otp": {
       "title": "登录以同步",
-      "emailDescription": "输入邮箱，我们会发给你一枚六位登录码，无需密码。",
+      "emailDescription": "登录后可将作品保存到私人云端、在任意设备上继续创作，并发布到社区。保存与发布需要账号；探索、创作与下载无需登录。",
       "codeDescription": "输入刚发送到邮箱的六位验证码。",
       "emailLabel": "邮箱",
       "emailPlaceholder": "you@example.com",
@@ -143,11 +143,17 @@
       "gallery": "画廊",
       "formulas": "公式",
       "explore": "探索",
-      "about": "关于"
+      "about": "关于",
+      "tagline": "开源、公式优先的分形知识与创作平台",
+      "signIn": "登录",
+      "signOut": "退出登录",
+      "cloudUnavailable": "云服务暂不可用",
+      "menu": "菜单"
     },
     "language": {
       "en": "EN",
-      "zh": "中文"
+      "zh": "中文",
+      "label": "语言"
     },
     "footer": {
       "formulas": "公式图鉴",

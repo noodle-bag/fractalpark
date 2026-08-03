@@ -11,11 +11,10 @@
 import { useCallback, useEffect, useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { useLocale, useTranslations } from 'next-intl';
-import { CloudUpload, LogOut, RefreshCw, Trash2 } from 'lucide-react';
+import { CloudUpload, RefreshCw, Trash2 } from 'lucide-react';
 
 import { useCloudSession } from '@/components/cloud/CloudSessionProvider';
 import { useArtworks } from '@/hooks/useArtworks';
-import AccountDeletion from '@/components/gallery/AccountDeletion';
 import {
   CloudClientError,
   getProfile,
@@ -51,7 +50,7 @@ export function MyWorksCloud() {
   const t = useTranslations('cloud.myWorks');
   const locale = useLocale();
   const router = useRouter();
-  const { state, openSignIn, signOut } = useCloudSession();
+  const { state, openSignIn } = useCloudSession();
   const { artworks: localArtworks, saveEnvelope, updateArtwork, bindCloud } = useArtworks();
 
   const [drafts, setDrafts] = useState<CloudDraftSummary[] | null>(null);
@@ -301,14 +300,6 @@ export function MyWorksCloud() {
             <RefreshCw className="h-3.5 w-3.5" />
             {t('refresh')}
           </button>
-          <button
-            type="button"
-            onClick={() => void signOut()}
-            className="inline-flex items-center gap-1.5 rounded-md border px-3 py-1.5 text-xs font-medium transition-colors hover:bg-muted"
-          >
-            <LogOut className="h-3.5 w-3.5" />
-            {t('signOut')}
-          </button>
         </div>
       </div>
 
@@ -443,7 +434,9 @@ export function MyWorksCloud() {
         </div>
       )}
 
-      <AccountDeletion />
+      {/* AccountDeletion is intentionally not rendered (v0.4.16 Slice 1):
+          the UI entry is hidden, while the component, API routes, RPCs,
+          worker, and safety tests stay fully intact. */}
     </section>
   );
 }
