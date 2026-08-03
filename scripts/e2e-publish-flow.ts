@@ -12,7 +12,7 @@ const EMAIL = `publish-e2e-${Date.now()}@example.com`;
 
 let passed = 0;
 let failed = 0;
-function assert(condition: boolean, label: string): void {
+function assert(condition: boolean, label: string): asserts condition {
   if (condition) {
     passed += 1;
     console.log(`ok  ${label}`);
@@ -203,6 +203,60 @@ async function main(): Promise<void> {
     'remix provenance recorded as the source publication',
   );
 
+  // 7b. Maintainer moderation chain: hide removes public access and new
+  // remixes immediately; restore brings them back. The RPC is the
+  // service-role-only controlled-panel mechanism (spec section 10).
+  const SERVICE_KEY = process.env.SUPABASE_SERVICE_ROLE_KEY;
+  assert(!!SERVICE_KEY, 'SUPABASE_SERVICE_ROLE_KEY must be set (local stack service key)');
+  const moderate = async (action: string, reason?: string) =>
+    fetch('http://127.0.0.1:54321/rest/v1/rpc/artwork_publication_set_moderation', {
+      method: 'POST',
+      headers: {
+        apikey: SERVICE_KEY,
+        authorization: `Bearer ${SERVICE_KEY}`,
+        'content-type': 'application/json',
+      },
+      body: JSON.stringify({
+        p_publication_id: publicationId,
+        p_action: action,
+        p_reason: reason ?? null,
+      }),
+    });
+
+  const hide = await moderate('hide', 'e2e takedown drill');
+  const hideBody = (await hide.json()) as { status?: string };
+  assert(hide.status === 200 && hideBody.status === 'hidden', `hide: ${hide.status}`);
+
+  const hiddenDetail = await fetch(`${BASE}/api/creation/publications/${publicationId}`);
+  assert(hiddenDetail.status === 404, 'hidden work 404s on the public detail');
+  const hiddenList = (await (
+    await fetch(`${BASE}/api/creation/community?limit=50`)
+  ).json()) as { items: { id: string }[] };
+  assert(
+    !hiddenList.items.some((w) => w.id === publicationId),
+    'hidden work leaves the community list',
+  );
+  const hiddenRemix = await api('/api/creation/drafts', cookie, {
+    method: 'POST',
+    headers: { 'idempotency-key': crypto.randomUUID() },
+    body: JSON.stringify({
+      envelope: detailBody.envelope,
+      remixSourceType: 'publication',
+      remixSourceId: publicationId,
+    }),
+  });
+  assert(hiddenRemix.status === 400, `remix of hidden refused (${hiddenRemix.status})`);
+
+  const hideReplay = await moderate('hide', 'e2e confirmed');
+  const hideReplayBody = (await hideReplay.json()) as { replayed?: boolean };
+  assert(hideReplay.status === 200 && hideReplayBody.replayed === true, 're-hide is an idempotent replay');
+
+  const restore = await moderate('restore');
+  const restoreBody = (await restore.json()) as { status?: string };
+  assert(restore.status === 200 && restoreBody.status === 'published', `restore: ${restore.status}`);
+  const restoredDetail = await fetch(`${BASE}/api/creation/publications/${publicationId}`);
+  assert(restoredDetail.status === 200, 'restored work is public again');
+
   // 8. Withdraw leaves the minimal tombstone and the public reads 404
   const withdraw = await api(`/api/creation/publications/${publicationId}/withdraw`, cookie, {
     method: 'POST',
@@ -233,6 +287,9 @@ async function main(): Promise<void> {
     }),
   });
   assert(lateRemix.status === 400, `remix of withdrawn refused (${lateRemix.status})`);
+
+  // 9b. The maintainer moderation chain ran at 7b (before withdrawal):
+  // hide -> 404 -> off-list -> remix refused -> idempotent re-hide -> restore.
 
   // 10. Backup email chain (Mailpit as the SMTP provider). Mode default off:
   // the earlier publish reported not_requested. Turn on publish_only, then

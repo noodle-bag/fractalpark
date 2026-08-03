@@ -12,6 +12,7 @@
 import { sendArtworkBackupEmail } from './backup-mailer';
 import { isArtworkEmailBackupEnabled } from './config';
 import { getSupabaseConfig } from './config';
+import { getAccountEmail } from './postgrest';
 import { canonicalStringify } from './envelope';
 import { consumeRateLimit } from './rate-limit';
 
@@ -72,18 +73,6 @@ async function postgrest<T>(path: string, init?: RequestInit): Promise<T> {
   });
   if (!response.ok) throw new Error(`PostgREST ${response.status}`);
   return (await response.json()) as T;
-}
-
-/** Account email from the auth user; server-side only. */
-async function getAccountEmail(ownerId: string): Promise<string | null> {
-  const { url, serviceRoleKey } = getSupabaseConfig();
-  const response = await fetch(`${url}/auth/v1/admin/users/${ownerId}`, {
-    headers: { apikey: serviceRoleKey, authorization: `Bearer ${serviceRoleKey}` },
-    cache: 'no-store',
-  });
-  if (!response.ok) return null;
-  const body = (await response.json()) as { email?: string };
-  return typeof body.email === 'string' && body.email.length > 0 ? body.email : null;
 }
 
 async function consumeBackupQuota(ownerId: string): Promise<boolean> {

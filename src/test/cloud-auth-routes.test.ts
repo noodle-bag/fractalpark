@@ -183,6 +183,29 @@ describe('POST /api/creation/auth/otp/request', () => {
     expect(fetchCalls.some((c) => c.url.includes('/auth/v1/otp'))).toBe(false);
   });
 
+  it('silently refuses codes for an account being deleted: generic 200, provider never called', async () => {
+    stubFetch((call) => {
+      if (call.url.includes('fractalpark_rate_limit_consume')) {
+        return new Response(JSON.stringify([{ allowed: true, retry_after: 0 }]), { status: 200 });
+      }
+      if (call.url.includes('/auth/v1/admin/users')) {
+        return new Response(
+          JSON.stringify({ users: [{ id: 'user-deleting-1', email: 'a@b.co' }] }),
+          { status: 200 },
+        );
+      }
+      if (call.url.includes('/rest/v1/artwork_operations')) {
+        return new Response(JSON.stringify([{ id: 'op-locked-1' }]), { status: 200 });
+      }
+      return new Response('unmatched', { status: 500 });
+    });
+    const res = await otpRequestPOST(postJson('/api/creation/auth/otp/request', { email: 'a@b.co' }));
+    expect(res.status).toBe(200);
+    // Rate limits were still consumed (probing burns quota too), but no OTP
+    // was requested from the provider.
+    expect(fetchCalls.some((c) => c.url.includes('/auth/v1/otp'))).toBe(false);
+  });
+
   it('rejects invalid input and cross-site origins without calling anything', async () => {
     const badEmail = await otpRequestPOST(postJson('/api/creation/auth/otp/request', { email: 'not-an-email' }));
     expect(badEmail.status).toBe(400);

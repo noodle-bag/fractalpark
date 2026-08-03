@@ -41,6 +41,7 @@ function toApiError(error: unknown): CloudApiError {
       case 'validation_failed':
       case 'idempotency_conflict':
       case 'revision_conflict':
+      case 'account_deleting':
         return new CloudApiError(error.code as 'not_found');
       case 'rate_limited':
         return new CloudApiError('rate_limited', error.retryAfter);

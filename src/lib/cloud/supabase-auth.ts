@@ -171,3 +171,25 @@ export async function revokeProviderSession(accessToken: string, refreshToken?: 
     }
   }
 }
+
+/**
+ * Look up an auth user id by exact email. GoTrue's `filter` is a fuzzy
+ * email match, so candidates are re-checked exactly. Used by the OTP
+ * request path to silently refuse codes for accounts being deleted —
+ * the response must stay generic (account-state privacy).
+ */
+export async function adminFindUserIdByEmail(email: string): Promise<string | null> {
+  const { url, serviceRoleKey } = getSupabaseConfig();
+  const res = await fetch(
+    `${url}/auth/v1/admin/users?filter=${encodeURIComponent(email)}&per_page=50`,
+    {
+      headers: { apikey: serviceRoleKey, authorization: `Bearer ${serviceRoleKey}` },
+      cache: 'no-store',
+    },
+  );
+  if (!res.ok) return null;
+  const body = (await res.json()) as { users?: Array<{ id: string; email?: string }> };
+  const needle = email.toLowerCase();
+  const match = (body.users ?? []).find((u) => (u.email ?? '').toLowerCase() === needle);
+  return match?.id ?? null;
+}

@@ -15,6 +15,20 @@ export default function Footer() {
             {t('formulas')}
           </Link>
         </p>
+        <p className="space-x-4">
+          <Link className="underline transition-colors hover:text-foreground" href="/privacy">
+            {t('privacy')}
+          </Link>
+          <Link className="underline transition-colors hover:text-foreground" href="/terms">
+            {t('terms')}
+          </Link>
+          <Link
+            className="underline transition-colors hover:text-foreground"
+            href="/community-rules"
+          >
+            {t('rules')}
+          </Link>
+        </p>
         <p>{t('copyright')}</p>
         <p>
           {t('contact')}{' '}

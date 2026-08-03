@@ -1,6 +1,6 @@
 {
   "name": "fractalpark",
-  "version": "0.4.13",
+  "version": "0.4.15",
   "scripts": {
     "dev": "next dev",
     "build": "next build --webpack",
@@ -19,7 +19,10 @@
     "db:reset": "supabase db reset",
     "db:migrate": "node --import tsx scripts/cloud-migrate.ts",
     "db:preflight": "node --import tsx scripts/cloud-preflight.ts",
-    "db:test": "node --import tsx scripts/cloud-schema-test.ts"
+    "db:test": "node --import tsx scripts/cloud-schema-test.ts",
+    "cleanup:worker": "node --import tsx scripts/cleanup-worker.ts",
+    "backup:cloud": "node --import tsx scripts/backup-cloud.ts",
+    "restore:cloud": "node --import tsx scripts/restore-cloud.ts"
   },
   "dependencies": {
     "@codemirror/commands": "^6.10.2",

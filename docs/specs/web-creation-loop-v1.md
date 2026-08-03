@@ -189,6 +189,7 @@ Six tables and two storage buckets carry the cloud state.
 | `error_code` | Nullable, stable, non-sensitive product error code |
 | `backup_email_status` | `not_requested \| pending \| sent \| failed \| unknown \| skipped_rate_limit` |
 | `email_attempts` / `email_sent_at` | Attempt count and confirmed send time |
+| `deletion_stage` | Null except `delete_account`: `stepped_up` (proof issued, 10-minute window, single use) or `locked` (proof consumed; ordinary owner RPCs reject until cleanup finishes) |
 | `created_at` / `updated_at` | Lifecycle timestamps |
 
 - Operations never store envelopes, email addresses, attachments, SMTP
@@ -202,7 +203,7 @@ Six tables and two storage buckets carry the cloud state.
 
 | Field | Contract |
 |---|---|
-| `policy_key` | `otp_email_minute \| otp_email_hour \| otp_ip_hour \| draft_save_5s \| publish_user_day \| backup_user_day` |
+| `policy_key` | `otp_email_minute \| otp_email_hour \| otp_ip_hour \| draft_save_5s \| publish_user_day \| backup_user_day \| account_delete_day` |
 | `subject_hash` | Irreversible server-HMAC key over email, IP, user ID, or draft ID |
 | `window_started_at` | Current window start |
 | `count` | Consumed count in the current window |
@@ -283,6 +284,8 @@ FractalPark Route Handlers.
 | GET | `/api/creation/publications/[publicationId]` | Published detail, download, and remix input |
 | POST | `/api/creation/publications/[publicationId]/withdraw` | Permanent owner withdrawal |
 | POST | `/api/creation/account/delete` | Start idempotent account deletion after step-up OTP |
+| POST | `/api/creation/account/delete/request` | Send the fresh step-up OTP to the account email |
+| POST | `/api/creation/account/delete/verify` | Verify the step-up OTP and issue the single-use proof |
 
 ### 5.1 General request contract
 
@@ -450,6 +453,12 @@ TypeScript or RPC branches:
 | Read/modify rate-limit counters | Deny | Deny | Deny | Allow |
 | Read/advance cleanup jobs | Deny | Safe summary via own operations | Deny by default | Allow |
 
+The controlled panel mechanism for hide/restore is the service-role-only
+RPC `artwork_publication_set_moderation(publication_id, 'hide' | 'restore',
+reason)` — idempotent per target state, terminal-state rejecting, and the
+only writer of `hidden_at`/`moderation_reason`. Operator procedure lives in
+`docs/runbooks/moderation.md`.
+
 ### 10.1 Enforcement layers
 
 - The browser calls only FractalPark's same-origin Auth and artwork APIs.
@@ -500,6 +509,31 @@ TypeScript or RPC branches:
   cleanup must succeed before the auth user is physically removed. During
   cleanup the account can neither log in nor write, and the flow is
   idempotently retryable.
+
+  The implemented mechanism: `artwork_operations.deletion_stage` carries
+  `stepped_up` (proof, 10-minute window, single use) and `locked` (active
+  deletion). `fractalpark_operation_gate` — the choke point every ordinary
+  owner RPC already calls — raises `account_deleting` while a locked
+  deletion exists. OTP requests for the account email are silently refused
+  (generic response; the account state stays private). Session revocation
+  removes every refresh token row from the auth schema
+  (`fractalpark_revoke_user_sessions`; GoTrue has no admin per-user logout
+  endpoint on v2.194, and its rotation-reuse grace would resurrect a
+  merely-flagged chain); an unexpired sealed access cookie on another
+  device is a bounded zombie — it cannot write (the gate rejects with
+  `account_deleting`), it cannot refresh, and its reads return only what
+  the confirm transaction left behind — nothing — until the short
+  access-token TTL expires. The cleanup worker
+  (`scripts/cleanup-worker.ts`) drains thumbnail jobs first, then calls
+  `fractalpark_account_deletion_finalize` (close op + purge older
+  operations, keep the audit row — the owner check must run while the id
+  still matches) and immediately removes the auth user physically. The
+  gate therefore stays closed until finalize; the physical removal
+  follows within milliseconds in the normal path, and a worker that
+  cannot finish keeps retrying instead of restoring access early.
+  Session revocation writes the provider's auth schema directly, so a
+  GoTrue upgrade must re-run the deletion drill
+  (`scripts/e2e-account-deletion.ts`) as its regression.
 - All writes go through the FractalPark API; RLS is the second enforcement
   boundary.
 
