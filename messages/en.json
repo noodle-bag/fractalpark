@@ -1756,7 +1756,7 @@
       "s2h": "What we never collect",
       "s2b": "No passwords — sign-in codes go to your email and expire.\n\nNo advertising trackers, no cross-site profiling cookies, no sale or sharing of personal data with data brokers.\n\nAnalytics never carry your email, IP address, artwork titles, draft contents, or any identifier that points back at you.",
       "s3h": "Cookies",
-      "s3b": "Two, both boring. An encrypted, HttpOnly session cookie keeps you signed in; a small NEXT_LOCALE cookie remembers your language. Neither is readable by other sites, and both are deleted when you sign out, delete your account, or clear your browser data.",
+      "s3b": "Two, both boring. An encrypted, HttpOnly session cookie keeps you signed in; a small NEXT_LOCALE cookie remembers your language. Neither is readable by other sites. The session cookie is deleted when you sign out or delete your account; the locale cookie stays until you clear your browser data.",
       "s4h": "Analytics",
       "s4b": "We use aggregate, privacy-limited usage analytics to understand which features help people (for example: a publish succeeded, a guide was opened). Events follow a fixed schema that forbids emails, IPs, titles, and artwork content.",
       "s5h": "Email we send",
@@ -1802,7 +1802,7 @@
       "s3h": "Remix etiquette",
       "s3b": "Every published work may be remixed — that is the point. When you publish a remix, keep the attribution the app fills in for you. Building on someone's work and crediting them is how the Community stays friendly to sharing.",
       "s4h": "Enforcement",
-      "s4b": "The maintainer hides first and deliberates second: a reported work leaves public view immediately and returns only if the report does not hold. Owners may withdraw their own works at any time; withdrawal is permanent. Repeated violations lead to account suspension.",
+      "s4b": "The maintainer hides first and deliberates second: once the maintainer hides a reported work it leaves public view immediately, and it returns only if review finds the report does not hold. Owners may withdraw their own works at any time; withdrawal is permanent. Repeated violations lead to account suspension.",
       "s5h": "Report",
       "s5b": "Every public artwork page carries a Report/Takedown entry, or write directly: contact@fractalpark.com. Include the artwork link and why it violates these rules."
     }

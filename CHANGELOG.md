@@ -2,6 +2,8 @@
 
 ## 0.4.15 - 2026-08-03
 
+(0.4.14 was skipped during PR 3 development; this release follows 0.4.13.)
+
 ### Added
 
 - Added optional cloud accounts with passwordless email sign-in: a one-time code, an encrypted HttpOnly session cookie, and sign-out.
