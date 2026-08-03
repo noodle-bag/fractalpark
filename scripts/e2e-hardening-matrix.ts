@@ -4,7 +4,7 @@
  * journeys that individual feature commits could not cover without
  * duplication. Everything here executes against the real local stack:
  *
- *  1. CSRF — every mutation route rejects a cross-site Origin
+ *  1. CSRF — every mutation route rejects a cross-site Origin (13 routes)
  *  2. Cache — every authenticated/private GET answers `private, no-store`;
  *     community reads answer no-store (spec 13)
  *  3. Permissions — anonymous drafts 401, cross-owner draft 404, private
@@ -154,6 +154,9 @@ async function main(): Promise<void> {
   // ---- 1. CSRF: cross-site Origin rejected on every mutation -----------
   const mutations: Array<[string, string, string]> = [
     ['POST', '/api/creation/drafts', JSON.stringify({ envelope: ENVELOPE })],
+    ['PATCH', `/api/creation/drafts/${draft.draftId}`, JSON.stringify({ expectedRevision: 1, envelope: ENVELOPE })],
+    ['DELETE', `/api/creation/drafts/${draft.draftId}`, '{}'],
+    ['POST', `/api/creation/drafts/${draft.draftId}/publish`, JSON.stringify({ expectedRevision: 1, title: 'x', description: '', attestationVersion: '2026-08-02.v1' })],
     ['PATCH', '/api/creation/profile', JSON.stringify({ displayName: 'x' })],
     ['POST', '/api/creation/auth/session/refresh', '{}'],
     ['POST', '/api/creation/auth/logout', '{}'],
