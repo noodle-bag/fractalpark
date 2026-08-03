@@ -58,6 +58,7 @@ describe('FRM Guide content contract', () => {
       'pipeline',
       'tutorials',
       'diagnostics',
+      'sharing',
       'next-steps',
     ]);
     expect(FRM_SYNTAX_TOPIC_IDS).toEqual([

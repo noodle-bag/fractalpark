@@ -22,7 +22,6 @@ export type CloudClientErrorCode =
   | 'revision_conflict'
   | 'otp_invalid'
   | 'payload_too_large'
-  | 'formula_assets_not_publishable'
   | 'formula_compile_failed'
   | 'formula_builtin_conflict'
   | 'account_deleting'
@@ -54,7 +53,6 @@ const API_CODES = new Set<CloudClientErrorCode>([
   'revision_conflict',
   'otp_invalid',
   'payload_too_large',
-  'formula_assets_not_publishable',
   'formula_compile_failed',
   'formula_builtin_conflict',
   'account_deleting',

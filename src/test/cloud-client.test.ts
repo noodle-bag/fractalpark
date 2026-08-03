@@ -93,11 +93,9 @@ describe('cloud client draft calls', () => {
     await expect(getSession()).rejects.toMatchObject({ code: 'otp_invalid' });
   });
 
-  it('maps payload_too_large and formula_assets_not_publishable from the frozen table', async () => {
+  it('maps payload_too_large from the frozen table', async () => {
     stubFetch(() => apiError(413, 'payload_too_large'));
     await expect(listDrafts()).rejects.toMatchObject({ code: 'payload_too_large' });
-    stubFetch(() => apiError(422, 'formula_assets_not_publishable'));
-    await expect(listDrafts()).rejects.toMatchObject({ code: 'formula_assets_not_publishable' });
   });
 
   it('returns undefined for 204 deletes', async () => {

@@ -9,6 +9,9 @@ import { DraftServiceError } from '@/lib/cloud/drafts';
 import { Link } from '@/i18n/routing';
 import { renderJsonLd } from '@/lib/json-ld';
 import { SITE } from '@/lib/site';
+import { FORMULA_PUBLICATION_LICENSE } from '@/lib/cloud/publications';
+import { validateFormulaPublication } from '@/lib/cloud/formula-publish';
+import { MIT_LICENSE_URL } from '@/lib/mit-license';
 import { cache } from 'react';
 
 export const dynamic = 'force-dynamic';
@@ -18,7 +21,6 @@ const CC_BY_URL = 'https://creativecommons.org/licenses/by/4.0/';
 interface PageProps {
   params: Promise<{ locale: string; publicationId: string }>;
 }
-
 async function loadPublication(publicationId: string): Promise<CommunityDetailDto | null> {
   if (!isCreationCloudEnabled()) return null;
   try {
@@ -53,6 +55,14 @@ export default async function CommunityArtworkPage({ params }: PageProps) {
 
   const pageUrl = `${SITE.url}/${locale}/gallery/community/${publication.id}`;
   const creditText = `${publication.title} — ${publication.authorDisplayName} — CC BY 4.0`;
+
+  // Formula publications (spec §17.2): MIT-licensed, with a public source
+  // download whose display name comes from the compiled formula metadata.
+  let formulaInfo: { name: string } | null = null;
+  if (publication.license === FORMULA_PUBLICATION_LICENSE) {
+    const verdict = validateFormulaPublication(publication.envelope);
+    if (verdict.ok) formulaInfo = { name: verdict.formulaName };
+  }
   const publishedAt = new Date(publication.publishedAt).toLocaleDateString(
     locale === 'zh' ? 'zh-CN' : 'en-US',
     { year: 'numeric', month: 'long', day: 'numeric' },
@@ -110,12 +120,37 @@ export default async function CommunityArtworkPage({ params }: PageProps) {
         <div className="flex gap-2">
           <dt className="font-medium text-foreground">{t('licenseLabel')}</dt>
           <dd>
-            {t('licenseValue')}{' '}
-            <a href={CC_BY_URL} target="_blank" rel="noreferrer" className="underline">
-              CC BY 4.0
-            </a>
+            {formulaInfo ? (
+              <>
+                {t('licenseFormulaValue')}{' '}
+                <a href={MIT_LICENSE_URL} target="_blank" rel="noreferrer" className="underline">
+                  MIT
+                </a>
+              </>
+            ) : (
+              <>
+                {t('licenseValue')}{' '}
+                <a href={CC_BY_URL} target="_blank" rel="noreferrer" className="underline">
+                  CC BY 4.0
+                </a>
+              </>
+            )}
           </dd>
         </div>
+        {formulaInfo && (
+          <div className="flex flex-wrap items-center gap-2">
+            <dt className="font-medium text-foreground">{t('formulaSourceLabel')}</dt>
+            <dd>
+              {t('formulaSourceValue', { name: formulaInfo.name })}{' '}
+              <a
+                href={`/api/creation/publications/${publication.id}/formula-source`}
+                className="underline"
+              >
+                {t('formulaSourceDownload')}
+              </a>
+            </dd>
+          </div>
+        )}
         {publication.remixSource && (
           <div className="flex gap-2">
             <dt className="font-medium text-foreground">{t('sourceLabel')}</dt>

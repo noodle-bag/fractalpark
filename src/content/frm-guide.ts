@@ -13,6 +13,7 @@ export const FRM_GUIDE_SECTION_IDS = [
   'pipeline',
   'tutorials',
   'diagnostics',
+  'sharing',
   'next-steps',
 ] as const;
 

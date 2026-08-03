@@ -29,6 +29,9 @@ export const LICENSE_VERSION = 'CC-BY-4.0';
 export const PUBLISH_TITLE_MAX = 80;
 export const PUBLISH_DESCRIPTION_MAX = 500;
 export const DISPLAY_NAME_MAX = 40;
+/** License frozen onto publications that carry a custom formula (§17.2):
+ *  the FRM source is public, MIT-licensed. */
+export const FORMULA_PUBLICATION_LICENSE = 'MIT';
 
 interface PostgrestOptions {
   method?: string;
@@ -255,6 +258,9 @@ export interface PublishInput {
   configBytes: number;
   /** The attestation version the client confirmed; must be current. */
   attestationVersion: string;
+  /** License frozen onto the publication; defaults to CC-BY-4.0, MIT when
+   *  the envelope carries a custom formula (spec §17.2). */
+  license?: string;
   idempotencyKey: string;
 }
 
@@ -318,7 +324,7 @@ export async function publishDraft(ownerId: string, input: PublishInput): Promis
     p_envelope: input.canonicalEnvelope,
     p_config_bytes: input.configBytes,
     p_rights_attestation_version: input.attestationVersion,
-    p_license_version: LICENSE_VERSION,
+    p_license_version: input.license ?? LICENSE_VERSION,
   });
   return {
     publicationId: result.publication_id,

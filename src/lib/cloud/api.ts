@@ -26,7 +26,6 @@ export type CloudErrorCode =
   | 'otp_invalid'
   | 'payload_too_large'
   | 'invalid_envelope'
-  | 'formula_assets_not_publishable'
   | 'quota_exceeded'
   | 'revision_conflict'
   | 'idempotency_conflict'
@@ -46,7 +45,6 @@ const ERROR_STATUS: Record<CloudErrorCode, number> = {
   otp_invalid: 400,
   payload_too_large: 413,
   invalid_envelope: 422,
-  formula_assets_not_publishable: 422,
   quota_exceeded: 422,
   revision_conflict: 409,
   idempotency_conflict: 409,
@@ -90,10 +88,6 @@ const ERROR_MESSAGES: Record<CloudErrorCode, { en: string; zh: string }> = {
   invalid_envelope: {
     en: 'The artwork data is not valid.',
     zh: '作品数据无效。',
-  },
-  formula_assets_not_publishable: {
-    en: 'Artworks carrying portable formula source cannot be published.',
-    zh: '携带便携公式源码的作品不能发布。',
   },
   quota_exceeded: {
     en: 'A cloud quota was reached.',

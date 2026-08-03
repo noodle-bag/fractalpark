@@ -13,12 +13,15 @@ import { useTranslations } from 'next-intl';
 
 import {
   CloudClientError,
+  getDraft,
   getProfile,
   publishDraft,
   setDisplayName,
   type CloudDraftSummary,
 } from '@/lib/cloud/client';
 import { RIGHTS_ATTESTATION_VERSION } from '@/lib/cloud/attestation';
+import { MIT_LICENSE_URL } from '@/lib/mit-license';
+import { readFractalDocumentEnvelope } from '@/engine/document-envelope';
 import { Button } from '@/components/ui/button';
 import {
   Dialog,
@@ -46,6 +49,9 @@ export function PublishDialog({ draft, onClose, onPublished }: PublishDialogProp
   const [attested, setAttested] = useState(false);
   const [pending, setPending] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  // True when the draft carries a portable formula asset: publishing then
+  // freezes under MIT and the FRM source becomes public (spec §17.2).
+  const [hasFormula, setHasFormula] = useState(false);
 
   // Reset and probe the profile whenever a new draft is targeted.
   useEffect(() => {
@@ -55,6 +61,7 @@ export function PublishDialog({ draft, onClose, onPublished }: PublishDialogProp
     setAttested(false);
     setError(null);
     setPending(false);
+    setHasFormula(false);
     getProfile()
       .then((profile) => {
         const existing = profile.displayName ?? '';
@@ -65,6 +72,14 @@ export function PublishDialog({ draft, onClose, onPublished }: PublishDialogProp
         setName('');
         setNeedsName(true);
       });
+    getDraft(draft.id)
+      .then((detail) => {
+        const read = readFractalDocumentEnvelope(detail.envelope);
+        setHasFormula(
+          read.mode === 'editable' && (read.envelope.assets?.formulas?.length ?? 0) > 0,
+        );
+      })
+      .catch(() => setHasFormula(false));
   }, [draft]);
 
   const submit = useCallback(async () => {
@@ -94,8 +109,8 @@ export function PublishDialog({ draft, onClose, onPublished }: PublishDialogProp
     switch (code) {
       case 'rate_limited':
         return t('errors.rateLimited');
-      case 'formula_assets_not_publishable':
-        return t('errors.formulaAssets');
+      case 'formula_compile_failed':
+        return t('errors.formulaCompile');
       case 'revision_conflict':
         return t('errors.revisionConflict');
       case 'validation_failed':
@@ -148,6 +163,20 @@ export function PublishDialog({ draft, onClose, onPublished }: PublishDialogProp
               className="w-full rounded-md border border-input bg-transparent px-3 py-2 text-sm shadow-xs outline-none transition-[color,box-shadow] focus-visible:border-ring focus-visible:ring-[3px] focus-visible:ring-ring/50"
             />
           </div>
+          {hasFormula && (
+            <div className="rounded-md border border-amber-500/40 bg-amber-500/10 p-3 text-xs leading-relaxed">
+              <p className="font-medium">{t('formulaNoticeTitle')}</p>
+              <p className="mt-1">{t('formulaNoticeBody')}</p>
+              <a
+                href={MIT_LICENSE_URL}
+                target="_blank"
+                rel="noreferrer"
+                className="mt-1 inline-block underline"
+              >
+                {t('formulaNoticeLink')}
+              </a>
+            </div>
+          )}
           <label className="flex items-start gap-2 text-sm">
             <input
               type="checkbox"

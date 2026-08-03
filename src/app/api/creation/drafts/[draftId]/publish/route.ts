@@ -3,11 +3,13 @@
  * publication from a stated draft revision (spec §4.3, §10.2).
  *
  * The server re-reads the draft, re-validates its envelope against the
- * cloud profile (rejecting portable formula source as
- * `formula_assets_not_publishable`), canonicalizes it, and hands the whole
+ * cloud profile, canonicalizes it, and hands the whole
  * write to a single-transaction owner RPC: idempotency, display-name
  * requirement, revision check, publish quota, publication insert, source
  * draft deletion, and thumbnail cleanup job all commit or fail together.
+ * Drafts carrying a portable formula asset pass through the §17.2 gate
+ * (single asset, hash match, compiles, no builtin conflict) and freeze
+ * under MIT with a public source download.
  */
 
 import {
@@ -20,8 +22,13 @@ import {
 } from '@/lib/cloud/api';
 import { DraftServiceError, getDraft } from '@/lib/cloud/drafts';
 import { validateCloudEnvelopeV1 } from '@/lib/cloud/envelope';
+import {
+  FORMULA_PUBLICATION_LICENSE,
+  findPublishReplay,
+  publishDraft,
+} from '@/lib/cloud/publications';
+import { validateFormulaPublication } from '@/lib/cloud/formula-publish';
 import { runArtworkBackup } from '@/lib/cloud/backup';
-import { findPublishReplay, publishDraft } from '@/lib/cloud/publications';
 import { resolveRequestSession } from '@/lib/cloud/request-session';
 
 export const runtime = 'nodejs';
@@ -106,8 +113,19 @@ export async function POST(
     const envelopeBytes = Buffer.byteLength(JSON.stringify(draft.envelope ?? null), 'utf8');
     const verdict = validateCloudEnvelopeV1(draft.envelope, envelopeBytes);
     if (!verdict.ok) throw new CloudApiError('invalid_envelope');
+
+    // Formula publications (spec §17.2): the portable source must pass the
+    // full server-side gate; the publication then freezes under MIT and the
+    // source becomes publicly downloadable. Anything else stays CC-BY-4.0.
+    let license: string | undefined;
     if (verdict.value.hasPortableFormulas) {
-      throw new CloudApiError('formula_assets_not_publishable');
+      const formulaVerdict = validateFormulaPublication(
+        JSON.parse(verdict.value.canonicalJson),
+      );
+      if (!formulaVerdict.ok) {
+        throw new CloudApiError(formulaVerdict.code as 'invalid_envelope');
+      }
+      license = FORMULA_PUBLICATION_LICENSE;
     }
 
     const result = await publishDraft(session.userId, {
@@ -118,6 +136,7 @@ export async function POST(
       canonicalEnvelope: JSON.parse(verdict.value.canonicalJson),
       configBytes: verdict.value.configBytes,
       attestationVersion: parsed.attestationVersion,
+      ...(license ? { license } : {}),
       idempotencyKey,
     });
     // Backup email fires only on a fresh publish, never on a replay.
