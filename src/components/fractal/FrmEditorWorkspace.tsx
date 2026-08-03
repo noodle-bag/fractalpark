@@ -28,7 +28,7 @@ import {
   useCloudFormulaLibrary,
   type FormulaMutationResult,
 } from '@/hooks/useCloudFormulaLibrary';
-import { MAX_CUSTOM_FORMULAS } from '@/lib/custom-formula-storage';
+import { MAX_CUSTOM_FORMULAS } from '@/lib/formula-resolver';
 import {
   createFrmDownload,
   editorToExploreHref,

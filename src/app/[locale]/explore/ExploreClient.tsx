@@ -29,7 +29,7 @@ import type { PluginParamRecord, PluginParamValue } from '@/engine/types';
 import {
   CUSTOM_FORMULAS_CHANGED_EVENT,
   readEffectiveFormulaAssets,
-} from '@/lib/custom-formula-storage';
+} from '@/lib/formula-resolver';
 import { captureThumbnail } from '@/lib/capture-thumbnail';
 import { readFractalDocumentEnvelope } from '@/engine/document-envelope';
 import { consumeRemixHandoff } from '@/lib/remix-handoff';

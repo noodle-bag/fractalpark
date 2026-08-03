@@ -14,8 +14,8 @@ import {
 import { captureThumbnail } from '@/lib/capture-thumbnail';
 import {
   readEffectiveFormulaAssets,
-} from '@/lib/custom-formula-storage';
-import { resolveCustomFormula } from '@/lib/formula-resolver';
+  resolveCustomFormula,
+} from '@/lib/formula-resolver';
 import { exportFractal } from '@/lib/export-fractal';
 import {
   FRACTAL_PROJECT_FILE_MAX_BYTES,

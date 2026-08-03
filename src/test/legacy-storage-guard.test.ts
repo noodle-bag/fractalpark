@@ -8,7 +8,11 @@ import { describe, expect, it } from 'vitest';
  * them (probes, migration notes) — app code may not.
  */
 
-const FORBIDDEN_KEYS = ['fractalpark-artworks-v1', 'myfrac-saved-fractals'];
+const FORBIDDEN_KEYS = [
+  'fractalpark-artworks-v1',
+  'myfrac-saved-fractals',
+  'myfrac-custom-formulas',
+];
 
 function collectSourceFiles(dir: string, out: string[] = []): string[] {
   for (const entry of readdirSync(dir)) {

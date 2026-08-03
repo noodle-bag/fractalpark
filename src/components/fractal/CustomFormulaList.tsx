@@ -35,7 +35,7 @@ import type { FormulaPlugin } from '@/engine/plugins/types';
 import type { FormulaExperienceHint } from '@/engine/frm/authoring';
 import { CUSTOM_FORMULA_EXAMPLES } from '@/engine/frm/example-library';
 import type { ViewBounds } from '@/engine/types';
-import { MAX_CUSTOM_FORMULAS } from '@/lib/custom-formula-storage';
+import { MAX_CUSTOM_FORMULAS } from '@/lib/formula-resolver';
 import type { CloudCustomFormulaSummary } from '@/lib/cloud/client';
 
 interface CustomFormulaListProps {
@@ -68,7 +68,6 @@ export function CustomFormulaList({ currentBounds, onSelectFormula }: CustomForm
   const [busyId, setBusyId] = useState<string | null>(null);
 
   const authenticated = session.status === 'authenticated';
-  const canAddMore = authenticated && formulas.length < MAX_CUSTOM_FORMULAS;
 
   const localizeError = (result: FormulaMutationResult): string => {
     switch (result.code) {
@@ -223,7 +222,7 @@ export function CustomFormulaList({ currentBounds, onSelectFormula }: CustomForm
           {authenticated && (
             <Badge variant="secondary">{formulas.length}/{MAX_CUSTOM_FORMULAS}</Badge>
           )}
-          {canAddMore && (
+          {session.status !== 'unavailable' && (
             <Button size="sm" onClick={openBlankEditor}>
               <Plus className="w-4 h-4 mr-1" />
               {customT('new')}
@@ -280,12 +279,10 @@ export function CustomFormulaList({ currentBounds, onSelectFormula }: CustomForm
           <div className="text-center py-8">
             <Code className="w-12 h-12 mx-auto mb-4 text-muted-foreground" />
             <p className="text-muted-foreground mb-4">{customT('empty')}</p>
-            {canAddMore && (
-              <Button onClick={openBlankEditor}>
-                <Plus className="w-4 h-4 mr-2" />
-                {customT('createFirst')}
-              </Button>
-            )}
+            <Button onClick={openBlankEditor}>
+              <Plus className="w-4 h-4 mr-2" />
+              {customT('createFirst')}
+            </Button>
           </div>
         ) : (
           <div className="space-y-2">
@@ -377,7 +374,7 @@ export function CustomFormulaList({ currentBounds, onSelectFormula }: CustomForm
           </div>
         )}
 
-        {authenticated && !canAddMore && (
+        {authenticated && formulas.length >= MAX_CUSTOM_FORMULAS && (
           <p className="text-sm text-muted-foreground mt-4 text-center">
             {customT('maxReached', { count: MAX_CUSTOM_FORMULAS })}
           </p>
