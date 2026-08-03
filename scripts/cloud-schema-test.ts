@@ -1760,6 +1760,52 @@ async function main(): Promise<void> {
     assert(authSave.status !== 200, `second anon-key save denied: ${authSave.status}`);
   });
 
+  await test('custom_formula_save: route seam — pre-generated id with null revision creates', async () => {
+    // Guards the route→RPC contract (review B1): create must not require a
+    // null p_formula_id; the pre-generated id becomes the row id.
+    const key = crypto.randomUUID();
+    const preId = crypto.randomUUID();
+    const res = await rpc(keys, 'fractalpark_custom_formula_save', keys.serviceKey, {
+      p_owner_id: CF_OWNER_A,
+      p_idempotency_key: key,
+      p_request_hash: `hash-${key}`,
+      p_name: 'seam',
+      p_source: 'z',
+      p_formula_id: preId,
+      p_expected_revision: null,
+    });
+    const body = await res.text();
+    assert(res.status === 200, `seam create: ${res.status} ${body}`);
+    const created = JSON.parse(body) as { replayed: boolean; formula: { id: string; revision: number } };
+    assert(created.replayed === false && created.formula.id === preId && created.formula.revision === 1,
+      `pre-id create: ${body}`);
+    psql(`delete from public.custom_formulas where id = '${preId}'`);
+    psql(`delete from public.artwork_operations where owner_id = '${CF_OWNER_A}' and idempotency_key = '${key}'`);
+  });
+
+  await test('custom formula read path: owner filter yields nothing for a foreign id', async () => {
+    const key = crypto.randomUUID();
+    const createRes = await rpc(keys, 'fractalpark_custom_formula_save', keys.serviceKey, {
+      p_owner_id: CF_OWNER_A,
+      p_idempotency_key: key,
+      p_request_hash: `hash-${key}`,
+      p_name: 'read-isolation',
+      p_source: 'z',
+    });
+    const created = JSON.parse(await createRes.text()) as { formula: { id: string } };
+    // The data layer reads with service key + explicit owner filter; a
+    // foreign owner filter must return zero rows (the API then maps 404).
+    const foreign = await rest(
+      keys,
+      `/rest/v1/custom_formulas?select=id&id=eq.${created.formula.id}&owner_id=eq.${CF_OWNER_B}`,
+      keys.serviceKey,
+    );
+    const rows = (await foreign.json()) as unknown[];
+    assert(foreign.status === 200 && rows.length === 0, `foreign read must be empty: ${foreign.status}`);
+    psql(`delete from public.custom_formulas where id = '${created.formula.id}'`);
+    psql(`delete from public.artwork_operations where owner_id = '${CF_OWNER_A}' and idempotency_key = '${key}'`);
+  });
+
   await test('account deletion confirm purges custom formulas and reports the count', async () => {
     const stepRes = await rpc(keys, 'fractalpark_account_deletion_step_up', keys.serviceKey, {
       p_owner_id: CF_OWNER_A,

@@ -180,7 +180,11 @@ describe('custom formula routes', () => {
     const body = (await res.json()) as { formulaId: string; revision: number };
     expect(body.revision).toBe(1);
     const rpcCall = fetchCalls.find((c) => c.url.includes('rpc/fractalpark_custom_formula_save'));
+    // Seam contract (review B1): create is signaled by null expected
+    // revision and MAY carry the pre-generated id; the RPC accepts both.
     expect(rpcCall?.body).toContain('"p_expected_revision":null');
+    const rpcArgs = JSON.parse(rpcCall?.body ?? '{}') as { p_formula_id?: string };
+    expect(rpcArgs.p_formula_id).toMatch(/^[0-9a-f-]{36}$/);
   });
 
   it('POST rejects uncompilable source with formula_compile_failed and never calls the RPC', async () => {
@@ -265,12 +269,24 @@ describe('custom formula routes', () => {
       authedRequest(`https://fractalpark.test/api/creation/custom-formulas/${FORMULA_ID}`, {
         method: 'DELETE',
         headers: { 'idempotency-key': IDEMPOTENCY_KEY },
+        body: { expectedRevision: 1 },
       }),
       detailContext(),
     );
     expect(res.status).toBe(204);
     const rpcCall = fetchCalls.find((c) => c.url.includes('rpc/fractalpark_custom_formula_delete'));
-    expect(rpcCall).toBeDefined();
+    expect(rpcCall?.body).toContain('"p_expected_revision":1');
+  });
+
+  it('DELETE requires expectedRevision', async () => {
+    const res = await formulaDELETE(
+      authedRequest(`https://fractalpark.test/api/creation/custom-formulas/${FORMULA_ID}`, {
+        method: 'DELETE',
+        headers: { 'idempotency-key': IDEMPOTENCY_KEY },
+      }),
+      detailContext(),
+    );
+    expect(res.status).toBe(400);
   });
 
   it('DELETE maps not_found to 404', async () => {
@@ -284,6 +300,7 @@ describe('custom formula routes', () => {
       authedRequest(`https://fractalpark.test/api/creation/custom-formulas/${FORMULA_ID}`, {
         method: 'DELETE',
         headers: { 'idempotency-key': IDEMPOTENCY_KEY },
+        body: { expectedRevision: 1 },
       }),
       detailContext(),
     );

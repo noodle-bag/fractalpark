@@ -124,22 +124,17 @@ export async function DELETE(request: Request, context: RouteContext): Promise<R
     const { session, rotatedSetCookie } = await resolveRequestSession(request);
     const idempotencyKey = requireIdempotencyKey(request);
 
-    let expectedRevision: number | null = null;
-    const contentLength = Number(request.headers.get('content-length') ?? '0');
-    if (contentLength > 0) {
-      let body: Record<string, unknown>;
-      try {
-        body = (await request.json()) as Record<string, unknown>;
-      } catch {
-        throw new CloudApiError('validation_failed');
-      }
-      const value = body?.expectedRevision;
-      if (value !== undefined && value !== null) {
-        if (!Number.isInteger(value) || (value as number) < 1) {
-          throw new CloudApiError('validation_failed');
-        }
-        expectedRevision = value as number;
-      }
+    // Symmetric with the update contract: a stale delete is a client bug,
+    // and the expected revision makes it visible instead of silent.
+    let body: Record<string, unknown>;
+    try {
+      body = (await request.json()) as Record<string, unknown>;
+    } catch {
+      throw new CloudApiError('validation_failed');
+    }
+    const expectedRevision = body?.expectedRevision;
+    if (!Number.isInteger(expectedRevision) || (expectedRevision as number) < 1) {
+      throw new CloudApiError('validation_failed');
     }
 
     const requestHash = formulaRequestHash({
@@ -152,7 +147,7 @@ export async function DELETE(request: Request, context: RouteContext): Promise<R
       await deleteCustomFormula({
         ownerId: session.userId,
         formulaId,
-        expectedRevision,
+        expectedRevision: expectedRevision as number,
         idempotencyKey,
         requestHash,
       });

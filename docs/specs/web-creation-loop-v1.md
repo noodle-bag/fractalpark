@@ -182,10 +182,11 @@ Six tables and two storage buckets carry the cloud state.
 | `id` | Server-generated UUID |
 | `idempotency_key` | Client UUID per logical write; scoped per owner |
 | `owner_id` | Set by the server session; nulled when the auth user is finally removed |
-| `operation_type` | `save_draft \| publish_draft \| delete_draft \| withdraw_publication \| delete_account` |
+| `operation_type` | `save_draft \| publish_draft \| delete_draft \| withdraw_publication \| delete_account \| save_custom_formula \| delete_custom_formula` (last two added in v0.4.16) |
 | `request_hash` | Server digest of the operation's key parameters |
 | `status` | `processing \| succeeded \| failed` |
 | `draft_id` / `publication_id` | Nullable operation target or result |
+| `formula_id` | Nullable custom-formula operation target or result (v0.4.16; set null when the formula row is deleted) |
 | `result_revision` | Nullable draft revision after a successful save |
 | `error_code` | Nullable, stable, non-sensitive product error code |
 | `backup_email_status` | `not_requested \| pending \| sent \| failed \| unknown \| skipped_rate_limit` |
