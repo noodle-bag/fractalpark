@@ -25,6 +25,7 @@ function toApiError(error: unknown): CloudApiError {
     switch (error.code) {
       case 'not_found':
       case 'idempotency_conflict':
+      case 'account_deleting':
         return new CloudApiError(error.code as 'not_found');
       default:
         return new CloudApiError('unavailable');

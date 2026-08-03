@@ -28,7 +28,8 @@ export type RateLimitPolicyKey =
   | 'otp_ip_hour'
   | 'draft_save_5s'
   | 'publish_user_day'
-  | 'backup_user_day';
+  | 'backup_user_day'
+  | 'account_delete_day';
 
 export interface RateLimitOutcome {
   allowed: boolean;

@@ -68,6 +68,8 @@ function mapRpcError(raw: string): DraftServiceError {
       return new DraftServiceError('revision_conflict');
     case 'not_found':
       return new DraftServiceError('not_found');
+    case 'account_deleting':
+      return new DraftServiceError('account_deleting');
     case 'validation_failed':
       return new DraftServiceError('validation_failed');
     case 'rate_limited': {

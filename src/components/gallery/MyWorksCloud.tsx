@@ -15,6 +15,7 @@ import { CloudUpload, LogOut, RefreshCw, Trash2 } from 'lucide-react';
 
 import { useCloudSession } from '@/components/cloud/CloudSessionProvider';
 import { useArtworks } from '@/hooks/useArtworks';
+import AccountDeletion from '@/components/gallery/AccountDeletion';
 import {
   CloudClientError,
   getProfile,
@@ -441,6 +442,8 @@ export function MyWorksCloud() {
           </ul>
         </div>
       )}
+
+      <AccountDeletion />
     </section>
   );
 }

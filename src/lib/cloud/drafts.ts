@@ -74,6 +74,8 @@ function mapRpcError(raw: string): DraftServiceError {
       return new DraftServiceError('revision_conflict');
     case 'not_found':
       return new DraftServiceError('not_found');
+    case 'account_deleting':
+      return new DraftServiceError('account_deleting');
     default:
       // Unknown RPC failures are our bug, never the client's; do not keep
       // the raw message (future-proof against accidental leakage).
@@ -373,6 +375,7 @@ export function toDraftApiError(error: unknown): CloudApiError {
       case 'idempotency_conflict':
       case 'quota_exceeded':
       case 'revision_conflict':
+      case 'account_deleting':
         return new CloudApiError(error.code as 'not_found');
       default:
         return new CloudApiError('unavailable');

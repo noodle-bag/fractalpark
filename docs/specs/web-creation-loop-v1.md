@@ -189,6 +189,7 @@ Six tables and two storage buckets carry the cloud state.
 | `error_code` | Nullable, stable, non-sensitive product error code |
 | `backup_email_status` | `not_requested \| pending \| sent \| failed \| unknown \| skipped_rate_limit` |
 | `email_attempts` / `email_sent_at` | Attempt count and confirmed send time |
+| `deletion_stage` | Null except `delete_account`: `stepped_up` (proof issued, 10-minute window, single use) or `locked` (proof consumed; ordinary owner RPCs reject until cleanup finishes) |
 | `created_at` / `updated_at` | Lifecycle timestamps |
 
 - Operations never store envelopes, email addresses, attachments, SMTP
@@ -202,7 +203,7 @@ Six tables and two storage buckets carry the cloud state.
 
 | Field | Contract |
 |---|---|
-| `policy_key` | `otp_email_minute \| otp_email_hour \| otp_ip_hour \| draft_save_5s \| publish_user_day \| backup_user_day` |
+| `policy_key` | `otp_email_minute \| otp_email_hour \| otp_ip_hour \| draft_save_5s \| publish_user_day \| backup_user_day \| account_delete_day` |
 | `subject_hash` | Irreversible server-HMAC key over email, IP, user ID, or draft ID |
 | `window_started_at` | Current window start |
 | `count` | Consumed count in the current window |
@@ -283,6 +284,8 @@ FractalPark Route Handlers.
 | GET | `/api/creation/publications/[publicationId]` | Published detail, download, and remix input |
 | POST | `/api/creation/publications/[publicationId]/withdraw` | Permanent owner withdrawal |
 | POST | `/api/creation/account/delete` | Start idempotent account deletion after step-up OTP |
+| POST | `/api/creation/account/delete/request` | Send the fresh step-up OTP to the account email |
+| POST | `/api/creation/account/delete/verify` | Verify the step-up OTP and issue the single-use proof |
 
 ### 5.1 General request contract
 
@@ -506,6 +509,22 @@ only writer of `hidden_at`/`moderation_reason`. Operator procedure lives in
   cleanup must succeed before the auth user is physically removed. During
   cleanup the account can neither log in nor write, and the flow is
   idempotently retryable.
+
+  The implemented mechanism: `artwork_operations.deletion_stage` carries
+  `stepped_up` (proof, 10-minute window, single use) and `locked` (active
+  deletion). `fractalpark_operation_gate` — the choke point every ordinary
+  owner RPC already calls — raises `account_deleting` while a locked
+  deletion exists. OTP requests for the account email are silently refused
+  (generic response; the account state stays private). Session revocation
+  is the provider's global logout (every refresh token dies); an unexpired
+  sealed access cookie on another device is a bounded zombie — it cannot
+  write (the gate rejects with `account_deleting`) and its reads return
+  only what the confirm transaction left behind — nothing — until the
+  short access-token TTL expires. The cleanup worker
+  (`scripts/cleanup-worker.ts`) drains thumbnail jobs first, then removes
+  the auth user and calls `fractalpark_account_deletion_finalize`, which
+  closes the operation and purges older operations while keeping the
+  audit row.
 - All writes go through the FractalPark API; RLS is the second enforcement
   boundary.
 

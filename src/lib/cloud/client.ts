@@ -23,6 +23,8 @@ export type CloudClientErrorCode =
   | 'otp_invalid'
   | 'payload_too_large'
   | 'formula_assets_not_publishable'
+  | 'account_deleting'
+  | 'step_up_expired'
   | 'unavailable';
 
 export class CloudClientError extends Error {
@@ -234,11 +236,42 @@ export async function setDisplayName(displayName: string): Promise<Profile> {
 }
 
 export async function setBackupEmailMode(
-  backupEmailMode: Profile['backupEmailMode'],
+  mode: Profile['backupEmailMode'],
 ): Promise<Profile> {
   return call('/api/creation/profile', {
     method: 'PATCH',
-    body: JSON.stringify({ backupEmailMode }),
+    body: JSON.stringify({ backupEmailMode: mode }),
+  });
+}
+
+export interface DeletionProof {
+  operationId: string;
+  deletionStage: string;
+  expiresAt: string;
+}
+
+export function requestAccountDeletionOtp(): Promise<{ ok?: boolean }> {
+  return call('/api/creation/account/delete/request', { method: 'POST', body: '{}' });
+}
+
+export function verifyAccountDeletion(code: string): Promise<DeletionProof> {
+  return call('/api/creation/account/delete/verify', {
+    method: 'POST',
+    body: JSON.stringify({ code }),
+  });
+}
+
+export interface DeletionResult {
+  status: string;
+  draftsDeleted: number;
+  publicationsWithdrawn: number;
+}
+
+export function deleteAccount(operationId: string, confirmEmail: string): Promise<DeletionResult> {
+  return call('/api/creation/account/delete', {
+    method: 'POST',
+    headers: { 'idempotency-key': crypto.randomUUID() },
+    body: JSON.stringify({ operationId, confirmEmail }),
   });
 }
 

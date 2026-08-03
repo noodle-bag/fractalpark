@@ -17,7 +17,8 @@ import {
   toErrorResponse,
 } from '@/lib/cloud/api';
 import { consumeRateLimit, extractClientIp } from '@/lib/cloud/rate-limit';
-import { AuthProviderError, requestEmailOtp } from '@/lib/cloud/supabase-auth';
+import { hasActiveDeletion } from '@/lib/cloud/account-deletion';
+import { adminFindUserIdByEmail, AuthProviderError, requestEmailOtp } from '@/lib/cloud/supabase-auth';
 
 export const runtime = 'nodejs';
 export const dynamic = 'force-dynamic';
@@ -46,6 +47,14 @@ export async function POST(request: Request): Promise<Response> {
     const hour = await consumeRateLimit('otp_email_hour', `email:${email}`, 5, 3600);
     if (!hour.allowed) {
       throw new CloudApiError('rate_limited', hour.retryAfter);
+    }
+
+    // Accounts being deleted must not receive new codes. The response
+    // stays generic — sending nothing while answering 200 keeps the
+    // account state private (spec 10.2 + this route's privacy contract).
+    const existingUserId = await adminFindUserIdByEmail(email);
+    if (existingUserId && (await hasActiveDeletion(existingUserId))) {
+      return jsonOk(request, { ok: true });
     }
 
     await requestEmailOtp(email);

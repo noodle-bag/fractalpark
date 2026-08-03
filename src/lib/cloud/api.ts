@@ -30,6 +30,8 @@ export type CloudErrorCode =
   | 'quota_exceeded'
   | 'revision_conflict'
   | 'idempotency_conflict'
+  | 'account_deleting'
+  | 'step_up_expired'
   | 'rate_limited'
   | 'unavailable';
 
@@ -46,6 +48,8 @@ const ERROR_STATUS: Record<CloudErrorCode, number> = {
   quota_exceeded: 422,
   revision_conflict: 409,
   idempotency_conflict: 409,
+  account_deleting: 409,
+  step_up_expired: 410,
   rate_limited: 429,
   unavailable: 503,
 };
@@ -106,6 +110,14 @@ const ERROR_MESSAGES: Record<CloudErrorCode, { en: string; zh: string }> = {
   unavailable: {
     en: 'A dependency is unavailable. Safe to retry later.',
     zh: '依赖服务暂不可用，稍后重试即可。',
+  },
+  account_deleting: {
+    en: 'Account deletion is in progress. This account can no longer write or sign in.',
+    zh: '账号删除正在进行中。该账号已无法写入或登录。',
+  },
+  step_up_expired: {
+    en: 'The confirmation code session expired. Request a new code to continue.',
+    zh: '验证码会话已过期，请重新获取验证码。',
   },
 };
 

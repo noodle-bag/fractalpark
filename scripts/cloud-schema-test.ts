@@ -1278,6 +1278,184 @@ async function main(): Promise<void> {
     assert(status === 'published', 'anon attempt changed nothing');
   });
 
+  await test('account deletion: step-up proof, idempotent replay, expiry renewal', async () => {
+    const key = crypto.randomUUID();
+    const step = await rpc(keys, 'fractalpark_account_deletion_step_up', keys.serviceKey, {
+      p_owner_id: RPC_OWNER_A,
+      p_proof_key: key,
+    });
+    const proof = JSON.parse(await step.text()) as { operation_id: string; deletion_stage: string };
+    assert(step.status === 200 && proof.deletion_stage === 'stepped_up', `step-up: ${step.status}`);
+
+    const again = await rpc(keys, 'fractalpark_account_deletion_step_up', keys.serviceKey, {
+      p_owner_id: RPC_OWNER_A,
+      p_proof_key: crypto.randomUUID(),
+    });
+    const againBody = JSON.parse(await again.text()) as { operation_id: string; replayed?: boolean };
+    assert(
+      again.status === 200 && againBody.replayed === true && againBody.operation_id === proof.operation_id,
+      'step-up replay returns the same proof',
+    );
+
+    // Age the proof by using a zero window: step-up retires it and issues fresh.
+    const renewed = await rpc(keys, 'fractalpark_account_deletion_step_up', keys.serviceKey, {
+      p_owner_id: RPC_OWNER_A,
+      p_proof_key: crypto.randomUUID(),
+      p_window: '0 seconds',
+    });
+    const renewedBody = JSON.parse(await renewed.text()) as { operation_id: string; replayed?: boolean };
+    assert(
+      renewed.status === 200 && !renewedBody.replayed && renewedBody.operation_id !== proof.operation_id,
+      'expired proof retired, fresh proof issued',
+    );
+    const retired = psql(`select status || '|' || error_code from public.artwork_operations where id = '${proof.operation_id}'`);
+    assert(retired === 'failed|step_up_expired', `retired proof: ${retired}`);
+    // Clean up the fresh proof so later batteries start clean.
+    psql(`delete from public.artwork_operations where id = '${renewedBody.operation_id}'`);
+  });
+
+  await test('account deletion: confirm locks, blocks RPCs, purges facts, registers jobs; replay safe', async () => {
+    // Seed: one draft with thumbnail, one published work, a profile.
+    const draft = await makeDraft('doomed draft');
+    psql(
+      `update public.artwork_drafts set thumbnail_path = 'draft-thumbs/${draft.id}.webp', revision = revision + 1 where id = '${draft.id}'`,
+    );
+    const pubDraft = await makeDraft('doomed publication');
+    const pubRes = await publish(pubDraft.id, pubDraft.revision);
+    const pub = JSON.parse(await pubRes.text()) as { publication_id: string };
+    psql(`update public.artwork_publications set thumbnail_path = 'pub-thumbs/${pub.publication_id}.webp' where id = '${pub.publication_id}'`);
+    psql(`insert into public.profiles (user_id, display_name) values ('${PUB_OWNER}', 'Doomed User') on conflict (user_id) do nothing`);
+
+    const step = await rpc(keys, 'fractalpark_account_deletion_step_up', keys.serviceKey, {
+      p_owner_id: PUB_OWNER,
+      p_proof_key: crypto.randomUUID(),
+    });
+    const proof = JSON.parse(await step.text()) as { operation_id: string };
+
+    const confirm = await rpc(keys, 'fractalpark_account_deletion_confirm', keys.serviceKey, {
+      p_owner_id: PUB_OWNER,
+      p_operation_id: proof.operation_id,
+    });
+    const result = JSON.parse(await confirm.text()) as {
+      status: string;
+      drafts_deleted: number;
+      publications_withdrawn: number;
+    };
+    assert(confirm.status === 200 && result.status === 'deleting', `confirm: ${confirm.status}`);
+    assert(result.drafts_deleted >= 1 && result.publications_withdrawn >= 1, `counts: ${JSON.stringify(result)}`);
+
+    const stage = psql(`select deletion_stage from public.artwork_operations where id = '${proof.operation_id}'`);
+    assert(stage === 'locked', `stage: ${stage}`);
+    const drafts = psql(`select count(*) from public.artwork_drafts where owner_id = '${PUB_OWNER}'`);
+    assert(drafts === '0', 'drafts gone');
+    const pubRow = psql(
+      `select status || '|' || coalesce(envelope::text, 'null') from public.artwork_publications where id = '${pub.publication_id}'`,
+    );
+    assert(pubRow === 'withdrawn|null', `publication tombstone: ${pubRow}`);
+    const profile = psql(`select count(*) from public.profiles where user_id = '${PUB_OWNER}'`);
+    assert(profile === '0', 'profile gone');
+    const jobs = psql(
+      `select count(*) filter (where resource_type = 'auth_user') || '|' ||
+              count(*) filter (where resource_type = 'draft_thumbnail') || '|' ||
+              (count(*) filter (where resource_type = 'publication_thumbnail') >= 1)
+       from public.resource_cleanup_jobs where operation_id = '${proof.operation_id}'`,
+    );
+    assert(jobs === '1|1|true', `cleanup jobs: ${jobs}`);
+
+    // Ordinary RPCs are rejected while the deletion is locked.
+    const blocked = await rpc(keys, 'fractalpark_draft_create', keys.serviceKey, {
+      p_owner_id: PUB_OWNER,
+      p_idempotency_key: crypto.randomUUID(),
+      p_request_hash: 'hash-blocked',
+      p_title: 'blocked',
+      p_envelope: { envelopeVersion: 1 },
+      p_thumbnail_path: null,
+      p_config_bytes: 1,
+      p_thumbnail_bytes: 0,
+    });
+    const blockedBody = await blocked.text();
+    assert(blocked.status !== 200 && blockedBody.includes('account_deleting'), `gate blocks: ${blocked.status}`);
+
+    // Confirm replay is a no-op (no duplicate auth_user job).
+    const replay = await rpc(keys, 'fractalpark_account_deletion_confirm', keys.serviceKey, {
+      p_owner_id: PUB_OWNER,
+      p_operation_id: proof.operation_id,
+    });
+    const replayBody = JSON.parse(await replay.text()) as { replayed?: boolean };
+    assert(replay.status === 200 && replayBody.replayed === true, `confirm replay: ${replay.status}`);
+    const authJobs = psql(
+      `select count(*) from public.resource_cleanup_jobs where operation_id = '${proof.operation_id}' and resource_type = 'auth_user'`,
+    );
+    assert(authJobs === '1', 'no duplicate auth_user job');
+
+    // Expired proof cannot confirm.
+    const step2 = await rpc(keys, 'fractalpark_account_deletion_step_up', keys.serviceKey, {
+      p_owner_id: RPC_OWNER_B,
+      p_proof_key: crypto.randomUUID(),
+    });
+    const proof2 = JSON.parse(await step2.text()) as { operation_id: string };
+    const expired = await rpc(keys, 'fractalpark_account_deletion_confirm', keys.serviceKey, {
+      p_owner_id: RPC_OWNER_B,
+      p_operation_id: proof2.operation_id,
+      p_window: '0 seconds',
+    });
+    const expiredBody = await expired.text();
+    assert(expired.status !== 200 && expiredBody.includes('step_up_expired'), `expired confirm: ${expired.status}`);
+    psql(`delete from public.artwork_operations where id = '${proof2.operation_id}'`);
+  });
+
+  await test('account deletion finalize: closes op, purges older ops, keeps audit row, idempotent', async () => {
+    const step = await rpc(keys, 'fractalpark_account_deletion_step_up', keys.serviceKey, {
+      p_owner_id: PUB_OWNER,
+      p_proof_key: crypto.randomUUID(),
+    });
+    // PUB_OWNER still has a locked op from the previous battery: step-up replays it.
+    const proof = JSON.parse(await step.text()) as { operation_id: string; deletion_stage: string };
+    assert(proof.deletion_stage === 'locked', `still locked: ${proof.deletion_stage}`);
+
+    const fin = await rpc(keys, 'fractalpark_account_deletion_finalize', keys.serviceKey, {
+      p_owner_id: PUB_OWNER,
+      p_operation_id: proof.operation_id,
+    });
+    const finBody = JSON.parse(await fin.text()) as { status: string; operations_purged: number };
+    assert(fin.status === 200 && finBody.status === 'succeeded', `finalize: ${fin.status}`);
+    assert(finBody.operations_purged >= 1, `purged: ${finBody.operations_purged}`);
+    const remaining = psql(
+      `select count(*) || '|' || string_agg(distinct operation_type, ',') from public.artwork_operations where owner_id = '${PUB_OWNER}'`,
+    );
+    assert(remaining === '1|delete_account', `audit row kept: ${remaining}`);
+
+    const finAgain = await rpc(keys, 'fractalpark_account_deletion_finalize', keys.serviceKey, {
+      p_owner_id: PUB_OWNER,
+      p_operation_id: proof.operation_id,
+    });
+    const finAgainBody = JSON.parse(await finAgain.text()) as { replayed?: boolean };
+    assert(finAgain.status === 200 && finAgainBody.replayed === true, 'finalize idempotent');
+
+    // After finalize (status=succeeded), the gate no longer blocks.
+    const unblocked = await rpc(keys, 'fractalpark_draft_create', keys.serviceKey, {
+      p_owner_id: PUB_OWNER,
+      p_idempotency_key: crypto.randomUUID(),
+      p_request_hash: 'hash-after-finalize-padding-32cc',
+      p_title: 'after',
+      p_envelope: { envelopeVersion: 1 },
+      p_thumbnail_path: null,
+      p_config_bytes: 1,
+      p_thumbnail_bytes: 0,
+    });
+    assert(unblocked.status === 200, `gate opens after finalize: ${unblocked.status}`);
+    psql(`delete from public.resource_cleanup_jobs where operation_id = '${proof.operation_id}'`);
+    psql(`delete from public.artwork_operations where id = '${proof.operation_id}'`);
+  });
+
+  await test('account deletion RPCs are not executable by anon', async () => {
+    const res = await rpc(keys, 'fractalpark_account_deletion_step_up', keys.anonKey, {
+      p_owner_id: RPC_OWNER_A,
+      p_proof_key: crypto.randomUUID(),
+    });
+    assert(res.status !== 200, `anon step-up denied: ${res.status}`);
+  });
+
   console.log(`\n${passed} passed, ${failed} failed`);
   if (failed > 0) {
     console.error('FAILURES:\n' + failures.map((f) => `  - ${f}`).join('\n'));
