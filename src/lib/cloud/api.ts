@@ -33,6 +33,8 @@ export type CloudErrorCode =
   | 'account_deleting'
   | 'step_up_expired'
   | 'rate_limited'
+  | 'formula_compile_failed'
+  | 'formula_builtin_conflict'
   | 'unavailable';
 
 const ERROR_STATUS: Record<CloudErrorCode, number> = {
@@ -51,6 +53,8 @@ const ERROR_STATUS: Record<CloudErrorCode, number> = {
   account_deleting: 409,
   step_up_expired: 410,
   rate_limited: 429,
+  formula_compile_failed: 422,
+  formula_builtin_conflict: 422,
   unavailable: 503,
 };
 
@@ -118,6 +122,14 @@ const ERROR_MESSAGES: Record<CloudErrorCode, { en: string; zh: string }> = {
   step_up_expired: {
     en: 'The confirmation code session expired. Request a new code to continue.',
     zh: '验证码会话已过期，请重新获取验证码。',
+  },
+  formula_compile_failed: {
+    en: 'The formula source could not be compiled.',
+    zh: '公式源码无法编译。',
+  },
+  formula_builtin_conflict: {
+    en: 'The formula identity conflicts with a built-in formula.',
+    zh: '公式标识与内置公式冲突。',
   },
 };
 

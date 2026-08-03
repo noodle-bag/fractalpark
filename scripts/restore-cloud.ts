@@ -168,6 +168,7 @@ async function main(): Promise<void> {
   const order = [
     'profiles',
     'artwork_drafts',
+    'custom_formulas',
     'artwork_publications',
     'artwork_operations',
     'resource_cleanup_jobs',
