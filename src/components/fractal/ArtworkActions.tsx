@@ -41,7 +41,8 @@ import {
 interface ArtworkActionsProps {
   status: ArtworkActionStatus;
   cloudPhase?: CloudSyncPhase;
-  savedCount: number;
+  /** Prefilled save-dialog name — the current draft title, or a fallback. */
+  defaultSaveName: string;
   onClearStatus: () => void;
   onSave: (name: string) => Promise<boolean>;
   onDownload: () => Promise<boolean>;
@@ -64,7 +65,7 @@ const ACTION_ICONS = {
 export function ArtworkActions({
   status,
   cloudPhase = 'idle',
-  savedCount,
+  defaultSaveName,
   onClearStatus,
   onSave,
   onDownload,
@@ -138,7 +139,7 @@ export function ArtworkActions({
             operation="save"
             status={status}
             onClick={() => {
-              setSaveName(`Fractal #${savedCount + 1}`);
+              setSaveName(defaultSaveName);
               setSaveOpen(true);
               onClearStatus();
             }}

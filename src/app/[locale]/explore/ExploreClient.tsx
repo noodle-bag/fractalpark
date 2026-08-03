@@ -31,6 +31,8 @@ import {
   readLocalFormulaAssets,
 } from '@/lib/custom-formula-storage';
 import { captureThumbnail } from '@/lib/capture-thumbnail';
+import { readFractalDocumentEnvelope } from '@/engine/document-envelope';
+import { consumeRemixHandoff } from '@/lib/remix-handoff';
 import {
   parseEditorToExploreIntent,
   stripEditorToExploreIntent,
@@ -304,6 +306,26 @@ function ExploreClient({ posterImage }: { posterImage?: string }) {
     router,
     cloudDraft.identity,
   ]);
+
+  // Anonymous remix handoff consumption (spec §17 transient): a one-shot
+  // sessionStorage envelope becomes the canvas — nothing persists until
+  // the user explicitly saves. Consumed once, deleted on read.
+  const remixParam = searchParams.get('remix');
+  const remixConsumedRef = useRef<string | null>(null);
+  useEffect(() => {
+    if (!remixParam || remixConsumedRef.current === remixParam) return;
+    remixConsumedRef.current = remixParam;
+    const handoff = consumeRemixHandoff();
+    if (!handoff) return;
+    const read = readFractalDocumentEnvelope(handoff.envelope);
+    if (read.mode !== 'editable') return;
+    for (const asset of read.envelope.assets?.formulas ?? []) {
+      resolveCustomFormula({ id: asset.id, source: asset.source });
+    }
+    cloudDraft.setPendingRemixSource({ type: 'publication', id: handoff.publicationId });
+    handleLoadDocument(read.envelope.document);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [remixParam]);
 
   // `?draft=` cloud session load: waits for the session probe, then loads
   // the draft and registers its formula assets in memory so the referenced
@@ -600,7 +622,7 @@ function ExploreClient({ posterImage }: { posterImage?: string }) {
         <ArtworkActions
           status={artworkActions.status}
           cloudPhase={artworkActions.cloudPhase}
-          savedCount={artworkActions.savedCount}
+          defaultSaveName={cloudDraft.draftTitle ?? 'Untitled'}
           onClearStatus={artworkActions.clearStatus}
           onSave={artworkActions.save}
           onDownload={artworkActions.download}

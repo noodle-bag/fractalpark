@@ -14,7 +14,7 @@ import { useLocale, useTranslations } from 'next-intl';
 import { Check, Copy, GitFork } from 'lucide-react';
 
 import { useCloudSession } from '@/components/cloud/CloudSessionProvider';
-import { useArtworks } from '@/hooks/useArtworks';
+import { stashRemixHandoff } from '@/lib/remix-handoff';
 import { CloudClientError, createDraft, getCommunityPublication } from '@/lib/cloud/client';
 import { trackEvent } from '@/components/analytics/PageViewTracker';
 
@@ -33,7 +33,6 @@ export function CommunityArtworkActions({
   const locale = useLocale();
   const router = useRouter();
   const { state, openSignIn } = useCloudSession();
-  const { saveEnvelope } = useArtworks();
   const [busy, setBusy] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [copied, setCopied] = useState(false);
@@ -44,28 +43,30 @@ export function CommunityArtworkActions({
     try {
       trackEvent('community_remix_started', { source: 'community_page' });
       const detail = await getCommunityPublication(publicationId);
-      const remixTitle = `${title} (Remix)`.slice(0, 80);
       if (state.status === 'authenticated') {
         // Server creates the draft with the frozen envelope and the
-        // verified publication provenance; it lands in My Works → Drafts.
+        // verified publication provenance; Explore opens it directly.
         const created = await createDraft({
           envelope: detail.envelope,
           remixSourceType: 'publication',
           remixSourceId: publicationId,
         });
-        void created;
-        router.push(`/${locale}/gallery?view=mine`);
+        router.push(`/${locale}/explore?draft=${encodeURIComponent(created.draftId)}`);
         return;
       }
-      // Anonymous remix: the same frozen envelope becomes a local artwork.
-      const saved = saveEnvelope(remixTitle, detail.envelope as never, '');
-      if (!saved.success) throw new CloudClientError('unavailable');
-      router.push(`/${locale}/explore?artwork=${encodeURIComponent(saved.value.id)}`);
+      // Anonymous remix (v0.4.16): a one-shot transient handoff, no local
+      // artwork entry — saving later is what creates the cloud draft.
+      stashRemixHandoff({
+        envelope: detail.envelope,
+        publicationId,
+        title: `${title} (Remix)`.slice(0, 80),
+      });
+      router.push(`/${locale}/explore?remix=${encodeURIComponent(publicationId)}`);
     } catch (value) {
       setBusy(false);
       setError(value instanceof CloudClientError ? value.code : 'unavailable');
     }
-  }, [locale, publicationId, router, saveEnvelope, state.status, title]);
+  }, [locale, publicationId, router, state.status, title]);
 
   const copyLink = useCallback(async () => {
     try {

@@ -63,6 +63,13 @@ export function useCloudDraftSession() {
   const [savePhase, setSavePhase] = useState<DraftSavePhase>('idle');
   // Latest envelope/remix facts captured at load time for conflict reloads.
   const loadedRef = useRef<LoadedDraft | null>(null);
+  // Provenance for a draft that has never been saved (anonymous transient
+  // remix): attached to the very first create, then cleared.
+  const pendingRemixSourceRef = useRef<{ type: string; id: string } | null>(null);
+
+  const setPendingRemixSource = useCallback((source: { type: string; id: string } | null) => {
+    pendingRemixSourceRef.current = source;
+  }, []);
 
   const loadDraft = useCallback(async (draftId: string): Promise<LoadedDraft | null> => {
     setLoadState('loading');
@@ -121,9 +128,12 @@ export function useCloudDraftSession() {
           const result = await createDraft({
             envelope,
             thumbnailBase64: input.thumbnail || undefined,
-            remixSourceType: loadedRef.current?.remixSource?.type,
-            remixSourceId: loadedRef.current?.remixSource?.id,
+            remixSourceType:
+              loadedRef.current?.remixSource?.type ?? pendingRemixSourceRef.current?.type,
+            remixSourceId:
+              loadedRef.current?.remixSource?.id ?? pendingRemixSourceRef.current?.id,
           });
+          pendingRemixSourceRef.current = null;
           const next = { id: result.draftId, revision: result.revision };
           setIdentity(next);
           setDraftTitle(input.name);
@@ -188,6 +198,7 @@ export function useCloudDraftSession() {
     setIdentity(null);
     setDraftTitle(null);
     loadedRef.current = null;
+    pendingRemixSourceRef.current = null;
     setSavePhase('idle');
     setLoadState('idle');
   }, []);
@@ -205,5 +216,6 @@ export function useCloudDraftSession() {
     saveAsNewDraft,
     clearIdentity,
     resetSavePhase,
+    setPendingRemixSource,
   };
 }

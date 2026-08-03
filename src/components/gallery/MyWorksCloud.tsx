@@ -1,22 +1,22 @@
 'use client';
 
 /**
- * My Works cloud sections (spec information architecture: signed-in My
- * Works shows Drafts, Published, and On this device). Rendered only when
- * the deployment is cloud-enabled; anonymous visitors get a low-key
- * sign-in card, and cloud-disabled deployments render nothing at all so
- * production keeps its current shape.
+ * My Works cloud sections (v0.4.16, spec §17): the signed-in view is
+ * exactly Cloud Drafts + Published. The local "On this device" section is
+ * gone — the cloud draft is the only artwork persistence (ADR 0006).
+ * Anonymous visitors get a low-key sign-in card, unavailable gets an
+ * honest outage card, and cloud-disabled deployments render nothing.
  */
 
 import { useCallback, useEffect, useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { useLocale, useTranslations } from 'next-intl';
-import { CloudUpload, RefreshCw, Trash2 } from 'lucide-react';
+import { RefreshCw, Trash2 } from 'lucide-react';
 
 import { useCloudSession } from '@/components/cloud/CloudSessionProvider';
-import { useArtworks } from '@/hooks/useArtworks';
 import {
   CloudClientError,
+  deleteDraft,
   getProfile,
   listDrafts,
   listPublications,
@@ -26,9 +26,6 @@ import {
   type CloudPublicationSummary,
   type Profile,
 } from '@/lib/cloud/client';
-import { deleteDraft, importArtworkToCloud } from '@/lib/cloud/sync';
-import { createFractalDocumentEnvelope } from '@/lib/fractal-file';
-import { readLocalFormulaAssets } from '@/lib/custom-formula-storage';
 import { PublishDialog } from './PublishDialog';
 
 const ERROR_KEYS = new Set([
@@ -51,7 +48,6 @@ export function MyWorksCloud() {
   const locale = useLocale();
   const router = useRouter();
   const { state, openSignIn } = useCloudSession();
-  const { artworks: localArtworks, bindCloud } = useArtworks();
 
   const [drafts, setDrafts] = useState<CloudDraftSummary[] | null>(null);
   const [publications, setPublications] = useState<CloudPublicationSummary[] | null>(null);
@@ -88,16 +84,12 @@ export function MyWorksCloud() {
     }
   }, [authenticated, refreshDrafts]);
 
-  /** After publishing, the source draft is gone server-side: clear the
-   * local copy's binding so it returns to the plain local state. */
+  /** After publishing, the source draft is gone server-side: close the
+   * dialog and refresh both lists. */
   const handlePublished = useCallback(() => {
-    if (publishTarget) {
-      const bound = localArtworks.find((item) => item.cloud?.draftId === publishTarget.id);
-      if (bound) bindCloud(bound.id, null);
-    }
     setPublishTarget(null);
     void refreshDrafts();
-  }, [bindCloud, localArtworks, publishTarget, refreshDrafts]);
+  }, [refreshDrafts]);
 
   const withdraw = useCallback(
     async (publicationId: string) => {
@@ -154,8 +146,6 @@ export function MyWorksCloud() {
       setError(null);
       try {
         await deleteDraft(draftId);
-        const bound = localArtworks.find((item) => item.cloud?.draftId === draftId);
-        if (bound) bindCloud(bound.id, null);
         await refreshDrafts();
       } catch (value) {
         setError(value instanceof CloudClientError ? value.code : 'unavailable');
@@ -163,35 +153,7 @@ export function MyWorksCloud() {
         setBusyId(null);
       }
     },
-    [bindCloud, localArtworks, refreshDrafts, t],
-  );
-
-  const importLocal = useCallback(
-    async (localId: string) => {
-      const item = localArtworks.find((entry) => entry.id === localId);
-      if (!item || item.cloud) return;
-      setBusyId(localId);
-      setError(null);
-      try {
-        const envelope = await createFractalDocumentEnvelope(item.document, readLocalFormulaAssets());
-        if (!envelope.success) throw new CloudClientError('invalid_envelope');
-        const outcome = await importArtworkToCloud({
-          envelope: envelope.value,
-          thumbnail: item.thumbnail,
-        });
-        if (outcome.kind === 'synced') {
-          bindCloud(localId, outcome.binding);
-          await refreshDrafts();
-        } else {
-          setError(outcome.kind === 'quota' ? 'quota_exceeded' : 'unavailable');
-        }
-      } catch (value) {
-        setError(value instanceof CloudClientError ? value.code : 'unavailable');
-      } finally {
-        setBusyId(null);
-      }
-    },
-    [bindCloud, localArtworks, refreshDrafts],
+    [refreshDrafts, t],
   );
 
   if (state.status === 'disabled' || state.status === 'loading') {
@@ -222,8 +184,6 @@ export function MyWorksCloud() {
       </section>
     );
   }
-
-  const unboundLocal = localArtworks.filter((item) => item.storageFormat === 'document' && !item.cloud);
 
   return (
     <section className="mx-4 mb-8 space-y-6 sm:mx-6 xl:mx-8">
@@ -390,28 +350,6 @@ export function MyWorksCloud() {
         onClose={() => setPublishTarget(null)}
         onPublished={handlePublished}
       />
-
-      {unboundLocal.length > 0 && (
-        <div>
-          <h3 className="text-sm font-medium text-muted-foreground">{t('importTitle')}</h3>
-          <ul className="mt-2 space-y-2">
-            {unboundLocal.map((item) => (
-              <li key={item.id} className="flex items-center justify-between gap-3 rounded-md border px-4 py-2">
-                <span className="min-w-0 flex-1 truncate text-sm">{item.name}</span>
-                <button
-                  type="button"
-                  onClick={() => void importLocal(item.id)}
-                  disabled={busyId === item.id}
-                  className="inline-flex items-center gap-1.5 rounded-md border px-3 py-1.5 text-xs font-medium transition-colors hover:bg-muted disabled:opacity-50"
-                >
-                  <CloudUpload className="h-3.5 w-3.5" />
-                  {busyId === item.id ? t('importing') : t('import')}
-                </button>
-              </li>
-            ))}
-          </ul>
-        </div>
-      )}
 
       {/* AccountDeletion is intentionally not rendered (v0.4.16 Slice 1):
           the UI entry is hidden, while the component, API routes, RPCs,

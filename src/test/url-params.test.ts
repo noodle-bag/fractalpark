@@ -3,7 +3,7 @@ import { registerBuiltins } from '@/engine/plugins/builtins/index';
 import { compileFrm } from '@/engine/frm/compile';
 import { pluginRegistry } from '@/engine/plugins/registry';
 import { runtimeParamsToDocument } from '@/engine/document-adapter';
-import { decodeParams, documentToExploreHref, documentToUrlState, encodeParams, savedFractalToHref } from '@/lib/url-params';
+import { decodeParams, documentToExploreHref, documentToUrlState, encodeParams } from '@/lib/url-params';
 
 describe('url params m3 protocol', () => {
   beforeAll(() => {
@@ -234,40 +234,4 @@ bailout:
     expect(href.startsWith('/zh/explore?')).toBe(true);
   });
 
-  it('builds saved fractal href through document projection', () => {
-    const href = savedFractalToHref({
-      id: 'saved-1',
-      name: 'Saved',
-      params: {
-        maxIterations: 300,
-        paletteIndex: 1,
-        bounds: { centerX: -0.25, centerY: 0.1, zoom: 3, rotation: 0.2 },
-        isJulia: false,
-        juliaC: [-0.7, 0.27],
-        power: 2,
-        customGradient: null,
-        formula: 'mandelbrot',
-        outsideColoring: 'smooth',
-        insideColoring: 'black',
-        transformId: 'none',
-        pluginParams: {},
-        orbitTrap: { shape: 'point', point: [0, 0], radius: 0.35, width: 0.02 },
-        useSSAA: false,
-        adaptiveIterations: false,
-        lighting: { enabled: false, mode: 'normalMap', azimuth: 45, elevation: 35, intensity: 0.65 },
-      },
-      createdAt: 1,
-      thumbnail: '',
-      starred: false,
-      animation: {
-        keyframes: [
-          { id: 'a', bounds: { centerX: 0, centerY: 0, zoom: 1, rotation: 0 } },
-          { id: 'b', bounds: { centerX: 0.5, centerY: -0.5, zoom: 4, rotation: 0.3 } },
-        ],
-      },
-    }, 'en');
-
-    expect(href.startsWith('/en/explore?')).toBe(true);
-    expect(href.includes('kf=')).toBe(true);
-  });
 });

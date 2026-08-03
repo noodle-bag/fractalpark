@@ -13,9 +13,9 @@ import {
 } from '@/lib/artwork-analytics';
 import { captureThumbnail } from '@/lib/capture-thumbnail';
 import {
-  commitPreparedFractalProjectImport,
   readLocalFormulaAssets,
 } from '@/lib/custom-formula-storage';
+import { resolveCustomFormula } from '@/lib/formula-resolver';
 import { exportFractal } from '@/lib/export-fractal';
 import {
   FRACTAL_PROJECT_FILE_MAX_BYTES,
@@ -23,12 +23,11 @@ import {
   createFractalProjectFilename,
   downloadFractalProjectFile,
   parseFractalProjectJson,
-  prepareFractalProjectImport,
   serializeFractalProject,
   type FractalProjectErrorCode,
   type LocalFormulaAsset,
 } from '@/lib/fractal-file';
-import { useArtworks } from './useArtworks';
+
 
 export type ArtworkOperation = 'save' | 'download' | 'import' | 'export';
 export type ArtworkActionErrorCode =
@@ -102,9 +101,6 @@ export function useArtworkActions({
   const [status, setStatus] = useState<ArtworkActionStatus>({ phase: 'idle' });
   const [cloudPhase, setCloudPhase] = useState<CloudSyncPhase>('idle');
   const pendingRef = useRef(false);
-  // Local storage survives until commit 5a only for the saved-count label;
-  // the save path no longer touches it.
-  const { storageInfo } = useArtworks();
   const { state: cloudSession, openSignIn } = useCloudSession();
 
   const begin = useCallback((operation: ArtworkOperation) => {
@@ -263,36 +259,22 @@ export function useArtworkActions({
         });
         return false;
       }
-      const prepared = await prepareFractalProjectImport(
-        parsed.value.envelope,
-        readLocalFormulaAssets()
-      );
-      if (!prepared.success) {
-        const code = prepared.errors[0]?.code ?? 'invalid-envelope';
-        fail('import', code);
-        trackEvent('project_import_failed', {
-          error_code: code,
-          file_size_bucket: getProjectFileSizeBucket(file.size),
-          ...getArtworkAnalyticsContext(document),
-        });
-        return false;
-      }
-      const committed = commitPreparedFractalProjectImport(prepared.value, loadDocument);
-      if (!committed.success) {
-        fail('import', committed.code);
-        trackEvent('project_import_failed', {
-          error_code: committed.code,
-          file_size_bucket: getProjectFileSizeBucket(file.size),
-          ...getArtworkAnalyticsContext(document),
-        });
-        return false;
+      // Transient import (v0.4.16): formula assets register in memory for
+      // this session only — nothing touches local formula storage.
+      for (const asset of parsed.value.envelope.assets?.formulas ?? []) {
+        const resolved = resolveCustomFormula({ id: asset.id, source: asset.source });
+        if (!resolved.success) {
+          fail('import', 'asset-compile-failed');
+          return false;
+        }
       }
       trackEvent('project_import', {
-        formula: prepared.value.document.formula.formulaId,
-        custom_formula_count: prepared.value.formulasToAdd.length,
+        formula: parsed.value.envelope.document.formula.formulaId,
+        custom_formula_count: parsed.value.envelope.assets?.formulas?.length ?? 0,
         file_size_bucket: getProjectFileSizeBucket(file.size),
-        ...getArtworkAnalyticsContext(prepared.value.document),
+        ...getArtworkAnalyticsContext(parsed.value.envelope.document),
       });
+      loadDocument(parsed.value.envelope.document);
       succeed('import');
       return true;
     } catch {
@@ -340,6 +322,5 @@ export function useArtworkActions({
     download,
     importFile,
     exportPng,
-    savedCount: storageInfo.count,
   };
 }
