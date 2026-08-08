@@ -23,13 +23,14 @@ import {
 import { DraftServiceError, getDraft } from '@/lib/cloud/drafts';
 import { validateCloudEnvelopeV1 } from '@/lib/cloud/envelope';
 import {
-  FORMULA_PUBLICATION_LICENSE,
+  FORMULA_SOURCE_ATTESTATION_VERSION,
   findPublishReplay,
   publishDraft,
 } from '@/lib/cloud/publications';
 import { validateFormulaPublication } from '@/lib/cloud/formula-publish';
 import { runArtworkBackup } from '@/lib/cloud/backup';
 import { resolveRequestSession } from '@/lib/cloud/request-session';
+import { requireIdempotencyKey, requireUuid } from '@/app/api/creation/drafts/shared';
 
 export const runtime = 'nodejs';
 export const dynamic = 'force-dynamic';
@@ -67,10 +68,9 @@ export async function POST(
     assertCloudEnabled();
     assertSameOrigin(request);
     const { session, rotatedSetCookie } = await resolveRequestSession(request);
-    const { draftId } = await context.params;
-
-    const idempotencyKey = request.headers.get('idempotency-key');
-    if (!idempotencyKey) throw new CloudApiError('validation_failed');
+    const { draftId: rawDraftId } = await context.params;
+    const draftId = requireUuid(rawDraftId);
+    const idempotencyKey = requireIdempotencyKey(request);
 
     const body: unknown = await readJsonBody(request);
     const parsed = body as {
@@ -78,6 +78,7 @@ export async function POST(
       title?: unknown;
       description?: unknown;
       attestationVersion?: unknown;
+      formulaSourceAttestationVersion?: unknown;
     };
     if (
       typeof parsed?.expectedRevision !== 'number' ||
@@ -105,6 +106,10 @@ export async function POST(
           title: parsed.title,
           description: parsed.description,
           attestationVersion: parsed.attestationVersion,
+          formulaSourceAttestationVersion:
+            typeof parsed.formulaSourceAttestationVersion === 'string'
+              ? parsed.formulaSourceAttestationVersion
+              : undefined,
         });
         if (replay) return jsonOk(request, replay, 201, rotationHeaders(rotatedSetCookie));
       }
@@ -115,9 +120,9 @@ export async function POST(
     if (!verdict.ok) throw new CloudApiError('invalid_envelope');
 
     // Formula publications (spec §17.2): the portable source must pass the
-    // full server-side gate; the publication then freezes under MIT and the
-    // source becomes publicly downloadable. Anything else stays CC-BY-4.0.
-    let license: string | undefined;
+    // full server-side gate and an independent, explicit MIT-source
+    // attestation. The rendered-image license remains CC-BY-4.0.
+    let formulaSourceAttestationVersion: string | undefined;
     if (verdict.value.hasPortableFormulas) {
       const formulaVerdict = validateFormulaPublication(
         JSON.parse(verdict.value.canonicalJson),
@@ -125,7 +130,10 @@ export async function POST(
       if (!formulaVerdict.ok) {
         throw new CloudApiError(formulaVerdict.code);
       }
-      license = FORMULA_PUBLICATION_LICENSE;
+      if (parsed.formulaSourceAttestationVersion !== FORMULA_SOURCE_ATTESTATION_VERSION) {
+        throw new CloudApiError('validation_failed');
+      }
+      formulaSourceAttestationVersion = FORMULA_SOURCE_ATTESTATION_VERSION;
     }
 
     const result = await publishDraft(session.userId, {
@@ -136,7 +144,7 @@ export async function POST(
       canonicalEnvelope: JSON.parse(verdict.value.canonicalJson),
       configBytes: verdict.value.configBytes,
       attestationVersion: parsed.attestationVersion,
-      ...(license ? { license } : {}),
+      formulaSourceAttestationVersion,
       idempotencyKey,
     });
     // Backup email fires only on a fresh publish, never on a replay.

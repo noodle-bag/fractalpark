@@ -19,7 +19,10 @@ import {
   setDisplayName,
   type CloudDraftSummary,
 } from '@/lib/cloud/client';
-import { RIGHTS_ATTESTATION_VERSION } from '@/lib/cloud/attestation';
+import {
+  FORMULA_SOURCE_ATTESTATION_VERSION,
+  RIGHTS_ATTESTATION_VERSION,
+} from '@/lib/cloud/attestation';
 import { MIT_LICENSE_URL } from '@/lib/mit-license';
 import { readFractalDocumentEnvelope } from '@/engine/document-envelope';
 import { Button } from '@/components/ui/button';
@@ -47,6 +50,7 @@ export function PublishDialog({ draft, onClose, onPublished }: PublishDialogProp
   const [title, setTitle] = useState('');
   const [description, setDescription] = useState('');
   const [attested, setAttested] = useState(false);
+  const [formulaAttested, setFormulaAttested] = useState(false);
   const [pending, setPending] = useState(false);
   const [error, setError] = useState<string | null>(null);
   // True when the draft carries a portable formula asset (spec §17.2).
@@ -60,9 +64,11 @@ export function PublishDialog({ draft, onClose, onPublished }: PublishDialogProp
     setTitle(draft.title);
     setDescription('');
     setAttested(false);
+    setFormulaAttested(false);
     setError(null);
     setPending(false);
     setHasFormula(false);
+    setProbeFailed(false);
     getProfile()
       .then((profile) => {
         const existing = profile.displayName ?? '';
@@ -87,6 +93,7 @@ export function PublishDialog({ draft, onClose, onPublished }: PublishDialogProp
 
   const submit = useCallback(async () => {
     if (!draft) return;
+    if (!attested || (hasFormula && !formulaAttested)) return;
     setPending(true);
     setError(null);
     try {
@@ -99,6 +106,9 @@ export function PublishDialog({ draft, onClose, onPublished }: PublishDialogProp
         title,
         description,
         attestationVersion: RIGHTS_ATTESTATION_VERSION,
+        ...(hasFormula
+          ? { formulaSourceAttestationVersion: FORMULA_SOURCE_ATTESTATION_VERSION }
+          : {}),
       });
       setPending(false);
       onPublished();
@@ -106,7 +116,17 @@ export function PublishDialog({ draft, onClose, onPublished }: PublishDialogProp
       setPending(false);
       setError(value instanceof CloudClientError ? value.code : 'unavailable');
     }
-  }, [description, displayName, draft, needsName, onPublished, title]);
+  }, [
+    attested,
+    description,
+    displayName,
+    draft,
+    formulaAttested,
+    hasFormula,
+    needsName,
+    onPublished,
+    title,
+  ]);
 
   const errorMessage = (code: string): string => {
     switch (code) {
@@ -182,6 +202,15 @@ export function PublishDialog({ draft, onClose, onPublished }: PublishDialogProp
               >
                 {t('formulaNoticeLink')}
               </a>
+              <label className="mt-3 flex items-start gap-2">
+                <input
+                  type="checkbox"
+                  checked={formulaAttested}
+                  onChange={(event) => setFormulaAttested(event.target.checked)}
+                  className="mt-0.5"
+                />
+                <span>{t('formulaAttestation')}</span>
+              </label>
             </div>
           )}
           {!hasFormula && probeFailed && (
@@ -211,6 +240,7 @@ export function PublishDialog({ draft, onClose, onPublished }: PublishDialogProp
             disabled={
               pending ||
               !attested ||
+              (hasFormula && !formulaAttested) ||
               title.trim().length === 0 ||
               (needsName && displayName.trim().length === 0)
             }

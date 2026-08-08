@@ -150,15 +150,19 @@ Six tables and two storage buckets carry the cloud state.
 | `thumbnail_attempts` / `thumbnail_error_code` | Server diagnostics; internal errors are never exposed |
 | `license` / `license_scope` | Fixed `CC-BY-4.0` / `artwork_image` |
 | `rights_attestation_version` / `license_version` / `rights_attested_at` | Frozen attestation and license display versions plus server-recorded time; never client-assigned |
+| `formula_license` / `formula_license_scope` / `formula_source_attestation_version` | Nullable all-or-none source-license snapshot; fixed `MIT` / `formula_source` plus the explicit confirmation version for custom-formula publications; null for built-in-only and legacy rows |
 | `remix_source_type` / `remix_source_id` | Nullable as a pair; frozen direct source |
 | `status` | `published \| hidden \| withdrawn` |
 | `published_at` / `hidden_at` / `withdrawn_at` | Lifecycle timestamps; inapplicable states stay null |
 | `moderation_reason` | Nullable, non-public, maintainer-only |
 
 - Publishing validates the display name, title, description, envelope,
-  provenance, license attestation, rate limits, and quotas; any envelope
-  containing portable formula source is rejected. On success the source
-  cloud draft is deleted and the work appears under My Works → Published.
+  provenance, license attestations, rate limits, and quotas. Built-in-only
+  works freeze the artwork-image license fields and keep formula-license
+  fields null; a portable custom formula must additionally pass the strict
+  §17.2 source, hash, compile, and independent MIT-attestation gate. On
+  success the source cloud draft is deleted and the work appears under My
+  Works → Published.
 - After publish, only lifecycle state, its timestamps, moderation records,
   and the derived thumbnail may change.
 - `published → hidden` and `hidden → published` are maintainer actions
@@ -296,8 +300,9 @@ FractalPark Route Handlers.
   draft save (a 1 MiB envelope plus a base64 thumbnail and metadata
   margin) and 16 KiB for every other write. Private draft thumbnails
   travel as base64 inside the JSON save request; there is no separate
-  upload endpoint. The server decodes, validates, and re-encodes before
-  storage.
+  upload endpoint. The server decodes the payload, enforces the byte cap and
+  PNG/JPEG/WebP magic bytes, then stores it in the owner-only private bucket;
+  server-side pixel re-encoding is not part of this version's contract.
   `SameSite=Lax` is a supplementary line, never the CSRF check itself.
 - Post-login continuation accepts only server-issued operation tokens and an
   in-site allowlist; arbitrary `returnTo` URLs are rejected.
@@ -398,6 +403,11 @@ normalize path is not a security validation.
   bounds, gradient stops, keyframes, animation tracks, plugin parameters,
   asset count, asset source size and hash, and total nesting size. The 1 MiB
   cap is only the first layer and never substitutes for semantic validation.
+- Built-in formula IDs must resolve in the runtime registry. A non-built-in
+  document formula ID is accepted only when the same portable envelope carries
+  an asset with that exact ID and a verified source hash; embedded assets may
+  never shadow built-in IDs. Publication adds the compile and license gate in
+  §17.2.
 - An envelope that is future read-only, cannot be fully canonicalized,
   contains unknown runtime plugins, or exceeds render budgets may open
   locally read-only but must not be written to a cloud draft or published.
@@ -751,3 +761,7 @@ under MIT; the server refuses without it. Withdrawal/deletion stops new
 reads, downloads, and remixes but does not retroactively revoke granted
 licenses; existing derivatives keep minimal provenance. Built-in-only
 publications keep null/not-applicable formula license fields (no backfill).
+Draft validation remains intentionally broader than publication validation:
+an envelope with unreferenced or multiple portable assets may still be saved,
+opened, exported, and emailed so the private project is not destroyed, but the
+publish gate rejects it fail-closed until exactly one asset is referenced.

@@ -113,6 +113,26 @@ describe('validateCloudEnvelopeV1', () => {
     expect(goodResult.ok).toBe(true);
     if (goodResult.ok) expect(goodResult.value.hasPortableFormulas).toBe(true);
 
+    const referencedCustom = envelopeOf(
+      {
+        formula: {
+          ...DEFAULT_FRACTAL_DOCUMENT.formula,
+          formulaId: goodAsset.id,
+        },
+      },
+      { assets: { formulas: [goodAsset] } },
+    );
+    expect(validateCloudEnvelopeV1(referencedCustom, inputBytes(referencedCustom))).toMatchObject({
+      ok: true,
+      value: { hasPortableFormulas: true },
+    });
+
+    const builtinShadow = envelopeOf(
+      {},
+      { assets: { formulas: [{ ...goodAsset, id: 'mandelbrot' }] } },
+    );
+    expect(validateCloudEnvelopeV1(builtinShadow, inputBytes(builtinShadow)).ok).toBe(false);
+
     const badHash = envelopeOf({}, { assets: { formulas: [{ ...goodAsset, hash: '0'.repeat(64) }] } });
     expect(validateCloudEnvelopeV1(badHash, inputBytes(badHash)).ok).toBe(false);
 

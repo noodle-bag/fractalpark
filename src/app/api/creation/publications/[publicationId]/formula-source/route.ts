@@ -11,8 +11,13 @@ import { CloudApiError } from '@/lib/cloud/api';
 import { getCommunityPublication } from '@/lib/cloud/community';
 import { DraftServiceError } from '@/lib/cloud/drafts';
 import { validateFormulaPublication } from '@/lib/cloud/formula-publish';
-import { FORMULA_PUBLICATION_LICENSE } from '@/lib/cloud/publications';
+import {
+  FORMULA_PUBLICATION_LICENSE,
+  FORMULA_PUBLICATION_LICENSE_SCOPE,
+  FORMULA_SOURCE_ATTESTATION_VERSION,
+} from '@/lib/cloud/publications';
 import { readFractalDocumentEnvelope } from '@/engine/document-envelope';
+import { requireUuid } from '@/app/api/creation/drafts/shared';
 
 export const runtime = 'nodejs';
 export const dynamic = 'force-dynamic';
@@ -27,9 +32,14 @@ export async function GET(
   context: { params: Promise<{ publicationId: string }> },
 ): Promise<Response> {
   try {
-    const { publicationId } = await context.params;
+    const { publicationId: rawPublicationId } = await context.params;
+    const publicationId = requireUuid(rawPublicationId);
     const publication = await getCommunityPublication(publicationId);
-    if (publication.license !== FORMULA_PUBLICATION_LICENSE) {
+    if (
+      publication.formulaLicense !== FORMULA_PUBLICATION_LICENSE ||
+      publication.formulaLicenseScope !== FORMULA_PUBLICATION_LICENSE_SCOPE ||
+      publication.formulaSourceAttestationVersion !== FORMULA_SOURCE_ATTESTATION_VERSION
+    ) {
       throw new CloudApiError('not_found');
     }
     const verdict = validateFormulaPublication(publication.envelope);
@@ -50,12 +60,15 @@ export async function GET(
       headers: {
         'content-type': 'text/plain; charset=utf-8',
         'content-disposition': `attachment; filename="${filename}"`,
-        'cache-control': 'public, max-age=3600, immutable',
+        // Moderation and author withdrawal must revoke source access without
+        // waiting for a shared cache TTL to expire.
+        'cache-control': 'no-store',
       },
     });
   } catch (error) {
     if (
-      (error instanceof CloudApiError && error.code === 'not_found') ||
+      (error instanceof CloudApiError &&
+        (error.code === 'not_found' || error.code === 'validation_failed')) ||
       (error instanceof DraftServiceError && error.code === 'not_found')
     ) {
       return jsonError(_request, 'not_found');

@@ -82,6 +82,7 @@
       },
       "formulaNoticeTitle": "This artwork uses your custom formula",
       "formulaNoticeBody": "Publishing makes the formula source code public under the MIT License: anyone may read, copy, and reuse it. The formula name and description shown publicly come from the formula metadata, not from this form. The rendered image stays under CC BY 4.0.",
+      "formulaAttestation": "I explicitly agree to publish the frozen custom-formula source under the MIT License.",
       "formulaNoticeLink": "Read the MIT License at opensource.org",
       "licensePendingNote": "Could not pre-check this draft. Licensing is finalized by the server at publish time: artworks without custom formulas publish under CC BY 4.0; a custom formula adds MIT for its source."
     },

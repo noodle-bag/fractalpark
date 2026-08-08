@@ -2,6 +2,7 @@ import { describe, expect, it } from 'vitest';
 
 import { DEFAULT_FRACTAL_DOCUMENT } from '@/engine/document';
 import { createFractalDocumentEnvelope } from '@/lib/fractal-file';
+import { validateCloudEnvelopeV1 } from '@/lib/cloud/envelope';
 import { validateFormulaPublication } from '@/lib/cloud/formula-publish';
 
 const VALID_FRM = `TestCustom {
@@ -36,6 +37,12 @@ describe('validateFormulaPublication (spec §17.2)', () => {
     const envelope = await envelopeWithFormula();
     const tampered = structuredClone(envelope);
     tampered.document.formula.formulaId = 'mandelbrot';
+    // Private draft preservation is intentionally broader than public
+    // publication: the asset remains saveable/exportable, but cannot be
+    // licensed and published while it is not the document's active formula.
+    expect(
+      validateCloudEnvelopeV1(tampered, Buffer.byteLength(JSON.stringify(tampered), 'utf8')),
+    ).toMatchObject({ ok: true });
     expect(validateFormulaPublication(tampered)).toEqual({ ok: false, code: 'invalid_envelope' });
   });
 

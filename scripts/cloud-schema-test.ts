@@ -238,6 +238,10 @@ async function main(): Promise<void> {
       `insert into public.artwork_publications (${base}, license) values (${vals}, 'CC0')`,
       'license other than CC-BY-4.0',
     );
+    psqlFails(
+      `insert into public.artwork_publications (${base}, formula_license) values (${vals}, 'MIT')`,
+      'partial formula license tuple',
+    );
   });
 
   await test('constraint battery: operations, counters, cleanup jobs', () => {
@@ -501,7 +505,7 @@ async function main(): Promise<void> {
     const res = await rpc(keys, 'fractalpark_schema_version', keys.anonKey);
     assert(res.status === 200, `status ${res.status}`);
     const body = await res.json();
-    assert(body === '20260802000000', `unexpected version ${body}`);
+    assert(body === '20260808202734', `unexpected version ${body}`);
   });
 
   await test('rate_limit_consume: denied for anon, transactional for service', async () => {
@@ -995,10 +999,15 @@ async function main(): Promise<void> {
     assert(res.status === 200 && body.status === 'published', `publish: ${res.status}`);
     assert(body.thumbnail_status === 'pending', 'public thumbnails start as pending placeholder');
     const pub = psql(
-      `select author_display_name || '|' || license || '|' || license_scope || '|' || rights_attestation_version || '|' || status
+      `select author_display_name || '|' || license || '|' || license_scope || '|' || rights_attestation_version || '|' || status || '|' ||
+              coalesce(formula_license, 'null') || '|' || coalesce(formula_license_scope, 'null') || '|' ||
+              coalesce(formula_source_attestation_version, 'null')
        from public.artwork_publications where id = '${body.publication_id}'`,
     );
-    assert(pub === 'Publisher|CC-BY-4.0|artwork_image|2026-08-02.v1|published', `frozen snapshot: ${pub}`);
+    assert(
+      pub === 'Publisher|CC-BY-4.0|artwork_image|2026-08-02.v1|published|null|null|null',
+      `frozen snapshot: ${pub}`,
+    );
     const gone = psql(`select count(*) from public.artwork_drafts where id = '${draft.id}'`);
     assert(gone === '0', 'source draft must be deleted on success');
 
@@ -1024,6 +1033,83 @@ async function main(): Promise<void> {
       `update public.artwork_publications set title = 'renamed' where id = '${body.publication_id}'`,
       'frozen title update',
     );
+  });
+
+  await test('publish: custom formula freezes a separate MIT source-license snapshot', async () => {
+    const draft = await makeDraft('formula publication');
+    const key = crypto.randomUUID();
+    const formulaPublishArgs = {
+      p_owner_id: PUB_OWNER,
+      p_idempotency_key: key,
+      p_request_hash: `hash-${key}`,
+      p_draft_id: draft.id,
+      p_expected_revision: draft.revision,
+      p_title: 'formula publication',
+      p_description: '',
+      p_envelope: { envelopeVersion: 1, assets: { formulas: [{ id: 'custom' }] } },
+      p_config_bytes: 48,
+      p_rights_attestation_version: '2026-08-02.v1',
+      p_license_version: 'CC-BY-4.0',
+      p_formula_source_attestation_version: '2026-08-08.v1',
+    };
+    const res = await rpc(keys, 'fractalpark_publish_draft', keys.serviceKey, formulaPublishArgs);
+    const body = JSON.parse(await res.text()) as { publication_id: string; status: string };
+    assert(res.status === 200 && body.status === 'published', `formula publish: ${res.status}`);
+    const snapshot = psql(
+      `select license || '|' || license_scope || '|' || license_version || '|' || formula_license || '|' ||
+              formula_license_scope || '|' || formula_source_attestation_version
+       from public.artwork_publications where id = '${body.publication_id}'`,
+    );
+    assert(
+      snapshot === 'CC-BY-4.0|artwork_image|CC-BY-4.0|MIT|formula_source|2026-08-08.v1',
+      `formula license snapshot: ${snapshot}`,
+    );
+    const replay = await rpc(
+      keys,
+      'fractalpark_publish_draft',
+      keys.serviceKey,
+      formulaPublishArgs,
+    );
+    const replayBody = JSON.parse(await replay.text()) as {
+      replayed: boolean;
+      publication_id: string;
+    };
+    assert(
+      replay.status === 200 &&
+        replayBody.replayed === true &&
+        replayBody.publication_id === body.publication_id,
+      `formula replay did not converge: ${replay.status}`,
+    );
+    psqlFails(
+      `update public.artwork_publications set formula_license = null where id = '${body.publication_id}'`,
+      'frozen formula license update',
+    );
+
+    const staleDraft = await makeDraft('stale formula attestation');
+    const staleKey = crypto.randomUUID();
+    const stale = await rpc(keys, 'fractalpark_publish_draft', keys.serviceKey, {
+      p_owner_id: PUB_OWNER,
+      p_idempotency_key: staleKey,
+      p_request_hash: `hash-${staleKey}`,
+      p_draft_id: staleDraft.id,
+      p_expected_revision: staleDraft.revision,
+      p_title: 'stale formula attestation',
+      p_description: '',
+      p_envelope: { envelopeVersion: 1 },
+      p_config_bytes: 8,
+      p_rights_attestation_version: '2026-08-02.v1',
+      p_license_version: 'CC-BY-4.0',
+      p_formula_source_attestation_version: '2026-08-07.v1',
+    });
+    const staleBody = await stale.text();
+    assert(
+      stale.status !== 200 && staleBody.includes('validation_failed'),
+      `stale formula attestation: ${stale.status} ${staleBody}`,
+    );
+    const retained = psql(
+      `select count(*) from public.artwork_drafts where id = '${staleDraft.id}'`,
+    );
+    assert(retained === '1', 'rejected formula publish must keep the source draft');
   });
 
   await test('publish: revision conflict and 24h quota consumed atomically', async () => {
@@ -1148,8 +1234,8 @@ async function main(): Promise<void> {
     assert(foreign.status !== 200 && foreignBody.includes('not_found'), `foreign withdraw: ${foreign.status} ${foreignBody}`);
   });
 
-  await test('publication RPCs are not executable by anon', async () => {
-    const res = await rpc(keys, 'fractalpark_publish_draft', keys.anonKey, {
+  await test('publication RPCs are not executable by anon or authenticated', async () => {
+    const publishArgs = {
       p_owner_id: PUB_OWNER,
       p_idempotency_key: crypto.randomUUID(),
       p_request_hash: 'hash-anon',
@@ -1161,19 +1247,23 @@ async function main(): Promise<void> {
       p_config_bytes: 1,
       p_rights_attestation_version: 'v1',
       p_license_version: 'CC-BY-4.0',
-    });
-    assert(res.status !== 200, `anon must not execute publish: ${res.status}`);
-    const wRes = await rpc(keys, 'fractalpark_withdraw_publication', keys.anonKey, {
+    };
+    const withdrawArgs = {
       p_owner_id: PUB_OWNER,
       p_idempotency_key: crypto.randomUUID(),
       p_request_hash: 'hash-anon',
       p_publication_id: crypto.randomUUID(),
-    });
-    assert(wRes.status !== 200, `anon must not execute withdraw: ${wRes.status}`);
+    };
+    for (const [label, bearer] of [['anon', keys.anonKey], ['authenticated', userJwt]] as const) {
+      const res = await rpc(keys, 'fractalpark_publish_draft', bearer, publishArgs);
+      assert(res.status !== 200, `${label} must not execute publish: ${res.status}`);
+      const wRes = await rpc(keys, 'fractalpark_withdraw_publication', bearer, withdrawArgs);
+      assert(wRes.status !== 200, `${label} must not execute withdraw: ${wRes.status}`);
+    }
   });
 
   await test('draft RPCs are not executable by anon or authenticated', async () => {
-    const anonRes = await rpc(keys, 'fractalpark_draft_create', keys.anonKey, {
+    const args = {
       p_owner_id: RPC_OWNER_A,
       p_idempotency_key: crypto.randomUUID(),
       p_request_hash: 'hash-anon',
@@ -1182,8 +1272,11 @@ async function main(): Promise<void> {
       p_thumbnail_path: null,
       p_config_bytes: 1,
       p_thumbnail_bytes: 0,
-    });
-    assert(anonRes.status !== 200, `anon must not execute draft_create: ${anonRes.status}`);
+    };
+    for (const [label, bearer] of [['anon', keys.anonKey], ['authenticated', userJwt]] as const) {
+      const denied = await rpc(keys, 'fractalpark_draft_create', bearer, args);
+      assert(denied.status !== 200, `${label} must not execute draft_create: ${denied.status}`);
+    }
   });
 
   await test('moderation: hide keeps the envelope, records reason, registers thumbnail cleanup', async () => {

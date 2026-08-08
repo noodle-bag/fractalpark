@@ -83,6 +83,7 @@
       },
       "formulaNoticeTitle": "这件作品使用了你的自定义公式",
       "formulaNoticeBody": "发布后，公式源码将以 MIT 许可证公开：任何人都可以阅读、复制和复用。公开展示的公式名称与描述来自公式元数据，而非此表单。渲染图像仍采用 CC BY 4.0。",
+      "formulaAttestation": "我明确同意将这份冻结的自定义公式源码以 MIT 许可证公开。",
       "formulaNoticeLink": "在 opensource.org 阅读 MIT 许可证",
       "licensePendingNote": "预检未完成。许可证由服务端在发布时最终确定：不含自定义公式的作品采用 CC BY 4.0；含自定义公式的作品另以 MIT 公开公式源码。"
     },
