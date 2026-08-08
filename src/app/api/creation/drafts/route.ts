@@ -20,7 +20,6 @@ import {
 import {
   createDraft,
   deleteDraftThumbnailObject,
-  DraftServiceError,
   listDrafts,
   storeDraftThumbnail,
   toDraftApiError,
@@ -101,6 +100,13 @@ export async function POST(request: Request): Promise<Response> {
         remixSourceType: input.remixSource?.type ?? null,
         remixSourceId: input.remixSource?.id ?? null,
       });
+      if (result.replayed && thumbnailPath) {
+        // This request uploaded under a fresh randomized object name, but the
+        // RPC returned the object adopted by the original request. The new
+        // upload is therefore an orphan and must not count against storage.
+        await deleteDraftThumbnailObject(thumbnailPath);
+        thumbnailPath = null;
+      }
       const status = result.replayed ? 200 : 201;
       // Backup email fires only on a fresh write, never on a replay.
       const backupEmailStatus = result.replayed
@@ -121,12 +127,9 @@ export async function POST(request: Request): Promise<Response> {
         rotationHeaders(rotatedSetCookie),
       );
     } catch (error) {
-      // On idempotency_conflict the draft id may already belong to an
-      // existing draft whose thumbnail lives at the same path; never delete
-      // in that case. Other failures only orphan the fresh upload.
-      const isIdConflict =
-        error instanceof DraftServiceError && error.code === 'idempotency_conflict';
-      if (thumbnailPath && !isIdConflict) {
+      // Object names are randomized per upload. If the RPC rejected this
+      // write, no persisted draft can point at this fresh path.
+      if (thumbnailPath) {
         await deleteDraftThumbnailObject(thumbnailPath);
       }
       throw error;

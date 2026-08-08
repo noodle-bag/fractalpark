@@ -20,6 +20,7 @@ function apiError(status: number, code: string, retryAfter?: number): Response {
 }
 
 afterEach(() => {
+  vi.useRealTimers();
   vi.unstubAllGlobals();
 });
 
@@ -66,6 +67,56 @@ describe('cloud client draft calls', () => {
     const headers = new Headers(calls[0].init?.headers);
     expect(headers.get('content-type')).toBe('application/json');
     expect(headers.get('idempotency-key')).toMatch(/^[0-9a-f-]{36}$/);
+  });
+
+  it('retries a lost idempotent write response once with the same key', async () => {
+    const calls: Array<{ url: string; init?: RequestInit }> = [];
+    vi.stubGlobal(
+      'fetch',
+      vi.fn((url: RequestInfo | URL, init?: RequestInit) => {
+        calls.push({ url: String(url), init });
+        if (calls.length === 1) return Promise.reject(new TypeError('response lost'));
+        return Promise.resolve(
+          new Response(JSON.stringify({ draftId: 'd-1', revision: 1 }), { status: 200 }),
+        );
+      }),
+    );
+
+    await expect(createDraft({ envelope: { envelopeVersion: 1 } })).resolves.toMatchObject({
+      draftId: 'd-1',
+      revision: 1,
+    });
+    expect(calls).toHaveLength(2);
+    const firstKey = new Headers(calls[0].init?.headers).get('idempotency-key');
+    const secondKey = new Headers(calls[1].init?.headers).get('idempotency-key');
+    expect(firstKey).toMatch(/^[0-9a-f-]{36}$/);
+    expect(secondKey).toBe(firstKey);
+  });
+
+  it('waits out the PATCH save cooldown before retrying a lost response with the same key', async () => {
+    vi.useFakeTimers();
+    const calls: Array<{ url: string; init?: RequestInit }> = [];
+    vi.stubGlobal(
+      'fetch',
+      vi.fn((url: RequestInfo | URL, init?: RequestInit) => {
+        calls.push({ url: String(url), init });
+        if (calls.length === 1) return Promise.reject(new TypeError('response lost'));
+        return Promise.resolve(
+          new Response(JSON.stringify({ draftId: 'd-1', revision: 2 }), { status: 200 }),
+        );
+      }),
+    );
+
+    const update = updateDraft('d-1', { envelope: {}, expectedRevision: 1 });
+    await vi.advanceTimersByTimeAsync(5_000);
+    expect(calls).toHaveLength(1);
+    await vi.advanceTimersByTimeAsync(100);
+    await expect(update).resolves.toMatchObject({ draftId: 'd-1', revision: 2 });
+
+    expect(calls).toHaveLength(2);
+    const firstKey = new Headers(calls[0].init?.headers).get('idempotency-key');
+    const secondKey = new Headers(calls[1].init?.headers).get('idempotency-key');
+    expect(secondKey).toBe(firstKey);
   });
 
   it('maps rate_limited with retryAfter', async () => {

@@ -127,6 +127,13 @@ export async function PATCH(request: Request, context: RouteContext): Promise<Re
         configBytes: input.configBytes,
         thumbnailBytes,
       });
+      if (result.replayed && input.thumbnail.kind === 'set' && thumbnailPath) {
+        // The original update already owns its recorded thumbnail path. This
+        // retry uploaded a different randomized object before the RPC replay
+        // was known, so reclaim that unused object immediately.
+        await deleteDraftThumbnailObject(thumbnailPath);
+        thumbnailPath = null;
+      }
       // Backup email fires only on a fresh write, never on a replay.
       const backupEmailStatus = result.replayed
         ? 'not_requested'

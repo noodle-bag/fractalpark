@@ -19,6 +19,8 @@
 
 export {};
 
+import { isStorageObjectAlreadyMissing } from '../src/lib/cloud/storage-cleanup';
+
 const SUPABASE_URL = process.env.SUPABASE_URL ?? 'http://127.0.0.1:54321';
 function requireServiceKey(): string {
   const key = process.env.SUPABASE_SERVICE_ROLE_KEY;
@@ -67,10 +69,8 @@ async function deleteStorageObject(bucket: string, path: string): Promise<void> 
     headers: serviceHeaders(),
     cache: 'no-store',
   });
-  // 404 = already missing = success (spec 4.6).
-  if (!response.ok && response.status !== 404) {
-    throw new Error(`storage delete ${response.status}`);
-  }
+  if (response.ok || (await isStorageObjectAlreadyMissing(response))) return;
+  throw new Error(`storage delete ${response.status}`);
 }
 
 async function deleteAuthUser(userId: string): Promise<void> {

@@ -14,6 +14,7 @@ import {
   CloudApiError,
   emptyOk,
   jsonOk,
+  readJsonBody,
   toErrorResponse,
 } from '@/lib/cloud/api';
 import {
@@ -126,12 +127,7 @@ export async function DELETE(request: Request, context: RouteContext): Promise<R
 
     // Symmetric with the update contract: a stale delete is a client bug,
     // and the expected revision makes it visible instead of silent.
-    let body: Record<string, unknown>;
-    try {
-      body = (await request.json()) as Record<string, unknown>;
-    } catch {
-      throw new CloudApiError('validation_failed');
-    }
+    const body = await readJsonBody(request);
     const expectedRevision = body?.expectedRevision;
     if (!Number.isInteger(expectedRevision) || (expectedRevision as number) < 1) {
       throw new CloudApiError('validation_failed');

@@ -289,6 +289,19 @@ describe('custom formula routes', () => {
     expect(res.status).toBe(400);
   });
 
+  it('DELETE rejects an oversized body before calling the RPC', async () => {
+    const res = await formulaDELETE(
+      authedRequest(`https://fractalpark.test/api/creation/custom-formulas/${FORMULA_ID}`, {
+        method: 'DELETE',
+        headers: { 'idempotency-key': IDEMPOTENCY_KEY },
+        body: { expectedRevision: 1, padding: 'x'.repeat(16 * 1024) },
+      }),
+      detailContext(),
+    );
+    expect(res.status).toBe(413);
+    expect(fetchCalls.some((c) => c.url.includes('rpc/fractalpark_custom_formula_delete'))).toBe(false);
+  });
+
   it('DELETE maps not_found to 404', async () => {
     stubFetch((call) => {
       if (call.url.includes('rpc/fractalpark_custom_formula_delete')) {

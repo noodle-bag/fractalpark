@@ -60,18 +60,42 @@ const API_CODES = new Set<CloudClientErrorCode>([
   'unavailable',
 ]);
 
+// Both idempotent PATCH endpoints enforce a five-second per-resource save
+// cooldown before reaching their RPC replay gate. If the first response is
+// lost after commit, an immediate retry is guaranteed to receive 429. Wait
+// just beyond that window before spending the single same-key retry.
+const PATCH_REPLAY_DELAY_MS = 5_100;
+
+async function waitForReplayWindow(init: RequestInit): Promise<void> {
+  if (init.method?.toUpperCase() !== 'PATCH') return;
+  await new Promise<void>((resolve) => setTimeout(resolve, PATCH_REPLAY_DELAY_MS));
+}
+
 async function call<T>(path: string, init: RequestInit = {}): Promise<T> {
+  const requestInit: RequestInit = {
+    ...init,
+    headers: {
+      ...(init.body !== undefined ? { 'content-type': 'application/json' } : {}),
+      ...(init.headers ?? {}),
+    },
+  };
   let response: Response;
   try {
-    response = await fetch(path, {
-      ...init,
-      headers: {
-        ...(init.body !== undefined ? { 'content-type': 'application/json' } : {}),
-        ...(init.headers ?? {}),
-      },
-    });
+    response = await fetch(path, requestInit);
   } catch {
-    throw new CloudClientError('offline');
+    // A response can be lost after the server committed the write. Retry
+    // exactly once only when the request carries the server-side replay key;
+    // reusing the same RequestInit preserves that key and makes the retry
+    // converge instead of duplicating a create or turning publish into 404.
+    if (!new Headers(requestInit.headers).has('idempotency-key')) {
+      throw new CloudClientError('offline');
+    }
+    try {
+      await waitForReplayWindow(requestInit);
+      response = await fetch(path, requestInit);
+    } catch {
+      throw new CloudClientError('offline');
+    }
   }
 
   if (!response.ok) {
@@ -303,6 +327,7 @@ export interface PublishInput {
   title: string;
   description: string;
   attestationVersion: string;
+  formulaSourceAttestationVersion?: string;
 }
 
 export interface PublishResult {
