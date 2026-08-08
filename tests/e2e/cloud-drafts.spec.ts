@@ -14,12 +14,23 @@ async function waitForFractalCanvasReady(page: Page) {
   await page.waitForTimeout(500);
 }
 
-async function readOtpCode(page: Page): Promise<string> {
+async function readOtpCode(page: Page, email: string): Promise<string> {
   for (let attempt = 0; attempt < 40; attempt++) {
-    const res = await page.request.get('http://127.0.0.1:54324/api/v1/messages?limit=1');
-    const body = (await res.json()) as { messages: Array<{ ID: string; Text?: string }> };
-    if (body.messages.length > 0) {
-      const match = (body.messages[0].Text ?? '').match(/\b(\d{6})\b/);
+    const res = await page.request.get('http://127.0.0.1:54324/api/v1/messages?limit=10');
+    const body = (await res.json()) as {
+      messages: Array<{ ID: string; To?: Array<{ Address?: string }> }>;
+    };
+    const summary = body.messages.find((message) =>
+      message.To?.some((recipient) => recipient.Address === email),
+    );
+    if (summary) {
+      const messageRes = await page.request.get(
+        `http://127.0.0.1:54324/api/v1/message/${summary.ID}`,
+      );
+      const message = (await messageRes.json()) as { Subject?: string; Text?: string; HTML?: string };
+      const match = `${message.Subject ?? ''} ${message.Text ?? ''} ${message.HTML ?? ''}`.match(
+        /\b(\d{6})\b/,
+      );
       if (match) return match[1];
     }
     await page.waitForTimeout(500);
@@ -30,7 +41,7 @@ async function readOtpCode(page: Page): Promise<string> {
 async function completeOtp(page: Page, email: string) {
   await page.getByLabel(/email/i).fill(email);
   await page.getByRole('button', { name: /send code/i }).click();
-  const code = await readOtpCode(page);
+  const code = await readOtpCode(page, email);
   await page.getByLabel(/six-digit code/i).fill(code);
   // Scoped to the dialog: the navbar's anonymous-state "Sign in" button
   // matches the same regex while the OTP dialog is open (review blocking).
