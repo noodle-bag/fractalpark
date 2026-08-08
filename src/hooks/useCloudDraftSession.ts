@@ -119,7 +119,14 @@ export function useCloudDraftSession() {
       // state would still hold the old identity within this tick.
       const currentIdentity = identityOverride !== undefined ? identityOverride : identity;
       setSavePhase('saving');
-      const envelopeResult = await createFractalDocumentEnvelope(input.document, input.formulaAssets);
+      const document = {
+        ...input.document,
+        metadata: {
+          ...input.document.metadata,
+          name: input.name,
+        },
+      };
+      const envelopeResult = await createFractalDocumentEnvelope(document, input.formulaAssets);
       if (!envelopeResult.success) {
         setSavePhase('failed');
         return { ok: false, phase: 'failed' };

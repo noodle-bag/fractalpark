@@ -48,6 +48,10 @@ describe('useCloudDraftSession (spec §17)', () => {
     expect(result.current.identity).toEqual({ id: 'd-1', revision: 1 });
     expect(result.current.savePhase).toBe('saved');
     expect(result.current.draftTitle).toBe('My draft');
+    const createInput = createDraftMock.mock.calls[0][0] as {
+      envelope: { document: { metadata?: { name?: string } } };
+    };
+    expect(createInput.envelope.document.metadata?.name).toBe('My draft');
   });
 
   it('patches with expectedRevision and maps revision_conflict', async () => {
