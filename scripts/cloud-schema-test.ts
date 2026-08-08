@@ -145,21 +145,21 @@ async function main(): Promise<void> {
   const OWNER_B = await createUser(keys, 'b');
   console.log('== SQL layer: structure, constraints, triggers, grants ==');
 
-  await test('six tables exist with RLS enabled and forced', () => {
+  await test('seven tables exist with RLS enabled and forced', () => {
     const rows = psql(
       `select relname || ':' || relrowsecurity || ':' || relforcerowsecurity
        from pg_class where relnamespace = 'public'::regnamespace and relkind = 'r'
-       and relname in ('profiles','artwork_drafts','artwork_publications','artwork_operations','rate_limit_counters','resource_cleanup_jobs')
+       and relname in ('profiles','artwork_drafts','custom_formulas','artwork_publications','artwork_operations','rate_limit_counters','resource_cleanup_jobs')
        order by relname`,
     ).split('\n');
-    assert(rows.length === 6, `expected 6 tables, got ${rows.length}`);
+    assert(rows.length === 7, `expected 7 tables, got ${rows.length}`);
     for (const row of rows) {
       assert(row.endsWith(':true:true'), `RLS not enabled+forced: ${row}`);
     }
   });
 
   await test('anon and authenticated hold no table privileges; service_role does', () => {
-    for (const table of ['profiles', 'artwork_drafts', 'artwork_publications', 'artwork_operations', 'rate_limit_counters', 'resource_cleanup_jobs']) {
+    for (const table of ['profiles', 'artwork_drafts', 'custom_formulas', 'artwork_publications', 'artwork_operations', 'rate_limit_counters', 'resource_cleanup_jobs']) {
       assert(psql(`select has_table_privilege('anon', 'public.${table}', 'select')`) === 'f', `anon can select ${table}`);
       assert(psql(`select has_table_privilege('authenticated', 'public.${table}', 'insert')`) === 'f', `authenticated can insert ${table}`);
       assert(psql(`select has_table_privilege('service_role', 'public.${table}', 'select')`) === 't', `service_role cannot select ${table}`);
@@ -505,7 +505,7 @@ async function main(): Promise<void> {
     const res = await rpc(keys, 'fractalpark_schema_version', keys.anonKey);
     assert(res.status === 200, `status ${res.status}`);
     const body = await res.json();
-    assert(body === '20260808202734', `unexpected version ${body}`);
+    assert(body === '20260809001201', `unexpected version ${body}`);
   });
 
   await test('rate_limit_consume: denied for anon, transactional for service', async () => {
