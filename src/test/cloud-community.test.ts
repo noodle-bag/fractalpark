@@ -5,6 +5,7 @@ import {
   COMMUNITY_MAX_PAGE,
   decodeCommunityCursor,
   encodeCommunityCursor,
+  getCommunityPublication,
   listCommunity,
 } from '@/lib/cloud/community';
 
@@ -99,5 +100,37 @@ describe('community cursor', () => {
     await expect(listCommunity('garbage', 10)).rejects.toMatchObject({
       code: 'validation_failed',
     });
+  });
+
+  it('maps the independent formula-source legal snapshot on detail reads', async () => {
+    enableCloud();
+    const fetchSpy = vi.fn<
+      (input: RequestInfo | URL, init?: RequestInit) => Promise<Response>
+    >(async () =>
+      new Response(
+        JSON.stringify([
+          {
+            ...ROW,
+            envelope: { envelopeVersion: 1 },
+            formula_license: 'MIT',
+            formula_license_scope: 'formula_source',
+            formula_source_attestation_version: '2026-08-08.v1',
+          },
+        ]),
+        { status: 200 },
+      ),
+    );
+    vi.stubGlobal('fetch', fetchSpy);
+
+    const detail = await getCommunityPublication(ROW.id);
+    expect(detail).toMatchObject({
+      license: 'CC-BY-4.0',
+      licenseScope: 'artwork_image',
+      formulaLicense: 'MIT',
+      formulaLicenseScope: 'formula_source',
+      formulaSourceAttestationVersion: '2026-08-08.v1',
+    });
+    const requestUrl = fetchSpy.mock.calls[0]?.[0];
+    expect(String(requestUrl)).toContain('formula_license');
   });
 });

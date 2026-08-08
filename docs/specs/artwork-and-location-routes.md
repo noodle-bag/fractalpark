@@ -371,3 +371,14 @@ Build-time tests must prove:
 - canonical routes, legacy redirects, unknown values, locale alternates,
   visible credit, license metadata, and structured data follow this
   specification.
+
+## v0.4.16: `?draft=` and Language-Switch State
+
+- Explore owner sessions are addressed by `?draft=<uuid>` (lookup hint only;
+  authorization is re-verified per call; foreign ids are indistinguishable
+  from missing ones). `?artwork=<localId>` is retired from the runtime
+  contract together with the legacy local artwork store (ADR 0006).
+- The navbar language dropdown must preserve the current path, query (full
+  `search`), and hash when switching locales — including `?draft=` and any
+  state query. Hash is client-visible only, so preservation is a client-side
+  responsibility.

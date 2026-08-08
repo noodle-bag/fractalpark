@@ -11,5 +11,8 @@ export function captureThumbnail(
   if (!ctx) return '';
 
   ctx.drawImage(canvas, 0, 0, maxWidth, maxHeight);
-  return offscreen.toDataURL('image/jpeg', 0.85);
+  const dataUrl = offscreen.toDataURL('image/jpeg', 0.85);
+  const marker = ';base64,';
+  const markerIndex = dataUrl.indexOf(marker);
+  return markerIndex === -1 ? '' : dataUrl.slice(markerIndex + marker.length);
 }

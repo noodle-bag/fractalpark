@@ -14,22 +14,14 @@ import {
 } from '@/engine/document';
 import { migrateFractalDocument, normalizeFractalDocument } from '@/engine/document-migrate';
 import type { FractalParams } from '@/engine/types';
-import { readArtworkDocumentById } from '@/lib/artwork-repository';
 import { applyFormulaSelectionDefaults } from '@/lib/formula-documents';
 import { applyRemixSource, parseRemixSource } from '@/lib/remix-source';
 import { decodeParams } from '@/lib/url-params';
 
 function createInitialDocument(searchParams: URLSearchParams): FractalDocument {
-  const artworkId = searchParams.get('artwork');
-  let document: FractalDocument;
-  if (artworkId) {
-    const artworkDocument = readArtworkDocumentById(artworkId);
-    if (artworkDocument) {
-      document = artworkDocument;
-      return applyRemixSource(document, parseRemixSource(searchParams));
-    }
-  }
-  document = migrateFractalDocument(decodeParams(searchParams), 0);
+  // v0.4.16: the `?artwork=` local handoff is gone — Explore initializes
+  // from URL params, `?draft=` (cloud), or the one-shot remix handoff only.
+  const document = migrateFractalDocument(decodeParams(searchParams), 0);
   return applyRemixSource(document, parseRemixSource(searchParams));
 }
 

@@ -145,21 +145,21 @@ async function main(): Promise<void> {
   const OWNER_B = await createUser(keys, 'b');
   console.log('== SQL layer: structure, constraints, triggers, grants ==');
 
-  await test('six tables exist with RLS enabled and forced', () => {
+  await test('seven tables exist with RLS enabled and forced', () => {
     const rows = psql(
       `select relname || ':' || relrowsecurity || ':' || relforcerowsecurity
        from pg_class where relnamespace = 'public'::regnamespace and relkind = 'r'
-       and relname in ('profiles','artwork_drafts','artwork_publications','artwork_operations','rate_limit_counters','resource_cleanup_jobs')
+       and relname in ('profiles','artwork_drafts','custom_formulas','artwork_publications','artwork_operations','rate_limit_counters','resource_cleanup_jobs')
        order by relname`,
     ).split('\n');
-    assert(rows.length === 6, `expected 6 tables, got ${rows.length}`);
+    assert(rows.length === 7, `expected 7 tables, got ${rows.length}`);
     for (const row of rows) {
       assert(row.endsWith(':true:true'), `RLS not enabled+forced: ${row}`);
     }
   });
 
   await test('anon and authenticated hold no table privileges; service_role does', () => {
-    for (const table of ['profiles', 'artwork_drafts', 'artwork_publications', 'artwork_operations', 'rate_limit_counters', 'resource_cleanup_jobs']) {
+    for (const table of ['profiles', 'artwork_drafts', 'custom_formulas', 'artwork_publications', 'artwork_operations', 'rate_limit_counters', 'resource_cleanup_jobs']) {
       assert(psql(`select has_table_privilege('anon', 'public.${table}', 'select')`) === 'f', `anon can select ${table}`);
       assert(psql(`select has_table_privilege('authenticated', 'public.${table}', 'insert')`) === 'f', `authenticated can insert ${table}`);
       assert(psql(`select has_table_privilege('service_role', 'public.${table}', 'select')`) === 't', `service_role cannot select ${table}`);
@@ -237,6 +237,10 @@ async function main(): Promise<void> {
     psqlFails(
       `insert into public.artwork_publications (${base}, license) values (${vals}, 'CC0')`,
       'license other than CC-BY-4.0',
+    );
+    psqlFails(
+      `insert into public.artwork_publications (${base}, formula_license) values (${vals}, 'MIT')`,
+      'partial formula license tuple',
     );
   });
 
@@ -501,7 +505,7 @@ async function main(): Promise<void> {
     const res = await rpc(keys, 'fractalpark_schema_version', keys.anonKey);
     assert(res.status === 200, `status ${res.status}`);
     const body = await res.json();
-    assert(body === '20260802000000', `unexpected version ${body}`);
+    assert(body === '20260809001201', `unexpected version ${body}`);
   });
 
   await test('rate_limit_consume: denied for anon, transactional for service', async () => {
@@ -995,10 +999,15 @@ async function main(): Promise<void> {
     assert(res.status === 200 && body.status === 'published', `publish: ${res.status}`);
     assert(body.thumbnail_status === 'pending', 'public thumbnails start as pending placeholder');
     const pub = psql(
-      `select author_display_name || '|' || license || '|' || license_scope || '|' || rights_attestation_version || '|' || status
+      `select author_display_name || '|' || license || '|' || license_scope || '|' || rights_attestation_version || '|' || status || '|' ||
+              coalesce(formula_license, 'null') || '|' || coalesce(formula_license_scope, 'null') || '|' ||
+              coalesce(formula_source_attestation_version, 'null')
        from public.artwork_publications where id = '${body.publication_id}'`,
     );
-    assert(pub === 'Publisher|CC-BY-4.0|artwork_image|2026-08-02.v1|published', `frozen snapshot: ${pub}`);
+    assert(
+      pub === 'Publisher|CC-BY-4.0|artwork_image|2026-08-02.v1|published|null|null|null',
+      `frozen snapshot: ${pub}`,
+    );
     const gone = psql(`select count(*) from public.artwork_drafts where id = '${draft.id}'`);
     assert(gone === '0', 'source draft must be deleted on success');
 
@@ -1024,6 +1033,83 @@ async function main(): Promise<void> {
       `update public.artwork_publications set title = 'renamed' where id = '${body.publication_id}'`,
       'frozen title update',
     );
+  });
+
+  await test('publish: custom formula freezes a separate MIT source-license snapshot', async () => {
+    const draft = await makeDraft('formula publication');
+    const key = crypto.randomUUID();
+    const formulaPublishArgs = {
+      p_owner_id: PUB_OWNER,
+      p_idempotency_key: key,
+      p_request_hash: `hash-${key}`,
+      p_draft_id: draft.id,
+      p_expected_revision: draft.revision,
+      p_title: 'formula publication',
+      p_description: '',
+      p_envelope: { envelopeVersion: 1, assets: { formulas: [{ id: 'custom' }] } },
+      p_config_bytes: 48,
+      p_rights_attestation_version: '2026-08-02.v1',
+      p_license_version: 'CC-BY-4.0',
+      p_formula_source_attestation_version: '2026-08-08.v1',
+    };
+    const res = await rpc(keys, 'fractalpark_publish_draft', keys.serviceKey, formulaPublishArgs);
+    const body = JSON.parse(await res.text()) as { publication_id: string; status: string };
+    assert(res.status === 200 && body.status === 'published', `formula publish: ${res.status}`);
+    const snapshot = psql(
+      `select license || '|' || license_scope || '|' || license_version || '|' || formula_license || '|' ||
+              formula_license_scope || '|' || formula_source_attestation_version
+       from public.artwork_publications where id = '${body.publication_id}'`,
+    );
+    assert(
+      snapshot === 'CC-BY-4.0|artwork_image|CC-BY-4.0|MIT|formula_source|2026-08-08.v1',
+      `formula license snapshot: ${snapshot}`,
+    );
+    const replay = await rpc(
+      keys,
+      'fractalpark_publish_draft',
+      keys.serviceKey,
+      formulaPublishArgs,
+    );
+    const replayBody = JSON.parse(await replay.text()) as {
+      replayed: boolean;
+      publication_id: string;
+    };
+    assert(
+      replay.status === 200 &&
+        replayBody.replayed === true &&
+        replayBody.publication_id === body.publication_id,
+      `formula replay did not converge: ${replay.status}`,
+    );
+    psqlFails(
+      `update public.artwork_publications set formula_license = null where id = '${body.publication_id}'`,
+      'frozen formula license update',
+    );
+
+    const staleDraft = await makeDraft('stale formula attestation');
+    const staleKey = crypto.randomUUID();
+    const stale = await rpc(keys, 'fractalpark_publish_draft', keys.serviceKey, {
+      p_owner_id: PUB_OWNER,
+      p_idempotency_key: staleKey,
+      p_request_hash: `hash-${staleKey}`,
+      p_draft_id: staleDraft.id,
+      p_expected_revision: staleDraft.revision,
+      p_title: 'stale formula attestation',
+      p_description: '',
+      p_envelope: { envelopeVersion: 1 },
+      p_config_bytes: 8,
+      p_rights_attestation_version: '2026-08-02.v1',
+      p_license_version: 'CC-BY-4.0',
+      p_formula_source_attestation_version: '2026-08-07.v1',
+    });
+    const staleBody = await stale.text();
+    assert(
+      stale.status !== 200 && staleBody.includes('validation_failed'),
+      `stale formula attestation: ${stale.status} ${staleBody}`,
+    );
+    const retained = psql(
+      `select count(*) from public.artwork_drafts where id = '${staleDraft.id}'`,
+    );
+    assert(retained === '1', 'rejected formula publish must keep the source draft');
   });
 
   await test('publish: revision conflict and 24h quota consumed atomically', async () => {
@@ -1148,8 +1234,8 @@ async function main(): Promise<void> {
     assert(foreign.status !== 200 && foreignBody.includes('not_found'), `foreign withdraw: ${foreign.status} ${foreignBody}`);
   });
 
-  await test('publication RPCs are not executable by anon', async () => {
-    const res = await rpc(keys, 'fractalpark_publish_draft', keys.anonKey, {
+  await test('publication RPCs are not executable by anon or authenticated', async () => {
+    const publishArgs = {
       p_owner_id: PUB_OWNER,
       p_idempotency_key: crypto.randomUUID(),
       p_request_hash: 'hash-anon',
@@ -1161,19 +1247,23 @@ async function main(): Promise<void> {
       p_config_bytes: 1,
       p_rights_attestation_version: 'v1',
       p_license_version: 'CC-BY-4.0',
-    });
-    assert(res.status !== 200, `anon must not execute publish: ${res.status}`);
-    const wRes = await rpc(keys, 'fractalpark_withdraw_publication', keys.anonKey, {
+    };
+    const withdrawArgs = {
       p_owner_id: PUB_OWNER,
       p_idempotency_key: crypto.randomUUID(),
       p_request_hash: 'hash-anon',
       p_publication_id: crypto.randomUUID(),
-    });
-    assert(wRes.status !== 200, `anon must not execute withdraw: ${wRes.status}`);
+    };
+    for (const [label, bearer] of [['anon', keys.anonKey], ['authenticated', userJwt]] as const) {
+      const res = await rpc(keys, 'fractalpark_publish_draft', bearer, publishArgs);
+      assert(res.status !== 200, `${label} must not execute publish: ${res.status}`);
+      const wRes = await rpc(keys, 'fractalpark_withdraw_publication', bearer, withdrawArgs);
+      assert(wRes.status !== 200, `${label} must not execute withdraw: ${wRes.status}`);
+    }
   });
 
   await test('draft RPCs are not executable by anon or authenticated', async () => {
-    const anonRes = await rpc(keys, 'fractalpark_draft_create', keys.anonKey, {
+    const args = {
       p_owner_id: RPC_OWNER_A,
       p_idempotency_key: crypto.randomUUID(),
       p_request_hash: 'hash-anon',
@@ -1182,8 +1272,11 @@ async function main(): Promise<void> {
       p_thumbnail_path: null,
       p_config_bytes: 1,
       p_thumbnail_bytes: 0,
-    });
-    assert(anonRes.status !== 200, `anon must not execute draft_create: ${anonRes.status}`);
+    };
+    for (const [label, bearer] of [['anon', keys.anonKey], ['authenticated', userJwt]] as const) {
+      const denied = await rpc(keys, 'fractalpark_draft_create', bearer, args);
+      assert(denied.status !== 200, `${label} must not execute draft_create: ${denied.status}`);
+    }
   });
 
   await test('moderation: hide keeps the envelope, records reason, registers thumbnail cleanup', async () => {
@@ -1468,6 +1561,371 @@ async function main(): Promise<void> {
       p_owner_id: RPC_OWNER_A,
     });
     assert(revoke.status !== 200, `anon revoke denied: ${revoke.status}`);
+  });
+
+  console.log('== v0.4.16: custom formula cloud store ==');
+
+  // Dedicated owners: OWNER_A is auth-deleted mid-suite, and RPC_OWNER_A has
+  // deletion-flow residue (rate-limit counters, audit rows) — the formula
+  // battery stays self-contained.
+  const CF_OWNER_A = await createUser(keys, 'cf-a');
+  const CF_OWNER_B = await createUser(keys, 'cf-b');
+
+  await test('custom_formulas: structure, RLS, grants, index', () => {
+    const rls = psql(
+      `select relrowsecurity || ':' || relforcerowsecurity from pg_class
+       where relnamespace = 'public'::regnamespace and relname = 'custom_formulas'`,
+    );
+    assert(rls === 'true:true', `RLS not enabled+forced on custom_formulas: ${rls}`);
+    assert(psql(`select has_table_privilege('anon', 'public.custom_formulas', 'select')`) === 'f', 'anon can select custom_formulas');
+    assert(psql(`select has_table_privilege('authenticated', 'public.custom_formulas', 'insert')`) === 'f', 'authenticated can insert custom_formulas');
+    assert(psql(`select has_table_privilege('service_role', 'public.custom_formulas', 'select')`) === 't', 'service_role cannot select custom_formulas');
+    const idx = psql(
+      `select indexname from pg_indexes where schemaname = 'public' and indexname = 'custom_formulas_owner_updated_idx'`,
+    );
+    assert(idx.includes('custom_formulas_owner_updated_idx'), 'missing owner/updated index');
+  });
+
+  await test('custom_formulas constraint battery', () => {
+    psqlFails(
+      `insert into public.custom_formulas (owner_id, name, source, source_bytes) values ('${CF_OWNER_A}', '', 'formula x', 9)`,
+      'empty name',
+    );
+    psqlFails(
+      `insert into public.custom_formulas (owner_id, name, source, source_bytes) values ('${CF_OWNER_A}', 'x', 'src', 7)`,
+      'source_bytes mismatch with octet_length(source)',
+    );
+    psqlFails(
+      `insert into public.custom_formulas (owner_id, name, source, source_bytes) values ('${CF_OWNER_A}', 'x', repeat('a', 65537), 65537)`,
+      'source above 64 KiB',
+    );
+    psqlFails(
+      `insert into public.custom_formulas (owner_id, name, source, source_bytes, experience_hint) values ('${CF_OWNER_A}', 'x', 'src', 3, '["not-an-object"]')`,
+      'experience_hint must be an object',
+    );
+    psql(
+      `insert into public.custom_formulas (owner_id, name, source, source_bytes) values ('${CF_OWNER_A}', 'ok', 'src', 3)`,
+    );
+    const count = psql(`select count(*) from public.custom_formulas where owner_id = '${CF_OWNER_A}' and name = 'ok'`);
+    assert(count === '1', 'valid row insert failed');
+    psql(`delete from public.custom_formulas where owner_id = '${CF_OWNER_A}' and name = 'ok'`);
+  });
+
+  await test('custom_formulas frozen-field trigger', () => {
+    psql(
+      `insert into public.custom_formulas (owner_id, name, source, source_bytes) values ('${CF_OWNER_A}', 'freeze', 'src', 3)`,
+    );
+    const id = psql(`select id from public.custom_formulas where owner_id = '${CF_OWNER_A}' and name = 'freeze'`);
+    psqlFails(
+      `update public.custom_formulas set revision = revision + 2 where id = '${id}'`,
+      'revision must increment by exactly one',
+    );
+    psqlFails(
+      `update public.custom_formulas set owner_id = '${CF_OWNER_B}', revision = revision + 1 where id = '${id}'`,
+      'owner is frozen',
+    );
+    psql(`update public.custom_formulas set name = 'freeze2', revision = revision + 1 where id = '${id}'`);
+    const rev = psql(`select revision from public.custom_formulas where id = '${id}'`);
+    assert(rev === '2', `expected revision 2, got ${rev}`);
+    psql(`delete from public.custom_formulas where id = '${id}'`);
+  });
+
+  await test('operation enum and rate-limit policy accept custom formula values', async () => {
+    const res = await rpc(keys, 'fractalpark_rate_limit_consume', keys.serviceKey, {
+      p_policy_key: 'custom_formula_save_5s',
+      p_subject_hash: 'cf'.padEnd(64, '0'),
+      p_limit: 100,
+      p_window_seconds: 5,
+    });
+    assert(res.status === 200, `custom_formula_save_5s policy rejected: ${res.status} ${await res.text()}`);
+    psql(`delete from public.rate_limit_counters where policy_key = 'custom_formula_save_5s'`);
+  });
+
+  await test('custom_formula_save: create + operation atomically, replay converges, hash conflict rejects', async () => {
+    const key = crypto.randomUUID();
+    const args = {
+      p_owner_id: CF_OWNER_A,
+      p_idempotency_key: key,
+      p_request_hash: `hash-${key}`,
+      p_name: 'RPC formula',
+      p_source: 'formula rpc { z = z^2 + c }',
+      p_experience_hint: null,
+    };
+    const createRes = await rpc(keys, 'fractalpark_custom_formula_save', keys.serviceKey, args);
+    const createBody = await createRes.text();
+    assert(createRes.status === 200, `create: ${createRes.status} ${createBody}`);
+    const created = JSON.parse(createBody) as { replayed: boolean; formula: { id: string; revision: number; source_bytes: number } };
+    assert(created.replayed === false, 'first create must not replay');
+    assert(created.formula.revision === 1, 'revision starts at 1');
+    assert(created.formula.source_bytes > 0, 'source_bytes maintained');
+
+    const replayRes = await rpc(keys, 'fractalpark_custom_formula_save', keys.serviceKey, args);
+    const replayed = (await replayRes.json()) as { replayed: boolean; formula_id: string; revision: number };
+    assert(replayRes.status === 200 && replayed.replayed === true, `replay: ${replayRes.status}`);
+    assert(replayed.formula_id === created.formula.id && replayed.revision === 1, 'replay returns the original result');
+
+    const count = psql(`select count(*) from public.custom_formulas where id = '${created.formula.id}'`);
+    assert(count === '1', 'replay must not duplicate the formula');
+    const opCount = psql(
+      `select count(*) from public.artwork_operations where owner_id = '${CF_OWNER_A}' and idempotency_key = '${key}'`,
+    );
+    assert(opCount === '1', 'exactly one operation row per (owner, key)');
+    const opType = psql(
+      `select operation_type from public.artwork_operations where owner_id = '${CF_OWNER_A}' and idempotency_key = '${key}'`,
+    );
+    assert(opType === 'save_custom_formula', `operation_type: ${opType}`);
+
+    const conflictRes = await rpc(keys, 'fractalpark_custom_formula_save', keys.serviceKey, {
+      ...args,
+      p_request_hash: `other-${key}`,
+    });
+    const conflictBody = await conflictRes.text();
+    assert(conflictRes.status !== 200 && conflictBody.includes('idempotency_conflict'), `hash conflict: ${conflictRes.status} ${conflictBody}`);
+
+    psql(`delete from public.custom_formulas where id = '${created.formula.id}'`);
+    psql(`delete from public.artwork_operations where owner_id = '${CF_OWNER_A}' and idempotency_key = '${key}'`);
+  });
+
+  await test('custom_formula_save: update revision contract and uniform foreign not_found', async () => {
+    const createKey = crypto.randomUUID();
+    const createRes = await rpc(keys, 'fractalpark_custom_formula_save', keys.serviceKey, {
+      p_owner_id: CF_OWNER_A,
+      p_idempotency_key: createKey,
+      p_request_hash: `hash-${createKey}`,
+      p_name: 'to update',
+      p_source: 'formula upd { z }',
+    });
+    const created = JSON.parse(await createRes.text()) as { formula: { id: string } };
+    const formulaId = created.formula.id;
+
+    const wrongRes = await rpc(keys, 'fractalpark_custom_formula_save', keys.serviceKey, {
+      p_owner_id: CF_OWNER_A,
+      p_formula_id: formulaId,
+      p_expected_revision: 5,
+      p_idempotency_key: crypto.randomUUID(),
+      p_request_hash: 'hash-wrong-rev',
+      p_name: 'x',
+      p_source: 'y',
+    });
+    const wrongBody = await wrongRes.text();
+    assert(wrongRes.status !== 200 && wrongBody.includes('revision_conflict'), `wrong revision: ${wrongRes.status} ${wrongBody}`);
+
+    const foreignRes = await rpc(keys, 'fractalpark_custom_formula_save', keys.serviceKey, {
+      p_owner_id: CF_OWNER_B,
+      p_formula_id: formulaId,
+      p_expected_revision: 1,
+      p_idempotency_key: crypto.randomUUID(),
+      p_request_hash: 'hash-foreign',
+      p_name: 'x',
+      p_source: 'y',
+    });
+    const foreignBody = await foreignRes.text();
+    assert(foreignRes.status !== 200 && foreignBody.includes('not_found'), `foreign owner must get uniform not_found: ${foreignRes.status} ${foreignBody}`);
+
+    const updateKey = crypto.randomUUID();
+    const okRes = await rpc(keys, 'fractalpark_custom_formula_save', keys.serviceKey, {
+      p_owner_id: CF_OWNER_A,
+      p_formula_id: formulaId,
+      p_expected_revision: 1,
+      p_idempotency_key: updateKey,
+      p_request_hash: `hash-${updateKey}`,
+      p_name: 'updated',
+      p_source: 'formula upd2 { z }',
+      p_experience_hint: { bounds: { centerX: 0, centerY: 0, zoom: 2, rotation: 0 } },
+    });
+    const okBody = await okRes.text();
+    assert(okRes.status === 200, `update: ${okRes.status} ${okBody}`);
+    const updated = JSON.parse(okBody) as { formula: { revision: number; name: string } };
+    assert(updated.formula.revision === 2 && updated.formula.name === 'updated', 'revision increments by exactly one');
+
+    const replayRes = await rpc(keys, 'fractalpark_custom_formula_save', keys.serviceKey, {
+      p_owner_id: CF_OWNER_A,
+      p_formula_id: formulaId,
+      p_expected_revision: 1,
+      p_idempotency_key: updateKey,
+      p_request_hash: `hash-${updateKey}`,
+      p_name: 'updated',
+      p_source: 'formula upd2 { z }',
+      p_experience_hint: { bounds: { centerX: 0, centerY: 0, zoom: 2, rotation: 0 } },
+    });
+    const replayed = JSON.parse(await replayRes.text()) as { replayed: boolean; revision: number };
+    assert(replayed.replayed === true && replayed.revision === 2, 'update replay returns the stored revision');
+    const finalRev = psql(`select revision from public.custom_formulas where id = '${formulaId}'`);
+    assert(finalRev === '2', 'replay must not re-increment');
+
+    psql(`delete from public.custom_formulas where id = '${formulaId}'`);
+    psql(`delete from public.artwork_operations where formula_id = '${formulaId}' or idempotency_key in ('${createKey}', '${updateKey}')`);
+  });
+
+  await test('custom_formula_save quota: count enforced with test-tunable limit', async () => {
+    const k1 = crypto.randomUUID();
+    const r1 = await rpc(keys, 'fractalpark_custom_formula_save', keys.serviceKey, {
+      p_owner_id: CF_OWNER_A,
+      p_idempotency_key: k1,
+      p_request_hash: `hash-${k1}`,
+      p_name: 'quota one',
+      p_source: 'a',
+      p_quota: 1,
+    });
+    assert(r1.status === 200, `first under quota: ${r1.status} ${await r1.text()}`);
+    const k2 = crypto.randomUUID();
+    const r2 = await rpc(keys, 'fractalpark_custom_formula_save', keys.serviceKey, {
+      p_owner_id: CF_OWNER_A,
+      p_idempotency_key: k2,
+      p_request_hash: `hash-${k2}`,
+      p_name: 'quota two',
+      p_source: 'b',
+      p_quota: 1,
+    });
+    const body2 = await r2.text();
+    assert(r2.status !== 200 && body2.includes('quota_exceeded'), `quota: ${r2.status} ${body2}`);
+    psql(`delete from public.custom_formulas where owner_id = '${CF_OWNER_A}' and name = 'quota one'`);
+    psql(`delete from public.artwork_operations where owner_id = '${CF_OWNER_A}' and idempotency_key in ('${k1}', '${k2}')`);
+  });
+
+  await test('custom_formula_delete: permanent, replay safe, uniform foreign not_found', async () => {
+    const createKey = crypto.randomUUID();
+    const createRes = await rpc(keys, 'fractalpark_custom_formula_save', keys.serviceKey, {
+      p_owner_id: CF_OWNER_A,
+      p_idempotency_key: createKey,
+      p_request_hash: `hash-${createKey}`,
+      p_name: 'to delete',
+      p_source: 'z',
+    });
+    const created = JSON.parse(await createRes.text()) as { formula: { id: string } };
+    const formulaId = created.formula.id;
+
+    const foreignRes = await rpc(keys, 'fractalpark_custom_formula_delete', keys.serviceKey, {
+      p_owner_id: CF_OWNER_B,
+      p_formula_id: formulaId,
+      p_idempotency_key: crypto.randomUUID(),
+      p_request_hash: 'hash-foreign-del',
+    });
+    const foreignBody = await foreignRes.text();
+    assert(foreignRes.status !== 200 && foreignBody.includes('not_found'), `foreign delete must get uniform not_found: ${foreignRes.status} ${foreignBody}`);
+
+    const deleteKey = crypto.randomUUID();
+    const delRes = await rpc(keys, 'fractalpark_custom_formula_delete', keys.serviceKey, {
+      p_owner_id: CF_OWNER_A,
+      p_formula_id: formulaId,
+      p_idempotency_key: deleteKey,
+      p_request_hash: `hash-${deleteKey}`,
+    });
+    assert(delRes.status === 200, `delete: ${delRes.status} ${await delRes.text()}`);
+    const gone = psql(`select count(*) from public.custom_formulas where id = '${formulaId}'`);
+    assert(gone === '0', 'formula must be physically deleted');
+
+    const replayRes = await rpc(keys, 'fractalpark_custom_formula_delete', keys.serviceKey, {
+      p_owner_id: CF_OWNER_A,
+      p_formula_id: formulaId,
+      p_idempotency_key: deleteKey,
+      p_request_hash: `hash-${deleteKey}`,
+    });
+    const replayed = JSON.parse(await replayRes.text()) as { replayed: boolean };
+    assert(replayRes.status === 200 && replayed.replayed === true, 'delete replay returns the stored result');
+
+    psql(`delete from public.artwork_operations where owner_id = '${CF_OWNER_A}' and idempotency_key in ('${createKey}', '${deleteKey}')`);
+  });
+
+  await test('custom formula RPCs are not executable by anon or authenticated', async () => {
+    const saveRes = await rpc(keys, 'fractalpark_custom_formula_save', keys.anonKey, {
+      p_owner_id: CF_OWNER_A,
+      p_idempotency_key: crypto.randomUUID(),
+      p_request_hash: 'anon',
+      p_name: 'x',
+      p_source: 'y',
+    });
+    assert(saveRes.status !== 200, `anon save denied: ${saveRes.status}`);
+    const delRes = await rpc(keys, 'fractalpark_custom_formula_delete', keys.anonKey, {
+      p_owner_id: CF_OWNER_A,
+      p_formula_id: crypto.randomUUID(),
+      p_idempotency_key: crypto.randomUUID(),
+      p_request_hash: 'anon',
+    });
+    assert(delRes.status !== 200, `anon delete denied: ${delRes.status}`);
+    const authSave = await rpc(keys, 'fractalpark_custom_formula_save', keys.anonKey, {
+      p_owner_id: CF_OWNER_A,
+      p_idempotency_key: crypto.randomUUID(),
+      p_request_hash: 'auth',
+      p_name: 'x',
+      p_source: 'y',
+    });
+    assert(authSave.status !== 200, `second anon-key save denied: ${authSave.status}`);
+  });
+
+  await test('custom_formula_save: route seam — pre-generated id with null revision creates', async () => {
+    // Guards the route→RPC contract (review B1): create must not require a
+    // null p_formula_id; the pre-generated id becomes the row id.
+    const key = crypto.randomUUID();
+    const preId = crypto.randomUUID();
+    const res = await rpc(keys, 'fractalpark_custom_formula_save', keys.serviceKey, {
+      p_owner_id: CF_OWNER_A,
+      p_idempotency_key: key,
+      p_request_hash: `hash-${key}`,
+      p_name: 'seam',
+      p_source: 'z',
+      p_formula_id: preId,
+      p_expected_revision: null,
+    });
+    const body = await res.text();
+    assert(res.status === 200, `seam create: ${res.status} ${body}`);
+    const created = JSON.parse(body) as { replayed: boolean; formula: { id: string; revision: number } };
+    assert(created.replayed === false && created.formula.id === preId && created.formula.revision === 1,
+      `pre-id create: ${body}`);
+    psql(`delete from public.custom_formulas where id = '${preId}'`);
+    psql(`delete from public.artwork_operations where owner_id = '${CF_OWNER_A}' and idempotency_key = '${key}'`);
+  });
+
+  await test('custom formula read path: owner filter yields nothing for a foreign id', async () => {
+    const key = crypto.randomUUID();
+    const createRes = await rpc(keys, 'fractalpark_custom_formula_save', keys.serviceKey, {
+      p_owner_id: CF_OWNER_A,
+      p_idempotency_key: key,
+      p_request_hash: `hash-${key}`,
+      p_name: 'read-isolation',
+      p_source: 'z',
+    });
+    const created = JSON.parse(await createRes.text()) as { formula: { id: string } };
+    // The data layer reads with service key + explicit owner filter; a
+    // foreign owner filter must return zero rows (the API then maps 404).
+    const foreign = await rest(
+      keys,
+      `/rest/v1/custom_formulas?select=id&id=eq.${created.formula.id}&owner_id=eq.${CF_OWNER_B}`,
+      keys.serviceKey,
+    );
+    const rows = (await foreign.json()) as unknown[];
+    assert(foreign.status === 200 && rows.length === 0, `foreign read must be empty: ${foreign.status}`);
+    psql(`delete from public.custom_formulas where id = '${created.formula.id}'`);
+    psql(`delete from public.artwork_operations where owner_id = '${CF_OWNER_A}' and idempotency_key = '${key}'`);
+  });
+
+  await test('account deletion confirm purges custom formulas and reports the count', async () => {
+    const stepRes = await rpc(keys, 'fractalpark_account_deletion_step_up', keys.serviceKey, {
+      p_owner_id: CF_OWNER_A,
+      p_proof_key: crypto.randomUUID(),
+    });
+    const step = JSON.parse(await stepRes.text()) as { operation_id: string };
+
+    const formulaKey = crypto.randomUUID();
+    const saveRes = await rpc(keys, 'fractalpark_custom_formula_save', keys.serviceKey, {
+      p_owner_id: CF_OWNER_A,
+      p_idempotency_key: formulaKey,
+      p_request_hash: `hash-${formulaKey}`,
+      p_name: 'deletion-target',
+      p_source: 'z',
+    });
+    assert(saveRes.status === 200, `seed formula: ${saveRes.status} ${await saveRes.text()}`);
+
+    const confirmRes = await rpc(keys, 'fractalpark_account_deletion_confirm', keys.serviceKey, {
+      p_owner_id: CF_OWNER_A,
+      p_operation_id: step.operation_id,
+    });
+    const confirmBody = await confirmRes.text();
+    assert(confirmRes.status === 200, `confirm: ${confirmRes.status} ${confirmBody}`);
+    const result = JSON.parse(confirmBody) as { formulas_deleted?: number };
+    assert(typeof result.formulas_deleted === 'number' && result.formulas_deleted >= 1, `formulas_deleted: ${confirmBody}`);
+    const remaining = psql(`select count(*) from public.custom_formulas where owner_id = '${CF_OWNER_A}'`);
+    assert(remaining === '0', 'formulas must be purged on account deletion');
   });
 
   console.log(`\n${passed} passed, ${failed} failed`);

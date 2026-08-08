@@ -100,7 +100,10 @@ interface FormulaEditorProps {
     source: string,
     experienceHint?: FormulaExperienceHint,
     formulaId?: string,
-  ) => { success: boolean; error?: string; id?: string } | void;
+  ) =>
+    | { success: boolean; error?: string; id?: string; silent?: boolean }
+    | Promise<{ success: boolean; error?: string; id?: string; silent?: boolean }>
+    | void;
   onClose?: () => void;
 }
 
@@ -166,6 +169,7 @@ export function FormulaEditor({
   const { toast } = useToast();
   const editorRef = useRef<HTMLDivElement>(null);
   const cmViewRef = useRef<EditorView | null>(null);
+  const savingRef = useRef(false);
   const lastSourceMapRef = useRef<FRMSourceMap | null>(null);
   const lastSourceRef = useRef<string>(initialSource);
   const currentDialect: FormulaDialect = detectFormulaDialect(source);
@@ -420,25 +424,35 @@ export function FormulaEditor({
     }
   }, [experienceHint, source, sourcePreflightError, onCompile, toast, t]);
 
-  const handleSave = useCallback(() => {
-    const name = compileResult?.plugin?.name || 'Untitled';
-    const effectiveHint = compileResult?.effectiveExperienceHint ?? experienceHint;
-    const saveResult = onSave?.(name, source, effectiveHint, formulaId);
-    if (saveResult && saveResult.success === false) {
+  const handleSave = useCallback(async () => {
+    if (savingRef.current) return; // double-click guard (review N8)
+    savingRef.current = true;
+    try {
+      const name = compileResult?.plugin?.name || 'Untitled';
+      const effectiveHint = compileResult?.effectiveExperienceHint ?? experienceHint;
+      const saveResult = await onSave?.(name, source, effectiveHint, formulaId);
+      if (saveResult && 'silent' in saveResult && saveResult.silent) {
+        // A sign-in intent owns the UI now (v0.4.16): no toast either way.
+        return;
+      }
+      if (saveResult && saveResult.success === false) {
+        toast({
+          title: t('saveFailed'),
+          description: saveResult.error ?? t('saveFailedDescription'),
+          variant: 'destructive',
+        });
+        return;
+      }
+
+      trackEvent('custom_formula_save', { name });
+
       toast({
-        title: t('saveFailed'),
-        description: saveResult.error ?? t('saveFailedDescription'),
-        variant: 'destructive',
+        title: t('saved'),
+        description: t('savedDescription', { name }),
       });
-      return;
+    } finally {
+      savingRef.current = false;
     }
-
-    trackEvent('custom_formula_save', { name });
-
-    toast({
-      title: t('saved'),
-      description: t('savedDescription', { name }),
-    });
   }, [source, compileResult, experienceHint, formulaId, onSave, toast, t]);
 
   const handleRestoreLastSuccessful = useCallback(() => {
@@ -714,7 +728,7 @@ export function FormulaEditor({
           </Button>
 
           {compileResult?.success && (
-            <Button variant="outline" onClick={handleSave}>
+            <Button variant="outline" onClick={() => void handleSave()}>
               <Save className="w-4 h-4 mr-2" />
               {t('save')}
             </Button>

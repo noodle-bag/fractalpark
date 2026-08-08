@@ -300,17 +300,22 @@ describe('POST /api/creation/drafts', () => {
     expect(Object.keys(args.p_envelope.document.coloring)).toEqual(keys);
   });
 
-  it('returns 200 with the original result on an idempotent replay', async () => {
+  it('returns the original create result and deletes the replay upload', async () => {
+    const png = Buffer.from([0x89, 0x50, 0x4e, 0x47, 1, 2, 3, 4]).toString('base64');
     stubFetch((call) => {
       if (call.url.includes('rpc/fractalpark_draft_create')) {
         return new Response(JSON.stringify({ replayed: true, draft_id: DRAFT_ID, revision: 1 }), { status: 200 });
       }
       return defaultRespond(call);
     });
-    const res = await draftsPOST(postJson('/api/creation/drafts', envelopeBody(), AUTH_HEADERS()));
+    const res = await draftsPOST(
+      postJson('/api/creation/drafts', envelopeBody({ thumbnail: png }), AUTH_HEADERS()),
+    );
     expect(res.status).toBe(200);
     const body = (await res.json()) as { draftId: string; revision: number };
     expect(body).toMatchObject({ draftId: DRAFT_ID, revision: 1 });
+    expect(fetchCalls.some((c) => c.url.includes('/storage/v1/object/') && c.method === 'POST')).toBe(true);
+    expect(fetchCalls.some((c) => c.url.includes('/storage/v1/object/') && c.method === 'DELETE')).toBe(true);
   });
 
   it('maps quota and idempotency RPC failures to the frozen codes', async () => {
@@ -351,9 +356,9 @@ describe('POST /api/creation/drafts', () => {
     expect(orphanDelete).toBeDefined();
   });
 
-  it('does not delete the uploaded thumbnail when the RPC reports idempotency_conflict', async () => {
-    // A conflict means the draft id may belong to an existing draft whose
-    // thumbnail lives at the same path; deleting would be self-harm.
+  it('deletes the fresh upload when the RPC reports idempotency_conflict', async () => {
+    // Thumbnail object names are randomized per upload. A rejected RPC can
+    // never have adopted this fresh path, so retaining it would leak storage.
     const png = Buffer.from([0x89, 0x50, 0x4e, 0x47, 1, 2, 3, 4]).toString('base64');
     stubFetch((call) => {
       if (call.url.includes('rpc/fractalpark_draft_create')) {
@@ -364,7 +369,7 @@ describe('POST /api/creation/drafts', () => {
     const res = await draftsPOST(postJson('/api/creation/drafts', envelopeBody({ thumbnail: png }), AUTH_HEADERS()));
     expect(res.status).toBe(409);
     expect(fetchCalls.some((c) => c.url.includes('/storage/v1/object/') && c.method === 'POST')).toBe(true);
-    expect(fetchCalls.some((c) => c.url.includes('/storage/v1/object/') && c.method === 'DELETE')).toBe(false);
+    expect(fetchCalls.some((c) => c.url.includes('/storage/v1/object/') && c.method === 'DELETE')).toBe(true);
   });
 
   it('rejects a thumbnail with invalid magic bytes', async () => {
@@ -533,6 +538,33 @@ describe('PATCH /api/creation/drafts/[draftId]', () => {
       params(DRAFT_ID),
     );
     expect(res.status).toBe(409);
+    expect(fetchCalls.some((c) => c.url.includes('/storage/v1/object/') && c.method === 'POST')).toBe(true);
+    expect(fetchCalls.some((c) => c.url.includes('/storage/v1/object/') && c.method === 'DELETE')).toBe(true);
+  });
+
+  it('deletes the unused replacement thumbnail on an update replay', async () => {
+    const webp = Buffer.from([0x52, 0x49, 0x46, 0x46, 1, 2, 3, 4]).toString('base64');
+    stubFetch((call) => {
+      if (call.url.includes('artwork_drafts') && call.method === 'GET') {
+        return new Response(JSON.stringify([currentRow()]), { status: 200 });
+      }
+      if (call.url.includes('rpc/fractalpark_draft_update')) {
+        return new Response(
+          JSON.stringify({ replayed: true, draft_id: DRAFT_ID, revision: 3 }),
+          { status: 200 },
+        );
+      }
+      return defaultRespond(call);
+    });
+    const res = await draftPATCH(
+      patchJson(
+        `/api/creation/drafts/${DRAFT_ID}`,
+        envelopeBody({ expectedRevision: 2, thumbnail: webp }),
+        AUTH_HEADERS(),
+      ),
+      params(DRAFT_ID),
+    );
+    expect(res.status).toBe(200);
     expect(fetchCalls.some((c) => c.url.includes('/storage/v1/object/') && c.method === 'POST')).toBe(true);
     expect(fetchCalls.some((c) => c.url.includes('/storage/v1/object/') && c.method === 'DELETE')).toBe(true);
   });

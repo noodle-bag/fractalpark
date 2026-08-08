@@ -65,7 +65,6 @@ describe('jsonError', () => {
       ['otp_invalid', 400],
       ['payload_too_large', 413],
       ['invalid_envelope', 422],
-      ['formula_assets_not_publishable', 422],
       ['quota_exceeded', 422],
       ['revision_conflict', 409],
       ['idempotency_conflict', 409],

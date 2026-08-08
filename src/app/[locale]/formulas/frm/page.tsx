@@ -444,8 +444,43 @@ export default async function FrmGuidePage({
         </GuideSection>
 
         <GuideSection
-          id="next-steps"
+          id="sharing"
           number="08"
+          title={t('sections.sharing.title')}
+        >
+          <p className="max-w-3xl leading-7 text-muted-foreground">
+            {t('sections.sharing.intro')}
+          </p>
+          <ul className="mt-6 space-y-4">
+            {(['private', 'download', 'publish'] as const).map((point) => (
+              <li key={point} className="flex gap-3">
+                <span className="mt-2 size-1.5 shrink-0 rounded-full bg-primary" />
+                <div>
+                  <p className="font-medium">{t(`sections.sharing.points.${point}.title`)}</p>
+                  <p className="mt-1 text-sm leading-6 text-muted-foreground">
+                    {t(`sections.sharing.points.${point}.body`)}
+                  </p>
+                </div>
+              </li>
+            ))}
+          </ul>
+          <p className="mt-6 text-sm leading-6 text-muted-foreground">
+            {t('sections.sharing.mitPrefix')}{' '}
+            <a
+              href="https://opensource.org/licenses/MIT"
+              target="_blank"
+              rel="noreferrer"
+              className="font-medium text-primary underline-offset-4 hover:underline"
+            >
+              {t('sections.sharing.mitLink')}
+            </a>
+            {t('sections.sharing.mitSuffix')}
+          </p>
+        </GuideSection>
+
+        <GuideSection
+          id="next-steps"
+          number="09"
           title={t('sections.next-steps.title')}
         >
           <div className="rounded-xl border bg-muted/20 p-6 sm:p-8">

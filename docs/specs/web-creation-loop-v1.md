@@ -133,6 +133,7 @@ Six tables and two storage buckets carry the cloud state.
   Anonymous users, other users, and maintainers cannot read private drafts.
 - Drafts may carry portable formula assets; those drafts can be saved,
   opened, exported, and emailed, but cannot be published to Community.
+  *(Superseded in v0.4.16: strict formula-asset publication acceptance — see §17.2.)*
 - Deletion is permanent and cleans up the private thumbnail.
 
 ### 4.3 `artwork_publications`
@@ -149,15 +150,19 @@ Six tables and two storage buckets carry the cloud state.
 | `thumbnail_attempts` / `thumbnail_error_code` | Server diagnostics; internal errors are never exposed |
 | `license` / `license_scope` | Fixed `CC-BY-4.0` / `artwork_image` |
 | `rights_attestation_version` / `license_version` / `rights_attested_at` | Frozen attestation and license display versions plus server-recorded time; never client-assigned |
+| `formula_license` / `formula_license_scope` / `formula_source_attestation_version` | Nullable all-or-none source-license snapshot; fixed `MIT` / `formula_source` plus the explicit confirmation version for custom-formula publications; null for built-in-only and legacy rows |
 | `remix_source_type` / `remix_source_id` | Nullable as a pair; frozen direct source |
 | `status` | `published \| hidden \| withdrawn` |
 | `published_at` / `hidden_at` / `withdrawn_at` | Lifecycle timestamps; inapplicable states stay null |
 | `moderation_reason` | Nullable, non-public, maintainer-only |
 
 - Publishing validates the display name, title, description, envelope,
-  provenance, license attestation, rate limits, and quotas; any envelope
-  containing portable formula source is rejected. On success the source
-  cloud draft is deleted and the work appears under My Works → Published.
+  provenance, license attestations, rate limits, and quotas. Built-in-only
+  works freeze the artwork-image license fields and keep formula-license
+  fields null; a portable custom formula must additionally pass the strict
+  §17.2 source, hash, compile, and independent MIT-attestation gate. On
+  success the source cloud draft is deleted and the work appears under My
+  Works → Published.
 - After publish, only lifecycle state, its timestamps, moderation records,
   and the derived thumbnail may change.
 - `published → hidden` and `hidden → published` are maintainer actions
@@ -181,10 +186,11 @@ Six tables and two storage buckets carry the cloud state.
 | `id` | Server-generated UUID |
 | `idempotency_key` | Client UUID per logical write; scoped per owner |
 | `owner_id` | Set by the server session; nulled when the auth user is finally removed |
-| `operation_type` | `save_draft \| publish_draft \| delete_draft \| withdraw_publication \| delete_account` |
+| `operation_type` | `save_draft \| publish_draft \| delete_draft \| withdraw_publication \| delete_account \| save_custom_formula \| delete_custom_formula` (last two added in v0.4.16) |
 | `request_hash` | Server digest of the operation's key parameters |
 | `status` | `processing \| succeeded \| failed` |
 | `draft_id` / `publication_id` | Nullable operation target or result |
+| `formula_id` | Nullable custom-formula operation target or result (v0.4.16; set null when the formula row is deleted) |
 | `result_revision` | Nullable draft revision after a successful save |
 | `error_code` | Nullable, stable, non-sensitive product error code |
 | `backup_email_status` | `not_requested \| pending \| sent \| failed \| unknown \| skipped_rate_limit` |
@@ -294,8 +300,9 @@ FractalPark Route Handlers.
   draft save (a 1 MiB envelope plus a base64 thumbnail and metadata
   margin) and 16 KiB for every other write. Private draft thumbnails
   travel as base64 inside the JSON save request; there is no separate
-  upload endpoint. The server decodes, validates, and re-encodes before
-  storage.
+  upload endpoint. The server decodes the payload, enforces the byte cap and
+  PNG/JPEG/WebP magic bytes, then stores it in the owner-only private bucket;
+  server-side pixel re-encoding is not part of this version's contract.
   `SameSite=Lax` is a supplementary line, never the CSRF check itself.
 - Post-login continuation accepts only server-issued operation tokens and an
   in-site allowlist; arbitrary `returnTo` URLs are rejected.
@@ -330,7 +337,7 @@ emails, IPs, tokens, and envelope contents are never sent to the client.
 | `otp_invalid` | 400 | Wrong or expired code; the response never reveals whether the email is registered |
 | `payload_too_large` | 413 | Body or envelope above the byte limit |
 | `invalid_envelope` | 422 | `CloudArtworkEnvelopeV1` rejection |
-| `formula_assets_not_publishable` | 422 | Envelope carries portable formula source |
+| `formula_assets_not_publishable` | 422 | Envelope carries portable formula source *(v0.4.16: blanket rejection superseded by §17.2 strict acceptance; acceptance-failure codes are frozen in the implementation commit)* |
 | `quota_exceeded` | 422 | Draft count or account storage quota reached; nothing is auto-deleted |
 | `revision_conflict` | 409 | Expected revision mismatch |
 | `idempotency_conflict` | 409 | Same key with a different request hash |
@@ -396,6 +403,11 @@ normalize path is not a security validation.
   bounds, gradient stops, keyframes, animation tracks, plugin parameters,
   asset count, asset source size and hash, and total nesting size. The 1 MiB
   cap is only the first layer and never substitutes for semantic validation.
+- Built-in formula IDs must resolve in the runtime registry. A non-built-in
+  document formula ID is accepted only when the same portable envelope carries
+  an asset with that exact ID and a verified source hash; embedded assets may
+  never shadow built-in IDs. Publication adds the compile and license gate in
+  §17.2.
 - An envelope that is future read-only, cannot be fully canonicalized,
   contains unknown runtime plugins, or exceeds render budgets may open
   locally read-only but must not be written to a cloud draft or published.
@@ -548,6 +560,11 @@ tombstones.
 
 ## 11. Local–Cloud Binding
 
+> **Superseded by [ADR 0006](../adr/0006-cloud-authoritative-creation-persistence.md)
+> in v0.4.16.** The binding below is the accurate record of v0.4.15. From
+> v0.4.16 the cloud draft is the only persistence; see §17. This section is
+> kept for historical reference and rollback reasoning.
+
 The local recovery record is `StoredArtworkRecordV2`:
 
 ```ts
@@ -592,6 +609,7 @@ the record returns to the plain local state.
   trademarks. Withdrawal does not retroactively revoke grants.
 - Private drafts and exports may carry portable formula assets. Community
   Publish rejects any envelope containing them.
+  *(Superseded in v0.4.16 — see §17.2.)*
 - The remix provenance namespace from ADR 0004 gains a stable `publication`
   source type. Frozen semantics — namespaced IDs, validation, immutability —
   follow ADR 0004; the concrete TypeScript name and URL code organization
@@ -669,3 +687,81 @@ or private draft titles. Operational correlation IDs are not analytics IDs.
   unlisted sharing, in-site report/appeal workflows, an admin UI, a
   standalone Studio or `/my-works` page, or Community featuring and indexing
   promotion.
+
+## 17. Cloud-Authoritative Persistence (v0.4.16)
+
+Introduced by [ADR 0006](../adr/0006-cloud-authoritative-creation-persistence.md).
+This section supersedes §11 for runtime behavior; §11 remains as history.
+Where §2 and §8 describe local-first persistence that conflicts with this
+section, this section governs current behavior (the older text remains the
+record of v0.4.15).
+
+- **Sole persistence.** `artwork_drafts` (Envelope + revision) is the only
+  artwork fact. Runtime code must not read, write, or delete the legacy keys
+  `fractalpark-artworks-v1`, `myfrac-saved-fractals`, or
+  `myfrac-custom-formulas`; no compatibility reader, migration wizard, or
+  double-write window ships. A static guard plus a Playwright storage probe
+  (matrix A1–A3) enforce this.
+- **Explore identity.** `?draft=<uuid>` is a lookup hint only; the owner API
+  re-verifies the session per call and returns one uniform `not_found` for
+  foreign or missing ids. `?artwork=<localId>` is removed from the runtime
+  contract. Plain URL state still carries anonymous transient creation.
+- **Five session states.** `loading` / `disabled` (switch off) /
+  `unavailable` (transport or service failure) / `anonymous` /
+  `authenticated`. UI must never render `unavailable` as `anonymous`.
+- **First frame.** While session or a `?draft=` fetch is unresolved, SSR and
+  the first client frame render one deterministic placeholder shell: no
+  private data, never a default fractal impersonating content; transitions
+  happen only after mount.
+- **Save intent.** Anonymous Save freezes the envelope/title/thumbnail at
+  click time, opens the contextual OTP, and resumes that exact intent after
+  verification. Intents live only in React memory. Publish intent first
+  ensures a saved cloud draft, then opens the existing publish dialog.
+- **Idempotency.** Draft and formula create/update/delete reuse the v0.4.15
+  operation gate: `Idempotency-Key` + request hash + stored replay; a lost
+  create response never duplicates a record.
+- **Conflicts.** Revision conflicts never auto-merge or overwrite; the UI
+  offers explicit reload-remote and save-as-new exits.
+- **Failure honesty.** Cloud failure, offline, quota, and session expiry
+  never report a successful save; Download remains the user-controlled
+  offline exit.
+- **Sign out.** Keeps the in-memory canvas but strips the private draft
+  identity; the next Save asks for OTP again.
+
+### 17.1 Custom formulas (cloud)
+
+`custom_formulas` is the My Formulas authority: UUID identity, owner, name,
+source, canonical experience hint, revision, byte size, timestamps. Runtime
+formula ids are `custom-<uuid>`. Contracts (all new in v0.4.16):
+
+- 50 records per account; UTF-8 source ≤ 64 KiB — enforced server-side with
+  stable error codes and negative tests (these are new limits, not inherited
+  ones; drafts keep their own 1 MiB / 100-record budgets).
+- Base table denies browser DML; same-origin owner API + narrow RPCs provide
+  list (summary only) / detail / save / delete with revision, quota, rate
+  limit, and idempotency; account deletion removes formulas in the staged
+  flow.
+- create/update validate name, source bytes, experience hint, built-in ID
+  conflict, and `compileFrm` server-side before writing canonical facts.
+- Artwork envelopes snapshot the referenced formula source/hash; opening a
+  draft compiles the embedded asset and never follows later library edits or
+  deletion. `.fractal.json` import registers assets in memory only; `.frm`
+  import stays an editor memory draft; only an explicit Save Formula writes
+  the library.
+
+### 17.2 Custom-formula publication
+
+The blanket `formula_assets_not_publishable` rejection is replaced by strict
+acceptance: exactly one referenced asset, hash match, ≤ 64 KiB, server-side
+compile success. The immutable publication snapshot freezes source/hash,
+license `MIT`, scope `formula_source`, and the source-attestation version —
+separate from the image layer's CC BY 4.0. The publish dialog requires an
+explicit author confirmation that the source becomes public and licensed
+under MIT; the server refuses without it. Withdrawal/deletion stops new
+reads, downloads, and remixes but does not retroactively revoke granted
+licenses; existing derivatives keep minimal provenance. Built-in-only
+publications keep null/not-applicable formula license fields (no backfill).
+Draft validation remains intentionally broader than publication validation:
+an envelope with unreferenced or multiple portable assets may still be saved,
+opened, exported, and emailed so the private project is not destroyed, but the
+publish gate rejects it fail-closed until exactly one asset is referenced.

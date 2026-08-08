@@ -13,12 +13,18 @@ import { useTranslations } from 'next-intl';
 
 import {
   CloudClientError,
+  getDraft,
   getProfile,
   publishDraft,
   setDisplayName,
   type CloudDraftSummary,
 } from '@/lib/cloud/client';
-import { RIGHTS_ATTESTATION_VERSION } from '@/lib/cloud/attestation';
+import {
+  FORMULA_SOURCE_ATTESTATION_VERSION,
+  RIGHTS_ATTESTATION_VERSION,
+} from '@/lib/cloud/attestation';
+import { MIT_LICENSE_URL } from '@/lib/mit-license';
+import { readFractalDocumentEnvelope } from '@/engine/document-envelope';
 import { Button } from '@/components/ui/button';
 import {
   Dialog,
@@ -44,8 +50,13 @@ export function PublishDialog({ draft, onClose, onPublished }: PublishDialogProp
   const [title, setTitle] = useState('');
   const [description, setDescription] = useState('');
   const [attested, setAttested] = useState(false);
+  const [formulaAttested, setFormulaAttested] = useState(false);
   const [pending, setPending] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  // True when the draft carries a portable formula asset (spec §17.2).
+  const [hasFormula, setHasFormula] = useState(false);
+  // True when the probe could not decide — warn neutrally, never assert.
+  const [probeFailed, setProbeFailed] = useState(false);
 
   // Reset and probe the profile whenever a new draft is targeted.
   useEffect(() => {
@@ -53,8 +64,11 @@ export function PublishDialog({ draft, onClose, onPublished }: PublishDialogProp
     setTitle(draft.title);
     setDescription('');
     setAttested(false);
+    setFormulaAttested(false);
     setError(null);
     setPending(false);
+    setHasFormula(false);
+    setProbeFailed(false);
     getProfile()
       .then((profile) => {
         const existing = profile.displayName ?? '';
@@ -65,10 +79,21 @@ export function PublishDialog({ draft, onClose, onPublished }: PublishDialogProp
         setName('');
         setNeedsName(true);
       });
+    getDraft(draft.id)
+      .then((detail) => {
+        const read = readFractalDocumentEnvelope(detail.envelope);
+        setHasFormula(
+          read.mode === 'editable' && (read.envelope.assets?.formulas?.length ?? 0) > 0,
+        );
+      })
+      // Probe failure = unknown: warn neutrally (license is finalized
+      // server-side) instead of either silence or a false MIT claim (N16).
+      .catch(() => setProbeFailed(true));
   }, [draft]);
 
   const submit = useCallback(async () => {
     if (!draft) return;
+    if (!attested || (hasFormula && !formulaAttested)) return;
     setPending(true);
     setError(null);
     try {
@@ -81,6 +106,9 @@ export function PublishDialog({ draft, onClose, onPublished }: PublishDialogProp
         title,
         description,
         attestationVersion: RIGHTS_ATTESTATION_VERSION,
+        ...(hasFormula
+          ? { formulaSourceAttestationVersion: FORMULA_SOURCE_ATTESTATION_VERSION }
+          : {}),
       });
       setPending(false);
       onPublished();
@@ -88,14 +116,28 @@ export function PublishDialog({ draft, onClose, onPublished }: PublishDialogProp
       setPending(false);
       setError(value instanceof CloudClientError ? value.code : 'unavailable');
     }
-  }, [description, displayName, draft, needsName, onPublished, title]);
+  }, [
+    attested,
+    description,
+    displayName,
+    draft,
+    formulaAttested,
+    hasFormula,
+    needsName,
+    onPublished,
+    title,
+  ]);
 
   const errorMessage = (code: string): string => {
     switch (code) {
       case 'rate_limited':
         return t('errors.rateLimited');
-      case 'formula_assets_not_publishable':
-        return t('errors.formulaAssets');
+      case 'formula_compile_failed':
+        return t('errors.formulaCompile');
+      case 'formula_builtin_conflict':
+        return t('errors.formulaBuiltinConflict');
+      case 'invalid_envelope':
+        return t('errors.formulaCompile');
       case 'revision_conflict':
         return t('errors.revisionConflict');
       case 'validation_failed':
@@ -148,6 +190,34 @@ export function PublishDialog({ draft, onClose, onPublished }: PublishDialogProp
               className="w-full rounded-md border border-input bg-transparent px-3 py-2 text-sm shadow-xs outline-none transition-[color,box-shadow] focus-visible:border-ring focus-visible:ring-[3px] focus-visible:ring-ring/50"
             />
           </div>
+          {hasFormula && (
+            <div className="rounded-md border border-amber-500/40 bg-amber-500/10 p-3 text-xs leading-relaxed">
+              <p className="font-medium">{t('formulaNoticeTitle')}</p>
+              <p className="mt-1">{t('formulaNoticeBody')}</p>
+              <a
+                href={MIT_LICENSE_URL}
+                target="_blank"
+                rel="noreferrer"
+                className="mt-1 inline-block underline"
+              >
+                {t('formulaNoticeLink')}
+              </a>
+              <label className="mt-3 flex items-start gap-2">
+                <input
+                  type="checkbox"
+                  checked={formulaAttested}
+                  onChange={(event) => setFormulaAttested(event.target.checked)}
+                  className="mt-0.5"
+                />
+                <span>{t('formulaAttestation')}</span>
+              </label>
+            </div>
+          )}
+          {!hasFormula && probeFailed && (
+            <p className="rounded-md border border-white/15 bg-white/5 p-2.5 text-xs text-muted-foreground">
+              {t('licensePendingNote')}
+            </p>
+          )}
           <label className="flex items-start gap-2 text-sm">
             <input
               type="checkbox"
@@ -170,6 +240,7 @@ export function PublishDialog({ draft, onClose, onPublished }: PublishDialogProp
             disabled={
               pending ||
               !attested ||
+              (hasFormula && !formulaAttested) ||
               title.trim().length === 0 ||
               (needsName && displayName.trim().length === 0)
             }

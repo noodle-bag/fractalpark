@@ -52,7 +52,7 @@ export interface CloudEnvelopeAcceptance {
   configBytes: number;
   /** Title projected from the envelope artwork name (1-80 chars). */
   title: string;
-  /** True when the envelope carries portable formula source (never publishable). */
+  /** True when the envelope carries portable formula source and needs the dedicated publish gate. */
   hasPortableFormulas: boolean;
 }
 
@@ -164,12 +164,23 @@ export function validateCloudEnvelopeV1(input: unknown, inputBytes: number): Clo
   }
 
   const doc = read.envelope.document;
+  const formulas = read.envelope.assets?.formulas ?? [];
 
-  // Runtime entity allowlists resolve against the engine registries; unknown
-  // plugins must not enter cloud storage (spec section 8).
-  if (!pluginRegistry.hasFormula(doc.formula.formulaId)) {
+  // Built-ins resolve against the runtime registry. A custom formula is
+  // allowed only when the portable envelope carries the exact referenced
+  // asset; unknown bare ids must not enter cloud storage. Embedded assets may
+  // never shadow a built-in id, even when they are not currently referenced.
+  const formulaIsBuiltin = pluginRegistry.hasFormula(doc.formula.formulaId);
+  const formulaHasPortableAsset = formulas.some(
+    (asset) => asset.id === doc.formula.formulaId,
+  );
+  if (!formulaIsBuiltin && !formulaHasPortableAsset) {
     return reject('Unknown formula.');
   }
+  if (formulas.some((asset) => pluginRegistry.hasFormula(asset.id))) {
+    return reject('Formula asset conflicts with a built-in formula.');
+  }
+  // All other runtime entities remain strict registry allowlists.
   if (!pluginRegistry.hasOutsideColoring(doc.coloring.outsideColoringId)) {
     return reject('Unknown outside coloring.');
   }
@@ -236,7 +247,6 @@ export function validateCloudEnvelopeV1(input: unknown, inputBytes: number): Clo
   }
 
   // Portable formula assets: count/source budgets and verified hashes.
-  const formulas = read.envelope.assets?.formulas ?? [];
   if (formulas.length > CLOUD_FORMULA_ASSET_MAX_COUNT) {
     return reject('Formula assets exceed the count budget.');
   }

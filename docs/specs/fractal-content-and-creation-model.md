@@ -43,11 +43,11 @@ default formula state, preset state, ordering rule, or custom-formula store.
 | Published preset identity, order, localized title, state query, animation input, and asset path | `public/gallery-presets.json` | Drift, Collection, artwork pages, playback, Remix, thumbnail generation |
 | Published artwork editorial content, public slug, license metadata, and relationships | `ArtworkContentManifest` plus locale messages | Collection, artwork pages, sitemap, structured data |
 | Durable render state | `FractalDocument` | Renderer, URL adapters, artwork storage, playback projections, exports |
-| Local saved artwork | `ArtworkRepository` and Envelope v1 | My Works and Explore |
+| ~~Local saved artwork~~ (retired v0.4.16; superseded by cloud drafts) | — | — |
 | Cloud private drafts | `artwork_drafts` (server, owner-scoped) | My Works Drafts, cloud save and reopen |
 | Public community revisions | `artwork_publications` (server) | Community, public artwork pages, Remix |
 | Cloud identity and session | Auth user record and sealed server session (ADR 0005) | Same-origin Auth API, owner-scoped RPC |
-| Local custom formula source and experience hint | `custom-formula-storage` | FRM Editor, Explore formula resolver, project import/export |
+| Custom formula source and experience hint | `custom_formulas` cloud library + session registration (ADR 0006) | FRM Editor, Explore formula resolver, project import/export |
 | FRM syntax and compatibility behavior | lexer, parser, validator, type system, code generator, and `compileFrm` tests | FRM Editor, FRM Guide, examples |
 
 Content manifests may reference runtime entities by stable ID but must not
@@ -249,3 +249,22 @@ Release-specific coverage and execution gates are defined in the active test
 plan: [v0.4.15 Regression Matrix](../testing/v0.4.15-regression-matrix.md),
 succeeding
 [v0.4.13 Regression Matrix](../testing/v0.4.13-regression-matrix.md).
+
+## Custom Formula Persistence (v0.4.16)
+
+With ADR 0006 the source-of-truth map gains one row: **My Formulas** is owned
+by the cloud `custom_formulas` table (owner-scoped, revisioned). The browser
+holds only session-scoped caches and in-memory registrations; no browser
+storage is a persistence fact. Surfaces consume formulas through two named
+boundaries:
+
+- **Library boundary** — owner list (summary) / detail reads and
+  revision-checked writes through the same-origin formula API.
+- **Snapshot boundary** — an artwork envelope embeds the referenced formula
+  source/hash at save time; draft rendering compiles the embedded asset and
+  is immune to later library changes. Publication freezes the same snapshot
+  publicly under the MIT license (scope `formula_source`), independent of
+  the image layer's CC BY 4.0.
+
+No surface may reintroduce a browser-persisted formula store or a second
+compile/registry path for persisted formulas.

@@ -16,6 +16,10 @@ import {
 import { DraftServiceError } from '@/lib/cloud/drafts';
 import { withdrawPublication } from '@/lib/cloud/publications';
 import { resolveRequestSession } from '@/lib/cloud/request-session';
+import {
+  requireIdempotencyKey,
+  requireUuid,
+} from '@/app/api/creation/drafts/shared';
 
 export const runtime = 'nodejs';
 export const dynamic = 'force-dynamic';
@@ -42,9 +46,9 @@ export async function POST(
     assertCloudEnabled();
     assertSameOrigin(request);
     const { session, rotatedSetCookie } = await resolveRequestSession(request);
-    const { publicationId } = await context.params;
-    const idempotencyKey = request.headers.get('idempotency-key');
-    if (!idempotencyKey) throw new CloudApiError('validation_failed');
+    const { publicationId: rawPublicationId } = await context.params;
+    const publicationId = requireUuid(rawPublicationId);
+    const idempotencyKey = requireIdempotencyKey(request);
 
     const result = await withdrawPublication(session.userId, publicationId, idempotencyKey);
     const headers = rotatedSetCookie ? new Headers({ 'set-cookie': rotatedSetCookie }) : undefined;

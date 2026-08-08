@@ -56,6 +56,35 @@ function failure(
   };
 }
 
+/** Session-scoped asset bytes (v0.4.16): every successfully registered
+ *  in-memory formula keeps its source here so envelope creation (save,
+ *  download, export) includes it even when local formula storage is empty
+ *  — the cross-device draft case (review P1). Session-only, never
+ *  persisted. */
+const sessionAssets = new Map<string, { id: string; source: string }>();
+
+export function readSessionFormulaAssets(): Array<{ id: string; source: string }> {
+  return [...sessionAssets.values()].map((asset) => ({ ...asset }));
+}
+
+/** Cloud quota mirror for list badges (spec §17.1). */
+export const MAX_CUSTOM_FORMULAS = 50;
+
+/** Cross-component signal that the session formula registry changed; the
+ *  Explore canvas re-resolves on it (replaces the localStorage event). */
+export const CUSTOM_FORMULAS_CHANGED_EVENT = 'fractalpark:custom-formulas-changed';
+
+/** Assets for envelope creation: session-registered bytes only, filtered
+ *  to the formula the document references (single-asset publish gate). */
+export function readEffectiveFormulaAssets(
+  referencedFormulaId?: string,
+): Array<{ id: string; source: string }> {
+  const all = readSessionFormulaAssets();
+  return referencedFormulaId === undefined
+    ? all
+    : all.filter((asset) => asset.id === referencedFormulaId);
+}
+
 export function resolveCustomFormula(
   formula: ResolvableCustomFormula,
   options: ResolveCustomFormulaOptions = {}
@@ -85,6 +114,13 @@ export function resolveCustomFormula(
   if (options.register !== false) {
     try {
       pluginRegistry.register(result.plugin);
+      // Dispatch only for genuinely new ids: re-registering the same id
+      // must not re-signal (pairs with the register:false fix — B1).
+      const isNew = !sessionAssets.has(formula.id);
+      sessionAssets.set(formula.id, { id: formula.id, source: formula.source });
+      if (isNew && typeof window !== 'undefined') {
+        window.dispatchEvent(new Event(CUSTOM_FORMULAS_CHANGED_EVENT));
+      }
     } catch (error) {
       return failure(formula.id, 'registration-failed', [
         error instanceof Error
@@ -145,5 +181,8 @@ export function resolveFormulaReference(
     ]);
   }
 
-  return resolveCustomFormula(customFormula);
+  // register:false — the formula listed in session assets was registered
+  // when it entered; re-registering here would re-dispatch the changed
+  // event and self-excite the resolution listener (review B1 storm).
+  return resolveCustomFormula(customFormula, { register: false });
 }

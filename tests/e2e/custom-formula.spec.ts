@@ -45,13 +45,10 @@ test.describe('Custom Formula Workflow', () => {
     // Wait for success message (English locale)
     await page.waitForSelector('text=Compile Successful', { timeout: 10000 });
 
-    // Save the formula
+    // Save while anonymous: the cloud library queues a sign-in intent —
+    // the OTP dialog opens and nothing persists locally (v0.4.16).
     await page.getByRole('button', { name: /^Save$/ }).click();
-
-    // Verify formula appears in list (default name is "MyFormula")
-    await expect(
-      page.getByRole('button', { name: /^MyFormula$/ }).first()
-    ).toBeVisible({ timeout: 15000 });
+    await expect(page.getByLabel(/email/i)).toBeVisible({ timeout: 15000 });
   });
 
   test('should handle compilation errors gracefully', async ({ page }) => {
@@ -126,76 +123,5 @@ bailout:
     ).toBeVisible({ timeout: 15000 });
     await expect(page.locator('[data-testid="fractal-canvas"]')).not.toBeVisible();
     await expect(page).toHaveURL(/[?&]fm=frm-nonexistent/);
-  });
-
-  test('should persist custom formulas across reloads', async ({ page }) => {
-    test.setTimeout(120_000);
-    // Create a formula
-    await page.getByRole('tab', { name: /formula/i }).click();
-    await page.getByRole('tab', { name: /custom/i }).click();
-
-    // Click "New Formula" button (Chinese: "New" or "Create first formula")
-    const newFormulaBtn4 = page.locator('button').filter({ hasText: /New|Create first formula/ }).first();
-    await newFormulaBtn4.click();
-
-    await page.waitForSelector('.cm-editor', { timeout: 15000 });
-    await page.waitForTimeout(2000); // Wait for editor + lint to initialize with default formula
-
-    // Use default formula (MyFormula) directly - it's already valid
-    const compileBtn4 = page.getByRole('button', { name: /^Compile$/ });
-    await expect(compileBtn4).toBeEnabled({ timeout: 30000 });
-    await compileBtn4.click();
-    await page.waitForSelector('text=Compile Successful', { timeout: 10000 });
-    await page.getByRole('button', { name: /^Save$/ }).click();
-    await expect(page).toHaveURL(/[?&]fm=custom-/, { timeout: 10000 });
-    await page.waitForTimeout(750);
-    
-    // Reload page
-    await page.reload();
-    await waitForFractalCanvasReady(page);
-    
-    // Navigate to custom formulas
-    await page.getByRole('tab', { name: /formula/i }).click();
-    await page.getByRole('tab', { name: /custom/i }).click();
-
-    // Verify formula still exists (saved as default name "MyFormula")
-    await expect(page.locator('text=MyFormula')).toBeVisible();
-  });
-
-  test('should delete custom formula', async ({ page }) => {
-    // Create a formula first
-    await page.getByRole('tab', { name: /formula/i }).click();
-    await page.getByRole('tab', { name: /custom/i }).click();
-
-    // Click "New Formula" button (Chinese: "New" or "Create first formula")
-    const newFormulaBtn5 = page.locator('button').filter({ hasText: /New|Create first formula/ }).first();
-    await newFormulaBtn5.click();
-
-    await page.waitForSelector('.cm-editor', { timeout: 15000 });
-    await page.waitForTimeout(500);
-
-    await page.click('.cm-editor');
-    await page.keyboard.press(SELECT_ALL_SHORTCUT);
-    await page.keyboard.type(`ToDelete {
-init:
-  z = 0
-loop:
-  z = z^2 + c
-bailout:
-  |z| < 4
-}`);
-
-    const compileBtn5 = page.getByRole('button', { name: /^Compile$/ });
-    await expect(compileBtn5).toBeEnabled({ timeout: 15000 });
-    await compileBtn5.click();
-    await page.waitForSelector('text=Compile Successful', { timeout: 10000 });
-    await page.getByRole('button', { name: /^Save$/ }).click();
-    
-    // Delete the formula
-    page.on('dialog', dialog => dialog.accept());
-    await page.click('[data-testid="delete-formula"]');
-    
-    // Verify formula is removed
-    await expect(page.locator('text=ToDelete')).not.toBeVisible();
   });
 });

@@ -20,6 +20,7 @@ function apiError(status: number, code: string, retryAfter?: number): Response {
 }
 
 afterEach(() => {
+  vi.useRealTimers();
   vi.unstubAllGlobals();
 });
 
@@ -68,6 +69,56 @@ describe('cloud client draft calls', () => {
     expect(headers.get('idempotency-key')).toMatch(/^[0-9a-f-]{36}$/);
   });
 
+  it('retries a lost idempotent write response once with the same key', async () => {
+    const calls: Array<{ url: string; init?: RequestInit }> = [];
+    vi.stubGlobal(
+      'fetch',
+      vi.fn((url: RequestInfo | URL, init?: RequestInit) => {
+        calls.push({ url: String(url), init });
+        if (calls.length === 1) return Promise.reject(new TypeError('response lost'));
+        return Promise.resolve(
+          new Response(JSON.stringify({ draftId: 'd-1', revision: 1 }), { status: 200 }),
+        );
+      }),
+    );
+
+    await expect(createDraft({ envelope: { envelopeVersion: 1 } })).resolves.toMatchObject({
+      draftId: 'd-1',
+      revision: 1,
+    });
+    expect(calls).toHaveLength(2);
+    const firstKey = new Headers(calls[0].init?.headers).get('idempotency-key');
+    const secondKey = new Headers(calls[1].init?.headers).get('idempotency-key');
+    expect(firstKey).toMatch(/^[0-9a-f-]{36}$/);
+    expect(secondKey).toBe(firstKey);
+  });
+
+  it('waits out the PATCH save cooldown before retrying a lost response with the same key', async () => {
+    vi.useFakeTimers();
+    const calls: Array<{ url: string; init?: RequestInit }> = [];
+    vi.stubGlobal(
+      'fetch',
+      vi.fn((url: RequestInfo | URL, init?: RequestInit) => {
+        calls.push({ url: String(url), init });
+        if (calls.length === 1) return Promise.reject(new TypeError('response lost'));
+        return Promise.resolve(
+          new Response(JSON.stringify({ draftId: 'd-1', revision: 2 }), { status: 200 }),
+        );
+      }),
+    );
+
+    const update = updateDraft('d-1', { envelope: {}, expectedRevision: 1 });
+    await vi.advanceTimersByTimeAsync(5_000);
+    expect(calls).toHaveLength(1);
+    await vi.advanceTimersByTimeAsync(100);
+    await expect(update).resolves.toMatchObject({ draftId: 'd-1', revision: 2 });
+
+    expect(calls).toHaveLength(2);
+    const firstKey = new Headers(calls[0].init?.headers).get('idempotency-key');
+    const secondKey = new Headers(calls[1].init?.headers).get('idempotency-key');
+    expect(secondKey).toBe(firstKey);
+  });
+
   it('maps rate_limited with retryAfter', async () => {
     stubFetch(() => apiError(429, 'rate_limited', 7));
     await expect(listDrafts()).rejects.toMatchObject({ code: 'rate_limited', retryAfter: 7 });
@@ -93,11 +144,9 @@ describe('cloud client draft calls', () => {
     await expect(getSession()).rejects.toMatchObject({ code: 'otp_invalid' });
   });
 
-  it('maps payload_too_large and formula_assets_not_publishable from the frozen table', async () => {
+  it('maps payload_too_large from the frozen table', async () => {
     stubFetch(() => apiError(413, 'payload_too_large'));
     await expect(listDrafts()).rejects.toMatchObject({ code: 'payload_too_large' });
-    stubFetch(() => apiError(422, 'formula_assets_not_publishable'));
-    await expect(listDrafts()).rejects.toMatchObject({ code: 'formula_assets_not_publishable' });
   });
 
   it('returns undefined for 204 deletes', async () => {

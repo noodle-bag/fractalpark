@@ -29,7 +29,8 @@ export type RateLimitPolicyKey =
   | 'draft_save_5s'
   | 'publish_user_day'
   | 'backup_user_day'
-  | 'account_delete_day';
+  | 'account_delete_day'
+  | 'custom_formula_save_5s';
 
 export interface RateLimitOutcome {
   allowed: boolean;

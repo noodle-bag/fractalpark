@@ -13,12 +13,12 @@ FractalPark is an open-source, formula-first fractal knowledge and creation plat
 - **Discover formulas** — Browse the Formula Atlas: 94 built-in formulas across 7 families, with 21 in-depth Formula Guides covering the math, history, and visual character of the classics.
 - **Create in the browser** — Explore and render in real time with WebGL: Mandelbrot and Julia modes for every formula, 7 transforms, 9 coloring modes, gradients, lighting, and keyframe animation.
 - **Author FRM** — Write custom formulas in the Fractint-compatible FRM language with the Guide and standalone Editor: AST validation, live GLSL preview, and clear diagnostics.
-- **Save and export** — Save artworks on this device, restore exact views from shareable URLs, and export high-resolution PNG images up to 4× with SSAA anti-aliasing.
+- **Save and share** — Save artworks and custom formulas to your private cloud with email sign-in and pick them up on any device, publish pieces to the community gallery, or create anonymously and export high-resolution PNG images up to 4× with SSAA anti-aliasing.
 
 ## Current boundaries
 
 - Growing Fractint-compatible FRM support: a practical, tested subset of the Fractint formula language runs today — not a complete Fractint reimplementation.
-- Artworks and custom formulas are stored locally on your device. There are no accounts, no cloud sync, and no server-side sharing.
+- Creating needs no account. Saving artworks and formulas uses email one-time-code sign-in and stores them in your private cloud library; publishing is always explicit, and artworks carrying a custom formula publish its source under the MIT license.
 - The interface is bilingual in English and Simplified Chinese.
 
 On the roadmap (not released):

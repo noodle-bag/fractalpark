@@ -55,6 +55,7 @@ if (!OUT) {
 const TABLES: ReadonlyArray<readonly [table: string, orderBy: string]> = [
   ['profiles', 'user_id'],
   ['artwork_drafts', 'id'],
+  ['custom_formulas', 'id'],
   ['artwork_publications', 'id'],
   ['artwork_operations', 'id'],
   // The cleanup-job audit trail is durable history; rate_limit_counters is

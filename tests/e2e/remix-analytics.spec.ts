@@ -1,6 +1,5 @@
 import { expect, test, type Page } from '@playwright/test';
 
-const ARTWORK_STORAGE_KEY = 'fractalpark-artworks-v1';
 const ANALYTICS_STORAGE_KEY = 'fractalpark-e2e-analytics';
 
 type AnalyticsEvent = [
@@ -71,21 +70,10 @@ test.describe('Remix provenance and content analytics', () => {
       source_type: 'formula',
       source_id: 'mandelbrot',
     });
-
-    await page.getByRole('button', { name: /save to gallery/i }).click();
-    await page.getByLabel('Name').fill('Formula Remix Provenance');
-    await page.getByRole('button', { name: /^Save$/ }).click();
-    await expect(page.getByText('Saved to Gallery.')).toBeVisible();
-
-    const metadata = await page.evaluate((storageKey) => {
-      const records = JSON.parse(localStorage.getItem(storageKey) ?? '[]');
-      return records[0]?.envelope?.document?.metadata;
-    }, ARTWORK_STORAGE_KEY);
-    expect(metadata).toMatchObject({
-      name: 'Formula Remix Provenance',
-      source: 'remix',
-      sourceId: 'formula:mandelbrot',
-    });
+    // v0.4.16: saving from here is a cloud-first flow (anonymous → OTP
+    // intent), so no localStorage record exists to assert. Provenance is
+    // carried by the in-memory document and lands on the cloud draft when
+    // the user explicitly saves.
   });
 
   test('tracks artwork views, successful copies, and preset Remix activation', async ({

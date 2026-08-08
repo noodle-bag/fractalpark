@@ -2,18 +2,15 @@
 
 import Link from 'next/link';
 import { useLocale, useTranslations } from 'next-intl';
-import { Plus } from 'lucide-react';
-import { LocalArtworkCard, PublishedArtworkCard } from './GalleryCard';
+import { PublishedArtworkCard } from './GalleryCard';
 import { MyWorksCloud } from './MyWorksCloud';
 import { CommunityGrid } from './CommunityGrid';
 import {
   artworkPagePath,
   isPublishedArtworkPagePresetId,
 } from '@/content/artwork-pages';
-import { useArtworks } from '@/hooks/useArtworks';
 import { builtinPresetToGalleryHref } from '@/lib/gallery-presets';
 import type { PublishedArtwork } from '@/lib/published-artworks';
-import { savedFractalToHref } from '@/lib/url-params';
 import { trackEvent } from '@/components/analytics/PageViewTracker';
 import { cn } from '@/lib/utils';
 
@@ -30,7 +27,6 @@ export default function GalleryPageClient({
 }: GalleryPageClientProps) {
   const locale = useLocale();
   const t = useTranslations('gallery');
-  const { artworks: localArtworks, remove, rename } = useArtworks();
   const isCollection = initialView === 'collection';
   const isCommunity = initialView === 'community';
 
@@ -86,45 +82,6 @@ export default function GalleryPageClient({
       ) : (
         <>
           <MyWorksCloud />
-          {localArtworks.length > 0 ? (
-        <>
-          <div className="mb-5 flex justify-end px-4 sm:px-6 xl:px-8">
-            <Link
-              href={`/${locale}/explore`}
-              className="inline-flex items-center gap-2 rounded-md border px-4 py-2 text-sm font-medium transition-colors hover:bg-muted"
-            >
-              <Plus className="h-4 w-4" />
-              {t('mine.create')}
-            </Link>
-          </div>
-          <ArtworkGrid>
-            {localArtworks.map((artwork) => (
-              <LocalArtworkCard
-                key={artwork.id}
-                artwork={artwork}
-                href={artwork.storageFormat === 'document'
-                  ? `/${locale}/explore?artwork=${encodeURIComponent(artwork.id)}`
-                  : savedFractalToHref(artwork, locale)}
-                onDelete={remove}
-                onRename={rename}
-                onOpen={() => trackEvent('open_from_gallery', { is_builtin: false })}
-              />
-            ))}
-          </ArtworkGrid>
-        </>
-      ) : (
-        <section className="mx-4 flex min-h-72 flex-col items-center justify-center rounded-lg border border-dashed px-6 text-center sm:mx-6 xl:px-8">
-          <h2 className="text-xl font-semibold">{t('mine.emptyTitle')}</h2>
-          <p className="mt-2 max-w-md text-muted-foreground">{t('mine.emptyDescription')}</p>
-          <Link
-            href={`/${locale}/explore`}
-            className="mt-5 inline-flex items-center gap-2 rounded-md bg-primary px-4 py-2 text-sm font-medium text-primary-foreground"
-          >
-            <Plus className="h-4 w-4" />
-            {t('mine.create')}
-          </Link>
-        </section>
-      )}
         </>
       )}
     </main>

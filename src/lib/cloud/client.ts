@@ -22,7 +22,8 @@ export type CloudClientErrorCode =
   | 'revision_conflict'
   | 'otp_invalid'
   | 'payload_too_large'
-  | 'formula_assets_not_publishable'
+  | 'formula_compile_failed'
+  | 'formula_builtin_conflict'
   | 'account_deleting'
   | 'step_up_expired'
   | 'unavailable';
@@ -52,22 +53,49 @@ const API_CODES = new Set<CloudClientErrorCode>([
   'revision_conflict',
   'otp_invalid',
   'payload_too_large',
-  'formula_assets_not_publishable',
+  'formula_compile_failed',
+  'formula_builtin_conflict',
+  'account_deleting',
+  'step_up_expired',
   'unavailable',
 ]);
 
+// Both idempotent PATCH endpoints enforce a five-second per-resource save
+// cooldown before reaching their RPC replay gate. If the first response is
+// lost after commit, an immediate retry is guaranteed to receive 429. Wait
+// just beyond that window before spending the single same-key retry.
+const PATCH_REPLAY_DELAY_MS = 5_100;
+
+async function waitForReplayWindow(init: RequestInit): Promise<void> {
+  if (init.method?.toUpperCase() !== 'PATCH') return;
+  await new Promise<void>((resolve) => setTimeout(resolve, PATCH_REPLAY_DELAY_MS));
+}
+
 async function call<T>(path: string, init: RequestInit = {}): Promise<T> {
+  const requestInit: RequestInit = {
+    ...init,
+    headers: {
+      ...(init.body !== undefined ? { 'content-type': 'application/json' } : {}),
+      ...(init.headers ?? {}),
+    },
+  };
   let response: Response;
   try {
-    response = await fetch(path, {
-      ...init,
-      headers: {
-        ...(init.body !== undefined ? { 'content-type': 'application/json' } : {}),
-        ...(init.headers ?? {}),
-      },
-    });
+    response = await fetch(path, requestInit);
   } catch {
-    throw new CloudClientError('offline');
+    // A response can be lost after the server committed the write. Retry
+    // exactly once only when the request carries the server-side replay key;
+    // reusing the same RequestInit preserves that key and makes the retry
+    // converge instead of duplicating a create or turning publish into 404.
+    if (!new Headers(requestInit.headers).has('idempotency-key')) {
+      throw new CloudClientError('offline');
+    }
+    try {
+      await waitForReplayWindow(requestInit);
+      response = await fetch(path, requestInit);
+    } catch {
+      throw new CloudClientError('offline');
+    }
   }
 
   if (!response.ok) {
@@ -299,6 +327,7 @@ export interface PublishInput {
   title: string;
   description: string;
   attestationVersion: string;
+  formulaSourceAttestationVersion?: string;
 }
 
 export interface PublishResult {
@@ -368,4 +397,81 @@ export interface CommunityDetail extends CommunityListItem {
 
 export async function getCommunityPublication(publicationId: string): Promise<CommunityDetail> {
   return call<CommunityDetail>(`/api/creation/publications/${publicationId}`);
+}
+
+// ---------------------------------------------------------------------------
+// Custom formula cloud library (v0.4.16, spec §17.1)
+
+export interface CloudCustomFormulaSummary {
+  id: string;
+  name: string;
+  revision: number;
+  sourceBytes: number;
+  hasExperienceHint: boolean;
+  createdAt: string;
+  updatedAt: string;
+}
+
+export interface CloudCustomFormulaDetail extends CloudCustomFormulaSummary {
+  source: string;
+  experienceHint: unknown | null;
+}
+
+export async function listCustomFormulas(): Promise<CloudCustomFormulaSummary[]> {
+  const data = await call<{ formulas: CloudCustomFormulaSummary[] }>(
+    '/api/creation/custom-formulas',
+  );
+  return data.formulas;
+}
+
+export async function getCustomFormula(
+  formulaId: string,
+): Promise<CloudCustomFormulaDetail> {
+  const data = await call<{ formula: CloudCustomFormulaDetail }>(
+    `/api/creation/custom-formulas/${formulaId}`,
+  );
+  return data.formula;
+}
+
+export async function createCustomFormula(input: {
+  name: string;
+  source: string;
+  experienceHint?: unknown;
+}): Promise<{ formulaId: string; revision: number }> {
+  return call('/api/creation/custom-formulas', {
+    method: 'POST',
+    headers: { 'idempotency-key': crypto.randomUUID() },
+    body: JSON.stringify({
+      name: input.name,
+      source: input.source,
+      ...(input.experienceHint !== undefined ? { experienceHint: input.experienceHint } : {}),
+    }),
+  });
+}
+
+export async function updateCustomFormula(
+  formulaId: string,
+  input: {
+    expectedRevision: number;
+    name?: string;
+    source?: string;
+    experienceHint?: unknown;
+  },
+): Promise<{ formulaId: string; revision: number }> {
+  return call(`/api/creation/custom-formulas/${formulaId}`, {
+    method: 'PATCH',
+    headers: { 'idempotency-key': crypto.randomUUID() },
+    body: JSON.stringify(input),
+  });
+}
+
+export async function deleteCustomFormula(
+  formulaId: string,
+  expectedRevision: number,
+): Promise<void> {
+  return call(`/api/creation/custom-formulas/${formulaId}`, {
+    method: 'DELETE',
+    headers: { 'idempotency-key': crypto.randomUUID() },
+    body: JSON.stringify({ expectedRevision }),
+  });
 }

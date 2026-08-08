@@ -41,13 +41,20 @@ import {
 interface ArtworkActionsProps {
   status: ArtworkActionStatus;
   cloudPhase?: CloudSyncPhase;
-  savedCount: number;
+  /** Prefilled save-dialog name — the current draft title, or a fallback. */
+  defaultSaveName: string;
   onClearStatus: () => void;
   onSave: (name: string) => Promise<boolean>;
   onDownload: () => Promise<boolean>;
   onImport: (file: File) => Promise<boolean>;
   onExport: (scale: number, ssaaLevel: number) => Promise<boolean>;
   onReset: () => void;
+  /** Revision-conflict exits (spec §17): adopt the remote version, or keep
+   *  local edits as a brand-new draft. No silent overwrite either way. */
+  onConflictReload?: () => void;
+  onConflictSaveAsNew?: () => void;
+  /** Disables both conflict exits while one is in flight (review N2). */
+  conflictBusy?: boolean;
 }
 
 const ACTION_ICONS = {
@@ -60,13 +67,16 @@ const ACTION_ICONS = {
 export function ArtworkActions({
   status,
   cloudPhase = 'idle',
-  savedCount,
+  defaultSaveName,
   onClearStatus,
   onSave,
   onDownload,
   onImport,
   onExport,
   onReset,
+  onConflictReload,
+  onConflictSaveAsNew,
+  conflictBusy = false,
 }: ArtworkActionsProps) {
   const t = useTranslations('explore.artworkActions');
   const fileInputRef = useRef<HTMLInputElement>(null);
@@ -132,7 +142,7 @@ export function ArtworkActions({
             operation="save"
             status={status}
             onClick={() => {
-              setSaveName(`Fractal #${savedCount + 1}`);
+              setSaveName(defaultSaveName);
               setSaveOpen(true);
               onClearStatus();
             }}
@@ -205,6 +215,26 @@ export function ArtworkActions({
             {cloudText && (
               <span className="mt-1 block border-t border-white/10 pt-1 opacity-90">
                 {cloudText}
+              </span>
+            )}
+            {cloudPhase === 'conflict' && onConflictReload && onConflictSaveAsNew && (
+              <span className="mt-1.5 flex gap-2">
+                <button
+                  type="button"
+                  onClick={onConflictReload}
+                  disabled={conflictBusy}
+                  className="rounded border border-white/25 px-2 py-1 text-[11px] hover:bg-white/10 disabled:opacity-50"
+                >
+                  {t('conflict.reload')}
+                </button>
+                <button
+                  type="button"
+                  onClick={onConflictSaveAsNew}
+                  disabled={conflictBusy}
+                  className="rounded border border-white/25 px-2 py-1 text-[11px] hover:bg-white/10 disabled:opacity-50"
+                >
+                  {t('conflict.saveAsNew')}
+                </button>
               </span>
             )}
           </div>

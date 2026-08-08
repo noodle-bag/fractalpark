@@ -3,11 +3,13 @@
  * publication from a stated draft revision (spec §4.3, §10.2).
  *
  * The server re-reads the draft, re-validates its envelope against the
- * cloud profile (rejecting portable formula source as
- * `formula_assets_not_publishable`), canonicalizes it, and hands the whole
+ * cloud profile, canonicalizes it, and hands the whole
  * write to a single-transaction owner RPC: idempotency, display-name
  * requirement, revision check, publish quota, publication insert, source
  * draft deletion, and thumbnail cleanup job all commit or fail together.
+ * Drafts carrying a portable formula asset pass through the §17.2 gate
+ * (single asset, hash match, compiles, no builtin conflict) and freeze
+ * under MIT with a public source download.
  */
 
 import {
@@ -20,9 +22,15 @@ import {
 } from '@/lib/cloud/api';
 import { DraftServiceError, getDraft } from '@/lib/cloud/drafts';
 import { validateCloudEnvelopeV1 } from '@/lib/cloud/envelope';
+import {
+  FORMULA_SOURCE_ATTESTATION_VERSION,
+  findPublishReplay,
+  publishDraft,
+} from '@/lib/cloud/publications';
+import { validateFormulaPublication } from '@/lib/cloud/formula-publish';
 import { runArtworkBackup } from '@/lib/cloud/backup';
-import { findPublishReplay, publishDraft } from '@/lib/cloud/publications';
 import { resolveRequestSession } from '@/lib/cloud/request-session';
+import { requireIdempotencyKey, requireUuid } from '@/app/api/creation/drafts/shared';
 
 export const runtime = 'nodejs';
 export const dynamic = 'force-dynamic';
@@ -60,10 +68,9 @@ export async function POST(
     assertCloudEnabled();
     assertSameOrigin(request);
     const { session, rotatedSetCookie } = await resolveRequestSession(request);
-    const { draftId } = await context.params;
-
-    const idempotencyKey = request.headers.get('idempotency-key');
-    if (!idempotencyKey) throw new CloudApiError('validation_failed');
+    const { draftId: rawDraftId } = await context.params;
+    const draftId = requireUuid(rawDraftId);
+    const idempotencyKey = requireIdempotencyKey(request);
 
     const body: unknown = await readJsonBody(request);
     const parsed = body as {
@@ -71,6 +78,7 @@ export async function POST(
       title?: unknown;
       description?: unknown;
       attestationVersion?: unknown;
+      formulaSourceAttestationVersion?: unknown;
     };
     if (
       typeof parsed?.expectedRevision !== 'number' ||
@@ -98,6 +106,10 @@ export async function POST(
           title: parsed.title,
           description: parsed.description,
           attestationVersion: parsed.attestationVersion,
+          formulaSourceAttestationVersion:
+            typeof parsed.formulaSourceAttestationVersion === 'string'
+              ? parsed.formulaSourceAttestationVersion
+              : undefined,
         });
         if (replay) return jsonOk(request, replay, 201, rotationHeaders(rotatedSetCookie));
       }
@@ -106,8 +118,22 @@ export async function POST(
     const envelopeBytes = Buffer.byteLength(JSON.stringify(draft.envelope ?? null), 'utf8');
     const verdict = validateCloudEnvelopeV1(draft.envelope, envelopeBytes);
     if (!verdict.ok) throw new CloudApiError('invalid_envelope');
+
+    // Formula publications (spec §17.2): the portable source must pass the
+    // full server-side gate and an independent, explicit MIT-source
+    // attestation. The rendered-image license remains CC-BY-4.0.
+    let formulaSourceAttestationVersion: string | undefined;
     if (verdict.value.hasPortableFormulas) {
-      throw new CloudApiError('formula_assets_not_publishable');
+      const formulaVerdict = validateFormulaPublication(
+        JSON.parse(verdict.value.canonicalJson),
+      );
+      if (!formulaVerdict.ok) {
+        throw new CloudApiError(formulaVerdict.code);
+      }
+      if (parsed.formulaSourceAttestationVersion !== FORMULA_SOURCE_ATTESTATION_VERSION) {
+        throw new CloudApiError('validation_failed');
+      }
+      formulaSourceAttestationVersion = FORMULA_SOURCE_ATTESTATION_VERSION;
     }
 
     const result = await publishDraft(session.userId, {
@@ -118,6 +144,7 @@ export async function POST(
       canonicalEnvelope: JSON.parse(verdict.value.canonicalJson),
       configBytes: verdict.value.configBytes,
       attestationVersion: parsed.attestationVersion,
+      formulaSourceAttestationVersion,
       idempotencyKey,
     });
     // Backup email fires only on a fresh publish, never on a replay.

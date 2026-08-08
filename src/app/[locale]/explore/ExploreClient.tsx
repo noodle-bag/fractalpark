@@ -16,6 +16,10 @@ import { documentToExploreHref } from '@/lib/url-params';
 import { trackEvent } from '@/components/analytics/PageViewTracker';
 import { useExploreDocumentState } from '@/hooks/useExploreDocumentState';
 import { useArtworkActions } from '@/hooks/useArtworkActions';
+import { useCloudDraftSession } from '@/hooks/useCloudDraftSession';
+import { useCloudFormulaLibrary } from '@/hooks/useCloudFormulaLibrary';
+import { useCloudSession } from '@/components/cloud/CloudSessionProvider';
+import { resolveCustomFormula } from '@/lib/formula-resolver';
 import AnimatedFractalCanvas from '@/components/fractal/AnimatedFractalCanvas';
 import { AlertTriangle, ChevronDown, ChevronUp } from 'lucide-react';
 import { DEFAULT_FRACTAL_DOCUMENT } from '@/engine/document';
@@ -24,14 +28,18 @@ import { getDefaultBounds } from '@/engine/plugins/formula-catalog';
 import type { PluginParamRecord, PluginParamValue } from '@/engine/types';
 import {
   CUSTOM_FORMULAS_CHANGED_EVENT,
-  readPersistedCustomFormulas,
-} from '@/lib/custom-formula-storage';
+  readEffectiveFormulaAssets,
+} from '@/lib/formula-resolver';
+import { captureThumbnail } from '@/lib/capture-thumbnail';
+import { readFractalDocumentEnvelope } from '@/engine/document-envelope';
+import { consumeRemixHandoff } from '@/lib/remix-handoff';
 import {
   parseEditorToExploreIntent,
   stripEditorToExploreIntent,
 } from '@/lib/frm-editor';
 import {
   resolveFormulaReference,
+  readSessionFormulaAssets,
   type FormulaResolution,
 } from '@/lib/formula-resolver';
 
@@ -109,6 +117,12 @@ function ExploreClient({ posterImage }: { posterImage?: string }) {
   const canvasElRef = useRef<HTMLCanvasElement | null>(null);
   const pickToastTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
 
+  // Cloud surfaces hoist above every consumer effect (deps evaluate at
+  // render time — declaring them later would be a TDZ crash).
+  const cloudDraft = useCloudDraftSession();
+  const { state: cloudSessionState, openSignIn } = useCloudSession();
+  const cloudFormulas = useCloudFormulaLibrary();
+
   const effectiveIterations = useMemo(() => {
     if (!adaptiveIterations) return maxIterations;
     const zoomFactor = Math.log2(Math.max(bounds.zoom, 0.0001));
@@ -155,9 +169,52 @@ function ExploreClient({ posterImage }: { posterImage?: string }) {
     try {
       const resolution = resolveFormulaReference(
         intent.formulaId,
-        readPersistedCustomFormulas()
+        readSessionFormulaAssets()
       );
       if (!resolution.success) {
+        // Cloud rescue (N13): a fresh tab has an empty session registry —
+        // the formula may still live in the owner's cloud library.
+        if (
+          resolution.code === 'formula-not-found' &&
+          cloudSessionState.status === 'authenticated'
+        ) {
+          void cloudFormulas.ensureRegistered(intent.formulaId).then((ok) => {
+            const retry = ok
+              ? resolveFormulaReference(intent.formulaId, readSessionFormulaAssets())
+              : resolution;
+            if (retry.success) {
+              queueMicrotask(() => {
+                setHandoffTargetId(intent.formulaId);
+                setHandoffError(null);
+                updateFormula({ formulaId: intent.formulaId });
+                updateBounds(
+                  retry.experienceHint?.bounds ??
+                    getDefaultBounds(intent.formulaId)
+                );
+                if (retry.experienceHint?.coloring) {
+                  updateColoring({
+                    customGradient: null,
+                    ...retry.experienceHint.coloring,
+                  });
+                }
+                router.replace(
+                  stripEditorToExploreIntent(locale, currentParams),
+                  { scroll: false }
+                );
+              });
+            } else {
+              queueMicrotask(() => {
+                setHandoffTargetId(null);
+                setHandoffError(retry);
+                router.replace(
+                  stripEditorToExploreIntent(locale, currentParams),
+                  { scroll: false }
+                );
+              });
+            }
+          });
+          return;
+        }
         queueMicrotask(() => {
           setHandoffTargetId(null);
           setHandoffError(resolution);
@@ -213,7 +270,10 @@ function ExploreClient({ posterImage }: { posterImage?: string }) {
     const resolveCurrentFormula = () => {
       try {
         setFormulaResolution(
-          resolveFormulaReference(formula, readPersistedCustomFormulas())
+          // v0.4.16: session-registered sources replace the local library;
+          // the registry's transient fallback covers formulas registered
+          // by draft loads and editor visits this session.
+          resolveFormulaReference(formula, readSessionFormulaAssets())
         );
       } catch (error) {
         setFormulaResolution({
@@ -254,14 +314,68 @@ function ExploreClient({ posterImage }: { posterImage?: string }) {
     queueMicrotask(() => setHandoffTargetId(null));
   }, [formula, formulaResolution, handoffTargetId]);
 
-  // Debounced URL update
+  // Cloud-authoritative draft session (ADR 0006): ?draft= loads from the
+  // cloud, save writes the cloud, identity lives here and in the URL.
+  const draftParam = searchParams.get('draft');
+  const draftLoadConsumedRef = useRef<string | null>(null);
+  const prevSessionStatusRef = useRef(cloudSessionState.status);
+  // Double-fire guard for the conflict exits (review N2).
+  const [conflictBusy, setConflictBusy] = useState(false);
+
+  // Cloud rescue (v0.4.16): a custom formula this session has never seen
+  // (fresh tab, cross-device library) resolves once its cloud detail is
+  // fetched and registered — then the resolution effect re-runs cleanly.
+  const rescueInFlightRef = useRef<string | null>(null);
+  useEffect(() => {
+    if (formulaResolution?.success !== false) return;
+    if (formulaResolution.code !== 'formula-not-found') return;
+    if (cloudSessionState.status !== 'authenticated') return;
+    const target = formulaResolution.formulaId;
+    if (rescueInFlightRef.current === target) return;
+    rescueInFlightRef.current = target;
+    void cloudFormulas.ensureRegistered(target).then((ok) => {
+      // Guard both the slot and the current formula: a late resolve from a
+      // previous target must neither clear another rescue's marker nor
+      // overwrite the resolution of the formula the user moved to (N11).
+      if (rescueInFlightRef.current !== target) return;
+      rescueInFlightRef.current = null;
+      if (!ok) return;
+      if (formula !== target) return;
+      setFormulaResolution(resolveFormulaReference(target, readSessionFormulaAssets()));
+    });
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [formulaResolution, cloudSessionState.status, formula]);
+
+  const pinDraftParam = useCallback(
+    (draftId: string | null) => {
+      const params = new URLSearchParams(window.location.search);
+      if (draftId) {
+        params.set('draft', draftId);
+      } else {
+        params.delete('draft');
+      }
+      const query = params.toString();
+      router.replace(`/${locale}/explore${query ? `?${query}` : ''}`, { scroll: false });
+    },
+    [locale, router],
+  );
+
+  // Debounced URL update — keeps the draft identity pinned so a refresh
+  // reopens the same cloud draft (spec §17: Explore identity is the URL).
   useEffect(() => {
     if (!initializedRef.current) return;
 
     if (debounceRef.current) clearTimeout(debounceRef.current);
     debounceRef.current = setTimeout(() => {
+      // Never project while a ?draft= load is unresolved: rebuilding the
+      // URL from the canvas would erase the param before identity lands
+      // and the draft would silently never load (review N1).
+      if (draftParam && !cloudDraft.identity) return;
       const newUrl = documentToExploreHref(document, locale);
-      router.replace(newUrl, { scroll: false });
+      const withDraft = cloudDraft.identity
+        ? `${newUrl}${newUrl.includes('?') ? '&' : '?'}draft=${cloudDraft.identity.id}`
+        : newUrl;
+      router.replace(withDraft, { scroll: false });
     }, 500);
 
     return () => {
@@ -271,7 +385,29 @@ function ExploreClient({ posterImage }: { posterImage?: string }) {
     document,
     locale,
     router,
+    cloudDraft.identity,
+    draftParam,
   ]);
+
+  // Anonymous remix handoff consumption (spec §17 transient): a one-shot
+  // sessionStorage envelope becomes the canvas — nothing persists until
+  // the user explicitly saves. Consumed once, deleted on read.
+  const remixParam = searchParams.get('remix');
+  const remixConsumedRef = useRef<string | null>(null);
+  useEffect(() => {
+    if (!remixParam || remixConsumedRef.current === remixParam) return;
+    remixConsumedRef.current = remixParam;
+    const handoff = consumeRemixHandoff();
+    if (!handoff) return;
+    const read = readFractalDocumentEnvelope(handoff.envelope);
+    if (read.mode !== 'editable') return;
+    for (const asset of read.envelope.assets?.formulas ?? []) {
+      resolveCustomFormula({ id: asset.id, source: asset.source });
+    }
+    cloudDraft.setPendingRemixSource({ type: 'publication', id: handoff.publicationId });
+    handleLoadDocument(read.envelope.document);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [remixParam]);
 
   const clearHandoffFailure = useCallback(() => {
     setHandoffError(null);
@@ -284,17 +420,68 @@ function ExploreClient({ posterImage }: { posterImage?: string }) {
     loadFromDocument(nextDocument);
   }, [clearHandoffFailure, loadFromDocument]);
 
+  // `?draft=` cloud session load: waits for the session probe, then loads
+  // the draft and registers its formula assets in memory so the referenced
+  // custom formula resolves. The in-flight guard (not the consumed ref)
+  // prevents duplicate fires; the consumed ref is set on success so a
+  // transient failure stays retryable (review N4).
+  const draftLoadInFlightRef = useRef<string | null>(null);
+  const attemptDraftLoad = useCallback(
+    (draftId: string) => {
+      if (draftLoadInFlightRef.current === draftId) return;
+      draftLoadInFlightRef.current = draftId;
+      void cloudDraft.loadDraft(draftId).then((loaded) => {
+        draftLoadInFlightRef.current = null;
+        if (!loaded) return;
+        draftLoadConsumedRef.current = draftId;
+        for (const asset of loaded.formulaAssets) {
+          resolveCustomFormula({ id: asset.id, source: asset.source });
+        }
+        handleLoadDocument(loaded.document);
+      });
+    },
+    [cloudDraft, handleLoadDocument],
+  );
+
+  useEffect(() => {
+    if (!draftParam) return;
+    if (draftLoadConsumedRef.current === draftParam) return;
+    if (cloudSessionState.status === 'loading') return;
+    if (cloudSessionState.status !== 'authenticated') return;
+    attemptDraftLoad(draftParam);
+  }, [draftParam, cloudSessionState.status, attemptDraftLoad]);
+
+  // Sign-out / session loss clears the draft identity but never the canvas:
+  // the user keeps looking at exactly what they were editing (spec §17).
+  useEffect(() => {
+    const previous = prevSessionStatusRef.current;
+    prevSessionStatusRef.current = cloudSessionState.status;
+    if (previous === 'authenticated' && cloudSessionState.status !== 'authenticated') {
+      cloudDraft.clearIdentity();
+      draftLoadConsumedRef.current = null;
+      if (draftParam) pinDraftParam(null);
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [cloudSessionState.status]);
+
   const handleResetView = useCallback(() => {
+    // Reset means a fresh canvas — the draft session ends with it, so a
+    // later save creates a new draft instead of silently overwriting the
+    // one that was just on screen (review follow-up).
+    cloudDraft.clearIdentity();
+    if (draftParam) pinDraftParam(null);
     handleLoadDocument(DEFAULT_FRACTAL_DOCUMENT);
-  }, [handleLoadDocument]);
+  }, [cloudDraft, draftParam, handleLoadDocument, pinDraftParam]);
 
   const getCanvas = useCallback(() => canvasElRef.current, []);
+
   const artworkActions = useArtworkActions({
     document,
     effectiveIterations,
     getCanvas,
     loadDocument: handleLoadDocument,
-    currentArtworkId: searchParams.get('artwork'),
+    cloudDraft,
+    onDraftCreated: (created) => pinDraftParam(created.id),
   });
 
   const handleJuliaModeChange = useCallback((julia: boolean) => {
@@ -443,7 +630,7 @@ function ExploreClient({ posterImage }: { posterImage?: string }) {
   }
 
   return (
-    <div className="flex flex-col lg:flex-row h-[calc(100dvh-4rem)] overflow-hidden">
+    <div className="flex flex-col lg:flex-row h-[calc(100dvh-3rem)] overflow-hidden">
       <div
         className={`relative bg-black lg:flex-1 ${isPanelCollapsed ? 'flex-1' : 'min-h-[50vh] lg:min-h-0'}`}
         style={posterImage ? {
@@ -452,6 +639,63 @@ function ExploreClient({ posterImage }: { posterImage?: string }) {
           backgroundSize: 'cover',
         } : undefined}
       >
+        {/* Cloud draft session states (spec §17): loading shows an honest
+            shell; failures never fake a default canvas. The shell only
+            covers windows where a load can actually happen (session
+            probing or an authenticated fetch in flight) — a resolved
+            anonymous/unavailable session shows guidance instead of a
+            permanent spinner (review blocking). */}
+        {(cloudDraft.loadState === 'loading' ||
+          (draftParam !== null &&
+            cloudDraft.identity === null &&
+            cloudDraft.loadState !== 'not_found' &&
+            cloudDraft.loadState !== 'unavailable' &&
+            (cloudSessionState.status === 'loading' ||
+              cloudSessionState.status === 'authenticated'))) && (
+          <div className="absolute inset-0 z-30 flex items-center justify-center bg-black/70 text-sm text-neutral-200 backdrop-blur-sm" role="status">
+            {t('draft.loading')}
+          </div>
+        )}
+        {draftParam !== null &&
+          cloudDraft.identity === null &&
+          (cloudSessionState.status === 'anonymous' ||
+            cloudSessionState.status === 'unavailable') && (
+          <div className="absolute left-3 top-3 z-30 max-w-sm rounded-md border border-white/20 bg-black/75 px-3 py-2 text-xs text-neutral-100 shadow-lg backdrop-blur-md" role="status">
+            {cloudSessionState.status === 'anonymous' ? (
+              <>
+                {t('draft.signInToOpen')}{' '}
+                <button
+                  type="button"
+                  onClick={() => openSignIn()}
+                  className="underline underline-offset-2 hover:text-white"
+                >
+                  {t('draft.signIn')}
+                </button>
+              </>
+            ) : (
+              t('draft.unavailable')
+            )}
+          </div>
+        )}
+        {(cloudDraft.loadState === 'not_found' || cloudDraft.loadState === 'unavailable') && (
+          <div className="absolute left-3 top-3 z-30 max-w-sm rounded-md border border-amber-400/40 bg-amber-950/85 px-3 py-2 text-xs text-amber-100 shadow-lg backdrop-blur-md" role="alert">
+            {cloudDraft.loadState === 'not_found' ? t('draft.notFound') : t('draft.unavailable')}
+            {cloudDraft.loadState === 'unavailable' && draftParam && (
+              <button
+                type="button"
+                onClick={() => attemptDraftLoad(draftParam)}
+                className="ml-2 underline underline-offset-2 hover:text-white"
+              >
+                {t('draft.retry')}
+              </button>
+            )}
+          </div>
+        )}
+        {cloudDraft.identity && cloudDraft.draftTitle && cloudDraft.loadState === 'ready' && (
+          <div className="absolute left-3 top-3 z-20 rounded-md border border-white/15 bg-black/55 px-2.5 py-1 text-xs text-neutral-200 backdrop-blur-md">
+            {cloudDraft.draftTitle}
+          </div>
+        )}
         {isFormulaReady && !isPreviewPlaying && (
           <FractalCanvas
             paletteIndex={paletteIndex}
@@ -516,13 +760,52 @@ function ExploreClient({ posterImage }: { posterImage?: string }) {
         <ArtworkActions
           status={artworkActions.status}
           cloudPhase={artworkActions.cloudPhase}
-          savedCount={artworkActions.savedCount}
+          defaultSaveName={cloudDraft.draftTitle ?? 'Untitled'}
           onClearStatus={artworkActions.clearStatus}
           onSave={artworkActions.save}
           onDownload={artworkActions.download}
           onImport={artworkActions.importFile}
           onExport={artworkActions.exportPng}
           onReset={handleResetView}
+          onConflictReload={() => {
+            // Reload discards the in-memory edits that conflicted — confirm
+            // first (review N3), and guard against double-fire (N2).
+            if (conflictBusy) return;
+            if (!window.confirm(t('artworkActions.conflict.discardConfirm'))) return;
+            setConflictBusy(true);
+            void cloudDraft.reloadConflictDraft().then((loaded) => {
+              setConflictBusy(false);
+              if (!loaded) return;
+              for (const asset of loaded.formulaAssets) {
+                resolveCustomFormula({ id: asset.id, source: asset.source });
+              }
+              handleLoadDocument(loaded.document);
+              artworkActions.clearStatus();
+              artworkActions.resetCloudPhase();
+            });
+          }}
+          onConflictSaveAsNew={() => {
+            if (conflictBusy) return;
+            setConflictBusy(true);
+            const name = cloudDraft.draftTitle ?? 'Untitled';
+            const canvas = getCanvas();
+            void cloudDraft
+              .saveAsNewDraft({
+                name,
+                document,
+                thumbnail: canvas ? captureThumbnail(canvas) : '',
+                formulaAssets: readEffectiveFormulaAssets(document.formula.formulaId),
+              })
+              .then((result) => {
+                setConflictBusy(false);
+                if (result.ok) {
+                  pinDraftParam(result.identity.id);
+                  artworkActions.clearStatus();
+                  artworkActions.resetCloudPhase();
+                }
+              });
+          }}
+          conflictBusy={conflictBusy}
         />
 
         {/* Mobile: toggle controls panel button */}

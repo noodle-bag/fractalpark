@@ -1,5 +1,29 @@
 # Changelog
 
+## 0.4.16 - 2026-08-04
+
+Cloud-first creation: accounts stop being an optional sync layer and become the single place where artworks and formulas live. Rendering stays entirely in the browser; creating needs no account; saving does.
+
+### Added
+
+- Added the private custom-formula cloud APIs (list/detail/save/delete) with owner-locked RPC writes, per-account quotas, optimistic concurrency, idempotency keys, and server-side compile and builtin-conflict validation.
+- Added one-shot sign-in intents: saving an artwork or a formula while anonymous freezes the exact write, opens the OTP dialog, and resumes after verification — dismissed dialogs settle the caller explicitly instead of hanging it.
+- Added MIT-licensed formula publishing: an artwork that carries a custom formula passes a server-side gate (single hash-matched asset, size cap, document reference, no builtin conflict) and publishes with its FRM source publicly downloadable, while the rendered image stays under CC BY 4.0.
+- Added the FRM Guide sharing section and the dual-license display on community artwork pages.
+
+### Changed
+
+- Navigation is a single compact bar on every page: locale switcher, sign-in state, and a mobile sheet; My Works and the cloud surfaces share one session provider with a five-state model (loading, anonymous, authenticated, unavailable, disabled).
+- Explore saves are cloud-authoritative: the draft identity lives in the URL (`?draft=`), refreshes and cross-device opens restore the same draft, revision conflicts offer reload/save-as-new exits, and a cloud outage says so instead of faking success.
+- My Works is cloud-only; remix handoffs are transient (authenticated remixes open as cloud drafts, anonymous ones carry their bytes through an in-memory, one-time handoff); project-file imports register their formulas for the session without persisting them.
+- My Formulas lives in the cloud library; the Explore canvas resolves session-registered formulas and rescues unknown ids through the detail API, including fresh-tab editor handoffs.
+- Browser storage is out of the creation loop: the artwork and formula localStorage modules are deleted, a static guard test keeps the retired keys out of app source, and a Playwright probe verifies legacy keys are never read.
+- The README, llms.txt, landing, About, and editor copy describe the real account/cloud model instead of the retired local-first claims.
+
+### Removed
+
+- Removed local artwork storage, the local formula library, and the `?artwork=` restore path (superseded by cloud drafts).
+
 ## 0.4.15 - 2026-08-03
 
 (0.4.14 was skipped during PR 3 development; this release follows 0.4.13.)

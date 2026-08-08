@@ -27,6 +27,16 @@ export interface CommunityListItemDto {
 export interface CommunityDetailDto extends CommunityListItemDto {
   /** Canonical frozen envelope; the document parameters a remix requires. */
   envelope: unknown;
+  formulaLicense: string | null;
+  formulaLicenseScope: string | null;
+  formulaSourceAttestationVersion: string | null;
+}
+
+interface CommunityDetailRow extends CommunityRow {
+  envelope: unknown;
+  formula_license: string | null;
+  formula_license_scope: string | null;
+  formula_source_attestation_version: string | null;
 }
 
 interface CommunityRow {
@@ -148,11 +158,18 @@ export async function getCommunityPublication(publicationId: string): Promise<Co
   if (!/^[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}$/.test(publicationId)) {
     throw new DraftServiceError('not_found');
   }
-  const rows = await postgrestJson<Array<CommunityRow & { envelope: unknown }>>(
+  const rows = await postgrestJson<CommunityDetailRow[]>(
     `artwork_publications?id=eq.${publicationId}&status=eq.published` +
-      `&select=${COMMUNITY_SELECT},envelope&limit=1`,
+      `&select=${COMMUNITY_SELECT},envelope,formula_license,formula_license_scope,` +
+      `formula_source_attestation_version&limit=1`,
   );
   const row = rows[0];
   if (!row) throw new DraftServiceError('not_found');
-  return { ...toDto(row), envelope: row.envelope };
+  return {
+    ...toDto(row),
+    envelope: row.envelope,
+    formulaLicense: row.formula_license,
+    formulaLicenseScope: row.formula_license_scope,
+    formulaSourceAttestationVersion: row.formula_source_attestation_version,
+  };
 }

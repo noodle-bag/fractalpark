@@ -29,6 +29,13 @@ export const LICENSE_VERSION = 'CC-BY-4.0';
 export const PUBLISH_TITLE_MAX = 80;
 export const PUBLISH_DESCRIPTION_MAX = 500;
 export const DISPLAY_NAME_MAX = 40;
+/** License frozen onto publications that carry a custom formula (§17.2):
+ *  the FRM source is public, MIT-licensed. */
+export const FORMULA_PUBLICATION_LICENSE = 'MIT';
+export const FORMULA_PUBLICATION_LICENSE_SCOPE = 'formula_source';
+/** Explicit author confirmation for publishing frozen custom-formula source
+ * under MIT. This is independent of the rendered-image rights attestation. */
+export const FORMULA_SOURCE_ATTESTATION_VERSION = '2026-08-08.v1';
 
 interface PostgrestOptions {
   method?: string;
@@ -255,6 +262,9 @@ export interface PublishInput {
   configBytes: number;
   /** The attestation version the client confirmed; must be current. */
   attestationVersion: string;
+  /** Present only when the author explicitly confirmed that the embedded
+   * custom-formula source becomes public under MIT (spec §17.2). */
+  formulaSourceAttestationVersion?: string;
   idempotencyKey: string;
 }
 
@@ -299,14 +309,26 @@ export async function publishDraft(ownerId: string, input: PublishInput): Promis
   if (!validatePublicationText(title, description)) {
     throw new DraftServiceError('validation_failed');
   }
-  const hash = requestHash({
+  if (
+    input.formulaSourceAttestationVersion !== undefined &&
+    input.formulaSourceAttestationVersion !== FORMULA_SOURCE_ATTESTATION_VERSION
+  ) {
+    throw new DraftServiceError('validation_failed');
+  }
+  const hashPayload: Record<string, unknown> = {
     draftId: input.draftId,
     expectedRevision: input.expectedRevision,
     title,
     description,
     envelope: input.canonicalEnvelope,
     attestationVersion: input.attestationVersion,
-  });
+  };
+  // Keep the ordinary-artwork hash byte-compatible with already recorded
+  // operations; only formula publications add the new legal fact.
+  if (input.formulaSourceAttestationVersion !== undefined) {
+    hashPayload.formulaSourceAttestationVersion = input.formulaSourceAttestationVersion;
+  }
+  const hash = requestHash(hashPayload);
   const result = await callRpc<PublishRpcResult>('fractalpark_publish_draft', {
     p_owner_id: ownerId,
     p_idempotency_key: input.idempotencyKey,
@@ -319,6 +341,7 @@ export async function publishDraft(ownerId: string, input: PublishInput): Promis
     p_config_bytes: input.configBytes,
     p_rights_attestation_version: input.attestationVersion,
     p_license_version: LICENSE_VERSION,
+    p_formula_source_attestation_version: input.formulaSourceAttestationVersion ?? null,
   });
   return {
     publicationId: result.publication_id,
@@ -347,6 +370,7 @@ interface PublicationEnvelopeRow {
   status: string;
   title: string;
   published_at: string;
+  formula_source_attestation_version: string | null;
 }
 
 /**
@@ -364,6 +388,7 @@ export async function findPublishReplay(
     title: string;
     description: string;
     attestationVersion: string;
+    formulaSourceAttestationVersion?: string;
   },
 ): Promise<PublishResultDto | null> {
   const ops = await postgrestJson<OperationReplayRow[]>(
@@ -373,18 +398,29 @@ export async function findPublishReplay(
   const op = ops[0];
   if (!op?.publication_id) return null;
   const pubs = await postgrestJson<PublicationEnvelopeRow[]>(
-    `artwork_publications?id=eq.${op.publication_id}&select=envelope,status,title,published_at`,
+    `artwork_publications?id=eq.${op.publication_id}` +
+      `&select=envelope,status,title,published_at,formula_source_attestation_version`,
   );
   const pub = pubs[0];
   if (!pub || pub.status !== 'published' || pub.envelope === null) return null;
-  const recomputed = requestHash({
+  if (
+    pub.formula_source_attestation_version !==
+    (hashInputs.formulaSourceAttestationVersion ?? null)
+  ) {
+    throw new DraftServiceError('idempotency_conflict');
+  }
+  const hashPayload: Record<string, unknown> = {
     draftId: hashInputs.draftId,
     expectedRevision: hashInputs.expectedRevision,
     title: hashInputs.title.trim(),
     description: hashInputs.description.trim(),
     envelope: pub.envelope,
     attestationVersion: hashInputs.attestationVersion,
-  });
+  };
+  if (hashInputs.formulaSourceAttestationVersion !== undefined) {
+    hashPayload.formulaSourceAttestationVersion = hashInputs.formulaSourceAttestationVersion;
+  }
+  const recomputed = requestHash(hashPayload);
   if (recomputed !== op.request_hash) {
     throw new DraftServiceError('idempotency_conflict');
   }

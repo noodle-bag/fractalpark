@@ -9,7 +9,7 @@
  * its current behavior.
  */
 
-import { createContext, useCallback, useContext, useEffect, useMemo, useState } from 'react';
+import { createContext, useCallback, useContext, useEffect, useMemo, useRef, useState } from 'react';
 import { useTranslations } from 'next-intl';
 
 import { CloudClientError, getSession, logout, requestOtp, verifyOtp } from '@/lib/cloud/client';
@@ -27,12 +27,15 @@ import { Label } from '@/components/ui/label';
 export type CloudSessionState =
   | { status: 'loading' }
   | { status: 'disabled' }
+  | { status: 'unavailable' }
   | { status: 'anonymous' }
   | { status: 'authenticated'; userId: string };
 
 interface CloudSessionContextValue {
   state: CloudSessionState;
-  openSignIn: () => void;
+  /** Opens the OTP dialog. An optional intent runs once after verification;
+   *  it lives only in React memory — never storage, URL, or analytics. */
+  openSignIn: (intent?: () => void | Promise<void>, onDropped?: () => void) => void;
   signOut: () => Promise<void>;
   refresh: () => Promise<void>;
 }
@@ -204,6 +207,12 @@ function OtpDialog({ open, onClose, onVerified }: {
 export function CloudSessionProvider({ children }: { children: React.ReactNode }) {
   const [state, setState] = useState<CloudSessionState>({ status: 'loading' });
   const [signInOpen, setSignInOpen] = useState(false);
+  // At most one intent at a time; opening sign-in again replaces it, and
+  // cancelling the dialog discards it without executing (DEC-0416-04).
+  const intentRef = useRef<(() => void | Promise<void>) | null>(null);
+  // Fired when a queued intent is dropped (dialog closed without verifying,
+  // or replaced by a newer intent) so awaiting callers can settle.
+  const intentDroppedRef = useRef<(() => void) | null>(null);
 
   const refresh = useCallback(async () => {
     try {
@@ -214,9 +223,10 @@ export function CloudSessionProvider({ children }: { children: React.ReactNode }
         setState({ status: 'disabled' });
         return;
       }
-      // Transport/config failures degrade to hiding cloud affordances; the
-      // local workflow is unaffected and the next mount re-probes.
-      setState({ status: 'disabled' });
+      // Transport/config failures are 'unavailable' (ADR 0006): never
+      // rendered as anonymous, so a sign-in prompt never lies during an
+      // outage. The next mount re-probes.
+      setState({ status: 'unavailable' });
     }
   }, []);
 
@@ -227,18 +237,27 @@ export function CloudSessionProvider({ children }: { children: React.ReactNode }
         if (cancelled) return;
         setState(session ? { status: 'authenticated', userId: session.userId } : { status: 'anonymous' });
       })
-      .catch(() => {
+      .catch((error) => {
         if (cancelled) return;
-        // cloud_disabled and transport/config failures both degrade to
-        // hiding cloud affordances; the next mount re-probes.
-        setState({ status: 'disabled' });
+        if (error instanceof CloudClientError && error.code === 'cloud_disabled') {
+          setState({ status: 'disabled' });
+          return;
+        }
+        // Transport/config failures are 'unavailable', not anonymous.
+        setState({ status: 'unavailable' });
       });
     return () => {
       cancelled = true;
     };
   }, []);
 
-  const openSignIn = useCallback(() => setSignInOpen(true), []);
+  const openSignIn = useCallback((intent?: () => void | Promise<void>, onDropped?: () => void) => {
+    // A newer intent replaces the previous one — settle the old awaiter.
+    intentDroppedRef.current?.();
+    intentRef.current = intent ?? null;
+    intentDroppedRef.current = intent ? (onDropped ?? null) : null;
+    setSignInOpen(true);
+  }, []);
 
   const signOut = useCallback(async () => {
     try {
@@ -259,10 +278,23 @@ export function CloudSessionProvider({ children }: { children: React.ReactNode }
       {children}
       <OtpDialog
         open={signInOpen}
-        onClose={() => setSignInOpen(false)}
-        onVerified={() => {
+        onClose={() => {
           setSignInOpen(false);
-          void refresh();
+          intentRef.current = null;
+          const dropped = intentDroppedRef.current;
+          intentDroppedRef.current = null;
+          dropped?.();
+        }}
+        onVerified={(userId) => {
+          setSignInOpen(false);
+          const intent = intentRef.current;
+          intentRef.current = null;
+          intentDroppedRef.current = null;
+          // verifyOtp already returned the fresh session — adopt it directly
+          // instead of a second probe that could flap to 'unavailable' on a
+          // transient failure right after a successful sign-in.
+          setState({ status: 'authenticated', userId });
+          if (intent) void intent();
         }}
       />
     </CloudSessionContext.Provider>
