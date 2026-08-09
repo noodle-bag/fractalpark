@@ -7,6 +7,10 @@ import {
   buildPublishedArtworkPlayback,
   type PublishedArtwork,
 } from '@/lib/published-artworks';
+import {
+  GALLERY_CARD_LINK_CLASS,
+  GALLERY_PREVIEW_FRAME_CLASS,
+} from './gallery-card-styles';
 
 const AnimatedFractalCanvas = lazy(
   () => import('@/components/fractal/AnimatedFractalCanvas')
@@ -41,9 +45,9 @@ export function PublishedArtworkCard({
           }
         }}
         onPointerLeave={() => setIsHovered(false)}
-        className="group block rounded-lg focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2"
+        className={GALLERY_CARD_LINK_CLASS}
       >
-        <div className="relative aspect-[16/10] overflow-hidden rounded-lg border bg-muted shadow-sm transition-transform duration-300 group-hover:-translate-y-0.5 group-hover:shadow-md">
+        <div className={GALLERY_PREVIEW_FRAME_CLASS}>
           {artwork.thumbnail ? (
             <Image
               src={artwork.thumbnail}

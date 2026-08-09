@@ -14,9 +14,17 @@ import { useLocale, useTranslations } from 'next-intl';
 import { RefreshCw, Trash2 } from 'lucide-react';
 
 import { useCloudSession } from '@/components/cloud/CloudSessionProvider';
+import { ArtworkEnvelopePreview } from '@/components/gallery/ArtworkEnvelopePreview';
+import {
+  GALLERY_CARD_LINK_CLASS,
+  GALLERY_PREVIEW_FRAME_CLASS,
+} from '@/components/gallery/gallery-card-styles';
+import { Link } from '@/i18n/routing';
 import {
   CloudClientError,
   deleteDraft,
+  getCommunityPublication,
+  getDraft,
   getProfile,
   listDrafts,
   listPublications,
@@ -251,41 +259,54 @@ export function MyWorksCloud() {
           {t('draftsEmpty')}
         </p>
       ) : (
-        <ul className="divide-y rounded-lg border">
+        <ul className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3 xl:gap-5">
           {drafts.map((draft) => (
-            <li key={draft.id} className="flex items-center justify-between gap-3 px-4 py-3">
-              <button
-                type="button"
-                onClick={() => void openDraft(draft.id)}
-                disabled={busyId === draft.id}
-                className="min-w-0 flex-1 text-left"
-              >
-                <span className="block truncate font-medium hover:underline">{draft.title}</span>
-                <span className="block text-xs text-muted-foreground">
-                  {t('meta', {
-                    revision: draft.revision,
-                    date: new Date(draft.updatedAt).toLocaleString(locale === 'zh' ? 'zh-CN' : 'en-US'),
-                  })}
-                </span>
-              </button>
-              <button
-                type="button"
-                onClick={() => setPublishTarget(draft)}
-                disabled={busyId === draft.id}
-                className="rounded-md border px-3 py-1.5 text-xs font-medium transition-colors hover:bg-muted disabled:opacity-50"
-              >
-                {t('publish')}
-              </button>
-              <button
-                type="button"
-                aria-label={t('delete')}
-                title={t('delete')}
-                onClick={() => void removeDraft(draft.id)}
-                disabled={busyId === draft.id}
-                className="rounded-md p-2 text-muted-foreground transition-colors hover:bg-destructive/10 hover:text-destructive"
-              >
-                <Trash2 className="h-4 w-4" />
-              </button>
+            <li key={draft.id}>
+              <article>
+                <button
+                  type="button"
+                  onClick={() => void openDraft(draft.id)}
+                  disabled={busyId === draft.id}
+                  className={`${GALLERY_CARD_LINK_CLASS} w-full text-left disabled:opacity-60`}
+                >
+                  <span className={GALLERY_PREVIEW_FRAME_CLASS}>
+                    <ArtworkEnvelopePreview
+                      key={`${draft.id}:${draft.revision}`}
+                      previewKey={`draft:${draft.id}:${draft.revision}`}
+                      loadEnvelope={async () => (await getDraft(draft.id)).envelope}
+                    />
+                  </span>
+                  <span className="mt-3 block truncate font-medium group-hover:underline">
+                    {draft.title}
+                  </span>
+                  <span className="mt-1 block text-xs text-muted-foreground">
+                    {t('meta', {
+                      revision: draft.revision,
+                      date: new Date(draft.updatedAt).toLocaleString(locale === 'zh' ? 'zh-CN' : 'en-US'),
+                    })}
+                  </span>
+                </button>
+                <div className="mt-3 flex items-center gap-2">
+                  <button
+                    type="button"
+                    onClick={() => setPublishTarget(draft)}
+                    disabled={busyId === draft.id}
+                    className="flex-1 rounded-md border px-3 py-1.5 text-xs font-medium transition-colors hover:bg-muted disabled:opacity-50"
+                  >
+                    {t('publish')}
+                  </button>
+                  <button
+                    type="button"
+                    aria-label={t('delete')}
+                    title={t('delete')}
+                    onClick={() => void removeDraft(draft.id)}
+                    disabled={busyId === draft.id}
+                    className="rounded-md p-2 text-muted-foreground transition-colors hover:bg-destructive/10 hover:text-destructive disabled:opacity-50"
+                  >
+                    <Trash2 className="h-4 w-4" />
+                  </button>
+                </div>
+              </article>
             </li>
           ))}
         </ul>
@@ -300,15 +321,36 @@ export function MyWorksCloud() {
             {t('publishedEmpty')}
           </p>
         ) : (
-          <ul className="mt-2 divide-y rounded-lg border">
+          <ul className="mt-4 grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3 xl:gap-5">
             {publications.map((publication) => (
-              <li
-                key={publication.id}
-                className="flex items-center justify-between gap-3 px-4 py-3"
-              >
-                <div className="min-w-0 flex-1">
-                  <span className="block truncate font-medium">{publication.title}</span>
-                  <span className="block text-xs text-muted-foreground">
+              <li key={publication.id}>
+                <article>
+                  {publication.status === 'published' ? (
+                    <Link
+                      href={`/gallery/community/${publication.id}`}
+                      className={GALLERY_CARD_LINK_CLASS}
+                    >
+                      <div className={GALLERY_PREVIEW_FRAME_CLASS}>
+                        <ArtworkEnvelopePreview
+                          previewKey={`publication:${publication.id}`}
+                          loadEnvelope={async () =>
+                            (await getCommunityPublication(publication.id)).envelope
+                          }
+                        />
+                      </div>
+                      <span className="mt-3 block truncate font-medium group-hover:underline">
+                        {publication.title}
+                      </span>
+                    </Link>
+                  ) : (
+                    <div className="group block">
+                      <div className={GALLERY_PREVIEW_FRAME_CLASS}>
+                        <div className="h-full w-full bg-gradient-to-br from-slate-950 via-slate-800 to-slate-600 opacity-60" />
+                      </div>
+                      <span className="mt-3 block truncate font-medium">{publication.title}</span>
+                    </div>
+                  )}
+                  <span className="mt-1 block text-xs text-muted-foreground">
                     {publication.status === 'withdrawn'
                       ? t('withdrawnMeta', {
                           date: new Date(publication.withdrawnAt ?? publication.publishedAt).toLocaleDateString(
@@ -328,17 +370,17 @@ export function MyWorksCloud() {
                             ),
                           })}
                   </span>
-                </div>
-                {(publication.status === 'published' || publication.status === 'hidden') && (
-                  <button
-                    type="button"
-                    onClick={() => void withdraw(publication.id)}
-                    disabled={busyId === publication.id}
-                    className="rounded-md border px-3 py-1.5 text-xs font-medium transition-colors hover:bg-muted disabled:opacity-50"
-                  >
-                    {t('withdraw')}
-                  </button>
-                )}
+                  {(publication.status === 'published' || publication.status === 'hidden') && (
+                    <button
+                      type="button"
+                      onClick={() => void withdraw(publication.id)}
+                      disabled={busyId === publication.id}
+                      className="mt-3 w-full rounded-md border px-3 py-1.5 text-xs font-medium transition-colors hover:bg-muted disabled:opacity-50"
+                    >
+                      {t('withdraw')}
+                    </button>
+                  )}
+                </article>
               </li>
             ))}
           </ul>

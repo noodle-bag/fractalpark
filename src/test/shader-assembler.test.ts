@@ -2,7 +2,7 @@ import { describe, it, expect, beforeAll } from 'vitest';
 import { assembleShader, makeCacheKey } from '@/engine/shaders/assembler';
 import { pluginRegistry } from '@/engine/plugins/registry';
 import { registerBuiltins } from '@/engine/plugins/builtins/index';
-import type { PluginCombination } from '@/engine/plugins/types';
+import type { FormulaPlugin, PluginCombination } from '@/engine/plugins/types';
 
 describe('Shader Assembler', () => {
   beforeAll(() => {
@@ -50,6 +50,33 @@ describe('Shader Assembler', () => {
       expect(shader).toContain('precision highp float');
       expect(shader).toContain('BAILOUT_RADIUS 4.0');
       expect(shader).toContain('iterateStep');
+    });
+
+    it('assembles an instance-local formula without registering it globally', () => {
+      const formula: FormulaPlugin = {
+        id: 'isolated-preview-formula',
+        category: 'formula',
+        name: 'IsolatedPreview',
+        source: 'frm',
+        glsl: `vec2 iterateStep(vec2 z, vec2 c, vec2 zPrev, vec2 point) {
+  return z * z * z + c;
+}`,
+        uniforms: [],
+        bailout: 4,
+        supportsPower: false,
+        supportsJulia: true,
+      };
+      const combo: PluginCombination = {
+        formulaId: formula.id,
+        outsideColoringId: 'smooth',
+        insideColoringId: 'black',
+        transformId: 'none',
+      };
+
+      const shader = assembleShader(combo, formula);
+
+      expect(shader).toContain('return z * z * z + c;');
+      expect(pluginRegistry.getFormula(formula.id)).toBeUndefined();
     });
 
     it('should extend OrbitStats with Phase 2 orbit channels', () => {

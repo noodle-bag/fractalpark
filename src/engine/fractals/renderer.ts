@@ -2,7 +2,11 @@ import type { FractalParams, GradientStop, PluginParamRecord } from '../types';
 import { assembleShader, makeCacheKey } from '../shaders/assembler';
 import { ShaderCache } from '../shaders/cache';
 import { pluginRegistry } from '../plugins/registry';
-import type { PluginCombination, PluginUniformDescriptor } from '../plugins/types';
+import type {
+  FormulaPlugin,
+  PluginCombination,
+  PluginUniformDescriptor,
+} from '../plugins/types';
 
 const ORBIT_TRAP_SHAPE_TO_UNIFORM: Record<string, number> = {
   point: 0,
@@ -19,6 +23,11 @@ function hexToRgb(hex: string): [number, number, number] {
   ];
 }
 
+export interface FractalRendererOptions {
+  /** Instance-local formula used without mutating the session-global registry. */
+  formulaPlugin?: FormulaPlugin;
+}
+
 export class FractalRenderer {
   private gl: WebGLRenderingContext;
   private cache: ShaderCache;
@@ -26,9 +35,11 @@ export class FractalRenderer {
   private currentUniforms: Record<string, WebGLUniformLocation> = {};
   private vbo: WebGLBuffer | null = null;
   private unsubscribeFromFormulaEvents: (() => void) | null = null;
+  private formulaPlugin: FormulaPlugin | undefined;
 
-  constructor(gl: WebGLRenderingContext) {
+  constructor(gl: WebGLRenderingContext, options: FractalRendererOptions = {}) {
     this.gl = gl;
+    this.formulaPlugin = options.formulaPlugin;
     this.cache = new ShaderCache(gl);
     this.unsubscribeFromFormulaEvents = pluginRegistry.subscribeToFormulaEvents((event) => {
       this.cache.invalidateFormula(event.formulaId);
@@ -52,7 +63,7 @@ export class FractalRenderer {
     };
     const key = makeCacheKey(combo);
     if (this.cache.get(key)) return;
-    const source = assembleShader(combo);
+    const source = assembleShader(combo, this.formulaPlugin);
     await this.cache.compileWithMetrics(key, source, combo.formulaId);
   }
 
@@ -121,7 +132,7 @@ export class FractalRenderer {
     let compiled = this.cache.get(key);
 
     if (!compiled) {
-      const source = assembleShader(combo);
+      const source = assembleShader(combo, this.formulaPlugin);
       compiled = await this.cache.compileWithMetrics(key, source, combo.formulaId);
     }
 
@@ -174,7 +185,10 @@ export class FractalRenderer {
 
     this.setGradientUniforms(uniforms, params.customGradient);
 
-    const formula = pluginRegistry.getFormula(combo.formulaId);
+    const formula =
+      this.formulaPlugin?.id === combo.formulaId
+        ? this.formulaPlugin
+        : pluginRegistry.getFormula(combo.formulaId);
     const outside = pluginRegistry.getOutsideColoring(combo.outsideColoringId);
     const inside = pluginRegistry.getInsideColoring(combo.insideColoringId);
     const transform = pluginRegistry.getTransform(combo.transformId);
