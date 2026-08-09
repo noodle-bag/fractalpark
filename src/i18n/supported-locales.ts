@@ -14,3 +14,25 @@ export const SUPPORTED_LOCALES = ['en', 'zh', 'pt', 'ko', 'ru', 'es', 'fr'] as c
 export type SupportedLocale = (typeof SUPPORTED_LOCALES)[number];
 
 export const DEFAULT_LOCALE: SupportedLocale = 'en';
+
+/** BCP 47 tags for `<html lang>` (server-rendered, per locale). */
+export const HTML_LANG: Record<SupportedLocale, string> = {
+  en: 'en',
+  zh: 'zh-CN',
+  pt: 'pt-BR',
+  ko: 'ko-KR',
+  ru: 'ru-RU',
+  es: 'es-ES',
+  fr: 'fr-FR',
+};
+
+/** Open Graph `og:locale` codes (underscore form, per OG spec). */
+export const OG_LOCALE: Record<SupportedLocale, string> = {
+  en: 'en_US',
+  zh: 'zh_CN',
+  pt: 'pt_BR',
+  ko: 'ko_KR',
+  ru: 'ru_RU',
+  es: 'es_ES',
+  fr: 'fr_FR',
+};

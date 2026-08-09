@@ -826,12 +826,12 @@ function ExploreClient({ posterImage }: { posterImage?: string }) {
           <PositionSummaryPanel bounds={bounds} />
 
           <Tabs defaultValue="formula" className="w-full mt-4">
-            <TabsList className="w-full grid grid-cols-5 mb-4 h-auto">
-              <TabsTrigger value="formula" className="px-1 py-1.5 text-[11px] sm:text-xs xl:text-sm">{t('tabs.formula')}</TabsTrigger>
-              <TabsTrigger value="coloring" className="px-1 py-1.5 text-[11px] sm:text-xs xl:text-sm">{t('tabs.coloring')}</TabsTrigger>
-              <TabsTrigger value="transform" className="px-1 py-1.5 text-[11px] sm:text-xs xl:text-sm">{t('tabs.transform')}</TabsTrigger>
-              <TabsTrigger value="render" className="px-1 py-1.5 text-[11px] sm:text-xs xl:text-sm">{t('tabs.render')}</TabsTrigger>
-              <TabsTrigger value="animation" className="px-1 py-1.5 text-[11px] sm:text-xs xl:text-sm">{t('tabs.animation')}</TabsTrigger>
+            <TabsList className="w-full grid grid-cols-5 mb-4 h-auto!">
+              <TabsTrigger value="formula" className="h-auto! min-w-0 whitespace-normal wrap-anywhere hyphens-auto text-center leading-tight px-1 py-1.5 text-[11px]">{t('tabs.formula')}</TabsTrigger>
+              <TabsTrigger value="coloring" className="h-auto! min-w-0 whitespace-normal wrap-anywhere hyphens-auto text-center leading-tight px-1 py-1.5 text-[11px]">{t('tabs.coloring')}</TabsTrigger>
+              <TabsTrigger value="transform" className="h-auto! min-w-0 whitespace-normal wrap-anywhere hyphens-auto text-center leading-tight px-1 py-1.5 text-[11px]">{t('tabs.transform')}</TabsTrigger>
+              <TabsTrigger value="render" className="h-auto! min-w-0 whitespace-normal wrap-anywhere hyphens-auto text-center leading-tight px-1 py-1.5 text-[11px]">{t('tabs.render')}</TabsTrigger>
+              <TabsTrigger value="animation" className="h-auto! min-w-0 whitespace-normal wrap-anywhere hyphens-auto text-center leading-tight px-1 py-1.5 text-[11px]">{t('tabs.animation')}</TabsTrigger>
             </TabsList>
             
             <TabsContent value="formula" className="mt-0 space-y-4">
