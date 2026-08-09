@@ -1,4 +1,4 @@
-import type { PluginCombination, ShaderCacheKey } from '../plugins/types';
+import type { FormulaPlugin, PluginCombination, ShaderCacheKey } from '../plugins/types';
 import { pluginRegistry } from '../plugins/registry';
 import frameworkTemplate from './framework.frag.glsl';
 import complexMathLib from './complex-math.glsl';
@@ -13,8 +13,14 @@ float orbitTrapDistance(vec2 z) {
 }
 `;
 
-export function assembleShader(combo: PluginCombination): string {
-  const formula = pluginRegistry.getFormula(combo.formulaId);
+export function assembleShader(
+  combo: PluginCombination,
+  formulaOverride?: FormulaPlugin,
+): string {
+  const formula =
+    formulaOverride?.id === combo.formulaId
+      ? formulaOverride
+      : pluginRegistry.getFormula(combo.formulaId);
   const outside = pluginRegistry.getOutsideColoring(combo.outsideColoringId);
   const inside = pluginRegistry.getInsideColoring(combo.insideColoringId);
   const transform = pluginRegistry.getTransform(combo.transformId);

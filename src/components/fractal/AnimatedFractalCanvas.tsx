@@ -5,6 +5,7 @@ import { FractalRenderer } from '@/engine/fractals/renderer';
 import { registerBuiltins } from '@/engine/plugins/builtins';
 import { useKeyframeAnimation } from '@/hooks/useKeyframeAnimation';
 import { cn } from '@/lib/utils';
+import type { FormulaPlugin } from '@/engine/plugins/types';
 import type { FractalParams, ViewBounds, Keyframe } from '@/engine/types';
 
 // Singleton plugin registration
@@ -18,6 +19,7 @@ export interface AnimatedFractalCanvasProps {
   paused?: boolean;                // Pause animation without disposing the renderer
   resetOnStop?: boolean;           // Reset progress when stopped (default: true). Set false to resume from current position.
   maxIterationsClamp?: number;     // Cap maxIterations (e.g. 300 for homepage)
+  formulaPlugin?: FormulaPlugin;   // Instance-local formula for isolated previews
   className?: string;
   onFrame?: (bounds: ViewBounds) => void;  // Called on each animation frame
   onLoopComplete?: () => void;     // Called when animation loop completes
@@ -41,6 +43,7 @@ export default function AnimatedFractalCanvas({
   paused = false,
   resetOnStop = true,
   maxIterationsClamp,
+  formulaPlugin,
   className,
   onFrame,
   onLoopComplete,
@@ -98,10 +101,11 @@ export default function AnimatedFractalCanvas({
       builtinsRegistered = true;
     }
 
-    // Create renderer
-    const renderer = new FractalRenderer(gl);
+    // Create a renderer whose optional custom formula is instance-local. Public
+    // previews must never write formula bytes into the user's session registry.
+    const renderer = new FractalRenderer(gl, { formulaPlugin });
     rendererRef.current = renderer;
-    void renderer.precompileDefault();
+    if (!formulaPlugin) void renderer.precompileDefault();
 
     // Handle resize with custom DPR
     const handleResize = () => {
@@ -131,7 +135,7 @@ export default function AnimatedFractalCanvas({
       rendererRef.current = null;
       glRef.current = null;
     };
-  }, [active, dprScale]);
+  }, [active, dprScale, formulaPlugin]);
 
   // Update bounds ref when params change (for static rendering)
   useEffect(() => {

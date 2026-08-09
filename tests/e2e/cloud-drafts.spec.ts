@@ -1,4 +1,4 @@
-import { test, expect, type Page } from '@playwright/test';
+import { test, expect, type Locator, type Page } from '@playwright/test';
 
 import { DEFAULT_FRACTAL_DOCUMENT } from '../../src/engine/document';
 import { createFractalDocumentEnvelope } from '../../src/lib/fractal-file';
@@ -28,6 +28,14 @@ async function waitForFractalCanvasReady(page: Page) {
   const canvas = page.locator('[data-testid="fractal-canvas"]');
   await expect(canvas).toBeVisible({ timeout: 30000 });
   await page.waitForTimeout(500);
+}
+
+async function expectArtworkPreviewReady(preview: Locator) {
+  await expect(preview).toHaveAttribute('data-preview-state', 'ready', { timeout: 30000 });
+  await expect(preview.locator('img')).toHaveAttribute('src', /^data:image\/jpeg;base64,/);
+  const box = await preview.boundingBox();
+  expect(box).not.toBeNull();
+  expect(box!.width / box!.height).toBeCloseTo(1.6, 1);
 }
 
 async function readOtpCode(page: Page, email: string): Promise<string> {
@@ -91,6 +99,7 @@ test.describe('Cloud drafts journey', () => {
     const draftRow = page.getByRole('button', { name: new RegExp(artworkName) });
     await expect(draftRow).toBeVisible({ timeout: 20000 });
     await expect(page.getByText(/rev 1/i)).toBeVisible();
+    await expectArtworkPreviewReady(draftRow.getByTestId('artwork-envelope-preview'));
 
     // 4. Open the draft: Explore loads it from the cloud via ?draft=.
     await draftRow.click();
@@ -143,9 +152,16 @@ test.describe('Cloud drafts journey', () => {
     expect(publishKeys[1]).toBe(publishKeys[0]);
     await expect(page.getByText(/no cloud drafts yet/i)).toBeVisible({ timeout: 15000 });
     await expect(page.getByText(`${artworkName} published`, { exact: true })).toBeVisible();
+    const ownerPublicationLink = page.getByRole('link', {
+      name: new RegExp(`${artworkName} published`),
+    });
+    await expectArtworkPreviewReady(
+      ownerPublicationLink.getByTestId('artwork-envelope-preview'),
+    );
 
-    // 8. The immutable publication is publicly readable and carries the
-    // frozen public title even though public thumbnails stay on placeholder.
+    // 8. The immutable publication is publicly readable and its in-app
+    // preview is renderer-derived even while the separate server thumbnail
+    // pipeline remains pending.
     const publicDetail = await page.request.get(`/api/creation/publications/${publicationId}`);
     expect(publicDetail.status()).toBe(200);
     const publicDetailBody = await publicDetail.json();
@@ -158,9 +174,32 @@ test.describe('Cloud drafts journey', () => {
     expect(publicDetailBody.formulaLicenseScope).toBeNull();
     expect(publicDetailBody.formulaSourceAttestationVersion).toBeNull();
 
+    await page.goto('/en/gallery?view=community');
+    const communityArtworkLink = page.getByRole('link', {
+      name: new RegExp(`${artworkName} published`),
+    });
+    await expect(communityArtworkLink).toBeVisible({ timeout: 20000 });
+    await expectArtworkPreviewReady(
+      communityArtworkLink.getByTestId('artwork-envelope-preview'),
+    );
+    await expect(page.locator('img[src="/images/community-placeholder.svg"]')).toHaveCount(0);
+
+    await Promise.all([
+      page.waitForURL(`/en/gallery/community/${publicationId}`, { timeout: 20000 }),
+      communityArtworkLink.click(),
+    ]);
+    await expect(
+      page.getByRole('heading', { name: `${artworkName} published` }),
+    ).toBeVisible({ timeout: 20000 });
+    await expectArtworkPreviewReady(
+      page.locator(`[data-preview-key="publication:${publicationId}"]`),
+    );
+    await expect(page.locator('img[src="/images/community-placeholder.svg"]')).toHaveCount(0);
+
     // 9. Withdraw is permanent: owner status remains as a tombstone while
     // the public detail stops resolving immediately. Lose the first response
     // after commit and require the client to converge with the same key.
+    await page.goto('/en/gallery?view=mine');
     const withdrawKeys: string[] = [];
     let injectWithdrawLoss = true;
     await page.route('**/api/creation/publications/*/withdraw', async (route) => {
@@ -336,6 +375,7 @@ test.describe('Cloud drafts journey', () => {
     await expect(
       page.getByRole('heading', { name: `${artworkName} formula published` }),
     ).toBeVisible({ timeout: 30000 });
+    await expectArtworkPreviewReady(page.getByTestId('artwork-envelope-preview'));
     await expect(page.getByRole('link', { name: 'MIT', exact: true })).toBeVisible();
     await expect(page.getByRole('link', { name: /download \.frm/i })).toHaveAttribute(
       'href',

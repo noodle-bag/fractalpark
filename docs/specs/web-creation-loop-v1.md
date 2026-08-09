@@ -145,7 +145,7 @@ Six tables and two storage buckets carry the cloud state.
 | `author_display_name` | Frozen 1–40 character attribution snapshot; later profile renames never rewrite it |
 | `title` / `description` | 1–80 / 0–500 characters; immutable after publish; description cleared on withdrawal |
 | `envelope` | Immutable snapshot; public while `published`, retained while `hidden`, cleared when `withdrawn` |
-| `thumbnail_path` | Nullable public derived thumbnail; a fixed placeholder stands in before generation and after failure |
+| `thumbnail_path` | Nullable public derived thumbnail for stable external-image and metadata use; in-app previews render from the immutable envelope and do not wait on this field |
 | `thumbnail_status` | `pending \| ready \| failed`; server-assigned only |
 | `thumbnail_attempts` / `thumbnail_error_code` | Server diagnostics; internal errors are never exposed |
 | `license` / `license_scope` | Fixed `CC-BY-4.0` / `artwork_image` |
@@ -263,12 +263,18 @@ Six tables and two storage buckets carry the cloud state.
     client-controlled image content ever reaches other users. If draft
     thumbnails ever gain a cross-user display path, pixel re-encoding
     becomes mandatory at that boundary.
-- `publication-thumbnails`: publicly readable, server-only writable. Public
-  thumbnails are produced only by the controlled server render path from the
-  immutable publication envelope; before generation and after failure the
-  Community surfaces use the fixed placeholder. They are deleted on
-  hide/withdraw and can be rebuilt from the artwork configuration. Paths are
-  unguessable and versioned.
+- `publication-thumbnails`: publicly readable, server-only writable. Stable
+  public image files are produced only by the controlled server render path
+  from the immutable publication envelope; they are deleted on hide/withdraw
+  and can be rebuilt from the artwork configuration. Paths are unguessable
+  and versioned. This pipeline is separate from the in-app preview path:
+  Community cards/details and published cards in My Works lazily fetch the
+  authorized immutable envelope and render an actual 16:10 preview in the
+  browser. A neutral surface is used only while loading or when envelope/WebGL
+  rendering fails; the fixed placeholder is not presented as the artwork and
+  is not advertised as an `ImageObject`. Draft cards use the same renderer
+  after an owner-authorized detail read; private uploaded thumbnail bytes never
+  cross the owner boundary.
 
 ## 5. Same-Origin API v1
 
@@ -727,6 +733,18 @@ record of v0.4.15).
   offline exit.
 - **Sign out.** Keeps the in-memory canvas but strips the private draft
   identity; the next Save asks for OTP again.
+- **Cloud previews.** My Works and Community use the same 16:10 visual frame
+  as the official Collection. Summary endpoints stay lightweight; only cards
+  near the viewport fetch owner/public detail envelopes, validate portable
+  formula hashes, compile custom formulas into renderer-local plugins without
+  touching the user's session formula registry/save assets, cap preview
+  iteration and bailout budgets, and serialize one-off WebGL renders through a
+  bounded queue. Each static render explicitly releases its detached WebGL
+  context. Animation mounts only for the hovered
+  card (or a visible animated detail view), so a long list cannot retain a
+  WebGL context per artwork. The server thumbnail pipeline remains the source
+  of future stable external image URLs, not a blocker for truthful in-app
+  previews.
 
 ### 17.1 Custom formulas (cloud)
 

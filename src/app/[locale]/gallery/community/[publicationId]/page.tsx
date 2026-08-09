@@ -3,6 +3,8 @@ import { notFound } from 'next/navigation';
 import { getTranslations, setRequestLocale } from 'next-intl/server';
 
 import { CommunityArtworkActions } from '@/components/gallery/CommunityArtworkActions';
+import { ArtworkEnvelopePreview } from '@/components/gallery/ArtworkEnvelopePreview';
+import { GALLERY_PREVIEW_FRAME_CLASS } from '@/components/gallery/gallery-card-styles';
 import { getCommunityPublication, type CommunityDetailDto } from '@/lib/cloud/community';
 import { isCreationCloudEnabled } from '@/lib/cloud/config';
 import { DraftServiceError } from '@/lib/cloud/drafts';
@@ -72,29 +74,17 @@ export default async function CommunityArtworkPage({ params }: PageProps) {
   }
   // Do not advertise a source license from the DB tuple alone: the same
   // compiler verdict gates both the public claim and the download link.
-  const creditText = `${publication.title} — ${publication.authorDisplayName} — ${
-    formulaInfo ? 'CC BY 4.0; formula source MIT' : 'CC BY 4.0'
-  }`;
   const publishedAt = new Date(publication.publishedAt).toLocaleDateString(
     locale === 'zh' ? 'zh-CN' : 'en-US',
     { year: 'numeric', month: 'long', day: 'numeric' },
   );
 
-  const imageObject = {
-    '@type': 'ImageObject',
-    '@id': `${pageUrl}#image`,
-    contentUrl: `${SITE.url}/images/community-placeholder.svg`,
-    creator: { '@type': 'Person', name: publication.authorDisplayName },
-    creditText,
-    license: CC_BY_URL,
-  };
   const jsonLd = {
     '@context': 'https://schema.org',
     '@type': 'WebPage',
     name: publication.title,
     description: publication.description ?? undefined,
     url: pageUrl,
-    primaryImageOfPage: imageObject,
   };
 
   return (
@@ -111,16 +101,13 @@ export default async function CommunityArtworkPage({ params }: PageProps) {
         {t('byline', { author: publication.authorDisplayName, date: publishedAt })}
       </p>
 
-      <div className="mt-6 overflow-hidden rounded-xl border bg-muted/30">
-        {/* Public thumbnails are the fixed placeholder until the controlled
-            server render path lands (spec 4.7); the artwork itself opens in
-            the Explorer via Remix. The same placeholder is the ImageObject
-            contentUrl so structured data matches visible content. */}
-        {/* eslint-disable-next-line @next/next/no-img-element */}
-        <img
-          src="/images/community-placeholder.svg"
-          alt={t('thumbnailPending')}
-          className="aspect-[4/3] w-full object-cover"
+      <div className={`mt-6 ${GALLERY_PREVIEW_FRAME_CLASS}`}>
+        <ArtworkEnvelopePreview
+          previewKey={`publication:${publication.id}`}
+          envelope={publication.envelope}
+          autoplay
+          eager
+          ariaLabel={publication.title}
         />
       </div>
 
