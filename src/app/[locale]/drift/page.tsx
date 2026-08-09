@@ -5,6 +5,7 @@ import { registerBuiltins } from '@/engine/plugins/builtins';
 import { buildPublishedArtworkCollection } from '@/lib/published-artworks';
 import { SITE, buildLocaleAlternates } from '@/lib/site';
 import DriftClient from './DriftClient';
+import { OG_LOCALE, type SupportedLocale } from '@/i18n/supported-locales';
 
 /**
  * Drift — immersive, hands-free playback of the published preset collection.
@@ -36,7 +37,7 @@ export async function generateMetadata({
       description: t('ogDescription'),
       url: `${baseUrl}/${locale}/drift`,
       siteName: SITE.name,
-      locale: locale === 'zh' ? 'zh_CN' : 'en_US',
+      locale: OG_LOCALE[locale as SupportedLocale] ?? OG_LOCALE.en,
       type: 'website',
       images: [{ url: image, width: 1200, height: 630, alt: `${SITE.name} Drift preview` }],
     },

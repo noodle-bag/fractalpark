@@ -35,6 +35,7 @@ import {
   type Profile,
 } from '@/lib/cloud/client';
 import { PublishDialog } from './PublishDialog';
+import { HTML_LANG, type SupportedLocale } from '@/i18n/supported-locales';
 
 const ERROR_KEYS = new Set([
   'unavailable',
@@ -282,7 +283,7 @@ export function MyWorksCloud() {
                   <span className="mt-1 block text-xs text-muted-foreground">
                     {t('meta', {
                       revision: draft.revision,
-                      date: new Date(draft.updatedAt).toLocaleString(locale === 'zh' ? 'zh-CN' : 'en-US'),
+                      date: new Date(draft.updatedAt).toLocaleString(HTML_LANG[locale as SupportedLocale] ?? locale),
                     })}
                   </span>
                 </button>
@@ -354,19 +355,19 @@ export function MyWorksCloud() {
                     {publication.status === 'withdrawn'
                       ? t('withdrawnMeta', {
                           date: new Date(publication.withdrawnAt ?? publication.publishedAt).toLocaleDateString(
-                            locale === 'zh' ? 'zh-CN' : 'en-US',
+                            HTML_LANG[locale as SupportedLocale] ?? locale,
                           ),
                         })
                       : publication.status === 'hidden'
                         ? t('hiddenMeta', {
                             date: new Date(publication.publishedAt).toLocaleDateString(
-                              locale === 'zh' ? 'zh-CN' : 'en-US',
+                              HTML_LANG[locale as SupportedLocale] ?? locale,
                             ),
                           })
                         : t('publishedMeta', {
                             license: publication.license,
                             date: new Date(publication.publishedAt).toLocaleDateString(
-                              locale === 'zh' ? 'zh-CN' : 'en-US',
+                              HTML_LANG[locale as SupportedLocale] ?? locale,
                             ),
                           })}
                   </span>

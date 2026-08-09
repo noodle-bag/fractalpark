@@ -40,6 +40,7 @@ import { SITE, buildLocaleAlternates } from '@/lib/site';
 import { splitProseParagraphs } from '@/lib/content-text';
 import { appendRemixSource } from '@/lib/remix-source';
 import { documentToExploreHref } from '@/lib/url-params';
+import { OG_LOCALE, type SupportedLocale } from '@/i18n/supported-locales';
 
 interface FormulaGuidePageProps {
   params: Promise<{
@@ -83,7 +84,7 @@ export async function generateMetadata({
       description: t('summary'),
       url: `${SITE.url}/${locale}${path}`,
       siteName: SITE.name,
-      locale: locale === 'zh' ? 'zh_CN' : 'en_US',
+      locale: OG_LOCALE[locale as SupportedLocale] ?? OG_LOCALE.en,
       type: 'article',
       images: [
         {

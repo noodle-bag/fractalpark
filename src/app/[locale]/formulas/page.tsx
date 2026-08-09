@@ -19,6 +19,7 @@ import { Button } from '@/components/ui/button';
 import { Link } from '@/i18n/routing';
 import { renderJsonLd } from '@/lib/json-ld';
 import { SITE, buildLocaleAlternates } from '@/lib/site';
+import { OG_LOCALE, type SupportedLocale } from '@/i18n/supported-locales';
 
 const ATLAS_PATH = '/formulas';
 const FRM_GUIDE_PATH = '/formulas/frm';
@@ -48,7 +49,7 @@ export async function generateMetadata({
       description: t('description'),
       url: `${SITE.url}/${locale}${ATLAS_PATH}`,
       siteName: SITE.name,
-      locale: locale === 'zh' ? 'zh_CN' : 'en_US',
+      locale: OG_LOCALE[locale as SupportedLocale] ?? OG_LOCALE.en,
       type: 'website',
       images: [
         {

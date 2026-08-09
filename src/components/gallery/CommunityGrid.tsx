@@ -24,6 +24,7 @@ import {
   type CommunityListItem,
 } from '@/lib/cloud/client';
 import { trackEvent } from '@/components/analytics/PageViewTracker';
+import { HTML_LANG, type SupportedLocale } from '@/i18n/supported-locales';
 
 export function CommunityGrid() {
   const t = useTranslations('cloud.community');
@@ -89,7 +90,7 @@ export function CommunityGrid() {
               </p>
               <p className="mt-1 text-xs text-muted-foreground">
                 {item.license} ·{' '}
-                {new Date(item.publishedAt).toLocaleDateString(locale === 'zh' ? 'zh-CN' : 'en-US')}
+                {new Date(item.publishedAt).toLocaleDateString(HTML_LANG[locale as SupportedLocale] ?? locale)}
               </p>
             </Link>
           </article>

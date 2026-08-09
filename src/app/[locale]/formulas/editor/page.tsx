@@ -5,6 +5,7 @@ import { Badge } from '@/components/ui/badge';
 import { Link } from '@/i18n/routing';
 import { renderJsonLd } from '@/lib/json-ld';
 import { SITE, buildLocaleAlternates } from '@/lib/site';
+import { OG_LOCALE, type SupportedLocale } from '@/i18n/supported-locales';
 
 const EDITOR_PATH = '/formulas/editor';
 const GUIDE_PATH = '/formulas/frm';
@@ -30,7 +31,7 @@ export async function generateMetadata({
       description: t('description'),
       url: `${SITE.url}/${locale}${EDITOR_PATH}`,
       siteName: SITE.name,
-      locale: locale === 'zh' ? 'zh_CN' : 'en_US',
+      locale: OG_LOCALE[locale as SupportedLocale] ?? OG_LOCALE.en,
       type: 'website',
       images: [image],
     },
