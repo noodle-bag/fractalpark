@@ -1,6 +1,11 @@
 import { beforeAll, describe, expect, it } from 'vitest';
 import enMessages from '../../messages/en.json';
 import zhMessages from '../../messages/zh.json';
+import ptMessages from '../../messages/pt.json';
+import koMessages from '../../messages/ko.json';
+import ruMessages from '../../messages/ru.json';
+import esMessages from '../../messages/es.json';
+import frMessages from '../../messages/fr.json';
 import presetsFile from '../../public/gallery-presets.json';
 import {
   ARTWORK_CONTENT_MANIFEST,
@@ -23,13 +28,20 @@ import {
   parseGalleryPresetsFile,
 } from '@/lib/gallery-presets';
 
+const ALL_MESSAGES: Record<string, Record<string, unknown>> = {
+  en: enMessages,
+  zh: zhMessages,
+  pt: ptMessages,
+  ko: koMessages,
+  ru: ruMessages,
+  es: esMessages,
+  fr: frMessages,
+};
+
 function buildValidationInput(overrides?: {
   formulas?: FormulaContentEntry[];
   artworks?: ArtworkContentEntry[];
-  messages?: {
-    en: Record<string, unknown>;
-    zh: Record<string, unknown>;
-  };
+  messages?: Record<string, Record<string, unknown>>;
 }) {
   return {
     formulas: overrides?.formulas ?? FORMULA_CONTENT_MANIFEST,
@@ -37,10 +49,7 @@ function buildValidationInput(overrides?: {
     catalog: FORMULA_CATALOG,
     formulaPlugins: pluginRegistry.listFormulas(),
     presets: parseGalleryPresetsFile(presetsFile).presets,
-    messages: overrides?.messages ?? {
-      en: enMessages,
-      zh: zhMessages,
-    },
+    messages: overrides?.messages ?? ALL_MESSAGES,
   };
 }
 
@@ -49,7 +58,7 @@ describe('formula and artwork content manifests', () => {
     registerBuiltins({ quiet: true });
   });
 
-  it('validates the complete bilingual 21-formula and 26-artwork set', () => {
+  it('validates the complete multilingual 21-formula and 26-artwork set', () => {
     expect(() => validateContentManifests(buildValidationInput())).not.toThrow();
     expect(FORMULA_CONTENT_MANIFEST).toHaveLength(21);
     expect(ARTWORK_CONTENT_MANIFEST).toHaveLength(26);
@@ -124,11 +133,8 @@ describe('formula and artwork content manifests', () => {
     ).toThrow(/must begin with newton-3-/);
   });
 
-  it('rejects a missing message in either locale', () => {
-    const messages = {
-      en: structuredClone(enMessages) as Record<string, unknown>,
-      zh: structuredClone(zhMessages) as Record<string, unknown>,
-    };
+  it('rejects a missing message in any locale', () => {
+    const messages = structuredClone(ALL_MESSAGES);
     const zhFormulas = messages.zh.formulas as Record<string, unknown>;
     const zhEntries = zhFormulas.entries as Record<string, unknown>;
     const mandelbrot = zhEntries.mandelbrot as Record<string, unknown>;

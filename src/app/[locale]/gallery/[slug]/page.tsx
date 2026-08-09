@@ -39,6 +39,7 @@ import {
 import { SITE, buildLocaleAlternates } from '@/lib/site';
 import { documentToExploreHref } from '@/lib/url-params';
 import { appendRemixSource } from '@/lib/remix-source';
+import { OG_LOCALE, type SupportedLocale } from '@/i18n/supported-locales';
 
 const ARTWORK_CREATOR = 'FractalPark';
 const ARTWORK_LICENSE_URL = 'https://creativecommons.org/licenses/by/4.0/';
@@ -94,7 +95,7 @@ export async function generateMetadata({
       description: t('summary'),
       url: `${SITE.url}/${locale}${path}`,
       siteName: SITE.name,
-      locale: locale === 'zh' ? 'zh_CN' : 'en_US',
+      locale: OG_LOCALE[locale as SupportedLocale] ?? OG_LOCALE.en,
       type: 'article',
       images: [{
         url: image,

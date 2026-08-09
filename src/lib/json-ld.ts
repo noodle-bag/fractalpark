@@ -1,4 +1,5 @@
 import { PUBLIC_PROJECT } from '@/content/public-project';
+import { routing } from '@/i18n/routing';
 import { SITE } from '@/lib/site';
 
 /**
@@ -22,6 +23,20 @@ import { SITE } from '@/lib/site';
 const baseUrl = SITE.url;
 const ogImage = `${baseUrl}${SITE.ogImage}`;
 
+/** BCP 47 language tags for JSON-LD `inLanguage`, derived from routing. */
+const IN_LANGUAGE: readonly string[] = routing.locales.map((locale) => {
+  const map: Record<string, string> = {
+    en: 'en',
+    zh: 'zh-CN',
+    pt: 'pt-BR',
+    ko: 'ko-KR',
+    ru: 'ru-RU',
+    es: 'es-ES',
+    fr: 'fr-FR',
+  };
+  return map[locale] ?? locale;
+});
+
 /**
  * WebSite schema — emitted on every page via [locale]/layout.tsx.
  * Establishes the site entity and points at the SoftwareApplication it hosts.
@@ -34,7 +49,7 @@ export const websiteJsonLd = {
   alternateName: SITE.nameZh,
   url: baseUrl,
   description: PUBLIC_PROJECT.tagline,
-  inLanguage: ['en', 'zh-CN'],
+  inLanguage: IN_LANGUAGE,
   publisher: {
     '@type': 'Organization',
     '@id': `${baseUrl}/#organization`,
@@ -80,7 +95,7 @@ export function buildSoftwareApplicationJsonLd(
     screenshot: ogImage,
     image: ogImage,
     isAccessibleForFree: true,
-    inLanguage: ['en', 'zh-CN'],
+    inLanguage: IN_LANGUAGE,
     featureList: [
       `${facts.formulaCount} GLSL fractal formulas across ${facts.formulaFamilyCount} families (Classic, Burning Ship, Newton, Phoenix, Transcendental, Magnet, Exotic)`,
       'Mandelbrot and Julia modes for every formula',
@@ -92,7 +107,7 @@ export function buildSoftwareApplicationJsonLd(
       `High-resolution PNG export up to ${facts.maxExportScale}× with SSAA anti-aliasing`,
       'Shareable URLs that encode the exact view and parameters',
       'Local on-device artwork storage; no account required',
-      'Bilingual interface (English and Simplified Chinese)',
+      'Interface available in seven languages (English, Simplified Chinese, Portuguese, Korean, Russian, Spanish, French)',
     ],
     offers: {
       '@type': 'Offer',

@@ -9,25 +9,25 @@ import { PageViewTracker } from '@/components/analytics/PageViewTracker';
 import { CloudSessionProvider } from '@/components/cloud/CloudSessionProvider';
 import { LayoutProvider } from '@/components/layout/LayoutContext';
 import LayoutShell from '@/components/layout/LayoutShell';
-import { routing } from '@/i18n/routing';
+import { HTML_LANG, OG_LOCALE, SUPPORTED_LOCALES, type SupportedLocale } from '@/i18n/supported-locales';
 import { SITE } from '@/lib/site';
 import { websiteJsonLd, renderJsonLd } from '@/lib/json-ld';
 
 export const dynamicParams = false;
 
 export function generateStaticParams() {
-  return routing.locales.map((locale) => ({ locale }));
+  return SUPPORTED_LOCALES.map((locale) => ({ locale }));
 }
 
 /**
- * Localized document language for the initial server HTML:
- * English pages render `<html lang="en">`, Chinese pages `<html lang="zh-CN">`.
- * Never fix the root document to a single language and never patch lang from
- * client-side scripts — crawlers (incl. Bingbot/Baiduspider) must see the
- * correct value without executing JavaScript.
+ * Localized document language for the initial server HTML: every locale
+ * renders its own BCP 47 tag (`en`, `zh-CN`, `pt-BR`, …). Never fix the root
+ * document to a single language and never patch lang from client-side
+ * scripts — crawlers (incl. Bingbot/Baiduspider) must see the correct value
+ * without executing JavaScript.
  */
 export function htmlLangForLocale(locale: string): string {
-  return locale === 'zh' ? 'zh-CN' : 'en';
+  return HTML_LANG[locale as SupportedLocale] ?? locale;
 }
 
 export async function generateMetadata({
@@ -53,7 +53,7 @@ export async function generateMetadata({
       description: t('ogDescription'),
       url: `${baseUrl}/${locale}/explore`,
       siteName: SITE.name,
-      locale: locale === 'zh' ? 'zh_CN' : 'en_US',
+      locale: OG_LOCALE[locale as SupportedLocale] ?? OG_LOCALE.en,
       type: 'website',
       images: [{ url: image, width: 1200, height: 630, alt: `${SITE.name} fractal art preview` }],
     },

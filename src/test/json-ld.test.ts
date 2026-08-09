@@ -67,7 +67,15 @@ describe('WebSite JSON-LD', () => {
     expect(websiteJsonLd['@id']).toBe(`${SITE.url}/#website`);
     expect(websiteJsonLd.url).toBe(SITE.url);
     expect(websiteJsonLd.description).toBe(PUBLIC_PROJECT.tagline);
-    expect(websiteJsonLd.inLanguage).toEqual(['en', 'zh-CN']);
+    expect(websiteJsonLd.inLanguage).toEqual([
+      'en',
+      'zh-CN',
+      'pt-BR',
+      'ko-KR',
+      'ru-RU',
+      'es-ES',
+      'fr-FR',
+    ]);
   });
 });
 

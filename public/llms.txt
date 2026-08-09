@@ -27,7 +27,7 @@ FractalPark is a free, open-source (MIT) WebGL application that renders entirely
 - **High-res Export**: PNG export with tiled rendering for large images, up to 4x
 - **Cloud Library**: Artworks and custom formulas saved behind email one-time-code sign-in (no passwords); anonymous creation stays fully usable
 - **Community Gallery**: Explicit publishing under CC BY 4.0; artworks using a custom formula also publish the formula source under MIT
-- **Bilingual**: English and Simplified Chinese support
+- **Multilingual**: Interface in English, Simplified Chinese, Portuguese, Korean, Russian, Spanish, and French
 
 ## URL Parameters
 

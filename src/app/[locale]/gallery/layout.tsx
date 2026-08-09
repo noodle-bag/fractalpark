@@ -1,6 +1,7 @@
 import type { Metadata } from 'next';
 import { getTranslations } from 'next-intl/server';
 import { SITE, buildLocaleAlternates } from '@/lib/site';
+import { OG_LOCALE, type SupportedLocale } from '@/i18n/supported-locales';
 
 export async function generateMetadata({
   params,
@@ -27,7 +28,7 @@ export async function generateMetadata({
       description: t('description'),
       url: `${baseUrl}/${locale}/gallery`,
       siteName: SITE.name,
-      locale: locale === 'zh' ? 'zh_CN' : 'en_US',
+      locale: OG_LOCALE[locale as SupportedLocale] ?? OG_LOCALE.en,
       type: 'website',
       images: [{ url: image, width: 1200, height: 630, alt: `${SITE.name} Gallery preview` }],
     },

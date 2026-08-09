@@ -33,7 +33,7 @@ FractalPark is a browser-based fractal art generator using WebGL for real-time r
 - 9 coloring modes with orbit channel support
 - High-resolution PNG export (up to 4x)
 - Personal collection with localStorage persistence
-- Bilingual support (English/Chinese)
+- Multilingual interface (English, Simplified Chinese, Portuguese, Korean, Russian, Spanish, French)
 
 ---
 

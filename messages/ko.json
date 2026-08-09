@@ -1,0 +1,1864 @@
+{
+  "cloud": {
+    "otp": {
+      "title": "동기화를 위해 로그인",
+      "emailDescription": "작품을 개인 클라우드에 저장하고, 어떤 기기에서든 이어서 보고, 커뮤니티에 게시하려면 로그인하세요. 저장과 게시는 계정이 필요하지만, 탐색·제작·다운로드는 계정 없이도 가능해요.",
+      "codeDescription": "방금 보내드린 이메일의 6자리 코드를 입력하세요.",
+      "emailLabel": "이메일",
+      "emailPlaceholder": "you@example.com",
+      "codeLabel": "6자리 코드",
+      "sendCode": "코드 보내기",
+      "sending": "보내는 중…",
+      "verify": "로그인",
+      "verifying": "로그인 중…",
+      "resend": "코드 다시 보내기",
+      "errors": {
+        "wrongCode": "코드가 올바르지 않아요. 이메일을 확인하고 다시 시도하세요.",
+        "rateLimited": "시도 횟수가 너무 많아요. 잠시 후 다시 시도하세요.",
+        "offline": "오프라인 상태인 것 같아요. 연결을 확인하고 다시 시도하세요.",
+        "disabled": "이 배포 환경에서는 클라우드 동기화를 사용할 수 없어요.",
+        "generic": "문제가 발생했어요. 다시 시도하세요."
+      }
+    },
+    "myWorks": {
+      "signInHint": "로그인하면 초안을 클라우드 라이브러리에 보관하고 어떤 기기에서든 이어서 볼 수 있어요.",
+      "signIn": "동기화를 위해 로그인",
+      "draftsTitle": "클라우드 초안",
+      "publishedTitle": "게시됨",
+      "publishedEmpty": "아직 게시된 작품이 없어요. 게시 기능은 커뮤니티 업데이트와 함께 제공돼요.",
+      "draftsEmpty": "아직 클라우드 초안이 없어요. 로그인한 상태로 작품을 저장하면 여기에 나타나요.",
+      "loading": "초안 불러오는 중…",
+      "refresh": "새로고침",
+      "delete": "삭제",
+      "confirmDelete": "이 클라우드 초안을 영구 삭제할까요? 되돌릴 수 없어요.",
+      "confirmWithdraw": "이 작품을 영구 철회할까요? 커뮤니티에서 즉시 사라지며 복원할 수 없어요. 이미 기존 리믹스에 부여된 라이선스는 계속 유효해요.",
+      "publish": "게시",
+      "withdraw": "철회",
+      "backupLabel": "백업 이메일",
+      "backupModes": {
+        "off": "끄기",
+        "publish_only": "게시할 때",
+        "save_and_publish": "저장 + 게시할 때마다"
+      },
+      "backupNotice": "백업 이메일에는 완전한 .fractal.json이 첨부돼요: 모든 파라미터, 뷰, 그리고 커스텀 수식까지 포함돼요. FractalPark은 발송 후에는 이를 회수할 수 없어요.",
+      "backupConfirm": "알겠어요, 켤게요",
+      "backupCancel": "나중에",
+      "publishedMeta": "{license} · {date} 게시",
+      "withdrawnMeta": "{date} 철회됨",
+      "hiddenMeta": "운영진에 의해 숨겨짐 · {date} 게시 · 앱에서는 이 행을 나만 볼 수 있어요",
+      "meta": "rev {revision} · {date}",
+      "errors": {
+        "unavailable": "지금은 클라우드 동기화를 사용할 수 없어요. 잠시 후 다시 시도하세요.",
+        "quota_exceeded": "클라우드 저장 공간이 가득 찼어요. 공간을 확보하려면 초안을 일부 삭제하세요.",
+        "offline": "오프라인 상태인 것 같아요.",
+        "not_found": "해당 초안은 더 이상 존재하지 않아요.",
+        "unauthenticated": "세션이 만료됐어요. 다시 로그인하세요.",
+        "invalid_envelope": "이 작품을 클라우드용으로 검증할 수 없었어요.",
+        "rate_limited": "잠시 기다렸다가 다시 시도하세요."
+      },
+      "unavailableHint": "지금은 클라우드 동기화를 사용할 수 없어요. 초안은 안전하니 잠시 후 다시 시도하세요."
+    },
+    "publish": {
+      "title": "커뮤니티에 게시",
+      "description": "게시하면 이 리비전은 영구적으로 고정돼요. 여기서 확인한 내용이 그대로 공개돼요.",
+      "displayNameLabel": "표시 이름",
+      "displayNamePlaceholder": "아티스트로 표시될 이름",
+      "displayNameHint": "게시하는 모든 작품에 표시돼요. 나중에 변경할 수 있으며, 이미 게시된 작품에는 이전 이름이 유지돼요.",
+      "titleLabel": "제목",
+      "descriptionLabel": "설명 (선택)",
+      "attestation": "저는 이 작품을 직접 만들었으며, 렌더링된 이미지를 CC BY 4.0으로 라이선스하여 다른 사람들이 출처를 표시하고 공유하거나 리믹스할 수 있게 합니다.",
+      "immutableHint": "게시된 후에는 작품과 그 텍스트를 편집할 수 없어요. 계속 작업하려면 리믹스로 포크하고, 철회는 영구적이에요.",
+      "cancel": "취소",
+      "confirm": "게시",
+      "publishing": "게시 중…",
+      "errors": {
+        "rateLimited": "오늘 게시를 많이 하셨어요. 내일 다시 시도하세요.",
+        "revisionConflict": "대화상자를 연 이후 초안이 변경됐어요. 닫고 다시 시도하세요.",
+        "validation": "표시 이름, 제목, 설명을 확인한 후 다시 시도하세요.",
+        "offline": "오프라인 상태인 것 같아요.",
+        "generic": "게시에 실패했어요. 게시된 것은 없으며 초안은 그대로 남아 있어요.",
+        "formulaCompile": "수식 소스가 서버 측 검증을 통과하지 못했어요. 초안을 열어 수식을 수정한 후 다시 시도하세요.",
+        "formulaBuiltinConflict": "수식 id가 내장 수식과 충돌해요. 내 수식에서 이름을 바꾼 후 다시 시도하세요."
+      },
+      "formulaNoticeTitle": "이 작품은 커스텀 수식을 사용해요",
+      "formulaNoticeBody": "게시하면 수식 소스 코드가 MIT 라이선스로 공개돼요: 누구나 읽고, 복사하고, 재사용할 수 있어요. 공개적으로 표시되는 수식 이름과 설명은 이 양식이 아닌 수식 메타데이터에서 가져와요. 렌더링된 이미지는 CC BY 4.0이 유지돼요.",
+      "formulaAttestation": "저는 고정된 커스텀 수식 소스를 MIT 라이선스로 게시하는 것에 명시적으로 동의합니다.",
+      "formulaNoticeLink": "opensource.org에서 MIT 라이선스 보기",
+      "licensePendingNote": "이 초안을 사전 확인할 수 없었어요. 라이선스는 게시 시점에 서버에서 최종 결정돼요: 커스텀 수식이 없는 작품은 CC BY 4.0으로 게시되고, 커스텀 수식이 있으면 소스에 MIT가 추가돼요."
+    },
+    "community": {
+      "backToCommunity": "← 커뮤니티",
+      "byline": "{author} · {date}",
+      "thumbnailPending": "서버 렌더링 파이프라인에서 작품 이미지 생성 중",
+      "licenseLabel": "라이선스:",
+      "licenseValue": "프랙탈 이미지 레이어의 라이선스",
+      "sourceLabel": "소스:",
+      "sourcePublication": "다른 커뮤니티 작품에서 리믹스됨",
+      "sourcePreset": "FractalPark 컬렉션에서 리믹스됨 ({id})",
+      "sourceFormula": "수식 {id}에서 리믹스됨",
+      "remix": "리믹스",
+      "remixing": "리믹스 중…",
+      "signInToSyncRemix": "로그인하면 리믹스를 클라우드에 보관할 수 있어요",
+      "copyLink": "링크 복사",
+      "copied": "복사됨",
+      "reportPrefix": "이 작품에 문제가 있나요? 신고 또는 삭제 요청:",
+      "loadMore": "더 보기",
+      "loading": "불러오는 중…",
+      "emptyTitle": "아직 아무것도 없어요",
+      "emptyDescription": "게시된 작품이 여기에 표시돼요. 여러분의 작품이 첫 번째가 될 수 있어요.",
+      "errors": {
+        "generic": "작동하지 않았어요. 다시 시도하세요.",
+        "loadFailed": "커뮤니티 목록을 불러올 수 없었어요. 잠시 후 다시 시도하세요."
+      },
+      "licenseFormulaValue": "작품 라이선스",
+      "formulaSourceLabel": "수식 소스",
+      "formulaSourceValue": "“{name}” (FRM, MIT)",
+      "formulaSourceDownload": ".frm 다운로드",
+      "licenseFormulaSourceValue": "수식 소스 라이선스"
+    },
+    "accountDeletion": {
+      "title": "계정 삭제",
+      "intro": "계정 삭제는 영구적이에요. 새 이메일 코드와 최종 확인을 요청드릴 거예요.",
+      "start": "계정 삭제 시작",
+      "working": "처리 중…",
+      "codeSent": "계정 이메일로 새 6자리 코드를 보냈어요. 계속하려면 코드를 입력하세요.",
+      "codePlaceholder": "123456",
+      "verify": "확인",
+      "cancel": "취소",
+      "confirmWarning": "마지막 단계예요. 영구 삭제를 확인하려면 계정 이메일을 입력하세요:",
+      "consequenceDrafts": "모든 클라우드 초안이 영구 삭제돼요.",
+      "consequencePublications": "게시된 작품은 철회되고 출처 기록만 남아요.",
+      "consequenceLicense": "이미 리믹스에 부여된 라이선스는 계속 유효해요.",
+      "emailPlaceholder": "you@example.com",
+      "confirmButton": "내 계정 영구 삭제",
+      "doneTitle": "계정이 삭제됐어요",
+      "doneBody": "계정과 개인 데이터를 삭제하는 중이에요. 로그아웃되었어요.",
+      "errors": {
+        "otp_invalid": "코드가 올바르지 않아요. 확인하고 다시 시도하세요.",
+        "step_up_expired": "코드 세션이 만료됐어요. 다시 시작해서 새 코드를 받으세요.",
+        "account_deleting": "계정 삭제가 이미 진행 중이에요.",
+        "rate_limited": "시도 횟수가 너무 많아요. 잠시 후 다시 시도하세요.",
+        "unauthenticated": "계속하려면 다시 로그인하세요.",
+        "generic": "문제가 발생했어요. 다시 시도하세요."
+      }
+    }
+  },
+  "common": {
+    "nav": {
+      "drift": "드리프트",
+      "gallery": "갤러리",
+      "formulas": "수식",
+      "explore": "탐색",
+      "about": "소개",
+      "tagline": "오픈소스, 수식 중심의 프랙탈 지식·창작 플랫폼",
+      "signIn": "로그인",
+      "signOut": "로그아웃",
+      "cloudUnavailable": "클라우드 사용 불가",
+      "menu": "메뉴"
+    },
+    "language": {
+      "en": "EN",
+      "zh": "중국어",
+      "label": "언어"
+    },
+    "footer": {
+      "copyright": "© 2026 FractalPark. MIT 라이선스로 배포됩니다.",
+      "contact": "문의:",
+      "privacy": "개인정보 처리방침",
+      "terms": "이용약관",
+      "rules": "커뮤니티 규칙"
+    }
+  },
+  "gallery": {
+    "title": "갤러리",
+    "viewsLabel": "갤러리 보기",
+    "collection": {
+      "title": "FractalPark 컬렉션",
+      "description": "게시된 FractalPark 작품 전체 컬렉션을 둘러보세요."
+    },
+    "community": {
+      "title": "커뮤니티",
+      "description": "크리에이터들이 CC BY 4.0으로 게시한 작품이에요. 하나를 열어 내 초안으로 리믹스해 보세요."
+    },
+    "mine": {
+      "title": "내 작품",
+      "description": "클라우드 라이브러리에 저장된 작품이에요.",
+      "create": "탐색에서 새로 만들기",
+      "actions": "{name} 작업"
+    },
+    "contextMenu": {
+      "restore": "탐색에서 복원",
+      "rename": "이름 바꾸기",
+      "delete": "삭제"
+    },
+    "card": {
+      "deleteConfirm": {
+        "title": "프랙탈을 삭제할까요?",
+        "description": "이 작업은 되돌릴 수 없어요.",
+        "confirm": "삭제",
+        "cancel": "취소"
+      },
+      "renameTitle": "프랙탈 이름 바꾸기",
+      "renameCancel": "취소",
+      "renameSave": "저장"
+    }
+  },
+  "formulas": {
+    "index": {
+      "breadcrumbLabel": "이동 경로",
+      "breadcrumbHome": "홈",
+      "breadcrumb": "수식",
+      "eyebrow": "수식 아틀라스",
+      "title": "수식 아틀라스",
+      "intro": "일곱 개 패밀리에 걸친 FractalPark의 내장 수식 94개 전체 카탈로그를 둘러보세요. 표준 뷰에서 시작하거나, 심층 가이드 프로필 21개 중 하나를 따라가거나, FRM으로 나만의 수식을 작성하는 법을 배워보세요.",
+      "stats": {
+        "formulas": "수식",
+        "families": "패밀리",
+        "guides": "가이드 프로필"
+      },
+      "capabilities": {
+        "eyebrow": "탐색을 위해 설계됨",
+        "title": "하나의 카탈로그, 다양한 창작 방법",
+        "intro": "모든 항목은 인터랙티브 탐색기가 사용하는 동일한 수식 카탈로그와 승인된 기본 상태에서 파생돼요.",
+        "items": {
+          "realtime": {
+            "title": "실시간 WebGL",
+            "description": "브라우저에서 아무 수식이나 바로 열고 GPU 가속 렌더링으로 그 경계를 탐색하세요."
+          },
+          "canonical": {
+            "title": "표준 시작 뷰",
+            "description": "각 목적지는 뷰, 파라미터, 컬러링을 포함한 권위 있는 수식 문서에서 생성돼요."
+          },
+          "server": {
+            "title": "서버에서 읽을 수 있는 디렉터리",
+            "description": "일곱 개 패밀리와 94개 목적지 모두가 클라이언트 측 검색이나 필터링 없이 초기 HTML에 그대로 제공돼요."
+          }
+        }
+      },
+      "families": {
+        "eyebrow": "일곱 개 패밀리",
+        "title": "수학적 특성을 선택하세요",
+        "intro": "패밀리는 반복 구조와 시각적 특성에 따라 수식을 분류해요. 개수는 현재 내장 카탈로그에서 직접 가져와요.",
+        "descriptions": {
+          "classic": "이차, 다항식, 줄리아, 멀티콘 등 관련 이탈 시간(escape-time) 기초 수식들.",
+          "burning-ship": "날카로운 선체, 능선, 불꽃 같은 경계를 가진 접힌 절댓값 맵.",
+          "newton": "평면을 색칠된 분지(basin)로 나누는 수렴형 근 찾기 시스템.",
+          "magnet": "극점, 조밀한 경계, 자기적 분지 구조를 가진 유리 맵.",
+          "phoenix": "이전 오빗 상태가 다음 단계를 결정하는 메모리 의존적 반복.",
+          "transcendental": "지수, 삼각, 쌍곡, 로그 복소 맵.",
+          "exotic": "역수, 유리, 반전, 테트레이션 등 기타 하이브리드 구성."
+        }
+      },
+      "frm": {
+        "eyebrow": "직접 만들기",
+        "title": "FRM으로 수식 배우고 작성하기",
+        "description": "FRM은 FractalPark의 검증된 텍스트 기반 저작 방식이에요. 호환성 가이드를 읽고, 컴파일 검증된 예제를 살펴본 다음, 독립형 에디터에서 수식을 작성하고 미리보기하세요.",
+        "learn": "FRM 배우기",
+        "openEditor": "수식 에디터 열기"
+      },
+      "guides": {
+        "eyebrow": "엄선된 수식 21개",
+        "title": "심층 가이드 세트",
+        "intro": "이 21개 수식은 FractalPark의 게시된 작품에서 선정된 고정 가이드 세트예요. 모든 가이드는 원본 이중 언어 콘텐츠와, 해당 이미지 및 탐색기 목적지가 사용하는 동일한 표준 상태를 함께 제공해요.",
+        "read": "가이드 읽기",
+        "explore": "표준 뷰 탐색"
+      },
+      "directory": {
+        "eyebrow": "전체 카탈로그",
+        "title": "모든 수식 94개",
+        "intro": "전체 디렉터리는 패밀리별로 그룹화되어 서버에서 렌더링돼요. 모든 링크는 표준 지역화된 탐색기 상태로 수식을 열어요.",
+        "familyCount": "{count, plural, one {수식 #개} other {수식 #개}}",
+        "backToFamilies": "패밀리 개요",
+        "guideBadge": "가이드"
+      },
+      "cta": {
+        "title": "수식에서 시작하거나 직접 작성하세요",
+        "description": "내장 수식은 탐색기를 사용하고, 반복을 직접 정의하고 싶을 때는 로컬 FRM 에디터를 열어보세요.",
+        "explore": "탐색기 열기",
+        "editor": "수식 에디터 열기"
+      }
+    },
+    "guide": {
+      "breadcrumbLabel": "이동 경로",
+      "breadcrumbHome": "홈",
+      "breadcrumbFormulas": "수식",
+      "openExplorer": "탐색기에서 열기",
+      "viewArtwork": "작품 보기",
+      "difficulty": {
+        "easy": "쉬움",
+        "medium": "보통",
+        "hard": "어려움"
+      },
+      "sections": {
+        "overview": "개요",
+        "mathematics": "수학",
+        "history": "역사",
+        "visualCharacteristics": "시각적 특징",
+        "parameters": "파라미터",
+        "remix": "리믹스와 예제",
+        "related": "관련 수식",
+        "faq": "자주 묻는 질문",
+        "references": "참고 자료"
+      },
+      "parameterLabels": {
+        "scale": "배율",
+        "memory": "메모리"
+      },
+      "remix": {
+        "title": "표준 문서에서 시작하기",
+        "description": "이 가이드가 사용하는 동일한 승인된 수식 상태를 연 다음, 인터랙티브 탐색기에서 뷰, 컬러링, 변환, 애니메이션을 바꿔보세요.",
+        "cta": "탐색기에서 리믹스"
+      }
+    },
+    "frmGuide": {
+      "eyebrow": "FRM 수식 언어",
+      "title": "FRM으로 프랙탈 작성하기",
+      "intro": "FractalPark의 검증된 FRM 하위 집합을 배우고, 소스가 GPU 셰이더가 되는 과정을 이해하며, 에디터가 사용하는 동일한 예제로 작동하는 수식 세 개를 만들어 보세요.",
+      "contentsLabel": "이 페이지에서",
+      "copy": {
+        "copy": "복사",
+        "copied": "복사됨",
+        "error": "복사 실패"
+      },
+      "sections": {
+        "what-is-frm": {
+          "title": "FRM이란 무엇인가요?",
+          "body": [
+            "FRM은 반복 프랙탈을 설명하는 간결한 텍스트 기반 방식이에요. 수식은 시작 상태, 각 오빗마다 반복되는 계산, 그리고 반복을 계속할지 결정하는 조건을 정의해요.",
+            "이 형식은 렌더링 프로그램을 다시 빌드하지 않고도 실험을 교환할 수 있게 해준 수식 파일이 있는 Fractint 생태계에서 성장했어요. FractalPark은 완전한 호환성을 주장하는 대신 자체 검증된 하위 집합을 문서화하면서 그 저작 아이디어를 브라우저 워크플로우로 옮겨왔어요."
+          ],
+          "historyPrefix": "더 넓은 프로젝트의 기원과 역사에 대해서는 다음을 참조하세요:",
+          "historyLink": "Fractint 프로젝트 사이트"
+        },
+        "support": {
+          "title": "FractalPark의 FRM 지원",
+          "intro": "FractalPark은 의도적으로 설계된 FRM 하위 집합을 토큰화·파싱·검증·컴파일해요. 아래 표는 직접 작동하는 구성, 문서화된 FractalPark 의미론을 가진 구성, 현재 워크플로우가 보존할 수 없는 구성을 구분해요.",
+          "table": {
+            "level": "수준",
+            "meaning": "의미",
+            "scope": "v0.4.13 범위"
+          },
+          "levels": {
+            "supported": {
+              "label": "지원됨",
+              "meaning": "컴파일러 테스트로 검증되며 의미론적 제약 없이 사용할 수 있어요."
+            },
+            "adapted": {
+              "label": "변형 지원",
+              "meaning": "문서화된 의미론적 차이를 두고, 또는 FractalPark 확장으로 수용돼요."
+            },
+            "unsupported": {
+              "label": "지원 안 됨",
+              "meaning": "현재 컴파일러나 파일 워크플로우가 보존하지 못해요. 조용히 다시 쓰는 대신 거부돼요."
+            }
+          },
+          "items": {
+            "single-formula": "소스 문서당 수식 선언 하나",
+            "core-sections": "init, loop, bailout 섹션",
+            "variables": "할당 및 사용자 변수",
+            "expressions": "실수·복소수 리터럴; 산술, 비교, 논리, 단항, 크기(magnitude) 표현식",
+            "conditionals": "if / elseif / else / endif 분기",
+            "builtins": "z, c, pixel, zPrev, p1–p5, 상수, 검증된 내장 함수",
+            "comments": "FRM 주석",
+            "diagnostics": "구조화된 진단 및 FRM-to-GLSL 소스 매핑",
+            "ismand": "ismand는 FractalPark의 현재 만델브로/줄리아 런타임 모드에 매핑돼요",
+            "function-slots": "fn1–fn4는 컴파일 타임 함수 디스패치를 사용해요",
+            "native-directives": "@mode: native, @default-view, @default-coloring은 FractalPark 확장이며, 기본값 지시어는 네이티브 모드에서만 적용돼요",
+            "multi-formula-files": "한 파일의 여러 수식 중 선택",
+            "dialect-conversion": "클래식 Fractint 방언의 자동 변환",
+            "arbitrary-directives": "임의의 소스 지시어",
+            "non-ascii-identifiers": "비-ASCII 식별자",
+            "user-functions": "사용자 정의 함수 또는 매크로",
+            "preprocessor": "전처리기 기능",
+            "rejected-constructs": "현재 컴파일 파이프라인이 거부하는 모든 구성"
+          },
+          "disclaimer": "이것은 검증된 호환성 기준선이지, 완전한 Fractint 호환성을 주장하는 것은 아니에요. 컴파일러가 변경되면 이 매트릭스와 테스트도 함께 변경돼야 해요."
+        },
+        "anatomy": {
+          "title": "수식 구조",
+          "intro": "FractalPark FRM 수식은 이름 있는 선언 하나와 세 개의 명시적 섹션으로 구성돼요. 이들이 함께 모든 픽셀의 상태 전이를 정의해요.",
+          "parts": {
+            "init": "픽셀당 한 번 실행돼요. 초기 오빗 값과 보조 변수를 여기서 설정하세요.",
+            "loop": "반복마다 한 번 실행돼요. z와 다음 반복에 필요한 상태를 업데이트하세요.",
+            "bailout": "오빗을 계속할 조건을 반환해요. 조건이 거짓이 되면 그 점은 이탈한 거예요."
+          },
+          "note": "섹션 이름은 주석이 아닌 구조적 요소예요: 빠뜨리거나 잘못 쓰면 진단이 생성돼요."
+        },
+        "syntax": {
+          "title": "문법 가이드",
+          "intro": "언어는 의도적으로 작게 유지돼요: 표현식은 복소수 연산을 기술하고, 문장은 오빗 상태를 업데이트하며, 제어 흐름은 업데이트 중 하나를 선택해요.",
+          "topics": {
+            "sections": {
+              "title": "선언과 섹션",
+              "body": "이름 있는 수식 하나를 중괄호로 감싼 다음 init:, loop:, bailout: 순서로 작성하세요."
+            },
+            "values": {
+              "title": "값과 변수",
+              "body": "0.15 같은 실수, (0.05, -0.02) 같은 복소수 쌍, 내장 오빗 값, 또는 직접 할당한 변수를 사용하세요."
+            },
+            "operators": {
+              "title": "표현식",
+              "body": "산술, 거듭제곱, 비교, 논리 연산자, 단항 연산자, |z| 크기 문법, 검증된 복소 함수를 조합할 수 있어요."
+            },
+            "control-flow": {
+              "title": "제어 흐름",
+              "body": "오빗 업데이트가 조건에 따라 달라질 때 if, elseif, else, endif를 사용하세요. 블록은 균형을 맞춰야 해요."
+            },
+            "builtins": {
+              "title": "내장 요소",
+              "body": "핵심 이름에는 z, c, pixel, zPrev, p1–p5, pi, e, maxit, ismand, fn1–fn4와 컴파일러 테스트가 검증한 함수들이 포함돼요."
+            },
+            "comments": {
+              "title": "주석과 지시어",
+              "body": "세미콜론 주석은 소스를 문서화해요. 인식된 @ 지시어는 FractalPark 네이티브 동작을 설정하며, 알 수 없는 지시어는 조용히 무시되지 않아요."
+            }
+          }
+        },
+        "pipeline": {
+          "title": "FRM → AST → GLSL 파이프라인",
+          "intro": "FractalPark은 FRM 텍스트를 셰이더에 그대로 붙여넣지 않아요. 소스를 단계적 컴파일러에 통과시켜 문법, 의미, 생성 코드, 진단이 연결된 상태를 유지해요.",
+          "steps": {
+            "source": {
+              "title": "FRM 소스",
+              "body": "에디터, 붙여넣기, 또는 로컬 파일의 정확한 텍스트가 권위 있는 입력이에요."
+            },
+            "tokens": {
+              "title": "렉서 토큰",
+              "body": "렉서는 이름, 숫자, 연산자, 섹션 표시자, 주석, 지시어를 소스 위치와 함께 인식해요."
+            },
+            "ast": {
+              "title": "파싱된 AST",
+              "body": "파서는 구조화된 수식 트리를 만들고 잘못된 선언, 표현식, 제어 흐름 블록을 보고해요."
+            },
+            "validation": {
+              "title": "검증과 표준 형식",
+              "body": "검증기는 표준 수식이 생성되기 전에 이름, 타입, 섹션, 지원되는 의미론을 확인해요."
+            },
+            "glsl": {
+              "title": "GLSL과 소스 맵",
+              "body": "코드 생성은 셰이더 함수를 출력하고 생성된 GLSL에서 FRM 소스로의 매핑을 기록해요."
+            },
+            "plugin": {
+              "title": "수식 플러그인",
+              "body": "컴파일이 성공하면 렌더러와 셰이더 조립 시스템이 사용하는 동일한 수식 플러그인 계약이 돼요."
+            }
+          },
+          "note": "공유 컴파일러 계약은 탐색기, 독립형 에디터, 저장된 커스텀 수식, 예제, 테스트가 하나의 구현 경로를 따르게 해요."
+        },
+        "tutorials": {
+          "title": "단계별 튜토리얼",
+          "intro": "이 예제들은 가장 작은 이차 수식에서 파라미터와 상태 기반 피드백까지 점진적으로 나아가요. 각 소스 블록은 공유 예제 레지스트리에서 직접 가져오며 테스트 중에 컴파일돼요.",
+          "lesson": "레슨 {number}",
+          "openInEditor": "FRM 에디터에서 열기",
+          "goals": {
+            "starter-brot": "초점: 선언과 init / loop / bailout 구조. 이 버전이 컴파일된 후에만 지수나 이탈 임계값을 변경하세요.",
+            "parameter-drift": "초점: p1과 p2 파라미터 슬롯, 복소수 리터럴, 명시적 크기 함수로서의 cabs(z).",
+            "orbit-echo": "초점: 이전 오빗 상태로서의 zPrev. 피드백은 수동으로 관리하는 두 번째 상태 변수를 도입하지 않고 메모리를 추가해요."
+          },
+          "editorNote": "FRM 에디터는 이 동일한 컴파일 검증 예제를 안정적인 ID로 열어요. 수식 소스는 로컬에만 남으며 URL에 절대 포함되지 않아요."
+        },
+        "diagnostics": {
+          "title": "오류와 진단",
+          "intro": "컴파일은 가장 이른 안전하지 않은 단계에서 멈추고 소스 중심 메시지를 보고해요. 거부된 구성은 비슷해 보이는 것으로 다시 쓰여지지 않아요.",
+          "items": {
+            "lexer": {
+              "title": "어휘 오류",
+              "body": "예상치 못한 문자와 지원되지 않는 식별자는 행과 열과 함께 보고돼요."
+            },
+            "parser": {
+              "title": "파싱 오류",
+              "body": "잘못된 섹션, 표현식, 제어 흐름 블록은 의미론적 검증 전에 진단돼요."
+            },
+            "validator": {
+              "title": "검증 오류",
+              "body": "알 수 없는 변수, 잘못된 할당, 타입 불일치, 지원되지 않는 의미론은 코드 생성을 차단해요."
+            },
+            "source-map": {
+              "title": "셰이더 소스 매핑",
+              "body": "생성된 GLSL은 셰이더 컴파일 실패를 원래 FRM 위치로 가리킬 수 있는 매핑을 유지해요."
+            }
+          },
+          "note": "오류를 고칠 때는 첫 번째 보고 메시지부터 시작하세요: 이후의 진단은 동일한 누락 토큰이나 잘못된 표현식의 결과일 수 있어요."
+        },
+        "next-steps": {
+          "title": "예제, 다음 단계, 참고 자료",
+          "exploreTitle": "렌더러를 실제 맥락에서 보기",
+          "exploreBody": "커스텀 수식을 작성하기 전에 탐색기를 열어 내장 수식의 동작, 컬러링, 변환, 애니메이션, 내보내기 컨트롤을 비교해 보세요.",
+          "exploreCta": "탐색기 열기",
+          "editorNote": "탐색기에 넘기기 전에 전용 FRM 에디터로 로컬 수식을 컴파일·미리보기·가져오기·다운로드·저장하세요.",
+          "referencesTitle": "참고 자료",
+          "referencesIntro": "역사적 맥락과 구현 세부 사항은 별도로 링크되어, 가이드가 Fractint 계보와 FractalPark의 현재 컴파일러 계약을 구분할 수 있어요.",
+          "references": {
+            "fractint-project": "Fractint 프로젝트와 역사",
+            "fractalpark-frm-source": "FractalPark FRM 컴파일러 소스",
+            "fractalpark-repository": "FractalPark 소스 저장소"
+          }
+        },
+        "sharing": {
+          "title": "공유와 게시",
+          "intro": "작성한 수식은 직접 선택하기 전까지 비공개예요. 수식이 이동할 수 있는 방법은 세 가지이며, 각각 명시적이고 어떤 것도 조용히 이루어지지 않아요.",
+          "points": {
+            "private": {
+              "title": "기본적으로 비공개",
+              "body": "수식은 클라우드 라이브러리에 있으며 나만 볼 수 있어요. 저장한 작품은 초안 안에 수식 소스 사본을 담고 있어서, 항상 마지막으로 둔 상태 그대로 열려요."
+            },
+            "download": {
+              "title": ".frm 파일 다운로드",
+              "body": "수식은 일반 텍스트예요. 내 수식에서 언제든 다운로드하여 직접 사본을 보관하세요 — 내보내기 요청도, 대기도 필요 없어요."
+            },
+            "publish": {
+              "title": "작품을 게시하고 소스 공유하기",
+              "body": "내 수식을 사용하는 작품을 게시하면 수식 소스가 MIT 라이선스로 공개돼요: 누구나 읽고, 복사하고, 그 위에 만들 수 있어요. 커뮤니티 페이지에는 메타데이터의 수식 이름이 표시되고 소스를 다운로드할 수 있어요. 해당 게시에 대해서는 되돌릴 수 없어요."
+            }
+          },
+          "mitPrefix": "전체",
+          "mitLink": "MIT 라이선스 전문은 opensource.org에 있어요",
+          "mitSuffix": "."
+        }
+      }
+    },
+    "entries": {
+      "mandelbrot": {
+        "title": "Mandelbrot Set",
+        "summary": "이차족 z² + c의 지도예요. 점 하나를 고르고 0에서 시작해서, 궤도가 결과를 결정하는 모습을 지켜보면 돼요.",
+        "overview": "만델브로 집합은 하나의 방정식에서 나온 곡선 하나가 아니라, 족 전체를 담은 지도예요. 복소평면에서 점 c를 골라요. z = 0에서 시작해서, 현재 값을 제곱하고 c를 더한 다음 반복해요. 궤도는 그렇게 이어지는 값의 목록이에요. 어떤 궤도는 유한한 영역 안에 머물고, 다른 궤도는 무한대로 달아나요. 첫 번째 부류에 속하는 c 값들이 바로 만델브로 집합을 이루어요.\n\n이 지도는 이차 줄리아 집합의 색인으로도 작동해요. c를 하나 고정하면 줄리아 집합이 하나 정해지는데, 그 집합이 연결되어 있는 건 정확히 c가 만델브로 집합 안에 있을 때예요. 매개변수 평면에서 몇 픽셀만 옮겨도, 안정적으로 반복되는 주기에서 탈출로 이어지는 행동으로 바뀔 수 있어요.\n\n익숙한 그림에서 집합은 보통 검은색으로 그려져요. 주변의 색은 집합의 일부가 아니라, 탈출하는 궤도가 정해진 문턱값을 넘는 데 걸린 시간을 기록한 거예요. 계산이 그린 등고선 같은 거죠.",
+        "imageAlt": "따뜻한 금빛 바탕 위의 검은 만델브로 집합, 경계에 가느다란 청백색 테두리",
+        "imageCaption": "집합 전체: 본체 심장형(cardioid), 붙어 있는 원형 돌기들, 그리고 탈출 시간으로 채색된 가지치는 가장자리.",
+        "math": {
+          "iteration": {
+            "label": "Give one parameter its turn",
+            "explanation": "Choose a complex number c, then keep it fixed. The orbit starts at z₀ = 0; each new value is the old one squared, with c added back in.\n\nTry two anchors. If c = 0, the orbit stays at zero forever, so 0 belongs to the Mandelbrot set. If c = 1, it runs 0, 1, 2, 5, 26, … and escapes, so 1 is out. In this quadratic map, once the magnitude of z exceeds 2, there is no return: the orbit diverges. A renderer treats that as its escape signal and stops at a chosen iteration limit."
+          }
+        },
+        "visualCharacteristics": "From a distance, first comes the heart-shaped main cardioid, then its round bulbs. The largest bulb marks a stable two-step cycle; smaller ones collect other repeating cycles. Follow the edge and the smooth arc frays into antennae, spirals, threads, and tiny copies of the whole set.\n\nThe boundary never finishes. Zooming brings out more structure, though not exact photocopies: local dynamics stretch and bend every return. The broad black interiors are relatively calm. At the fine edge, the slightest nudge to c can send an orbit elsewhere.",
+        "faq": {
+          "membership": {
+            "question": "What gets a point into the Mandelbrot set?",
+            "answer": "c belongs when the orbit from zero remains bounded under iteration. On a computer, |z| exceeding 2 settles it: the orbit escapes. Points that have not escaped by the iteration limit are drawn as members, although a point tight against the boundary may need many more steps for a dependable verdict."
+          },
+          "julia-mode": {
+            "question": "Where do Julia sets enter?",
+            "answer": "For a Julia set, c stays fixed while the starting point z₀ ranges across the image. For the Mandelbrot set, zero stays fixed and c moves instead. In the quadratic family, the link is exact: the Julia set for z² + c is connected if and only if c belongs to the Mandelbrot set."
+          }
+        },
+        "history": "The story starts before anyone could print a detailed parameter plane. Around 1917–1918, Pierre Fatou and Gaston Julia laid foundations for iterating complex functions. Fatou was a French mathematician and astronomer at the Paris Observatory; Julia’s 1918 memoir on iterated rational functions became an early landmark.\n\nThere is no uncontested “discovery moment.” At the 1978 Stony Brook conference, Robert W. Brooks and J. Peter Matelski were studying Kleinian groups when they published an early image now recognized as this same parameter locus. Their question was different, and the rough image did not yet carry the interpretation that later made the set famous.\n\nBenoit B. Mandelbrot, at IBM’s Thomas J. Watson Research Center, used computer graphics to examine related quadratic parameter spaces and published his study in 1980. He placed the images in the wider frame of fractal geometry, making the object hard to ignore on its own terms. Mandelbrot was born in Warsaw, educated in France, spent 35 years at IBM, and later taught at Yale.\n\nIn the early 1980s, Adrien Douady and John H. Hubbard built the modern mathematical theory of the set, including the proof of its connectedness. Their work helped establish the name “Mandelbrot set.” Douady, a leading French mathematician in complex dynamics, died in 2006; Hubbard’s Cornell faculty page remains available and describes his work on iterative systems and computer-assisted mathematical exploration."
+      },
+      "lambda": {
+        "title": "Lambda Fractal",
+        "summary": "중심화된 복소 로지스틱 사상이에요. 하나의 매개변수가 궤도를 늘리는 동시에 스스로를 향해 되접어요.",
+        "overview": "실수선 위에서 로지스틱 사상은 혼돈을 연구하는 작은 실험실이 되었어요. 그 값을 복소평면으로 확장하면 람다(λ) 프랙탈로 펼쳐져요. FractalPark은 중심화된 형태를 사용해요. c가 서로 반대 방향으로 당기는 두 보완 요소를 동시에 조절하는 구조예요.\n\n좌표의 아핀 변환을 거치면 이 공식은 표준 이차 사상 z² + c와 켤레(conjugate)가 돼요. 만델브로 집합의 가족적 특징은 공유하지만 외곽선은 달라요. 만델브로 집합에서 심장형이 있는 자리에 여기서는 원반이 있고, 붙어 있는 돌기들도 각자의 주기에 따라 배열돼요.\n\n여기서 c는 성장과 회전이라는 두 손잡이를 동시에 돌려요. 줄리아 뷰를 위해 고정해 두었다가 살짝 움직여 보세요. 거의 둥근 분지가 가지와 나선의 경계로 바뀔 수 있어요.",
+        "imageAlt": "청록색 공간 위의 검은 람다 집합, 가장자리에 가지처럼 뻗은 실들이 늘어져 있어요",
+        "imageCaption": "중심화된 복소 로지스틱 사상의 매개변수 평면: 원반 같은 중심부, 붙어 있는 돌기들, 실처럼 가는 가장자리.",
+        "math": {
+          "iteration": {
+            "label": "Complex logistic iteration",
+            "explanation": "At each step, shift the current value halfway either side of center, multiply (z + ½) by (½ − z), then scale the product with c. The two factors make ¼ − z², so the same step reads z → c(¼ − z²).\n\nTry c = 2 with z₀ = 0. The first step is z₁ = 2 × (½) × (½) = 0.5; the next is z₂ = 2 × 1.0 × 0 = 0. The orbit now shuttles between 0 and 0.5: a stable 2-cycle. Turn c up to 4 and the pull changes: z₁ = 4 × ½ × ½ = 1, then z₂ = 4 × 1.5 × (−0.5) = −3. The orbit diverges, so c = 4 lies outside the bounded set. In Julia mode, hold c still and vary z₀ across the image; the dividing line between trapped and escaping appears."
+          }
+        },
+        "visualCharacteristics": "At full scale, the Lambda set begins with an almost circular body—the countershape to the Mandelbrot set’s heart-like cardioid. Smaller bulbs cling to the disk; each marks a stable periodic cycle, and the largest marks a period-2 cycle. Beyond them lie branching channels, tiny disk islands, and spirals.\n\nThe islands give away the difference: they are round here, not cardioid-shaped, because the algebra has changed. In Julia mode, c can select a filled disk or a many-armed vortex.",
+        "faq": {
+          "parameter-role": {
+            "question": "What does lambda control?",
+            "answer": "The complex parameter c—often written λ in the literature—sets both the orbit’s growth rate and its rotation. Its magnitude controls the strength of expansion or contraction; its argument supplies the turn at each step."
+          },
+          "julia-mode": {
+            "question": "Why does Julia mode look especially varied?",
+            "answer": "Fix c and the question shifts to the starting point: does it stay bounded or escape? With linear and quadratic terms in the same formula, the border may be a smooth closed curve or a heavily branched connected set. The chosen c decides what the renderer reveals."
+          }
+        },
+        "history": "The map z → λz(1 − z) began as the complex extension of the real logistic map, studied extensively in the 1970s as a simple model of population dynamics and chaotic behavior. In 1980, Benoit B. Mandelbrot took the iteration to unrestricted complex λ and z. His paper, \"Fractal Aspects of the Iteration of z → λz(1−z) for Complex λ and z,\" introduced the λ-plane parameter set—now the Lambda fractal—and placed it in the broader theory of iterated rational maps.\n\nThe groundwork was already there. Around 1917–1918, Pierre Fatou and Gaston Julia developed the general theory of iterated rational functions that later made families such as the logistic map available to explore. In 1986, Heinz-Otto Peitgen and Peter H. Richter brought the Lambda fractal to a wider audience in \"The Beauty of Fractals,\" with some of the first widely seen computer-generated images of the set."
+      },
+      "mandelbox": {
+        "title": "Mandelbox",
+        "summary": "톰 로우(Tom Lowe)의 2010년 Mandelbox에서 영감을 받은 접기-스케일 사상이에요. 상자 반사, 방사형 접기, 스케일링이 반복 하나로 방과 벽을 만들어 내요.",
+        "overview": "대부분의 프랙탈 공식은 z² + c처럼 제곱에서 시작해요. Mandelbox는 다른 길을 택해요. 상자 접기(box fold)는 고정된 정육면체 바깥의 좌표를 다시 면 쪽으로 되돌려 보내고, 방사형(공) 접기는 원점과의 거리에 따라 점을 뒤집거나 스케일해요. 마지막으로 균일 스케일이 결과를 늘리거나 압축한 다음 c를 더해요. 이 순서를 반복하면 구조를 만드는 건 제곱이 아니라 접기예요.\n\n반사와 반전은 특정한 차원 수를 요구하지 않아서, 어떤 차원에서든 만들 수 있어요. FractalPark은 복소평면에서 동일한 접기-스케일 핵심을 유지한 2차원 변형을 그려요.\n\n이 매개변수 지도는 다항식에서 익숙한 곡선으로 부드러워지지 않아요. 날카로운 모서리의 방들, 겹겹이 쌓인 요새, 설계도에서 옮겨온 듯한 통로들을 잘라 내요. 그 경계는 닿을 수 있는 범위 안에 머무는 유계 궤도와 탈출하는 궤도를 가르고, 확대하면 톱니처럼 들쭉날쭉한 자기유사 가장자리가 더 작은 규모로 상자 모티프를 다시 보여줘요.",
+        "imageAlt": "차가운 청색 톤의 Mandelbox 2차원 지도, 날카로운 모서리의 방들과 겹겹이 쌓인 요새 같은 움푹한 공간",
+        "imageCaption": "FractalPark의 Mandelbox 영감 지도: 곧은 벽, 직각 모서리, 수정 요새 내부 같은 층층의 움푹한 공간.",
+        "math": {
+          "iteration": {
+            "label": "Fold-and-scale iteration",
+            "explanation": "Each round puts the orbit through four moves: box fold, radial fold, scale, then a shift by c.\n\nThe box fold handles one coordinate at a time. Take a component a of z. Above 1, it reflects as a → 2 − a; below −1, as a → −2 − a. Components in [−1, 1] stay put. The outer plane folds back into the central square.\n\nNext comes the ball fold, checking the squared magnitude r² = |z|². If r² < 0.25 (|z| < 0.5), scale the point by 4 and push it away from the origin. If 0.25 ≤ r² < 1, invert it through the unit sphere: z → z/r², so a radius of m becomes 1/m. Points with r² ≥ 1 stay put. The near points move outward; the middle band turns across the unit sphere. These moves make the unsettled interface behind the Mandelbox's boxy layers.\n\nTry z₀ = (1.5, 0) with scale s = 2. The box fold reflects x = 1.5 to x = 0.5. Since r² = 0.25 falls in the middle band, the ball fold inverts it: z = z/r² = (2, 0). Scaling by 2 gives (4, 0), and adding c completes the step. Start at the origin instead and you are in the innermost band: the ball fold multiplies it by 4—still the origin—so the first iterate lands exactly on c."
+          }
+        },
+        "visualCharacteristics": "Repeated folds produce hard-edged chambers, nested fortifications, and corridors with depth. The default parameter s = 2 gives the structure straight walls, right-angle corners, and layered recesses like the inside of a crystalline fortress.\n\nAt finer scales, the box theme returns: small copies of the overall shape appear in recesses and along boundaries, all with the same rectilinear geometry. The canonical image uses cool blues and cyans, which suit the mechanical geometry of the folds.",
+        "parameters": {
+          "scale": "Scale sets how strongly the folded orbit expands or reverses before c is added. A scale of 2 (the default) roughly doubles the folded value; negative values reverse direction and produce mirror-image variations."
+        },
+        "faq": {
+          "folds": {
+            "question": "What are box and ball folds?",
+            "answer": "A box fold reflects coordinates outside a fixed interval toward the origin—like folding a sheet’s edges inward. A ball fold (or sphere fold) makes a conditional inversion: points too close to the origin are pushed outward, points at an intermediate distance invert through a sphere, and distant points remain unchanged. Together they redirect the orbit at every step and make the Mandelbox’s layered geometry."
+          },
+          "dimension": {
+            "question": "Is this the three‑dimensional Mandelbox?",
+            "answer": "No. FractalPark renders a two-dimensional map inspired by the same fold-and-scale construction. The original Mandelbox is most often explored in 3D, where the box fold reflects across a cube’s faces; here the same logic works in the complex plane with a square boundary."
+          }
+        },
+        "history": "The Mandelbox was first presented by Tom Lowe (known online as Tglad) in early 2010 on the FractalForums community. Lowe was experimenting with iterative folding operations in three dimensions — box reflections and spherical inversions — to see whether they could produce bounded, self‑similar structures analogous to the Mandelbrot set. The results were immediately recognised as a new class of fractal, and the name \"Mandelbox\" was adopted both as an homage to the Mandelbrot set and because of the boxlike shape of the set when visualised.\n\nThe discovery followed closely on the 2009 Mandelbulb by Daniel White and Paul Nylander, which had sparked renewed hobbyist interest in finding non‑trivial 3D fractals. Within months, contributors on FractalForums — including Knighty, Jesse, and others — extended the Mandelbox idea to different symmetry planes and polyhedral folds.\n\nDespite its popularity in fractal art software (Mandelbulber, Mandelbulb3D, Fragmentarium, Ultra Fractal), the Mandelbox has received relatively little formal mathematical analysis. One of the few peer‑reviewed treatments is Gregg Helt's 2018 Bridges Conference paper, which generalises the spherical inversion step to arbitrary shape inversions."
+      },
+      "perpendicular-celtic": {
+        "title": "Perpendicular Celtic",
+        "summary": "Perpendicular 계열의 이차 사상이에요. 제곱 전에 실수부를 접고, 결과의 실수부를 다시 접으면 경계가 땋은 머리처럼 매듭져요.",
+        "overview": "Perpendicular Celtic은 Perpendicular Burning Ship, Perpendicular Buffalo와 함께 버닝 쉽 변형의 Perpendicular 계열에 속해요. 핵심 동작은 이중 접기예요. 제곱하기 전에 실수 성분을 접고, 그 결과의 실수 성분을 다시 접어요. 허수 성분은 두 번째 접기를 거치지 않아요.\n\n반복할 때마다 경계가 두 번 방향을 바꿔요. 땋고 얽힌 형태가 나타나기 시작하는데, 켈트 매듭(Celtic knotwork)과 비슷해서 이름이 붙었어요. 거울 대칭의 아치, 도자기 같은 고리, 탈출 시간 띠가 날카로운 접힘에서 직각으로 꺾여요.\n\n어떤 영역에서는 버닝 쉽 변형들과 달리 실수축과 허수축 양쪽에 대칭이에요. 그 이유는 수직(perpendicular) 배열 덕분이에요. 접기가 한 번에 두 축이 아니라 한 축씩 직교로 작용하거든요.",
+        "imageAlt": "땋은 띠, 거울 대칭 아치, 도자기 같은 고리를 가진 Perpendicular Celtic 프랙탈",
+        "imageCaption": "Perpendicular Celtic: 맞물린 띠와 거울 대칭 아치, 가장자리에서 날카롭게 접히고 안쪽에서 고리를 이뤄요.",
+        "math": {
+          "iteration": {
+            "label": "Perpendicular Celtic iteration",
+            "explanation": "First fold the real input: construct z' = |xₙ| + iyₙ. Square it: (z')² = (|xₙ|² − yₙ²) + i(2·|xₙ|·yₙ). Then fold the real part of that result: zₙ₊₁ = ||xₙ|² − yₙ²| + i(2·|xₙ|·yₙ) + c.\n\nThe double fold reflects the real component twice per iteration: before the square, negative x mirrors to positive; after it, a negative resulting real part mirrors to nonnegative. The imaginary component folds only indirectly, through |xₙ| in the cross term.\n\nConsider c = −0.5. For the Mandelbrot set: z₁ = −0.5, z₂ = −0.25, bounded. For the Perpendicular Celtic: z₁ = ||0|² − 0²| + i(2·|0|·0) − 0.5 = 0 − 0.5 = −0.5, then z₂ = ||−0.5|² − 0²| + i(2·|−0.5|·0) − 0.5 = |0.25| − 0.5 = −0.25, same orbit. But try c = 0.3i: the double fold redirects the orbit in a way that neither the Mandelbrot set nor the Burning Ship reproduces."
+          }
+        },
+        "visualCharacteristics": "Braided bands, mirrored arches, and porcelain-like loops gather at folds where escape-time color turns at right angles. From far out, the structure is symmetric across both axes; deeper in, fine asymmetries appear.",
+        "faq": {
+          "folding": {
+            "question": "Why are absolute values used twice?",
+            "answer": "The folds act at different moments: the first absolute value folds the real input before squaring; the second folds the squared result’s real part. The real component is therefore reflected twice per iteration, changing how the orbit responds to the parameter c. Compared with the single-fold Burning Ship, the boundary becomes finer and more braided."
+          },
+          "symmetry": {
+            "question": "Is it simply a rotated Burning Ship?",
+            "answer": "No. It is related to the Burning Ship through absolute-value folds, but it places them differently in the quadratic step. The Burning Ship folds both raw coordinates before squaring. Perpendicular Celtic folds the real coordinate before squaring and then folds the result’s real part again. That two-stage order gives the orbit a different geometry and a distinct symmetry."
+          }
+        },
+        "history": "Perpendicular Celtic belongs to the “Perpendicular” Burning Ship family, with Perpendicular Burning Ship, Perpendicular Buffalo, and related forms. Like the others, it came from the fractal art community rather than academic research.\n\n“Celtic” names the visual resemblance to Celtic knotwork made by the double fold. “Perpendicular” names the folds’ orthogonal placement: first on the real coordinate before squaring, then on the real part of the result.\n\nIt appears in formula browsers supporting custom iterations, including Ultra Fractal, Fractal Extreme, and Mandelbrowser. The earliest documented instances are in online fractal forums and fractal wiki pages cataloging Burning Ship variants."
+      },
+      "quartic-julia": {
+        "title": "Quartic Julia",
+        "summary": "4차 줄리아 사상이에요. z를 네제곱하고 고정된 c를 더하면 네 갈래 가지가 시작돼요.",
+        "overview": "익숙한 줄리아 레시피에서 다이얼을 한 칸 돌려 봐요. 복소 상수 c 하나를 고정하고 z → z⁴ + c를 반복해요. 네제곱은 복소 편각을 매번 네 배로 만들어요. 이차 사상에서 두 갈래로 갈라질 방향이 여기서는 네 갈래로 열릴 수 있는데, 그게 네 갈래 가지의 원천이에요.\n\n같은 c에서 이 고차 사상은 보통 이차 사촌보다 집합 안에 더 많은 굽이를 채워 넣어요. 채워진 줄리아 집합이 한 덩어리로 남을지 갈라질지도 여전히 c에 달려 있는데, 이는 고차 다항식에 대한 파투–줄리아 분류에 따른 거예요. 임계 궤도, 즉 임계점 z = 0과 도함수의 임계점이 지배하는 궤도를 살펴보면 연결성의 실마리가 보여요.\n\n화면에서는 구름보다 도장 찍은 장식처럼 읽혀요. 섬세한 정교한 무늬(filigree), 장미 문양, 도장 같은 매듭이 4중 대칭으로 반복돼요. 차수가 높아진 만큼 디테일이 빽빽하지만, 각진 배치는 놀라울 정도로 정돈돼 있어요.",
+        "imageAlt": "상아색으로 가장자리 장식된 Quartic Julia 집합, 4중 장미 문양과 가지치는 정교한 무늬",
+        "imageCaption": "FractalPark의 Quartic Julia: 상아색 정교한 무늬가 가지치는 장미 문양과 4중 실들을 따라가요.",
+        "math": {
+          "iteration": {
+            "label": "Quartic iteration",
+            "explanation": "One step has the effect of four squarings: the argument is multiplied by four, so a point near the boundary can split four ways. Try c = 0. The recurrence becomes zₙ₊₁ = zₙ⁴, simply a fourth-power map. From z₀ = 0.5 + 0i, the values shrink toward zero and remain bounded; from z₀ = 1.5 + 0i, they grow rapidly and escape. As in the quadratic case, |zₙ| signals escape: once it passes a fixed threshold (about 2 for this quartic), the orbit must diverge. The fourth power hastens the outward flight; it also speeds the angular splitting that creates the four-fold shape.\n\nFractalPark holds c fixed across the image and varies the starting point z₀ from pixel to pixel—the usual Julia-family setup."
+          }
+        },
+        "visualCharacteristics": "Angles multiplied by four leave a recognizable trace: fine seals, branching rosettes, and filaments arranged on a quartic grid. A quadratic Julia may grow a spiral or one pair of arms; here, feature centers often send out four matching arms or lobes.\n\nMore detail fits into the same space than in a quadratic Julia, but it arrives in a tidier order. Turn ninety degrees around a prominent point and a motif often returns. The canonical FractalPark image picks out those edges with ivory filigree.",
+        "faq": {
+          "name": {
+            "question": "Why is this called Quartic Julia?",
+            "answer": "Its rule uses the fourth power of z, so it is a quartic, or degree-four, polynomial. The name distinguishes it from the standard quadratic Julia set and other higher-degree variants."
+          },
+          "constant": {
+            "question": "What does c change?",
+            "answer": "The fixed complex constant c decides whether the filled Julia set is connected or disconnected, then shapes its fine geometry. Nudge c and four-way branches rearrange, seals and filaments shift, and a connected set can fall into disconnected dust."
+          }
+        },
+        "history": "The theory came first. Pierre Fatou and Gaston Julia developed the classical framework for iterated rational functions in 1917–1918, and it applies to polynomials of any degree. Quartic Julia sets inherit its principles for connectivity and dynamical classification. When fractal-rendering software moved beyond quadratics in the 1980s and 1990s, computer exploration of higher-degree Julia sets became common. The named quartic variant belongs to that line; no single discoverer is attributed to it.\n\nFractalPark uses the standard fourth-degree recurrence as a fixed-parameter Julia-family formula."
+      },
+      "burning-ship": {
+        "title": "Burning Ship",
+        "summary": "이차 탈출 시간 프랙탈이에요. 제곱 전에 두 좌표를 절댓값으로 접으면 색 띠가 비대칭의 배 모양 윤곽을 만들어요.",
+        "overview": "버닝 쉽은 만델브로 집합과 아주 가까운데, 한 가지 변화가 모든 것을 바꿔요. 제곱할 때마다 z의 실수부와 허수부를 각각 절댓값으로 바꿔요. 궤도가 축 쪽으로 접히면서 이차 사상의 회전 대칭이 사라져요. 이 사상은 더 이상 해석적이지 않아요. 코시–리만 방정식을 만족하지 않거든요. 가장자리를 따라 단단한 모서리가 나타나요.\n\n실수축을 수평으로, 허수축을 뒤집어 놓는 일반적인 표시 관례를 쓰면, 그 접힘이 불타는 배를 떠올리게 해요. 쐐기 모양의 선체가 불꽃 같은 능선 아래에 자리 잡아요. 왼쪽의 실수선을 따라 더 작은 배들이 같은 톱니 윤곽을 반복해요.\n\n일반적인 탈출 반지름 테스트는 여전히 유효해요. |z|가 2를 넘으면 발산이 확실하거든요. 하지만 이 비해석적 궤도는 더 이상 복소해석 함수처럼 행동하지 않아요. 탈출 시간 띠가 만델브로 집합의 부드러운 방사형 그라데이션 대신 단단한 가장자리의 층과 겹겹의 직사각형 경계로 쌓여요.",
+        "imageAlt": "버닝 쉽 프랙탈: 어두운 본체 선체, 불꽃 색 탈출 띠",
+        "imageCaption": "버닝 쉽: 쐐기 모양 선체, 실수축 위의 불꽃 같은 능선, 층층이 쌓인 탈출 시간 띠.",
+        "math": {
+          "iteration": {
+            "label": "Fold, then square",
+            "explanation": "Both real and imaginary components are reflected to nonnegative values, combined into a complex number, then squared. In expanded form, the real part is xₙ₊₁ = xₙ² − yₙ² + Re(c) and the imaginary part is yₙ₊₁ = 2|xₙ||yₙ| + Im(c). At every iteration, the absolute values fold the orbit back toward the axes: if xₙ or yₙ is negative, it is mirrored to positive before the squaring step. That fold produces the sharp, rectangular boundaries that set the Burning Ship apart from the Mandelbrot set’s smooth contours.\n\nTry c = −1. For the Mandelbrot set, the orbit z₀=0, z₁=−1, z₂=0, z₃=−1, … stays bounded (period 2). For the Burning Ship, z₁ = (|0| + i|0|)² − 1 = −1, then z₂ = (|−1| + i|0|)² − 1 = 0, and the orbit settles into the same 2-cycle. Now take a point such as c = i: the fold redirects its orbit where the Mandelbrot iteration would not, producing a different escape decision."
+          }
+        },
+        "visualCharacteristics": "Dark hulls, flame-like masts, and chimney shapes rise through folded layers. Set beside the Mandelbrot set, the asymmetry is immediate.",
+        "faq": {
+          "difference": {
+            "question": "What changed from the Mandelbrot set?",
+            "answer": "Taking absolute values component by component breaks the Mandelbrot set’s rotational symmetry and makes the map non-analytic. Rounded boundaries become angled edges and nested rectangles; escape-time color settles into bands rather than smooth radial gradients."
+          },
+          "orientation": {
+            "question": "Why is the ship sometimes upside down?",
+            "answer": "The canonical formula puts the ship upside down because absolute values turn negative imaginary coordinates positive before squaring. Most renderers, including FractalPark, reflect the image vertically for display. A screen whose Y-axis points down can add a second flip, so the final orientation depends on where the renderer applies that reflection."
+          }
+        },
+        "history": "In 1992, Michael Michelitsch and Otto E. Rössler first described and rendered the Burning Ship in a Computers & Graphics paper. Both were then researchers at the University of Tübingen (Eberhard Karls Universität Tübingen). Their paper gave the iteration and showed that the absolute-value fold produces what they called a “quasi-Julia set”: it resembles a classical Julia set, but arises from a non-analytic map.\n\nThe name “Burning Ship” comes from a close view near the real axis: a dark hull below, flame-like ridges above. Paul Bourke independently implemented the fractal in October 1993, crediting Michelitsch and Rössler; his page became an early online reference.\n\nBecause it is a non-analytic alteration of the Mandelbrot recurrence, the formula falls outside the classical complex-dynamics theory Fatou and Julia developed for analytic functions. It has since become one of the most widely explored non-analytic escape-time fractals. Buffalo, Airship, Celtic, and Perpendicular variants rearrange which coordinates are folded and when."
+      },
+      "airship": {
+        "title": "Airship",
+        "summary": "버닝 쉽의 친척이지만 접기가 고르지 않아요. 실수부는 직접 접히고, 허수부는 부호가 있는 x를 |y|와 결합해요.",
+        "overview": "Airship은 버닝 쉽이 접는 위치와 다른 좌표의 역할을 모두 바꿔요. 실수부만 절댓값으로 직접 접히고, 허수부는 부호 있는 x에 |y|를 곱해요. 이 고르지 않은 짝짓기는 다른 접힌 프랙탈의 단순한 회전이나 반사로는 만들 수 없는 궤도 기하를 만들어 내요.\n\n좁은 이음새에서 시작해 비행선이나 비행 날개를 닮은 날개 모양의 돌출부가 퍼져 나가요. 가장 넓은 부분은 중심 근처에 있고, 끝으로 갈수록 가느다란 돌기로 가늘어져요. 좌표 처리의 불균형이 그림에 그대로 드러나요. 가로 방향의 형태는 넓고 연속적인 반면, 세로 방향은 뾰족한 가시로 부서져요.\n\n반전이나 다른 공간 변환을 쓰면 겹겹의 날개가 열릴 수 있어요. 이는 뷰 선택일 뿐, 공식이 불완전하다는 뜻이 아니에요. 이미 고유한 형태를 만들어 내고 있으니까요.",
+        "imageAlt": "날개 모양 돌출부와 비대칭으로 접힌 디테일을 가진 Airship 프랙탈",
+        "imageCaption": "Airship: 날개 모양 돌출부가 좁은 중앙 이음새를 남기고, 가로로는 넓고 위로는 뾰족해요.",
+        "math": {
+          "iteration": {
+            "label": "Airship fold",
+            "explanation": "Fold the real component with an absolute value, then square the complex number (|xₙ| + i·xₙ·|yₙ|) before adding c. In expanded form, the real part after squaring is xₙ₊₁ = (|xₙ|)² − (xₙ·|yₙ|)² + Re(c), while the imaginary part is yₙ₊₁ = 2·|xₙ|·xₙ·|yₙ| + Im(c). Notice that xₙ appears in the cross term both inside and outside the absolute value. Its sign therefore travels through the iteration.\n\nTry c = i. For the Burning Ship, the orbit diverges quickly. For the Airship, z₁ = (|0| + i·0·|0|)² + i = i, z₂ = (|0| + i·0·|1|)² + i = i, and the orbit remains bounded at i indefinitely — a fixed point that the Burning Ship does not share. The asymmetric fold can therefore stabilize or destabilize orbits that behave identically in the Mandelbrot set."
+          }
+        },
+        "visualCharacteristics": "Wing-like lobes rise from narrow central seams. Across the image, forms are broad and continuous; vertically, they break into spikes. Inversion can expose nested layers of those same wing-like forms.",
+        "faq": {
+          "folding": {
+            "question": "How is the Airship fold different?",
+            "answer": "The Airship folds only the real component with an absolute value; the imaginary component couples signed x with the absolute value of y. In the Burning Ship, both coordinates are folded independently before squaring. In the Airship, the fold is asymmetric — x is mirrored, but y retains its sign within the product x·|y| before the final squaring step."
+          },
+          "transform": {
+            "question": "Does the formula require an inversion transform?",
+            "answer": "No. Inversion can open layered wing-like forms from the Airship’s asymmetric lobes. But the Airship formula is complete on its own and produces its characteristic shapes without any view transform."
+          }
+        }
+      },
+      "newton-3": {
+        "title": "Newton Fractal for z³ − 1",
+        "summary": "z³ − 1에 대한 뉴턴 방법이에요. 세 개의 수렴 분지가 결코 가라앉지 않는 경계로 나뉘어요.",
+        "overview": "이 공식은 익숙한 근 찾기 알고리즘을 복소평면의 지도로 바꿔요. 만델브로 집합과 달리 궤도가 탈출하는지를 묻지 않아요. 대신 주어진 시작점에서 뉴턴 방법이 z³ − 1의 어떤 근에 도달하는지를 묻죠. 1의 세 세제곱근 (1, e^{2πi/3}, e^{4πi/3})은 각각 하나의 흡인 분지를 차지해요. 그 근으로 수렴하는 궤도를 가진 모든 시작값이 그 분지에 속해요.\n\n세 분지는 쉽게 구분되지만, 그들이 공유하는 경계는 그렇지 않아요. 경계 위의 점은 어떤 근에도 도달하지 못하고 혼돈적이고 반복되지 않는 경로를 따라가요. 이 경계가 바로 뉴턴 사상, 즉 유리 함수 N(z) = z − (z³ − 1)/(3z²)의 줄리아 집합이에요. 확대하면 더 많은 구조가 계속 나타나요.\n\n고전적인 수렴 프랙탈이에요. 평범한 수치 알고리즘 안에 좀처럼 가라앉지 않는 경계가 숨어 있죠. 아서 케일리(Arthur Cayley)가 1879년 뉴턴 분지의 분류 문제를 처음 제기했어요. 이차의 경우는 풀었지만, 삼차의 경우는 “상당한 어려움이 있는 것으로 보인다”고 했어요. 이후 파투와 줄리아의 복소 동역학이 이 문제를 읽을 수 있게 만들었고, 1980년대 초에 최초의 컴퓨터 시각화가 등장했어요.",
+        "imageAlt": "z³ − 1에 대한 뉴턴 프랙탈: 바퀴살 모양 선을 따라 세 분지가 만나고, 나선형 경계 디테일이 있어요",
+        "imageCaption": "FractalPark의 z³ − 1 뉴턴 프랙탈: 3분할 대칭의 세 수렴 분지가 겹겹의 나선 경계로 이어져요.",
+        "math": {
+          "iteration": {
+            "label": "Newton iteration",
+            "explanation": "For a function f(z), Newton iteration is N(z) = z − f(z) / f′(z). Here f(z) = z³ − 1 and f′(z) = 3z². Each step subtracts the polynomial value divided by its derivative, nudging z toward a root. For the cubic z³ − 1, the iteration simplifies to:\n\nN(z) = z − (z³ − 1) / (3z²) = (2z³ + 1) / (3z²).\n\nThis is a degree‑2 rational map of the Riemann sphere. Its fixed points are exactly the three cube roots of unity, and they are all superattracting—once an orbit is close enough to a root, convergence is extremely fast. The Julia set is the boundary where basins meet, and the map is chaotic there.\n\nTry a concrete starting point: z₀ = 0.5. Then z₁ = (2·0.125 + 1) / (3·0.25) = (0.25 + 1) / 0.75 ≈ 1.667, z₂ ≈ 1.107, z₃ ≈ 1.001, and the orbit rapidly converges to the root at 1. Now try z₀ = 0.5i: z₁ ≈ −0.417 + 0.583i, z₂ ≈ −0.495 + 0.865i, and the orbit converges to e^{2πi/3} = −0.5 + 0.866i. A third starting point, say z₀ = −0.5 − 0.5i, converges to the remaining root e^{4πi/3} = −0.5 − 0.866i. The basins are large and well separated, but close to a boundary a tiny nudge in the starting value can switch the destination entirely.\n\nFractalPark uses a stability threshold: an orbit counts as converged when consecutive iterates differ by less than a chosen tolerance. The pixel is then coloured by the root reached and the number of steps needed."
+          }
+        },
+        "visualCharacteristics": "Three large basins, one for each cube root of unity, occupy the image. They meet in wheel-spoke lines from the centre, making the three-part symmetry plain. Inside each basin, convergence is quick and the colour stays smooth.\n\nBetween any two basins—and especially at the central three-way meeting—spirals, miniature three-basin copies, and dendritic threads crowd in. Follow a spiral arm inward: the three-basin arrangement returns at smaller scales, bent by local dynamics. Broad calm regions; then a restless frontier.",
+        "faq": {
+          "basins": {
+            "question": "What do the main regions represent?",
+            "answer": "Each coloured region is a basin of attraction: it contains the starting points whose Newton iteration converges to the same root of z³ − 1. The three cube roots of unity are 1, e^{2πi/3} = −0.5 + 0.866i, and e^{4πi/3} = −0.5 − 0.866i. A point’s colour records the root it reaches and how quickly convergence happens."
+          },
+          "escape": {
+            "question": "Is this an escape-time fractal?",
+            "answer": "It is primarily a convergence fractal. The classification is not about whether the orbit escapes to infinity (as in the Mandelbrot set), but which root it approaches and how many steps it takes. There is no escape-radius test. Instead, the renderer checks whether consecutive iterates have become very close—indicating convergence to a root—and, if so, which root they are near."
+          }
+        },
+        "history": "At the heart of this image is Newton's method, discovered by Isaac Newton in 1669 and independently refined by Joseph Raphson in 1690. For real functions it is a practical root‑finding tool; for complex polynomials it reveals fractal basins no one could have foreseen at the time.\n\nThe mathematical study of those basins began in 1879 with Arthur Cayley's paper \"The Newton–Fourier imaginary problem\" (American Journal of Mathematics, vol. 2, p. 97). For a complex quadratic polynomial, Cayley showed that the basins of attraction are simply the two half-planes separated by the perpendicular bisector of the line segment joining the two roots. At cubic polynomials, though, he found the problem \"considerable difficult.\" His inability to extend the simple quadratic result to the cubic case became known as Cayley's problem.\n\nThe resolution came through complex dynamics, developed by Pierre Fatou and Gaston Julia in the years around 1918. Their theory of iterated rational functions supplied the language for the basins and their infinitely convoluted boundaries. But the first pictures of the Newton fractal for z³ − 1 had to wait for computer graphics in the early 1980s.\n\nIn 1986, Heinz-Otto Peitgen and Peter H. Richter included a chapter titled \"Newton's Method for Complex Polynomials: Cayley's Problem\" (Chapter 6, pp. 93–106) in *The Beauty of Fractals: Images of Complex Dynamical Systems*. It presents some of the earliest published computer renderings of these basins and helped introduce a wide audience to the fractal structure hidden inside Newton's method."
+      },
+      "newton-cosh": {
+        "title": "Newton Cosh",
+        "summary": "cosh z = 1에 뉴턴 방법을 적용한 거예요. 무한히 많은 등간격 근이 평면을 반복되는 수렴 띠로 만들어요.",
+        "overview": "뉴턴의 평범한 근 찾기 단계는 f(z) = cosh z − 1일 때 성격이 달라져요. 근은 모든 정수 k에 대해 2πik예요. 다항식은 궤도에 유한한 목적지만 제공하지만, 이 근들은 허수축을 따라 같은 간격으로 계속 나아가요. 그래서 프랙탈은 몇 개의 분지에 머물지 않고 위아래로 이어지는 띠 모양으로 배열돼요.\n\n사상 N(z) = z − (cosh z − 1) / sinh z는 유리형(meromorphic) 함수예요. 특이점을 제외한 복소평면 전체에서 정의돼요. 두 종류의 반복되는 점 집합을 눈여겨보세요. cosh z − 1의 근과, 정수 k에 대해 z = πik에서 나타나는 분모 sinh z의 영점이에요. 분모 영점 근처에서는 시작점을 살짝 움직이는 것만으로 궤도가 도달하는 근이 바뀔 수 있어요.\n\n허수축을 따라 반복되는 주기성은 수학 지식 없이도 한눈에 보여요. 수평 띠가 위아래로 서로를 반복하는데, 근의 주기마다 하나씩이에요. 띠가 만나는 자리에는 한 분지가 궤도를 다음 분지로 넘겨주는 지점을 가느다란 세로 실이 기록해요.",
+        "imageAlt": "cosh z = 1에 대한 뉴턴 프랙탈, 허수축을 따라 반복되는 수평 띠와 휘어진 경계가 쌓여 있어요",
+        "imageCaption": "FractalPark의 cosh z = 1 뉴턴 뷰: 허수축을 따라 반복되는 수렴 띠가 접힌 실 모양 경계로 나뉘어요.",
+        "math": {
+          "iteration": {
+            "label": "Newton’s cosh iteration",
+            "explanation": "Newton's rule is N(z) = z − f(z) / f′(z). Here f(z) = cosh z − 1 and f′(z) = sinh z. Each step finds the correction (cosh z − 1) / sinh z, then takes it away from z.\n\nThe equation cosh z = 1 has infinitely many solutions: z = 2πik for every integer k. Each is a simple root: cosh z grows linearly close by, so Newton's method converges quadratically there. Far from the real axis, cosh and sinh grow exponentially. Their quotient may be tiny or enormous, and that is where the image's sensitive seams take shape.\n\nTry z₀ = 0.2i. Since i·sinh(0.2) ≈ 0.201i and cosh(0.2) ≈ 1.020, the first correction is small; the orbit quickly reaches the root at z = 0. Now move to z₀ = (0.5 + 3.0i), farther from every root. The correction now contains large exponential terms. The orbit can cross several basin boundaries before settling, or wander chaotically between roots for many iterations before one captures it.\n\nThe function repeats with period 2πi in the imaginary direction, and the Newton map does too: N(z + 2πi) = N(z) + 2πi. That repeated rule is the source of the horizontal banding."
+          }
+        },
+        "visualCharacteristics": "Start with the horizontal bands along the imaginary axis. A period of roots makes one band, and the convergence pattern returns in the next. The borders do not run straight: they bend and fold, then pull out fine vertical filaments like taut threads.\n\nWithin each band, the basin geometry resembles its neighbours, with small distortions. Think of a ribbon folded repeatedly. The warm and cool zones come from the colouring; the sharp breaks arise where singularities of sinh z destabilise the Newton correction.",
+        "faq": {
+          "target": {
+            "question": "What equation is being solved?",
+            "answer": "It seeks the complex solutions of cosh(z) = 1: z = 2πik for every integer k. The equally spaced roots line the imaginary axis. Each draws in nearby Newton orbits, and their repeating arrangement creates the horizontal bands."
+          },
+          "singularities": {
+            "question": "Why are some regions extremely sensitive?",
+            "answer": "The correction divides by sinh(z), which vanishes at z = πik for integer k. Close to one of these points, the correction can become huge, sending an orbit across several basin boundaries before it converges. These singularities are not roots; they pull the fine vertical filaments and unsettled border zones into view."
+          }
+        }
+      },
+      "magnet-type-1": {
+        "title": "Magnet Type 1",
+        "summary": "z = c에 극 하나를 가진 제곱 뫼비우스 몫이에요. 평면을 뭉친 분지와 구슬 같은 사슬로 모아요.",
+        "overview": "Magnet Type 1은 ((z + c) / (z − c))²에서 시작해요. 괄호 안의 비는 뫼비우스 변환, 즉 가장 단순한 비자명 유리 함수예요. 이를 제곱하면 2차 유리 사상이 돼요. z² + c와 달리 이 사상은 먼 점을 점점 더 멀리 보내지 않아요. 대신 1 근처로 되돌아와요.\n\n동역학은 서로 반대편의 두 지점을 중심으로 돌아가요. 몫은 z = −c에서 0이 되고 z = c에서 극을 가져요. 극을 스치듯 지나는 궤도는 멀리 날아갔다가 다음 단계에서 1 근처로 돌아와요. 안정된 분지가 평면에 퍼지고, 그 사이에는 극의 원상(preimage)이 겹겹이 쌓여 만든 프랙탈 경계가 있어요.\n\nFractalPark에는 c가 움직이는 매개변수 평면과 c가 고정된 줄리아 뷰가 있어요. 가이드 이미지는 줄리아 확대 사진이에요. 둥근 분지들이 자석 주위의 쇳가루처럼 뭉쳐 있는데, 그래서 가족 이름이 붙었어요.",
+        "imageAlt": "짙은 파란 바탕에 여러 크기의 구릿빛 주황 구체들이 뭉쳐 있고, 작은 청백색 별 모양 장미 문양이 흩어져 있어요",
+        "imageCaption": "Magnet Type 1의 줄리아 뷰: 매끄러운 둥근 분지가 무리를 지어 모이고, 별 모양 장미 문양이 프랙탈 경계를 빽빽이 채워요.",
+        "math": {
+          "iteration": {
+            "label": "A Möbius quotient, squared",
+            "explanation": "Each step forms (z + c) / (z − c), then squares it. The ratio is zero at z = −c and blows up at z = c. Squaring makes −c a double zero and c a double pole, while leaving the map with rational degree two.\n\nInfinity behaves differently here. As |z| grows, (z + c) / (z − c) approaches 1, so the next value lands near 1 however large z becomes. Huge values arise only near z = c. FractalPark treats |z| above 16 as escaped, so a “fast escape” marks a close pass by the pole, not a one-way trip to infinity.\n\nOn the Riemann sphere, the pole maps to infinity and infinity maps to 1, so the orbit remains well-defined at the singularity. A numerical renderer cannot divide by zero: when the denominator is exactly zero, the shader substitutes 0, and the next step continues from f(0) = 1. That is a computational safeguard, not another mathematical definition."
+          }
+        },
+        "visualCharacteristics": "In this Julia-set close-up, large smooth copper-orange spheres gather on the right in clusters of very different sizes. The deep blue at left and below holds smaller spheres and blue-white rosettes, each star-shaped around a faint orange core.\n\nThe rounded blobs are basins, where orbits settle. Rosettes and dense grain trace the fractal border between them. This arrangement belongs to this parameter and framing—other c values rearrange it. The warm/cool palette is a colouring choice, not a property of the formula.",
+        "faq": {
+          "name": {
+            "question": "Why is it called Magnet?",
+            "answer": "The name comes from a family made widely known by Fractint. Its maps trace back to renormalization calculations for a model of magnetic phase transitions, presented in Heinz-Otto Peitgen and Peter H. Richter’s 1986 book *The Beauty of Fractals*. The squared-quotient formulas form clustered, domain-like basins; their boundaries mark the transition between magnetic and non-magnetic phases.\n\nFractalPark’s Type 1 keeps the name and the squared-quotient shape but uses the simpler ratio ((z + c) / (z − c))². The formula shown on this page is exactly the one the engine computes."
+          },
+          "poles": {
+            "question": "What happens near z = c?",
+            "answer": "At that point the denominator z − c vanishes. Thus z = c is a pole of the quotient, and a double pole after squaring. Orbits that skim past it leap to very large values, then fold back near 1 a step later.\n\nThis behaviour builds the boundary: a growing web of points whose orbits eventually hit the pole. For the rare pixel that lands exactly there, the shader uses a safe value rather than divide by zero, matching the orbit’s continuation on the Riemann sphere."
+          }
+        },
+        "history": "In 1986, Heinz-Otto Peitgen and Peter H. Richter brought magnet fractals into the literature in *The Beauty of Fractals: Images of Complex Dynamical Systems*. Their chapter “Magnetism and Complex Boundaries” (pp. 129–138) presented rational maps derived from renormalization transformations in a model of magnetic materials. There, the boundary between magnetic and non-magnetic phases is fractal. Iterating the transformation draws that boundary, giving the images their clustered, field-like structure.\n\nFractint later included the maps as “magnet1” and “magnet2,” in both Mandelbrot-style and Julia-style views; the name was then adopted by other fractal software. POV-Ray’s documentation still calls its magnet1 and magnet2 patterns “derived from some magnetic renormalization transformations,” crediting the Fractint help files.\n\nThe classic Type 1 formula from that lineage is ((z² + c − 1) / (2z + c − 2))². FractalPark implements a simplified squared quotient, ((z + c) / (z − c))², under the same name; every render and every mathematical statement on this page refers to the formula as FractalPark actually computes it."
+      },
+      "magnet-type-2": {
+        "title": "Magnet Type 2",
+        "summary": "몫 안에 z²이 들어 있는 제곱 유리 사상이에요. Type 1의 지형을 더 가파르고 더 많이 접힌 형태로 만들어요.",
+        "overview": "Magnet Type 2는 ((z² + c) / (z² − c))²을 반복해요. Type 1의 제곱 몫 구조는 유지하지만, 분자와 분모 모두에서 z가 이미 제곱돼 있어요. 그 비를 제곱하면 Type 1의 두 배인 4차 유리 사상이 돼요.\n\n차수가 늘어난 효과는 두 곳에서 드러나요. 분모 z² − c는 c의 제곱근 값 두 곳에서 0이 되는데, 하나가 아니라 둘이라서 극도 두 개예요. 반복된 제곱은 또 각진 접힘을 십자 모양 대칭으로 날카롭게 다듬어요. 극도 많아지고 굽이도 많아지면서 Type 2는 더 빽빽하고 더 각져요.\n\n자석 계열의 메커니즘은 그대로 남아요. 극 근처를 지나는 궤도는 큰 값으로 내던져졌다가 다음 단계에서 1 쪽으로 되접혀요. 무한대로 가는 게 아니라 리만 구면 위에서 1로 사상돼요. 분지가 평면에 모이고, 극의 원상들이 그 사이의 프랙탈 경계를 조립해요.",
+        "imageAlt": "십자 대칭의 Magnet Type 2 줄리아 뷰, 고리와 구슬 사슬, 돌출부가 네 구역으로 반복돼요",
+        "imageCaption": "c = −0.56 + 0.11i에서의 FractalPark Magnet Type 2: 4중 십자 대칭, 층층의 고리와 구슬 사슬, 쌍극에서 뻗어 나오는 능선.",
+        "math": {
+          "iteration": {
+            "label": "Type 2 rational iteration",
+            "explanation": "Each step computes (z² + c) / (z² − c), then squares it. The numerator is zero when z² = −c; the denominator is zero when z² = c. After squaring, every zero and pole is double, leaving the map with two double zeros and two double poles on the Riemann sphere. Its rational degree is four.\n\nAs |z| grows, (z² + c) / (z² − c) approaches 1, so the next value lands near 1 no matter how large z becomes. Only a close pass by one of the two poles produces a large value. FractalPark treats |z| above 16 as escaped, so a coloured “fast escape” region records a close encounter with a pole, not a one-way trip to infinity.\n\nSuppose c = 1. The poles are at z² = 1, i.e. z = 1 and z = −1. Choose z₀ = 0.98, very close to the pole at 1. Then (z₀² + c) / (z₀² − c) ≈ (0.9604 + 1) / (0.9604 − 1) = 1.9604 / (−0.0396) ≈ −49.5, and squaring gives z₁ ≈ 2450. The large value then folds back: on the next step, with |z₁| large, the ratio tends to 1 and z₂ lands near 1. The shader colours the pixel according to how quickly the orbit returns near 1 after its pole encounter."
+          }
+        },
+        "visualCharacteristics": "The guide image is a Julia-mode view at c = −0.56 + 0.11i. Cross-like symmetry holds the frame together: two intersecting folding axes divide the plane into four repeating sectors, each packed with layered rings, bead-like chains, and lobes. Two opposing bright nodes mark the poles, with angular ridges radiating outward.\n\nAt the same parameter, Type 2 has finer angular detail and a more articulated basin boundary than Type 1. The warm core and cool exterior emphasise its radial structure, but the geometry comes from the map: the extra degree reorients the basins along the cross axes set by the two poles.",
+        "faq": {
+          "difference": {
+            "question": "How does Type 2 differ from Type 1?",
+            "answer": "Type 2 squares z before forming the quotient, so its numerator and denominator carry z² rather than z. This raises the rational degree from two to four, takes the number of poles from one to two, and strengthens the cross-like angular symmetry. At the same parameter, its images are denser and more folded than Type 1’s."
+          },
+          "poles": {
+            "question": "Where do its poles occur?",
+            "answer": "Poles occur where the denominator z² − c vanishes: z = √c and z = −√c. Type 1 has one pole at z = c; Type 2 has two, except when c = 0, when the pole at zero is double. Their positions move with c and strongly influence the fractal boundary’s layout."
+          }
+        },
+        "history": "In 1986, Heinz-Otto Peitgen and Peter H. Richter brought magnet fractals into the literature in *The Beauty of Fractals: Images of Complex Dynamical Systems*. Their chapter “Magnetism and Complex Boundaries” (pp. 129–138) presented rational maps derived from renormalization transformations in a model of magnetic materials. The boundary between magnetic and non-magnetic phases is fractal; iterating the transformation draws it, giving the images their clustered, field-like structure.\n\nFractint later included the maps as “magnet1” and “magnet2,” in both Mandelbrot-style and Julia-style views, and the name spread through fractal software. POV-Ray’s documentation still describes its magnet1 and magnet2 patterns as “derived from some magnetic renormalization transformations,” crediting the Fractint help files.\n\nThe classic Type 2 formula from that lineage is ((z² + c − 1) / (2z + c − 2))². FractalPark implements a different simplified squared quotient, ((z² + c) / (z² − c))², under the same name; every render and every mathematical statement on this page refers to the formula as FractalPark actually computes it."
+      },
+      "multi-phoenix": {
+        "title": "Multi-Phoenix",
+        "summary": "기억을 가진 이차 점화식이에요. 복소 계수가 이전 궤도 값을 다음 단계로 이어서, 깃털 같고 불꽃 같은 형태를 만들어요.",
+        "overview": "Multi-Phoenix는 마지막 단계를 기억해요. 이 2차 점화식은 현재의 z와 바로 직전 궤도 값을 함께 사용하고, 직전 값에는 복소 기억 계수 p로 가중치를 줘요. 그 기억이 특징의 방향과 지속 시간을 바꿔요.\n\n표준 줄리아 단계 z → z² + c에는 기억이 없어요. Phoenix는 이전 z를 p·zₙ₋₁로 끌어와요. p를 바꾸면 과거가 다른 가중치를 갖게 되고, p가 복소수라서 그 가중치는 커지거나 작아질 뿐 아니라 회전할 수도 있어요. 깃털 모양의 살, 불꽃 같은 부채, 나침반 장미, 숯불 같은 무리들이 따라 나와요.\n\n실 모양의 구조가 신화 속 새의 날개와 꼬리를 떠올리게 해서 “Phoenix”라는 이름이 붙었어요. 교토대학의 우시키 시게히로(Shigehiro Ushiki)가 발견해 1988년에 발표했어요.",
+        "imageAlt": "깃털 모양 살과 숯불 같은 실 무리를 가진 Multi-Phoenix 프랙탈 (“Ember Compass”)",
+        "imageCaption": "FractalPark의 Multi-Phoenix (“Ember Compass”): 나침반 같은 살이 빛나는 실 무리 사이로 방사형으로 뻗어요.",
+        "math": {
+          "iteration": {
+            "label": "Phoenix recurrence",
+            "explanation": "Take the standard quadratic step zₙ² + c, then add p times the value from two steps ago. A second-order recurrence needs two starting values before its first iteration: z₀ and the “previous” value, usually 0. FractalPark exposes p as an adjustable complex control.\n\nTry the classic Phoenix parameter pair c = 0.5667 and p = −0.5. Starting with z₀ = 0 and z₋₁ = 0, the first few values stay bounded and trace angular, wing-like arcs. Make p positive with a similar magnitude and the feathered structure can break apart or rotate: the memory term now reinforces the earlier direction instead of opposing it."
+          }
+        },
+        "visualCharacteristics": "That one-step memory is visible in feathered spokes radiating from centres, flame-like fans curling along filaments, and compass forms with a sense of direction. A standard quadratic Julia does not make these in the same way; they rely on the directional persistence of p·zₙ₋₁.\n\nWith different parameters, the same rule can close into ember-like clusters, open into radiating pinwheels, or dissolve into dust-like regions. FractalPark’s “Ember Compass” foregrounds the compass spokes and warm filament clusters.",
+        "parameters": {
+          "memory": "The complex memory coefficient p sets both the strength and the rotational direction of the previous orbit value’s influence on the next step."
+        },
+        "faq": {
+          "memory": {
+            "question": "Why does this formula need the previous value?",
+            "answer": "The recurrence is second-order: its next state depends on the current and immediately preceding orbit values. It is a discrete analogue of a delay differential equation, where the past feeds back into the present. The extra parameter p sets how much of that past continues forward."
+          },
+          "initial-state": {
+            "question": "Does the initial previous value matter?",
+            "answer": "Yes. A second-order recurrence requires two initial conditions — z₀ and the value of z before iteration begins (z₋₁) — for a deterministic orbit. FractalPark initializes z₋₁ to zero by default, the standard convention for the Phoenix family."
+          }
+        },
+        "history": "Shigehiro Ushiki, a mathematician in Kyoto University’s Graduate School of Human and Environmental Studies, discovered the Phoenix fractal. In 1988, he published the Phoenix iteration in IEEE Transactions on Circuits and Systems. He presented it as a complex-one-dimensional section of a Julia-like set derived from a complexified Hénon map. The paper is simply titled \"Phoenix.\" The classic parameter pair (c = 0.5667, p = −0.5) produces the named Phoenix curve, later well known in fractal-rendering communities.\n\nUshiki’s broader research covers complex dynamical systems, Julia sets with polyhedral symmetries, higher-dimensional complex Hénon maps, and the dynamics of surface automorphisms. His Kyoto University homepage lists publications from the 1980s to the present.\n\nThe Phoenix family later appeared in Ultra Fractal and other fractal software in both Julia-mode and Mandelbrot-mode variants. FractalPark’s Multi-Phoenix uses the same core recurrence and adds a multi-preview parameter interface."
+      },
+      "cosh-mandelbrot": {
+        "title": "Cosh Mandelbrot",
+        "summary": "초월적 탈출 시간 사상이에요. 쌍곡코사인이 제곱을 대신하고, 세로로 반복되는 깃털과 층층의 부채가 그 자리를 차지해요.",
+        "overview": "Cosh Mandelbrot는 익숙한 다항식 단계를 벗어나요. z² + c 대신 z → cosh(z) + c를 반복해요. 제곱은 실수축 방향의 지수적 성장과 허수축 방향의 2π 반복을 가진 쌍곡코사인으로 대체돼요.\n\n복소 코사인과 쌍곡코사인은 가까운 친척이에요. 둘 다 한 방향으로는 반복되고 다른 방향으로는 끝없이 자라요. cosh(z)의 허수축 주기는 2π라서, 디테일 띠가 위아래로 자신을 되풀이해요. |Re(z)|가 크면 지수 항들이 바깥으로 치달아요. 대부분의 시작점은 빨리 탈출하고, 가느다란 띠만이 궤도를 붙잡아 여러 단계 동안 연속된 값을 유계로 유지해요.\n\n매개변수 평면은 더 이상 만델브로 집합의 심장형과 돌기처럼 보이지 않아요. 대신 부채, 금빛 깃털, 세로로 울리는 메아리를 쌓아 올려요. 탈출과 비탈출 사이의 경계는 초월 반복 자체가 그려 내며, 간단한 대수적 탈출 반지름은 존재하지 않아요.",
+        "imageAlt": "Cosh Mandelbrot 프랙탈에서 일정한 세로 간격으로 반복되는 층층의 금빛 깃털과 부채",
+        "imageCaption": "FractalPark의 Cosh Mandelbrot: 금빛 깃털과 층층의 부채가 cosh의 허수 방향 주기 2π에 맞춰 세로로 되돌아와요.",
+        "math": {
+          "iteration": {
+            "label": "Hyperbolic cosine iteration",
+            "explanation": "Each turn evaluates complex hyperbolic cosine at the current z, then adds c. The definition cosh(z) = (eᶻ + e⁻ᶻ)/2 puts exponential growth on the real axis beside imaginary-axis repetition with period 2π.\n\nTry z = iπ/2 on the imaginary axis. Since cosh(iπ/2) = cos(π/2) = 0, starting there with c = 0 leaves the recurrence at zero. Nudge the point off that axis and the eᶻ term can drive exponential growth and rapid escape. That sharp divide—bounded behavior in a narrow strip, rapid escape elsewhere—is typical of transcendental iteration. Unlike a polynomial, this map has no universal escape radius; FractalPark uses a bailout threshold chosen to detect divergence in practice."
+          }
+        },
+        "visualCharacteristics": "First notice the vertical repetition. Because cosh(z) repeats in the imaginary direction every 2π, fine plumes, layered fans, and gilt filaments return at regular intervals. The result is striped and tiered, far from the radial branching of polynomial Mandelbrot sets.\n\nIn the canonical rendering, plumes and fans often carry warm tones. The finest detail concentrates in narrow horizontal bands, where an orbit lingers near the boundary between escape and non-escape. Above and below, escape accelerates and the image becomes smoother.",
+        "faq": {
+          "periodicity": {
+            "question": "Why do patterns repeat vertically?",
+            "answer": "Complex hyperbolic cosine repeats along the imaginary axis with period 2π. Because every step uses cosh(z), the orbit structure repeats too: bounded and escaping behavior returns at regular vertical intervals in the parameter plane."
+          },
+          "growth": {
+            "question": "Why do many points escape rapidly?",
+            "answer": "Hyperbolic cosine is built from exponentials: cosh(z) = (eᶻ + e⁻ᶻ)/2. At a point with a substantial real part, the eᶻ term takes over and the orbit can grow extremely fast. There is no simple polynomial-style escape radius, so the bailout threshold is a practical computational choice."
+          }
+        },
+        "history": "In 1988, Clifford A. Pickover, a computer scientist and author at IBM's Thomas J. Watson Research Center, published the short paper \"Chaotic behavior of the transcendental mapping (Z → cosh(Z) + μ)\" in The Visual Computer. He presented images of chaotic behavior produced by this transcendental function, alongside maps such as z → sin(z) + c and z → eᶻ + c.\n\nPickover’s work brought the cosh-based map into the fractal-rendering community, where it became a standard transcendental escape-time example. Earlier, mathematicians including Robert Devaney and Michał Krych had developed the broader study of transcendental complex dynamics—exponential, trigonometric, and hyperbolic families—and analyzed the dynamics of exp(z) in the 1980s."
+      },
+      "buffalo": {
+        "title": "Buffalo",
+        "summary": "접힌 버닝 쉽 친척이에요. 제곱된 좌표 항은 절댓값을 취하고, 교차 항은 x의 부호를 유지해서 거울 대칭의 안쪽 문과 함께 넓은 뿔을 열어요.",
+        "overview": "Buffalo는 버닝 쉽의 접힘을 새로운 위치로 옮겨요. 실수부와 허수부를 따로 제곱하고, 그 제곱된 크기에 절댓값을 취하며, 교차 항에서는 x의 부호를 유지해요. 결과는 버닝 쉽과 더 단순한 Celtic 변형들 모두와 구별돼요.\n\n매개변수 집합은 넓고 휘어진 뿔로 펼쳐져요. 그 안에는 거울 대칭의 아치와 일식 모양 주머니가 자리 잡고, 흔히 꼬인 실로 가장자리가 장식돼요. 실수축을 기준으로 접으면 위아래 절반이 서로를 꼭 닮아요.\n\n버닝 쉽은 직사각형의 불꽃 같은 능선을 선호해요. Buffalo는 바깥쪽 큰 돌출부를 둥글게 다듬고, 날카로운 꺾임은 안쪽 문과 실 가장자리에 아껴 둬요.",
+        "imageAlt": "휘어진 뿔 모양 돌출부, 거울 대칭 문, 꼬인 실을 가진 Buffalo 프랙탈",
+        "imageCaption": "Buffalo: 넓은 뿔, 거울 대칭의 내부 문, 꼬인 실 가장자리.",
+        "math": {
+          "iteration": {
+            "label": "Buffalo iteration",
+            "explanation": "The squared coordinate magnitudes make the real part: xₙ₊₁ = |xₙ|² − |yₙ|² + Re(c). The imaginary part pairs signed xₙ with folded yₙ: yₙ₊₁ = 2·xₙ·|yₙ| + Im(c). The difference from Burning Ship sits exactly there: Buffalo folds squared terms one by one, rather than folding raw coordinates before squaring. Keeping xₙ signed preserves a directional imbalance that Burning Ship’s fully folded cross term erases.\n\nTry c = −0.5. Starting from z₀ = 0, the first iteration gives z₁ = |0|² − |0|² + 2i·0·|0| − 0.5 = −0.5. The second iteration: z₂ = |−0.5|² − |0|² + 2i·(−0.5)·|0| − 0.5 = 0.25 − 0.5 = −0.25. The orbit settles into a bounded oscillation between negative real values. With the same c, Burning Ship gives (|−0.5| + i|0|)² − 0.5 = 0.25 − 0.5 = −0.25 at the second step; the paths already differ because it folded the real part before squaring."
+          }
+        },
+        "visualCharacteristics": "Broad horns establish the outline, with smooth outer curves cut by sharp inner detail. Inside are mirrored eclipse-like gates and twisted filament edges. The set reflects across the real axis.",
+        "faq": {
+          "folding": {
+            "question": "Which part of the orbit is folded?",
+            "answer": "Buffalo takes absolute values of the squared coordinate magnitudes. In the cross term it folds only the imaginary component and keeps x signed. So its folds act after squaring on each coordinate’s magnitude; Burning Ship instead folds both raw components first and squares one complex number."
+          },
+          "julia-mode": {
+            "question": "Can Buffalo produce Julia sets?",
+            "answer": "Yes. Fix c and vary the starting point z₀ to reveal Buffalo Julia sets. As in the parameter set, the chosen c controls the balance of smooth and angular features. Both connected and disconnected Julia structures appear."
+          }
+        },
+        "history": "After Burning Ship appeared in 1992, Buffalo surfaced in the fractal exploration community as one of several variants. It belongs to folded quadratic maps, where shifting an absolute-value operation to another spot in the recurrence reshapes the escape-time geometry.\n\nBuffalo has no single published introduction. It appears to have come from online fractal-software communities, where programs such as Ultra Fractal and Fractal Extreme let people define custom iterations. “Buffalo” likely refers to the large horn-like lobes, resembling a buffalo-head silhouette.\n\nThe earliest documented reference is the theory.org fractal dynamics page, which calls Buffalo a Burning Ship derivative. FractalPark uses the HPDZ Buffalo iteration rather than the original Buffalo formula described there."
+      },
+      "circle-inversion": {
+        "title": "Circle Inversion",
+        "summary": "매 단계마다 가까움과 멂을 뒤바꾸는 역수 이차 사상이에요. 작은 값은 바깥으로 날아가고, 큰 값은 원점 쪽으로 돌아와요.",
+        "overview": "Circle Inversion은 익숙한 이차 성장을 역수 이차 단계로 바꿔요. 1/z²을 취한 다음 c만큼 옮기는 거죠. 작은 맞바꿈처럼 보이지만, 그 행동은 전혀 작지 않아요.\n\n보통의 다항식 반복에서는 궤도가 일정 크기 이상 자라면 계속 원점에서 멀어져요. 여기서는 그 논리가 뒤집혀요. 0에 가까운 값은 어마어마하게 커지고, 어마어마하게 큰 값은 0 근처로 돌아와요. 그러면 c가 그 맞바꿔진 값이 어디에 닿을지를 결정해요.\n\n그림은 방사형이에요. 겹겹의 고리와 날카로운 축 방향 흔적이 보여요. 원점은 2차 극, 즉 사상이 정의되지 않는 점이고, 그 끌림은 매개변수 평면 전체에 미쳐요.",
+        "imageAlt": "동심원 고리와 중심 극 주위의 밝은 방사형 가시를 가진 Circle Inversion 프랙탈",
+        "imageCaption": "Circle Inversion 매개변수 평면: 겹겹의 고리, 축 방향 가시, 원점의 극.",
+        "math": {
+          "iteration": {
+            "label": "Reciprocal quadratic iteration",
+            "explanation": "At each step, the map takes the reciprocal of z²—geometric inversion through the unit circle with a doubled angle—then shifts the result by the complex parameter c. That inversion gives the formula its name; it is classical circle inversion applied to z² rather than to z.\n\nTry c = 0 and start at z₀ = 2. Then z₁ = 1/4 = 0.25, z₂ = 1/(0.0625) = 16, z₃ = 1/256 ≈ 0.0039. The orbit ricochets between large and small values rather than settling at a fixed point. For c = 0.5, start at z₀ = 1: z₁ = 1/1 + 0.5 = 1.5, z₂ = 1/2.25 + 0.5 ≈ 0.944, z₃ = 1/0.892 + 0.5 ≈ 1.62. This orbit oscillates without diverging, suggesting c = 0.5 belongs to the bounded set. Escape needs a different test from the quadratic case: a huge value may collapse on the next step, so the bailout must allow for this alternation."
+          }
+        },
+        "visualCharacteristics": "Concentric bands and radial spines run outward from the pole at the origin. The bands mark regions whose orbits stay bounded or escape at different rates, making nested rings like a target or the ripples from a dropped pebble.\n\nSharp axial structures form distinct spokes. They come from the inversion’s angular part: 1/z² doubles z’s angle, creating preferred directions where the dynamics line up. The reciprocal quadratic form gives this parameter plane a more rigid radial symmetry than most.",
+        "faq": {
+          "origin": {
+            "question": "Why is the origin special?",
+            "answer": "The origin is a pole of order 2: 1/z² is undefined at z = 0 because division by zero creates a singularity. An orbit landing exactly there cannot continue; one passing nearby gets a very large next value. That is why the rendered image grows rings and spines around the origin."
+          },
+          "singularity": {
+            "question": "How does FractalPark handle values near zero?",
+            "answer": "The renderer clips the denominator at a small epsilon value to prevent division by zero. The pole still leaves its rings and spines visible, while the calculation stays numerically stable. Its effect remains part of the rendered structure."
+          }
+        },
+        "history": "The map z → 1/z² + c sits near the broader rational family known as McMullen maps, z → zⁿ + λ/zⁿ. Curt McMullen introduced that family in the late 1980s, showing rational maps whose parameter spaces contain several kinds of hyperbolic components, including ones with Sierpiński-carpet Julia sets.\n\nWith n = 2, λ = 1, and a translation parameter c, this gives the Circle Inversion map. Its name comes from 1/z², which inverts the complex plane with respect to the unit circle and doubles the angle. Robert L. Devaney and others later studied the McMullen family, tracing how escape loci and Julia sets change with parameters. FractalPark renders exactly this map — the n = 2, λ = 1 case with c as the translation parameter."
+      },
+      "inverted-lambda": {
+        "title": "Inverted Lambda",
+        "summary": "복소 로지스틱 점화식에 유리 이차 항을 더한 혼합 사상이에요. 움직이는 극을 궤도 안으로 들여와요.",
+        "overview": "Inverted Lambda는 Lambda 프랙탈의 로지스틱 점화식에서 시작해 유리 보정 항을 더해요. 첫 번째 항 c·z(1−z)는 표준 복소 로지스틱 사상이에요. 두 번째 항 0.18/(z² + c)은 역수형 이차 항인데, 분모가 0에 가까워지면 궤도를 아주 큰 값으로 내던질 수 있어요.\n\n그 분수가 규칙을 바꿔요. 순수 로지스틱 사상은 어디서나 매끄러운 다항식이지만, Inverted Lambda는 움직이는 극을 가진 유리 사상이에요. 궤도는 제한 없는 성장을 통해, 또는 제수에 너무 가까이 다가가서 무한대를 향할 수 있어요. 원래 사상의 둥근 돌출부는 남아 있지만, 톱니 모양 이음새, 매듭 같은 얽힘, 갑작스러운 스케일 변화가 그 사이를 가로질러요.\n\n0.18은 또 다른 매개변수가 아니라 고정값이에요. 적당한 반복 횟수 안에서 다항식 기여와 유리 기여가 모두 활성화되도록 유지해 줘요.",
+        "imageAlt": "밝은 단층선과 매듭 같은 구조로 갈라진 어두운 돌출부를 가진 Inverted Lambda 프랙탈",
+        "imageCaption": "Inverted Lambda 매개변수 평면: 유리 보정에 끊긴 로지스틱 돌출부, 이음새와 갑작스러운 스케일 변화가 함께 보여요.",
+        "math": {
+          "iteration": {
+            "label": "Lambda-reciprocal iteration",
+            "explanation": "Every step combines two contributions. First comes c·z(1−z), the quadratic logistic step behind the Lambda parameter set. Then comes a rational correction with fixed numerator 0.18 and denominator z² + c. A large denominator makes that correction small, so the map nearly follows the pure logistic version. Near z² + c = 0, it surges and may send the orbit far away.\n\nTake c = 1 + i and start at z₀ = 0. The first term gives 1 × 0 × 1 = 0. The second term: 0.18 / (0 + (1+i)) = 0.18/(1+i) = 0.09 − 0.09i. So z₁ ≈ 0.09 − 0.09i: a small nudge away from the logistic baseline. On later steps the rational term keeps steering, creating paths unavailable to the pure logistic family. The denominator z² + c marks the poles—near-singular values—and their positions move with c."
+          }
+        },
+        "visualCharacteristics": "The parameter plane keeps the logistic family’s rounded lobes, but sharp seams, dense knots, and patches where color suddenly deepens or brightens interrupt them. Near a pole, an orbit makes a large jump, and the escape-time coloring records that break.\n\nIt can resemble a smooth surface cracked from within. Far from the poles, the parent Lambda structure is still legible; the rational correction draws angular, crystalline detail across it.",
+        "faq": {
+          "inversion": {
+            "question": "What is inverted in this formula?",
+            "answer": "“Inverted” names the reciprocal term added to the logistic recurrence. It is not a geometric flip of the image or a reflection of the parameter plane. The reciprocal quadratic term 1/(z² + c) is the inversion meant here."
+          },
+          "poles": {
+            "question": "Where can poles occur?",
+            "answer": "A pole occurs wherever the denominator z² + c is zero — that is, when z = ±√(−c). Since c is free, pole locations depend on the parameter being explored. An evolving orbit may pass close to one, making the rational term spike and the trajectory jump far away."
+          }
+        },
+        "history": "Inverted Lambda is a hybrid construction joining two well-studied complex-dynamics families. Its logistic base comes from the lambda fractal tradition studied by Mandelbrot (1980). Adding a reciprocal quadratic term to a polynomial map relates to singular perturbation, which Curt McMullen explored in the late 1980s for rational maps zⁿ + λ/zⁿ.\n\nThis particular pairing—a logistic map and a reciprocal quadratic with a fixed constant numerator—appears to be a novel fractal-rendering formulation. It does not trace to one historical paper; it draws on ideas developed across decades of complex-dynamics research. “Inverted Lambda” describes the construction rather than a term from the research literature."
+      },
+      "mcmullen-2-3": {
+        "title": "McMullen 2–3 Map",
+        "summary": "제곱이 점을 바깥으로 몰아내고 역삼차 항이 점을 원점의 극을 통해 보내는 유리 사상이에요.",
+        "overview": "McMullen 2–3 사상은 보통 \\(f_\\lambda(z)=z^n+\\lambda/z^d\\)로 쓰는 계열에 속해요. FractalPark은 매개변수를 \\(c\\)라고 부르고 \\(n=2\\), \\(d=3\\)으로 골랐어요. 처음에는 항이 하나 더 붙은 이차 사상처럼 보여요. 그런데 \\(z^3\\)이 분모에 나타나면서 규칙이 바뀌어요. 원점은 평범한 점이 아니라 극이에요.\n\n이제 한 공식에 두 영역이 생겨요. 멀리서는 \\(z^2\\)이 지배하며 큰 값을 더 멀리 밀어내요. 0 근처에서는 \\(c/z^3\\)이 주도권을 잡아 점들을 극을 통해 무한대로 보내요. 그 사이에는 어느 쪽도 확실히 이기지 못하는 움직이는 경계가 있어요.\n\n그 경계는 고리로 닫히거나, 둥근 세포로 부서지거나, 연결된 그물로 합쳐질 수 있어요. \\(c\\)와 임계점 궤도에 달려 있죠. 단 하나의 McMullen 윤곽은 존재하지 않아요.",
+        "imageAlt": "큰 중앙 구멍 주위에 둥근 세포들이 다각형 고리를 이루는 옅은 파란 McMullen 프랙탈",
+        "imageCaption": "FractalPark의 McMullen 2–3 렌더링: 구슬 같은 경계가 겹겹이 넓은 중앙 구멍을 둘러싸요.",
+        "math": {
+          "iteration": {
+            "label": "A quadratic term and a cubic pole",
+            "explanation": "At each step, square the current complex value, then add \\(c/z^3\\). When \\(|z|\\) is large, the first term grows roughly like \\(|z|^2\\), while the reciprocal term fades like \\(1/|z|^3\\). Near zero the balance flips: the reciprocal term becomes enormous.\n\nThe same expression can be written as\n\n$$\nf_c(z)=\\frac{z^5+c}{z^3}.\n$$\n\nThe map has a pole of order three at \\(z=0\\), and—when \\(c\\neq0\\)—is a rational map of degree five. The “2–3” names the exponents in the original expression, not the rational-map degree.\n\nIn the exact definition, the pole sends zero to infinity on the Riemann sphere. A numerical renderer cannot divide by zero, so FractalPark replaces values extremely close to the origin with a tiny nonzero value and guards the denominator. That is a computational safety rail, not a different definition."
+          }
+        },
+        "visualCharacteristics": "One large pale opening anchors the image. An uneven ring of rounded cells circles it; farther out, smaller cells make a fine lace. What looks like a smooth blue band at first resolves into a crowded rim.\n\nThe outer edge is gently faceted rather than round, and no two cells quite match. That belongs to this parameter, frame, and colouring—not every McMullen map. The pale palette favours relief and nested boundaries over an escape-speed gradient.",
+        "faq": {
+          "exponents": {
+            "question": "What do 2 and 3 mean in the name?",
+            "answer": "They name the two powers in \\(z^2+c/z^3\\): the polynomial side squares \\(z\\), while the reciprocal side divides by its cube. In the general McMullen family they are \\(n\\) and \\(d\\).\n\nDo not read them as “degree two to degree three.” Combine the terms and the map is \\((z^5+c)/z^3\\), so for nonzero \\(c\\) its rational-map degree is five."
+          },
+          "singularity": {
+            "question": "What happens at z = 0?",
+            "answer": "The denominator \\(z^3\\) vanishes, so zero is a pole, not an ordinary starting point. On the extended complex plane it maps to infinity. Nearby points are flung away with strength growing like \\(1/|z|^3\\).\n\nThat pole is not a rendering accident; it is the feature that distinguishes this family from a polynomial such as \\(z^2+c\\). FractalPark only adds a tiny numerical guard near zero so the shader can represent the same limiting behavior without performing an undefined division."
+          }
+        },
+        "history": "The family takes its name from Curtis T. McMullen. In Section 7 of his 1988 paper *Automorphisms of Rational Maps*, McMullen constructed rational maps whose Julia sets break into a Cantor set of Jordan curves—infinitely many disjoint loops arranged with Cantor-set structure. Later authors adopted “McMullen maps” for the family \\(z^n+\\lambda/z^d\\) associated with this construction. McMullen is now Cabot Professor of Mathematics at Harvard, where his personal academic homepage and publication list remain available.\n\nThe 2–3 choice is the smallest pair of exponents satisfying the characteristic inequality\n\n$$\n\\frac{1}{n}+\\frac{1}{d}<1,\n$$\n\nbecause \\(1/2+1/3=5/6\\). It also gives the lowest possible degree, \\(n+d=5\\), in this part of the theory. The inequality alone does not guarantee that every parameter produces circles: the relevant critical orbits must also enter the appropriate escape region.\n\nWork after McMullen mapped out that dependence in much greater detail. Robert Devaney, Daniel Look, and David Uminsky proved an “escape trichotomy” in 2005: when the free critical orbit escapes, the Julia set can be a Cantor set, a Cantor set of circles, or a Sierpiński curve, depending on how it reaches infinity."
+      },
+      "rational-map-1": {
+        "title": "Rational Map 1",
+        "summary": "2차 유리 반복 z²/(z + c)이에요. 영점 하나와, c가 변하면서 이동하는 극 하나가 있어요.",
+        "overview": "Rational Map 1은 z² / (z + c)을 반복해요. z² + c 같은 다항식에는 분모가 무너지는 지점이 없지만, 이 사상에는 있어요. z = −c에 움직이는 극이 자리 잡아요. 극을 스치는 궤도는 바깥으로 내던져졌다가 다음 단계에서 전혀 다른 경로를 탈 수 있어요.\n\n영점은 z = 0에 하나, 극은 z = −c에 하나 있어요. 함수는 여전히 2차이지만, 그 극 하나가 평면을 다시 그려요. 멀리서는 z² / (z + c)이 대략 z처럼 자라서(|z|가 크면 z² / (z + c) ≈ z), 무한대는 더 이상 지배적인 고정점이 아니에요. 분지는 유한한 흡인 주기 집합 주변에 모이고, 극은 그 사이에 휘어진 수로와 부채꼴 구역을 새겨요.\n\nFractalPark에는 c가 움직이는 매개변수 평면과 c가 고정된 줄리아 뷰가 있어요. 이 가이드 이미지는 줄리아 확대 사진이에요. 극 주위로 휘어진 칼날들이 펼쳐지고, 가느다란 색 띠가 특이점을 스치는 궤도를 따라가요.",
+        "imageAlt": "Rational Map 1 줄리아 확대: 극에서 방사형으로 뻗는 휘어진 칼날 부채와 휘감기는 수로",
+        "imageCaption": "FractalPark이 렌더링한 Rational Map 1: 휘어진 칼날 부채가 극에서 천천히 회전하며 방사되고, 가느다란 띠가 극 근처 궤도를 기록해요.",
+        "math": {
+          "iteration": {
+            "label": "Rational iteration",
+            "explanation": "Each step squares z, then divides by z + c. The numerator is zero at z = 0; the denominator is zero at z = −c, which makes that point a pole. The map has degree two: (z²)/(z + c) is degree‑2 over degree‑1, and after cancelling a common factor it has one zero and one pole, each counted with multiplicity.\n\nTry the pole at close range. Take c = 0.5, so the pole is at z = −0.5, and start at z₀ = −0.49, just to its right. Then z₁ = (−0.49)² / (−0.49 + 0.5) = 0.2401 / 0.01 = 24.01. One step has thrown the orbit far out. Since |z₁| is large, the next step gives z₂ ≈ z₁² / z₁ = z₁ = 24.01: the large value persists instead of snapping back as in the magnet family. Pixel colour records the steps before the orbit crosses the escape threshold.\n\nUnlike polynomial maps, where infinity always attracts escaping orbits, this map is nearly linear far out (z → z). Thrown-out orbits may drift. The escape-time colours therefore spread into broad, gradual bands rather than the abrupt jumps familiar from z² + c."
+          }
+        },
+        "visualCharacteristics": "This is a Julia close-up. Around the pole, curved blades open into sweeping channels that follow the map's local direction. Tight colour bands between them mark orbits that graze the pole and need many steps to cross the escape threshold.\n\nBecause large-z motion is nearly linear rather than explosive, the bands change colour slowly and broadly. It reads as a turning fan with the pole for its hub. Move c and the pole moves too; the whole fan reorganizes.",
+        "faq": {
+          "rational": {
+            "question": "What makes this a rational map?",
+            "answer": "Its rule is a quotient of two complex polynomials, z² divided by z + c, not one polynomial alone. That permits poles: places where the denominator vanishes and the value becomes infinite. Polynomial maps have no such places, so their dynamics lack this particular detour."
+          },
+          "pole": {
+            "question": "Where is the pole?",
+            "answer": "Set z + c to zero: the pole is at z = −c. It moves with c and helps draw the curved fan and blades. An orbit passing close by is thrown to a large value, then may drift because the map grows only linearly far from the origin."
+          }
+        }
+      },
+      "spider": {
+        "title": "Spider",
+        "summary": "이차 궤도에 c/z를 더한 유리 사상이에요. 0의 극이 긴 다리와 거미줄 같은 실을 끌어내요.",
+        "overview": "Spider 공식은 익숙한 제곱 항 z²에 c/z를 결합해요. 서로 경쟁하는 두 끌림을 가진 2차 유리 사상이에요. 0에서 멀리 떨어지면 z²이 이차 만델브로 탈출에서처럼 궤도를 이끌어요. 가까이 다가가면 c/z가 주도권을 잡아 원점의 극을 향하게 해요.\n\n그 경쟁이 매개변수 경계를 단순히 옮겨진 탈출 문턱이 아니라 가지치는 실로 늘여 놓아요. 좁은 중심, 방사형으로 뻗는 다리, 어두운 틈이 이름을 설명해 줘요.\n\n규칙이 z로 나누기 때문에 z = 0은 특이점이에요. 렌더러는 0에 아주 가까운 값을 수치적 폴백으로 처리해야 해요. c 자체가 0일 수도 있는데, 그러면 사상은 z²이 되어 평범한 이차 줄리아 동역학으로 돌아가요.",
+        "imageAlt": "Spider 프랙탈: 어두운 중앙 핵에서 방사형으로 뻗는 긴 다리와 심연 같은 실",
+        "imageCaption": "FractalPark이 렌더링한 Spider 프랙탈: 어두운 핵에서 긴 다리와 거미줄 같은 실이 나오고, 짙은 심연의 파랑과 검정으로 채색돼요.",
+        "math": {
+          "iteration": {
+            "label": "Spider iteration",
+            "explanation": "The reciprocal term gives a quadratic orbit a sharp tug around the pole at zero.\n\nStart with c = 0. The reciprocal term vanishes, leaving z², the standard quadratic Julia map; initial values inside the unit disk can still have bounded orbits.\n\nNow take c = 1 and z₀ = (1, 0). The first iteration gives z₁ = 1² + 1/1 = 2, already far from the origin; the next gives z₂ = 4 + 1/2 = 4.5, and escape is rapid. Begin near zero instead—say z₀ = (0.01, 0)—and 1/0.01 = 100 dominates, throwing the orbit out at once. The spider filaments live on the boundary between those regimes."
+          }
+        },
+        "visualCharacteristics": "Long legs, dark filaments, and web-like junctions run out from a narrow centre. The origin's singularity makes a dark core; from it the threads branch and thin.\n\nThe canonical FractalPark rendering uses deep blues and blacks. The rational term breaks full symmetry, leaving the set slightly twisted rather than neatly balanced.",
+        "faq": {
+          "zero": {
+            "question": "What happens at z = 0?",
+            "answer": "At z = 0 the reciprocal term asks for division by zero, which is undefined. The implementation uses a stable fallback for extremely small values, by clamping the magnitude or substituting a small constant. This does not change the visible structure: points entering that near-zero zone are normally flung outward by the large reciprocal value on the next step."
+          },
+          "filaments": {
+            "question": "What creates the spider‑like legs?",
+            "answer": "The legs form where quadratic expansion and reciprocal attraction are nearly balanced. There an orbit can alternate between a pull toward zero and a throw outward, drawing the boundary between bounded and escaping behaviour into long threads. The effect is strongest near the origin, where the reciprocal term is largest; farther out, z² regains control and the threads taper."
+          }
+        }
+      },
+      "zaslavsky-map": {
+        "title": "Zaslavsky Map",
+        "summary": "복소 사인 사상이에요. 사인이 궤도를 휘게 하고, 고정된 0.55라디안 회전이 방향을 돌리며, c가 이동시켜요. 조지 자슬라프스키(George Zaslavsky)의 1978년 소산성 킥 로터 사상에서 영감을 받은 변형이에요.",
+        "overview": "Zaslavsky Map은 사인으로 궤도를 휘게 하고, 고정된 복소 위상 (e^{0.55i})만큼 결과를 회전시킨 다음 c를 더해요. 다항식 탈출 사상은 점점 커지는 z의 거듭제곱에서 성격을 얻지만, 여기서는 주기적인 휨이 꾸준한 회전을 만나는 데서 이야기가 만들어져요.\n\n1978년, 조지 M. 자슬라프스키가 소산성 킥 로터, 즉 마찰이 에너지를 빼앗는 동안 반복적으로 차여지는 회전체를 모델링하기 위해 원래 사상을 소개했어요. 그 고전적 사상은 실수 작용-각 변수를 쓰는 2차원 사상이에요. FractalPark은 그 아이디어를 하나의 복소 변수로 다시 만들었어요. 사인이 비선형 킥을, 고정된 복소 승수가 회전을 담당하고, c가 매개변수를 훑는 탈출 시간 이미지를 가능하게 해요.\n\n복소 사인은 허수축을 따라 무한히 자랄 수 있어서, 이건 단순한 다항식 탈출이 아니에요. 궤도는 잠시 원을 그리다가 흩어질 수 있어요. 그 머뭇거림이 소용돌이치는 팔과 동심원 고리를 남기는데, 특히 만화경 같은 공간 변환 후에 두드러져요.",
+        "imageAlt": "Zaslavsky Map: 따뜻한 주황과 금빛의 소용돌이치는 팔과 만다라 같은 고리",
+        "imageCaption": "FractalPark이 렌더링한 Zaslavsky Map: 동심원 호와 방사형 살이 따뜻한 주황과 금빛으로 빛나는 만다라를 이뤄요.",
+        "math": {
+          "iteration": {
+            "label": "Sinusoidal rotation map",
+            "explanation": "Sine bends z; the fixed complex multiplier turns it; c shifts the result.\n\nStart on the real axis. For z₀ = (0, 0), sin(0) = 0, so z₁ = e^{0.55i} × 0 + c = c. After that, complex sine can grow: the magnitude of sin(a + ib) contains terms up to cosh(b). A point with a large imaginary coordinate gets a large kick from sine, and is more likely to escape.\n\nThe 0.55-radian rotation (about 31.5°) is not a parameter; it is hard-coded in the formula. Every orbit gets the same angular twist each time. Hence the swirls."
+          }
+        },
+        "visualCharacteristics": "Kaleidoscopic transforms make the swirling arms and mandala-like rings especially clear. The canonical image sets concentric arcs and radiating spokes around a central region where the sine perturbation keeps orbits bounded.\n\nWarm oranges and golds sit against deep black in the canonical rendering. Constant rotation curves the arms; sine puts fine ripples along the ring edges.",
+        "faq": {
+          "rotation": {
+            "question": "Where does the rotation come from?",
+            "answer": "The map multiplies the perturbed orbit by e^{0.55i}, the unit complex number that turns the plane about 31.5° counter-clockwise. It happens on every iteration and is fixed in the formula, not adjustable by the user. The 0.55-radian value was chosen empirically for balanced swirls."
+          },
+          "transform": {
+            "question": "Is kaleidoscope part of the formula?",
+            "answer": "No. Kaleidoscope is an optional spatial transform outside the iteration. It reflects or copies sectors of the parameter plane. The Zaslavsky Map has no built-in reflection symmetry; the kaleidoscope is a separate rendering step that can be switched independently."
+          }
+        },
+        "history": "George M. Zaslavsky (1929–2008) was a Soviet‑born mathematical physicist who made foundational contributions to the theory of dynamical chaos. He introduced the map that now bears his name in a 1978 paper titled \"The Simplest Case of a Strange Attractor,\" published in Physics Letters A. The map was derived as a stroboscopic description of a dissipative kicked rotor — a rotating system that receives periodic impulses and loses energy through friction.\n\nZaslavsky later moved to the United States, joining New York University's physics department and the Courant Institute of Mathematical Sciences. He authored several books on Hamiltonian chaos and fractional dynamics. The Scholarpedia article on the Zaslavsky map, written by Zaslavsky himself in 2007, provides an authoritative technical reference.\n\nClassical Zaslavsky maps operate on two real variables (action and angle). The complex variant used by FractalPark, with its sine perturbation and fixed complex multiplier, is a creative adaptation suitable for escape‑time rendering rather than a direct transcription of the original dissipative system."
+      },
+      "zubieta": {
+        "title": "Zubieta",
+        "summary": "매 단계마다 z² + c의 두 성분을 음이 아닌 사분면으로 접는 이차 사상이에요. 이중 거울 대칭과 콤팩트한 만다라 같은 형태를 만들어요.",
+        "overview": "Zubieta는 고전 만델브로 반복의 “절댓값” 사촌이에요. 평소처럼 zₙ² + c를 갱신한 다음 실수부와 허수부에 각각 절댓값을 취해요. 이건 두 성분을 하나의 실수로 뭉개는 복소 크기가 아니에요. 종이를 두 축을 따라 접는 걸 상상해 보세요. 복소 구조는 그대로지만 각 좌표는 음이 아닌 사분면으로 돌아와요.\n\n그 접기를 반복하면 궤도는 계속 제1사분면으로 돌아오거나 통과해요. 거울 대칭이 쌓여요. 표준 만델브로 집합은 실수축 하나만 거울축으로 가지지만, Zubieta는 두 축 모두에 대해 반사해서 만화경처럼 네 개의 거울 사분면을 펼쳐요.\n\n버닝 쉽과 Buffalo도 반복의 다른 시점에 비슷한 성분별 접기를 사용해요. Zubieta는 제곱과 c 더하기를 모두 마친 뒤에 접어요. 그 타이밍 덕분에 고유한 콤팩트한 돌출부, 타일처럼 깔린 쐐기, 거울 대칭 실을 갖게 돼요.",
+        "imageAlt": "Zubieta 프랙탈: 따뜻한 앰버 톤의 거울 대칭 쐐기와 만다라 같은 돌출부 (“Kaleido Amber Mandala”)",
+        "imageCaption": "FractalPark이 렌더링한 Zubieta 프랙탈 (“Kaleido Amber Mandala”): 이중 거울 대칭이 콤팩트한 돌출부와 타일처럼 깔린 실을 만화경 같은 만다라로 배열해요.",
+        "math": {
+          "iteration": {
+            "label": "Component-folded iteration",
+            "explanation": "Here the bars mean component-wise absolute value, not complex magnitude. For u = x + iy, |u| means |x| + i|y|: take the absolute value of each part. Picture folding the point into the first quadrant.\n\nTry c = −0.5 + 0i. In the standard Mandelbrot iteration, z₀ = 0 produces z₁ = −0.5, z₂ = −0.25, z₃ ≈ −0.4375, and so on, converging to a fixed point. Zubieta folds those same values: after one step, |−0.5| = 0.5, so z₁ is 0.5 rather than −0.5. One small fold redirects the orbit—and changes how c is classified.\n\nThe escape threshold comes from the quadratic Mandelbrot test: once |zₙ| exceeds 2, divergence is guaranteed. The component-wise fold can keep some orbits bounded longer than the unfolded rule would."
+          }
+        },
+        "visualCharacteristics": "Repeated component-wise folding imposes double-mirror symmetry. The image reflects across both real and imaginary axes, making mirrored wedges, compact mandala-like lobes, and tiled filaments.\n\nCompared with Buffalo, which folds before squaring, Zubieta's post-update fold packs its lobes more tightly. In FractalPark's canonical rendering (\"Kaleido Amber Mandala\"), amber colour fills boundaries patterned with repeated angular motifs.",
+        "faq": {
+          "absolute-value": {
+            "question": "Is the absolute value a complex magnitude?",
+            "answer": "No. FractalPark takes absolute value separately on the real and imaginary parts. It takes |x| and |y| independently, reflecting each coordinate into the nonnegative range without collapsing the complex number to one real value."
+          },
+          "symmetry": {
+            "question": "Why is the image strongly mirrored?",
+            "answer": "Folding both output components into the first quadrant on every iteration imposes double reflection symmetry. The orbit is repeatedly sent back toward the nonnegative region, and the parameter map mirrors across both axes. Burning Ship gains its flame-like symmetry by a related fold, though Zubieta packs the result into tighter mandala-like patterns."
+          }
+        },
+        "history": "Zubieta belongs to a broader family of \"abs\" fractal variants — maps that apply absolute-value folds at different stages of the quadratic iteration. The best-known member of this family is the Burning Ship fractal, discovered by Michael Michelitsch and Otto E. Rössler in 1992, which folds the components before squaring. The Buffalo fractal, another relative, applies the fold after squaring but before adding c.\n\nThe Zubieta variant applies the component-wise absolute value after both squaring and the addition of c. Its precise origin is difficult to pin to a single published academic source. Variants of this kind circulated among fractal-rendering communities and software packages (Ultra Fractal, Fractint, XaoS) in the 1990s and 2000s, often named after whoever first implemented or popularized them in a given program.\n\nFractalPark's implementation follows the standard component-wise fold and renders the parameter plane in Mandelbrot mode."
+      }
+    }
+  },
+  "artworks": {
+    "page": {
+      "metadataTitle": "{title} | FractalPark 작품",
+      "imageAlt": "{title}, 게시된 FractalPark 작품",
+      "breadcrumbLabel": "이동 경로",
+      "breadcrumbHome": "홈",
+      "breadcrumbGallery": "갤러리",
+      "eyebrow": "게시된 작품",
+      "createdBy": "{creator}님이 만든 작품",
+      "license": "이미지: CC BY 4.0 라이선스",
+      "licenseScope": "CC BY 4.0은 프랙탈 작품의 이미지 레이어에 적용돼요. FractalPark 소스 코드는 MIT 라이선스가 유지되며, 사이트 문구, 인터페이스, 로고, 상표는 이미지 라이선스에 포함되지 않아요.",
+      "remix": "탐색기에서 리믹스",
+      "copy": "페이지 링크 복사",
+      "copied": "링크가 복사됐어요",
+      "copyError": "복사 실패",
+      "visualNote": "시각적 특징",
+      "related": "관련 작품",
+      "customGradient": "커스텀 그라디언트",
+      "viewer": {
+        "viewFullscreen": "전체 화면 보기",
+        "resume": "애니메이션 재개",
+        "pause": "애니메이션 일시정지",
+        "minimize": "전체 화면 종료",
+        "closeHint": "배경을 클릭하거나 Esc를 누르면 닫혀요"
+      },
+      "state": {
+        "title": "작품 상태",
+        "formula": "수식",
+        "zoom": "줌",
+        "iterations": "최대 반복 횟수",
+        "coloring": "컬러링",
+        "coloringValue": "{palette}; {outside} / {inside}; {transform} 변환"
+      }
+    },
+    "entries": {
+      "preset-newton-deep-spiral": {
+        "summary": "세 근 영역이 콤팩트한 나선으로 꼬이는 깊은 뉴턴 분지 하강이에요.",
+        "visualNote": "가는 교대 띠가 중심을 향해 조여 들고, 회전된 프레임이 대각선 방향의 움직임을 유지해요."
+      },
+      "preset-lambda-julia-vortex": {
+        "summary": "접힌 경계로 길게 줌인해서 만든 Lambda 줄리아 소용돌이예요.",
+        "visualNote": "어두운 수로가 중심에서 벗어난 눈 주위를 도는 듯한 옅은 휘어진 칼날들을 갈라놓아요."
+      },
+      "preset-spider-julia-abyss": {
+        "summary": "좁은 유리 사상 심연 위에 떠 있는 Spider 줄리아 뷰예요.",
+        "visualNote": "실 같은 다리가 넓은 어두운 공간을 가로질러 아주 작고 크게 확대된 접합부로 모여요."
+      },
+      "preset-buffalo-julia-eclipse": {
+        "summary": "그림자를 통과하는 빛나는 천체처럼 형상화된 Buffalo 줄리아 구도예요.",
+        "visualNote": "접힌 초승달과 입자 같은 가장자리가 기울어진 시야 안에서 일식의 인상을 만들어요."
+      },
+      "preset-mandelbrot-deep-escape": {
+        "summary": "극단적인 경계 여행에서 뒤로 물러선 조용한 만델브로 뷰예요.",
+        "visualNote": "넓은 최종 프레임이 애니메이션 경로에 새겨진 숨은 깊이와 대비를 이뤄요."
+      },
+      "preset-mandelbrot-crown": {
+        "summary": "반복되는 돌기와 가느다란 실로 조립된 왕관 같은 만델브로 경계예요.",
+        "visualNote": "아치형 봉우리가 어두운 중앙 덩어리 주위로 솟아오르고, 모든 가장자리를 따라 작은 위성 디테일이 있어요."
+      },
+      "preset-buffalo-julia-spiral-gate": {
+        "summary": "접힌 팔이 아주 작은 나선 문턱을 감싸는 Buffalo 줄리아 문이에요.",
+        "visualNote": "강한 좌우 대칭 구조가 4분의 1 회전 구도와 날카롭게 확대된 중심으로 어긋나 있어요."
+      },
+      "preset-lambda-julia-ice-veil": {
+        "summary": "차가운 반투명 꽃처럼 렌더링된 Lambda 줄리아 경계예요.",
+        "visualNote": "보라와 검정의 장 사이로 유리 위 서리처럼 흰 이음새와 시안색 가장자리가 나타나요."
+      },
+      "preset-magnet-julia-ember-reach": {
+        "summary": "따뜻한 포자가 어두운 장을 가로질러 뻗는 Magnet Type 1 줄리아 장면이에요.",
+        "visualNote": "커스텀 그라데이션 안에서 구릿빛과 자홍색 무리가 외딴 녹색 포인트를 향해 가지를 뻗어요."
+      },
+      "preset-julia-aqua-compass": {
+        "summary": "도자기 나침반처럼 배열된 만델브로 계열 줄리아 격자예요.",
+        "visualNote": "궤도 트랩 선이 아쿠아와 흑연 층 위에 옅은 기하학적 호를 그려요."
+      },
+      "preset-mcmullen-azure-whorl": {
+        "summary": "아주 높은 배율에서 드러난 McMullen 2–3 줄리아 소용돌이예요.",
+        "visualNote": "하늘색 소용돌이가 작은 유리 사상 특이점 주위로 반복되고, 회전이 그 휩쓰는 흐름을 강조해요."
+      },
+      "preset-inverted-lambda-obsidian-knot": {
+        "summary": "콤팩트한 흑요석 매듭으로 묶인 Inverted Lambda 단층선이에요.",
+        "visualNote": "역수형 끊김이 매끄러운 로지스틱 곡선을 중단시키고 날카로운 검은 이음새를 만들어요."
+      },
+      "preset-circle-inversion-citrine-spine": {
+        "summary": "시트린 색 역수 구조로 빛나는 Circle Inversion 축이에요.",
+        "visualNote": "밝은 중앙 축과 거의 대칭인 프레임 주위로 동심원 디테일이 쌓여요."
+      },
+      "preset-rational-map-sapphire-fan": {
+        "summary": "사파이어 톤의 평면 위로 펼쳐진 Rational Map 1 줄리아 부채예요.",
+        "visualNote": "긴 칼날이 극의 영향을 받은 중심에서 방사되고, 회전이 배열을 휘감는 부채로 바꿔요."
+      },
+      "preset-perpendicular-celtic-porcelain-halo": {
+        "summary": "접힌 도자기 띠로 만들어진 Perpendicular Celtic 줄리아 후광이에요.",
+        "visualNote": "매끄러운 옅은 고리들이 회전되고 빽빽이 확대된 구도에서 날카로운 접힘 이음새로 교차해요."
+      },
+      "preset-burning-ship-cinder-rift": {
+        "summary": "잿빛 주황과 광물 녹색으로 밝혀진 버닝 쉽 균열이에요.",
+        "visualNote": "층층의 절벽이 어두운 수로로 내려가고, 커스텀 그라데이션이 능선과 재를 구분해요."
+      },
+      "preset-magnet-julia-rust-cross": {
+        "summary": "녹슨 색 대칭으로 풍화된 Magnet Type 2 줄리아 십자가예요.",
+        "visualNote": "네 개의 빽빽한 팔이 정확한 중심에서 만나고, 가는 유리 사상 질감이 주위를 둘러싸요."
+      },
+      "preset-zaslavsky-penitent-mandala": {
+        "summary": "절제된 4분할 만다라로 접힌 Zaslavsky 소용돌이예요.",
+        "visualNote": "만화경 변환이 작고 명상적인 중심 주위로 휘어진 궤도 띠를 반복해요."
+      },
+      "preset-zubieta-kaleido-amber-mandala": {
+        "summary": "일곱 부분의 앰버 만다라로 확장된 Zubieta 줄리아 접힘이에요.",
+        "visualNote": "성분 대칭과 만화경식 반복이 중심에서 벗어난 주위에 층층의 꽃잎을 만들어요."
+      },
+      "preset-airship-inversion-seafoam-wings": {
+        "summary": "넓은 형광 가오리 날개로 반전된 Airship 줄리아 형태예요.",
+        "visualNote": "바다거품색과 시안색 가장자리가 거의 검은 공간에 떠 있고, 반전이 중앙 실루엣을 열어요."
+      },
+      "preset-newton-cosh-ember-meridian": {
+        "summary": "빛나는 세로 자오선을 따라 그려진 Newton Cosh 분지예요.",
+        "visualNote": "반복되는 초월 띠가 깊은 확대에서 숯불색 이음새로 좁아져요."
+      },
+      "preset-mandelbox-cobalt-bastion": {
+        "summary": "빽빽한 코발트 층으로 렌더링된, 접힌 Mandelbox 영감 요새예요.",
+        "visualNote": "단단한 모서리와 겹겹의 방이 평평한 지도에 건축적인 깊이감을 줘요."
+      },
+      "preset-cosh-mandelbrot-gilded-plumes": {
+        "summary": "금빛 초월 깃털로 퍼져 나가는 Cosh Mandelbrot 줄리아 장이에요.",
+        "visualNote": "반복되는 깃털 띠가 바깥으로 부채처럼 펼쳐지고, 회전된 프레임이 그 세로 주기성을 깨뜨려요."
+      },
+      "preset-quad-julia-ivory-filigree-seal": {
+        "summary": "상아색 정교한 무늬와 4중 가지로 짜인 Quartic Julia 도장이에요.",
+        "visualNote": "가는 옅은 실들이 더 어두운 이진 채색 영역을 배경으로 콤팩트한 문장으로 닫혀요."
+      },
+      "preset-magnet-julia-moonstone-reef": {
+        "summary": "광택 낸 문스톤처럼 빛나는 Magnet Type 2 줄리아 암초예요.",
+        "visualNote": "거리 추정 조명이 유리 사상 표면 위로 솟은 능선과 작은 구멍들을 드러내요."
+      },
+      "preset-phoenix-multi-ember-compass": {
+        "summary": "강한 음의 기억 항이 이끄는 Multi-Phoenix 줄리아 나침반이에요.",
+        "visualNote": "네 개의 숯불색 살과 되돌아 휘는 깃털 디테일이 안정된 중앙 허브를 둘러싸요."
+      }
+    }
+  },
+  "explore": {
+    "title": "탐색",
+    "canvas": {
+      "placeholder": "WebGL 캔버스 — 곧 제공될 예정"
+    },
+    "tabs": {
+      "formula": "수식",
+      "coloring": "컬러링",
+      "transform": "변환",
+      "render": "렌더링",
+      "animation": "애니메이션"
+    },
+    "artworkActions": {
+      "common": {
+        "cancel": "취소"
+      },
+      "cloud": {
+        "syncing": "클라우드에 저장하는 중…",
+        "synced": "클라우드에 저장했어요.",
+        "failed": "클라우드 저장에 실패했어요 — 변경 사항이 저장되지 않았어요. 다시 시도하세요.",
+        "conflict": "이 초안이 다른 곳에서 변경됐어요. 원격 버전을 불러오거나, 수정 사항을 새 초안으로 저장하세요.",
+        "quota": "클라우드 저장 공간이 가득 찼어요. 공간을 확보하려면 초안을 삭제하세요.",
+        "offline": "오프라인 상태인 것 같아요. 변경 사항이 저장되지 않았어요.",
+        "session-expired": "세션이 만료됐어요. 계속 저장하려면 다시 로그인하세요."
+      },
+      "save": {
+        "label": "갤러리에 저장",
+        "title": "작품 저장",
+        "name": "이름",
+        "placeholder": "이름을 입력하세요...",
+        "confirm": "저장",
+        "pending": "저장 중..."
+      },
+      "download": {
+        "label": "프로젝트 다운로드"
+      },
+      "import": {
+        "label": "프로젝트 가져오기",
+        "dropHint": ".fractal.json 파일을 여기에 놓으세요"
+      },
+      "export": {
+        "label": "PNG 내보내기",
+        "title": "PNG 내보내기",
+        "scale": "크기",
+        "quality": "안티앨리어싱 품질",
+        "qualityOff": "끄기",
+        "qualityLow": "낮음",
+        "qualityHigh": "높음",
+        "qualityUltra": "최고",
+        "confirm": "내보내기",
+        "pending": "렌더링 중..."
+      },
+      "reset": {
+        "label": "작품 초기화",
+        "title": "모든 설정을 초기화할까요?",
+        "description": "이 작품은 수식, 뷰, 스타일, 렌더링, 애니메이션 설정을 포함해 기본 프리셋으로 돌아가요. 저장된 갤러리 항목과 커스텀 수식 라이브러리는 삭제되지 않아요.",
+        "cancel": "취소",
+        "confirm": "초기화"
+      },
+      "status": {
+        "save": {
+          "success": "갤러리에 저장했어요."
+        },
+        "download": {
+          "success": "프로젝트를 다운로드했어요."
+        },
+        "import": {
+          "success": "프로젝트를 가져왔어요."
+        },
+        "export": {
+          "success": "PNG를 내보냈어요."
+        }
+      },
+      "errors": {
+        "invalid-json": "선택한 파일이 올바른 JSON이 아니에요.",
+        "file-too-large": "프로젝트 파일이 너무 커요.",
+        "invalid-envelope": "선택한 파일이 유효한 FractalPark 프로젝트가 아니에요.",
+        "source-too-large": "내장된 커스텀 수식이 너무 커요.",
+        "missing-formula-asset": "프로젝트에 커스텀 수식 소스가 없어요.",
+        "asset-hash-mismatch": "커스텀 수식 소스가 무결성 검사를 통과하지 못했어요.",
+        "asset-compile-failed": "내장된 커스텀 수식을 컴파일할 수 없었어요.",
+        "future-document": "이 프로젝트는 더 새로운 FractalPark 버전으로 만들어진 것이라 여기서 편집할 수 없어요.",
+        "invalid-formula-storage": "커스텀 수식 라이브러리를 안전하게 업데이트할 수 없었어요.",
+        "formula-limit-reached": "커스텀 수식 라이브러리가 가득 찼어요.",
+        "formula-commit-failed": "커스텀 수식을 설치할 수 없었어요. 변경 사항은 저장되지 않았어요.",
+        "save-failed": "작품을 저장할 수 없었어요.",
+        "download-failed": "프로젝트를 다운로드할 수 없었어요.",
+        "export-failed": "PNG를 내보낼 수 없었어요.",
+        "cloud-unavailable": "지금은 클라우드 동기화를 사용할 수 없어요 — 변경 사항이 저장되지 않았어요."
+      },
+      "conflict": {
+        "reload": "원격 버전 불러오기",
+        "saveAsNew": "새 초안으로 저장"
+      }
+    },
+    "formula": {
+      "select": "수식 선택",
+      "search": "수식 검색...",
+      "noResults": "수식을 찾을 수 없어요",
+      "active": "활성",
+      "builtin": "내장",
+      "custom": "커스텀",
+      "resolution": {
+        "loading": "수식 불러오는 중...",
+        "notFound": "커스텀 수식 “{formula}”을(를) 불러올 수 없었어요.",
+        "storageInvalid": "커스텀 수식 라이브러리를 안전하게 읽을 수 없었어요.",
+        "idConflict": "커스텀 수식 ID “{formula}”이(가) 내장 수식과 충돌해요.",
+        "compileFailed": "커스텀 수식 “{formula}”을(를) 컴파일할 수 없었어요.",
+        "unavailable": "수식 “{formula}”을(를) 불러올 수 없었어요."
+      },
+      "examples": {
+        "starterBrot": {
+          "name": "스타터 만델브로",
+          "description": "가장 작은 이탈 시간(escape-time) 수식으로, init / loop / bailout 구조를 먼저 배우기에 좋아요."
+        },
+        "parameterDrift": {
+          "name": "파라미터 드리프트",
+          "description": "p1 / p2 파라미터 슬롯과 cabs와 |z|의 차이를 보여줘요."
+        },
+        "orbitEcho": {
+          "name": "오빗 에코",
+          "description": "zPrev를 피드백 메모리로 사용하며, 오빗 엔벨로프를 위한 orbitEcho 컬러링과 잘 어울려요."
+        },
+        "fnSlotWeave": {
+          "name": "Fn 슬롯 위브",
+          "description": "Fractint 호환 저작 템플릿으로서 fn1 / fn2와 파라미터 슬롯을 보여줘요."
+        },
+        "branchGarden": {
+          "name": "브랜치 가든",
+          "description": "삼각함수 업데이트와 결합된 if / elseif / else 분기를 보여줘요."
+        }
+      },
+      "customLibrary": {
+        "title": "커스텀 수식",
+        "openStandaloneEditor": "FRM 에디터",
+        "new": "새로 만들기",
+        "loading": "불러오는 중...",
+        "empty": "아직 커스텀 수식이 없어요",
+        "createFirst": "첫 번째 수식 만들기",
+        "renameConfirm": "확인",
+        "deleteConfirm": "이 수식을 삭제할까요?",
+        "maxReached": "수식 최대 개수에 도달했어요 ({count})",
+        "formulaNotFound": "그 수식은 클라우드 라이브러리에 더 이상 존재하지 않아요.",
+        "compileFailed": "수식을 컴파일할 수 없었어요.",
+        "examplesTitle": "예제로 시작하기",
+        "examplesDescription": "먼저 작동하는 예제를 불러온 다음, 에디터에서 나만의 수식으로 바꿔 보세요.",
+        "signInHint": "로그인하면 수식을 클라우드 라이브러리에 보관하고 어떤 기기에서든 이어서 볼 수 있어요.",
+        "signIn": "로그인",
+        "unavailableHint": "지금은 수식 라이브러리를 사용할 수 없어요. 잠시 후 다시 시도하세요.",
+        "unavailable": "지금은 수식 라이브러리를 사용할 수 없어요.",
+        "conflict": "이 수식이 다른 곳에서 변경됐어요. 새로고침하고 다시 시도하세요.",
+        "builtinConflict": "이 id는 내장 수식이 사용 중이에요. 이름을 바꾸고 다시 시도하세요."
+      },
+      "family": {
+        "all": "전체",
+        "classic": "클래식",
+        "burning-ship": "버닝 쉽",
+        "newton": "뉴턴",
+        "magnet": "마그넷",
+        "phoenix": "피닉스",
+        "transcendental": "초월",
+        "exotic": "이색"
+      }
+    },
+    "controls": {
+      "colorScheme": "색상 구성",
+      "iterations": "반복 횟수",
+      "position": "위치",
+      "center": "중심",
+      "zoom": "줌",
+      "mode": {
+        "label": "프랙탈 모드",
+        "mandelbrot": "만델브로",
+        "julia": "줄리아"
+      },
+      "juliaC": {
+        "label": "줄리아 파라미터 (c)",
+        "pickHint": "팁: 만델브로에서 한 점을 클릭하면 c가 설정되면서 줄리아로 전환돼요.",
+        "picked": "줄리아 c = {re}, {im}"
+      },
+      "formula": {
+        "label": "수식",
+        "mandelbrot": "만델브로",
+        "burningShip": "버닝 쉽",
+        "airship": "에어십",
+        "tricorn": "트라이콘",
+        "phoenix": "피닉스",
+        "lambda": "람다",
+        "quadJulia": "쿼드 줄리아",
+        "cubicMandelbrot": "큐빅",
+        "quarticMandelbrot": "쿼틱",
+        "sierpinski": "시어핀스키",
+        "mandelbox": "만델박스",
+        "multicorn4": "멀티콘 4",
+        "multicorn5": "멀티콘 5",
+        "multicorn6": "멀티콘 6",
+        "multicorn7": "멀티콘 7",
+        "chebyshev2": "체비쇼프 T2",
+        "chebyshev3": "체비쇼프 T3",
+        "chebyshev4": "체비쇼프 T4",
+        "chebyshev5": "체비쇼프 T5",
+        "perpendicularMandelbrot": "퍼펜디큘러 만델브로",
+        "perpendicularTricorn": "퍼펜디큘러 트라이콘",
+        "perpendicularCeltic": "퍼펜디큘러 켈틱",
+        "cubicPerpendicularMandelbrot": "큐빅 퍼펜디큘러 만델브로",
+        "quarticPerpendicularMandelbrot": "쿼틱 퍼펜디큘러 만델브로",
+        "rabbitJulia": "래빗 줄리아",
+        "newton3": "뉴턴 (3차)",
+        "newton4": "뉴턴 (4차)",
+        "newtonSin": "뉴턴 사인",
+        "newtonCos": "뉴턴 코사인",
+        "newton5": "뉴턴 (5차)",
+        "newton6": "뉴턴 (6차)",
+        "newtonSinh": "뉴턴 쌍곡사인",
+        "newtonCosh": "뉴턴 쌍곡코사인",
+        "magnet1": "마그넷 타입 1",
+        "magnet2": "마그넷 타입 2",
+        "phoenixMulti": "멀티 피닉스",
+        "barnsley1": "번슬리 1",
+        "barnsley2": "번슬리 2",
+        "collatz": "콜라츠",
+        "spider": "스파이더",
+        "buffalo": "버펄로",
+        "rationalMap1": "유리 맵 1",
+        "rationalMap2": "유리 맵 2",
+        "mcMullen23": "맥멀런 2/3",
+        "mcMullen32": "맥멀런 3/2",
+        "mcMullen34": "맥멀런 3/4",
+        "reciprocalQuadratic": "역수 이차",
+        "reciprocalCubic": "역수 삼차",
+        "invertedLambda": "역람다",
+        "novaBasin": "노바 분지",
+        "zaslavskyMap": "자슬라프스키 맵",
+        "henon": "에농",
+        "ikeda": "이케다",
+        "zubieta": "주비에타",
+        "expJulia": "지수 줄리아",
+        "atanhMandelbrot": "역쌍곡탄젠트 만델브로",
+        "atanhJulia": "역쌍곡탄젠트 줄리아",
+        "asinhMandelbrot": "역쌍곡사인 만델브로",
+        "asinhJulia": "역쌍곡사인 줄리아",
+        "acoshMandelbrot": "역쌍곡코사인 만델브로",
+        "acoshJulia": "역쌍곡코사인 줄리아",
+        "cothMandelbrot": "쌍곡코탄젠트 만델브로",
+        "cothJulia": "쌍곡코탄젠트 줄리아",
+        "logJulia": "로그 줄리아",
+        "cosMandelb": "코사인 만델브로",
+        "expMandelbrot": "지수 만델브로",
+        "sineMandelb": "사인 만델브로",
+        "sineJulia": "사인 줄리아",
+        "coshMandelb": "쌍곡코사인 만델브로",
+        "sinhMandelb": "쌍곡사인 만델브로",
+        "coshJulia": "쌍곡코사인 줄리아",
+        "coshSinh": "쌍곡코사인-쌍곡사인",
+        "cosJulia": "코사인 줄리아",
+        "tanJulia": "탄젠트 줄리아",
+        "sinhJulia": "쌍곡사인 줄리아",
+        "heart": "하트",
+        "manowar": "맨오워",
+        "biomorph": "바이오모프",
+        "cactus": "선인장",
+        "logistic": "로지스틱 맵",
+        "celticMandelbrot": "켈틱 만델브로",
+        "celticBurningShip": "켈틱 버닝 쉽",
+        "celticMandelbar": "켈틱 만델바",
+        "burningShipImag": "버닝 쉽 허수부",
+        "perpendicularBurningShip": "퍼펜디큘러 버닝 쉽",
+        "perpendicularCelticBurningShip": "퍼펜디큘러 켈틱 버닝 쉽",
+        "burningShipCubic": "버닝 쉽 큐빅",
+        "burningShipQuartic": "버닝 쉽 쿼틱",
+        "airshipCubic": "에어십 큐빅",
+        "newtonExp": "뉴턴 지수",
+        "halleyCubic": "할리 큐빅",
+        "novaClassic": "노바 클래식",
+        "novaSine": "노바 사인",
+        "novaCos": "노바 코사인",
+        "tetration": "테트레이션",
+        "circleInversion": "원 반전",
+        "frothyBasin": "거품 분지",
+        "simonBrot": "사이먼브로",
+        "rings": "링스"
+      },
+      "transform": {
+        "label": "변환",
+        "none": "없음",
+        "kaleidoscope": "칼레이도스코프",
+        "mobius": "뫼비우스",
+        "inversion": "반전",
+        "polar": "극좌표",
+        "sinusoidal": "사인",
+        "spherical": "구면"
+      },
+      "coloring": {
+        "outside": "외부 컬러링",
+        "inside": "내부 컬러링",
+        "smooth": "스무스",
+        "orbitTrap": "오빗 트랩",
+        "orbitEcho": "오빗 에코",
+        "stripe": "스트라이프",
+        "binary": "바이너리",
+        "tia": "TIA",
+        "black": "블랙",
+        "finalOrbit": "파이널 오빗",
+        "atomDomain": "아톰 도메인"
+      },
+      "orbitTrap": {
+        "label": "오빗 트랩",
+        "point": "점",
+        "cross": "십자",
+        "circle": "원",
+        "radius": "반지름",
+        "width": "너비"
+      },
+      "quality": {
+        "ssaa": "SSAA 2x2",
+        "adaptive": "적응형 반복",
+        "lighting": "조명",
+        "lightingMode": "모드",
+        "lightingModeNormalMap": "노멀 맵",
+        "lightingModeDem": "거리 추정",
+        "azimuth": "광원 방위각",
+        "elevation": "광원 고도",
+        "intensity": "광원 강도"
+      },
+      "rotation": {
+        "label": "회전"
+      },
+      "formulaParameters": "수식 파라미터",
+      "formulaNoParameters": "이 수식은 내장 기본값을 사용하므로 추가 컨트롤이 필요 없어요.",
+      "complexReal": "Re",
+      "complexImaginary": "Im",
+      "transformParameters": "변환 파라미터",
+      "transformNoParameters": "이 변환은 내장 기본값을 사용하므로 추가 컨트롤이 필요 없어요.",
+      "transformCenter": "중심점",
+      "kaleidoFold": "접힘 수",
+      "kaleidoCenterX": "중심 X",
+      "kaleidoCenterY": "중심 Y",
+      "invRadius": "반전 반지름",
+      "invCenterX": "중심 X",
+      "invCenterY": "중심 Y",
+      "polarAngleScale": "각도 배율",
+      "polarRadiusScale": "반지름 배율",
+      "sphericalAmount": "구면 강도",
+      "ringsP": "링 파라미터",
+      "animation": {
+        "title": "애니메이션",
+        "addKeyframe": "키프레임 추가",
+        "removeKeyframe": "제거",
+        "maxReached": "키프레임은 최대 5개",
+        "preview": "미리보기",
+        "stopPreview": "중지",
+        "noKeyframes": "아직 키프레임이 없어요",
+        "duration": "반복: {seconds}초",
+        "keyframeLabel": "키프레임 {number} (줌: {zoom})"
+      },
+      "gradient": {
+        "preset": "프리셋",
+        "custom": "커스텀",
+        "addStop": "+ 색상 정지점 추가",
+        "removeStop": "제거",
+        "presets": {
+          "inferno": "인페르노",
+          "ocean": "오션",
+          "spectrum": "스펙트럼",
+          "sakura": "사쿠라",
+          "moonlight": "문라이트"
+        }
+      }
+    },
+    "palettes": {
+      "inferno": "인페르노",
+      "ocean": "오션",
+      "spectrum": "스펙트럼",
+      "sakura": "사쿠라",
+      "moonlight": "문라이트",
+      "magma": "마그마",
+      "viridis": "비리디스",
+      "batlow": "배틀로우",
+      "fire": "파이어",
+      "deepOcean": "딥 오션",
+      "twilight": "트와일라잇",
+      "romaO": "RomaO",
+      "vik": "비크",
+      "berlin": "베를린",
+      "copperPatina": "구리 파티나",
+      "aurora": "오로라",
+      "porcelain": "포슬린"
+    },
+    "paletteCategories": {
+      "legacy": "레거시",
+      "sequential": "순차",
+      "cyclic": "순환",
+      "diverging": "발산",
+      "artistic": "아트"
+    },
+    "editor": {
+      "title": "수식 에디터",
+      "loading": "에디터 불러오는 중...",
+      "loadFailed": "에디터를 불러오지 못했어요",
+      "loadFailedDescription": "코드 에디터를 불러올 수 없어요. 페이지를 새로고침하세요.",
+      "compile": "컴파일",
+      "compiling": "컴파일 중...",
+      "save": "저장",
+      "saved": "저장됨",
+      "savedDescription": "수식 \"{name}\"이(가) 로컬에 저장됐어요",
+      "saveFailed": "저장 실패",
+      "saveFailedDescription": "현재 수식을 저장할 수 없어요",
+      "compileSuccess": "컴파일 성공",
+      "compileSuccessDescription": "수식 \"{name}\"이(가) 준비됐어요",
+      "compileFailed": "컴파일 실패",
+      "compileFailedDescription": "오류 {count}개 발견",
+      "compileError": "컴파일 오류",
+      "compatibilityNotes": "호환성 참고 사항",
+      "errors": "오류 {count}개",
+      "warnings": "경고 {count}개",
+      "infos": "호환성 참고 {count}개",
+      "noErrors": "오류 없음",
+      "diagnostics": "진단 (오류 {errors}개, 경고 {warnings}개, 호환성 참고 {infos}개)",
+      "moreIssues": "문제 {count}개 더 보기...",
+      "restoreLastSuccessful": "마지막 성공 버전 복원",
+      "restoreSuccess": "버전 복원됨",
+      "restoreSuccessDescription": "에디터가 가장 최근에 성공한 소스로 되돌아갔어요.",
+      "setCurrentViewAsDefault": "현재 뷰를 기본값으로 사용",
+      "defaultViewSet": "기본 뷰 업데이트됨",
+      "defaultViewSetDescription": "저장하면 이 커스텀 수식과 함께 현재 탐색 뷰가 유지돼요.",
+      "modeCompat": "모드: 호환",
+      "modeNative": "모드: 네이티브",
+      "line": "{line}행, {col}열",
+      "lines": "{count}줄",
+      "glslError": "GLSL 컴파일 오류 (수식 소스에서 매핑됨)",
+      "glslErrorUnmapped": "GLSL 컴파일 오류 (위치를 매핑할 수 없음)"
+    },
+    "landing": {
+      "heading": "FractalPark: 브라우저에서 만나는 오픈소스 프랙탈 생성기",
+      "whatIsHeading": "FractalPark이란 무엇인가요?",
+      "whatIsAnswer": "FractalPark은 WebGL로 브라우저에서 완전히 렌더링되는 무료 오픈소스(MIT) 프랙탈 지식·창작 플랫폼이에요: 내장 수식 {formulaCount}개, Fractint 호환 FRM 저작, 고해상도 PNG 내보내기를 지원해요. 제작은 계정 없이 가능하고, 작품과 수식 저장은 이메일 로그인과 개인 클라우드 라이브러리를 이용해요.",
+      "capabilitiesHeading": "핵심 기능",
+      "capabilitiesIntro": "{formulaFamilyCount}개 패밀리에 걸친 수식 {formulaCount}개 · 심층 Formula Guide {formulaGuideCount}개 · 변환 {transformCount}개 · 컬러링 모드 {coloringModeCount}개 · 공유 가능한 URL · 최대 {maxExportScale}× PNG 내보내기",
+      "linksHeading": "계속 탐색하기",
+      "links": {
+        "formulas": "Formula Atlas — 모든 수식의 수학, 역사, 라이브 예제",
+        "frmGuide": "FRM Guide — 브라우저에서 Fractint 호환 수식 작성하기",
+        "drift": "Drift — 몰입형 프리셋 슬라이드쇼를 편안하게 감상하기",
+        "about": "About — 프로젝트 소개, 범위, 오픈소스 상세 정보"
+      },
+      "posterAlt": "FractalPark이 렌더링한 만델브로 프랙탈 정적 미리보기"
+    },
+    "draft": {
+      "loading": "초안 여는 중…",
+      "notFound": "초안을 찾을 수 없어요. 삭제되었거나 다른 계정의 소유일 수 있어요.",
+      "unavailable": "지금은 이 초안을 열 수 없어요. 잠시 후 다시 시도하세요.",
+      "retry": "다시 시도",
+      "signInToOpen": "이 초안은 클라우드 라이브러리에 있어요.",
+      "signIn": "로그인하고 열기"
+    }
+  },
+  "frmEditor": {
+    "title": "FRM 에디터",
+    "description": "브라우저에서 FRM 수식을 작성·컴파일·미리보기하고 클라우드 라이브러리에 저장하세요.",
+    "breadcrumb": "이동 경로",
+    "crumbGuide": "FRM 가이드",
+    "beta": "베타",
+    "localOnly": "클라우드 라이브러리에 저장하기 전까지 소스와 미리보기는 이 탭에만 남아요. FRM 호환성은 의도적으로 제한되어 있어요.",
+    "guide": "FRM 가이드 읽기",
+    "noJsTitle": "FRM 에디터에는 JavaScript가 필요해요",
+    "noJs": "이 페이지는 FRM 워크플로우를 설명해요. 수식을 편집·컴파일·미리보기하려면 JavaScript를 활성화하세요.",
+    "actions": "에디터 작업",
+    "new": "새로 만들기",
+    "examples": "예제",
+    "myFormulas": "내 수식",
+    "loading": "수식 라이브러리 불러오는 중…",
+    "empty": "아직 저장된 수식이 없어요.",
+    "import": ".frm 가져오기",
+    "download": ".frm 다운로드",
+    "saveOpen": "저장 후 탐색에서 열기",
+    "viewModes": "에디터 보기",
+    "editorMode": "에디터",
+    "previewMode": "미리보기",
+    "preview": "컴파일된 미리보기",
+    "previewEmpty": "유효한 수식을 컴파일하면 이 미리보기가 업데이트돼요.",
+    "previewStale": "소스가 변경됐어요. 이 미리보기는 마지막으로 성공한 것이에요. 저장하거나 열기 전에 다시 컴파일하세요.",
+    "reset": "뷰 초기화",
+    "unknownExample": "그 예제는 사용할 수 없어요. 대신 빈 로컬 수식으로 시작하세요.",
+    "replaceConfirm": "현재 저장되지 않은 초안을 교체할까요?",
+    "leaveConfirm": "에디터를 나가고 저장되지 않은 초안 변경 사항을 버릴까요?",
+    "saved": "로컬에 저장했어요.",
+    "saveError": "수식을 로컬에 저장할 수 없었어요.",
+    "errors": {
+      "maxCount": "수식 최대 개수에 도달했어요 ({count}).",
+      "formulaNotFound": "그 로컬 수식은 더 이상 존재하지 않아요.",
+      "storageUnavailable": "로컬 수식 라이브러리를 업데이트할 수 없었어요.",
+      "compileFailed": "수식을 컴파일할 수 없었어요.",
+      "conflict": "이 수식이 다른 곳에서 변경됐어요. 새로고침하고 다시 시도하세요.",
+      "builtinConflict": "이 id는 내장 수식이 사용 중이에요."
+    },
+    "compileFirst": "탐색에서 열기 전에 이 소스를 성공적으로 컴파일하세요.",
+    "source": {
+      "multiple": "이 소스에는 최상위 수식이 두 개 이상 포함되어 있어요. FractalPark은 한 번에 하나의 수식만 컴파일하며, 전체 소스를 잘라내지 않고 보존했어요.",
+      "trailing": "이 소스에는 수식 뒤에 지원되지 않는 내용이 있어요. FractalPark은 전체 소스를 보존했으며 첫 부분만 컴파일하지 않아요."
+    },
+    "file": {
+      "extension": ".frm 파일을 선택하세요.",
+      "size": "FRM 파일은 256 KiB 이하여야 해요.",
+      "encoding": "파일은 유효한 UTF-8이어야 해요."
+    },
+    "librarySignIn": "클라우드 수식 라이브러리를 열려면 로그인하세요."
+  },
+  "metadata": {
+    "explore": {
+      "title": "FractalPark — 오픈소스 브라우저 프랙탈 생성기",
+      "description": "브라우저에서 만나는 오픈소스·수식 중심 프랙탈 지식·창작 플랫폼: 내장 수식 94개, 실시간 WebGL 렌더링, Fractint 호환 FRM 저작, 고해상도 PNG 내보내기.",
+      "ogTitle": "FractalPark — 브라우저에서 만나는 오픈소스 프랙탈 아트",
+      "ogDescription": "브라우저에서 프랙탈 아트 만들기: 수식 94개, 실시간 WebGL 렌더링, FRM 저작, 고해상도 PNG 내보내기."
+    },
+    "gallery": {
+      "title": "내 갤러리 | 나만의 프랙탈 컬렉션 - FractalPark",
+      "description": "나만의 프랙탈 아트 갤러리. 좋아하는 프랙탈 작품을 저장하고 정리하고 공유하세요."
+    },
+    "about": {
+      "title": "소개 | 오픈소스 브라우저 프랙탈 생성기 - FractalPark",
+      "description": "WebGL, 94개 수식, 커스텀 팔레트, PNG 내보내기를 갖춘 오픈소스 MIT 라이선스 브라우저 프랙탈 생성기 FractalPark을 알아보세요."
+    },
+    "formulaAtlas": {
+      "title": "Formula Atlas | 프랙탈 수식 94개 - FractalPark",
+      "description": "일곱 개 패밀리에 걸친 FractalPark 수식 94개를 둘러보고, 엄선된 가이드 프로필 21개를 탐색하며, FRM을 배우고, WebGL 탐색기에서 표준 수식 상태를 열어보세요.",
+      "imageAlt": "내장 수식 94개가 담긴 FractalPark Formula Atlas"
+    },
+    "frmEditor": {
+      "title": "FRM 에디터 | FractalPark",
+      "description": "브라우저에서 FRM 수식을 작성·컴파일·미리보기하고 클라우드 라이브러리에 저장하세요."
+    },
+    "frmGuide": {
+      "title": "FRM 가이드 | 커스텀 프랙탈 수식 작성 - FractalPark",
+      "description": "FractalPark의 검증된 FRM 문법, 호환성 수준, AST-to-GLSL 컴파일러 파이프라인, 진단, 컴파일 검증된 커스텀 수식 예제 3개를 배워보세요.",
+      "imageAlt": "FractalPark FRM 수식 언어 가이드"
+    },
+    "drift": {
+      "title": "Drift — 몰입형 프랙탈 슬라이드쇼 | FractalPark",
+      "description": "게시된 FractalPark 프랙탈 프리셋을 손대지 않고 전체 화면으로 감상하는 드리프트, WebGL로 실시간 렌더링돼요. 편안히 앉아 수학이 움직이는 걸 지켜보세요.",
+      "ogTitle": "Drift — 몰입형 프랙탈 슬라이드쇼",
+      "ogDescription": "FractalPark 프랙탈 프리셋의 전체 화면 앰비언트 재생."
+    }
+  },
+  "about": {
+    "title": "FractalPark 소개",
+    "aiDescription": "FractalPark은 실시간 GPU 렌더링을 위해 WebGL을 사용하는 오픈소스 MIT 라이선스 브라우저 기반 프랙탈 아트 생성기예요. 내장 이탈 시간(escape-time) 프랙탈 수식 94개(만델브로, 줄리아, 뉴턴, 피닉스, 마그넷, 맥멀런, 유리, 초월 패밀리), Fractint .frm 문법을 지원하는 커스텀 수식 에디터, UV 변환 플러그인 7개, 컬러링 모드 9개, 고해상도 PNG 내보내기를 갖추고 있어요. Next.js 16, React 19, TypeScript 5, Tailwind CSS로 제작됐어요. 렌더링 엔진은 동적 GLSL 셰이더 조립과 LRU 캐싱을 사용하는 플러그인 아키텍처를 기반으로 해요.",
+    "techStack": {
+      "title": "기술 스택",
+      "description": "Next.js, WebGL, TypeScript로 제작됐어요. GPU 셰이더 기반의 실시간 프랙탈 렌더링을 제공해요.",
+      "frontend": "프론트엔드: Next.js 16 (App Router), React 19, TypeScript 5, Tailwind CSS 4, shadcn/ui",
+      "rendering": "렌더링: WebGL 1 (GLSL 프래그먼트 셰이더), 플러그인 기반 아키텍처, 셰이더 LRU 캐시",
+      "formula": "수식 시스템: 커스텀 Fractint .frm 파서, CodeMirror 6 에디터, AST-to-GLSL 트랜스파일러"
+    },
+    "openSource": {
+      "title": "오픈소스",
+      "description": "FractalPark은 MIT 라이선스로 배포돼요. 소스 코드는 GitHub에서 공개되어 누구나 작동 방식을 연구하고, 로컬에서 실행하고, 개선을 제안하거나 브라우저 기반 프랙탈 엔진 위에 새로운 것을 만들 수 있어요.",
+      "github": "GitHub 저장소",
+      "license": "MIT 라이선스"
+    }
+  },
+  "drift": {
+    "pause": "애니메이션 일시정지",
+    "play": "애니메이션 재생",
+    "previous": "이전 프리셋",
+    "next": "다음 프리셋"
+  },
+  "publicProject": {
+    "tagline": "FractalPark은 오픈소스·수식 중심의 프랙탈 지식·창작 플랫폼으로, Fractint의 수식 유산을 현대 브라우저로 가져오기 위해 Fractint 호환 FRM 지원을 계속 확장하고 있어요.",
+    "definition": "FractalPark은 프랙탈 아트를 탐색·학습·창작하기 위한 무료 오픈소스(MIT) WebGL 애플리케이션이에요. {formulaFamilyCount}개 패밀리에 걸친 내장 수식 {formulaCount}개, 심층 Formula Guide {formulaGuideCount}개, 가이드와 독립형 에디터를 갖춘 Fractint 호환 FRM 언어, 커뮤니티 갤러리를 제공해요. 렌더링은 브라우저에서 실행되고, 작품과 수식 저장은 이메일 로그인과 개인 클라우드 라이브러리를 이용해요.",
+    "aiDescription": "FractalPark은 실시간 GPU 렌더링을 위해 WebGL을 사용하는 오픈소스 MIT 라이선스 브라우저 프랙탈 생성기예요. {formulaFamilyCount}개 패밀리에 걸친 내장 프랙탈 수식 {formulaCount}개, Formula Guide {formulaGuideCount}개, AST-to-GLSL 트랜스파일을 지원하는 Fractint 호환 FRM 에디터, UV 변환 플러그인 {transformCount}개, 컬러링 모드 {coloringModeCount}개, 공유 가능한 URL, 작품·수식용 이메일 로그인 클라우드 라이브러리, 커뮤니티 게시, 최대 {maxExportScale}배 고해상도 PNG 내보내기를 갖추고 있어요. Next.js, React, TypeScript로 제작됐어요.",
+    "capabilitiesHeading": "지금 할 수 있는 것",
+    "capabilities": {
+      "discover": {
+        "title": "수식 탐색",
+        "summary": "Formula Atlas를 둘러보세요: 7개 패밀리에 걸친 내장 수식 94개와, 고전 수식들의 수학·역사·시각적 특징을 다루는 심층 Formula Guide 21개가 있어요."
+      },
+      "create": {
+        "title": "브라우저에서 창작",
+        "summary": "WebGL로 실시간 탐색과 렌더링을 즐겨보세요: 모든 수식의 만델브로·줄리아 모드, 변환 7개, 컬러링 모드 9개, 그라디언트, 조명, 키프레임 애니메이션을 지원해요."
+      },
+      "authorFrm": {
+        "title": "FRM 저작",
+        "summary": "가이드와 독립형 에디터로 Fractint 호환 FRM 언어를 사용해 커스텀 수식을 작성하세요: AST 검증, 실시간 GLSL 미리보기, 명확한 진단을 제공해요."
+      },
+      "saveExport": {
+        "title": "저장하고 공유",
+        "summary": "이메일 로그인으로 작품과 커스텀 수식을 개인 클라우드에 저장하고 어떤 기기에서든 이어서 보세요. 커뮤니티 갤러리에 게시하거나, 익명으로 제작한 뒤 SSAA 안티앨리어싱으로 최대 4배 해상도의 고해상도 PNG 이미지를 내보낼 수도 있어요."
+      }
+    },
+    "boundariesHeading": "현재 한계와 향후 방향",
+    "currentHeading": "지금 사용 가능",
+    "futureHeading": "로드맵에 있음",
+    "boundaries": {
+      "current": {
+        "0": "확장 중인 Fractint 호환 FRM 지원: Fractint 수식 언어의 실용적이고 검증된 하위 집합이 현재 실행돼요 — 완전한 Fractint 재구현은 아니에요.",
+        "1": "제작은 계정이 필요 없어요. 작품과 수식 저장은 이메일 일회용 코드 로그인을 사용해 개인 클라우드 라이브러리에 보관해요. 게시는 항상 명시적이며, 커스텀 수식이 포함된 작품은 그 소스를 MIT 라이선스로 게시해요.",
+        "2": "인터페이스는 영어, 중국어 간체, 포르투갈어, 한국어, 러시아어, 스페인어, 프랑스어의 일곱 가지 언어로 제공돼요."
+      },
+      "future": {
+        "0": "Fractint의 역사적인 수식 아카이브를 점차 현대 브라우저로 가져오기 위해 노력하고 있어요.",
+        "1": "더 깊은 컬러링, 애니메이션, 줌 기능이 로드맵에 있지만 아직 출시되지는 않았어요."
+      }
+    },
+    "licenseLine": "FractalPark은 MIT 라이선스로 배포돼요.",
+    "heroAlt": "FractalPark WebGL 엔진이 실시간으로 렌더링한 만델브로 집합",
+    "cta": {
+      "explore": "탐색 열기",
+      "formulas": "Formula Atlas 둘러보기",
+      "frmGuide": "FRM 가이드 읽기",
+      "gallery": "갤러리 방문"
+    }
+  },
+  "legal": {
+    "privacy": {
+      "title": "개인정보 처리방침",
+      "updated": "최종 업데이트: 2026년 8월 3일",
+      "intro": "FractalPark은 오픈소스 프랙탈 아트 탐색기예요. 아무 정보도 제공하지 않고도 내 기기에서 작품을 탐색·제작·저장할 수 있어요. 계정은 클라우드 초안을 보관하거나 커뮤니티에 게시할 때만 필요해요. 이 페이지는 계정이 무엇을 다루고 — 절대 다루지 않는 것이 무엇인지 정확히 설명해요.",
+      "s1h": "계정이 저장하는 것",
+      "s1b": "이메일 주소 — 일회용 코드로 로그인할 때만 사용해요. 비밀번호는 없어요.\n\n직접 선택한 표시 이름 — 게시 전까지는 비공개이며, 게시된 작품에는 출처 표시로 나타나요.\n\n클라우드 초안(비공개)과 게시된 작품(공개) — 리믹스에 필요한 파라미터를 포함해요.",
+      "s2h": "절대 수집하지 않는 것",
+      "s2b": "비밀번호 없음 — 로그인 코드는 이메일로 전송되고 만료돼요.\n\n광고 추적기 없음, 사이트 간 프로파일링 쿠키 없음, 데이터 브로커와의 개인정보 판매·공유 없음.\n\n분석 데이터에는 이메일, IP 주소, 작품 제목, 초안 내용, 또는 사용자를 특정할 수 있는 어떤 식별자도 포함되지 않아요.",
+      "s3h": "쿠키",
+      "s3b": "쿠키는 두 개뿐이고, 둘 다 평범해요. 암호화된 HttpOnly 세션 쿠키는 로그인 상태를 유지하고, 작은 NEXT_LOCALE 쿠키는 언어 설정을 기억해요. 둘 다 다른 사이트에서 읽을 수 없어요. 세션 쿠키는 로그아웃하거나 계정을 삭제하면 삭제되고, 언어 쿠키는 브라우저 데이터를 지우기 전까지 유지돼요.",
+      "s4h": "분석",
+      "s4b": "어떤 기능이 사람들에게 도움이 되는지 이해하기 위해 집계된, 개인정보가 제한된 사용 분석을 사용해요 (예: 게시 성공, 가이드 열람). 이벤트는 이메일, IP, 제목, 작품 콘텐츠를 금지하는 고정 스키마를 따르고 있어요.",
+      "s5h": "보내는 이메일",
+      "s5b": "로그인 코드 — 항상 보내요.\n\n작품 백업 이메일 — 직접 켠 경우에만 보내요. 기본값은 꺼져 있어요. 백업 이메일에는 작품의 전체 설정이 첨부돼요. 이메일은 암호화된 저장소가 아니며, 발송 후에는 첨부 파일을 회수할 수 없어요. 설정 페이지에서도 활성화 전에 이 내용을 다시 안내해요.",
+      "s6h": "비공개 초안, 공개 작품",
+      "s6b": "초안은 나만 볼 수 있어요. 게시하면 작품, 제목, 설명, 표시 이름, 파라미터가 커뮤니티 약관에 따라 공개돼요. 숨겨지거나 철회된 작품은 공개 화면에서 즉시 사라져요.",
+      "s7h": "계정 삭제",
+      "s7b": "갤러리에서 언제든 직접 계정을 삭제할 수 있어요. 삭제 시 새 로그인 코드와 이메일 입력을 요청한 뒤, 초안을 제거하고 게시된 작품을 철회하며 세션을 종료하고 프로필을 삭제해요. 게시된 작품의 출처 표시는 이전 리믹스가 출처 크레딧을 유지할 수 있도록 묘비처럼 남고, 악용 조사를 위한 최소한의 감사 기록(이메일·콘텐츠 없음)이 보관돼요.",
+      "s8h": "데이터가 저장되는 곳",
+      "s8b": "계정과 작품은 우리가 소유하지 않은 인프라의 클라우드 데이터베이스·호스팅 제공업체에 저장돼요. 주류 제공업체를 선택하고 액세스 키는 클라이언트에 두지 않아요. 운영 로그는 단기간만 유지되고, 속도 제한 기록에는 일방향 해시만 저장돼요.",
+      "s9h": "변경 사항 및 문의",
+      "s9b": "이 방침이 사용자에게 영향을 주는 방식으로 변경되면, 변경 사항은 오픈소스 저장소에 반영되고 이 페이지의 날짜도 갱신돼요. 질문, 요청, 삭제 요청 신고: contact@fractalpark.com."
+    },
+    "terms": {
+      "title": "이용약관",
+      "updated": "최종 업데이트: 2026년 8월 3일",
+      "intro": "이 약관은 FractalPark 웹사이트와 클라우드 기능(계정, 클라우드 초안, 커뮤니티 게시)에 적용돼요. 소프트웨어 자체는 오픈소스이며, 자체 호스팅은 이 약관이 아닌 라이선스의 적용을 받아요.",
+      "s1h": "서비스",
+      "s1b": "FractalPark은 프랙탈 아트를 탐색·창작하고, 비공개 클라우드 초안을 보관하고, 작품을 공개 커뮤니티에 게시할 수 있게 해줘요. 서비스는 있는 그대로 제공되며, 개인정보 처리방침과 백업 런북이 설명하는 범위 외에는 가동 시간이나 데이터 보존에 대한 보장이 없어요.",
+      "s2h": "계정",
+      "s2b": "로그인은 일회용 이메일 코드로 이루어져요. 로그인에 사용하는 메일함은 본인 책임이에요. 한 사람이 여러 계정을 보유할 수 있지만, 속도 제한과 할당량은 계정 단위로 적용되며 한도를 악용하면 정지될 수 있어요.",
+      "s3h": "내 콘텐츠",
+      "s3b": "직접 만든 것에 대한 모든 권리는 본인에게 있어요. 클라우드 초안은 비공개이며 본인만의 것이에요.\n\n게시하면 작품이 공개되고 렌더링된 이미지가 CC BY 4.0으로 라이선스되어, 누구나 출처를 표시하고 공유하거나 리믹스할 수 있어요. 이 라이선스는 렌더링된 이미지 레이어에만 적용돼요 — 수식 소스 코드, 설명 텍스트, FractalPark UI, 로고, 상표에는 적용되지 않아요. 리믹스에 필요한 파라미터는 설계상 공개되므로, 비밀을 게시하지 마세요. 작품을 철회하면 공개 화면에서 제거되지만 이미 부여된 라이선스를 취소할 수는 없어요.",
+      "s4h": "게시 확인 선언",
+      "s4b": "게시하려면 직접 작품을 만들었거나 이 약관에 따라 게시할 권리를 보유하고 있음을 확인해야 해요. 권리가 없는 콘텐츠를 게시하면 작품이 숨겨지고 계정이 정지될 수 있어요.",
+      "s5h": "운영 및 삭제 요청",
+      "s5b": "게시 전 검토는 없어요. 관리자는 커뮤니티 규칙을 위반하거나 신뢰할 만한 신고를 받은 게시 작품을 숨길 수 있으며, 검토 후 복원할 수도 있어요. 숨김은 되돌릴 수 있지만 소유자의 철회는 영구적이에요. 신고는 contact@fractalpark.com으로 보내주세요 — 모든 공개 작품 페이지에 링크가 있어요. 응답 시간은 보장하지 않아요.",
+      "s6h": "허용되는 사용",
+      "s6b": "커뮤니티 규칙은 이 약관의 일부예요. 비공개 엔드포인트의 자동 스크래핑, 속도 제한이나 권한을 우회하려는 시도, 다른 사용자의 데이터를 방해하는 행위는 금지돼요.",
+      "s7h": "면책 및 책임",
+      "s7b": "서비스는 어떠한 보증도 없이 제공돼요. 법이 허용하는 범위 내에서 FractalPark과 관리자는 초안 분실, 계정 분실, 게시 작품의 파생 사용에 대해 책임을 지지 않아요. 중요한 것은 직접 내보내기로 보관하세요 — 앱은 원클릭 다운로드와 선택적 백업 이메일을 제공해요.",
+      "s8h": "변경 사항 및 문의",
+      "s8b": "약관 변경 사항은 오픈소스 저장소에 반영되고 이 페이지의 날짜도 갱신돼요. 변경 후에도 계속 사용하면 새 약관에 동의한 것으로 간주돼요. 문의: contact@fractalpark.com."
+    },
+    "rules": {
+      "title": "커뮤니티 규칙",
+      "updated": "최종 업데이트: 2026년 8월 3일",
+      "intro": "커뮤니티는 프랙탈 작품의 공개 진열장이에요. 다섯 가지 짧은 규칙이 둘러볼 가치를 지켜줘요.",
+      "s1h": "올릴 수 있는 것",
+      "s1b": "FractalPark으로 직접 만든(또는 게시 권리를 가진) 독창적인 프랙탈 작품 — CC BY 4.0 이미지 라이선스로 공유되어 다른 사람들이 배우고 리믹스할 수 있어요.",
+      "s2h": "올릴 수 없는 것",
+      "s2b": "불법적인 모든 것. 미성년자가 관련된 성적 콘텐츠 — 어떤 경우에도 금지돼요. 신상 털기 또는 개인을 괴롭히려는 콘텐츠. 피해를 목적으로 하는 멀웨어나 링크. 스팸, 광고, 대량으로 올라온 유사 중복 콘텐츠. 혐오 콘텐츠. 게시 권리가 없는 작품.",
+      "s3h": "리믹스 에티켓",
+      "s3b": "게시된 모든 작품은 리믹스될 수 있어요 — 그것이 바로 목적이에요. 리믹스를 게시할 때는 앱이 자동으로 채워주는 출처 표시를 유지하세요. 다른 사람의 작품 위에 만들고 그들을 표시하는 것이 커뮤니티가 공유에 우호적으로 유지되는 방식이에요.",
+      "s4h": "집행",
+      "s4b": "관리자는 먼저 숨기고 나중에 심의해요: 신고된 작품을 관리자가 숨기면 즉시 공개 화면에서 사라지고, 검토 결과 신고가 성립하지 않을 때만 복원돼요. 소유자는 언제든 자신의 작품을 철회할 수 있으며, 철회는 영구적이에요. 반복적인 위반은 계정 정지로 이어져요.",
+      "s5h": "신고",
+      "s5b": "모든 공개 작품 페이지에는 신고/삭제 요청 항목이 있어요. 또는 contact@fractalpark.com으로 직접 연락해 주세요. 작품 링크와 이 규칙을 위반하는 이유를 포함해 주세요."
+    }
+  }
+}

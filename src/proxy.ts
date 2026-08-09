@@ -16,8 +16,9 @@ const intlMiddleware = createMiddleware({ ...routing, alternateLinks: false });
  */
 const LEGACY_ENTRY_TARGETS: Record<string, string> = {
   '/': `/${routing.defaultLocale}/explore`,
-  '/en': '/en/explore',
-  '/zh': '/zh/explore',
+  ...Object.fromEntries(
+    routing.locales.map((locale) => [`/${locale}`, `/${locale}/explore`])
+  ),
 };
 
 export default function proxy(request: NextRequest) {
@@ -53,7 +54,7 @@ export const config = {
   // Skip: sitemap.xml, robots.txt, favicon.ico, api, _next static files, images
   matcher: [
     '/',
-    '/(en|zh)/:path*',
+    '/(en|zh|pt|ko|ru|es|fr)/:path*',
     '/:path*.txt',
   ],
 };

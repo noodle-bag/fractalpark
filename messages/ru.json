@@ -1,0 +1,1864 @@
+{
+  "cloud": {
+    "otp": {
+      "title": "Вход для синхронизации",
+      "emailDescription": "Войдите, чтобы сохранять работы в личное облако, открывать их на любом устройстве и публиковать в Сообщество. Для сохранения и публикации нужен аккаунт; просмотр, создание и скачивание работают без него.",
+      "codeDescription": "Введите шестизначный код из письма, которое мы только что отправили вам.",
+      "emailLabel": "Email",
+      "emailPlaceholder": "you@example.com",
+      "codeLabel": "Шестизначный код",
+      "sendCode": "Отправить код",
+      "sending": "Отправляем…",
+      "verify": "Войти",
+      "verifying": "Входим…",
+      "resend": "Отправить код повторно",
+      "errors": {
+        "wrongCode": "Код неверный. Проверьте письмо и попробуйте снова.",
+        "rateLimited": "Слишком много попыток. Подождите немного и попробуйте снова.",
+        "offline": "Похоже, вы не в сети. Проверьте подключение и попробуйте снова.",
+        "disabled": "Облачная синхронизация недоступна в этой сборке.",
+        "generic": "Что-то пошло не так. Пожалуйста, попробуйте снова."
+      }
+    },
+    "myWorks": {
+      "signInHint": "Войдите, чтобы хранить черновики в облачной библиотеке и открывать их на любом устройстве.",
+      "signIn": "Войти для синхронизации",
+      "draftsTitle": "Облачные черновики",
+      "publishedTitle": "Опубликовано",
+      "publishedEmpty": "Пока ничего не опубликовано. Публикация появится вместе с обновлением Сообщества.",
+      "draftsEmpty": "Облачных черновиков пока нет. Сохраните работу, будучи в системе, — и она появится здесь.",
+      "loading": "Загружаем черновики…",
+      "refresh": "Обновить",
+      "delete": "Удалить",
+      "confirmDelete": "Удалить этот облачный черновик навсегда? Это действие нельзя отменить.",
+      "confirmWithdraw": "Отозвать эту работу навсегда? Она сразу исчезнет из Сообщества, и восстановить её будет нельзя. Лицензия, уже предоставленная существующим ремиксам, остаётся в силе.",
+      "publish": "Опубликовать",
+      "withdraw": "Отозвать",
+      "backupLabel": "Резервные письма",
+      "backupModes": {
+        "off": "Выкл.",
+        "publish_only": "При публикации",
+        "save_and_publish": "При каждом сохранении и публикации"
+      },
+      "backupNotice": "Резервное письмо содержит полный файл .fractal.json: все параметры, вид и пользовательские формулы. FractalPark не сможет отозвать его после отправки.",
+      "backupConfirm": "Понятно, включить",
+      "backupCancel": "Не сейчас",
+      "publishedMeta": "{license} · опубликовано {date}",
+      "withdrawnMeta": "Отозвано {date}",
+      "hiddenMeta": "Скрыто модерацией · опубликовано {date} · в приложении эту запись видите только вы",
+      "meta": "ред. {revision} · {date}",
+      "errors": {
+        "unavailable": "Облачная синхронизация сейчас недоступна. Попробуйте снова через минуту.",
+        "quota_exceeded": "Ваше облачное хранилище переполнено. Удалите несколько черновиков, чтобы освободить место.",
+        "offline": "Похоже, вы не в сети.",
+        "not_found": "Этот черновик больше не существует.",
+        "unauthenticated": "Ваша сессия истекла. Войдите снова.",
+        "invalid_envelope": "Не удалось проверить эту работу для облака.",
+        "rate_limited": "Немного сбавьте темп и попробуйте снова."
+      },
+      "unavailableHint": "Облачная синхронизация сейчас недоступна. Ваши черновики в безопасности; попробуйте снова чуть позже."
+    },
+    "publish": {
+      "title": "Опубликовать в Сообществе",
+      "description": "Публикация навсегда фиксирует эту версию. То, что вы подтвердите здесь, увидят все.",
+      "displayNameLabel": "Отображаемое имя",
+      "displayNamePlaceholder": "Как вы представлены как автор",
+      "displayNameHint": "Отображается на всех ваших публикациях. Вы можете изменить его позже; уже опубликованные работы сохранят прежнее имя.",
+      "titleLabel": "Заголовок",
+      "descriptionLabel": "Описание (необязательно)",
+      "attestation": "Я создал(а) эту работу и лицензирую полученное изображение по CC BY 4.0, чтобы другие могли делиться им и создавать ремиксы с указанием авторства.",
+      "immutableHint": "После публикации работу и её тексты нельзя изменить. Дальнейшая работа продолжается через ремикс; отзыв необратим.",
+      "cancel": "Отмена",
+      "confirm": "Опубликовать",
+      "publishing": "Публикуем…",
+      "errors": {
+        "rateLimited": "Сегодня вы уже много опубликовали. Попробуйте снова завтра.",
+        "revisionConflict": "Черновик изменился с момента открытия диалога. Закройте его и попробуйте снова.",
+        "validation": "Проверьте отображаемое имя, заголовок и описание, затем попробуйте снова.",
+        "offline": "Похоже, вы не в сети.",
+        "generic": "Не удалось опубликовать. Ничего не опубликовано; черновик остаётся у вас.",
+        "formulaCompile": "Исходный код формулы не прошёл проверку на сервере. Откройте черновик, исправьте формулу и попробуйте снова.",
+        "formulaBuiltinConflict": "Идентификатор формулы совпадает со встроенной формулой. Переименуйте её в «Мои формулы» и попробуйте снова."
+      },
+      "formulaNoticeTitle": "Эта работа использует вашу пользовательскую формулу",
+      "formulaNoticeBody": "Публикация делает исходный код формулы общедоступным по лицензии MIT: любой может читать, копировать и использовать его. Публично отображаемые имя и описание формулы берутся из метаданных формулы, а не из этой формы. Полученное изображение остаётся под CC BY 4.0.",
+      "formulaAttestation": "Я явно соглашаюсь опубликовать зафиксированный исходный код пользовательской формулы по лицензии MIT.",
+      "formulaNoticeLink": "Прочитать лицензию MIT на opensource.org",
+      "licensePendingNote": "Не удалось предварительно проверить этот черновик. Лицензирование окончательно определяется сервером при публикации: работы без пользовательских формул публикуются под CC BY 4.0; пользовательская формула добавляет лицензию MIT для своего исходного кода."
+    },
+    "community": {
+      "backToCommunity": "← Сообщество",
+      "byline": "автор {author} · {date}",
+      "thumbnailPending": "Изображение работы готовится серверным конвейером рендеринга",
+      "licenseLabel": "Лицензия:",
+      "licenseValue": "Слой фрактального изображения распространяется под",
+      "sourceLabel": "Источник:",
+      "sourcePublication": "Ремикс другой работы из Сообщества",
+      "sourcePreset": "Ремикс из коллекции FractalPark ({id})",
+      "sourceFormula": "Ремикс формулы {id}",
+      "remix": "Ремикс",
+      "remixing": "Создаём ремикс…",
+      "signInToSyncRemix": "Войдите, чтобы сохранять ремиксы в облаке",
+      "copyLink": "Копировать ссылку",
+      "copied": "Скопировано",
+      "reportPrefix": "Что-то не так с этой работой? Пожаловаться или запросить удаление:",
+      "loadMore": "Загрузить ещё",
+      "loading": "Загрузка…",
+      "emptyTitle": "Здесь пока пусто",
+      "emptyDescription": "Здесь появятся опубликованные работы. Ваша может стать первой.",
+      "errors": {
+        "generic": "Не получилось. Попробуйте снова.",
+        "loadFailed": "Не удалось загрузить список Сообщества. Попробуйте снова через минуту."
+      },
+      "licenseFormulaValue": "Работа под",
+      "formulaSourceLabel": "Исходный код формулы",
+      "formulaSourceValue": "«{name}» (FRM, MIT)",
+      "formulaSourceDownload": "Скачать .frm",
+      "licenseFormulaSourceValue": "исходный код формулы под"
+    },
+    "accountDeletion": {
+      "title": "Удаление аккаунта",
+      "intro": "Удаление аккаунта необратимо. Мы запросим новый код из письма и финальное подтверждение.",
+      "start": "Начать удаление аккаунта",
+      "working": "Работаем…",
+      "codeSent": "Мы отправили новый 6-значный код на вашу почту. Введите его, чтобы продолжить.",
+      "codePlaceholder": "123456",
+      "verify": "Подтвердить",
+      "cancel": "Отмена",
+      "confirmWarning": "Последний шаг. Введите email аккаунта, чтобы подтвердить окончательное удаление:",
+      "consequenceDrafts": "Все облачные черновики будут удалены навсегда.",
+      "consequencePublications": "Опубликованные работы будут отозваны, от них останется только запись об авторстве.",
+      "consequenceLicense": "Лицензии, уже предоставленные ремиксам, остаются в силе.",
+      "emailPlaceholder": "you@example.com",
+      "confirmButton": "Удалить мой аккаунт навсегда",
+      "doneTitle": "Аккаунт удалён",
+      "doneBody": "Ваш аккаунт и личные данные удаляются. Вы вышли из системы.",
+      "errors": {
+        "otp_invalid": "Код не подошёл. Проверьте его и попробуйте снова.",
+        "step_up_expired": "Сессия кода истекла. Начните заново, чтобы получить новый код.",
+        "account_deleting": "Удаление аккаунта уже выполняется.",
+        "rate_limited": "Слишком много попыток. Подождите немного и попробуйте снова.",
+        "unauthenticated": "Войдите снова, чтобы продолжить.",
+        "generic": "Что-то пошло не так. Попробуйте снова."
+      }
+    }
+  },
+  "common": {
+    "nav": {
+      "drift": "Drift",
+      "gallery": "Галерея",
+      "formulas": "Формулы",
+      "explore": "Обзор",
+      "about": "О проекте",
+      "tagline": "платформа с открытым исходным кодом для изучения и создания фракталов, где формула — в центре всего",
+      "signIn": "Войти",
+      "signOut": "Выйти",
+      "cloudUnavailable": "Облако недоступно",
+      "menu": "Меню"
+    },
+    "language": {
+      "en": "EN",
+      "zh": "Китайский",
+      "label": "Язык"
+    },
+    "footer": {
+      "copyright": "© 2026 FractalPark. Распространяется по лицензии MIT.",
+      "contact": "Контакты:",
+      "privacy": "Конфиденциальность",
+      "terms": "Условия",
+      "rules": "Правила сообщества"
+    }
+  },
+  "gallery": {
+    "title": "Галерея",
+    "viewsLabel": "Виды галереи",
+    "collection": {
+      "title": "Коллекция FractalPark",
+      "description": "Изучите полную коллекцию опубликованных работ FractalPark."
+    },
+    "community": {
+      "title": "Сообщество",
+      "description": "Работы авторов, опубликованные по лицензии CC BY 4.0. Откройте работу, чтобы превратить её в собственный черновик-ремикс."
+    },
+    "mine": {
+      "title": "Мои работы",
+      "description": "Работы, сохранённые в вашей облачной библиотеке.",
+      "create": "Создать в Обзоре",
+      "actions": "Действия для {name}"
+    },
+    "contextMenu": {
+      "restore": "Открыть в Обзоре",
+      "rename": "Переименовать",
+      "delete": "Удалить"
+    },
+    "card": {
+      "deleteConfirm": {
+        "title": "Удалить фрактал?",
+        "description": "Это действие нельзя отменить.",
+        "confirm": "Удалить",
+        "cancel": "Отмена"
+      },
+      "renameTitle": "Переименовать фрактал",
+      "renameCancel": "Отмена",
+      "renameSave": "Сохранить"
+    }
+  },
+  "formulas": {
+    "index": {
+      "breadcrumbLabel": "Хлебные крошки",
+      "breadcrumbHome": "Главная",
+      "breadcrumb": "Формулы",
+      "eyebrow": "Атлас формул",
+      "title": "Атлас формул",
+      "intro": "Изучите полный каталог FractalPark: 94 встроенные формулы в семи семействах. Начните с канонического вида, пройдите один из 21 подробного профиля с руководством или научитесь писать собственные формулы на FRM.",
+      "stats": {
+        "formulas": "Формулы",
+        "families": "Семейства",
+        "guides": "Профили с руководствами"
+      },
+      "capabilities": {
+        "eyebrow": "Создано для исследования",
+        "title": "Один каталог — множество способов творить",
+        "intro": "Каждая запись основана на том же каталоге формул и утверждённом состоянии по умолчанию, которые использует интерактивный Обзор.",
+        "items": {
+          "realtime": {
+            "title": "WebGL в реальном времени",
+            "description": "Открывайте любую формулу прямо в браузере и исследуйте её границу с рендерингом на GPU."
+          },
+          "canonical": {
+            "title": "Канонические стартовые виды",
+            "description": "Каждый раздел создаётся из авторитетного документа формулы, включая её вид, параметры и раскраску."
+          },
+          "server": {
+            "title": "Каталог, доступный серверу",
+            "description": "Все семь семейств и 94 раздела остаются доступными в исходном HTML без поиска и фильтрации на стороне клиента."
+          }
+        }
+      },
+      "families": {
+        "eyebrow": "Семь семейств",
+        "title": "Выберите математический характер",
+        "intro": "Семейства группируют формулы по структуре итераций и визуальному поведению. Количество берётся непосредственно из текущего каталога встроенных формул.",
+        "descriptions": {
+          "classic": "Квадратичные, полиномиальные, Жюлиа, мультикорн и другие базовые формулы времени убегания.",
+          "burning-ship": "Свёрнутые отображения абсолютной величины с острыми корпусами, гребнями и пламеподобными границами.",
+          "newton": "Сходящиеся системы поиска корней, делящие плоскость на цветные бассейны.",
+          "magnet": "Рациональные отображения с полюсами, плотными границами и структурами магнитных бассейнов.",
+          "phoenix": "Итерации с памятью, где предыдущее состояние орбиты определяет следующий шаг.",
+          "transcendental": "Экспоненциальные, тригонометрические, гиперболические и логарифмические комплексные отображения.",
+          "exotic": "Обратные, рациональные, инверсионные, тетрационные и другие гибридные конструкции."
+        }
+      },
+      "frm": {
+        "eyebrow": "Создайте свою",
+        "title": "Изучайте и пишите формулы на FRM",
+        "description": "FRM — это проверенный текстовый способ создания формул в FractalPark. Прочитайте руководство по совместимости, изучите примеры, прошедшие проверку компиляции, затем напишите и просмотрите формулу локально в отдельном редакторе.",
+        "learn": "Изучить FRM",
+        "openEditor": "Открыть редактор формул"
+      },
+      "guides": {
+        "eyebrow": "21 избранная формула",
+        "title": "Набор подробных руководств",
+        "intro": "Эти 21 формула — зафиксированный набор руководств, отобранный из опубликованных работ FractalPark. Каждое руководство объединяет оригинальный двуязычный контекст с тем же каноническим состоянием, которое используется в его изображении и разделе Обзора.",
+        "read": "Читать руководство",
+        "explore": "Открыть канонический вид"
+      },
+      "directory": {
+        "eyebrow": "Полный каталог",
+        "title": "Все 94 формулы",
+        "intro": "Полный каталог сгруппирован по семействам и рендерится на сервере. Каждая ссылка открывает формулу с её каноническим локализованным состоянием в Обзоре.",
+        "familyCount": "{count, plural, one {# формула} few {# формулы} many {# формул} other {# формул}}",
+        "backToFamilies": "Обзор семейства",
+        "guideBadge": "Руководство"
+      },
+      "cta": {
+        "title": "Начните с формулы или напишите свою",
+        "description": "Используйте Обзор для встроенных формул или откройте локальный FRM Editor, если хотите задать итерацию самостоятельно.",
+        "explore": "Открыть Обзор",
+        "editor": "Открыть редактор формул"
+      }
+    },
+    "guide": {
+      "breadcrumbLabel": "Хлебные крошки",
+      "breadcrumbHome": "Главная",
+      "breadcrumbFormulas": "Формулы",
+      "openExplorer": "Открыть в Обзоре",
+      "viewArtwork": "Посмотреть работу",
+      "difficulty": {
+        "easy": "Легко",
+        "medium": "Средне",
+        "hard": "Сложно"
+      },
+      "sections": {
+        "overview": "Обзор",
+        "mathematics": "Математика",
+        "history": "История",
+        "visualCharacteristics": "Визуальные особенности",
+        "parameters": "Параметры",
+        "remix": "Ремиксы и примеры",
+        "related": "Похожие формулы",
+        "faq": "Часто задаваемые вопросы",
+        "references": "Ссылки"
+      },
+      "parameterLabels": {
+        "scale": "Масштаб",
+        "memory": "Память"
+      },
+      "remix": {
+        "title": "Начните с канонического документа",
+        "description": "Откройте то же утверждённое состояние формулы, которое используется в этом руководстве, а затем измените вид, раскраску, трансформации или анимацию в интерактивном Обзоре.",
+        "cta": "Создать ремикс в Обзоре"
+      }
+    },
+    "frmGuide": {
+      "eyebrow": "Язык формул FRM",
+      "title": "Создавайте фракталы на FRM",
+      "intro": "Изучите проверенное подмножество FRM FractalPark, поймите, как исходный код превращается в GPU-шейдер, и соберите три рабочие формулы на тех же примерах, что использует редактор.",
+      "contentsLabel": "На этой странице",
+      "copy": {
+        "copy": "Копировать",
+        "copied": "Скопировано",
+        "error": "Не удалось скопировать"
+      },
+      "sections": {
+        "what-is-frm": {
+          "title": "Что такое FRM",
+          "body": [
+            "FRM — это компактный текстовый способ описания итеративного фрактала. Формула задаёт начальное состояние, вычисление, повторяемое для каждой орбиты, и условие, определяющее, продолжается ли итерация.",
+            "Формат вырос из экосистемы Fractint, где файлы формул позволяли обмениваться экспериментами без пересборки программы рендеринга. FractalPark переносит эту идею создания формул в браузерный рабочий процесс, документируя собственное проверенное подмножество вместо заявления о полной совместимости."
+          ],
+          "historyPrefix": "Об истоках и истории более широкого проекта см.",
+          "historyLink": "сайт проекта Fractint"
+        },
+        "support": {
+          "title": "Поддержка FRM в FractalPark",
+          "intro": "FractalPark токенизирует, разбирает, проверяет и компилирует продуманное подмножество FRM. Таблица разделяет конструкции, которые работают напрямую, конструкции с документированной семантикой FractalPark и конструкции, которые текущий рабочий процесс не может сохранить.",
+          "table": {
+            "level": "Уровень",
+            "meaning": "Значение",
+            "scope": "Область в v0.4.13"
+          },
+          "levels": {
+            "supported": {
+              "label": "Поддерживается",
+              "meaning": "Покрыто тестами компилятора и пригодно к использованию без семантических оговорок."
+            },
+            "adapted": {
+              "label": "Адаптировано",
+              "meaning": "Принимается с документированным семантическим отличием или как расширение FractalPark."
+            },
+            "unsupported": {
+              "label": "Не поддерживается",
+              "meaning": "Не сохраняется текущим компилятором или файловым рабочим процессом; отклоняется, а не молча переписывается."
+            }
+          },
+          "items": {
+            "single-formula": "Одно объявление формулы на исходный документ",
+            "core-sections": "секции init, loop и bailout",
+            "variables": "присваивания и пользовательские переменные",
+            "expressions": "вещественные и комплексные литералы; арифметические, сравнительные, логические, унарные выражения и выражения величины",
+            "conditionals": "ветви if / elseif / else / endif",
+            "builtins": "z, c, pixel, zPrev, p1–p5, константы и проверенные встроенные функции",
+            "comments": "комментарии FRM",
+            "diagnostics": "структурированная диагностика и сопоставление исходного кода FRM с GLSL",
+            "ismand": "ismand соответствует текущему режиму выполнения Мандельброт/Жюлиа в FractalPark",
+            "function-slots": "fn1–fn4 используют диспетчеризацию функций на этапе компиляции",
+            "native-directives": "@mode: native, @default-view и @default-coloring — это расширения FractalPark; директивы по умолчанию действуют только в нативном режиме",
+            "multi-formula-files": "выбор одной из нескольких формул в одном файле",
+            "dialect-conversion": "автоматическое преобразование классических диалектов Fractint",
+            "arbitrary-directives": "произвольные директивы исходного кода",
+            "non-ascii-identifiers": "не-ASCII идентификаторы",
+            "user-functions": "пользовательские функции или макросы",
+            "preprocessor": "возможности препроцессора",
+            "rejected-constructs": "любые конструкции, отклоняемые текущим конвейером компиляции"
+          },
+          "disclaimer": "Это проверенный базовый уровень совместимости, а не заявление о полной совместимости с Fractint. Когда меняется компилятор, эта матрица и её тесты должны меняться вместе."
+        },
+        "anatomy": {
+          "title": "Анатомия формулы",
+          "intro": "FRM-формула FractalPark состоит из одного именованного объявления и трёх явных секций. Вместе они определяют переход состояния для каждого пикселя.",
+          "parts": {
+            "init": "Выполняется один раз для пикселя. Здесь задайте начальное значение орбиты и вспомогательные переменные.",
+            "loop": "Выполняется один раз за итерацию. Обновите z и любое состояние, необходимое следующей итерации.",
+            "bailout": "Возвращает условие продолжения орбиты. Когда оно становится ложным, точка вышла за пределы."
+          },
+          "note": "Названия секций структурны, а не являются комментариями: пропуск или опечатка в них приводит к диагностическому сообщению."
+        },
+        "syntax": {
+          "title": "Руководство по синтаксису",
+          "intro": "Язык намеренно остаётся небольшим: выражения описывают комплексную арифметику, операторы обновляют состояние орбиты, а управляющие конструкции выбирают между обновлениями.",
+          "topics": {
+            "sections": {
+              "title": "Объявление и секции",
+              "body": "Заключите одну именованную формулу в фигурные скобки, затем напишите init:, loop: и bailout: в этом порядке."
+            },
+            "values": {
+              "title": "Значения и переменные",
+              "body": "Используйте вещественные числа, например 0.15, комплексные пары, например (0.05, -0.02), встроенные значения орбиты или собственные присвоенные переменные."
+            },
+            "operators": {
+              "title": "Выражения",
+              "body": "Арифметические операции, степени, сравнения, логические операторы, унарные операторы, синтаксис величины |z| и проверенные комплексные функции можно комбинировать."
+            },
+            "control-flow": {
+              "title": "Управляющие конструкции",
+              "body": "Используйте if, elseif, else и endif, когда обновление орбиты зависит от условия. Блоки должны быть сбалансированы."
+            },
+            "builtins": {
+              "title": "Встроенные элементы",
+              "body": "Основные имена включают z, c, pixel, zPrev, p1–p5, pi, e, maxit, ismand, fn1–fn4 и функции, покрытые тестами компилятора."
+            },
+            "comments": {
+              "title": "Комментарии и директивы",
+              "body": "Комментарии с точкой с запятой документируют исходный код. Распознаваемые директивы @ настраивают нативное поведение FractalPark; неизвестные директивы не игнорируются молча."
+            }
+          }
+        },
+        "pipeline": {
+          "title": "Конвейер: FRM → AST → GLSL",
+          "intro": "FractalPark не вставляет текст FRM в шейдер. Он прогоняет исходный код через поэтапный компилятор, чтобы синтаксис, смысл, сгенерированный код и диагностика оставались связанными.",
+          "steps": {
+            "source": {
+              "title": "Исходный код FRM",
+              "body": "Точный текст из редактора, вставки или локального файла является авторитетными входными данными."
+            },
+            "tokens": {
+              "title": "Токены лексера",
+              "body": "Лексер распознаёт имена, числа, операторы, маркеры секций, комментарии и директивы, сохраняя позиции в исходном коде."
+            },
+            "ast": {
+              "title": "Разобранное AST",
+              "body": "Парсер строит структурированное дерево формулы и сообщает о некорректных объявлениях, выражениях и блоках управления."
+            },
+            "validation": {
+              "title": "Проверка и каноническая форма",
+              "body": "Валидатор проверяет имена, типы, секции и поддерживаемую семантику перед созданием канонической формулы."
+            },
+            "glsl": {
+              "title": "GLSL и карта исходного кода",
+              "body": "Генерация кода создаёт шейдерные функции и фиксирует сопоставления сгенерированного GLSL с исходным кодом FRM."
+            },
+            "plugin": {
+              "title": "Плагин формулы",
+              "body": "Успешная компиляция превращается в тот же контракт плагина формулы, который используют рендерер и система сборки шейдеров."
+            }
+          },
+          "note": "Общий контракт компилятора держит Обзор, отдельный редактор, сохранённые пользовательские формулы, примеры и тесты на одном пути реализации."
+        },
+        "tutorials": {
+          "title": "Пошаговые уроки",
+          "intro": "Эти примеры идут от простейшей квадратичной формулы к параметрам и обратной связи с состоянием. Каждый блок исходного кода взят непосредственно из общего реестра примеров и компилируется во время тестов.",
+          "lesson": "Урок {number}",
+          "openInEditor": "Открыть во FRM Editor",
+          "goals": {
+            "starter-brot": "В центре внимания: объявление и структура init / loop / bailout. Меняйте показатель степени или порог убегания только после того, как эта версия скомпилируется.",
+            "parameter-drift": "В центре внимания: слоты параметров p1 и p2, комплексный литерал и cabs(z) как явная функция величины.",
+            "orbit-echo": "В центре внимания: zPrev как предыдущее состояние орбиты. Обратная связь добавляет память без введения второй вручную управляемой переменной состояния."
+          },
+          "editorNote": "FRM Editor открывает эти же проверенные компиляцией примеры по стабильному идентификатору. Исходный код формулы остаётся локальным и никогда не встраивается в URL."
+        },
+        "diagnostics": {
+          "title": "Ошибки и диагностика",
+          "intro": "Компиляция останавливается на самой ранней небезопасной стадии и сообщает сообщения, привязанные к исходному коду. Отклонённая конструкция никогда не переписывается во что-то лишь похожее.",
+          "items": {
+            "lexer": {
+              "title": "Лексические ошибки",
+              "body": "Неожиданные символы и неподдерживаемые идентификаторы сообщаются с указанием строки и столбца."
+            },
+            "parser": {
+              "title": "Ошибки разбора",
+              "body": "Некорректные секции, выражения или блоки управления диагностируются до семантической проверки."
+            },
+            "validator": {
+              "title": "Ошибки проверки",
+              "body": "Неизвестные переменные, недопустимые присваивания, несоответствие типов и неподдерживаемая семантика не позволяют генерировать код."
+            },
+            "source-map": {
+              "title": "Сопоставление исходного кода шейдера",
+              "body": "Сгенерированный GLSL сохраняет сопоставления, позволяющие связать сбой компиляции шейдера с исходной позицией FRM."
+            }
+          },
+          "note": "Исправляя ошибку, начните с первого сообщения: более поздняя диагностика может быть следствием того же отсутствующего токена или недопустимого выражения."
+        },
+        "next-steps": {
+          "title": "Примеры, следующие шаги и ссылки",
+          "exploreTitle": "Посмотрите на рендерер в контексте",
+          "exploreBody": "Откройте Обзор, чтобы сравнить поведение встроенных формул, раскраску, трансформации, анимацию и элементы управления экспортом, прежде чем писать собственную формулу.",
+          "exploreCta": "Открыть Обзор",
+          "editorNote": "Используйте отдельный FRM Editor, чтобы компилировать, просматривать, импортировать, скачивать и сохранять локальные формулы, прежде чем передавать их в Обзор.",
+          "referencesTitle": "Ссылки",
+          "referencesIntro": "Исторический контекст и детали реализации указаны отдельными ссылками, чтобы руководство могло отличать наследие Fractint от текущего контракта компилятора FractalPark.",
+          "references": {
+            "fractint-project": "Проект Fractint и его история",
+            "fractalpark-frm-source": "Исходный код компилятора FRM FractalPark",
+            "fractalpark-repository": "Репозиторий исходного кода FractalPark"
+          }
+        },
+        "sharing": {
+          "title": "Обмен и публикация",
+          "intro": "Написанная вами формула приватна, пока вы не решите иначе. Есть три способа её распространения — каждый явный, ни один не молчаливый.",
+          "points": {
+            "private": {
+              "title": "Приватно по умолчанию",
+              "body": "Формулы хранятся в вашей облачной библиотеке и видны только вам. Сохранённые работы содержат копию исходного кода формулы внутри черновика, поэтому они всегда открываются в том виде, в котором вы их оставили."
+            },
+            "download": {
+              "title": "Скачайте файл .frm",
+              "body": "Ваша формула — это обычный текст. Скачайте её из раздела «Мои формулы» в любое время и храните собственную копию — без запросов на экспорт и ожидания."
+            },
+            "publish": {
+              "title": "Опубликуйте работу, поделитесь исходным кодом",
+              "body": "Публикация работы, использующей вашу формулу, делает исходный код формулы общедоступным по лицензии MIT: любой может читать, копировать и развивать его. Страница сообщества показывает имя формулы из её метаданных и предлагает исходный код для скачивания. Для этой публикации действие необратимо."
+            }
+          },
+          "mitPrefix": "Полный текст",
+          "mitLink": "лицензии MIT находится на opensource.org",
+          "mitSuffix": "."
+        }
+      }
+    },
+    "entries": {
+      "mandelbrot": {
+        "title": "Mandelbrot Set",
+        "summary": "Карта квадратичного семейства z² + c: выберите точку, начните с нуля и наблюдайте, как её орбита решает исход.",
+        "overview": "Множество Мандельброта — это карта целого семейства, а не одна кривая, заданная одним уравнением. Выберите точку c на комплексной плоскости. Начните с z = 0, возведите в квадрат то, что у вас есть, прибавьте c и повторяйте. Орбита — это получающийся ряд значений. Некоторые остаются в ограниченной области; другие устремляются к бесконечности. Значения c из первой группы и образуют множество.\n\nОно также служит указателем для квадратичных множеств Жюлиа. Зафиксируйте одно c — и получите одно множество Жюлиа; оно связно ровно тогда, когда c лежит в множестве Мандельброта. Переместитесь на несколько пикселей по плоскости параметра — и поведение может измениться от устоявшегося повторяющегося цикла до ухода на бесконечность.\n\nНа привычной картинке множество обычно показано чёрным. Окружающий цвет — не его дополнительная часть. Он фиксирует, как скоро уходящая орбита пересекает выбранный порог, словно линии уровня, проведённые вычислением.",
+        "imageAlt": "Чёрное множество Мандельброта на тёплом золотом фоне с тонкой голубо-белой каймой на границе",
+        "imageCaption": "Полное множество: главная кардиоида, присоединённые «почки» и ветвящийся край, окрашенный по времени ухода на бесконечность.",
+        "math": {
+          "iteration": {
+            "label": "Give one parameter its turn",
+            "explanation": "Choose a complex number c, then keep it fixed. The orbit starts at z₀ = 0; each new value is the old one squared, with c added back in.\n\nTry two anchors. If c = 0, the orbit stays at zero forever, so 0 belongs to the Mandelbrot set. If c = 1, it runs 0, 1, 2, 5, 26, … and escapes, so 1 is out. In this quadratic map, once the magnitude of z exceeds 2, there is no return: the orbit diverges. A renderer treats that as its escape signal and stops at a chosen iteration limit."
+          }
+        },
+        "visualCharacteristics": "From a distance, first comes the heart-shaped main cardioid, then its round bulbs. The largest bulb marks a stable two-step cycle; smaller ones collect other repeating cycles. Follow the edge and the smooth arc frays into antennae, spirals, threads, and tiny copies of the whole set.\n\nThe boundary never finishes. Zooming brings out more structure, though not exact photocopies: local dynamics stretch and bend every return. The broad black interiors are relatively calm. At the fine edge, the slightest nudge to c can send an orbit elsewhere.",
+        "faq": {
+          "membership": {
+            "question": "What gets a point into the Mandelbrot set?",
+            "answer": "c belongs when the orbit from zero remains bounded under iteration. On a computer, |z| exceeding 2 settles it: the orbit escapes. Points that have not escaped by the iteration limit are drawn as members, although a point tight against the boundary may need many more steps for a dependable verdict."
+          },
+          "julia-mode": {
+            "question": "Where do Julia sets enter?",
+            "answer": "For a Julia set, c stays fixed while the starting point z₀ ranges across the image. For the Mandelbrot set, zero stays fixed and c moves instead. In the quadratic family, the link is exact: the Julia set for z² + c is connected if and only if c belongs to the Mandelbrot set."
+          }
+        },
+        "history": "The story starts before anyone could print a detailed parameter plane. Around 1917–1918, Pierre Fatou and Gaston Julia laid foundations for iterating complex functions. Fatou was a French mathematician and astronomer at the Paris Observatory; Julia’s 1918 memoir on iterated rational functions became an early landmark.\n\nThere is no uncontested “discovery moment.” At the 1978 Stony Brook conference, Robert W. Brooks and J. Peter Matelski were studying Kleinian groups when they published an early image now recognized as this same parameter locus. Their question was different, and the rough image did not yet carry the interpretation that later made the set famous.\n\nBenoit B. Mandelbrot, at IBM’s Thomas J. Watson Research Center, used computer graphics to examine related quadratic parameter spaces and published his study in 1980. He placed the images in the wider frame of fractal geometry, making the object hard to ignore on its own terms. Mandelbrot was born in Warsaw, educated in France, spent 35 years at IBM, and later taught at Yale.\n\nIn the early 1980s, Adrien Douady and John H. Hubbard built the modern mathematical theory of the set, including the proof of its connectedness. Their work helped establish the name “Mandelbrot set.” Douady, a leading French mathematician in complex dynamics, died in 2006; Hubbard’s Cornell faculty page remains available and describes his work on iterative systems and computer-assisted mathematical exploration."
+      },
+      "lambda": {
+        "title": "Lambda Fractal",
+        "summary": "Центрированное комплексное логистическое отображение: один параметр одновременно растягивает орбиту и заворачивает её на себя.",
+        "overview": "На вещественной прямой логистическое отображение стало небольшой лабораторией хаоса. Пусть его значения блуждают по комплексной плоскости — и оно раскрывается в λ-фрактал (Lambda). FractalPark использует центрированную форму: c масштабирует два взаимодополняющих множителя, тянущих в противоположные стороны.\n\nАффинная замена координат делает эту формулу сопряжённой стандартному квадратичному отображению z² + c. Она разделяет черты семейства множества Мандельброта, но не его очертания: здесь диск стоит там, где у множества Мандельброта кардиоида, а присоединённые «почки» располагаются по собственным периодам.\n\nЗдесь c вращает две рукоятки сразу — рост и поворот. Зафиксируйте его для вида Жюлиа, затем слегка сдвиньте: почти круглая область притяжения может превратиться в границу из ветвей и спиралей.",
+        "imageAlt": "Чёрное множество Λ на сине-зелёном пространстве, край которого окутан ветвящимися нитями",
+        "imageCaption": "Плоскость параметра центрированного комплексного логистического отображения: дискообразное ядро, присоединённые «почки» и нитевидный край.",
+        "math": {
+          "iteration": {
+            "label": "Complex logistic iteration",
+            "explanation": "At each step, shift the current value halfway either side of center, multiply (z + ½) by (½ − z), then scale the product with c. The two factors make ¼ − z², so the same step reads z → c(¼ − z²).\n\nTry c = 2 with z₀ = 0. The first step is z₁ = 2 × (½) × (½) = 0.5; the next is z₂ = 2 × 1.0 × 0 = 0. The orbit now shuttles between 0 and 0.5: a stable 2-cycle. Turn c up to 4 and the pull changes: z₁ = 4 × ½ × ½ = 1, then z₂ = 4 × 1.5 × (−0.5) = −3. The orbit diverges, so c = 4 lies outside the bounded set. In Julia mode, hold c still and vary z₀ across the image; the dividing line between trapped and escaping appears."
+          }
+        },
+        "visualCharacteristics": "At full scale, the Lambda set begins with an almost circular body—the countershape to the Mandelbrot set’s heart-like cardioid. Smaller bulbs cling to the disk; each marks a stable periodic cycle, and the largest marks a period-2 cycle. Beyond them lie branching channels, tiny disk islands, and spirals.\n\nThe islands give away the difference: they are round here, not cardioid-shaped, because the algebra has changed. In Julia mode, c can select a filled disk or a many-armed vortex.",
+        "faq": {
+          "parameter-role": {
+            "question": "What does lambda control?",
+            "answer": "The complex parameter c—often written λ in the literature—sets both the orbit’s growth rate and its rotation. Its magnitude controls the strength of expansion or contraction; its argument supplies the turn at each step."
+          },
+          "julia-mode": {
+            "question": "Why does Julia mode look especially varied?",
+            "answer": "Fix c and the question shifts to the starting point: does it stay bounded or escape? With linear and quadratic terms in the same formula, the border may be a smooth closed curve or a heavily branched connected set. The chosen c decides what the renderer reveals."
+          }
+        },
+        "history": "The map z → λz(1 − z) began as the complex extension of the real logistic map, studied extensively in the 1970s as a simple model of population dynamics and chaotic behavior. In 1980, Benoit B. Mandelbrot took the iteration to unrestricted complex λ and z. His paper, \"Fractal Aspects of the Iteration of z → λz(1−z) for Complex λ and z,\" introduced the λ-plane parameter set—now the Lambda fractal—and placed it in the broader theory of iterated rational maps.\n\nThe groundwork was already there. Around 1917–1918, Pierre Fatou and Gaston Julia developed the general theory of iterated rational functions that later made families such as the logistic map available to explore. In 1986, Heinz-Otto Peitgen and Peter H. Richter brought the Lambda fractal to a wider audience in \"The Beauty of Fractals,\" with some of the first widely seen computer-generated images of the set."
+      },
+      "mandelbox": {
+        "title": "Mandelbox",
+        "summary": "Отображение «складывание и масштабирование», вдохновлённое Mandelbox Тома Лоу 2010 года: отражения от куба, радиальное складывание и масштабирование превращают итерацию в комнаты и стены.",
+        "overview": "Большинство фрактальных формул начинаются с возведения в квадрат, как в z² + c. Mandelbox выбирает другой путь: складывание куба возвращает координаты за пределами фиксированного куба к его граням; радиальное складывание (складывание шара) затем инвертирует или масштабирует точку в зависимости от её расстояния до начала координат; равномерное масштабирование растягивает или сжимает результат, прежде чем будет прибавлено c. Повторяйте последовательность — и структуру строят складывания, а не возведение в квадрат.\n\nОтражения и инверсии не требуют конкретного числа измерений, поэтому конструкцию можно построить в любом из них. FractalPark отображает двумерный вариант, сохраняющий то же ядро «складывание и масштабирование» на комплексной плоскости.\n\nЭта карта параметра не смягчается до привычных кривых многочленов. Она высекает камеры с резкими гранями, вложенные укрепления и проходы, будто взятые с чертежа. Её граница разделяет ограниченные орбиты — те, что остаются в пределах досягаемости, — и уходящие. Приблизьтесь — и зазубренный самоподобный край воспроизводит мотив куба в меньшем масштабе.",
+        "imageAlt": "Двумерная карта Mandelbox с камерами с резкими гранями и вложенными крепостными углублениями в холодных синих тонах",
+        "imageCaption": "Карта FractalPark, вдохновлённая Mandelbox: прямые стены, прямые углы и слоистые углубления, словно интерьер кристаллической крепости.",
+        "math": {
+          "iteration": {
+            "label": "Fold-and-scale iteration",
+            "explanation": "Each round puts the orbit through four moves: box fold, radial fold, scale, then a shift by c.\n\nThe box fold handles one coordinate at a time. Take a component a of z. Above 1, it reflects as a → 2 − a; below −1, as a → −2 − a. Components in [−1, 1] stay put. The outer plane folds back into the central square.\n\nNext comes the ball fold, checking the squared magnitude r² = |z|². If r² < 0.25 (|z| < 0.5), scale the point by 4 and push it away from the origin. If 0.25 ≤ r² < 1, invert it through the unit sphere: z → z/r², so a radius of m becomes 1/m. Points with r² ≥ 1 stay put. The near points move outward; the middle band turns across the unit sphere. These moves make the unsettled interface behind the Mandelbox's boxy layers.\n\nTry z₀ = (1.5, 0) with scale s = 2. The box fold reflects x = 1.5 to x = 0.5. Since r² = 0.25 falls in the middle band, the ball fold inverts it: z = z/r² = (2, 0). Scaling by 2 gives (4, 0), and adding c completes the step. Start at the origin instead and you are in the innermost band: the ball fold multiplies it by 4—still the origin—so the first iterate lands exactly on c."
+          }
+        },
+        "visualCharacteristics": "Repeated folds produce hard-edged chambers, nested fortifications, and corridors with depth. The default parameter s = 2 gives the structure straight walls, right-angle corners, and layered recesses like the inside of a crystalline fortress.\n\nAt finer scales, the box theme returns: small copies of the overall shape appear in recesses and along boundaries, all with the same rectilinear geometry. The canonical image uses cool blues and cyans, which suit the mechanical geometry of the folds.",
+        "parameters": {
+          "scale": "Scale sets how strongly the folded orbit expands or reverses before c is added. A scale of 2 (the default) roughly doubles the folded value; negative values reverse direction and produce mirror-image variations."
+        },
+        "faq": {
+          "folds": {
+            "question": "What are box and ball folds?",
+            "answer": "A box fold reflects coordinates outside a fixed interval toward the origin—like folding a sheet’s edges inward. A ball fold (or sphere fold) makes a conditional inversion: points too close to the origin are pushed outward, points at an intermediate distance invert through a sphere, and distant points remain unchanged. Together they redirect the orbit at every step and make the Mandelbox’s layered geometry."
+          },
+          "dimension": {
+            "question": "Is this the three‑dimensional Mandelbox?",
+            "answer": "No. FractalPark renders a two-dimensional map inspired by the same fold-and-scale construction. The original Mandelbox is most often explored in 3D, where the box fold reflects across a cube’s faces; here the same logic works in the complex plane with a square boundary."
+          }
+        },
+        "history": "The Mandelbox was first presented by Tom Lowe (known online as Tglad) in early 2010 on the FractalForums community. Lowe was experimenting with iterative folding operations in three dimensions — box reflections and spherical inversions — to see whether they could produce bounded, self‑similar structures analogous to the Mandelbrot set. The results were immediately recognised as a new class of fractal, and the name \"Mandelbox\" was adopted both as an homage to the Mandelbrot set and because of the boxlike shape of the set when visualised.\n\nThe discovery followed closely on the 2009 Mandelbulb by Daniel White and Paul Nylander, which had sparked renewed hobbyist interest in finding non‑trivial 3D fractals. Within months, contributors on FractalForums — including Knighty, Jesse, and others — extended the Mandelbox idea to different symmetry planes and polyhedral folds.\n\nDespite its popularity in fractal art software (Mandelbulber, Mandelbulb3D, Fragmentarium, Ultra Fractal), the Mandelbox has received relatively little formal mathematical analysis. One of the few peer‑reviewed treatments is Gregg Helt's 2018 Bridges Conference paper, which generalises the spherical inversion step to arbitrary shape inversions."
+      },
+      "perpendicular-celtic": {
+        "title": "Perpendicular Celtic",
+        "summary": "Квадратичное отображение семейства Perpendicular: сложите вещественную часть перед возведением в квадрат, сложите вещественный результат ещё раз — и граница завяжется в косы.",
+        "overview": "Perpendicular Celtic принадлежит семейству Perpendicular — вариантам Burning Ship — наряду с Perpendicular Burning Ship и Perpendicular Buffalo. Его приём — двойное складывание: вещественная составляющая складывается перед возведением в квадрат, затем вещественная составляющая результата складывается ещё раз. Мнимая составляющая пропускает второе складывание.\n\nКаждая итерация дважды перенаправляет границу. Начинают появляться переплетённые, сцепленные формы — достаточно близкие к кельтскому плетению, чтобы объяснить название. Зеркальные арки, фарфоровые петли и полосы времени ухода на бесконечность делают повороты под прямым углом на резких складках.\n\nВ некоторых областях фигура симметрична относительно и вещественной, и мнимой осей — в отличие от некоторых вариантов Burning Ship. Причина — перпендикулярное устройство: складки действуют ортогонально, по одной оси за раз, а не по обеим сразу.",
+        "imageAlt": "Фрактал Perpendicular Celtic с плетёными полосами, зеркальными арками и фарфоровыми петлями",
+        "imageCaption": "Perpendicular Celtic: сцепленные полосы и зеркальные арки, резко сложенные у края и образующие петли внутри.",
+        "math": {
+          "iteration": {
+            "label": "Perpendicular Celtic iteration",
+            "explanation": "First fold the real input: construct z' = |xₙ| + iyₙ. Square it: (z')² = (|xₙ|² − yₙ²) + i(2·|xₙ|·yₙ). Then fold the real part of that result: zₙ₊₁ = ||xₙ|² − yₙ²| + i(2·|xₙ|·yₙ) + c.\n\nThe double fold reflects the real component twice per iteration: before the square, negative x mirrors to positive; after it, a negative resulting real part mirrors to nonnegative. The imaginary component folds only indirectly, through |xₙ| in the cross term.\n\nConsider c = −0.5. For the Mandelbrot set: z₁ = −0.5, z₂ = −0.25, bounded. For the Perpendicular Celtic: z₁ = ||0|² − 0²| + i(2·|0|·0) − 0.5 = 0 − 0.5 = −0.5, then z₂ = ||−0.5|² − 0²| + i(2·|−0.5|·0) − 0.5 = |0.25| − 0.5 = −0.25, same orbit. But try c = 0.3i: the double fold redirects the orbit in a way that neither the Mandelbrot set nor the Burning Ship reproduces."
+          }
+        },
+        "visualCharacteristics": "Braided bands, mirrored arches, and porcelain-like loops gather at folds where escape-time color turns at right angles. From far out, the structure is symmetric across both axes; deeper in, fine asymmetries appear.",
+        "faq": {
+          "folding": {
+            "question": "Why are absolute values used twice?",
+            "answer": "The folds act at different moments: the first absolute value folds the real input before squaring; the second folds the squared result’s real part. The real component is therefore reflected twice per iteration, changing how the orbit responds to the parameter c. Compared with the single-fold Burning Ship, the boundary becomes finer and more braided."
+          },
+          "symmetry": {
+            "question": "Is it simply a rotated Burning Ship?",
+            "answer": "No. It is related to the Burning Ship through absolute-value folds, but it places them differently in the quadratic step. The Burning Ship folds both raw coordinates before squaring. Perpendicular Celtic folds the real coordinate before squaring and then folds the result’s real part again. That two-stage order gives the orbit a different geometry and a distinct symmetry."
+          }
+        },
+        "history": "Perpendicular Celtic belongs to the “Perpendicular” Burning Ship family, with Perpendicular Burning Ship, Perpendicular Buffalo, and related forms. Like the others, it came from the fractal art community rather than academic research.\n\n“Celtic” names the visual resemblance to Celtic knotwork made by the double fold. “Perpendicular” names the folds’ orthogonal placement: first on the real coordinate before squaring, then on the real part of the result.\n\nIt appears in formula browsers supporting custom iterations, including Ultra Fractal, Fractal Extreme, and Mandelbrowser. The earliest documented instances are in online fractal forums and fractal wiki pages cataloging Burning Ship variants."
+      },
+      "quartic-julia": {
+        "title": "Quartic Julia",
+        "summary": "Множество Жюлиа четвёртой степени: возведите z в четвёртую степень, прибавьте фиксированное c — и начнётся ветвление на четыре.",
+        "overview": "Возьмите обычный рецепт Жюлиа и поверните рукоятку на один шаг: зафиксируйте одну комплексную постоянную c и повторяйте z → z⁴ + c. Каждое возведение в четвёртую степень умножает комплексный аргумент на четыре. Направление, которое у квадратичного отображения могло раздвоиться, здесь может раскрыться на четыре — отсюда и ветвление на четыре.\n\nПри том же c это отображение более высокой степени обычно умещает в множество больше поворотов, чем его квадратичный родственник. Останется ли заполненное множество Жюлиа единым или распадётся, по-прежнему зависит от c, согласно классификации Фату–Жюлиа для многочленов высших степеней. Следите за критической орбитой — здесь она управляется критической точкой z = 0 и критическими точками производной, — и она даст ключ к этой связности.\n\nНа экране это читается не столько как облако, сколько как тиснёный орнамент: тонкая филигрань, розетки и печатеподобные узлы повторяются с симметрией четвёртого порядка. Дополнительная степень уплотняет детали, однако угловатая компоновка остаётся поразительно упорядоченной.",
+        "imageAlt": "Множество Жюлиа четвёртой степени с кромкой цвета слоновой кости, розетками четвёртого порядка и ветвящейся филигранью",
+        "imageCaption": "Quartic Julia от FractalPark: филигрань цвета слоновой кости повторяет ветвящиеся розетки и четырёхкратные нити.",
+        "math": {
+          "iteration": {
+            "label": "Quartic iteration",
+            "explanation": "One step has the effect of four squarings: the argument is multiplied by four, so a point near the boundary can split four ways. Try c = 0. The recurrence becomes zₙ₊₁ = zₙ⁴, simply a fourth-power map. From z₀ = 0.5 + 0i, the values shrink toward zero and remain bounded; from z₀ = 1.5 + 0i, they grow rapidly and escape. As in the quadratic case, |zₙ| signals escape: once it passes a fixed threshold (about 2 for this quartic), the orbit must diverge. The fourth power hastens the outward flight; it also speeds the angular splitting that creates the four-fold shape.\n\nFractalPark holds c fixed across the image and varies the starting point z₀ from pixel to pixel—the usual Julia-family setup."
+          }
+        },
+        "visualCharacteristics": "Angles multiplied by four leave a recognizable trace: fine seals, branching rosettes, and filaments arranged on a quartic grid. A quadratic Julia may grow a spiral or one pair of arms; here, feature centers often send out four matching arms or lobes.\n\nMore detail fits into the same space than in a quadratic Julia, but it arrives in a tidier order. Turn ninety degrees around a prominent point and a motif often returns. The canonical FractalPark image picks out those edges with ivory filigree.",
+        "faq": {
+          "name": {
+            "question": "Why is this called Quartic Julia?",
+            "answer": "Its rule uses the fourth power of z, so it is a quartic, or degree-four, polynomial. The name distinguishes it from the standard quadratic Julia set and other higher-degree variants."
+          },
+          "constant": {
+            "question": "What does c change?",
+            "answer": "The fixed complex constant c decides whether the filled Julia set is connected or disconnected, then shapes its fine geometry. Nudge c and four-way branches rearrange, seals and filaments shift, and a connected set can fall into disconnected dust."
+          }
+        },
+        "history": "The theory came first. Pierre Fatou and Gaston Julia developed the classical framework for iterated rational functions in 1917–1918, and it applies to polynomials of any degree. Quartic Julia sets inherit its principles for connectivity and dynamical classification. When fractal-rendering software moved beyond quadratics in the 1980s and 1990s, computer exploration of higher-degree Julia sets became common. The named quartic variant belongs to that line; no single discoverer is attributed to it.\n\nFractalPark uses the standard fourth-degree recurrence as a fixed-parameter Julia-family formula."
+      },
+      "burning-ship": {
+        "title": "Burning Ship",
+        "summary": "Квадратичный фрактал времени ухода на бесконечность: сложите обе координаты по абсолютной величине перед возведением в квадрат — и цветовые полосы образуют асимметричный кораблеподобный контур.",
+        "overview": "Burning Ship стоит вплотную к множеству Мандельброта, но один приём меняет всё. Перед каждым возведением в квадрат он заменяет и вещественную, и мнимую части z их абсолютными величинами. Орбита складывается к осям, и квадратичное отображение теряет вращательную симметрию. Отображение перестаёт быть аналитическим — оно не удовлетворяет уравнениям Коши–Римана, — и по его краю появляются жёсткие углы.\n\nИспользуйте обычное соглашение об отображении: вещественная ось горизонтальна, мнимая — инвертирована, — и складка напоминает горящий корабль. Клиновидный корпус лежит под пламеподобными гребнями. Вдоль вещественной оси слева меньшие корабли повторяют тот же зазубренный профиль.\n\nОбычный тест радиуса ухода по-прежнему работает: как только |z| превышает 2, расходимость гарантирована. Однако эта неаналитическая орбита больше не ведёт себя как комплексно-аналитическая функция. Её полосы времени ухода складываются в слои с резкими гранями и вложенные прямоугольные границы вместо гладких радиальных градиентов множества Мандельброта.",
+        "imageAlt": "Фрактал Burning Ship: тёмный главный корпус, пламенные полосы ухода на бесконечность",
+        "imageCaption": "Burning Ship: клиновидный корпус, пламеподобные гребни над вещественной осью и слоистые полосы времени ухода на бесконечность.",
+        "math": {
+          "iteration": {
+            "label": "Fold, then square",
+            "explanation": "Both real and imaginary components are reflected to nonnegative values, combined into a complex number, then squared. In expanded form, the real part is xₙ₊₁ = xₙ² − yₙ² + Re(c) and the imaginary part is yₙ₊₁ = 2|xₙ||yₙ| + Im(c). At every iteration, the absolute values fold the orbit back toward the axes: if xₙ or yₙ is negative, it is mirrored to positive before the squaring step. That fold produces the sharp, rectangular boundaries that set the Burning Ship apart from the Mandelbrot set’s smooth contours.\n\nTry c = −1. For the Mandelbrot set, the orbit z₀=0, z₁=−1, z₂=0, z₃=−1, … stays bounded (period 2). For the Burning Ship, z₁ = (|0| + i|0|)² − 1 = −1, then z₂ = (|−1| + i|0|)² − 1 = 0, and the orbit settles into the same 2-cycle. Now take a point such as c = i: the fold redirects its orbit where the Mandelbrot iteration would not, producing a different escape decision."
+          }
+        },
+        "visualCharacteristics": "Dark hulls, flame-like masts, and chimney shapes rise through folded layers. Set beside the Mandelbrot set, the asymmetry is immediate.",
+        "faq": {
+          "difference": {
+            "question": "What changed from the Mandelbrot set?",
+            "answer": "Taking absolute values component by component breaks the Mandelbrot set’s rotational symmetry and makes the map non-analytic. Rounded boundaries become angled edges and nested rectangles; escape-time color settles into bands rather than smooth radial gradients."
+          },
+          "orientation": {
+            "question": "Why is the ship sometimes upside down?",
+            "answer": "The canonical formula puts the ship upside down because absolute values turn negative imaginary coordinates positive before squaring. Most renderers, including FractalPark, reflect the image vertically for display. A screen whose Y-axis points down can add a second flip, so the final orientation depends on where the renderer applies that reflection."
+          }
+        },
+        "history": "In 1992, Michael Michelitsch and Otto E. Rössler first described and rendered the Burning Ship in a Computers & Graphics paper. Both were then researchers at the University of Tübingen (Eberhard Karls Universität Tübingen). Their paper gave the iteration and showed that the absolute-value fold produces what they called a “quasi-Julia set”: it resembles a classical Julia set, but arises from a non-analytic map.\n\nThe name “Burning Ship” comes from a close view near the real axis: a dark hull below, flame-like ridges above. Paul Bourke independently implemented the fractal in October 1993, crediting Michelitsch and Rössler; his page became an early online reference.\n\nBecause it is a non-analytic alteration of the Mandelbrot recurrence, the formula falls outside the classical complex-dynamics theory Fatou and Julia developed for analytic functions. It has since become one of the most widely explored non-analytic escape-time fractals. Buffalo, Airship, Celtic, and Perpendicular variants rearrange which coordinates are folded and when."
+      },
+      "airship": {
+        "title": "Airship",
+        "summary": "Родственник Burning Ship с неравномерным складыванием: вещественная часть складывается напрямую, а мнимая связывает знаковый x с |y|.",
+        "overview": "Airship меняет и то, где складывает Burning Ship, и то, что делает другая координата. Напрямую складывается по абсолютной величине только вещественная часть. Мнимая часть умножает знаковый x на |y|. Такое неравномерное сочетание создаёт геометрию орбит, которую не даст ни простой поворот, ни отражение другого сложенного фрактала.\n\nИз узких швов множество раскидывает крылоподобные доли, напоминающие дирижабль или летающее крыло. Самые широкие части лежат вблизи центра, затем сужаются в стройные выступы. Неравномерная обработка координат видна на картине: горизонтальные формы остаются широкими и непрерывными; вертикальные распадаются на шипы.\n\nИнверсия или другое пространственное преобразование может раскрыть вложенные слои крыльев. Это выбор вида, а не признак незавершённости формулы, — она уже создаёт свои характерные формы.",
+        "imageAlt": "Фрактал Airship с крылоподобными долями и асимметрично сложенными деталями",
+        "imageCaption": "Airship: крылоподобные доли оставляют узкие центральные швы — широкие поперёк и колючие вверх.",
+        "math": {
+          "iteration": {
+            "label": "Airship fold",
+            "explanation": "Fold the real component with an absolute value, then square the complex number (|xₙ| + i·xₙ·|yₙ|) before adding c. In expanded form, the real part after squaring is xₙ₊₁ = (|xₙ|)² − (xₙ·|yₙ|)² + Re(c), while the imaginary part is yₙ₊₁ = 2·|xₙ|·xₙ·|yₙ| + Im(c). Notice that xₙ appears in the cross term both inside and outside the absolute value. Its sign therefore travels through the iteration.\n\nTry c = i. For the Burning Ship, the orbit diverges quickly. For the Airship, z₁ = (|0| + i·0·|0|)² + i = i, z₂ = (|0| + i·0·|1|)² + i = i, and the orbit remains bounded at i indefinitely — a fixed point that the Burning Ship does not share. The asymmetric fold can therefore stabilize or destabilize orbits that behave identically in the Mandelbrot set."
+          }
+        },
+        "visualCharacteristics": "Wing-like lobes rise from narrow central seams. Across the image, forms are broad and continuous; vertically, they break into spikes. Inversion can expose nested layers of those same wing-like forms.",
+        "faq": {
+          "folding": {
+            "question": "How is the Airship fold different?",
+            "answer": "The Airship folds only the real component with an absolute value; the imaginary component couples signed x with the absolute value of y. In the Burning Ship, both coordinates are folded independently before squaring. In the Airship, the fold is asymmetric — x is mirrored, but y retains its sign within the product x·|y| before the final squaring step."
+          },
+          "transform": {
+            "question": "Does the formula require an inversion transform?",
+            "answer": "No. Inversion can open layered wing-like forms from the Airship’s asymmetric lobes. But the Airship formula is complete on its own and produces its characteristic shapes without any view transform."
+          }
+        }
+      },
+      "newton-3": {
+        "title": "Newton Fractal for z³ − 1",
+        "summary": "Метод Ньютона для z³ − 1: три бассейна сходимости, разделённые границей, которая никогда не успокаивается.",
+        "overview": "Эта формула превращает знакомый алгоритм поиска корней в карту комплексной плоскости. В отличие от множества Мандельброта, она не спрашивает, уходит ли орбита на бесконечность. Она спрашивает, к какому корню z³ − 1 приводит метод Ньютона из заданного старта. Каждый из трёх кубических корней из единицы (1, e^{2πi/3}, e^{4πi/3}) заявляет свой бассейн притяжения: все стартовые значения, чья орбита сходится к этому корню.\n\nТри бассейна легко различить. А вот их общую границу — нет. Точка ровно на ней не достигает ни одного корня; вместо этого она следует по хаотическому, неповторяющемуся пути. Эта граница — множество Жюлиа ньютоновского отображения, рациональной функции N(z) = z − (z³ − 1)/(3z²). Приближайтесь — и структура продолжает прибывать.\n\nЭто классический фрактал сходимости: повседневный численный алгоритм с беспокойной границей внутри. Артур Кэли сформулировал задачу классификации бассейнов Ньютона в 1879 году. Он решил квадратичный случай, но кубический «представляется сопряжённым со значительными трудностями». Позднейшая комплексная динамика Фату и Жюлиа сделала задачу обозримой; первые компьютерные визуализации появились в начале 1980-х годов.",
+        "imageAlt": "Фрактал Ньютона для z³ − 1: три бассейна встречаются вдоль спицеобразных линий со спиральными деталями на границе",
+        "imageCaption": "Фрактал Ньютона для z³ − 1 от FractalPark: три бассейна сходимости в симметрии третьего порядка, соединённые вложенными спиральными границами.",
+        "math": {
+          "iteration": {
+            "label": "Newton iteration",
+            "explanation": "For a function f(z), Newton iteration is N(z) = z − f(z) / f′(z). Here f(z) = z³ − 1 and f′(z) = 3z². Each step subtracts the polynomial value divided by its derivative, nudging z toward a root. For the cubic z³ − 1, the iteration simplifies to:\n\nN(z) = z − (z³ − 1) / (3z²) = (2z³ + 1) / (3z²).\n\nThis is a degree‑2 rational map of the Riemann sphere. Its fixed points are exactly the three cube roots of unity, and they are all superattracting—once an orbit is close enough to a root, convergence is extremely fast. The Julia set is the boundary where basins meet, and the map is chaotic there.\n\nTry a concrete starting point: z₀ = 0.5. Then z₁ = (2·0.125 + 1) / (3·0.25) = (0.25 + 1) / 0.75 ≈ 1.667, z₂ ≈ 1.107, z₃ ≈ 1.001, and the orbit rapidly converges to the root at 1. Now try z₀ = 0.5i: z₁ ≈ −0.417 + 0.583i, z₂ ≈ −0.495 + 0.865i, and the orbit converges to e^{2πi/3} = −0.5 + 0.866i. A third starting point, say z₀ = −0.5 − 0.5i, converges to the remaining root e^{4πi/3} = −0.5 − 0.866i. The basins are large and well separated, but close to a boundary a tiny nudge in the starting value can switch the destination entirely.\n\nFractalPark uses a stability threshold: an orbit counts as converged when consecutive iterates differ by less than a chosen tolerance. The pixel is then coloured by the root reached and the number of steps needed."
+          }
+        },
+        "visualCharacteristics": "Three large basins, one for each cube root of unity, occupy the image. They meet in wheel-spoke lines from the centre, making the three-part symmetry plain. Inside each basin, convergence is quick and the colour stays smooth.\n\nBetween any two basins—and especially at the central three-way meeting—spirals, miniature three-basin copies, and dendritic threads crowd in. Follow a spiral arm inward: the three-basin arrangement returns at smaller scales, bent by local dynamics. Broad calm regions; then a restless frontier.",
+        "faq": {
+          "basins": {
+            "question": "What do the main regions represent?",
+            "answer": "Each coloured region is a basin of attraction: it contains the starting points whose Newton iteration converges to the same root of z³ − 1. The three cube roots of unity are 1, e^{2πi/3} = −0.5 + 0.866i, and e^{4πi/3} = −0.5 − 0.866i. A point’s colour records the root it reaches and how quickly convergence happens."
+          },
+          "escape": {
+            "question": "Is this an escape-time fractal?",
+            "answer": "It is primarily a convergence fractal. The classification is not about whether the orbit escapes to infinity (as in the Mandelbrot set), but which root it approaches and how many steps it takes. There is no escape-radius test. Instead, the renderer checks whether consecutive iterates have become very close—indicating convergence to a root—and, if so, which root they are near."
+          }
+        },
+        "history": "At the heart of this image is Newton's method, discovered by Isaac Newton in 1669 and independently refined by Joseph Raphson in 1690. For real functions it is a practical root‑finding tool; for complex polynomials it reveals fractal basins no one could have foreseen at the time.\n\nThe mathematical study of those basins began in 1879 with Arthur Cayley's paper \"The Newton–Fourier imaginary problem\" (American Journal of Mathematics, vol. 2, p. 97). For a complex quadratic polynomial, Cayley showed that the basins of attraction are simply the two half-planes separated by the perpendicular bisector of the line segment joining the two roots. At cubic polynomials, though, he found the problem \"considerable difficult.\" His inability to extend the simple quadratic result to the cubic case became known as Cayley's problem.\n\nThe resolution came through complex dynamics, developed by Pierre Fatou and Gaston Julia in the years around 1918. Their theory of iterated rational functions supplied the language for the basins and their infinitely convoluted boundaries. But the first pictures of the Newton fractal for z³ − 1 had to wait for computer graphics in the early 1980s.\n\nIn 1986, Heinz-Otto Peitgen and Peter H. Richter included a chapter titled \"Newton's Method for Complex Polynomials: Cayley's Problem\" (Chapter 6, pp. 93–106) in *The Beauty of Fractals: Images of Complex Dynamical Systems*. It presents some of the earliest published computer renderings of these basins and helped introduce a wide audience to the fractal structure hidden inside Newton's method."
+      },
+      "newton-cosh": {
+        "title": "Newton Cosh",
+        "summary": "Метод Ньютона для cosh z = 1: бесконечно много равномерно расположенных корней превращают плоскость в повторяющиеся полосы сходимости.",
+        "overview": "Обычный шаг поиска корня по Ньютону меняет характер, когда f(z) = cosh z − 1. Его корни — 2πik для каждого целого k. Многочлен даёт орбите лишь конечное число возможных назначений; эти корни продолжают маршировать вдоль мнимой оси через равные интервалы. Поэтому фрактал устраивается полосами, идущими вверх и вниз, а не укладывается в несколько бассейнов.\n\nОтображение N(z) = z − (cosh z − 1) / sinh z мероморфно: оно работает на всей комплексной плоскости, кроме своих особенностей. Следите за двумя повторяющимися наборами точек: корни cosh z − 1 и нули знаменателя sinh z при z = πik для целого k. Вблизи нуля знаменателя лёгкий сдвиг стартовой точки может переключить корень, которого достигнет орбита.\n\nПериодичность вдоль мнимой оси видна с первого взгляда — математическая подготовка не нужна. Горизонтальные полосы повторяются одна над другой, по одной на каждый период корней. На их стыках тонкие вертикальные нити отмечают, где один бассейн передаёт орбиту следующему.",
+        "imageAlt": "Фрактал Ньютона для cosh z = 1 с повторяющимися горизонтальными полосами и искривлёнными границами, сложенными вдоль мнимой оси",
+        "imageCaption": "Ньютоновский вид cosh z = 1 от FractalPark: повторяющиеся полосы сходимости вдоль мнимой оси, разделённые сложенными нитевидными границами.",
+        "math": {
+          "iteration": {
+            "label": "Newton’s cosh iteration",
+            "explanation": "Newton's rule is N(z) = z − f(z) / f′(z). Here f(z) = cosh z − 1 and f′(z) = sinh z. Each step finds the correction (cosh z − 1) / sinh z, then takes it away from z.\n\nThe equation cosh z = 1 has infinitely many solutions: z = 2πik for every integer k. Each is a simple root: cosh z grows linearly close by, so Newton's method converges quadratically there. Far from the real axis, cosh and sinh grow exponentially. Their quotient may be tiny or enormous, and that is where the image's sensitive seams take shape.\n\nTry z₀ = 0.2i. Since i·sinh(0.2) ≈ 0.201i and cosh(0.2) ≈ 1.020, the first correction is small; the orbit quickly reaches the root at z = 0. Now move to z₀ = (0.5 + 3.0i), farther from every root. The correction now contains large exponential terms. The orbit can cross several basin boundaries before settling, or wander chaotically between roots for many iterations before one captures it.\n\nThe function repeats with period 2πi in the imaginary direction, and the Newton map does too: N(z + 2πi) = N(z) + 2πi. That repeated rule is the source of the horizontal banding."
+          }
+        },
+        "visualCharacteristics": "Start with the horizontal bands along the imaginary axis. A period of roots makes one band, and the convergence pattern returns in the next. The borders do not run straight: they bend and fold, then pull out fine vertical filaments like taut threads.\n\nWithin each band, the basin geometry resembles its neighbours, with small distortions. Think of a ribbon folded repeatedly. The warm and cool zones come from the colouring; the sharp breaks arise where singularities of sinh z destabilise the Newton correction.",
+        "faq": {
+          "target": {
+            "question": "What equation is being solved?",
+            "answer": "It seeks the complex solutions of cosh(z) = 1: z = 2πik for every integer k. The equally spaced roots line the imaginary axis. Each draws in nearby Newton orbits, and their repeating arrangement creates the horizontal bands."
+          },
+          "singularities": {
+            "question": "Why are some regions extremely sensitive?",
+            "answer": "The correction divides by sinh(z), which vanishes at z = πik for integer k. Close to one of these points, the correction can become huge, sending an orbit across several basin boundaries before it converges. These singularities are not roots; they pull the fine vertical filaments and unsettled border zones into view."
+          }
+        }
+      },
+      "magnet-type-1": {
+        "title": "Magnet Type 1",
+        "summary": "Возведённое в квадрат отношение Мёбиуса с одним полюсом в z = c, собирающее плоскость в сгруппированные бассейны и цепочки-бусы.",
+        "overview": "Magnet Type 1 начинается с ((z + c) / (z − c))². Отношение в скобках — преобразование Мёбиуса, простейшая нетривиальная рациональная функция; возведение в квадрат делает из него рациональное отображение второй степени. В отличие от z² + c, это отображение не отправляет далёкие точки всё дальше. Они возвращаются к 1.\n\nДинамика сосредоточена вокруг двух противоположных точек. Отношение обращается в нуль при z = −c и имеет полюс при z = c. Орбита, задевающая полюс, улетает далеко, затем возвращается к 1 на следующем шаге. Устойчивые бассейны растекаются по плоскости; между ними — фрактальная граница, сложенная из слоёв прообразов полюса.\n\nFractalPark предлагает плоскость параметра, где движется c, и виды Жюлиа, где c остаётся фиксированным. Иллюстрация — крупный план Жюлиа. Его округлые бассейны собираются в комки, как железные опилки вокруг магнита, — отсюда название семейства.",
+        "imageAlt": "Медно-оранжевые сферы разных размеров, сгруппированные на тёмно-синем поле, усыпанном мелкими сине-белыми звездообразными розетками",
+        "imageCaption": "Вид Жюлиа Magnet Type 1: гладкие округлые бассейны собираются в группы, а звездообразные розетки теснятся на их фрактальных границах.",
+        "math": {
+          "iteration": {
+            "label": "A Möbius quotient, squared",
+            "explanation": "Each step forms (z + c) / (z − c), then squares it. The ratio is zero at z = −c and blows up at z = c. Squaring makes −c a double zero and c a double pole, while leaving the map with rational degree two.\n\nInfinity behaves differently here. As |z| grows, (z + c) / (z − c) approaches 1, so the next value lands near 1 however large z becomes. Huge values arise only near z = c. FractalPark treats |z| above 16 as escaped, so a “fast escape” marks a close pass by the pole, not a one-way trip to infinity.\n\nOn the Riemann sphere, the pole maps to infinity and infinity maps to 1, so the orbit remains well-defined at the singularity. A numerical renderer cannot divide by zero: when the denominator is exactly zero, the shader substitutes 0, and the next step continues from f(0) = 1. That is a computational safeguard, not another mathematical definition."
+          }
+        },
+        "visualCharacteristics": "In this Julia-set close-up, large smooth copper-orange spheres gather on the right in clusters of very different sizes. The deep blue at left and below holds smaller spheres and blue-white rosettes, each star-shaped around a faint orange core.\n\nThe rounded blobs are basins, where orbits settle. Rosettes and dense grain trace the fractal border between them. This arrangement belongs to this parameter and framing—other c values rearrange it. The warm/cool palette is a colouring choice, not a property of the formula.",
+        "faq": {
+          "name": {
+            "question": "Why is it called Magnet?",
+            "answer": "The name comes from a family made widely known by Fractint. Its maps trace back to renormalization calculations for a model of magnetic phase transitions, presented in Heinz-Otto Peitgen and Peter H. Richter’s 1986 book *The Beauty of Fractals*. The squared-quotient formulas form clustered, domain-like basins; their boundaries mark the transition between magnetic and non-magnetic phases.\n\nFractalPark’s Type 1 keeps the name and the squared-quotient shape but uses the simpler ratio ((z + c) / (z − c))². The formula shown on this page is exactly the one the engine computes."
+          },
+          "poles": {
+            "question": "What happens near z = c?",
+            "answer": "At that point the denominator z − c vanishes. Thus z = c is a pole of the quotient, and a double pole after squaring. Orbits that skim past it leap to very large values, then fold back near 1 a step later.\n\nThis behaviour builds the boundary: a growing web of points whose orbits eventually hit the pole. For the rare pixel that lands exactly there, the shader uses a safe value rather than divide by zero, matching the orbit’s continuation on the Riemann sphere."
+          }
+        },
+        "history": "In 1986, Heinz-Otto Peitgen and Peter H. Richter brought magnet fractals into the literature in *The Beauty of Fractals: Images of Complex Dynamical Systems*. Their chapter “Magnetism and Complex Boundaries” (pp. 129–138) presented rational maps derived from renormalization transformations in a model of magnetic materials. There, the boundary between magnetic and non-magnetic phases is fractal. Iterating the transformation draws that boundary, giving the images their clustered, field-like structure.\n\nFractint later included the maps as “magnet1” and “magnet2,” in both Mandelbrot-style and Julia-style views; the name was then adopted by other fractal software. POV-Ray’s documentation still calls its magnet1 and magnet2 patterns “derived from some magnetic renormalization transformations,” crediting the Fractint help files.\n\nThe classic Type 1 formula from that lineage is ((z² + c − 1) / (2z + c − 2))². FractalPark implements a simplified squared quotient, ((z + c) / (z − c))², under the same name; every render and every mathematical statement on this page refers to the formula as FractalPark actually computes it."
+      },
+      "magnet-type-2": {
+        "title": "Magnet Type 2",
+        "summary": "Возведённое в квадрат рациональное отображение с z² внутри отношения, придающее рельефу Type 1 более крутую, более складчатую форму.",
+        "overview": "Magnet Type 2 итерирует ((z² + c) / (z² − c))². Он сохраняет возведённое в квадрат отношение Type 1, но z уже возведено в квадрат и в числителе, и в знаменателе. Возведение этого отношения в квадрат даёт рациональное отображение четвёртой степени — вдвое выше степени Type 1.\n\nДополнительная степень проявляется в двух местах. Знаменатель z² − c обращается в нуль при двух квадратных корнях из c, а не при одном, — появляются два полюса. Повторное возведение в квадрат также заостряет угловую складку до крестообразной симметрии. С бо́льшим числом полюсов и поворотов Type 2 становится плотнее и угловатее.\n\nМеханизм семейства магнитов сохраняется. Орбита, проходящая вблизи полюса, выбрасывается к большому значению, а на следующем шаге складывается обратно к 1. Она не уходит на бесконечность: на сфере Римана она отображается в 1. Бассейны собираются по плоскости, а прообразы полюсов складывают между ними фрактальную границу.",
+        "imageAlt": "Крестообразно-симметричный вид Жюлиа Magnet Type 2 с четырьмя повторяющимися секторами колец, цепочек-бус и долей",
+        "imageCaption": "Magnet Type 2 от FractalPark при c = −0.56 + 0.11i: четырёхкратная крестообразная симметрия, слоистые кольца и цепочки-бусы с гребнями, расходящимися от двух полюсов.",
+        "math": {
+          "iteration": {
+            "label": "Type 2 rational iteration",
+            "explanation": "Each step computes (z² + c) / (z² − c), then squares it. The numerator is zero when z² = −c; the denominator is zero when z² = c. After squaring, every zero and pole is double, leaving the map with two double zeros and two double poles on the Riemann sphere. Its rational degree is four.\n\nAs |z| grows, (z² + c) / (z² − c) approaches 1, so the next value lands near 1 no matter how large z becomes. Only a close pass by one of the two poles produces a large value. FractalPark treats |z| above 16 as escaped, so a coloured “fast escape” region records a close encounter with a pole, not a one-way trip to infinity.\n\nSuppose c = 1. The poles are at z² = 1, i.e. z = 1 and z = −1. Choose z₀ = 0.98, very close to the pole at 1. Then (z₀² + c) / (z₀² − c) ≈ (0.9604 + 1) / (0.9604 − 1) = 1.9604 / (−0.0396) ≈ −49.5, and squaring gives z₁ ≈ 2450. The large value then folds back: on the next step, with |z₁| large, the ratio tends to 1 and z₂ lands near 1. The shader colours the pixel according to how quickly the orbit returns near 1 after its pole encounter."
+          }
+        },
+        "visualCharacteristics": "The guide image is a Julia-mode view at c = −0.56 + 0.11i. Cross-like symmetry holds the frame together: two intersecting folding axes divide the plane into four repeating sectors, each packed with layered rings, bead-like chains, and lobes. Two opposing bright nodes mark the poles, with angular ridges radiating outward.\n\nAt the same parameter, Type 2 has finer angular detail and a more articulated basin boundary than Type 1. The warm core and cool exterior emphasise its radial structure, but the geometry comes from the map: the extra degree reorients the basins along the cross axes set by the two poles.",
+        "faq": {
+          "difference": {
+            "question": "How does Type 2 differ from Type 1?",
+            "answer": "Type 2 squares z before forming the quotient, so its numerator and denominator carry z² rather than z. This raises the rational degree from two to four, takes the number of poles from one to two, and strengthens the cross-like angular symmetry. At the same parameter, its images are denser and more folded than Type 1’s."
+          },
+          "poles": {
+            "question": "Where do its poles occur?",
+            "answer": "Poles occur where the denominator z² − c vanishes: z = √c and z = −√c. Type 1 has one pole at z = c; Type 2 has two, except when c = 0, when the pole at zero is double. Their positions move with c and strongly influence the fractal boundary’s layout."
+          }
+        },
+        "history": "In 1986, Heinz-Otto Peitgen and Peter H. Richter brought magnet fractals into the literature in *The Beauty of Fractals: Images of Complex Dynamical Systems*. Their chapter “Magnetism and Complex Boundaries” (pp. 129–138) presented rational maps derived from renormalization transformations in a model of magnetic materials. The boundary between magnetic and non-magnetic phases is fractal; iterating the transformation draws it, giving the images their clustered, field-like structure.\n\nFractint later included the maps as “magnet1” and “magnet2,” in both Mandelbrot-style and Julia-style views, and the name spread through fractal software. POV-Ray’s documentation still describes its magnet1 and magnet2 patterns as “derived from some magnetic renormalization transformations,” crediting the Fractint help files.\n\nThe classic Type 2 formula from that lineage is ((z² + c − 1) / (2z + c − 2))². FractalPark implements a different simplified squared quotient, ((z² + c) / (z² − c))², under the same name; every render and every mathematical statement on this page refers to the formula as FractalPark actually computes it."
+      },
+      "multi-phoenix": {
+        "title": "Multi-Phoenix",
+        "summary": "Квадратичная рекуррентность с памятью: комплексный коэффициент переносит предыдущее значение орбиты в следующий шаг, рождая перистые, пламеподобные формы.",
+        "overview": "Multi-Phoenix помнит свой последний шаг. Эта рекуррентность второго порядка использует и текущее z, и непосредственно предыдущее значение орбиты, взвешивая последнее комплексным коэффициентом памяти p. Эта память меняет направление детали и то, как долго она сохраняется.\n\nСтандартный шаг Жюлиа, z → z² + c, памяти не имеет. Phoenix подтягивает прежнее z вперёд как p·zₙ₋₁. Меняйте p — и прошлое получает другой вес; поскольку p комплексное, этот вес может и поворачивать, и расти, и убывать. Далее следуют перистые спицы, пламеподобные веера, розетки-компасы и тлеющие скопления.\n\nНити подсказали крылья и хвост мифической птицы — отсюда «Phoenix». Сигэхиро Усики из Киотского университета открыл его и опубликовал в 1988 году.",
+        "imageAlt": "Фрактал Multi-Phoenix с перистыми спицами и тлеющими скоплениями нитей (\"Ember Compass\")",
+        "imageCaption": "Multi-Phoenix от FractalPark (\"Ember Compass\"): спицы, подобные стрелкам компаса, расходятся сквозь светящиеся скопления нитей.",
+        "math": {
+          "iteration": {
+            "label": "Phoenix recurrence",
+            "explanation": "Take the standard quadratic step zₙ² + c, then add p times the value from two steps ago. A second-order recurrence needs two starting values before its first iteration: z₀ and the “previous” value, usually 0. FractalPark exposes p as an adjustable complex control.\n\nTry the classic Phoenix parameter pair c = 0.5667 and p = −0.5. Starting with z₀ = 0 and z₋₁ = 0, the first few values stay bounded and trace angular, wing-like arcs. Make p positive with a similar magnitude and the feathered structure can break apart or rotate: the memory term now reinforces the earlier direction instead of opposing it."
+          }
+        },
+        "visualCharacteristics": "That one-step memory is visible in feathered spokes radiating from centres, flame-like fans curling along filaments, and compass forms with a sense of direction. A standard quadratic Julia does not make these in the same way; they rely on the directional persistence of p·zₙ₋₁.\n\nWith different parameters, the same rule can close into ember-like clusters, open into radiating pinwheels, or dissolve into dust-like regions. FractalPark’s “Ember Compass” foregrounds the compass spokes and warm filament clusters.",
+        "parameters": {
+          "memory": "The complex memory coefficient p sets both the strength and the rotational direction of the previous orbit value’s influence on the next step."
+        },
+        "faq": {
+          "memory": {
+            "question": "Why does this formula need the previous value?",
+            "answer": "The recurrence is second-order: its next state depends on the current and immediately preceding orbit values. It is a discrete analogue of a delay differential equation, where the past feeds back into the present. The extra parameter p sets how much of that past continues forward."
+          },
+          "initial-state": {
+            "question": "Does the initial previous value matter?",
+            "answer": "Yes. A second-order recurrence requires two initial conditions — z₀ and the value of z before iteration begins (z₋₁) — for a deterministic orbit. FractalPark initializes z₋₁ to zero by default, the standard convention for the Phoenix family."
+          }
+        },
+        "history": "Shigehiro Ushiki, a mathematician in Kyoto University’s Graduate School of Human and Environmental Studies, discovered the Phoenix fractal. In 1988, he published the Phoenix iteration in IEEE Transactions on Circuits and Systems. He presented it as a complex-one-dimensional section of a Julia-like set derived from a complexified Hénon map. The paper is simply titled \"Phoenix.\" The classic parameter pair (c = 0.5667, p = −0.5) produces the named Phoenix curve, later well known in fractal-rendering communities.\n\nUshiki’s broader research covers complex dynamical systems, Julia sets with polyhedral symmetries, higher-dimensional complex Hénon maps, and the dynamics of surface automorphisms. His Kyoto University homepage lists publications from the 1980s to the present.\n\nThe Phoenix family later appeared in Ultra Fractal and other fractal software in both Julia-mode and Mandelbrot-mode variants. FractalPark’s Multi-Phoenix uses the same core recurrence and adds a multi-preview parameter interface."
+      },
+      "cosh-mandelbrot": {
+        "title": "Cosh Mandelbrot",
+        "summary": "Трансцендентное отображение времени ухода на бесконечность: гиперболический косинус заменяет возведение в квадрат, а его место занимают вертикально повторяющиеся перья и слоистые веера.",
+        "overview": "Cosh Mandelbrot оставляет знакомый полиномиальный шаг позади. Вместо повторения z² + c он повторяет z → cosh(z) + c. Возведение в квадрат заменяется экспоненциальным ростом гиперболического косинуса вдоль вещественной оси и его 2π-периодичностью вдоль мнимой оси.\n\nКомплексный косинус и гиперболический косинус — близкие родственники: каждый повторяется вдоль одного направления и неограниченно растёт вдоль другого. Для cosh(z) период по мнимой оси равен 2π, поэтому полоса деталей возвращается над и под собой. Когда |Re(z)| велико, его экспоненциальные слагаемые устремляются наружу. Большинство стартовых точек уходят быстро; лишь тонкие полосы удерживают орбиту — сохраняя её последовательные значения ограниченными на протяжении многих шагов.\n\nПлоскость параметра больше не напоминает кардиоиду и «почки» множества Мандельброта. Вместо этого она складывает веера, золочёные перья и вертикальные эхо. Линия между уходом и неуходом проведена самой трансцендентной итерацией; простого алгебраического радиуса ухода здесь нет.",
+        "imageAlt": "Слоистые золотые перья и веера, повторяющиеся через равные вертикальные промежутки во фрактале Cosh Mandelbrot",
+        "imageCaption": "Cosh Mandelbrot от FractalPark: золочёные перья и слоистые веера возвращаются по вертикали с периодом cosh 2π в мнимом направлении.",
+        "math": {
+          "iteration": {
+            "label": "Hyperbolic cosine iteration",
+            "explanation": "Each turn evaluates complex hyperbolic cosine at the current z, then adds c. The definition cosh(z) = (eᶻ + e⁻ᶻ)/2 puts exponential growth on the real axis beside imaginary-axis repetition with period 2π.\n\nTry z = iπ/2 on the imaginary axis. Since cosh(iπ/2) = cos(π/2) = 0, starting there with c = 0 leaves the recurrence at zero. Nudge the point off that axis and the eᶻ term can drive exponential growth and rapid escape. That sharp divide—bounded behavior in a narrow strip, rapid escape elsewhere—is typical of transcendental iteration. Unlike a polynomial, this map has no universal escape radius; FractalPark uses a bailout threshold chosen to detect divergence in practice."
+          }
+        },
+        "visualCharacteristics": "First notice the vertical repetition. Because cosh(z) repeats in the imaginary direction every 2π, fine plumes, layered fans, and gilt filaments return at regular intervals. The result is striped and tiered, far from the radial branching of polynomial Mandelbrot sets.\n\nIn the canonical rendering, plumes and fans often carry warm tones. The finest detail concentrates in narrow horizontal bands, where an orbit lingers near the boundary between escape and non-escape. Above and below, escape accelerates and the image becomes smoother.",
+        "faq": {
+          "periodicity": {
+            "question": "Why do patterns repeat vertically?",
+            "answer": "Complex hyperbolic cosine repeats along the imaginary axis with period 2π. Because every step uses cosh(z), the orbit structure repeats too: bounded and escaping behavior returns at regular vertical intervals in the parameter plane."
+          },
+          "growth": {
+            "question": "Why do many points escape rapidly?",
+            "answer": "Hyperbolic cosine is built from exponentials: cosh(z) = (eᶻ + e⁻ᶻ)/2. At a point with a substantial real part, the eᶻ term takes over and the orbit can grow extremely fast. There is no simple polynomial-style escape radius, so the bailout threshold is a practical computational choice."
+          }
+        },
+        "history": "In 1988, Clifford A. Pickover, a computer scientist and author at IBM's Thomas J. Watson Research Center, published the short paper \"Chaotic behavior of the transcendental mapping (Z → cosh(Z) + μ)\" in The Visual Computer. He presented images of chaotic behavior produced by this transcendental function, alongside maps such as z → sin(z) + c and z → eᶻ + c.\n\nPickover’s work brought the cosh-based map into the fractal-rendering community, where it became a standard transcendental escape-time example. Earlier, mathematicians including Robert Devaney and Michał Krych had developed the broader study of transcendental complex dynamics—exponential, trigonometric, and hyperbolic families—and analyzed the dynamics of exp(z) in the 1980s."
+      },
+      "buffalo": {
+        "title": "Buffalo",
+        "summary": "Сложенный родственник Burning Ship: квадратичные координатные члены берутся по абсолютной величине, тогда как перекрёстный член сохраняет знак x и раскрывает широкие рога с зеркальными внутренними вратами.",
+        "overview": "Buffalo переносит складки Burning Ship на новые места. Он возводит вещественную и мнимую части в квадрат по отдельности, берёт абсолютные величины этих квадратов и сохраняет x знаковым в перекрёстном члене. Результат отличен и от Burning Ship, и от более простых кельтских вариантов.\n\nМножество параметров раскрывается в широкие изогнутые рога. Внутри — зеркальные арки и карманы-затмения, часто окаймлённые скрученными нитями. Сложите картинку через вещественную ось — и верхняя и нижняя половины тесно отзываются друг другу.\n\nBurning Ship предпочитает прямоугольные пламеподобные гребни. Buffalo округляет свои крупные внешние доли, оставляя резкие повороты внутренним вратам и краям нитей.",
+        "imageAlt": "Фрактал Buffalo с изогнутыми рогатыми долями, зеркальными вратами и скрученными нитями",
+        "imageCaption": "Buffalo: широкие рога, зеркальные внутренние врата и скрученные края нитей.",
+        "math": {
+          "iteration": {
+            "label": "Buffalo iteration",
+            "explanation": "The squared coordinate magnitudes make the real part: xₙ₊₁ = |xₙ|² − |yₙ|² + Re(c). The imaginary part pairs signed xₙ with folded yₙ: yₙ₊₁ = 2·xₙ·|yₙ| + Im(c). The difference from Burning Ship sits exactly there: Buffalo folds squared terms one by one, rather than folding raw coordinates before squaring. Keeping xₙ signed preserves a directional imbalance that Burning Ship’s fully folded cross term erases.\n\nTry c = −0.5. Starting from z₀ = 0, the first iteration gives z₁ = |0|² − |0|² + 2i·0·|0| − 0.5 = −0.5. The second iteration: z₂ = |−0.5|² − |0|² + 2i·(−0.5)·|0| − 0.5 = 0.25 − 0.5 = −0.25. The orbit settles into a bounded oscillation between negative real values. With the same c, Burning Ship gives (|−0.5| + i|0|)² − 0.5 = 0.25 − 0.5 = −0.25 at the second step; the paths already differ because it folded the real part before squaring."
+          }
+        },
+        "visualCharacteristics": "Broad horns establish the outline, with smooth outer curves cut by sharp inner detail. Inside are mirrored eclipse-like gates and twisted filament edges. The set reflects across the real axis.",
+        "faq": {
+          "folding": {
+            "question": "Which part of the orbit is folded?",
+            "answer": "Buffalo takes absolute values of the squared coordinate magnitudes. In the cross term it folds only the imaginary component and keeps x signed. So its folds act after squaring on each coordinate’s magnitude; Burning Ship instead folds both raw components first and squares one complex number."
+          },
+          "julia-mode": {
+            "question": "Can Buffalo produce Julia sets?",
+            "answer": "Yes. Fix c and vary the starting point z₀ to reveal Buffalo Julia sets. As in the parameter set, the chosen c controls the balance of smooth and angular features. Both connected and disconnected Julia structures appear."
+          }
+        },
+        "history": "After Burning Ship appeared in 1992, Buffalo surfaced in the fractal exploration community as one of several variants. It belongs to folded quadratic maps, where shifting an absolute-value operation to another spot in the recurrence reshapes the escape-time geometry.\n\nBuffalo has no single published introduction. It appears to have come from online fractal-software communities, where programs such as Ultra Fractal and Fractal Extreme let people define custom iterations. “Buffalo” likely refers to the large horn-like lobes, resembling a buffalo-head silhouette.\n\nThe earliest documented reference is the theory.org fractal dynamics page, which calls Buffalo a Burning Ship derivative. FractalPark uses the HPDZ Buffalo iteration rather than the original Buffalo formula described there."
+      },
+      "circle-inversion": {
+        "title": "Circle Inversion",
+        "summary": "Обратное квадратичное отображение, которое на каждом шаге меняет близкое и далёкое местами: малые значения улетают наружу, большие возвращаются к началу координат.",
+        "overview": "Circle Inversion меняет привычный квадратичный рост на обратный квадратичный шаг: возьмите 1/z², затем сдвиньте его на c. Выглядит как маленькая замена. Поведение — совсем нет.\n\nВ обычной полиномиальной итерации, как только орбита вырастает за некоторый размер, она продолжает удаляться от начала координат. Здесь логика выворачивается наизнанку: вблизи нуля значение становится огромным, а огромное возвращается к нулю. Затем c решает, куда ляжет обменянное значение.\n\nКартина радиальна: вложенные кольца и резкие осевые следы. Начало координат — полюс порядка 2, точка, где отображение не определено, — и его притяжение протягивается через всю плоскость параметра.",
+        "imageAlt": "Фрактал Circle Inversion с концентрическими кольцами и яркими радиальными шипами вокруг центрального полюса",
+        "imageCaption": "Плоскость параметра Circle Inversion: вложенные кольца, осевые шипы и полюс в начале координат.",
+        "math": {
+          "iteration": {
+            "label": "Reciprocal quadratic iteration",
+            "explanation": "At each step, the map takes the reciprocal of z²—geometric inversion through the unit circle with a doubled angle—then shifts the result by the complex parameter c. That inversion gives the formula its name; it is classical circle inversion applied to z² rather than to z.\n\nTry c = 0 and start at z₀ = 2. Then z₁ = 1/4 = 0.25, z₂ = 1/(0.0625) = 16, z₃ = 1/256 ≈ 0.0039. The orbit ricochets between large and small values rather than settling at a fixed point. For c = 0.5, start at z₀ = 1: z₁ = 1/1 + 0.5 = 1.5, z₂ = 1/2.25 + 0.5 ≈ 0.944, z₃ = 1/0.892 + 0.5 ≈ 1.62. This orbit oscillates without diverging, suggesting c = 0.5 belongs to the bounded set. Escape needs a different test from the quadratic case: a huge value may collapse on the next step, so the bailout must allow for this alternation."
+          }
+        },
+        "visualCharacteristics": "Concentric bands and radial spines run outward from the pole at the origin. The bands mark regions whose orbits stay bounded or escape at different rates, making nested rings like a target or the ripples from a dropped pebble.\n\nSharp axial structures form distinct spokes. They come from the inversion’s angular part: 1/z² doubles z’s angle, creating preferred directions where the dynamics line up. The reciprocal quadratic form gives this parameter plane a more rigid radial symmetry than most.",
+        "faq": {
+          "origin": {
+            "question": "Why is the origin special?",
+            "answer": "The origin is a pole of order 2: 1/z² is undefined at z = 0 because division by zero creates a singularity. An orbit landing exactly there cannot continue; one passing nearby gets a very large next value. That is why the rendered image grows rings and spines around the origin."
+          },
+          "singularity": {
+            "question": "How does FractalPark handle values near zero?",
+            "answer": "The renderer clips the denominator at a small epsilon value to prevent division by zero. The pole still leaves its rings and spines visible, while the calculation stays numerically stable. Its effect remains part of the rendered structure."
+          }
+        },
+        "history": "The map z → 1/z² + c sits near the broader rational family known as McMullen maps, z → zⁿ + λ/zⁿ. Curt McMullen introduced that family in the late 1980s, showing rational maps whose parameter spaces contain several kinds of hyperbolic components, including ones with Sierpiński-carpet Julia sets.\n\nWith n = 2, λ = 1, and a translation parameter c, this gives the Circle Inversion map. Its name comes from 1/z², which inverts the complex plane with respect to the unit circle and doubles the angle. Robert L. Devaney and others later studied the McMullen family, tracing how escape loci and Julia sets change with parameters. FractalPark renders exactly this map — the n = 2, λ = 1 case with c as the translation parameter."
+      },
+      "inverted-lambda": {
+        "title": "Inverted Lambda",
+        "summary": "Гибридное отображение, добавляющее рациональный квадратичный член к комплексной логистической рекуррентности и вносящее подвижные полюсы в орбиту.",
+        "overview": "Inverted Lambda начинается с логистической рекуррентности λ-фрактала и добавляет рациональную поправку. Первый член, c·z(1−z), — стандартное комплексное логистическое отображение. Второй, 0.18/(z² + c), обратен и квадратичен; когда его знаменатель приближается к нулю, он может забросить орбиту к очень большим значениям.\n\nЭта дробь меняет правила. Обычное логистическое отображение — многочлен, гладкий всюду; Inverted Lambda — рациональное отображение с подвижными полюсами. Орбита может уйти к бесконечности через неограниченный рост или забредая слишком близко к делителю. Округлые доли родителя остаются, но их прорезают зазубренные швы, узлоподобные сплетения и внезапные смены масштаба.\n\nЗначение 0,18 фиксировано, это не ещё один параметр. Оно удерживает и полиномиальный, и рациональный вклады активными в пределах умеренного числа итераций.",
+        "imageAlt": "Фрактал Inverted Lambda с тёмными долями, рассечёнными яркими линиями разломов и узлоподобными структурами",
+        "imageCaption": "Плоскость параметра Inverted Lambda: логистические доли, прерываемые рациональной поправкой, со швами и внезапными сменами масштаба.",
+        "math": {
+          "iteration": {
+            "label": "Lambda-reciprocal iteration",
+            "explanation": "Every step combines two contributions. First comes c·z(1−z), the quadratic logistic step behind the Lambda parameter set. Then comes a rational correction with fixed numerator 0.18 and denominator z² + c. A large denominator makes that correction small, so the map nearly follows the pure logistic version. Near z² + c = 0, it surges and may send the orbit far away.\n\nTake c = 1 + i and start at z₀ = 0. The first term gives 1 × 0 × 1 = 0. The second term: 0.18 / (0 + (1+i)) = 0.18/(1+i) = 0.09 − 0.09i. So z₁ ≈ 0.09 − 0.09i: a small nudge away from the logistic baseline. On later steps the rational term keeps steering, creating paths unavailable to the pure logistic family. The denominator z² + c marks the poles—near-singular values—and their positions move with c."
+          }
+        },
+        "visualCharacteristics": "The parameter plane keeps the logistic family’s rounded lobes, but sharp seams, dense knots, and patches where color suddenly deepens or brightens interrupt them. Near a pole, an orbit makes a large jump, and the escape-time coloring records that break.\n\nIt can resemble a smooth surface cracked from within. Far from the poles, the parent Lambda structure is still legible; the rational correction draws angular, crystalline detail across it.",
+        "faq": {
+          "inversion": {
+            "question": "What is inverted in this formula?",
+            "answer": "“Inverted” names the reciprocal term added to the logistic recurrence. It is not a geometric flip of the image or a reflection of the parameter plane. The reciprocal quadratic term 1/(z² + c) is the inversion meant here."
+          },
+          "poles": {
+            "question": "Where can poles occur?",
+            "answer": "A pole occurs wherever the denominator z² + c is zero — that is, when z = ±√(−c). Since c is free, pole locations depend on the parameter being explored. An evolving orbit may pass close to one, making the rational term spike and the trajectory jump far away."
+          }
+        },
+        "history": "Inverted Lambda is a hybrid construction joining two well-studied complex-dynamics families. Its logistic base comes from the lambda fractal tradition studied by Mandelbrot (1980). Adding a reciprocal quadratic term to a polynomial map relates to singular perturbation, which Curt McMullen explored in the late 1980s for rational maps zⁿ + λ/zⁿ.\n\nThis particular pairing—a logistic map and a reciprocal quadratic with a fixed constant numerator—appears to be a novel fractal-rendering formulation. It does not trace to one historical paper; it draws on ideas developed across decades of complex-dynamics research. “Inverted Lambda” describes the construction rather than a term from the research literature."
+      },
+      "mcmullen-2-3": {
+        "title": "McMullen 2–3 Map",
+        "summary": "Рациональное отображение, в котором возведение в квадрат уводит точки наружу, а обратно-кубический член отправляет их через полюс в начале координат.",
+        "overview": "Отображение McMullen 2–3 принадлежит семейству, обычно записываемому как \\(f_\\lambda(z)=z^n+\\lambda/z^d\\). FractalPark называет параметр \\(c\\) и выбирает \\(n=2\\), \\(d=3\\). Сначала оно похоже на квадратичное отображение с дополнительным членом. Затем \\(z^3\\) появляется в знаменателе и меняет правила: начало координат — полюс, а не обычная точка.\n\nОдна формула теперь владеет двумя территориями. Далеко наружу \\(z^2\\) доминирует и отталкивает большие значения дальше. Вблизи нуля \\(c/z^3\\) берёт верх и отправляет точки к бесконечности через полюс. Между ними лежит подвижная граница, где ни один член не побеждает окончательно.\n\nЭта граница может сомкнуться в кольца, распасться на округлые ячейки или соединиться в связную сеть. Это зависит от \\(c\\) и от орбит критических точек. Единого очертания McMullen не существует.",
+        "imageAlt": "Бледно-голубой фрактал McMullen, образующий многогранное кольцо из округлых ячеек вокруг большого центрального отверстия",
+        "imageCaption": "Изображение McMullen 2–3 от FractalPark: вложенные бусиноподобные границы, опоясывающие широкое центральное отверстие.",
+        "math": {
+          "iteration": {
+            "label": "A quadratic term and a cubic pole",
+            "explanation": "At each step, square the current complex value, then add \\(c/z^3\\). When \\(|z|\\) is large, the first term grows roughly like \\(|z|^2\\), while the reciprocal term fades like \\(1/|z|^3\\). Near zero the balance flips: the reciprocal term becomes enormous.\n\nThe same expression can be written as\n\n$$\nf_c(z)=\\frac{z^5+c}{z^3}.\n$$\n\nThe map has a pole of order three at \\(z=0\\), and—when \\(c\\neq0\\)—is a rational map of degree five. The “2–3” names the exponents in the original expression, not the rational-map degree.\n\nIn the exact definition, the pole sends zero to infinity on the Riemann sphere. A numerical renderer cannot divide by zero, so FractalPark replaces values extremely close to the origin with a tiny nonzero value and guards the denominator. That is a computational safety rail, not a different definition."
+          }
+        },
+        "visualCharacteristics": "One large pale opening anchors the image. An uneven ring of rounded cells circles it; farther out, smaller cells make a fine lace. What looks like a smooth blue band at first resolves into a crowded rim.\n\nThe outer edge is gently faceted rather than round, and no two cells quite match. That belongs to this parameter, frame, and colouring—not every McMullen map. The pale palette favours relief and nested boundaries over an escape-speed gradient.",
+        "faq": {
+          "exponents": {
+            "question": "What do 2 and 3 mean in the name?",
+            "answer": "They name the two powers in \\(z^2+c/z^3\\): the polynomial side squares \\(z\\), while the reciprocal side divides by its cube. In the general McMullen family they are \\(n\\) and \\(d\\).\n\nDo not read them as “degree two to degree three.” Combine the terms and the map is \\((z^5+c)/z^3\\), so for nonzero \\(c\\) its rational-map degree is five."
+          },
+          "singularity": {
+            "question": "What happens at z = 0?",
+            "answer": "The denominator \\(z^3\\) vanishes, so zero is a pole, not an ordinary starting point. On the extended complex plane it maps to infinity. Nearby points are flung away with strength growing like \\(1/|z|^3\\).\n\nThat pole is not a rendering accident; it is the feature that distinguishes this family from a polynomial such as \\(z^2+c\\). FractalPark only adds a tiny numerical guard near zero so the shader can represent the same limiting behavior without performing an undefined division."
+          }
+        },
+        "history": "The family takes its name from Curtis T. McMullen. In Section 7 of his 1988 paper *Automorphisms of Rational Maps*, McMullen constructed rational maps whose Julia sets break into a Cantor set of Jordan curves—infinitely many disjoint loops arranged with Cantor-set structure. Later authors adopted “McMullen maps” for the family \\(z^n+\\lambda/z^d\\) associated with this construction. McMullen is now Cabot Professor of Mathematics at Harvard, where his personal academic homepage and publication list remain available.\n\nThe 2–3 choice is the smallest pair of exponents satisfying the characteristic inequality\n\n$$\n\\frac{1}{n}+\\frac{1}{d}<1,\n$$\n\nbecause \\(1/2+1/3=5/6\\). It also gives the lowest possible degree, \\(n+d=5\\), in this part of the theory. The inequality alone does not guarantee that every parameter produces circles: the relevant critical orbits must also enter the appropriate escape region.\n\nWork after McMullen mapped out that dependence in much greater detail. Robert Devaney, Daniel Look, and David Uminsky proved an “escape trichotomy” in 2005: when the free critical orbit escapes, the Julia set can be a Cantor set, a Cantor set of circles, or a Sierpiński curve, depending on how it reaches infinity."
+      },
+      "rational-map-1": {
+        "title": "Rational Map 1",
+        "summary": "Рациональная итерация второй степени z²/(z + c) с одним нулём и полюсом, который путешествует по мере изменения c.",
+        "overview": "Rational Map 1 итерирует z² / (z + c). У многочлена вроде z² + c нет места, где отказывает знаменатель; у этого отображения есть. При z = −c сидит подвижный полюс. Орбита, задевающая его, может быть выброшена наружу, а затем на следующих шагах пойти совсем другим путём.\n\nЕсть один нуль — при z = 0 — и один полюс — при z = −c. Функция по-прежнему имеет степень два, но этот полюс перерисовывает плоскость. Далеко наружу z² / (z + c) растёт примерно как z (при больших |z|, z² / (z + c) ≈ z), так что бесконечность — не единственная командующая неподвижная точка. Бассейны собираются вокруг конечного набора притягивающих циклов, а полюс прорезает между ними изогнутые каналы и веерообразные секторы.\n\nFractalPark показывает плоскости параметра, где движется c, и виды Жюлиа, где c удерживается неподвижным. Эта иллюстрация — крупный план Жюлиа: изогнутые лезвия раскрываются вокруг полюса, а тонкие цветовые полосы следуют за орбитами, скользящими вблизи особенности.",
+        "imageAlt": "Крупный план Жюлиа Rational Map 1: веер изгибающихся лезвий и размашистых каналов, расходящихся от полюса",
+        "imageCaption": "Rational Map 1 в рендеринге FractalPark: медленно поворачивающийся веер изогнутых лезвий расходится от полюса, а узкие полосы фиксируют орбиты вблизи полюса.",
+        "math": {
+          "iteration": {
+            "label": "Rational iteration",
+            "explanation": "Each step squares z, then divides by z + c. The numerator is zero at z = 0; the denominator is zero at z = −c, which makes that point a pole. The map has degree two: (z²)/(z + c) is degree‑2 over degree‑1, and after cancelling a common factor it has one zero and one pole, each counted with multiplicity.\n\nTry the pole at close range. Take c = 0.5, so the pole is at z = −0.5, and start at z₀ = −0.49, just to its right. Then z₁ = (−0.49)² / (−0.49 + 0.5) = 0.2401 / 0.01 = 24.01. One step has thrown the orbit far out. Since |z₁| is large, the next step gives z₂ ≈ z₁² / z₁ = z₁ = 24.01: the large value persists instead of snapping back as in the magnet family. Pixel colour records the steps before the orbit crosses the escape threshold.\n\nUnlike polynomial maps, where infinity always attracts escaping orbits, this map is nearly linear far out (z → z). Thrown-out orbits may drift. The escape-time colours therefore spread into broad, gradual bands rather than the abrupt jumps familiar from z² + c."
+          }
+        },
+        "visualCharacteristics": "This is a Julia close-up. Around the pole, curved blades open into sweeping channels that follow the map's local direction. Tight colour bands between them mark orbits that graze the pole and need many steps to cross the escape threshold.\n\nBecause large-z motion is nearly linear rather than explosive, the bands change colour slowly and broadly. It reads as a turning fan with the pole for its hub. Move c and the pole moves too; the whole fan reorganizes.",
+        "faq": {
+          "rational": {
+            "question": "What makes this a rational map?",
+            "answer": "Its rule is a quotient of two complex polynomials, z² divided by z + c, not one polynomial alone. That permits poles: places where the denominator vanishes and the value becomes infinite. Polynomial maps have no such places, so their dynamics lack this particular detour."
+          },
+          "pole": {
+            "question": "Where is the pole?",
+            "answer": "Set z + c to zero: the pole is at z = −c. It moves with c and helps draw the curved fan and blades. An orbit passing close by is thrown to a large value, then may drift because the map grows only linearly far from the origin."
+          }
+        }
+      },
+      "spider": {
+        "title": "Spider",
+        "summary": "Рациональное отображение, добавляющее c/z к квадратичной орбите; полюс в нуле вытягивает длинные ноги и паутинные нити.",
+        "overview": "Формула Spider соединяет знакомое квадратичное слагаемое z² с c/z. Это рациональное отображение второй степени с двумя конкурирующими притяжениями. Далеко от нуля z² ведёт орбиту почти так же, как в квадратичном уходе Мандельброта. Вблизи c/z берёт верх и тянет точки к полюсу в начале координат.\n\nЭто состязание растягивает границу параметра в ветвящиеся нити, а не просто сдвигает порог ухода. Узкий центр, расходящиеся ноги и тёмные зазоры объясняют название.\n\nПоскольку правило делит на z, z = 0 — особая точка. Рендереры должны обрабатывать значения, крайне близкие к нулю, численным запасным вариантом. Само c может быть нулём; тогда отображение становится z² и возвращается обычная квадратичная динамика Жюлиа.",
+        "imageAlt": "Фрактал Spider: длинные ноги и бездонные нити, расходящиеся от тёмного центрального ядра",
+        "imageCaption": "Фрактал Spider в рендеринге FractalPark: длинные ноги и паутинные нити выступают из тёмного ядра в глубоких бездонных синих и чёрных тонах.",
+        "math": {
+          "iteration": {
+            "label": "Spider iteration",
+            "explanation": "The reciprocal term gives a quadratic orbit a sharp tug around the pole at zero.\n\nStart with c = 0. The reciprocal term vanishes, leaving z², the standard quadratic Julia map; initial values inside the unit disk can still have bounded orbits.\n\nNow take c = 1 and z₀ = (1, 0). The first iteration gives z₁ = 1² + 1/1 = 2, already far from the origin; the next gives z₂ = 4 + 1/2 = 4.5, and escape is rapid. Begin near zero instead—say z₀ = (0.01, 0)—and 1/0.01 = 100 dominates, throwing the orbit out at once. The spider filaments live on the boundary between those regimes."
+          }
+        },
+        "visualCharacteristics": "Long legs, dark filaments, and web-like junctions run out from a narrow centre. The origin's singularity makes a dark core; from it the threads branch and thin.\n\nThe canonical FractalPark rendering uses deep blues and blacks. The rational term breaks full symmetry, leaving the set slightly twisted rather than neatly balanced.",
+        "faq": {
+          "zero": {
+            "question": "What happens at z = 0?",
+            "answer": "At z = 0 the reciprocal term asks for division by zero, which is undefined. The implementation uses a stable fallback for extremely small values, by clamping the magnitude or substituting a small constant. This does not change the visible structure: points entering that near-zero zone are normally flung outward by the large reciprocal value on the next step."
+          },
+          "filaments": {
+            "question": "What creates the spider‑like legs?",
+            "answer": "The legs form where quadratic expansion and reciprocal attraction are nearly balanced. There an orbit can alternate between a pull toward zero and a throw outward, drawing the boundary between bounded and escaping behaviour into long threads. The effect is strongest near the origin, where the reciprocal term is largest; farther out, z² regains control and the threads taper."
+          }
+        }
+      },
+      "zaslavsky-map": {
+        "title": "Zaslavsky Map",
+        "summary": "Комплексное синусное отображение: синус изгибает орбиту, фиксированный поворот на 0,55 радиана вращает её, а c сдвигает её — адаптация, вдохновлённая диссипативным отображением ударного ротора Джорджа Заславского 1978 года.",
+        "overview": "Отображение Заславского изгибает орбиту синусом, поворачивает результат на фиксированную комплексную фазу (e^{0.55i}), затем прибавляет c. Полиномиальное отображение ухода получает свой характер от степеней z, растущих всё больше и больше. Здесь сюжет строится из периодических изгибов, встречающих устойчивый поворот.\n\nВ 1978 году Джордж М. Заславский ввёл исходное отображение для моделирования диссипативного ударного ротора: вращающееся тело, по которому многократно ударяют, пока трение истощает энергию. То классическое отображение двумерно и использует вещественные переменные «действие — угол». FractalPark переосмысляет идею в одной комплексной переменной: синус поставляет нелинейный удар, фиксированный комплексный множитель — поворот, а c делает возможными изображения времени ухода при сканировании параметра.\n\nКомплексный синус может неограниченно расти вдоль мнимой оси, так что это не просто полиномиальный уход. Орбита может некоторое время кружить, а затем разлететься. Эта заминка оставляет кружащиеся рукава и концентрические кольца, особенно после калейдоскопического пространственного преобразования.",
+        "imageAlt": "Отображение Заславского: кружащиеся рукава и мандалоподобные кольца в тёплых оранжевых и золотых тонах",
+        "imageCaption": "Отображение Заславского в рендеринге FractalPark: концентрические дуги и расходящиеся спицы образуют светящуюся мандалу в тёплых оранжевых и золотых тонах.",
+        "math": {
+          "iteration": {
+            "label": "Sinusoidal rotation map",
+            "explanation": "Sine bends z; the fixed complex multiplier turns it; c shifts the result.\n\nStart on the real axis. For z₀ = (0, 0), sin(0) = 0, so z₁ = e^{0.55i} × 0 + c = c. After that, complex sine can grow: the magnitude of sin(a + ib) contains terms up to cosh(b). A point with a large imaginary coordinate gets a large kick from sine, and is more likely to escape.\n\nThe 0.55-radian rotation (about 31.5°) is not a parameter; it is hard-coded in the formula. Every orbit gets the same angular twist each time. Hence the swirls."
+          }
+        },
+        "visualCharacteristics": "Kaleidoscopic transforms make the swirling arms and mandala-like rings especially clear. The canonical image sets concentric arcs and radiating spokes around a central region where the sine perturbation keeps orbits bounded.\n\nWarm oranges and golds sit against deep black in the canonical rendering. Constant rotation curves the arms; sine puts fine ripples along the ring edges.",
+        "faq": {
+          "rotation": {
+            "question": "Where does the rotation come from?",
+            "answer": "The map multiplies the perturbed orbit by e^{0.55i}, the unit complex number that turns the plane about 31.5° counter-clockwise. It happens on every iteration and is fixed in the formula, not adjustable by the user. The 0.55-radian value was chosen empirically for balanced swirls."
+          },
+          "transform": {
+            "question": "Is kaleidoscope part of the formula?",
+            "answer": "No. Kaleidoscope is an optional spatial transform outside the iteration. It reflects or copies sectors of the parameter plane. The Zaslavsky Map has no built-in reflection symmetry; the kaleidoscope is a separate rendering step that can be switched independently."
+          }
+        },
+        "history": "George M. Zaslavsky (1929–2008) was a Soviet‑born mathematical physicist who made foundational contributions to the theory of dynamical chaos. He introduced the map that now bears his name in a 1978 paper titled \"The Simplest Case of a Strange Attractor,\" published in Physics Letters A. The map was derived as a stroboscopic description of a dissipative kicked rotor — a rotating system that receives periodic impulses and loses energy through friction.\n\nZaslavsky later moved to the United States, joining New York University's physics department and the Courant Institute of Mathematical Sciences. He authored several books on Hamiltonian chaos and fractional dynamics. The Scholarpedia article on the Zaslavsky map, written by Zaslavsky himself in 2007, provides an authoritative technical reference.\n\nClassical Zaslavsky maps operate on two real variables (action and angle). The complex variant used by FractalPark, with its sine perturbation and fixed complex multiplier, is a creative adaptation suitable for escape‑time rendering rather than a direct transcription of the original dissipative system."
+      },
+      "zubieta": {
+        "title": "Zubieta",
+        "summary": "Квадратичное отображение, которое на каждом шаге складывает обе части z² + c в неотрицательный квадрант, порождая двойную зеркальную симметрию и компактные мандалоподобные формы.",
+        "overview": "Zubieta — родственник классической итерации Мандельброта, использующий абсолютные величины. Он выполняет обычное обновление zₙ² + c, а затем берёт абсолютную величину отдельно для вещественной и мнимой частей. Это не комплексный модуль, который сплющил бы обе части в одно вещественное число. Представьте складывание листа вдоль обеих осей: комплексная структура сохраняется, но каждая координата возвращается в неотрицательный квадрант.\n\nПовторите это складывание — и орбита продолжает возвращаться в первый квадрант или проходить сквозь него. Зеркальная симметрия накапливается. Стандартное множество Мандельброта имеет одну ось зеркала — вещественную; Zubieta отражается относительно обеих осей, раскладывая четыре зеркальных квадранта, как калейдоскоп.\n\nBurning Ship и Buffalo используют похожие покомпонентные складывания в другие моменты итерации. Zubieta складывает после и возведения в квадрат, и прибавления c. Этот момент придаёт ему собственные компактные доли, мозаичные клинья и зеркальные нити.",
+        "imageAlt": "Фрактал Zubieta: зеркальные клинья и мандалоподобные доли в тёплом янтарном цвете (\"Kaleido Amber Mandala\")",
+        "imageCaption": "Фрактал Zubieta в рендеринге FractalPark (\"Kaleido Amber Mandala\"): двойная зеркальная симметрия складывает компактные доли и мозаичные нити в калейдоскопическую мандалу.",
+        "math": {
+          "iteration": {
+            "label": "Component-folded iteration",
+            "explanation": "Here the bars mean component-wise absolute value, not complex magnitude. For u = x + iy, |u| means |x| + i|y|: take the absolute value of each part. Picture folding the point into the first quadrant.\n\nTry c = −0.5 + 0i. In the standard Mandelbrot iteration, z₀ = 0 produces z₁ = −0.5, z₂ = −0.25, z₃ ≈ −0.4375, and so on, converging to a fixed point. Zubieta folds those same values: after one step, |−0.5| = 0.5, so z₁ is 0.5 rather than −0.5. One small fold redirects the orbit—and changes how c is classified.\n\nThe escape threshold comes from the quadratic Mandelbrot test: once |zₙ| exceeds 2, divergence is guaranteed. The component-wise fold can keep some orbits bounded longer than the unfolded rule would."
+          }
+        },
+        "visualCharacteristics": "Repeated component-wise folding imposes double-mirror symmetry. The image reflects across both real and imaginary axes, making mirrored wedges, compact mandala-like lobes, and tiled filaments.\n\nCompared with Buffalo, which folds before squaring, Zubieta's post-update fold packs its lobes more tightly. In FractalPark's canonical rendering (\"Kaleido Amber Mandala\"), amber colour fills boundaries patterned with repeated angular motifs.",
+        "faq": {
+          "absolute-value": {
+            "question": "Is the absolute value a complex magnitude?",
+            "answer": "No. FractalPark takes absolute value separately on the real and imaginary parts. It takes |x| and |y| independently, reflecting each coordinate into the nonnegative range without collapsing the complex number to one real value."
+          },
+          "symmetry": {
+            "question": "Why is the image strongly mirrored?",
+            "answer": "Folding both output components into the first quadrant on every iteration imposes double reflection symmetry. The orbit is repeatedly sent back toward the nonnegative region, and the parameter map mirrors across both axes. Burning Ship gains its flame-like symmetry by a related fold, though Zubieta packs the result into tighter mandala-like patterns."
+          }
+        },
+        "history": "Zubieta belongs to a broader family of \"abs\" fractal variants — maps that apply absolute-value folds at different stages of the quadratic iteration. The best-known member of this family is the Burning Ship fractal, discovered by Michael Michelitsch and Otto E. Rössler in 1992, which folds the components before squaring. The Buffalo fractal, another relative, applies the fold after squaring but before adding c.\n\nThe Zubieta variant applies the component-wise absolute value after both squaring and the addition of c. Its precise origin is difficult to pin to a single published academic source. Variants of this kind circulated among fractal-rendering communities and software packages (Ultra Fractal, Fractint, XaoS) in the 1990s and 2000s, often named after whoever first implemented or popularized them in a given program.\n\nFractalPark's implementation follows the standard component-wise fold and renders the parameter plane in Mandelbrot mode."
+      }
+    }
+  },
+  "artworks": {
+    "page": {
+      "metadataTitle": "{title} | Работа FractalPark",
+      "imageAlt": "{title} — опубликованная работа FractalPark",
+      "breadcrumbLabel": "Хлебные крошки",
+      "breadcrumbHome": "Главная",
+      "breadcrumbGallery": "Галерея",
+      "eyebrow": "Опубликованная работа",
+      "createdBy": "Автор: {creator}",
+      "license": "Изображение распространяется по лицензии CC BY 4.0",
+      "licenseScope": "CC BY 4.0 распространяется на слой изображения фрактальной работы. Исходный код FractalPark остаётся под лицензией MIT; тексты сайта, интерфейс, логотип и товарные знаки не входят в лицензию на изображение.",
+      "remix": "Создать ремикс в Обзоре",
+      "copy": "Копировать ссылку на страницу",
+      "copied": "Ссылка скопирована",
+      "copyError": "Не удалось скопировать",
+      "visualNote": "Визуальный характер",
+      "related": "Похожие работы",
+      "customGradient": "Пользовательский градиент",
+      "viewer": {
+        "viewFullscreen": "Во весь экран",
+        "resume": "Продолжить анимацию",
+        "pause": "Пауза",
+        "minimize": "Выйти из полноэкранного режима",
+        "closeHint": "Кликните по фону или нажмите Esc, чтобы выйти"
+      },
+      "state": {
+        "title": "Состояние работы",
+        "formula": "Формула",
+        "zoom": "Масштаб",
+        "iterations": "Максимум итераций",
+        "coloring": "Раскраска",
+        "coloringValue": "{palette}; снаружи: {outside} / внутри: {inside}; трансформация: {transform}"
+      }
+    },
+    "entries": {
+      "preset-newton-deep-spiral": {
+        "summary": "Глубокий спуск в бассейнах Ньютона, где три области корней закручиваются в компактную спираль.",
+        "visualNote": "Тонкие чередующиеся полосы сжимаются к центру, а повёрнутая рамка сохраняет движение по диагонали."
+      },
+      "preset-lambda-julia-vortex": {
+        "summary": "Вихрь Жюлиа Lambda, построенный долгим приближением к сложенной границе.",
+        "visualNote": "Тёмные каналы разделяют бледные изогнутые лезвия, которые, кажется, циркулируют вокруг смещённого от центра глаза."
+      },
+      "preset-spider-julia-abyss": {
+        "summary": "Вид Жюлиа Spider, зависший над узкой бездной рационального отображения.",
+        "visualNote": "Нитевидные ноги пересекают обширное тёмное пространство и сходятся в крошечном, сильно увеличенном узле."
+      },
+      "preset-buffalo-julia-eclipse": {
+        "summary": "Композиция Жюлиа Buffalo, по форме подобная светящемуся телу, проходящему сквозь тень.",
+        "visualNote": "Сложенные полумесяцы и зернистые края создают впечатление затмения в наклонённом поле."
+      },
+      "preset-mandelbrot-deep-escape": {
+        "summary": "Спокойный вид Мандельброта, отступающий назад после крайнего путешествия вдоль границы.",
+        "visualNote": "Широкий финальный кадр контрастирует со скрытой глубиной, закодированной в его анимированном пути."
+      },
+      "preset-mandelbrot-crown": {
+        "summary": "Короноподобная граница Мандельброта, собранная из повторяющихся «почек» и узких нитей.",
+        "visualNote": "Арочные острия поднимаются вокруг тёмной центральной массы с мелкими спутниковыми деталями вдоль каждого края."
+      },
+      "preset-buffalo-julia-spiral-gate": {
+        "summary": "Врата Жюлиа Buffalo, чьи сложенные руки смыкаются вокруг крошечного спирального порога.",
+        "visualNote": "Выраженная двусторонняя структура уравновешивается композицией с поворотом на четверть оборота и резко увеличенным центром."
+      },
+      "preset-lambda-julia-ice-veil": {
+        "summary": "Граница Жюлиа Lambda, изображённая как холодное полупрозрачное цветение.",
+        "visualNote": "Белые швы и циановые края проступают между фиолетовыми и чёрными полями, словно иней на стекле."
+      },
+      "preset-magnet-julia-ember-reach": {
+        "summary": "Сцена Жюлиа Magnet Type 1 с тёплыми спорами, протянувшимися через тёмное поле.",
+        "visualNote": "Медные и пурпурные скопления ветвятся к отдельным зелёным акцентам внутри пользовательского градиента."
+      },
+      "preset-julia-aqua-compass": {
+        "summary": "Решётка Жюлиа семейства Мандельброта, устроенная как фарфоровый компас.",
+        "visualNote": "Линии орбитальных ловушек проводят бледные геометрические дуги поверх аквамариновых и графитовых слоёв."
+      },
+      "preset-mcmullen-azure-whorl": {
+        "summary": "Завиток Жюлиа McMullen 2–3, обнаруженный при очень сильном увеличении.",
+        "visualNote": "Лазурные завитки повторяются вокруг малой особенности рационального отображения, а поворот подчёркивает их размах."
+      },
+      "preset-inverted-lambda-obsidian-knot": {
+        "summary": "Линия разлома Inverted Lambda, завязанная в компактный обсидиановый узел.",
+        "visualNote": "Обратные разрывы прерывают гладкие логистические кривые и порождают резкие чёрные швы."
+      },
+      "preset-circle-inversion-citrine-spine": {
+        "summary": "Ось Circle Inversion, светящаяся цитриновой обратной структурой.",
+        "visualNote": "Концентрические детали накапливаются вокруг яркого центрального хребта и почти симметричной рамки."
+      },
+      "preset-rational-map-sapphire-fan": {
+        "summary": "Веер Жюлиа Rational Map 1, раскрытый на сапфировой плоскости.",
+        "visualNote": "Длинные лезвия расходятся от центра, испытывающего влияние полюса, а поворот превращает массив в размашистый веер."
+      },
+      "preset-perpendicular-celtic-porcelain-halo": {
+        "summary": "Ореол Жюлиа Perpendicular Celtic, образованный сложенными фарфоровыми полосами.",
+        "visualNote": "Гладкие бледные кольца пересекаются в резких складках в повёрнутой, плотно увеличенной композиции."
+      },
+      "preset-burning-ship-cinder-rift": {
+        "summary": "Разлом Burning Ship, освещённый шлаково-оранжевым и минерально-зелёным.",
+        "visualNote": "Слоистые утёсы спускаются в тёмное русло, а пользовательский градиент отделяет гребни от пепла."
+      },
+      "preset-magnet-julia-rust-cross": {
+        "summary": "Крест Жюлиа Magnet Type 2, выветренный в ржаво-цветную симметрию.",
+        "visualNote": "Четыре плотных рукава сходятся в точном центре в окружении тонкой текстуры рационального отображения."
+      },
+      "preset-zaslavsky-penitent-mandala": {
+        "summary": "Завиток Заславского, сложенный в сдержанную четырёхчастную мандалу.",
+        "visualNote": "Калейдоскопическое преобразование повторяет изогнутые орбитальные полосы вокруг малого созерцательного центра."
+      },
+      "preset-zubieta-kaleido-amber-mandala": {
+        "summary": "Складка Жюлиа Zubieta, развёрнутая в семичастную янтарную мандалу.",
+        "visualNote": "Компонентная симметрия и калейдоскопическое повторение создают слоистые лепестки вокруг смещённого центра."
+      },
+      "preset-airship-inversion-seafoam-wings": {
+        "summary": "Форма Жюлиа Airship, инвертированная в широкие флуоресцентные крылья ската-манты.",
+        "visualNote": "Пенно-морские и циановые края парят на почти чёрном пространстве, а инверсия раскрывает центральный силуэт."
+      },
+      "preset-newton-cosh-ember-meridian": {
+        "summary": "Бассейн Newton Cosh, прослеженный вдоль светящегося вертикального меридиана.",
+        "visualNote": "Повторяющиеся трансцендентные полосы сужаются в тлеющие швы при глубоком увеличении."
+      },
+      "preset-mandelbox-cobalt-bastion": {
+        "summary": "Сложенный бастион в духе Mandelbox, отрендеренный плотными кобальтовыми слоями.",
+        "visualNote": "Резкие углы и вложенные камеры придают плоской карте архитектурное ощущение глубины."
+      },
+      "preset-cosh-mandelbrot-gilded-plumes": {
+        "summary": "Поле Жюлиа Cosh Mandelbrot, растекающееся золочёными трансцендентными перьями.",
+        "visualNote": "Повторяющиеся перистые полосы разворачиваются веером наружу, а повёрнутая рамка разбивает их вертикальную периодичность."
+      },
+      "preset-quad-julia-ivory-filigree-seal": {
+        "summary": "Печать Жюлиа Quartic, сплетённая из филиграни цвета слоновой кости и четырёхкратного ветвления.",
+        "visualNote": "Тонкие бледные нити смыкаются в компактную эмблему на фоне более тёмных областей бинарной окраски."
+      },
+      "preset-magnet-julia-moonstone-reef": {
+        "summary": "Риф Жюлиа Magnet Type 2, освещённый, как полированный лунный камень.",
+        "visualNote": "Освещение с оценкой расстояния выявляет приподнятые гребни и мелкие впадины на поверхности рационального отображения."
+      },
+      "preset-phoenix-multi-ember-compass": {
+        "summary": "Компас Жюлиа Multi-Phoenix, ведомый сильным отрицательным членом памяти.",
+        "visualNote": "Четыре тлеющие спицы и загибающиеся назад перистые детали окружают устойчивую центральную ступицу."
+      }
+    }
+  },
+  "explore": {
+    "title": "Обзор",
+    "canvas": {
+      "placeholder": "WebGL Canvas — скоро"
+    },
+    "tabs": {
+      "formula": "Формула",
+      "coloring": "Раскраска",
+      "transform": "Трансформация",
+      "render": "Рендеринг",
+      "animation": "Анимация"
+    },
+    "artworkActions": {
+      "common": {
+        "cancel": "Отмена"
+      },
+      "cloud": {
+        "syncing": "Сохраняем в ваше облако…",
+        "synced": "Сохранено в ваше облако.",
+        "failed": "Не удалось сохранить в облако — ваши изменения не были сохранены. Попробуйте снова.",
+        "conflict": "Этот черновик был изменён в другом месте. Загрузите удалённую версию или сохраните свои правки как новый черновик.",
+        "quota": "Ваше облачное хранилище переполнено. Удалите черновики, чтобы освободить место.",
+        "offline": "Похоже, вы не в сети. Ваши изменения не были сохранены.",
+        "session-expired": "Ваша сессия истекла. Войдите снова, чтобы продолжить сохранение."
+      },
+      "save": {
+        "label": "Сохранить в галерею",
+        "title": "Сохранить работу",
+        "name": "Название",
+        "placeholder": "Введите название...",
+        "confirm": "Сохранить",
+        "pending": "Сохраняем..."
+      },
+      "download": {
+        "label": "Скачать проект"
+      },
+      "import": {
+        "label": "Импортировать проект",
+        "dropHint": "Перетащите сюда файл .fractal.json"
+      },
+      "export": {
+        "label": "Экспорт PNG",
+        "title": "Экспорт PNG",
+        "scale": "Размер",
+        "quality": "Качество сглаживания",
+        "qualityOff": "Выкл.",
+        "qualityLow": "Низкое",
+        "qualityHigh": "Высокое",
+        "qualityUltra": "Ультра",
+        "confirm": "Экспортировать",
+        "pending": "Рендерим..."
+      },
+      "reset": {
+        "label": "Сбросить работу",
+        "title": "Сбросить все настройки?",
+        "description": "Эта работа вернётся к пресету по умолчанию, включая настройки формулы, вида, стиля, рендеринга и анимации. Сохранённые элементы галереи и библиотека пользовательских формул не будут удалены.",
+        "cancel": "Отмена",
+        "confirm": "Сбросить"
+      },
+      "status": {
+        "save": {
+          "success": "Сохранено в галерею."
+        },
+        "download": {
+          "success": "Проект скачан."
+        },
+        "import": {
+          "success": "Проект импортирован."
+        },
+        "export": {
+          "success": "PNG экспортирован."
+        }
+      },
+      "errors": {
+        "invalid-json": "Выбранный файл не является корректным JSON.",
+        "file-too-large": "Файл проекта слишком большой.",
+        "invalid-envelope": "Выбранный файл не является корректным проектом FractalPark.",
+        "source-too-large": "Встроенная пользовательская формула слишком большая.",
+        "missing-formula-asset": "В проекте отсутствует исходный код пользовательской формулы.",
+        "asset-hash-mismatch": "Исходный код пользовательской формулы не прошёл проверку целостности.",
+        "asset-compile-failed": "Не удалось скомпилировать встроенную пользовательскую формулу.",
+        "future-document": "Этот проект создан в более новой версии FractalPark и не может быть отредактирован здесь.",
+        "invalid-formula-storage": "Не удалось безопасно обновить библиотеку пользовательских формул.",
+        "formula-limit-reached": "Библиотека пользовательских формул заполнена.",
+        "formula-commit-failed": "Не удалось установить пользовательскую формулу. Изменения не сохранены.",
+        "save-failed": "Не удалось сохранить работу.",
+        "download-failed": "Не удалось скачать проект.",
+        "export-failed": "Не удалось экспортировать PNG.",
+        "cloud-unavailable": "Облачная синхронизация сейчас недоступна — ваши изменения не были сохранены."
+      },
+      "conflict": {
+        "reload": "Загрузить удалённую версию",
+        "saveAsNew": "Сохранить как новый черновик"
+      }
+    },
+    "formula": {
+      "select": "Выбрать формулу",
+      "search": "Поиск формул...",
+      "noResults": "Формулы не найдены",
+      "active": "Активная",
+      "builtin": "Встроенная",
+      "custom": "Пользовательская",
+      "resolution": {
+        "loading": "Загружаем формулу...",
+        "notFound": "Не удалось загрузить пользовательскую формулу «{formula}».",
+        "storageInvalid": "Не удалось безопасно прочитать библиотеку пользовательских формул.",
+        "idConflict": "Идентификатор пользовательской формулы «{formula}» конфликтует со встроенной формулой.",
+        "compileFailed": "Не удалось скомпилировать пользовательскую формулу «{formula}».",
+        "unavailable": "Не удалось загрузить формулу «{formula}»."
+      },
+      "examples": {
+        "starterBrot": {
+          "name": "Стартовое множество Мандельброта",
+          "description": "Простейшая формула времени убегания — удобна для первого знакомства со структурой init / loop / bailout."
+        },
+        "parameterDrift": {
+          "name": "Дрейф параметров",
+          "description": "Демонстрирует слоты параметров p1 / p2 и разницу между cabs и |z|."
+        },
+        "orbitEcho": {
+          "name": "Эхо орбиты",
+          "description": "Использует zPrev как память обратной связи и хорошо сочетается с раскраской orbitEcho для огибающих орбиты."
+        },
+        "fnSlotWeave": {
+          "name": "Плетение слотов Fn",
+          "description": "Демонстрирует fn1 / fn2 и слоты параметров как шаблон создания формул, совместимый с Fractint."
+        },
+        "branchGarden": {
+          "name": "Сад ветвлений",
+          "description": "Показывает ветви if / elseif / else в сочетании с тригонометрическими обновлениями."
+        }
+      },
+      "customLibrary": {
+        "title": "Пользовательские формулы",
+        "openStandaloneEditor": "FRM Editor",
+        "new": "Новая",
+        "loading": "Загрузка...",
+        "empty": "Пользовательских формул пока нет",
+        "createFirst": "Создайте первую формулу",
+        "renameConfirm": "Подтвердить",
+        "deleteConfirm": "Удалить эту формулу?",
+        "maxReached": "Достигнут максимум формул ({count})",
+        "formulaNotFound": "Этой формулы больше нет в вашей облачной библиотеке.",
+        "compileFailed": "Не удалось скомпилировать формулу.",
+        "examplesTitle": "Начать с примеров",
+        "examplesDescription": "Сначала загрузите рабочий пример, а затем превратите его в собственную формулу в редакторе.",
+        "signInHint": "Войдите, чтобы хранить формулы в облачной библиотеке и открывать их на любом устройстве.",
+        "signIn": "Войти",
+        "unavailableHint": "Библиотека формул сейчас недоступна. Попробуйте снова чуть позже.",
+        "unavailable": "Библиотека формул сейчас недоступна.",
+        "conflict": "Эта формула была изменена в другом месте. Перезагрузите и попробуйте снова.",
+        "builtinConflict": "Этот идентификатор зарезервирован встроенной формулой. Переименуйте свою и попробуйте снова."
+      },
+      "family": {
+        "all": "Все",
+        "classic": "Классические",
+        "burning-ship": "Горящий корабль",
+        "newton": "Ньютон",
+        "magnet": "Магнит",
+        "phoenix": "Феникс",
+        "transcendental": "Трансцендентные",
+        "exotic": "Экзотические"
+      }
+    },
+    "controls": {
+      "colorScheme": "Цветовая схема",
+      "iterations": "Итерации",
+      "position": "Положение",
+      "center": "Центр",
+      "zoom": "Масштаб",
+      "mode": {
+        "label": "Режим фрактала",
+        "mandelbrot": "Мандельброт",
+        "julia": "Жюлиа"
+      },
+      "juliaC": {
+        "label": "Параметр Жюлиа (c)",
+        "pickHint": "Совет: кликните по точке на множестве Мандельброта, чтобы задать c и переключиться на Жюлиа.",
+        "picked": "Жюлиа c = {re}, {im}"
+      },
+      "formula": {
+        "label": "Формула",
+        "mandelbrot": "Мандельброт",
+        "burningShip": "Горящий корабль",
+        "airship": "Дирижабль",
+        "tricorn": "Трикорн",
+        "phoenix": "Феникс",
+        "lambda": "Лямбда",
+        "quadJulia": "Квадратичная Жюлиа",
+        "cubicMandelbrot": "Кубический",
+        "quarticMandelbrot": "Квартичный",
+        "sierpinski": "Серпинский",
+        "mandelbox": "Mandelbox",
+        "multicorn4": "Мультикорн 4",
+        "multicorn5": "Мультикорн 5",
+        "multicorn6": "Мультикорн 6",
+        "multicorn7": "Мультикорн 7",
+        "chebyshev2": "Чебышёв T2",
+        "chebyshev3": "Чебышёв T3",
+        "chebyshev4": "Чебышёв T4",
+        "chebyshev5": "Чебышёв T5",
+        "perpendicularMandelbrot": "Перпендикулярный Мандельброт",
+        "perpendicularTricorn": "Перпендикулярный трикорн",
+        "perpendicularCeltic": "Перпендикулярный кельтский",
+        "cubicPerpendicularMandelbrot": "Кубический перпендикулярный Мандельброт",
+        "quarticPerpendicularMandelbrot": "Квартичный перпендикулярный Мандельброт",
+        "rabbitJulia": "Жюлиа-кролик",
+        "newton3": "Ньютон (3-й)",
+        "newton4": "Ньютон (4-й)",
+        "newtonSin": "Ньютон sin",
+        "newtonCos": "Ньютон cos",
+        "newton5": "Ньютон (5-й)",
+        "newton6": "Ньютон (6-й)",
+        "newtonSinh": "Ньютон sinh",
+        "newtonCosh": "Ньютон cosh",
+        "magnet1": "Магнит, тип 1",
+        "magnet2": "Магнит, тип 2",
+        "phoenixMulti": "Мульти-Феникс",
+        "barnsley1": "Барнсли 1",
+        "barnsley2": "Барнсли 2",
+        "collatz": "Коллатц",
+        "spider": "Паук",
+        "buffalo": "Буффало",
+        "rationalMap1": "Рациональное отображение 1",
+        "rationalMap2": "Рациональное отображение 2",
+        "mcMullen23": "Макмаллен 2/3",
+        "mcMullen32": "Макмаллен 3/2",
+        "mcMullen34": "Макмаллен 3/4",
+        "reciprocalQuadratic": "Обратная квадратичная",
+        "reciprocalCubic": "Обратная кубическая",
+        "invertedLambda": "Инвертированная лямбда",
+        "novaBasin": "Бассейн Нова",
+        "zaslavskyMap": "Отображение Заславского",
+        "henon": "Эно",
+        "ikeda": "Икеда",
+        "zubieta": "Зубьета",
+        "expJulia": "Экспоненциальная Жюлиа",
+        "atanhMandelbrot": "Atanh Мандельброт",
+        "atanhJulia": "Atanh Жюлиа",
+        "asinhMandelbrot": "Asinh Мандельброт",
+        "asinhJulia": "Asinh Жюлиа",
+        "acoshMandelbrot": "Acosh Мандельброт",
+        "acoshJulia": "Acosh Жюлиа",
+        "cothMandelbrot": "Coth Мандельброт",
+        "cothJulia": "Coth Жюлиа",
+        "logJulia": "Log Жюлиа",
+        "cosMandelb": "Косинусный Мандельброт",
+        "expMandelbrot": "Экспоненциальный Мандельброт",
+        "sineMandelb": "Синусный Мандельброт",
+        "sineJulia": "Синусная Жюлиа",
+        "coshMandelb": "Cosh Мандельброт",
+        "sinhMandelb": "Sinh Мандельброт",
+        "coshJulia": "Cosh Жюлиа",
+        "coshSinh": "Cosh-Sinh",
+        "cosJulia": "Косинусная Жюлиа",
+        "tanJulia": "Тангенсная Жюлиа",
+        "sinhJulia": "Sinh Жюлиа",
+        "heart": "Сердце",
+        "manowar": "Man-O-War",
+        "biomorph": "Биоморф",
+        "cactus": "Кактус",
+        "logistic": "Логистическое отображение",
+        "celticMandelbrot": "Кельтский Мандельброт",
+        "celticBurningShip": "Кельтский горящий корабль",
+        "celticMandelbar": "Кельтский мандельбар",
+        "burningShipImag": "Мнимый горящий корабль",
+        "perpendicularBurningShip": "Перпендикулярный горящий корабль",
+        "perpendicularCelticBurningShip": "Перпендикулярный кельтский горящий корабль",
+        "burningShipCubic": "Кубический горящий корабль",
+        "burningShipQuartic": "Квартичный горящий корабль",
+        "airshipCubic": "Кубический дирижабль",
+        "newtonExp": "Ньютон exp",
+        "halleyCubic": "Кубический Хейли",
+        "novaClassic": "Классическая Нова",
+        "novaSine": "Нова sin",
+        "novaCos": "Нова cos",
+        "tetration": "Тетрация",
+        "circleInversion": "Инверсия окружности",
+        "frothyBasin": "Пенный бассейн",
+        "simonBrot": "SimonBrot",
+        "rings": "Кольца"
+      },
+      "transform": {
+        "label": "Трансформация",
+        "none": "Нет",
+        "kaleidoscope": "Калейдоскоп",
+        "mobius": "Мёбиус",
+        "inversion": "Инверсия",
+        "polar": "Полярная",
+        "sinusoidal": "Синусоидальная",
+        "spherical": "Сферическая"
+      },
+      "coloring": {
+        "outside": "Раскраска снаружи",
+        "inside": "Раскраска внутри",
+        "smooth": "Гладкая",
+        "orbitTrap": "Ловушка орбиты",
+        "orbitEcho": "Эхо орбиты",
+        "stripe": "Полосы",
+        "binary": "Бинарная",
+        "tia": "TIA",
+        "black": "Чёрная",
+        "finalOrbit": "Финальная орбита",
+        "atomDomain": "Атомный домен"
+      },
+      "orbitTrap": {
+        "label": "Ловушка орбиты",
+        "point": "Точка",
+        "cross": "Крест",
+        "circle": "Окружность",
+        "radius": "Радиус",
+        "width": "Ширина"
+      },
+      "quality": {
+        "ssaa": "SSAA 2x2",
+        "adaptive": "Адаптивные итерации",
+        "lighting": "Освещение",
+        "lightingMode": "Режим",
+        "lightingModeNormalMap": "Карта нормалей",
+        "lightingModeDem": "Оценка расстояния",
+        "azimuth": "Азимут света",
+        "elevation": "Высота света",
+        "intensity": "Интенсивность света"
+      },
+      "rotation": {
+        "label": "Поворот"
+      },
+      "formulaParameters": "Параметры формулы",
+      "formulaNoParameters": "Эта формула использует встроенные значения по умолчанию и не требует дополнительных элементов управления.",
+      "complexReal": "Re",
+      "complexImaginary": "Im",
+      "transformParameters": "Параметры трансформации",
+      "transformNoParameters": "Эта трансформация использует встроенные значения по умолчанию и не требует дополнительных элементов управления.",
+      "transformCenter": "Центральная точка",
+      "kaleidoFold": "Число сгибов",
+      "kaleidoCenterX": "Центр X",
+      "kaleidoCenterY": "Центр Y",
+      "invRadius": "Радиус инверсии",
+      "invCenterX": "Центр X",
+      "invCenterY": "Центр Y",
+      "polarAngleScale": "Масштаб угла",
+      "polarRadiusScale": "Масштаб радиуса",
+      "sphericalAmount": "Степень сферичности",
+      "ringsP": "Параметр колец",
+      "animation": {
+        "title": "Анимация",
+        "addKeyframe": "Добавить ключевой кадр",
+        "removeKeyframe": "Удалить",
+        "maxReached": "Максимум 5 ключевых кадров",
+        "preview": "Предпросмотр",
+        "stopPreview": "Стоп",
+        "noKeyframes": "Ключевых кадров пока нет",
+        "duration": "Цикл: {seconds} с",
+        "keyframeLabel": "Ключевой кадр {number} (масштаб: {zoom})"
+      },
+      "gradient": {
+        "preset": "Пресет",
+        "custom": "Свой",
+        "addStop": "+ Добавить цветовую точку",
+        "removeStop": "Удалить",
+        "presets": {
+          "inferno": "Инферно",
+          "ocean": "Океан",
+          "spectrum": "Спектр",
+          "sakura": "Сакура",
+          "moonlight": "Лунный свет"
+        }
+      }
+    },
+    "palettes": {
+      "inferno": "Инферно",
+      "ocean": "Океан",
+      "spectrum": "Спектр",
+      "sakura": "Сакура",
+      "moonlight": "Лунный свет",
+      "magma": "Магма",
+      "viridis": "Viridis",
+      "batlow": "Batlow",
+      "fire": "Огонь",
+      "deepOcean": "Глубокий океан",
+      "twilight": "Сумерки",
+      "romaO": "RomaO",
+      "vik": "Vik",
+      "berlin": "Berlin",
+      "copperPatina": "Медная патина",
+      "aurora": "Аврора",
+      "porcelain": "Фарфор"
+    },
+    "paletteCategories": {
+      "legacy": "Наследие",
+      "sequential": "Последовательные",
+      "cyclic": "Циклические",
+      "diverging": "Расходящиеся",
+      "artistic": "Художественные"
+    },
+    "editor": {
+      "title": "Редактор формул",
+      "loading": "Загружаем редактор...",
+      "loadFailed": "Не удалось загрузить редактор",
+      "loadFailedDescription": "Не удалось загрузить редактор кода. Пожалуйста, обновите страницу.",
+      "compile": "Скомпилировать",
+      "compiling": "Компилируем...",
+      "save": "Сохранить",
+      "saved": "Сохранено",
+      "savedDescription": "Формула «{name}» сохранена локально",
+      "saveFailed": "Не удалось сохранить",
+      "saveFailedDescription": "Не удалось сохранить текущую формулу",
+      "compileSuccess": "Компиляция успешна",
+      "compileSuccessDescription": "Формула «{name}» готова",
+      "compileFailed": "Ошибка компиляции",
+      "compileFailedDescription": "Найдено ошибок: {count}",
+      "compileError": "Ошибка компиляции",
+      "compatibilityNotes": "Примечания о совместимости",
+      "errors": "Ошибок: {count}",
+      "warnings": "Предупреждений: {count}",
+      "infos": "Примечаний о совместимости: {count}",
+      "noErrors": "Ошибок нет",
+      "diagnostics": "Диагностика (ошибок: {errors}, предупреждений: {warnings}, примечаний о совместимости: {infos})",
+      "moreIssues": "Ещё проблем: {count}...",
+      "restoreLastSuccessful": "Восстановить последнюю рабочую версию",
+      "restoreSuccess": "Версия восстановлена",
+      "restoreSuccessDescription": "Редактор возвращён к последнему рабочему исходному коду.",
+      "setCurrentViewAsDefault": "Сделать текущий вид видом по умолчанию",
+      "defaultViewSet": "Вид по умолчанию обновлён",
+      "defaultViewSetDescription": "При сохранении текущий вид Обзора будет закреплён за этой пользовательской формулой.",
+      "modeCompat": "Режим: совместимости",
+      "modeNative": "Режим: нативный",
+      "line": "Строка {line}, столбец {col}",
+      "lines": "Строк: {count}",
+      "glslError": "Ошибка компиляции GLSL (сопоставлена с исходным кодом формулы)",
+      "glslErrorUnmapped": "Ошибка компиляции GLSL (местоположение не удаётся сопоставить)"
+    },
+    "landing": {
+      "heading": "FractalPark: генератор фракталов с открытым исходным кодом прямо в браузере",
+      "whatIsHeading": "Что такое FractalPark?",
+      "whatIsAnswer": "FractalPark — это бесплатная платформа с открытым исходным кодом (MIT) для изучения и создания фракталов, которая полностью рендерит изображения в вашем браузере с помощью WebGL: {formulaCount} встроенных формул, создание формул FRM, совместимых с Fractint, и экспорт PNG в высоком разрешении. Для создания аккаунт не нужен; сохранение работ и формул выполняется через вход по email и личную облачную библиотеку.",
+      "capabilitiesHeading": "Основные возможности",
+      "capabilitiesIntro": "{formulaCount} формул в {formulaFamilyCount} семействах · {formulaGuideCount} подробных руководств по формулам · {transformCount} трансформаций · {coloringModeCount} режимов раскраски · общие ссылки · экспорт PNG до {maxExportScale}×",
+      "linksHeading": "Продолжайте исследовать",
+      "links": {
+        "formulas": "Атлас формул — каждая формула с математикой, историей и живыми примерами",
+        "frmGuide": "Руководство по FRM — создавайте формулы, совместимые с Fractint, прямо в браузере",
+        "drift": "Drift — расслабьтесь под захватывающее слайд-шоу пресетов",
+        "about": "О проекте — факты, границы и детали открытого исходного кода"
+      },
+      "posterAlt": "Статический предпросмотр фрактала Мандельброта, отрендеренного FractalPark"
+    },
+    "draft": {
+      "loading": "Открываем ваш черновик…",
+      "notFound": "Не удалось найти этот черновик. Возможно, он был удалён или принадлежит другому аккаунту.",
+      "unavailable": "Сейчас не удалось открыть этот черновик. Попробуйте снова чуть позже.",
+      "retry": "Повторить",
+      "signInToOpen": "Этот черновик хранится в облачной библиотеке.",
+      "signIn": "Войдите, чтобы открыть его"
+    }
+  },
+  "frmEditor": {
+    "title": "FRM Editor",
+    "description": "Пишите, компилируйте и просматривайте FRM-формулы в браузере; сохраняйте их в облачной библиотеке.",
+    "breadcrumb": "Хлебные крошки",
+    "crumbGuide": "Руководство по FRM",
+    "beta": "Бета",
+    "localOnly": "Ваш исходный код и предпросмотр остаются в этой вкладке, пока вы не сохраните их в облачную библиотеку. Совместимость с FRM намеренно ограничена.",
+    "guide": "Читать руководство по FRM",
+    "noJsTitle": "FRM Editor требует JavaScript",
+    "noJs": "На этой странице описывается работа с FRM. Включите JavaScript, чтобы редактировать, компилировать и просматривать формулы.",
+    "actions": "Действия редактора",
+    "new": "Новая",
+    "examples": "Примеры",
+    "myFormulas": "Мои формулы",
+    "loading": "Загружаем вашу библиотеку формул…",
+    "empty": "Сохранённых формул пока нет.",
+    "import": "Импортировать .frm",
+    "download": "Скачать .frm",
+    "saveOpen": "Сохранить и открыть в Обзоре",
+    "viewModes": "Вид редактора",
+    "editorMode": "Редактор",
+    "previewMode": "Предпросмотр",
+    "preview": "Предпросмотр скомпилированного",
+    "previewEmpty": "Скомпилируйте корректную формулу, чтобы обновить предпросмотр.",
+    "previewStale": "Исходный код изменился. Это последний успешный предпросмотр; скомпилируйте снова перед сохранением или открытием.",
+    "reset": "Сбросить вид",
+    "unknownExample": "Этот пример недоступен. Начните с пустой локальной формулы.",
+    "replaceConfirm": "Заменить текущий несохранённый черновик?",
+    "leaveConfirm": "Выйти из редактора и отбросить несохранённые изменения черновика?",
+    "saved": "Сохранено локально.",
+    "saveError": "Не удалось сохранить формулу локально.",
+    "errors": {
+      "maxCount": "Достигнут максимум формул ({count}).",
+      "formulaNotFound": "Этой локальной формулы больше не существует.",
+      "storageUnavailable": "Не удалось обновить локальную библиотеку формул.",
+      "compileFailed": "Не удалось скомпилировать формулу.",
+      "conflict": "Эта формула была изменена в другом месте. Перезагрузите и попробуйте снова.",
+      "builtinConflict": "Этот идентификатор зарезервирован встроенной формулой."
+    },
+    "compileFirst": "Сначала успешно скомпилируйте этот исходный код, прежде чем открывать его в Обзоре.",
+    "source": {
+      "multiple": "Этот исходный код содержит более одной формулы верхнего уровня. FractalPark компилирует по одной формуле за раз и сохранил полный исходный код без усечения.",
+      "trailing": "Этот исходный код содержит неподдерживаемое содержимое после формулы. FractalPark сохранил полный исходный код и не будет компилировать только первую часть."
+    },
+    "file": {
+      "extension": "Выберите файл .frm.",
+      "size": "Файлы FRM должны быть не больше 256 КиБ.",
+      "encoding": "Файл должен быть корректным UTF-8."
+    },
+    "librarySignIn": "Войдите, чтобы открыть облачную библиотеку формул."
+  },
+  "metadata": {
+    "explore": {
+      "title": "FractalPark — генератор фракталов с открытым исходным кодом в браузере",
+      "description": "Платформа с открытым исходным кодом для изучения и создания фракталов, где формула — в центре всего, работает прямо в браузере: 94 встроенные формулы, рендеринг WebGL в реальном времени, создание формул FRM, совместимых с Fractint, и экспорт PNG в высоком разрешении.",
+      "ogTitle": "FractalPark — фрактальное искусство с открытым исходным кодом в вашем браузере",
+      "ogDescription": "Создавайте фрактальное искусство в браузере: 94 формулы, рендеринг WebGL в реальном времени, создание FRM, экспорт PNG в высоком разрешении."
+    },
+    "gallery": {
+      "title": "Моя галерея | Личная коллекция фракталов - FractalPark",
+      "description": "Ваша личная галерея фрактального искусства. Сохраняйте, упорядочивайте и делитесь любимыми фракталами."
+    },
+    "about": {
+      "title": "О проекте | Генератор фракталов с открытым исходным кодом в браузере - FractalPark",
+      "description": "Узнайте о FractalPark — генераторе фракталов с открытым исходным кодом (MIT), работающем в браузере на WebGL: 94 формулы, пользовательские палитры и экспорт PNG."
+    },
+    "formulaAtlas": {
+      "title": "Атлас формул | 94 фрактальные формулы - FractalPark",
+      "description": "Просматривайте все 94 формулы FractalPark из семи семейств, изучайте 21 избранный профиль с руководством, осваивайте FRM и открывайте канонические состояния формул в WebGL-Обзоре.",
+      "imageAlt": "Атлас формул FractalPark со 94 встроенными формулами"
+    },
+    "frmEditor": {
+      "title": "FRM Editor | FractalPark",
+      "description": "Пишите, компилируйте и просматривайте FRM-формулы в браузере; сохраняйте их в облачной библиотеке."
+    },
+    "frmGuide": {
+      "title": "Руководство по FRM | Создавайте собственные фрактальные формулы - FractalPark",
+      "description": "Изучите проверенный синтаксис FRM FractalPark, уровни совместимости, конвейер компиляции AST в GLSL, диагностику и три примера пользовательских формул, прошедших проверку компиляции.",
+      "imageAlt": "Руководство по языку формул FRM FractalPark"
+    },
+    "drift": {
+      "title": "Drift — захватывающее слайд-шоу фракталов | FractalPark",
+      "description": "Свободное путешествие во весь экран по опубликованным фрактальным пресетам FractalPark, отрендеренное в реальном времени на WebGL. Откиньтесь и наблюдайте, как движется математика.",
+      "ogTitle": "Drift — захватывающее слайд-шоу фракталов",
+      "ogDescription": "Фоновое воспроизведение фрактальных пресетов FractalPark во весь экран."
+    }
+  },
+  "about": {
+    "title": "О FractalPark",
+    "aiDescription": "FractalPark — это генератор фрактального искусства с открытым исходным кодом (MIT), работающий в браузере и использующий WebGL для рендеринга на GPU в реальном времени. Он включает 94 встроенные формулы фракталов времени убегания (семейства Мандельброта, Жюлиа, Ньютона, Феникса, Магнита, Макмаллена, рациональные и трансцендентные), редактор пользовательских формул с поддержкой синтаксиса Fractint .frm, 7 плагинов UV-трансформаций, 9 режимов раскраски и экспорт PNG в высоком разрешении. Создан на Next.js 16, React 19, TypeScript 5 и Tailwind CSS. Рендер-движок использует плагинную архитектуру с динамической сборкой GLSL-шейдеров и LRU-кэшированием.",
+    "techStack": {
+      "title": "Технологии",
+      "description": "Создано на Next.js, WebGL и TypeScript. Рендеринг фракталов в реальном времени обеспечивают GPU-шейдеры.",
+      "frontend": "Фронтенд: Next.js 16 (App Router), React 19, TypeScript 5, Tailwind CSS 4, shadcn/ui",
+      "rendering": "Рендеринг: WebGL 1 (GLSL-фрагментные шейдеры), плагинная архитектура, LRU-кэш шейдеров",
+      "formula": "Система формул: собственный парсер Fractint .frm, редактор CodeMirror 6, транспилятор AST в GLSL"
+    },
+    "openSource": {
+      "title": "Открытый исходный код",
+      "description": "FractalPark распространяется по лицензии MIT. Исходный код доступен на GitHub, поэтому любой желающий может изучить, как он работает, запустить его локально, предложить улучшения или развивать браузерный фрактальный движок.",
+      "github": "Репозиторий GitHub",
+      "license": "Лицензия MIT"
+    }
+  },
+  "drift": {
+    "pause": "Пауза",
+    "play": "Воспроизвести",
+    "previous": "Предыдущий пресет",
+    "next": "Следующий пресет"
+  },
+  "publicProject": {
+    "tagline": "FractalPark — это платформа с открытым исходным кодом для изучения и создания фракталов, где формула — в центре всего; поддержка FRM, совместимого с Fractint, постоянно растёт, и мы работаем над тем, чтобы перенести формульное наследие Fractint в современный браузер.",
+    "definition": "FractalPark — это бесплатное приложение с открытым исходным кодом (MIT) на WebGL для исследования, изучения и создания фрактального искусства. В него входят {formulaCount} встроенных формул в {formulaFamilyCount} семействах, {formulaGuideCount} подробных руководств по формулам, язык FRM, совместимый с Fractint, с руководством и отдельным редактором, а также Галерея сообщества. Рендеринг выполняется в вашем браузере; сохранение работ и формул — через вход по email и личную облачную библиотеку.",
+    "aiDescription": "FractalPark — это генератор фракталов с открытым исходным кодом (MIT) в браузере, использующий WebGL для рендеринга на GPU в реальном времени. Он включает {formulaCount} встроенных фрактальных формул в {formulaFamilyCount} семействах, {formulaGuideCount} руководств по формулам, совместимый с Fractint редактор FRM с транспиляцией AST в GLSL, {transformCount} плагинов UV-трансформаций, {coloringModeCount} режимов раскраски, общие ссылки, облачную библиотеку с входом по email для работ и формул, публикацию в сообществе и экспорт PNG в высоком разрешении до {maxExportScale}x. Создан на Next.js, React и TypeScript.",
+    "capabilitiesHeading": "Что доступно уже сегодня",
+    "capabilities": {
+      "discover": {
+        "title": "Открывайте формулы",
+        "summary": "Изучайте Атлас формул: 94 встроенные формулы в 7 семействах и 21 подробное руководство, рассказывающее о математике, истории и визуальном характере классических формул."
+      },
+      "create": {
+        "title": "Создавайте в браузере",
+        "summary": "Исследуйте и рендерите в реальном времени на WebGL: режимы Мандельброта и Жюлиа для каждой формулы, 7 трансформаций, 9 режимов раскраски, градиенты, освещение и покадровая анимация."
+      },
+      "authorFrm": {
+        "title": "Пишите формулы FRM",
+        "summary": "Пишите пользовательские формулы на языке FRM, совместимом с Fractint, с помощью руководства и отдельного редактора: проверка AST, живой предпросмотр GLSL и понятная диагностика."
+      },
+      "saveExport": {
+        "title": "Сохраняйте и делитесь",
+        "summary": "Сохраняйте работы и пользовательские формулы в личное облако с входом по email и открывайте их на любом устройстве, публикуйте работы в галерее сообщества или создавайте анонимно и экспортируйте изображения PNG в высоком разрешении до 4× со сглаживанием SSAA."
+      }
+    },
+    "boundariesHeading": "Текущие границы и планы на будущее",
+    "currentHeading": "Доступно сегодня",
+    "futureHeading": "В планах",
+    "boundaries": {
+      "current": {
+        "0": "Растущая поддержка совместимого с Fractint FRM: сегодня работает практичное, проверенное подмножество языка формул Fractint — это не полная реимплементация Fractint.",
+        "1": "Для создания аккаунт не нужен. Сохранение работ и формул выполняется через вход по одноразовому коду из email и хранение в личной облачной библиотеке; публикация всегда явная, а работы с пользовательскими формулами публикуют их исходный код по лицензии MIT.",
+        "2": "Интерфейс доступен на семи языках: английском, китайском упрощённом, португальском, корейском, русском, испанском и французском."
+      },
+      "future": {
+        "0": "Мы работаем над тем, чтобы со временем перенести исторический архив формул Fractint в современный браузер.",
+        "1": "Более глубокие возможности раскраски, анимации и масштабирования — в планах, но ещё не выпущены."
+      }
+    },
+    "licenseLine": "FractalPark распространяется по лицензии MIT.",
+    "heroAlt": "Множество Мандельброта, отрендеренное в реальном времени движком FractalPark на WebGL",
+    "cta": {
+      "explore": "Открыть Обзор",
+      "formulas": "Открыть Атлас формул",
+      "frmGuide": "Читать руководство по FRM",
+      "gallery": "Посетить Галерею"
+    }
+  },
+  "legal": {
+    "privacy": {
+      "title": "Политика конфиденциальности",
+      "updated": "Последнее обновление: 3 августа 2026 г.",
+      "intro": "FractalPark — это исследователь фрактального искусства с открытым исходным кодом. Вы можете просматривать, создавать и сохранять работы на своём устройстве, ничего не сообщая нам. Аккаунт нужен только тогда, когда вы решаете хранить облачные черновики или публиковать работы в Сообществе. На этой странице точно сказано, к чему аккаунт имеет доступ — а к чему не имеет никогда.",
+      "s1h": "Что хранит аккаунт",
+      "s1b": "Ваш адрес email, используемый только для входа с одноразовыми кодами. Пароля нет.\n\nВыбранное вами отображаемое имя. Оно приватно до публикации; опубликованные работы показывают его в строке авторства.\n\nВаши облачные черновики (приватные) и опубликованные работы (публичные), включая параметры, необходимые для ремикса.",
+      "s2h": "Что мы никогда не собираем",
+      "s2b": "Никаких паролей — коды входа приходят на ваш email и истекают.\n\nНикаких рекламных трекеров, межсайтовых cookies для профилирования, никакой продажи или передачи личных данных брокерам данных.\n\nАналитика никогда не содержит ваш email, IP-адрес, названия работ, содержимое черновиков или любой идентификатор, указывающий на вас.",
+      "s3h": "Файлы cookie",
+      "s3b": "Их два, и оба скучные. Зашифрованный HttpOnly-файл cookie сессии поддерживает ваш вход; небольшой файл cookie NEXT_LOCALE запоминает ваш язык. Ни один из них не доступен другим сайтам. Файл cookie сессии удаляется при выходе из системы или удалении аккаунта; файл cookie языка хранится, пока вы не очистите данные браузера.",
+      "s4h": "Аналитика",
+      "s4b": "Мы используем агрегированную аналитику использования с ограничениями приватности, чтобы понимать, какие функции помогают людям (например: публикация прошла успешно, руководство открыто). События следуют фиксированной схеме, которая запрещает email, IP, названия и содержимое работ.",
+      "s5h": "Письма, которые мы отправляем",
+      "s5b": "Коды входа — всегда.\n\nРезервные письма работ — только если вы их включите. По умолчанию они выключены. Резервное письмо содержит полную конфигурацию вашей работы во вложении; email — это не зашифрованное хранилище, и мы не можем отозвать вложение после отправки. Страница настроек повторяет это перед включением.",
+      "s6h": "Приватные черновики, публичные работы",
+      "s6b": "Черновики видите только вы. Публикация делает работу, её заголовок и описание, ваше отображаемое имя и параметры общедоступными в соответствии с условиями Сообщества. Скрытые или отозванные работы немедленно исчезают из публичного доступа.",
+      "s7h": "Удаление аккаунта",
+      "s7b": "Вы можете удалить свой аккаунт самостоятельно, из Галереи, в любое время. При удалении запрашивается новый код входа и введённый вами email, после чего удаляются ваши черновики, отзываются опубликованные работы, завершаются сессии и стирается профиль. Строка авторства опубликованной работы остаётся как «надгробие», чтобы прежние ремиксы сохраняли указание источника, а минимальная запись аудита (без email и содержимого) хранится для расследования нарушений.",
+      "s8h": "Где хранятся данные",
+      "s8b": "Аккаунты и работы хранятся у наших провайдеров облачных баз данных и хостинга, на инфраструктуре, которой мы не владеем. Мы выбираем распространённых провайдеров и не храним ключи доступа на клиенте. Операционные журналы недолговечны, а записи об ограничении частоты запросов содержат только однонаправленные хеши.",
+      "s9h": "Изменения и контакты",
+      "s9b": "Если эта политика изменится так, что это затронет вас, изменение появится в репозитории с открытым исходным кодом, а дата на этой странице обновится. Вопросы, запросы и жалобы на удаление: contact@fractalpark.com."
+    },
+    "terms": {
+      "title": "Условия использования",
+      "updated": "Последнее обновление: 3 августа 2026 г.",
+      "intro": "Эти условия регулируют использование сайта FractalPark и его облачных функций (аккаунты, облачные черновики, публикация в Сообществе). Само программное обеспечение с открытым исходным кодом; его самостоятельное размещение регулируется лицензией, а не этими условиями.",
+      "s1h": "Сервис",
+      "s1b": "FractalPark позволяет исследовать и создавать фрактальное искусство, хранить приватные облачные черновики и публиковать работы в публичном Сообществе. Сервис предоставляется «как есть», без гарантий доступности или хранения данных сверх того, что описано в Политике конфиденциальности и регламенте резервного копирования.",
+      "s2h": "Аккаунты",
+      "s2b": "Вход выполняется по одноразовому коду из email. Вы несёте ответственность за почтовый ящик, с которым входите. Один человек может иметь несколько аккаунтов, но ограничения частоты запросов и квоты применяются к каждому аккаунту, а злоупотребление лимитами может привести к блокировке.",
+      "s3h": "Ваш контент",
+      "s3b": "Вы сохраняете все права на то, что создаёте. Облачные черновики приватны и принадлежат только вам.\n\nПубликуя работу, вы делаете её общедоступной и лицензируете полученное изображение по CC BY 4.0, чтобы любой мог делиться им и создавать ремиксы с указанием авторства. Лицензия покрывает только слой полученного изображения — не исходный код формул, текст описания, интерфейс FractalPark, логотип или товарные знаки. Параметры, необходимые для ремикса, публичны по замыслу; никогда не публикуйте секреты. Отзыв работы убирает её из публичного доступа, но не может отозвать уже предоставленные лицензии.",
+      "s4h": "Подтверждение при публикации",
+      "s4b": "Публикация требует, чтобы вы подтвердили, что создали работу или обладаете правами на её публикацию на этих условиях. Публикация контента, на который у вас нет прав, может привести к скрытию работы и блокировке аккаунта.",
+      "s5h": "Модерация и удаление",
+      "s5b": "Предварительной проверки перед публикацией нет. Мейнтейнер может скрыть любую опубликованную работу, нарушающую Правила сообщества или вызвавшую обоснованную жалобу, и может восстановить её после проверки. Скрытие обратимо; отзыв владельцем необратим. Жалобы направляются на contact@fractalpark.com — на каждой странице публичной работы есть ссылка. Мы не обещаем срок ответа.",
+      "s6h": "Допустимое использование",
+      "s6b": "Правила сообщества являются частью этих условий. Запрещены автоматический сбор данных с приватных конечных точек, попытки обойти ограничения частоты запросов или прав доступа, а также вмешательство в данные других пользователей.",
+      "s7h": "Отказ от ответственности",
+      "s7b": "Сервис предоставляется без каких-либо гарантий. В той мере, в какой это допускает закон, FractalPark и его мейнтейнер не несут ответственности за утраченные черновики, утраченные аккаунты или последующее использование опубликованных работ. Храните собственные экспорты всего, что для вас важно, — в приложении есть скачивание в один клик и дополнительные резервные письма.",
+      "s8h": "Изменения и контакты",
+      "s8b": "Изменения условий появляются в репозитории с открытым исходным кодом и обновляют дату на этой странице. Продолжение использования после изменения означает принятие новых условий. Контакты: contact@fractalpark.com."
+    },
+    "rules": {
+      "title": "Правила сообщества",
+      "updated": "Последнее обновление: 3 августа 2026 г.",
+      "intro": "Сообщество — это публичная полка фрактальных работ. Пять коротких правил делают его достойным просмотра.",
+      "s1h": "Что сюда подходит",
+      "s1b": "Оригинальные фрактальные работы, созданные вами в FractalPark (или на которые у вас есть права публикации), распространяемые по лицензии изображений CC BY 4.0, чтобы другие могли изучать их и создавать ремиксы.",
+      "s2h": "Что не подходит",
+      "s2b": "Всё незаконное. Любой сексуальный контент с участием несовершеннолетних — всегда. Доксинг или контент, направленный на преследование человека. Вредоносное ПО или ссылки, предназначенные для причинения вреда. Спам, реклама и массовые почти-копии. Контент, разжигающий ненависть. Работы, на публикацию которых у вас нет прав.",
+      "s3h": "Этикет ремиксов",
+      "s3b": "Любую опубликованную работу можно ремиксировать — в этом и смысл. Публикуя ремикс, сохраняйте указание авторства, которое приложение подставляет за вас. Развивать чужую работу и указывать автора — так Сообщество остаётся дружелюбным к обмену.",
+      "s4h": "Обеспечение соблюдения",
+      "s4b": "Мейнтейнер сначала скрывает, потом разбирается: как только мейнтейнер скрывает работу, на которую поступила жалоба, она немедленно исчезает из публичного доступа и возвращается только в том случае, если проверка покажет, что жалоба необоснованна. Владельцы могут отозвать свои работы в любое время; отзыв необратим. Неоднократные нарушения приводят к блокировке аккаунта.",
+      "s5h": "Жалоба",
+      "s5b": "На каждой странице публичной работы есть пункт «Пожаловаться / удалить», либо напишите напрямую: contact@fractalpark.com. Укажите ссылку на работу и причину, по которой она нарушает эти правила."
+    }
+  }
+}

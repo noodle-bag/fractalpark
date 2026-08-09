@@ -1,3 +1,4 @@
+import { SUPPORTED_LOCALES } from '@/i18n/supported-locales';
 import { describe, expect, it } from 'vitest';
 import {
   INDEXABLE_PAGE_PATHS,
@@ -39,7 +40,7 @@ describe('indexable pages', () => {
 
   it('builds one canonical URL per locale per page on the www host', () => {
     const urls = buildIndexableUrls();
-    expect(urls.length).toBe(INDEXABLE_PAGE_PATHS.length * 2);
+    expect(urls.length).toBe(INDEXABLE_PAGE_PATHS.length * SUPPORTED_LOCALES.length);
     for (const url of urls) {
       expect(url.startsWith(`${SITE.url}/`)).toBe(true);
       expect(SITE.url).toBe('https://www.fractalpark.com');
