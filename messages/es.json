@@ -1784,7 +1784,7 @@
       "current": {
         "0": "Soporte FRM compatible con Fractint en crecimiento: hoy funciona un subconjunto práctico y probado del lenguaje de fórmulas de Fractint — no es una reimplementación completa de Fractint.",
         "1": "Crear no requiere cuenta. Guardar obras y fórmulas usa inicio de sesión por código único de correo y las almacena en tu biblioteca privada en la nube; publicar siempre es explícito, y las obras que llevan una fórmula personalizada publican su código fuente bajo la licencia MIT.",
-        "2": "La interfaz es bilingüe en inglés y chino simplificado."
+        "2": "La interfaz está disponible en siete idiomas: inglés, chino simplificado, portugués, coreano, ruso, español y francés."
       },
       "future": {
         "0": "Trabajamos para llevar el archivo histórico de fórmulas de Fractint al navegador moderno con el tiempo.",

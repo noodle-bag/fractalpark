@@ -1699,7 +1699,7 @@
   "metadata": {
     "explore": {
       "title": "分形公园 FractalPark - 开源浏览器分形生成器",
-      "description": "开源、公式优先的分形知识与创作平台, 在浏览器中实时运行: 94 个内置公式、WebGL 实时渲染、Fractint 兼容 FRM 公式编辑、高分辨率 PNG 导出, 中英双语界面.",
+      "description": "开源、公式优先的分形知识与创作平台, 在浏览器中实时运行: 94 个内置公式、WebGL 实时渲染、Fractint 兼容 FRM 公式编辑、高分辨率 PNG 导出, 七语言界面.",
       "ogTitle": "分形公园 FractalPark - 浏览器里的开源分形艺术工具",
       "ogDescription": "在浏览器中创作分形艺术: 94 个公式、WebGL 实时渲染、FRM 编辑、高清 PNG 导出."
     },
@@ -1709,7 +1709,7 @@
     },
     "about": {
       "title": "关于 | 开源浏览器分形生成器 - 分形公园 FractalPark",
-      "description": "了解分形公园 FractalPark: 一个基于 MIT 许可证开源、可在浏览器中直接使用的 WebGL 分形生成器, 支持 94 个公式、自定义调色板和 PNG 导出.核心技术: Fractint .frm 公式编辑器, AST 到 GLSL 转译流水线, 插件化着色器架构, 完全免费开源无需安装, 支持中英文双语界面."
+      "description": "了解分形公园 FractalPark: 一个基于 MIT 许可证开源、可在浏览器中直接使用的 WebGL 分形生成器, 支持 94 个公式、自定义调色板和 PNG 导出.核心技术: Fractint .frm 公式编辑器, AST 到 GLSL 转译流水线, 插件化着色器架构, 完全免费开源无需安装, 支持七种语言界面."
     },
     "formulaAtlas": {
       "title": "公式图鉴 | 94 个分形公式 - 分形公园 FractalPark",
@@ -1785,7 +1785,7 @@
       "current": {
         "0": "不断扩展的 Fractint 兼容 FRM 支持: 今天可用的是一个经过实测的 Fractint 公式语言子集——不是完整的 Fractint 复刻.",
         "1": "创作无需账号。保存使用邮箱一次性验证码登录，作品和公式存入你的私有云端库；发布始终显式触发，携带自定义公式的作品会同时以 MIT 许可证公开公式源码。",
-        "2": "界面支持英文与简体中文双语."
+        "2": "界面支持七种语言：英文、简体中文、葡萄牙语、韩语、俄语、西班牙语和法语。"
       },
       "future": {
         "0": "正致力于逐步把 Fractint 的历史公式资产带入现代浏览器.",

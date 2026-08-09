@@ -107,7 +107,7 @@ export function buildSoftwareApplicationJsonLd(
       `High-resolution PNG export up to ${facts.maxExportScale}× with SSAA anti-aliasing`,
       'Shareable URLs that encode the exact view and parameters',
       'Local on-device artwork storage; no account required',
-      'Bilingual interface (English and Simplified Chinese)',
+      'Interface available in seven languages (English, Simplified Chinese, Portuguese, Korean, Russian, Spanish, French)',
     ],
     offers: {
       '@type': 'Offer',

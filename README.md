@@ -19,7 +19,7 @@ FractalPark is an open-source, formula-first fractal knowledge and creation plat
 
 - Growing Fractint-compatible FRM support: a practical, tested subset of the Fractint formula language runs today — not a complete Fractint reimplementation.
 - Creating needs no account. Saving artworks and formulas uses email one-time-code sign-in and stores them in your private cloud library; publishing is always explicit, and artworks carrying a custom formula publish its source under the MIT license.
-- The interface is bilingual in English and Simplified Chinese.
+- The interface is available in seven languages: English, Simplified Chinese, Portuguese, Korean, Russian, Spanish, and French.
 
 On the roadmap (not released):
 
