@@ -1,518 +1,518 @@
 {
   "cloud": {
     "otp": {
-      "title": "Sign in to sync",
-      "emailDescription": "Sign in to save artworks to your private cloud, pick them up on any device, and publish to Community. Saving and publishing need an account; exploring, creating, and downloading work without one.",
-      "codeDescription": "Enter the six-digit code from the email we just sent you.",
-      "emailLabel": "Email",
+      "title": "Inicia sesión para sincronizar",
+      "emailDescription": "Inicia sesión para guardar tus obras en tu nube privada, retomarlas en cualquier dispositivo y publicarlas en la Comunidad. Guardar y publicar requieren una cuenta; explorar, crear y descargar funcionan sin una.",
+      "codeDescription": "Ingresa el código de seis dígitos del correo que acabamos de enviarte.",
+      "emailLabel": "Correo electrónico",
       "emailPlaceholder": "you@example.com",
-      "codeLabel": "Six-digit code",
-      "sendCode": "Send code",
-      "sending": "Sending…",
-      "verify": "Sign in",
-      "verifying": "Signing in…",
-      "resend": "Resend code",
+      "codeLabel": "Código de seis dígitos",
+      "sendCode": "Enviar código",
+      "sending": "Enviando…",
+      "verify": "Iniciar sesión",
+      "verifying": "Iniciando sesión…",
+      "resend": "Reenviar código",
       "errors": {
-        "wrongCode": "That code is not right. Check the email and try again.",
-        "rateLimited": "Too many attempts. Please wait a moment and try again.",
-        "offline": "You appear to be offline. Check your connection and try again.",
-        "disabled": "Cloud sync is not available on this deployment.",
-        "generic": "Something went wrong. Please try again."
+        "wrongCode": "Ese código no es correcto. Revisa el correo e inténtalo de nuevo.",
+        "rateLimited": "Demasiados intentos. Espera un momento e inténtalo de nuevo.",
+        "offline": "Parece que estás sin conexión. Revisa tu conexión e inténtalo de nuevo.",
+        "disabled": "La sincronización en la nube no está disponible en esta implementación.",
+        "generic": "Algo salió mal. Inténtalo de nuevo."
       }
     },
     "myWorks": {
-      "signInHint": "Sign in to keep drafts in your cloud library and pick them up on any device.",
-      "signIn": "Sign in to sync",
-      "draftsTitle": "Cloud drafts",
-      "publishedTitle": "Published",
-      "publishedEmpty": "Nothing published yet. Publishing arrives with the Community update.",
-      "draftsEmpty": "No cloud drafts yet. Save an artwork while signed in and it lands here.",
-      "loading": "Loading drafts…",
-      "refresh": "Refresh",
-      "delete": "Delete",
-      "confirmDelete": "Delete this cloud draft permanently? This cannot be undone.",
-      "confirmWithdraw": "Withdraw this artwork permanently? It disappears from the Community immediately and cannot be restored. The license already granted to existing remixes stays in effect.",
-      "publish": "Publish",
-      "withdraw": "Withdraw",
-      "backupLabel": "Backup emails",
+      "signInHint": "Inicia sesión para guardar borradores en tu biblioteca en la nube y retomarlos en cualquier dispositivo.",
+      "signIn": "Inicia sesión para sincronizar",
+      "draftsTitle": "Borradores en la nube",
+      "publishedTitle": "Publicados",
+      "publishedEmpty": "Aún no hay nada publicado. La publicación llega con la actualización de la Comunidad.",
+      "draftsEmpty": "Aún no hay borradores en la nube. Guarda una obra con la sesión iniciada y aparecerá aquí.",
+      "loading": "Cargando borradores…",
+      "refresh": "Actualizar",
+      "delete": "Eliminar",
+      "confirmDelete": "¿Eliminar este borrador de la nube de forma permanente? Esta acción no se puede deshacer.",
+      "confirmWithdraw": "¿Retirar esta obra de forma permanente? Desaparecerá de la Comunidad de inmediato y no se podrá restaurar. La licencia ya otorgada a los remixes existentes sigue vigente.",
+      "publish": "Publicar",
+      "withdraw": "Retirar",
+      "backupLabel": "Correos de respaldo",
       "backupModes": {
-        "off": "Off",
-        "publish_only": "On publish",
-        "save_and_publish": "Every save + publish"
+        "off": "Desactivado",
+        "publish_only": "Al publicar",
+        "save_and_publish": "En cada guardado + publicación"
       },
-      "backupNotice": "The backup email attaches the complete .fractal.json: every parameter, the view, and any custom formulas. FractalPark cannot retract it once delivered.",
-      "backupConfirm": "I understand, turn it on",
-      "backupCancel": "Not now",
-      "publishedMeta": "{license} · published {date}",
-      "withdrawnMeta": "Withdrawn {date}",
-      "hiddenMeta": "Hidden by moderation · published {date} · in the app, only you can see this row",
+      "backupNotice": "El correo de respaldo adjunta el .fractal.json completo: cada parámetro, la vista y las fórmulas personalizadas. FractalPark no puede retractarlo una vez entregado.",
+      "backupConfirm": "Entiendo, activarlo",
+      "backupCancel": "Ahora no",
+      "publishedMeta": "{license} · publicado {date}",
+      "withdrawnMeta": "Retirado {date}",
+      "hiddenMeta": "Oculto por moderación · publicado {date} · en la app, solo tú puedes ver esta fila",
       "meta": "rev {revision} · {date}",
       "errors": {
-        "unavailable": "Cloud sync is unavailable right now. Try again in a moment.",
-        "quota_exceeded": "Your cloud storage is full. Delete some drafts to make room.",
-        "offline": "You appear to be offline.",
-        "not_found": "That draft no longer exists.",
-        "unauthenticated": "Your session expired. Sign in again.",
-        "invalid_envelope": "This artwork could not be validated for the cloud.",
-        "rate_limited": "Slow down a little and try again."
+        "unavailable": "La sincronización en la nube no está disponible en este momento. Inténtalo de nuevo en un momento.",
+        "quota_exceeded": "Tu almacenamiento en la nube está lleno. Elimina algunos borradores para liberar espacio.",
+        "offline": "Parece que estás sin conexión.",
+        "not_found": "Ese borrador ya no existe.",
+        "unauthenticated": "Tu sesión caducó. Inicia sesión de nuevo.",
+        "invalid_envelope": "Esta obra no pudo validarse para la nube.",
+        "rate_limited": "Ve más despacio e inténtalo de nuevo."
       },
-      "unavailableHint": "Cloud sync is unavailable right now. Your drafts are safe; try again shortly."
+      "unavailableHint": "La sincronización en la nube no está disponible en este momento. Tus borradores están a salvo; inténtalo de nuevo en un momento."
     },
     "publish": {
-      "title": "Publish to the Community",
-      "description": "Publishing freezes this revision forever. What you confirm here is what the world sees.",
-      "displayNameLabel": "Display name",
-      "displayNamePlaceholder": "How you appear as the artist",
-      "displayNameHint": "Shown on everything you publish. You can change it later; already published works keep the old name.",
-      "titleLabel": "Title",
-      "descriptionLabel": "Description (optional)",
-      "attestation": "I created this artwork, and I license the rendered image under CC BY 4.0 so others can share and remix it with attribution.",
-      "immutableHint": "Once published, the artwork and its text cannot be edited. Continued work forks through remix; withdrawal is permanent.",
-      "cancel": "Cancel",
-      "confirm": "Publish",
-      "publishing": "Publishing…",
+      "title": "Publicar en la Comunidad",
+      "description": "Publicar congela esta revisión para siempre. Lo que confirmes aquí es lo que verá el mundo.",
+      "displayNameLabel": "Nombre para mostrar",
+      "displayNamePlaceholder": "Cómo apareces como artista",
+      "displayNameHint": "Se muestra en todo lo que publiques. Puedes cambiarlo más tarde; las obras ya publicadas conservan el nombre anterior.",
+      "titleLabel": "Título",
+      "descriptionLabel": "Descripción (opcional)",
+      "attestation": "Creé esta obra y licencio la imagen renderizada bajo CC BY 4.0 para que otras personas puedan compartirla y remezclarla con atribución.",
+      "immutableHint": "Una vez publicada, la obra y su texto no se pueden editar. El trabajo posterior se ramifica mediante remix; el retiro es permanente.",
+      "cancel": "Cancelar",
+      "confirm": "Publicar",
+      "publishing": "Publicando…",
       "errors": {
-        "rateLimited": "You have published a lot today. Try again tomorrow.",
-        "revisionConflict": "This draft changed since you opened the dialog. Close it and try again.",
-        "validation": "Check the display name, title, and description, then try again.",
-        "offline": "You appear to be offline.",
-        "generic": "Publishing failed. Nothing was published; the draft is still yours.",
-        "formulaCompile": "The formula source failed server-side validation. Open the draft, fix the formula, and try again.",
-        "formulaBuiltinConflict": "The formula id collides with a built-in formula. Rename it in My Formulas and try again."
+        "rateLimited": "Has publicado mucho hoy. Inténtalo de nuevo mañana.",
+        "revisionConflict": "Este borrador cambió desde que abriste el diálogo. Ciérralo e inténtalo de nuevo.",
+        "validation": "Revisa el nombre para mostrar, el título y la descripción, y luego inténtalo de nuevo.",
+        "offline": "Parece que estás sin conexión.",
+        "generic": "La publicación falló. No se publicó nada; el borrador sigue siendo tuyo.",
+        "formulaCompile": "El código fuente de la fórmula no pasó la validación del servidor. Abre el borrador, corrige la fórmula e inténtalo de nuevo.",
+        "formulaBuiltinConflict": "El id de la fórmula choca con una fórmula integrada. Cámbiale el nombre en Mis Fórmulas e inténtalo de nuevo."
       },
-      "formulaNoticeTitle": "This artwork uses your custom formula",
-      "formulaNoticeBody": "Publishing makes the formula source code public under the MIT License: anyone may read, copy, and reuse it. The formula name and description shown publicly come from the formula metadata, not from this form. The rendered image stays under CC BY 4.0.",
-      "formulaAttestation": "I explicitly agree to publish the frozen custom-formula source under the MIT License.",
-      "formulaNoticeLink": "Read the MIT License at opensource.org",
-      "licensePendingNote": "Could not pre-check this draft. Licensing is finalized by the server at publish time: artworks without custom formulas publish under CC BY 4.0; a custom formula adds MIT for its source."
+      "formulaNoticeTitle": "Esta obra usa tu fórmula personalizada",
+      "formulaNoticeBody": "Publicar hace público el código fuente de la fórmula bajo la Licencia MIT: cualquiera puede leerlo, copiarlo y reutilizarlo. El nombre y la descripción de la fórmula que se muestran públicamente provienen de los metadatos de la fórmula, no de este formulario. La imagen renderizada permanece bajo CC BY 4.0.",
+      "formulaAttestation": "Acepto explícitamente publicar el código fuente congelado de la fórmula personalizada bajo la Licencia MIT.",
+      "formulaNoticeLink": "Lee la Licencia MIT en opensource.org",
+      "licensePendingNote": "No se pudo verificar este borrador de antemano. El servidor define la licencia al momento de publicar: las obras sin fórmulas personalizadas se publican bajo CC BY 4.0; una fórmula personalizada agrega MIT para su código fuente."
     },
     "community": {
-      "backToCommunity": "← Community",
-      "byline": "by {author} · {date}",
-      "thumbnailPending": "Artwork image coming from the server render pipeline",
-      "licenseLabel": "License:",
-      "licenseValue": "The fractal image layer is under",
-      "sourceLabel": "Source:",
-      "sourcePublication": "Remixed from another community artwork",
-      "sourcePreset": "Remixed from the FractalPark Collection ({id})",
-      "sourceFormula": "Remixed from formula {id}",
+      "backToCommunity": "← Comunidad",
+      "byline": "por {author} · {date}",
+      "thumbnailPending": "La imagen de la obra vendrá del proceso de renderizado del servidor",
+      "licenseLabel": "Licencia:",
+      "licenseValue": "La capa de imagen del fractal está bajo",
+      "sourceLabel": "Fuente:",
+      "sourcePublication": "Remix de otra obra de la comunidad",
+      "sourcePreset": "Remix de la Colección FractalPark ({id})",
+      "sourceFormula": "Remix de la fórmula {id}",
       "remix": "Remix",
-      "remixing": "Remixing…",
-      "signInToSyncRemix": "Sign in to keep remixes in the cloud",
-      "copyLink": "Copy link",
-      "copied": "Copied",
-      "reportPrefix": "Something wrong with this artwork? Report or takedown:",
-      "loadMore": "Load more",
-      "loading": "Loading…",
-      "emptyTitle": "Nothing here yet",
-      "emptyDescription": "Published artworks will show up here. Yours could be the first.",
+      "remixing": "Remezclando…",
+      "signInToSyncRemix": "Inicia sesión para guardar los remixes en la nube",
+      "copyLink": "Copiar enlace",
+      "copied": "Copiado",
+      "reportPrefix": "¿Algo anda mal con esta obra? Reportar o solicitar retiro:",
+      "loadMore": "Cargar más",
+      "loading": "Cargando…",
+      "emptyTitle": "Aún no hay nada aquí",
+      "emptyDescription": "Las obras publicadas aparecerán aquí. La tuya podría ser la primera.",
       "errors": {
-        "generic": "That did not work. Try again.",
-        "loadFailed": "The community list could not be loaded. Try again in a moment."
+        "generic": "Eso no funcionó. Inténtalo de nuevo.",
+        "loadFailed": "No se pudo cargar la lista de la comunidad. Inténtalo de nuevo en un momento."
       },
-      "licenseFormulaValue": "Artwork under",
-      "formulaSourceLabel": "Formula source",
+      "licenseFormulaValue": "Obra bajo",
+      "formulaSourceLabel": "Código fuente de la fórmula",
       "formulaSourceValue": "“{name}” (FRM, MIT)",
-      "formulaSourceDownload": "Download .frm",
-      "licenseFormulaSourceValue": "formula source under"
+      "formulaSourceDownload": "Descargar .frm",
+      "licenseFormulaSourceValue": "código fuente de la fórmula bajo"
     },
     "accountDeletion": {
-      "title": "Delete account",
-      "intro": "Deleting your account is permanent. We will ask for a fresh email code and a final confirmation.",
-      "start": "Start account deletion",
-      "working": "Working…",
-      "codeSent": "We sent a fresh 6-digit code to your account email. Enter it to continue.",
+      "title": "Eliminar cuenta",
+      "intro": "Eliminar tu cuenta es permanente. Te pediremos un código de correo nuevo y una confirmación final.",
+      "start": "Iniciar la eliminación de la cuenta",
+      "working": "Trabajando…",
+      "codeSent": "Enviamos un código nuevo de 6 dígitos al correo de tu cuenta. Ingrésalo para continuar.",
       "codePlaceholder": "123456",
-      "verify": "Verify",
-      "cancel": "Cancel",
-      "confirmWarning": "Last step. Type your account email to confirm permanent deletion:",
-      "consequenceDrafts": "All cloud drafts are deleted permanently.",
-      "consequencePublications": "Published works are withdrawn and keep only an attribution record.",
-      "consequenceLicense": "Licenses already granted to remixes stay in effect.",
+      "verify": "Verificar",
+      "cancel": "Cancelar",
+      "confirmWarning": "Último paso. Escribe el correo de tu cuenta para confirmar la eliminación permanente:",
+      "consequenceDrafts": "Todos los borradores de la nube se eliminan de forma permanente.",
+      "consequencePublications": "Las obras publicadas se retiran y solo conservan un registro de atribución.",
+      "consequenceLicense": "Las licencias ya otorgadas a los remixes siguen vigentes.",
       "emailPlaceholder": "you@example.com",
-      "confirmButton": "Delete my account permanently",
-      "doneTitle": "Account deleted",
-      "doneBody": "Your account and private data are being removed. You have been signed out.",
+      "confirmButton": "Eliminar mi cuenta de forma permanente",
+      "doneTitle": "Cuenta eliminada",
+      "doneBody": "Tu cuenta y tus datos privados se están eliminando. Se cerró tu sesión.",
       "errors": {
-        "otp_invalid": "That code did not work. Check it and try again.",
-        "step_up_expired": "The code session expired. Start again to get a new code.",
-        "account_deleting": "Account deletion is already in progress.",
-        "rate_limited": "Too many attempts. Wait a bit and try again.",
-        "unauthenticated": "Sign in again to continue.",
-        "generic": "Something went wrong. Try again."
+        "otp_invalid": "Ese código no funcionó. Revísalo e inténtalo de nuevo.",
+        "step_up_expired": "La sesión del código caducó. Vuelve a empezar para obtener un código nuevo.",
+        "account_deleting": "La eliminación de la cuenta ya está en curso.",
+        "rate_limited": "Demasiados intentos. Espera un poco e inténtalo de nuevo.",
+        "unauthenticated": "Inicia sesión de nuevo para continuar.",
+        "generic": "Algo salió mal. Inténtalo de nuevo."
       }
     }
   },
   "common": {
     "nav": {
       "drift": "Drift",
-      "gallery": "Gallery",
-      "formulas": "Formulas",
-      "explore": "Explore",
-      "about": "About",
-      "tagline": "an open-source, formula-first fractal knowledge and creation platform",
-      "signIn": "Sign in",
-      "signOut": "Sign out",
-      "cloudUnavailable": "Cloud unavailable",
-      "menu": "Menu"
+      "gallery": "Galería",
+      "formulas": "Fórmulas",
+      "explore": "Explorar",
+      "about": "Acerca de",
+      "tagline": "una plataforma de código abierto para crear y explorar fractales, donde la fórmula es lo primero",
+      "signIn": "Iniciar sesión",
+      "signOut": "Cerrar sesión",
+      "cloudUnavailable": "Nube no disponible",
+      "menu": "Menú"
     },
     "language": {
       "en": "EN",
-      "zh": "Chinese",
-      "label": "Language"
+      "zh": "Chino",
+      "label": "Idioma"
     },
     "footer": {
-      "copyright": "© 2026 FractalPark. Released under the MIT License.",
-      "contact": "Contact:",
-      "privacy": "Privacy",
-      "terms": "Terms",
-      "rules": "Community Rules"
+      "copyright": "© 2026 FractalPark. Publicado bajo la Licencia MIT.",
+      "contact": "Contacto:",
+      "privacy": "Privacidad",
+      "terms": "Términos",
+      "rules": "Reglas de la Comunidad"
     }
   },
   "gallery": {
-    "title": "Gallery",
-    "viewsLabel": "Gallery views",
+    "title": "Galería",
+    "viewsLabel": "Vistas de la galería",
     "collection": {
-      "title": "FractalPark Collection",
-      "description": "Explore the complete collection of published FractalPark artworks."
+      "title": "Colección FractalPark",
+      "description": "Explora la colección completa de obras de FractalPark publicadas."
     },
     "community": {
-      "title": "Community",
-      "description": "Artworks published by creators under CC BY 4.0. Open one to remix it into your own draft."
+      "title": "Comunidad",
+      "description": "Obras publicadas por creadores bajo CC BY 4.0. Abre una para remezclarla en tu propio borrador."
     },
     "mine": {
-      "title": "My Works",
-      "description": "Works saved to your cloud library.",
-      "create": "Create in Explorer",
-      "actions": "Actions for {name}"
+      "title": "Mis Obras",
+      "description": "Obras guardadas en tu biblioteca en la nube.",
+      "create": "Crear en Explorador",
+      "actions": "Acciones para {name}"
     },
     "contextMenu": {
-      "restore": "Restore in Explorer",
-      "rename": "Rename",
-      "delete": "Delete"
+      "restore": "Restaurar en Explorador",
+      "rename": "Renombrar",
+      "delete": "Eliminar"
     },
     "card": {
       "deleteConfirm": {
-        "title": "Delete fractal?",
-        "description": "This action cannot be undone.",
-        "confirm": "Delete",
-        "cancel": "Cancel"
+        "title": "¿Eliminar fractal?",
+        "description": "Esta acción no se puede deshacer.",
+        "confirm": "Eliminar",
+        "cancel": "Cancelar"
       },
-      "renameTitle": "Rename Fractal",
-      "renameCancel": "Cancel",
-      "renameSave": "Save"
+      "renameTitle": "Renombrar fractal",
+      "renameCancel": "Cancelar",
+      "renameSave": "Guardar"
     }
   },
   "formulas": {
     "index": {
-      "breadcrumbLabel": "Breadcrumb",
-      "breadcrumbHome": "Home",
-      "breadcrumb": "Formulas",
-      "eyebrow": "Formula Atlas",
-      "title": "Formula Atlas",
-      "intro": "Explore FractalPark's complete catalog of 94 built-in formulas across seven families. Start with a canonical view, follow one of 21 in-depth guide profiles, or learn to write your own formula with FRM.",
+      "breadcrumbLabel": "Migas de pan",
+      "breadcrumbHome": "Inicio",
+      "breadcrumb": "Fórmulas",
+      "eyebrow": "Atlas de Fórmulas",
+      "title": "Atlas de Fórmulas",
+      "intro": "Explora el catálogo completo de las 94 fórmulas integradas de FractalPark en siete familias. Empieza con una vista canónica, sigue uno de los 21 perfiles de guía en profundidad o aprende a escribir tu propia fórmula con FRM.",
       "stats": {
-        "formulas": "Formulas",
-        "families": "Families",
-        "guides": "Guide profiles"
+        "formulas": "Fórmulas",
+        "families": "Familias",
+        "guides": "Perfiles de guía"
       },
       "capabilities": {
-        "eyebrow": "Built for exploration",
-        "title": "One catalog, many ways to create",
-        "intro": "Every entry is derived from the same formula catalog and approved default state used by the interactive Explorer.",
+        "eyebrow": "Hecho para explorar",
+        "title": "Un solo catálogo, muchas formas de crear",
+        "intro": "Cada entrada se deriva del mismo catálogo de fórmulas y del estado predeterminado aprobado que usa el Explorador interactivo.",
         "items": {
           "realtime": {
-            "title": "Real-time WebGL",
-            "description": "Open any formula directly in the browser and explore its boundary with GPU-accelerated rendering."
+            "title": "WebGL en tiempo real",
+            "description": "Abre cualquier fórmula directamente en el navegador y explora su frontera con renderizado acelerado por GPU."
           },
           "canonical": {
-            "title": "Canonical starting views",
-            "description": "Each destination is generated from the authoritative formula Document, including its view, parameters, and coloring."
+            "title": "Vistas iniciales canónicas",
+            "description": "Cada destino se genera a partir del Documento de fórmula autoritativo, incluidos su vista, parámetros y coloración."
           },
           "server": {
-            "title": "Server-readable directory",
-            "description": "All seven families and 94 destinations remain available in the initial HTML without client-side search or filtering."
+            "title": "Directorio legible por el servidor",
+            "description": "Las siete familias y los 94 destinos permanecen disponibles en el HTML inicial sin búsqueda ni filtrado del lado del cliente."
           }
         }
       },
       "families": {
-        "eyebrow": "Seven families",
-        "title": "Choose a mathematical character",
-        "intro": "Families organize formulas by their iteration structure and visual behavior. Counts come directly from the current built-in catalog.",
+        "eyebrow": "Siete familias",
+        "title": "Elige un carácter matemático",
+        "intro": "Las familias organizan las fórmulas por su estructura de iteración y su comportamiento visual. Los conteos provienen directamente del catálogo integrado actual.",
         "descriptions": {
-          "classic": "Quadratic, polynomial, Julia, multicorn, and related escape-time foundations.",
-          "burning-ship": "Folded absolute-value maps with sharp hulls, ridges, and flame-like boundaries.",
-          "newton": "Convergent root-finding systems that divide the plane into colored basins.",
-          "magnet": "Rational maps with poles, dense boundaries, and magnetic basin structures.",
-          "phoenix": "Memory-dependent iterations whose previous orbit state shapes the next step.",
-          "transcendental": "Exponential, trigonometric, hyperbolic, and logarithmic complex maps.",
-          "exotic": "Reciprocal, rational, inversion, tetration, and other hybrid constructions."
+          "classic": "Fundamentos de tiempo de escape cuadráticos, polinómicos, Julia, multicorn y relacionados.",
+          "burning-ship": "Mapas de valor absoluto plegados con cascos afilados, crestas y fronteras parecidas a llamas.",
+          "newton": "Sistemas convergentes de búsqueda de raíces que dividen el plano en cuencas coloreadas.",
+          "magnet": "Mapas racionales con polos, fronteras densas y estructuras de cuencas magnéticas.",
+          "phoenix": "Iteraciones dependientes de la memoria cuyo estado de órbita anterior moldea el siguiente paso.",
+          "transcendental": "Mapas complejos exponenciales, trigonométricos, hiperbólicos y logarítmicos.",
+          "exotic": "Construcciones híbridas recíprocas, racionales, de inversión, tetración y otras."
         }
       },
       "frm": {
-        "eyebrow": "Create your own",
-        "title": "Learn and write formulas with FRM",
-        "description": "FRM is FractalPark's tested text-based authoring path. Read the compatibility guide, study compile-checked examples, then write and preview a formula locally in the standalone editor.",
-        "learn": "Learn FRM",
-        "openEditor": "Open Formula Editor"
+        "eyebrow": "Crea la tuya",
+        "title": "Aprende y escribe fórmulas con FRM",
+        "description": "FRM es la ruta de autoría basada en texto probada de FractalPark. Lee la guía de compatibilidad, estudia los ejemplos verificados por compilación y luego escribe y previsualiza una fórmula localmente en el editor independiente.",
+        "learn": "Aprende FRM",
+        "openEditor": "Abrir el Editor de fórmulas"
       },
       "guides": {
-        "eyebrow": "21 selected formulas",
-        "title": "In-depth guide set",
-        "intro": "These 21 formulas are the frozen guide set selected from FractalPark's published artwork. Every guide now pairs original bilingual context with the same canonical state used by its image and Explorer destination.",
-        "read": "Read guide",
-        "explore": "Explore canonical view"
+        "eyebrow": "21 fórmulas seleccionadas",
+        "title": "Conjunto de guías en profundidad",
+        "intro": "Estas 21 fórmulas son el conjunto de guías congelado seleccionado de las obras publicadas de FractalPark. Cada guía combina contexto bilingüe original con el mismo estado canónico que usan su imagen y su destino en Explorador.",
+        "read": "Leer guía",
+        "explore": "Explorar la vista canónica"
       },
       "directory": {
-        "eyebrow": "Complete catalog",
-        "title": "All 94 formulas",
-        "intro": "The full directory is grouped by family and rendered on the server. Every link opens the formula with its canonical localized Explorer state.",
-        "familyCount": "{count, plural, one {# formula} other {# formulas}}",
-        "backToFamilies": "Family overview",
-        "guideBadge": "Guide"
+        "eyebrow": "Catálogo completo",
+        "title": "Las 94 fórmulas",
+        "intro": "El directorio completo está agrupado por familia y se renderiza en el servidor. Cada enlace abre la fórmula con su estado canónico localizado de Explorador.",
+        "familyCount": "{count, plural, one {# fórmula} other {# fórmulas}}",
+        "backToFamilies": "Resumen de familias",
+        "guideBadge": "Guía"
       },
       "cta": {
-        "title": "Start from a formula or write your own",
-        "description": "Use the Explorer for built-in formulas, or open the local FRM Editor when you want to define the iteration yourself.",
-        "explore": "Open Explorer",
-        "editor": "Open Formula Editor"
+        "title": "Empieza con una fórmula o escribe la tuya",
+        "description": "Usa el Explorador para las fórmulas integradas, o abre el Editor FRM local cuando quieras definir tú mismo la iteración.",
+        "explore": "Abrir Explorador",
+        "editor": "Abrir el Editor de fórmulas"
       }
     },
     "guide": {
-      "breadcrumbLabel": "Breadcrumb",
-      "breadcrumbHome": "Home",
-      "breadcrumbFormulas": "Formulas",
-      "openExplorer": "Open in Explorer",
-      "viewArtwork": "View artwork",
+      "breadcrumbLabel": "Migas de pan",
+      "breadcrumbHome": "Inicio",
+      "breadcrumbFormulas": "Fórmulas",
+      "openExplorer": "Abrir en Explorador",
+      "viewArtwork": "Ver obra",
       "difficulty": {
-        "easy": "Easy",
-        "medium": "Medium",
-        "hard": "Hard"
+        "easy": "Fácil",
+        "medium": "Media",
+        "hard": "Difícil"
       },
       "sections": {
-        "overview": "Overview",
-        "mathematics": "The Mathematics",
-        "history": "History",
-        "visualCharacteristics": "Visual Characteristics",
-        "parameters": "Parameters",
-        "remix": "Remix and Examples",
-        "related": "Related Formulas",
-        "faq": "Frequently Asked Questions",
-        "references": "References"
+        "overview": "Resumen",
+        "mathematics": "Las matemáticas",
+        "history": "Historia",
+        "visualCharacteristics": "Características visuales",
+        "parameters": "Parámetros",
+        "remix": "Remix y ejemplos",
+        "related": "Fórmulas relacionadas",
+        "faq": "Preguntas frecuentes",
+        "references": "Referencias"
       },
       "parameterLabels": {
-        "scale": "Scale",
-        "memory": "Memory"
+        "scale": "Escala",
+        "memory": "Memoria"
       },
       "remix": {
-        "title": "Start from the canonical Document",
-        "description": "Open the same approved formula state used by this guide, then change the view, coloring, transforms, or animation in the interactive Explorer.",
-        "cta": "Remix in Explorer"
+        "title": "Empieza desde el Documento canónico",
+        "description": "Abre el mismo estado de fórmula aprobado que usa esta guía y luego cambia la vista, la coloración, las transformaciones o la animación en el Explorador interactivo.",
+        "cta": "Remix en Explorador"
       }
     },
     "frmGuide": {
-      "eyebrow": "FRM formula language",
-      "title": "Write Fractals with FRM",
-      "intro": "Learn FractalPark's tested FRM subset, understand how source becomes a GPU shader, and build three working formulas from the same examples used by the editor.",
-      "contentsLabel": "On this page",
+      "eyebrow": "Lenguaje de fórmulas FRM",
+      "title": "Escribe fractales con FRM",
+      "intro": "Aprende el subconjunto FRM probado de FractalPark, entiende cómo el código fuente se convierte en un shader de GPU y construye tres fórmulas funcionales a partir de los mismos ejemplos que usa el editor.",
+      "contentsLabel": "En esta página",
       "copy": {
-        "copy": "Copy",
-        "copied": "Copied",
-        "error": "Copy failed"
+        "copy": "Copiar",
+        "copied": "Copiado",
+        "error": "Error al copiar"
       },
       "sections": {
         "what-is-frm": {
-          "title": "What Is FRM",
+          "title": "Qué es FRM",
           "body": [
-            "FRM is a compact, text-based way to describe an iterative fractal. A formula names its starting state, the calculation repeated for each orbit, and the condition that decides whether iteration continues.",
-            "The format grew out of the Fractint ecosystem, where formula files made it possible to exchange experiments without rebuilding the rendering program. FractalPark carries that authoring idea into a browser workflow while documenting its own tested subset instead of claiming complete compatibility."
+            "FRM es una forma compacta y basada en texto de describir un fractal iterativo. Una fórmula nombra su estado inicial, el cálculo que se repite para cada órbita y la condición que decide si la iteración continúa.",
+            "El formato nació del ecosistema de Fractint, donde los archivos de fórmulas permitían intercambiar experimentos sin reconstruir el programa de renderizado. FractalPark lleva esa idea de autoría a un flujo de trabajo en el navegador, documentando su propio subconjunto probado en lugar de reclamar compatibilidad completa."
           ],
-          "historyPrefix": "For the wider project's origins and history, see the",
-          "historyLink": "Fractint project site"
+          "historyPrefix": "Para los orígenes y la historia del proyecto en general, consulta el",
+          "historyLink": "sitio del proyecto Fractint"
         },
         "support": {
-          "title": "FRM Support in FractalPark",
-          "intro": "FractalPark tokenizes, parses, validates, and compiles a deliberate FRM subset. The table separates constructs that work directly, constructs with documented FractalPark semantics, and constructs the current workflow cannot preserve.",
+          "title": "Soporte de FRM en FractalPark",
+          "intro": "FractalPark tokeniza, analiza, valida y compila un subconjunto deliberado de FRM. La tabla separa las construcciones que funcionan directamente, las que tienen semántica documentada de FractalPark y las que el flujo de trabajo actual no puede conservar.",
           "table": {
-            "level": "Level",
-            "meaning": "Meaning",
-            "scope": "v0.4.13 scope"
+            "level": "Nivel",
+            "meaning": "Significado",
+            "scope": "Alcance v0.4.13"
           },
           "levels": {
             "supported": {
-              "label": "Supported",
-              "meaning": "Covered by compiler tests and usable without a semantic qualification."
+              "label": "Compatible",
+              "meaning": "Cubierto por las pruebas del compilador y utilizable sin una salvedad semántica."
             },
             "adapted": {
-              "label": "Adapted",
-              "meaning": "Accepted with a documented semantic difference or as a FractalPark extension."
+              "label": "Adaptado",
+              "meaning": "Aceptado con una diferencia semántica documentada o como extensión de FractalPark."
             },
             "unsupported": {
-              "label": "Unsupported",
-              "meaning": "Not preserved by the current compiler or file workflow; rejected rather than silently rewritten."
+              "label": "No compatible",
+              "meaning": "No se conserva con el compilador ni el flujo de archivos actual; se rechaza en lugar de reescribirse silenciosamente."
             }
           },
           "items": {
-            "single-formula": "One formula declaration per source document",
-            "core-sections": "init, loop, and bailout sections",
-            "variables": "Assignments and user variables",
-            "expressions": "Real and complex literals; arithmetic, comparison, logical, unary, and magnitude expressions",
-            "conditionals": "if / elseif / else / endif branches",
-            "builtins": "z, c, pixel, zPrev, p1–p5, constants, and tested built-in functions",
-            "comments": "FRM comments",
-            "diagnostics": "Structured diagnostics and FRM-to-GLSL source mapping",
-            "ismand": "ismand maps to FractalPark's current Mandelbrot/Julia runtime mode",
-            "function-slots": "fn1–fn4 use compile-time function dispatch",
-            "native-directives": "@mode: native, @default-view, and @default-coloring are FractalPark extensions; default directives apply only in native mode",
-            "multi-formula-files": "Selecting among multiple formulas in one file",
-            "dialect-conversion": "Automatic conversion of classic Fractint dialects",
-            "arbitrary-directives": "Arbitrary source directives",
-            "non-ascii-identifiers": "Non-ASCII identifiers",
-            "user-functions": "User-defined functions or macros",
-            "preprocessor": "Preprocessor features",
-            "rejected-constructs": "Any construct rejected by the current compile pipeline"
+            "single-formula": "Una declaración de fórmula por documento de código fuente",
+            "core-sections": "Secciones init, loop y bailout",
+            "variables": "Asignaciones y variables de usuario",
+            "expressions": "Literales reales y complejos; expresiones aritméticas, de comparación, lógicas, unarias y de magnitud",
+            "conditionals": "Ramas if / elseif / else / endif",
+            "builtins": "z, c, pixel, zPrev, p1–p5, constantes y funciones integradas probadas",
+            "comments": "Comentarios FRM",
+            "diagnostics": "Diagnósticos estructurados y mapeo de código fuente de FRM a GLSL",
+            "ismand": "ismand se asigna al modo de ejecución Mandelbrot/Julia actual de FractalPark",
+            "function-slots": "fn1–fn4 usan despacho de funciones en tiempo de compilación",
+            "native-directives": "@mode: native, @default-view y @default-coloring son extensiones de FractalPark; las directivas predeterminadas solo se aplican en modo nativo",
+            "multi-formula-files": "Seleccionar entre varias fórmulas en un archivo",
+            "dialect-conversion": "Conversión automática de dialectos clásicos de Fractint",
+            "arbitrary-directives": "Directivas arbitrarias de código fuente",
+            "non-ascii-identifiers": "Identificadores no ASCII",
+            "user-functions": "Funciones o macros definidas por el usuario",
+            "preprocessor": "Funciones del preprocesador",
+            "rejected-constructs": "Cualquier construcción rechazada por el pipeline de compilación actual"
           },
-          "disclaimer": "This is a tested compatibility baseline, not a claim of full Fractint compatibility. When the compiler changes, this matrix and its tests must change together."
+          "disclaimer": "Esta es una línea base de compatibilidad probada, no una afirmación de compatibilidad total con Fractint. Cuando el compilador cambie, esta matriz y sus pruebas deben cambiar juntas."
         },
         "anatomy": {
-          "title": "Formula Anatomy",
-          "intro": "A FractalPark FRM formula has one named declaration and three explicit sections. Together they define the state transition for every pixel.",
+          "title": "Anatomía de la fórmula",
+          "intro": "Una fórmula FRM de FractalPark tiene una declaración con nombre y tres secciones explícitas. Juntas definen la transición de estado para cada píxel.",
           "parts": {
-            "init": "Runs once for a pixel. Set the initial orbit value and any helper variables here.",
-            "loop": "Runs once per iteration. Update z and any state that the next iteration needs.",
-            "bailout": "Returns the condition for continuing the orbit. When it becomes false, the point has escaped."
+            "init": "Se ejecuta una vez por píxel. Define aquí el valor inicial de la órbita y cualquier variable auxiliar.",
+            "loop": "Se ejecuta una vez por iteración. Actualiza z y cualquier estado que necesite la siguiente iteración.",
+            "bailout": "Devuelve la condición para continuar la órbita. Cuando se vuelve falsa, el punto ha escapado."
           },
-          "note": "The section names are structural, not comments: omitting or misspelling one produces a diagnostic."
+          "note": "Los nombres de las secciones son estructurales, no comentarios: omitir o escribir mal uno produce un diagnóstico."
         },
         "syntax": {
-          "title": "Syntax Guide",
-          "intro": "The language stays intentionally small: expressions describe complex arithmetic, statements update orbit state, and control flow selects among updates.",
+          "title": "Guía de sintaxis",
+          "intro": "El lenguaje se mantiene deliberadamente pequeño: las expresiones describen aritmética compleja, las sentencias actualizan el estado de la órbita y el flujo de control selecciona entre actualizaciones.",
           "topics": {
             "sections": {
-              "title": "Declaration and sections",
-              "body": "Wrap one named formula in braces, then write init:, loop:, and bailout: in that order."
+              "title": "Declaración y secciones",
+              "body": "Envuelve una fórmula con nombre entre llaves y luego escribe init:, loop: y bailout: en ese orden."
             },
             "values": {
-              "title": "Values and variables",
-              "body": "Use real numbers such as 0.15, complex pairs such as (0.05, -0.02), built-in orbit values, or your own assigned variables."
+              "title": "Valores y variables",
+              "body": "Usa números reales como 0.15, pares complejos como (0.05, -0.02), valores de órbita integrados o tus propias variables asignadas."
             },
             "operators": {
-              "title": "Expressions",
-              "body": "Arithmetic, powers, comparisons, logical operators, unary operators, |z| magnitude syntax, and tested complex functions can be combined."
+              "title": "Expresiones",
+              "body": "Se pueden combinar aritmética, potencias, comparaciones, operadores lógicos, operadores unarios, la sintaxis de magnitud |z| y funciones complejas probadas."
             },
             "control-flow": {
-              "title": "Control flow",
-              "body": "Use if, elseif, else, and endif when an orbit update depends on a condition. Blocks must be balanced."
+              "title": "Flujo de control",
+              "body": "Usa if, elseif, else y endif cuando una actualización de la órbita dependa de una condición. Los bloques deben estar balanceados."
             },
             "builtins": {
-              "title": "Built-ins",
-              "body": "Core names include z, c, pixel, zPrev, p1–p5, pi, e, maxit, ismand, fn1–fn4, and the functions covered by compiler tests."
+              "title": "Funciones integradas",
+              "body": "Los nombres principales incluyen z, c, pixel, zPrev, p1–p5, pi, e, maxit, ismand, fn1–fn4 y las funciones cubiertas por las pruebas del compilador."
             },
             "comments": {
-              "title": "Comments and directives",
-              "body": "Semicolon comments document source. Recognized @ directives configure FractalPark native behavior; unknown directives are not silently ignored."
+              "title": "Comentarios y directivas",
+              "body": "Los comentarios con punto y coma documentan el código fuente. Las directivas @ reconocidas configuran el comportamiento nativo de FractalPark; las directivas desconocidas no se ignoran silenciosamente."
             }
           }
         },
         "pipeline": {
-          "title": "FRM to AST to GLSL Pipeline",
-          "intro": "FractalPark does not paste FRM text into a shader. It passes source through a staged compiler so syntax, meaning, generated code, and diagnostics stay connected.",
+          "title": "Pipeline de FRM a AST a GLSL",
+          "intro": "FractalPark no pega texto FRM en un shader. Pasa el código fuente por un compilador por etapas para que la sintaxis, el significado, el código generado y los diagnósticos permanezcan conectados.",
           "steps": {
             "source": {
-              "title": "FRM source",
-              "body": "The exact text from the editor, paste, or local file is the authoritative input."
+              "title": "Código fuente FRM",
+              "body": "El texto exacto del editor, del pegado o del archivo local es la entrada autoritativa."
             },
             "tokens": {
-              "title": "Lexer tokens",
-              "body": "The lexer recognizes names, numbers, operators, section markers, comments, and directives while retaining source locations."
+              "title": "Tokens del lexer",
+              "body": "El lexer reconoce nombres, números, operadores, marcadores de sección, comentarios y directivas, conservando las ubicaciones del código fuente."
             },
             "ast": {
-              "title": "Parsed AST",
-              "body": "The parser builds a structured formula tree and reports malformed declarations, expressions, and control-flow blocks."
+              "title": "AST analizado",
+              "body": "El analizador construye un árbol de fórmula estructurado y reporta declaraciones, expresiones y bloques de flujo de control malformados."
             },
             "validation": {
-              "title": "Validation and canonical form",
-              "body": "The validator checks names, types, sections, and supported semantics before a canonical formula is created."
+              "title": "Validación y forma canónica",
+              "body": "El validador revisa nombres, tipos, secciones y la semántica compatible antes de crear una fórmula canónica."
             },
             "glsl": {
-              "title": "GLSL and source map",
-              "body": "Code generation emits shader functions and records mappings from generated GLSL back to FRM source."
+              "title": "GLSL y mapa de código fuente",
+              "body": "La generación de código emite funciones de shader y registra mapeos del GLSL generado de vuelta al código fuente FRM."
             },
             "plugin": {
-              "title": "Formula plugin",
-              "body": "A successful compile becomes the same formula-plugin contract used by the renderer and shader assembly system."
+              "title": "Plugin de fórmula",
+              "body": "Una compilación exitosa se convierte en el mismo contrato de plugin de fórmula que usan el renderizador y el sistema de ensamblado de shaders."
             }
           },
-          "note": "The shared compiler contract keeps Explore, the standalone Editor, saved custom formulas, examples, and tests on one implementation path."
+          "note": "El contrato compartido del compilador mantiene Explorar, el Editor independiente, las fórmulas personalizadas guardadas, los ejemplos y las pruebas en una sola ruta de implementación."
         },
         "tutorials": {
-          "title": "Progressive Tutorials",
-          "intro": "These examples advance from the smallest quadratic formula to parameters and stateful feedback. Each source block is taken directly from the shared example registry and compiled during tests.",
-          "lesson": "Lesson {number}",
-          "openInEditor": "Open in FRM Editor",
+          "title": "Tutoriales progresivos",
+          "intro": "Estos ejemplos avanzan desde la fórmula cuadrática más pequeña hasta los parámetros y la retroalimentación con estado. Cada bloque de código se toma directamente del registro compartido de ejemplos y se compila durante las pruebas.",
+          "lesson": "Lección {number}",
+          "openInEditor": "Abrir en el Editor FRM",
           "goals": {
-            "starter-brot": "Focus: the declaration and the init / loop / bailout structure. Change the exponent or escape threshold only after this version compiles.",
-            "parameter-drift": "Focus: p1 and p2 parameter slots, a complex literal, and cabs(z) as an explicit magnitude function.",
-            "orbit-echo": "Focus: zPrev as the previous orbit state. Feedback adds memory without introducing a second manually managed state variable."
+            "starter-brot": "Enfoque: la declaración y la estructura init / loop / bailout. Cambia el exponente o el umbral de escape solo después de que esta versión compile.",
+            "parameter-drift": "Enfoque: los espacios de parámetros p1 y p2, un literal complejo y cabs(z) como función de magnitud explícita.",
+            "orbit-echo": "Enfoque: zPrev como el estado de órbita anterior. La retroalimentación agrega memoria sin introducir una segunda variable de estado administrada manualmente."
           },
-          "editorNote": "The FRM Editor opens these same compile-checked examples by stable ID. Formula source remains local and is never embedded in the URL."
+          "editorNote": "El Editor FRM abre estos mismos ejemplos verificados por compilación por ID estable. El código fuente de la fórmula permanece local y nunca se incrusta en la URL."
         },
         "diagnostics": {
-          "title": "Errors and Diagnostics",
-          "intro": "Compilation stops at the earliest unsafe stage and reports source-oriented messages. A rejected construct is never rewritten into something that merely looks similar.",
+          "title": "Errores y diagnósticos",
+          "intro": "La compilación se detiene en la etapa insegura más temprana y reporta mensajes orientados al código fuente. Una construcción rechazada nunca se reescribe en algo que solo se parece.",
           "items": {
             "lexer": {
-              "title": "Lexical errors",
-              "body": "Unexpected characters and unsupported identifiers are reported with their line and column."
+              "title": "Errores léxicos",
+              "body": "Los caracteres inesperados y los identificadores no compatibles se reportan con su línea y columna."
             },
             "parser": {
-              "title": "Parse errors",
-              "body": "Malformed sections, expressions, or control-flow blocks are diagnosed before semantic validation."
+              "title": "Errores de análisis",
+              "body": "Las secciones, expresiones o bloques de flujo de control malformados se diagnostican antes de la validación semántica."
             },
             "validator": {
-              "title": "Validation errors",
-              "body": "Unknown variables, invalid assignments, type mismatches, and unsupported semantics prevent code generation."
+              "title": "Errores de validación",
+              "body": "Las variables desconocidas, las asignaciones inválidas, los desajustes de tipo y la semántica no compatible impiden la generación de código."
             },
             "source-map": {
-              "title": "Shader source mapping",
-              "body": "Generated GLSL retains mappings that can point a shader compilation failure back to the originating FRM location."
+              "title": "Mapeo del código fuente del shader",
+              "body": "El GLSL generado conserva mapeos que pueden apuntar un fallo de compilación del shader de vuelta a la ubicación FRM de origen."
             }
           },
-          "note": "When fixing an error, start with the first reported message: later diagnostics can be consequences of the same missing token or invalid expression."
+          "note": "Al corregir un error, empieza con el primer mensaje reportado: los diagnósticos posteriores pueden ser consecuencias del mismo token faltante o de la misma expresión inválida."
         },
         "next-steps": {
-          "title": "Examples, Next Steps, and References",
-          "exploreTitle": "See the renderer in context",
-          "exploreBody": "Open Explore to compare built-in formula behavior, coloring, transforms, animation, and export controls before writing a custom formula.",
-          "exploreCta": "Open Explore",
-          "editorNote": "Use the dedicated FRM Editor to compile, preview, import, download, and save local formulas before handing one off to Explore.",
-          "referencesTitle": "References",
-          "referencesIntro": "Historical context and implementation details are linked separately so the guide can distinguish the Fractint lineage from FractalPark's current compiler contract.",
+          "title": "Ejemplos, siguientes pasos y referencias",
+          "exploreTitle": "Ve el renderizador en contexto",
+          "exploreBody": "Abre Explorar para comparar el comportamiento de las fórmulas integradas, la coloración, las transformaciones, la animación y los controles de exportación antes de escribir una fórmula personalizada.",
+          "exploreCta": "Abrir Explorador",
+          "editorNote": "Usa el Editor FRM dedicado para compilar, previsualizar, importar, descargar y guardar fórmulas locales antes de pasarla a Explorar.",
+          "referencesTitle": "Referencias",
+          "referencesIntro": "El contexto histórico y los detalles de implementación se enlazan por separado para que la guía pueda distinguir el linaje de Fractint del contrato actual del compilador de FractalPark.",
           "references": {
-            "fractint-project": "Fractint project and history",
-            "fractalpark-frm-source": "FractalPark FRM compiler source",
-            "fractalpark-repository": "FractalPark source repository"
+            "fractint-project": "Proyecto e historia de Fractint",
+            "fractalpark-frm-source": "Código fuente del compilador FRM de FractalPark",
+            "fractalpark-repository": "Repositorio de código fuente de FractalPark"
           }
         },
         "sharing": {
-          "title": "Sharing and publishing",
-          "intro": "A formula you write is private until you choose otherwise. There are three ways it can travel — each explicit, none silent.",
+          "title": "Compartir y publicar",
+          "intro": "Una fórmula que escribes es privada hasta que decidas lo contrario. Hay tres formas en que puede viajar — cada una explícita, ninguna silenciosa.",
           "points": {
             "private": {
-              "title": "Private by default",
-              "body": "Formulas live in your cloud library, visible only to you. Artworks you save carry a copy of the formula source inside the draft, so they always open the way you left them."
+              "title": "Privada por defecto",
+              "body": "Las fórmulas viven en tu biblioteca en la nube, visibles solo para ti. Las obras que guardas llevan una copia del código fuente de la fórmula dentro del borrador, así que siempre se abren tal como las dejaste."
             },
             "download": {
-              "title": "Download the .frm file",
-              "body": "Your formula is plain text. Download it from My Formulas any time and keep your own copy — no export request, no waiting."
+              "title": "Descarga el archivo .frm",
+              "body": "Tu fórmula es texto plano. Descárgala desde Mis fórmulas cuando quieras y conserva tu propia copia — sin solicitud de exportación ni esperas."
             },
             "publish": {
-              "title": "Publish an artwork, share the source",
-              "body": "Publishing an artwork that uses your formula makes the formula source public under the MIT License: anyone may read, copy, and build on it. The community page shows the formula name from its metadata and offers the source as a download. This cannot be undone for that publication."
+              "title": "Publica una obra, comparte el código fuente",
+              "body": "Publicar una obra que usa tu fórmula hace público el código fuente de la fórmula bajo la Licencia MIT: cualquiera puede leerlo, copiarlo y construir sobre él. La página de la comunidad muestra el nombre de la fórmula desde sus metadatos y ofrece el código fuente como descarga. Esto no se puede deshacer para esa publicación."
             }
           },
-          "mitPrefix": "The full",
-          "mitLink": "MIT License text lives at opensource.org",
+          "mitPrefix": "El texto completo de la",
+          "mitLink": "Licencia MIT está en opensource.org",
           "mitSuffix": "."
         }
       }
@@ -1049,36 +1049,36 @@
   },
   "artworks": {
     "page": {
-      "metadataTitle": "{title} | FractalPark Artwork",
-      "imageAlt": "{title}, a published FractalPark artwork",
-      "breadcrumbLabel": "Breadcrumb",
-      "breadcrumbHome": "Home",
-      "breadcrumbGallery": "Gallery",
-      "eyebrow": "Published artwork",
-      "createdBy": "Created by {creator}",
-      "license": "Image licensed under CC BY 4.0",
-      "licenseScope": "CC BY 4.0 applies to the fractal artwork image layer. FractalPark source code remains MIT licensed; site prose, interface, logo, and trademarks are not included in the image license.",
-      "remix": "Remix in Explorer",
-      "copy": "Copy page link",
-      "copied": "Link copied",
-      "copyError": "Copy failed",
-      "visualNote": "Visual character",
-      "related": "Related artworks",
-      "customGradient": "Custom gradient",
+      "metadataTitle": "{title} | Obra de FractalPark",
+      "imageAlt": "{title}, una obra publicada de FractalPark",
+      "breadcrumbLabel": "Migas de pan",
+      "breadcrumbHome": "Inicio",
+      "breadcrumbGallery": "Galería",
+      "eyebrow": "Obra publicada",
+      "createdBy": "Creada por {creator}",
+      "license": "Imagen bajo licencia CC BY 4.0",
+      "licenseScope": "CC BY 4.0 se aplica a la capa de imagen de la obra fractal. El código fuente de FractalPark permanece bajo licencia MIT; el texto del sitio, la interfaz, el logo y las marcas no están incluidos en la licencia de la imagen.",
+      "remix": "Remix en Explorador",
+      "copy": "Copiar enlace de la página",
+      "copied": "Enlace copiado",
+      "copyError": "Error al copiar",
+      "visualNote": "Carácter visual",
+      "related": "Obras relacionadas",
+      "customGradient": "Gradiente personalizado",
       "viewer": {
-        "viewFullscreen": "View fullscreen",
-        "resume": "Resume animation",
-        "pause": "Pause animation",
-        "minimize": "Exit fullscreen",
-        "closeHint": "Click the background or press Esc to exit"
+        "viewFullscreen": "Ver a pantalla completa",
+        "resume": "Reanudar animación",
+        "pause": "Pausar animación",
+        "minimize": "Salir de pantalla completa",
+        "closeHint": "Haz clic en el fondo o presiona Esc para salir"
       },
       "state": {
-        "title": "Artwork state",
-        "formula": "Formula",
+        "title": "Estado de la obra",
+        "formula": "Fórmula",
         "zoom": "Zoom",
-        "iterations": "Maximum iterations",
-        "coloring": "Coloring",
-        "coloringValue": "{palette}; {outside} / {inside}; {transform} transform"
+        "iterations": "Iteraciones máximas",
+        "coloring": "Coloración",
+        "coloringValue": "{palette}; {outside} / {inside}; transformación {transform}"
       }
     },
     "entries": {
@@ -1189,187 +1189,187 @@
     }
   },
   "explore": {
-    "title": "Explore",
+    "title": "Explorar",
     "canvas": {
-      "placeholder": "WebGL Canvas — coming soon"
+      "placeholder": "Lienzo WebGL — próximamente"
     },
     "tabs": {
-      "formula": "Formula",
-      "coloring": "Coloring",
-      "transform": "Transform",
-      "render": "Render",
-      "animation": "Animation"
+      "formula": "Fórmula",
+      "coloring": "Coloración",
+      "transform": "Transformación",
+      "render": "Renderizado",
+      "animation": "Animación"
     },
     "artworkActions": {
       "common": {
-        "cancel": "Cancel"
+        "cancel": "Cancelar"
       },
       "cloud": {
-        "syncing": "Saving to your cloud…",
-        "synced": "Saved to your cloud.",
-        "failed": "Cloud save failed — your changes were not stored. Try again.",
-        "conflict": "This draft changed elsewhere. Load the remote version, or keep your edits as a new draft.",
-        "quota": "Your cloud storage is full. Delete drafts to make room.",
-        "offline": "You appear to be offline. Your changes were not saved.",
-        "session-expired": "Your session expired. Sign in again to keep saving."
+        "syncing": "Guardando en tu nube…",
+        "synced": "Guardado en tu nube.",
+        "failed": "Falló el guardado en la nube — tus cambios no se almacenaron. Inténtalo de nuevo.",
+        "conflict": "Este borrador cambió en otro lugar. Carga la versión remota o guarda tus ediciones como un borrador nuevo.",
+        "quota": "Tu almacenamiento en la nube está lleno. Elimina borradores para liberar espacio.",
+        "offline": "Parece que estás sin conexión. Tus cambios no se guardaron.",
+        "session-expired": "Tu sesión caducó. Inicia sesión de nuevo para seguir guardando."
       },
       "save": {
-        "label": "Save to Gallery",
-        "title": "Save Artwork",
-        "name": "Name",
-        "placeholder": "Enter a name...",
-        "confirm": "Save",
-        "pending": "Saving..."
+        "label": "Guardar en la Galería",
+        "title": "Guardar obra",
+        "name": "Nombre",
+        "placeholder": "Escribe un nombre…",
+        "confirm": "Guardar",
+        "pending": "Guardando…"
       },
       "download": {
-        "label": "Download Project"
+        "label": "Descargar proyecto"
       },
       "import": {
-        "label": "Import Project",
-        "dropHint": "Drop a .fractal.json file here"
+        "label": "Importar proyecto",
+        "dropHint": "Suelta un archivo .fractal.json aquí"
       },
       "export": {
-        "label": "Export PNG",
-        "title": "Export PNG",
-        "scale": "Size",
-        "quality": "Anti-aliasing Quality",
-        "qualityOff": "Off",
-        "qualityLow": "Low",
-        "qualityHigh": "High",
+        "label": "Exportar PNG",
+        "title": "Exportar PNG",
+        "scale": "Tamaño",
+        "quality": "Calidad de suavizado",
+        "qualityOff": "Desactivado",
+        "qualityLow": "Baja",
+        "qualityHigh": "Alta",
         "qualityUltra": "Ultra",
-        "confirm": "Export",
-        "pending": "Rendering..."
+        "confirm": "Exportar",
+        "pending": "Renderizando…"
       },
       "reset": {
-        "label": "Reset Artwork",
-        "title": "Reset all settings?",
-        "description": "This artwork will return to the default preset, including its formula, view, style, render, and animation settings. Saved gallery items and your custom formula library will not be deleted.",
-        "cancel": "Cancel",
-        "confirm": "Reset"
+        "label": "Restablecer obra",
+        "title": "¿Restablecer todos los ajustes?",
+        "description": "Esta obra volverá al preset predeterminado, incluidos su fórmula, vista, estilo, renderizado y ajustes de animación. Los elementos guardados en la galería y tu biblioteca de fórmulas personalizadas no se eliminarán.",
+        "cancel": "Cancelar",
+        "confirm": "Restablecer"
       },
       "status": {
         "save": {
-          "success": "Saved to Gallery."
+          "success": "Guardado en la Galería."
         },
         "download": {
-          "success": "Project downloaded."
+          "success": "Proyecto descargado."
         },
         "import": {
-          "success": "Project imported."
+          "success": "Proyecto importado."
         },
         "export": {
-          "success": "PNG exported."
+          "success": "PNG exportado."
         }
       },
       "errors": {
-        "invalid-json": "The selected file is not valid JSON.",
-        "file-too-large": "The project file is too large.",
-        "invalid-envelope": "The selected file is not a valid FractalPark project.",
-        "source-too-large": "The embedded custom formula is too large.",
-        "missing-formula-asset": "The project is missing its custom formula source.",
-        "asset-hash-mismatch": "The custom formula source failed its integrity check.",
-        "asset-compile-failed": "The embedded custom formula could not be compiled.",
-        "future-document": "This project was created by a newer FractalPark version and cannot be edited here.",
-        "invalid-formula-storage": "Your custom formula library could not be updated safely.",
-        "formula-limit-reached": "Your custom formula library is full.",
-        "formula-commit-failed": "The custom formula could not be installed. No changes were kept.",
-        "save-failed": "The artwork could not be saved.",
-        "download-failed": "The project could not be downloaded.",
-        "export-failed": "The PNG could not be exported.",
-        "cloud-unavailable": "Cloud sync is unavailable right now — your changes were not saved."
+        "invalid-json": "El archivo seleccionado no es JSON válido.",
+        "file-too-large": "El archivo del proyecto es demasiado grande.",
+        "invalid-envelope": "El archivo seleccionado no es un proyecto FractalPark válido.",
+        "source-too-large": "La fórmula personalizada incorporada es demasiado grande.",
+        "missing-formula-asset": "Al proyecto le falta el código fuente de su fórmula personalizada.",
+        "asset-hash-mismatch": "El código fuente de la fórmula personalizada no pasó la verificación de integridad.",
+        "asset-compile-failed": "La fórmula personalizada incorporada no se pudo compilar.",
+        "future-document": "Este proyecto fue creado con una versión más reciente de FractalPark y no se puede editar aquí.",
+        "invalid-formula-storage": "Tu biblioteca de fórmulas personalizadas no se pudo actualizar de forma segura.",
+        "formula-limit-reached": "Tu biblioteca de fórmulas personalizadas está llena.",
+        "formula-commit-failed": "La fórmula personalizada no se pudo instalar. No se conservaron cambios.",
+        "save-failed": "La obra no se pudo guardar.",
+        "download-failed": "El proyecto no se pudo descargar.",
+        "export-failed": "El PNG no se pudo exportar.",
+        "cloud-unavailable": "La sincronización en la nube no está disponible en este momento — tus cambios no se guardaron."
       },
       "conflict": {
-        "reload": "Load remote version",
-        "saveAsNew": "Save as new draft"
+        "reload": "Cargar versión remota",
+        "saveAsNew": "Guardar como borrador nuevo"
       }
     },
     "formula": {
-      "select": "Select Formula",
-      "search": "Search formulas...",
-      "noResults": "No formulas found",
-      "active": "Active",
-      "builtin": "Built-in",
-      "custom": "Custom",
+      "select": "Seleccionar fórmula",
+      "search": "Buscar fórmulas…",
+      "noResults": "No se encontraron fórmulas",
+      "active": "Activa",
+      "builtin": "Integrada",
+      "custom": "Personalizada",
       "resolution": {
-        "loading": "Loading formula...",
-        "notFound": "The custom formula “{formula}” could not be loaded.",
-        "storageInvalid": "Your custom formula library could not be read safely.",
-        "idConflict": "The custom formula ID “{formula}” conflicts with a built-in formula.",
-        "compileFailed": "The custom formula “{formula}” could not be compiled.",
-        "unavailable": "The formula “{formula}” could not be loaded."
+        "loading": "Cargando fórmula…",
+        "notFound": "La fórmula personalizada “{formula}” no se pudo cargar.",
+        "storageInvalid": "Tu biblioteca de fórmulas personalizadas no se pudo leer de forma segura.",
+        "idConflict": "El ID de la fórmula personalizada “{formula}” choca con una fórmula integrada.",
+        "compileFailed": "La fórmula personalizada “{formula}” no se pudo compilar.",
+        "unavailable": "La fórmula “{formula}” no se pudo cargar."
       },
       "examples": {
         "starterBrot": {
-          "name": "Starter Mandelbrot",
-          "description": "The smallest escape-time formula, useful for learning the init / loop / bailout structure first."
+          "name": "Mandelbrot de inicio",
+          "description": "La fórmula de tiempo de escape más pequeña, útil para aprender primero la estructura init / loop / bailout."
         },
         "parameterDrift": {
-          "name": "Parameter Drift",
-          "description": "Demonstrates p1 / p2 parameter slots and the difference between cabs and |z|."
+          "name": "Deriva de parámetros",
+          "description": "Demuestra los espacios de parámetros p1 / p2 y la diferencia entre cabs y |z|."
         },
         "orbitEcho": {
-          "name": "Orbit Echo",
-          "description": "Uses zPrev as feedback memory and pairs well with orbitEcho coloring for orbit envelopes."
+          "name": "Eco de órbita",
+          "description": "Usa zPrev como memoria de retroalimentación y combina bien con la coloración orbitEcho para envolventes de órbita."
         },
         "fnSlotWeave": {
-          "name": "Fn Slot Weave",
-          "description": "Demonstrates fn1 / fn2 and parameter slots as a Fractint-compatible authoring template."
+          "name": "Tejido de espacios Fn",
+          "description": "Demuestra fn1 / fn2 y los espacios de parámetros como plantilla de autoría compatible con Fractint."
         },
         "branchGarden": {
-          "name": "Branch Garden",
-          "description": "Shows if / elseif / else branches mixed with trigonometric updates."
+          "name": "Jardín de ramas",
+          "description": "Muestra ramas if / elseif / else combinadas con actualizaciones trigonométricas."
         }
       },
       "customLibrary": {
-        "title": "Custom Formulas",
-        "openStandaloneEditor": "FRM Editor",
-        "new": "New",
-        "loading": "Loading...",
-        "empty": "No custom formulas yet",
-        "createFirst": "Create your first formula",
-        "renameConfirm": "Confirm",
-        "deleteConfirm": "Delete this formula?",
-        "maxReached": "Maximum formula limit reached ({count})",
-        "formulaNotFound": "That formula no longer exists in your cloud library.",
-        "compileFailed": "The formula could not be compiled.",
-        "examplesTitle": "Start from Examples",
-        "examplesDescription": "Load a working example first, then reshape it into your own formula in the editor.",
-        "signInHint": "Sign in to keep formulas in your cloud library and pick them up on any device.",
-        "signIn": "Sign in",
-        "unavailableHint": "The formula library is unavailable right now. Try again shortly.",
-        "unavailable": "The formula library is unavailable right now.",
-        "conflict": "This formula changed elsewhere. Reload and try again.",
-        "builtinConflict": "This id is reserved by a built-in formula. Rename yours and try again."
+        "title": "Fórmulas personalizadas",
+        "openStandaloneEditor": "Editor FRM",
+        "new": "Nueva",
+        "loading": "Cargando…",
+        "empty": "Aún no hay fórmulas personalizadas",
+        "createFirst": "Crea tu primera fórmula",
+        "renameConfirm": "Confirmar",
+        "deleteConfirm": "¿Eliminar esta fórmula?",
+        "maxReached": "Se alcanzó el límite máximo de fórmulas ({count})",
+        "formulaNotFound": "Esa fórmula ya no existe en tu biblioteca en la nube.",
+        "compileFailed": "La fórmula no se pudo compilar.",
+        "examplesTitle": "Empezar desde los ejemplos",
+        "examplesDescription": "Carga primero un ejemplo que funcione y luego transfórmalo en tu propia fórmula en el editor.",
+        "signInHint": "Inicia sesión para guardar fórmulas en tu biblioteca en la nube y retomarlas en cualquier dispositivo.",
+        "signIn": "Iniciar sesión",
+        "unavailableHint": "La biblioteca de fórmulas no está disponible en este momento. Inténtalo de nuevo en un momento.",
+        "unavailable": "La biblioteca de fórmulas no está disponible en este momento.",
+        "conflict": "Esta fórmula cambió en otro lugar. Recarga e inténtalo de nuevo.",
+        "builtinConflict": "Este id está reservado por una fórmula integrada. Cambia el nombre de la tuya e inténtalo de nuevo."
       },
       "family": {
-        "all": "All",
-        "classic": "Classic",
+        "all": "Todas",
+        "classic": "Clásica",
         "burning-ship": "Burning Ship",
         "newton": "Newton",
         "magnet": "Magnet",
         "phoenix": "Phoenix",
-        "transcendental": "Transcendental",
-        "exotic": "Exotic"
+        "transcendental": "Trascendental",
+        "exotic": "Exótica"
       }
     },
     "controls": {
-      "colorScheme": "Color Scheme",
-      "iterations": "Iterations",
-      "position": "Position",
-      "center": "Center",
+      "colorScheme": "Esquema de color",
+      "iterations": "Iteraciones",
+      "position": "Posición",
+      "center": "Centro",
       "zoom": "Zoom",
       "mode": {
-        "label": "Fractal Mode",
+        "label": "Modo de fractal",
         "mandelbrot": "Mandelbrot",
         "julia": "Julia"
       },
       "juliaC": {
-        "label": "Julia Parameter (c)",
-        "pickHint": "Tip: click a point on Mandelbrot to set c and switch to Julia.",
+        "label": "Parámetro de Julia (c)",
+        "pickHint": "Consejo: haz clic en un punto del Mandelbrot para fijar c y cambiar a Julia.",
         "picked": "Julia c = {re}, {im}"
       },
       "formula": {
-        "label": "Formula",
+        "label": "Fórmula",
         "mandelbrot": "Mandelbrot",
         "burningShip": "Burning Ship",
         "airship": "Airship",
@@ -1471,83 +1471,83 @@
         "rings": "Rings"
       },
       "transform": {
-        "label": "Transform",
-        "none": "None",
-        "kaleidoscope": "Kaleidoscope",
-        "mobius": "Mobius",
-        "inversion": "Inversion",
+        "label": "Transformación",
+        "none": "Ninguna",
+        "kaleidoscope": "Caleidoscopio",
+        "mobius": "Möbius",
+        "inversion": "Inversión",
         "polar": "Polar",
-        "sinusoidal": "Sine",
-        "spherical": "Spherical"
+        "sinusoidal": "Seno",
+        "spherical": "Esférica"
       },
       "coloring": {
-        "outside": "Outside Coloring",
-        "inside": "Inside Coloring",
-        "smooth": "Smooth",
-        "orbitTrap": "Orbit Trap",
-        "orbitEcho": "Orbit Echo",
-        "stripe": "Stripe",
-        "binary": "Binary",
+        "outside": "Coloración exterior",
+        "inside": "Coloración interior",
+        "smooth": "Suave",
+        "orbitTrap": "Trampa de órbita",
+        "orbitEcho": "Eco de órbita",
+        "stripe": "Franja",
+        "binary": "Binaria",
         "tia": "TIA",
-        "black": "Black",
-        "finalOrbit": "Final Orbit",
-        "atomDomain": "Atom Domain"
+        "black": "Negro",
+        "finalOrbit": "Órbita final",
+        "atomDomain": "Dominio atómico"
       },
       "orbitTrap": {
-        "label": "Orbit Trap",
-        "point": "Point",
-        "cross": "Cross",
-        "circle": "Circle",
-        "radius": "Radius",
-        "width": "Width"
+        "label": "Trampa de órbita",
+        "point": "Punto",
+        "cross": "Cruz",
+        "circle": "Círculo",
+        "radius": "Radio",
+        "width": "Ancho"
       },
       "quality": {
         "ssaa": "SSAA 2x2",
-        "adaptive": "Adaptive Iterations",
-        "lighting": "Lighting",
-        "lightingMode": "Mode",
-        "lightingModeNormalMap": "Normal Map",
-        "lightingModeDem": "Distance Estimate",
-        "azimuth": "Light Azimuth",
-        "elevation": "Light Elevation",
-        "intensity": "Light Intensity"
+        "adaptive": "Iteraciones adaptativas",
+        "lighting": "Iluminación",
+        "lightingMode": "Modo",
+        "lightingModeNormalMap": "Mapa de normales",
+        "lightingModeDem": "Estimación de distancia",
+        "azimuth": "Acimut de la luz",
+        "elevation": "Elevación de la luz",
+        "intensity": "Intensidad de la luz"
       },
       "rotation": {
-        "label": "Rotation"
+        "label": "Rotación"
       },
-      "formulaParameters": "Formula Parameters",
-      "formulaNoParameters": "This formula uses its built-in defaults and does not need extra controls.",
+      "formulaParameters": "Parámetros de la fórmula",
+      "formulaNoParameters": "Esta fórmula usa sus valores predeterminados integrados y no necesita controles adicionales.",
       "complexReal": "Re",
       "complexImaginary": "Im",
-      "transformParameters": "Transform Parameters",
-      "transformNoParameters": "This transform uses its built-in defaults and does not need extra controls.",
-      "transformCenter": "Center Point",
-      "kaleidoFold": "Fold Count",
-      "kaleidoCenterX": "Center X",
-      "kaleidoCenterY": "Center Y",
-      "invRadius": "Inversion Radius",
-      "invCenterX": "Center X",
-      "invCenterY": "Center Y",
-      "polarAngleScale": "Angle Scale",
-      "polarRadiusScale": "Radius Scale",
-      "sphericalAmount": "Spherical Amount",
-      "ringsP": "Rings Parameter",
+      "transformParameters": "Parámetros de la transformación",
+      "transformNoParameters": "Esta transformación usa sus valores predeterminados integrados y no necesita controles adicionales.",
+      "transformCenter": "Punto central",
+      "kaleidoFold": "Número de pliegues",
+      "kaleidoCenterX": "Centro X",
+      "kaleidoCenterY": "Centro Y",
+      "invRadius": "Radio de inversión",
+      "invCenterX": "Centro X",
+      "invCenterY": "Centro Y",
+      "polarAngleScale": "Escala de ángulo",
+      "polarRadiusScale": "Escala de radio",
+      "sphericalAmount": "Cantidad esférica",
+      "ringsP": "Parámetro de anillos",
       "animation": {
-        "title": "Animation",
-        "addKeyframe": "Add Keyframe",
-        "removeKeyframe": "Remove",
-        "maxReached": "Maximum 5 keyframes",
-        "preview": "Preview",
-        "stopPreview": "Stop",
-        "noKeyframes": "No keyframes yet",
-        "duration": "Loop: {seconds}s",
-        "keyframeLabel": "Keyframe {number} (zoom: {zoom})"
+        "title": "Animación",
+        "addKeyframe": "Agregar fotograma clave",
+        "removeKeyframe": "Quitar",
+        "maxReached": "Máximo 5 fotogramas clave",
+        "preview": "Vista previa",
+        "stopPreview": "Detener",
+        "noKeyframes": "Aún no hay fotogramas clave",
+        "duration": "Bucle: {seconds}s",
+        "keyframeLabel": "Fotograma clave {number} (zoom: {zoom})"
       },
       "gradient": {
         "preset": "Preset",
-        "custom": "Custom",
-        "addStop": "+ Add Color Stop",
-        "removeStop": "Remove",
+        "custom": "Personalizado",
+        "addStop": "+ Agregar punto de color",
+        "removeStop": "Quitar",
         "presets": {
           "inferno": "Inferno",
           "ocean": "Ocean",
@@ -1577,288 +1577,288 @@
       "porcelain": "Porcelain"
     },
     "paletteCategories": {
-      "legacy": "Legacy",
-      "sequential": "Sequential",
-      "cyclic": "Cyclic",
-      "diverging": "Diverging",
-      "artistic": "Artistic"
+      "legacy": "Legado",
+      "sequential": "Secuencial",
+      "cyclic": "Cíclica",
+      "diverging": "Divergente",
+      "artistic": "Artística"
     },
     "editor": {
-      "title": "Formula Editor",
-      "loading": "Loading editor...",
-      "loadFailed": "Editor failed to load",
-      "loadFailedDescription": "Unable to load the code editor. Please refresh the page.",
-      "compile": "Compile",
-      "compiling": "Compiling...",
-      "save": "Save",
-      "saved": "Saved",
-      "savedDescription": "Formula \"{name}\" saved locally",
-      "saveFailed": "Save Failed",
-      "saveFailedDescription": "Unable to save the current formula",
-      "compileSuccess": "Compile Successful",
-      "compileSuccessDescription": "Formula \"{name}\" is ready",
-      "compileFailed": "Compile Failed",
-      "compileFailedDescription": "{count} error(s) found",
-      "compileError": "Compile Error",
-      "compatibilityNotes": "Compatibility Notes",
-      "errors": "{count} error(s)",
-      "warnings": "{count} warning(s)",
-      "infos": "{count} compatibility note(s)",
-      "noErrors": "No errors",
-      "diagnostics": "Diagnostics ({errors} error(s), {warnings} warning(s), {infos} compatibility note(s))",
-      "moreIssues": "{count} more issue(s)...",
-      "restoreLastSuccessful": "Restore Last Successful Version",
-      "restoreSuccess": "Version Restored",
-      "restoreSuccessDescription": "The editor has been rolled back to the most recent successful source.",
-      "setCurrentViewAsDefault": "Use Current View as Default",
-      "defaultViewSet": "Default View Updated",
-      "defaultViewSetDescription": "Saving will persist the current Explore view with this custom formula.",
-      "modeCompat": "Mode: Compat",
-      "modeNative": "Mode: Native",
-      "line": "Line {line}, Column {col}",
-      "lines": "{count} lines",
-      "glslError": "GLSL compile error (mapped from formula source)",
-      "glslErrorUnmapped": "GLSL compile error (location cannot be mapped)"
+      "title": "Editor de fórmulas",
+      "loading": "Cargando editor…",
+      "loadFailed": "No se pudo cargar el editor",
+      "loadFailedDescription": "No se pudo cargar el editor de código. Actualiza la página.",
+      "compile": "Compilar",
+      "compiling": "Compilando…",
+      "save": "Guardar",
+      "saved": "Guardado",
+      "savedDescription": "Fórmula \"{name}\" guardada localmente",
+      "saveFailed": "Error al guardar",
+      "saveFailedDescription": "No se pudo guardar la fórmula actual",
+      "compileSuccess": "Compilación exitosa",
+      "compileSuccessDescription": "La fórmula \"{name}\" está lista",
+      "compileFailed": "Error de compilación",
+      "compileFailedDescription": "Se encontraron {count} error(es)",
+      "compileError": "Error de compilación",
+      "compatibilityNotes": "Notas de compatibilidad",
+      "errors": "{count} error(es)",
+      "warnings": "{count} advertencia(s)",
+      "infos": "{count} nota(s) de compatibilidad",
+      "noErrors": "Sin errores",
+      "diagnostics": "Diagnóstico ({errors} error(es), {warnings} advertencia(s), {infos} nota(s) de compatibilidad)",
+      "moreIssues": "{count} problema(s) más…",
+      "restoreLastSuccessful": "Restaurar la última versión exitosa",
+      "restoreSuccess": "Versión restaurada",
+      "restoreSuccessDescription": "El editor volvió a la versión exitosa más reciente.",
+      "setCurrentViewAsDefault": "Usar la vista actual como predeterminada",
+      "defaultViewSet": "Vista predeterminada actualizada",
+      "defaultViewSetDescription": "Al guardar se conservará la vista actual de Explorar con esta fórmula personalizada.",
+      "modeCompat": "Modo: Compat",
+      "modeNative": "Modo: Nativo",
+      "line": "Línea {line}, columna {col}",
+      "lines": "{count} líneas",
+      "glslError": "Error de compilación GLSL (mapeado desde el código fuente de la fórmula)",
+      "glslErrorUnmapped": "Error de compilación GLSL (no se puede mapear la ubicación)"
     },
     "landing": {
-      "heading": "FractalPark: open-source fractal generator in your browser",
-      "whatIsHeading": "What is FractalPark?",
-      "whatIsAnswer": "FractalPark is a free, open-source (MIT) fractal knowledge and creation platform that renders entirely in your browser with WebGL: {formulaCount} built-in formulas, Fractint-compatible FRM authoring, and high-resolution PNG export. Creating needs no account; saving artworks and formulas uses email sign-in and a private cloud library.",
-      "capabilitiesHeading": "Core capabilities",
-      "capabilitiesIntro": "{formulaCount} formulas across {formulaFamilyCount} families · {formulaGuideCount} in-depth Formula Guides · {transformCount} transforms · {coloringModeCount} coloring modes · shareable URLs · PNG export up to {maxExportScale}×",
-      "linksHeading": "Keep exploring",
+      "heading": "FractalPark: generador de fractales de código abierto en tu navegador",
+      "whatIsHeading": "¿Qué es FractalPark?",
+      "whatIsAnswer": "FractalPark es una plataforma gratuita y de código abierto (MIT) para crear y explorar fractales que se renderiza por completo en tu navegador con WebGL: {formulaCount} fórmulas integradas, creación de fórmulas FRM compatible con Fractint y exportación de PNG en alta resolución. Crear no requiere cuenta; guardar obras y fórmulas usa inicio de sesión por correo y una biblioteca privada en la nube.",
+      "capabilitiesHeading": "Capacidades principales",
+      "capabilitiesIntro": "{formulaCount} fórmulas en {formulaFamilyCount} familias · {formulaGuideCount} guías de fórmulas en profundidad · {transformCount} transformaciones · {coloringModeCount} modos de coloración · URL compartibles · exportación de PNG hasta {maxExportScale}×",
+      "linksHeading": "Sigue explorando",
       "links": {
-        "formulas": "Formula Atlas — every formula with math, history, and live examples",
-        "frmGuide": "FRM Guide — write Fractint-compatible formulas in the browser",
-        "drift": "Drift — sit back with an immersive preset slideshow",
-        "about": "About — project facts, boundaries, and open-source details"
+        "formulas": "Atlas de Fórmulas — cada fórmula con matemática, historia y ejemplos en vivo",
+        "frmGuide": "Guía FRM — escribe fórmulas compatibles con Fractint en el navegador",
+        "drift": "Drift — relájate con una presentación inmersiva de presets",
+        "about": "Acerca de — datos del proyecto, límites y detalles de código abierto"
       },
-      "posterAlt": "Static preview of a Mandelbrot fractal rendered by FractalPark"
+      "posterAlt": "Vista previa estática de un fractal de Mandelbrot renderizado por FractalPark"
     },
     "draft": {
-      "loading": "Opening your draft…",
-      "notFound": "This draft could not be found. It may have been deleted, or it belongs to another account.",
-      "unavailable": "This draft could not be opened right now. Try again shortly.",
-      "retry": "Retry",
-      "signInToOpen": "This draft lives in a cloud library.",
-      "signIn": "Sign in to open it"
+      "loading": "Abriendo tu borrador…",
+      "notFound": "No se pudo encontrar este borrador. Puede que se haya eliminado o que pertenezca a otra cuenta.",
+      "unavailable": "Este borrador no se pudo abrir en este momento. Inténtalo de nuevo en un momento.",
+      "retry": "Reintentar",
+      "signInToOpen": "Este borrador vive en una biblioteca en la nube.",
+      "signIn": "Inicia sesión para abrirlo"
     }
   },
   "frmEditor": {
-    "title": "FRM Editor",
-    "description": "Write, compile, and preview FRM formulas in your browser; save them to your cloud library.",
-    "breadcrumb": "Breadcrumb",
-    "crumbGuide": "FRM Guide",
+    "title": "Editor FRM",
+    "description": "Escribe, compila y previsualiza fórmulas FRM en tu navegador; guárdalas en tu biblioteca en la nube.",
+    "breadcrumb": "Migas de pan",
+    "crumbGuide": "Guía FRM",
     "beta": "Beta",
-    "localOnly": "Your source and preview stay in this tab until you save to your cloud library. FRM compatibility is deliberately limited.",
-    "guide": "Read the FRM Guide",
-    "noJsTitle": "FRM Editor requires JavaScript",
-    "noJs": "This page explains the FRM workflow. Enable JavaScript to edit, compile, and preview formulas.",
-    "actions": "Editor actions",
-    "new": "New",
-    "examples": "Examples",
-    "myFormulas": "My Formulas",
-    "loading": "Loading your formula library…",
-    "empty": "No saved formulas yet.",
-    "import": "Import .frm",
-    "download": "Download .frm",
-    "saveOpen": "Save and Open in Explorer",
-    "viewModes": "Editor view",
+    "localOnly": "Tu código fuente y la vista previa permanecen en esta pestaña hasta que guardes en tu biblioteca en la nube. La compatibilidad FRM está limitada a propósito.",
+    "guide": "Leer la Guía FRM",
+    "noJsTitle": "El Editor FRM requiere JavaScript",
+    "noJs": "Esta página explica el flujo de trabajo de FRM. Habilita JavaScript para editar, compilar y previsualizar fórmulas.",
+    "actions": "Acciones del editor",
+    "new": "Nueva",
+    "examples": "Ejemplos",
+    "myFormulas": "Mis fórmulas",
+    "loading": "Cargando tu biblioteca de fórmulas…",
+    "empty": "Aún no hay fórmulas guardadas.",
+    "import": "Importar .frm",
+    "download": "Descargar .frm",
+    "saveOpen": "Guardar y abrir en Explorador",
+    "viewModes": "Vista del editor",
     "editorMode": "Editor",
-    "previewMode": "Preview",
-    "preview": "Compiled preview",
-    "previewEmpty": "Compile a valid formula to update this preview.",
-    "previewStale": "The source has changed. This is the last successful preview; compile again before saving or opening it.",
-    "reset": "Reset view",
-    "unknownExample": "That example is not available. Start with a blank local formula instead.",
-    "replaceConfirm": "Replace the current unsaved draft?",
-    "leaveConfirm": "Leave this editor and discard unsaved draft changes?",
-    "saved": "Saved locally.",
-    "saveError": "The formula could not be saved locally.",
+    "previewMode": "Vista previa",
+    "preview": "Vista previa compilada",
+    "previewEmpty": "Compila una fórmula válida para actualizar esta vista previa.",
+    "previewStale": "El código fuente cambió. Esta es la última vista previa exitosa; compila de nuevo antes de guardarla o abrirla.",
+    "reset": "Restablecer vista",
+    "unknownExample": "Ese ejemplo no está disponible. Empieza con una fórmula local en blanco.",
+    "replaceConfirm": "¿Reemplazar el borrador actual sin guardar?",
+    "leaveConfirm": "¿Salir del editor y descartar los cambios sin guardar del borrador?",
+    "saved": "Guardado localmente.",
+    "saveError": "La fórmula no se pudo guardar localmente.",
     "errors": {
-      "maxCount": "Maximum formula limit reached ({count}).",
-      "formulaNotFound": "That local formula no longer exists.",
-      "storageUnavailable": "The local formula library could not be updated.",
-      "compileFailed": "The formula could not be compiled.",
-      "conflict": "This formula changed elsewhere. Reload and try again.",
-      "builtinConflict": "This id is reserved by a built-in formula."
+      "maxCount": "Se alcanzó el límite máximo de fórmulas ({count}).",
+      "formulaNotFound": "Esa fórmula local ya no existe.",
+      "storageUnavailable": "No se pudo actualizar la biblioteca local de fórmulas.",
+      "compileFailed": "La fórmula no se pudo compilar.",
+      "conflict": "Esta fórmula cambió en otro lugar. Recarga e inténtalo de nuevo.",
+      "builtinConflict": "Este id está reservado por una fórmula integrada."
     },
-    "compileFirst": "Compile this source successfully before opening it in Explorer.",
+    "compileFirst": "Compila este código fuente con éxito antes de abrirlo en Explorador.",
     "source": {
-      "multiple": "This source contains more than one top-level formula. FractalPark compiles one formula at a time and has preserved the full source without truncating it.",
-      "trailing": "This source contains unsupported content after the formula. FractalPark has preserved the full source and will not compile only the first part."
+      "multiple": "Este código fuente contiene más de una fórmula de nivel superior. FractalPark compila una fórmula a la vez y ha conservado el código fuente completo sin truncarlo.",
+      "trailing": "Este código fuente contiene contenido no compatible después de la fórmula. FractalPark ha conservado el código fuente completo y no compilará solo la primera parte."
     },
     "file": {
-      "extension": "Choose a .frm file.",
-      "size": "FRM files must be 256 KiB or smaller.",
-      "encoding": "The file must be valid UTF-8."
+      "extension": "Elige un archivo .frm.",
+      "size": "Los archivos FRM deben ser de 256 KiB o menos.",
+      "encoding": "El archivo debe ser UTF-8 válido."
     },
-    "librarySignIn": "Sign in to open your cloud formula library."
+    "librarySignIn": "Inicia sesión para abrir tu biblioteca de fórmulas en la nube."
   },
   "metadata": {
     "explore": {
-      "title": "FractalPark — Open-source browser fractal generator",
-      "description": "Open-source, formula-first fractal knowledge and creation platform in your browser: 94 built-in formulas, real-time WebGL rendering, Fractint-compatible FRM authoring, and high-resolution PNG export.",
-      "ogTitle": "FractalPark — Open-source fractal art in your browser",
-      "ogDescription": "Create fractal art in your browser: 94 formulas, real-time WebGL rendering, FRM authoring, high-resolution PNG export."
+      "title": "FractalPark — Generador de fractales de código abierto para navegador",
+      "description": "Plataforma de código abierto para crear y explorar fractales, donde la fórmula es lo primero, en tu navegador: 94 fórmulas integradas, renderizado WebGL en tiempo real, creación de fórmulas FRM compatible con Fractint y exportación de PNG en alta resolución.",
+      "ogTitle": "FractalPark — Arte fractal de código abierto en tu navegador",
+      "ogDescription": "Crea arte fractal en tu navegador: 94 fórmulas, renderizado WebGL en tiempo real, creación de fórmulas FRM y exportación de PNG en alta resolución."
     },
     "gallery": {
-      "title": "My Gallery | Personal Fractal Collection - FractalPark",
-      "description": "Your personal fractal art gallery. Save, organize and share your favorite fractal creations."
+      "title": "Mi Galería | Colección personal de fractales - FractalPark",
+      "description": "Tu galería personal de arte fractal. Guarda, organiza y comparte tus creaciones fractales favoritas."
     },
     "about": {
-      "title": "About | Open Source Browser Fractal Generator - FractalPark",
-      "description": "Learn about FractalPark, an open-source MIT-licensed fractal generator that runs in the browser with WebGL, 94 formulas, custom palettes, and PNG export."
+      "title": "Acerca de | Generador de fractales de código abierto para navegador - FractalPark",
+      "description": "Conoce FractalPark, un generador de fractales de código abierto bajo licencia MIT que funciona en el navegador con WebGL, 94 fórmulas, paletas personalizadas y exportación de PNG."
     },
     "formulaAtlas": {
-      "title": "Formula Atlas | 94 Fractal Formulas - FractalPark",
-      "description": "Browse all 94 FractalPark formulas across seven families, explore 21 selected guide profiles, learn FRM, and open canonical formula states in the WebGL Explorer.",
-      "imageAlt": "FractalPark Formula Atlas with 94 built-in formulas"
+      "title": "Atlas de Fórmulas | 94 fórmulas de fractales - FractalPark",
+      "description": "Explora las 94 fórmulas de FractalPark en siete familias, recorre 21 perfiles de guía seleccionados, aprende FRM y abre estados canónicos de fórmulas en el Explorador WebGL.",
+      "imageAlt": "Atlas de Fórmulas de FractalPark con 94 fórmulas integradas"
     },
     "frmEditor": {
-      "title": "FRM Editor | FractalPark",
-      "description": "Write, compile, and preview FRM formulas in your browser; save them to your cloud library."
+      "title": "Editor FRM | FractalPark",
+      "description": "Escribe, compila y previsualiza fórmulas FRM en tu navegador; guárdalas en tu biblioteca en la nube."
     },
     "frmGuide": {
-      "title": "FRM Guide | Write Custom Fractal Formulas - FractalPark",
-      "description": "Learn FractalPark's tested FRM syntax, compatibility levels, AST-to-GLSL compiler pipeline, diagnostics, and three compile-checked custom formula examples.",
-      "imageAlt": "FractalPark FRM formula language guide"
+      "title": "Guía FRM | Escribe fórmulas de fractales personalizadas - FractalPark",
+      "description": "Aprende la sintaxis FRM probada de FractalPark, los niveles de compatibilidad, el pipeline del compilador de AST a GLSL, los diagnósticos y tres ejemplos de fórmulas personalizadas verificados por compilación.",
+      "imageAlt": "Guía del lenguaje de fórmulas FRM de FractalPark"
     },
     "drift": {
-      "title": "Drift — Immersive fractal slideshow | FractalPark",
-      "description": "A hands-free, full-viewport drift through published FractalPark fractal presets, rendered live in WebGL. Lean back and watch the math move.",
-      "ogTitle": "Drift — Immersive fractal slideshow",
-      "ogDescription": "Full-viewport ambient playback of FractalPark fractal presets."
+      "title": "Drift — Presentación inmersiva de fractales | FractalPark",
+      "description": "Un recorrido sin manos por presets de fractales de FractalPark publicados, a pantalla completa y renderizado en vivo con WebGL. Recuéstate y mira cómo se mueve la matemática.",
+      "ogTitle": "Drift — Presentación inmersiva de fractales",
+      "ogDescription": "Reproducción ambiental a pantalla completa de presets de fractales de FractalPark."
     }
   },
   "about": {
-    "title": "About FractalPark",
-    "aiDescription": "FractalPark is an open-source MIT-licensed browser-based fractal art generator using WebGL for real-time GPU rendering. It features 94 built-in escape-time fractal formulas (Mandelbrot, Julia, Newton, Phoenix, Magnet, McMullen, rational, transcendental families), a custom formula editor with Fractint .frm syntax support, 7 UV transform plugins, 9 coloring modes, and high-resolution PNG export. Built with Next.js 16, React 19, TypeScript 5, and Tailwind CSS. The rendering engine uses a plugin architecture with dynamic GLSL shader assembly and LRU caching.",
+    "title": "Acerca de FractalPark",
+    "aiDescription": "FractalPark es un generador de arte fractal de código abierto, con licencia MIT, basado en navegador, que usa WebGL para el renderizado en tiempo real con GPU. Incluye 94 fórmulas de fractales de tiempo de escape integradas (familias Mandelbrot, Julia, Newton, Phoenix, Magnet, McMullen, racionales y trascendentales), un editor de fórmulas personalizadas con soporte de sintaxis .frm de Fractint, 7 plugins de transformación UV, 9 modos de coloración y exportación de PNG en alta resolución. Está construido con Next.js 16, React 19, TypeScript 5 y Tailwind CSS. El motor de renderizado usa una arquitectura de plugins con ensamblado dinámico de shaders GLSL y caché LRU.",
     "techStack": {
-      "title": "Technology",
-      "description": "Built with Next.js, WebGL, and TypeScript. Real-time fractal rendering powered by GPU shaders.",
+      "title": "Tecnología",
+      "description": "Construido con Next.js, WebGL y TypeScript. Renderizado de fractales en tiempo real impulsado por shaders de GPU.",
       "frontend": "Frontend: Next.js 16 (App Router), React 19, TypeScript 5, Tailwind CSS 4, shadcn/ui",
-      "rendering": "Rendering: WebGL 1 (GLSL fragment shaders), plugin-based architecture, shader LRU cache",
-      "formula": "Formula System: Custom Fractint .frm parser, CodeMirror 6 editor, AST-to-GLSL transpiler"
+      "rendering": "Renderizado: WebGL 1 (shaders de fragmentos GLSL), arquitectura basada en plugins, caché LRU de shaders",
+      "formula": "Sistema de fórmulas: analizador .frm personalizado de Fractint, editor CodeMirror 6, transpilador de AST a GLSL"
     },
     "openSource": {
-      "title": "Open Source",
-      "description": "FractalPark is released under the MIT License. The source code is available on GitHub so anyone can study how it works, run it locally, suggest improvements, or build on the browser-based fractal engine.",
-      "github": "GitHub repository",
-      "license": "MIT License"
+      "title": "Código abierto",
+      "description": "FractalPark se publica bajo la Licencia MIT. El código fuente está disponible en GitHub para que cualquiera pueda estudiar cómo funciona, ejecutarlo localmente, sugerir mejoras o construir sobre el motor de fractales basado en navegador.",
+      "github": "Repositorio de GitHub",
+      "license": "Licencia MIT"
     }
   },
   "drift": {
-    "pause": "Pause animation",
-    "play": "Play animation",
-    "previous": "Previous preset",
-    "next": "Next preset"
+    "pause": "Pausar animación",
+    "play": "Reproducir animación",
+    "previous": "Preset anterior",
+    "next": "Preset siguiente"
   },
   "publicProject": {
-    "tagline": "FractalPark is an open-source, formula-first fractal knowledge and creation platform with growing Fractint-compatible FRM support, working to bring Fractint’s formula heritage into the modern browser.",
-    "definition": "FractalPark is a free, open-source (MIT) WebGL application for exploring, learning, and creating fractal art. It ships {formulaCount} built-in formulas across {formulaFamilyCount} families, {formulaGuideCount} in-depth Formula Guides, a Fractint-compatible FRM language with a Guide and standalone Editor, and a community Gallery. Rendering runs in your browser; saving works and formulas uses email sign-in and a private cloud library.",
-    "aiDescription": "FractalPark is an open-source MIT-licensed browser fractal generator using WebGL for real-time GPU rendering. It features {formulaCount} built-in fractal formulas across {formulaFamilyCount} families, {formulaGuideCount} Formula Guides, a Fractint-compatible FRM editor with AST-to-GLSL transpilation, {transformCount} UV transform plugins, {coloringModeCount} coloring modes, shareable URLs, an email sign-in cloud library for artworks and formulas, community publishing, and high-resolution PNG export up to {maxExportScale}x. Built with Next.js, React, and TypeScript.",
-    "capabilitiesHeading": "What you can do today",
+    "tagline": "FractalPark es una plataforma de código abierto para crear y explorar fractales, donde la fórmula es lo primero, con soporte FRM compatible con Fractint en crecimiento, que trabaja para llevar el legado de fórmulas de Fractint al navegador moderno.",
+    "definition": "FractalPark es una aplicación WebGL gratuita y de código abierto (MIT) para explorar, aprender y crear arte fractal. Incluye {formulaCount} fórmulas integradas en {formulaFamilyCount} familias, {formulaGuideCount} guías de fórmulas en profundidad, un lenguaje FRM compatible con Fractint con Guía y Editor independiente, y una Galería comunitaria. El renderizado ocurre en tu navegador; guardar obras y fórmulas usa inicio de sesión por correo y una biblioteca privada en la nube.",
+    "aiDescription": "FractalPark es un generador de fractales de código abierto, con licencia MIT, que usa WebGL para el renderizado en tiempo real con GPU. Incluye {formulaCount} fórmulas de fractales integradas en {formulaFamilyCount} familias, {formulaGuideCount} Guías de Fórmulas, un editor FRM compatible con Fractint con transpilación de AST a GLSL, {transformCount} plugins de transformación UV, {coloringModeCount} modos de coloración, URL compartibles, una biblioteca en la nube con inicio de sesión por correo para obras y fórmulas, publicación comunitaria y exportación de PNG en alta resolución hasta {maxExportScale}x. Construido con Next.js, React y TypeScript.",
+    "capabilitiesHeading": "Qué puedes hacer hoy",
     "capabilities": {
       "discover": {
-        "title": "Discover formulas",
-        "summary": "Browse the Formula Atlas: 94 built-in formulas across 7 families, with 21 in-depth Formula Guides covering the math, history, and visual character of the classics."
+        "title": "Descubre fórmulas",
+        "summary": "Explora el Atlas de Fórmulas: 94 fórmulas integradas en 7 familias, con 21 guías de fórmulas en profundidad que cubren la matemática, la historia y el carácter visual de los clásicos."
       },
       "create": {
-        "title": "Create in the browser",
-        "summary": "Explore and render in real time with WebGL: Mandelbrot and Julia modes for every formula, 7 transforms, 9 coloring modes, gradients, lighting, and keyframe animation."
+        "title": "Crea en el navegador",
+        "summary": "Explora y renderiza en tiempo real con WebGL: modos Mandelbrot y Julia para cada fórmula, 7 transformaciones, 9 modos de coloración, gradientes, iluminación y animación con fotogramas clave."
       },
       "authorFrm": {
-        "title": "Author FRM",
-        "summary": "Write custom formulas in the Fractint-compatible FRM language with the Guide and standalone Editor: AST validation, live GLSL preview, and clear diagnostics."
+        "title": "Crea fórmulas FRM",
+        "summary": "Escribe fórmulas personalizadas en el lenguaje FRM compatible con Fractint con la Guía y el Editor independiente: validación de AST, vista previa GLSL en vivo y diagnósticos claros."
       },
       "saveExport": {
-        "title": "Save and share",
-        "summary": "Save artworks and custom formulas to your private cloud with email sign-in and pick them up on any device, publish pieces to the community gallery, or create anonymously and export high-resolution PNG images up to 4× with SSAA anti-aliasing."
+        "title": "Guarda y comparte",
+        "summary": "Guarda obras y fórmulas personalizadas en tu nube privada con inicio de sesión por correo y retómalas en cualquier dispositivo, publica piezas en la galería de la comunidad o crea de forma anónima y exporta imágenes PNG en alta resolución hasta 4× con suavizado SSAA."
       }
     },
-    "boundariesHeading": "Current boundaries and future directions",
-    "currentHeading": "Available today",
-    "futureHeading": "On the roadmap",
+    "boundariesHeading": "Límites actuales y direcciones futuras",
+    "currentHeading": "Disponible hoy",
+    "futureHeading": "En la hoja de ruta",
     "boundaries": {
       "current": {
-        "0": "Growing Fractint-compatible FRM support: a practical, tested subset of the Fractint formula language runs today — not a complete Fractint reimplementation.",
-        "1": "Creating needs no account. Saving artworks and formulas uses email one-time-code sign-in and stores them in your private cloud library; publishing is always explicit, and artworks carrying a custom formula publish its source under the MIT license.",
-        "2": "The interface is bilingual in English and Simplified Chinese."
+        "0": "Soporte FRM compatible con Fractint en crecimiento: hoy funciona un subconjunto práctico y probado del lenguaje de fórmulas de Fractint — no es una reimplementación completa de Fractint.",
+        "1": "Crear no requiere cuenta. Guardar obras y fórmulas usa inicio de sesión por código único de correo y las almacena en tu biblioteca privada en la nube; publicar siempre es explícito, y las obras que llevan una fórmula personalizada publican su código fuente bajo la licencia MIT.",
+        "2": "La interfaz es bilingüe en inglés y chino simplificado."
       },
       "future": {
-        "0": "Working to bring Fractint’s historical formula archive into the modern browser over time.",
-        "1": "Deeper coloring, animation, and zoom capabilities are on the roadmap but not released."
+        "0": "Trabajamos para llevar el archivo histórico de fórmulas de Fractint al navegador moderno con el tiempo.",
+        "1": "Capacidades más profundas de coloración, animación y zoom están en la hoja de ruta, pero aún no se publican."
       }
     },
-    "licenseLine": "FractalPark is released under the MIT License.",
-    "heroAlt": "The Mandelbrot set rendered in real time by the FractalPark WebGL engine",
+    "licenseLine": "FractalPark se publica bajo la Licencia MIT.",
+    "heroAlt": "El conjunto de Mandelbrot renderizado en tiempo real por el motor WebGL de FractalPark",
     "cta": {
-      "explore": "Open Explore",
-      "formulas": "Browse the Formula Atlas",
-      "frmGuide": "Read the FRM Guide",
-      "gallery": "Visit the Gallery"
+      "explore": "Abrir Explorador",
+      "formulas": "Explorar el Atlas de Fórmulas",
+      "frmGuide": "Leer la Guía FRM",
+      "gallery": "Visitar la Galería"
     }
   },
   "legal": {
     "privacy": {
-      "title": "Privacy Policy",
-      "updated": "Last updated: August 3, 2026",
-      "intro": "FractalPark is an open-source fractal art explorer. You can browse, create, and save artworks on your own device without telling us anything. An account is only needed when you choose to keep cloud drafts or publish to the Community. This page says exactly what an account touches — and what it never does.",
-      "s1h": "What an account stores",
-      "s1b": "Your email address, used only to sign you in with one-time codes. There is no password.\n\nA display name you choose. It is private until you publish; published works show it as the attribution line.\n\nYour cloud drafts (private) and your published artworks (public), including the parameters a remix needs.",
-      "s2h": "What we never collect",
-      "s2b": "No passwords — sign-in codes go to your email and expire.\n\nNo advertising trackers, no cross-site profiling cookies, no sale or sharing of personal data with data brokers.\n\nAnalytics never carry your email, IP address, artwork titles, draft contents, or any identifier that points back at you.",
+      "title": "Política de privacidad",
+      "updated": "Última actualización: 3 de agosto de 2026",
+      "intro": "FractalPark es un explorador de arte fractal de código abierto. Puedes navegar, crear y guardar obras en tu propio dispositivo sin contarnos nada. Solo necesitas una cuenta si decides conservar borradores en la nube o publicar en la Comunidad. Esta página explica exactamente qué toca una cuenta — y qué jamás toca.",
+      "s1h": "Qué almacena una cuenta",
+      "s1b": "Tu dirección de correo electrónico, usada solo para iniciar tu sesión con códigos de un solo uso. No hay contraseña.\n\nUn nombre para mostrar que eliges. Es privado hasta que publicas; las obras publicadas lo muestran como línea de atribución.\n\nTus borradores en la nube (privados) y tus obras publicadas (públicas), incluidos los parámetros que un remix necesita.",
+      "s2h": "Qué nunca recopilamos",
+      "s2b": "Sin contraseñas: los códigos de inicio de sesión van a tu correo y caducan.\n\nSin rastreadores publicitarios, sin cookies de perfilado entre sitios, sin venta ni intercambio de datos personales con intermediarios de datos.\n\nLa analítica nunca transporta tu correo, dirección IP, títulos de obras, contenido de borradores ni ningún identificador que apunte hacia ti.",
       "s3h": "Cookies",
-      "s3b": "Two, both boring. An encrypted, HttpOnly session cookie keeps you signed in; a small NEXT_LOCALE cookie remembers your language. Neither is readable by other sites. The session cookie is deleted when you sign out or delete your account; the locale cookie stays until you clear your browser data.",
-      "s4h": "Analytics",
-      "s4b": "We use aggregate, privacy-limited usage analytics to understand which features help people (for example: a publish succeeded, a guide was opened). Events follow a fixed schema that forbids emails, IPs, titles, and artwork content.",
-      "s5h": "Email we send",
-      "s5b": "Sign-in codes, always.\n\nArtwork backup emails, only if you turn them on. They are off by default. A backup email carries your artwork's complete configuration as an attachment; email is not encrypted storage, and we cannot retract an attachment once delivered. The setting page says this again before you enable it.",
-      "s6h": "Private drafts, public works",
-      "s6b": "Drafts are visible only to you. Publishing makes the artwork, its title and description, your display name, and the parameters public under the Community terms. Hidden or withdrawn works disappear from public view immediately.",
-      "s7h": "Deleting your account",
-      "s7b": "You can delete your account yourself, from the Gallery, at any time. Deletion asks for a fresh sign-in code and your typed email, then removes your drafts, withdraws your published works, ends your sessions, and erases your profile. A published work's attribution line remains as a tombstone so earlier remixes keep their source credit, and a minimal audit record (no email, no content) is kept for abuse investigation.",
-      "s8h": "Where the data lives",
-      "s8b": "Accounts and artworks are stored with our cloud database and hosting providers, on infrastructure we do not own. We choose mainstream providers and keep access keys off the client. Operational logs are short-lived and rate-limit records store only one-way hashes.",
-      "s9h": "Changes and contact",
-      "s9b": "If this policy changes in a way that affects you, the change ships in the open-source repository and this page's date moves. Questions, requests, and takedown reports: contact@fractalpark.com."
+      "s3b": "Dos, y ambas aburridas. Una cookie de sesión cifrada y HttpOnly mantiene tu sesión iniciada; una cookie pequeña NEXT_LOCALE recuerda tu idioma. Ninguna puede ser leída por otros sitios. La cookie de sesión se elimina cuando cierras sesión o eliminas tu cuenta; la cookie de idioma permanece hasta que borres los datos de tu navegador.",
+      "s4h": "Analítica",
+      "s4b": "Usamos analítica de uso agregada y limitada en privacidad para entender qué funciones ayudan a las personas (por ejemplo: una publicación fue exitosa, se abrió una guía). Los eventos siguen un esquema fijo que prohíbe correos, IP, títulos y contenido de obras.",
+      "s5h": "Correos que enviamos",
+      "s5b": "Códigos de inicio de sesión, siempre.\n\nCorreos de respaldo de obras, solo si los activas. Están desactivados por defecto. Un correo de respaldo lleva la configuración completa de tu obra como adjunto; el correo no es almacenamiento cifrado y no podemos retractar un adjunto una vez entregado. La página de configuración lo dice de nuevo antes de que lo actives.",
+      "s6h": "Borradores privados, obras públicas",
+      "s6b": "Los borradores solo son visibles para ti. Publicar hace públicos la obra, su título y descripción, tu nombre para mostrar y los parámetros, según los términos de la Comunidad. Las obras ocultas o retiradas desaparecen de la vista pública de inmediato.",
+      "s7h": "Eliminar tu cuenta",
+      "s7b": "Puedes eliminar tu cuenta tú mismo, desde la Galería, en cualquier momento. La eliminación pide un código de inicio de sesión nuevo y tu correo escrito, luego elimina tus borradores, retira tus obras publicadas, cierra tus sesiones y borra tu perfil. La línea de atribución de una obra publicada permanece como lápida para que los remixes anteriores conserven su crédito de origen, y se conserva un registro de auditoría mínimo (sin correo ni contenido) para investigar abusos.",
+      "s8h": "Dónde viven los datos",
+      "s8b": "Las cuentas y las obras se almacenan con nuestros proveedores de base de datos en la nube y hosting, en infraestructura que no es nuestra. Elegimos proveedores convencionales y mantenemos las claves de acceso fuera del cliente. Los registros operativos son de corta duración y los registros de límite de uso almacenan solo hashes de un solo sentido.",
+      "s9h": "Cambios y contacto",
+      "s9b": "Si esta política cambia de una manera que te afecta, el cambio se publica en el repositorio de código abierto y la fecha de esta página se actualiza. Preguntas, solicitudes y reportes de retiro: contact@fractalpark.com."
     },
     "terms": {
-      "title": "Terms of Service",
-      "updated": "Last updated: August 3, 2026",
-      "intro": "These terms govern the FractalPark website and its cloud features (accounts, cloud drafts, Community publishing). The software itself is open source; self-hosting it is governed by its license, not by these terms.",
-      "s1h": "The service",
-      "s1b": "FractalPark lets you explore and create fractal art, keep private cloud drafts, and publish artworks to a public Community. The service is provided as-is, with no uptime or data-retention guarantee beyond what the Privacy Policy and the backup runbook describe.",
-      "s2h": "Accounts",
-      "s2b": "Sign-in is by one-time email code. You are responsible for the mailbox you sign in with. One person may hold multiple accounts, but rate limits and quotas apply per account and abuse of limits may lead to suspension.",
-      "s3h": "Your content",
-      "s3b": "You keep every right in what you create. Cloud drafts are private and yours alone.\n\nWhen you publish, you make the artwork public and license its rendered image under CC BY 4.0, so anyone may share and remix it with attribution. The license covers the rendered image layer only — not formula source code, description text, the FractalPark UI, logo, or trademarks. The parameters a remix needs are public by design; never publish secrets. Withdrawing a work removes it from public view but cannot revoke licenses already granted.",
-      "s4h": "The publish attestation",
-      "s4b": "Publishing requires you to confirm that you created the work or hold the rights to publish it under these terms. Publishing content you do not have rights to may get the work hidden and the account suspended.",
-      "s5h": "Moderation and takedown",
-      "s5b": "There is no pre-publication review. The maintainer may hide any published work that violates the Community Rules or draws a credible complaint, and may restore it after review. Hiding is reversible; withdrawal by the owner is permanent. Reports go to contact@fractalpark.com — every public artwork page links there. We do not promise a response time.",
-      "s6h": "Acceptable use",
-      "s6b": "The Community Rules are part of these terms. Automated scraping of private endpoints, attempts to bypass rate limits or permissions, and interference with other users' data are prohibited.",
-      "s7h": "Disclaimers and liability",
-      "s7b": "The service is provided without warranties of any kind. To the extent the law allows, FractalPark and its maintainer are not liable for lost drafts, lost accounts, or downstream use of published works. Keep your own exports of anything that matters — the app offers one-click download, and optional backup emails.",
-      "s8h": "Changes and contact",
-      "s8b": "Terms changes ship in the open-source repository and move this page's date. Continued use after a change means you accept the new terms. Contact: contact@fractalpark.com."
+      "title": "Términos de servicio",
+      "updated": "Última actualización: 3 de agosto de 2026",
+      "intro": "Estos términos rigen el sitio web de FractalPark y sus funciones en la nube (cuentas, borradores en la nube, publicación en la Comunidad). El software en sí es de código abierto; autoalojarlo se rige por su licencia, no por estos términos.",
+      "s1h": "El servicio",
+      "s1b": "FractalPark te permite explorar y crear arte fractal, mantener borradores privados en la nube y publicar obras en una Comunidad pública. El servicio se ofrece tal cual, sin garantía de disponibilidad ni de retención de datos más allá de lo que describen la Política de privacidad y el runbook de respaldo.",
+      "s2h": "Cuentas",
+      "s2b": "El inicio de sesión es mediante código de correo de un solo uso. Eres responsable del buzón con el que inicias sesión. Una persona puede tener varias cuentas, pero los límites de uso y las cuotas se aplican por cuenta, y abusar de los límites puede llevar a la suspensión.",
+      "s3h": "Tu contenido",
+      "s3b": "Conservas todos los derechos sobre lo que creas. Los borradores en la nube son privados y solo tuyos.\n\nCuando publicas, haces pública la obra y licencias su imagen renderizada bajo CC BY 4.0, para que cualquiera pueda compartirla y remezclarla con atribución. La licencia cubre solo la capa de imagen renderizada — no el código fuente de la fórmula, el texto de la descripción, la interfaz de FractalPark, el logo ni las marcas. Los parámetros que un remix necesita son públicos por diseño; nunca publiques secretos. Retirar una obra la quita de la vista pública, pero no puede revocar las licencias ya otorgadas.",
+      "s4h": "La declaración de publicación",
+      "s4b": "Publicar requiere que confirmes que creaste la obra o que tienes los derechos para publicarla bajo estos términos. Publicar contenido sobre el que no tienes derechos puede hacer que la obra sea ocultada y la cuenta suspendida.",
+      "s5h": "Moderación y retiro",
+      "s5b": "No hay revisión previa a la publicación. El mantenedor puede ocultar cualquier obra publicada que viole las Reglas de la Comunidad o reciba una queja creíble, y puede restaurarla después de revisarla. Ocultar es reversible; el retiro por parte del dueño es permanente. Los reportes van a contact@fractalpark.com — cada página pública de obra enlaza allí. No prometemos un tiempo de respuesta.",
+      "s6h": "Uso aceptable",
+      "s6b": "Las Reglas de la Comunidad forman parte de estos términos. Se prohíben el raspado automatizado de endpoints privados, los intentos de evadir los límites de uso o los permisos, y la interferencia con los datos de otros usuarios.",
+      "s7h": "Renuncias y responsabilidad",
+      "s7b": "El servicio se ofrece sin garantías de ningún tipo. En la medida que la ley lo permita, FractalPark y su mantenedor no son responsables por borradores perdidos, cuentas perdidas ni el uso posterior de obras publicadas. Conserva tus propias exportaciones de lo que te importe: la app ofrece descarga con un clic y correos de respaldo opcionales.",
+      "s8h": "Cambios y contacto",
+      "s8b": "Los cambios de términos se publican en el repositorio de código abierto y actualizan la fecha de esta página. Seguir usando el servicio después de un cambio significa que aceptas los nuevos términos. Contacto: contact@fractalpark.com."
     },
     "rules": {
-      "title": "Community Rules",
-      "updated": "Last updated: August 3, 2026",
-      "intro": "The Community is a public shelf of fractal artworks. Five short rules keep it worth browsing.",
-      "s1h": "What belongs",
-      "s1b": "Original fractal artworks you made with FractalPark (or have the rights to publish), shared under the CC BY 4.0 image license so others can learn from and remix them.",
-      "s2h": "What does not",
-      "s2b": "Anything illegal. Any sexual content involving minors, ever. Doxxing or content meant to harass a person. Malware or links whose purpose is to harm. Spam, advertising, and mass-posted near-duplicates. Hate content. Works you do not have the rights to publish.",
-      "s3h": "Remix etiquette",
-      "s3b": "Every published work may be remixed — that is the point. When you publish a remix, keep the attribution the app fills in for you. Building on someone's work and crediting them is how the Community stays friendly to sharing.",
-      "s4h": "Enforcement",
-      "s4b": "The maintainer hides first and deliberates second: once the maintainer hides a reported work it leaves public view immediately, and it returns only if review finds the report does not hold. Owners may withdraw their own works at any time; withdrawal is permanent. Repeated violations lead to account suspension.",
-      "s5h": "Report",
-      "s5b": "Every public artwork page carries a Report/Takedown entry, or write directly: contact@fractalpark.com. Include the artwork link and why it violates these rules."
+      "title": "Reglas de la Comunidad",
+      "updated": "Última actualización: 3 de agosto de 2026",
+      "intro": "La Comunidad es un estante público de obras de fractales. Cinco reglas breves la mantienen digna de explorar.",
+      "s1h": "Qué pertenece",
+      "s1b": "Obras de fractales originales que hiciste con FractalPark (o que tienes derechos de publicar), compartidas bajo la licencia de imagen CC BY 4.0 para que otros puedan aprender de ellas y remezclarlas.",
+      "s2h": "Qué no pertenece",
+      "s2b": "Cualquier cosa ilegal. Cualquier contenido sexual que involucre menores, siempre. Doxxing o contenido destinado a acosar a una persona. Malware o enlaces cuyo propósito sea dañar. Spam, publicidad y casi duplicados publicados en masa. Contenido de odio. Obras sobre las que no tienes derechos de publicación.",
+      "s3h": "Etiqueta del remix",
+      "s3b": "Toda obra publicada puede remezclarse — ese es el punto. Cuando publiques un remix, conserva la atribución que la app completa por ti. Construir sobre el trabajo de alguien y darle crédito es como la Comunidad se mantiene amigable con el intercambio.",
+      "s4h": "Aplicación",
+      "s4b": "El mantenedor oculta primero y delibera después: en cuanto el mantenedor oculta una obra reportada, esta sale de la vista pública de inmediato y solo regresa si la revisión determina que el reporte no procede. Los dueños pueden retirar sus propias obras en cualquier momento; el retiro es permanente. Las violaciones repetidas llevan a la suspensión de la cuenta.",
+      "s5h": "Reportar",
+      "s5b": "Cada página pública de obra tiene una entrada de Reportar/Retiro, o escribe directamente: contact@fractalpark.com. Incluye el enlace de la obra y por qué viola estas reglas."
     }
   }
 }
