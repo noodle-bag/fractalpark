@@ -1,3 +1,4 @@
+import { routing } from '@/i18n/routing';
 import type { FormulaMetadata } from '@/engine/plugins/formula-catalog';
 import type { FormulaPlugin } from '@/engine/plugins/types';
 import type { GalleryPresetConfig } from '@/lib/gallery-presets';
@@ -17,10 +18,7 @@ export interface ContentManifestValidationInput {
   catalog: readonly FormulaMetadata[];
   formulaPlugins: readonly FormulaPlugin[];
   presets: readonly GalleryPresetConfig[];
-  messages: {
-    en: Messages;
-    zh: Messages;
-  };
+  messages: Record<string, Messages>;
 }
 
 function findMessage(messages: Messages, key: string): unknown {
@@ -41,7 +39,7 @@ function assertNonEmptyMessage(
   messages: ContentManifestValidationInput['messages'],
   key: string
 ): void {
-  for (const locale of ['en', 'zh'] as const) {
+  for (const locale of routing.locales) {
     const value = findMessage(messages[locale], key);
     if (typeof value !== 'string' || value.trim() === '') {
       throw new Error(`Missing non-empty ${locale} message: ${key}`);

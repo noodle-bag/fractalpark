@@ -15,6 +15,7 @@
  *   `cloud_disabled` while off — without initializing any cloud client.
  */
 
+import { DEFAULT_LOCALE, SUPPORTED_LOCALES } from '@/i18n/supported-locales';
 import { CloudConfigError, isCreationCloudEnabled } from './config';
 
 export type CloudErrorCode =
@@ -56,74 +57,159 @@ const ERROR_STATUS: Record<CloudErrorCode, number> = {
   unavailable: 503,
 };
 
-const ERROR_MESSAGES: Record<CloudErrorCode, { en: string; zh: string }> = {
+const ERROR_MESSAGES: Record<CloudErrorCode, Record<string, string>> = {
   cloud_disabled: {
     en: 'Cloud creation is not available on this deployment.',
     zh: '当前部署未开放云端创作。',
+    pt: 'A criação na nuvem não está disponível nesta implantação.',
+    ko: '이 배포에서는 클라우드 생성을 사용할 수 없습니다.',
+    ru: 'Облачное создание недоступно в этом развёртывании.',
+    es: 'La creación en la nube no está disponible en esta implementación.',
+    fr: 'La création dans le cloud n\'est pas disponible sur ce déploiement.',
   },
   unauthenticated: {
     en: 'Sign in to continue.',
     zh: '请先登录。',
+    pt: 'Entre para continuar.',
+    ko: '계속하려면 로그인하세요.',
+    ru: 'Войдите, чтобы продолжить.',
+    es: 'Inicia sesión para continuar.',
+    fr: 'Connectez-vous pour continuer.',
   },
   forbidden: {
     en: 'This action is not allowed.',
     zh: '此操作不被允许。',
+    pt: 'Esta ação não é permitida.',
+    ko: '이 작업은 허용되지 않습니다.',
+    ru: 'Это действие не разрешено.',
+    es: 'Esta acción no está permitida.',
+    fr: 'Cette action n\'est pas autorisée.',
   },
   not_found: {
     en: 'Not found.',
     zh: '未找到。',
+    pt: 'Não encontrado.',
+    ko: '찾을 수 없습니다.',
+    ru: 'Не найдено.',
+    es: 'No encontrado.',
+    fr: 'Introuvable.',
   },
   validation_failed: {
     en: 'The request could not be understood.',
     zh: '请求无法被理解。',
+    pt: 'A solicitação não pôde ser compreendida.',
+    ko: '요청을 이해할 수 없습니다.',
+    ru: 'Запрос не может быть понят.',
+    es: 'La solicitud no pudo ser entendida.',
+    fr: 'La requête n\'a pas pu être comprise.',
   },
   otp_invalid: {
     en: 'The code is wrong or has expired.',
     zh: '验证码错误或已过期。',
+    pt: 'O código está errado ou expirou.',
+    ko: '코드가 잘못되었거나 만료되었습니다.',
+    ru: 'Код неверен или истёк.',
+    es: 'El código es incorrecto o ha expirado.',
+    fr: 'Le code est incorrect ou a expiré.',
   },
   payload_too_large: {
     en: 'The request is too large.',
     zh: '请求过大。',
+    pt: 'A solicitação é muito grande.',
+    ko: '요청이 너무 큽니다.',
+    ru: 'Запрос слишком велик.',
+    es: 'La solicitud es demasiado grande.',
+    fr: 'La requête est trop volumineuse.',
   },
   invalid_envelope: {
     en: 'The artwork data is not valid.',
     zh: '作品数据无效。',
+    pt: 'Os dados da obra não são válidos.',
+    ko: '작품 데이터가 유효하지 않습니다.',
+    ru: 'Данные произведения недействительны.',
+    es: 'Los datos de la obra no son válidos.',
+    fr: 'Les données de l\'œuvre ne sont pas valides.',
   },
   quota_exceeded: {
     en: 'A cloud quota was reached.',
     zh: '已达到云端配额。',
+    pt: 'Uma cota da nuvem foi atingida.',
+    ko: '클라우드 할당량에 도달했습니다.',
+    ru: 'Достигнута облачная квота.',
+    es: 'Se alcanzó una cuota de la nube.',
+    fr: 'Un quota cloud a été atteint.',
   },
   revision_conflict: {
     en: 'The draft changed elsewhere; reload before saving.',
     zh: '草稿已在别处变更，请重新加载后再保存。',
+    pt: 'O rascunho foi alterado em outro lugar; recarregue antes de salvar.',
+    ko: '초안이 다른 곳에서 변경되었습니다. 저장하기 전에 다시 로드하세요.',
+    ru: 'Черновик был изменён в другом месте; перезагрузите перед сохранением.',
+    es: 'El borrador cambió en otro lugar; recarga antes de guardar.',
+    fr: 'Le brouillon a été modifié ailleurs ; rechargez avant de sauvegarder.',
   },
   idempotency_conflict: {
     en: 'A conflicting operation with the same key exists.',
     zh: '已存在相同键的冲突操作。',
+    pt: 'Existe uma operação conflitante com a mesma chave.',
+    ko: '동일한 키를 가진 충돌하는 작업이 존재합니다.',
+    ru: 'Существует конфликтующая операция с тем же ключом.',
+    es: 'Existe una operación conflictiva con la misma clave.',
+    fr: 'Une opération conflictuelle avec la même clé existe.',
   },
   rate_limited: {
     en: 'Too many requests. Try again later.',
     zh: '请求过于频繁，请稍后再试。',
+    pt: 'Muitas solicitações. Tente novamente mais tarde.',
+    ko: '요청이 너무 많습니다. 나중에 다시 시도하세요.',
+    ru: 'Слишком много запросов. Попробуйте позже.',
+    es: 'Demasiadas solicitudes. Inténtalo de nuevo más tarde.',
+    fr: 'Trop de requêtes. Réessayez plus tard.',
   },
   unavailable: {
     en: 'A dependency is unavailable. Safe to retry later.',
     zh: '依赖服务暂不可用，稍后重试即可。',
+    pt: 'Uma dependência está indisponível. Seguro tentar novamente mais tarde.',
+    ko: '종속성을 사용할 수 없습니다. 나중에 다시 시도해도 안전합니다.',
+    ru: 'Зависимость недоступна. Безопасно повторить позже.',
+    es: 'Una dependencia no está disponible. Es seguro reintentar más tarde.',
+    fr: 'Une dépendance est indisponible. Il est sûr de réessayer plus tard.',
   },
   account_deleting: {
     en: 'Account deletion is in progress. This account can no longer write or sign in.',
     zh: '账号删除正在进行中。该账号已无法写入或登录。',
+    pt: 'A exclusão da conta está em andamento. Esta conta não pode mais escrever ou entrar.',
+    ko: '계정 삭제가 진행 중입니다. 이 계정은 더 이상 쓰거나 로그인할 수 없습니다.',
+    ru: 'Удаление аккаунта в процессе. Этот аккаунт больше не может писать или входить.',
+    es: 'La eliminación de la cuenta está en progreso. Esta cuenta ya no puede escribir ni iniciar sesión.',
+    fr: 'La suppression du compte est en cours. Ce compte ne peut plus écrire ni se connecter.',
   },
   step_up_expired: {
     en: 'The confirmation code session expired. Request a new code to continue.',
     zh: '验证码会话已过期，请重新获取验证码。',
+    pt: 'A sessão do código de confirmação expirou. Solicite um novo código para continuar.',
+    ko: '확인 코드 세션이 만료되었습니다. 계속하려면 새 코드를 요청하세요.',
+    ru: 'Сессия кода подтверждения истекла. Запросите новый код, чтобы продолжить.',
+    es: 'La sesión del código de confirmación expiró. Solicita un nuevo código para continuar.',
+    fr: 'La session du code de confirmation a expiré. Demandez un nouveau code pour continuer.',
   },
   formula_compile_failed: {
     en: 'The formula source could not be compiled.',
     zh: '公式源码无法编译。',
+    pt: 'A fonte da fórmula não pôde ser compilada.',
+    ko: '수식 소스를 컴파일할 수 없습니다.',
+    ru: 'Исходный код формулы не может быть скомпилирован.',
+    es: 'El código fuente de la fórmula no pudo ser compilado.',
+    fr: 'Le code source de la formule n\'a pas pu être compilé.',
   },
   formula_builtin_conflict: {
     en: 'The formula identity conflicts with a built-in formula.',
     zh: '公式标识与内置公式冲突。',
+    pt: 'A identidade da fórmula conflita com uma fórmula integrada.',
+    ko: '수식 ID가 내장 수식과 충돌합니다.',
+    ru: 'Идентификатор формулы конфликтует с встроенной формулой.',
+    es: 'La identidad de la fórmula entra en conflicto con una fórmula integrada.',
+    fr: 'L\'identité de la formule entre en conflit avec une formule intégrée.',
   },
 };
 
@@ -139,8 +225,14 @@ export class CloudApiError extends Error {
   }
 }
 
-function prefersChinese(request: Request): boolean {
-  return (request.headers.get('accept-language') ?? '').toLowerCase().startsWith('zh');
+function resolveLocale(request: Request): string {
+  const acceptLanguage = (request.headers.get('accept-language') ?? '').toLowerCase();
+  for (const locale of SUPPORTED_LOCALES) {
+    if (acceptLanguage.startsWith(locale)) {
+      return locale;
+    }
+  }
+  return DEFAULT_LOCALE;
 }
 
 function baseHeaders(): Headers {
@@ -160,7 +252,8 @@ export function jsonOk(request: Request, body: unknown, status = 200, extraHeade
 /** JSON error envelope; message locale follows Accept-Language. */
 export function jsonError(request: Request, code: CloudErrorCode, retryAfter?: number): Response {
   const messages = ERROR_MESSAGES[code];
-  const message = prefersChinese(request) ? messages.zh : messages.en;
+  const locale = resolveLocale(request);
+  const message = messages[locale] ?? messages[DEFAULT_LOCALE];
   const error: { code: string; message: string; retryAfter?: number } = { code, message };
   if (retryAfter !== undefined) error.retryAfter = retryAfter;
   const headers = baseHeaders();

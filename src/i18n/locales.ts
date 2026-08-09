@@ -16,6 +16,11 @@ export interface LocaleMeta {
 const REGISTRY: Record<string, { label: string; shortLabel: string }> = {
   en: { label: 'English', shortLabel: 'EN' },
   zh: { label: '中文', shortLabel: '中' },
+  pt: { label: 'Português', shortLabel: 'PT' },
+  ko: { label: '한국어', shortLabel: '한' },
+  ru: { label: 'Русский', shortLabel: 'RU' },
+  es: { label: 'Español', shortLabel: 'ES' },
+  fr: { label: 'Français', shortLabel: 'FR' },
 };
 
 export const LOCALES: LocaleMeta[] = routing.locales.map((code) => ({
