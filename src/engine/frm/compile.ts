@@ -14,7 +14,8 @@ import { validate } from './validator';
 import { generateGLSL } from './codegen';
 import { FRMSourceMap } from './sourcemap';
 import { frmParserCache } from './cache';
-import { scanFrmEntries, selectFrmEntry, FRM_BLOCKING_DIAGNOSTICS, type FrmEntry, type FrmSourceRange } from './scanner';
+import { scanFrmEntries, selectFrmEntry, FRM_BLOCKING_DIAGNOSTICS, type FrmEntry, type FrmScanResult, type FrmSourceRange } from './scanner';
+import { lowerClassicEntryToNative, type LoweringNote } from './classic-frontend';
 
 export interface CompileResult {
   success: boolean;
@@ -295,7 +296,7 @@ export function compileFrmRange(source: string, range: FrmSourceRange, id?: stri
 
 function compileSelectedEntry(
   source: string,
-  scan: ReturnType<typeof scanFrmEntries>,
+  scan: FrmScanResult,
   entry: FrmEntry,
   id?: string,
 ): EntryCompileResult {
@@ -314,6 +315,72 @@ function compileSelectedEntry(
   const entrySource = source.slice(entry.range.startOffset, entry.range.endOffset);
   const result = compileFrmDetailed(entrySource, id);
   return { ...result, entry };
+}
+
+/** Classic-path compile result: adds lowering provenance to the compile result. */
+export interface ClassicEntryCompileResult extends EntryCompileResult {
+  /** The lowered native source that was actually compiled. */
+  loweredNative?: string;
+  /** `lineMap[nativeLine - 1]` = 1-based classic source line. */
+  loweringLineMap?: number[];
+  /** Adaptations applied by the classic frontend. */
+  loweringNotes?: LoweringNote[];
+}
+
+/**
+ * Compile one entry of a CLASSIC FRM source: scan, select (same rejection
+ * semantics as `compileFrmEntry`), lower the entry to native syntax, then
+ * run the untouched `compileFrmDetailed` pipeline. Native sources must use
+ * `compileFrmEntry`/`compileFrm` instead — this path exists only for
+ * classic body syntax (docs/specs/frm-compatibility-v1.md §1-§2).
+ */
+export function compileClassicFrmEntry(
+  source: string,
+  entryKey?: string,
+  id?: string,
+): ClassicEntryCompileResult {
+  const scan = scanFrmEntries(source);
+  const entry = selectFrmEntry(scan, entryKey);
+  if (!entry) {
+    const entryKeys = scan.entries.map((e) => e.key);
+    if (scan.entries.length === 0) {
+      return selectionFailure('no-entries', 'Source contains no formula entries', entryKeys);
+    }
+    if (!entryKey) {
+      return selectionFailure(
+        'selection-required',
+        `Source contains ${scan.entries.length} formula entries; ` +
+          `select one explicitly (entry keys: ${entryKeys.join(', ')})`,
+        entryKeys,
+      );
+    }
+    return selectionFailure(
+      'unknown-entry',
+      `No formula entry with key "${entryKey}" (available keys: ${entryKeys.join(', ')})`,
+      entryKeys,
+    );
+  }
+
+  const blocking = scan.diagnostics.filter((d) => FRM_BLOCKING_DIAGNOSTICS.has(d.code));
+  if (blocking.length > 0) {
+    const codes = blocking.map((d) => d.code).join(', ');
+    return selectionFailure(
+      'invalid-source',
+      `Source has blocking diagnostics (${codes}); resolve them before compiling an entry`,
+      scan.entries.map((e) => e.key),
+    );
+  }
+
+  const entrySource = source.slice(entry.range.startOffset, entry.range.endOffset);
+  const lowered = lowerClassicEntryToNative(entrySource);
+  const result = compileFrmDetailed(lowered.native, id);
+  return {
+    ...result,
+    entry,
+    loweredNative: lowered.native,
+    loweringLineMap: lowered.lineMap,
+    loweringNotes: lowered.notes,
+  };
 }
 
 export function compileFrmEntry(source: string, entryKey?: string, id?: string): EntryCompileResult {
