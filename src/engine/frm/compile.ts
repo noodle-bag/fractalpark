@@ -14,6 +14,7 @@ import { validate } from './validator';
 import { generateGLSL } from './codegen';
 import { FRMSourceMap } from './sourcemap';
 import { frmParserCache } from './cache';
+import { scanFrmEntries, selectFrmEntry, type FrmEntry } from './scanner';
 
 export interface CompileResult {
   success: boolean;
@@ -214,4 +215,73 @@ export function compileFrmDetailed(source: string, id?: string): DetailedCompile
     lexerErrors,
     parseErrors,
   };
+}
+
+export type FrmSelectionErrorCode = 'no-entries' | 'selection-required' | 'unknown-entry';
+
+/** Structured selection failure for `compileFrmEntry`. */
+export interface FrmSelectionError {
+  code: FrmSelectionErrorCode;
+  message: string;
+  /** Stable keys of every entry in the scanned source. */
+  entryKeys: string[];
+}
+
+export interface EntryCompileResult extends DetailedCompileResult {
+  /** The selected entry; present whenever selection succeeded. */
+  entry?: FrmEntry;
+  /** Structured selection failure; present when selection could not resolve. */
+  selectionError?: FrmSelectionError;
+}
+
+/**
+ * Compile a single entry of a classic FRM source, selected by stable entry
+ * key. The entry text (header included) is sliced from the source and flows
+ * through the existing `compileFrmDetailed` pipeline — there is no
+ * "take the first entry and compile" fallback (docs/specs/
+ * frm-compatibility-v1.md §2).
+ *
+ * - A single-entry source may be compiled without a key (implicit
+ *   selection of the only entry).
+ * - A multi-entry source without a key is rejected with a structured
+ *   `selection-required` error.
+ * - An unknown key is rejected with a structured `unknown-entry` error.
+ *
+ * `compileFrm` itself is untouched: its legacy whole-source behavior is
+ * preserved exactly.
+ */
+export function compileFrmEntry(source: string, entryKey?: string, id?: string): EntryCompileResult {
+  const scan = scanFrmEntries(source);
+  const entry = selectFrmEntry(scan, entryKey);
+
+  if (!entry) {
+    const entryKeys = scan.entries.map((e) => e.key);
+    let code: FrmSelectionErrorCode;
+    let message: string;
+    if (scan.entries.length === 0) {
+      code = 'no-entries';
+      message = 'Source contains no formula entries';
+    } else if (!entryKey) {
+      code = 'selection-required';
+      message =
+        `Source contains ${scan.entries.length} formula entries; ` +
+        `select one explicitly (entry keys: ${entryKeys.join(', ')})`;
+    } else {
+      code = 'unknown-entry';
+      message = `No formula entry with key "${entryKey}" (available keys: ${entryKeys.join(', ')})`;
+    }
+    const selectionError: FrmSelectionError = { code, message, entryKeys };
+    return {
+      success: false,
+      errors: [message],
+      warnings: [],
+      lexerErrors: [],
+      parseErrors: [],
+      selectionError,
+    };
+  }
+
+  const entrySource = source.slice(entry.range.startOffset, entry.range.endOffset);
+  const result = compileFrmDetailed(entrySource, id);
+  return { ...result, entry };
 }

@@ -22,10 +22,24 @@ export {
   compileFrm, 
   compileToGLSL, 
   compileFrmDetailed,
+  compileFrmEntry,
   mapGLSLErrorToFRM,
   type CompileResult,
   type DetailedCompileResult,
+  type EntryCompileResult,
+  type FrmSelectionError,
+  type FrmSelectionErrorCode,
 } from './compile';
+export {
+  scanFrmEntries,
+  requiresSelection,
+  selectFrmEntry,
+  type FrmEntry,
+  type FrmScanDiagnostic,
+  type FrmScanDiagnosticCode,
+  type FrmScanResult,
+  type FrmSourceRange,
+} from './scanner';
 export { generateGLSL, type CodeGenResult } from './codegen';
 export { FRMSourceMap, type SourceMapping } from './sourcemap';
 export { ErrorRecovery, type ParseError as RecoveryError } from './error-recovery';
