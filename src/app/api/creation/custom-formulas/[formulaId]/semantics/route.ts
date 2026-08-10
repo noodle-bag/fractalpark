@@ -82,15 +82,12 @@ function parseSemanticsBody(body: Record<string, unknown>): {
 }
 
 /** The action must move the stored version in its declared direction. */
-function assertDirection(
+function isDirectionSatisfied(
   action: FormulaSemanticsAction,
   formula: CustomFormulaDetailDto,
-): void {
+): boolean {
   const current = formula.frmSemanticsVersion ?? 1;
-  const target = ACTION_TARGET_VERSION[action];
-  if (current === target) {
-    throw new CloudApiError('validation_failed');
-  }
+  return current === ACTION_TARGET_VERSION[action];
 }
 
 export async function POST(request: Request, context: RouteContext): Promise<Response> {
@@ -117,9 +114,36 @@ export async function POST(request: Request, context: RouteContext): Promise<Res
     const targetVersion = ACTION_TARGET_VERSION[action];
 
     // Uniform not_found (ownership) before any side effect; the RPC
-    // re-checks ownership and revision atomically.
-    const formula = await getCustomFormula(session.userId, formulaId);
-    assertDirection(action, formula);
+    // re-checks ownership and revision atomically. The pre-read error must
+    // be mapped here — toErrorResponse does not know service errors.
+    let formula: CustomFormulaDetailDto;
+    try {
+      formula = await getCustomFormula(session.userId, formulaId);
+    } catch (error) {
+      throw toCustomFormulaApiError(error);
+    }
+
+    // Post-condition semantics: when the stored version already matches the
+    // action's target, the request's post-condition holds. This keeps
+    // idempotent retries safe — after a successful upgrade, retrying the
+    // identical request must not fail on the direction check (it would
+    // otherwise see v2 and return validation_failed instead of the original
+    // success). A fresh request in the wrong direction receives the same
+    // 200 with `unchanged: true`, which is observable, side-effect-free,
+    // and cannot masquerade as a new write (revision is the stored one).
+    if (isDirectionSatisfied(action, formula)) {
+      return jsonOk(
+        request,
+        {
+          formulaId,
+          revision: formula.revision,
+          frmSemanticsVersion: targetVersion,
+          unchanged: true,
+        },
+        200,
+        rotationHeaders(rotatedSetCookie),
+      );
+    }
 
     const requestHash = formulaRequestHash({
       operation: 'change_formula_semantics',

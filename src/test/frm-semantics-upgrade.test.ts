@@ -216,18 +216,25 @@ describe('POST .../semantics: explicit Upgrade & Compare actions', () => {
     expect(saveCall?.body).toContain('"p_frm_semantics_version":1');
   });
 
-  it('rejects an upgrade that is already at v2 (direction enforcement)', async () => {
+  it('returns 200 with unchanged when an upgrade retry sees v2 (idempotent post-condition)', async () => {
     stubFetch(defaultRespond(2));
     const res = await semanticsPOST(semanticsRequest('upgradeSemantics'), detailContext());
-    expect(res.status).toBe(400);
+    expect(res.status).toBe(200);
+    const body = await res.json();
+    expect(body).toMatchObject({ formulaId: FORMULA_ID, frmSemanticsVersion: 2, unchanged: true });
+    // No write may happen: the save RPC must not be called.
     const saveCall = fetchCalls.find((c) => c.url.includes('rpc/fractalpark_custom_formula_save'));
     expect(saveCall).toBeUndefined();
   });
 
-  it('rejects a revert that is already at v1', async () => {
+  it('returns 200 with unchanged when a revert retry sees v1', async () => {
     stubFetch(defaultRespond(1));
     const res = await semanticsPOST(semanticsRequest('revertSemantics'), detailContext());
-    expect(res.status).toBe(400);
+    expect(res.status).toBe(200);
+    const body = await res.json();
+    expect(body).toMatchObject({ formulaId: FORMULA_ID, frmSemanticsVersion: 1, unchanged: true });
+    const saveCall = fetchCalls.find((c) => c.url.includes('rpc/fractalpark_custom_formula_save'));
+    expect(saveCall).toBeUndefined();
   });
 
   it('rejects unknown actions and bad revisions at validation', async () => {
@@ -236,6 +243,21 @@ describe('POST .../semantics: explicit Upgrade & Compare actions', () => {
     expect(badAction.status).toBe(400);
     const badRevision = await semanticsPOST(semanticsRequest('upgradeSemantics', 0), detailContext());
     expect(badRevision.status).toBe(400);
+  });
+
+  it('returns uniform not_found for a formula the owner cannot see', async () => {
+    stubFetch((call) => {
+      if (call.url.includes('fractalpark_rate_limit_consume')) {
+        return new Response(JSON.stringify([{ allowed: true, retry_after: 0 }]), { status: 200 });
+      }
+      if (call.url.includes('custom_formulas')) {
+        // Ownership-filtered pre-read finds nothing.
+        return new Response(JSON.stringify([]), { status: 200 });
+      }
+      throw new Error(`unexpected fetch: ${call.method} ${call.url}`);
+    });
+    const res = await semanticsPOST(semanticsRequest('upgradeSemantics'), detailContext());
+    expect(res.status).toBe(404);
   });
 
   it('requires a session', async () => {
