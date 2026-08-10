@@ -141,6 +141,30 @@
         "unauthenticated": "Entre novamente para continuar.",
         "generic": "Algo deu errado. Tente novamente."
       }
+    },
+    "customFormulas": {
+      "semantics": {
+        "badgeV1": "v1 legado",
+        "badgeV2": "v2 estrito",
+        "upgradeButton": "Atualizar e comparar",
+        "revertButton": "Reverter para v1",
+        "upgradeTitle": "Atualizar para v2 estrito?",
+        "revertTitle": "Reverter para v1 legado?",
+        "upgradeIntro": "A atualização muda sua fórmula para o contrato de semântica estrita v2:",
+        "revertIntro": "A reversão muda sua fórmula de volta para o contrato de semântica legado v1:",
+        "diffSelectedEntry": "Entrada selecionada: a v2 impõe regras estritas de seleção de entrada — uma fórmula com várias entradas deve escolher explicitamente qual usar, em vez de assumir a primeira.",
+        "diffBailout": "Descritores de bailout: a v2 normaliza as condições de escape (radial fixo/parametrizado, direção da comparação preservada) em vez de manter os comportamentos de v1 com operandos trocados.",
+        "diffStrictPredicates": "Rejeição estrita de predicados: a v2 rejeita predicados desconhecidos na compilação, em vez de recorrer silenciosamente a 4.0.",
+        "upgradeNote": "A renderização é visualmente idêntica hoje — essas diferenças semânticas entram em vigor mais adiante na v0.4.18. Você pode reverter para v1 a qualquer momento.",
+        "revertNote": "A renderização permanece visualmente idêntica hoje. Você pode atualizar para v2 novamente a qualquer momento.",
+        "confirmUpgrade": "Atualizar",
+        "confirmRevert": "Reverter",
+        "cancel": "Cancelar",
+        "upgradeSuccess": "Fórmula atualizada para v2 estrito.",
+        "revertSuccess": "Fórmula revertida para v1 legado.",
+        "upgradeFailed": "Não foi possível atualizar a fórmula.",
+        "revertFailed": "Não foi possível reverter a fórmula."
+      }
     }
   },
   "common": {

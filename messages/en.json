@@ -141,6 +141,30 @@
         "unauthenticated": "Sign in again to continue.",
         "generic": "Something went wrong. Try again."
       }
+    },
+    "customFormulas": {
+      "semantics": {
+        "badgeV1": "v1 legacy",
+        "badgeV2": "v2 strict",
+        "upgradeButton": "Upgrade & Compare",
+        "revertButton": "Revert to v1",
+        "upgradeTitle": "Upgrade to strict v2?",
+        "revertTitle": "Revert to legacy v1?",
+        "upgradeIntro": "Upgrading switches your formula to the strict v2 semantics contract:",
+        "revertIntro": "Reverting switches your formula back to the legacy v1 semantics contract:",
+        "diffSelectedEntry": "Selected-entry: v2 enforces strict entry-selection rules — a multi-entry formula must pick its entry explicitly instead of defaulting to the first one.",
+        "diffBailout": "Bailout descriptors: v2 normalizes escape conditions (fixed or parameterized radial, comparison direction preserved) instead of keeping v1's swapped-operand quirks.",
+        "diffStrictPredicates": "Strict predicate rejection: v2 rejects unknown predicates at compile time instead of silently falling back to 4.0.",
+        "upgradeNote": "Rendering is visually identical today — these semantic differences take effect later in v0.4.18. You can revert to v1 at any time.",
+        "revertNote": "Rendering stays visually identical today. You can upgrade to v2 again at any time.",
+        "confirmUpgrade": "Upgrade",
+        "confirmRevert": "Revert",
+        "cancel": "Cancel",
+        "upgradeSuccess": "Formula upgraded to strict v2.",
+        "revertSuccess": "Formula reverted to legacy v1.",
+        "upgradeFailed": "Could not upgrade the formula.",
+        "revertFailed": "Could not revert the formula."
+      }
     }
   },
   "common": {

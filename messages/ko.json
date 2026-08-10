@@ -141,6 +141,30 @@
         "unauthenticated": "계속하려면 다시 로그인하세요.",
         "generic": "문제가 발생했어요. 다시 시도하세요."
       }
+    },
+    "customFormulas": {
+      "semantics": {
+        "badgeV1": "v1 레거시",
+        "badgeV2": "v2 엄격",
+        "upgradeButton": "업그레이드 및 비교",
+        "revertButton": "v1으로 되돌리기",
+        "upgradeTitle": "엄격한 v2로 업그레이드할까요?",
+        "revertTitle": "레거시 v1으로 되돌릴까요?",
+        "upgradeIntro": "업그레이드하면 공식이 엄격한 v2 의미 체계 계약으로 전환됩니다:",
+        "revertIntro": "되돌리면 공식이 레거시 v1 의미 체계 계약으로 복귀합니다:",
+        "diffSelectedEntry": "선택 항목: v2는 엄격한 항목 선택 규칙을 적용합니다 — 여러 항목이 있는 공식은 첫 번째 항목을 기본값으로 쓰지 않고 사용할 항목을 명시적으로 선택해야 합니다.",
+        "diffBailout": "베일아웃 설명자: v2는 v1의 피연산자 교환 동작을 유지하는 대신 이스케이프 조건(고정/매개변수화 방사형, 비교 방향 보존)을 정규화합니다.",
+        "diffStrictPredicates": "엄격한 술어 거부: v2는 알 수 없는 술어를 4.0으로 조용히 대체하지 않고 컴파일 시점에 거부합니다.",
+        "upgradeNote": "오늘날 렌더링은 시각적으로 동일합니다 — 이러한 의미 차이는 v0.4.18 후반부에 적용됩니다. 언제든지 v1으로 되돌릴 수 있습니다.",
+        "revertNote": "렌더링은 오늘날에도 시각적으로 동일합니다. 언제든지 다시 v2로 업그레이드할 수 있습니다.",
+        "confirmUpgrade": "업그레이드",
+        "confirmRevert": "되돌리기",
+        "cancel": "취소",
+        "upgradeSuccess": "공식이 엄격한 v2로 업그레이드되었습니다.",
+        "revertSuccess": "공식이 레거시 v1으로 되돌아갔습니다.",
+        "upgradeFailed": "공식을 업그레이드할 수 없습니다.",
+        "revertFailed": "공식을 되돌릴 수 없습니다."
+      }
     }
   },
   "common": {

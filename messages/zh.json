@@ -141,6 +141,30 @@
         "unauthenticated": "请重新登录后继续。",
         "generic": "出了点问题，请重试。"
       }
+    },
+    "customFormulas": {
+      "semantics": {
+        "badgeV1": "v1 旧版",
+        "badgeV2": "v2 严格版",
+        "upgradeButton": "升级并对比",
+        "revertButton": "回退到 v1",
+        "upgradeTitle": "升级到严格 v2？",
+        "revertTitle": "回退到旧版 v1？",
+        "upgradeIntro": "升级后，你的公式将切换到严格的 v2 语义契约：",
+        "revertIntro": "回退后，你的公式将回到旧版 v1 语义契约：",
+        "diffSelectedEntry": "条目选择：v2 强制严格的条目选择规则——多条目公式必须显式指定使用的条目，不再默认取第一条。",
+        "diffBailout": "逃逸描述符：v2 会规范化逃逸条件（固定/参数化径向、保留比较方向），不再保留 v1 对调操作数时的旧行为。",
+        "diffStrictPredicates": "严格谓词拒绝：v2 在编译期直接拒绝未知谓词，不再静默回退到 4.0。",
+        "upgradeNote": "当前渲染效果完全相同，这些语义差异将在 v0.4.18 后续版本生效。你可以随时回退到 v1。",
+        "revertNote": "当前渲染效果保持不变。你可以随时再次升级到 v2。",
+        "confirmUpgrade": "升级",
+        "confirmRevert": "回退",
+        "cancel": "取消",
+        "upgradeSuccess": "公式已升级到严格 v2。",
+        "revertSuccess": "公式已回退到旧版 v1。",
+        "upgradeFailed": "公式升级失败，请重试。",
+        "revertFailed": "公式回退失败，请重试。"
+      }
     }
   },
   "common": {

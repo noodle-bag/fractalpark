@@ -15,6 +15,7 @@ import { useCallback, useEffect, useRef, useState } from 'react';
 import { useCloudSession } from '@/components/cloud/CloudSessionProvider';
 import {
   CloudClientError,
+  changeCustomFormulaSemantics,
   createCustomFormula,
   deleteCustomFormula,
   getCustomFormula,
@@ -22,6 +23,7 @@ import {
   updateCustomFormula,
   type CloudCustomFormulaDetail,
   type CloudCustomFormulaSummary,
+  type CustomFormulaSemanticsAction,
 } from '@/lib/cloud/client';
 import { resolveCustomFormula } from '@/lib/formula-resolver';
 import type { FormulaExperienceHint } from '@/engine/frm/authoring';
@@ -82,6 +84,11 @@ export interface CloudFormulaLibrary {
   saveFormula: (input: SaveInput) => Promise<FormulaMutationResult>;
   renameFormula: (formulaId: string, name: string) => Promise<FormulaMutationResult>;
   deleteFormula: (formulaId: string) => Promise<FormulaMutationResult>;
+  /** Explicit, reversible FRM semantics-version change (v1↔v2). */
+  changeSemantics: (
+    formulaId: string,
+    action: CustomFormulaSemanticsAction,
+  ) => Promise<FormulaMutationResult>;
   refresh: () => Promise<void>;
 }
 
@@ -234,6 +241,25 @@ export function useCloudFormulaLibrary(): CloudFormulaLibrary {
     [refresh],
   );
 
+  const changeSemantics = useCallback(
+    async (
+      formulaId: string,
+      action: CustomFormulaSemanticsAction,
+    ): Promise<FormulaMutationResult> => {
+      const revision = revisionsRef.current.get(formulaId);
+      if (revision === undefined) return { success: false, code: 'not_found' };
+      try {
+        const result = await changeCustomFormulaSemantics(formulaId, action, revision);
+        revisionsRef.current.set(formulaId, result.revision);
+        await refresh();
+        return { success: true, code: 'ok', formulaId };
+      } catch (error) {
+        return mapError(error);
+      }
+    },
+    [refresh],
+  );
+
   return {
     formulas,
     isLoading,
@@ -242,6 +268,7 @@ export function useCloudFormulaLibrary(): CloudFormulaLibrary {
     saveFormula,
     renameFormula,
     deleteFormula,
+    changeSemantics,
     refresh,
   };
 }

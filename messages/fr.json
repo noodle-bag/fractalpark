@@ -141,6 +141,30 @@
         "unauthenticated": "Reconnecte-toi pour continuer.",
         "generic": "Une erreur s'est produite. Réessaie."
       }
+    },
+    "customFormulas": {
+      "semantics": {
+        "badgeV1": "v1 héritée",
+        "badgeV2": "v2 stricte",
+        "upgradeButton": "Mettre à niveau et comparer",
+        "revertButton": "Revenir à v1",
+        "upgradeTitle": "Passer à la v2 stricte ?",
+        "revertTitle": "Revenir à la v1 héritée ?",
+        "upgradeIntro": "La mise à niveau fait passer votre formule au contrat de sémantique stricte v2 :",
+        "revertIntro": "Le retour fait repasser votre formule au contrat de sémantique héritée v1 :",
+        "diffSelectedEntry": "Entrée sélectionnée : la v2 impose des règles strictes de sélection d'entrée — une formule à plusieurs entrées doit choisir explicitement laquelle utiliser au lieu de prendre la première par défaut.",
+        "diffBailout": "Descripteurs de bailout : la v2 normalise les conditions d'échappement (radial fixe/paramétré, direction de comparaison préservée) au lieu de conserver les particularités de la v1 avec opérandes inversés.",
+        "diffStrictPredicates": "Rejet strict des prédicats : la v2 rejette les prédicats inconnus à la compilation au lieu de revenir silencieusement à 4.0.",
+        "upgradeNote": "Le rendu est visuellement identique aujourd'hui — ces différences sémantiques prendront effet plus tard dans v0.4.18. Vous pouvez revenir à v1 à tout moment.",
+        "revertNote": "Le rendu reste visuellement identique aujourd'hui. Vous pouvez repasser à v2 à tout moment.",
+        "confirmUpgrade": "Mettre à niveau",
+        "confirmRevert": "Revenir",
+        "cancel": "Annuler",
+        "upgradeSuccess": "Formule mise à niveau vers la v2 stricte.",
+        "revertSuccess": "Formule revenue à la v1 héritée.",
+        "upgradeFailed": "Impossible de mettre la formule à niveau.",
+        "revertFailed": "Impossible de revenir en arrière pour la formule."
+      }
     }
   },
   "common": {

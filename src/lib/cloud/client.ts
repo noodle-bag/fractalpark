@@ -408,6 +408,8 @@ export interface CloudCustomFormulaSummary {
   revision: number;
   sourceBytes: number;
   hasExperienceHint: boolean;
+  /** FRM compile-semantics contract (spec §3); absent/1 = legacy v1, 2 = strict v2. */
+  frmSemanticsVersion?: 1 | 2;
   createdAt: string;
   updatedAt: string;
 }
@@ -473,5 +475,24 @@ export async function deleteCustomFormula(
     method: 'DELETE',
     headers: { 'idempotency-key': crypto.randomUUID() },
     body: JSON.stringify({ expectedRevision }),
+  });
+}
+
+export type CustomFormulaSemanticsAction = 'upgradeSemantics' | 'revertSemantics';
+
+/**
+ * Explicit, reversible FRM semantics-version change (v0.4.18 slice 2,
+ * commit 6): upgradeSemantics moves v1→v2, revertSemantics moves v2→v1.
+ * Revision-checked like an update; the response carries the new version.
+ */
+export async function changeCustomFormulaSemantics(
+  formulaId: string,
+  action: CustomFormulaSemanticsAction,
+  expectedRevision: number,
+): Promise<{ formulaId: string; revision: number; frmSemanticsVersion: 1 | 2 }> {
+  return call(`/api/creation/custom-formulas/${formulaId}/semantics`, {
+    method: 'POST',
+    headers: { 'idempotency-key': crypto.randomUUID() },
+    body: JSON.stringify({ action, expectedRevision }),
   });
 }

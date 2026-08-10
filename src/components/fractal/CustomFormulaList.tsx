@@ -10,10 +10,21 @@
 
 import React, { useState } from 'react';
 import { useLocale, useTranslations } from 'next-intl';
+import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+} from '@/components/ui/alert-dialog';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
 import { Badge } from '@/components/ui/badge';
+import { useToast } from '@/hooks/use-toast';
 import {
   Edit2,
   Trash2,
@@ -28,6 +39,7 @@ import {
   useCloudFormulaLibrary,
   type FormulaMutationResult,
 } from '@/hooks/useCloudFormulaLibrary';
+import type { CustomFormulaSemanticsAction } from '@/lib/cloud/client';
 import { resolveFormulaReference } from '@/lib/formula-resolver';
 import { readSessionFormulaAssets } from '@/lib/formula-resolver';
 import { FormulaEditor } from './FormulaEditor';
@@ -43,10 +55,17 @@ interface CustomFormulaListProps {
   onSelectFormula?: (plugin: FormulaPlugin, experienceHint?: FormulaExperienceHint) => void;
 }
 
+/** Strict v2 (explicit column) vs legacy v1 (missing column reads as v1). */
+function isStrictV2(formula: CloudCustomFormulaSummary): boolean {
+  return formula.frmSemanticsVersion === 2;
+}
+
 export function CustomFormulaList({ currentBounds, onSelectFormula }: CustomFormulaListProps) {
   const t = useTranslations('explore');
   const customT = useTranslations('explore.formula.customLibrary');
+  const semanticsT = useTranslations('cloud.customFormulas.semantics');
   const locale = useLocale();
+  const { toast } = useToast();
   const { state: session, openSignIn } = useCloudSession();
   const {
     formulas,
@@ -56,6 +75,7 @@ export function CustomFormulaList({ currentBounds, onSelectFormula }: CustomForm
     saveFormula,
     deleteFormula,
     renameFormula,
+    changeSemantics,
   } = useCloudFormulaLibrary();
 
   const [showEditor, setShowEditor] = useState(false);
@@ -66,6 +86,11 @@ export function CustomFormulaList({ currentBounds, onSelectFormula }: CustomForm
   const [newName, setNewName] = useState('');
   const [actionError, setActionError] = useState('');
   const [busyId, setBusyId] = useState<string | null>(null);
+  /** Pending explicit FRM semantics change awaiting confirmation (v0.4.18). */
+  const [semanticsAction, setSemanticsAction] = useState<{
+    formulaId: string;
+    action: CustomFormulaSemanticsAction;
+  } | null>(null);
 
   const authenticated = session.status === 'authenticated';
 
@@ -165,6 +190,38 @@ export function CustomFormulaList({ currentBounds, onSelectFormula }: CustomForm
     setActionError('');
     setRenamingId(null);
     setNewName('');
+  };
+
+  /**
+   * Explicit FRM semantics change (v0.4.18 Upgrade & Compare): the dialog
+   * already explained the v1↔v2 contract differences; this persists the
+   * version bump through the revision-checked semantics endpoint.
+   */
+  const handleSemanticsChange = async (
+    formulaId: string,
+    action: CustomFormulaSemanticsAction,
+  ) => {
+    setBusyId(formulaId);
+    setSemanticsAction(null);
+    const result = await changeSemantics(formulaId, action);
+    setBusyId(null);
+    if (result.success) {
+      setActionError('');
+      toast({
+        title:
+          action === 'upgradeSemantics'
+            ? semanticsT('upgradeSuccess')
+            : semanticsT('revertSuccess'),
+      });
+      return;
+    }
+    toast({
+      title:
+        action === 'upgradeSemantics'
+          ? semanticsT('upgradeFailed')
+          : semanticsT('revertFailed'),
+      variant: 'destructive',
+    });
   };
 
   const handleSelect = async (formula: CloudCustomFormulaSummary) => {
@@ -318,14 +375,24 @@ export function CustomFormulaList({ currentBounds, onSelectFormula }: CustomForm
                         </Button>
                       </div>
                     ) : (
-                      <div>
+                      <div className="flex items-center gap-2 min-w-0">
                         <button
                           onClick={() => void handleSelect(formula)}
-                          className="font-medium hover:underline text-left truncate block"
+                          className="font-medium hover:underline text-left truncate"
                           disabled={busyId === formula.id}
                         >
                           {formula.name}
                         </button>
+                        {/* FRM semantics contract badge: explicit v2 vs legacy v1. */}
+                        <Badge
+                          variant="secondary"
+                          className="shrink-0 text-[10px] leading-4"
+                          data-testid={`semantics-badge-${formula.id}`}
+                        >
+                          {isStrictV2(formula)
+                            ? semanticsT('badgeV2')
+                            : semanticsT('badgeV1')}
+                        </Badge>
                       </div>
                     )}
                   </div>
@@ -334,6 +401,25 @@ export function CustomFormulaList({ currentBounds, onSelectFormula }: CustomForm
                 <div className="flex items-center gap-1 shrink-0">
                   {renamingId !== formula.id && (
                     <>
+                      {/* Explicit, reversible FRM semantics change (v0.4.18). */}
+                      <Button
+                        variant="outline"
+                        size="sm"
+                        disabled={busyId === formula.id}
+                        onClick={() =>
+                          setSemanticsAction({
+                            formulaId: formula.id,
+                            action: isStrictV2(formula)
+                              ? 'revertSemantics'
+                              : 'upgradeSemantics',
+                          })
+                        }
+                      >
+                        {isStrictV2(formula)
+                          ? semanticsT('revertButton')
+                          : semanticsT('upgradeButton')}
+                      </Button>
+
                       <Button
                         variant="ghost"
                         size="icon"
@@ -377,6 +463,62 @@ export function CustomFormulaList({ currentBounds, onSelectFormula }: CustomForm
           </p>
         )}
       </CardContent>
+
+      {/* Explicit FRM semantics change confirmation (v0.4.18 Upgrade &
+          Compare): explains the v1↔v2 contract differences before the
+          version bump is persisted. Visual side-by-side comparison lands
+          with the strict-v2 semantics slice; today v1 and v2 compile
+          identically, so the dialog presents semantic/diagnostic
+          differences, not rendered output. */}
+      <AlertDialog
+        open={semanticsAction !== null}
+        onOpenChange={(open) => {
+          if (!open) setSemanticsAction(null);
+        }}
+      >
+        <AlertDialogContent>
+          <AlertDialogHeader>
+            <AlertDialogTitle>
+              {semanticsAction?.action === 'upgradeSemantics'
+                ? semanticsT('upgradeTitle')
+                : semanticsT('revertTitle')}
+            </AlertDialogTitle>
+            <AlertDialogDescription asChild>
+              <div className="space-y-2 text-sm">
+                <p>
+                  {semanticsAction?.action === 'upgradeSemantics'
+                    ? semanticsT('upgradeIntro')
+                    : semanticsT('revertIntro')}
+                </p>
+                <ul className="list-disc pl-5 space-y-1">
+                  <li>{semanticsT('diffSelectedEntry')}</li>
+                  <li>{semanticsT('diffBailout')}</li>
+                  <li>{semanticsT('diffStrictPredicates')}</li>
+                </ul>
+                <p className="text-muted-foreground">
+                  {semanticsAction?.action === 'upgradeSemantics'
+                    ? semanticsT('upgradeNote')
+                    : semanticsT('revertNote')}
+                </p>
+              </div>
+            </AlertDialogDescription>
+          </AlertDialogHeader>
+          <AlertDialogFooter>
+            <AlertDialogCancel>{semanticsT('cancel')}</AlertDialogCancel>
+            <AlertDialogAction
+              onClick={() => {
+                if (semanticsAction) {
+                  void handleSemanticsChange(semanticsAction.formulaId, semanticsAction.action);
+                }
+              }}
+            >
+              {semanticsAction?.action === 'upgradeSemantics'
+                ? semanticsT('confirmUpgrade')
+                : semanticsT('confirmRevert')}
+            </AlertDialogAction>
+          </AlertDialogFooter>
+        </AlertDialogContent>
+      </AlertDialog>
     </Card>
   );
 }
