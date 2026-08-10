@@ -194,6 +194,16 @@ function compileFrmUncached(
     let c2ThresholdGlsl: string | undefined;
     if (bailoutDescriptor?.kind === 'C2') {
       c2ThresholdGlsl = generateC2ThresholdGLSL(bailoutDescriptor, ast);
+      // Parameters are complex (vec2) uniforms and the UI exposes their
+      // imaginary components, but the escape test consumes the threshold's
+      // real part only (.x coercion). A nonzero imaginary edit would be
+      // silently dropped — say so instead of staying quiet.
+      if (bailoutDescriptor.params.length > 0) {
+        warnings.push(
+          `C2 bailout threshold uses its real part only: imaginary components of parameter(s) ` +
+            `${bailoutDescriptor.params.join(', ')} are ignored in the escape test (.x coercion).`,
+        );
+      }
     }
 
     // Step 5: Create FormulaPlugin

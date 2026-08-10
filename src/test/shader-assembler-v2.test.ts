@@ -265,4 +265,61 @@ describe('assembleShader: C4-R projection escapes and after-step timing', () => 
     expect(shader).toContain('#define C2_ESCAPE_CHECK(zz) ((zz) <= (');
     expect(shader).toContain('(u_p1).x');
   });
+
+  it('C2 inclusive operators negate to strict escapes (<= → >, >= → <)', () => {
+    const le = compileFrm(
+      `C2Le {\ninit:\n  z = 0\nloop:\n  z = z^2 + c\nbailout:\n  |z| <= p1\n}`,
+      'c2-le',
+      2,
+    );
+    expect(le.success).toBe(true);
+    expect(assembleShader({ formulaId: 'c2-le', ...COMBO_BASE }, le.plugin)).toContain(
+      '#define C2_ESCAPE_CHECK(zz) ((zz) > (',
+    );
+
+    const ge = compileFrm(
+      `C2Ge {\ninit:\n  z = 0\nloop:\n  z = z^2 + c\nbailout:\n  |z| >= p1\n}`,
+      'c2-ge',
+      2,
+    );
+    expect(ge.success).toBe(true);
+    expect(assembleShader({ formulaId: 'c2-ge', ...COMBO_BASE }, ge.plugin)).toContain(
+      '#define C2_ESCAPE_CHECK(zz) ((zz) < (',
+    );
+  });
+
+  it('C2 swapped operands flip the operator before inlining', () => {
+    // p1 < |z| is continue-while |z| > p1: descriptor normalization swaps
+    // operands and flips the operator, so the escape is <=.
+    const swapped = compileFrm(
+      `C2Swap {\ninit:\n  z = 0\nloop:\n  z = z^2 + c\nbailout:\n  p1 < |z|\n}`,
+      'c2-swap',
+      2,
+    );
+    expect(swapped.success).toBe(true);
+    expect(swapped.bailoutDescriptor?.kind).toBe('C2');
+    expect(assembleShader({ formulaId: 'c2-swap', ...COMBO_BASE }, swapped.plugin)).toContain(
+      '#define C2_ESCAPE_CHECK(zz) ((zz) <= (',
+    );
+  });
+
+  it('C2 parameterized thresholds surface the .x coercion warning; constants stay silent', () => {
+    const withParams = compileFrm(
+      `C2Warn {\ninit:\n  z = 0\nloop:\n  z = z^2 + c\nbailout:\n  |z| < p1 * p2 + 1\n}`,
+      'c2-warn',
+      2,
+    );
+    expect(withParams.success).toBe(true);
+    expect(withParams.warnings.some((w) => w.includes('real part only'))).toBe(true);
+    expect(withParams.warnings.some((w) => w.includes('p1') && w.includes('p2'))).toBe(true);
+
+    const constOnly = compileFrm(
+      `C2Quiet {\ninit:\n  z = 0\nloop:\n  z = z^2 + c\nbailout:\n  |z| < sqrt(16)\n}`,
+      'c2-quiet',
+      2,
+    );
+    expect(constOnly.success).toBe(true);
+    expect(constOnly.bailoutDescriptor?.kind).toBe('C2');
+    expect(constOnly.warnings.some((w) => w.includes('real part only'))).toBe(false);
+  });
 });
