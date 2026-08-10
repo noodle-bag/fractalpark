@@ -12,6 +12,12 @@ import { tokenize, formatLexerErrors, type LexerError } from './lexer';
 import { parse, formatParseErrors, type ParseError } from './parser';
 import { validate } from './validator';
 import { generateGLSL } from './codegen';
+import {
+  extractBailoutDescriptor,
+  type BailoutDescriptor,
+  type BailoutRejectReason,
+} from './bailout-descriptor';
+import { PARAMETER_NAMES } from './builtins';
 import { FRMSourceMap } from './sourcemap';
 import { frmParserCache } from './cache';
 import { scanFrmEntries, selectFrmEntry, FRM_BLOCKING_DIAGNOSTICS, type FrmEntry, type FrmScanResult, type FrmSourceRange } from './scanner';
@@ -29,6 +35,15 @@ export interface CompileResult {
   sourceMap?: FRMSourceMap;
   /** Compile-semantics contract of the source (spec §3); mechanism-layer metadata, read back as-is. */
   frmSemanticsVersion: FrmSemanticsVersion;
+  /**
+   * Strict-v2 bounded bailout descriptor (spec §4). Present only when the
+   * source was compiled under semanticsVersion 2 and the bailout predicate
+   * matched the bounded C1/C2/C4-R contract. The numeric `plugin.bailout`
+   * field keeps the legacy v1 channel semantics unchanged; renderer-pipeline
+   * v2 consumes this descriptor instead (renderer wiring lands in the
+   * coloring-pipeline slice).
+   */
+  bailoutDescriptor?: BailoutDescriptor;
 }
 
 /**
@@ -114,6 +129,35 @@ function compileFrmUncached(
 
     const canonicalFormula = createCanonicalFormula(ast, source);
 
+    // Strict v2: bounded bailout descriptor extraction (spec §4). Unknown
+    // or out-of-contract predicates fail with a stable reason — the v2
+    // pipeline never falls back to a default radius. The v1 heuristic
+    // (extractBailoutValue in codegen) is untouched and still drives the
+    // numeric plugin.bailout field for both versions.
+    let bailoutDescriptor: BailoutDescriptor | undefined;
+    if (semanticsVersion === 2) {
+      const declaredParams = new Set<string>(ast.params.map((p) => p.name));
+      for (const pn of PARAMETER_NAMES) declaredParams.add(pn);
+      const extraction = extractBailoutDescriptor(ast.bailoutExpr, declaredParams);
+      if (!extraction.ok) {
+        const reasonMessages: Record<BailoutRejectReason, string> = {
+          'unknown-magnitude-form':
+            'bailout magnitude must be |z|, |real(z)|, or real(z) under strict v2 semantics',
+          'threshold-not-loop-invariant':
+            'bailout threshold must be loop-invariant (numbers, declared parameters, and pure arithmetic only — no orbit state) under strict v2 semantics',
+          'unknown-predicate':
+            'bailout predicate is outside the bounded C1/C2/C4-R contract under strict v2 semantics',
+          'chained-logical':
+            'bailout predicates combined with && or || are not part of the strict v2 contract yet',
+        };
+        errors.push(
+          `Line ${ast.bailoutExpr.loc.line}, column ${ast.bailoutExpr.loc.col}: ${reasonMessages[extraction.reason]} [${extraction.reason}]`,
+        );
+        return { success: false, errors, warnings, ast, frmSemanticsVersion: semanticsVersion };
+      }
+      bailoutDescriptor = extraction.descriptor;
+    }
+
     // Step 4: Generate GLSL with source map
     const sourceMap = new FRMSourceMap();
     const { glsl, initGlsl, uniforms, bailout } = generateGLSL(ast, sourceMap);
@@ -148,6 +192,7 @@ function compileFrmUncached(
       glsl,
       sourceMap,
       frmSemanticsVersion: semanticsVersion,
+      ...(bailoutDescriptor ? { bailoutDescriptor } : {}),
     };
 
   } catch (e) {
@@ -217,7 +262,6 @@ export interface DetailedCompileResult extends CompileResult {
   lexerErrors: LexerError[];
   parseErrors: ParseError[];
 }
-
 export function compileFrmDetailed(
   source: string,
   id?: string,
