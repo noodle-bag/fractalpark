@@ -206,7 +206,9 @@ function runFullBatch(corpus: SourceItem[]): {
         : undefined;
 
       const result: FullBatchEntryResult = {
-        entryId: `${item.contentHash.slice(0, 16)}:${entry.key}`,
+        // Ordinal, never the entry key: keys derive from corpus text and
+        // must not enter the report (hash-only contract).
+        entryId: `${item.contentHash.slice(0, 16)}#${aggregate.totalEntries}`,
         v1: { success: v1.success },
         v2: {
           success: v2.success,
@@ -276,13 +278,13 @@ function main() {
     corpusFileCount = corpus.length;
     corpusSnapshotHash = sha256(corpus.map((item) => item.contentHash).sort().join('\n'));
     if (process.env.FRACTALPARK_FRM_FULL === '1') {
-      // Slice 4 mechanism layer: full-corpus v1/v2 double-compile batch.
+      // Slice 4 mechanism layer: full-corpus v1/v2 double-compile batch,
+      // run IN ADDITION TO the sentinel gates (never instead of them).
       fullBatch = runFullBatch(corpus);
-    } else {
-      const { coverage, stress } = selectSentinels(corpus);
-      for (const item of coverage) record(item, 'coverage', aggregate.coverage);
-      for (const item of stress) record(item, 'predicted-stress', aggregate.predictedStress);
     }
+    const { coverage, stress } = selectSentinels(corpus);
+    for (const item of coverage) record(item, 'coverage', aggregate.coverage);
+    for (const item of stress) record(item, 'predicted-stress', aggregate.predictedStress);
   }
 
   // B94 native registry controls — registry-integrity evidence, NOT compile
