@@ -2,6 +2,17 @@ precision highp float;
 
 // #define lines injected by assembler
 // #define BAILOUT_RADIUS 4.0
+// Escape-condition macro, driven by the v2 bailout descriptor defines when
+// present. Default (no v2 defines): the historical zz > BAILOUT_RADIUS.
+#if defined(ESCAPE_INVERSE_DIRECTION) && defined(BAILOUT_INCLUSIVE)
+  #define ESCAPE_CHECK(zz) ((zz) <= BAILOUT_RADIUS)
+#elif defined(ESCAPE_INVERSE_DIRECTION)
+  #define ESCAPE_CHECK(zz) ((zz) < BAILOUT_RADIUS)
+#elif defined(BAILOUT_INCLUSIVE)
+  #define ESCAPE_CHECK(zz) ((zz) >= BAILOUT_RADIUS)
+#else
+  #define ESCAPE_CHECK(zz) ((zz) > BAILOUT_RADIUS)
+#endif
 // #define ESCAPE_CONVERGE
 // #define CONVERGE_EPSILON 0.000001
 // #define NEED_ORBIT_TRAP
@@ -74,7 +85,7 @@ float escapeHeight(vec2 point) {
   for (int i = 0; i < 10000; i++) {
     if (i >= u_maxIterations) break;
     float zz = dot(z, z);
-    if (zz > BAILOUT_RADIUS) {
+    if (ESCAPE_CHECK(zz)) {
       float zn = sqrt(zz);
       float si = float(i) - log2(log2(max(zn, 1.00001))) / log2(max(u_power, 2.0)) + 4.0;
       return clamp(si / float(u_maxIterations), 0.0, 1.0);
@@ -174,10 +185,17 @@ vec3 colorAtComplex(vec2 point) {
       break;
     }
 #else
-    if (zz > BAILOUT_RADIUS) {
+    if (ESCAPE_CHECK(zz)) {
       escaped = true;
+#ifdef ESCAPE_INVERSE_DIRECTION
+      // Inverse-direction escape (v2 descriptor op > / >=): the smooth
+      // formula is not meaningful for inside-out escapes — deterministic
+      // Escape Time fallback per the coloring-capability contract.
+      smoothIter = float(i);
+#else
       float zn = sqrt(zz);
       smoothIter = float(i) - log2(log2(max(zn, 1.00001))) / log2(max(u_power, 2.0)) + 4.0;
+#endif
       iter = i;
       break;
     }

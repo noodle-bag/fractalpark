@@ -25,6 +25,13 @@ export interface FractalPlugin {
 export interface FormulaPlugin extends FractalPlugin {
   category: 'formula';
   bailout?: number;         // default 4.0
+  /**
+   * Strict-v2 bounded bailout descriptor (spec §4). Present only on FRM
+   * formulas compiled under semanticsVersion 2; renderer-pipeline v2
+   * (shader assembler) consumes this instead of the legacy numeric
+   * `bailout` field. Legacy/v1 formulas never carry it.
+   */
+  bailoutDescriptor?: import('../frm/bailout-descriptor').BailoutDescriptor;
   supportsPower?: boolean;  // DEPRECATED: not consumed by any current consumer; Smooth capability resolves from AST/dataflow per ADR-0007. Retired in the coloring-capability slice.
   supportsJulia?: boolean;  // default true
   family?: string;          // grouping: 'classic' | 'newton' | 'magnet' | 'phoenix' | 'exotic'

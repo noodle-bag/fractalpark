@@ -32,7 +32,25 @@ export function assembleShader(
   }
 
   const defines: string[] = [];
-  defines.push(`#define BAILOUT_RADIUS ${(formula.bailout ?? 4.0).toFixed(1)}`);
+  // Renderer-pipeline v2: a formula carrying a bounded bailout descriptor
+  // (strict-v2 FRM compile) drives the escape defines from the descriptor
+  // instead of the legacy numeric bailout field. C1 thresholds are
+  // magnitude values, so the zz comparison consumes threshold²; inverse
+  // directions (>, >=) flip the escape condition, and inclusive operators
+  // use an inclusive boundary. Legacy formulas (no descriptor) keep the
+  // historical BAILOUT_RADIUS semantics byte-for-byte.
+  const bailoutDescriptor = formula.bailoutDescriptor;
+  if (bailoutDescriptor?.kind === 'C1') {
+    defines.push(`#define BAILOUT_RADIUS ${(bailoutDescriptor.threshold ** 2).toFixed(1)}`);
+    if (bailoutDescriptor.op === '>' || bailoutDescriptor.op === '>=') {
+      defines.push('#define ESCAPE_INVERSE_DIRECTION');
+    }
+    if (bailoutDescriptor.op === '<=' || bailoutDescriptor.op === '>=') {
+      defines.push('#define BAILOUT_INCLUSIVE');
+    }
+  } else {
+    defines.push(`#define BAILOUT_RADIUS ${(formula.bailout ?? 4.0).toFixed(1)}`);
+  }
   if (formula.escapeType === 'converge') {
     defines.push('#define ESCAPE_CONVERGE');
     defines.push('#define CONVERGE_EPSILON 0.000001');

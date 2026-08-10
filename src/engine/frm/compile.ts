@@ -177,6 +177,7 @@ function compileFrmUncached(
       supportsPower: false, // DEPRECATED per ADR-0007: capability resolves from AST/dataflow, not this flag.
       supportsJulia: true,
       bailout,
+      ...(bailoutDescriptor ? { bailoutDescriptor } : {}),
       uniforms: pluginUniforms,
       glsl,
       initGlsl,
