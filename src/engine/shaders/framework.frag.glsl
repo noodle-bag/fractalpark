@@ -86,9 +86,15 @@ float escapeHeight(vec2 point) {
     if (i >= u_maxIterations) break;
     float zz = dot(z, z);
     if (ESCAPE_CHECK(zz)) {
+#ifdef ESCAPE_INVERSE_DIRECTION
+      // Inverse-direction escape (v2 descriptor op > / >=): deterministic
+      // Escape Time fallback — see the main loop for the same contract.
+      return clamp(float(i) / float(u_maxIterations), 0.0, 1.0);
+#else
       float zn = sqrt(zz);
       float si = float(i) - log2(log2(max(zn, 1.00001))) / log2(max(u_power, 2.0)) + 4.0;
       return clamp(si / float(u_maxIterations), 0.0, 1.0);
+#endif
     }
     vec2 nextZ = iterateStep(z, c, zPrev, point);
     zPrev = z;

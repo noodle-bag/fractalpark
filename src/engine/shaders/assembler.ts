@@ -13,6 +13,15 @@ float orbitTrapDistance(vec2 z) {
 }
 `;
 
+/** GLSL float literal with full precision (integers gain a `.0` suffix). */
+function glslFloatLiteral(value: number): string {
+  if (!Number.isFinite(value)) {
+    throw new Error(`Non-finite GLSL float literal: ${value}`);
+  }
+  const text = String(value);
+  return text.includes('.') || text.includes('e') || text.includes('E') ? text : `${text}.0`;
+}
+
 export function assembleShader(
   combo: PluginCombination,
   formulaOverride?: FormulaPlugin,
@@ -41,7 +50,9 @@ export function assembleShader(
   // historical BAILOUT_RADIUS semantics byte-for-byte.
   const bailoutDescriptor = formula.bailoutDescriptor;
   if (bailoutDescriptor?.kind === 'C1') {
-    defines.push(`#define BAILOUT_RADIUS ${(bailoutDescriptor.threshold ** 2).toFixed(1)}`);
+    // Full precision: fractional thresholds (e.g. |z| < 0.1 → 0.01) must
+    // not be rounded away.
+    defines.push(`#define BAILOUT_RADIUS ${glslFloatLiteral(bailoutDescriptor.threshold ** 2)}`);
     if (bailoutDescriptor.op === '>' || bailoutDescriptor.op === '>=') {
       defines.push('#define ESCAPE_INVERSE_DIRECTION');
     }
@@ -89,6 +100,18 @@ export function assembleShader(
   return shader;
 }
 
-export function makeCacheKey(combo: PluginCombination): ShaderCacheKey {
-  return `${combo.formulaId}|${combo.outsideColoringId}|${combo.insideColoringId}|${combo.transformId}`;
+export function makeCacheKey(combo: PluginCombination, formulaOverride?: FormulaPlugin): ShaderCacheKey {
+  const base = `${combo.formulaId}|${combo.outsideColoringId}|${combo.insideColoringId}|${combo.transformId}`;
+  // Shader semantics now depend on the formula's bailout descriptor (strict
+  // v2). A v1 and a v2 variant of the same formula id must never share a
+  // compiled program — fingerprint the descriptor into the key.
+  const descriptor = formulaOverride?.bailoutDescriptor;
+  if (!descriptor) return base;
+  const fingerprint =
+    descriptor.kind === 'C2'
+      ? `C2:${descriptor.op}:${descriptor.params.join(',')}`
+      : descriptor.kind === 'C1'
+        ? `C1:${descriptor.op}:${descriptor.threshold}`
+        : `C4R:${descriptor.form}:${descriptor.op}:${descriptor.threshold}`;
+  return `${base}|bo:${fingerprint}`;
 }

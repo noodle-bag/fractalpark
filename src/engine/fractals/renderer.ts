@@ -61,7 +61,7 @@ export class FractalRenderer {
       insideColoringId: 'black',
       transformId: 'none',
     };
-    const key = makeCacheKey(combo);
+    const key = makeCacheKey(combo, this.formulaPlugin);
     if (this.cache.get(key)) return;
     const source = assembleShader(combo, this.formulaPlugin);
     await this.cache.compileWithMetrics(key, source, combo.formulaId);
@@ -128,7 +128,7 @@ export class FractalRenderer {
       transformId: params.transformId ?? 'none',
     };
 
-    const key = makeCacheKey(combo);
+    const key = makeCacheKey(combo, this.formulaPlugin);
     let compiled = this.cache.get(key);
 
     if (!compiled) {

@@ -11,7 +11,7 @@
  */
 
 import { describe, it, expect, beforeAll } from 'vitest';
-import { assembleShader } from '@/engine/shaders/assembler';
+import { assembleShader, makeCacheKey } from '@/engine/shaders/assembler';
 import { pluginRegistry } from '@/engine/plugins/registry';
 import { registerBuiltins } from '@/engine/plugins/builtins/index';
 import { compileFrm } from '@/engine/frm/compile';
@@ -101,5 +101,35 @@ describe('assembleShader: renderer-pipeline v2 (bailout descriptor consumption)'
     expect(shader).toMatch(injectedRadius('4.0'));
     expect(shader).not.toMatch(INJECTED_INVERSE);
     expect(shader).not.toMatch(INJECTED_INCLUSIVE);
+  });
+
+  it('preserves fractional thresholds at full precision (no radius collapse)', () => {
+    const plugin = compileV2('V2Frac', '|z| < 0.1', 'v2-frac');
+    const shader = assembleShader({ formulaId: plugin.id, ...COMBO_BASE }, plugin);
+    // 0.1² = 0.010000000000000002 (IEEE 754) — must not round to 0.0.
+    expect(shader).toMatch(/^#define BAILOUT_RADIUS 0\.01/m);
+    expect(shader).not.toMatch(/^#define BAILOUT_RADIUS 0\.0$/m);
+  });
+
+  it('escapeHeight falls back to Escape Time for inverse-direction escapes too', () => {
+    const plugin = compileV2('V2InvH', '4 < |z|', 'v2-inv-h');
+    const shader = assembleShader({ formulaId: plugin.id, ...COMBO_BASE }, plugin);
+    // Both escape sites must honor the Smooth-Unavailable fallback.
+    const escapeHeightBlock = shader.slice(shader.indexOf('float escapeHeight'), shader.indexOf('vec3 applyLighting'));
+    expect(escapeHeightBlock).toContain('float(i) / float(u_maxIterations)');
+    expect(escapeHeightBlock).toContain('#ifdef ESCAPE_INVERSE_DIRECTION');
+  });
+
+  it('v1/v2 variants of the same formula id never share a shader cache key', () => {
+    const v1 = compileFrm(`Same {\ninit:\n  z = 0\nloop:\n  z = z^2 + c\nbailout:\n  |z| < 4\n}`, 'same-id', 1);
+    const v2 = compileFrm(`Same {\ninit:\n  z = 0\nloop:\n  z = z^2 + c\nbailout:\n  |z| < 4\n}`, 'same-id', 2);
+    expect(v1.success && v2.success).toBe(true);
+    const combo: PluginCombination = { formulaId: 'same-id', ...COMBO_BASE };
+    const keyV1 = makeCacheKey(combo, v1.plugin);
+    const keyV2 = makeCacheKey(combo, v2.plugin);
+    expect(keyV1).not.toBe(keyV2);
+    expect(keyV2).toContain('bo:C1:<:4');
+    // A descriptor-less formula keeps the legacy key shape byte-for-byte.
+    expect(keyV1).toBe('same-id|smooth|black|none');
   });
 });
