@@ -36,13 +36,14 @@ function useFormulas() {
   const [isReady, setIsReady] = useState(false);
 
   useEffect(() => {
-    // Small delay to ensure plugins are registered
-    const timeout = setTimeout(() => {
+    // Sync immediately, then follow registry changes so late-registered
+    // plugins appear without a one-shot timing guess.
+    const sync = () => {
       setFormulas(pluginRegistry.listFormulas());
       setIsReady(true);
-    }, 50);
-
-    return () => clearTimeout(timeout);
+    };
+    sync();
+    return pluginRegistry.subscribeToFormulaEvents(sync);
   }, []);
 
   return { formulas, isReady };

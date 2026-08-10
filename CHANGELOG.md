@@ -1,5 +1,19 @@
 # Changelog
 
+## 0.4.17 - 2026-08-09
+
+Five-language international expansion: the full UI and content surface now ships in Portuguese, Korean, Russian, Spanish, and French alongside English and Chinese.
+
+### Added
+
+- Added pt/ko/ru/es/fr UI translations and localized content across Explore, Gallery, Formula Atlas, About, privacy, terms, and community rules.
+- Added localized `og:locale`, HTML `lang`, and gallery date formatting for every route.
+
+### Fixed
+
+- Fixed the Explore tab overflow on localized navigation bars.
+- Fixed `og:locale` and `lang` drifting from the active locale on localized routes.
+
 ## 0.4.16 - 2026-08-04
 
 Cloud-first creation: accounts stop being an optional sync layer and become the single place where artworks and formulas live. Rendering stays entirely in the browser; creating needs no account; saving does.

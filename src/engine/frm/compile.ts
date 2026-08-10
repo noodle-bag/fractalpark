@@ -114,7 +114,7 @@ function compileFrmUncached(source: string, id?: string): CompileResult {
       category: 'formula',
       name: ast.name,
       source: 'frm',
-      supportsPower: false,
+      supportsPower: false, // DEPRECATED per ADR-0007: capability resolves from AST/dataflow, not this flag.
       supportsJulia: true,
       bailout,
       uniforms: pluginUniforms,

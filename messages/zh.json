@@ -34,7 +34,6 @@
       "confirmWithdraw": "永久撤回这件作品？它会立刻从社区消失且无法恢复。已经授予既有二创的许可继续有效。",
       "publish": "发布",
       "withdraw": "撤回",
-      "withdrawn": "已撤回",
       "backupLabel": "备份邮件",
       "backupModes": {
         "off": "关闭",
