@@ -440,7 +440,7 @@ export function lowerClassicEntryToNative(entrySource: string): LoweredClassicEn
   // Normalize it here so the strict v2 descriptor contract (which only
   // accepts |z|, |real(z)|, or real(z)) can see the intended form.
   if (/^z\s*(<=|>=|<|>)/.test(bailoutText)) {
-    bailoutText = bailoutText.replace(/^z\s*(?=(?:<=|>=|<|>))/, '|z| ');
+    bailoutText = bailoutText.replace(/^z\s*(?=(?:<=|>=|<|>))/, '|z|');
     notes.push({
       kind: 'bailout-magnitude-normalized',
       line: bailoutLine,
