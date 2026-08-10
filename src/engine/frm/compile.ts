@@ -194,14 +194,16 @@ function compileFrmUncached(
     let c2ThresholdGlsl: string | undefined;
     if (bailoutDescriptor?.kind === 'C2') {
       c2ThresholdGlsl = generateC2ThresholdGLSL(bailoutDescriptor, ast);
-      // Parameters are complex (vec2) uniforms and the UI exposes their
-      // imaginary components, but the escape test consumes the threshold's
-      // real part only (.x coercion). A nonzero imaginary edit would be
-      // silently dropped — say so instead of staying quiet.
+      // Parameters are complex (vec2) uniforms whose imaginary components
+      // feed the expression's real result too (complexMul ac-bd), but the
+      // escape test keeps only the threshold's FINAL real part (.x
+      // coercion). Say so instead of staying quiet — and without claiming
+      // each parameter's imaginary part is dropped, which is wrong.
       if (bailoutDescriptor.params.length > 0) {
         warnings.push(
-          `C2 bailout threshold uses its real part only: imaginary components of parameter(s) ` +
-            `${bailoutDescriptor.params.join(', ')} are ignored in the escape test (.x coercion).`,
+          `C2 bailout threshold coerces to real (.x): the escape test uses only the real part of ` +
+            `the threshold expression; its final imaginary component (computed over parameter(s) ` +
+            `${bailoutDescriptor.params.join(', ')}) is discarded.`,
         );
       }
     }

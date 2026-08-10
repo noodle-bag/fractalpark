@@ -310,7 +310,7 @@ describe('assembleShader: C4-R projection escapes and after-step timing', () => 
       2,
     );
     expect(withParams.success).toBe(true);
-    expect(withParams.warnings.some((w) => w.includes('real part only'))).toBe(true);
+    expect(withParams.warnings.some((w) => w.includes('coerces to real'))).toBe(true);
     expect(withParams.warnings.some((w) => w.includes('p1') && w.includes('p2'))).toBe(true);
 
     const constOnly = compileFrm(
@@ -320,6 +320,6 @@ describe('assembleShader: C4-R projection escapes and after-step timing', () => 
     );
     expect(constOnly.success).toBe(true);
     expect(constOnly.bailoutDescriptor?.kind).toBe('C2');
-    expect(constOnly.warnings.some((w) => w.includes('real part only'))).toBe(false);
+    expect(constOnly.warnings.some((w) => w.includes('coerces to real'))).toBe(false);
   });
 });
