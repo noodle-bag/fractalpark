@@ -34,7 +34,9 @@
  *   starting with the `bailout` keyword as a section header);
  * - `c = pixel` is removed: in the native model `c` already equals the
  *   pixel for Mandelbrot mode (codegen: `pixel = u_isJulia ? point : c`),
- *   so the classic identity assignment is redundant;
+ *   so the classic identity assignment is redundant there. Julia-mode
+ *   pixel-binding has no native equivalent; entries relying on it classify
+ *   Read-only downstream and the removal is always recorded as a note;
  * - chained assignments `a = b = expr` are split into ordered single
  *   assignments (`b = expr`, `a = b`) so the native assignment grammar can
  *   express them;
@@ -136,13 +138,23 @@ function isFullyParenWrapped(text: string): boolean {
 
 /** True when the expression is a top-level assignment (`ident = ...`). */
 function isAssignmentExpr(text: string): boolean {
-  return /^[a-zA-Z_][a-zA-Z0-9_]*\s*=/.test(text);
+  const m = /^[a-zA-Z_][a-zA-Z0-9_]*\s*=/.exec(text);
+  if (!m) return false;
+  // The matched `=` must be a plain assignment operator, not the start of
+  // `==` (equality) — and the character before it (if any) must not turn it
+  // into `<=`, `>=`, `!=` either (defensive; the identifier prefix normally
+  // prevents this).
+  const eqIndex = m[0].length - 1;
+  if (text[eqIndex + 1] === '=') return false;
+  if (eqIndex > 0 && '=!<>'.includes(text[eqIndex - 1]) && !/\s/.test(text[eqIndex - 1])) return false;
+  return true;
 }
 
 /**
  * Split a chained assignment `a = b = expr` into ordered single
- * assignments: `b = expr`, `a = b`. Only top-level `=` (outside
- * parentheses) participates; a plain assignment is returned unchanged.
+ * assignments: `b = expr`, `a = b`. Only top-level assignment `=`
+ * (outside parentheses, not part of `==`/`!=`/`<=`/`>=`) participates; a
+ * plain assignment is returned unchanged.
  */
 function splitChainedAssignment(text: string): string[] {
   if (!isAssignmentExpr(text)) return [text];
@@ -154,6 +166,10 @@ function splitChainedAssignment(text: string): string[] {
     if (ch === '(') depth++;
     else if (ch === ')') depth--;
     else if (ch === '=' && depth === 0) {
+      const prev = text[i - 1];
+      const next = text[i + 1];
+      // Skip comparison operators: ==, <=, >=, !=
+      if (next === '=' || prev === '=' || prev === '!' || prev === '<' || prev === '>') continue;
       parts.push(text.slice(start, i).trim());
       start = i + 1;
     }
@@ -396,7 +412,9 @@ export function lowerClassicEntryToNative(entrySource: string): LoweredClassicEn
     let depth = 0;
     let lastTopLevel: BodyToken | null = null;
     for (const token of loopTokens) {
-      if (token.type === 'if' || token.type === 'elseif') depth++;
+      // `elseif` stays at the same nesting level — only `if` opens a new
+      // block and `endif` closes one.
+      if (token.type === 'if') depth++;
       else if (token.type === 'endif') depth = Math.max(0, depth - 1);
       else if (token.type === 'expr' && depth === 0) lastTopLevel = token;
     }
@@ -453,7 +471,10 @@ export function lowerClassicEntryToNative(entrySource: string): LoweredClassicEn
         notes.push({
           kind: 'c-pixel-assignment-removed',
           line: token.line,
-          message: '`c = pixel` removed: native `c` already equals the pixel in Mandelbrot mode',
+          message:
+            '`c = pixel` removed: redundant in Mandelbrot mode (native `c` already equals the ' +
+            'pixel). Julia-mode pixel-binding has no native equivalent — entries relying on it ' +
+            'are expected to classify Read-only downstream.',
         });
         continue;
       }
@@ -485,27 +506,30 @@ export function lowerClassicEntryToNative(entrySource: string): LoweredClassicEn
   };
 
   push(`${name} {`, 1);
+  // Structural tokens must be lowered identically in both sections — an
+  // `if` inside the init section is valid classic syntax.
+  const emitStmt = (stmt: Stmt) => {
+    if (stmt.kind === 'if') {
+      const cond = stmt.text;
+      push(`  if ${isFullyParenWrapped(cond) ? cond : `(${cond})`}`, stmt.line);
+    } else if (stmt.kind === 'elseif') {
+      const cond = stmt.text;
+      push(`  elseif ${isFullyParenWrapped(cond) ? cond : `(${cond})`}`, stmt.line);
+    } else if (stmt.kind === 'else') {
+      push('  else', stmt.line);
+    } else if (stmt.kind === 'endif') {
+      push('  endif', stmt.line);
+    } else {
+      push(`  ${stmt.text}`, stmt.line);
+    }
+  };
   if (initStmts.length > 0) {
     push('init:', walk.colonLine || initStmts[0].line);
-    for (const stmt of initStmts) push(`  ${stmt.text}`, stmt.line);
+    for (const stmt of initStmts) emitStmt(stmt);
   }
   if (loopStmts.length > 0) {
     push('loop:', loopStmts[0].line);
-    for (const stmt of loopStmts) {
-      if (stmt.kind === 'if') {
-        const cond = stmt.text;
-        push(`  if ${isFullyParenWrapped(cond) ? cond : `(${cond})`}`, stmt.line);
-      } else if (stmt.kind === 'elseif') {
-        const cond = stmt.text;
-        push(`  elseif ${isFullyParenWrapped(cond) ? cond : `(${cond})`}`, stmt.line);
-      } else if (stmt.kind === 'else') {
-        push('  else', stmt.line);
-      } else if (stmt.kind === 'endif') {
-        push('  endif', stmt.line);
-      } else {
-        push(`  ${stmt.text}`, stmt.line);
-      }
-    }
+    for (const stmt of loopStmts) emitStmt(stmt);
   }
   push('bailout:', bailoutLine);
   push(`  ${bailoutText}`, bailoutLine);

@@ -116,6 +116,36 @@ describe('lowerClassicEntryToNative: header and text hygiene', () => {
       expect(line).toBeLessThanOrEqual(5); // fixture spans 5 classic lines
     }
   });
+
+  it('extracts an equality predicate instead of corrupting it as an assignment', () => {
+    const { native } = lowerClassicEntryToNative('Eq {\n\tz=0:\n\tz=z^2+c\n\tz == 0\n}');
+    expect(native).toContain('bailout:\n  z == 0');
+    // The equality must not be split into assignments.
+    expect(native).not.toContain('z = 0\n  =');
+  });
+
+  it('keeps ELSEIF at the same nesting level so the trailing predicate is found', () => {
+    const { native, notes } = lowerClassicEntryToNative(
+      'Elseif {\n\tz=0:\n\tIF (|z| > 8)\n\t  z = z^2 + c\n\tELSEIF (|z| > 2)\n\t  z = z + c\n\tENDIF\n\t|z| < 4\n}',
+    );
+    expect(native).toContain('bailout:\n  |z| < 4');
+    expect(kinds(notes)).not.toContain('default-bailout');
+  });
+
+  it('lowers IF blocks inside the init section identically to the loop section', () => {
+    const { native } = lowerClassicEntryToNative(
+      'InitIf {\n\tIF (p1)\n\t  z = p1\n\tELSE\n\t  z = 0\n\tENDIF\n\tc = pixel:\n\tz = z^2 + c\n\t|z| < 4\n}',
+    );
+    expect(native).toMatch(/init:\n  IF \(p1\)/i);
+    expect(native).toMatch(/ELSE/i);
+    expect(native).toMatch(/ENDIF/i);
+  });
+
+  it('records the Julia-mode caveat when removing c = pixel', () => {
+    const { notes } = lowerClassicEntryToNative('CIdent {\n\tz=0, c=pixel:\n\tz=z^2+c\n\t|z|<4\n}');
+    const note = notes.find((n) => n.kind === 'c-pixel-assignment-removed');
+    expect(note?.message).toContain('Julia');
+  });
 });
 
 describe('compileClassicFrmEntry: round-trip through production compiler', () => {
