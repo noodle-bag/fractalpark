@@ -20,7 +20,7 @@ import {
   selectFrmEntry,
   type FrmScanResult,
 } from '../engine/frm/scanner';
-import { compileFrmEntry, compileFrm } from '../engine/frm/compile';
+import { compileFrmEntry, compileFrmRange, compileFrm } from '../engine/frm/compile';
 import { frmParserCache } from '../engine/frm/cache';
 
 const fixture = (name: string): string =>
@@ -321,5 +321,79 @@ describe('compileFrm: legacy behavior untouched', () => {
     const result = compileFrm(fixture('multi-entry.frm'));
     expect(result.success).toBe(true);
     expect(result.plugin?.name).toBe('ScanMandel');
+  });
+});
+
+describe('entry contract hardening (Codex review)', () => {
+  beforeEach(() => {
+    frmParserCache.clear();
+  });
+
+  it('reports preamble content as non-blocking and still compiles the entry', () => {
+    const source = `From: someone@example.com\nSubject: formulas\n\nScanMandel {\ninit:\n  z = 0\nloop:\n  z = z^2 + c\nbailout:\n  |z| < 4\n}\n`;
+    const scan = scanFrmEntries(source);
+    expect(scan.entries).toHaveLength(1);
+    expect(scan.diagnostics.map((d) => d.code)).toEqual(['preamble-content']);
+
+    const result = compileFrmEntry(source, 'ScanMandel');
+    expect(result.selectionError).toBeUndefined();
+    expect(result.success).toBe(true);
+  });
+
+  it('rejects compilation when trailing tokens are present (no silent slicing)', () => {
+    const source = fixture('trailing-tokens.frm');
+    const result = compileFrmEntry(source, 'ScanMandel');
+    expect(result.success).toBe(false);
+    expect(result.selectionError?.code).toBe('invalid-source');
+  });
+
+  it('rejects compilation when duplicate names are present', () => {
+    const result = compileFrmEntry(fixture('duplicate-names.frm'), 'Dup');
+    expect(result.success).toBe(false);
+    expect(result.selectionError?.code).toBe('invalid-source');
+  });
+
+  it('rejects compilation when an entry boundary is broken', () => {
+    const result = compileFrmEntry(fixture('unclosed-brace.frm'), 'Broken');
+    expect(result.success).toBe(false);
+    expect(result.selectionError?.code).toBe('invalid-source');
+  });
+
+  it('keeps entry keys unique when a literal name collides with a generated suffix', () => {
+    const source = [
+      'A#2 {\ninit:\n  z = 0\nloop:\n  z = z^2 + c\nbailout:\n  |z| < 4\n}',
+      'A {\ninit:\n  z = 0\nloop:\n  z = z^2 + c\nbailout:\n  |z| < 4\n}',
+      'A {\ninit:\n  z = 1\nloop:\n  z = z^2 + c\nbailout:\n  |z| < 4\n}',
+    ].join('\n\n');
+    const scan = scanFrmEntries(source);
+    const keys = scan.entries.map((e) => e.key);
+    expect(new Set(keys).size).toBe(3);
+    // Every entry remains selectable by its unique key.
+    for (const key of keys) {
+      expect(selectFrmEntry(scan, key)?.key).toBe(key);
+    }
+  });
+});
+
+describe('compileFrmRange: range-based selection (spec §2)', () => {
+  beforeEach(() => {
+    frmParserCache.clear();
+  });
+
+  it('compiles the entry matching an exact scanner range', () => {
+    const source = fixture('multi-entry.frm');
+    const scan = scanFrmEntries(source);
+    const target = scan.entries[1];
+    const result = compileFrmRange(source, target.range);
+    expect(result.selectionError).toBeUndefined();
+    expect(result.success).toBe(true);
+    expect(result.entry?.key).toBe(target.key);
+  });
+
+  it('rejects arbitrary slices that do not match a scanned entry range', () => {
+    const source = fixture('multi-entry.frm');
+    const result = compileFrmRange(source, { startOffset: 0, endOffset: 12 });
+    expect(result.success).toBe(false);
+    expect(result.selectionError?.code).toBe('unknown-range');
   });
 });

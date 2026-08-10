@@ -49,8 +49,17 @@ export interface FrmEntry {
 export type FrmScanDiagnosticCode =
   | 'no-entries'
   | 'duplicate-name'
+  | 'preamble-content'
   | 'trailing-tokens'
   | 'unclosed-brace';
+
+/** Diagnostic codes that must block entry compilation (spec §2). */
+export const FRM_BLOCKING_DIAGNOSTICS: ReadonlySet<FrmScanDiagnosticCode> = new Set<FrmScanDiagnosticCode>([
+  'no-entries',
+  'duplicate-name',
+  'trailing-tokens',
+  'unclosed-brace',
+]);
 
 /** Structured scanner finding; consumers reject or annotate from these. */
 export interface FrmScanDiagnostic {
@@ -169,14 +178,20 @@ export function scanFrmEntries(source: string): FrmScanResult {
   const entries: FrmEntry[] = [];
   const diagnostics: FrmScanDiagnostic[] = [];
   const nameCounts = new Map<string, number>();
+  const usedKeys = new Set<string>();
   const n = source.length;
 
   let trailingRegion: { start: number; end: number } | null = null;
   const closeTrailingRegion = () => {
     if (trailingRegion) {
+      // Content before the first entry is a preamble (annotated, not
+      // blocking); content after any entry is trailing tokens (blocking).
+      const isPreamble = entries.length === 0;
       diagnostics.push({
-        code: 'trailing-tokens',
-        message: 'Non-entry content outside any formula entry',
+        code: isPreamble ? 'preamble-content' : 'trailing-tokens',
+        message: isPreamble
+          ? 'Non-entry content before the first formula entry'
+          : 'Non-entry content outside any formula entry',
         offset: trailingRegion.start,
         endOffset: trailingRegion.end,
       });
@@ -224,7 +239,16 @@ export function scanFrmEntries(source: string): FrmScanResult {
 
     const count = (nameCounts.get(header.name) ?? 0) + 1;
     nameCounts.set(header.name, count);
-    const key = count === 1 ? header.name : `${header.name}#${count}`;
+    // Keys must stay unique even when a literal name collides with a
+    // generated suffix (e.g. entries `A#2`, `A`, `A`): bump the counter
+    // until the candidate key is unused.
+    let key = count === 1 ? header.name : `${header.name}#${count}`;
+    let suffix = count;
+    while (usedKeys.has(key)) {
+      suffix += 1;
+      key = `${header.name}#${suffix}`;
+    }
+    usedKeys.add(key);
     if (count > 1) {
       diagnostics.push({
         code: 'duplicate-name',

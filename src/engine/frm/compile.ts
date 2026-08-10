@@ -14,7 +14,7 @@ import { validate } from './validator';
 import { generateGLSL } from './codegen';
 import { FRMSourceMap } from './sourcemap';
 import { frmParserCache } from './cache';
-import { scanFrmEntries, selectFrmEntry, type FrmEntry } from './scanner';
+import { scanFrmEntries, selectFrmEntry, FRM_BLOCKING_DIAGNOSTICS, type FrmEntry, type FrmSourceRange } from './scanner';
 
 export interface CompileResult {
   success: boolean;
@@ -217,7 +217,12 @@ export function compileFrmDetailed(source: string, id?: string): DetailedCompile
   };
 }
 
-export type FrmSelectionErrorCode = 'no-entries' | 'selection-required' | 'unknown-entry';
+export type FrmSelectionErrorCode =
+  | 'no-entries'
+  | 'selection-required'
+  | 'unknown-entry'
+  | 'unknown-range'
+  | 'invalid-source';
 
 /** Structured selection failure for `compileFrmEntry`. */
 export interface FrmSelectionError {
@@ -250,6 +255,67 @@ export interface EntryCompileResult extends DetailedCompileResult {
  * `compileFrm` itself is untouched: its legacy whole-source behavior is
  * preserved exactly.
  */
+function selectionFailure(
+  code: FrmSelectionErrorCode,
+  message: string,
+  entryKeys: string[],
+): EntryCompileResult {
+  return {
+    success: false,
+    errors: [message],
+    warnings: [],
+    lexerErrors: [],
+    parseErrors: [],
+    selectionError: { code, message, entryKeys },
+  };
+}
+
+/**
+ * Compile the entry matching an exact scanner-produced source range (spec
+ * §2's range-based selection path). The range must equal one scanned
+ * entry's full range — arbitrary slices are rejected so callers cannot
+ * bypass the authoritative entry contract.
+ */
+export function compileFrmRange(source: string, range: FrmSourceRange, id?: string): EntryCompileResult {
+  const scan = scanFrmEntries(source);
+  const entry = scan.entries.find(
+    (e) => e.range.startOffset === range.startOffset && e.range.endOffset === range.endOffset,
+  );
+  if (!entry) {
+    const entryKeys = scan.entries.map((e) => e.key);
+    return selectionFailure(
+      'unknown-range',
+      `No formula entry spans exactly [${range.startOffset}, ${range.endOffset}); ` +
+        'ranges must come from scanFrmEntries output',
+      entryKeys,
+    );
+  }
+  return compileSelectedEntry(source, scan, entry, id);
+}
+
+function compileSelectedEntry(
+  source: string,
+  scan: ReturnType<typeof scanFrmEntries>,
+  entry: FrmEntry,
+  id?: string,
+): EntryCompileResult {
+  // Blocking diagnostics (trailing tokens, duplicate names, broken
+  // boundaries) must reject compilation consistently across consumers —
+  // slicing the entry out must not let invalid sources silently compile.
+  const blocking = scan.diagnostics.filter((d) => FRM_BLOCKING_DIAGNOSTICS.has(d.code));
+  if (blocking.length > 0) {
+    const codes = blocking.map((d) => d.code).join(', ');
+    return selectionFailure(
+      'invalid-source',
+      `Source has blocking diagnostics (${codes}); resolve them before compiling an entry`,
+      scan.entries.map((e) => e.key),
+    );
+  }
+  const entrySource = source.slice(entry.range.startOffset, entry.range.endOffset);
+  const result = compileFrmDetailed(entrySource, id);
+  return { ...result, entry };
+}
+
 export function compileFrmEntry(source: string, entryKey?: string, id?: string): EntryCompileResult {
   const scan = scanFrmEntries(source);
   const entry = selectFrmEntry(scan, entryKey);
@@ -270,18 +336,8 @@ export function compileFrmEntry(source: string, entryKey?: string, id?: string):
       code = 'unknown-entry';
       message = `No formula entry with key "${entryKey}" (available keys: ${entryKeys.join(', ')})`;
     }
-    const selectionError: FrmSelectionError = { code, message, entryKeys };
-    return {
-      success: false,
-      errors: [message],
-      warnings: [],
-      lexerErrors: [],
-      parseErrors: [],
-      selectionError,
-    };
+    return selectionFailure(code, message, entryKeys);
   }
 
-  const entrySource = source.slice(entry.range.startOffset, entry.range.endOffset);
-  const result = compileFrmDetailed(entrySource, id);
-  return { ...result, entry };
+  return compileSelectedEntry(source, scan, entry, id);
 }
