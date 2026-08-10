@@ -40,6 +40,13 @@ export interface FormulaPlugin extends FractalPlugin {
    * the ESCAPE_AFTER_STEP branch. Legacy/v1 rendering is unchanged.
    */
   afterStepTiming?: boolean;
+  /**
+   * Strict-v2 C2 parameterized radial: the threshold expression serialized
+   * to GLSL through the compiler's own expression pipeline (parameters map
+   * to u_p1…u_p5 uniforms, so edits take effect without recompilation).
+   * Present only when the plugin carries a C2 bailoutDescriptor.
+   */
+  c2ThresholdGlsl?: string;
   supportsPower?: boolean;  // DEPRECATED: not consumed by any current consumer; Smooth capability resolves from AST/dataflow per ADR-0007. Retired in the coloring-capability slice.
   supportsJulia?: boolean;  // default true
   family?: string;          // grouping: 'classic' | 'newton' | 'magnet' | 'phoenix' | 'exotic'

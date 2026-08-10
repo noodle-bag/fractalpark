@@ -10,6 +10,7 @@ import type { VarType } from './type-system';
 import { collectVariables, inferType } from './type-system';
 import { FRMSourceMap } from './sourcemap';
 import { FN_SLOT_OPTIONS, isFnSlotName, isParameterName } from './builtins';
+import type { BailoutDescriptorC2 } from './bailout-descriptor';
 
 type CodeGenUniformType = 'float' | 'int' | 'vec2';
 
@@ -658,4 +659,26 @@ function isDefaultInit(initBlock: ASTNode[]): boolean {
   if (stmt.value.type === 'number' && stmt.value.value === 0) return true;
   if (stmt.value.type === 'complex' && stmt.value.real === 0 && stmt.value.imag === 0) return true;
   return false;
+}
+
+/**
+ * Serialize a verified C2 threshold AST to GLSL through the SAME expression
+ * pipeline as the formula body (spec §4: consumers must not re-serialize in
+ * a divergent dialect). Parameter identifiers map to their uniforms
+ * (u_p1…u_p5), so parameter edits take effect without recompilation.
+ */
+export function generateC2ThresholdGLSL(
+  descriptor: BailoutDescriptorC2,
+  ast: FrmAST,
+): string {
+  const variableTypes = collectVariables(ast.initBlock, ast.loopBlock);
+  const ctx: CodeGenContext = {
+    getVariableType: (name) => variableTypes.get(name),
+    getNodeType: (node) => inferType(node, { getVariableType: (name) => variableTypes.get(name) }),
+    sourceMap: new FRMSourceMap(),
+  };
+  // The expression coerces to real through the type system's standard path:
+  // complex parameter expressions collapse to their real part (`.x`), which
+  // is exact for real-valued parameters (imag = 0).
+  return generateExpression(descriptor.thresholdNode, ctx, REAL_TYPE);
 }

@@ -227,4 +227,42 @@ describe('assembleShader: C4-R projection escapes and after-step timing', () => 
     expect(result.bailoutDescriptor?.kind).toBe('C2');
     expect(result.plugin?.bailout).toBe(16);
   });
+
+  it('C2 thresholds inline as uniform-driven GLSL (parameter edits need no recompile)', () => {
+    const result = compileFrm(
+      `C2Inline {\ninit:\n  z = 0\nloop:\n  z = z^2 + c\nbailout:\n  |z| < p1 * p2 + 1\n}`,
+      'c2-inline',
+      2,
+    );
+    expect(result.success).toBe(true);
+    // Serialized through the compiler's own expression pipeline.
+    expect(result.plugin?.c2ThresholdGlsl).toBeDefined();
+    expect(result.plugin?.c2ThresholdGlsl).toContain('u_p1');
+    expect(result.plugin?.c2ThresholdGlsl).toContain('u_p2');
+
+    const shader = assembleShader({ formulaId: 'c2-inline', ...COMBO_BASE }, result.plugin);
+    expect(shader).toMatch(/^#define ESCAPE_C2$/m);
+    // Escape negates the continue predicate over the squared expression.
+    // Parameters are complex-typed in the FRM type system; the expression
+    // coerces to real (.x) — exact for real-valued parameters (imag = 0).
+    expect(shader).toContain('#define C2_ESCAPE_CHECK(zz) ((zz) >= (');
+    expect(shader).toContain('complexMul(u_p1, u_p2)');
+    expect(shader).toContain(').x)');
+    // The threshold expression is uniform-driven: uniforms must be declared.
+    expect(shader).toContain('uniform vec2 u_p1;');
+    expect(shader).toContain('uniform vec2 u_p2;');
+  });
+
+  it('C2 inverse direction negates the escape comparison', () => {
+    const result = compileFrm(
+      `C2Inv {\ninit:\n  z = 0\nloop:\n  z = z^2 + c\nbailout:\n  |z| > p1\n}`,
+      'c2-inv',
+      2,
+    );
+    expect(result.success).toBe(true);
+    const shader = assembleShader({ formulaId: 'c2-inv', ...COMBO_BASE }, result.plugin);
+    // continue while |z| > p1 → escape when zz <= p1² (real part squared).
+    expect(shader).toContain('#define C2_ESCAPE_CHECK(zz) ((zz) <= (');
+    expect(shader).toContain('(u_p1).x');
+  });
 });

@@ -59,6 +59,16 @@ export function assembleShader(
     if (bailoutDescriptor.op === '<=' || bailoutDescriptor.op === '>=') {
       defines.push('#define BAILOUT_INCLUSIVE');
     }
+  } else if (bailoutDescriptor?.kind === 'C2' && formula.c2ThresholdGlsl) {
+    // C2 parameterized radial: the threshold is a GLSL expression over
+    // parameter uniforms (u_p1…u_p5) — parameter edits take effect without
+    // recompilation. Escape is the negated continue predicate over the
+    // expression's square (zz vs magnitude²).
+    const escapeOp = { '<': '>=', '<=': '>', '>': '<=', '>=': '<' }[bailoutDescriptor.op];
+    defines.push('#define ESCAPE_C2');
+    defines.push(
+      `#define C2_ESCAPE_CHECK(zz) ((zz) ${escapeOp} ((${formula.c2ThresholdGlsl}) * (${formula.c2ThresholdGlsl})))`,
+    );
   } else if (bailoutDescriptor?.kind === 'C4R') {
     // C4-R real projection: escape is the negation of the continue
     // predicate over z.x (abs-real uses abs(z.x)). The assembler injects

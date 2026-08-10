@@ -9,6 +9,9 @@ precision highp float;
 #if defined(ESCAPE_C4R)
   // C4R_ESCAPE_CHECK(z) is fully injected by the assembler.
   #define ESCAPE_CHECK(z, zz) C4R_ESCAPE_CHECK(z)
+#elif defined(ESCAPE_C2)
+  // C2_ESCAPE_CHECK(zz) is fully injected by the assembler (uniform-driven).
+  #define ESCAPE_CHECK(z, zz) C2_ESCAPE_CHECK(zz)
 #elif defined(ESCAPE_INVERSE_DIRECTION) && defined(BAILOUT_INCLUSIVE)
   #define ESCAPE_CHECK(z, zz) ((zz) <= BAILOUT_RADIUS)
 #elif defined(ESCAPE_INVERSE_DIRECTION)

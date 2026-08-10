@@ -11,7 +11,7 @@ import type { FormulaPlugin } from '../plugins/types';
 import { tokenize, formatLexerErrors, type LexerError } from './lexer';
 import { parse, formatParseErrors, type ParseError } from './parser';
 import { validate } from './validator';
-import { generateGLSL } from './codegen';
+import { generateC2ThresholdGLSL, generateGLSL } from './codegen';
 import {
   evaluateC2Threshold,
   extractBailoutDescriptor,
@@ -188,6 +188,14 @@ function compileFrmUncached(
       }
     }
 
+    // C2 GLSL inlining: serialize the verified threshold AST through the
+    // compiler's own expression pipeline. Parameters map to u_p* uniforms —
+    // parameter edits update the uniform only, never recompile.
+    let c2ThresholdGlsl: string | undefined;
+    if (bailoutDescriptor?.kind === 'C2') {
+      c2ThresholdGlsl = generateC2ThresholdGLSL(bailoutDescriptor, ast);
+    }
+
     // Step 5: Create FormulaPlugin
     const pluginUniforms = uniforms.map(u => ({
       name: u.name,
@@ -210,6 +218,7 @@ function compileFrmUncached(
       ...(dialect === 'fractint-compat' && semanticsVersion === 2
         ? { afterStepTiming: true }
         : {}),
+      ...(c2ThresholdGlsl ? { c2ThresholdGlsl } : {}),
       uniforms: pluginUniforms,
       glsl,
       initGlsl,
