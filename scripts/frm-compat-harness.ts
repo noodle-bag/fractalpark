@@ -75,7 +75,8 @@ function collectCorpus(dir: string): SourceItem[] {
       const full = join(current, name);
       if (statSync(full).isDirectory()) {
         walk(full);
-      } else if (name.toLowerCase().endsWith('.frm')) {
+      } else if (name.toLowerCase().endsWith('.frm') || (process.env.FRACTALPARK_FRM_FULL === '1' && name.toLowerCase().endsWith('.par'))) {
+        // Full mode also ingests .par files (classic multi-entry corpus).
         const source = readFileSync(full, 'utf8');
         items.push({
           contentHash: sha256(source),
@@ -142,6 +143,97 @@ function runB94RegistryControls(): RegistryControlEvidence[] {
   });
 }
 
+interface FullBatchEntryResult {
+  /** contentHash16 of the source file + entry key — opaque, no corpus text. */
+  entryId: string;
+  v1: { success: boolean };
+  v2: {
+    success: boolean;
+    descriptorKind?: 'C1' | 'C2' | 'C4R';
+    rejectReason?: string;
+    afterStepTiming?: boolean;
+  };
+}
+
+/**
+ * Full-corpus batch mode (FRACTALPARK_FRM_FULL=1, v0.4.18 Slice 4
+ * mechanism layer): every entry of every corpus source is compiled through
+ * the classic frontend twice — v1 (frozen baseline) and v2 (strict) — and
+ * the results are aggregated WITHOUT writing corpus text or paths into the
+ * report. This is compile-level evidence only: orbit/track and visual
+ * verification remain their own gates.
+ */
+function runFullBatch(corpus: SourceItem[]): {
+  entries: FullBatchEntryResult[];
+  aggregate: {
+    totalEntries: number;
+    scanFailed: number;
+    v1: { success: number; failed: number };
+    v2: { success: number; failed: number };
+    v2Descriptor: { C1: number; C2: number; C4R: number };
+    v2Rejects: Record<string, number>;
+    v1PassV2Reject: number;
+    afterStepTiming: number;
+  };
+} {
+  const entries: FullBatchEntryResult[] = [];
+  const aggregate = {
+    totalEntries: 0,
+    scanFailed: 0,
+    v1: { success: 0, failed: 0 },
+    v2: { success: 0, failed: 0 },
+    v2Descriptor: { C1: 0, C2: 0, C4R: 0 },
+    v2Rejects: {} as Record<string, number>,
+    v1PassV2Reject: 0,
+    afterStepTiming: 0,
+  };
+
+  for (const item of corpus) {
+    const scan = scanFrmEntries(item.source);
+    if (scan.entries.length === 0) {
+      aggregate.scanFailed += 1;
+      continue;
+    }
+    for (const entry of scan.entries) {
+      aggregate.totalEntries += 1;
+      const id = `batch-${item.contentHash.slice(0, 16)}`;
+      const v1 = compileClassicFrmEntry(item.source, entry.key, id, 1);
+      const v2 = compileClassicFrmEntry(item.source, entry.key, id, 2);
+
+      const descriptor = v2.plugin?.bailoutDescriptor;
+      const rejectReason = !v2.success
+        ? (v2.errors.join('\n').match(/\[(unknown-magnitude-form|threshold-not-loop-invariant|unknown-predicate|chained-logical)\]/)?.[1] ?? 'other')
+        : undefined;
+
+      const result: FullBatchEntryResult = {
+        entryId: `${item.contentHash.slice(0, 16)}:${entry.key}`,
+        v1: { success: v1.success },
+        v2: {
+          success: v2.success,
+          ...(descriptor ? { descriptorKind: descriptor.kind } : {}),
+          ...(rejectReason ? { rejectReason } : {}),
+          ...(v2.plugin?.afterStepTiming ? { afterStepTiming: true } : {}),
+        },
+      };
+      entries.push(result);
+
+      if (v1.success) aggregate.v1.success += 1;
+      else aggregate.v1.failed += 1;
+      if (v2.success) {
+        aggregate.v2.success += 1;
+        if (descriptor) aggregate.v2Descriptor[descriptor.kind] += 1;
+        if (v2.plugin?.afterStepTiming) aggregate.afterStepTiming += 1;
+      } else {
+        aggregate.v2.failed += 1;
+        const reason = rejectReason ?? 'other';
+        aggregate.v2Rejects[reason] = (aggregate.v2Rejects[reason] ?? 0) + 1;
+        if (v1.success) aggregate.v1PassV2Reject += 1;
+      }
+    }
+  }
+  return { entries, aggregate };
+}
+
 function main() {
   const startedAll = performance.now();
   const compilerCommit = execSync('git rev-parse HEAD').toString().trim();
@@ -178,13 +270,19 @@ function main() {
   // Private corpus sentinels (Level 2 shape).
   let corpusSnapshotHash: string | null = null;
   let corpusFileCount = 0;
+  let fullBatch: ReturnType<typeof runFullBatch> | null = null;
   if (corpusDir) {
     const corpus = collectCorpus(corpusDir);
     corpusFileCount = corpus.length;
     corpusSnapshotHash = sha256(corpus.map((item) => item.contentHash).sort().join('\n'));
-    const { coverage, stress } = selectSentinels(corpus);
-    for (const item of coverage) record(item, 'coverage', aggregate.coverage);
-    for (const item of stress) record(item, 'predicted-stress', aggregate.predictedStress);
+    if (process.env.FRACTALPARK_FRM_FULL === '1') {
+      // Slice 4 mechanism layer: full-corpus v1/v2 double-compile batch.
+      fullBatch = runFullBatch(corpus);
+    } else {
+      const { coverage, stress } = selectSentinels(corpus);
+      for (const item of coverage) record(item, 'coverage', aggregate.coverage);
+      for (const item of stress) record(item, 'predicted-stress', aggregate.predictedStress);
+    }
   }
 
   // B94 native registry controls — registry-integrity evidence, NOT compile
@@ -193,6 +291,9 @@ function main() {
   const b94Failed = b94RegistryControls.filter((c) => !c.registered || !c.glslPresent);
 
   const compileFailedTotal = aggregate.cleanRoom.failed + aggregate.coverage.failed + aggregate.predictedStress.failed;
+  // Full-batch mode is a report, not a gate: v1 failures reflect the classic
+  // frontend's progressive coverage (Slice 4's own backlog), and v2 rejects
+  // are expected strictness data. Only the sentinel/controls paths gate.
 
   const report = {
     reportVersion: REPORT_VERSION,
@@ -212,9 +313,13 @@ function main() {
       b94RegistryControls: { total: b94RegistryControls.length, failed: b94Failed.length },
       maxDurationMs: evidences.length > 0 ? Math.max(...evidences.map((e) => e.durationMs)) : 0,
       totalDurationMs: Math.round(performance.now() - startedAll),
+      ...(fullBatch ? { fullBatch: fullBatch.aggregate } : {}),
     },
     evidences,
     b94RegistryControls,
+    ...(fullBatch
+      ? { fullBatchEntries: fullBatch.entries.map((e) => ({ entryId: e.entryId, v1: e.v1, v2: e.v2 })) }
+      : {}),
   };
 
   const contentHash = sha256(JSON.stringify(report));
