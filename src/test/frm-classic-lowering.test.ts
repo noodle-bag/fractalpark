@@ -146,6 +146,12 @@ describe('lowerClassicEntryToNative: header and text hygiene', () => {
     const note = notes.find((n) => n.kind === 'c-pixel-assignment-removed');
     expect(note?.message).toContain('Julia');
   });
+
+  it('normalizes the bare-z bailout shorthand to magnitude form (Fractint semantics)', () => {
+    const { native, notes } = lowerClassicEntryToNative('Short {\n\tz=0:\n\tz=z^2+c\n\tz<=4\n}');
+    expect(native).toContain('bailout:\n  |z| <= 4');
+    expect(kinds(notes)).toContain('bailout-magnitude-normalized');
+  });
 });
 
 describe('compileClassicFrmEntry: round-trip through production compiler', () => {

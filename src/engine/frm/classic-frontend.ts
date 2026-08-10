@@ -66,6 +66,7 @@ export interface LoweringNote {
     | 'crlf-normalized'
     | 'c-pixel-assignment-removed'
     | 'bailout-variable-renamed'
+    | 'bailout-magnitude-normalized'
     | 'chained-assignment-split'
     | 'header-trailing-text-ignored';
   /** 1-based line in the classic entry source. */
@@ -431,6 +432,19 @@ export function lowerClassicEntryToNative(entrySource: string): LoweredClassicEn
       kind: 'default-bailout',
       line: bailoutLine,
       message: 'No bailout predicate found; defaulting to |z| < 4 (Fractint default)',
+    });
+  }
+
+  // Classic magnitude shorthand: a bare `z` on the left of a comparison
+  // predicate means |z| in Fractint semantics (e.g. `z<=4` ≡ `|z| <= 4`).
+  // Normalize it here so the strict v2 descriptor contract (which only
+  // accepts |z|, |real(z)|, or real(z)) can see the intended form.
+  if (/^z\s*(<=|>=|<|>)/.test(bailoutText)) {
+    bailoutText = bailoutText.replace(/^z\s*(?=(?:<=|>=|<|>))/, '|z| ');
+    notes.push({
+      kind: 'bailout-magnitude-normalized',
+      line: bailoutLine,
+      message: 'Bare `z` in the bailout predicate normalized to |z| (Fractint magnitude shorthand)',
     });
   }
 
