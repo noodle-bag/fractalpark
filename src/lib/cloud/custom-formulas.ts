@@ -10,6 +10,7 @@
 
 import { getSupabaseConfig } from './config';
 import { CloudApiError } from './api';
+import { resolveFrmSemanticsVersion, type FrmSemanticsVersion } from '@/engine/frm/semantics-version';
 
 export class CustomFormulaServiceError extends Error {
   readonly code:
@@ -100,6 +101,8 @@ export interface CustomFormulaSummaryDto {
   revision: number;
   sourceBytes: number;
   hasExperienceHint: boolean;
+  /** FRM compile-semantics contract (spec §3); absent when the column is missing/NULL (reads as v1). */
+  frmSemanticsVersion?: FrmSemanticsVersion;
   createdAt: string;
   updatedAt: string;
 }
@@ -115,13 +118,16 @@ interface CustomFormulaRow {
   revision: number;
   source_bytes: number;
   experience_hint?: unknown | null;
+  frm_semantics_version?: number | null;
   created_at: string;
   updated_at: string;
   source?: string;
 }
 
 const SUMMARY_SELECT = 'id,name,revision,source_bytes,experience_hint,created_at,updated_at';
-const DETAIL_SELECT = `${SUMMARY_SELECT},source`;
+const DETAIL_SELECT = `${SUMMARY_SELECT},source,frm_semantics_version`;
+/** Pre-migration detail select: identical minus the additive column. */
+const DETAIL_SELECT_LEGACY = `${SUMMARY_SELECT},source`;
 
 function toSummaryDto(row: CustomFormulaRow): CustomFormulaSummaryDto {
   return {
@@ -130,6 +136,10 @@ function toSummaryDto(row: CustomFormulaRow): CustomFormulaSummaryDto {
     revision: row.revision,
     sourceBytes: row.source_bytes,
     hasExperienceHint: row.experience_hint != null,
+    frmSemanticsVersion:
+      row.frm_semantics_version == null
+        ? undefined
+        : resolveFrmSemanticsVersion(row.frm_semantics_version),
     createdAt: row.created_at,
     updatedAt: row.updated_at,
   };
@@ -152,9 +162,18 @@ export async function listCustomFormulas(ownerId: string): Promise<CustomFormula
 }
 
 export async function getCustomFormula(ownerId: string, formulaId: string): Promise<CustomFormulaDetailDto> {
-  const rows = await postgrestJson<CustomFormulaRow[]>(
-    `custom_formulas?select=${DETAIL_SELECT}&id=eq.${formulaId}&owner_id=eq.${ownerId}&limit=1`,
-  );
+  const detailUrl = (select: string) =>
+    `custom_formulas?select=${select}&id=eq.${formulaId}&owner_id=eq.${ownerId}&limit=1`;
+  let rows: CustomFormulaRow[];
+  try {
+    rows = await postgrestJson<CustomFormulaRow[]>(detailUrl(DETAIL_SELECT));
+  } catch {
+    // Pre-migration fallback: frm_semantics_version is an additive column
+    // applied under hosted-ops review. Until it exists, retry without it;
+    // the DTO reports undefined and reads as legacy v1. The retry is an
+    // idempotent GET, so a broad catch is safe here.
+    rows = await postgrestJson<CustomFormulaRow[]>(detailUrl(DETAIL_SELECT_LEGACY));
+  }
   if (rows.length === 0) {
     throw new CustomFormulaServiceError('not_found');
   }
@@ -183,6 +202,8 @@ export async function saveCustomFormula(args: {
   name: string;
   source: string;
   experienceHint: unknown | null;
+  /** Only forwarded when explicitly given; ordinary saves never auto-upgrade the version. */
+  frmSemanticsVersion?: FrmSemanticsVersion;
 }): Promise<CustomFormulaSaveResult> {
   const payload = await callFormulaRpc<RpcFormulaSavePayload>('fractalpark_custom_formula_save', {
     p_owner_id: args.ownerId,
@@ -193,6 +214,9 @@ export async function saveCustomFormula(args: {
     p_experience_hint: args.experienceHint,
     p_formula_id: args.formulaId,
     p_expected_revision: args.expectedRevision,
+    ...(args.frmSemanticsVersion !== undefined
+      ? { p_frm_semantics_version: args.frmSemanticsVersion }
+      : {}),
   });
   if (payload.replayed) {
     if (!payload.formula_id || typeof payload.revision !== 'number') {

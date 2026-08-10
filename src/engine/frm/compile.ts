@@ -16,6 +16,7 @@ import { FRMSourceMap } from './sourcemap';
 import { frmParserCache } from './cache';
 import { scanFrmEntries, selectFrmEntry, FRM_BLOCKING_DIAGNOSTICS, type FrmEntry, type FrmScanResult, type FrmSourceRange } from './scanner';
 import { lowerClassicEntryToNative, type LoweringNote } from './classic-frontend';
+import { DEFAULT_FRM_SEMANTICS_VERSION, type FrmSemanticsVersion } from './semantics-version';
 
 export interface CompileResult {
   success: boolean;
@@ -26,15 +27,24 @@ export interface CompileResult {
   canonicalFormula?: CanonicalFormula;
   glsl?: string;
   sourceMap?: FRMSourceMap;
+  /** Compile-semantics contract of the source (spec §3); mechanism-layer metadata, read back as-is. */
+  frmSemanticsVersion: FrmSemanticsVersion;
 }
 
 /**
  * Compile FRM source code to a FormulaPlugin
  * Results are cached for unchanged sources
  */
-export function compileFrm(source: string, id?: string): CompileResult {
+export function compileFrm(
+  source: string,
+  id?: string,
+  semanticsVersion: FrmSemanticsVersion = DEFAULT_FRM_SEMANTICS_VERSION,
+): CompileResult {
+  // The version is part of the cache key: a v2 request must never reuse a
+  // cached v1 result (or vice versa).
+  const cacheKey = `${semanticsVersion}\u0000${source}`;
   // Check cache first
-  const cached = frmParserCache.get(source);
+  const cached = frmParserCache.get(cacheKey);
   if (cached) {
     // If a specific ID is requested, update the cached plugin's ID
     if (id && cached.plugin) {
@@ -47,17 +57,21 @@ export function compileFrm(source: string, id?: string): CompileResult {
   }
 
   // Perform full compilation
-  const result = compileFrmUncached(source, id);
+  const result = compileFrmUncached(source, id, semanticsVersion);
   
   // Cache successful results
   if (result.success) {
-    frmParserCache.set(source, result);
+    frmParserCache.set(cacheKey, result);
   }
   
   return result;
 }
 
-function compileFrmUncached(source: string, id?: string): CompileResult {
+function compileFrmUncached(
+  source: string,
+  id?: string,
+  semanticsVersion: FrmSemanticsVersion = DEFAULT_FRM_SEMANTICS_VERSION,
+): CompileResult {
   const errors: string[] = [];
   const warnings: string[] = [];
 
@@ -79,7 +93,7 @@ function compileFrmUncached(source: string, id?: string): CompileResult {
     }
 
     if (!ast) {
-      return { success: false, errors, warnings };
+      return { success: false, errors, warnings, frmSemanticsVersion: semanticsVersion };
     }
 
     // Step 3: Validate
@@ -95,7 +109,7 @@ function compileFrmUncached(source: string, id?: string): CompileResult {
     }
 
     if (!valid) {
-      return { success: false, errors, warnings, ast };
+      return { success: false, errors, warnings, ast, frmSemanticsVersion: semanticsVersion };
     }
 
     const canonicalFormula = createCanonicalFormula(ast, source);
@@ -133,11 +147,12 @@ function compileFrmUncached(source: string, id?: string): CompileResult {
       canonicalFormula,
       glsl,
       sourceMap,
+      frmSemanticsVersion: semanticsVersion,
     };
 
   } catch (e) {
     errors.push(`Compile error: ${e instanceof Error ? e.message : String(e)}`);
-    return { success: false, errors, warnings };
+    return { success: false, errors, warnings, frmSemanticsVersion: semanticsVersion };
   }
 }
 
@@ -203,13 +218,17 @@ export interface DetailedCompileResult extends CompileResult {
   parseErrors: ParseError[];
 }
 
-export function compileFrmDetailed(source: string, id?: string): DetailedCompileResult {
+export function compileFrmDetailed(
+  source: string,
+  id?: string,
+  semanticsVersion: FrmSemanticsVersion = DEFAULT_FRM_SEMANTICS_VERSION,
+): DetailedCompileResult {
   // Run tokenize + parse once to collect structured errors
   const { tokens, errors: lexerErrors } = tokenize(source);
   const { errors: parseErrors } = parse(tokens);
 
   // Get the full compile result (may use cache)
-  const result = compileFrm(source, id);
+  const result = compileFrm(source, id, semanticsVersion);
 
   return {
     ...result,
@@ -260,6 +279,7 @@ function selectionFailure(
   code: FrmSelectionErrorCode,
   message: string,
   entryKeys: string[],
+  semanticsVersion: FrmSemanticsVersion = DEFAULT_FRM_SEMANTICS_VERSION,
 ): EntryCompileResult {
   return {
     success: false,
@@ -268,6 +288,7 @@ function selectionFailure(
     lexerErrors: [],
     parseErrors: [],
     selectionError: { code, message, entryKeys },
+    frmSemanticsVersion: semanticsVersion,
   };
 }
 
@@ -277,7 +298,12 @@ function selectionFailure(
  * entry's full range — arbitrary slices are rejected so callers cannot
  * bypass the authoritative entry contract.
  */
-export function compileFrmRange(source: string, range: FrmSourceRange, id?: string): EntryCompileResult {
+export function compileFrmRange(
+  source: string,
+  range: FrmSourceRange,
+  id?: string,
+  semanticsVersion: FrmSemanticsVersion = DEFAULT_FRM_SEMANTICS_VERSION,
+): EntryCompileResult {
   const scan = scanFrmEntries(source);
   const entry = scan.entries.find(
     (e) => e.range.startOffset === range.startOffset && e.range.endOffset === range.endOffset,
@@ -289,9 +315,10 @@ export function compileFrmRange(source: string, range: FrmSourceRange, id?: stri
       `No formula entry spans exactly [${range.startOffset}, ${range.endOffset}); ` +
         'ranges must come from scanFrmEntries output',
       entryKeys,
+      semanticsVersion,
     );
   }
-  return compileSelectedEntry(source, scan, entry, id);
+  return compileSelectedEntry(source, scan, entry, id, semanticsVersion);
 }
 
 function compileSelectedEntry(
@@ -299,6 +326,7 @@ function compileSelectedEntry(
   scan: FrmScanResult,
   entry: FrmEntry,
   id?: string,
+  semanticsVersion: FrmSemanticsVersion = DEFAULT_FRM_SEMANTICS_VERSION,
 ): EntryCompileResult {
   // Blocking diagnostics (trailing tokens, duplicate names, broken
   // boundaries) must reject compilation consistently across consumers —
@@ -310,10 +338,11 @@ function compileSelectedEntry(
       'invalid-source',
       `Source has blocking diagnostics (${codes}); resolve them before compiling an entry`,
       scan.entries.map((e) => e.key),
+      semanticsVersion,
     );
   }
   const entrySource = source.slice(entry.range.startOffset, entry.range.endOffset);
-  const result = compileFrmDetailed(entrySource, id);
+  const result = compileFrmDetailed(entrySource, id, semanticsVersion);
   return { ...result, entry };
 }
 
@@ -338,13 +367,14 @@ export function compileClassicFrmEntry(
   source: string,
   entryKey?: string,
   id?: string,
+  semanticsVersion: FrmSemanticsVersion = DEFAULT_FRM_SEMANTICS_VERSION,
 ): ClassicEntryCompileResult {
   const scan = scanFrmEntries(source);
   const entry = selectFrmEntry(scan, entryKey);
   if (!entry) {
     const entryKeys = scan.entries.map((e) => e.key);
     if (scan.entries.length === 0) {
-      return selectionFailure('no-entries', 'Source contains no formula entries', entryKeys);
+      return selectionFailure('no-entries', 'Source contains no formula entries', entryKeys, semanticsVersion);
     }
     if (!entryKey) {
       return selectionFailure(
@@ -352,12 +382,14 @@ export function compileClassicFrmEntry(
         `Source contains ${scan.entries.length} formula entries; ` +
           `select one explicitly (entry keys: ${entryKeys.join(', ')})`,
         entryKeys,
+        semanticsVersion,
       );
     }
     return selectionFailure(
       'unknown-entry',
       `No formula entry with key "${entryKey}" (available keys: ${entryKeys.join(', ')})`,
       entryKeys,
+      semanticsVersion,
     );
   }
 
@@ -368,12 +400,13 @@ export function compileClassicFrmEntry(
       'invalid-source',
       `Source has blocking diagnostics (${codes}); resolve them before compiling an entry`,
       scan.entries.map((e) => e.key),
+      semanticsVersion,
     );
   }
 
   const entrySource = source.slice(entry.range.startOffset, entry.range.endOffset);
   const lowered = lowerClassicEntryToNative(entrySource);
-  const result = compileFrmDetailed(lowered.native, id);
+  const result = compileFrmDetailed(lowered.native, id, semanticsVersion);
   return {
     ...result,
     entry,
@@ -383,7 +416,12 @@ export function compileClassicFrmEntry(
   };
 }
 
-export function compileFrmEntry(source: string, entryKey?: string, id?: string): EntryCompileResult {
+export function compileFrmEntry(
+  source: string,
+  entryKey?: string,
+  id?: string,
+  semanticsVersion: FrmSemanticsVersion = DEFAULT_FRM_SEMANTICS_VERSION,
+): EntryCompileResult {
   const scan = scanFrmEntries(source);
   const entry = selectFrmEntry(scan, entryKey);
 
@@ -403,8 +441,8 @@ export function compileFrmEntry(source: string, entryKey?: string, id?: string):
       code = 'unknown-entry';
       message = `No formula entry with key "${entryKey}" (available keys: ${entryKeys.join(', ')})`;
     }
-    return selectionFailure(code, message, entryKeys);
+    return selectionFailure(code, message, entryKeys, semanticsVersion);
   }
 
-  return compileSelectedEntry(source, scan, entry, id);
+  return compileSelectedEntry(source, scan, entry, id, semanticsVersion);
 }

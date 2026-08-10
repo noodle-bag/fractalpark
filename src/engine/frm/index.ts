@@ -18,9 +18,9 @@ export {
   Parser,
 } from './parser';
 export { validate, type ValidationError } from './validator';
-export { 
-  compileFrm, 
-  compileToGLSL, 
+export {
+  compileFrm,
+  compileToGLSL,
   compileFrmDetailed,
   compileFrmEntry,
   compileFrmRange,
@@ -31,6 +31,11 @@ export {
   type FrmSelectionError,
   type FrmSelectionErrorCode,
 } from './compile';
+export {
+  DEFAULT_FRM_SEMANTICS_VERSION,
+  resolveFrmSemanticsVersion,
+  type FrmSemanticsVersion,
+} from './semantics-version';
 export {
   scanFrmEntries,
   requiresSelection,

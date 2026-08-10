@@ -169,6 +169,7 @@ describe('fractal project files', () => {
       name: 'Portable Test',
       source: CUSTOM_SOURCE,
       hash,
+      frmSemanticsVersion: 1,
     });
   });
 

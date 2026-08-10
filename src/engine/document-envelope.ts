@@ -1,5 +1,9 @@
 import type { FractalDocument } from './document';
 import { readFractalDocument } from './document-reader';
+import {
+  resolveFrmSemanticsVersion,
+  type FrmSemanticsVersion,
+} from './frm/semantics-version';
 
 export const FRACTAL_DOCUMENT_ENVELOPE_VERSION = 1 as const;
 
@@ -9,6 +13,8 @@ export interface PortableFormulaAsset {
   name?: string;
   source: string;
   hash: string;
+  /** FRM compile-semantics contract (spec §3); missing reads as v1. */
+  frmSemanticsVersion?: FrmSemanticsVersion;
 }
 
 export interface FractalDocumentEnvelopeV1 {
@@ -108,6 +114,9 @@ function readPortableFormulaAsset(
     name: value.name as string | undefined,
     source: value.source,
     hash: value.hash,
+    // Missing/abnormal versions read as legacy v1 (lenient reader); the
+    // parsed asset always carries an effective version.
+    frmSemanticsVersion: resolveFrmSemanticsVersion(value.frmSemanticsVersion),
   };
 }
 
