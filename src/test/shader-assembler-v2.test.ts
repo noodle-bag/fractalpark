@@ -14,7 +14,7 @@ import { describe, it, expect, beforeAll } from 'vitest';
 import { assembleShader, makeCacheKey } from '@/engine/shaders/assembler';
 import { pluginRegistry } from '@/engine/plugins/registry';
 import { registerBuiltins } from '@/engine/plugins/builtins/index';
-import { compileFrm } from '@/engine/frm/compile';
+import { compileFrm, compileClassicFrmEntry } from '@/engine/frm/compile';
 import { frmParserCache } from '@/engine/frm/cache';
 import type { PluginCombination } from '@/engine/plugins/types';
 
@@ -131,5 +131,54 @@ describe('assembleShader: renderer-pipeline v2 (bailout descriptor consumption)'
     expect(keyV2).toContain('bo:C1:<:4');
     // A descriptor-less formula keeps the legacy key shape byte-for-byte.
     expect(keyV1).toBe('same-id|smooth|black|none');
+  });
+});
+
+describe('assembleShader: C4-R projection escapes and after-step timing', () => {
+  beforeAll(() => {
+    frmParserCache.clear();
+    registerBuiltins();
+  });
+
+  it('C4-R abs-real injects a z.x escape expression with the negated operator', () => {
+    const plugin = compileV2('V2C4R', '|real(z)| < 2', 'v2-c4r-abs');
+    const shader = assembleShader({ formulaId: plugin.id, ...COMBO_BASE }, plugin);
+    // continue while abs(z.x) < 2 → escape when abs(z.x) >= 2.
+    expect(shader).toMatch(/^#define ESCAPE_C4R$/m);
+    expect(shader).toMatch(/^#define C4R_ESCAPE_CHECK\(z\) \(abs\(\(z\)\.x\) >= 2\.0\)$/m);
+    // C4-R must not touch the radial radius define.
+    expect(shader).not.toMatch(injectedRadius('4.0'));
+  });
+
+  it('C4-R real form compares z.x without abs and preserves direction via negation', () => {
+    const plugin = compileV2('V2C4RR', 'real(z) >= -1', 'v2-c4r-real');
+    const shader = assembleShader({ formulaId: plugin.id, ...COMBO_BASE }, plugin);
+    // continue while z.x >= -1 → escape when z.x < -1.
+    expect(shader).toMatch(/^#define C4R_ESCAPE_CHECK\(z\) \(\(z\)\.x < -1\.0\)$/m);
+  });
+
+  it('classic dialect under v2 sets afterStepTiming and injects ESCAPE_AFTER_STEP', () => {
+    const result = compileClassicFrmEntry('AfterStep {\n\tz=0:\n\tz=z^2+c\n\t|z|<4\n}', undefined, 'v2-after-step', 2);
+    expect(result.success).toBe(true);
+    expect(result.plugin?.afterStepTiming).toBe(true);
+    const shader = assembleShader({ formulaId: 'v2-after-step', ...COMBO_BASE }, result.plugin);
+    expect(shader).toMatch(/^#define ESCAPE_AFTER_STEP$/m);
+    // The loop evaluates the predicate after the iterate step.
+    const loopStart = shader.indexOf('for (int i = 0; i < 10000; i++) {', shader.indexOf('vec3 render('));
+    const afterStepIdx = shader.indexOf('vec2 steppedZ = iterateStep', loopStart);
+    const zzIdx = shader.indexOf('float zz = dot(z, z);', loopStart);
+    expect(afterStepIdx).toBeGreaterThan(-1);
+    expect(afterStepIdx).toBeLessThan(zzIdx);
+  });
+
+  it('classic dialect under v1 and native dialect under v2 never set afterStepTiming', () => {
+    const classicV1 = compileClassicFrmEntry('PreStep {\n\tz=0:\n\tz=z^2+c\n\t|z|<4\n}', undefined, 'v1-pre-step', 1);
+    expect(classicV1.success).toBe(true);
+    expect(classicV1.plugin?.afterStepTiming).toBeUndefined();
+
+    const nativeV2 = compileV2('NativeV2', '|z| < 4', 'native-v2-pre');
+    expect(nativeV2.afterStepTiming).toBeUndefined();
+    const shader = assembleShader({ formulaId: nativeV2.id, ...COMBO_BASE }, nativeV2);
+    expect(shader).not.toMatch(/^#define ESCAPE_AFTER_STEP$/m);
   });
 });

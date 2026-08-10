@@ -59,8 +59,23 @@ export function assembleShader(
     if (bailoutDescriptor.op === '<=' || bailoutDescriptor.op === '>=') {
       defines.push('#define BAILOUT_INCLUSIVE');
     }
+  } else if (bailoutDescriptor?.kind === 'C4R') {
+    // C4-R real projection: escape is the negation of the continue
+    // predicate over z.x (abs-real uses abs(z.x)). The assembler injects
+    // the full comparison expression; the framework routes ESCAPE_CHECK to
+    // it. Thresholds are compared against z.x directly (not squared).
+    const escapeOp = { '<': '>=', '<=': '>', '>': '<=', '>=': '<' }[bailoutDescriptor.op];
+    const operand = bailoutDescriptor.form === 'abs-real' ? 'abs((z).x)' : '(z).x';
+    defines.push('#define ESCAPE_C4R');
+    defines.push(
+      `#define C4R_ESCAPE_CHECK(z) (${operand} ${escapeOp} ${glslFloatLiteral(bailoutDescriptor.threshold)})`,
+    );
   } else {
     defines.push(`#define BAILOUT_RADIUS ${(formula.bailout ?? 4.0).toFixed(1)}`);
+  }
+  // Strict-v2 classic timing: bailout evaluated after each loop step.
+  if (formula.afterStepTiming) {
+    defines.push('#define ESCAPE_AFTER_STEP');
   }
   if (formula.escapeType === 'converge') {
     defines.push('#define ESCAPE_CONVERGE');

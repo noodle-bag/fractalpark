@@ -32,6 +32,14 @@ export interface FormulaPlugin extends FractalPlugin {
    * `bailout` field. Legacy/v1 formulas never carry it.
    */
   bailoutDescriptor?: import('../frm/bailout-descriptor').BailoutDescriptor;
+  /**
+   * Strict-v2 classic bailout timing (spec §4): classic Fractint dialect
+   * evaluates the bailout predicate AFTER each loop step, while the native
+   * dialect evaluates BEFORE. Set only for fractint-compat formulas
+   * compiled under semanticsVersion 2; the shader assembler turns it into
+   * the ESCAPE_AFTER_STEP branch. Legacy/v1 rendering is unchanged.
+   */
+  afterStepTiming?: boolean;
   supportsPower?: boolean;  // DEPRECATED: not consumed by any current consumer; Smooth capability resolves from AST/dataflow per ADR-0007. Retired in the coloring-capability slice.
   supportsJulia?: boolean;  // default true
   family?: string;          // grouping: 'classic' | 'newton' | 'magnet' | 'phoenix' | 'exotic'

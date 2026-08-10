@@ -3,15 +3,20 @@ precision highp float;
 // #define lines injected by assembler
 // #define BAILOUT_RADIUS 4.0
 // Escape-condition macro, driven by the v2 bailout descriptor defines when
-// present. Default (no v2 defines): the historical zz > BAILOUT_RADIUS.
-#if defined(ESCAPE_INVERSE_DIRECTION) && defined(BAILOUT_INCLUSIVE)
-  #define ESCAPE_CHECK(zz) ((zz) <= BAILOUT_RADIUS)
+// present. Signature is (z, zz) so C4-R real-projection escapes can use z.x
+// while radial escapes use the precomputed zz = dot(z, z). Default (no v2
+// defines): the historical zz > BAILOUT_RADIUS.
+#if defined(ESCAPE_C4R)
+  // C4R_ESCAPE_CHECK(z) is fully injected by the assembler.
+  #define ESCAPE_CHECK(z, zz) C4R_ESCAPE_CHECK(z)
+#elif defined(ESCAPE_INVERSE_DIRECTION) && defined(BAILOUT_INCLUSIVE)
+  #define ESCAPE_CHECK(z, zz) ((zz) <= BAILOUT_RADIUS)
 #elif defined(ESCAPE_INVERSE_DIRECTION)
-  #define ESCAPE_CHECK(zz) ((zz) < BAILOUT_RADIUS)
+  #define ESCAPE_CHECK(z, zz) ((zz) < BAILOUT_RADIUS)
 #elif defined(BAILOUT_INCLUSIVE)
-  #define ESCAPE_CHECK(zz) ((zz) >= BAILOUT_RADIUS)
+  #define ESCAPE_CHECK(z, zz) ((zz) >= BAILOUT_RADIUS)
 #else
-  #define ESCAPE_CHECK(zz) ((zz) > BAILOUT_RADIUS)
+  #define ESCAPE_CHECK(z, zz) ((zz) > BAILOUT_RADIUS)
 #endif
 // #define ESCAPE_CONVERGE
 // #define CONVERGE_EPSILON 0.000001
@@ -84,8 +89,14 @@ float escapeHeight(vec2 point) {
   vec2 zPrev = vec2(0.0);
   for (int i = 0; i < 10000; i++) {
     if (i >= u_maxIterations) break;
+#ifdef ESCAPE_AFTER_STEP
+    // Classic v2 timing: evaluate the predicate AFTER this loop step.
+    vec2 steppedZ = iterateStep(z, c, zPrev, point);
+    zPrev = z;
+    z = steppedZ;
+#endif
     float zz = dot(z, z);
-    if (ESCAPE_CHECK(zz)) {
+    if (ESCAPE_CHECK(z, zz)) {
 #ifdef ESCAPE_INVERSE_DIRECTION
       // Inverse-direction escape (v2 descriptor op > / >=): deterministic
       // Escape Time fallback — see the main loop for the same contract.
@@ -96,9 +107,11 @@ float escapeHeight(vec2 point) {
       return clamp(si / float(u_maxIterations), 0.0, 1.0);
 #endif
     }
+#ifndef ESCAPE_AFTER_STEP
     vec2 nextZ = iterateStep(z, c, zPrev, point);
     zPrev = z;
     z = nextZ;
+#endif
   }
   return 0.0;
 #endif
@@ -171,6 +184,16 @@ vec3 colorAtComplex(vec2 point) {
 
   for (int i = 0; i < 10000; i++) {
     if (i >= u_maxIterations) break;
+#ifdef ESCAPE_AFTER_STEP
+    // Classic v2 timing: run this loop step first, then evaluate the
+    // predicate against the freshly produced orbit state.
+    vec2 steppedZ = iterateStep(z, c, zPrev, point);
+    if (u_lightingEnabled && u_lightingMode == 1) {
+      demDz = 2.0 * vec2(z.x * demDz.x - z.y * demDz.y, z.x * demDz.y + z.y * demDz.x) + vec2(1.0, 0.0);
+    }
+    zPrev = z;
+    z = steppedZ;
+#endif
     float zz = dot(z, z);
     float angle = atan(z.y, z.x);
 
@@ -191,7 +214,7 @@ vec3 colorAtComplex(vec2 point) {
       break;
     }
 #else
-    if (ESCAPE_CHECK(zz)) {
+    if (ESCAPE_CHECK(z, zz)) {
       escaped = true;
 #ifdef ESCAPE_INVERSE_DIRECTION
       // Inverse-direction escape (v2 descriptor op > / >=): the smooth
@@ -202,7 +225,12 @@ vec3 colorAtComplex(vec2 point) {
       float zn = sqrt(zz);
       smoothIter = float(i) - log2(log2(max(zn, 1.00001))) / log2(max(u_power, 2.0)) + 4.0;
 #endif
+#ifdef ESCAPE_AFTER_STEP
+      // After-step timing: i+1 steps were executed before this evaluation.
+      iter = i + 1;
+#else
       iter = i;
+#endif
       break;
     }
 #endif
@@ -221,6 +249,7 @@ vec3 colorAtComplex(vec2 point) {
     if (denom > 0.00001) stats.tiaSum += abs(zr - cr) / denom;
 #endif
 
+#ifndef ESCAPE_AFTER_STEP
     vec2 nextZ = iterateStep(z, c, zPrev, point);
     // Track dz/dc = 2*z*(dz/dc) + 1 for DEM lighting (generalised, correct for z^2+c family)
     if (u_lightingEnabled && u_lightingMode == 1) {
@@ -228,6 +257,8 @@ vec3 colorAtComplex(vec2 point) {
     }
     zPrev = z;
     z = nextZ;
+#endif
+    // Both timings: after iteration i the loop has executed i+1 steps.
     iter = i + 1;
   }
 
