@@ -181,4 +181,50 @@ describe('assembleShader: C4-R projection escapes and after-step timing', () => 
     const shader = assembleShader({ formulaId: nativeV2.id, ...COMBO_BASE }, nativeV2);
     expect(shader).not.toMatch(/^#define ESCAPE_AFTER_STEP$/m);
   });
+
+  it('after-step escapes count i+1 steps in both iter and smooth iteration', () => {
+    const result = compileClassicFrmEntry('SmoothAfter {\n\tz=0:\n\tz=z^2+c\n\t|z|<4\n}', undefined, 'v2-smooth-after', 2);
+    expect(result.success).toBe(true);
+    const shader = assembleShader({ formulaId: 'v2-smooth-after', ...COMBO_BASE }, result.plugin);
+    expect(shader).toContain('smoothIter = float(i + 1) - log2(log2(max(zn, 1.00001)))');
+    expect(shader).toContain('iter = i + 1;');
+  });
+
+  it('cache keys include the after-step timing bit', () => {
+    const classicV2 = compileClassicFrmEntry('Timed {\n\tz=0:\n\tz=z^2+c\n\t|z|<4\n}', undefined, 'timed-id', 2);
+    expect(classicV2.success).toBe(true);
+    const combo: PluginCombination = { formulaId: 'timed-id', ...COMBO_BASE };
+    const key = makeCacheKey(combo, classicV2.plugin);
+    expect(key).toContain('|t:after');
+    // Same id without after-step timing must not collide.
+    const nativeV2 = compileV2('Timed', '|z| < 4', 'timed-id');
+    const nativeKey = makeCacheKey(combo, nativeV2);
+    expect(nativeKey).not.toBe(key);
+    expect(nativeKey).not.toContain('|t:after');
+  });
+
+  it('C2 descriptors evaluate the threshold against parameter defaults for the legacy channel', () => {
+    // Native FRM infers parameters from usage; p1's uniform default is 0,
+    // so |z| < p1 + 1 evaluates to magnitude 1 → zz threshold 1 — matching
+    // the uniform the user actually sees, not the v1 4.0 fallback.
+    const result = compileFrm(
+      `C2Default {\ninit:\n  z = 0\nloop:\n  z = z^2 + c\nbailout:\n  |z| < p1 + 1\n}`,
+      'c2-default',
+      2,
+    );
+    expect(result.success).toBe(true);
+    expect(result.bailoutDescriptor?.kind).toBe('C2');
+    expect(result.plugin?.bailout).toBe(1);
+  });
+
+  it('C2 constant expressions evaluate exactly (sqrt(16) → zz threshold 16)', () => {
+    const result = compileFrm(
+      `C2Const {\ninit:\n  z = 0\nloop:\n  z = z^2 + c\nbailout:\n  |z| < sqrt(16)\n}`,
+      'c2-const',
+      2,
+    );
+    expect(result.success).toBe(true);
+    expect(result.bailoutDescriptor?.kind).toBe('C2');
+    expect(result.plugin?.bailout).toBe(16);
+  });
 });

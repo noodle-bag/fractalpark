@@ -121,12 +121,13 @@ export function makeCacheKey(combo: PluginCombination, formulaOverride?: Formula
   // v2). A v1 and a v2 variant of the same formula id must never share a
   // compiled program — fingerprint the descriptor into the key.
   const descriptor = formulaOverride?.bailoutDescriptor;
-  if (!descriptor) return base;
+  const timingBit = formulaOverride?.afterStepTiming ? '|t:after' : '';
+  if (!descriptor) return `${base}${timingBit}`;
   const fingerprint =
     descriptor.kind === 'C2'
       ? `C2:${descriptor.op}:${descriptor.params.join(',')}`
       : descriptor.kind === 'C1'
         ? `C1:${descriptor.op}:${descriptor.threshold}`
         : `C4R:${descriptor.form}:${descriptor.op}:${descriptor.threshold}`;
-  return `${base}|bo:${fingerprint}`;
+  return `${base}|bo:${fingerprint}${timingBit}`;
 }

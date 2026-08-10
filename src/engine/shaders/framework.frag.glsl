@@ -100,10 +100,18 @@ float escapeHeight(vec2 point) {
 #ifdef ESCAPE_INVERSE_DIRECTION
       // Inverse-direction escape (v2 descriptor op > / >=): deterministic
       // Escape Time fallback — see the main loop for the same contract.
+      #ifdef ESCAPE_AFTER_STEP
+      return clamp(float(i + 1) / float(u_maxIterations), 0.0, 1.0);
+      #else
       return clamp(float(i) / float(u_maxIterations), 0.0, 1.0);
+      #endif
 #else
       float zn = sqrt(zz);
+      #ifdef ESCAPE_AFTER_STEP
+      float si = float(i + 1) - log2(log2(max(zn, 1.00001))) / log2(max(u_power, 2.0)) + 4.0;
+      #else
       float si = float(i) - log2(log2(max(zn, 1.00001))) / log2(max(u_power, 2.0)) + 4.0;
+      #endif
       return clamp(si / float(u_maxIterations), 0.0, 1.0);
 #endif
     }
@@ -220,10 +228,20 @@ vec3 colorAtComplex(vec2 point) {
       // Inverse-direction escape (v2 descriptor op > / >=): the smooth
       // formula is not meaningful for inside-out escapes — deterministic
       // Escape Time fallback per the coloring-capability contract.
+  #ifdef ESCAPE_AFTER_STEP
+      smoothIter = float(i + 1);
+  #else
       smoothIter = float(i);
+  #endif
 #else
       float zn = sqrt(zz);
+  #ifdef ESCAPE_AFTER_STEP
+      // After-step timing: i+1 steps were executed before this evaluation —
+      // the smooth formula must count them too.
+      smoothIter = float(i + 1) - log2(log2(max(zn, 1.00001))) / log2(max(u_power, 2.0)) + 4.0;
+  #else
       smoothIter = float(i) - log2(log2(max(zn, 1.00001))) / log2(max(u_power, 2.0)) + 4.0;
+  #endif
 #endif
 #ifdef ESCAPE_AFTER_STEP
       // After-step timing: i+1 steps were executed before this evaluation.

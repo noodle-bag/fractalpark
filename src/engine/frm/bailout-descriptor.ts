@@ -169,6 +169,69 @@ function checkLoopInvariance(node: ASTNode, declaredParams: Set<string>): Invari
  * `declaredParams` are the formula's declared parameter names (p1–p5 plus
  * params-block entries). Never throws; every failure is a stable reason.
  */
+/**
+ * Evaluate a C2 threshold expression against concrete parameter values.
+ * Returns null when a referenced parameter has no known default — the
+ * caller must not guess.
+ */
+export function evaluateC2Threshold(
+  descriptor: BailoutDescriptorC2,
+  paramDefaults: ReadonlyMap<string, number>,
+): number | null {
+  const evaluate = (node: ASTNode): number | null => {
+    switch (node.type) {
+      case 'number':
+        return node.value;
+      case 'ident':
+        return paramDefaults.get(node.name) ?? null;
+      case 'unary':
+        if (node.op !== '-') return null;
+        const v = evaluate(node.operand);
+        return v === null ? null : -v;
+      case 'binary': {
+        const l = evaluate(node.left);
+        const r = evaluate(node.right);
+        if (l === null || r === null) return null;
+        switch (node.op) {
+          case '+': return l + r;
+          case '-': return l - r;
+          case '*': return l * r;
+          case '/': return r === 0 ? null : l / r;
+          case '^': return Math.pow(l, r);
+          default: return null;
+        }
+      }
+      case 'call': {
+        const args = node.args.map(evaluate);
+        if (args.some((a) => a === null)) return null;
+        const [a] = args as number[];
+        switch (node.name) {
+          case 'sqrt': return a < 0 ? null : Math.sqrt(a);
+          case 'abs': return Math.abs(a);
+          case 'sqr': return a * a;
+          case 'exp': return Math.exp(a);
+          case 'log': return a <= 0 ? null : Math.log(a);
+          case 'sin': return Math.sin(a);
+          case 'cos': return Math.cos(a);
+          case 'tan': return Math.tan(a);
+          case 'sinh': return Math.sinh(a);
+          case 'cosh': return Math.cosh(a);
+          case 'tanh': return Math.tanh(a);
+          default: return null;
+        }
+      }
+      default:
+        return null;
+    }
+  };
+  return evaluate(descriptor.thresholdNode);
+}
+
+/**
+ * Extract a bounded bailout descriptor from a parsed bailout expression.
+ * `declaredParams` are the formula's declared parameter names (p1–p5 plus
+ * params-block entries). Never throws; every failure is a stable reason.
+ */
 export function extractBailoutDescriptor(
   node: ASTNode,
   declaredParams: Set<string>,
