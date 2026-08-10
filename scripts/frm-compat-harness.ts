@@ -33,7 +33,8 @@ import { readdirSync, readFileSync, statSync } from 'node:fs';
 import { join } from 'node:path';
 import { execSync } from 'node:child_process';
 
-import { compileFrmDetailed } from '../src/engine/frm/compile';
+import { compileFrmDetailed, compileClassicFrmEntry } from '../src/engine/frm/compile';
+import { scanFrmEntries } from '../src/engine/frm/scanner';
 import { CUSTOM_FORMULA_EXAMPLES } from '../src/engine/frm/example-library';
 import { pluginRegistry } from '../src/engine/plugins/registry';
 import { registerBuiltins } from '../src/engine/plugins/builtins';
@@ -107,7 +108,17 @@ function compileOne(item: SourceItem, sentinel: CompileEvidence['sentinel']): {
   success: boolean;
 } {
   const started = performance.now();
-  const result = compileFrmDetailed(item.source, `harness-${item.contentHash.slice(0, 16)}`);
+  // Classic mode (FRACTALPARK_FRM_CLASSIC=1): scan and compile the FIRST
+  // entry through the classic frontend — the production selected-entry path.
+  // Multi-entry sources are never silently first-entry compiled here; the
+  // first entry's stable key is selected explicitly.
+  const result = process.env.FRACTALPARK_FRM_CLASSIC === '1'
+    ? (() => {
+        const scan = scanFrmEntries(item.source);
+        const firstKey = scan.entries[0]?.key;
+        return compileClassicFrmEntry(item.source, firstKey, `harness-${item.contentHash.slice(0, 16)}`);
+      })()
+    : compileFrmDetailed(item.source, `harness-${item.contentHash.slice(0, 16)}`);
   return {
     evidence: {
       sourceId: item.contentHash.slice(0, 16),
