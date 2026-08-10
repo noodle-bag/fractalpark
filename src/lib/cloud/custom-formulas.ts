@@ -124,10 +124,12 @@ interface CustomFormulaRow {
   source?: string;
 }
 
-const SUMMARY_SELECT = 'id,name,revision,source_bytes,experience_hint,created_at,updated_at';
-const DETAIL_SELECT = `${SUMMARY_SELECT},source,frm_semantics_version`;
+const SUMMARY_SELECT = 'id,name,revision,source_bytes,experience_hint,created_at,updated_at,frm_semantics_version';
+/** Pre-migration summary select: identical minus the additive column. */
+const SUMMARY_SELECT_LEGACY = 'id,name,revision,source_bytes,experience_hint,created_at,updated_at';
+const DETAIL_SELECT = `${SUMMARY_SELECT},source`;
 /** Pre-migration detail select: identical minus the additive column. */
-const DETAIL_SELECT_LEGACY = `${SUMMARY_SELECT},source`;
+const DETAIL_SELECT_LEGACY = `${SUMMARY_SELECT_LEGACY},source`;
 
 function toSummaryDto(row: CustomFormulaRow): CustomFormulaSummaryDto {
   return {
@@ -154,10 +156,15 @@ function toDetailDto(row: CustomFormulaRow): CustomFormulaDetailDto {
 }
 
 export async function listCustomFormulas(ownerId: string): Promise<CustomFormulaSummaryDto[]> {
-  const rows = await postgrestJson<CustomFormulaRow[]>(
-    `custom_formulas?select=${SUMMARY_SELECT}&owner_id=eq.${ownerId}` +
-      '&order=updated_at.desc,id.desc',
-  );
+  const listUrl = (select: string) =>
+    `custom_formulas?select=${select}&owner_id=eq.${ownerId}` + '&order=updated_at.desc,id.desc';
+  let rows: CustomFormulaRow[];
+  try {
+    rows = await postgrestJson<CustomFormulaRow[]>(listUrl(SUMMARY_SELECT));
+  } catch {
+    // Pre-migration fallback (same contract as getCustomFormula).
+    rows = await postgrestJson<CustomFormulaRow[]>(listUrl(SUMMARY_SELECT_LEGACY));
+  }
   return rows.map(toSummaryDto);
 }
 

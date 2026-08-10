@@ -30,7 +30,7 @@ import {
 import { frmParserCache } from '../engine/frm/cache';
 import { readFractalDocumentEnvelope } from '../engine/document-envelope';
 import { createFractalDocumentEnvelope } from '../lib/fractal-file';
-import { getCustomFormula, saveCustomFormula } from '../lib/cloud/custom-formulas';
+import { getCustomFormula, listCustomFormulas, saveCustomFormula } from '../lib/cloud/custom-formulas';
 import envelopeV1 from './fixtures/documents/envelope-v1.json';
 
 const MANDELBROT = `Mandelbrot {
@@ -180,6 +180,28 @@ describe('portable assets: formula envelope version', () => {
       DEFAULT_FRM_SEMANTICS_VERSION,
     );
   });
+
+  it('preserves a stored v2 through export and re-import (round-trip)', async () => {
+    const document = envelopeV1.document as unknown as FractalDocument;
+    const exported = await createFractalDocumentEnvelope(document, [
+      {
+        id: 'custom-fixture',
+        name: 'Custom V2',
+        source: 'CustomV2 {\ninit:\n  z = pixel\nloop:\n  z = z^2 + c\nbailout:\n  |z| < 4\n}',
+        frmSemanticsVersion: 2,
+      },
+    ]);
+    expect(exported.success).toBe(true);
+    if (!exported.success) return;
+    expect(exported.value.assets?.formulas?.[0]?.frmSemanticsVersion).toBe(2);
+
+    const reimported = readFractalDocumentEnvelope(
+      exported.value as unknown as Record<string, unknown>,
+    );
+    expect(reimported.mode).toBe('editable');
+    if (reimported.mode !== 'editable') return;
+    expect(reimported.envelope.assets?.formulas?.[0]?.frmSemanticsVersion).toBe(2);
+  });
 });
 
 describe('cloud custom-formula DTO mapping', () => {
@@ -283,5 +305,71 @@ describe('cloud custom-formula DTO mapping', () => {
       frmSemanticsVersion: 2 satisfies FrmSemanticsVersion,
     });
     expect(capturedBody).toContain('"p_frm_semantics_version":2');
+  });
+
+  it('falls back to the legacy detail select when the column is missing', async () => {
+    const requestedUrls: string[] = [];
+    vi.stubGlobal(
+      'fetch',
+      vi.fn(async (input: RequestInfo | URL) => {
+        const url = String(input);
+        requestedUrls.push(url);
+        if (url.includes('frm_semantics_version')) {
+          // PostgREST missing-column error shape.
+          return new Response(
+            JSON.stringify({
+              code: '42703',
+              message: 'column custom_formulas.frm_semantics_version does not exist',
+            }),
+            { status: 400 },
+          );
+        }
+        return new Response(JSON.stringify([BASE_ROW]), { status: 200 });
+      }),
+    );
+    const dto = await getCustomFormula('owner-id', FORMULA_ID);
+    expect(dto.frmSemanticsVersion).toBeUndefined();
+    expect(requestedUrls).toHaveLength(2);
+    expect(requestedUrls[0]).toContain('frm_semantics_version');
+    expect(requestedUrls[1]).not.toContain('frm_semantics_version');
+  });
+
+  it('lists a persisted v2 version in summary DTOs', async () => {
+    vi.stubGlobal(
+      'fetch',
+      vi.fn(async () =>
+        new Response(JSON.stringify([{ ...BASE_ROW, frm_semantics_version: 2 }]), {
+          status: 200,
+        }),
+      ),
+    );
+    const rows = await listCustomFormulas('owner-id');
+    expect(rows[0]?.frmSemanticsVersion).toBe(2);
+  });
+
+  it('falls back to the legacy list select when the column is missing', async () => {
+    const requestedUrls: string[] = [];
+    vi.stubGlobal(
+      'fetch',
+      vi.fn(async (input: RequestInfo | URL) => {
+        const url = String(input);
+        requestedUrls.push(url);
+        if (url.includes('frm_semantics_version')) {
+          return new Response(
+            JSON.stringify({
+              code: '42703',
+              message: 'column custom_formulas.frm_semantics_version does not exist',
+            }),
+            { status: 400 },
+          );
+        }
+        return new Response(JSON.stringify([BASE_ROW]), { status: 200 });
+      }),
+    );
+    const rows = await listCustomFormulas('owner-id');
+    expect(rows[0]?.frmSemanticsVersion).toBeUndefined();
+    expect(requestedUrls).toHaveLength(2);
+    expect(requestedUrls[0]).toContain('frm_semantics_version');
+    expect(requestedUrls[1]).not.toContain('frm_semantics_version');
   });
 });
