@@ -152,6 +152,21 @@ describe('lowerClassicEntryToNative: header and text hygiene', () => {
     expect(native).toContain('bailout:\n  |z|<=4');
     expect(kinds(notes)).toContain('bailout-magnitude-normalized');
   });
+
+  it('normalizes the swapped bare-z shorthand with the direction flipped', () => {
+    const { native, notes } = lowerClassicEntryToNative('Swap {\n\tz=0:\n\tz=z^2+c\n\t4>=z\n}');
+    expect(native).toContain('bailout:\n  |z| <= 4');
+    expect(kinds(notes)).toContain('bailout-magnitude-normalized');
+  });
+
+  it('does not touch z-prefixed identifiers or non-predicate assignments', () => {
+    const { native, notes } = lowerClassicEntryToNative(
+      'Zid {\n\tz=0, zPrev=1:\n\tzPrev=z, z=z^2+c\n\t|z|<4\n}',
+    );
+    expect(native).toContain('zPrev=1');
+    expect(native).toContain('zPrev=z');
+    expect(kinds(notes)).not.toContain('bailout-magnitude-normalized');
+  });
 });
 
 describe('compileClassicFrmEntry: round-trip through production compiler', () => {

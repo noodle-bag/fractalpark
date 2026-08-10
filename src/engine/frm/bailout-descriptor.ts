@@ -37,8 +37,13 @@ export interface BailoutDescriptorC2 {
   kind: 'C2';
   op: ComparisonOp;
   magnitude: 'z';
-  /** Serialized loop-invariant threshold expression (numbers/params/pure ops). */
-  thresholdExpr: string;
+  /**
+   * The verified loop-invariant threshold AST subtree. Consumers must
+   * evaluate this through the same expression code path as the compiler
+   * (codegen generateExpression) — a re-serialized string could diverge
+   * from the compiled dialect (`^` is not exponentiation in GLSL).
+   */
+  thresholdNode: ASTNode;
   /** Declared parameter names referenced by the expression, sorted. */
   params: string[];
 }
@@ -159,24 +164,6 @@ function checkLoopInvariance(node: ASTNode, declaredParams: Set<string>): Invari
   }
 }
 
-/** Serialize a loop-invariant expression for the C2 descriptor. */
-function serializeExpr(node: ASTNode): string {
-  switch (node.type) {
-    case 'number':
-      return String(node.value);
-    case 'ident':
-      return node.name;
-    case 'unary':
-      return `-${serializeExpr(node.operand)}`;
-    case 'binary':
-      return `(${serializeExpr(node.left)} ${node.op} ${serializeExpr(node.right)})`;
-    case 'call':
-      return `${node.name}(${node.args.map(serializeExpr).join(', ')})`;
-    default:
-      return '?';
-  }
-}
-
 /**
  * Extract a bounded bailout descriptor from a parsed bailout expression.
  * `declaredParams` are the formula's declared parameter names (p1–p5 plus
@@ -256,7 +243,7 @@ export function extractBailoutDescriptor(
       kind: 'C2',
       op: effectiveOp,
       magnitude: 'z',
-      thresholdExpr: serializeExpr(thresholdNode),
+      thresholdNode,
       params: [...invariance.params].sort(),
     },
   };

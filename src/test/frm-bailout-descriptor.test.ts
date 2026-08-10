@@ -45,14 +45,18 @@ describe('extractBailoutDescriptor: bounded forms', () => {
     }
   });
 
-  it('C2 parameterized radial collects sorted declared params', () => {
+  it('C2 parameterized radial collects sorted declared params and keeps the AST', () => {
     const r = extractBailoutDescriptor(bailoutAst('|z| < p1 * p2 + 1'), P_PARAMS);
     expect(r.ok).toBe(true);
     if (!r.ok) return;
     expect(r.descriptor.kind).toBe('C2');
     if (r.descriptor.kind !== 'C2') return;
     expect(r.descriptor.params).toEqual(['p1', 'p2']);
-    expect(r.descriptor.thresholdExpr).toBe('((p1 * p2) + 1)');
+    // The descriptor carries the verified AST subtree (not a re-serialized
+    // string) so consumers evaluate through the compiler's expression path.
+    expect(r.descriptor.thresholdNode.type).toBe('binary');
+    if (r.descriptor.thresholdNode.type !== 'binary') return;
+    expect(r.descriptor.thresholdNode.op).toBe('+');
   });
 
   it('C2 accepts pure function expressions over parameters', () => {
@@ -60,6 +64,7 @@ describe('extractBailoutDescriptor: bounded forms', () => {
     expect(r.ok).toBe(true);
     if (!r.ok || r.descriptor.kind !== 'C2') return;
     expect(r.descriptor.params).toEqual(['p1']);
+    expect(r.descriptor.thresholdNode.type).toBe('binary');
   });
 
   it('C4-R abs-real and real forms with numeric thresholds', () => {
@@ -89,6 +94,27 @@ describe('extractBailoutDescriptor: bounded forms', () => {
       descriptor: { kind: 'C1', op: '>=', magnitude: 'z', threshold: 16 },
     });
   });
+
+  it('swapped operands flip > and >= directions as well', () => {
+    const gt = extractBailoutDescriptor(bailoutAst('4 > |z|'), NO_PARAMS);
+    expect(gt).toEqual({
+      ok: true,
+      descriptor: { kind: 'C1', op: '<', magnitude: 'z', threshold: 4 },
+    });
+    const ge = extractBailoutDescriptor(bailoutAst('9 >= |z|'), NO_PARAMS);
+    expect(ge).toEqual({
+      ok: true,
+      descriptor: { kind: 'C1', op: '<=', magnitude: 'z', threshold: 9 },
+    });
+  });
+
+  it('swapped C4-R operands flip direction and keep the projection form', () => {
+    const r = extractBailoutDescriptor(bailoutAst('2 < |real(z)|'), NO_PARAMS);
+    expect(r).toEqual({
+      ok: true,
+      descriptor: { kind: 'C4R', form: 'abs-real', op: '>', threshold: 2 },
+    });
+  });
 });
 
 describe('extractBailoutDescriptor: stable rejections (no silent fallback)', () => {
@@ -109,6 +135,47 @@ describe('extractBailoutDescriptor: stable rejections (no silent fallback)', () 
       reason: 'unknown-magnitude-form',
     });
     expect(extractBailoutDescriptor(bailoutAst('|z*z| < 4'), NO_PARAMS).ok).toBe(false);
+  });
+
+  it('rejects adversarial magnitude lookalikes', () => {
+    // Case-sensitive `Z` is not the orbit variable.
+    expect(extractBailoutDescriptor(bailoutAst('|Z| < 4'), NO_PARAMS)).toEqual({
+      ok: false,
+      reason: 'unknown-magnitude-form',
+    });
+    // abs(z) is a function call, not the magnitude bars form.
+    expect(extractBailoutDescriptor(bailoutAst('abs(z) < 4'), NO_PARAMS)).toEqual({
+      ok: false,
+      reason: 'unknown-magnitude-form',
+    });
+    // real(c) projects the wrong variable.
+    expect(extractBailoutDescriptor(bailoutAst('real(c) < 4'), NO_PARAMS)).toEqual({
+      ok: false,
+      reason: 'unknown-magnitude-form',
+    });
+    expect(extractBailoutDescriptor(bailoutAst('|real(c)| < 4'), NO_PARAMS)).toEqual({
+      ok: false,
+      reason: 'unknown-magnitude-form',
+    });
+  });
+
+  it('rejects orbit-state smuggling through nested pure calls and fn slots', () => {
+    expect(extractBailoutDescriptor(bailoutAst('|z| < sqrt(z)'), NO_PARAMS)).toEqual({
+      ok: false,
+      reason: 'threshold-not-loop-invariant',
+    });
+    expect(extractBailoutDescriptor(bailoutAst('|z| < sqrt(sqrt(z))'), NO_PARAMS)).toEqual({
+      ok: false,
+      reason: 'threshold-not-loop-invariant',
+    });
+    expect(extractBailoutDescriptor(bailoutAst('|z| < fn1(p1)'), P_PARAMS)).toEqual({
+      ok: false,
+      reason: 'threshold-not-loop-invariant',
+    });
+    expect(extractBailoutDescriptor(bailoutAst('|z| < (1, 2)'), NO_PARAMS)).toEqual({
+      ok: false,
+      reason: 'threshold-not-loop-invariant',
+    });
   });
 
   it('rejects non-comparison and degenerate predicates', () => {
@@ -168,6 +235,21 @@ describe('strict v2 compile integration', () => {
     const r = compileFrmDetailed(src('|z| < z'), undefined, 2);
     expect(r.success).toBe(false);
     expect(r.errors.join('\n')).toContain('threshold-not-loop-invariant');
+  });
+
+  it('documents the intentional descriptor vs legacy bailout divergence', () => {
+    // Under v2 the descriptor is the authoritative contract; the numeric
+    // plugin.bailout keeps the legacy v1 channel value for existing
+    // renderer consumers until the renderer-pipeline v2 slice lands. Both
+    // are exposed side by side, gated by frmSemanticsVersion.
+    const r = compileFrmDetailed(src('4 < |z|'), undefined, 2);
+    expect(r.success).toBe(true);
+    expect(r.frmSemanticsVersion).toBe(2);
+    // Descriptor: direction preserved (|z| > 4).
+    expect(r.bailoutDescriptor).toEqual({ kind: 'C1', op: '>', magnitude: 'z', threshold: 4 });
+    // Legacy channel: v1 heuristic value (threshold 4, direction discarded)
+    // — renderer-pipeline v2 will consume the descriptor instead.
+    expect(r.plugin?.bailout).toBe(4);
   });
 });
 

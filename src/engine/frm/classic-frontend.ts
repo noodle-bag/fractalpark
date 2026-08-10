@@ -435,10 +435,12 @@ export function lowerClassicEntryToNative(entrySource: string): LoweredClassicEn
     });
   }
 
-  // Classic magnitude shorthand: a bare `z` on the left of a comparison
-  // predicate means |z| in Fractint semantics (e.g. `z<=4` ≡ `|z| <= 4`).
-  // Normalize it here so the strict v2 descriptor contract (which only
-  // accepts |z|, |real(z)|, or real(z)) can see the intended form.
+  // Classic magnitude shorthand: a bare `z` in a comparison predicate means
+  // |z| in Fractint semantics (`z<=4` ≡ `|z| <= 4`; swapped `4>=z` ≡
+  // `|z| <= 4` with the direction flipped). Normalize here so the strict v2
+  // descriptor contract (which only accepts |z|, |real(z)|, or real(z))
+  // sees the intended form.
+  const flipCmp: Record<string, string> = { '<': '>', '<=': '>=', '>': '<', '>=': '<=' };
   if (/^z\s*(<=|>=|<|>)/.test(bailoutText)) {
     bailoutText = bailoutText.replace(/^z\s*(?=(?:<=|>=|<|>))/, '|z|');
     notes.push({
@@ -446,6 +448,17 @@ export function lowerClassicEntryToNative(entrySource: string): LoweredClassicEn
       line: bailoutLine,
       message: 'Bare `z` in the bailout predicate normalized to |z| (Fractint magnitude shorthand)',
     });
+  } else {
+    const swapped = /^(.+?)\s*(<=|>=|<|>)\s*z$/.exec(bailoutText);
+    if (swapped) {
+      bailoutText = `|z| ${flipCmp[swapped[2]]} ${swapped[1]}`;
+      notes.push({
+        kind: 'bailout-magnitude-normalized',
+        line: bailoutLine,
+        message:
+          'Swapped bare `z` bailout normalized to |z| with the direction flipped (Fractint magnitude shorthand)',
+      });
+    }
   }
 
   // Variable `bailout` rename: the native parser treats a statement that
