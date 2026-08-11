@@ -23,6 +23,8 @@
  * - `;` comments stripped (native lexer would accept them, but the
  *   lowering makes the IR comment-free);
  * - `\r\n` / stray `\r` normalized to `\n`;
+ * - a classic backslash at the end of a code line joins the following
+ *   physical line before tokenization (comments never participate);
  * - statements before the first top-level `:` become `init:` lines; the
  *   remaining statements become `loop:` lines (additional colons are
  *   statement separators, matching Fractint);
@@ -85,7 +87,8 @@ export interface LoweringNote {
     | 'c-init-rebinding-renamed'
     | 'builtin-name-recased'
     | 'reserved-word-renamed'
-    | 'unary-call-complex-pair';
+    | 'unary-call-complex-pair'
+    | 'line-continuation-joined';
   /** 1-based line in the classic entry source. */
   line: number;
   message: string;
@@ -266,6 +269,103 @@ interface WalkResult {
 
 const KEYWORD_RE = /^(if|else|elseif|endif)(?![a-zA-Z0-9_])/i;
 
+// This marker represents the physical newline removed by a classic `\\`
+// continuation.  `walkBody` consumes it without ending the current token,
+// but still advances its physical source-line counter.  Consequently a
+// joined statement keeps the first line as its diagnostic line while later
+// statements retain their real physical lines.
+const LINE_CONTINUATION_MARKER = '\u0000';
+
+/**
+ * Join classic code lines ending in `\\`, leaving comments untouched.
+ *
+ * The marker preserves physical line accounting for `walkBody`; it is never
+ * emitted into native source.  A continuation immediately followed by the
+ * entry's closing brace (or EOF) has no statement to continue and is an
+ * honest source error rather than an implicit deletion of the backslash.
+ */
+function joinClassicLineContinuations(body: string, notes: LoweringNote[]): { text: string; physicalLines: number[] } {
+  const lines = body.split('\n');
+  let joined = 0;
+  let firstLine = 0;
+  const isClosingBraceLine = (line: string): boolean => {
+    const code = line.slice(0, line.indexOf(';') === -1 ? line.length : line.indexOf(';'));
+    return code.trimStart().startsWith('}');
+  };
+
+  const out: string[] = [];
+  /** physicalLines[logical index] = 1-based body-relative physical line. */
+  const physicalLines: number[] = [];
+  let logical = 0;
+  let previousContinued = false;
+  for (let i = 0; i < lines.length; i++) {
+    const semi = lines[i].indexOf(';');
+    const code = semi === -1 ? lines[i] : lines[i].slice(0, semi);
+    // Continuation is a backslash at the TRUE physical end of the line.
+    // A comment anywhere on the line (`code \; note` or `; note \`) makes
+    // the slash ordinary text — joining would swallow the next physical
+    // line into the comment (Codex 6b1 round-2).
+    const continues = semi === -1 && lines[i].endsWith('\\');
+    if (continues && (i === lines.length - 1 || isClosingBraceLine(lines[i + 1]))) {
+      throw new Error(`Classic line continuation at line ${i + 1} has no following statement`);
+    }
+    const transformed = continues
+      ? `${lines[i].slice(0, code.length - 1)}${LINE_CONTINUATION_MARKER}${lines[i].slice(code.length)}`
+      : lines[i];
+    // A continuation replaces the following newline, so do not add one
+    // before this line when the preceding line continued.
+    if (i > 0 && !previousContinued) out.push('\n');
+    if (!previousContinued) {
+      // A new logical line starts at physical line i (1-based).
+      physicalLines[logical] = i + 1;
+    }
+    out.push(transformed);
+    if (continues) {
+      joined++;
+      if (!firstLine) firstLine = i + 1;
+    } else {
+      logical++;
+    }
+    previousContinued = continues;
+  }
+
+  if (joined > 0) {
+    notes.push({
+      kind: 'line-continuation-joined',
+      line: firstLine,
+      message: `${joined} classic backslash line continuation(s) joined before tokenization`,
+    });
+  }
+  return { text: out.join(''), physicalLines };
+}
+
+/** Build a regex matching `literal` with optional continuation markers
+ * between characters (a backslash join may split an identifier). */
+function markerFlexRegExp(literal: string, flags = 'g'): RegExp {
+  const flex = literal
+    .split('')
+    .map((c) => c.replace(/[.*+?^${}()|[\]\\]/g, '\\$&'))
+    .join(`${LINE_CONTINUATION_MARKER}?`);
+  return new RegExp(`\\b${flex}\\b`, flags);
+}
+
+/** Rebuild `target` over a marker-flex match, keeping any continuation
+ * markers in place so walkBody's physical-line accounting survives. */
+function replacePreservingMarkers(match: string, target: string): string {
+  const markerless = match.replace(new RegExp(LINE_CONTINUATION_MARKER, 'g'), '');
+  if (markerless === match) return target;
+  let out = '';
+  let ti = 0;
+  for (const ch of match) {
+    if (ch === LINE_CONTINUATION_MARKER) {
+      out += LINE_CONTINUATION_MARKER;
+    } else {
+      out += target[ti++] ?? '';
+    }
+  }
+  return out + target.slice(ti);
+}
+
 /**
  * Tokenize a classic body into expression and structural tokens. Comments,
  * separators (`,`, newline, `:`), and the closing `}` are consumed here.
@@ -294,6 +394,14 @@ function walkBody(body: string, startLine: number, notes: LoweringNote[]): WalkR
   const n = body.length;
   while (i < n) {
     const ch = body[i];
+
+    if (ch === LINE_CONTINUATION_MARKER) {
+      // This is a removed `\\` plus its following physical newline. Keep
+      // the current token open, but account for the original line break.
+      line++;
+      i++;
+      continue;
+    }
 
     if (ch === '\n') {
       endCurrent();
@@ -514,14 +622,24 @@ export function lowerClassicEntryToNative(entrySource: string): LoweredClassicEn
   // `IF` ≡ `if`); the native parser is case-sensitive. Lowercase the body
   // once, before tokenization — entry names come from the header parse and
   // are unaffected.
-  let prepared = bodyText.toLowerCase();
+  const joinedBody = joinClassicLineContinuations(bodyText.toLowerCase(), notes);
+  let prepared = joinedBody.text;
+  const logicalLine = (idx: number) => joinedBody.physicalLines[idx] ?? idx + 1;
   // 5b — three classic-dialect text rules, applied per line to the code
   // portion only (a `;` comment never triggers or receives a rewrite, so
   // notes never claim phantom adaptations). Each note records the first
   // affected source line (body-relative +1: the body starts after the
   // header line, and walkBody's line accounting is 1-based from the body).
-  const pairRe =
-    /\b(sin|cos|cosxx|cotanh|tan|sinh|cosh|tanh|exp|log|sqrt|abs|sqr|conj|flip|recip|cabs|real|imag|fn[1-4])\s*\(\s*([^(),]+?)\s*,\s*([^(),]+?)\s*\)/g;
+  const PAIR_FN_NAMES = ['sin', 'cos', 'cosxx', 'cotanh', 'tan', 'sinh', 'cosh', 'tanh', 'exp', 'log', 'sqrt', 'abs', 'sqr', 'conj', 'flip', 'recip', 'cabs', 'real', 'imag', 'fn1', 'fn2', 'fn3', 'fn4'];
+  const flexOf = (lit: string) =>
+    lit
+      .split('')
+      .map((c) => c.replace(/[.*+?^${}()|[\]\\]/g, '\\$&'))
+      .join(`${LINE_CONTINUATION_MARKER}?`);
+  const pairRe = new RegExp(
+    `\\b(${PAIR_FN_NAMES.map(flexOf).join('|')})\\s*\\(\\s*([^(),]+?)\\s*,\\s*([^(),]+?)\\s*\\)`,
+    'g',
+  );
   let recased = 0;
   let recasedLine = 0;
   let constRenamed = false;
@@ -534,17 +652,17 @@ export function lowerClassicEntryToNative(entrySource: string): LoweredClassicEn
       const semi = line.indexOf(';');
       const code = semi < 0 ? line : line.slice(0, semi);
       const comment = semi < 0 ? '' : line.slice(semi);
-      let out = code.replace(/\blast(sqr)\b/g, () => {
+      let out = code.replace(markerFlexRegExp('lastsqr'), (m) => {
         recased++;
-        if (!recasedLine) recasedLine = idx + 1;
-        return 'LastSqr';
+        if (!recasedLine) recasedLine = logicalLine(idx);
+        return replacePreservingMarkers(m, 'LastSqr');
       });
       // `const` is a legal classic variable name (fractint.hlp reserves
       // only operator symbols) but is GLSL-reserved — rename to const_.
-      out = out.replace(/\bconst\b/g, () => {
+      out = out.replace(markerFlexRegExp('const'), (m) => {
         constRenamed = true;
-        if (!constLine) constLine = idx + 1;
-        return 'const_';
+        if (!constLine) constLine = logicalLine(idx);
+        return replacePreservingMarkers(m, 'const_');
       });
       // Unary function applied to a bare complex pair: classic
       // `exp(1.,0.)` means exp((1,0)) — wrap the pair as a complex
@@ -552,7 +670,7 @@ export function lowerClassicEntryToNative(entrySource: string): LoweredClassicEn
       // (nested calls, multi-arg shapes) fails loudly at validator arity.
       out = out.replace(pairRe, (_m, fn, a, b) => {
         pairWrapped++;
-        if (!pairLine) pairLine = idx + 1;
+        if (!pairLine) pairLine = logicalLine(idx);
         return `${fn}((${a},${b}))`;
       });
       return out + comment;

@@ -58,6 +58,53 @@ describe('lowerClassicEntryToNative: section mapping', () => {
 });
 
 describe('lowerClassicEntryToNative: header and text hygiene', () => {
+  it('joins classic backslash line continuations before tokenization and maps to the first line', () => {
+    const source = 'Continued {\n  z=0:\n  z=z^2+\\\n    c\n  |z|<4\n}';
+    const { native, notes, lineMap } = lowerClassicEntryToNative(source);
+    expect(native).toContain('z=z^2+    c');
+    expect(native).not.toContain('\\');
+    expect(notes).toContainEqual(expect.objectContaining({ kind: 'line-continuation-joined', line: 3 }));
+    expect(lineMap[native.split('\n').indexOf('  z=z^2+    c')]).toBe(3);
+    expect(compileClassicFrmEntry(source, 'Continued').success).toBe(true);
+  });
+
+  it('does not treat a backslash inside a classic comment as a continuation', () => {
+    const source = 'CommentSlash {\n  z=0: ; documentation slash \\\n  z=z^2+c\n  |z|<4\n}';
+    const { native, notes } = lowerClassicEntryToNative(source);
+    expect(native).toContain('z=z^2+c');
+    expect(kinds(notes)).not.toContain('line-continuation-joined');
+    expect(compileClassicFrmEntry(source, 'CommentSlash').success).toBe(true);
+  });
+
+  it('refuses to join a backslash that precedes a trailing comment (6b1 round-2)', () => {
+    // The pre-fix check tested the comment-stripped prefix, so the line
+    // below looked like a continuation: joining swallowed the next physical
+    // line (the bailout predicate) into the `;` comment and silently
+    // substituted the default bailout. The slash is ordinary text now: the
+    // predicate survives lowering, and the stray backslash fails closed at
+    // the lexer instead of changing semantics behind the user's back.
+    const source = String.raw`SlashCode {
+  z=0:
+  z=z^2+c\; trailing note
+  |z|<4
+}`;
+    const { native, notes } = lowerClassicEntryToNative(source);
+    expect(native).toContain('bailout:');
+    expect(native).toContain('|z|<4');
+    expect(kinds(notes)).not.toContain('line-continuation-joined');
+    expect(kinds(notes)).not.toContain('default-bailout');
+    const result = compileClassicFrmEntry(source, 'SlashCode');
+    expect(result.success).toBe(false);
+    expect(result.lexerErrors?.[0]?.char).toBe('\\');
+  });
+
+  it('rejects a trailing classic backslash at the end of the body', () => {
+    const source = 'Dangling {\n  z=0:\n  z=z^2+c\\\n}';
+    expect(() => lowerClassicEntryToNative(source)).toThrow(
+      'Classic line continuation at line 3 has no following statement',
+    );
+  });
+
   it('sanitises hyphenated names and records symmetry', () => {
     const { native, notes } = lowerClassicEntryToNative(
       'Hy-1 (XAXIS) {\n\tz=0:\n\tz=z^2+c\n\t|z|<4\n}',
@@ -434,5 +481,34 @@ describe('Slice 5b review fixes', () => {
       2,
     );
     expect(ok.success).toBe(true);
+  });
+});
+
+describe('Slice 6b1 review fixes (marker-flex rules + physical note lines)', () => {
+  it('a split identifier across a continuation still recases (lastsqr)', () => {
+    const src = 'T {\n  z = pixel:\n  z = sqr(z) + c,\n  lastsq\\\nr <= 4\n}';
+    const { native, notes } = lowerClassicEntryToNative(src);
+    expect(native).toContain('LastSq');
+    expect(kinds(notes)).toContain('builtin-name-recased');
+    const r = compileClassicFrmEntry(src, 'T', 'split-lastsqr', 2);
+    expect(r.success).toBe(true);
+  });
+
+  it('a split `const` across a continuation still renames', () => {
+    const { native, notes } = lowerClassicEntryToNative(
+      'T {\n  c\\\nonst = 1, z = pixel:\n  z = z + const + c,\n  |z| < 4\n}',
+    );
+    expect(native.replace(/\0/g, '')).toContain('const_ = 1');
+    expect(kinds(notes)).toContain('reserved-word-renamed');
+  });
+
+  it('notes use the physical source line after a continuation join', () => {
+    // Continuation on classic source line 2 merges lines 2-3; the const on
+    // PHYSICAL source line 5 must note 5, not the joined-logical index.
+    const { notes } = lowerClassicEntryToNative(
+      'T {\n  a = 1 + \\\n2, z = pixel:\n  z = z + c,\n  const = 3\n  |z| < 4\n}',
+    );
+    const note = notes.find((n) => n.kind === 'reserved-word-renamed');
+    expect(note?.line).toBe(5);
   });
 });
