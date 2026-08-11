@@ -23,8 +23,9 @@ describe('lowerClassicEntryToNative: section mapping', () => {
     const { native } = lowerClassicEntryToNative(
       'Mini {\n\tz=0, c=pixel:\n\tz=z^2+c\n\t|z| <= 4\n}',
     );
-    expect(native).toContain('init:\n  z=0');
-    expect(native).toContain('loop:\n  z=z^2+c');
+    // The c-rebinding seed lands first; the user statements follow.
+    expect(native).toContain('init:\n  cclassic = c\n  z=0');
+    expect(native).toContain('loop:\n  z=z^2+cclassic');
     expect(native).toContain('bailout:\n  |z| <= 4');
   });
 
@@ -76,12 +77,13 @@ describe('lowerClassicEntryToNative: header and text hygiene', () => {
     expect(kinds(notes)).toContain('comment-stripped');
   });
 
-  it('removes the redundant c=pixel identity assignment', () => {
+  it('an init c=pixel rebind lowers to the renamed fresh variable (Julia-correct, Slice 5c)', () => {
     const { native, notes } = lowerClassicEntryToNative(
       'CIdent {\n\tz=0, c=pixel:\n\tz=z^2+c\n\t|z|<4\n}',
     );
-    expect(native).not.toContain('c=pixel');
-    expect(kinds(notes)).toContain('c-pixel-assignment-removed');
+    // Not deleted: in Julia mode c=pixel replaces the Julia constant.
+    expect(native).toContain('cclassic=pixel');
+    expect(kinds(notes)).toContain('c-init-rebinding-renamed');
   });
 
   it('splits chained assignments into ordered single assignments', () => {
@@ -136,15 +138,19 @@ describe('lowerClassicEntryToNative: header and text hygiene', () => {
     const { native } = lowerClassicEntryToNative(
       'InitIf {\n\tIF (p1)\n\t  z = p1\n\tELSE\n\t  z = 0\n\tENDIF\n\tc = pixel:\n\tz = z^2 + c\n\t|z| < 4\n}',
     );
-    expect(native).toMatch(/init:\n  IF \(p1\)/i);
+    // c=pixel init triggers the rename; the seed precedes the IF block.
+    expect(native).toContain('cclassic = c');
+    expect(native).toMatch(/if \(p1\)/i);
     expect(native).toMatch(/ELSE/i);
     expect(native).toMatch(/ENDIF/i);
   });
 
-  it('records the Julia-mode caveat when removing c = pixel', () => {
-    const { notes } = lowerClassicEntryToNative('CIdent {\n\tz=0, c=pixel:\n\tz=z^2+c\n\t|z|<4\n}');
-    const note = notes.find((n) => n.kind === 'c-pixel-assignment-removed');
-    expect(note?.message).toContain('Julia');
+  it('init c = pixel is preserved (Julia-mode rebind), never dropped (Slice 5c)', () => {
+    // Pre-5c this piece was deleted as Mandelbrot-redundant; in Julia mode
+    // that silently kept c == juliaC. Now it renames and rebinds.
+    const { native, notes } = lowerClassicEntryToNative('CIdent {\n\tz=0, c=pixel:\n\tz=z^2+c\n\t|z|<4\n}');
+    expect(native).toContain('cclassic=pixel');
+    expect(kinds(notes)).not.toContain('c-pixel-assignment-removed');
   });
 
   it('normalizes the bare-z bailout shorthand to magnitude form (Fractint semantics)', () => {
@@ -223,13 +229,14 @@ describe('compileClassicFrmEntry: round-trip through production compiler', () =>
 });
 
 describe('T0 grammar coverage (corpus-evidence forms, project-authored samples)', () => {
-  it('removes the c=pixel fragment of a chained `z = c = pixel` init', () => {
+  it('a chained `z = c = pixel` init splits and renames (nothing dropped, Slice 5c)', () => {
     const source = 'ChainProbe {\n  z = c = pixel:\n  z = z*z + c,\n  |z| < 4\n}';
     const { native, notes } = lowerClassicEntryToNative(source);
-    expect(native).toContain('init:\n  z = c\n');
-    expect(native).not.toContain('c = pixel');
+    expect(native).toContain('init:\n  cclassic = c\n');
+    expect(native).toContain('cclassic = pixel');
+    expect(native).toContain('z = cclassic');
     expect(kinds(notes)).toContain('chained-assignment-split');
-    expect(kinds(notes)).toContain('c-pixel-assignment-removed');
+    expect(kinds(notes)).toContain('c-init-rebinding-renamed');
     const result = compileClassicFrmEntry(source, 'ChainProbe');
     expect(result.success).toBe(true);
   });
@@ -298,7 +305,7 @@ describe('init-only c rebinding rename (T0 evidence)', () => {
     const source =
       'RebindProbe {\n  z = 0, x = real(pixel), y = imag(pixel), c = x*(cos(y)+x*sin(y)):\n  z = sqr(z) + c,\n  |z| < 4\n}';
     const { native, notes } = lowerClassicEntryToNative(source);
-    expect(native).toContain('cclassic = pixel');
+    expect(native).toContain('cclassic = c');
     expect(native).toContain('cclassic = x*(cos(y)+x*sin(y))');
     expect(native).toContain('z = sqr(z) + cclassic');
     expect(kinds(notes)).toContain('c-init-rebinding-renamed');
@@ -310,38 +317,44 @@ describe('init-only c rebinding rename (T0 evidence)', () => {
     const source = 'SeedProbe {\n  z = c, c = 2*pixel:\n  z = z^2 + c,\n  |z| < 4\n}';
     const { native } = lowerClassicEntryToNative(source);
     const init = native.split('loop:')[0];
-    expect(init.indexOf('cclassic = pixel')).toBeLessThan(init.indexOf('z = cclassic'));
+    expect(init.indexOf('cclassic = c')).toBeLessThan(init.indexOf('z = cclassic'));
     const result = compileClassicFrmEntry(source, 'SeedProbe');
     expect(result.success).toBe(true);
   });
 
-  it('a c assignment in the LOOP is cross-iteration state — no rename, native rejects', () => {
+  it('a c assignment in the LOOP lowers to mutable cross-iteration state (Slice 5c)', () => {
     const source = 'LoopCProbe {\n  z = pixel:\n  z = sqr(z) + c, c = c + p1,\n  |z| < 4\n}';
     const { native, notes } = lowerClassicEntryToNative(source);
-    expect(native).toContain('c = c + p1');
-    expect(kinds(notes)).not.toContain('c-init-rebinding-renamed');
+    // The loop mutation is renamed like any c assignment; the fresh
+    // variable is seeded from framework c and persists across iterations
+    // (module-scope mutable — the classic semantics).
+    expect(native).toContain('cclassic = c');
+    expect(native).toContain('cclassic = cclassic + p1');
+    expect(kinds(notes)).toContain('c-init-rebinding-renamed');
     const result = compileClassicFrmEntry(source, 'LoopCProbe');
-    expect(result.success).toBe(false);
+    expect(result.success).toBe(true);
   });
 
   it('avoids collisions with an existing cclassic identifier', () => {
     const source = 'CollisionProbe {\n  cclassic = 1, c = 2*pixel:\n  z = z^2 + c + cclassic,\n  |z| < 4\n}';
     const { native } = lowerClassicEntryToNative(source);
-    expect(native).toContain('cclassic2 = pixel');
+    expect(native).toContain('cclassic2 = c');
     const result = compileClassicFrmEntry(source, 'CollisionProbe');
     expect(result.success).toBe(true);
   });
 });
 
 describe('Codex round-2 regressions', () => {
-  it('init c rebind + loop chained z = c = pixel is per-iteration reset — no rename, rejects', () => {
-    // Classic resets c to pixel EVERY iteration; the init rebind only
-    // shapes iteration 1. Renaming would silently keep the rebound c.
+  it('init c rebind + loop chained z = c = pixel lowers to an explicit per-iteration reset (Slice 5c)', () => {
+    // Classic resets c to pixel EVERY iteration; with c writable the loop
+    // piece survives the flatten and becomes cclassic = pixel — the reset
+    // is now expressed, not silently dropped.
     const source = 'ResetProbe {\n  c = fn1(pixel), z = 0:\n  z = c = pixel, z = z^2 + c,\n  |z| < 4\n}';
-    const { notes } = lowerClassicEntryToNative(source);
-    expect(kinds(notes)).not.toContain('c-init-rebinding-renamed');
+    const { native, notes } = lowerClassicEntryToNative(source);
+    expect(kinds(notes)).toContain('c-init-rebinding-renamed');
+    expect(native).toContain('cclassic = c');
     const result = compileClassicFrmEntry(source, 'ResetProbe');
-    expect(result.success).toBe(false);
+    expect(result.success).toBe(true);
   });
 });
 

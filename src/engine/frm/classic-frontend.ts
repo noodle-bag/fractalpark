@@ -98,6 +98,10 @@ export interface LoweredClassicEntry {
   /** `lineMap[nativeLine - 1]` = 1-based classic source line. */
   lineMap: number[];
   notes: LoweringNote[];
+  /** The generated c-rebinding seed target (`cclassic[N]`) when the
+   * rename fired — provenance marker consumed by the C2 init-binding
+   * analysis so only the GENERATED seed is transparent, never user code. */
+  cSeedTarget?: string;
   /** Raw `[...]` option block content from the header, when present. */
   options?: string;
   /**
@@ -663,8 +667,6 @@ export function lowerClassicEntryToNative(entrySource: string): LoweredClassicEn
     line: number;
     kind: 'stmt' | 'if' | 'else' | 'elseif' | 'endif';
   }
-  let removedCPixelInLoop = 0;
-  let activeSection: 'init' | 'loop' = 'init';
   const flatten = (tokensIn: BodyToken[]): Stmt[] => {
     const out: Stmt[] = [];
     for (const token of tokensIn) {
@@ -683,21 +685,10 @@ export function lowerClassicEntryToNative(entrySource: string): LoweredClassicEn
         });
       }
       for (const piece of pieces) {
-        // The `c = pixel` removal applies per split piece — a chained
-        // `z = c = pixel` otherwise leaks the `c = pixel` fragment into
-        // native source, where assigning the reserved `c` is rejected.
-        if (/^c\s*=\s*pixel$/i.test(piece)) {
-          if (activeSection === 'loop') removedCPixelInLoop++;
-          notes.push({
-            kind: 'c-pixel-assignment-removed',
-            line: token.line,
-            message:
-              '`c = pixel` removed: redundant in Mandelbrot mode (native `c` already equals the ' +
-              'pixel). Julia-mode pixel-binding has no native equivalent — entries relying on it ' +
-              'are expected to classify Read-only downstream.',
-          });
-          continue;
-        }
+        // No c=pixel deletion anywhere: in Julia mode an init `c = pixel`
+        // is a real rebind (replacing the Julia constant), and in the loop
+        // it is a per-iteration reset — both are expressed by the
+        // c-rebinding rename below (Slice 5c). Nothing is dropped.
         out.push({ text: piece, line: token.line, kind: 'stmt' });
       }
     }
@@ -705,34 +696,35 @@ export function lowerClassicEntryToNative(entrySource: string): LoweredClassicEn
   };
 
   const initStmts = flatten(initTokens);
-  activeSection = 'loop';
   const loopStmts = flatten(loopBodyTokens);
   if (predicate) bailoutText = renameBailout(bailoutText);
 
-  // Init-only `c = <non-pixel>` rebinding: classic semantics pre-set
-  // `c = pixel` at entry start and let init reassign it (the loop then
-  // reads the rebound value). Native reserves `c` as the read-only pixel
-  // constant, so the rebinding lowers to a fresh variable seeded with
-  // `pixel` ahead of the classic init statements, and every `c` reference
-  // (init, loop, bailout) reads the fresh variable. A `c` assignment in
-  // the LOOP is cross-iteration state (E3 / T1 territory) and stays on
-  // the native reject path — no rename.
+  // `c` rebinding (init AND/OR loop): classic pre-seeds `c` at entry
+  // (Mandelbrot: pixel; Julia: the julia constant) and treats it as
+  // ordinary mutable state — init may rebind it, the loop may keep
+  // evolving it (j1: `c = c + p2`). Native reserves `c` as the read-only
+  // runtime constant, so any `c` assignment lowers to a fresh mutable
+  // variable seeded from the framework `c` (correct for both modes:
+  // Mandelbrot c == point, Julia c == u_juliaC), and every `c` reference
+  // (init, loop, bailout) reads the fresh variable. The prelude declares
+  // it as a module-scope mutable — persistence across iterateStep calls
+  // within the fragment is exactly classic cross-iteration state.
   const C_ASSIGN_RE = /^c\s*=(?![=])/;
   const initHasCRebind = initStmts.some(
     (s) => s.kind === 'stmt' && C_ASSIGN_RE.test(s.text),
   );
-  // A `c = pixel` piece removed from the loop is a per-iteration reset —
-  // cross-iteration c state (E3) even though nothing survives to detect.
-  const loopHasCAssign =
-    removedCPixelInLoop > 0 ||
-    loopStmts.some((s) => s.kind === 'stmt' && C_ASSIGN_RE.test(s.text));
-  if (initHasCRebind && !loopHasCAssign) {
+  const loopHasCAssign = loopStmts.some(
+    (s) => s.kind === 'stmt' && C_ASSIGN_RE.test(s.text),
+  );
+  let cSeedTarget: string | undefined;
+  if (initHasCRebind || loopHasCAssign) {
     let fresh = 'cclassic';
     const allText = () =>
       [...initStmts, ...loopStmts].map((s) => s.text).join('\n') + '\n' + bailoutText;
     for (let suffix = 2; new RegExp(`\\b${fresh}\\b`).test(allText()); suffix++) {
       fresh = `cclassic${suffix}`;
     }
+    cSeedTarget = fresh;
     const renameC = (text: string) => text.replace(/\bc\b/g, fresh);
     for (const s of initStmts) s.text = renameC(s.text);
     for (const s of loopStmts) s.text = renameC(s.text);
@@ -740,14 +732,15 @@ export function lowerClassicEntryToNative(entrySource: string): LoweredClassicEn
     const firstLine =
       initStmts.find((s) => s.kind === 'stmt' && s.text.startsWith(`${fresh} `))?.line ??
       initStmts.find((s) => s.kind === 'stmt' && s.text.startsWith(`${fresh}=`))?.line ??
+      loopStmts.find((s) => s.kind === 'stmt' && s.text.startsWith(`${fresh} `))?.line ??
       1;
-    initStmts.unshift({ text: `${fresh} = pixel`, line: firstLine, kind: 'stmt' });
+    initStmts.unshift({ text: `${fresh} = c`, line: firstLine, kind: 'stmt' });
     notes.push({
       kind: 'c-init-rebinding-renamed',
       line: firstLine,
       message:
-        `Init-only c rebinding lowered to \`${fresh}\` (seeded from pixel): native reserves \`c\` ` +
-        'as the read-only pixel constant; classic init reassignments are ordinary state',
+        `c rebinding lowered to \`${fresh}\` (seeded from framework c; ${loopHasCAssign ? 'loop-mutated' : 'init-only'}): ` +
+        'native reserves `c` as the read-only runtime constant; classic c is ordinary mutable state',
     });
   }
 
@@ -793,6 +786,7 @@ export function lowerClassicEntryToNative(entrySource: string): LoweredClassicEn
     native: native.join('\n'),
     lineMap,
     notes,
+    ...(cSeedTarget !== undefined ? { cSeedTarget } : {}),
     ...(header.options !== undefined ? { options: header.options } : {}),
     ...(fnDefaults !== undefined ? { fnDefaults } : {}),
   };

@@ -59,13 +59,15 @@ export function compileFrm(
   source: string,
   id?: string,
   semanticsVersion: FrmSemanticsVersion = DEFAULT_FRM_SEMANTICS_VERSION,
-  options?: { dialect?: FormulaDialect },
+  options?: { dialect?: FormulaDialect; classicSeedTarget?: string },
 ): CompileResult {
   const dialect: FormulaDialect = options?.dialect ?? 'myfrac-native';
   // The version and dialect are part of the cache key: a v2 request must
   // never reuse a cached v1 result, and a classic-dialect compile (which
   // may carry after-step timing under v2) must never reuse a native one.
-  const cacheKey = `${semanticsVersion}\u0000${dialect}\u0000${source}`;
+  // The classic seed marker also keys the cache: the same source text
+  // compiles differently with and without the provenance marker.
+  const cacheKey = `${semanticsVersion}\u0000${dialect}\u0000${options?.classicSeedTarget ?? ''}\u0000${source}`;
   // Check cache first
   const cached = frmParserCache.get(cacheKey);
   if (cached) {
@@ -80,7 +82,12 @@ export function compileFrm(
   }
 
   // Perform full compilation
-  const result = compileFrmUncached(source, id, semanticsVersion, { dialect });
+  const result = compileFrmUncached(source, id, semanticsVersion, {
+    dialect,
+    ...(options?.classicSeedTarget !== undefined
+      ? { classicSeedTarget: options.classicSeedTarget }
+      : {}),
+  });
   
   // Cache successful results
   if (result.success) {
@@ -94,7 +101,7 @@ function compileFrmUncached(
   source: string,
   id?: string,
   semanticsVersion: FrmSemanticsVersion = DEFAULT_FRM_SEMANTICS_VERSION,
-  options?: { dialect?: FormulaDialect },
+  options?: { dialect?: FormulaDialect; classicSeedTarget?: string },
 ): CompileResult {
   const dialect: FormulaDialect = options?.dialect ?? 'myfrac-native';
   const errors: string[] = [];
@@ -154,8 +161,33 @@ function compileFrmUncached(
       // a classic idiom for parameterized radii (Jm_* family evidence).
       const initBindings = new Map<string, ASTNode>();
       const multiplyAssigned = new Set<string>();
+      // Remaining assignment counts per target, for seed detection.
+      const remaining = new Map<string, number>();
       for (const stmt of ast.initBlock) {
         if (stmt.type !== 'assignment') continue;
+        remaining.set(stmt.target, (remaining.get(stmt.target) ?? 0) + 1);
+      }
+      for (const stmt of ast.initBlock) {
+        if (stmt.type !== 'assignment') continue;
+        remaining.set(stmt.target, (remaining.get(stmt.target) ?? 1) - 1);
+        // Seed-transparency, provenance-gated: the classic c-rebinding
+        // lowering marks its generated seed target via
+        // options.classicSeedTarget — ONLY that exact variable with a
+        // seed-shaped RHS (exactly `c` or `pixel`), assigned again later,
+        // is transparent. User code can never claim the marker: a
+        // hand-written `cclassic = pixel; cclassic = p1` keeps the strict
+        // exactly-once treatment (Codex round-3 reproduction).
+        if (
+          options?.classicSeedTarget !== undefined &&
+          stmt.target === options.classicSeedTarget &&
+          stmt.value.type === 'ident' &&
+          (stmt.value.name === 'c' || stmt.value.name === 'pixel') &&
+          (remaining.get(stmt.target) ?? 0) > 0 &&
+          !initBindings.has(stmt.target) &&
+          !multiplyAssigned.has(stmt.target)
+        ) {
+          continue;
+        }
         // Exactly-once only: a second assignment permanently bans the name
         // (sequential init semantics make later bindings order-dependent).
         if (multiplyAssigned.has(stmt.target)) continue;
@@ -362,7 +394,7 @@ export function compileFrmDetailed(
   source: string,
   id?: string,
   semanticsVersion: FrmSemanticsVersion = DEFAULT_FRM_SEMANTICS_VERSION,
-  options?: { dialect?: FormulaDialect },
+  options?: { dialect?: FormulaDialect; classicSeedTarget?: string },
 ): DetailedCompileResult {
   const dialect: FormulaDialect = options?.dialect ?? 'myfrac-native';
   // Run tokenize + parse once to collect structured errors
@@ -370,7 +402,12 @@ export function compileFrmDetailed(
   const { errors: parseErrors } = parse(tokens);
 
   // Get the full compile result (may use cache)
-  const result = compileFrm(source, id, semanticsVersion, { dialect });
+  const result = compileFrm(source, id, semanticsVersion, {
+    dialect,
+    ...(options?.classicSeedTarget !== undefined
+      ? { classicSeedTarget: options.classicSeedTarget }
+      : {}),
+  });
 
   return {
     ...result,
@@ -556,6 +593,9 @@ export function compileClassicFrmEntry(
   const lowered = lowerClassicEntryToNative(entrySource);
   const result = compileFrmDetailed(lowered.native, id, semanticsVersion, {
     dialect: 'fractint-compat',
+    ...(lowered.cSeedTarget !== undefined
+      ? { classicSeedTarget: lowered.cSeedTarget }
+      : {}),
   });
   // fnDefaults consumption (spec §2): known names become the u_fnN uniform
   // descriptor DEFAULTS, so every consumer (renderer default resolution,

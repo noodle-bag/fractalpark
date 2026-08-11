@@ -377,3 +377,95 @@ describe('cosxx truth (Slice 5)', () => {
     expect(orbit.orbit[0].re).toBeCloseTo(1.5, 10);
   });
 });
+
+describe('c cross-iteration mutation (Slice 5c)', () => {
+  it('j1 shape: c evolves per iteration (c = c + p2), orbit matches hand math', () => {
+    // p1 = p2 = 0 (defaults): init z=pixel, c=p1=0; loop z=sqr(z)+c then
+    // c=c+p2=0 — c stays 0, so z follows the pure quadratic from the pixel.
+    const src = 'J1Probe {\n  z = pixel, c = p1:\n  z = sqr(z) + c,\n  c = c + p2,\n  |z| <= 4\n}';
+    const r = compileClassicFrmEntry(src, 'J1Probe', 'j1-orbit', 2);
+    expect(r.success).toBe(true);
+    const orbit = evaluateOrbit(r.ast!, {
+      pixel: { re: 0.3, im: 0.1 },
+      maxIterations: 3,
+      descriptor: r.bailoutDescriptor!,
+      plugin: r.plugin,
+    });
+    // z0 = 0.3+0.1i; iter1: z = z0² + 0 = (0.09-0.01) + 0.06i = 0.08+0.06i
+    expect(orbit.orbit[0].re).toBeCloseTo(0.08, 10);
+    expect(orbit.orbit[0].im).toBeCloseTo(0.06, 10);
+    // iter2: (0.08+0.06i)² = (0.0064-0.0036) + 0.0096i = 0.0028+0.0096i
+    expect(orbit.orbit[1].re).toBeCloseTo(0.0028, 10);
+    expect(orbit.orbit[1].im).toBeCloseTo(0.0096, 10);
+  });
+
+  it('c mutation actually compounds when p2 is nonzero', () => {
+    const src = 'J1Probe {\n  z = pixel, c = p1:\n  z = sqr(z) + c,\n  c = c + p2,\n  |z| <= 4\n}';
+    const r = compileClassicFrmEntry(src, 'J1Probe', 'j1-p2', 2);
+    expect(r.success).toBe(true);
+    const orbit = evaluateOrbit(r.ast!, {
+      pixel: { re: 0.3, im: 0.1 },
+      maxIterations: 3,
+      descriptor: r.bailoutDescriptor!,
+      plugin: r.plugin,
+      params: { p2: { re: 0.5, im: 0 } },
+    });
+    // c0=0; iter1: z=0.08+0.06i (c=0), then c=0.5; iter2: z=(0.08+0.06i)²+0.5
+    expect(orbit.orbit[1].re).toBeCloseTo(0.5028, 10);
+    expect(orbit.orbit[1].im).toBeCloseTo(0.0096, 10);
+  });
+});
+
+describe('Slice 5c review fixes', () => {
+  it('C2 threshold through a renamed c rebind (seed transparency)', () => {
+    // c=p1 init + |z|<c bailout: the synthetic seed must not count against
+    // the exactly-once init-binding rule — the threshold resolves to p1.
+    const src = 'C2C {\n  c = p1, z = 0:\n  z = sqr(z) + c,\n  |z| < c\n}';
+    const r = compileClassicFrmEntry(src, 'C2C', 'c2c-seed', 2);
+    expect(r.success).toBe(true);
+    expect(r.bailoutDescriptor?.kind).toBe('C2');
+  });
+
+  it('a lone `t = pixel` init binding still binds (not mistaken for a seed)', () => {
+    const src = 'LoneSeed {\n  t = pixel, z = 0:\n  z = sqr(z) + c,\n  |z| < 4\n}';
+    const r = compileClassicFrmEntry(src, 'LoneSeed', 'lone-seed', 2);
+    expect(r.success).toBe(true);
+  });
+
+  it('julia mode: c is the Julia constant, not the pixel', () => {
+    // Loop-only c mutation (no init rebind): the seed cclassic = c is live,
+    // so in Julia mode iter1 z = pixel² + juliaC.
+    const src = 'J1Julia {\n  z = pixel:\n  z = sqr(z) + c,\n  c = c + p2,\n  |z| <= 4\n}';
+    const r = compileClassicFrmEntry(src, 'J1Julia', 'j1-julia', 2);
+    expect(r.success).toBe(true);
+    const orbit = evaluateOrbit(r.ast!, {
+      pixel: { re: 0.3, im: 0.1 },
+      juliaC: { re: -0.8, im: 0.156 },
+      maxIterations: 2,
+      descriptor: r.bailoutDescriptor!,
+      plugin: r.plugin,
+    });
+    // iter1: z = (0.3+0.1i)² + (-0.8+0.156i) = 0.08+0.06i - 0.8+0.156i
+    expect(orbit.orbit[0].re).toBeCloseTo(-0.72, 10);
+    expect(orbit.orbit[0].im).toBeCloseTo(0.216, 10);
+  });
+});
+
+describe('Slice 5c round-3 fix (provenance-gated seed transparency)', () => {
+  it('a hand-written cclassic double-assign does NOT claim the seed marker', () => {
+    // Codex round-3 reproduction: user code naming cclassic with two init
+    // assignments keeps the strict exactly-once rule — the threshold stays
+    // unbound and the entry honestly rejects.
+    const src = 'UserCclassic {\n  cclassic = pixel, cclassic = p1, z = 0:\n  z = sqr(z) + c,\n  |z| < cclassic\n}';
+    const r = compileClassicFrmEntry(src, 'UserCclassic', 'user-cclassic', 2);
+    expect(r.success).toBe(false);
+    expect(r.errors.join(' ')).toMatch(/threshold-not-loop-invariant|unknown-predicate|Undeclared/);
+  });
+
+  it('the lowering seed itself carries the marker (C2C still compiles to C2)', () => {
+    const src = 'C2C {\n  c = p1, z = 0:\n  z = sqr(z) + c,\n  |z| < c\n}';
+    const r = compileClassicFrmEntry(src, 'C2C', 'c2c-marker', 2);
+    expect(r.success).toBe(true);
+    expect(r.bailoutDescriptor?.kind).toBe('C2');
+  });
+});

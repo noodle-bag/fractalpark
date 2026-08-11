@@ -50,6 +50,9 @@ type Pair = [number, number];
 export interface OrbitOptions {
   /** Pixel (the classic `pixel` / Mandelbrot `c`). */
   pixel: Complex;
+  /** Julia mode: the Julia constant for `c` (ismand becomes 0). Omit for
+   * Mandelbrot semantics (c ≡ pixel). */
+  juliaC?: Complex;
   /** Parameter values p1..p5 (classic default is 0+0i). */
   params?: Record<string, Complex>;
   /** fn slot → builtin function name. When omitted, slots resolve from
@@ -209,13 +212,19 @@ export function evaluateOrbit(ast: FrmAST, opts: OrbitOptions): OrbitResult {
         return [node.real, node.imag];
       case 'ident': {
         const name = node.name;
-        if (name === 'pixel' || name === 'c') return [opts.pixel.re, opts.pixel.im];
+        if (name === 'pixel') return [opts.pixel.re, opts.pixel.im];
+        // Julia mode: c is the Julia constant (opts.juliaC); Mandelbrot
+        // (default) keeps c ≡ pixel. The framework's iterateStep does the
+        // same split via u_isJulia/u_juliaC.
+        if (name === 'c') return opts.juliaC
+          ? [opts.juliaC.re, opts.juliaC.im]
+          : [opts.pixel.re, opts.pixel.im];
         if (name === 'zPrev') return zPrevValue;
         if (name === 'LastSqr') return [lastSqr, 0];
         if (name === 'pi') return [Math.PI, 0];
         if (name === 'e') return [Math.E, 0];
         if (name === 'maxit') return [opts.maxIterations, 0];
-        if (name === 'ismand') return [1, 0]; // fixtures are Mandelbrot-mode
+        if (name === 'ismand') return [opts.juliaC ? 0 : 1, 0];
         if (/^p[1-5]$/.test(name)) {
           const p = params[name];
           return p ? [p.re, p.im] : [0, 0]; // classic default param
