@@ -282,3 +282,27 @@ describe('predicate float materialization (WebGL-smoke ghost regression)', () =>
     expect(glsl).toContain('? 1.0 : 0.0');
   });
 });
+
+describe('cosxx (FractInt pre-v16 truth function)', () => {
+  it('emits complexCosxx for direct calls and fn-slot case 18', () => {
+    const source =
+      'T {\ninit:\n  z = 0\nloop:\n  z = cosxx(z) + c\nbailout:\n  |z| < 4\n}';
+    const { tokens, errors: lexErrors } = tokenize(source);
+    expect(lexErrors).toEqual([]);
+    const { ast, errors } = parse(tokens);
+    expect(errors).toEqual([]);
+    const { glsl } = generateGLSL(ast!, new FRMSourceMap());
+    expect(glsl).toContain('complexCosxx(');
+  });
+
+  it('fn-slot helper dispatches option 18 to complexCosxx', () => {
+    const source =
+      'T {\ninit:\n  z = 0\nloop:\n  z = fn1(z) + c\nbailout:\n  |z| < 4\n}';
+    const { tokens, errors: lexErrors } = tokenize(source);
+    expect(lexErrors).toEqual([]);
+    const { ast, errors } = parse(tokens);
+    expect(errors).toEqual([]);
+    const { glsl } = generateGLSL(ast!, new FRMSourceMap());
+    expect(glsl).toContain('if (u_fn1 == 18) return complexCosxx(value);');
+  });
+});

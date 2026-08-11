@@ -49,6 +49,15 @@ vec2 complexCos(vec2 z) {
   return vec2(cos(z.x) * complexCosh(z.y), -sin(z.x) * complexSinh(z.y));
 }
 
+/* FractInt truth: cosxx duplicates the pre-v16 cos() bug — the imaginary
+ * term carries a PLUS sign (fractint.hlp: cosxx(x+iy) = cos(x)cosh(y) +
+ * i sin(x)sinh(y)), i.e. conj(cos(z)). Deliberate, not a typo.
+ * Numeric limitation (intentional, shared with cos/sin): complexCosh/
+ * complexSinh clamp inputs to ±80 — classic overflowed instead. */
+vec2 complexCosxx(vec2 z) {
+  return vec2(cos(z.x) * complexCosh(z.y), sin(z.x) * complexSinh(z.y));
+}
+
 vec2 complexTan(vec2 z) {
   return complexDiv(complexSin(z), complexCos(z));
 }

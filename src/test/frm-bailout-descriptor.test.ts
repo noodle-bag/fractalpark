@@ -346,3 +346,16 @@ describe('Codex round-2 regressions', () => {
     expect(r.errors.join('\n')).toContain('threshold-not-loop-invariant');
   });
 });
+
+describe('C2 default-threshold evaluation (cosxx regression)', () => {
+  it('|z| < cosxx(p1) with p1 default 0 yields legacy bailout 1, not the 4.0 fallback', async () => {
+    const { evaluateC2Threshold, extractBailoutDescriptor } = await import(
+      '../engine/frm/bailout-descriptor'
+    );
+    const r = extractBailoutDescriptor(bailoutAst('|z| < cosxx(p1)'), P_PARAMS);
+    expect(r.ok).toBe(true);
+    if (!r.ok || r.descriptor.kind !== 'C2') return;
+    // cosxx on a real input equals cos (imag term vanishes): cos(0) = 1.
+    expect(evaluateC2Threshold(r.descriptor, new Map([['p1', 0]]))).toBe(1);
+  });
+});

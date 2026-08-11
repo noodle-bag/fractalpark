@@ -64,6 +64,8 @@
  *   non-assignment expression only.
  */
 
+import { FN_SLOT_OPTIONS } from './builtins';
+
 /** Structured note describing one adaptation applied during lowering. */
 export interface LoweringNote {
   kind:
@@ -436,10 +438,9 @@ export function lowerClassicEntryToNative(entrySource: string): LoweredClassicEn
   let fnDefaults: Record<string, string> | undefined;
   if (header.options) {
     const FN_DEFAULT_CANONICAL: Record<string, string> = { ident: 'identity' };
-    const KNOWN_FN = new Set([
-      'identity', 'sin', 'cos', 'tan', 'exp', 'log', 'sqrt', 'abs', 'sqr',
-      'conj', 'flip', 'recip', 'cabs', 'real', 'imag', 'sinh', 'cosh', 'tanh',
-    ]);
+    // Derive from FN_SLOT_OPTIONS — a hand-maintained list drifts (cosxx
+    // was added to the engine and this set falsely reported it unmapped).
+    const KNOWN_FN = new Set(FN_SLOT_OPTIONS.map((o) => o.key));
     for (const token of header.options.split(/\s+/)) {
       const eq = token.indexOf('=');
       if (eq <= 0) continue;

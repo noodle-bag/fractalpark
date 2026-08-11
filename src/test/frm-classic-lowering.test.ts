@@ -265,9 +265,11 @@ describe('T0 grammar coverage (corpus-evidence forms, project-authored samples)'
   });
 
   it('records unknown function= names raw instead of silently defaulting', () => {
-    const source = 'FnUnknown[function=ident/cosxx] {\n  z = 0:\n  z = fn1(z) + c,\n  |z| < 4\n}';
+    // cotan is classic-real (fractint.hlp fn list) but not yet an engine
+    // option — it must stay raw and annotated, never silently defaulted.
+    const source = 'FnUnknown[function=ident/cotan] {\n  z = 0:\n  z = fn1(z) + c,\n  |z| < 4\n}';
     const { fnDefaults, notes } = lowerClassicEntryToNative(source);
-    expect(fnDefaults).toEqual({ fn1: 'identity', fn2: 'cosxx' });
+    expect(fnDefaults).toEqual({ fn1: 'identity', fn2: 'cotan' });
     expect(kinds(notes)).toContain('function-option-unmapped');
   });
 

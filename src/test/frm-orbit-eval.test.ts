@@ -333,3 +333,47 @@ describe('Codex round-4 regressions', () => {
     expect(result.orbit[0].re).toBeCloseTo(4, 12);
   });
 });
+
+describe('cosxx truth (Slice 5)', () => {
+  it('cosxx(z) = cos(x)cosh(y) + i·sin(x)sinh(y) — the plus-sign bug', () => {
+    // fractint.hlp: cosxx duplicates the pre-v16 cos() bug. For z0 = 0,
+    // pixel (0.5, 0.25): iter1 z = cosxx(0) + c = (1,0) + c = (1.5, 0.25).
+    const src = 'T {\n  z = 0:\n  z = cosxx(z) + c,\n  |z| < 4\n}';
+    const r = compileClassicFrmEntry(src, 'T', 'cosxx-truth', 2);
+    expect(r.success).toBe(true);
+    const orbit = evaluateOrbit(r.ast!, {
+      pixel: { re: 0.5, im: 0.25 },
+      maxIterations: 4,
+      descriptor: r.bailoutDescriptor!,
+      plugin: r.plugin,
+    });
+    const z1 = orbit.orbit[0];
+    expect(z1.re).toBeCloseTo(1.5, 10);
+    expect(z1.im).toBeCloseTo(0.25, 10);
+    // iter2: cosxx(1.5 + 0.25i) = cos(1.5)cosh(0.25) + i·sin(1.5)sinh(0.25) + c
+    const z2 = orbit.orbit[1];
+    const re2 = Math.cos(1.5) * Math.cosh(0.25) + 0.5;
+    const im2 = Math.sin(1.5) * Math.sinh(0.25) + 0.25; // PLUS — the bug
+    expect(z2.re).toBeCloseTo(re2, 10);
+    expect(z2.im).toBeCloseTo(im2, 10);
+    // and it must differ from correct cos (minus sign) — guards against
+    // someone "fixing" the bug away.
+    expect(z2.im).not.toBeCloseTo(-Math.sin(1.5) * Math.sinh(0.25) + 0.25, 6);
+  });
+
+  it('function=cosxx bracket resolves to u_fn default 18', () => {
+    const src =
+      'T[function=cosxx] {\n  z = 0:\n  z = fn1(z) + c,\n  |z| < 4\n}';
+    const r = compileClassicFrmEntry(src, 'T', 'cosxx-bracket', 2);
+    expect(r.success).toBe(true);
+    const u = r.plugin!.uniforms.find((x) => x.name === 'u_fn1');
+    expect(u?.default).toBe(18);
+    const orbit = evaluateOrbit(r.ast!, {
+      pixel: { re: 0.5, im: 0.25 },
+      maxIterations: 2,
+      descriptor: r.bailoutDescriptor!,
+      plugin: r.plugin,
+    });
+    expect(orbit.orbit[0].re).toBeCloseTo(1.5, 10);
+  });
+});

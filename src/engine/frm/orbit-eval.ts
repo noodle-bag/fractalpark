@@ -124,6 +124,7 @@ export function evalDescriptorThreshold(
           case 'log': return Math.log(args[0]);
           case 'sin': return Math.sin(args[0]);
           case 'cos': return Math.cos(args[0]);
+          case 'cosxx': return Math.cos(args[0]); // real input: imag term vanishes
           case 'tan': return Math.tan(args[0]);
           case 'sinh': return Math.sinh(args[0]);
           case 'cosh': return Math.cosh(args[0]);
@@ -152,6 +153,16 @@ const sinOf = ([re, im]: Pair): Pair => [
 const cosOf = ([re, im]: Pair): Pair => [
   Math.cos(re) * coshClamped(im),
   -Math.sin(re) * sinhClamped(im),
+];
+// FractInt truth: cosxx = the pre-v16 cos() sign bug — imaginary term PLUS
+// (fractint.hlp: cos(x)cosh(y) + i sin(x)sinh(y)), i.e. conj(cos(z)).
+// Numeric limitation (intentional, matches cos/sin): hyperbolic inputs are
+// clamped to ±80 — classic overflowed instead; |Im| beyond that diverges
+// from classic behavior. Documented as a renderer limitation, not a truth
+// claim.
+const cosxxOf = ([re, im]: Pair): Pair => [
+  Math.cos(re) * coshClamped(im),
+  Math.sin(re) * sinhClamped(im),
 ];
 const sinhOf = ([re, im]: Pair): Pair => [
   sinhClamped(re) * Math.cos(im),
@@ -318,6 +329,8 @@ export function evaluateOrbit(ast: FrmAST, opts: OrbitOptions): OrbitResult {
         return sinOf(arg(0));
       case 'cos':
         return cosOf(arg(0));
+      case 'cosxx':
+        return cosxxOf(arg(0));
       case 'tan': {
         const v = arg(0); // evaluate the argument once — side channels
         return divGuarded(sinOf(v), cosOf(v));

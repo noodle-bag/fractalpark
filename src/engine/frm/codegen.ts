@@ -384,6 +384,8 @@ function generateCallExpression(
       return `complexSin(${coerceExpression(args[0]?.expr ?? '0.0', args[0]?.type ?? REAL_TYPE, COMPLEX_TYPE)})`;
     case 'cos':
       return `complexCos(${coerceExpression(args[0]?.expr ?? '0.0', args[0]?.type ?? REAL_TYPE, COMPLEX_TYPE)})`;
+    case 'cosxx':
+      return `complexCosxx(${coerceExpression(args[0]?.expr ?? '0.0', args[0]?.type ?? REAL_TYPE, COMPLEX_TYPE)})`;
     case 'tan':
       return `complexTan(${coerceExpression(args[0]?.expr ?? '0.0', args[0]?.type ?? REAL_TYPE, COMPLEX_TYPE)})`;
     case 'exp':
@@ -606,6 +608,8 @@ function buildFnSlotHelper(fnSlot: string): string {
         return `  if (${uniformName} == ${option.value}) return complexSin(value);`;
       case 'cos':
         return `  if (${uniformName} == ${option.value}) return complexCos(value);`;
+      case 'cosxx':
+        return `  if (${uniformName} == ${option.value}) return complexCosxx(value);`;
       case 'tan':
         return `  if (${uniformName} == ${option.value}) return complexTan(value);`;
       case 'exp':
