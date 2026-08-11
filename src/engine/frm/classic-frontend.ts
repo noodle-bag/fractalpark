@@ -82,7 +82,10 @@ export interface LoweringNote {
     | 'float-option-recorded'
     | 'function-option-recorded'
     | 'function-option-unmapped'
-    | 'c-init-rebinding-renamed';
+    | 'c-init-rebinding-renamed'
+    | 'builtin-name-recased'
+    | 'reserved-word-renamed'
+    | 'unary-call-complex-pair';
   /** 1-based line in the classic entry source. */
   line: number;
   message: string;
@@ -507,7 +510,72 @@ export function lowerClassicEntryToNative(entrySource: string): LoweredClassicEn
   // `IF` ≡ `if`); the native parser is case-sensitive. Lowercase the body
   // once, before tokenization — entry names come from the header parse and
   // are unaffected.
-  const walk = walkBody(bodyText.toLowerCase(), 1, notes);
+  let prepared = bodyText.toLowerCase();
+  // 5b — three classic-dialect text rules, applied per line to the code
+  // portion only (a `;` comment never triggers or receives a rewrite, so
+  // notes never claim phantom adaptations). Each note records the first
+  // affected source line (body-relative +1: the body starts after the
+  // header line, and walkBody's line accounting is 1-based from the body).
+  const pairRe =
+    /\b(sin|cos|cosxx|tan|sinh|cosh|tanh|exp|log|sqrt|abs|sqr|conj|flip|recip|cabs|real|imag|fn[1-4])\s*\(\s*([^(),]+?)\s*,\s*([^(),]+?)\s*\)/g;
+  let recased = 0;
+  let recasedLine = 0;
+  let constRenamed = false;
+  let constLine = 0;
+  let pairWrapped = 0;
+  let pairLine = 0;
+  prepared = prepared
+    .split('\n')
+    .map((line, idx) => {
+      const semi = line.indexOf(';');
+      const code = semi < 0 ? line : line.slice(0, semi);
+      const comment = semi < 0 ? '' : line.slice(semi);
+      let out = code.replace(/\blast(sqr)\b/g, () => {
+        recased++;
+        if (!recasedLine) recasedLine = idx + 1;
+        return 'LastSqr';
+      });
+      // `const` is a legal classic variable name (fractint.hlp reserves
+      // only operator symbols) but is GLSL-reserved — rename to const_.
+      out = out.replace(/\bconst\b/g, () => {
+        constRenamed = true;
+        if (!constLine) constLine = idx + 1;
+        return 'const_';
+      });
+      // Unary function applied to a bare complex pair: classic
+      // `exp(1.,0.)` means exp((1,0)) — wrap the pair as a complex
+      // literal. Simple (no-nested-paren) pairs only; anything left over
+      // (nested calls, multi-arg shapes) fails loudly at validator arity.
+      out = out.replace(pairRe, (_m, fn, a, b) => {
+        pairWrapped++;
+        if (!pairLine) pairLine = idx + 1;
+        return `${fn}((${a},${b}))`;
+      });
+      return out + comment;
+    })
+    .join('\n');
+  if (recased > 0) {
+    notes.push({
+      kind: 'builtin-name-recased',
+      line: recasedLine,
+      message: `${recased} classic LastSqr builtin reference(s) re-canonicalized after the case-insensitive lowercase pass`,
+    });
+  }
+  if (constRenamed) {
+    notes.push({
+      kind: 'reserved-word-renamed',
+      line: constLine,
+      message: 'classic variable `const` renamed to `const_` (GLSL-reserved; classic reserves only operator symbols)',
+    });
+  }
+  if (pairWrapped > 0) {
+    notes.push({
+      kind: 'unary-call-complex-pair',
+      line: pairLine,
+      message: `${pairWrapped} unary call(s) with a bare complex pair wrapped as a complex literal (classic fn(a,b) ≡ fn((a,b)))`,
+    });
+  }
+  const walk = walkBody(prepared, 1, notes);
 
   const initTokens = walk.tokens.slice(0, walk.boundary);
   const loopTokens = walk.tokens.slice(walk.boundary);

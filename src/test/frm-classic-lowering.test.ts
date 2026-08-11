@@ -344,3 +344,82 @@ describe('Codex round-2 regressions', () => {
     expect(result.success).toBe(false);
   });
 });
+
+describe('classic dialect text rules (Slice 5b)', () => {
+  it('recases camelCase builtins destroyed by the lowercase pass', () => {
+    const source = 'T {\n  z = Pixel:\n  z = Sqr(Conj(z)) + c,\n  LASTSQR <= 4\n}';
+    const { native, notes } = lowerClassicEntryToNative(source);
+    expect(native).toContain('LastSqr');
+    expect(native).not.toContain('lastsqr');
+    expect(kinds(notes)).toContain('builtin-name-recased');
+  });
+
+  it('renames the classic variable `const` (GLSL-reserved) and stays compilable', () => {
+    const source =
+      'T {\n  z = pixel:\n  const = real(z)*real(z);\n  z = z + const + c,\n  |z| < 4\n}';
+    const { native, notes } = lowerClassicEntryToNative(source);
+    expect(native).toContain('const_');
+    expect(kinds(notes)).toContain('reserved-word-renamed');
+    const r = compileClassicFrmEntry(source, 'T', 'const-var', 2);
+    expect(r.success).toBe(true);
+  });
+
+  it('wraps a bare complex pair in a unary call as a complex literal', () => {
+    const source = 'T {\n  s = exp(1.,0.), z = pixel:\n  z = z^s + c,\n  |z| < 100\n}';
+    const { native, notes } = lowerClassicEntryToNative(source);
+    expect(native).toContain('exp((1.,0.))');
+    expect(kinds(notes)).toContain('unary-call-complex-pair');
+    const r = compileClassicFrmEntry(source, 'T', 'complex-pair', 2);
+    expect(r.success).toBe(true);
+  });
+});
+
+describe('Slice 5b review fixes', () => {
+  it('wraps real/imag pairs and tolerates whitespace before the paren', () => {
+    const { native } = lowerClassicEntryToNative(
+      'T {\n  a = real(1.,0.), b = exp (1., -2.), z = pixel:\n  z = z + c,\n  |z| < 4\n}',
+    );
+    expect(native).toContain('real((1.,0.))');
+    expect(native).toContain('exp((1.,-2.))');
+  });
+
+  it('a nested leftover pair fails loudly at validator arity — never silently dropped', () => {
+    // exp(sin(1.,0.),3.) — the inner pair wraps; the outer keeps two args
+    // and MUST NOT compile (codegen would drop the second argument).
+    const r = compileClassicFrmEntry(
+      'T {\n  z = pixel:\n  z = exp(sin(1.,0.),3.) + c,\n  |z| < 4\n}',
+      'T',
+      'nested-pair',
+      2,
+    );
+    expect(r.success).toBe(false);
+    expect(r.errors.join(' ')).toMatch(/takes exactly 1 argument/);
+  });
+
+  it('comment text never triggers phantom adaptations', () => {
+    const { notes } = lowerClassicEntryToNative(
+      'T { ; try exp(1.,0.) here\n  z = pixel:\n  z = z + c, ; and const = 3\n  |z| < 4\n}',
+    );
+    expect(kinds(notes)).not.toContain('unary-call-complex-pair');
+    expect(kinds(notes)).not.toContain('reserved-word-renamed');
+  });
+
+  it('notes carry the first affected classic source line, not the header line', () => {
+    const { notes } = lowerClassicEntryToNative(
+      'T {\n  z = pixel:\n  const = real(z);\n  z = z + const + c,\n  |z| < 4\n}',
+    );
+    const note = notes.find((n) => n.kind === 'reserved-word-renamed');
+    // `const` sits on classic source line 3 (header is line 1).
+    expect(note?.line).toBe(3);
+  });
+
+  it('validator arity: atan2 stays two-argument, unary rejects extras', () => {
+    const ok = compileClassicFrmEntry(
+      'T {\n  z = pixel:\n  z = atan2(imag(z), real(z)) + c,\n  |z| < 4\n}',
+      'T',
+      'atan2-ok',
+      2,
+    );
+    expect(ok.success).toBe(true);
+  });
+});
