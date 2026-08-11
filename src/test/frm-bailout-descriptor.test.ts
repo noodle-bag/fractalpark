@@ -284,3 +284,53 @@ describe('legacy v1 frozen controls (defects preserved on purpose)', () => {
     expect(implicit.bailoutDescriptor).toBeUndefined();
   });
 });
+
+describe('init-bound threshold substitution (T0 evidence: Jm_* idiom)', () => {
+  const compileV2 = (source: string) => compileFrm(source, undefined, 2);
+
+  it('an init-bound named constant classifies like its inline form (C2)', () => {
+    const source =
+      'T {\ninit:\n  t = p1 + 4\n  z = pixel\nloop:\n  z = z^2 + c\nbailout:\n  |z| <= t\n}';
+    const r = compileV2(source);
+    expect(r.success).toBe(true);
+    expect(r.bailoutDescriptor?.kind).toBe('C2');
+    // The descriptor threshold is the substituted pure subtree — no `t`.
+    const text = JSON.stringify(r.bailoutDescriptor);
+    expect(text).toContain('"name":"p1"');
+    expect(text).not.toContain('"name":"t"');
+  });
+
+  it('chained init bindings substitute transitively', () => {
+    const source =
+      'T {\ninit:\n  u = p1 * 2\n  t = u + 1\n  z = pixel\nloop:\n  z = z^2 + c\nbailout:\n  |z| <= t\n}';
+    const r = compileV2(source);
+    expect(r.success).toBe(true);
+    expect(r.bailoutDescriptor?.kind).toBe('C2');
+    const text = JSON.stringify(r.bailoutDescriptor);
+    expect(text).not.toContain('"name":"u"');
+    expect(text).not.toContain('"name":"t"');
+  });
+
+  it('a loop-reassigned binding is not invariant — still rejected', () => {
+    const source =
+      'T {\ninit:\n  t = p1 + 4\n  z = pixel\nloop:\n  t = z\n  z = z^2 + c\nbailout:\n  |z| <= t\n}';
+    const r = compileV2(source);
+    expect(r.success).toBe(false);
+    expect(r.errors.join('\n')).toContain('threshold-not-loop-invariant');
+  });
+
+  it('a reassigned init binding is ineligible — still rejected', () => {
+    const source =
+      'T {\ninit:\n  t = p1\n  t = p1 + 4\n  z = pixel\nloop:\n  z = z^2 + c\nbailout:\n  |z| <= t\n}';
+    const r = compileV2(source);
+    expect(r.success).toBe(false);
+    expect(r.errors.join('\n')).toContain('threshold-not-loop-invariant');
+  });
+
+  it('a self-referencing binding (cycle) is ineligible — still rejected', () => {
+    const source =
+      'T {\ninit:\n  t = t + 1\n  z = pixel\nloop:\n  z = z^2 + c\nbailout:\n  |z| <= t\n}';
+    const r = compileV2(source);
+    expect(r.success).toBe(false);
+  });
+});

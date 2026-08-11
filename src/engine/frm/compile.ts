@@ -5,7 +5,7 @@
  * Full compilation pipeline: source -> AST -> GLSL with source map support
  */
 
-import type { CanonicalFormula, FormulaDialect, FrmAST } from './ast';
+import type { ASTNode, CanonicalFormula, FormulaDialect, FrmAST } from './ast';
 import { createCanonicalFormula } from './ast';
 import type { FormulaPlugin } from '../plugins/types';
 import { tokenize, formatLexerErrors, type LexerError } from './lexer';
@@ -148,7 +148,30 @@ function compileFrmUncached(
     if (semanticsVersion === 2) {
       const declaredParams = new Set<string>(ast.params.map((p) => p.name));
       for (const pn of PARAMETER_NAMES) declaredParams.add(pn);
-      const extraction = extractBailoutDescriptor(ast.bailoutExpr, declaredParams);
+      // Init-bound named constants (`t = p1 + 4` in init, `|z| <= t` in the
+      // bailout) are eligible for threshold substitution when assigned
+      // exactly once at the top level of init and never inside the loop —
+      // a classic idiom for parameterized radii (Jm_* family evidence).
+      const initBindings = new Map<string, ASTNode>();
+      for (const stmt of ast.initBlock) {
+        if (stmt.type !== 'assignment') continue;
+        if (initBindings.has(stmt.target)) initBindings.delete(stmt.target);
+        else initBindings.set(stmt.target, stmt.value);
+      }
+      const loopTargets = new Set<string>();
+      const collectTargets = (nodes: readonly ASTNode[]): void => {
+        for (const n of nodes) {
+          if (n.type === 'assignment') loopTargets.add(n.target);
+          else if (n.type === 'if') {
+            collectTargets(n.then);
+            n.elseIf?.forEach((b) => collectTargets(b.body));
+            if (n.else) collectTargets(n.else);
+          }
+        }
+      };
+      collectTargets(ast.loopBlock);
+      for (const t of loopTargets) initBindings.delete(t);
+      const extraction = extractBailoutDescriptor(ast.bailoutExpr, declaredParams, initBindings);
       if (!extraction.ok) {
         const reasonMessages: Record<BailoutRejectReason, string> = {
           'unknown-magnitude-form':

@@ -38,7 +38,9 @@ export interface BailoutDescriptorC2 {
   op: ComparisonOp;
   magnitude: 'z';
   /**
-   * The verified loop-invariant threshold AST subtree. Consumers must
+   * The verified loop-invariant threshold AST subtree. When the source
+   * used an init-bound named constant (`t = p1 + 4` → `|z| <= t`), this is
+   * the SUBSTITUTED pure subtree (init RHS inlined). Consumers must
    * evaluate this through the same expression code path as the compiler
    * (codegen generateExpression) — a re-serialized string could diverge
    * from the compiled dialect (`^` is not exponentiation in GLSL).
@@ -118,6 +120,46 @@ function evalNumericLiteral(node: ASTNode): number | null {
 /** Pure functions allowed inside a C2 threshold expression. */
 const PURE_THRESHOLD_FUNCTIONS = new Set(['sqrt', 'abs', 'sqr', 'exp', 'log', 'sin', 'cos', 'tan', 'sinh', 'cosh', 'tanh']);
 const ARITHMETIC_OPS = new Set(['+', '-', '*', '/', '^']);
+
+/**
+ * Substitute init-bound identifiers with deep clones of their init RHS.
+ * `initBindings` is pre-filtered by the caller to variables assigned
+ * exactly once in init and never in the loop, so the substitution is
+ * semantics-preserving and the result is a self-contained pure subtree
+ * (no variable scoping questions for numeric eval or GLSL emission).
+ * Cycles (`t = t + 1`) resolve to the identifier left in place, which the
+ * invariance check then rejects.
+ */
+function substituteInitIdents(
+  node: ASTNode,
+  bindings: ReadonlyMap<string, ASTNode>,
+  active: ReadonlySet<string> = new Set(),
+): ASTNode {
+  switch (node.type) {
+    case 'ident': {
+      const bound = bindings.get(node.name);
+      if (!bound || active.has(node.name)) return { ...node };
+      const next = new Set(active);
+      next.add(node.name);
+      return substituteInitIdents(bound, bindings, next);
+    }
+    case 'binary':
+      return {
+        ...node,
+        left: substituteInitIdents(node.left, bindings, active),
+        right: substituteInitIdents(node.right, bindings, active),
+      };
+    case 'unary':
+      return { ...node, operand: substituteInitIdents(node.operand, bindings, active) };
+    case 'call':
+      return {
+        ...node,
+        args: node.args.map((a) => substituteInitIdents(a, bindings, active)),
+      };
+    default:
+      return { ...node };
+  }
+}
 
 interface InvarianceResult {
   invariant: boolean;
@@ -235,6 +277,7 @@ export function evaluateC2Threshold(
 export function extractBailoutDescriptor(
   node: ASTNode,
   declaredParams: Set<string>,
+  initBindings?: ReadonlyMap<string, ASTNode>,
 ): BailoutExtraction {
   if (node.type !== 'binary') {
     return { ok: false, reason: 'unknown-predicate' };
@@ -273,6 +316,13 @@ export function extractBailoutDescriptor(
   const form = leftForm ?? rightForm;
   if (!form || !magnitudeNode || !thresholdNode) {
     return { ok: false, reason: 'unknown-magnitude-form' };
+  }
+
+  // Init-bound identifiers (`t = p1 + 4` in init, `|z| <= t` bailout) are
+  // substituted with their pure init RHS before the invariance check, so a
+  // loop-invariant named constant classifies exactly like its inline form.
+  if (initBindings && initBindings.size > 0) {
+    thresholdNode = substituteInitIdents(thresholdNode, initBindings);
   }
 
   const invariance = checkLoopInvariance(thresholdNode, declaredParams);
