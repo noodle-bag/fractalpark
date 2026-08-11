@@ -117,10 +117,23 @@ function corpusCases(): SmokeCase[] {
     source: string;
   }
   const rows: Row[] = [];
+  // Slice 5g: T0 AND T1 tiers; the seven Slice-5 waiver rows are excluded
+  // (compile-rejects by design — evidence in the Slice 5 archive).
+  const WAIVERS = new Set([
+    'frm-d1',
+    "f'functionike",
+    'fly',
+    'julia',
+    'mand_1',
+    'mandel',
+    'g-3-03-m',
+  ]);
   for (const line of readFileSync(ledger, 'utf-8').split('\n')) {
     if (!line.startsWith('| ') || line.startsWith('| ---')) continue;
     const cells = line.trim().replace(/^\||\|$/g, '').split('|').map((c) => c.trim());
-    if (cells.length < 14 || cells[0] === '名称' || cells[3] !== 'T0') continue;
+    if (cells.length < 14 || cells[0] === '名称') continue;
+    if (cells[3] !== 'T0' && cells[3] !== 'T1') continue;
+    if (WAIVERS.has(cells[0])) continue;
     rows.push({ name: cells[0], eflags: cells[5], source: cells[6] });
   }
   // Deterministic sample: every 9th row, plus every E3/E10-flagged row.
