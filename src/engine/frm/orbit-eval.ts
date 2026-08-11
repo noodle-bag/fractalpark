@@ -73,6 +73,71 @@ export interface OrbitResult {
 
 export class OrbitUnsupportedError extends Error {}
 
+/**
+ * Numeric value of a descriptor's threshold under the given params (C1/C4-R:
+ * the literal; C2: the substituted pure AST with params — defaults 0+0i).
+ * Used by the WebGL smoke to hand the GPU the same radius the CPU oracle
+ * applied. Throws OrbitUnsupportedError if the C2 expression references
+ * something outside the invariant contract (cannot happen post-extraction).
+ */
+export function evalDescriptorThreshold(
+  descriptor: BailoutDescriptor,
+  params: Record<string, Complex> = {},
+): number {
+  if (descriptor.kind !== 'C2') return descriptor.threshold;
+  // Minimal pure-evaluator for the substituted C2 threshold subtree:
+  // numbers, params, unary -, arithmetic, whitelisted pure calls.
+  const evalPure = (node: ASTNode): number => {
+    switch (node.type) {
+      case 'number':
+        return node.value;
+      case 'ident': {
+        const p = params[node.name];
+        if (p) return p.re;
+        if (/^p[1-5]$/.test(node.name)) return 0;
+        if (node.name === 'pi') return Math.PI;
+        if (node.name === 'e') return Math.E;
+        throw new OrbitUnsupportedError(`threshold ident ${node.name}`);
+      }
+      case 'unary':
+        if (node.op === '-') return -evalPure(node.operand);
+        throw new OrbitUnsupportedError(`threshold unary ${node.op}`);
+      case 'binary': {
+        const l = evalPure(node.left);
+        const r = evalPure(node.right);
+        switch (node.op) {
+          case '+': return l + r;
+          case '-': return l - r;
+          case '*': return l * r;
+          case '/': return l / r;
+          case '^': return Math.pow(l, r);
+          default: throw new OrbitUnsupportedError(`threshold op ${node.op}`);
+        }
+      }
+      case 'call': {
+        const args = node.args.map(evalPure);
+        switch (node.name) {
+          case 'sqrt': return Math.sqrt(args[0]);
+          case 'abs': return Math.abs(args[0]);
+          case 'sqr': return args[0] * args[0];
+          case 'exp': return Math.exp(args[0]);
+          case 'log': return Math.log(args[0]);
+          case 'sin': return Math.sin(args[0]);
+          case 'cos': return Math.cos(args[0]);
+          case 'tan': return Math.tan(args[0]);
+          case 'sinh': return Math.sinh(args[0]);
+          case 'cosh': return Math.cosh(args[0]);
+          case 'tanh': return Math.tanh(args[0]);
+          default: throw new OrbitUnsupportedError(`threshold call ${node.name}`);
+        }
+      }
+      default:
+        throw new OrbitUnsupportedError(`threshold node ${node.type}`);
+    }
+  };
+  return evalPure(descriptor.thresholdNode);
+}
+
 const clampSinhCosh = (x: number) => Math.max(-80, Math.min(80, x));
 const sinhClamped = (x: number) => Math.sinh(clampSinhCosh(x));
 const coshClamped = (x: number) => Math.cosh(clampSinhCosh(x));
@@ -366,9 +431,8 @@ export function evaluateOrbit(ast: FrmAST, opts: OrbitOptions): OrbitResult {
     }
   };
 
-  // Escape per the strict-v2 descriptor: compare dot(z,z) against the
-  // squared threshold with the descriptor's comparison direction; escape
-  // fires when the predicate no longer holds.
+  // Escape per the strict-v2 descriptor; escape fires when the predicate
+  // no longer holds (the assembler's inverted escapeOp is exactly !holds).
   const thresholdSquared = (): number => {
     const d = opts.descriptor;
     if (d.kind === 'C1' || d.kind === 'C4R') return d.threshold * d.threshold;
@@ -377,6 +441,24 @@ export function evaluateOrbit(ast: FrmAST, opts: OrbitOptions): OrbitResult {
   };
   const predicateHolds = (z: Pair): boolean => {
     const d = opts.descriptor;
+    if (d.kind === 'C4R') {
+      // Real-projection: z.x (abs-real: abs(z.x)) against the RAW
+      // threshold — never squared (assembler C4R_ESCAPE_CHECK contract).
+      const v = d.form === 'abs-real' ? Math.abs(z[0]) : z[0];
+      const t = d.threshold;
+      switch (d.op) {
+        case '<':
+          return v < t;
+        case '<=':
+          return v <= t;
+        case '>':
+          return v > t;
+        case '>=':
+          return v >= t;
+        default:
+          throw new OrbitUnsupportedError(`C4R op ${d.op}`);
+      }
+    }
     const mag2 = z[0] * z[0] + z[1] * z[1];
     const t2 = thresholdSquared();
     switch (d.op) {

@@ -8,6 +8,7 @@
     "lint": "eslint",
     "test": "vitest",
     "test:run": "vitest run",
+    "test:webgl-smoke": "esbuild scripts/frm-smoke-payload.ts --bundle --platform=node --format=esm --loader:.glsl=text --outfile=node_modules/.cache/frm-smoke-payload.mjs --log-level=warning && node node_modules/.cache/frm-smoke-payload.mjs && SKIP_WEB_SERVER=1 playwright test frm-webgl-smoke --workers=1",
     "thumbnails:presets": "node scripts/generate-thumbnails.mjs",
     "images:formula-guides": "node --import tsx scripts/generate-formula-guide-images.ts",
     "indexnow:submit": "node --import tsx scripts/submit-indexnow.ts",
