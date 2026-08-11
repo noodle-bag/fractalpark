@@ -276,6 +276,16 @@ function main() {
   console.log(`payload rows: ${rows.length} (authored ${AUTHORED_CASES.length}); skipped: ${skipped.length}`);
   for (const s of skipped.slice(0, 12)) console.log(`  skip ${s}`);
   console.log(`out: ${OUT}`);
+  // Authored cases are the contract: any authored skip means the compiler
+  // regressed — fail loudly instead of emitting a vacuous payload.
+  const authoredNames = new Set(AUTHORED_CASES.map((c) => c.name));
+  const authoredSkipped = skipped.filter((s) => authoredNames.has(s.split(':')[0]));
+  if (authoredSkipped.length > 0 || rows.length < AUTHORED_CASES.length) {
+    console.error(
+      `FATAL: ${authoredSkipped.length} authored cases skipped — refusing to emit a vacuous payload`,
+    );
+    process.exit(1);
+  }
 }
 
 main();

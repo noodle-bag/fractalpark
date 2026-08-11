@@ -1,26 +1,33 @@
 /**
- * FRM WebGL smoke (v0.4.18 Slice 4) — dumb runner.
+ * FRM WebGL smoke (v0.4.18 Slice 4) — self-sufficient runner.
  *
- * Consumes tests/e2e/.fixtures/frm-smoke-payload.json produced by
- * scripts/frm-smoke-payload.ts (production compiler + assembler + CPU
- * oracle). Per row:
+ * beforeAll regenerates the payload from CURRENT sources via
+ * scripts/frm-smoke-payload.ts (esbuild bundles the .glsl templates;
+ * production compiler + assembler + CPU oracle), so the spec always tests
+ * the code as it stands — never a stale blob. The generated payload is
+ * gitignored (corpus-derived when FRM_SMOKE_LEDGER/FRM_SMOKE_CORPUS are
+ * set; self-authored otherwise).
+ *
+ * Per row:
  *   A) the FULLY ASSEMBLED framework shader must compile in a real WebGL
  *      context (Chromium SwiftShader) — catches GLSL emission bugs the CPU
  *      path cannot see;
  *   B) a driver fragment shader embedding the plugin's own initGlsl +
  *      iterateStep runs three fixture pixels with the v2 after-step /
  *      descriptor escape rule; the GPU escape iteration must match the CPU
- *      evaluator (deltas > 1 fail; 0/1 are tallied and reported).
+ *      evaluator (deltas > 1 fail).
  *
  * App-free: page.setContent + inline canvas — run with SKIP_WEB_SERVER=1.
- * SwiftShader flags come from playwright.config.ts. Payload regeneration:
- *   npm run test:webgl-smoke   (builds the payload, then runs this spec)
+ * Plain `npx playwright test frm-webgl-smoke` works (payload auto-builds);
+ * `npm run test:webgl-smoke` is a convenience alias.
  */
 
 import { test, expect } from '@playwright/test';
-import { readFileSync, existsSync } from 'node:fs';
+import { readFileSync } from 'node:fs';
+import { execSync } from 'node:child_process';
 import { join } from 'node:path';
 
+const REPO_ROOT = join(__dirname, '..', '..');
 const PAYLOAD_PATH = join(__dirname, '.fixtures', 'frm-smoke-payload.json');
 
 interface PayloadRow {
@@ -44,14 +51,48 @@ interface Payload {
 test.setTimeout(300000);
 
 test.describe('FRM WebGL smoke (SwiftShader)', () => {
+  test.beforeAll(() => {
+    test.setTimeout(300000);
+    const bundle = 'node_modules/.cache/frm-smoke-payload.mjs';
+    // execSync blocks the event loop, so Playwright's own timeout cannot
+    // interrupt a hung subprocess — cap each child explicitly instead.
+    const CHILD_TIMEOUT = 240_000;
+    execSync(
+      `npx esbuild scripts/frm-smoke-payload.ts --bundle --platform=node --format=esm --loader:.glsl=text --outfile=${bundle} --log-level=warning`,
+      { cwd: REPO_ROOT, stdio: 'inherit', timeout: CHILD_TIMEOUT },
+    );
+    execSync(`node ${bundle}`, {
+      cwd: REPO_ROOT,
+      stdio: 'inherit',
+      env: process.env,
+      timeout: CHILD_TIMEOUT,
+    });
+  });
+
   test('production GLSL compiles and GPU orbits match the CPU oracle', async ({
     page,
   }) => {
-    test.skip(
-      !existsSync(PAYLOAD_PATH),
-      'payload missing — run scripts/frm-smoke-payload.ts first (npm run test:webgl-smoke)',
-    );
     const payload = JSON.parse(readFileSync(PAYLOAD_PATH, 'utf-8')) as Payload;
+    // Never let a degenerate payload pass vacuously: all authored cases
+    // must be present (the generator also exits nonzero on authored skips).
+    expect(payload.rows.length).toBeGreaterThanOrEqual(10);
+    for (const name of [
+      'smoke-mandel',
+      'smoke-c-rebind',
+      'smoke-fn-slot',
+      'smoke-c2-threshold',
+      'smoke-branches',
+      'smoke-case-mix',
+      'smoke-abs-ship',
+      'smoke-c4r-real',
+      'smoke-c4r-abs-real',
+      'smoke-inverse-radial',
+    ]) {
+      expect(
+        payload.rows.some((r) => r.name === name),
+        `payload missing authored case ${name}`,
+      ).toBe(true);
+    }
 
     await page.setContent('<canvas id="c" width="3" height="1"></canvas>');
     await page.evaluate(() => {
