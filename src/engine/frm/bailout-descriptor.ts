@@ -122,13 +122,14 @@ const PURE_THRESHOLD_FUNCTIONS = new Set(['sqrt', 'abs', 'sqr', 'exp', 'log', 's
 const ARITHMETIC_OPS = new Set(['+', '-', '*', '/', '^']);
 
 /**
- * Substitute init-bound identifiers with deep clones of their init RHS.
- * `initBindings` is pre-filtered by the caller to variables assigned
- * exactly once in init and never in the loop, so the substitution is
- * semantics-preserving and the result is a self-contained pure subtree
- * (no variable scoping questions for numeric eval or GLSL emission).
- * Cycles (`t = t + 1`) resolve to the identifier left in place, which the
- * invariance check then rejects.
+ * Substitute init-bound identifiers with structural copies of their init
+ * RHS (fresh node objects; `loc` references are shared — consumers treat
+ * nodes as read-only). `initBindings` is pre-filtered by the caller to
+ * variables assigned exactly once in init and never in the loop, so the
+ * substitution is semantics-preserving and the result is a self-contained
+ * pure subtree (no variable scoping questions for numeric eval or GLSL
+ * emission). Cycles (`t = t + 1`) resolve to the identifier left in place,
+ * which the invariance check then rejects.
  */
 function substituteInitIdents(
   node: ASTNode,

@@ -153,10 +153,18 @@ function compileFrmUncached(
       // exactly once at the top level of init and never inside the loop —
       // a classic idiom for parameterized radii (Jm_* family evidence).
       const initBindings = new Map<string, ASTNode>();
+      const multiplyAssigned = new Set<string>();
       for (const stmt of ast.initBlock) {
         if (stmt.type !== 'assignment') continue;
-        if (initBindings.has(stmt.target)) initBindings.delete(stmt.target);
-        else initBindings.set(stmt.target, stmt.value);
+        // Exactly-once only: a second assignment permanently bans the name
+        // (sequential init semantics make later bindings order-dependent).
+        if (multiplyAssigned.has(stmt.target)) continue;
+        if (initBindings.has(stmt.target)) {
+          initBindings.delete(stmt.target);
+          multiplyAssigned.add(stmt.target);
+        } else {
+          initBindings.set(stmt.target, stmt.value);
+        }
       }
       const loopTargets = new Set<string>();
       const collectTargets = (nodes: readonly ASTNode[]): void => {

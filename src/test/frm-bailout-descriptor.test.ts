@@ -334,3 +334,15 @@ describe('init-bound threshold substitution (T0 evidence: Jm_* idiom)', () => {
     expect(r.success).toBe(false);
   });
 });
+
+describe('Codex round-2 regressions', () => {
+  it('a thrice-assigned init binding is banned (sequential init semantics)', () => {
+    // u=1; t=u; u=2; u=3 — classic t equals 1, not the final u. The toggle
+    // (set/delete/set) admitted u on the third assignment; the ban sticks.
+    const source =
+      'T {\ninit:\n  u = 1\n  t = u\n  u = 2\n  u = 3\n  z = pixel\nloop:\n  z = z^2 + c\nbailout:\n  |z| <= t\n}';
+    const r = compileFrm(source, undefined, 2);
+    expect(r.success).toBe(false);
+    expect(r.errors.join('\n')).toContain('threshold-not-loop-invariant');
+  });
+});
