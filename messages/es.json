@@ -1508,6 +1508,8 @@
         "outside": "Coloración exterior",
         "inside": "Coloración interior",
         "smooth": "Suave",
+        "smoothAdapted": "Adapted: radial-crossing-v1 approximation",
+        "smoothUnavailable": "Unavailable for this formula — rendering with Escape Time",
         "orbitTrap": "Trampa de órbita",
         "orbitEcho": "Eco de órbita",
         "stripe": "Franja",

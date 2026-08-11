@@ -1508,6 +1508,8 @@
         "outside": "Colorisation externe",
         "inside": "Colorisation interne",
         "smooth": "Lisse",
+        "smoothAdapted": "Adapted: radial-crossing-v1 approximation",
+        "smoothUnavailable": "Unavailable for this formula — rendering with Escape Time",
         "orbitTrap": "Piège d'orbite",
         "orbitEcho": "Écho d'orbite",
         "stripe": "Bandes",

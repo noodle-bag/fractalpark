@@ -1508,6 +1508,8 @@
         "outside": "Coloração Externa",
         "inside": "Coloração Interna",
         "smooth": "Suave",
+        "smoothAdapted": "Adapted: radial-crossing-v1 approximation",
+        "smoothUnavailable": "Unavailable for this formula — rendering with Escape Time",
         "orbitTrap": "Armadilha de Órbita",
         "orbitEcho": "Eco de Órbita",
         "stripe": "Listras",

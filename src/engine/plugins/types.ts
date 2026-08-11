@@ -1,5 +1,12 @@
 export type PluginCategory = 'formula' | 'outsideColoring' | 'insideColoring' | 'transform';
 
+/**
+ * Strict-v2 smooth-coloring capability, resolved from AST/dataflow plus the
+ * bailout descriptor at compile time (docs/specs/frm-compatibility-v1.md §7).
+ * Never guessed from family, name, `supportsPower`, or a default u_power=2.
+ */
+export type SmoothCapability = 'supported' | 'adapted' | 'unavailable';
+
 export interface PluginUniformDescriptor {
   name: string;           // e.g. "u_phoenixP"
   type: 'float' | 'int' | 'vec2' | 'vec3' | 'bool';
@@ -47,6 +54,19 @@ export interface FormulaPlugin extends FractalPlugin {
    * Present only when the plugin carries a C2 bailoutDescriptor.
    */
   c2ThresholdGlsl?: string;
+  /**
+   * Strict-v2 smooth-coloring capability, resolved from AST/dataflow plus
+   * the bailout descriptor at compile time (spec §7). Absent for v1/legacy
+   * plugins — v1 smooth behavior is frozen.
+   */
+  smoothCapability?: SmoothCapability;
+  /**
+   * Leading polynomial degree extracted from the loop dataflow; present only
+   * when smoothCapability === 'supported'. Feeds u_power in place of the
+   * document-level power parameter, so the smooth formula uses the degree
+   * the formula actually iterates.
+   */
+  smoothPower?: number;
   supportsPower?: boolean;  // DEPRECATED: not consumed by any current consumer; Smooth capability resolves from AST/dataflow per ADR-0007. Retired in the coloring-capability slice.
   supportsJulia?: boolean;  // default true
   family?: string;          // grouping: 'classic' | 'newton' | 'magnet' | 'phoenix' | 'exotic'

@@ -1508,6 +1508,8 @@
         "outside": "Outside Coloring",
         "inside": "Inside Coloring",
         "smooth": "Smooth",
+        "smoothAdapted": "Adapted: radial-crossing-v1 approximation",
+        "smoothUnavailable": "Unavailable for this formula — rendering with Escape Time",
         "orbitTrap": "Orbit Trap",
         "orbitEcho": "Orbit Echo",
         "stripe": "Stripe",

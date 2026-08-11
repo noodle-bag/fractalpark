@@ -87,6 +87,13 @@ export function assembleShader(
   if (formula.afterStepTiming) {
     defines.push('#define ESCAPE_AFTER_STEP');
   }
+  if (formula.smoothCapability === 'unavailable') {
+    // Spec §7: smooth unavailable (C4-R real projection or inverse-direction
+    // radial) → deterministic Escape Time. The requested coloring preference
+    // is preserved upstream and deterministically restored when the
+    // capability returns (docs/specs/frm-compatibility-v1.md §7).
+    defines.push('#define SMOOTH_ESCAPE_TIME');
+  }
   if (formula.escapeType === 'converge') {
     defines.push('#define ESCAPE_CONVERGE');
     defines.push('#define CONVERGE_EPSILON 0.000001');

@@ -1508,6 +1508,8 @@
         "outside": "外部着色",
         "inside": "内部着色",
         "smooth": "平滑",
+        "smoothAdapted": "适配模式：radial-crossing-v1 径向穿越近似",
+        "smoothUnavailable": "此公式不可用平滑着色——已确定性回退为逃逸时间",
         "orbitTrap": "轨道陷阱",
         "orbitEcho": "轨迹回声",
         "stripe": "条纹",

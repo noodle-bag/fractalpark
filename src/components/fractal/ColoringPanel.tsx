@@ -7,6 +7,7 @@ import { Label } from '@/components/ui/label';
 import { Slider } from '@/components/ui/slider';
 import { ColorSchemeSelector } from './ColorSchemeSelector';
 import { GradientEditor } from './GradientEditor';
+import type { SmoothCapability } from '@/engine/plugins/types';
 import type {
   GradientStop,
   InsideColoringMode,
@@ -20,6 +21,8 @@ interface ColoringPanelProps {
   insideColoring: InsideColoringMode;
   orbitTrap: OrbitTrapConfig;
   customGradient: GradientStop[] | null;
+  /** Strict-v2 smooth capability of the active formula; undefined for v1. */
+  smoothCapability?: SmoothCapability;
   onPaletteChange: (index: number) => void;
   onOutsideColoringChange: (mode: OutsideColoringMode) => void;
   onInsideColoringChange: (mode: InsideColoringMode) => void;
@@ -33,6 +36,7 @@ export function ColoringPanel({
   insideColoring,
   orbitTrap,
   customGradient,
+  smoothCapability,
   onPaletteChange,
   onOutsideColoringChange,
   onInsideColoringChange,
@@ -79,6 +83,17 @@ export function ColoringPanel({
             </Button>
           ))}
         </div>
+
+        {outsideColoring === 'smooth' && smoothCapability === 'adapted' && (
+          <p className="text-xs text-amber-200/90" data-testid="smooth-capability-note">
+            {t('coloring.smoothAdapted')}
+          </p>
+        )}
+        {outsideColoring === 'smooth' && smoothCapability === 'unavailable' && (
+          <p className="text-xs text-amber-200/90" data-testid="smooth-capability-note">
+            {t('coloring.smoothUnavailable')}
+          </p>
+        )}
 
         <label className="text-sm font-medium leading-none">{t('coloring.inside')}</label>
         <div className="grid grid-cols-3 gap-2">

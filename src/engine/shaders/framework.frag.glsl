@@ -227,10 +227,11 @@ vec3 colorAtComplex(vec2 point) {
 #else
     if (ESCAPE_CHECK(z, zz)) {
       escaped = true;
-#ifdef ESCAPE_INVERSE_DIRECTION
-      // Inverse-direction escape (v2 descriptor op > / >=): the smooth
-      // formula is not meaningful for inside-out escapes — deterministic
-      // Escape Time fallback per the coloring-capability contract.
+#if defined(ESCAPE_INVERSE_DIRECTION) || defined(SMOOTH_ESCAPE_TIME)
+      // Deterministic Escape Time fallback (coloring-capability contract,
+      // spec §7): inverse-direction escapes make the radial smooth formula
+      // meaningless, and SMOOTH_ESCAPE_TIME marks formulas whose capability
+      // resolved to unavailable (C4-R projection / inside-out radial).
   #ifdef ESCAPE_AFTER_STEP
       smoothIter = float(i + 1);
   #else

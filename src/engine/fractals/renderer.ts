@@ -166,7 +166,7 @@ export class FractalRenderer {
     if (uniforms.u_paletteIndex) gl.uniform1i(uniforms.u_paletteIndex, params.paletteIndex);
     if (uniforms.u_isJulia) gl.uniform1i(uniforms.u_isJulia, params.isJulia ? 1 : 0);
     if (uniforms.u_juliaC) gl.uniform2f(uniforms.u_juliaC, params.juliaC[0], params.juliaC[1]);
-    if (uniforms.u_power) gl.uniform1f(uniforms.u_power, params.power);
+    if (uniforms.u_power) gl.uniform1f(uniforms.u_power, this.formulaPlugin?.smoothPower ?? params.power);
     if (uniforms.u_ssaaLevel) {
       const level = params.ssaaLevel ?? (params.useSSAA ? 4 : 0);
       gl.uniform1i(uniforms.u_ssaaLevel, level);

@@ -1508,6 +1508,8 @@
         "outside": "외부 컬러링",
         "inside": "내부 컬러링",
         "smooth": "스무스",
+        "smoothAdapted": "Adapted: radial-crossing-v1 approximation",
+        "smoothUnavailable": "Unavailable for this formula — rendering with Escape Time",
         "orbitTrap": "오빗 트랩",
         "orbitEcho": "오빗 에코",
         "stripe": "스트라이프",

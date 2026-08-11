@@ -12,6 +12,7 @@ import { tokenize, formatLexerErrors, type LexerError } from './lexer';
 import { parse, formatParseErrors, type ParseError } from './parser';
 import { validate } from './validator';
 import { generateC2ThresholdGLSL, generateGLSL } from './codegen';
+import { resolveSmoothCapability } from './smooth-capability';
 import {
   evaluateC2Threshold,
   extractBailoutDescriptor,
@@ -208,6 +209,11 @@ function compileFrmUncached(
       }
     }
 
+    // Smooth-coloring capability (spec §7): resolved from AST/dataflow plus
+    // the bailout descriptor — never from family, name, or a u_power=2
+    // guess. Absent without a descriptor (v1 behavior stays frozen).
+    const smooth = resolveSmoothCapability(ast, bailoutDescriptor ?? undefined);
+
     // Step 5: Create FormulaPlugin
     const pluginUniforms = uniforms.map(u => ({
       name: u.name,
@@ -231,6 +237,8 @@ function compileFrmUncached(
         ? { afterStepTiming: true }
         : {}),
       ...(c2ThresholdGlsl ? { c2ThresholdGlsl } : {}),
+      ...(smooth ? { smoothCapability: smooth.capability } : {}),
+      ...(smooth?.power !== undefined ? { smoothPower: smooth.power } : {}),
       uniforms: pluginUniforms,
       glsl,
       initGlsl,

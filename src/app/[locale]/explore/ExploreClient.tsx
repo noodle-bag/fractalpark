@@ -42,6 +42,7 @@ import {
   readSessionFormulaAssets,
   type FormulaResolution,
 } from '@/lib/formula-resolver';
+import { pluginRegistry } from '@/engine/plugins/registry';
 
 type ExploreFormulaResolution =
   | FormulaResolution
@@ -856,6 +857,7 @@ function ExploreClient({ posterImage }: { posterImage?: string }) {
                 insideColoring={insideColoring}
                 orbitTrap={orbitTrap}
                 customGradient={customGradient}
+                smoothCapability={pluginRegistry.getFormula(formula)?.smoothCapability}
                 onPaletteChange={(index) => updateColoring({ paletteIndex: index })}
                 onOutsideColoringChange={(mode) => updateColoring({ outsideColoringId: mode })}
                 onInsideColoringChange={(mode) => updateColoring({ insideColoringId: mode })}
