@@ -290,3 +290,43 @@ describe('T0 grammar coverage (corpus-evidence forms, project-authored samples)'
     expect(result.scanAnnotations?.some((d) => d.code === 'prose-content')).toBe(true);
   });
 });
+
+describe('init-only c rebinding rename (T0 evidence)', () => {
+  it('renames an init-only non-pixel c binding to a fresh seeded variable', () => {
+    const source =
+      'RebindProbe {\n  z = 0, x = real(pixel), y = imag(pixel), c = x*(cos(y)+x*sin(y)):\n  z = sqr(z) + c,\n  |z| < 4\n}';
+    const { native, notes } = lowerClassicEntryToNative(source);
+    expect(native).toContain('cclassic = pixel');
+    expect(native).toContain('cclassic = x*(cos(y)+x*sin(y))');
+    expect(native).toContain('z = sqr(z) + cclassic');
+    expect(kinds(notes)).toContain('c-init-rebinding-renamed');
+    const result = compileClassicFrmEntry(source, 'RebindProbe');
+    expect(result.success).toBe(true);
+  });
+
+  it('c read before the rebinding still sees pixel (seed-first semantics)', () => {
+    const source = 'SeedProbe {\n  z = c, c = 2*pixel:\n  z = z^2 + c,\n  |z| < 4\n}';
+    const { native } = lowerClassicEntryToNative(source);
+    const init = native.split('loop:')[0];
+    expect(init.indexOf('cclassic = pixel')).toBeLessThan(init.indexOf('z = cclassic'));
+    const result = compileClassicFrmEntry(source, 'SeedProbe');
+    expect(result.success).toBe(true);
+  });
+
+  it('a c assignment in the LOOP is cross-iteration state — no rename, native rejects', () => {
+    const source = 'LoopCProbe {\n  z = pixel:\n  z = sqr(z) + c, c = c + p1,\n  |z| < 4\n}';
+    const { native, notes } = lowerClassicEntryToNative(source);
+    expect(native).toContain('c = c + p1');
+    expect(kinds(notes)).not.toContain('c-init-rebinding-renamed');
+    const result = compileClassicFrmEntry(source, 'LoopCProbe');
+    expect(result.success).toBe(false);
+  });
+
+  it('avoids collisions with an existing cclassic identifier', () => {
+    const source = 'CollisionProbe {\n  cclassic = 1, c = 2*pixel:\n  z = z^2 + c + cclassic,\n  |z| < 4\n}';
+    const { native } = lowerClassicEntryToNative(source);
+    expect(native).toContain('cclassic2 = pixel');
+    const result = compileClassicFrmEntry(source, 'CollisionProbe');
+    expect(result.success).toBe(true);
+  });
+});

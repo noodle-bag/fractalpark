@@ -79,7 +79,8 @@ export interface LoweringNote {
     | 'header-trailing-text-ignored'
     | 'float-option-recorded'
     | 'function-option-recorded'
-    | 'function-option-unmapped';
+    | 'function-option-unmapped'
+    | 'c-init-rebinding-renamed';
   /** 1-based line in the classic entry source. */
   line: number;
   message: string;
@@ -630,6 +631,46 @@ export function lowerClassicEntryToNative(entrySource: string): LoweredClassicEn
   const initStmts = flatten(initTokens);
   const loopStmts = flatten(loopBodyTokens);
   if (predicate) bailoutText = renameBailout(bailoutText);
+
+  // Init-only `c = <non-pixel>` rebinding: classic semantics pre-set
+  // `c = pixel` at entry start and let init reassign it (the loop then
+  // reads the rebound value). Native reserves `c` as the read-only pixel
+  // constant, so the rebinding lowers to a fresh variable seeded with
+  // `pixel` ahead of the classic init statements, and every `c` reference
+  // (init, loop, bailout) reads the fresh variable. A `c` assignment in
+  // the LOOP is cross-iteration state (E3 / T1 territory) and stays on
+  // the native reject path — no rename.
+  const C_ASSIGN_RE = /^c\s*=(?![=])/;
+  const initHasCRebind = initStmts.some(
+    (s) => s.kind === 'stmt' && C_ASSIGN_RE.test(s.text),
+  );
+  const loopHasCAssign = loopStmts.some(
+    (s) => s.kind === 'stmt' && C_ASSIGN_RE.test(s.text),
+  );
+  if (initHasCRebind && !loopHasCAssign) {
+    let fresh = 'cclassic';
+    const allText = () =>
+      [...initStmts, ...loopStmts].map((s) => s.text).join('\n') + '\n' + bailoutText;
+    for (let suffix = 2; new RegExp(`\\b${fresh}\\b`).test(allText()); suffix++) {
+      fresh = `cclassic${suffix}`;
+    }
+    const renameC = (text: string) => text.replace(/\bc\b/g, fresh);
+    for (const s of initStmts) s.text = renameC(s.text);
+    for (const s of loopStmts) s.text = renameC(s.text);
+    bailoutText = renameC(bailoutText);
+    const firstLine =
+      initStmts.find((s) => s.kind === 'stmt' && s.text.startsWith(`${fresh} `))?.line ??
+      initStmts.find((s) => s.kind === 'stmt' && s.text.startsWith(`${fresh}=`))?.line ??
+      1;
+    initStmts.unshift({ text: `${fresh} = pixel`, line: firstLine, kind: 'stmt' });
+    notes.push({
+      kind: 'c-init-rebinding-renamed',
+      line: firstLine,
+      message:
+        `Init-only c rebinding lowered to \`${fresh}\` (seeded from pixel): native reserves \`c\` ` +
+        'as the read-only pixel constant; classic init reassignments are ordinary state',
+    });
+  }
 
   // Emit native source with a line map back to the classic source.
   const native: string[] = [];
