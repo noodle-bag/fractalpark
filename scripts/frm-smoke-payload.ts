@@ -117,8 +117,10 @@ function corpusCases(): SmokeCase[] {
     source: string;
   }
   const rows: Row[] = [];
-  // Slice 5g: T0 AND T1 tiers; the seven Slice-5 waiver rows are excluded
-  // (compile-rejects by design — evidence in the Slice 5 archive).
+  // Slice 5g: T0+T1 tiers; Slice 6a: T2 too (C5 GPU-vs-CPU evidence —
+  // the exotic-magnitude rows moved to T2 by the second re-projection).
+  // The seven Slice-5 waiver rows are excluded (compile-rejects by
+  // design — evidence in the Slice 5 archive).
   const WAIVERS = new Set([
     'frm-d1',
     "f'functionike",
@@ -132,7 +134,7 @@ function corpusCases(): SmokeCase[] {
     if (!line.startsWith('| ') || line.startsWith('| ---')) continue;
     const cells = line.trim().replace(/^\||\|$/g, '').split('|').map((c) => c.trim());
     if (cells.length < 14 || cells[0] === '名称') continue;
-    if (cells[3] !== 'T0' && cells[3] !== 'T1') continue;
+    if (cells[3] !== 'T0' && cells[3] !== 'T1' && cells[3] !== 'T2') continue;
     if (WAIVERS.has(cells[0])) continue;
     rows.push({ name: cells[0], eflags: cells[5], source: cells[6] });
   }

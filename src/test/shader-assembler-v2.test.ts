@@ -194,6 +194,16 @@ describe('assembleShader: C4-R projection escapes and after-step timing', () => 
     expect(shader).toMatch(/^#define C4R_ESCAPE_CHECK\(z\) \(\(z\)\.x < -1\.0\)$/m);
   });
 
+  it('C5 LastSqr injects a raw zz threshold without a second square', () => {
+    const plugin = compileV2('V2C5', 'LastSqr <= 4', 'v2-c5');
+    const shader = assembleShader({ formulaId: plugin.id, ...COMBO_BASE }, plugin);
+    // Continue while zz <= 4 → escape when zz > 4.  `4` is already a
+    // squared-magnitude threshold, unlike C1's radius threshold.
+    expect(shader).toMatch(/^#define ESCAPE_C5$/m);
+    expect(shader).toMatch(/^#define C5_ESCAPE_CHECK\(zz\) \(\(zz\) > 4\.0\)$/m);
+    expect(shader).not.toMatch(injectedRadius('16.0'));
+  });
+
   it('classic dialect under v2 sets afterStepTiming and injects ESCAPE_AFTER_STEP', () => {
     const result = compileClassicFrmEntry('AfterStep {\n\tz=0:\n\tz=z^2+c\n\t|z|<4\n}', undefined, 'v2-after-step', 2);
     expect(result.success).toBe(true);

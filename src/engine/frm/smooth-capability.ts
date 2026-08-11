@@ -27,7 +27,7 @@ export interface SmoothResolution {
   capability: SmoothCapability;
   /** Leading polynomial degree; present only when capability is 'supported'. */
   power?: number;
-  reason: 'polynomial' | 'non-polynomial-radial' | 'inverse-direction' | 'non-radial-projection';
+  reason: 'polynomial' | 'non-polynomial-radial' | 'inverse-direction' | 'non-radial-projection' | 'lastsqr-non-radial';
 }
 
 /**
@@ -257,6 +257,12 @@ export function resolveSmoothCapability(
   if (descriptor.kind === 'C4R') {
     // C4-R is a real projection, not a radial crossing — no reuse by default.
     return { capability: 'unavailable', reason: 'non-radial-projection' };
+  }
+  if (descriptor.kind === 'C5') {
+    // C5 thresholds LastSqr — the modulus at the last sqr() CALL, not a
+    // radial crossing of the predicate-time z. Smooth is unavailable until
+    // a specific equivalent shape is proven (Codex 6a round-1).
+    return { capability: 'unavailable', reason: 'lastsqr-non-radial' };
   }
   if (descriptor.op === '>' || descriptor.op === '>=') {
     // Inside-out escapes make the radial smooth formula meaningless.

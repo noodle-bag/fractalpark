@@ -60,6 +60,20 @@ describe('orbit evaluator anchors (hand-verified)', () => {
     expect(r.escapedAt).toBeNull();
   });
 
+  it('LastSqr thresholds the sqr-argument modulus, raw and inclusive', () => {
+    // z=0, c=2: iter1 sqr(0) → lastSqr=0 (holds), z1=2; iter2 sqr(2) →
+    // lastSqr=4 (inclusive holds), z2=6; iter3 sqr(6) → 36>4 escapes.
+    const r = orbitFor('T {\ninit:\n  z = 0\nloop:\n  z = sqr(z) + c\nbailout:\n  LastSqr <= 4\n}', [2, 0]);
+    expect(r.escapedAt).toBe(3);
+    expect(r.orbit[0]).toEqual({ re: 2, im: 0 });
+    expect(r.orbit[1]).toEqual({ re: 6, im: 0 });
+  });
+
+  it('abs(z) shares the C1 true-radius escape path', () => {
+    const r = orbitFor('T {\ninit:\n  z = 3\nloop:\n  z = z\nbailout:\n  abs(z) < 4\n}', [0, 0]);
+    expect(r.escapedAt).toBeNull();
+  });
+
   it('componentwise abs drives the burning-ship shape', () => {
     // z = sqr(abs(z)) + c at pixel (0.5, 0.5): z1 = sqr(abs(0)) + c =
     // 0.5+0.5i; z2 = sqr(0.5+0.5i)+c = (0+0.5i)+c = 0.5+1i.
@@ -541,5 +555,55 @@ describe('compileImportedFrm routing (Slice 5f review fix)', () => {
     const { compileImportedFrm } = await import('../engine/frm/compile');
     const r = compileImportedFrm('M {\ninit:\n  z = 0\nloop:\n  z = z*z + c\nbailout:\n  |z| < 4\n}', 'native', 2);
     expect(r.success).toBe(true);
+  });
+});
+
+describe('C5 smooth capability (Slice 6a review fix)', () => {
+  it('C5 (LastSqr threshold) resolves smooth as unavailable — not a radial crossing', async () => {
+    const { resolveSmoothCapability } = await import('../engine/frm/smooth-capability');
+    const src = 'T {\n  z = pixel:\n  z = sqr(conj(z)) + c,\n  lastsqr <= 4\n}';
+    const r = compileClassicFrmEntry(src, 'T', 'c5-smooth', 2);
+    expect(r.success).toBe(true);
+    expect(r.bailoutDescriptor?.kind).toBe('C5');
+    const res = resolveSmoothCapability(r.ast!, r.bailoutDescriptor!);
+    expect(res?.capability).toBe('unavailable');
+    expect(res?.reason).toBe('lastsqr-non-radial');
+  });
+});
+
+describe('C5 LastSqr escape channel (Slice 6a round-2 fix)', () => {
+  it('C5 reads the sqr-argument modulus, not the predicate-time |z|²', () => {
+    // z = sqr(z) + c with lastsqr <= 0.12: iter1 step calls sqr on
+    // z_init=(0.3,0.1) -> lastSqr = 0.10 (holds); |z_new|² = 0.17 would
+    // have escaped under the wrong channel. Discriminating anchor.
+    const src = 'T {\n  z = pixel:\n  z = sqr(z) + c,\n  lastsqr <= 0.12\n}';
+    const r = compileClassicFrmEntry(src, 'T', 'c5-channel', 2);
+    expect(r.success).toBe(true);
+    expect(r.bailoutDescriptor?.kind).toBe('C5');
+    const result = evaluateOrbit(r.ast!, {
+      pixel: { re: 0.3, im: 0.1 },
+      maxIterations: 4,
+      descriptor: r.bailoutDescriptor!,
+      plugin: r.plugin,
+    });
+    // iter1: lastSqr=0.10 <= 0.12 holds -> z_new = 0.08+0.06i + c(0.3+0.1i)
+    expect(result.orbit[0].re).toBeCloseTo(0.38, 10);
+    expect(result.orbit[0].im).toBeCloseTo(0.16, 10);
+    // iter2: sqr(0.38+0.16i) arg modulus 0.1444+0.0256 = 0.17 > 0.12 escapes
+    expect(result.escapedAt).toBe(2);
+  });
+
+  it('a loop with no sqr call thresholds LastSqr = 0 (side channel init)', () => {
+    const src = 'T {\n  z = pixel:\n  z = z + c,\n  lastsqr <= 0.5\n}';
+    const r = compileClassicFrmEntry(src, 'T', 'c5-nosqr', 2);
+    expect(r.success).toBe(true);
+    const result = evaluateOrbit(r.ast!, {
+      pixel: { re: 0.3, im: 0.1 },
+      maxIterations: 3,
+      descriptor: r.bailoutDescriptor!,
+      plugin: r.plugin,
+    });
+    // lastSqr stays 0 (no sqr call) -> 0 <= 0.5 always holds -> no escape
+    expect(result.escapedAt).toBeNull();
   });
 });

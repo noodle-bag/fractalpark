@@ -149,7 +149,7 @@ interface FullBatchEntryResult {
   v1: { success: boolean };
   v2: {
     success: boolean;
-    descriptorKind?: 'C1' | 'C2' | 'C4R';
+    descriptorKind?: 'C1' | 'C2' | 'C4R' | 'C5';
     rejectReason?: string;
     afterStepTiming?: boolean;
   };
@@ -170,7 +170,7 @@ function runFullBatch(corpus: SourceItem[]): {
     scanFailed: number;
     v1: { success: number; failed: number };
     v2: { success: number; failed: number };
-    v2Descriptor: { C1: number; C2: number; C4R: number };
+    v2Descriptor: { C1: number; C2: number; C4R: number; C5: number };
     v2Rejects: Record<string, number>;
     v1PassV2Reject: number;
     afterStepTiming: number;
@@ -182,7 +182,7 @@ function runFullBatch(corpus: SourceItem[]): {
     scanFailed: 0,
     v1: { success: 0, failed: 0 },
     v2: { success: 0, failed: 0 },
-    v2Descriptor: { C1: 0, C2: 0, C4R: 0 },
+    v2Descriptor: { C1: 0, C2: 0, C4R: 0, C5: 0 },
     v2Rejects: {} as Record<string, number>,
     v1PassV2Reject: 0,
     afterStepTiming: 0,

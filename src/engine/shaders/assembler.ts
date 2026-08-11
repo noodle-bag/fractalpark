@@ -84,6 +84,14 @@ export function assembleShader(
     defines.push(
       `#define C4R_ESCAPE_CHECK(z) (${operand} ${escapeOp} ${glslFloatLiteral(bailoutDescriptor.threshold)})`,
     );
+  } else if (bailoutDescriptor?.kind === 'C5') {
+    // C5 LastSqr: the side-channel modulus at the last sqr() call's
+    // argument (frmLastSqr). The threshold stays RAW — already squared.
+    const escapeOp = { '<': '>=', '<=': '>', '>': '<=', '>=': '<' }[bailoutDescriptor.op];
+    defines.push('#define ESCAPE_C5');
+    defines.push(
+      `#define C5_ESCAPE_CHECK(zz) ((zz) ${escapeOp} ${glslFloatLiteral(bailoutDescriptor.threshold)})`,
+    );
   } else {
     defines.push(`#define BAILOUT_RADIUS ${(formula.bailout ?? 4.0).toFixed(1)}`);
   }
@@ -152,6 +160,8 @@ export function makeCacheKey(combo: PluginCombination, formulaOverride?: Formula
       ? `C2:${descriptor.op}:${descriptor.params.join(',')}`
       : descriptor.kind === 'C1'
         ? `C1:${descriptor.op}:${descriptor.threshold}`
-        : `C4R:${descriptor.form}:${descriptor.op}:${descriptor.threshold}`;
+        : descriptor.kind === 'C4R'
+          ? `C4R:${descriptor.form}:${descriptor.op}:${descriptor.threshold}`
+          : `C5:${descriptor.op}:${descriptor.threshold}`;
   return `${base}|bo:${fingerprint}${timingBit}`;
 }

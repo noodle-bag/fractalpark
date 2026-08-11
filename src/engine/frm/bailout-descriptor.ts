@@ -15,6 +15,8 @@
  *   them, and whitelisted pure functions).
  * - **C4-R real projection**: `|real(z)| <op> R` (`abs-real`) or
  *   `real(z) <op> R` (`real`), numeric-literal threshold.
+ * - **C5 LastSqr**: `LastSqr <op> R`, where the builtin is the post-step
+ *   `|z|²`, so its threshold is deliberately raw.
  *
  * Comparison direction (`<`, `<=`, `>`, `>=`) is preserved exactly; swapped
  * operands are normalized by flipping the operator (`4 < |z|` ≡ `|z| > 4`)
@@ -57,7 +59,15 @@ export interface BailoutDescriptorC4R {
   threshold: number;
 }
 
-export type BailoutDescriptor = BailoutDescriptorC1 | BailoutDescriptorC2 | BailoutDescriptorC4R;
+/** A raw, already-squared post-step magnitude supplied by LastSqr. */
+export interface BailoutDescriptorC5 {
+  kind: 'C5';
+  magnitude: 'last-sqr';
+  op: ComparisonOp;
+  threshold: number;
+}
+
+export type BailoutDescriptor = BailoutDescriptorC1 | BailoutDescriptorC2 | BailoutDescriptorC4R | BailoutDescriptorC5;
 
 export type BailoutRejectReason =
   /** Magnitude side is not `|z|`, `|real(z)|`, or `real(z)`. */
@@ -90,10 +100,21 @@ function isIdent(node: ASTNode, name: string): boolean {
   return node.type === 'ident' && node.name === name;
 }
 
-type MagnitudeForm = { magnitude: 'z' } | { c4r: 'abs-real' | 'real' };
+type MagnitudeForm = { magnitude: 'z' } | { c4r: 'abs-real' | 'real' } | { lastSqr: true };
 
-/** Classify the magnitude side: `|z|`, `|real(z)|`, or `real(z)`. */
-function classifyMagnitude(node: ASTNode): MagnitudeForm | null {
+/** Classify the magnitude side: radial forms, projections, or LastSqr. */
+function classifyMagnitude(node: ASTNode, magnitudeAliases: ReadonlySet<string>): MagnitudeForm | null {
+  // Corpus evidence: classic `abs(z)` and `cabs(z)` in a bailout are both
+  // true-modulus spellings. Normalize them to C1 so renderer and CPU follow
+  // the exact same threshold-squaring path as bars magnitude.
+  if (
+    node.type === 'call' &&
+    (node.name === 'abs' || node.name === 'cabs') &&
+    node.args.length === 1 &&
+    isIdent(node.args[0], 'z')
+  ) return { magnitude: 'z' };
+  if (node.type === 'ident' && node.name === 'LastSqr') return { lastSqr: true };
+  if (node.type === 'ident' && magnitudeAliases.has(node.name)) return { magnitude: 'z' };
   if (node.type === 'magnitude') {
     const inner = node.operand;
     if (isIdent(inner, 'z')) return { magnitude: 'z' };
@@ -281,6 +302,8 @@ export function extractBailoutDescriptor(
   node: ASTNode,
   declaredParams: Set<string>,
   initBindings?: ReadonlyMap<string, ASTNode>,
+  /** Proven final-loop aliases assigned exactly `name = |z|`; see compile.ts. */
+  magnitudeAliases: ReadonlySet<string> = new Set(),
 ): BailoutExtraction {
   if (node.type !== 'binary') {
     return { ok: false, reason: 'unknown-predicate' };
@@ -299,8 +322,8 @@ export function extractBailoutDescriptor(
   let thresholdNode: ASTNode | null = null;
   let effectiveOp: ComparisonOp = op;
 
-  const leftForm = classifyMagnitude(node.left);
-  const rightForm = classifyMagnitude(node.right);
+  const leftForm = classifyMagnitude(node.left, magnitudeAliases);
+  const rightForm = classifyMagnitude(node.right, magnitudeAliases);
 
   if (leftForm && !rightForm) {
     magnitudeNode = node.left;
@@ -343,6 +366,18 @@ export function extractBailoutDescriptor(
     return {
       ok: true,
       descriptor: { kind: 'C4R', form: form.c4r, op: effectiveOp, threshold: numericThreshold },
+    };
+  }
+
+  if ('lastSqr' in form) {
+    // LastSqr is the post-step squared magnitude, not a radius.
+    // Parameterized variants are intentionally outside C5's evidence.
+    if (numericThreshold === null) {
+      return { ok: false, reason: 'threshold-not-loop-invariant' };
+    }
+    return {
+      ok: true,
+      descriptor: { kind: 'C5', magnitude: 'last-sqr', op: effectiveOp, threshold: numericThreshold },
     };
   }
 

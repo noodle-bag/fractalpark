@@ -77,7 +77,7 @@ export interface OrbitResult {
 export class OrbitUnsupportedError extends Error {}
 
 /**
- * Numeric value of a descriptor's threshold under the given params (C1/C4-R:
+ * Numeric value of a descriptor's threshold under the given params (C1/C4-R/C5:
  * the literal; C2: the substituted pure AST with params — defaults 0+0i).
  * Used by the WebGL smoke to hand the GPU the same radius the CPU oracle
  * applied. Throws OrbitUnsupportedError if the C2 expression references
@@ -462,7 +462,7 @@ export function evaluateOrbit(ast: FrmAST, opts: OrbitOptions): OrbitResult {
   // no longer holds (the assembler's inverted escapeOp is exactly !holds).
   const thresholdSquared = (): number => {
     const d = opts.descriptor;
-    if (d.kind === 'C1' || d.kind === 'C4R') return d.threshold * d.threshold;
+    if (d.kind === 'C1' || d.kind === 'C4R' || d.kind === 'C5') return d.threshold * d.threshold;
     const t = evalNode(d.thresholdNode);
     return t[0] * t[0];
   };
@@ -484,6 +484,19 @@ export function evaluateOrbit(ast: FrmAST, opts: OrbitOptions): OrbitResult {
           return v >= t;
         default:
           throw new OrbitUnsupportedError(`C4R op ${d.op}`);
+      }
+    }
+    if (d.kind === 'C5') {
+      // C5 reads the LastSqr SIDE CHANNEL — the modulus at the last sqr()
+      // call's argument (0 before any sqr call), NOT the predicate-time
+      // |z|². Mirrors C5_ESCAPE_CHECK(frmLastSqr).
+      const v = lastSqr;
+      switch (d.op) {
+        case '<': return v < d.threshold;
+        case '<=': return v <= d.threshold;
+        case '>': return v > d.threshold;
+        case '>=': return v >= d.threshold;
+        default: throw new OrbitUnsupportedError(`C5 op ${d.op}`);
       }
     }
     const mag2 = z[0] * z[0] + z[1] * z[1];

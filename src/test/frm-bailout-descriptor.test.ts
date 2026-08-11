@@ -80,6 +80,26 @@ describe('extractBailoutDescriptor: bounded forms', () => {
     });
   });
 
+  it('normalizes classic abs(z) and cabs(z) to the C1 true-radius path', () => {
+    for (const spelling of ['abs(z)', 'cabs(z)']) {
+      expect(extractBailoutDescriptor(bailoutAst(`${spelling} <= 4`), NO_PARAMS)).toEqual({
+        ok: true,
+        descriptor: { kind: 'C1', op: '<=', magnitude: 'z', threshold: 4 },
+      });
+    }
+  });
+
+  it('C5 LastSqr keeps its numeric threshold raw and flips swapped direction', () => {
+    expect(extractBailoutDescriptor(bailoutAst('LastSqr <= 4'), NO_PARAMS)).toEqual({
+      ok: true,
+      descriptor: { kind: 'C5', magnitude: 'last-sqr', op: '<=', threshold: 4 },
+    });
+    expect(extractBailoutDescriptor(bailoutAst('4 > LastSqr'), NO_PARAMS)).toEqual({
+      ok: true,
+      descriptor: { kind: 'C5', magnitude: 'last-sqr', op: '<', threshold: 4 },
+    });
+  });
+
   it('swapped operands flip the operator without changing meaning', () => {
     // `4 < |z|` means "|z| > 4" — the v1 heuristic reads this as threshold
     // 4 with direction discarded; v2 must preserve the direction exactly.
@@ -140,11 +160,6 @@ describe('extractBailoutDescriptor: stable rejections (no silent fallback)', () 
   it('rejects adversarial magnitude lookalikes', () => {
     // Case-sensitive `Z` is not the orbit variable.
     expect(extractBailoutDescriptor(bailoutAst('|Z| < 4'), NO_PARAMS)).toEqual({
-      ok: false,
-      reason: 'unknown-magnitude-form',
-    });
-    // abs(z) is a function call, not the magnitude bars form.
-    expect(extractBailoutDescriptor(bailoutAst('abs(z) < 4'), NO_PARAMS)).toEqual({
       ok: false,
       reason: 'unknown-magnitude-form',
     });
@@ -221,6 +236,24 @@ describe('strict v2 compile integration', () => {
     const r = compileFrmDetailed(src('4 < |z|'), undefined, 2);
     expect(r.success).toBe(true);
     expect(r.bailoutDescriptor).toEqual({ kind: 'C1', op: '>', magnitude: 'z', threshold: 4 });
+  });
+
+  it('normalizes a proven final `x = |z|` alias to C2, but not a stale alias', () => {
+    const proven = compileFrmDetailed(
+      'T {\ninit:\n  z = 0\nloop:\n  z = z^2 + c\n  x = |z|\nbailout:\n  x <= p2\n}',
+      undefined,
+      2,
+    );
+    expect(proven.success).toBe(true);
+    expect(proven.bailoutDescriptor?.kind).toBe('C2');
+
+    const stale = compileFrmDetailed(
+      'T {\ninit:\n  z = 0\nloop:\n  x = |z|\n  z = z^2 + c\nbailout:\n  x <= p2\n}',
+      undefined,
+      2,
+    );
+    expect(stale.success).toBe(false);
+    expect(stale.errors.join('\n')).toContain('unknown-magnitude-form');
   });
 
   it('fails an unknown predicate with a stable reason and no fallback', () => {

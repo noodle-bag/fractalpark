@@ -52,6 +52,25 @@ export interface CompileResult {
 }
 
 /**
+ * Return only aliases that are demonstrably refreshed from the completed
+ * orbit on every body run. This deliberately recognizes the four corpus
+ * rows' narrow shape and does not turn general mutable variables into
+ * magnitude forms.
+ */
+function collectFinalMagnitudeAliases(loopBlock: readonly ASTNode[]): Set<string> {
+  const final = loopBlock[loopBlock.length - 1];
+  if (
+    final?.type === 'assignment' &&
+    final.value.type === 'magnitude' &&
+    final.value.operand.type === 'ident' &&
+    final.value.operand.name === 'z'
+  ) {
+    return new Set([final.target]);
+  }
+  return new Set();
+}
+
+/**
  * Compile FRM source code to a FormulaPlugin
  * Results are cached for unchanged sources
  */
@@ -217,15 +236,27 @@ function compileFrmUncached(
       };
       collectTargets(ast.loopBlock);
       for (const t of loopTargets) initBindings.delete(t);
-      const extraction = extractBailoutDescriptor(ast.bailoutExpr, declaredParams, initBindings);
+      // A small corpus-proven classic idiom caches the just-computed
+      // magnitude in a scalar and uses it as the final predicate:
+      // `..., x = |z|, x <= p2`.  It is equivalent to a C1/C2 radial
+      // predicate only when the assignment is the final top-level loop
+      // statement; branches, stale values, and arbitrary aliases remain
+      // outside the contract.
+      const magnitudeAliases = collectFinalMagnitudeAliases(ast.loopBlock);
+      const extraction = extractBailoutDescriptor(
+        ast.bailoutExpr,
+        declaredParams,
+        initBindings,
+        magnitudeAliases,
+      );
       if (!extraction.ok) {
         const reasonMessages: Record<BailoutRejectReason, string> = {
           'unknown-magnitude-form':
-            'bailout magnitude must be |z|, |real(z)|, or real(z) under strict v2 semantics',
+            'bailout magnitude must be |z|/abs(z)/cabs(z), a proven final |z| alias, LastSqr, |real(z)|, or real(z) under strict v2 semantics',
           'threshold-not-loop-invariant':
             'bailout threshold must be loop-invariant (numbers, declared parameters, and pure arithmetic only — no orbit state) under strict v2 semantics',
           'unknown-predicate':
-            'bailout predicate is outside the bounded C1/C2/C4-R contract under strict v2 semantics',
+            'bailout predicate is outside the bounded C1/C2/C4-R/C5 contract under strict v2 semantics',
           'chained-logical':
             'bailout predicates combined with && or || are not part of the strict v2 contract yet',
         };

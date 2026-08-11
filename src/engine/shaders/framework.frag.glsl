@@ -9,6 +9,10 @@ precision highp float;
 #if defined(ESCAPE_C4R)
   // C4R_ESCAPE_CHECK(z) is fully injected by the assembler.
   #define ESCAPE_CHECK(z, zz) C4R_ESCAPE_CHECK(z)
+#elif defined(ESCAPE_C5)
+  // C5 reads the LastSqr side channel (modulus at the last sqr() call),
+  // not the predicate-time |z|².
+  #define ESCAPE_CHECK(z, zz) C5_ESCAPE_CHECK(frmLastSqr)
 #elif defined(ESCAPE_C2)
   // C2_ESCAPE_CHECK(zz) is fully injected by the assembler (uniform-driven).
   #define ESCAPE_CHECK(z, zz) C2_ESCAPE_CHECK(zz)
@@ -86,6 +90,10 @@ float escapeHeight(vec2 point) {
 #else
   vec2 z = u_isJulia ? point : vec2(0.0);
   vec2 c = u_isJulia ? u_juliaC : point;
+  // Per-orbit side-channel reset: LastSqr must start 0 for EVERY orbit
+  // evaluation (lighting runs extra orbits after the main one — Codex 6a
+  // round-3). An init sqr() then updates it naturally.
+  frmLastSqr = 0.0;
 #ifdef HAS_INIT_FORMULA
   z = initFormula(z, c, point);
 #endif
@@ -168,6 +176,8 @@ vec3 colorAtComplex(vec2 point) {
   vec2 z = u_isJulia ? point : vec2(0.0);
 #endif
   vec2 c = u_isJulia ? u_juliaC : point;
+  // Per-orbit side-channel reset (see escapeHeight).
+  frmLastSqr = 0.0;
 #ifdef HAS_INIT_FORMULA
   z = initFormula(z, c, point);
 #endif
