@@ -142,9 +142,34 @@ export function tokenize(source: string): TokenizeResult {
   }
 
   function readNumber(): string {
+    // Digits with at most one dot. A second dot ABUTTING the digits is a
+    // malformed number (`1.2.3`, `.5.6`) — error loudly instead of letting
+    // parseFloat silently truncate or the tail re-lex as a leading-dot
+    // number (Codex 5e round-1).
     let value = '';
-    while (i < source.length && /[0-9.]/.test(peek())) {
-      value += advance();
+    let seenDot = false;
+    while (i < source.length) {
+      const c = peek();
+      if (/[0-9]/.test(c)) {
+        value += advance();
+      } else if (c === '.' && !seenDot) {
+        seenDot = true;
+        value += advance();
+      } else if (c === '.') {
+        const errLoc = loc();
+        errors.push({
+          line: errLoc.line,
+          col: errLoc.col,
+          char: c,
+          message: "Malformed number: second decimal point",
+          severity: 'error',
+        });
+        // Consume the malformed tail so cascading tokens do not multiply.
+        while (i < source.length && /[0-9.]/.test(peek())) advance();
+        break;
+      } else {
+        break;
+      }
     }
     return value;
   }
@@ -244,10 +269,10 @@ export function tokenize(source: string): TokenizeResult {
       }
 
       // Check if it looks like a complex number: number, number
+      // (classic numeric forms: 1, 1., 1.5, and leading-dot .5)
+      const NUM = /^-?(?:[0-9]+\.?[0-9]*|\.[0-9]+)$/;
       const parts = inner.split(',').map(s => s.trim());
-      if (parts.length === 2 && 
-          /^-?[0-9]+\.?[0-9]*$/.test(parts[0]) && 
-          /^-?[0-9]+\.?[0-9]*$/.test(parts[1])) {
+      if (parts.length === 2 && NUM.test(parts[0]) && NUM.test(parts[1])) {
         tokens.push({ type: 'COMPLEX', value: `${parts[0]},${parts[1]}`, loc: startLoc });
       } else {
         // Not a complex number, reset and treat as LPAREN
@@ -260,8 +285,8 @@ export function tokenize(source: string): TokenizeResult {
       continue;
     }
 
-    // Numbers
-    if (/[0-9]/.test(char)) {
+    // Numbers (classic also allows the leading-dot form: .5, .001)
+    if (/[0-9]/.test(char) || (char === '.' && /[0-9]/.test(peek(1)))) {
       const value = readNumber();
       tokens.push({ type: 'NUMBER', value, loc: startLoc });
       continue;

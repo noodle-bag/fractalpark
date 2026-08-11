@@ -114,6 +114,12 @@ function compileFrmUncached(
     if (lexerErrors.length > 0) {
       const formattedLexerErrors = formatLexerErrors(lexerErrors);
       errors.push(...formattedLexerErrors);
+      // Severity discipline (mirrors the validator): severity 'error' is
+      // fatal — a malformed token must never compile into a shader that
+      // silently dropped the malformed part. Warnings ride along.
+      if (lexerErrors.some((e) => e.severity === 'error')) {
+        return { success: false, errors, warnings, frmSemanticsVersion: semanticsVersion };
+      }
     }
 
     // Step 2: Parse

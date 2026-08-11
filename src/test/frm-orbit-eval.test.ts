@@ -501,3 +501,29 @@ describe('cotanh (Slice 5d)', () => {
     expect(u?.default).toBe(19);
   });
 });
+
+describe('leading-dot number literals (Slice 5e)', () => {
+  it('`.5` and `.001` lex as classic numbers', () => {
+    const src = 'T {\n  z = pixel, f = (pixel)^.5:\n  z = fn1(z) + f,\n  |z| <= 50\n}';
+    const r = compileClassicFrmEntry(src, 'T', 'lead-dot', 2);
+    expect(r.success).toBe(true);
+    const src2 = 'T2 {\n  z = .001:\n  z = z^p1 + (1/pixel)^p1,\n  |z| <= 100\n}';
+    const r2 = compileClassicFrmEntry(src2, 'T2', 'lead-dot-2', 2);
+    expect(r2.success).toBe(true);
+  });
+});
+
+describe('Slice 5e review fixes', () => {
+  it('(.5, 2) complex literal with a leading-dot part parses', () => {
+    const src = 'T {\n  z = (.5, 2):\n  z = z*z + c,\n  |z| < 4\n}';
+    const r = compileClassicFrmEntry(src, 'T', 'lead-dot-complex', 2);
+    expect(r.errors).toEqual([]);
+    expect(r.success).toBe(true);
+  });
+
+  it('multi-dot numbers fail loudly instead of truncating', () => {
+    const src = 'T {\n  z = 1.2.3:\n  z = z + c,\n  |z| < 4\n}';
+    const r = compileClassicFrmEntry(src, 'T', 'multi-dot', 2);
+    expect(r.success).toBe(false);
+  });
+});
