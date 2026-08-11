@@ -48,6 +48,17 @@ interface Payload {
   rows: PayloadRow[];
 }
 
+/** Result of the in-page shader compile helper installed on `__smoke`. */
+type SmokeShaderResult =
+  | { error: string; shader?: undefined }
+  | { shader: WebGLShader; error?: undefined };
+
+/** In-page runtime installed by beforeAll (gl context + compile helper). */
+interface SmokeRuntime {
+  gl: WebGLRenderingContext;
+  compile: (type: number, src: string) => SmokeShaderResult;
+}
+
 test.setTimeout(300000);
 
 test.describe('FRM WebGL smoke (SwiftShader)', () => {
@@ -126,7 +137,7 @@ test.describe('FRM WebGL smoke (SwiftShader)', () => {
     for (const row of payload.rows) {
       // Layer A: fully assembled framework shader compiles for real.
       const layerA = await page.evaluate((src) => {
-        const w = window as unknown as { __smoke: any };
+        const w = window as unknown as { __smoke: SmokeRuntime };
         const { gl, compile } = w.__smoke;
         const r = compile(gl.FRAGMENT_SHADER, src);
         if (r.error) return { compileError: r.error };
@@ -138,7 +149,7 @@ test.describe('FRM WebGL smoke (SwiftShader)', () => {
       // Layer B: driver shader executes the production iterateStep.
       const gpu = await page.evaluate(
         ({ row: r, pixels }) => {
-          const w = window as unknown as { __smoke: any };
+          const w = window as unknown as { __smoke: SmokeRuntime };
           const { gl, compile } = w.__smoke;
           const vs = compile(
             gl.VERTEX_SHADER,
