@@ -330,3 +330,15 @@ describe('init-only c rebinding rename (T0 evidence)', () => {
     expect(result.success).toBe(true);
   });
 });
+
+describe('Codex round-2 regressions', () => {
+  it('init c rebind + loop chained z = c = pixel is per-iteration reset — no rename, rejects', () => {
+    // Classic resets c to pixel EVERY iteration; the init rebind only
+    // shapes iteration 1. Renaming would silently keep the rebound c.
+    const source = 'ResetProbe {\n  c = fn1(pixel), z = 0:\n  z = c = pixel, z = z^2 + c,\n  |z| < 4\n}';
+    const { notes } = lowerClassicEntryToNative(source);
+    expect(kinds(notes)).not.toContain('c-init-rebinding-renamed');
+    const result = compileClassicFrmEntry(source, 'ResetProbe');
+    expect(result.success).toBe(false);
+  });
+});

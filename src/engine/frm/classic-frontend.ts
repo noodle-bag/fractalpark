@@ -584,12 +584,18 @@ export function lowerClassicEntryToNative(entrySource: string): LoweredClassicEn
     });
   }
 
-  // Flatten each section into single-assignment statement lines.
+  // Flatten each section into single-assignment statement lines. Also
+  // report `c = pixel` pieces removed per section: a loop-section removal
+  // is a per-iteration c reset (cross-iteration state) and must suppress
+  // the init-rebinding rename below — the guard must see what flatten
+  // removed, not just what survived.
   interface Stmt {
     text: string;
     line: number;
     kind: 'stmt' | 'if' | 'else' | 'elseif' | 'endif';
   }
+  let removedCPixelInLoop = 0;
+  let activeSection: 'init' | 'loop' = 'init';
   const flatten = (tokensIn: BodyToken[]): Stmt[] => {
     const out: Stmt[] = [];
     for (const token of tokensIn) {
@@ -612,6 +618,7 @@ export function lowerClassicEntryToNative(entrySource: string): LoweredClassicEn
         // `z = c = pixel` otherwise leaks the `c = pixel` fragment into
         // native source, where assigning the reserved `c` is rejected.
         if (/^c\s*=\s*pixel$/i.test(piece)) {
+          if (activeSection === 'loop') removedCPixelInLoop++;
           notes.push({
             kind: 'c-pixel-assignment-removed',
             line: token.line,
@@ -629,6 +636,7 @@ export function lowerClassicEntryToNative(entrySource: string): LoweredClassicEn
   };
 
   const initStmts = flatten(initTokens);
+  activeSection = 'loop';
   const loopStmts = flatten(loopBodyTokens);
   if (predicate) bailoutText = renameBailout(bailoutText);
 
@@ -644,9 +652,11 @@ export function lowerClassicEntryToNative(entrySource: string): LoweredClassicEn
   const initHasCRebind = initStmts.some(
     (s) => s.kind === 'stmt' && C_ASSIGN_RE.test(s.text),
   );
-  const loopHasCAssign = loopStmts.some(
-    (s) => s.kind === 'stmt' && C_ASSIGN_RE.test(s.text),
-  );
+  // A `c = pixel` piece removed from the loop is a per-iteration reset —
+  // cross-iteration c state (E3) even though nothing survives to detect.
+  const loopHasCAssign =
+    removedCPixelInLoop > 0 ||
+    loopStmts.some((s) => s.kind === 'stmt' && C_ASSIGN_RE.test(s.text));
   if (initHasCRebind && !loopHasCAssign) {
     let fresh = 'cclassic';
     const allText = () =>
