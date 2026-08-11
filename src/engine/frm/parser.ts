@@ -365,13 +365,56 @@ export class Parser {
       return this.parseIfStatement();
     }
 
+    // Component lvalue assignment: `real(tmp) = expr` / `imag(tmp) = expr`
+    // (classic component-store idiom, dafrm09 corpus evidence).
+    if (
+      this.peek(0).type === 'IDENT' &&
+      ['real', 'imag'].includes(this.peek(0).value.toLowerCase()) &&
+      this.peek(1).type === 'LPAREN' &&
+      this.peek(2).type === 'IDENT' &&
+      this.peek(3).type === 'RPAREN' &&
+      this.peek(4).type === 'EQUALS'
+    ) {
+      const componentToken = this.advance();
+      const component = componentToken.value.toLowerCase() as 'real' | 'imag';
+      const loc = componentToken.loc;
+      this.advance(); // '('
+      const targetToken = this.advance(); // ident
+      this.advance(); // ')'
+      this.advance(); // '='
+      const target = targetToken.value;
+      if (SYSTEM_VARS.has(target.toLowerCase())) {
+        this.error(
+          `Cannot assign to system variable '${target}'`,
+          targetToken.loc,
+          `'${target}' is reserved; use another variable name such as '${target}2' or 'my${target}'`,
+        );
+      }
+      const value = this.parseExpression();
+      if (!value) return null;
+      return { type: 'assignment', target, component, value, loc };
+    }
+
     // Assignment: target = value
     if (this.peek(0).type === 'IDENT' && this.peek(1).type === 'EQUALS') {
       return this.parseAssignment();
     }
 
-    // Expression statement (rare but possible)
-    return this.parseExpression();
+    // Expression statement. A pure leaf (bare ident/number/complex) has no
+    // effect and almost always means a malformed statement boundary such as
+    // `z=3 z` (Codex 6b2 round-1) — reject it loudly instead of compiling a
+    // discarded expression.
+    const expr = this.parseExpression();
+    if (expr && (expr.type === 'ident' || expr.type === 'number' || expr.type === 'complex')) {
+      this.error(
+        `Statement has no effect: bare ${expr.type} '${
+          expr.type === 'ident' ? expr.name : expr.type === 'number' ? expr.value : 'complex'
+        }'`,
+        expr.loc,
+        'Assign it, compare it, or remove it; implicit multiplication requires adjacency (e.g. `3z`)',
+      );
+    }
+    return expr;
   }
 
   private parseAssignment(): ASTNode | null {
@@ -460,6 +503,34 @@ export class Parser {
 
   // Expression parsing with precedence climbing
   private parseExpression(): ASTNode | null {
+    return this.parseAssignmentExpression();
+  }
+
+  /**
+   * Assignment expression: `ident = expr` is legal wherever an expression
+   * is legal in the classic dialect (frmtutor IfThen-A1 documents that the
+   * assignment is performed BEFORE the enclosing comparison; the choice.frm
+   * family multiplies guarded assignments). Right-associative, lowest
+   * precedence, plain-identifier targets only. The node is lifted into
+   * statement position by the sequencing pass before analysis/codegen.
+   */
+  private parseAssignmentExpression(): ASTNode | null {
+    if (this.peek(0).type === 'IDENT' && this.peek(1).type === 'EQUALS') {
+      const targetToken = this.advance();
+      const target = targetToken.value;
+      const loc = targetToken.loc;
+      if (SYSTEM_VARS.has(target.toLowerCase())) {
+        this.error(
+          `Cannot assign to system variable '${target}'`,
+          loc,
+          `'${target}' is reserved; use another variable name such as '${target}2' or 'my${target}'`,
+        );
+      }
+      this.advance(); // '='
+      const value = this.parseAssignmentExpression();
+      if (!value) return null;
+      return { type: 'assignment', target, value, loc };
+    }
     return this.parseOr();
   }
 

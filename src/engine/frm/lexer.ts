@@ -171,6 +171,29 @@ export function tokenize(source: string): TokenizeResult {
         break;
       }
     }
+    // Scientific notation (classic `1e12` / `1e-12`): consume the exponent
+    // only when well-formed (`e`/`E`, optional sign, at least one digit);
+    // otherwise backtrack so `2e` still reads as `2 * e` (Euler builtin)
+    // via implicit multiplication (Codex 6b2 round-1).
+    if (i < source.length && (source[i] === 'e' || source[i] === 'E')) {
+      const saveI = i;
+      const saveLine = line;
+      const saveCol = col;
+      let exp = advance();
+      if (i < source.length && (source[i] === '+' || source[i] === '-')) exp += advance();
+      let expDigits = 0;
+      while (i < source.length && /[0-9]/.test(source[i])) {
+        exp += advance();
+        expDigits++;
+      }
+      if (expDigits > 0) {
+        value += exp;
+      } else {
+        i = saveI;
+        line = saveLine;
+        col = saveCol;
+      }
+    }
     return value;
   }
 
@@ -289,6 +312,14 @@ export function tokenize(source: string): TokenizeResult {
     if (/[0-9]/.test(char) || (char === '.' && /[0-9]/.test(peek(1)))) {
       const value = readNumber();
       tokens.push({ type: 'NUMBER', value, loc: startLoc });
+      // Classic implicit multiplication: a number IMMEDIATELY followed by
+      // an identifier or `(` multiplies (`3z` == `3*z`, rcl_12/rcl_13
+      // corpus evidence). Adjacency in the raw source is required — the
+      // parser drops NEWLINE tokens before parsing, so a whitespace or
+      // line boundary must never turn into a multiplication.
+      if (i < source.length && /[a-zA-Z_(]/.test(source[i])) {
+        tokens.push({ type: 'STAR', value: '*', loc: { line, col } });
+      }
       continue;
     }
 

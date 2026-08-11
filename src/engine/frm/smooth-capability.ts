@@ -202,7 +202,10 @@ export function extractPolynomialDegree(ast: FrmAST, orbitVar = 'z'): number | n
   // untracked (unknown → safe rejection downstream).
   const env = new Map<string, number | null>();
   for (const stmt of ast.initBlock) {
-    if (stmt.type !== 'assignment') continue;
+    // Component stores (real(x)/imag(x)) update one lane only — the whole
+    // variable's degree is unknowable here, so leave it untracked (unknown
+    // → safe rejection downstream).
+    if (stmt.type !== 'assignment' || stmt.component) continue;
     env.set(stmt.target, polynomialDegreeOf(stmt.value, orbitVar, env));
   }
   // Loop start: the orbit variable IS the recurrence input — degree 1,
@@ -211,7 +214,7 @@ export function extractPolynomialDegree(ast: FrmAST, orbitVar = 'z'): number | n
 
   let degree: number | null = null;
   for (const stmt of ast.loopBlock) {
-    if (stmt.type !== 'assignment') return null; // conditional dataflow
+    if (stmt.type !== 'assignment' || stmt.component) return null; // conditional or component-lane dataflow
     const stmtDegree = polynomialDegreeOf(stmt.value, orbitVar, env);
     env.set(stmt.target, stmtDegree);
     if (stmt.target === orbitVar) degree = stmtDegree;

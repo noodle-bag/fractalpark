@@ -155,7 +155,9 @@ export function inferType(node: ASTNode, ctx: TypeContext): VarType {
       return { kind: 'real' };
 
     case 'assignment': {
-      return inferType(node.value, ctx);
+      // The expression value is what the target holds after the store:
+      // the target's fixed type when known, else the value's own type.
+      return ctx.getVariableType(node.target) ?? inferType(node.value, ctx);
     }
 
     case 'if': {
@@ -196,6 +198,11 @@ export function collectVariables(
   const processNode = (node: ASTNode) => {
     switch (node.type) {
       case 'assignment': {
+        if (node.component) {
+          // A component store (real(x)/imag(x)) requires a complex target.
+          vars.set(node.target, { kind: 'complex' });
+          break;
+        }
         const inferredType = inferType(node.value, ctx);
         const existing = vars.get(node.target);
         

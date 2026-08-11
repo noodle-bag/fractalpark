@@ -432,6 +432,16 @@ export function evaluateOrbit(ast: FrmAST, opts: OrbitOptions): OrbitResult {
     for (const stmt of nodes) {
       if (stmt.type === 'assignment') {
         const value = evalNode(stmt.value);
+        if (stmt.component) {
+          // Component store mirrors codegen: real writes .x, imag writes
+          // .y; later statements read the updated pair (dafrm09 order).
+          const cur = vars.get(stmt.target) ?? [0, 0] as Pair;
+          vars.set(
+            stmt.target,
+            stmt.component === 'real' ? [value[0], cur[1]] : [cur[0], value[0]],
+          );
+          continue;
+        }
         // Coerce to the variable's fixed static type, like codegen: a real
         // variable keeps .x; a complex variable promotes (x, 0).
         const fixed = varTypes.get(stmt.target)?.kind ?? nodeType(stmt.value).kind;

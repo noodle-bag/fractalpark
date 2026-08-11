@@ -25,6 +25,9 @@ export interface SourceLocation {
 export interface AssignmentNode {
   type: 'assignment';
   target: string;
+  /** Component lvalue: `real(tmp) = e` stores into tmp.x, `imag(tmp)` into
+   * tmp.y. Absent for plain whole-variable assignments. */
+  component?: 'real' | 'imag';
   value: ASTNode;
   loc: SourceLocation;
 }

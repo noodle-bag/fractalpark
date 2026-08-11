@@ -7,6 +7,7 @@
 
 import type { ASTNode, CanonicalFormula, FormulaDialect, FrmAST } from './ast';
 import { createCanonicalFormula } from './ast';
+import { sequenceAssignmentExpressions } from './assign-expr';
 import type { FormulaPlugin } from '../plugins/types';
 import { tokenize, formatLexerErrors, type LexerError } from './lexer';
 import { parse, formatParseErrors, type ParseError } from './parser';
@@ -142,16 +143,42 @@ function compileFrmUncached(
     }
 
     // Step 2: Parse
-    const { ast, errors: parseErrors } = parse(tokens);
-    
+    const { ast: parsedAst, errors: parseErrors } = parse(tokens);
+
     if (parseErrors.length > 0) {
       const formattedParseErrors = formatParseErrors(parseErrors);
       errors.push(...formattedParseErrors);
+      // Severity discipline (mirrors the lexer gate): severity 'error' is
+      // fatal. Error recovery may still produce a partial AST, but a
+      // shader built from recovered fragments is a silent semantics lie —
+      // 6b2 found exactly that (assignment expressions shredded into
+      // no-op fragments while `success` stayed true).
+      if (parseErrors.some((e) => e.severity === 'error')) {
+        return { success: false, errors, warnings, frmSemanticsVersion: semanticsVersion };
+      }
     }
 
-    if (!ast) {
+    if (!parsedAst) {
       return { success: false, errors, warnings, frmSemanticsVersion: semanticsVersion };
     }
+
+    // Step 2.5: sequence assignment expressions (Slice 6b2) — lift nested
+    // `ident = expr` writes into explicit left-to-right statements with
+    // frmseq<N> temps, so GLSL's unspecified operand order cannot make CPU
+    // and GPU disagree. Fail-closed on &&/||-RHS, elseif-condition,
+    // component-lvalue, and bailout-predicate assignments.
+    const sequenced = sequenceAssignmentExpressions(parsedAst);
+    if (sequenced.errors.length > 0) {
+      for (const issue of sequenced.errors) {
+        errors.push(`Line ${issue.line}, column ${issue.col}: ${issue.message}`);
+      }
+      return { success: false, errors, warnings, frmSemanticsVersion: semanticsVersion };
+    }
+    const ast: FrmAST = {
+      ...parsedAst,
+      initBlock: sequenced.initBlock,
+      loopBlock: sequenced.loopBlock,
+    };
 
     // Step 3: Validate
     const { valid, errors: validationErrors } = validate(ast);

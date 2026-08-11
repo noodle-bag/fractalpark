@@ -107,6 +107,19 @@ function generateStatement(node: ASTNode, ctx: CodeGenContext, indent: number): 
 
   switch (node.type) {
     case 'assignment': {
+      if (node.component) {
+        // Component store: `real(tmp) = e` writes tmp.x only, `imag(tmp)`
+        // writes tmp.y only (classic dafrm09 idiom). The value coerces to
+        // real through the standard .x collapse.
+        const value = generateExpression(node.value, ctx, REAL_TYPE);
+        const line =
+          node.component === 'real'
+            ? `${spaces}${node.target} = vec2(${value}, ${node.target}.y);`
+            : `${spaces}${node.target} = vec2(${node.target}.x, ${value});`;
+        ctx.sourceMap.record(node, line);
+        ctx.sourceMap.advanceLine();
+        return line;
+      }
       const targetType = ctx.getVariableType(node.target) ?? ctx.getNodeType(node.value);
       const value = generateExpression(node.value, ctx, targetType);
       const line = `${spaces}${node.target} = ${value};`;
