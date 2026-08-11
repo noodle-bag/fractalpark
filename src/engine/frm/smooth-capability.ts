@@ -19,7 +19,7 @@
  */
 
 import type { ASTNode, FrmAST } from './ast';
-import { isFnSlotName, isParameterName } from './builtins';
+import { isParameterName } from './builtins';
 import type { BailoutDescriptor } from './bailout-descriptor';
 import type { SmoothCapability } from '../plugins/types';
 
@@ -31,11 +31,42 @@ export interface SmoothResolution {
 }
 
 /**
+ * The requested coloring preference and the effective method are separate
+ * concerns (spec §7): the document stores what the user asked for; the
+ * effective method is derived deterministically from the capability and
+ * restored when the capability returns. v1/legacy plugins (no capability
+ * field) keep the historical smooth path.
+ */
+export type EffectiveSmoothMethod = 'smooth' | 'radial-crossing-v1' | 'escape-time';
+
+export function resolveEffectiveSmoothMethod(plugin: {
+  smoothCapability?: SmoothCapability;
+}): EffectiveSmoothMethod {
+  switch (plugin.smoothCapability) {
+    case 'supported':
+      return 'smooth';
+    case 'adapted':
+      return 'radial-crossing-v1';
+    case 'unavailable':
+      return 'escape-time';
+    default:
+      return 'smooth'; // v1/legacy: frozen historical behavior
+  }
+}
+
+/**
  * Degree of an expression as a polynomial in `orbitVar`, or null when the
  * expression is not a polynomial (transcendental call, fn slot, z-dependent
- * denominator or exponent, magnitude, conditional). `env` tracks the
- * polynomial degree of previously assigned loop variables; entries set to
- * null mark non-polynomial or unknown dependencies.
+ * denominator or exponent, magnitude, logical operator, conditional).
+ *
+ * EVERY identifier — including the orbit variable itself — resolves through
+ * `env`, which tracks the polynomial degree of each variable's CURRENT value
+ * within one loop iteration. Seeding decides soundness: at loop start the
+ * orbit variable has degree 1 (the recurrence input) and every init-block
+ * variable carries its computed (z-free) degree. Resolving `z` through env
+ * is what keeps sequential compositions honest:
+ *   z = sin(z); z = z^2 + c   → F(z) = sin(z)² + c is NOT polynomial → null
+ *   z = z^2; w = z; z = w^2+c → F(z) = z^4 + c, degree 4 (not 2)
  */
 function polynomialDegreeOf(
   node: ASTNode,
@@ -47,13 +78,20 @@ function polynomialDegreeOf(
     case 'complex':
       return 0;
     case 'ident': {
-      if (node.name === orbitVar) return 1;
-      // Parameters, the pixel variable and loop-invariant idents are z-free.
-      if (isParameterName(node.name) || node.name === 'c' || node.name === 'pixel') return 0;
+      // Parameters and the pixel coordinate are uniform inputs — never
+      // loop-assigned, always z-free.
+      if (isParameterName(node.name) || node.name === 'pixel') return 0;
       const known = env.get(node.name);
-      return known === undefined ? null : known;
+      if (known !== undefined) return known;
+      // `c` defaults to the pixel coordinate when the formula never assigns
+      // it (native dialect has no explicit `c = pixel` init statement).
+      // Any other untracked identifier is an unknown dependency → reject.
+      return node.name === 'c' ? 0 : null;
     }
     case 'unary':
+      // Only arithmetic negation preserves a polynomial; logical operators
+      // (e.g. `!`) break it.
+      if (node.op !== '-') return null;
       return polynomialDegreeOf(node.operand, orbitVar, env);
     case 'binary': {
       const left = polynomialDegreeOf(node.left, orbitVar, env);
@@ -80,6 +118,8 @@ function polynomialDegreeOf(
           return left * exp;
         }
         default:
+          // Comparison / logical operators yield boolean values, not
+          // polynomial terms.
           return null;
       }
     }
@@ -93,7 +133,6 @@ function polynomialDegreeOf(
       // not polynomials; z-free calls do not affect the degree.
       const argDegrees = node.args.map((arg) => polynomialDegreeOf(arg, orbitVar, env));
       if (argDegrees.every((d) => d === 0)) return 0;
-      if (isFnSlotName(node.name)) return null;
       return null;
     }
     case 'magnitude':
@@ -104,12 +143,25 @@ function polynomialDegreeOf(
 }
 
 /**
- * Extract the leading polynomial degree of the loop recurrence in `orbitVar`
- * (default `z`). Returns null when the loop is not provably polynomial:
- * conditional branches, non-polynomial operations, or a final degree < 2.
+ * Extract the leading polynomial degree of the per-iteration recurrence in
+ * `orbitVar` (default `z`). Returns null when the loop is not provably
+ * polynomial: conditional branches, non-polynomial operations anywhere in
+ * the sequential composition, or a final degree < 2.
  */
 export function extractPolynomialDegree(ast: FrmAST, orbitVar = 'z'): number | null {
+  // Seed from the init block: every init variable is a constant w.r.t. the
+  // orbit (the initial orbit value itself is constant), so init expressions
+  // evaluate with all idents z-free. Init conditionals leave their targets
+  // untracked (unknown → safe rejection downstream).
   const env = new Map<string, number | null>();
+  for (const stmt of ast.initBlock) {
+    if (stmt.type !== 'assignment') continue;
+    env.set(stmt.target, polynomialDegreeOf(stmt.value, orbitVar, env));
+  }
+  // Loop start: the orbit variable IS the recurrence input — degree 1,
+  // regardless of what the init block assigned to it.
+  env.set(orbitVar, 1);
+
   let degree: number | null = null;
   for (const stmt of ast.loopBlock) {
     if (stmt.type !== 'assignment') return null; // conditional dataflow

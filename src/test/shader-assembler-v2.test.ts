@@ -117,7 +117,11 @@ describe('assembleShader: renderer-pipeline v2 (bailout descriptor consumption)'
     // Both escape sites must honor the Smooth-Unavailable fallback.
     const escapeHeightBlock = shader.slice(shader.indexOf('float escapeHeight'), shader.indexOf('vec3 applyLighting'));
     expect(escapeHeightBlock).toContain('float(i) / float(u_maxIterations)');
-    expect(escapeHeightBlock).toContain('#ifdef ESCAPE_INVERSE_DIRECTION');
+    // Both escape sites route inverse-direction AND capability-unavailable
+    // formulas through the same deterministic fallback (spec §7).
+    expect(escapeHeightBlock).toContain(
+      '#if defined(ESCAPE_INVERSE_DIRECTION) || defined(SMOOTH_ESCAPE_TIME)',
+    );
   });
 
   it('v1/v2 variants of the same formula id never share a shader cache key', () => {

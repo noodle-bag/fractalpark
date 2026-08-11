@@ -166,7 +166,17 @@ export class FractalRenderer {
     if (uniforms.u_paletteIndex) gl.uniform1i(uniforms.u_paletteIndex, params.paletteIndex);
     if (uniforms.u_isJulia) gl.uniform1i(uniforms.u_isJulia, params.isJulia ? 1 : 0);
     if (uniforms.u_juliaC) gl.uniform2f(uniforms.u_juliaC, params.juliaC[0], params.juliaC[1]);
-    if (uniforms.u_power) gl.uniform1f(uniforms.u_power, this.formulaPlugin?.smoothPower ?? params.power);
+    // u_power feeds the smooth iteration formula. Strict-v2 compiles carry
+    // the polynomial degree extracted from the loop dataflow (smoothPower) —
+    // use it instead of the document-level power parameter. The active
+    // formula resolves exactly like the assembler does: an instance override
+    // only applies when its id matches, otherwise the registry is
+    // authoritative (ordinary Explore rendering has no override).
+    const activePlugin =
+      this.formulaPlugin?.id === params.formula
+        ? this.formulaPlugin
+        : pluginRegistry.getFormula(params.formula);
+    if (uniforms.u_power) gl.uniform1f(uniforms.u_power, activePlugin?.smoothPower ?? params.power);
     if (uniforms.u_ssaaLevel) {
       const level = params.ssaaLevel ?? (params.useSSAA ? 4 : 0);
       gl.uniform1i(uniforms.u_ssaaLevel, level);

@@ -43,6 +43,7 @@ import {
   type FormulaResolution,
 } from '@/lib/formula-resolver';
 import { pluginRegistry } from '@/engine/plugins/registry';
+import { resolveEffectiveSmoothMethod } from '@/engine/frm/smooth-capability';
 
 type ExploreFormulaResolution =
   | FormulaResolution
@@ -857,7 +858,9 @@ function ExploreClient({ posterImage }: { posterImage?: string }) {
                 insideColoring={insideColoring}
                 orbitTrap={orbitTrap}
                 customGradient={customGradient}
-                smoothCapability={pluginRegistry.getFormula(formula)?.smoothCapability}
+                effectiveSmoothMethod={resolveEffectiveSmoothMethod(
+                  pluginRegistry.getFormula(formula) ?? {},
+                )}
                 onPaletteChange={(index) => updateColoring({ paletteIndex: index })}
                 onOutsideColoringChange={(mode) => updateColoring({ outsideColoringId: mode })}
                 onInsideColoringChange={(mode) => updateColoring({ insideColoringId: mode })}

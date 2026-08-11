@@ -7,7 +7,7 @@ import { Label } from '@/components/ui/label';
 import { Slider } from '@/components/ui/slider';
 import { ColorSchemeSelector } from './ColorSchemeSelector';
 import { GradientEditor } from './GradientEditor';
-import type { SmoothCapability } from '@/engine/plugins/types';
+import type { EffectiveSmoothMethod } from '@/engine/frm/smooth-capability';
 import type {
   GradientStop,
   InsideColoringMode,
@@ -21,8 +21,12 @@ interface ColoringPanelProps {
   insideColoring: InsideColoringMode;
   orbitTrap: OrbitTrapConfig;
   customGradient: GradientStop[] | null;
-  /** Strict-v2 smooth capability of the active formula; undefined for v1. */
-  smoothCapability?: SmoothCapability;
+  /**
+   * Effective smooth method derived from the active formula's capability —
+   * separate from the requested `outsideColoring` preference (spec §7).
+   * Undefined for v1/legacy formulas (historical smooth path).
+   */
+  effectiveSmoothMethod?: EffectiveSmoothMethod;
   onPaletteChange: (index: number) => void;
   onOutsideColoringChange: (mode: OutsideColoringMode) => void;
   onInsideColoringChange: (mode: InsideColoringMode) => void;
@@ -36,7 +40,7 @@ export function ColoringPanel({
   insideColoring,
   orbitTrap,
   customGradient,
-  smoothCapability,
+  effectiveSmoothMethod,
   onPaletteChange,
   onOutsideColoringChange,
   onInsideColoringChange,
@@ -84,12 +88,12 @@ export function ColoringPanel({
           ))}
         </div>
 
-        {outsideColoring === 'smooth' && smoothCapability === 'adapted' && (
+        {outsideColoring === 'smooth' && effectiveSmoothMethod === 'radial-crossing-v1' && (
           <p className="text-xs text-amber-200/90" data-testid="smooth-capability-note">
             {t('coloring.smoothAdapted')}
           </p>
         )}
-        {outsideColoring === 'smooth' && smoothCapability === 'unavailable' && (
+        {outsideColoring === 'smooth' && effectiveSmoothMethod === 'escape-time' && (
           <p className="text-xs text-amber-200/90" data-testid="smooth-capability-note">
             {t('coloring.smoothUnavailable')}
           </p>

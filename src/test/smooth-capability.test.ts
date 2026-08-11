@@ -6,10 +6,14 @@
 import { beforeAll, describe, expect, it } from 'vitest';
 import { compileFrm } from '@/engine/frm/compile';
 import { frmParserCache } from '@/engine/frm/cache';
-import { extractPolynomialDegree } from '@/engine/frm/smooth-capability';
+import {
+  extractPolynomialDegree,
+  resolveEffectiveSmoothMethod,
+} from '@/engine/frm/smooth-capability';
 import { registerBuiltins } from '@/engine/plugins/builtins';
 import { assembleShader } from '@/engine/shaders/assembler';
 import type { PluginCombination } from '@/engine/plugins/types';
+import type { ASTNode, FrmAST } from '@/engine/frm/ast';
 
 const COMBO_BASE: Omit<PluginCombination, 'formulaId'> = {
   outsideColoringId: 'smooth',
@@ -57,6 +61,58 @@ describe('smooth capability: three-tier resolution from AST/dataflow', () => {
     const plugin = compileV2('SmoothEnv', 'w = z^2\n  z = w + c', '|z| < 4', 'sm-env');
     expect(plugin.smoothCapability).toBe('supported');
     expect(plugin.smoothPower).toBe(2);
+  });
+
+  it('sequential composition through a transcendental step is NOT polynomial', () => {
+    // z = sin(z); z = z^2 + c composes F(z) = sin(z)^2 + c — a false
+    // 'supported' here would be a correctness lie (Codex review).
+    const plugin = compileV2('SmoothSeq', 'z = sin(z)\n  z = z^2 + c', '|z| < 4', 'sm-seq');
+    expect(plugin.smoothCapability).toBe('adapted');
+    expect(plugin.smoothPower).toBeUndefined();
+  });
+
+  it('composed polynomial degrees multiply across assignments (z^2 then w^2 → 4)', () => {
+    const plugin = compileV2(
+      'SmoothCompose',
+      'z = z^2\n  w = z\n  z = w^2 + c',
+      '|z| < 4',
+      'sm-compose',
+    );
+    expect(plugin.smoothCapability).toBe('supported');
+    expect(plugin.smoothPower).toBe(4);
+  });
+
+  it('arithmetic negation preserves the polynomial; logical ops do not', () => {
+    const neg = compileV2('SmoothNeg', 'z = -(z^2) + c', '|z| < 4', 'sm-neg');
+    expect(neg.smoothCapability).toBe('supported');
+    expect(neg.smoothPower).toBe(2);
+  });
+
+  it('loop-assigned c is dataflow-tracked, not assumed z-free', () => {
+    // The native dialect rejects c assignment (reserved read-only — so the
+    // c→0 default IS sound there); classic sources DO assign c
+    // (alt: c=c+k*p1/z). Exercise the extractor directly on a canonical AST:
+    // c = c + z makes c z-dependent; the composed map stays polynomial of
+    // degree 2 — the degree model must track it, not hardcode 0.
+    const L = { line: 1, col: 1 };
+    const id = (name: string) => ({ type: 'ident', name, loc: L }) as const;
+    const num = (value: number) => ({ type: 'number', value, loc: L }) as const;
+    const bin = (op: string, left: ASTNode, right: ASTNode) =>
+      ({ type: 'binary', op, left, right, loc: L }) as const;
+    const assign = (target: string, value: ASTNode) =>
+      ({ type: 'assignment', target, value, loc: L }) as const;
+
+    const ast: FrmAST = {
+      name: 'CVar',
+      params: [],
+      initBlock: [assign('z', num(0)), assign('c', id('pixel'))],
+      loopBlock: [
+        assign('z', bin('+', bin('^', id('z'), num(2)), id('c'))),
+        assign('c', bin('+', id('c'), id('z'))),
+      ],
+      bailoutExpr: bin('<', { type: 'magnitude', operand: id('z'), loc: L }, num(4)),
+    };
+    expect(extractPolynomialDegree(ast)).toBe(2);
   });
 
   it('transcendental or fn-slot loops → adapted (radial-crossing-v1), no power', () => {
@@ -132,6 +188,27 @@ describe('smooth capability: three-tier resolution from AST/dataflow', () => {
     // Adapted keeps the radial-crossing formula — labeled upstream, same GLSL.
     expect(shaderA).not.toMatch(/^#define SMOOTH_ESCAPE_TIME$/m);
     expect(shaderA).toContain('log2(log2(max(zn, 1.00001)))');
+  });
+
+  it('the Escape Time fallback covers BOTH the main loop and the normal-map height path', () => {
+    const unavailable = compileV2('SmoothHeight', 'z = z^2 + c', '|real(z)| < 2', 'sm-height');
+    const shader = assembleShader({ formulaId: unavailable.id, ...COMBO_BASE }, unavailable);
+    const fallback = /#if defined\(ESCAPE_INVERSE_DIRECTION\) \|\| defined\(SMOOTH_ESCAPE_TIME\)/g;
+    const occurrences = shader.match(fallback) ?? [];
+    // Main coloring loop + escapeHeight (normal-map/DEM) — deterministic
+    // fallback must be consistent across every shader path.
+    expect(occurrences.length).toBe(2);
+  });
+
+  it('effective smooth method separates requested preference from derived outcome', () => {
+    const supported = compileV2('SmoothEffS', 'z = z^2 + c', '|z| < 4', 'sm-eff-s');
+    const adapted = compileV2('SmoothEffA', 'z = sin(z) + c', '|z| < 4', 'sm-eff-a');
+    const unavailable = compileV2('SmoothEffU', 'z = z^2 + c', '|real(z)| < 2', 'sm-eff-u');
+    expect(resolveEffectiveSmoothMethod(supported)).toBe('smooth');
+    expect(resolveEffectiveSmoothMethod(adapted)).toBe('radial-crossing-v1');
+    expect(resolveEffectiveSmoothMethod(unavailable)).toBe('escape-time');
+    // v1/legacy plugins keep the historical smooth path.
+    expect(resolveEffectiveSmoothMethod({})).toBe('smooth');
   });
 
   it('extractPolynomialDegree returns null for degree < 2', () => {

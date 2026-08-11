@@ -100,9 +100,9 @@ float escapeHeight(vec2 point) {
 #endif
     float zz = dot(z, z);
     if (ESCAPE_CHECK(z, zz)) {
-#ifdef ESCAPE_INVERSE_DIRECTION
-      // Inverse-direction escape (v2 descriptor op > / >=): deterministic
-      // Escape Time fallback — see the main loop for the same contract.
+#if defined(ESCAPE_INVERSE_DIRECTION) || defined(SMOOTH_ESCAPE_TIME)
+      // Deterministic Escape Time fallback — see the main loop for the
+      // same contract (inverse-direction and capability-unavailable paths).
       #ifdef ESCAPE_AFTER_STEP
       return clamp(float(i + 1) / float(u_maxIterations), 0.0, 1.0);
       #else
