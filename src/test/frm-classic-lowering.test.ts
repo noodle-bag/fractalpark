@@ -163,8 +163,10 @@ describe('lowerClassicEntryToNative: header and text hygiene', () => {
     const { native, notes } = lowerClassicEntryToNative(
       'Zid {\n\tz=0, zPrev=1:\n\tzPrev=z, z=z^2+c\n\t|z|<4\n}',
     );
-    expect(native).toContain('zPrev=1');
-    expect(native).toContain('zPrev=z');
+    // Classic FRM is case-insensitive: identifiers lowercase during
+    // lowering, and the z→|z| bailout shorthand must not mangle `zprev`.
+    expect(native).toContain('zprev=1');
+    expect(native).toContain('zprev=z');
     expect(kinds(notes)).not.toContain('bailout-magnitude-normalized');
   });
 });
@@ -204,7 +206,9 @@ describe('compileClassicFrmEntry: round-trip through production compiler', () =>
   });
 
   it('rejects sources with blocking diagnostics (trailing tokens)', () => {
-    const source = 'One {\n\tz=0:\n\tz=z^2+c\n\t|z|<4\n}\n\ngarbage after the entry';
+    // A garbage line that carries a brace may be a corrupted entry header —
+    // that stays blocking. (Bare prose no longer blocks; see scanner tests.)
+    const source = 'One {\n\tz=0:\n\tz=z^2+c\n\t|z|<4\n}\n\ngarbage line { with a brace';
     const result = compileClassicFrmEntry(source, 'One');
     expect(result.success).toBe(false);
     expect(result.selectionError?.code).toBe('invalid-source');
@@ -215,5 +219,55 @@ describe('compileClassicFrmEntry: round-trip through production compiler', () =>
     expect(result.success).toBe(true);
     expect(result.loweringLineMap?.[0]).toBe(1);
     expect(kinds(result.loweringNotes ?? [])).toContain('symmetry-recorded');
+  });
+});
+
+describe('T0 grammar coverage (corpus-evidence forms, project-authored samples)', () => {
+  it('removes the c=pixel fragment of a chained `z = c = pixel` init', () => {
+    const source = 'ChainProbe {\n  z = c = pixel:\n  z = z*z + c,\n  |z| < 4\n}';
+    const { native, notes } = lowerClassicEntryToNative(source);
+    expect(native).toContain('init:\n  z = c\n');
+    expect(native).not.toContain('c = pixel');
+    expect(kinds(notes)).toContain('chained-assignment-split');
+    expect(kinds(notes)).toContain('c-pixel-assignment-removed');
+    const result = compileClassicFrmEntry(source, 'ChainProbe');
+    expect(result.success).toBe(true);
+  });
+
+  it('lowercases the body (classic FRM is case-insensitive)', () => {
+    const source = 'CaseProbe {\n  Z = C = Pixel:\n  RealZ = Real(Z), Z = Z^2 + C,\n  |Z| < 4\n}';
+    const { native } = lowerClassicEntryToNative(source);
+    expect(native).toContain('realz = real(z)');
+    expect(native).toContain('z = z^2 + c');
+    expect(native).not.toContain('RealZ');
+    expect(native).not.toContain('Pixel');
+    const result = compileClassicFrmEntry(source, 'CaseProbe');
+    expect(result.success).toBe(true);
+  });
+
+  it('accepts the `Name = {` header form end to end', () => {
+    const source = 'EqProbe = {\n  z = 0:\n  z = z*z + c,\n  |z| < 4\n}';
+    const result = compileClassicFrmEntry(source, 'EqProbe');
+    expect(result.success).toBe(true);
+  });
+
+  it('parses header options into fnDefaults with canonicalization', () => {
+    const source =
+      'FnProbe(XAXIS)[float=y function=sqr/exp] {\n  z = 0:\n  z = fn1(z) + fn2(z) + c,\n  |z| < 4\n}';
+    const { options, fnDefaults, notes } = lowerClassicEntryToNative(source);
+    expect(options).toBe('float=y function=sqr/exp');
+    expect(fnDefaults).toEqual({ fn1: 'sqr', fn2: 'exp' });
+    expect(kinds(notes)).toContain('float-option-recorded');
+    expect(kinds(notes)).toContain('function-option-recorded');
+    const result = compileClassicFrmEntry(source, 'FnProbe');
+    expect(result.success).toBe(true);
+    expect(result.plugin?.fnDefaults).toEqual({ fn1: 'sqr', fn2: 'exp' });
+  });
+
+  it('records unknown function= names raw instead of silently defaulting', () => {
+    const source = 'FnUnknown[function=ident/cosxx] {\n  z = 0:\n  z = fn1(z) + c,\n  |z| < 4\n}';
+    const { fnDefaults, notes } = lowerClassicEntryToNative(source);
+    expect(fnDefaults).toEqual({ fn1: 'identity', fn2: 'cosxx' });
+    expect(kinds(notes)).toContain('function-option-unmapped');
   });
 });

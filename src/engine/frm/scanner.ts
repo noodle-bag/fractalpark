@@ -40,6 +40,8 @@ export interface FrmEntry {
   name: string;
   /** Symmetry marker from the header (e.g. `XAXIS`), uppercased, when present. */
   symmetry?: string;
+  /** Raw `[...]` option block content from the header, when present. */
+  options?: string;
   /** Full entry text range: header name start through the closing `}`. */
   range: FrmSourceRange;
   /** Header range: name start through the opening `{` (inclusive). */
@@ -50,13 +52,13 @@ export type FrmScanDiagnosticCode =
   | 'no-entries'
   | 'duplicate-name'
   | 'preamble-content'
+  | 'prose-content'
   | 'trailing-tokens'
   | 'unclosed-brace';
 
 /** Diagnostic codes that must block entry compilation (spec §2). */
 export const FRM_BLOCKING_DIAGNOSTICS: ReadonlySet<FrmScanDiagnosticCode> = new Set<FrmScanDiagnosticCode>([
   'no-entries',
-  'duplicate-name',
   'trailing-tokens',
   'unclosed-brace',
 ]);
@@ -79,7 +81,7 @@ export interface FrmScanResult {
 }
 
 /** Characters that terminate a header name token. */
-const NAME_STOP = new Set([' ', '\t', '\r', '\n', '(', '{', '}', ';']);
+const NAME_STOP = new Set([' ', '\t', '\r', '\n', '(', '{', '}', ';', '[']);
 
 /** Leading noise on a line that can never begin an entry header. */
 const LEADING_NOISE = new Set([' ', '\t', '\r', '\uFEFF']);
@@ -89,6 +91,8 @@ interface ParsedHeader {
   nameStart: number;
   nameEnd: number;
   symmetry?: string;
+  /** Raw `[...]` option block content (e.g. `float=y function=sqr/exp`). */
+  options?: string;
   braceOffset: number;
 }
 
@@ -129,8 +133,34 @@ function tryParseHeader(source: string, start: number): ParsedHeader | null {
     while (i < n && (source[i] === ' ' || source[i] === '\t' || source[i] === '\r')) i++;
   }
 
+  // Optional `[...]` option block (e.g. `[float=y function=sqr/exp]`). The
+  // content is recorded verbatim; consumers decide what each option means.
+  let options: string | undefined;
+  if (source[i] === '[') {
+    let k = i + 1;
+    while (k < n && source[k] !== ']' && source[k] !== '\n' && source[k] !== '{') k++;
+    if (source[k] !== ']') return null;
+    options = source.slice(i + 1, k).trim();
+    i = k + 1;
+    while (i < n && (source[i] === ' ' || source[i] === '\t' || source[i] === '\r')) i++;
+  }
+
+  // Optional `=` before the opening brace (`Name = {` — a classic variant).
+  if (source[i] === '=' && source[i + 1] !== '=') {
+    let k = i + 1;
+    while (k < n && (source[k] === ' ' || source[k] === '\t' || source[k] === '\r')) k++;
+    if (source[k] === '{') i = k;
+  }
+
   if (source[i] !== '{') return null;
-  return { name, nameStart: start, nameEnd: start + name.length, symmetry, braceOffset: i };
+  return {
+    name,
+    nameStart: start,
+    nameEnd: start + name.length,
+    ...(symmetry !== undefined ? { symmetry } : {}),
+    ...(options !== undefined ? { options } : {}),
+    braceOffset: i,
+  };
 }
 
 interface BodyScan {
@@ -181,17 +211,25 @@ export function scanFrmEntries(source: string): FrmScanResult {
   const usedKeys = new Set<string>();
   const n = source.length;
 
-  let trailingRegion: { start: number; end: number } | null = null;
+  // A failed-header line that contains `{` may be a corrupted entry header
+  // and stays blocking; bare prose lines (classic files carry `;`-less
+  // comment paragraphs between entries) are annotated, never blocking.
+  let trailingRegion: { start: number; end: number; kind: 'prose' | 'tokens' } | null = null;
   const closeTrailingRegion = () => {
     if (trailingRegion) {
-      // Content before the first entry is a preamble (annotated, not
-      // blocking); content after any entry is trailing tokens (blocking).
       const isPreamble = entries.length === 0;
+      const code: FrmScanDiagnosticCode = isPreamble
+        ? 'preamble-content'
+        : trailingRegion.kind === 'prose'
+          ? 'prose-content'
+          : 'trailing-tokens';
       diagnostics.push({
-        code: isPreamble ? 'preamble-content' : 'trailing-tokens',
+        code,
         message: isPreamble
           ? 'Non-entry content before the first formula entry'
-          : 'Non-entry content outside any formula entry',
+          : trailingRegion.kind === 'prose'
+            ? 'Bare prose paragraph between formula entries (annotated, non-blocking)'
+            : 'Non-entry content outside any formula entry',
         offset: trailingRegion.start,
         endOffset: trailingRegion.end,
       });
@@ -223,13 +261,15 @@ export function scanFrmEntries(source: string): FrmScanResult {
 
     const header = tryParseHeader(source, contentStart);
     if (!header) {
-      // Trailing tokens: non-header, non-comment content. Consecutive
-      // garbage lines merge into a single diagnostic region.
+      // Non-header, non-comment content. Consecutive same-kind lines merge
+      // into a single diagnostic region.
       const lineEnd = skipToEol(source, contentStart);
-      if (trailingRegion) {
+      const kind = source.slice(contentStart, lineEnd).includes('{') ? 'tokens' : 'prose';
+      if (trailingRegion && trailingRegion.kind === kind) {
         trailingRegion.end = lineEnd;
       } else {
-        trailingRegion = { start: contentStart, end: lineEnd };
+        closeTrailingRegion();
+        trailingRegion = { start: contentStart, end: lineEnd, kind };
       }
       i = lineEnd < n ? lineEnd + 1 : lineEnd;
       continue;
@@ -250,9 +290,14 @@ export function scanFrmEntries(source: string): FrmScanResult {
     }
     usedKeys.add(key);
     if (count > 1) {
+      // Classic files carry intentional duplicates (authors re-release
+      // formulas; `comment { }` doc blocks repeat per file). Keys stay
+      // unique and selection is always by key, so this annotates instead of
+      // blocking — a bare name deterministically resolves to the FIRST
+      // occurrence, later ones need their `#2`/`#3` keys.
       diagnostics.push({
         code: 'duplicate-name',
-        message: `Duplicate formula name "${header.name}" (entry key "${key}")`,
+        message: `Duplicate formula name "${header.name}" (entry key "${key}"; bare-name selection resolves to the first occurrence)`,
         offset: header.nameStart,
         endOffset: header.nameEnd,
         entryKey: key,
@@ -264,6 +309,7 @@ export function scanFrmEntries(source: string): FrmScanResult {
       key,
       name: header.name,
       ...(header.symmetry !== undefined ? { symmetry: header.symmetry } : {}),
+      ...(header.options !== undefined ? { options: header.options } : {}),
       range: { startOffset: header.nameStart, endOffset: body.endOffset },
       headerRange: { startOffset: header.nameStart, endOffset: header.braceOffset + 1 },
     });

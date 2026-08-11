@@ -39,7 +39,15 @@
  *   Read-only downstream and the removal is always recorded as a note;
  * - chained assignments `a = b = expr` are split into ordered single
  *   assignments (`b = expr`, `a = b`) so the native assignment grammar can
- *   express them;
+ *   express them; the `c = pixel` removal applies per split piece, so a
+ *   chained `z = c = pixel` leaves only `z = c`;
+ * - the body is fully case-insensitive in classic semantics (`Real` ≡
+ *   `real`, `Z` ≡ `z`), so it is lowercased once before tokenization —
+ *   entry names come from the header parse and keep their case;
+ * - header `[...]` option blocks are recorded verbatim; `function=`
+ *   pre-specifies fn slot defaults (mapped to engine fn-option keys where
+ *   known, raw otherwise) and `float=` is provenance-only (the engine is
+ *   always float);
  * - `IF (...) ... ELSE ... ENDIF` (any case, inline or line-based) is
  *   lowered to native `if`/`else`/`endif` keyword statements;
  * - non-comment text trailing the header `{` that cannot start a statement
@@ -68,7 +76,10 @@ export interface LoweringNote {
     | 'bailout-variable-renamed'
     | 'bailout-magnitude-normalized'
     | 'chained-assignment-split'
-    | 'header-trailing-text-ignored';
+    | 'header-trailing-text-ignored'
+    | 'float-option-recorded'
+    | 'function-option-recorded'
+    | 'function-option-unmapped';
   /** 1-based line in the classic entry source. */
   line: number;
   message: string;
@@ -81,14 +92,26 @@ export interface LoweredClassicEntry {
   /** `lineMap[nativeLine - 1]` = 1-based classic source line. */
   lineMap: number[];
   notes: LoweringNote[];
+  /** Raw `[...]` option block content from the header, when present. */
+  options?: string;
+  /**
+   * `function=fn1/fn2/...` bracket defaults, mapped positionally to fn
+   * slots. Names matching the engine's fn options are canonicalized
+   * (`ident` → `identity`); unknown names pass through raw so consumers
+   * (orbit fixtures, future UI plumbing) see the original intent instead
+   * of a silently wrong default.
+   */
+  fnDefaults?: Record<string, string>;
 }
 
 /** Characters that terminate a header name token (mirrors scanner). */
-const NAME_STOP = new Set([' ', '\t', '\r', '\n', '(', '{', '}', ';']);
+const NAME_STOP = new Set([' ', '\t', '\r', '\n', '(', '{', '}', ';', '[']);
 
 interface ParsedHeader {
   name: string;
   symmetry?: string;
+  /** Raw `[...]` option block content (e.g. `float=y function=sqr/exp`). */
+  options?: string;
   /** Offset (in the header line) of the opening `{`. */
   braceOffset: number;
 }
@@ -112,8 +135,27 @@ function parseClassicHeader(line: string): ParsedHeader | null {
     i = close + 1;
     while (i < line.length && (line[i] === ' ' || line[i] === '\t')) i++;
   }
+  let options: string | undefined;
+  if (line[i] === '[') {
+    const close = line.indexOf(']', i + 1);
+    if (close === -1) return null;
+    options = line.slice(i + 1, close).trim();
+    i = close + 1;
+    while (i < line.length && (line[i] === ' ' || line[i] === '\t')) i++;
+  }
+  // Optional `=` before the opening brace (`Name = {` — a classic variant).
+  if (line[i] === '=' && line[i + 1] !== '=') {
+    let k = i + 1;
+    while (k < line.length && (line[k] === ' ' || line[k] === '\t')) k++;
+    if (line[k] === '{') i = k;
+  }
   if (line[i] !== '{') return null;
-  return { name, ...(symmetry !== undefined ? { symmetry } : {}), braceOffset: i };
+  return {
+    name,
+    ...(symmetry !== undefined ? { symmetry } : {}),
+    ...(options !== undefined ? { options } : {}),
+    braceOffset: i,
+  };
 }
 
 /** Make a header name lexer-safe: non-alphanumerics → `_`, digit prefix `_`. */
@@ -376,6 +418,55 @@ export function lowerClassicEntryToNative(entrySource: string): LoweredClassicEn
     });
   }
 
+  // Header `[...]` options: `float=` selects the classic float code path
+  // (the engine is always float — recorded for provenance only);
+  // `function=a/b/c` pre-specifies the fn slots positionally (classic would
+  // otherwise prompt at run time — see fractint.hlp fn1..fn4).
+  let fnDefaults: Record<string, string> | undefined;
+  if (header.options) {
+    const FN_DEFAULT_CANONICAL: Record<string, string> = { ident: 'identity' };
+    const KNOWN_FN = new Set([
+      'identity', 'sin', 'cos', 'tan', 'exp', 'log', 'sqrt', 'abs', 'sqr',
+      'conj', 'flip', 'recip', 'cabs', 'real', 'imag', 'sinh', 'cosh', 'tanh',
+    ]);
+    for (const token of header.options.split(/\s+/)) {
+      const eq = token.indexOf('=');
+      if (eq <= 0) continue;
+      const key = token.slice(0, eq).toLowerCase();
+      const value = token.slice(eq + 1);
+      if (key === 'float') {
+        notes.push({
+          kind: 'float-option-recorded',
+          line: 1,
+          message: `Header option float=${value} recorded; the engine always evaluates in float`,
+        });
+      } else if (key === 'function') {
+        fnDefaults = fnDefaults ?? {};
+        const slots = value.split('/');
+        for (let s = 0; s < slots.length && s < 4; s++) {
+          const rawName = slots[s].trim().toLowerCase();
+          if (!rawName) continue;
+          const canonical = FN_DEFAULT_CANONICAL[rawName] ?? rawName;
+          if (KNOWN_FN.has(canonical)) {
+            fnDefaults[`fn${s + 1}`] = canonical;
+            notes.push({
+              kind: 'function-option-recorded',
+              line: 1,
+              message: `Header function= sets fn${s + 1} default to ${canonical}`,
+            });
+          } else {
+            fnDefaults[`fn${s + 1}`] = rawName;
+            notes.push({
+              kind: 'function-option-unmapped',
+              line: 1,
+              message: `Header function= name "${rawName}" (fn${s + 1}) has no engine equivalent; recorded raw — consumers must not treat the slot default as the classic intent`,
+            });
+          }
+        }
+      }
+    }
+  }
+
   // Body text: remainder of the header line after `{`, then every line up
   // to the entry's closing brace. Non-comment text after `{` that cannot
   // start a statement (classic header notes like "was modified by ...")
@@ -400,7 +491,11 @@ export function lowerClassicEntryToNative(entrySource: string): LoweredClassicEn
     }
   }
   const bodyText = normalized.slice(bodyStart);
-  const walk = walkBody(bodyText, 1, notes);
+  // Classic FRM is fully case-insensitive (`Real` ≡ `real`, `Z` ≡ `z`,
+  // `IF` ≡ `if`); the native parser is case-sensitive. Lowercase the body
+  // once, before tokenization — entry names come from the header parse and
+  // are unaffected.
+  const walk = walkBody(bodyText.toLowerCase(), 1, notes);
 
   const initTokens = walk.tokens.slice(0, walk.boundary);
   const loopTokens = walk.tokens.slice(walk.boundary);
@@ -493,18 +588,6 @@ export function lowerClassicEntryToNative(entrySource: string): LoweredClassicEn
         continue;
       }
       const text = renameBailout(token.text);
-      const isCPixel = /^c\s*=\s*pixel$/i.test(text);
-      if (isCPixel) {
-        notes.push({
-          kind: 'c-pixel-assignment-removed',
-          line: token.line,
-          message:
-            '`c = pixel` removed: redundant in Mandelbrot mode (native `c` already equals the ' +
-            'pixel). Julia-mode pixel-binding has no native equivalent — entries relying on it ' +
-            'are expected to classify Read-only downstream.',
-        });
-        continue;
-      }
       const pieces = splitChainedAssignment(text);
       if (pieces.length > 1 && pieces.join(' ') !== text.replace(/\s+/g, ' ')) {
         notes.push({
@@ -514,6 +597,20 @@ export function lowerClassicEntryToNative(entrySource: string): LoweredClassicEn
         });
       }
       for (const piece of pieces) {
+        // The `c = pixel` removal applies per split piece — a chained
+        // `z = c = pixel` otherwise leaks the `c = pixel` fragment into
+        // native source, where assigning the reserved `c` is rejected.
+        if (/^c\s*=\s*pixel$/i.test(piece)) {
+          notes.push({
+            kind: 'c-pixel-assignment-removed',
+            line: token.line,
+            message:
+              '`c = pixel` removed: redundant in Mandelbrot mode (native `c` already equals the ' +
+              'pixel). Julia-mode pixel-binding has no native equivalent — entries relying on it ' +
+              'are expected to classify Read-only downstream.',
+          });
+          continue;
+        }
         out.push({ text: piece, line: token.line, kind: 'stmt' });
       }
     }
@@ -562,5 +659,11 @@ export function lowerClassicEntryToNative(entrySource: string): LoweredClassicEn
   push(`  ${bailoutText}`, bailoutLine);
   push('}', walk.closeLine);
 
-  return { native: native.join('\n'), lineMap, notes };
+  return {
+    native: native.join('\n'),
+    lineMap,
+    notes,
+    ...(header.options !== undefined ? { options: header.options } : {}),
+    ...(fnDefaults !== undefined ? { fnDefaults } : {}),
+  };
 }

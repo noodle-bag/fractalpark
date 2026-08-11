@@ -8,3 +8,4 @@ bailout:
 }
 this is not a formula
 neither is this
+Some Name { corrupted header line

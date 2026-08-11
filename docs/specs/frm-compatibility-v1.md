@@ -37,11 +37,24 @@ reimplementation invalidates the evidence it produces.
 
 - The scanner returns an entry list with exact source ranges, header
   metadata, diagnostics, and a stable selection key per entry.
+- The classic header grammar is
+  `NAME [(SYMMETRY)] [[option=value ...]] [=] {`; the option block is
+  recorded verbatim on the entry. `function=fn1/fn2/...` pre-specifies the
+  fn slots positionally (classic would otherwise prompt at run time); the
+  lowering maps known names to engine fn-option keys and records unknown
+  names raw — consumers must not treat an unmapped slot default as the
+  classic intent.
 - A single-entry file may select its only entry implicitly. A multi-entry
   file must be selected explicitly by the user or caller.
-- Unselected multi-entry sources, trailing tokens after a complete entry,
-  and duplicated or broken entry boundaries are rejected consistently in
-  Editor, API, resolver, publication, and CLI paths.
+- Unselected multi-entry sources and broken entry boundaries are rejected
+  consistently in Editor, API, resolver, publication, and CLI paths.
+  Trailing content after a complete entry is classified by shape: content
+  bearing a `{` may be a corrupted entry header and stays rejected; bare
+  prose paragraphs (a classic corpus convention — `;`-less comment blocks
+  between entries) are annotated, never blocking. Duplicated entry names
+  are annotated and resolve deterministically by unique selection key —
+  a bare name selects the first occurrence, later duplicates require their
+  `#2`/`#3` keys.
 - Compile entry points accept a selected source range or entry key. The
   "take the first entry and compile" shadow path is forbidden.
 - The source file is never mutated by scanning, selection, or compilation;

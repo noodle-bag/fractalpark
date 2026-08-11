@@ -67,6 +67,13 @@ export interface FormulaPlugin extends FractalPlugin {
    * the formula actually iterates.
    */
   smoothPower?: number;
+  /**
+   * Classic header `function=` bracket defaults (fn1..fn4), recorded during
+   * lowering of strict-v2 classic compiles. Classic semantics prompt for fn
+   * choices at run time; the bracket pre-specifies them. Values are engine
+   * fn-option keys where mapped, raw classic names otherwise.
+   */
+  fnDefaults?: Record<string, string>;
   supportsPower?: boolean;  // DEPRECATED: not consumed by any current consumer; Smooth capability resolves from AST/dataflow per ADR-0007. Retired in the coloring-capability slice.
   supportsJulia?: boolean;  // default true
   family?: string;          // grouping: 'classic' | 'newton' | 'magnet' | 'phoenix' | 'exotic'

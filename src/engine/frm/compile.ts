@@ -517,8 +517,13 @@ export function compileClassicFrmEntry(
   const result = compileFrmDetailed(lowered.native, id, semanticsVersion, {
     dialect: 'fractint-compat',
   });
+  const plugin =
+    result.plugin && lowered.fnDefaults
+      ? { ...result.plugin, fnDefaults: lowered.fnDefaults }
+      : result.plugin;
   return {
     ...result,
+    ...(plugin !== result.plugin ? { plugin } : {}),
     entry,
     loweredNative: lowered.native,
     loweringLineMap: lowered.lineMap,

@@ -173,15 +173,18 @@ describe('scanFrmEntries: selection contract', () => {
 });
 
 describe('scanFrmEntries: diagnostics', () => {
-  it('reports trailing tokens after a complete entry (SC-4)', () => {
+  it('annotates bare prose but keeps brace-bearing garbage blocking (SC-4)', () => {
     const source = fixture('trailing-tokens.frm');
     const scan = scanFrmEntries(source);
 
     expect(scan.entries).toHaveLength(1);
+    const prose = scan.diagnostics.filter((d) => d.code === 'prose-content');
+    expect(prose).toHaveLength(1);
+    expect(prose[0].offset).toBe(source.indexOf('this is not a formula'));
+    expect(prose[0].endOffset).toBe(source.indexOf('neither is this') + 'neither is this'.length);
     const trailing = scan.diagnostics.filter((d) => d.code === 'trailing-tokens');
     expect(trailing).toHaveLength(1);
-    expect(trailing[0].offset).toBe(source.indexOf('this is not a formula'));
-    expect(trailing[0].endOffset).toBe(source.length - 1);
+    expect(trailing[0].offset).toBe(source.indexOf('Some Name {'));
   });
 
   it('assigns stable keys and flags duplicate names (SC-5)', () => {
@@ -324,6 +327,45 @@ describe('compileFrm: legacy behavior untouched', () => {
   });
 });
 
+describe('classic header variants (T0 corpus evidence)', () => {
+  const scanOne = (header: string) => {
+    const scan = scanFrmEntries(`${header}\n  z = 0:\n  z = z^2 + c,\n  |z| < 4\n}\n`);
+    expect(scan.entries).toHaveLength(1);
+    return scan.entries[0];
+  };
+
+  it('accepts the `Name = {` equals form', () => {
+    const entry = scanOne('FlipLambdaJ = {');
+    expect(entry.name).toBe('FlipLambdaJ');
+    expect(entry.options).toBeUndefined();
+  });
+
+  it('accepts a spaced `[...]` option block and records it verbatim', () => {
+    const entry = scanOne('Mask [float=y] {');
+    expect(entry.name).toBe('Mask');
+    expect(entry.options).toBe('float=y');
+  });
+
+  it('accepts a bracket glued to the name (REB004K[float=y])', () => {
+    const entry = scanOne('REB004K[float=y] {');
+    expect(entry.name).toBe('REB004K');
+    expect(entry.options).toBe('float=y');
+  });
+
+  it('accepts symmetry + options + comment tail combined', () => {
+    const entry = scanOne('DeepSpaceProbe(XAXIS_NOPARM)[float=y function=sqr/exp] {; note');
+    expect(entry.name).toBe('DeepSpaceProbe');
+    expect(entry.symmetry).toBe('XAXIS_NOPARM');
+    expect(entry.options).toBe('float=y function=sqr/exp');
+  });
+
+  it('keeps `=` inside a header name (z^3-1=0)', () => {
+    const entry = scanOne('z^3-1=0(XAXIS)  {');
+    expect(entry.name).toBe('z^3-1=0');
+    expect(entry.symmetry).toBe('XAXIS');
+  });
+});
+
 describe('entry contract hardening (Codex review)', () => {
   beforeEach(() => {
     frmParserCache.clear();
@@ -347,10 +389,30 @@ describe('entry contract hardening (Codex review)', () => {
     expect(result.selectionError?.code).toBe('invalid-source');
   });
 
-  it('rejects compilation when duplicate names are present', () => {
-    const result = compileFrmEntry(fixture('duplicate-names.frm'), 'Dup');
-    expect(result.success).toBe(false);
-    expect(result.selectionError?.code).toBe('invalid-source');
+  it('bare prose between entries annotates but does not block compilation', () => {
+    const source = [
+      'ScanMandel {\ninit:\n  z = 0\nloop:\n  z = z^2 + c\nbailout:\n  |z| < 4\n}',
+      'A prose paragraph the classic files carry between entries.',
+      'More prose without any brace.',
+    ].join('\n');
+    const scan = scanFrmEntries(source);
+    expect(scan.diagnostics.some((d) => d.code === 'prose-content')).toBe(true);
+    expect(scan.diagnostics.some((d) => d.code === 'trailing-tokens')).toBe(false);
+    const result = compileFrmEntry(source, 'ScanMandel');
+    expect(result.success).toBe(true);
+  });
+
+  it('duplicate names annotate and resolve deterministically by key', () => {
+    const source = fixture('duplicate-names.frm');
+    const scan = scanFrmEntries(source);
+    expect(scan.diagnostics.filter((d) => d.code === 'duplicate-name')).toHaveLength(1);
+    // Bare name → first occurrence; the later duplicate needs its #2 key.
+    const first = compileFrmEntry(source, 'Dup');
+    expect(first.success).toBe(true);
+    expect(first.entry?.key).toBe('Dup');
+    const second = compileFrmEntry(source, 'Dup#2');
+    expect(second.success).toBe(true);
+    expect(second.entry?.key).toBe('Dup#2');
   });
 
   it('rejects compilation when an entry boundary is broken', () => {
