@@ -128,6 +128,7 @@ export function evalDescriptorThreshold(
           case 'sin': return Math.sin(args[0]);
           case 'cos': return Math.cos(args[0]);
           case 'cosxx': return Math.cos(args[0]); // real input: imag term vanishes
+          case 'cotanh': return args[0] === 0 ? 0 : 1 / Math.tanh(args[0]);
           case 'tan': return Math.tan(args[0]);
           case 'sinh': return Math.sinh(args[0]);
           case 'cosh': return Math.cosh(args[0]);
@@ -340,6 +341,10 @@ export function evaluateOrbit(ast: FrmAST, opts: OrbitOptions): OrbitResult {
         return cosOf(arg(0));
       case 'cosxx':
         return cosxxOf(arg(0));
+      case 'cotanh': {
+        const v = arg(0); // evaluate the argument once — side channels
+        return divGuarded(coshOf(v), sinhOf(v));
+      }
       case 'tan': {
         const v = arg(0); // evaluate the argument once — side channels
         return divGuarded(sinOf(v), cosOf(v));

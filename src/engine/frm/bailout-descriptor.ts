@@ -118,7 +118,7 @@ function evalNumericLiteral(node: ASTNode): number | null {
 }
 
 /** Pure functions allowed inside a C2 threshold expression. */
-const PURE_THRESHOLD_FUNCTIONS = new Set(['sqrt', 'abs', 'sqr', 'exp', 'log', 'sin', 'cos', 'cosxx', 'tan', 'sinh', 'cosh', 'tanh']);
+const PURE_THRESHOLD_FUNCTIONS = new Set(['sqrt', 'abs', 'sqr', 'exp', 'log', 'sin', 'cos', 'cosxx', 'cotanh', 'tan', 'sinh', 'cosh', 'tanh']);
 const ARITHMETIC_OPS = new Set(['+', '-', '*', '/', '^']);
 
 /**
@@ -257,6 +257,7 @@ export function evaluateC2Threshold(
           case 'sin': return Math.sin(a);
           case 'cos': return Math.cos(a);
           case 'cosxx': return Math.cos(a); // real input: imag term vanishes
+          case 'cotanh': return a === 0 ? null : 1 / Math.tanh(a);
           case 'tan': return Math.tan(a);
           case 'sinh': return Math.sinh(a);
           case 'cosh': return Math.cosh(a);

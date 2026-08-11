@@ -469,3 +469,35 @@ describe('Slice 5c round-3 fix (provenance-gated seed transparency)', () => {
     expect(r.bailoutDescriptor?.kind).toBe('C2');
   });
 });
+
+describe('cotanh (Slice 5d)', () => {
+  it('cotanh(z) = cosh(z)/sinh(z) — hand-checked orbit', () => {
+    // z0 = 0; pixel (0.5, 0.25): iter1 z = cotanh(0) + c = guarded div by
+    // sinh(0)=0 → divGuarded(1,0)... hand value: cosh(0)/sinh(0) guarded.
+    // Use a nonzero start instead: z = pixel directly.
+    const src = 'T {\n  z = pixel:\n  z = cotanh(z) + c,\n  |z| < 4\n}';
+    const r = compileClassicFrmEntry(src, 'T', 'cotanh-truth', 2);
+    expect(r.success).toBe(true);
+    const orbit = evaluateOrbit(r.ast!, {
+      pixel: { re: 0.5, im: 0.25 },
+      maxIterations: 2,
+      descriptor: r.bailoutDescriptor!,
+      plugin: r.plugin,
+    });
+    // iter1: cotanh(0.5+0.25i) = cosh(0.5+0.25i)/sinh(0.5+0.25i) + (0.5+0.25i)
+    const sh = [Math.sinh(0.5) * Math.cos(0.25), Math.cosh(0.5) * Math.sin(0.25)];
+    const ch = [Math.cosh(0.5) * Math.cos(0.25), Math.sinh(0.5) * Math.sin(0.25)];
+    const d = sh[0] * sh[0] + sh[1] * sh[1];
+    const q = [(ch[0] * sh[0] + ch[1] * sh[1]) / d, (ch[1] * sh[0] - ch[0] * sh[1]) / d];
+    expect(orbit.orbit[0].re).toBeCloseTo(q[0] + 0.5, 10);
+    expect(orbit.orbit[0].im).toBeCloseTo(q[1] + 0.25, 10);
+  });
+
+  it('function=cotanh bracket resolves to u_fn default 19', () => {
+    const src = 'T[function=cotanh] {\n  z = pixel:\n  z = fn1(z) + c,\n  |z| < 4\n}';
+    const r = compileClassicFrmEntry(src, 'T', 'cotanh-bracket', 2);
+    expect(r.success).toBe(true);
+    const u = r.plugin!.uniforms.find((x) => x.name === 'u_fn1');
+    expect(u?.default).toBe(19);
+  });
+});

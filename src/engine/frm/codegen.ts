@@ -386,6 +386,8 @@ function generateCallExpression(
       return `complexCos(${coerceExpression(args[0]?.expr ?? '0.0', args[0]?.type ?? REAL_TYPE, COMPLEX_TYPE)})`;
     case 'cosxx':
       return `complexCosxx(${coerceExpression(args[0]?.expr ?? '0.0', args[0]?.type ?? REAL_TYPE, COMPLEX_TYPE)})`;
+    case 'cotanh':
+      return `frmCotanh(${coerceExpression(args[0]?.expr ?? '0.0', args[0]?.type ?? REAL_TYPE, COMPLEX_TYPE)})`;
     case 'tan':
       return `complexTan(${coerceExpression(args[0]?.expr ?? '0.0', args[0]?.type ?? REAL_TYPE, COMPLEX_TYPE)})`;
     case 'exp':
@@ -584,6 +586,10 @@ vec2 frmComplexSqrt(vec2 value) {
 
 vec2 frmTanh(vec2 value) {
   return complexDiv(complexSinhVec(value), complexCoshVec(value));
+}
+
+vec2 frmCotanh(vec2 value) {
+  return complexDiv(complexCoshVec(value), complexSinhVec(value));
 }`);
 
   for (const fnSlot of fnSlots) {
@@ -610,6 +616,8 @@ function buildFnSlotHelper(fnSlot: string): string {
         return `  if (${uniformName} == ${option.value}) return complexCos(value);`;
       case 'cosxx':
         return `  if (${uniformName} == ${option.value}) return complexCosxx(value);`;
+      case 'cotanh':
+        return `  if (${uniformName} == ${option.value}) return frmCotanh(value);`;
       case 'tan':
         return `  if (${uniformName} == ${option.value}) return complexTan(value);`;
       case 'exp':

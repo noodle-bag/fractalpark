@@ -36,6 +36,7 @@ const FUNCTION_RETURN_TYPES: Record<string, VarType> = {
   'sin': { kind: 'complex' },
   'cos': { kind: 'complex' },
   'cosxx': { kind: 'complex' },
+  'cotanh': { kind: 'complex' },
   'tan': { kind: 'complex' },
   'exp': { kind: 'complex' },
   'log': { kind: 'complex' },

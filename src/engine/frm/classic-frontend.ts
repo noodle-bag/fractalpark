@@ -521,7 +521,7 @@ export function lowerClassicEntryToNative(entrySource: string): LoweredClassicEn
   // affected source line (body-relative +1: the body starts after the
   // header line, and walkBody's line accounting is 1-based from the body).
   const pairRe =
-    /\b(sin|cos|cosxx|tan|sinh|cosh|tanh|exp|log|sqrt|abs|sqr|conj|flip|recip|cabs|real|imag|fn[1-4])\s*\(\s*([^(),]+?)\s*,\s*([^(),]+?)\s*\)/g;
+    /\b(sin|cos|cosxx|cotanh|tan|sinh|cosh|tanh|exp|log|sqrt|abs|sqr|conj|flip|recip|cabs|real|imag|fn[1-4])\s*\(\s*([^(),]+?)\s*,\s*([^(),]+?)\s*\)/g;
   let recased = 0;
   let recasedLine = 0;
   let constRenamed = false;
