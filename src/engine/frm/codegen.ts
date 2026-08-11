@@ -168,7 +168,10 @@ function generateBooleanExpression(node: ASTNode, ctx: CodeGenContext): string {
   }
 
   if (node.type === 'binary' && ['<', '>', '<=', '>=', '==', '!='].includes(node.op)) {
-    return generateExpression(node, ctx, REAL_TYPE);
+    // Boolean context: keep the GLSL bool text — generateExpressionRaw
+    // emits it directly (generateExpression would materialize float 0/1
+    // for arithmetic positions, which is not valid inside if()).
+    return generateExpressionRaw(node, ctx, REAL_TYPE);
   }
 
   if (node.type === 'unary' && node.op === '!') {
@@ -182,7 +185,18 @@ function generateBooleanExpression(node: ASTNode, ctx: CodeGenContext): string {
 
 function generateExpression(node: ASTNode, ctx: CodeGenContext, expectedType?: VarType): string {
   const actualType = ctx.getNodeType(node);
-  const expr = generateExpressionRaw(node, ctx, actualType);
+  let expr = generateExpressionRaw(node, ctx, actualType);
+  // Predicate ops emit GLSL BOOL text, but the dialect types them real
+  // 0/1 and they can feed arithmetic (ghost: (dist <= olddist) * c1).
+  // Value positions need the float materialization; boolean contexts go
+  // through generateBooleanExpression → generateExpressionRaw directly.
+  if (
+    (node.type === 'binary' &&
+      ['<', '>', '<=', '>=', '==', '!=', '&&', '||'].includes(node.op)) ||
+    (node.type === 'unary' && node.op === '!')
+  ) {
+    expr = `((${expr}) ? 1.0 : 0.0)`;
+  }
   return expectedType ? coerceExpression(expr, actualType, expectedType) : expr;
 }
 
@@ -204,7 +218,7 @@ function generateExpressionRaw(node: ASTNode, ctx: CodeGenContext, actualType: V
 
     case 'unary': {
       if (node.op === '!') {
-        return generateBooleanExpression(node.operand, ctx);
+        return `(!${generateBooleanExpression(node.operand, ctx)})`;
       }
 
       const operandType = ctx.getNodeType(node.operand);

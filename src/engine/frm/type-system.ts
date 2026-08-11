@@ -106,7 +106,12 @@ export function inferType(node: ASTNode, ctx: TypeContext): VarType {
 
         case '*':
         case '/':
-          // Any multiplication/division with complex returns complex
+          // Narrow like actualBinaryType: real op real stays real, so the
+          // type tag agrees with the emitted real-arithmetic text and
+          // coercion wraps at complex boundaries (fn slots, complex vars).
+          if (left.kind === 'real' && right.kind === 'real') {
+            return { kind: 'real' };
+          }
           return { kind: 'complex' };
 
         case '^':
