@@ -19,11 +19,14 @@ import {
   type BailoutDescriptor,
   type BailoutRejectReason,
 } from './bailout-descriptor';
-import { PARAMETER_NAMES } from './builtins';
+import { PARAMETER_NAMES, FN_SLOT_OPTIONS } from './builtins';
 import { FRMSourceMap } from './sourcemap';
 import { frmParserCache } from './cache';
-import { scanFrmEntries, selectFrmEntry, FRM_BLOCKING_DIAGNOSTICS, type FrmEntry, type FrmScanResult, type FrmSourceRange } from './scanner';
+import { scanFrmEntries, selectFrmEntry, FRM_BLOCKING_DIAGNOSTICS, type FrmEntry, type FrmScanDiagnostic, type FrmScanResult, type FrmSourceRange } from './scanner';
 import { lowerClassicEntryToNative, type LoweringNote } from './classic-frontend';
+
+/** fn-slot option key (`sqr`) → uniform value, for fnDefaults consumption. */
+const FN_SLOT_KEY_TO_VALUE = new Map(FN_SLOT_OPTIONS.map((o) => [o.key, o.value]));
 import { DEFAULT_FRM_SEMANTICS_VERSION, type FrmSemanticsVersion } from './semantics-version';
 
 export interface CompileResult {
@@ -462,6 +465,12 @@ export interface ClassicEntryCompileResult extends EntryCompileResult {
   loweringLineMap?: number[];
   /** Adaptations applied by the classic frontend. */
   loweringNotes?: LoweringNote[];
+  /**
+   * Non-blocking scan findings (prose paragraphs, duplicate names) from the
+   * source scan. Annotated must never mean invisible — consumers surface
+   * these so a malformed intended entry cannot vanish silently.
+   */
+  scanAnnotations?: FrmScanDiagnostic[];
 }
 
 /**
@@ -517,10 +526,27 @@ export function compileClassicFrmEntry(
   const result = compileFrmDetailed(lowered.native, id, semanticsVersion, {
     dialect: 'fractint-compat',
   });
+  // fnDefaults consumption (spec §2): known names become the u_fnN uniform
+  // descriptor DEFAULTS, so every consumer (renderer default resolution,
+  // future descriptor-driven UIs) executes the bracket-specified functions
+  // unless the caller overrides them. Unknown names stay raw in
+  // plugin.fnDefaults only — their slots keep the engine default.
   const plugin =
     result.plugin && lowered.fnDefaults
-      ? { ...result.plugin, fnDefaults: lowered.fnDefaults }
+      ? {
+          ...result.plugin,
+          fnDefaults: lowered.fnDefaults,
+          uniforms: result.plugin.uniforms.map((u) => {
+            const m = /^u_(fn[1-4])$/.exec(u.name);
+            const key = m ? lowered.fnDefaults?.[m[1]] : undefined;
+            const value = key ? FN_SLOT_KEY_TO_VALUE.get(key) : undefined;
+            return value !== undefined ? { ...u, default: value } : u;
+          }),
+        }
       : result.plugin;
+  // Non-blocking scan findings (prose paragraphs, duplicate names) ride
+  // along so consumers surface them — annotated must never mean invisible.
+  const scanAnnotations = scan.diagnostics.filter((d) => !FRM_BLOCKING_DIAGNOSTICS.has(d.code));
   return {
     ...result,
     ...(plugin !== result.plugin ? { plugin } : {}),
@@ -528,6 +554,7 @@ export function compileClassicFrmEntry(
     loweredNative: lowered.native,
     loweringLineMap: lowered.lineMap,
     loweringNotes: lowered.notes,
+    ...(scanAnnotations.length > 0 ? { scanAnnotations } : {}),
   };
 }
 

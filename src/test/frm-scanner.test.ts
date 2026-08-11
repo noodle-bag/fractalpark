@@ -364,6 +364,11 @@ describe('classic header variants (T0 corpus evidence)', () => {
     expect(entry.name).toBe('z^3-1=0');
     expect(entry.symmetry).toBe('XAXIS');
   });
+
+  it('treats a glued trailing `=` as the header equals (`T={` / `T= {`)', () => {
+    expect(scanOne('T={').name).toBe('T');
+    expect(scanOne('T= {').name).toBe('T');
+  });
 });
 
 describe('entry contract hardening (Codex review)', () => {

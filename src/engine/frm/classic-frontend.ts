@@ -121,8 +121,18 @@ function parseClassicHeader(line: string): ParsedHeader | null {
   while (i < line.length && (line[i] === ' ' || line[i] === '\t')) i++;
   const nameStart = i;
   while (i < line.length && !NAME_STOP.has(line[i])) i++;
-  const name = line.slice(nameStart, i);
+  let name = line.slice(nameStart, i);
   if (name.length === 0) return null;
+  // A trailing `=` glued to the name is the optional header equals, not
+  // part of the name (`T={` / `T= {`) — only when a `{` directly follows.
+  if (name.endsWith('=')) {
+    let k = i;
+    while (k < line.length && (line[k] === ' ' || line[k] === '\t')) k++;
+    if (line[k] === '{') {
+      name = name.slice(0, -1);
+      i = k;
+    }
+  }
 
   while (i < line.length && (line[i] === ' ' || line[i] === '\t')) i++;
   let symmetry: string | undefined;

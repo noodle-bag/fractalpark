@@ -116,8 +116,19 @@ function tryParseHeader(source: string, start: number): ParsedHeader | null {
   // Name token: run of characters until whitespace, '(', '{', '}', or ';'.
   let i = start;
   while (i < n && !NAME_STOP.has(source[i])) i++;
-  const name = source.slice(start, i);
+  let name = source.slice(start, i);
   if (name.length === 0) return null;
+  // A trailing `=` glued to the name is the optional header equals, not
+  // part of the name (`T={` / `T= {`) — but only when a `{` follows it;
+  // `z^3-1=0(...)` keeps its `=` because the name does not end with one.
+  if (name.endsWith('=')) {
+    let k = i;
+    while (k < n && (source[k] === ' ' || source[k] === '\t' || source[k] === '\r')) k++;
+    if (source[k] === '{') {
+      name = name.slice(0, -1);
+      i = k;
+    }
+  }
 
   // Optional whitespace, then an optional symmetry marker `(SYM)`.
   while (i < n && (source[i] === ' ' || source[i] === '\t' || source[i] === '\r')) i++;

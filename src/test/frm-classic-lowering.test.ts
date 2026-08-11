@@ -270,4 +270,23 @@ describe('T0 grammar coverage (corpus-evidence forms, project-authored samples)'
     expect(fnDefaults).toEqual({ fn1: 'identity', fn2: 'cosxx' });
     expect(kinds(notes)).toContain('function-option-unmapped');
   });
+
+  it('fnDefaults become u_fnN uniform descriptor defaults (executable, overridable)', () => {
+    const source =
+      'FnExec[function=sqr/exp] {\n  z = 0:\n  z = fn1(z) + fn2(z) + c,\n  |z| < 4\n}';
+    const result = compileClassicFrmEntry(source, 'FnExec');
+    expect(result.success).toBe(true);
+    const uFn1 = result.plugin?.uniforms.find((u) => u.name === 'u_fn1');
+    const uFn2 = result.plugin?.uniforms.find((u) => u.name === 'u_fn2');
+    expect(uFn1?.default).toBe(8); // sqr
+    expect(uFn2?.default).toBe(4); // exp
+  });
+
+  it('surfaces non-blocking scan annotations on successful compiles', () => {
+    const source =
+      'AnnProbe {\n  z = 0:\n  z = z^2 + c,\n  |z| < 4\n}\n\nA bare prose paragraph follows the entry.';
+    const result = compileClassicFrmEntry(source, 'AnnProbe');
+    expect(result.success).toBe(true);
+    expect(result.scanAnnotations?.some((d) => d.code === 'prose-content')).toBe(true);
+  });
 });

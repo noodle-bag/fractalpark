@@ -39,11 +39,14 @@ reimplementation invalidates the evidence it produces.
   metadata, diagnostics, and a stable selection key per entry.
 - The classic header grammar is
   `NAME [(SYMMETRY)] [[option=value ...]] [=] {`; the option block is
-  recorded verbatim on the entry. `function=fn1/fn2/...` pre-specifies the
-  fn slots positionally (classic would otherwise prompt at run time); the
-  lowering maps known names to engine fn-option keys and records unknown
-  names raw — consumers must not treat an unmapped slot default as the
-  classic intent.
+  recorded verbatim on the entry. The optional `=` may glue to the name
+  (`T={`) or stand alone (`T = {`); a name may itself contain `=`
+  (`z^3-1=0`) when it does not trail the token. `function=fn1/fn2/...`
+  pre-specifies the fn slots positionally (classic would otherwise prompt
+  at run time); known names become the compiled plugin's u_fnN uniform
+  descriptor defaults — executable unless the caller overrides them —
+  while unknown names record raw in `plugin.fnDefaults` and keep the
+  engine default.
 - A single-entry file may select its only entry implicitly. A multi-entry
   file must be selected explicitly by the user or caller.
 - Unselected multi-entry sources and broken entry boundaries are rejected
@@ -51,10 +54,13 @@ reimplementation invalidates the evidence it produces.
   Trailing content after a complete entry is classified by shape: content
   bearing a `{` may be a corrupted entry header and stays rejected; bare
   prose paragraphs (a classic corpus convention — `;`-less comment blocks
-  between entries) are annotated, never blocking. Duplicated entry names
+  between entries) are annotated, never blocking — and the annotations ride
+  the compile result (`scanAnnotations`) so an unrecognized region is
+  always visible to the caller. Duplicated entry names
   are annotated and resolve deterministically by unique selection key —
-  a bare name selects the first occurrence, later duplicates require their
-  `#2`/`#3` keys.
+  a bare name selects the first occurrence, later duplicates require the
+  suffixed key the scanner assigned (`#2`, `#3`, … — the suffix is the
+  duplicate ordinal and may skip when a literal name collides).
 - Compile entry points accept a selected source range or entry key. The
   "take the first entry and compile" shadow path is forbidden.
 - The source file is never mutated by scanning, selection, or compilation;
