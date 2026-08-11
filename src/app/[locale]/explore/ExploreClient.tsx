@@ -748,6 +748,7 @@ function ExploreClient({ posterImage }: { posterImage?: string }) {
               pluginParams,
               useSSAA: false,
               adaptiveIterations,
+              pipelineVersion: explorePipelineVersion,
               lighting,
               customGradient,
             }}
