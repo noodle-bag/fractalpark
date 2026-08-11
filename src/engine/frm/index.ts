@@ -20,6 +20,7 @@ export {
 export { validate, type ValidationError } from './validator';
 export {
   compileFrm,
+  compileImportedFrm,
   compileToGLSL,
   compileFrmDetailed,
   compileFrmEntry,

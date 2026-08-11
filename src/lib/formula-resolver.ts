@@ -3,7 +3,7 @@ import {
   mergeFormulaExperienceHints,
   type FormulaExperienceHint,
 } from '@/engine/frm/authoring';
-import { compileFrm } from '@/engine/frm/compile';
+import { compileImportedFrm } from '@/engine/frm/compile';
 import { registerBuiltins } from '@/engine/plugins/builtins';
 import { getFormulaMetadata } from '@/engine/plugins/formula-catalog';
 import { pluginRegistry } from '@/engine/plugins/registry';
@@ -95,7 +95,7 @@ export function resolveCustomFormula(
     ]);
   }
 
-  const result = compileFrm(formula.source, formula.id);
+  const result = compileImportedFrm(formula.source, formula.id);
   const experienceHint = mergeFormulaExperienceHints(
     formula.experienceHint,
     formulaMetadataToExperienceHint(result.canonicalFormula?.metadata)

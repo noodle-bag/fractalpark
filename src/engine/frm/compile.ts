@@ -635,6 +635,32 @@ export function compileClassicFrmEntry(
   };
 }
 
+/**
+ * Compile a single source file supplied through an authoring/import surface.
+ * Classic Fractint entries use a bare `:` to move from their init statements
+ * into the loop; native MyFrac entries use named `init:`, `loop:`, and
+ * `bailout:` sections.  Keep this routing at the import boundary so the
+ * lower-level `compileFrm` API remains the explicit native compiler.
+ */
+export function compileImportedFrm(
+  source: string,
+  id?: string,
+  semanticsVersion: FrmSemanticsVersion = DEFAULT_FRM_SEMANTICS_VERSION,
+): CompileResult {
+  const hasClassicTransition = source.split(/\r?\n/).some((line) => {
+    const statement = line.split(';', 1)[0];
+    // A classic init/loop transition is a bare `:` after an expression —
+    // it may sit MID-LINE (`z = pixel: z = sqr(z) + c`), so strip the
+    // three native section labels and look for any surviving colon.
+    const stripped = statement.replace(/\b(init|loop|bailout)\s*:/gi, '');
+    return stripped.includes(':');
+  });
+
+  return hasClassicTransition
+    ? compileClassicFrmEntry(source, undefined, id, semanticsVersion)
+    : compileFrm(source, id, semanticsVersion);
+}
+
 export function compileFrmEntry(
   source: string,
   entryKey?: string,

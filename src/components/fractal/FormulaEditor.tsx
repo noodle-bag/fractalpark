@@ -16,7 +16,7 @@ import { Alert, AlertDescription } from '@/components/ui/alert';
 import { useToast } from '@/hooks/use-toast';
 import { Loader2, Play, Save, AlertCircle, CheckCircle, ChevronDown, ChevronUp, Info, RotateCcw } from 'lucide-react';
 import type { FormulaPlugin } from '@/engine/plugins/types';
-import { compileFrm, mapGLSLErrorToFRM } from '@/engine/frm/compile';
+import { compileImportedFrm, mapGLSLErrorToFRM } from '@/engine/frm/compile';
 import type { FormulaCompatibilityNote, FormulaDialect } from '@/engine/frm/ast';
 import {
   formulaMetadataToExperienceHint,
@@ -328,7 +328,7 @@ export function FormulaEditor({
     setCompileResult(null);
 
     try {
-      const result = compileFrm(source);
+      const result = compileImportedFrm(source);
 
       // Store source map for potential GLSL error mapping
       if (result.sourceMap) {

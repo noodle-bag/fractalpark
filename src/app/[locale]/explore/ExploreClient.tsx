@@ -44,6 +44,7 @@ import {
 } from '@/lib/formula-resolver';
 import { pluginRegistry } from '@/engine/plugins/registry';
 import { resolveEffectiveSmoothMethod } from '@/engine/frm/smooth-capability';
+import { getFormulaUniformDefaults } from '@/lib/formula-documents';
 
 type ExploreFormulaResolution =
   | FormulaResolution
@@ -188,7 +189,10 @@ function ExploreClient({ posterImage }: { posterImage?: string }) {
               queueMicrotask(() => {
                 setHandoffTargetId(intent.formulaId);
                 setHandoffError(null);
-                updateFormula({ formulaId: intent.formulaId });
+                updateFormula({
+                  formulaId: intent.formulaId,
+                  params: { formula: getFormulaUniformDefaults(retry.plugin) },
+                });
                 updateBounds(
                   retry.experienceHint?.bounds ??
                     getDefaultBounds(intent.formulaId)
@@ -231,7 +235,10 @@ function ExploreClient({ posterImage }: { posterImage?: string }) {
       queueMicrotask(() => {
         setHandoffTargetId(intent.formulaId);
         setHandoffError(null);
-        updateFormula({ formulaId: intent.formulaId });
+        updateFormula({
+          formulaId: intent.formulaId,
+          params: { formula: getFormulaUniformDefaults(resolution.plugin) },
+        });
         updateBounds(
           resolution.experienceHint?.bounds ??
             getDefaultBounds(intent.formulaId)
@@ -548,7 +555,16 @@ function ExploreClient({ posterImage }: { posterImage?: string }) {
 
   const handleCustomFormulaSelect = useCallback((selection: FormulaSelectionRequest) => {
     clearHandoffFailure();
-    updateFormula({ formulaId: selection.formulaId });
+    const plugin = pluginRegistry.getFormula(selection.formulaId);
+    updateFormula({
+      formulaId: selection.formulaId,
+      // Seed descriptor defaults only when SWITCHING formulas — a re-select
+      // of the same formula must not clobber the user's edits (Codex 5f
+      // round-1).
+      ...(selection.formulaId === document.formula.formulaId
+        ? {}
+        : { params: { formula: plugin ? getFormulaUniformDefaults(plugin) : {} } }),
+    });
 
     const targetBounds = selection.experienceHint?.bounds ?? getDefaultBounds(selection.formulaId);
     updateBounds(targetBounds);
@@ -559,7 +575,7 @@ function ExploreClient({ posterImage }: { posterImage?: string }) {
         ...selection.experienceHint.coloring,
       });
     }
-  }, [clearHandoffFailure, updateBounds, updateColoring, updateFormula]);
+  }, [clearHandoffFailure, document.formula.formulaId, updateBounds, updateColoring, updateFormula]);
 
   // Handle transform change
   const handleTransformChange = useCallback((newTransform: string) => {

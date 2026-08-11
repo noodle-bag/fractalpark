@@ -11,7 +11,7 @@ import {
   CUSTOM_FORMULA_MAX_SOURCE_BYTES,
   CUSTOM_FORMULA_NAME_MAX_LENGTH,
 } from '@/lib/cloud/custom-formulas';
-import { compileFrm } from '@/engine/frm/compile';
+import { compileImportedFrm } from '@/engine/frm/compile';
 import { registerBuiltins } from '@/engine/plugins/builtins';
 import { getFormulaMetadata } from '@/engine/plugins/formula-catalog';
 
@@ -113,7 +113,7 @@ export function assertFormulaCompiles(runtimeId: string, source: string): void {
   if (getFormulaMetadata(runtimeId)) {
     throw new CloudApiError('formula_builtin_conflict');
   }
-  const result = compileFrm(source, runtimeId);
+  const result = compileImportedFrm(source, runtimeId);
   if (!result.success || !result.plugin) {
     throw new CloudApiError('formula_compile_failed');
   }

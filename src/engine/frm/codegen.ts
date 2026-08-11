@@ -34,6 +34,7 @@ const COMPLEX_TYPE: VarType = { kind: 'complex' };
 
 export function generateGLSL(ast: FrmAST, sourceMap: FRMSourceMap): CodeGenResult {
   const variableTypes = collectVariables(ast.initBlock, ast.loopBlock);
+  const usedParameterSlots = collectUsedParameterSlots(ast);
   const ctx: CodeGenContext = {
     getVariableType: (name) => variableTypes.get(name),
     getNodeType: (node) => inferType(node, { getVariableType: (name) => variableTypes.get(name) }),
@@ -47,6 +48,7 @@ export function generateGLSL(ast: FrmAST, sourceMap: FRMSourceMap): CodeGenResul
     if (BUILTINS.has(name)) continue;
 
     if (isParameterName(name)) {
+      if (!usedParameterSlots.has(name)) continue;
       uniforms.push({ name: `u_${name}`, type: type.kind === 'complex' ? 'vec2' : 'float' });
       continue;
     }
@@ -518,6 +520,51 @@ function collectUsedFnSlots(ast: FrmAST): Set<string> {
         if (isFnSlotName(node.name)) {
           used.add(node.name);
         }
+        node.args.forEach(visit);
+        break;
+      case 'if':
+        visit(node.condition);
+        node.then.forEach(visit);
+        node.elseIf?.forEach((branch) => {
+          visit(branch.condition);
+          branch.body.forEach(visit);
+        });
+        node.else?.forEach(visit);
+        break;
+      default:
+        break;
+    }
+  };
+
+  ast.initBlock.forEach(visit);
+  ast.loopBlock.forEach(visit);
+  visit(ast.bailoutExpr);
+  return used;
+}
+
+/** Parameters are listed in BUILTIN_TYPES for type inference, so collect
+ * their actual identifier reads separately before exposing runtime uniforms.
+ */
+function collectUsedParameterSlots(ast: FrmAST): Set<string> {
+  const used = new Set<string>();
+
+  const visit = (node: ASTNode) => {
+    switch (node.type) {
+      case 'ident':
+        if (isParameterName(node.name)) used.add(node.name);
+        break;
+      case 'assignment':
+        visit(node.value);
+        break;
+      case 'binary':
+        visit(node.left);
+        visit(node.right);
+        break;
+      case 'unary':
+      case 'magnitude':
+        visit(node.operand);
+        break;
+      case 'call':
         node.args.forEach(visit);
         break;
       case 'if':

@@ -1,7 +1,7 @@
 import { beforeAll, describe, expect, it, vi } from 'vitest';
 import { render, screen } from '@testing-library/react';
 import { registerBuiltins } from '@/engine/plugins/builtins/index';
-import { compileFrm } from '@/engine/frm/compile';
+import { compileClassicFrmEntry, compileFrm } from '@/engine/frm/compile';
 import { pluginRegistry } from '@/engine/plugins/registry';
 import { FormulaPanel } from '@/components/fractal/FormulaPanel';
 
@@ -31,6 +31,15 @@ bailout:
 
     if (compiled.success && compiled.plugin) {
       pluginRegistry.register(compiled.plugin);
+    }
+
+    const classic = compileClassicFrmEntry(`ClassicSlots {
+  z = p1:
+  z = fn2(z) + p3
+  |z| < 16
+}`, undefined, 'classic-slots');
+    if (classic.success && classic.plugin) {
+      pluginRegistry.register(classic.plugin);
     }
   });
 
@@ -101,5 +110,28 @@ bailout:
     expect(screen.getByRole('combobox')).toBeInTheDocument();
     expect(screen.getByDisplayValue('0.25')).toBeInTheDocument();
     expect(screen.getByDisplayValue('-0.1')).toBeInTheDocument();
+  });
+
+  it('renders only the used classic parameter and function uniforms', () => {
+    render(
+      <FormulaPanel
+        isJulia={false}
+        juliaC={[-0.7, 0.27]}
+        currentFormula="classic-slots"
+        currentBounds={{ centerX: 0, centerY: 0, zoom: 1, rotation: 0 }}
+        pluginParams={{ u_p1: [0.1, 0.2], u_p3: [0.3, 0.4], u_fn2: 2 }}
+        onJuliaModeChange={() => {}}
+        onJuliaCChange={() => {}}
+        onFormulaChange={() => {}}
+        onFormulaParamChange={() => {}}
+      />
+    );
+
+    expect(screen.getByText('p1')).toBeInTheDocument();
+    expect(screen.getByText('p3')).toBeInTheDocument();
+    expect(screen.getByText('fn2')).toBeInTheDocument();
+    expect(screen.getAllByRole('combobox')).toHaveLength(1);
+    expect(screen.queryByText('p2')).not.toBeInTheDocument();
+    expect(screen.queryByText('fn1')).not.toBeInTheDocument();
   });
 });

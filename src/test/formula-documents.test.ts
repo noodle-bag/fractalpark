@@ -7,9 +7,11 @@ import {
   getFormulaSelectionDefaults,
 } from '@/engine/plugins/formula-catalog';
 import { pluginRegistry } from '@/engine/plugins/registry';
+import { compileClassicFrmEntry } from '@/engine/frm/compile';
 import {
   applyFormulaSelectionDefaults,
   buildFormulaDefaultDocument,
+  getFormulaUniformDefaults,
 } from '@/lib/formula-documents';
 import { decodeParams, documentToExploreHref } from '@/lib/url-params';
 
@@ -139,5 +141,21 @@ describe('formula documents', () => {
     expect(() => buildFormulaDefaultDocument('missing-formula')).toThrow(
       'Unknown built-in formula: missing-formula'
     );
+  });
+
+  it('seeds imported classic formula uniforms from descriptors', () => {
+    const compiled = compileClassicFrmEntry(`ImportedClassic {
+  z = p1:
+  z = fn2(z) + p3
+  |z| < 16
+}`, undefined, 'imported-classic');
+
+    expect(compiled.success).toBe(true);
+    expect(compiled.plugin).toBeDefined();
+    expect(getFormulaUniformDefaults(compiled.plugin!)).toEqual({
+      u_p1: [0, 0],
+      u_p3: [0, 0],
+      u_fn2: 0,
+    });
   });
 });

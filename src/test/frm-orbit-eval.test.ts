@@ -527,3 +527,19 @@ describe('Slice 5e review fixes', () => {
     expect(r.success).toBe(false);
   });
 });
+
+describe('compileImportedFrm routing (Slice 5f review fix)', () => {
+  it('a mid-line classic transition routes to the classic compiler', async () => {
+    const { compileImportedFrm } = await import('../engine/frm/compile');
+    // Colon NOT at end of line — the old heuristic missed this and fell
+    // into the native compiler, which fails on classic syntax.
+    const r = compileImportedFrm('T { z = pixel: z = sqr(z) + c, |z| < 4 }', 'mid-line', 2);
+    expect(r.success).toBe(true);
+  });
+
+  it('a native formula with named sections still routes native', async () => {
+    const { compileImportedFrm } = await import('../engine/frm/compile');
+    const r = compileImportedFrm('M {\ninit:\n  z = 0\nloop:\n  z = z*z + c\nbailout:\n  |z| < 4\n}', 'native', 2);
+    expect(r.success).toBe(true);
+  });
+});
