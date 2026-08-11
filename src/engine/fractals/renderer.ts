@@ -126,6 +126,7 @@ export class FractalRenderer {
       outsideColoringId: params.outsideColoring,
       insideColoringId: params.insideColoring,
       transformId: params.transformId ?? 'none',
+      pipelineVersion: params.pipelineVersion ?? 1,
     };
 
     const key = makeCacheKey(combo, this.formulaPlugin);
@@ -168,15 +169,20 @@ export class FractalRenderer {
     if (uniforms.u_juliaC) gl.uniform2f(uniforms.u_juliaC, params.juliaC[0], params.juliaC[1]);
     // u_power feeds the smooth iteration formula. Strict-v2 compiles carry
     // the polynomial degree extracted from the loop dataflow (smoothPower) —
-    // use it instead of the document-level power parameter. The active
-    // formula resolves exactly like the assembler does: an instance override
-    // only applies when its id matches, otherwise the registry is
+    // use it instead of the document-level power parameter, but only on
+    // pipeline v2 (a v1 document keeps the legacy power parameter). The
+    // active formula resolves exactly like the assembler does: an instance
+    // override only applies when its id matches, otherwise the registry is
     // authoritative (ordinary Explore rendering has no override).
     const activePlugin =
       this.formulaPlugin?.id === params.formula
         ? this.formulaPlugin
         : pluginRegistry.getFormula(params.formula);
-    if (uniforms.u_power) gl.uniform1f(uniforms.u_power, activePlugin?.smoothPower ?? params.power);
+    if (uniforms.u_power) {
+      const smoothPower =
+        params.pipelineVersion === 2 ? activePlugin?.smoothPower : undefined;
+      gl.uniform1f(uniforms.u_power, smoothPower ?? params.power);
+    }
     if (uniforms.u_ssaaLevel) {
       const level = params.ssaaLevel ?? (params.useSSAA ? 4 : 0);
       gl.uniform1i(uniforms.u_ssaaLevel, level);

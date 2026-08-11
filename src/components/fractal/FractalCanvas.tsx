@@ -31,6 +31,8 @@ interface FractalCanvasProps {
   pluginParams?: PluginParamRecord;
   useSSAA: boolean;
   adaptiveIterations: boolean;
+  /** Rendering pipeline version (spec §7); defaults to 1 (legacy). */
+  pipelineVersion?: 1 | 2;
   lighting: LightingConfig;
   customGradient: GradientStop[] | null;
   onBoundsChange?: (bounds: ViewBounds) => void;
@@ -53,6 +55,7 @@ export default function FractalCanvas({
   pluginParams = {},
   useSSAA,
   adaptiveIterations,
+  pipelineVersion = 1,
   lighting,
   customGradient,
   onBoundsChange,
@@ -94,6 +97,7 @@ export default function FractalCanvas({
       pluginParams,
       useSSAA,
       adaptiveIterations,
+      pipelineVersion,
       lighting,
       customGradient,
     };
@@ -116,6 +120,7 @@ export default function FractalCanvas({
     pluginParams,
     useSSAA,
     adaptiveIterations,
+    pipelineVersion,
     lighting,
     customGradient,
     resize,

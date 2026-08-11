@@ -143,10 +143,57 @@ function polynomialDegreeOf(
 }
 
 /**
+ * Variables whose values can reach the orbit variable within one iteration
+ * (transitive read closure). Only these feeders decide polynomial soundness;
+ * an unrelated loop counter never poisons the result.
+ */
+function collectIdents(node: ASTNode, out: Set<string>): void {
+  switch (node.type) {
+    case 'ident':
+      out.add(node.name);
+      return;
+    case 'binary':
+      collectIdents(node.left, out);
+      collectIdents(node.right, out);
+      return;
+    case 'unary':
+      collectIdents(node.operand, out);
+      return;
+    case 'call':
+      node.args.forEach((arg) => collectIdents(arg, out));
+      return;
+    case 'magnitude':
+      collectIdents(node.operand, out);
+      return;
+    case 'if': {
+      collectIdents(node.condition, out);
+      node.then.forEach((s) => collectIdents(s, out));
+      node.elseIf?.forEach((b) => {
+        collectIdents(b.condition, out);
+        b.body.forEach((s) => collectIdents(s, out));
+      });
+      node.else?.forEach((s) => collectIdents(s, out));
+      return;
+    }
+    case 'assignment':
+      collectIdents(node.value, out);
+      return;
+    default:
+      return;
+  }
+}
+
+/**
  * Extract the leading polynomial degree of the per-iteration recurrence in
  * `orbitVar` (default `z`). Returns null when the loop is not provably
  * polynomial: conditional branches, non-polynomial operations anywhere in
  * the sequential composition, or a final degree < 2.
+ *
+ * Loop-carried soundness: variables persist across iterations, so a feeder
+ * assigned ANYWHERE in the loop must evaluate to a polynomial in its final
+ * (carried) state — `z = z^2 + c; c = sin(z)` reads a polynomial c in the
+ * first iteration but a transcendental one from the second onward, and is
+ * therefore NOT a proven polynomial recurrence.
  */
 export function extractPolynomialDegree(ast: FrmAST, orbitVar = 'z'): number | null {
   // Seed from the init block: every init variable is a constant w.r.t. the
@@ -170,6 +217,30 @@ export function extractPolynomialDegree(ast: FrmAST, orbitVar = 'z'): number | n
     if (stmt.target === orbitVar) degree = stmtDegree;
   }
   if (degree === null || degree < 2) return null;
+
+  // Feeder closure: every loop-assigned variable that can reach the orbit
+  // must still be polynomial in its final (carried) state.
+  const feeders = new Set<string>([orbitVar]);
+  let grew = true;
+  while (grew) {
+    grew = false;
+    for (const stmt of ast.loopBlock) {
+      if (stmt.type !== 'assignment' || !feeders.has(stmt.target)) continue;
+      const read = new Set<string>();
+      collectIdents(stmt.value, read);
+      for (const name of read) {
+        if (!feeders.has(name)) {
+          feeders.add(name);
+          grew = true;
+        }
+      }
+    }
+  }
+  for (const stmt of ast.loopBlock) {
+    if (stmt.type !== 'assignment') continue;
+    if (!feeders.has(stmt.target)) continue;
+    if ((env.get(stmt.target) ?? null) === null) return null;
+  }
   return degree;
 }
 

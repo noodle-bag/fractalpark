@@ -19,6 +19,16 @@ const COMBO_BASE: Omit<PluginCombination, 'formulaId'> = {
   outsideColoringId: 'smooth',
   insideColoringId: 'black',
   transformId: 'none',
+  // Strict-v2 shader behaviors (SMOOTH_ESCAPE_TIME et al.) are gated on the
+  // renderer pipeline version (spec §7) — these tests exercise pipeline v2.
+  pipelineVersion: 2,
+};
+
+const COMBO_BASE_V1: Omit<PluginCombination, 'formulaId'> = {
+  outsideColoringId: 'smooth',
+  insideColoringId: 'black',
+  transformId: 'none',
+  pipelineVersion: 1,
 };
 
 function compileV2(name: string, loop: string, bailout: string, id: string) {
@@ -113,6 +123,57 @@ describe('smooth capability: three-tier resolution from AST/dataflow', () => {
       bailoutExpr: bin('<', { type: 'magnitude', operand: id('z'), loc: L }, num(4)),
     };
     expect(extractPolynomialDegree(ast)).toBe(2);
+  });
+
+  it('a feeder that turns transcendental in its CARRIED state rejects the loop', () => {
+    // Codex review: z = z^2 + c; c = sin(z) reads a polynomial c in the
+    // first iteration but a transcendental one from the second onward — not
+    // a proven polynomial recurrence, must not be declared supported.
+    const L = { line: 1, col: 1 };
+    const id = (name: string) => ({ type: 'ident', name, loc: L }) as const;
+    const num = (value: number) => ({ type: 'number', value, loc: L }) as const;
+    const bin = (op: string, left: ASTNode, right: ASTNode) =>
+      ({ type: 'binary', op, left, right, loc: L }) as const;
+    const assign = (target: string, value: ASTNode) =>
+      ({ type: 'assignment', target, value, loc: L }) as const;
+
+    const ast: FrmAST = {
+      name: 'CarriedSin',
+      params: [],
+      initBlock: [assign('z', num(0)), assign('c', id('pixel'))],
+      loopBlock: [
+        assign('z', bin('+', bin('^', id('z'), num(2)), id('c'))),
+        assign('c', {
+          type: 'call',
+          name: 'sin',
+          args: [id('z')],
+          loc: L,
+        }),
+      ],
+      bailoutExpr: bin('<', { type: 'magnitude', operand: id('z'), loc: L }, num(4)),
+    };
+    expect(extractPolynomialDegree(ast)).toBeNull();
+
+    // An unrelated loop counter never poisons the orbit recurrence.
+    const counterAst: FrmAST = {
+      ...ast,
+      name: 'CounterOk',
+      loopBlock: [
+        assign('x', bin('+', id('x'), num(1))),
+        assign('z', bin('+', bin('^', id('z'), num(2)), id('c'))),
+        assign('c', bin('+', id('c'), id('z'))),
+      ],
+    };
+    expect(extractPolynomialDegree(counterAst)).toBe(2);
+  });
+
+  it('pipeline v1 keeps smooth-unavailable formulas on the legacy path', () => {
+    const unavailable = compileV2('SmoothV1Gate', 'z = z^2 + c', '|real(z)| < 2', 'sm-v1-gate');
+    expect(unavailable.smoothCapability).toBe('unavailable');
+    const legacy = assembleShader({ formulaId: unavailable.id, ...COMBO_BASE_V1 }, unavailable);
+    expect(legacy).not.toMatch(/^#define SMOOTH_ESCAPE_TIME$/m);
+    const strict = assembleShader({ formulaId: unavailable.id, ...COMBO_BASE }, unavailable);
+    expect(strict).toMatch(/^#define SMOOTH_ESCAPE_TIME$/m);
   });
 
   it('transcendental or fn-slot loops → adapted (radial-crossing-v1), no power', () => {

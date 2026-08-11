@@ -95,4 +95,11 @@ export interface PluginCombination {
   outsideColoringId: string;
   insideColoringId: string;
   transformId: string;
+  /**
+   * Rendering pipeline version (spec §7): when 2, strict-v2 formula
+   * capabilities (bailout descriptor, after-step timing, smooth capability)
+   * drive shader assembly; anything else renders the legacy frozen path —
+   * even for formulas compiled strict-v2.
+   */
+  pipelineVersion?: 1 | 2;
 }

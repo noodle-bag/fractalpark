@@ -596,6 +596,15 @@ function ExploreClient({ posterImage }: { posterImage?: string }) {
     formulaResolution?.formulaId === formula;
   const isFormulaReady =
     !handoffError && formulaResolutionMatches && formulaResolution?.success === true;
+  // Renderer pipeline version (spec §7): a strict-v2 compiled formula (it
+  // carries a bailout descriptor) renders through pipeline v2; everything
+  // else keeps the document's stored version (historical default 1).
+  const explorePipelineVersion: 1 | 2 =
+    isFormulaReady &&
+    formulaResolution?.success === true &&
+    formulaResolution.plugin.bailoutDescriptor
+      ? 2
+      : (document.coloring.pipelineVersion ?? 1);
   let formulaResolutionMessage = t('formula.resolution.loading');
 
   if (
@@ -714,6 +723,7 @@ function ExploreClient({ posterImage }: { posterImage?: string }) {
             pluginParams={pluginParams}
             useSSAA={useSSAA}
             adaptiveIterations={adaptiveIterations}
+            pipelineVersion={explorePipelineVersion}
             lighting={lighting}
             customGradient={customGradient}
             onBoundsChange={updateBounds}

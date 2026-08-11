@@ -612,6 +612,10 @@ export function FrmEditorWorkspace() {
                   DEFAULT_FRACTAL_DOCUMENT.coloring.paletteIndex
                 }
                 power={DEFAULT_FRACTAL_DOCUMENT.formula.power}
+                // The FRM editor previews strict-v2 compiles — render them
+                // through pipeline v2 (descriptor semantics, after-step
+                // timing, smooth capability), not the legacy v1 path.
+                pipelineVersion={2}
                 useSSAA={false}
               />
             </div>

@@ -22,6 +22,16 @@ const COMBO_BASE: Omit<PluginCombination, 'formulaId'> = {
   outsideColoringId: 'smooth',
   insideColoringId: 'black',
   transformId: 'none',
+  // Strict-v2 behaviors are gated on the renderer pipeline version
+  // (spec §7) — these tests exercise the v2 pipeline.
+  pipelineVersion: 2,
+};
+
+const COMBO_BASE_V1: Omit<PluginCombination, 'formulaId'> = {
+  outsideColoringId: 'smooth',
+  insideColoringId: 'black',
+  transformId: 'none',
+  pipelineVersion: 1,
 };
 
 const INJECTED_INVERSE = /^#define ESCAPE_INVERSE_DIRECTION$/m;
@@ -135,6 +145,29 @@ describe('assembleShader: renderer-pipeline v2 (bailout descriptor consumption)'
     expect(keyV2).toContain('bo:C1:<:4');
     // A descriptor-less formula keeps the legacy key shape byte-for-byte.
     expect(keyV1).toBe('same-id|smooth|black|none');
+  });
+
+  it('pipeline v1 renders a strict-v2 formula through the LEGACY path (spec §7)', () => {
+    const plugin = compileV2('V2Gate', '|z| < 4', 'v2-gate');
+    expect(plugin.bailoutDescriptor).toBeDefined();
+    const legacy = assembleShader({ formulaId: plugin.id, ...COMBO_BASE_V1 }, plugin);
+    // No descriptor-driven defines on pipeline v1 — the historical numeric
+    // bailout semantics stay byte-for-byte.
+    expect(legacy).not.toMatch(/^#define BAILOUT_LE /m);
+    expect(legacy).not.toMatch(/^#define ESCAPE_AFTER_STEP$/m);
+    expect(legacy).not.toMatch(/^#define SMOOTH_ESCAPE_TIME$/m);
+    expect(legacy).toMatch(/^#define BAILOUT_RADIUS 4\.0$/m);
+    const strict = assembleShader({ formulaId: plugin.id, ...COMBO_BASE }, plugin);
+    // Pipeline v2 drives the escape from the descriptor: the threshold is
+    // squared (|z|<4 compares zz<16), unlike the legacy raw 4.0.
+    expect(strict).toMatch(/^#define BAILOUT_RADIUS 16\.0$/m);
+    expect(strict).not.toMatch(/^#define BAILOUT_RADIUS 4\.0$/m);
+    // And the two pipelines never share a compiled program.
+    const keyLegacy = makeCacheKey({ formulaId: plugin.id, ...COMBO_BASE_V1 }, plugin);
+    const keyStrict = makeCacheKey({ formulaId: plugin.id, ...COMBO_BASE }, plugin);
+    expect(keyLegacy).toBe(`${plugin.id}|smooth|black|none`);
+    expect(keyStrict).toContain('bo:C1:<:4');
+    expect(keyLegacy).not.toBe(keyStrict);
   });
 });
 

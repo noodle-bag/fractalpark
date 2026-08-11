@@ -43,12 +43,16 @@ export function assembleShader(
   const defines: string[] = [];
   // Renderer-pipeline v2: a formula carrying a bounded bailout descriptor
   // (strict-v2 FRM compile) drives the escape defines from the descriptor
-  // instead of the legacy numeric bailout field. C1 thresholds are
-  // magnitude values, so the zz comparison consumes threshold²; inverse
-  // directions (>, >=) flip the escape condition, and inclusive operators
-  // use an inclusive boundary. Legacy formulas (no descriptor) keep the
-  // historical BAILOUT_RADIUS semantics byte-for-byte.
-  const bailoutDescriptor = formula.bailoutDescriptor;
+  // instead of the legacy numeric bailout field — but only when the
+  // combination itself requests pipeline v2 (spec §7). A historical
+  // pipeline-v1 document renders the legacy path even for strict-v2
+  // formulas. C1 thresholds are magnitude values, so the zz comparison
+  // consumes threshold²; inverse directions (>, >=) flip the escape
+  // condition, and inclusive operators use an inclusive boundary. Legacy
+  // combinations keep the historical BAILOUT_RADIUS semantics
+  // byte-for-byte.
+  const pipelineV2 = combo.pipelineVersion === 2;
+  const bailoutDescriptor = pipelineV2 ? formula.bailoutDescriptor : undefined;
   if (bailoutDescriptor?.kind === 'C1') {
     // Full precision: fractional thresholds (e.g. |z| < 0.1 → 0.01) must
     // not be rounded away.
@@ -84,10 +88,10 @@ export function assembleShader(
     defines.push(`#define BAILOUT_RADIUS ${(formula.bailout ?? 4.0).toFixed(1)}`);
   }
   // Strict-v2 classic timing: bailout evaluated after each loop step.
-  if (formula.afterStepTiming) {
+  if (pipelineV2 && formula.afterStepTiming) {
     defines.push('#define ESCAPE_AFTER_STEP');
   }
-  if (formula.smoothCapability === 'unavailable') {
+  if (pipelineV2 && formula.smoothCapability === 'unavailable') {
     // Spec §7: smooth unavailable (C4-R real projection or inverse-direction
     // radial) → deterministic Escape Time. The requested coloring preference
     // is preserved upstream and deterministically restored when the
@@ -136,7 +140,10 @@ export function makeCacheKey(combo: PluginCombination, formulaOverride?: Formula
   const base = `${combo.formulaId}|${combo.outsideColoringId}|${combo.insideColoringId}|${combo.transformId}`;
   // Shader semantics now depend on the formula's bailout descriptor (strict
   // v2). A v1 and a v2 variant of the same formula id must never share a
-  // compiled program — fingerprint the descriptor into the key.
+  // compiled program — fingerprint the descriptor into the key. The
+  // fingerprint applies only to pipeline-v2 combinations: a pipeline-v1
+  // render of the same formula uses the legacy path and the legacy key.
+  if (combo.pipelineVersion !== 2) return base;
   const descriptor = formulaOverride?.bailoutDescriptor;
   const timingBit = formulaOverride?.afterStepTiming ? '|t:after' : '';
   if (!descriptor) return `${base}${timingBit}`;
