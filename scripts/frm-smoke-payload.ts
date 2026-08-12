@@ -21,6 +21,7 @@
 import { mkdirSync, writeFileSync, readFileSync, readdirSync, statSync, existsSync } from 'node:fs';
 import { join, basename } from 'node:path';
 import { compileClassicFrmEntry } from '../src/engine/frm/compile';
+import { createHash } from 'node:crypto';
 import { scanFrmEntries } from '../src/engine/frm/scanner';
 import { evaluateOrbit, evalDescriptorThreshold } from '../src/engine/frm/orbit-eval';
 import { assembleShader } from '../src/engine/shaders/assembler';
@@ -94,10 +95,19 @@ const AUTHORED_CASES: SmokeCase[] = [
   },
 ];
 
-function corpusCases(): SmokeCase[] {
+function corpusCases(): { cases: SmokeCase[]; dropped: string[] } {
   const ledger = process.env.FRM_SMOKE_LEDGER;
   const corpus = process.env.FRM_SMOKE_CORPUS;
-  if (!ledger || !corpus || !existsSync(ledger)) return [];
+  const full = process.env.FRM_SMOKE_FULL === '1';
+  if (!ledger || !corpus || !existsSync(ledger) || !existsSync(corpus)) {
+    // Full mode is meaningless without the private inputs — fail loudly
+    // instead of emitting an authored-only payload marked full:true.
+    if (full) {
+      console.error('FRM_SMOKE_FULL requires FRM_SMOKE_LEDGER and FRM_SMOKE_CORPUS');
+      process.exit(1);
+    }
+    return { cases: [], dropped: [] };
+  }
   const byBase = new Map<string, string>();
   const bySuffix = new Map<string, string>();
   const walk = (dir: string) => {
@@ -115,6 +125,12 @@ function corpusCases(): SmokeCase[] {
     name: string;
     eflags: string;
     source: string;
+    /** Raw ledger cells (HTML-escaped) for anchor reconstruction. */
+    header: string;
+    init: string;
+    loop: string;
+    bailout: string;
+    sha: string;
   }
   const rows: Row[] = [];
   // Slice 5g: T0+T1 tiers; Slice 6a: T2 too (C5 GPU-vs-CPU evidence —
@@ -132,31 +148,76 @@ function corpusCases(): SmokeCase[] {
   ]);
   for (const line of readFileSync(ledger, 'utf-8').split('\n')) {
     if (!line.startsWith('| ') || line.startsWith('| ---')) continue;
-    const cells = line.trim().replace(/^\||\|$/g, '').split('|').map((c) => c.trim());
+    // Split on unescaped pipes only — bailout/init cells carry `\|`.
+    const cells = line.trim().replace(/^\||\|$/g, '').split(/(?<!\\)\|/).map((c) => c.trim());
     if (cells.length < 14 || cells[0] === '名称') continue;
     if (cells[3] !== 'T0' && cells[3] !== 'T1' && cells[3] !== 'T2') continue;
     if (WAIVERS.has(cells[0])) continue;
-    rows.push({ name: cells[0], eflags: cells[5], source: cells[6] });
+    rows.push({
+      name: cells[0], eflags: cells[5], source: cells[6],
+      header: cells[9], init: cells[10], loop: cells[11],
+      bailout: cells[12], sha: cells[13],
+    });
   }
   // Deterministic sample: every 9th row, plus every E3/E10-flagged row.
-  const picked = rows.filter(
-    (r, i) => i % 9 === 0 || /E3|E10/.test(r.eflags),
-  );
+  // FRM_SMOKE_FULL=1 (Level 2, maintainer-local): every ledger row, with
+  // name-not-found/missing-source rows reconstructed from the ledger's
+  // sha256-anchored normalized cells (verified, never guessed).
+  const picked = full
+    ? rows
+    : rows.filter((r, i) => i % 9 === 0 || /E3|E10/.test(r.eflags));
   const cases: SmokeCase[] = [];
+  const dropped: string[] = [];
   const scanCache = new Map<string, string>();
+  const unescapeHtml = (s: string) =>
+    s.replace(/&lt;/g, '<').replace(/&gt;/g, '>').replace(/&amp;/g, '&');
+  const unescCell = (s: string) => unescapeHtml(s.replace(/\\\|/g, '|'));
+  /** sha256-verified reconstruction of an anchor-only entry (full mode). */
+  const anchorText = (row: Row): string | null => {
+    const s = [row.header, row.init, row.loop, row.bailout].map(unescCell).join('\n');
+    if (createHash('sha256').update(s, 'utf-8').digest('hex') !== row.sha) return null;
+    const loop = unescCell(row.loop)
+      .split(';')
+      .map((x) => x.trim())
+      .filter(Boolean)
+      .map((x) => `  ${x}`)
+      .join('\n');
+    const header = unescCell(row.header);
+    return `${row.name}${header ? ` ${header}` : ''} {\n  ${unescCell(row.init)}:\n${loop}\n  ${unescCell(row.bailout)}\n}`;
+  };
   for (const row of picked) {
     const rel = row.source.toLowerCase();
     const base = basename(rel);
     const path =
       bySuffix.get(rel) ?? bySuffix.get(`fractint/formulas/${base}`) ?? byBase.get(base);
-    if (!path) continue;
+    if (!path) {
+      // No corpus file — full mode falls back to the verified anchor.
+      if (full) {
+        const text = anchorText(row);
+        if (text) cases.push({ name: `corpus-${row.name}`, source: text, key: row.name });
+        else dropped.push(`${row.name}: source missing AND anchor sha mismatch`);
+      }
+      continue;
+    }
     if (!scanCache.has(path)) scanCache.set(path, readFileSync(path, 'latin1'));
+    const fileText = scanCache.get(path)!;
+    const bare = row.name.replace(/\[.*\]/, '');
+    if (full && !scanFrmEntries(fileText).entries.some(
+      (e) => e.key.toLowerCase() === bare.toLowerCase() ||
+        e.key.toLowerCase().startsWith(`${bare.toLowerCase()}#`),
+    )) {
+      // File exists but the entry does not (float-variant rewrites) —
+      // fall back to the verified anchor reconstruction.
+      const text = anchorText(row);
+      if (text) cases.push({ name: `corpus-${row.name}`, source: text, key: row.name });
+      else dropped.push(`${row.name}: entry not in ${base} AND anchor sha mismatch`);
+      continue;
+    }
     // Carry the full file text + the scanner key; the production scanner
     // resolves the entry (handles symmetry parens, bracket options, prose).
-    const bare = row.name.replace(/\[.*\]/, '');
-    cases.push({ name: `corpus-${row.name}`, source: scanCache.get(path)!, key: bare });
+    cases.push({ name: `corpus-${row.name}`, source: fileText, key: bare });
   }
-  return cases;
+  return { cases, dropped };
 }
 
 interface PayloadRow {
@@ -216,7 +277,8 @@ void main() {
 }
 
 function main() {
-  const cases = [...AUTHORED_CASES, ...corpusCases()];
+  const corpus = corpusCases();
+  const cases = [...AUTHORED_CASES, ...corpus.cases];
   const rows: PayloadRow[] = [];
   const skipped: string[] = [];
   for (const fixture of cases) {
@@ -286,11 +348,32 @@ function main() {
       cpu,
     });
   }
-  mkdirSync(join(OUT, '..'), { recursive: true });
-  writeFileSync(OUT, JSON.stringify({ pixels: PIXELS, maxIter: MAX_ITER, rows }, null, 1));
-  console.log(`payload rows: ${rows.length} (authored ${AUTHORED_CASES.length}); skipped: ${skipped.length}`);
+  const full = process.env.FRM_SMOKE_FULL === '1';
+  // All coverage gates run BEFORE the payload is written — a failing full
+  // run must never leave a partial full:true payload on disk (Codex 7d r3).
+  console.log(`payload rows: ${rows.length} (authored ${AUTHORED_CASES.length}); skipped: ${skipped.length}; dropped-ledger-rows: ${corpus.dropped.length}`);
   for (const s of skipped.slice(0, 12)) console.log(`  skip ${s}`);
-  console.log(`out: ${OUT}`);
+  for (const d of corpus.dropped) console.log(`  DROP ${d}`);
+  // Full mode must account for every ledger row: a dropped row is a hard
+  // failure, not a silent gap in coverage.
+  if (corpus.dropped.length > 0) {
+    console.error(`FRM_SMOKE_FULL: ${corpus.dropped.length} ledger row(s) unaccounted for`);
+    process.exit(1);
+  }
+  // Corpus-row skips in full mode are fatal too — except the two documented
+  // T2 compile waivers (carr2289: system-var write + asin; mandelbrotbc3:
+  // read-only e — both also fail v1; evidence in the Slice-6 archive).
+  if (full) {
+    const T2_COMPILE_WAIVERS = new Set(['corpus-carr2289', 'corpus-mandelbrotbc3']);
+    const unexpected = skipped.filter(
+      (s) => s.startsWith('corpus-') && !T2_COMPILE_WAIVERS.has(s.split(':')[0]),
+    );
+    if (unexpected.length > 0) {
+      console.error(`FRM_SMOKE_FULL: ${unexpected.length} corpus row(s) skipped without a documented waiver:`);
+      for (const u of unexpected) console.error(`  ${u}`);
+      process.exit(1);
+    }
+  }
   // Authored cases are the contract: any authored skip means the compiler
   // regressed — fail loudly instead of emitting a vacuous payload.
   const authoredNames = new Set(AUTHORED_CASES.map((c) => c.name));
@@ -301,6 +384,14 @@ function main() {
     );
     process.exit(1);
   }
+  mkdirSync(join(OUT, '..'), { recursive: true });
+  writeFileSync(OUT, JSON.stringify({
+    pixels: PIXELS,
+    maxIter: MAX_ITER,
+    full: full || undefined,
+    rows,
+  }, null, 1));
+  console.log(`out: ${OUT}`);
 }
 
 main();

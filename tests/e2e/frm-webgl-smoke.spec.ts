@@ -45,8 +45,48 @@ interface PayloadRow {
 interface Payload {
   pixels: Array<[number, number]>;
   maxIter: number;
+  /** Set when the payload was generated with FRM_SMOKE_FULL=1 (Level 2). */
+  full?: boolean;
   rows: PayloadRow[];
 }
+
+/**
+ * Level-2 full-coverage mode (payload.full === true) tolerates a beyond-±1
+ * GPU/CPU escape-round divergence ONLY when the row's CURRENT run matches
+ * the documented fingerprint EXACTLY — both the GPU escape rounds and the
+ * f64 CPU oracle rounds. Any change on either side (a semantic regression
+ * or an improvement) fails the gate and requires re-evidencing:
+ *
+ * - corpus-fzppchsq (z=cosh(z)+sqr(pixel), pixel (1.1,-0.4)): GPU escapes
+ *   at 8, f64 CPU oracle at 12. Per-round GPU readback shows a ~1e-3 seed
+ *   deviation in the transcendental evaluation amplified round-over-round
+ *   (0.01 → 0.05 → 0.25 → 2.2 → explosion) — Lyapunov growth, not a code
+ *   path difference; a strict-f32 scalar simulation follows the CPU
+ *   trajectory, confirming the formula semantics agree. Evidence:
+ *   private f588_level2_report.md (Slice 7d).
+ *
+ * The sampled (CI) smoke never includes these rows in its stride — the
+ * strict gate is untouched. Adding a row here requires the same
+ * trajectory-level evidence and Codex review.
+ */
+const FRM_KNOWN_CHAOTIC_BOUNDARY: Readonly<Record<string, { gpu: number[]; cpu: number[] }>> = {
+  'corpus-fzppchsq': { gpu: [5, 7, 8], cpu: [5, 7, 12] },
+};
+
+const matchesDocumented = (
+  name: string,
+  gpu: number[],
+  cpu: number[],
+): boolean => {
+  const known = FRM_KNOWN_CHAOTIC_BOUNDARY[name];
+  return (
+    known !== undefined &&
+    known.gpu.length === gpu.length &&
+    known.gpu.every((v, i) => v === gpu[i]) &&
+    known.cpu.length === cpu.length &&
+    known.cpu.every((v, i) => v === cpu[i])
+  );
+};
 
 /** Result of the in-page shader compile helper installed on `__smoke`. */
 type SmokeShaderResult =
@@ -218,11 +258,17 @@ test.describe('FRM WebGL smoke (SwiftShader)', () => {
         else if (d === 1) offByOne++;
       }
       const bad = deltas.some((d) => d > 1);
+      const documentedChaotic =
+        bad &&
+        payload.full === true &&
+        matchesDocumented(row.name, iters, row.cpu);
       summary.push(
-        `${row.name}: gpu=[${iters}] cpu=[${row.cpu}] ${bad ? 'MISMATCH' : 'ok'}`,
+        `${row.name}: gpu=[${iters}] cpu=[${row.cpu}] ${
+          bad ? (documentedChaotic ? 'documented-chaotic-boundary' : 'MISMATCH') : 'ok'
+        }`,
       );
       expect(
-        bad,
+        bad && !documentedChaotic,
         `${row.name}: gpu=${JSON.stringify(iters)} cpu=${JSON.stringify(row.cpu)}`,
       ).toBe(false);
     }
