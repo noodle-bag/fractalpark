@@ -4,6 +4,10 @@ import {
   type FormulaExperienceHint,
 } from '@/engine/frm/authoring';
 import { compileImportedFrm } from '@/engine/frm/compile';
+import {
+  resolveFrmSemanticsVersion,
+  type FrmSemanticsVersion,
+} from '@/engine/frm/semantics-version';
 import { registerBuiltins } from '@/engine/plugins/builtins';
 import { getFormulaMetadata } from '@/engine/plugins/formula-catalog';
 import { pluginRegistry } from '@/engine/plugins/registry';
@@ -13,6 +17,8 @@ export interface ResolvableCustomFormula {
   id: string;
   source: string;
   experienceHint?: FormulaExperienceHint;
+  /** Missing is the frozen legacy v1 contract; new content passes v2 explicitly. */
+  frmSemanticsVersion?: FrmSemanticsVersion;
 }
 
 export type FormulaResolutionErrorCode =
@@ -28,6 +34,8 @@ export interface ResolvedFormula {
   kind: 'builtin' | 'custom';
   plugin: FormulaPlugin;
   experienceHint?: FormulaExperienceHint;
+  /** Present for custom formulas; built-ins follow the document pipeline. */
+  frmSemanticsVersion?: FrmSemanticsVersion;
 }
 
 export interface FormulaResolutionFailure {
@@ -56,14 +64,29 @@ function failure(
   };
 }
 
+function experienceHintsEqual(
+  left?: FormulaExperienceHint,
+  right?: FormulaExperienceHint,
+): boolean {
+  return (
+    left?.bounds?.centerX === right?.bounds?.centerX &&
+    left?.bounds?.centerY === right?.bounds?.centerY &&
+    left?.bounds?.zoom === right?.bounds?.zoom &&
+    left?.bounds?.rotation === right?.bounds?.rotation &&
+    left?.coloring?.outsideColoringId === right?.coloring?.outsideColoringId &&
+    left?.coloring?.insideColoringId === right?.coloring?.insideColoringId &&
+    left?.coloring?.paletteIndex === right?.coloring?.paletteIndex
+  );
+}
+
 /** Session-scoped asset bytes (v0.4.16): every successfully registered
  *  in-memory formula keeps its source here so envelope creation (save,
  *  download, export) includes it even when local formula storage is empty
  *  — the cross-device draft case (review P1). Session-only, never
  *  persisted. */
-const sessionAssets = new Map<string, { id: string; source: string }>();
+const sessionAssets = new Map<string, ResolvableCustomFormula>();
 
-export function readSessionFormulaAssets(): Array<{ id: string; source: string }> {
+export function readSessionFormulaAssets(): ResolvableCustomFormula[] {
   return [...sessionAssets.values()].map((asset) => ({ ...asset }));
 }
 
@@ -78,7 +101,7 @@ export const CUSTOM_FORMULAS_CHANGED_EVENT = 'fractalpark:custom-formulas-change
  *  to the formula the document references (single-asset publish gate). */
 export function readEffectiveFormulaAssets(
   referencedFormulaId?: string,
-): Array<{ id: string; source: string }> {
+): ResolvableCustomFormula[] {
   const all = readSessionFormulaAssets();
   return referencedFormulaId === undefined
     ? all
@@ -95,7 +118,14 @@ export function resolveCustomFormula(
     ]);
   }
 
-  const result = compileImportedFrm(formula.source, formula.id);
+  const frmSemanticsVersion = resolveFrmSemanticsVersion(
+    formula.frmSemanticsVersion,
+  );
+  const result = compileImportedFrm(
+    formula.source,
+    formula.id,
+    frmSemanticsVersion,
+  );
   const experienceHint = mergeFormulaExperienceHints(
     formula.experienceHint,
     formulaMetadataToExperienceHint(result.canonicalFormula?.metadata)
@@ -113,12 +143,25 @@ export function resolveCustomFormula(
 
   if (options.register !== false) {
     try {
+      const previous = sessionAssets.get(formula.id);
       pluginRegistry.register(result.plugin);
-      // Dispatch only for genuinely new ids: re-registering the same id
-      // must not re-signal (pairs with the register:false fix — B1).
-      const isNew = !sessionAssets.has(formula.id);
-      sessionAssets.set(formula.id, { id: formula.id, source: formula.source });
-      if (isNew && typeof window !== 'undefined') {
+      const nextAsset: ResolvableCustomFormula = {
+        ...formula,
+        frmSemanticsVersion,
+      };
+      sessionAssets.set(formula.id, nextAsset);
+      // Re-resolve Explore only when the effective asset changed. An exact
+      // re-registration stays silent (B1 event-storm guard), while an
+      // explicit v1↔v2 change must replace the active runtime immediately.
+      const changed =
+        !previous ||
+        previous.source !== nextAsset.source ||
+        previous.frmSemanticsVersion !== nextAsset.frmSemanticsVersion ||
+        !experienceHintsEqual(
+          previous.experienceHint,
+          nextAsset.experienceHint,
+        );
+      if (changed && typeof window !== 'undefined') {
         window.dispatchEvent(new Event(CUSTOM_FORMULAS_CHANGED_EVENT));
       }
     } catch (error) {
@@ -136,6 +179,7 @@ export function resolveCustomFormula(
     kind: 'custom',
     plugin: result.plugin,
     experienceHint,
+    frmSemanticsVersion,
   };
 }
 
@@ -173,6 +217,9 @@ export function resolveFormulaReference(
         formulaId,
         kind: 'custom',
         plugin: transientPlugin,
+        frmSemanticsVersion: resolveFrmSemanticsVersion(
+          transientPlugin.frmSemanticsVersion,
+        ),
       };
     }
 

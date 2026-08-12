@@ -24,6 +24,7 @@ import {
   type FormulaExperienceHint,
 } from '@/engine/frm/authoring';
 import type { FRMSourceMap } from '@/engine/frm/sourcemap';
+import type { FrmSemanticsVersion } from '@/engine/frm/semantics-version';
 import { detectFormulaDialect } from '@/engine/frm/source-directives';
 import { pluginRegistry } from '@/engine/plugins/registry';
 import type { ViewBounds } from '@/engine/types';
@@ -88,6 +89,8 @@ async function loadCodeMirror(): Promise<CodeMirrorModules> {
 
 interface FormulaEditorProps {
   formulaId?: string;
+  /** New formulas use strict v2; stored formulas pass their frozen version. */
+  frmSemanticsVersion?: FrmSemanticsVersion;
   initialSource?: string;
   initialExperienceHint?: FormulaExperienceHint;
   currentBounds?: ViewBounds;
@@ -140,6 +143,7 @@ function parseGLSLErrorLog(log: string): { line: number; col: number; message: s
 
 export function FormulaEditor({
   formulaId,
+  frmSemanticsVersion = 2,
   initialSource = DEFAULT_SOURCE,
   initialExperienceHint,
   jumpTo,
@@ -350,7 +354,11 @@ export function FormulaEditor({
     setCompileResult(null);
 
     try {
-      const result = compileImportedFrm(source);
+      const result = compileImportedFrm(
+        source,
+        formulaId,
+        frmSemanticsVersion,
+      );
 
       // Store source map for potential GLSL error mapping
       if (result.sourceMap) {
@@ -444,7 +452,16 @@ export function FormulaEditor({
     } finally {
       setIsCompiling(false);
     }
-  }, [experienceHint, source, sourcePreflightError, onCompile, toast, t]);
+  }, [
+    experienceHint,
+    formulaId,
+    frmSemanticsVersion,
+    source,
+    sourcePreflightError,
+    onCompile,
+    toast,
+    t,
+  ]);
 
   const handleSave = useCallback(async () => {
     if (savingRef.current) return; // double-click guard (review N8)

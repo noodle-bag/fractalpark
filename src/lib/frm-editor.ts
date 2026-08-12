@@ -18,6 +18,28 @@ export type EditorToExploreIntent =
   | { status: 'invalid'; formulaId: string; reason: 'missing' | 'invalid-id' }
   | { status: 'valid'; formulaId: string };
 
+export function formulaMutationErrorKey(
+  code: string,
+):
+  | 'errors.conflict'
+  | 'errors.formulaNotFound'
+  | 'errors.compileFailed'
+  | 'errors.builtinConflict'
+  | 'saveError' {
+  switch (code) {
+    case 'conflict':
+      return 'errors.conflict';
+    case 'not_found':
+      return 'errors.formulaNotFound';
+    case 'compile-failed':
+      return 'errors.compileFailed';
+    case 'builtin-conflict':
+      return 'errors.builtinConflict';
+    default:
+      return 'saveError';
+  }
+}
+
 export async function readFrmFile(file: File): Promise<FrmFileReadResult> {
   if (!file.name.toLowerCase().endsWith('.frm')) {
     return { success: false, error: 'extension' };

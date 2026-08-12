@@ -2,6 +2,7 @@ import { afterEach, describe, expect, it, vi } from 'vitest';
 
 import {
   CloudClientError,
+  changeCustomFormulaSemantics,
   createDraft,
   getSession,
   listDrafts,
@@ -112,6 +113,49 @@ describe('cloud client draft calls', () => {
     expect(calls).toHaveLength(1);
     await vi.advanceTimersByTimeAsync(100);
     await expect(update).resolves.toMatchObject({ draftId: 'd-1', revision: 2 });
+
+    expect(calls).toHaveLength(2);
+    const firstKey = new Headers(calls[0].init?.headers).get('idempotency-key');
+    const secondKey = new Headers(calls[1].init?.headers).get('idempotency-key');
+    expect(secondKey).toBe(firstKey);
+  });
+
+  it('waits out the semantics POST cooldown before retrying a lost response with the same key', async () => {
+    vi.useFakeTimers();
+    const calls: Array<{ url: string; init?: RequestInit }> = [];
+    vi.stubGlobal(
+      'fetch',
+      vi.fn((url: RequestInfo | URL, init?: RequestInit) => {
+        calls.push({ url: String(url), init });
+        if (calls.length === 1) {
+          return Promise.reject(new TypeError('response lost'));
+        }
+        return Promise.resolve(
+          new Response(
+            JSON.stringify({
+              formulaId: 'f-1',
+              revision: 2,
+              frmSemanticsVersion: 2,
+            }),
+            { status: 200 },
+          ),
+        );
+      }),
+    );
+
+    const change = changeCustomFormulaSemantics(
+      'f-1',
+      'upgradeSemantics',
+      1,
+    );
+    await vi.advanceTimersByTimeAsync(5_000);
+    expect(calls).toHaveLength(1);
+    await vi.advanceTimersByTimeAsync(100);
+    await expect(change).resolves.toMatchObject({
+      formulaId: 'f-1',
+      revision: 2,
+      frmSemanticsVersion: 2,
+    });
 
     expect(calls).toHaveLength(2);
     const firstKey = new Headers(calls[0].init?.headers).get('idempotency-key');

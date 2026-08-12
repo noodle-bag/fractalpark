@@ -5,9 +5,7 @@
  * docs/adr/0007-frm-semantics-versioning.md: the lenient resolver, the
  * compiler entry points (default 1, explicit v2 round-trip, cache key
  * separation), portable asset envelope read/write, and the cloud
- * custom-formula DTO mapping (missing column → undefined). v1/v2 compile
- * behavior is identical at this layer; semantic differences land in a later
- * Slice.
+ * custom-formula DTO mapping (missing column → undefined).
  */
 
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
@@ -17,6 +15,7 @@ import { resolve } from 'node:path';
 import type { FractalDocument } from '../engine/document';
 import {
   DEFAULT_FRM_SEMANTICS_VERSION,
+  resolveRendererPipelineVersion,
   resolveFrmSemanticsVersion,
   type FrmSemanticsVersion,
 } from '../engine/frm/semantics-version';
@@ -66,6 +65,18 @@ describe('resolveFrmSemanticsVersion: lenient reader rules', () => {
     expect(resolveFrmSemanticsVersion('2')).toBe(1);
     expect(resolveFrmSemanticsVersion(true)).toBe(1);
     expect(resolveFrmSemanticsVersion({})).toBe(1);
+  });
+});
+
+describe('renderer pipeline follows effective FRM semantics', () => {
+  it('forces custom v1/v2 independently from the document pipeline', () => {
+    expect(resolveRendererPipelineVersion(1, 2)).toBe(1);
+    expect(resolveRendererPipelineVersion(2, 1)).toBe(2);
+  });
+
+  it('keeps the document pipeline only when no custom semantics version exists', () => {
+    expect(resolveRendererPipelineVersion(undefined, 2)).toBe(2);
+    expect(resolveRendererPipelineVersion(undefined, 1)).toBe(1);
   });
 });
 

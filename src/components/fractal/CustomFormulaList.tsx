@@ -8,18 +8,16 @@
 
 'use client';
 
-import React, { useState } from 'react';
+import React, { useRef, useState } from 'react';
 import { useLocale, useTranslations } from 'next-intl';
 import {
-  AlertDialog,
-  AlertDialogAction,
-  AlertDialogCancel,
-  AlertDialogContent,
-  AlertDialogDescription,
-  AlertDialogFooter,
-  AlertDialogHeader,
-  AlertDialogTitle,
-} from '@/components/ui/alert-dialog';
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogFooter,
+  DialogHeader,
+  DialogTitle,
+} from '@/components/ui/dialog';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
@@ -43,12 +41,24 @@ import type { CustomFormulaSemanticsAction } from '@/lib/cloud/client';
 import { resolveFormulaReference } from '@/lib/formula-resolver';
 import { readSessionFormulaAssets } from '@/lib/formula-resolver';
 import { FormulaEditor } from './FormulaEditor';
+import { FrmSemanticsComparisonView } from './FrmSemanticsComparisonView';
 import type { FormulaPlugin } from '@/engine/plugins/types';
 import type { FormulaExperienceHint } from '@/engine/frm/authoring';
+import {
+  resolveFrmSemanticsVersion,
+  type FrmSemanticsVersion,
+} from '@/engine/frm/semantics-version';
 import { CUSTOM_FORMULA_EXAMPLES } from '@/engine/frm/example-library';
 import type { ViewBounds } from '@/engine/types';
 import { MAX_CUSTOM_FORMULAS } from '@/lib/formula-resolver';
-import type { CloudCustomFormulaSummary } from '@/lib/cloud/client';
+import type {
+  CloudCustomFormulaDetail,
+  CloudCustomFormulaSummary,
+} from '@/lib/cloud/client';
+import {
+  compareFrmSemantics,
+  type FrmSemanticsComparison,
+} from '@/lib/frm-semantics-comparison';
 
 interface CustomFormulaListProps {
   currentBounds?: ViewBounds;
@@ -71,6 +81,7 @@ export function CustomFormulaList({ currentBounds, onSelectFormula }: CustomForm
     formulas,
     isLoading,
     getDetail,
+    inspectDetail,
     ensureRegistered,
     saveFormula,
     deleteFormula,
@@ -82,6 +93,8 @@ export function CustomFormulaList({ currentBounds, onSelectFormula }: CustomForm
   const [editingFormulaId, setEditingFormulaId] = useState<string | undefined>(undefined);
   const [editorSource, setEditorSource] = useState<string | undefined>(undefined);
   const [editorExperienceHint, setEditorExperienceHint] = useState<FormulaExperienceHint | undefined>(undefined);
+  const [editorSemanticsVersion, setEditorSemanticsVersion] =
+    useState<FrmSemanticsVersion>(2);
   const [renamingId, setRenamingId] = useState<string | null>(null);
   const [newName, setNewName] = useState('');
   const [actionError, setActionError] = useState('');
@@ -91,6 +104,11 @@ export function CustomFormulaList({ currentBounds, onSelectFormula }: CustomForm
     formulaId: string;
     action: CustomFormulaSemanticsAction;
   } | null>(null);
+  const [semanticsComparison, setSemanticsComparison] =
+    useState<FrmSemanticsComparison | null>(null);
+  const [semanticsCompareStatus, setSemanticsCompareStatus] =
+    useState<'idle' | 'loading' | 'ready' | 'failed'>('idle');
+  const semanticsRequestRef = useRef(0);
 
   const authenticated = session.status === 'authenticated';
 
@@ -116,6 +134,7 @@ export function CustomFormulaList({ currentBounds, onSelectFormula }: CustomForm
     setEditingFormulaId(undefined);
     setEditorSource(undefined);
     setEditorExperienceHint(undefined);
+    setEditorSemanticsVersion(2);
     setShowEditor(true);
   };
 
@@ -132,6 +151,9 @@ export function CustomFormulaList({ currentBounds, onSelectFormula }: CustomForm
     setEditorSource(detail.source);
     setEditorExperienceHint(
       (detail.experienceHint ?? undefined) as FormulaExperienceHint | undefined,
+    );
+    setEditorSemanticsVersion(
+      resolveFrmSemanticsVersion(detail.frmSemanticsVersion),
     );
     setShowEditor(true);
   };
@@ -192,17 +214,64 @@ export function CustomFormulaList({ currentBounds, onSelectFormula }: CustomForm
     setNewName('');
   };
 
+  const openSemanticsDialog = async (
+    formula: CloudCustomFormulaSummary,
+  ) => {
+    const action: CustomFormulaSemanticsAction = isStrictV2(formula)
+      ? 'revertSemantics'
+      : 'upgradeSemantics';
+    const requestId = semanticsRequestRef.current + 1;
+    semanticsRequestRef.current = requestId;
+    setSemanticsAction({ formulaId: formula.id, action });
+    setSemanticsComparison(null);
+
+    if (action === 'revertSemantics') {
+      setSemanticsCompareStatus('idle');
+      return;
+    }
+
+    setSemanticsCompareStatus('loading');
+    const detail: CloudCustomFormulaDetail | null = await inspectDetail(formula.id);
+    if (semanticsRequestRef.current !== requestId) return;
+    if (!detail) {
+      setSemanticsCompareStatus('failed');
+      return;
+    }
+
+    try {
+      setSemanticsComparison(
+        compareFrmSemantics({
+          formulaId: detail.id,
+          source: detail.source,
+          experienceHint: (detail.experienceHint ?? undefined) as
+            | FormulaExperienceHint
+            | undefined,
+        }),
+      );
+      setSemanticsCompareStatus('ready');
+    } catch {
+      setSemanticsCompareStatus('failed');
+    }
+  };
+
+  const closeSemanticsDialog = () => {
+    semanticsRequestRef.current += 1;
+    setSemanticsAction(null);
+    setSemanticsComparison(null);
+    setSemanticsCompareStatus('idle');
+  };
+
   /**
-   * Explicit FRM semantics change (v0.4.18 Upgrade & Compare): the dialog
-   * already explained the v1↔v2 contract differences; this persists the
-   * version bump through the revision-checked semantics endpoint.
+   * Explicit FRM semantics change (v0.4.18 Upgrade & Compare): comparison
+   * is read-only; only this final confirmation persists the revision-checked
+   * version change.
    */
   const handleSemanticsChange = async (
     formulaId: string,
     action: CustomFormulaSemanticsAction,
   ) => {
     setBusyId(formulaId);
-    setSemanticsAction(null);
+    closeSemanticsDialog();
     const result = await changeSemantics(formulaId, action);
     setBusyId(null);
     if (result.success) {
@@ -245,6 +314,7 @@ export function CustomFormulaList({ currentBounds, onSelectFormula }: CustomForm
     return (
       <FormulaEditor
         formulaId={editingFormulaId}
+        frmSemanticsVersion={editorSemanticsVersion}
         initialSource={editorSource}
         initialExperienceHint={editorExperienceHint}
         currentBounds={currentBounds}
@@ -257,6 +327,7 @@ export function CustomFormulaList({ currentBounds, onSelectFormula }: CustomForm
           setEditingFormulaId(undefined);
           setEditorSource(undefined);
           setEditorExperienceHint(undefined);
+          setEditorSemanticsVersion(2);
         }}
       />
     );
@@ -306,6 +377,7 @@ export function CustomFormulaList({ currentBounds, onSelectFormula }: CustomForm
                   setEditingFormulaId(undefined);
                   setEditorSource(example.source);
                   setEditorExperienceHint(example.experienceHint);
+                  setEditorSemanticsVersion(2);
                   setShowEditor(true);
                 }}
               >
@@ -406,14 +478,7 @@ export function CustomFormulaList({ currentBounds, onSelectFormula }: CustomForm
                         variant="outline"
                         size="sm"
                         disabled={busyId === formula.id}
-                        onClick={() =>
-                          setSemanticsAction({
-                            formulaId: formula.id,
-                            action: isStrictV2(formula)
-                              ? 'revertSemantics'
-                              : 'upgradeSemantics',
-                          })
-                        }
+                        onClick={() => void openSemanticsDialog(formula)}
                       >
                         {isStrictV2(formula)
                           ? semanticsT('revertButton')
@@ -464,61 +529,101 @@ export function CustomFormulaList({ currentBounds, onSelectFormula }: CustomForm
         )}
       </CardContent>
 
-      {/* Explicit FRM semantics change confirmation (v0.4.18 Upgrade &
-          Compare): explains the v1↔v2 contract differences before the
-          version bump is persisted. Visual side-by-side comparison lands
-          with the strict-v2 semantics slice; today v1 and v2 compile
-          identically, so the dialog presents semantic/diagnostic
-          differences, not rendered output. */}
-      <AlertDialog
+      {/* Explicit FRM semantics change. Upgrade compares the stored source
+          through both frozen contracts before the revision-checked write;
+          revert remains a direct, reversible confirmation. */}
+      <Dialog
         open={semanticsAction !== null}
         onOpenChange={(open) => {
-          if (!open) setSemanticsAction(null);
+          if (!open) closeSemanticsDialog();
         }}
       >
-        <AlertDialogContent>
-          <AlertDialogHeader>
-            <AlertDialogTitle>
+        <DialogContent className="max-h-[calc(100dvh-2rem)] overflow-y-auto sm:max-w-5xl">
+          <DialogHeader>
+            <DialogTitle>
               {semanticsAction?.action === 'upgradeSemantics'
                 ? semanticsT('upgradeTitle')
                 : semanticsT('revertTitle')}
-            </AlertDialogTitle>
-            <AlertDialogDescription asChild>
+            </DialogTitle>
+            <DialogDescription asChild>
               <div className="space-y-2 text-sm">
                 <p>
                   {semanticsAction?.action === 'upgradeSemantics'
                     ? semanticsT('upgradeIntro')
                     : semanticsT('revertIntro')}
                 </p>
-                <ul className="list-disc pl-5 space-y-1">
+                <ul className="list-disc space-y-1 pl-5">
                   <li>{semanticsT('diffSelectedEntry')}</li>
                   <li>{semanticsT('diffBailout')}</li>
                   <li>{semanticsT('diffStrictPredicates')}</li>
                 </ul>
-                <p className="text-muted-foreground">
-                  {semanticsAction?.action === 'upgradeSemantics'
-                    ? semanticsT('upgradeNote')
-                    : semanticsT('revertNote')}
-                </p>
               </div>
-            </AlertDialogDescription>
-          </AlertDialogHeader>
-          <AlertDialogFooter>
-            <AlertDialogCancel>{semanticsT('cancel')}</AlertDialogCancel>
-            <AlertDialogAction
+            </DialogDescription>
+          </DialogHeader>
+
+          {semanticsAction?.action === 'upgradeSemantics' ? (
+            <div aria-live="polite" className="space-y-3">
+              {semanticsCompareStatus === 'loading' ? (
+                <div
+                  className="flex min-h-48 items-center justify-center rounded-lg border bg-muted/30 text-sm text-muted-foreground"
+                  data-testid="semantics-comparison-loading"
+                >
+                  {semanticsT('comparisonLoading')}
+                </div>
+              ) : semanticsCompareStatus === 'failed' ? (
+                <p
+                  className="rounded-lg border border-destructive/40 bg-destructive/10 p-3 text-sm text-destructive"
+                  role="alert"
+                >
+                  {semanticsT('comparisonFailed')}
+                </p>
+              ) : semanticsComparison ? (
+                <FrmSemanticsComparisonView comparison={semanticsComparison} />
+              ) : null}
+              <p className="text-sm text-muted-foreground">
+                {semanticsComparison?.v2.result.success
+                  ? semanticsT('upgradeNote')
+                  : semanticsCompareStatus === 'ready'
+                    ? semanticsT('upgradeBlocked')
+                    : semanticsT('comparisonReadOnly')}
+              </p>
+            </div>
+          ) : (
+            <p className="text-sm text-muted-foreground">
+              {semanticsT('revertNote')}
+            </p>
+          )}
+
+          <DialogFooter>
+            <Button onClick={closeSemanticsDialog} type="button" variant="outline">
+              {semanticsT('cancel')}
+            </Button>
+            <Button
+              disabled={
+                semanticsAction?.action === 'upgradeSemantics' &&
+                !(
+                  semanticsCompareStatus === 'ready' &&
+                  semanticsComparison?.v2.result.success &&
+                  semanticsComparison.v2.result.plugin
+                )
+              }
               onClick={() => {
                 if (semanticsAction) {
-                  void handleSemanticsChange(semanticsAction.formulaId, semanticsAction.action);
+                  void handleSemanticsChange(
+                    semanticsAction.formulaId,
+                    semanticsAction.action,
+                  );
                 }
               }}
+              type="button"
             >
               {semanticsAction?.action === 'upgradeSemantics'
                 ? semanticsT('confirmUpgrade')
                 : semanticsT('confirmRevert')}
-            </AlertDialogAction>
-          </AlertDialogFooter>
-        </AlertDialogContent>
-      </AlertDialog>
+            </Button>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
     </Card>
   );
 }

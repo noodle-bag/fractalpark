@@ -97,7 +97,7 @@ export const FRM_CAPABILITY_MANIFEST = {
     smoothCapability: SMOOTH_CAPABILITIES,
   },
   compatibility: {
-    /** Verified-classic target set (F588). */
+    /** Frozen compatibility target set (strict-v2 passes + documented waivers). */
     target: 588,
     /** Deterministically excluded entries (per-row stable reasons). */
     excluded: 117,

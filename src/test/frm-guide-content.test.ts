@@ -155,6 +155,11 @@ describe('FRM Guide content contract', () => {
     expect(FRM_GUIDE_CAPABILITY.target).toBe(
       FRM_CAPABILITY_MANIFEST.compatibility.target
     );
+    expect(FRM_GUIDE_CAPABILITY.passed).toBe(579);
+    expect(FRM_GUIDE_CAPABILITY.waivers).toBe(9);
+    expect(
+      FRM_GUIDE_CAPABILITY.passed + FRM_GUIDE_CAPABILITY.waivers,
+    ).toBe(FRM_GUIDE_CAPABILITY.target);
     expect(FRM_GUIDE_CAPABILITY.excluded).toBe(
       FRM_CAPABILITY_MANIFEST.compatibility.excluded
     );

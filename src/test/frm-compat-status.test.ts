@@ -8,6 +8,7 @@
 import { describe, it, expect, beforeEach } from 'vitest';
 import { frmParserCache } from '../engine/frm/cache';
 import {
+  classifyImportedFrmSource,
   classifyFrmSource,
   FRM_COMPAT_LEVELS,
   type FrmCompatLevel,
@@ -15,6 +16,54 @@ import {
 import { FRM_CAPABILITY_MANIFEST } from '../engine/frm/capability-manifest';
 
 beforeEach(() => frmParserCache.clear());
+
+describe('authoring/import dialect routing', () => {
+  const native = `StarterBrot {
+init:
+  z = 0
+loop:
+  z = z^2 + c
+bailout:
+  |z| < 4
+}`;
+
+  it('classifies native section syntax through the native compiler', () => {
+    const result = classifyImportedFrmSource(native, 2);
+    expect(result.entries).toHaveLength(1);
+    expect(result.entries[0]).toMatchObject({
+      key: 'StarterBrot',
+      level: 'supported',
+      runnable: true,
+    });
+    expect(result.entries[0].diagnostics.filter((d) => d.blocking)).toEqual([]);
+  });
+
+  it('keeps native syntax failures invalid and strict-v2 semantic rejects read-only', () => {
+    const invalid = classifyImportedFrmSource('Broken {\ninit\n  z = 0\n}', 2);
+    expect(invalid.entries[0]).toMatchObject({ level: 'invalid', runnable: false });
+
+    const readOnly = classifyImportedFrmSource(
+      native.replace('|z| < 4', 'tanh(|z|) < p1'),
+      2,
+    );
+    expect(readOnly.entries[0]).toMatchObject({
+      level: 'read-only',
+      runnable: false,
+    });
+  });
+
+  it('keeps classic syntax on the classic compatibility path', () => {
+    const classic = classifyImportedFrmSource(
+      'Classic {\n  z=pixel:\n  z=z*z+pixel\n  |z|<=4\n}',
+      2,
+    );
+    expect(classic.entries[0]).toMatchObject({
+      key: 'Classic',
+      level: 'supported',
+      runnable: true,
+    });
+  });
+});
 
 function levelOf(source: string, key?: string): FrmCompatLevel {
   const r = classifyFrmSource(source);

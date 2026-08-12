@@ -60,15 +60,25 @@ const API_CODES = new Set<CloudClientErrorCode>([
   'unavailable',
 ]);
 
-// Both idempotent PATCH endpoints enforce a five-second per-resource save
-// cooldown before reaching their RPC replay gate. If the first response is
-// lost after commit, an immediate retry is guaranteed to receive 429. Wait
-// just beyond that window before spending the single same-key retry.
-const PATCH_REPLAY_DELAY_MS = 5_100;
+// Revision-checked PATCH writes and the custom-formula semantics POST enforce
+// a five-second per-resource save cooldown before reaching their RPC replay
+// gate. If the first response is lost after commit, an immediate retry is
+// guaranteed to receive 429. Wait just beyond that window before spending
+// the single same-key retry.
+const COOLDOWN_REPLAY_DELAY_MS = 5_100;
 
-async function waitForReplayWindow(init: RequestInit): Promise<void> {
-  if (init.method?.toUpperCase() !== 'PATCH') return;
-  await new Promise<void>((resolve) => setTimeout(resolve, PATCH_REPLAY_DELAY_MS));
+async function waitForReplayWindow(
+  path: string,
+  init: RequestInit,
+): Promise<void> {
+  const method = init.method?.toUpperCase();
+  const hasCooldown =
+    method === 'PATCH' ||
+    (method === 'POST' && /\/custom-formulas\/[^/]+\/semantics$/.test(path));
+  if (!hasCooldown) return;
+  await new Promise<void>((resolve) =>
+    setTimeout(resolve, COOLDOWN_REPLAY_DELAY_MS),
+  );
 }
 
 async function call<T>(path: string, init: RequestInit = {}): Promise<T> {
@@ -91,7 +101,7 @@ async function call<T>(path: string, init: RequestInit = {}): Promise<T> {
       throw new CloudClientError('offline');
     }
     try {
-      await waitForReplayWindow(requestInit);
+      await waitForReplayWindow(path, requestInit);
       response = await fetch(path, requestInit);
     } catch {
       throw new CloudClientError('offline');

@@ -1,13 +1,14 @@
 /**
- * CustomFormulaList semantics badge and Upgrade & Compare UI tests
- * (v0.4.18 slice 2, commit 6).
+ * CustomFormulaList semantics badge and Upgrade & Compare behavior tests.
  */
 
-import { describe, expect, it, vi } from 'vitest';
-import { fireEvent, render, screen } from '@testing-library/react';
-import type { ReactNode } from 'react';
+import { beforeEach, describe, expect, it, vi } from 'vitest';
+import { fireEvent, render, screen, waitFor } from '@testing-library/react';
 import { CustomFormulaList } from '@/components/fractal/CustomFormulaList';
-import type { CloudCustomFormulaSummary } from '@/lib/cloud/client';
+import type {
+  CloudCustomFormulaDetail,
+  CloudCustomFormulaSummary,
+} from '@/lib/cloud/client';
 
 vi.mock('next-intl', () => ({
   useTranslations: () => ((key: string) => key),
@@ -25,7 +26,18 @@ vi.mock('@/components/cloud/CloudSessionProvider', () => ({
   }),
 }));
 
-const changeSemanticsMock = vi.fn(async () => ({ ok: true as const }));
+vi.mock('@/components/fractal/AnimatedFractalCanvas', () => ({
+  default: () => <div data-testid="mock-semantics-preview" />,
+}));
+
+const changeSemanticsMock = vi.fn(async () => ({
+  success: true as const,
+  code: 'ok' as const,
+  formulaId: 'f-dialog',
+}));
+const inspectDetailMock = vi.fn<
+  (formulaId: string) => Promise<CloudCustomFormulaDetail | null>
+>();
 
 let formulasFixture: CloudCustomFormulaSummary[] = [];
 
@@ -33,8 +45,10 @@ vi.mock('@/hooks/useCloudFormulaLibrary', () => ({
   useCloudFormulaLibrary: () => ({
     formulas: formulasFixture,
     isLoading: false,
-    error: '',
     refresh: vi.fn(),
+    ensureRegistered: vi.fn(),
+    getDetail: vi.fn(),
+    inspectDetail: inspectDetailMock,
     saveFormula: vi.fn(),
     deleteFormula: vi.fn(),
     renameFormula: vi.fn(),
@@ -49,7 +63,7 @@ vi.mock('@/lib/formula-resolver', async () => {
   return {
     ...actual,
     resolveFormulaReference: vi.fn(),
-    readSessionFormulaAssets: vi.fn(() => ({})),
+    readSessionFormulaAssets: vi.fn(() => []),
   };
 });
 
@@ -57,15 +71,28 @@ vi.mock('@/components/fractal/FormulaEditor', () => ({
   FormulaEditor: () => null,
 }));
 
-vi.mock('@/components/ui/alert-dialog', async () => {
-  const actual = await vi.importActual<typeof import('@/components/ui/alert-dialog')>(
-    '@/components/ui/alert-dialog',
-  );
-  // Keep the real components; jsdom portals render in place under RTL.
-  return actual;
-});
+const COMPATIBLE_SOURCE = `CompareCompatible {
+init:
+  z = 0
+loop:
+  z = z^2 + c
+bailout:
+  4 < |z|
+}`;
 
-function summary(version: 1 | 2 | undefined, id: string): CloudCustomFormulaSummary {
+const LEGACY_ONLY_SOURCE = `CompareLegacyOnly {
+init:
+  z = 0
+loop:
+  z = z^2 + c
+bailout:
+  tanh(|z|) < p1
+}`;
+
+function summary(
+  version: 1 | 2 | undefined,
+  id: string,
+): CloudCustomFormulaSummary {
   return {
     id,
     name: `Formula ${id}`,
@@ -75,26 +102,38 @@ function summary(version: 1 | 2 | undefined, id: string): CloudCustomFormulaSumm
     frmSemanticsVersion: version,
     createdAt: '2026-08-03T00:00:00Z',
     updatedAt: '2026-08-03T00:00:00Z',
-  } as CloudCustomFormulaSummary;
+  };
+}
+
+function detail(
+  formula: CloudCustomFormulaSummary,
+  source = COMPATIBLE_SOURCE,
+): CloudCustomFormulaDetail {
+  return {
+    ...formula,
+    source,
+    experienceHint: null,
+  };
 }
 
 const bounds = { centerX: -0.5, centerY: 0, zoom: 0.4, rotation: 0 };
 
+beforeEach(() => {
+  formulasFixture = [];
+  changeSemanticsMock.mockClear();
+  inspectDetailMock.mockReset();
+});
+
 describe('CustomFormulaList semantics UI (Upgrade & Compare)', () => {
-  it('shows the strict badge and revert action for a v2 formula', () => {
-    formulasFixture = [summary(2, 'f-v2')];
+  it('shows strict/revert and legacy/upgrade states without fetching source', () => {
+    formulasFixture = [summary(2, 'f-v2'), summary(1, 'f-v1')];
     render(<CustomFormulaList currentBounds={bounds} />);
+
     expect(screen.getByText('badgeV2')).toBeTruthy();
     expect(screen.getByText('revertButton')).toBeTruthy();
-    expect(screen.queryByText('upgradeButton')).toBeNull();
-  });
-
-  it('shows the legacy badge and upgrade action for a v1 formula', () => {
-    formulasFixture = [summary(1, 'f-v1')];
-    render(<CustomFormulaList currentBounds={bounds} />);
     expect(screen.getByText('badgeV1')).toBeTruthy();
     expect(screen.getByText('upgradeButton')).toBeTruthy();
-    expect(screen.queryByText('revertButton')).toBeNull();
+    expect(inspectDetailMock).not.toHaveBeenCalled();
   });
 
   it('treats a missing version as legacy v1', () => {
@@ -104,12 +143,65 @@ describe('CustomFormulaList semantics UI (Upgrade & Compare)', () => {
     expect(screen.getByText('upgradeButton')).toBeTruthy();
   });
 
-  it('opens the confirmation dialog from the upgrade action', () => {
-    formulasFixture = [summary(1, 'f-dialog')];
+  it('loads exact source read-only, renders both results, and writes only after final confirmation', async () => {
+    const formula = summary(1, 'f-dialog');
+    formulasFixture = [formula];
+    inspectDetailMock.mockResolvedValue(detail(formula));
     render(<CustomFormulaList currentBounds={bounds} />);
+
     fireEvent.click(screen.getByText('upgradeButton'));
-    expect(screen.getByText('upgradeTitle')).toBeTruthy();
-    expect(screen.getByText('confirmUpgrade')).toBeTruthy();
-    expect(screen.getByText('cancel')).toBeTruthy();
+    expect(screen.getByTestId('semantics-comparison-loading')).toBeTruthy();
+    expect(changeSemanticsMock).not.toHaveBeenCalled();
+
+    await screen.findByTestId('frm-semantics-comparison');
+    expect(inspectDetailMock).toHaveBeenCalledWith('f-dialog');
+    expect(screen.getByTestId('semantics-comparison-v1')).toBeTruthy();
+    expect(screen.getByTestId('semantics-comparison-v2')).toBeTruthy();
+    expect(changeSemanticsMock).not.toHaveBeenCalled();
+
+    fireEvent.click(screen.getByText('confirmUpgrade'));
+    await waitFor(() =>
+      expect(changeSemanticsMock).toHaveBeenCalledWith(
+        'f-dialog',
+        'upgradeSemantics',
+      ),
+    );
+  });
+
+  it('keeps confirmation disabled when strict v2 rejects the stored source', async () => {
+    const formula = summary(1, 'f-blocked');
+    formulasFixture = [formula];
+    inspectDetailMock.mockResolvedValue(detail(formula, LEGACY_ONLY_SOURCE));
+    render(<CustomFormulaList currentBounds={bounds} />);
+
+    fireEvent.click(screen.getByText('upgradeButton'));
+    await screen.findByText('upgradeBlocked');
+
+    const confirm = screen.getByText('confirmUpgrade').closest('button');
+    expect(confirm).toBeDisabled();
+    expect(changeSemanticsMock).not.toHaveBeenCalled();
+    expect(screen.getByTestId('semantics-comparison-v1')).toBeTruthy();
+    expect(screen.getByTestId('semantics-comparison-v2')).toBeTruthy();
+  });
+
+  it('invalidates a late source response after cancellation', async () => {
+    const formula = summary(1, 'f-cancel');
+    formulasFixture = [formula];
+    let resolveDetail!: (value: CloudCustomFormulaDetail | null) => void;
+    inspectDetailMock.mockReturnValue(
+      new Promise((resolve) => {
+        resolveDetail = resolve;
+      }),
+    );
+    render(<CustomFormulaList currentBounds={bounds} />);
+
+    fireEvent.click(screen.getByText('upgradeButton'));
+    fireEvent.click(screen.getByText('cancel'));
+    resolveDetail(detail(formula));
+
+    await waitFor(() =>
+      expect(screen.queryByText('upgradeTitle')).not.toBeInTheDocument(),
+    );
+    expect(changeSemanticsMock).not.toHaveBeenCalled();
   });
 });

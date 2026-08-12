@@ -234,6 +234,32 @@ describe('fractal project files', () => {
     });
   });
 
+  it('does not reuse identical bytes under a different semantics version', async () => {
+    const strictEnvelope = structuredClone(
+      PORTABLE_ENVELOPE,
+    ) as FractalDocumentEnvelopeV1;
+    strictEnvelope.assets!.formulas![0].frmSemanticsVersion = 2;
+    const asset = strictEnvelope.assets!.formulas![0];
+    const result = await prepareFractalProjectImport(strictEnvelope, [
+      {
+        id: asset.id,
+        name: asset.name,
+        source: asset.source,
+        frmSemanticsVersion: 1,
+      },
+    ]);
+
+    expect(result.success).toBe(true);
+    if (!result.success) return;
+    expect(result.value.reusedFormulaIds).toEqual([]);
+    expect(result.value.formulasToAdd).toHaveLength(1);
+    expect(result.value.formulasToAdd[0].id).not.toBe(asset.id);
+    expect(result.value.formulasToAdd[0].frmSemanticsVersion).toBe(2);
+    expect(result.value.document.formula.formulaId).toBe(
+      result.value.formulasToAdd[0].id
+    );
+  });
+
   it('derives a deterministic ID when local content conflicts', async () => {
     const asset = envelopeV1.assets.formulas[0];
     const result = await prepareFractalProjectImport(

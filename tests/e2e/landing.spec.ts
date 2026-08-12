@@ -167,7 +167,8 @@ test.describe('Explore landing document', () => {
     await expect(page.locator('html')).toHaveAttribute('lang', 'zh-CN');
     await expect(page.locator('h1')).toHaveCount(1);
     await expect(page.locator('h1')).toContainText('分形公园');
-    await expect(page.getByText(/94 个内置公式/)).toBeVisible();
+    await expect(page.getByText(/内置 94 个公式/)).toBeVisible();
+    await expect(page.getByText(/94 个公式、7 个家族/)).toBeVisible();
 
     await context.close();
   });

@@ -155,15 +155,37 @@
         "diffSelectedEntry": "Selected-entry: v2 enforces strict entry-selection rules — a multi-entry formula must pick its entry explicitly instead of defaulting to the first one.",
         "diffBailout": "Bailout descriptors: v2 normalizes escape conditions (fixed or parameterized radial, comparison direction preserved) instead of keeping v1's swapped-operand quirks.",
         "diffStrictPredicates": "Strict predicate rejection: v2 rejects unknown predicates at compile time instead of silently falling back to 4.0.",
-        "upgradeNote": "Rendering is visually identical today — these semantic differences take effect later in v0.4.18. You can revert to v1 at any time.",
-        "revertNote": "Rendering stays visually identical today. You can upgrade to v2 again at any time.",
+        "upgradeNote": "The previews above show the actual v1/v2 runtime differences. Confirming switches this stored formula to strict v2; you can revert to v1 later.",
+        "revertNote": "Reverting immediately restores the frozen legacy v1 compile and render contract. You can run Upgrade & Compare again later.",
         "confirmUpgrade": "Upgrade",
         "confirmRevert": "Revert",
         "cancel": "Cancel",
         "upgradeSuccess": "Formula upgraded to strict v2.",
         "revertSuccess": "Formula reverted to legacy v1.",
         "upgradeFailed": "Could not upgrade the formula.",
-        "revertFailed": "Could not revert the formula."
+        "revertFailed": "Could not revert the formula.",
+        "comparisonLoading": "Loading the stored formula for a read-only comparison…",
+        "comparisonFailed": "The stored source could not be loaded. Nothing was changed.",
+        "comparisonReadOnly": "Comparison is read-only. No version change happens until you confirm.",
+        "upgradeBlocked": "Strict v2 rejected this source. The formula remains on legacy v1; use the diagnostics above to edit a compatible copy first.",
+        "legacyColumn": "Legacy v1",
+        "strictColumn": "Strict v2",
+        "runnable": "Runnable",
+        "readOnly": "Read-only",
+        "visualPreview": "Visual preview",
+        "visualUnavailable": "No runnable preview for this contract.",
+        "descriptorLabel": "Bailout",
+        "timingLabel": "Loop timing",
+        "legacyTiming": "Legacy pre-step",
+        "afterStep": "After-step",
+        "beforeStep": "Before-step",
+        "smoothLabel": "Smooth coloring",
+        "legacyFrozen": "Legacy frozen behavior",
+        "diagnosticsHeading": "Diagnostics",
+        "noDiagnostics": "No compiler diagnostics.",
+        "diagnosticError": "Error",
+        "diagnosticWarning": "Warning",
+        "diagnosticNote": "Note"
       }
     }
   },
@@ -276,7 +298,7 @@
       "frm": {
         "eyebrow": "Create your own",
         "title": "Learn and write formulas with FRM",
-        "description": "FRM is FractalPark's tested text-based authoring path. Read the compatibility guide, study compile-checked examples, then write and preview a formula locally in the standalone editor.",
+        "description": "FRM is FractalPark's tested text-based authoring path. Read the compatibility guide, study compile-checked examples, then write and preview a formula in the standalone editor.",
         "learn": "Learn FRM",
         "openEditor": "Open Formula Editor"
       },
@@ -297,7 +319,7 @@
       },
       "cta": {
         "title": "Start from a formula or write your own",
-        "description": "Use the Explorer for built-in formulas, or open the local FRM Editor when you want to define the iteration yourself.",
+        "description": "Use the Explorer for built-in formulas, or open the standalone FRM Editor when you want to define the iteration yourself.",
         "explore": "Open Explorer",
         "editor": "Open Formula Editor"
       }
@@ -399,9 +421,11 @@
           "disclaimer": "This is a tested compatibility baseline, not a claim of full Fractint compatibility. When the compiler changes, this matrix and its tests must change together.",
           "verified": {
             "title": "Verified compatibility",
-            "intro": "Every figure and list in this panel renders from FractalPark's versioned capability manifest — the same source the compiler's drift tests pin — never hand-written copy.",
+            "intro": "These capability counts come from the versioned manifest: 588 target entries comprise 579 strict-v2 passes and 9 documented waivers; 117 separate entries are excluded with stable reasons.",
             "stats": {
-              "target": "Verified classic formulas",
+              "target": "Target entries",
+              "passed": "Strict-v2 passes",
+              "waivers": "Documented waivers",
               "excluded": "Excluded with reasons",
               "descriptors": "Bailout descriptor kinds",
               "builtins": "Built-in functions"
@@ -496,7 +520,7 @@
             "parameter-drift": "Focus: p1 and p2 parameter slots, a complex literal, and cabs(z) as an explicit magnitude function.",
             "orbit-echo": "Focus: zPrev as the previous orbit state. Feedback adds memory without introducing a second manually managed state variable."
           },
-          "editorNote": "The FRM Editor opens these same compile-checked examples by stable ID. Formula source remains local and is never embedded in the URL."
+          "editorNote": "The FRM Editor opens these same compile-checked examples by stable ID. Formula source stays in the current tab until you save it to your cloud library, and is never embedded in the URL."
         },
         "diagnostics": {
           "title": "Errors and Diagnostics",
@@ -526,7 +550,7 @@
           "exploreTitle": "See the renderer in context",
           "exploreBody": "Open Explore to compare built-in formula behavior, coloring, transforms, animation, and export controls before writing a custom formula.",
           "exploreCta": "Open Explore",
-          "editorNote": "Use the dedicated FRM Editor to compile, preview, import, download, and save local formulas before handing one off to Explore.",
+          "editorNote": "Use the dedicated FRM Editor to compile, preview, import, and download formulas; sign in to save one to your cloud library before handing it off to Explore.",
           "referencesTitle": "References",
           "referencesIntro": "Historical context and implementation details are linked separately so the guide can distinguish the Fractint lineage from FractalPark's current compiler contract.",
           "references": {
@@ -1635,7 +1659,7 @@
       "compiling": "Compiling...",
       "save": "Save",
       "saved": "Saved",
-      "savedDescription": "Formula \"{name}\" saved locally",
+      "savedDescription": "Formula \"{name}\" saved to your cloud library",
       "saveFailed": "Save Failed",
       "saveFailedDescription": "Unable to save the current formula",
       "compileSuccess": "Compile Successful",
@@ -1713,15 +1737,15 @@
     "previewEmpty": "Compile a valid formula to update this preview.",
     "previewStale": "The source has changed. This is the last successful preview; compile again before saving or opening it.",
     "reset": "Reset view",
-    "unknownExample": "That example is not available. Start with a blank local formula instead.",
+    "unknownExample": "That example is not available. Start with a blank formula instead.",
     "replaceConfirm": "Replace the current unsaved draft?",
     "leaveConfirm": "Leave this editor and discard unsaved draft changes?",
-    "saved": "Saved locally.",
-    "saveError": "The formula could not be saved locally.",
+    "saved": "Saved to your cloud library.",
+    "saveError": "The cloud formula library is unavailable. Your formula was not saved.",
     "errors": {
       "maxCount": "Maximum formula limit reached ({count}).",
-      "formulaNotFound": "That local formula no longer exists.",
-      "storageUnavailable": "The local formula library could not be updated.",
+      "formulaNotFound": "That formula no longer exists in your cloud library.",
+      "storageUnavailable": "The cloud formula library could not be updated.",
       "compileFailed": "The formula could not be compiled.",
       "conflict": "This formula changed elsewhere. Reload and try again.",
       "builtinConflict": "This id is reserved by a built-in formula."

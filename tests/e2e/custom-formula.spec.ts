@@ -45,10 +45,22 @@ test.describe('Custom Formula Workflow', () => {
     // Wait for success message (English locale)
     await page.waitForSelector('text=Compile Successful', { timeout: 10000 });
 
-    // Save while anonymous: the cloud library queues a sign-in intent —
-    // the OTP dialog opens and nothing persists locally (v0.4.16).
-    await page.getByRole('button', { name: /^Save$/ }).click();
-    await expect(page.getByLabel(/email/i)).toBeVisible({ timeout: 15000 });
+    // Saving is cloud-only. The full OTP/resume/persistence journey lives in
+    // cloud-drafts.spec.ts and requires the real local Supabase + Mailpit
+    // prerequisites. Keep this general workflow executable in cloud-off
+    // production builds while still asserting the save control is ready.
+    const saveButton = page.getByRole('button', { name: /^Save$/ });
+    await expect(saveButton).toBeEnabled();
+    if (process.env.FRACTALPARK_CREATION_CLOUD_ENABLED === 'true') {
+      await saveButton.click();
+      await expect(page.getByLabel(/email/i)).toBeVisible({ timeout: 15000 });
+    } else {
+      test.info().annotations.push({
+        type: 'prerequisite',
+        description:
+          'OTP save is covered by cloud-drafts.spec.ts with local Supabase and Mailpit.',
+      });
+    }
   });
 
   test('should handle compilation errors gracefully', async ({ page }) => {
@@ -118,7 +130,7 @@ bailout:
 
     await expect(
       page.getByText(
-        'The custom formula “frm-nonexistent” is not available on this device.'
+        'The custom formula “frm-nonexistent” could not be loaded.'
       )
     ).toBeVisible({ timeout: 15000 });
     await expect(page.locator('[data-testid="fractal-canvas"]')).not.toBeVisible();

@@ -31,6 +31,8 @@
 import { scanFrmEntries, FRM_BLOCKING_DIAGNOSTICS } from './scanner';
 import {
   compileClassicFrmEntry,
+  compileFrmDetailed,
+  isClassicFrmSource,
   type ClassicEntryCompileResult,
 } from './compile';
 import {
@@ -302,5 +304,124 @@ export function classifyFrmSource(
   return {
     entries: scan.entries.map((e) => classifyEntry(source, e.key, semanticsVersion)),
     sourceDiagnostics: dedupe(sourceDiagnostics),
+  };
+}
+
+/**
+ * Classify an authoring/import source without confusing native section syntax
+ * with a classic Fractint body. Classic entries retain the lowering analysis
+ * above; native sources use the production compiler and the same stage-based
+ * four-level rules.
+ */
+export function classifyImportedFrmSource(
+  source: string,
+  semanticsVersion: FrmSemanticsVersion = STRICT_FRM_SEMANTICS_VERSION,
+): FrmSourceCompat {
+  if (isClassicFrmSource(source)) {
+    return classifyFrmSource(source, semanticsVersion);
+  }
+
+  const scan = scanFrmEntries(source);
+  const result = compileFrmDetailed(
+    source,
+    `compat-native-${hashString(source)}`,
+    semanticsVersion,
+  );
+  const diagnostics: FrmCompatDiagnostic[] = [];
+  const structured = new Set<string>();
+
+  for (const issue of result.lexerErrors) {
+    structured.add(`${issue.line}:${issue.message}`);
+    diagnostics.push({
+      reasonCode: 'lexer-error',
+      severity: issue.severity === 'error' ? 'error' : 'warning',
+      blocking: issue.severity === 'error',
+      message: issue.message,
+      line: issue.line,
+      col: issue.col,
+    });
+  }
+  for (const issue of result.parseErrors) {
+    structured.add(`${issue.line}:${issue.message}`);
+    diagnostics.push({
+      reasonCode: 'parse-error',
+      severity: issue.severity === 'error' ? 'error' : 'warning',
+      blocking: issue.severity === 'error',
+      message: issue.message,
+      line: issue.line,
+      col: issue.col,
+    });
+  }
+  for (const message of result.errors) {
+    const formatted = FORMATTED_ERROR_RE.exec(message);
+    if (formatted && structured.has(`${Number(formatted[2])}:${formatted[4]}`)) {
+      continue;
+    }
+    diagnostics.push({
+      reasonCode: extractReasonCode(message) ?? 'compile-error',
+      severity: 'error',
+      blocking: true,
+      message,
+      ...(formatted
+        ? { line: Number(formatted[2]), col: Number(formatted[3]) }
+        : {}),
+    });
+  }
+  for (const message of result.warnings) {
+    diagnostics.push({
+      reasonCode: 'compile-warning',
+      severity: 'warning',
+      blocking: false,
+      message,
+    });
+  }
+  for (const note of result.canonicalFormula?.compatibilityNotes ?? []) {
+    diagnostics.push({
+      reasonCode: `compat-${note.kind}`,
+      severity: note.kind === 'info' ? 'note' : 'warning',
+      blocking: false,
+      message: note.message,
+      ...(note.loc ? { line: note.loc.line, col: note.loc.col } : {}),
+    });
+  }
+
+  const key = scan.entries[0]?.key ?? result.ast?.name;
+  if (!key) {
+    return {
+      entries: [],
+      sourceDiagnostics: dedupe(
+        diagnostics.length > 0
+          ? diagnostics
+          : [
+              {
+                reasonCode: 'scan-no-entries',
+                severity: 'error',
+                blocking: true,
+                message: 'Source contains no recognizable formula entries',
+              },
+            ],
+      ),
+    };
+  }
+
+  const structuralFatal =
+    !result.ast ||
+    result.lexerErrors.some((issue) => issue.severity === 'error') ||
+    result.parseErrors.some((issue) => issue.severity === 'error');
+  return {
+    entries: [
+      {
+        key,
+        level: result.success
+          ? 'supported'
+          : structuralFatal
+            ? 'invalid'
+            : 'read-only',
+        runnable: result.success,
+        adaptations: [],
+        diagnostics: dedupe(diagnostics),
+      },
+    ],
+    sourceDiagnostics: [],
   };
 }

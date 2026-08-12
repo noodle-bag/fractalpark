@@ -14,6 +14,7 @@ import { createHash } from 'node:crypto';
 import type { FractalDocument } from '@/engine/document';
 import { readFractalDocumentEnvelope } from '@/engine/document-envelope';
 import { compileImportedFrm } from '@/engine/frm/compile';
+import { resolveFrmSemanticsVersion } from '@/engine/frm/semantics-version';
 import { registerBuiltins } from '@/engine/plugins/builtins';
 import { getFormulaMetadata } from '@/engine/plugins/formula-catalog';
 
@@ -64,7 +65,11 @@ export function validateFormulaPublication(canonicalEnvelope: unknown): FormulaP
   if (getFormulaMetadata(asset.id)) {
     return { ok: false, code: 'formula_builtin_conflict' };
   }
-  const compiled = compileImportedFrm(asset.source, asset.id);
+  const compiled = compileImportedFrm(
+    asset.source,
+    asset.id,
+    resolveFrmSemanticsVersion(asset.frmSemanticsVersion),
+  );
   if (!compiled.success) {
     return { ok: false, code: 'formula_compile_failed' };
   }

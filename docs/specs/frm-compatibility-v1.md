@@ -1,8 +1,8 @@
 # FRM Compatibility and Migration Contracts v1
 
-- Status: Frozen (v0.4.18, Release)
+- Status: Frozen (v0.4.18 release candidate)
 - Date: 2026-08-12
-- Last verified: 2026-08-12 (commit 0bf85b7, PR #19, all slices completed)
+- Last verified: 2026-08-12 (PR #19 development closeout; release gates remain separate)
 
 ## Purpose
 
@@ -94,17 +94,22 @@ Rules:
   unknown-predicate fallback, and normal right-side thresholds. Legacy
   content is judged by v1 visual stability; strict v2 is judged by
   directional correctness or an explicit Read-only verdict.
-- Migrations are additive. Writers may be rolled back; readers stay
-  v1-compatible indefinitely.
+- Schema evolution is forward-only and reader-compatible. The ordered pair
+  `20260811000000_frm_semantics_version.sql` (nullable column) then
+  `20260812000000_custom_formula_semantics_rpc.sql` (optional version-aware
+  save RPC) is one migration contract: explicit `1`/`2` persists a version,
+  while NULL preserves the current version on ordinary updates and reads as
+  legacy v1 when absent. Both remain pending hosted-ops review; build and
+  application startup never apply them.
 - `coloring.pipelineVersion` describes the coloring pipeline only and is
   persisted and migrated separately from `frmSemanticsVersion`.
 
 ## 4. Canonical IR and bailout descriptors
 
-- Bailout descriptors allow exactly five kinds: C1 (fixed radial), C2
+- Bailout descriptors allow exactly four kinds: C1 (fixed radial), C2
   (parametrised radial), C4-R (real-projection in `abs-real` / `real`
   forms), and C5 (squared magnitude via the `LastSqr` side-channel). The
-  five-kind vocabulary is a runtime constant gated by a build-time
+  four-kind vocabulary is a runtime constant gated by a build-time
   bidirectional exhaustiveness assertion — adding a descriptor kind
   without updating the list fails the build.
 - Comparison and logical operators (`< <= > >= == != && ||`) are allowed
@@ -248,7 +253,7 @@ Five layers, split across two execution levels:
 |---|---|---|
 | File | entry boundary, selected entry, trailing source | corpus fully determined |
 | Syntax | native/Classic → canonical IR | target set generatable, exclusions definitively rejected |
-| Semantics | descriptor, params/fn, timing, capability | unknown = 0 (all five descriptor kinds verified) |
+| Semantics | descriptor, params/fn, timing, capability | unknown = 0; all four runtime descriptor kinds covered by real compiler probes |
 | Orbit | per-iteration z/LastSqr/continue/iteration | full target set |
 | WebGL | compile/link/first frame/NaN/basic interaction | starter-profile smoke (sampled CI) / full-coverage smoke (maintainer Level 2) |
 
@@ -271,12 +276,16 @@ Five layers, split across two execution levels:
   per-round trajectory evidence and gated by an exact GPU/CPU fingerprint
   (Slice 7d).
 
-## 10. Compatibility facts baseline (frozen at Slice 7, Release)
+## 10. Compatibility facts baseline (frozen at Slice 7, release candidate)
 
 - Resolution: 588 target entries (362 T0 / 174 T1 / 52 T2) + 117
-  exclusions with documented reasons = 705 total ledger rows.
-- Descriptor kinds: C1 / C2 / C4-R / C5 (all five verified across the
-  target set). Reject reasons: `unknown-predicate`, `unknown-magnitude-
+  exclusions with documented reasons = 705 total ledger rows. The 588
+  targets close as 579 strict-v2 passes + 9 documented waivers.
+- Source-scope classification stays C1 465 / C2 110 / C4-R 13. Runtime
+  descriptors are a separate four-kind vocabulary: C1 / C2 / C4-R / C5;
+  each kind is covered by real compiler probes, and target rows may lower to
+  a different runtime descriptor without expanding the frozen source scope.
+  Reject reasons: `unknown-predicate`, `unknown-magnitude-
   form`, `threshold-not-loop-invariant`, `chained-logical`, and per-row
   dialect gaps (inverse-trig family `asin`/`acos`/`atan`, system-var
   writes, read-only constant shadowing).
@@ -285,13 +294,17 @@ Five layers, split across two execution levels:
   `ru-RU`, `es-ES`, `fr-FR`; OG locale uses the underscore mapping.
 - Public formula count remains `94`; the unified-library fact-source move
   belongs to a later release.
-- Public version facts (`package.json`, `SITE.version`, `CHANGELOG.md`)
-  are aligned to the currently deployed release before any v0.4.18 bump.
+- Release-candidate version facts (`package.json`, `SITE.version`,
+  `CHANGELOG.md`) are aligned to `0.4.18`; merge, deployment, tag, and
+  GitHub Release remain separate release gates.
+- The ordered semantics column/RPC migrations exist in the candidate but have
+  not been applied to staging or Production; schema replay, backup, and hosted
+  smoke remain release gates rather than development-closeout claims.
 
 ## 11. Private ledger entry point
 
 The private compatibility ledger (corpus of record: 705 sources → 588
-target entries + 117 exclusions; tiers T0/T1/T2 = 362/194/32; C1/C2/C4-R =
+target entries + 117 exclusions; tiers T0/T1/T2 = 362/174/52; C1/C2/C4-R =
 465/110/13) lives outside the public repository. The public side of the
 ledger is only its schema:
 

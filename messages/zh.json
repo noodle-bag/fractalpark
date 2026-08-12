@@ -155,15 +155,37 @@
         "diffSelectedEntry": "条目选择：v2 强制严格的条目选择规则——多条目公式必须显式指定使用的条目，不再默认取第一条。",
         "diffBailout": "逃逸描述符：v2 会规范化逃逸条件（固定/参数化径向、保留比较方向），不再保留 v1 对调操作数时的旧行为。",
         "diffStrictPredicates": "严格谓词拒绝：v2 在编译期直接拒绝未知谓词，不再静默回退到 4.0。",
-        "upgradeNote": "当前渲染效果完全相同，这些语义差异将在 v0.4.18 后续版本生效。你可以随时回退到 v1。",
-        "revertNote": "当前渲染效果保持不变。你可以随时再次升级到 v2。",
+        "upgradeNote": "上方预览展示的是 v1/v2 的实际运行差异。确认后，这条已保存公式会切换到严格 v2；之后仍可回退到 v1。",
+        "revertNote": "回退会立即恢复冻结的旧版 v1 编译与渲染契约。之后仍可再次运行“升级并对比”。",
         "confirmUpgrade": "升级",
         "confirmRevert": "回退",
         "cancel": "取消",
         "upgradeSuccess": "公式已升级到严格 v2。",
         "revertSuccess": "公式已回退到旧版 v1。",
         "upgradeFailed": "公式升级失败，请重试。",
-        "revertFailed": "公式回退失败，请重试。"
+        "revertFailed": "公式回退失败，请重试。",
+        "comparisonLoading": "正在读取已保存的公式，仅用于只读对比…",
+        "comparisonFailed": "无法读取已保存的源码，未做任何更改。",
+        "comparisonReadOnly": "对比过程是只读的；只有确认后才会切换版本。",
+        "upgradeBlocked": "严格 v2 拒绝了这份源码。公式仍保留在旧版 v1；请先根据上方诊断编辑一份兼容副本。",
+        "legacyColumn": "旧版 v1",
+        "strictColumn": "严格 v2",
+        "runnable": "可运行",
+        "readOnly": "只读",
+        "visualPreview": "画面对比",
+        "visualUnavailable": "此契约没有可运行的预览。",
+        "descriptorLabel": "Bailout",
+        "timingLabel": "循环时序",
+        "legacyTiming": "旧版步前判定",
+        "afterStep": "步后判定",
+        "beforeStep": "步前判定",
+        "smoothLabel": "平滑着色",
+        "legacyFrozen": "冻结的旧版行为",
+        "diagnosticsHeading": "诊断",
+        "noDiagnostics": "编译器未返回诊断。",
+        "diagnosticError": "错误",
+        "diagnosticWarning": "警告",
+        "diagnosticNote": "说明"
       }
     }
   },
@@ -276,7 +298,7 @@
       "frm": {
         "eyebrow": "创作自己的公式",
         "title": "使用 FRM 学习并编写公式",
-        "description": "FRM 是 FractalPark 经过测试的文本创作路径。先阅读兼容指南和通过编译验证的示例，再在独立编辑器中本地编写与预览公式。",
+        "description": "FRM 是 FractalPark 经过测试的文本创作方式。阅读兼容性指南，学习已通过编译检查的示例，然后在独立编辑器中编写并预览公式。",
         "learn": "学习 FRM",
         "openEditor": "打开公式编辑器"
       },
@@ -297,7 +319,7 @@
       },
       "cta": {
         "title": "从内置公式开始，或编写自己的公式",
-        "description": "使用探索器体验内置公式；当你想亲自定义迭代时，可以进入本地 FRM 编辑器。",
+        "description": "使用探索器查看内置公式；当你想自行定义迭代时，打开独立 FRM 编辑器。",
         "explore": "打开探索器",
         "editor": "打开公式编辑器"
       }
@@ -399,10 +421,12 @@
           "disclaimer": "这是经过测试的兼容性基线，不代表完整兼容 Fractint。编译器能力变化时，本表及其测试必须在同一项改动中同步更新。",
           "verified": {
             "title": "已验证的兼容性",
-            "intro": "本面板中的每个数字和清单都渲染自 FractalPark 的版本化能力清单——与编译器漂移测试锁定的是同一来源，而非手写文案。",
+            "intro": "这些能力统计来自版本化清单：588 个目标条目由 579 个严格 v2 通过项和 9 个有据可查的豁免项组成；另有 117 个条目按稳定原因排除。",
             "stats": {
-              "target": "已验证经典公式",
-              "excluded": "带原因排除",
+              "target": "目标条目",
+              "passed": "严格 v2 通过",
+              "waivers": "有据豁免",
+              "excluded": "按原因排除",
               "descriptors": "bailout 描述符种类",
               "builtins": "内置函数"
             },
@@ -496,7 +520,7 @@
             "parameter-drift": "重点：p1 与 p2 参数槽、复数常量，以及把 cabs(z) 作为显式模长函数。",
             "orbit-echo": "重点：用 zPrev 取得上一轮轨道状态。无需手动维护第二个状态变量，也能引入记忆反馈。"
           },
-          "editorNote": "FRM 编辑器通过稳定 ID 打开这三个实际通过编译测试的示例。公式源码只留在本地，绝不会写入 URL。"
+          "editorNote": "FRM 编辑器通过稳定 ID 打开这些同样经过编译检查的示例。保存到云端公式库之前，公式源码只保留在当前标签页中，绝不会嵌入 URL。"
         },
         "diagnostics": {
           "title": "错误与诊断",
@@ -526,7 +550,7 @@
           "exploreTitle": "先在完整渲染环境中观察",
           "exploreBody": "打开 Explore，比较内置公式的行为、着色、变换、动画和导出控制，再开始编写自定义公式。",
           "exploreCta": "打开 Explore",
-          "editorNote": "使用独立 FRM 编辑器编译、预览、导入、下载并在本地保存公式，再把所选公式交给 Explore。",
+          "editorNote": "使用专用 FRM 编辑器编译、预览、导入和下载公式；登录并保存到云端公式库后，再将它交给探索器。",
           "referencesTitle": "参考资料",
           "referencesIntro": "历史背景与实现细节分开链接，以明确区分 Fractint 传承和 FractalPark 当前的编译器契约。",
           "references": {
@@ -1635,7 +1659,7 @@
       "compiling": "编译中...",
       "save": "保存",
       "saved": "已保存",
-      "savedDescription": "公式 \"{name}\" 已保存到本地",
+      "savedDescription": "公式“{name}”已保存到你的云端公式库",
       "saveFailed": "保存失败",
       "saveFailedDescription": "无法保存当前公式",
       "compileSuccess": "编译成功",
@@ -1713,15 +1737,15 @@
     "previewEmpty": "成功编译有效公式后将更新预览。",
     "previewStale": "源代码已改变。这里保留上一次成功预览；重新编译前不能保存或在探索器中打开。",
     "reset": "重置视图",
-    "unknownExample": "该示例不可用。请从空白本地公式开始。",
+    "unknownExample": "该示例不可用。请改为从空白公式开始。",
     "replaceConfirm": "要替换当前未保存的草稿吗？",
     "leaveConfirm": "要离开编辑器并放弃未保存的草稿修改吗？",
-    "saved": "已本地保存。",
-    "saveError": "无法在本地保存公式。",
+    "saved": "已保存到你的云端公式库。",
+    "saveError": "云端公式库不可用。你的公式未保存。",
     "errors": {
       "maxCount": "已达到公式数量上限（{count} 条）。",
-      "formulaNotFound": "该本地公式已不存在。",
-      "storageUnavailable": "无法更新本地公式库。",
+      "formulaNotFound": "该公式已不再存在于你的云端公式库中。",
+      "storageUnavailable": "无法更新云端公式库。",
       "compileFailed": "无法编译该公式。",
       "conflict": "该公式已在别处被修改，请刷新后重试。",
       "builtinConflict": "该 id 已被内置公式占用。"

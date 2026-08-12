@@ -6,7 +6,7 @@ export const SITE = {
   url: 'https://www.fractalpark.com',
   domain: 'www.fractalpark.com',
   repositoryUrl: 'https://github.com/noodle-bag/fractalpark',
-  version: '0.4.17',
+  version: '0.4.18',
   formulaCount: 94,
   ogImage: '/opengraph-image',
 } as const;

@@ -29,6 +29,15 @@ bailout:
   |z| < 4
 }`;
 
+const LEGACY_ONLY_SOURCE = `LegacyOnly {
+init:
+  z = 0
+loop:
+  z = z^2 + c
+bailout:
+  tanh(|z|) < p1
+}`;
+
 const ENV_VARS = [
   'FRACTALPARK_CREATION_CLOUD_ENABLED',
   'SUPABASE_URL',
@@ -42,16 +51,16 @@ const savedEnv = new Map<string, string | undefined>();
 
 let fetchCalls: Array<{ url: string; method: string; body: string | null }> = [];
 
-function baseRow(version?: number) {
+function baseRow(version?: number, source = VALID_SOURCE, revision = 1) {
   return {
     id: FORMULA_ID,
     name: 'Route formula',
-    revision: 1,
+    revision,
     source_bytes: 40,
     experience_hint: null,
     created_at: '2026-08-03T00:00:00Z',
     updated_at: '2026-08-03T00:00:00Z',
-    source: VALID_SOURCE,
+    source,
     ...(version === undefined ? {} : { frm_semantics_version: version }),
   };
 }
@@ -72,7 +81,11 @@ function stubFetch(respond: (call: { url: string; method: string; body: string |
   );
 }
 
-function defaultRespond(storedVersion?: number) {
+function defaultRespond(
+  storedVersion?: number,
+  storedSource = VALID_SOURCE,
+  storedRevision = 1,
+) {
   return (call: { url: string; method: string; body: string | null }): Response => {
     if (call.url.includes('fractalpark_rate_limit_consume')) {
       return new Response(JSON.stringify([{ allowed: true, retry_after: 0 }]), { status: 200 });
@@ -98,7 +111,10 @@ function defaultRespond(storedVersion?: number) {
       );
     }
     if (call.url.includes('custom_formulas')) {
-      return new Response(JSON.stringify([baseRow(storedVersion)]), { status: 200 });
+      return new Response(
+        JSON.stringify([baseRow(storedVersion, storedSource, storedRevision)]),
+        { status: 200 },
+      );
     }
     throw new Error(`unexpected fetch: ${call.method} ${call.url}`);
   };
@@ -185,6 +201,66 @@ describe('semantics versioning across save routes', () => {
     const saveCall = fetchCalls.find((c) => c.url.includes('rpc/fractalpark_custom_formula_save'));
     expect(saveCall?.body).not.toContain('p_frm_semantics_version');
   });
+
+  it('keeps legacy v1 source editable but rejects it at every strict-v2 save boundary', async () => {
+    stubFetch(defaultRespond(1, LEGACY_ONLY_SOURCE));
+    const legacyUpdate = await formulaPATCH(
+      authedRequest(DETAIL_URL, {
+        method: 'PATCH',
+        headers: { 'idempotency-key': IDEMPOTENCY_KEY },
+        body: {
+          name: 'Legacy stays legacy',
+          source: LEGACY_ONLY_SOURCE,
+          experienceHint: null,
+          expectedRevision: 1,
+        },
+      }),
+      detailContext(),
+    );
+    expect(legacyUpdate.status).toBe(200);
+
+    stubFetch(defaultRespond());
+    const strictCreate = await formulasPOST(
+      authedRequest(CREATE_URL, {
+        method: 'POST',
+        headers: { 'idempotency-key': IDEMPOTENCY_KEY },
+        body: { name: 'Rejected v2', source: LEGACY_ONLY_SOURCE },
+      }),
+    );
+    expect(strictCreate.status).toBe(422);
+    expect(
+      ((await strictCreate.json()) as { error: { code: string } }).error.code,
+    ).toBe('formula_compile_failed');
+    expect(
+      fetchCalls.some((call) =>
+        call.url.includes('rpc/fractalpark_custom_formula_save'),
+      ),
+    ).toBe(false);
+
+    stubFetch(defaultRespond(2, VALID_SOURCE));
+    const strictUpdate = await formulaPATCH(
+      authedRequest(DETAIL_URL, {
+        method: 'PATCH',
+        headers: { 'idempotency-key': IDEMPOTENCY_KEY },
+        body: {
+          name: 'Rejected edit',
+          source: LEGACY_ONLY_SOURCE,
+          experienceHint: null,
+          expectedRevision: 1,
+        },
+      }),
+      detailContext(),
+    );
+    expect(strictUpdate.status).toBe(422);
+    expect(
+      ((await strictUpdate.json()) as { error: { code: string } }).error.code,
+    ).toBe('formula_compile_failed');
+    expect(
+      fetchCalls.some((call) =>
+        call.url.includes('rpc/fractalpark_custom_formula_save'),
+      ),
+    ).toBe(false);
+  });
 });
 
 describe('POST .../semantics: explicit Upgrade & Compare actions', () => {
@@ -206,6 +282,23 @@ describe('POST .../semantics: explicit Upgrade & Compare actions', () => {
     expect(saveCall?.body).toContain('"p_expected_revision":1');
   });
 
+  it('rejects a direct upgrade when the exact stored bytes fail strict v2', async () => {
+    stubFetch(defaultRespond(1, LEGACY_ONLY_SOURCE));
+    const res = await semanticsPOST(
+      semanticsRequest('upgradeSemantics'),
+      detailContext(),
+    );
+    expect(res.status).toBe(422);
+    expect(((await res.json()) as { error: { code: string } }).error.code).toBe(
+      'formula_compile_failed',
+    );
+    expect(
+      fetchCalls.some((call) =>
+        call.url.includes('rpc/fractalpark_custom_formula_save'),
+      ),
+    ).toBe(false);
+  });
+
   it('reverts a v2 formula back to v1', async () => {
     stubFetch(defaultRespond(2));
     const res = await semanticsPOST(semanticsRequest('revertSemantics'), detailContext());
@@ -216,18 +309,34 @@ describe('POST .../semantics: explicit Upgrade & Compare actions', () => {
     expect(saveCall?.body).toContain('"p_frm_semantics_version":1');
   });
 
-  it('returns 200 with unchanged when an upgrade retry sees v2 (idempotent post-condition)', async () => {
+  it('validates the exact stored bytes under v1 before a revert write', async () => {
+    stubFetch(defaultRespond(2, 'Broken {'));
+    const res = await semanticsPOST(
+      semanticsRequest('revertSemantics'),
+      detailContext(),
+    );
+    expect(res.status).toBe(422);
+    expect(((await res.json()) as { error: { code: string } }).error.code).toBe(
+      'formula_compile_failed',
+    );
+    expect(
+      fetchCalls.some((call) =>
+        call.url.includes('rpc/fractalpark_custom_formula_save'),
+      ),
+    ).toBe(false);
+  });
+
+  it('returns unchanged only when the caller revision is still current', async () => {
     stubFetch(defaultRespond(2));
     const res = await semanticsPOST(semanticsRequest('upgradeSemantics'), detailContext());
     expect(res.status).toBe(200);
     const body = await res.json();
     expect(body).toMatchObject({ formulaId: FORMULA_ID, frmSemanticsVersion: 2, unchanged: true });
-    // No write may happen: the save RPC must not be called.
     const saveCall = fetchCalls.find((c) => c.url.includes('rpc/fractalpark_custom_formula_save'));
     expect(saveCall).toBeUndefined();
   });
 
-  it('returns 200 with unchanged when a revert retry sees v1', async () => {
+  it('returns unchanged for a current-revision revert post-condition', async () => {
     stubFetch(defaultRespond(1));
     const res = await semanticsPOST(semanticsRequest('revertSemantics'), detailContext());
     expect(res.status).toBe(200);
@@ -235,6 +344,44 @@ describe('POST .../semantics: explicit Upgrade & Compare actions', () => {
     expect(body).toMatchObject({ formulaId: FORMULA_ID, frmSemanticsVersion: 1, unchanged: true });
     const saveCall = fetchCalls.find((c) => c.url.includes('rpc/fractalpark_custom_formula_save'));
     expect(saveCall).toBeUndefined();
+  });
+
+  it('routes a stale post-condition through the RPC and returns revision conflict', async () => {
+    stubFetch((call) => {
+      if (call.url.includes('fractalpark_rate_limit_consume')) {
+        return new Response(JSON.stringify([{ allowed: true, retry_after: 0 }]), {
+          status: 200,
+        });
+      }
+      if (call.url.includes('rpc/fractalpark_custom_formula_save')) {
+        return new Response(
+          JSON.stringify({
+            message: 'revision_conflict: expected revision mismatch',
+          }),
+          { status: 400 },
+        );
+      }
+      if (call.url.includes('custom_formulas')) {
+        return new Response(JSON.stringify([baseRow(2, VALID_SOURCE, 2)]), {
+          status: 200,
+        });
+      }
+      throw new Error(`unexpected fetch: ${call.method} ${call.url}`);
+    });
+
+    const res = await semanticsPOST(
+      semanticsRequest('upgradeSemantics', 1),
+      detailContext(),
+    );
+    expect(res.status).toBe(409);
+    expect(((await res.json()) as { error: { code: string } }).error.code).toBe(
+      'revision_conflict',
+    );
+    expect(
+      fetchCalls.some((call) =>
+        call.url.includes('rpc/fractalpark_custom_formula_save'),
+      ),
+    ).toBe(true);
   });
 
   it('rejects unknown actions and bad revisions at validation', async () => {

@@ -76,6 +76,46 @@ describe('locale metadata maps', () => {
     }
   });
 
+  it('Editor persistence copy is cloud-only in every locale', () => {
+    const localPersistenceMarkers: Record<SupportedLocale, RegExp> = {
+      en: /\blocal(?:ly)?\b/i,
+      zh: /本地/,
+      pt: /local(?:mente)?/i,
+      ko: /로컬/,
+      ru: /локал/i,
+      es: /local(?:mente)?/i,
+      fr: /local(?:ement)?/i,
+    };
+
+    for (const locale of [...SUPPORTED_LOCALES]) {
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      const messages: any = JSON.parse(
+        readFileSync(join(__dirname, '../../messages', `${locale}.json`), 'utf-8'),
+      );
+      const values = [
+        messages.explore.editor.savedDescription,
+        messages.frmEditor.saved,
+        messages.frmEditor.saveError,
+        messages.frmEditor.errors.formulaNotFound,
+        messages.frmEditor.errors.storageUnavailable,
+        messages.formulas.index.frm.description,
+        messages.formulas.index.cta.description,
+        messages.formulas.frmGuide.sections.tutorials.editorNote,
+        messages.formulas.frmGuide.sections['next-steps'].editorNote,
+        messages.frmEditor.unknownExample,
+      ];
+
+      expect(values, `${locale} Editor cloud-only copy count`).toHaveLength(10);
+      for (const value of values) {
+        expect(value, `${locale} Editor cloud-only copy`).toBeTypeOf('string');
+        expect(String(value).trim(), `${locale} Editor cloud-only copy`).not.toBe('');
+        expect(String(value), `${locale} still claims local formula persistence`).not.toMatch(
+          localPersistenceMarkers[locale],
+        );
+      }
+    }
+  });
+
   it('no private corpus text leaks into the public repo (Slice 7f leakage scan)', () => {
     const cmd =
       `git grep -l -E 'frm-corpus|fractint/?(float)?/formulas|ledger-row-sha256|f588_level2_report\\.json' -- ':!docs/specs/*' ':!scripts/*' ':!tests/e2e/.fixtures/*' ':!src/engine/frm/compat-report.ts' ':!src/test/*'`;

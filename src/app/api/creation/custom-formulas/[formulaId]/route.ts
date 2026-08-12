@@ -25,6 +25,7 @@ import {
 } from '@/lib/cloud/custom-formulas';
 import { consumeRateLimit } from '@/lib/cloud/rate-limit';
 import { resolveRequestSession } from '@/lib/cloud/request-session';
+import { resolveFrmSemanticsVersion } from '@/engine/frm/semantics-version';
 import {
   assertFormulaCompiles,
   formulaRequestHash,
@@ -77,9 +78,13 @@ export async function PATCH(request: Request, context: RouteContext): Promise<Re
 
     // Uniform not_found before any side effect; the RPC re-checks ownership
     // and revision atomically.
-    await getCustomFormula(session.userId, formulaId);
+    const storedFormula = await getCustomFormula(session.userId, formulaId);
     const input = await parseFormulaWriteBody(request, { requireExpectedRevision: true });
-    assertFormulaCompiles(newFormulaRuntimeId(formulaId), input.source);
+    assertFormulaCompiles(
+      newFormulaRuntimeId(formulaId),
+      input.source,
+      resolveFrmSemanticsVersion(storedFormula.frmSemanticsVersion),
+    );
 
     const requestHash = formulaRequestHash({
       operation: 'save_custom_formula',

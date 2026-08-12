@@ -59,7 +59,7 @@ export async function POST(request: Request): Promise<Response> {
     const input = await parseFormulaWriteBody(request);
 
     const formulaId = randomUUID();
-    assertFormulaCompiles(newFormulaRuntimeId(formulaId), input.source);
+    assertFormulaCompiles(newFormulaRuntimeId(formulaId), input.source, 2);
 
     const requestHash = formulaRequestHash({
       operation: 'save_custom_formula',

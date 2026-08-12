@@ -451,6 +451,7 @@ function compileFrmUncached(
       category: 'formula',
       name: ast.name,
       source: 'frm',
+      frmSemanticsVersion: semanticsVersion,
       supportsPower: false, // DEPRECATED per ADR-0007: capability resolves from AST/dataflow, not this flag.
       supportsJulia: true,
       bailout: effectiveBailout,
@@ -800,7 +801,18 @@ export function compileImportedFrm(
   id?: string,
   semanticsVersion: FrmSemanticsVersion = DEFAULT_FRM_SEMANTICS_VERSION,
 ): CompileResult {
-  const hasClassicTransition = source.split(/\r?\n/).some((line) => {
+  return isClassicFrmSource(source)
+    ? compileClassicFrmEntry(source, undefined, id, semanticsVersion)
+    : compileFrm(source, id, semanticsVersion);
+}
+
+/**
+ * Authoritative import-boundary dialect discriminator. Compiler routing,
+ * compatibility status, and Editor gating must share this exact predicate so
+ * native section syntax is never fed to the classic lowerer.
+ */
+export function isClassicFrmSource(source: string): boolean {
+  return source.split(/\r?\n/).some((line) => {
     const statement = line.split(';', 1)[0];
     // A classic init/loop transition is a bare `:` after an expression —
     // it may sit MID-LINE (`z = pixel: z = sqr(z) + c`), so strip the
@@ -808,10 +820,6 @@ export function compileImportedFrm(
     const stripped = statement.replace(/\b(init|loop|bailout)\s*:/gi, '');
     return stripped.includes(':');
   });
-
-  return hasClassicTransition
-    ? compileClassicFrmEntry(source, undefined, id, semanticsVersion)
-    : compileFrm(source, id, semanticsVersion);
 }
 
 export function compileFrmEntry(

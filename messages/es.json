@@ -155,15 +155,37 @@
         "diffSelectedEntry": "Entrada seleccionada: v2 aplica reglas estrictas de selección de entrada — una fórmula con varias entradas debe elegir explícitamente cuál usar en lugar de tomar la primera por defecto.",
         "diffBailout": "Descriptores de bailout: v2 normaliza las condiciones de escape (radial fijo/parametrizado, dirección de comparación preservada) en lugar de conservar las rarezas de v1 con operandos intercambiados.",
         "diffStrictPredicates": "Rechazo estricto de predicados: v2 rechaza los predicados desconocidos en tiempo de compilación en lugar de recurrir silenciosamente a 4.0.",
-        "upgradeNote": "El renderizado es visualmente idéntico hoy; estas diferencias semánticas surtirán efecto más adelante en v0.4.18. Puedes revertir a v1 en cualquier momento.",
-        "revertNote": "El renderizado sigue siendo visualmente idéntico hoy. Puedes actualizar a v2 de nuevo en cualquier momento.",
+        "upgradeNote": "Las vistas previas anteriores muestran las diferencias reales de ejecución entre v1 y v2. Al confirmar, esta fórmula guardada cambia a la v2 estricta; puedes volver a v1 más tarde.",
+        "revertNote": "Revertir restaura de inmediato el contrato congelado heredado de compilación y renderización de v1. Puedes ejecutar “Actualizar y comparar” de nuevo más tarde.",
         "confirmUpgrade": "Actualizar",
         "confirmRevert": "Revertir",
         "cancel": "Cancelar",
         "upgradeSuccess": "Fórmula actualizada a v2 estricto.",
         "revertSuccess": "Fórmula revertida a v1 heredado.",
         "upgradeFailed": "No se pudo actualizar la fórmula.",
-        "revertFailed": "No se pudo revertir la fórmula."
+        "revertFailed": "No se pudo revertir la fórmula.",
+        "comparisonLoading": "Cargando la fórmula guardada para una comparación de solo lectura…",
+        "comparisonFailed": "No se pudo cargar el código fuente guardado. No se cambió nada.",
+        "comparisonReadOnly": "La comparación es de solo lectura. No se cambia ninguna versión hasta que confirmes.",
+        "upgradeBlocked": "La v2 estricta rechazó este código fuente. La fórmula permanece en la v1 heredada; usa los diagnósticos anteriores para editar primero una copia compatible.",
+        "legacyColumn": "v1 heredada",
+        "strictColumn": "v2 estricta",
+        "runnable": "Ejecutable",
+        "readOnly": "Solo lectura",
+        "visualPreview": "Vista previa visual",
+        "visualUnavailable": "No hay una vista previa ejecutable para este contrato.",
+        "descriptorLabel": "Bailout",
+        "timingLabel": "Tiempo del bucle",
+        "legacyTiming": "Paso previo heredado",
+        "afterStep": "Después del paso",
+        "beforeStep": "Antes del paso",
+        "smoothLabel": "Coloración suave",
+        "legacyFrozen": "Comportamiento heredado congelado",
+        "diagnosticsHeading": "Diagnósticos",
+        "noDiagnostics": "No hay diagnósticos del compilador.",
+        "diagnosticError": "Error",
+        "diagnosticWarning": "Advertencia",
+        "diagnosticNote": "Nota"
       }
     }
   },
@@ -276,7 +298,7 @@
       "frm": {
         "eyebrow": "Crea la tuya",
         "title": "Aprende y escribe fórmulas con FRM",
-        "description": "FRM es la ruta de autoría basada en texto probada de FractalPark. Lee la guía de compatibilidad, estudia los ejemplos verificados por compilación y luego escribe y previsualiza una fórmula localmente en el editor independiente.",
+        "description": "FRM es la vía de creación basada en texto y probada de FractalPark. Lee la guía de compatibilidad, estudia ejemplos verificados por compilación y luego escribe y previsualiza una fórmula en el editor independiente.",
         "learn": "Aprende FRM",
         "openEditor": "Abrir el Editor de fórmulas"
       },
@@ -297,7 +319,7 @@
       },
       "cta": {
         "title": "Empieza con una fórmula o escribe la tuya",
-        "description": "Usa el Explorar para las fórmulas integradas, o abre el Editor FRM local cuando quieras definir tú mismo la iteración.",
+        "description": "Usa Explorar para las fórmulas integradas, o abre el Editor FRM independiente cuando quieras definir tú mismo la iteración.",
         "explore": "Abrir Explorar",
         "editor": "Abrir el Editor de fórmulas"
       }
@@ -399,12 +421,14 @@
           "disclaimer": "Esta es una línea base de compatibilidad probada, no una afirmación de compatibilidad total con Fractint. Cuando el compilador cambie, esta matriz y sus pruebas deben cambiar juntas.",
           "verified": {
             "title": "Compatibilidad verificada",
-            "intro": "Todas las cifras y listas de este panel se renderizan a partir del manifiesto de capacidades versionado de FractalPark —la misma fuente que fijan las pruebas de deriva del compilador—, nunca de texto escrito a mano.",
+            "intro": "Estos recuentos de capacidades provienen del manifiesto versionado: 588 entradas objetivo comprenden 579 aprobaciones strict-v2 y 9 exenciones documentadas; 117 entradas independientes se excluyen con motivos estables.",
             "stats": {
-              "target": "Fórmulas clásicas verificadas",
-              "excluded": "Exclusiones con motivos",
+              "builtins": "Funciones integradas",
               "descriptors": "Tipos de descriptor de bailout",
-              "builtins": "Funciones integradas"
+              "target": "Entradas objetivo",
+              "passed": "Aprobaciones strict-v2",
+              "waivers": "Exenciones documentadas",
+              "excluded": "Excluidas con justificación"
             },
             "groups": {
               "descriptors": "Descriptores de bailout",
@@ -496,7 +520,7 @@
             "parameter-drift": "Enfoque: los espacios de parámetros p1 y p2, un literal complejo y cabs(z) como función de magnitud explícita.",
             "orbit-echo": "Enfoque: zPrev como el estado de órbita anterior. La retroalimentación agrega memoria sin introducir una segunda variable de estado administrada manualmente."
           },
-          "editorNote": "El Editor FRM abre estos mismos ejemplos verificados por compilación por ID estable. El código fuente de la fórmula permanece local y nunca se incrusta en la URL."
+          "editorNote": "El Editor FRM abre estos mismos ejemplos verificados por compilación mediante un ID estable. El código fuente de la fórmula permanece solo en la pestaña actual hasta que lo guardas en tu biblioteca de fórmulas en la nube y nunca se incorpora en la URL."
         },
         "diagnostics": {
           "title": "Errores y diagnósticos",
@@ -526,7 +550,7 @@
           "exploreTitle": "Ve el renderizador en contexto",
           "exploreBody": "Abre Explorar para comparar el comportamiento de las fórmulas integradas, la coloración, las transformaciones, la animación y los controles de exportación antes de escribir una fórmula personalizada.",
           "exploreCta": "Abrir Explorar",
-          "editorNote": "Usa el Editor FRM dedicado para compilar, previsualizar, importar, descargar y guardar fórmulas locales antes de pasarla a Explorar.",
+          "editorNote": "Usa el Editor FRM dedicado para compilar, previsualizar, importar y descargar fórmulas; inicia sesión para guardar una en tu biblioteca de fórmulas en la nube antes de enviarla a Explorar.",
           "referencesTitle": "Referencias",
           "referencesIntro": "El contexto histórico y los detalles de implementación se enlazan por separado para que la guía pueda distinguir el linaje de Fractint del contrato actual del compilador de FractalPark.",
           "references": {
@@ -1635,7 +1659,7 @@
       "compiling": "Compilando…",
       "save": "Guardar",
       "saved": "Guardado",
-      "savedDescription": "Fórmula \"{name}\" guardada localmente",
+      "savedDescription": "La fórmula \"{name}\" se guardó en tu biblioteca de fórmulas en la nube",
       "saveFailed": "Error al guardar",
       "saveFailedDescription": "No se pudo guardar la fórmula actual",
       "compileSuccess": "Compilación exitosa",
@@ -1713,15 +1737,15 @@
     "previewEmpty": "Compila una fórmula válida para actualizar esta vista previa.",
     "previewStale": "El código fuente cambió. Esta es la última vista previa exitosa; compila de nuevo antes de guardarla o abrirla.",
     "reset": "Restablecer vista",
-    "unknownExample": "Ese ejemplo no está disponible. Empieza con una fórmula local en blanco.",
+    "unknownExample": "Ese ejemplo no está disponible. En su lugar, empieza con una fórmula en blanco.",
     "replaceConfirm": "¿Reemplazar el borrador actual sin guardar?",
     "leaveConfirm": "¿Salir del editor y descartar los cambios sin guardar del borrador?",
-    "saved": "Guardado localmente.",
-    "saveError": "La fórmula no se pudo guardar localmente.",
+    "saved": "Se guardó en tu biblioteca de fórmulas en la nube.",
+    "saveError": "La biblioteca de fórmulas en la nube no está disponible. Tu fórmula no se guardó.",
     "errors": {
       "maxCount": "Se alcanzó el límite máximo de fórmulas ({count}).",
-      "formulaNotFound": "Esa fórmula local ya no existe.",
-      "storageUnavailable": "No se pudo actualizar la biblioteca local de fórmulas.",
+      "formulaNotFound": "Esa fórmula ya no existe en tu biblioteca de fórmulas en la nube.",
+      "storageUnavailable": "No se pudo actualizar la biblioteca de fórmulas en la nube.",
       "compileFailed": "La fórmula no se pudo compilar.",
       "conflict": "Esta fórmula cambió en otro lugar. Recarga e inténtalo de nuevo.",
       "builtinConflict": "Este id está reservado por una fórmula integrada."

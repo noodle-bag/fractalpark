@@ -265,13 +265,29 @@ export default async function FrmGuidePage({
             <p className="mt-2 text-sm leading-6 text-muted-foreground">
               {t('sections.support.verified.intro')}
             </p>
-            <dl className="mt-5 grid grid-cols-2 gap-4 sm:grid-cols-4">
+            <dl className="mt-5 grid grid-cols-2 gap-4 sm:grid-cols-3 lg:grid-cols-6">
               <div>
                 <dt className="text-xs uppercase tracking-wide text-muted-foreground">
                   {t('sections.support.verified.stats.target')}
                 </dt>
                 <dd className="mt-1 text-2xl font-semibold tabular-nums">
                   {FRM_GUIDE_CAPABILITY.target}
+                </dd>
+              </div>
+              <div>
+                <dt className="text-xs uppercase tracking-wide text-muted-foreground">
+                  {t('sections.support.verified.stats.passed')}
+                </dt>
+                <dd className="mt-1 text-2xl font-semibold tabular-nums">
+                  {FRM_GUIDE_CAPABILITY.passed}
+                </dd>
+              </div>
+              <div>
+                <dt className="text-xs uppercase tracking-wide text-muted-foreground">
+                  {t('sections.support.verified.stats.waivers')}
+                </dt>
+                <dd className="mt-1 text-2xl font-semibold tabular-nums">
+                  {FRM_GUIDE_CAPABILITY.waivers}
                 </dd>
               </div>
               <div>

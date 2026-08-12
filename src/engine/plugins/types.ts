@@ -43,6 +43,9 @@ export interface FractalPlugin {
 
 export interface FormulaPlugin extends FractalPlugin {
   category: 'formula';
+  /** Explicit compile-semantics contract for FRM/custom plugins. Built-ins
+   * omit it and continue to follow the document renderer pipeline. */
+  frmSemanticsVersion?: import('../frm/semantics-version').FrmSemanticsVersion;
   bailout?: number;         // default 4.0
   /**
    * Strict-v2 bounded bailout descriptor (spec §4). Present only on FRM

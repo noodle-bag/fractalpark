@@ -97,16 +97,17 @@ fallback for presets without explicit keyframes, it must be produced by one
 shared playback projection and must not modify the canonical document,
 poster, thumbnail, or Remix state.
 
-### Local custom formulas
+### Custom formulas
 
 The FRM Editor and Explore use the same persisted custom-formula record,
 compiler, plugin registration, cache invalidation, and experience-hint
 handling. The Editor must not create a second storage key or a second compiler
 pipeline.
 
-A local formula is resolved before a document that references it is rendered.
-Missing, invalid, or cross-device formula IDs produce an explicit error and
-must not silently resolve to a built-in formula.
+A persisted formula is resolved from the owner-scoped cloud library (or from a
+session/portable snapshot) before a document that references it is rendered.
+Missing, invalid, or inaccessible formula IDs produce an explicit error and
+must not silently resolve to a built-in formula or a browser-persisted store.
 
 ### Local artwork
 
@@ -195,8 +196,9 @@ decided in [ADR 0005](../adr/0005-same-origin-cloud-session.md).
 
 - Share editor/compiler primitives, custom-formula persistence, and formula
   resolution.
-- Editor-to-Explore handoff passes a local formula identity, not source text
-  in a URL.
+- Editor-to-Explore handoff passes an owner-scoped cloud formula identity, not
+  source text in a URL. Explore may rescue a fresh-tab handoff through the
+  owner detail API; a disabled/unavailable cloud fails closed.
 - Explore remains the full creation surface; the Editor owns source authoring,
   diagnostics, compile preview, and formula defaults.
 
@@ -243,7 +245,7 @@ At minimum, automated tests must prove:
   preset and canonical state;
 - Editor and Explore resolve the same persisted custom formula;
 - legacy artwork, Document v1/v2, future read-only documents, legacy URLs, and
-  missing local formula IDs retain their documented behavior.
+  missing/inaccessible formula IDs retain their documented behavior.
 
 Release-specific coverage and execution gates are defined in the active test
 plan: [v0.4.15 Regression Matrix](../testing/v0.4.15-regression-matrix.md),

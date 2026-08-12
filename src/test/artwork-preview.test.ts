@@ -75,6 +75,45 @@ describe('cloud artwork preview projection', () => {
     expect(readSessionFormulaAssets().find((asset) => asset.id === formulaId)).toBeUndefined();
   });
 
+  it('threads a strict-v2 portable asset into the renderer v2 pipeline', async () => {
+    const formulaId = 'preview-custom-strict-v2-test';
+    const document = structuredClone(DEFAULT_FRACTAL_DOCUMENT);
+    document.formula.formulaId = formulaId;
+    const result = await createFractalDocumentEnvelope(document, [
+      {
+        id: formulaId,
+        name: 'Strict Preview',
+        source: CUSTOM_SOURCE,
+        frmSemanticsVersion: 2,
+      },
+    ]);
+    if (!result.success) throw new Error('strict preview envelope failed');
+
+    const preview = await prepareArtworkPreview(result.value);
+    expect(preview?.params.pipelineVersion).toBe(2);
+    expect(preview?.customFormulaPlugin?.bailoutDescriptor).toBeDefined();
+  });
+
+  it('forces a legacy-v1 portable asset onto renderer v1 even when the document says v2', async () => {
+    const formulaId = 'preview-custom-legacy-v1-test';
+    const document = structuredClone(DEFAULT_FRACTAL_DOCUMENT);
+    document.formula.formulaId = formulaId;
+    document.coloring.pipelineVersion = 2;
+    const result = await createFractalDocumentEnvelope(document, [
+      {
+        id: formulaId,
+        name: 'Legacy Preview',
+        source: CUSTOM_SOURCE,
+        frmSemanticsVersion: 1,
+      },
+    ]);
+    if (!result.success) throw new Error('legacy preview envelope failed');
+
+    const preview = await prepareArtworkPreview(result.value);
+    expect(preview?.params.pipelineVersion).toBe(1);
+    expect(preview?.customFormulaPlugin?.frmSemanticsVersion).toBe(1);
+  });
+
   it('bounds an extreme custom bailout only in the isolated preview plugin', async () => {
     const formulaId = 'preview-custom-bailout-bound-test';
     const document = structuredClone(DEFAULT_FRACTAL_DOCUMENT);

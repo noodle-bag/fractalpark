@@ -39,6 +39,20 @@ can be disabled for rollback without deleting v2 fields or user sources.
 `coloring.pipelineVersion` remains a separate, independently persisted
 contract.
 
+The database contract ships as two ordered, forward-only migrations:
+
+1. `20260811000000_frm_semantics_version.sql` adds the nullable compatibility
+   column; missing/NULL continues to mean legacy v1 and existing rows are not
+   backfilled.
+2. `20260812000000_custom_formula_semantics_rpc.sql` replaces the save RPC
+   signature with an optional `p_frm_semantics_version`. Explicit `1`/`2`
+   persists the requested contract; NULL preserves the stored value on
+   ordinary updates and remains legacy v1 for old create callers.
+
+The pair is pending hosted-ops review. Neither migration is applied by the
+application, build, or startup path; staging verification, backup, and
+Production authorization remain separate release gates.
+
 ## Consequences
 
 - Old visuals are stable by construction; v1 defects are documented as

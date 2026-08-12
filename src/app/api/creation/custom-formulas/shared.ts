@@ -12,6 +12,7 @@ import {
   CUSTOM_FORMULA_NAME_MAX_LENGTH,
 } from '@/lib/cloud/custom-formulas';
 import { compileImportedFrm } from '@/engine/frm/compile';
+import type { FrmSemanticsVersion } from '@/engine/frm/semantics-version';
 import { registerBuiltins } from '@/engine/plugins/builtins';
 import { getFormulaMetadata } from '@/engine/plugins/formula-catalog';
 
@@ -108,12 +109,20 @@ export async function parseFormulaWriteBody(
  * the source must compile. registerBuiltins() is idempotent; the catalog
  * check mirrors formula-resolver's builtin-id-conflict semantics.
  */
-export function assertFormulaCompiles(runtimeId: string, source: string): void {
+export function assertFormulaCompiles(
+  runtimeId: string,
+  source: string,
+  frmSemanticsVersion: FrmSemanticsVersion,
+): void {
   registerBuiltins();
   if (getFormulaMetadata(runtimeId)) {
     throw new CloudApiError('formula_builtin_conflict');
   }
-  const result = compileImportedFrm(source, runtimeId);
+  const result = compileImportedFrm(
+    source,
+    runtimeId,
+    frmSemanticsVersion,
+  );
   if (!result.success || !result.plugin) {
     throw new CloudApiError('formula_compile_failed');
   }

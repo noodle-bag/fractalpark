@@ -22,6 +22,10 @@ import {
 } from '@/content/frm-guide';
 import { DEFAULT_FRACTAL_DOCUMENT } from '@/engine/document';
 import type { FormulaExperienceHint } from '@/engine/frm/authoring';
+import {
+  resolveFrmSemanticsVersion,
+  type FrmSemanticsVersion,
+} from '@/engine/frm/semantics-version';
 import type { FormulaPlugin } from '@/engine/plugins/types';
 import { useCloudSession } from '@/components/cloud/CloudSessionProvider';
 import {
@@ -30,12 +34,13 @@ import {
 } from '@/hooks/useCloudFormulaLibrary';
 import { MAX_CUSTOM_FORMULAS } from '@/lib/formula-resolver';
 import { scanFrmEntries } from '@/engine/frm/scanner';
-import { classifyFrmSource } from '@/engine/frm/compat-status';
+import { classifyImportedFrmSource } from '@/engine/frm/compat-status';
 import { FrmCompatStatusCard } from '@/components/fractal/FrmCompatStatusCard';
 import { sliceFrmEntrySource } from '@/lib/frm-editor';
 import {
   createFrmDownload,
   editorToExploreHref,
+  formulaMutationErrorKey,
   preflightFrmSource,
   readFrmFile,
 } from '@/lib/frm-editor';
@@ -106,6 +111,8 @@ export function FrmEditorWorkspace() {
     initialDraft.hint
   );
   const [recordId, setRecordId] = useState<string | undefined>();
+  const [frmSemanticsVersion, setFrmSemanticsVersion] =
+    useState<FrmSemanticsVersion>(2);
   const [revision, setRevision] = useState(0);
   const [notice, setNotice] = useState(
     initialDraft.unknown ? t('unknownExample') : ''
@@ -130,21 +137,20 @@ export function FrmEditorWorkspace() {
   // and deferred catch-up could let a read-only entry compile (Codex 7e2).
   const deferredSource = useDeferredValue(source);
   const classification = useMemo(
-    () => (deferredSource.trim() ? classifyFrmSource(deferredSource) : null),
-    [deferredSource]
+    () =>
+      deferredSource.trim()
+        ? classifyImportedFrmSource(deferredSource, frmSemanticsVersion)
+        : null,
+    [deferredSource, frmSemanticsVersion]
   );
   const gatingEntry = useMemo(() => {
     if (!source.trim()) return null;
-    return classifyFrmSource(source).entries[0] ?? null;
-  }, [source]);
+    return classifyImportedFrmSource(source, frmSemanticsVersion).entries[0] ?? null;
+  }, [source, frmSemanticsVersion]);
   const scan = useMemo(
     () => (deferredSource.trim() ? scanFrmEntries(deferredSource) : null),
     [deferredSource]
   );
-  const currentEntry =
-    classification && classification.entries.length === 1
-      ? classification.entries[0]
-      : null;
   const [jumpTo, setJumpTo] = useState<
     { line: number; col?: number; nonce: number } | undefined
   >();
@@ -177,7 +183,8 @@ export function FrmEditorWorkspace() {
     (
       nextSource: string,
       nextHint?: FormulaExperienceHint,
-      id?: string
+      id?: string,
+      nextSemanticsVersion: FrmSemanticsVersion = 2,
     ): boolean => {
       const nextHintKey = experienceHintKey(nextHint);
       if (
@@ -193,6 +200,7 @@ export function FrmEditorWorkspace() {
       setSavedHintKey(id ? nextHintKey : experienceHintKey(undefined));
       setHint(nextHint);
       setRecordId(id);
+      setFrmSemanticsVersion(nextSemanticsVersion);
       setCompiledPreview(null);
       setBounds(nextHint?.bounds ?? DEFAULT_FRACTAL_DOCUMENT.scene.bounds);
       setRevision((value) => value + 1);
@@ -312,16 +320,8 @@ export function FrmEditorWorkspace() {
       switch (result.code) {
         case 'quota':
           return t('errors.maxCount', { count: MAX_CUSTOM_FORMULAS });
-        case 'conflict':
-          return t('errors.conflict');
-        case 'not_found':
-          return t('errors.formulaNotFound');
-        case 'compile-failed':
-          return t('errors.compileFailed');
-        case 'builtin-conflict':
-          return t('errors.builtinConflict');
         default:
-          return result.error ?? t('saveError');
+          return t(formulaMutationErrorKey(result.code));
       }
     },
     [t]
@@ -570,7 +570,10 @@ export function FrmEditorWorkspace() {
                           (detail.experienceHint ?? undefined) as
                             | FormulaExperienceHint
                             | undefined,
-                          detail.id
+                          detail.id,
+                          resolveFrmSemanticsVersion(
+                            detail.frmSemanticsVersion
+                          )
                         );
                       });
                     }}
@@ -601,6 +604,7 @@ export function FrmEditorWorkspace() {
           <FormulaEditor
             currentBounds={bounds}
             formulaId={recordId}
+            frmSemanticsVersion={frmSemanticsVersion}
             initialExperienceHint={hint}
             initialSource={source}
             jumpTo={jumpTo}
@@ -675,10 +679,11 @@ export function FrmEditorWorkspace() {
                   DEFAULT_FRACTAL_DOCUMENT.coloring.paletteIndex
                 }
                 power={DEFAULT_FRACTAL_DOCUMENT.formula.power}
-                // The FRM editor previews strict-v2 compiles — render them
-                // through pipeline v2 (descriptor semantics, after-step
-                // timing, smooth capability), not the legacy v1 path.
-                pipelineVersion={2}
+                // The editor renders through the same frozen pipeline as
+                // the compiler contract selected for this record. New
+                // formulas are v2; historical formulas remain v1 until an
+                // explicit Upgrade & Compare succeeds.
+                pipelineVersion={frmSemanticsVersion}
                 useSSAA={false}
               />
             </div>

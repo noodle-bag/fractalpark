@@ -10,15 +10,12 @@
  *   revertSemantics  — v2 (strict) → v1 (legacy): saveCustomFormula is
  *     called with an explicit frmSemanticsVersion of 1.
  *
- * The source is not recompiled here (the save RPC is a metadata-only
- * version bump through the same optimistic-lock transaction). Ordinary
- * saves (PATCH) never pass a version and therefore never auto-upgrade.
+ * The exact stored source is compiled under the target contract before the
+ * metadata write. Ordinary saves (PATCH) inherit the stored version and
+ * therefore never auto-upgrade.
  * The pre-read enforces ownership (uniform not_found) and the action
  * direction; the RPC re-checks ownership and revision atomically.
  *
- * Note: at the mechanism layer v1 and v2 compile identically today — the
- * strict-v2 semantic differences land in a later Slice. This endpoint
- * changes the persisted contract version only.
  */
 
 import {
@@ -39,7 +36,9 @@ import { consumeRateLimit } from '@/lib/cloud/rate-limit';
 import { resolveRequestSession } from '@/lib/cloud/request-session';
 import type { FrmSemanticsVersion } from '@/engine/frm/semantics-version';
 import {
+  assertFormulaCompiles,
   formulaRequestHash,
+  newFormulaRuntimeId,
   requireIdempotencyKey,
   requireUuid,
 } from '../../shared';
@@ -123,15 +122,23 @@ export async function POST(request: Request, context: RouteContext): Promise<Res
       throw toCustomFormulaApiError(error);
     }
 
-    // Post-condition semantics: when the stored version already matches the
-    // action's target, the request's post-condition holds. This keeps
-    // idempotent retries safe — after a successful upgrade, retrying the
-    // identical request must not fail on the direction check (it would
-    // otherwise see v2 and return validation_failed instead of the original
-    // success). A fresh request in the wrong direction receives the same
-    // 200 with `unchanged: true`, which is observable, side-effect-free,
-    // and cannot masquerade as a new write (revision is the stored one).
-    if (isDirectionSatisfied(action, formula)) {
+    // Validate the target even for an idempotent post-condition. Early
+    // v0.4.18 candidates could persist v2 after a v1-only validation; an
+    // `unchanged` response must not bless that inconsistent record.
+    assertFormulaCompiles(
+      newFormulaRuntimeId(formulaId),
+      formula.source,
+      targetVersion,
+    );
+
+    // A no-write post-condition is safe only when the caller's revision is
+    // still current. A stale tab must enter the RPC gate: the original key
+    // can replay, while a fresh key receives revision_conflict instead of
+    // blessing and re-registering stale source bytes.
+    if (
+      isDirectionSatisfied(action, formula) &&
+      formula.revision === expectedRevision
+    ) {
       return jsonOk(
         request,
         {

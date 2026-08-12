@@ -91,6 +91,7 @@ export function useCloudDraftSession() {
           id: asset.id,
           name: asset.name ?? asset.id,
           source: asset.source,
+          frmSemanticsVersion: asset.frmSemanticsVersion,
         })),
       };
       loadedRef.current = loaded;

@@ -1757,6 +1757,82 @@ async function main(): Promise<void> {
     psql(`delete from public.artwork_operations where formula_id = '${formulaId}' or idempotency_key in ('${createKey}', '${updateKey}')`);
   });
 
+  await test('custom_formula_save persists explicit FRM semantics and preserves it on ordinary updates', async () => {
+    const createKey = crypto.randomUUID();
+    const createRes = await rpc(keys, 'fractalpark_custom_formula_save', keys.serviceKey, {
+      p_owner_id: CF_OWNER_A,
+      p_idempotency_key: createKey,
+      p_request_hash: `hash-${createKey}`,
+      p_name: 'semantics rpc',
+      p_source: 'formula semantics { z = z^2 + c }',
+      p_frm_semantics_version: 2,
+    });
+    const createBody = await createRes.text();
+    assert(createRes.status === 200, `semantics create: ${createRes.status} ${createBody}`);
+    const created = JSON.parse(createBody) as {
+      formula: { id: string; revision: number; frm_semantics_version: number | null };
+    };
+    const formulaId = created.formula.id;
+    assert(created.formula.frm_semantics_version === 2, `create version: ${createBody}`);
+
+    const ordinaryKey = crypto.randomUUID();
+    const ordinaryRes = await rpc(keys, 'fractalpark_custom_formula_save', keys.serviceKey, {
+      p_owner_id: CF_OWNER_A,
+      p_formula_id: formulaId,
+      p_expected_revision: 1,
+      p_idempotency_key: ordinaryKey,
+      p_request_hash: `hash-${ordinaryKey}`,
+      p_name: 'semantics ordinary update',
+      p_source: 'formula semantics ordinary { z = z^2 + c }',
+    });
+    const ordinaryBody = await ordinaryRes.text();
+    assert(ordinaryRes.status === 200, `ordinary update: ${ordinaryRes.status} ${ordinaryBody}`);
+    const preserved = psql(
+      `select revision || ':' || frm_semantics_version from public.custom_formulas where id = '${formulaId}'`,
+    );
+    assert(preserved === '2:2', `ordinary update must preserve v2, got ${preserved}`);
+
+    const revertKey = crypto.randomUUID();
+    const revertRes = await rpc(keys, 'fractalpark_custom_formula_save', keys.serviceKey, {
+      p_owner_id: CF_OWNER_A,
+      p_formula_id: formulaId,
+      p_expected_revision: 2,
+      p_idempotency_key: revertKey,
+      p_request_hash: `hash-${revertKey}`,
+      p_name: 'semantics reverted',
+      p_source: 'formula semantics ordinary { z = z^2 + c }',
+      p_frm_semantics_version: 1,
+    });
+    const revertBody = await revertRes.text();
+    assert(revertRes.status === 200, `explicit revert: ${revertRes.status} ${revertBody}`);
+    const reverted = psql(
+      `select revision || ':' || frm_semantics_version from public.custom_formulas where id = '${formulaId}'`,
+    );
+    assert(reverted === '3:1', `explicit revert must persist v1, got ${reverted}`);
+
+    const invalidKey = crypto.randomUUID();
+    const invalidRes = await rpc(keys, 'fractalpark_custom_formula_save', keys.serviceKey, {
+      p_owner_id: CF_OWNER_A,
+      p_formula_id: formulaId,
+      p_expected_revision: 3,
+      p_idempotency_key: invalidKey,
+      p_request_hash: `hash-${invalidKey}`,
+      p_name: 'invalid semantics version',
+      p_source: 'formula semantics ordinary { z = z^2 + c }',
+      p_frm_semantics_version: 3,
+    });
+    const invalidBody = await invalidRes.text();
+    assert(
+      invalidRes.status !== 200 && invalidBody.includes('validation_failed'),
+      `invalid semantics version must reject: ${invalidRes.status} ${invalidBody}`,
+    );
+
+    psql(`delete from public.custom_formulas where id = '${formulaId}'`);
+    psql(
+      `delete from public.artwork_operations where formula_id = '${formulaId}' or idempotency_key in ('${createKey}', '${ordinaryKey}', '${revertKey}', '${invalidKey}')`,
+    );
+  });
+
   await test('custom_formula_save quota: count enforced with test-tunable limit', async () => {
     const k1 = crypto.randomUUID();
     const r1 = await rpc(keys, 'fractalpark_custom_formula_save', keys.serviceKey, {

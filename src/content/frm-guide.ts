@@ -6,6 +6,8 @@ import {
 } from '@/engine/frm/example-library';
 import { FRM_CAPABILITY_MANIFEST } from '@/engine/frm/capability-manifest';
 
+const COMPATIBILITY_TIERS = FRM_CAPABILITY_MANIFEST.compatibility.tiers;
+
 /**
  * Verified-capability facts rendered by the Guide's support section.
  * Derived from the versioned capability manifest — never hand-write
@@ -15,6 +17,14 @@ export const FRM_GUIDE_CAPABILITY = {
   manifestVersion: FRM_CAPABILITY_MANIFEST.manifestVersion,
   strictSemanticsVersion: FRM_CAPABILITY_MANIFEST.semantics.strictVersion,
   target: FRM_CAPABILITY_MANIFEST.compatibility.target,
+  passed:
+    COMPATIBILITY_TIERS.t0.pass +
+    COMPATIBILITY_TIERS.t1.pass +
+    COMPATIBILITY_TIERS.t2.pass,
+  waivers:
+    COMPATIBILITY_TIERS.t0.waivers +
+    COMPATIBILITY_TIERS.t1.waivers +
+    COMPATIBILITY_TIERS.t2.waivers,
   excluded: FRM_CAPABILITY_MANIFEST.compatibility.excluded,
   tiers: FRM_CAPABILITY_MANIFEST.compatibility.tiers,
   descriptorKinds: FRM_CAPABILITY_MANIFEST.bailout.descriptorKinds,

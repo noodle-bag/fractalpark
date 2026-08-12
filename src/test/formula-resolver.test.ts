@@ -23,6 +23,7 @@ const CUSTOM_IDS = [
   'custom-missing-resolver',
   'custom-transient-resolver',
   'custom-classic-resolver',
+  'custom-strict-resolver',
 ];
 
 describe('formula resolver', () => {
@@ -131,6 +132,20 @@ describe('formula resolver', () => {
       'u_p3',
       'u_fn2',
     ]);
+  });
+
+  it('returns the explicit semantics version used to compile a custom formula', () => {
+    const resolution = resolveCustomFormula({
+      id: 'custom-strict-resolver',
+      source: SOURCE,
+      frmSemanticsVersion: 2,
+    });
+
+    expect(resolution).toMatchObject({
+      success: true,
+      kind: 'custom',
+      frmSemanticsVersion: 2,
+    });
   });
 
   it('never lets a custom formula overwrite a built-in formula ID', () => {

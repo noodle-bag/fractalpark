@@ -40,4 +40,85 @@ describe('formula registry change signal (review B1)', () => {
       window.removeEventListener(CUSTOM_FORMULAS_CHANGED_EVENT, listener);
     }
   });
+
+  it('dispatches once when the same bytes move from legacy v1 to strict v2', () => {
+    const formulaId = 'version-change-probe';
+    let listenerRuns = 0;
+    const listener = () => {
+      listenerRuns += 1;
+    };
+    window.addEventListener(CUSTOM_FORMULAS_CHANGED_EVENT, listener);
+    try {
+      expect(
+        resolveCustomFormula({
+          id: formulaId,
+          source: VALID_FRM,
+          frmSemanticsVersion: 1,
+        }).success,
+      ).toBe(true);
+      expect(listenerRuns).toBe(1);
+
+      expect(
+        resolveCustomFormula({
+          id: formulaId,
+          source: VALID_FRM,
+          frmSemanticsVersion: 2,
+        }).success,
+      ).toBe(true);
+      expect(listenerRuns).toBe(2);
+      expect(
+        readSessionFormulaAssets().find((asset) => asset.id === formulaId)
+          ?.frmSemanticsVersion,
+      ).toBe(2);
+
+      resolveCustomFormula({
+        id: formulaId,
+        source: VALID_FRM,
+        frmSemanticsVersion: 2,
+      });
+      expect(listenerRuns).toBe(2);
+    } finally {
+      window.removeEventListener(CUSTOM_FORMULAS_CHANGED_EVENT, listener);
+    }
+  });
+
+  it('keeps an equivalent experience hint silent when object key order changes', () => {
+    const formulaId = 'hint-order-probe';
+    let listenerRuns = 0;
+    const listener = () => {
+      listenerRuns += 1;
+    };
+    window.addEventListener(CUSTOM_FORMULAS_CHANGED_EVENT, listener);
+    try {
+      resolveCustomFormula({
+        id: formulaId,
+        source: VALID_FRM,
+        experienceHint: {
+          bounds: { centerX: 1, centerY: 2, zoom: 3, rotation: 4 },
+          coloring: {
+            outsideColoringId: 'smooth',
+            insideColoringId: 'solid',
+            paletteIndex: 5,
+          },
+        },
+      });
+      expect(listenerRuns).toBe(1);
+
+      resolveCustomFormula({
+        id: formulaId,
+        source: VALID_FRM,
+        experienceHint: {
+          coloring: {
+            paletteIndex: 5,
+            insideColoringId: 'solid',
+            outsideColoringId: 'smooth',
+          },
+          bounds: { rotation: 4, zoom: 3, centerY: 2, centerX: 1 },
+        },
+      });
+      expect(listenerRuns).toBe(1);
+    } finally {
+      window.removeEventListener(CUSTOM_FORMULAS_CHANGED_EVENT, listener);
+    }
+  });
 });

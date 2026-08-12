@@ -1,7 +1,6 @@
 import { expect, test } from '@playwright/test';
 
 const ABSOLUTE_EDITOR_URL = 'http://127.0.0.1:3000/en/formulas/editor';
-const STORAGE_KEY = 'myfrac-custom-formulas';
 
 test.describe('standalone FRM editor', () => {
   test.describe.configure({ mode: 'serial', timeout: 60_000 });
@@ -78,31 +77,27 @@ test.describe('standalone FRM editor', () => {
     await expect(page.getByTestId('frm-editor-preview')).toBeVisible();
   });
 
-  test('saves locally and consumes the one-time handoff in Explore', async ({ page }) => {
+  test('fails closed without cloud prerequisites and never restores local persistence', async ({
+    page,
+  }) => {
     await page.goto('/en/formulas/editor?example=starter-brot');
     await page.getByRole('button', { name: 'Compile', exact: true }).click();
     await expect(page.getByText('Compile Successful').first()).toBeVisible();
 
     await page.getByRole('button', { name: 'Save', exact: true }).click();
-    await expect(page.getByText('Saved locally.')).toBeVisible();
-    const storedId = await page.evaluate((storageKey) => {
-      const records = JSON.parse(localStorage.getItem(storageKey) ?? '[]') as Array<{
-        id: string;
-      }>;
-      return records[0]?.id ?? '';
-    }, STORAGE_KEY);
-    expect(storedId).toMatch(/^custom-/);
+    await expect(
+      page.getByText('The cloud formula library is unavailable. Your formula was not saved.')
+    ).toBeVisible();
+    await expect(page).toHaveURL(/\/en\/formulas\/editor\?example=starter-brot$/);
 
     await page.getByTestId('frm-save-open').click();
-    await page.waitForURL((url) => {
-      return (
-        url.pathname === '/en/explore' &&
-        !url.searchParams.has('open') &&
-        !url.searchParams.has('formula')
-      );
-    });
-    await expect.poll(() => new URL(page.url()).searchParams.get('fm')).toBe(storedId);
-    await expect(page.getByTestId('fractal-canvas')).toBeVisible();
+    await expect(
+      page.getByText('The cloud formula library is unavailable. Your formula was not saved.')
+    ).toBeVisible();
+    await expect(page).toHaveURL(/\/en\/formulas\/editor\?example=starter-brot$/);
+    await expect
+      .poll(() => page.evaluate(() => localStorage.getItem('myfrac-custom-formulas')))
+      .toBeNull();
   });
 
   test('consumes invalid and cross-device handoffs without a built-in fallback', async ({
@@ -123,7 +118,7 @@ test.describe('standalone FRM editor', () => {
         page.getByText(
           formulaId === 'mandelbrot'
             ? /custom formula library could not be read safely/i
-            : /not available on this device/i
+            : /custom formula .* could not be loaded/i
         )
       ).toBeVisible();
       await expect(page.getByTestId('fractal-canvas')).toHaveCount(0);
@@ -134,7 +129,7 @@ test.describe('standalone FRM editor', () => {
         page.getByText(
           formulaId === 'mandelbrot'
             ? /custom formula library could not be read safely/i
-            : /not available on this device/i
+            : /custom formula .* could not be loaded/i
         )
       ).toHaveCount(0);
     }
@@ -173,26 +168,6 @@ test.describe('standalone FRM editor', () => {
     await expect(page).toHaveURL(/\/en\/formulas\/frm$/);
   });
 
-  test('treats a changed default view as an unsaved draft change', async ({ page }) => {
-    await page.goto('/en/formulas/editor?example=starter-brot');
-    await page.getByRole('button', { name: 'Compile', exact: true }).click();
-    await page.getByRole('button', { name: 'Save', exact: true }).click();
-    await expect(page.getByText('Saved locally.')).toBeVisible();
-
-    const canvas = page.getByTestId('fractal-canvas');
-    await canvas.hover();
-    await page.mouse.wheel(0, -500);
-    await page.getByRole('button', { name: 'Use Current View as Default' }).click();
-
-    let prompted = false;
-    page.once('dialog', async (dialog) => {
-      prompted = true;
-      await dialog.dismiss();
-    });
-    await page.getByRole('link', { name: 'FRM Guide', exact: true }).click();
-    expect(prompted).toBe(true);
-    await expect(page).toHaveURL(/\/en\/formulas\/editor\?example=starter-brot$/);
-  });
 
   test('updates preview only after compile and keeps the last success when source changes', async ({
     page,

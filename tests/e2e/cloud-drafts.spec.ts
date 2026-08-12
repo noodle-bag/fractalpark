@@ -119,7 +119,55 @@ test.describe('Cloud drafts journey', () => {
     ).toBeVisible({ timeout: 15000 });
     await expect(page.getByText(/rev 2/i)).toBeVisible();
 
-    // 7. Publish through the real UI. The first response is deliberately
+    // 7. The standalone FRM Editor uses the same authenticated cloud session.
+    // Save & Open must persist a strict-v2 formula through the real RPC, then
+    // consume the one-time handoff in Explore without any localStorage fallback.
+    await page.goto('/en/formulas/editor?example=starter-brot');
+    await page.getByRole('button', { name: 'Compile', exact: true }).click();
+    await expect(page.getByText('Compile Successful').first()).toBeVisible();
+
+    // A real cloud save establishes the persisted baseline. Changing only the
+    // default view must then activate the unsaved-draft navigation guard.
+    await page.getByRole('button', { name: 'Save', exact: true }).click();
+    await expect(page.getByText('Saved to your cloud library.')).toBeVisible();
+    const editorCanvas = page.getByTestId('fractal-canvas');
+    await editorCanvas.hover();
+    await page.mouse.wheel(0, -500);
+    await page.getByRole('button', { name: 'Use Current View as Default' }).click();
+    let promptedForDefaultView = false;
+    page.once('dialog', async (dialog) => {
+      promptedForDefaultView = true;
+      await dialog.dismiss();
+    });
+    await page.getByRole('link', { name: 'FRM Guide', exact: true }).click();
+    expect(promptedForDefaultView).toBe(true);
+    await expect(page).toHaveURL(/\/en\/formulas\/editor\?example=starter-brot$/);
+
+    await page.getByTestId('frm-save-open').click();
+    await page.waitForURL((url) => {
+      return (
+        url.pathname === '/en/explore' &&
+        !url.searchParams.has('open') &&
+        !url.searchParams.has('formula') &&
+        /^custom-/.test(url.searchParams.get('fm') ?? '')
+      );
+    }, { timeout: 30000 });
+    await waitForFractalCanvasReady(page);
+    await expect
+      .poll(() => page.evaluate(() => localStorage.getItem('myfrac-custom-formulas')))
+      .toBeNull();
+
+    const formulaList = await page.request.get('/api/creation/custom-formulas');
+    expect(formulaList.status()).toBe(200);
+    const formulaListBody = (await formulaList.json()) as {
+      formulas: Array<{ id: string; frmSemanticsVersion?: number }>;
+    };
+    const editorFormulaId = new URL(page.url()).searchParams.get('fm');
+    expect(formulaListBody.formulas).toContainEqual(
+      expect.objectContaining({ id: editorFormulaId, frmSemanticsVersion: 2 }),
+    );
+
+    // 8. Publish through the real UI. The first response is deliberately
     // lost after the server commits; the cloud client must retry with the
     // same idempotency key and converge through the route's replay branch.
     const publishKeys: string[] = [];
