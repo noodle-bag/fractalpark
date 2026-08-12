@@ -1736,7 +1736,25 @@
       "size": "Los archivos FRM deben ser de 256 KiB o menos.",
       "encoding": "El archivo debe ser UTF-8 válido."
     },
-    "librarySignIn": "Inicia sesión para abrir tu biblioteca de fórmulas en la nube."
+    "librarySignIn": "Inicia sesión para abrir tu biblioteca de fórmulas en la nube.",
+    "compat": {
+      "level": {
+        "supported": "Compatible",
+        "adapted": "Compatible con adaptaciones",
+        "readOnly": "Solo lectura",
+        "invalid": "Fuente no válida"
+      },
+      "entriesTitle": "Se encontraron {count} entradas de fórmula — elige una para abrirla",
+      "entriesSummary": "{count} entradas, {blocked} no ejecutables — toca para elegir",
+      "select": "Abrir",
+      "adaptationsTitle": "Adaptaciones:",
+      "blockingTag": "Bloqueo:",
+      "lineJump": "Línea {line}",
+      "blockedHint": "Las fuentes de solo lectura o no válidas no se pueden ejecutar; la edición, la copia y la descarga siguen disponibles",
+      "blockedCompile": "Esta fuente no cumple el contrato de compatibilidad admitido y no se puede ejecutar.",
+      "summary": "{level} · {errors, plural, =0 {sin errores} one {# error} other {# errores}} · {warnings, plural, =0 {sin advertencias} one {# advertencia} other {# advertencias}}",
+      "selectEntry": "Abrir {name}"
+    }
   },
   "metadata": {
     "explore": {

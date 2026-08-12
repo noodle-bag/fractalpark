@@ -1,6 +1,6 @@
 'use client';
 
-import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
+import { useCallback, useDeferredValue, useEffect, useMemo, useRef, useState } from 'react';
 import {
   BookOpen,
   Download,
@@ -29,6 +29,10 @@ import {
   type FormulaMutationResult,
 } from '@/hooks/useCloudFormulaLibrary';
 import { MAX_CUSTOM_FORMULAS } from '@/lib/formula-resolver';
+import { scanFrmEntries } from '@/engine/frm/scanner';
+import { classifyFrmSource } from '@/engine/frm/compat-status';
+import { FrmCompatStatusCard } from '@/components/fractal/FrmCompatStatusCard';
+import { sliceFrmEntrySource } from '@/lib/frm-editor';
 import {
   createFrmDownload,
   editorToExploreHref,
@@ -121,16 +125,49 @@ export function FrmEditorWorkspace() {
       ? source.length > 0 || currentHintKey !== experienceHintKey(undefined)
       : source !== savedSource || currentHintKey !== savedHintKey;
   const sourcePreflight = useMemo(() => preflightFrmSource(source), [source]);
+  // Card rendering uses deferred classification (no per-keystroke flicker).
+  // Run gating on the live source — a brief gap between a selection-slice
+  // and deferred catch-up could let a read-only entry compile (Codex 7e2).
+  const deferredSource = useDeferredValue(source);
+  const classification = useMemo(
+    () => (deferredSource.trim() ? classifyFrmSource(deferredSource) : null),
+    [deferredSource]
+  );
+  const gatingEntry = useMemo(() => {
+    if (!source.trim()) return null;
+    return classifyFrmSource(source).entries[0] ?? null;
+  }, [source]);
+  const scan = useMemo(
+    () => (deferredSource.trim() ? scanFrmEntries(deferredSource) : null),
+    [deferredSource]
+  );
+  const currentEntry =
+    classification && classification.entries.length === 1
+      ? classification.entries[0]
+      : null;
+  const [jumpTo, setJumpTo] = useState<
+    { line: number; col?: number; nonce: number } | undefined
+  >();
   const sourcePreflightError =
     sourcePreflight.status === 'multiple'
       ? t('source.multiple')
       : sourcePreflight.status === 'trailing'
         ? t('source.trailing')
         : undefined;
+  // Compile gating: preflight blocks as before; additionally a single
+  // recognized entry that is read-only/invalid under strict v2 cannot run
+  // (four-level contract — no silent default radius, no other entry runs).
+  const compileBlockError =
+    sourcePreflightError ??
+    (!gatingEntry?.runnable
+      ? gatingEntry?.diagnostics.find((d) => d.blocking)?.message ??
+        t('compat.blockedCompile')
+      : undefined);
   const canSaveAndOpen = Boolean(
     compiledPreview &&
       compiledPreview.source === source &&
-      !sourcePreflightError
+      !sourcePreflightError &&
+      (gatingEntry ? gatingEntry.runnable : true)
   );
   const previewIsStale = Boolean(
     compiledPreview && compiledPreview.source !== source
@@ -164,6 +201,21 @@ export function FrmEditorWorkspace() {
     },
     [currentHintKey, isDirty, source, t]
   );
+
+  // Multi-entry picker: slice the chosen entry into the editor (the dirty
+  // guard in loadSource protects unsaved edits).
+  const selectEntry = useCallback(
+    (key: string) => {
+      if (!scan) return;
+      const entry = scan.entries.find((e) => e.key === key);
+      if (!entry) return;
+      loadSource(sliceFrmEntrySource(deferredSource, entry));
+    },
+    [scan, deferredSource, loadSource]
+  );
+  const jumpToLocation = useCallback((line: number, col?: number) => {
+    setJumpTo({ line, col, nonce: Date.now() });
+  }, []);
 
   useEffect(() => {
     if (lastExampleRequestRef.current === requestedExample) return;
@@ -536,11 +588,22 @@ export function FrmEditorWorkspace() {
             </div>
           </details>
 
+          {classification && (
+            <FrmCompatStatusCard
+              classification={classification}
+              onJumpToLocation={jumpToLocation}
+              onSelectEntry={
+                classification.entries.length > 1 ? selectEntry : undefined
+              }
+            />
+          )}
+
           <FormulaEditor
             currentBounds={bounds}
             formulaId={recordId}
             initialExperienceHint={hint}
             initialSource={source}
+            jumpTo={jumpTo}
             key={revision}
             onCompile={(plugin, effectiveHint) => {
               setCompiledPreview({ plugin, source });
@@ -554,7 +617,7 @@ export function FrmEditorWorkspace() {
             onExperienceHintChange={setHint}
             onSave={save}
             onSourceChange={setSource}
-            sourcePreflightError={sourcePreflightError}
+            sourcePreflightError={compileBlockError}
           />
         </div>
 

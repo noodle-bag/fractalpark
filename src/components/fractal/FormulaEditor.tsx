@@ -92,6 +92,8 @@ interface FormulaEditorProps {
   initialExperienceHint?: FormulaExperienceHint;
   currentBounds?: ViewBounds;
   sourcePreflightError?: string;
+  /** Request a cursor jump to a 1-based source line/col (nonce retriggers). */
+  jumpTo?: { line: number; col?: number; nonce: number };
   onCompile?: (plugin: FormulaPlugin, experienceHint?: FormulaExperienceHint) => void;
   onSourceChange?: (source: string) => void;
   onExperienceHintChange?: (experienceHint?: FormulaExperienceHint) => void;
@@ -140,6 +142,7 @@ export function FormulaEditor({
   formulaId,
   initialSource = DEFAULT_SOURCE,
   initialExperienceHint,
+  jumpTo,
   currentBounds,
   sourcePreflightError,
   onCompile,
@@ -321,6 +324,25 @@ export function FormulaEditor({
       }
     };
   }, []); // eslint-disable-line react-hooks/exhaustive-deps
+
+  // Source-location jump (four-level diagnostics → editor cursor). The nonce
+  // retriggers the same location; out-of-range lines clamp to the document.
+  useEffect(() => {
+    if (!jumpTo) return;
+    const view = cmViewRef.current;
+    if (!view) return;
+    const doc = view.state.doc;
+    const line = Math.max(1, Math.min(jumpTo.line, doc.lines));
+    const lineInfo = doc.line(line);
+    const col = Math.max(1, jumpTo.col ?? 1);
+    const pos = Math.min(lineInfo.from + col - 1, lineInfo.to);
+    view.dispatch({
+      selection: { anchor: pos },
+      scrollIntoView: true,
+    });
+    view.focus();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [jumpTo?.nonce]);
 
   const handleCompile = useCallback(async () => {
     if (sourcePreflightError) return;

@@ -52,4 +52,39 @@ describe('locale metadata maps', () => {
   it('htmlLangForLocale passes through unknown locales defensively', () => {
     expect(htmlLangForLocale('de' as SupportedLocale)).toBe('de');
   });
+
+  it('every locale carries the Editor compat-status keys (Slice 7e2)', () => {
+    // JSON parse — avoids TS dynamic-import issues in vitest.
+    /* eslint-disable @typescript-eslint/no-var-requires */
+    for (const locale of [...SUPPORTED_LOCALES]) {
+      // eslint-disable-next-line @typescript-eslint/no-require-imports, unicorn/prefer-module
+      const messages = JSON.parse(require('node:fs').readFileSync(
+        require('node:path').join(__dirname, '../../messages', `${locale}.json`),
+        'utf-8',
+      ));
+      /* eslint-enable @typescript-eslint/no-var-requires */
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      const frmEditor = (messages as any).frmEditor;
+      expect(frmEditor, `${locale}.json missing frmEditor`).toBeTruthy();
+      const c = frmEditor.compat;
+      expect(
+        c,
+        `${locale}.json missing frmEditor.compat keys (Slice 7e2)`,
+      ).toBeTypeOf('object');
+      expect(c.level, `missing level object in ${locale}`).toBeTypeOf('object');
+      for (const sub of ['supported', 'adapted', 'readOnly', 'invalid']) {
+        expect(
+          (c.level as Record<string, unknown>)[sub],
+          `missing level.${sub} in ${locale}`,
+        ).toBeTypeOf('string');
+      }
+      for (const key of [
+        'entriesTitle', 'select', 'blockingTag', 'lineJump', 'summary',
+      ]) {
+        expect(
+          (c as Record<string, unknown>)[key], `missing ${key} in ${locale}`,
+        ).toBeTypeOf('string');
+      }
+    }
+  });
 });

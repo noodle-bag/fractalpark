@@ -1727,6 +1727,24 @@
       "builtinConflict": "This id is reserved by a built-in formula."
     },
     "compileFirst": "Compile this source successfully before opening it in Explorer.",
+    "compat": {
+      "level": {
+        "supported": "Supported",
+        "adapted": "Supported with adaptations",
+        "readOnly": "Read-only",
+        "invalid": "Invalid source"
+      },
+      "entriesTitle": "{count} formula entries found — choose one to open",
+      "entriesSummary": "{count} entries, {blocked} not runnable — tap to choose",
+      "select": "Open",
+      "selectEntry": "Open {name}",
+      "adaptationsTitle": "Adaptations:",
+      "blockingTag": "Blocking:",
+      "lineJump": "Line {line}",
+      "blockedHint": "Read-only / invalid sources cannot run; editing, copy and download stay available",
+      "blockedCompile": "This source is outside the supported compatibility contract and cannot run.",
+      "summary": "{level} · {errors, plural, =0 {no errors} one {# error} other {# errors}} · {warnings, plural, =0 {no warnings} one {# warning} other {# warnings}}"
+    },
     "source": {
       "multiple": "This source contains more than one top-level formula. FractalPark compiles one formula at a time and has preserved the full source without truncating it.",
       "trailing": "This source contains unsupported content after the formula. FractalPark has preserved the full source and will not compile only the first part."

@@ -1727,6 +1727,24 @@
       "builtinConflict": "该 id 已被内置公式占用。"
     },
     "compileFirst": "请先成功编译源代码，再在探索器中打开。",
+    "compat": {
+      "level": {
+        "supported": "受支持",
+        "adapted": "受支持（含适配）",
+        "readOnly": "只读",
+        "invalid": "无效源"
+      },
+      "entriesTitle": "发现 {count} 个公式条目——请选择一个打开",
+      "entriesSummary": "{count} 个条目，{blocked} 个不可运行——点击选择",
+      "select": "打开",
+      "selectEntry": "打开 {name}",
+      "adaptationsTitle": "适配：",
+      "blockingTag": "阻断：",
+      "lineJump": "第 {line} 行",
+      "blockedHint": "只读/无效源不可运行；编辑、复制和下载仍然可用",
+      "blockedCompile": "该源代码超出受支持的兼容合同，无法运行。",
+      "summary": "{level} · {errors, plural, =0 {无错误} other {# 个错误}} · {warnings, plural, =0 {无警告} other {# 条警告}}"
+    },
     "source": {
       "multiple": "源代码包含多个顶层公式。FractalPark 每次只编译一个公式，并已完整保留源码，不会静默截断。",
       "trailing": "公式后还存在不受支持的内容。FractalPark 已完整保留源码，不会只编译前半部分。"

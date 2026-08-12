@@ -28,7 +28,6 @@
  * lowering line map.
  */
 
-import { createHash } from 'node:crypto';
 import { scanFrmEntries, FRM_BLOCKING_DIAGNOSTICS } from './scanner';
 import {
   compileClassicFrmEntry,
@@ -78,6 +77,14 @@ export interface FrmSourceCompat {
   sourceDiagnostics: FrmCompatDiagnostic[];
 }
 
+/** Simple string hash (djb2) — produces a stable 8-char hex digest suitable
+ * for dedupe disambiguation and stable IDs. Browser-safe, no node:crypto. */
+function hashString(s: string): string {
+  let h = 5381;
+  for (let i = 0; i < s.length; i++) h = ((h << 5) + h + s.charCodeAt(i)) | 0;
+  return (h >>> 0).toString(16).padStart(8, '0');
+}
+
 const REJECT_REASON_SET: ReadonlySet<string> = new Set(BAILOUT_REJECT_REASONS);
 
 /** Extract a bracketed machine reason (`... [threshold-not-loop-invariant]`)
@@ -97,7 +104,7 @@ function dedupe(diagnostics: FrmCompatDiagnostic[]): FrmCompatDiagnostic[] {
   return diagnostics.filter((d) => {
     // reasonCode + location + message digest: distinct issues sharing a
     // code (two undeclared variables on one line) must survive dedupe.
-    const digest = createHash('sha256').update(d.message).digest('hex').slice(0, 8);
+    const digest = hashString(d.message);
     const key = `${d.reasonCode}@${d.line ?? ''}:${d.col ?? ''}#${digest}`;
     if (seen.has(key)) return false;
     seen.add(key);
@@ -113,7 +120,7 @@ function classifyEntry(
   const result: ClassicEntryCompileResult = compileClassicFrmEntry(
     source,
     key,
-    `compat-${createHash('sha256').update(key).digest('hex').slice(0, 8)}`,
+    `compat-${hashString(key)}`,
     semanticsVersion,
   );
   const toClassicLine = (nativeLine: number | undefined): number | undefined => {

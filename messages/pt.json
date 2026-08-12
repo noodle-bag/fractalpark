@@ -1736,7 +1736,25 @@
       "size": "Arquivos FRM devem ter no máximo 256 KiB.",
       "encoding": "O arquivo deve ser UTF-8 válido."
     },
-    "librarySignIn": "Entre para abrir sua biblioteca de fórmulas na nuvem."
+    "librarySignIn": "Entre para abrir sua biblioteca de fórmulas na nuvem.",
+    "compat": {
+      "level": {
+        "supported": "Compatível",
+        "adapted": "Compatível com adaptações",
+        "readOnly": "Somente leitura",
+        "invalid": "Fonte inválida"
+      },
+      "entriesTitle": "{count} entradas de fórmula encontradas — escolha uma para abrir",
+      "entriesSummary": "{count} entradas, {blocked} não executáveis — toque para escolher",
+      "select": "Abrir",
+      "adaptationsTitle": "Adaptações:",
+      "blockingTag": "Bloqueio:",
+      "lineJump": "Linha {line}",
+      "blockedHint": "Fontes somente leitura ou inválidas não podem ser executadas; edição, cópia e download continuam disponíveis",
+      "blockedCompile": "Esta fonte está fora do contrato de compatibilidade compatível e não pode ser executada.",
+      "summary": "{level} · {errors, plural, =0 {sem erros} one {# erro} other {# erros}} · {warnings, plural, =0 {sem avisos} one {# aviso} other {# avisos}}",
+      "selectEntry": "Abrir {name}"
+    }
   },
   "metadata": {
     "explore": {
