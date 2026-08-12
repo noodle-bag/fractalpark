@@ -139,8 +139,12 @@ function evalNumericLiteral(node: ASTNode): number | null {
 }
 
 /** Pure functions allowed inside a C2 threshold expression. */
-const PURE_THRESHOLD_FUNCTIONS = new Set(['sqrt', 'abs', 'sqr', 'exp', 'log', 'sin', 'cos', 'cosxx', 'cotanh', 'tan', 'sinh', 'cosh', 'tanh']);
+const PURE_THRESHOLD_FUNCTIONS = new Set(['sqrt', 'abs', 'sqr', 'exp', 'log', 'sin', 'cos', 'cosxx', 'cotanh', 'tan', 'sinh', 'cosh', 'tanh', 'real']);
 const ARITHMETIC_OPS = new Set(['+', '-', '*', '/', '^']);
+/** Boolean-arithmetic ops over invariant operands are themselves invariant
+ * (classic 0/1 semantics; T2 `test=(4*(p2<=0))+...` idiom). `imag` stays
+ * out: the scalar evaluators track real defaults only. */
+const INVARIANT_BOOL_OPS = new Set(['<', '<=', '>', '>=', '==', '!=', '&&', '||']);
 
 /**
  * Substitute init-bound identifiers with structural copies of their init
@@ -207,7 +211,9 @@ function checkLoopInvariance(node: ASTNode, declaredParams: Set<string>): Invari
       if (node.op === '-') return checkLoopInvariance(node.operand, declaredParams);
       return { invariant: false, params: [] };
     case 'binary': {
-      if (!ARITHMETIC_OPS.has(node.op)) return { invariant: false, params: [] };
+      if (!ARITHMETIC_OPS.has(node.op) && !INVARIANT_BOOL_OPS.has(node.op)) {
+        return { invariant: false, params: [] };
+      }
       const left = checkLoopInvariance(node.left, declaredParams);
       const right = checkLoopInvariance(node.right, declaredParams);
       if (!left.invariant || !right.invariant) return { invariant: false, params: [] };
@@ -262,6 +268,15 @@ export function evaluateC2Threshold(
           case '*': return l * r;
           case '/': return r === 0 ? null : l / r;
           case '^': return Math.pow(l, r);
+          // Classic boolean arithmetic: 0/1 values, non-short-circuit.
+          case '<': return l < r ? 1 : 0;
+          case '<=': return l <= r ? 1 : 0;
+          case '>': return l > r ? 1 : 0;
+          case '>=': return l >= r ? 1 : 0;
+          case '==': return l === r ? 1 : 0;
+          case '!=': return l !== r ? 1 : 0;
+          case '&&': return l !== 0 && r !== 0 ? 1 : 0;
+          case '||': return l !== 0 || r !== 0 ? 1 : 0;
           default: return null;
         }
       }
@@ -270,6 +285,7 @@ export function evaluateC2Threshold(
         if (args.some((a) => a === null)) return null;
         const [a] = args as number[];
         switch (node.name) {
+          case 'real': return a; // scalar evaluator tracks real parts only
           case 'sqrt': return a < 0 ? null : Math.sqrt(a);
           case 'abs': return Math.abs(a);
           case 'sqr': return a * a;

@@ -114,12 +114,23 @@ export function evalDescriptorThreshold(
           case '*': return l * r;
           case '/': return l / r;
           case '^': return Math.pow(l, r);
+          // Classic boolean arithmetic (0/1, non-short-circuit) — the T2
+          // `test=(4*(p2<=0))+...` / if-else-synthesized threshold idiom.
+          case '<': return l < r ? 1 : 0;
+          case '<=': return l <= r ? 1 : 0;
+          case '>': return l > r ? 1 : 0;
+          case '>=': return l >= r ? 1 : 0;
+          case '==': return l === r ? 1 : 0;
+          case '!=': return l !== r ? 1 : 0;
+          case '&&': return l !== 0 && r !== 0 ? 1 : 0;
+          case '||': return l !== 0 || r !== 0 ? 1 : 0;
           default: throw new OrbitUnsupportedError(`threshold op ${node.op}`);
         }
       }
       case 'call': {
         const args = node.args.map(evalPure);
         switch (node.name) {
+          case 'real': return args[0]; // scalar evaluator: real part is the value
           case 'sqrt': return Math.sqrt(args[0]);
           case 'abs': return Math.abs(args[0]);
           case 'sqr': return args[0] * args[0];

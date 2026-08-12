@@ -58,15 +58,35 @@ export interface CompileResult {
  * rows' narrow shape and does not turn general mutable variables into
  * magnitude forms.
  */
+/** Last statement is exactly `x = |z|` → returns x, else null. */
+const finalZMagTarget = (stmt: ASTNode | undefined): string | null =>
+  stmt?.type === 'assignment' &&
+  !stmt.component &&
+  stmt.value.type === 'magnitude' &&
+  stmt.value.operand.type === 'ident' &&
+  stmt.value.operand.name === 'z'
+    ? stmt.target
+    : null;
+
 function collectFinalMagnitudeAliases(loopBlock: readonly ASTNode[]): Set<string> {
   const final = loopBlock[loopBlock.length - 1];
-  if (
-    final?.type === 'assignment' &&
-    final.value.type === 'magnitude' &&
-    final.value.operand.type === 'ident' &&
-    final.value.operand.name === 'z'
-  ) {
-    return new Set([final.target]);
+  const direct = finalZMagTarget(final);
+  if (direct) return new Set([direct]);
+  // Branch-uniform refresh (inandout02 evidence): the final top-level loop
+  // statement is an if/else whose EVERY branch ends with the same
+  // `x = |z|`, so x still holds the completed round's magnitude no matter
+  // which branch ran. else-if chains are covered; a missing else is not
+  // (the stale value would leak through).
+  if (final?.type === 'if' && final.else) {
+    const bodies: Array<readonly ASTNode[]> = [
+      final.then,
+      ...(final.elseIf ?? []).map((b) => b.body),
+      final.else,
+    ];
+    const targets = bodies.map((b) => finalZMagTarget(b[b.length - 1]));
+    if (targets[0] && targets.every((t) => t === targets[0])) {
+      return new Set([targets[0]]);
+    }
   }
   return new Set();
 }
@@ -217,10 +237,14 @@ function compileFrmUncached(
       const remaining = new Map<string, number>();
       for (const stmt of ast.initBlock) {
         if (stmt.type !== 'assignment') continue;
+        if (stmt.component) continue; // lane stores are not whole-var assignments
         remaining.set(stmt.target, (remaining.get(stmt.target) ?? 0) + 1);
       }
       for (const stmt of ast.initBlock) {
         if (stmt.type !== 'assignment') continue;
+        // A component store (`real(x) = e`) writes one lane only — it is
+        // never a whole-variable binding (Codex 6b3 round-1).
+        if (stmt.component) continue;
         remaining.set(stmt.target, (remaining.get(stmt.target) ?? 1) - 1);
         // Seed-transparency, provenance-gated: the classic c-rebinding
         // lowering marks its generated seed target via
@@ -248,6 +272,77 @@ function compileFrmUncached(
           multiplyAssigned.add(stmt.target);
         } else {
           initBindings.set(stmt.target, stmt.value);
+        }
+      }
+      // Init if/else single-target bindings (T2 `test` idiom: groucho,
+      // inandout01-04, larry, moe, bailout-c). When an init-level if with
+      // an exhaustive else assigns the SAME target exactly once in every
+      // branch (and nothing else in init assigns it), the post-init value
+      // is exactly the right-folded boolean-arithmetic expression
+      // `c1*A + (1-c1)*(c2*B + (1-c2)*C)` under classic 0/1 semantics.
+      // The downstream invariance check still gates every node inside the
+      // synthesized tree, so orbit-state references stay rejected.
+      for (const stmt of ast.initBlock) {
+        if (stmt.type !== 'if' || !stmt.else) continue;
+        const branches: Array<{ cond: ASTNode | null; body: readonly ASTNode[] }> = [
+          { cond: stmt.condition, body: stmt.then },
+          ...(stmt.elseIf ?? []).map((b) => ({ cond: b.condition as ASTNode | null, body: b.body })),
+          { cond: null, body: stmt.else },
+        ];
+        // Conservative: a nested if inside any branch makes the dataflow
+        // non-trivial — skip the whole statement.
+        const hasNestedIf = branches.some((b) => b.body.some((s) => s.type === 'if'));
+        if (hasNestedIf) continue;
+        const maps = branches.map((b) => {
+          const m = new Map<string, ASTNode>();
+          for (const s of b.body) {
+            if (s.type !== 'assignment') return null; // side-effect statements: bail
+            if (s.component) return null; // lane stores are not whole-var bindings
+            if (m.has(s.target)) return null; // twice in one branch: order-dependent
+            m.set(s.target, s.value);
+          }
+          return m;
+        });
+        if (maps.some((m) => m === null)) continue;
+        // The right-fold `c*A + (1-c)*B` is only exact when every condition
+        // is guaranteed 0/1: a comparison or logical root coerces by
+        // construction. A bare param/arithmetic condition (`if(p2)`) would
+        // smuggle its raw value into the arithmetic (Codex 6b3 round-1).
+        const BOOLEAN_ROOT_OPS = new Set(['<', '<=', '>', '>=', '==', '!=', '&&', '||']);
+        const conditionsBoolean = branches.every(
+          (b) => b.cond === null || (b.cond.type === 'binary' && BOOLEAN_ROOT_OPS.has(b.cond.op)),
+        );
+        if (!conditionsBoolean) continue;
+        const branchMaps = maps as Array<Map<string, ASTNode>>;
+        const common = [...branchMaps[0].keys()].filter((t) => branchMaps.every((m) => m.has(t)));
+        for (const target of common) {
+          if (initBindings.has(target) || multiplyAssigned.has(target)) continue;
+          // Right-fold: else value is the innermost fallback.
+          let expr: ASTNode = branchMaps[branchMaps.length - 1].get(target)!;
+          for (let bi = branches.length - 2; bi >= 0; bi--) {
+            const cond = branches[bi].cond!;
+            const value = branchMaps[bi].get(target)!;
+            expr = {
+              type: 'binary',
+              op: '+',
+              left: { type: 'binary', op: '*', left: cond, right: value, loc: cond.loc },
+              right: {
+                type: 'binary',
+                op: '*',
+                left: {
+                  type: 'binary',
+                  op: '-',
+                  left: { type: 'number', value: 1, loc: cond.loc },
+                  right: cond,
+                  loc: cond.loc,
+                },
+                right: expr,
+                loc: cond.loc,
+              },
+              loc: cond.loc,
+            };
+          }
+          initBindings.set(target, expr);
         }
       }
       const loopTargets = new Set<string>();
