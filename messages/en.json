@@ -360,7 +360,7 @@
           "table": {
             "level": "Level",
             "meaning": "Meaning",
-            "scope": "v0.4.13 scope"
+            "scope": "Verified scope"
           },
           "levels": {
             "supported": {
@@ -396,7 +396,24 @@
             "preprocessor": "Preprocessor features",
             "rejected-constructs": "Any construct rejected by the current compile pipeline"
           },
-          "disclaimer": "This is a tested compatibility baseline, not a claim of full Fractint compatibility. When the compiler changes, this matrix and its tests must change together."
+          "disclaimer": "This is a tested compatibility baseline, not a claim of full Fractint compatibility. When the compiler changes, this matrix and its tests must change together.",
+          "verified": {
+            "title": "Verified compatibility",
+            "intro": "Every figure and list in this panel renders from FractalPark's versioned capability manifest — the same source the compiler's drift tests pin — never hand-written copy.",
+            "stats": {
+              "target": "Verified classic formulas",
+              "excluded": "Excluded with reasons",
+              "descriptors": "Bailout descriptor kinds",
+              "builtins": "Built-in functions"
+            },
+            "groups": {
+              "descriptors": "Bailout descriptors",
+              "rejectReasons": "Stable reject reasons",
+              "builtins": "Built-in functions"
+            },
+            "paramsLine": "Parameters: {params} · Function slots: {fnSlots}",
+            "manifestLine": "Capability manifest v{manifest} · strict semantics v{semantics}"
+          }
         },
         "anatomy": {
           "title": "Formula Anatomy",

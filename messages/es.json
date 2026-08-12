@@ -360,7 +360,7 @@
           "table": {
             "level": "Nivel",
             "meaning": "Significado",
-            "scope": "Alcance v0.4.13"
+            "scope": "Ámbito verificado"
           },
           "levels": {
             "supported": {
@@ -396,7 +396,24 @@
             "preprocessor": "Funciones del preprocesador",
             "rejected-constructs": "Cualquier construcción rechazada por el pipeline de compilación actual"
           },
-          "disclaimer": "Esta es una línea base de compatibilidad probada, no una afirmación de compatibilidad total con Fractint. Cuando el compilador cambie, esta matriz y sus pruebas deben cambiar juntas."
+          "disclaimer": "Esta es una línea base de compatibilidad probada, no una afirmación de compatibilidad total con Fractint. Cuando el compilador cambie, esta matriz y sus pruebas deben cambiar juntas.",
+          "verified": {
+            "title": "Compatibilidad verificada",
+            "intro": "Todas las cifras y listas de este panel se renderizan a partir del manifiesto de capacidades versionado de FractalPark —la misma fuente que fijan las pruebas de deriva del compilador—, nunca de texto escrito a mano.",
+            "stats": {
+              "target": "Fórmulas clásicas verificadas",
+              "excluded": "Exclusiones con motivos",
+              "descriptors": "Tipos de descriptor de bailout",
+              "builtins": "Funciones integradas"
+            },
+            "groups": {
+              "descriptors": "Descriptores de bailout",
+              "rejectReasons": "Motivos de rechazo estables",
+              "builtins": "Funciones integradas"
+            },
+            "paramsLine": "Parámetros: {params} · Ranuras de función: {fnSlots}",
+            "manifestLine": "Manifiesto de capacidades v{manifest} · Semántica estricta v{semantics}"
+          }
         },
         "anatomy": {
           "title": "Anatomía de la fórmula",

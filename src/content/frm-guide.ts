@@ -4,6 +4,25 @@ import {
   type FormulaExample,
   type FrmGuideExampleId,
 } from '@/engine/frm/example-library';
+import { FRM_CAPABILITY_MANIFEST } from '@/engine/frm/capability-manifest';
+
+/**
+ * Verified-capability facts rendered by the Guide's support section.
+ * Derived from the versioned capability manifest — never hand-write
+ * counts, function lists, or vocabulary here (plan §13.3).
+ */
+export const FRM_GUIDE_CAPABILITY = {
+  manifestVersion: FRM_CAPABILITY_MANIFEST.manifestVersion,
+  strictSemanticsVersion: FRM_CAPABILITY_MANIFEST.semantics.strictVersion,
+  target: FRM_CAPABILITY_MANIFEST.compatibility.target,
+  excluded: FRM_CAPABILITY_MANIFEST.compatibility.excluded,
+  tiers: FRM_CAPABILITY_MANIFEST.compatibility.tiers,
+  descriptorKinds: FRM_CAPABILITY_MANIFEST.bailout.descriptorKinds,
+  rejectReasons: FRM_CAPABILITY_MANIFEST.bailout.rejectReasons,
+  builtinFunctions: FRM_CAPABILITY_MANIFEST.dialect.builtinFunctions,
+  parameters: FRM_CAPABILITY_MANIFEST.dialect.parameters,
+  fnSlots: FRM_CAPABILITY_MANIFEST.dialect.fnSlots,
+} as const;
 
 export const FRM_GUIDE_SECTION_IDS = [
   'what-is-frm',

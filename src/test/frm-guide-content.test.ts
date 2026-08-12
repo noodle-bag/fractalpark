@@ -1,15 +1,22 @@
 import { describe, expect, it } from 'vitest';
 import enMessages from '../../messages/en.json';
 import zhMessages from '../../messages/zh.json';
+import esMessages from '../../messages/es.json';
+import frMessages from '../../messages/fr.json';
+import koMessages from '../../messages/ko.json';
+import ptMessages from '../../messages/pt.json';
+import ruMessages from '../../messages/ru.json';
 import {
   FRM_COMPATIBILITY_GROUPS,
   FRM_COMPATIBILITY_LEVELS,
+  FRM_GUIDE_CAPABILITY,
   FRM_GUIDE_REFERENCES,
   FRM_GUIDE_SECTION_IDS,
   FRM_GUIDE_TUTORIALS,
   FRM_PIPELINE_STEP_IDS,
   FRM_SYNTAX_TOPIC_IDS,
 } from '@/content/frm-guide';
+import { FRM_CAPABILITY_MANIFEST } from '@/engine/frm/capability-manifest';
 import { compileFrm } from '@/engine/frm/compile';
 import {
   FRM_GUIDE_EXAMPLE_IDS,
@@ -134,6 +141,64 @@ describe('FRM Guide content contract', () => {
     expect(enMessages.metadata.frmGuide.description).toBeTruthy();
     expect(zhMessages.metadata.frmGuide.title).toBeTruthy();
     expect(zhMessages.metadata.frmGuide.description).toBeTruthy();
+  });
+
+  it('renders verified-capability facts straight from the manifest', () => {
+    // The Guide must never hand-write capability facts (plan §13.3): the
+    // exported view model is the manifest, field for field.
+    expect(FRM_GUIDE_CAPABILITY.manifestVersion).toBe(
+      FRM_CAPABILITY_MANIFEST.manifestVersion
+    );
+    expect(FRM_GUIDE_CAPABILITY.strictSemanticsVersion).toBe(
+      FRM_CAPABILITY_MANIFEST.semantics.strictVersion
+    );
+    expect(FRM_GUIDE_CAPABILITY.target).toBe(
+      FRM_CAPABILITY_MANIFEST.compatibility.target
+    );
+    expect(FRM_GUIDE_CAPABILITY.excluded).toBe(
+      FRM_CAPABILITY_MANIFEST.compatibility.excluded
+    );
+    expect(FRM_GUIDE_CAPABILITY.tiers).toBe(
+      FRM_CAPABILITY_MANIFEST.compatibility.tiers
+    );
+    expect(FRM_GUIDE_CAPABILITY.descriptorKinds).toBe(
+      FRM_CAPABILITY_MANIFEST.bailout.descriptorKinds
+    );
+    expect(FRM_GUIDE_CAPABILITY.rejectReasons).toBe(
+      FRM_CAPABILITY_MANIFEST.bailout.rejectReasons
+    );
+    expect(FRM_GUIDE_CAPABILITY.builtinFunctions).toBe(
+      FRM_CAPABILITY_MANIFEST.dialect.builtinFunctions
+    );
+    expect(FRM_GUIDE_CAPABILITY.parameters).toBe(
+      FRM_CAPABILITY_MANIFEST.dialect.parameters
+    );
+    expect(FRM_GUIDE_CAPABILITY.fnSlots).toBe(
+      FRM_CAPABILITY_MANIFEST.dialect.fnSlots
+    );
+  });
+
+  it('keeps the guide structurally complete in all seven locales', () => {
+    const enGuide = collectLeafPaths(enMessages.formulas.frmGuide);
+    const localeGuides: Array<[string, Map<string, unknown>]> = [
+      ['zh', collectLeafPaths(zhMessages.formulas.frmGuide)],
+      ['es', collectLeafPaths(esMessages.formulas.frmGuide)],
+      ['fr', collectLeafPaths(frMessages.formulas.frmGuide)],
+      ['ko', collectLeafPaths(koMessages.formulas.frmGuide)],
+      ['pt', collectLeafPaths(ptMessages.formulas.frmGuide)],
+      ['ru', collectLeafPaths(ruMessages.formulas.frmGuide)],
+    ];
+    for (const [locale, guide] of localeGuides) {
+      expect([...guide.keys()].sort(), `locale ${locale}`).toEqual(
+        [...enGuide.keys()].sort()
+      );
+      for (const [path] of guide) {
+        expect(
+          String(guide.get(path)).trim(),
+          `${locale} formulas.frmGuide.${path}`
+        ).not.toBe('');
+      }
+    }
   });
 
   it('uses unique HTTPS reference IDs and URLs', () => {

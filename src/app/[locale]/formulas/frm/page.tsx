@@ -10,6 +10,7 @@ import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import {
   FRM_COMPATIBILITY_GROUPS,
+  FRM_GUIDE_CAPABILITY,
   FRM_GUIDE_REFERENCES,
   FRM_GUIDE_SECTION_IDS,
   FRM_GUIDE_TUTORIALS,
@@ -252,6 +253,102 @@ export default async function FrmGuidePage({
               className="mt-0.5 size-5 shrink-0 text-amber-600 dark:text-amber-400"
             />
             <p>{t('sections.support.disclaimer')}</p>
+          </div>
+
+          {/* Verified capability facts — every number/list renders from the
+              versioned capability manifest (FRM_GUIDE_CAPABILITY), never
+              from hand-written copy. */}
+          <div className="mt-8 rounded-xl border bg-muted/20 p-6">
+            <h3 className="text-base font-semibold">
+              {t('sections.support.verified.title')}
+            </h3>
+            <p className="mt-2 text-sm leading-6 text-muted-foreground">
+              {t('sections.support.verified.intro')}
+            </p>
+            <dl className="mt-5 grid grid-cols-2 gap-4 sm:grid-cols-4">
+              <div>
+                <dt className="text-xs uppercase tracking-wide text-muted-foreground">
+                  {t('sections.support.verified.stats.target')}
+                </dt>
+                <dd className="mt-1 text-2xl font-semibold tabular-nums">
+                  {FRM_GUIDE_CAPABILITY.target}
+                </dd>
+              </div>
+              <div>
+                <dt className="text-xs uppercase tracking-wide text-muted-foreground">
+                  {t('sections.support.verified.stats.excluded')}
+                </dt>
+                <dd className="mt-1 text-2xl font-semibold tabular-nums">
+                  {FRM_GUIDE_CAPABILITY.excluded}
+                </dd>
+              </div>
+              <div>
+                <dt className="text-xs uppercase tracking-wide text-muted-foreground">
+                  {t('sections.support.verified.stats.descriptors')}
+                </dt>
+                <dd className="mt-1 text-2xl font-semibold tabular-nums">
+                  {FRM_GUIDE_CAPABILITY.descriptorKinds.length}
+                </dd>
+              </div>
+              <div>
+                <dt className="text-xs uppercase tracking-wide text-muted-foreground">
+                  {t('sections.support.verified.stats.builtins')}
+                </dt>
+                <dd className="mt-1 text-2xl font-semibold tabular-nums">
+                  {FRM_GUIDE_CAPABILITY.builtinFunctions.length}
+                </dd>
+              </div>
+            </dl>
+            <div className="mt-6 space-y-4 text-sm">
+              <div>
+                <h4 className="text-xs font-medium uppercase tracking-wide text-muted-foreground">
+                  {t('sections.support.verified.groups.descriptors')}
+                </h4>
+                <ul className="mt-2 flex flex-wrap gap-2">
+                  {FRM_GUIDE_CAPABILITY.descriptorKinds.map((kind) => (
+                    <li key={kind}>
+                      <Badge variant="secondary">{kind}</Badge>
+                    </li>
+                  ))}
+                </ul>
+              </div>
+              <div>
+                <h4 className="text-xs font-medium uppercase tracking-wide text-muted-foreground">
+                  {t('sections.support.verified.groups.rejectReasons')}
+                </h4>
+                <ul className="mt-2 flex flex-wrap gap-2">
+                  {FRM_GUIDE_CAPABILITY.rejectReasons.map((reason) => (
+                    <li key={reason}>
+                      <Badge variant="outline">{reason}</Badge>
+                    </li>
+                  ))}
+                </ul>
+              </div>
+              <div>
+                <h4 className="text-xs font-medium uppercase tracking-wide text-muted-foreground">
+                  {t('sections.support.verified.groups.builtins')}
+                </h4>
+                <ul className="mt-2 flex flex-wrap gap-2">
+                  {FRM_GUIDE_CAPABILITY.builtinFunctions.map((fn) => (
+                    <li key={fn}>
+                      <Badge variant="outline">{fn}</Badge>
+                    </li>
+                  ))}
+                </ul>
+              </div>
+              <p className="text-xs leading-5 text-muted-foreground">
+                {t('sections.support.verified.paramsLine', {
+                  params: FRM_GUIDE_CAPABILITY.parameters.join(', '),
+                  fnSlots: FRM_GUIDE_CAPABILITY.fnSlots.join(', '),
+                })}
+              </p>
+              <p className="text-xs leading-5 text-muted-foreground">
+                {t('sections.support.verified.manifestLine', {
+                  manifest: FRM_GUIDE_CAPABILITY.manifestVersion,
+                  semantics: FRM_GUIDE_CAPABILITY.strictSemanticsVersion,
+                })}
+              </p>
+            </div>
           </div>
         </GuideSection>
 

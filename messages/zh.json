@@ -360,7 +360,7 @@
           "table": {
             "level": "级别",
             "meaning": "含义",
-            "scope": "v0.4.13 范围"
+            "scope": "已验证范围"
           },
           "levels": {
             "supported": {
@@ -396,7 +396,24 @@
             "preprocessor": "预处理器功能",
             "rejected-constructs": "当前编译流水线拒绝的其他写法"
           },
-          "disclaimer": "这是经过测试的兼容性基线，不代表完整兼容 Fractint。编译器能力变化时，本表及其测试必须在同一项改动中同步更新。"
+          "disclaimer": "这是经过测试的兼容性基线，不代表完整兼容 Fractint。编译器能力变化时，本表及其测试必须在同一项改动中同步更新。",
+          "verified": {
+            "title": "已验证的兼容性",
+            "intro": "本面板中的每个数字和清单都渲染自 FractalPark 的版本化能力清单——与编译器漂移测试锁定的是同一来源，而非手写文案。",
+            "stats": {
+              "target": "已验证经典公式",
+              "excluded": "带原因排除",
+              "descriptors": "bailout 描述符种类",
+              "builtins": "内置函数"
+            },
+            "groups": {
+              "descriptors": "Bailout 描述符",
+              "rejectReasons": "稳定拒绝原因",
+              "builtins": "内置函数"
+            },
+            "paramsLine": "参数：{params} · 函数槽：{fnSlots}",
+            "manifestLine": "能力清单 v{manifest} · 严格语义 v{semantics}"
+          }
         },
         "anatomy": {
           "title": "公式结构",

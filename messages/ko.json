@@ -360,7 +360,7 @@
           "table": {
             "level": "수준",
             "meaning": "의미",
-            "scope": "v0.4.13 범위"
+            "scope": "검증된 범위"
           },
           "levels": {
             "supported": {
@@ -396,7 +396,24 @@
             "preprocessor": "전처리기 기능",
             "rejected-constructs": "현재 컴파일 파이프라인이 거부하는 모든 구성"
           },
-          "disclaimer": "이것은 검증된 호환성 기준선이지, 완전한 Fractint 호환성을 주장하는 것은 아니에요. 컴파일러가 변경되면 이 매트릭스와 테스트도 함께 변경돼야 해요."
+          "disclaimer": "이것은 검증된 호환성 기준선이지, 완전한 Fractint 호환성을 주장하는 것은 아니에요. 컴파일러가 변경되면 이 매트릭스와 테스트도 함께 변경돼야 해요.",
+          "verified": {
+            "title": "검증된 호환성",
+            "intro": "이 패널의 모든 수치와 목록은 컴파일러 드리프트 테스트가 고정하는 FractalPark의 버전화된 기능 매니페스트에서 렌더링되며, 수동으로 작성한 문구가 아닙니다.",
+            "stats": {
+              "target": "검증된 고전 수식",
+              "excluded": "사유와 함께 제외됨",
+              "descriptors": "bailout 디스크립터 종류",
+              "builtins": "내장 함수"
+            },
+            "groups": {
+              "descriptors": "bailout 디스크립터",
+              "rejectReasons": "안정적 거부 사유",
+              "builtins": "내장 함수"
+            },
+            "paramsLine": "매개변수: {params} · 함수 슬롯: {fnSlots}",
+            "manifestLine": "기능 매니페스트 v{manifest} · 엄격한 의미론 v{semantics}"
+          }
         },
         "anatomy": {
           "title": "수식 구조",

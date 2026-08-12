@@ -360,7 +360,7 @@
           "table": {
             "level": "Niveau",
             "meaning": "Signification",
-            "scope": "Périmètre v0.4.13"
+            "scope": "Périmètre vérifié"
           },
           "levels": {
             "supported": {
@@ -396,7 +396,24 @@
             "preprocessor": "les fonctionnalités de préprocesseur",
             "rejected-constructs": "toute construction rejetée par le pipeline de compilation actuel"
           },
-          "disclaimer": "Il s'agit d'une base de compatibilité testée, et non d'une revendication de compatibilité totale avec Fractint. Lorsque le compilateur change, cette matrice et ses tests doivent changer ensemble."
+          "disclaimer": "Il s'agit d'une base de compatibilité testée, et non d'une revendication de compatibilité totale avec Fractint. Lorsque le compilateur change, cette matrice et ses tests doivent changer ensemble.",
+          "verified": {
+            "title": "Compatibilité vérifiée",
+            "intro": "Chaque chiffre et liste de ce panneau est rendu à partir du manifeste de capacités versionné de FractalPark — la même source que verrouillent les tests de dérive du compilateur —, jamais à partir d’un texte rédigé à la main.",
+            "stats": {
+              "target": "Formules classiques vérifiées",
+              "excluded": "Exclues avec motifs",
+              "descriptors": "Types de descripteurs de bailout",
+              "builtins": "Fonctions intégrées"
+            },
+            "groups": {
+              "descriptors": "Descripteurs de bailout",
+              "rejectReasons": "Motifs de rejet stables",
+              "builtins": "Fonctions intégrées"
+            },
+            "paramsLine": "Paramètres : {params} · Emplacements de fonction : {fnSlots}",
+            "manifestLine": "Manifeste de capacités v{manifest} · Sémantique stricte v{semantics}"
+          }
         },
         "anatomy": {
           "title": "Anatomie d'une formule",
