@@ -509,6 +509,14 @@ function lineOfOffset(source: string, offset: number): number {
  * `scanFrmEntries`) into an equivalent native source. Throws on an
  * unparsable header; the scanner guarantees headers are well-formed.
  */
+/**
+ * Parser-protected variables that classic sources may nevertheless rebind:
+ * the lowering below rewrites such assignments into a fresh mutable seed
+ * variable before the parser's protection applies. The capability manifest
+ * derives its `classicRebindable` fact from this list (Slice 7a review).
+ */
+export const CLASSIC_REBINDABLE_VARIABLES = ['c'] as const;
+
 export function lowerClassicEntryToNative(entrySource: string): LoweredClassicEntry {
   const notes: LoweringNote[] = [];
 

@@ -12,8 +12,22 @@
 /** Compile-semantics contract version of an FRM source. */
 export type FrmSemanticsVersion = 1 | 2;
 
+/** Runtime vocabulary of the semantics-version union; the bidirectional
+ * assertion fails the build if a v3 ever lands without updating this list
+ * (Slice 7a review). */
+export const FRM_SEMANTICS_VERSIONS = [1, 2] as const;
+type AssertExactVersions =
+  [FrmSemanticsVersion] extends [(typeof FRM_SEMANTICS_VERSIONS)[number]]
+    ? ([(typeof FRM_SEMANTICS_VERSIONS)[number]] extends [FrmSemanticsVersion] ? true : never)
+    : never;
+const _semanticsVersionsExhaustive: AssertExactVersions = true;
+void _semanticsVersionsExhaustive;
+
 /** Version used for new compiles; existing content with a missing version reads as v1. */
 export const DEFAULT_FRM_SEMANTICS_VERSION: FrmSemanticsVersion = 1;
+
+/** The strict contract: selected-entry, bailout descriptors, after-step. */
+export const STRICT_FRM_SEMANTICS_VERSION: FrmSemanticsVersion = 2;
 
 /**
  * Lenient reader for untrusted inputs (cloud rows, portable assets, URL

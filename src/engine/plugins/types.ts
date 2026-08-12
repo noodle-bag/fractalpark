@@ -7,6 +7,18 @@ export type PluginCategory = 'formula' | 'outsideColoring' | 'insideColoring' | 
  */
 export type SmoothCapability = 'supported' | 'adapted' | 'unavailable';
 
+/** Runtime vocabulary of the SmoothCapability union. The bidirectional
+ * type assertion below fails the build if the union ever grows without
+ * updating this list (Slice 7a review). */
+export const SMOOTH_CAPABILITIES = ['supported', 'adapted', 'unavailable'] as const;
+type AssertExactMembers<T extends readonly string[], U extends string> =
+  [T[number]] extends [U] ? ([U] extends [T[number]] ? true : never) : never;
+const _smoothCapabilitiesExhaustive: AssertExactMembers<
+  typeof SMOOTH_CAPABILITIES,
+  SmoothCapability
+> = true;
+void _smoothCapabilitiesExhaustive;
+
 export interface PluginUniformDescriptor {
   name: string;           // e.g. "u_phoenixP"
   type: 'float' | 'int' | 'vec2' | 'vec3' | 'bool';

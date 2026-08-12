@@ -79,6 +79,38 @@ export type BailoutRejectReason =
   /** `&&`/`||` combined predicates are not yet part of the v2 contract. */
   | 'chained-logical';
 
+/** Runtime vocabularies of the descriptor/reject-reason unions, with
+ * bidirectional type assertions that fail the build if either union grows
+ * without updating these lists (Slice 7a review). */
+export const BAILOUT_DESCRIPTOR_KINDS = ['C1', 'C2', 'C4R', 'C5'] as const;
+export const BAILOUT_REJECT_REASONS = [
+  'unknown-predicate',
+  'unknown-magnitude-form',
+  'threshold-not-loop-invariant',
+  'chained-logical',
+] as const;
+type AssertExactMembers<T extends readonly string[], U extends string> =
+  [T[number]] extends [U] ? ([U] extends [T[number]] ? true : never) : never;
+const _descriptorKindsExhaustive: AssertExactMembers<
+  typeof BAILOUT_DESCRIPTOR_KINDS,
+  BailoutDescriptor['kind']
+> = true;
+const _rejectReasonsExhaustive: AssertExactMembers<
+  typeof BAILOUT_REJECT_REASONS,
+  BailoutRejectReason
+> = true;
+void _descriptorKindsExhaustive;
+void _rejectReasonsExhaustive;
+
+/** Runtime vocabulary of the C4-R projection forms, with the same
+ * build-failing exhaustiveness assertion (Slice 7a review). */
+export const C4R_FORMS = ['real', 'abs-real'] as const;
+const _c4rFormsExhaustive: AssertExactMembers<
+  typeof C4R_FORMS,
+  BailoutDescriptorC4R['form']
+> = true;
+void _c4rFormsExhaustive;
+
 export type BailoutExtraction =
   | { ok: true; descriptor: BailoutDescriptor }
   | { ok: false; reason: BailoutRejectReason };

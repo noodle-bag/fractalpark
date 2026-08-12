@@ -49,7 +49,14 @@ const SMART_ERRORS: Record<string, { message: string; suggestion?: string }> = {
 /**
  * System variables that cannot be assigned
  */
-const SYSTEM_VARS = new Set(['c', 'pixel']);
+/**
+ * Write-protected at the raw parser level (case-insensitive at use sites).
+ * Note: classic sources may still rebind `c` — the classic frontend lowers
+ * that to a fresh seed variable before parsing (classic-frontend.ts).
+ * Exported for the capability manifest (Slice 7a): the manifest derives its
+ * dialect facts from this set rather than restating them.
+ */
+export const SYSTEM_VARS = new Set(['c', 'pixel']);
 
 /**
  * Known functions for typo detection
