@@ -1,8 +1,8 @@
 # FRM Compatibility and Migration Contracts v1
 
-- Status: Frozen (v0.4.18 Slice 0)
-- Date: 2026-08-10
-- Target release: FractalPark v0.4.18
+- Status: Frozen (v0.4.18, Release)
+- Date: 2026-08-12
+- Last verified: 2026-08-12 (commit 0bf85b7, PR #19, all slices completed)
 
 ## Purpose
 
@@ -101,21 +101,64 @@ Rules:
 
 ## 4. Canonical IR and bailout descriptors
 
-- Bailout descriptors allow only: C1 fixed radial, C2 parameterized
-  radial, and C4-R in the two normalized forms `abs-real` / `real`.
+- Bailout descriptors allow exactly five kinds: C1 (fixed radial), C2
+  (parametrised radial), C4-R (real-projection in `abs-real` / `real`
+  forms), and C5 (squared magnitude via the `LastSqr` side-channel). The
+  five-kind vocabulary is a runtime constant gated by a build-time
+  bidirectional exhaustiveness assertion — adding a descriptor kind
+  without updating the list fails the build.
+- Comparison and logical operators (`< <= > >= == != && ||`) are allowed
+  in C2 threshold expressions when their operands are loop-invariant; they
+  produce classic 0/1 reals. `real()` is an allowed threshold function;
+  `imag()` is intentionally excluded (its scalar default is always 0).
 - Comparison direction (`<`, `<=`, `>`, `>=`) is preserved exactly; operand
   swapping must not smuggle in a changed meaning.
 - Legacy v1 mis-extraction of swapped operands may exist only inside the
   compatibility reader/controls — never in v2 descriptors, capability
   conclusions, or strict-pass evidence.
-- Thresholds must be loop-invariant expressions: they may reference
-  declared parameters, never per-iteration orbit state.
+- The classic `if(p2<=0)test=4else test=real(p2)endif` threshold idiom is
+  synthesised by the compile-time binding collector: when every branch of
+  an init `if`/`elseif`/`else` (exhaustive else required) assigns the SAME
+  target exactly once — and no other init or loop assignment touches that
+  target — the collector derives a right-folded expression `c1*A +
+  (1-c1)*(c2*B + (1-c2)*C)` (exact for 0/1 conditions; the synthesis
+  gate restricts condition roots to comparisons and logicals). The
+  derived expression then passes through the same invariance gate as any
+  hand-written threshold.
+- A branch-uniform final |z| refresh — every branch of a trailing
+  `if`/`else` ends with the same `x = |z|` — proves x is a final `|z|`
+  alias, enabling the descriptor to recognise radial magnitude forms that
+  run through a per-iteration branch (e.g. `inandout02`).
 - Classic v2 evaluates the continue condition after executing the current
   loop body. B94/native v1 keeps the existing pre-step contract.
 - `LastSqr`, complex relations, `abs`, `flip`, truthiness, and inverse
   functions are defined solely by the canonical IR.
 - Unsupported predicates produce a stable structured reason and land in
   Read-only; they never silently default to radial.
+
+### 4.1 Assignment expressions and boolean arithmetic (v0.4.18 Slice 6b2)
+
+Classic `.frm` sources may embed assignments inside expressions
+(`z = flip(z=1)`). The lowering transforms these into sequenced
+temporaries: `frmseq<N>` variables are assigned in deterministic
+target-first order (`z = A; frmseq1 = z` — the temp carries the
+*stored* value, not a pre-store snapshot), preserving left-to-right
+classic order where semantics depend on it. The lowering rejects
+assignments in bailout expressions, `&&`/`||` right-hand sides,
+`elseif` conditions, and component-assignments (`real(x)=1`) at the
+statement level — these forms are well-known to produce implementation-
+defined behaviour in Fractint and are refused loudly.
+
+Boolean arithmetic (`(x<10)*(4 - (x<10)*3)`) relies on comparisons
+producing exact 0/1 reals. The evaluator, codegen, and invariance
+gates treat `< <= > >= == != && ||` as 0/1-producing; `&&`/`||`
+coerce operands via the real-part truthiness rule (`.x != 0` → 1, else
+0). Implicit multiplication between a number and an adjacent identifier
+(`3z`) is lexical only — the parser drops `NEWLINE` tokens, so the
+adjacency must be literal in the source text; `3 z` is a syntax error.
+Scientific notation (`1e-12`) is a single lexer token; malformed
+exponents (`2e`, `e5`) fall back to two tokens (`2`, `e` the Euler
+constant) so classic truthiness edge cases stay intact.
 
 ## 5. Parameters and function slots
 
@@ -148,10 +191,24 @@ Every recognized entry gets exactly one product status:
 | Invalid source | Structure insufficient to form a valid entry/IR | no |
 
 Status is orthogonal to error/warning/note severity, to verification
-evidence, and to the `review-required` publication flag. Lint, compile
-results, and status cards dedupe by `reasonCode + location`. Mobile keeps
-a single-line summary with on-demand details. Read-only/Invalid entries
-keep editing, copying, download, and source navigation.
+evidence, and to the `review-required` publication flag. The adaptation
+vocabulary (each declared and verified by the engine's own gates) is:
+
+- **Bailout descriptor kinds** C2 / C4-R / C5 — exotic but verified
+  forms; C1 is not an adaptation.
+- **Smooth capability** `adapted` (transcendental/non-polynomial) and
+  `unavailable` (C4-R / inverse-radial → deterministic Escape Time
+  fallback).
+- **Default-bailout injected** — the classic frontend records a note
+  when it applies the default `|z|<=4` contract to an entry that lacked a
+  predicate line.
+- **c-init-rebinding** — classic c-rebinding renamed by the frontend.
+
+After-step timing is the uniform classic-v2 truth and is deliberately NOT
+an adaptation. `function=` slot defaults and `float=` options are recorded
+as informational notes (visible, never blocking).
+
+Lint, compile results, and status cards dedupe by `reasonCode + location`. Mobile keeps a single-line summary with on-demand details. Read-only/Invalid entries keep editing, copying, download, and source navigation.
 
 ## 7. Coloring capability
 
@@ -191,22 +248,38 @@ Five layers, split across two execution levels:
 |---|---|---|
 | File | entry boundary, selected entry, trailing source | corpus fully determined |
 | Syntax | native/Classic → canonical IR | target set generatable, exclusions definitively rejected |
-| Semantics | descriptor, params/fn, timing, capability | unknown = 0 |
+| Semantics | descriptor, params/fn, timing, capability | unknown = 0 (all five descriptor kinds verified) |
 | Orbit | per-iteration z/LastSqr/continue/iteration | full target set |
-| WebGL | compile/link/first frame/NaN/basic interaction | starter-profile smoke |
+| WebGL | compile/link/first frame/NaN/basic interaction | starter-profile smoke (sampled CI) / full-coverage smoke (maintainer Level 2) |
 
 - **Level 1 (public PR CI)** runs clean-room fixtures, project-owned B94
   controls, v1/v2 round-trips, message key-set/interpolation parity across
-  all supported locales, manifest/drift checks, leakage scan, lint, unit,
-  build, and affected Playwright. It must not require private corpora.
+  all supported locales, capability-manifest drift checks (7a), compat-
+  report schema verifier (7d), leakage scan, lint, unit, build, and
+  affected Playwright. It must not require private corpora. The sampled
+  smoke runs a deterministic stride of the ledger and always stays green
+  in CI.
 - **Level 2 (maintainer-local pre-merge hard gate)** injects the private
   corpus via local path on the same candidate commit that passed Level 1,
   and persists only report schema/version, compiler commit, source
   snapshot hash, selector version, device/environment, aggregate results,
   duration, and report content hash — never corpus text or local paths.
+  The full-coverage smoke mode (`FRM_SMOKE_FULL=1`) covers every corpus-
+  resolvable ledger row including anchor-reconstructed entries (source
+  text derived from the ledger's sha256-anchored normalised cells); a
+  single row of chaotic-f32-boundary divergence is documented with
+  per-round trajectory evidence and gated by an exact GPU/CPU fingerprint
+  (Slice 7d).
 
-## 10. Compatibility facts baseline (frozen at Slice 0)
+## 10. Compatibility facts baseline (frozen at Slice 7, Release)
 
+- Resolution: 588 target entries (362 T0 / 174 T1 / 52 T2) + 117
+  exclusions with documented reasons = 705 total ledger rows.
+- Descriptor kinds: C1 / C2 / C4-R / C5 (all five verified across the
+  target set). Reject reasons: `unknown-predicate`, `unknown-magnitude-
+  form`, `threshold-not-loop-invariant`, `chained-logical`, and per-row
+  dialect gaps (inverse-trig family `asin`/`acos`/`atan`, system-var
+  writes, read-only constant shadowing).
 - Supported locales: `en`, `zh`, `pt`, `ko`, `ru`, `es`, `fr` (single
   registry source of truth). HTML lang: `en`, `zh-CN`, `pt-BR`, `ko-KR`,
   `ru-RU`, `es-ES`, `fr-FR`; OG locale uses the underscore mapping.

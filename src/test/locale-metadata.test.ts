@@ -1,4 +1,7 @@
 import { describe, expect, it } from 'vitest';
+import { readFileSync } from 'node:fs';
+import { execSync } from 'node:child_process';
+import { join } from 'node:path';
 import {
   DEFAULT_LOCALE,
   HTML_LANG,
@@ -8,12 +11,6 @@ import {
 } from '@/i18n/supported-locales';
 import { htmlLangForLocale } from '@/app/[locale]/layout';
 
-/**
- * Guards the seven-locale metadata contract: every supported locale must have
- * a distinct, correctly formatted `<html lang>` tag and `og:locale` code, and
- * no locale may silently fall back to English (the v0.4.17 bug where all
- * non-zh pages emitted lang="en" / en_US).
- */
 describe('locale metadata maps', () => {
   it('covers every supported locale exactly once', () => {
     expect(Object.keys(HTML_LANG).sort()).toEqual([...SUPPORTED_LOCALES].sort());
@@ -54,23 +51,15 @@ describe('locale metadata maps', () => {
   });
 
   it('every locale carries the Editor compat-status keys (Slice 7e2)', () => {
-    // JSON parse — avoids TS dynamic-import issues in vitest.
-    /* eslint-disable @typescript-eslint/no-var-requires */
     for (const locale of [...SUPPORTED_LOCALES]) {
-      // eslint-disable-next-line @typescript-eslint/no-require-imports, unicorn/prefer-module
-      const messages = JSON.parse(require('node:fs').readFileSync(
-        require('node:path').join(__dirname, '../../messages', `${locale}.json`),
-        'utf-8',
-      ));
-      /* eslint-enable @typescript-eslint/no-var-requires */
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
-      const frmEditor = (messages as any).frmEditor;
+      const messages: any = JSON.parse(
+        readFileSync(join(__dirname, '../../messages', `${locale}.json`), 'utf-8'),
+      );
+      const frmEditor = messages.frmEditor;
       expect(frmEditor, `${locale}.json missing frmEditor`).toBeTruthy();
       const c = frmEditor.compat;
-      expect(
-        c,
-        `${locale}.json missing frmEditor.compat keys (Slice 7e2)`,
-      ).toBeTypeOf('object');
+      expect(c, `${locale}.json missing frmEditor.compat keys (Slice 7e2)`).toBeTypeOf('object');
       expect(c.level, `missing level object in ${locale}`).toBeTypeOf('object');
       for (const sub of ['supported', 'adapted', 'readOnly', 'invalid']) {
         expect(
@@ -78,13 +67,34 @@ describe('locale metadata maps', () => {
           `missing level.${sub} in ${locale}`,
         ).toBeTypeOf('string');
       }
-      for (const key of [
-        'entriesTitle', 'select', 'blockingTag', 'lineJump', 'summary',
-      ]) {
+      for (const key of ['entriesTitle', 'select', 'blockingTag', 'lineJump', 'summary']) {
         expect(
-          (c as Record<string, unknown>)[key], `missing ${key} in ${locale}`,
+          (c as Record<string, unknown>)[key],
+          `missing ${key} in ${locale}`,
         ).toBeTypeOf('string');
       }
+    }
+  });
+
+  it('no private corpus text leaks into the public repo (Slice 7f leakage scan)', () => {
+    const cmd =
+      `git grep -l -E 'frm-corpus|fractint/?(float)?/formulas|ledger-row-sha256|f588_level2_report\\.json' -- ':!docs/specs/*' ':!scripts/*' ':!tests/e2e/.fixtures/*' ':!src/engine/frm/compat-report.ts' ':!src/test/*'`;
+    let leaked = '';
+    try {
+      leaked = execSync(cmd, { encoding: 'utf-8' }).trim();
+    } catch {
+      /* git grep exit-1 = no matches */
+    }
+    if (leaked) {
+      const files = execSync(
+        `git grep -l -E 'frm-corpus|fractint/?(float)?/formulas' -- ':!docs/specs/*' ':!scripts/*' ':!tests/e2e/.fixtures/*' ':!src/engine/frm/compat-report.ts'`,
+        { encoding: 'utf-8' },
+      ).trim();
+      const allowed = new Set(['.hermes', 'obsidian', 'node_modules', '.git']);
+      const violations = files.split('\n').filter((f) => f && !allowed.has(f.split('/')[0]));
+      expect(violations, `private corpus references found in ${violations.length} file(s)`).toEqual(
+        [],
+      );
     }
   });
 });
