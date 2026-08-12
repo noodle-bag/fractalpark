@@ -79,6 +79,9 @@ test.describe('Remix provenance and content analytics', () => {
   test('tracks artwork views, successful copies, and preset Remix activation', async ({
     page,
   }) => {
+    // The journey crosses from an SSR artwork page into a cold SwiftShader
+    // Explore render; it measured ~31s on the release-gate host.
+    test.setTimeout(60_000);
     await installAnalyticsRecorder(page);
     await page.context().grantPermissions(['clipboard-read', 'clipboard-write']);
     await page.goto('/en/gallery/newton-3-deep-spiral');
@@ -99,7 +102,13 @@ test.describe('Remix provenance and content analytics', () => {
     expect(new URL(remixHref!, 'https://www.fractalpark.com').searchParams.get('remix'))
       .toBe('preset:preset-newton-deep-spiral');
     await remix.click();
-    await expect(page).not.toHaveURL(/[?&]remix=/, { timeout: 5000 });
+    await expect(page.locator('[data-testid="fractal-canvas"]')).toBeVisible({
+      timeout: 15000,
+    });
+    await expect.poll(
+      () => new URL(page.url()).searchParams.get('remix'),
+      { timeout: 15000 },
+    ).toBeNull();
     await expectEvent(page, 'start_remix', {
       source_type: 'preset',
       source_id: 'preset-newton-deep-spiral',

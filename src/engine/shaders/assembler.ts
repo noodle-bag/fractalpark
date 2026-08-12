@@ -113,6 +113,13 @@ export function assembleShader(
   if (formula.initGlsl) {
     defines.push('#define HAS_INIT_FORMULA');
   }
+  const frmSource = `${formula.initGlsl ?? ''}\n${formula.glsl}`;
+  if (/\bfloat\s+frmLastSqr\b/.test(frmSource)) {
+    // The classic FRM codegen owns this mutable side channel even when the
+    // bailout descriptor is C1/C2/C4-R: loop expressions may read LastSqr.
+    // Native/B94 plugins do not declare it and must not pay for/reset it.
+    defines.push('#define HAS_FRM_LAST_SQR');
+  }
 
   const allNeeded = new Set([...(outside.needsOrbitStats ?? []), ...(inside.needsOrbitStats ?? [])]);
   if (allNeeded.has('trapMin')) defines.push('#define NEED_ORBIT_TRAP');

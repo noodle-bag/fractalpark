@@ -229,6 +229,13 @@ Lint, compile results, and status cards dedupe by `reasonCode + location`. Mobil
 - B94, historical Documents/URLs/artworks stay on pipeline v1; strict
   FRM paths use v2. The renderer/assembler must actually consume
   `pipelineVersion`.
+- `frmLastSqr` is an FRM-owned side channel. C5 reads it for bailout, while
+  any classic loop expression may also read it under a C1/C2/C4-R bailout.
+  The assembler derives `HAS_FRM_LAST_SQR` from the codegen-owned declaration
+  and the framework resets it at every orbit entry; B94/native-v1 shaders
+  neither declare nor pay for that state. Public WebGL controls must match
+  both a C5 bailout orbit and a non-C5 loop-side-channel orbit, then compile,
+  link, draw, and read back representative pipeline-v1 formulas.
 - Normal-map/DEM is not implied by Smooth availability; it requires its
   own capability.
 

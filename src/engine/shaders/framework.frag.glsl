@@ -90,10 +90,12 @@ float escapeHeight(vec2 point) {
 #else
   vec2 z = u_isJulia ? point : vec2(0.0);
   vec2 c = u_isJulia ? u_juliaC : point;
-  // Per-orbit side-channel reset: LastSqr must start 0 for EVERY orbit
-  // evaluation (lighting runs extra orbits after the main one — Codex 6a
-  // round-3). An init sqr() then updates it naturally.
+  // Per-orbit FRM side-channel reset. LastSqr can be read by loop expressions
+  // even when the bailout is C1/C2/C4-R; lighting also runs extra orbits.
+  // Native/B94 shaders do not declare it and omit HAS_FRM_LAST_SQR entirely.
+#ifdef HAS_FRM_LAST_SQR
   frmLastSqr = 0.0;
+#endif
 #ifdef HAS_INIT_FORMULA
   z = initFormula(z, c, point);
 #endif
@@ -176,8 +178,10 @@ vec3 colorAtComplex(vec2 point) {
   vec2 z = u_isJulia ? point : vec2(0.0);
 #endif
   vec2 c = u_isJulia ? u_juliaC : point;
-  // Per-orbit side-channel reset (see escapeHeight).
+  // Per-orbit FRM side-channel reset (see escapeHeight).
+#ifdef HAS_FRM_LAST_SQR
   frmLastSqr = 0.0;
+#endif
 #ifdef HAS_INIT_FORMULA
   z = initFormula(z, c, point);
 #endif

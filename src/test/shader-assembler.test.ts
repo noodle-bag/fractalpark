@@ -52,6 +52,22 @@ describe('Shader Assembler', () => {
       expect(shader).toContain('iterateStep');
     });
 
+    it('keeps the FRM-only LastSqr side channel out of legacy built-ins', () => {
+      const shader = assembleShader({
+        formulaId: 'mandelbrot',
+        outsideColoringId: 'smooth',
+        insideColoringId: 'black',
+        transformId: 'none',
+        pipelineVersion: 1,
+      });
+      expect(shader).not.toMatch(/\bfloat frmLastSqr\b/);
+      expect(shader).not.toMatch(/^#define ESCAPE_C5$/m);
+      expect(shader).not.toMatch(/^#define HAS_FRM_LAST_SQR$/m);
+      expect(shader).toMatch(
+        /#ifdef HAS_FRM_LAST_SQR\s+frmLastSqr = 0\.0;\s+#endif/,
+      );
+    });
+
     it('assembles an instance-local formula without registering it globally', () => {
       const formula: FormulaPlugin = {
         id: 'isolated-preview-formula',

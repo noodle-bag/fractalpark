@@ -26,6 +26,7 @@ import { scanFrmEntries } from '../src/engine/frm/scanner';
 import { evaluateOrbit, evalDescriptorThreshold } from '../src/engine/frm/orbit-eval';
 import { assembleShader } from '../src/engine/shaders/assembler';
 import { registerBuiltins } from '../src/engine/plugins/builtins';
+import { pluginRegistry } from '../src/engine/plugins/registry';
 // The plugin GLSL references the shared complex-math library (complexPow
 // etc.) — the framework injects it at assembly time, the driver must
 // prepend it explicitly.
@@ -44,6 +45,7 @@ const PIXELS: Array<[number, number]> = [
   [1.1, -0.4],
 ];
 const MAX_ITER = 12;
+const B94_CONTROL_IDS = ['mandelbrot', 'quadJulia', 'burningShip', 'newton3'] as const;
 
 registerBuiltins({ quiet: true });
 
@@ -92,6 +94,20 @@ const AUTHORED_CASES: SmokeCase[] = [
   {
     name: 'smoke-inverse-radial',
     source: 'SmokeInv {\n  z = 10:\n  z = z/4 + c,\n  |z| > 2\n}',
+  },
+  {
+    name: 'smoke-c5-lastsqr',
+    // At pixel (1.1,-0.4), correct LastSqr semantics escape at step 3;
+    // incorrectly reading the current dot(z,z) escapes at step 2.
+    source: 'SmokeC5 {\n  z = 0:\n  z = sqr(z) + c,\n  LastSqr <= 2\n}',
+  },
+  {
+    name: 'smoke-lastsqr-loop-c1',
+    // LastSqr is read by the loop while the bailout remains ordinary C1.
+    // The driver poisons the channel before the production-style reset;
+    // without that reset all three pixels escape on the first step.
+    source:
+      'SmokeLastSqrLoop {\n  z = 0:\n  z = LastSqr + c,\n  sqr(z),\n  |z| < 4\n}',
   },
 ];
 
@@ -226,15 +242,30 @@ interface PayloadRow {
   driverFrag: string;
   fnDefaults: Record<string, number>;
   threshold: number;
-  /** 0 radial |z| (squared compare), 1 real-projection z.x, 2 abs(z.x). */
+  /** 0 radial |z| (squared compare), 1 z.x, 2 abs(z.x), 3 LastSqr. */
   proj: number;
   /** descriptor predicate direction: 0 `<`, 1 `<=`, 2 `>`, 3 `>=`. */
   op: number;
   maxIter: number;
   cpu: number[];
+  descriptorKind: 'C1' | 'C2' | 'C4R' | 'C5';
+  hasFrmLastSqr: boolean;
 }
 
-function buildDriverFrag(formulaGlsl: string, hasInit: boolean): string {
+interface B94ControlRow {
+  name: string;
+  assembled: string;
+}
+
+function buildDriverFrag(
+  formulaGlsl: string,
+  hasInit: boolean,
+  hasFrmLastSqr: boolean,
+  poisonLastSqr: boolean,
+): string {
+  if (poisonLastSqr && !hasFrmLastSqr) {
+    throw new Error('LastSqr poison control requires an FRM side-channel declaration');
+  }
   return `precision highp float;
 uniform vec2 u_c0; uniform vec2 u_c1; uniform vec2 u_c2;
 uniform float u_threshold;
@@ -253,6 +284,8 @@ void main() {
   if (idx == 2) c = u_c2;
   vec2 point = c;
   vec2 z = vec2(0.0);
+  ${poisonLastSqr ? 'frmLastSqr = 123.0;' : ''}
+  ${hasFrmLastSqr ? 'frmLastSqr = 0.0;' : ''}
   ${hasInit ? 'z = initFormula(z, c, point);' : ''}
   vec2 zPrev = vec2(0.0);
   int escaped = 0;
@@ -262,8 +295,9 @@ void main() {
     zPrev = z;
     z = steppedZ;
     // Predicate holds-then-negate, matching the assembler's inverted
-    // escapeOp; C4-R projections compare z.x raw (never squared).
-    float v = u_proj == 0 ? dot(z, z) : (u_proj == 1 ? z.x : abs(z.x));
+    // escapeOp; C4-R projections and C5 LastSqr use raw thresholds.
+    float v = u_proj == 0 ? dot(z, z)
+      : (u_proj == 1 ? z.x : (u_proj == 2 ? abs(z.x) : frmLastSqr));
     float t = u_proj == 0 ? u_threshold * u_threshold : u_threshold;
     bool holds = u_op == 0 ? v < t
       : u_op == 1 ? v <= t
@@ -280,6 +314,20 @@ function main() {
   const corpus = corpusCases();
   const cases = [...AUTHORED_CASES, ...corpus.cases];
   const rows: PayloadRow[] = [];
+  const b94Controls: B94ControlRow[] = B94_CONTROL_IDS.map((name) => {
+    const plugin = pluginRegistry.getFormula(name);
+    if (!plugin) throw new Error(`B94 control ${name} is not registered`);
+    return {
+      name,
+      assembled: assembleShader({
+        formulaId: name,
+        outsideColoringId: 'smooth',
+        insideColoringId: 'black',
+        transformId: 'none',
+        pipelineVersion: 1,
+      }),
+    };
+  });
   const skipped: string[] = [];
   for (const fixture of cases) {
     let entryName = fixture.key ?? fixture.source.split(/[\s[{]/, 1)[0];
@@ -303,6 +351,8 @@ function main() {
     }
     const plugin = compiled.plugin;
     const descriptor = compiled.bailoutDescriptor;
+    const formulaGlsl = `${complexMathLib}\n${plugin.initGlsl ?? ''}\n${plugin.glsl}`;
+    const hasFrmLastSqr = /\bfloat\s+frmLastSqr\b/.test(formulaGlsl);
     const assembled = assembleShader(
       {
         formulaId: plugin.id,
@@ -332,8 +382,10 @@ function main() {
       name: fixture.name,
       assembled,
       driverFrag: buildDriverFrag(
-        `${complexMathLib}\n${plugin.initGlsl ?? ''}\n${plugin.glsl}`,
+        formulaGlsl,
         Boolean(plugin.initGlsl),
+        hasFrmLastSqr,
+        fixture.name === 'smoke-lastsqr-loop-c1',
       ),
       fnDefaults,
       threshold,
@@ -342,10 +394,14 @@ function main() {
           ? descriptor.form === 'abs-real'
             ? 2
             : 1
-          : 0,
+          : descriptor.kind === 'C5'
+            ? 3
+            : 0,
       op: { '<': 0, '<=': 1, '>': 2, '>=': 3 }[descriptor.op],
       maxIter: MAX_ITER,
       cpu,
+      descriptorKind: descriptor.kind,
+      hasFrmLastSqr,
     });
   }
   const full = process.env.FRM_SMOKE_FULL === '1';
@@ -390,6 +446,7 @@ function main() {
     maxIter: MAX_ITER,
     full: full || undefined,
     rows,
+    b94Controls,
   }, null, 1));
   console.log(`out: ${OUT}`);
 }

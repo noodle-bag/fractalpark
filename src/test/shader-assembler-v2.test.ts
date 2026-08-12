@@ -12,7 +12,6 @@
 
 import { describe, it, expect, beforeAll } from 'vitest';
 import { assembleShader, makeCacheKey } from '@/engine/shaders/assembler';
-import { pluginRegistry } from '@/engine/plugins/registry';
 import { registerBuiltins } from '@/engine/plugins/builtins/index';
 import { compileFrm, compileClassicFrmEntry } from '@/engine/frm/compile';
 import { frmParserCache } from '@/engine/frm/cache';
@@ -71,6 +70,11 @@ describe('assembleShader: renderer-pipeline v2 (bailout descriptor consumption)'
     expect(shader).not.toMatch(INJECTED_INVERSE);
     // `<` continues while |z| < 4 → escape at the inclusive boundary.
     expect(shader).not.toMatch(INJECTED_INCLUSIVE);
+    // FRM codegen owns exactly one declaration. LastSqr is a general classic
+    // side channel, so even this C1 formula resets it per orbit.
+    expect(shader.match(/\bfloat frmLastSqr\b/g)).toHaveLength(1);
+    expect(shader).toMatch(/^#define HAS_FRM_LAST_SQR$/m);
+    expect(shader).not.toMatch(/^#define ESCAPE_C5$/m);
   });
 
   it('v2 C1 > flips the escape condition and falls back to Escape Time smoothing', () => {
@@ -202,6 +206,11 @@ describe('assembleShader: C4-R projection escapes and after-step timing', () => 
     expect(shader).toMatch(/^#define ESCAPE_C5$/m);
     expect(shader).toMatch(/^#define C5_ESCAPE_CHECK\(zz\) \(\(zz\) > 4\.0\)$/m);
     expect(shader).not.toMatch(injectedRadius('16.0'));
+    expect(shader.match(/\bfloat frmLastSqr\b/g)).toHaveLength(1);
+    expect(shader).toMatch(/^#define HAS_FRM_LAST_SQR$/m);
+    expect(
+      shader.match(/#ifdef HAS_FRM_LAST_SQR\s+frmLastSqr = 0\.0;\s+#endif/g),
+    ).toHaveLength(2);
   });
 
   it('classic dialect under v2 sets afterStepTiming and injects ESCAPE_AFTER_STEP', () => {

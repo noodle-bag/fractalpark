@@ -40,6 +40,8 @@ interface PayloadRow {
   op: number;
   maxIter: number;
   cpu: number[];
+  descriptorKind: 'C1' | 'C2' | 'C4R' | 'C5';
+  hasFrmLastSqr: boolean;
 }
 
 interface Payload {
@@ -48,6 +50,7 @@ interface Payload {
   /** Set when the payload was generated with FRM_SMOKE_FULL=1 (Level 2). */
   full?: boolean;
   rows: PayloadRow[];
+  b94Controls: Array<{ name: string; assembled: string }>;
 }
 
 /**
@@ -126,7 +129,7 @@ test.describe('FRM WebGL smoke (SwiftShader)', () => {
     const payload = JSON.parse(readFileSync(PAYLOAD_PATH, 'utf-8')) as Payload;
     // Never let a degenerate payload pass vacuously: all authored cases
     // must be present (the generator also exits nonzero on authored skips).
-    expect(payload.rows.length).toBeGreaterThanOrEqual(10);
+    expect(payload.rows.length).toBeGreaterThanOrEqual(12);
     for (const name of [
       'smoke-mandel',
       'smoke-c-rebind',
@@ -138,12 +141,50 @@ test.describe('FRM WebGL smoke (SwiftShader)', () => {
       'smoke-c4r-real',
       'smoke-c4r-abs-real',
       'smoke-inverse-radial',
+      'smoke-c5-lastsqr',
+      'smoke-lastsqr-loop-c1',
     ]) {
       expect(
         payload.rows.some((r) => r.name === name),
         `payload missing authored case ${name}`,
       ).toBe(true);
     }
+    expect(payload.b94Controls.map((row) => row.name).sort()).toEqual(
+      ['burningShip', 'mandelbrot', 'newton3', 'quadJulia'],
+    );
+    const c5Control = payload.rows.find((row) => row.name === 'smoke-c5-lastsqr');
+    expect(c5Control?.descriptorKind).toBe('C5');
+    expect(c5Control?.proj).toBe(3);
+    expect(c5Control?.cpu).toEqual([13, 13, 3]);
+    expect(c5Control?.assembled).toMatch(/^#define ESCAPE_C5$/m);
+    expect(c5Control?.assembled).toMatch(
+      /^#define C5_ESCAPE_CHECK\(zz\) \(\(zz\) > 2\.0\)$/m,
+    );
+    expect(c5Control?.assembled.match(/\bfloat frmLastSqr\b/g)).toHaveLength(1);
+    expect(c5Control?.assembled).toMatch(/^#define HAS_FRM_LAST_SQR$/m);
+    expect(
+      c5Control?.assembled.match(
+        /#ifdef HAS_FRM_LAST_SQR\s+frmLastSqr = 0\.0;\s+#endif/g,
+      ),
+    ).toHaveLength(2);
+
+    const loopLastSqrControl = payload.rows.find(
+      (row) => row.name === 'smoke-lastsqr-loop-c1',
+    );
+    expect(loopLastSqrControl?.descriptorKind).toBe('C1');
+    expect(loopLastSqrControl?.hasFrmLastSqr).toBe(true);
+    expect(loopLastSqrControl?.cpu).toEqual([13, 13, 3]);
+    expect(loopLastSqrControl?.assembled).toMatch(/^#define HAS_FRM_LAST_SQR$/m);
+    expect(loopLastSqrControl?.assembled).not.toMatch(/^#define ESCAPE_C5$/m);
+    expect(loopLastSqrControl?.assembled.match(/\bfloat frmLastSqr\b/g)).toHaveLength(1);
+    expect(
+      loopLastSqrControl?.assembled.match(
+        /#ifdef HAS_FRM_LAST_SQR\s+frmLastSqr = 0\.0;\s+#endif/g,
+      ),
+    ).toHaveLength(2);
+    expect(loopLastSqrControl?.driverFrag).toMatch(
+      /frmLastSqr = 123\.0;\s+frmLastSqr = 0\.0;/,
+    );
 
     await page.setContent('<canvas id="c" width="3" height="1"></canvas>');
     await page.evaluate(() => {
@@ -273,8 +314,103 @@ test.describe('FRM WebGL smoke (SwiftShader)', () => {
       ).toBe(false);
     }
 
+    // B94 controls use the frozen renderer pipeline-v1 path and bypass the
+    // FRM compiler. Registry presence alone cannot catch framework/assembler
+    // regressions, so compile, link, draw, and read back each control shader.
+    for (const control of payload.b94Controls) {
+      const result = await page.evaluate(({ name, assembled }) => {
+        const w = window as unknown as { __smoke: SmokeRuntime };
+        const { gl, compile } = w.__smoke;
+        const vertex = compile(
+          gl.VERTEX_SHADER,
+          'attribute vec2 a; void main() { gl_Position = vec4(a, 0.0, 1.0); }',
+        );
+        if (vertex.error) return { error: `vertex: ${vertex.error}` };
+        const fragment = compile(gl.FRAGMENT_SHADER, assembled);
+        if (fragment.error) {
+          gl.deleteShader(vertex.shader);
+          return { error: `fragment: ${fragment.error}` };
+        }
+        const program = gl.createProgram()!;
+        gl.attachShader(program, vertex.shader);
+        gl.attachShader(program, fragment.shader);
+        gl.linkProgram(program);
+        if (!gl.getProgramParameter(program, gl.LINK_STATUS)) {
+          const error = `link: ${gl.getProgramInfoLog(program) ?? 'unknown'}`;
+          gl.deleteProgram(program);
+          gl.deleteShader(vertex.shader);
+          gl.deleteShader(fragment.shader);
+          return { error };
+        }
+        gl.useProgram(program);
+        const buffer = gl.createBuffer()!;
+        gl.bindBuffer(gl.ARRAY_BUFFER, buffer);
+        gl.bufferData(
+          gl.ARRAY_BUFFER,
+          new Float32Array([-1, -1, 3, -1, -1, 3]),
+          gl.STATIC_DRAW,
+        );
+        const attribute = gl.getAttribLocation(program, 'a');
+        gl.enableVertexAttribArray(attribute);
+        gl.vertexAttribPointer(attribute, 2, gl.FLOAT, false, 0, 0);
+        const set1f = (uniform: string, value: number) => {
+          const location = gl.getUniformLocation(program, uniform);
+          if (location !== null) gl.uniform1f(location, value);
+        };
+        const set1i = (uniform: string, value: number) => {
+          const location = gl.getUniformLocation(program, uniform);
+          if (location !== null) gl.uniform1i(location, value);
+        };
+        const set2f = (uniform: string, x: number, y: number) => {
+          const location = gl.getUniformLocation(program, uniform);
+          if (location !== null) gl.uniform2f(location, x, y);
+        };
+        set2f('u_resolution', 3, 1);
+        set2f('u_center', 0, 0);
+        set1f('u_zoom', 1);
+        set1f('u_rotation', 0);
+        set1i('u_maxIterations', 32);
+        set1i('u_paletteIndex', 0);
+        set1i('u_isJulia', name === 'quadJulia' ? 1 : 0);
+        set2f('u_juliaC', -0.7, 0.27);
+        set1f('u_power', 2);
+        set1i('u_ssaaLevel', 0);
+        set2f('u_tileOffset', 0, 0);
+        set1i('u_lightingEnabled', 0);
+        set1i('u_lightingMode', 0);
+        set1f('u_lightAzimuth', 0);
+        set1f('u_lightElevation', 0);
+        set1f('u_lightIntensity', 1);
+        set1i('u_useCustomGradient', 0);
+        set1i('u_gradientCount', 0);
+        while (gl.getError() !== gl.NO_ERROR) {
+          // Clear errors from optional/optimized-away uniforms before draw.
+        }
+        gl.viewport(0, 0, 3, 1);
+        gl.drawArrays(gl.TRIANGLES, 0, 3);
+        gl.finish();
+        const drawError = gl.getError();
+        const pixels = new Uint8Array(12);
+        gl.readPixels(0, 0, 3, 1, gl.RGBA, gl.UNSIGNED_BYTE, pixels);
+        const readError = gl.getError();
+        const contextLost = gl.isContextLost();
+        const alpha = [pixels[3], pixels[7], pixels[11]];
+        gl.deleteBuffer(buffer);
+        gl.deleteProgram(program);
+        gl.deleteShader(vertex.shader);
+        gl.deleteShader(fragment.shader);
+        return { drawError, readError, contextLost, alpha };
+      }, control);
+      expect(result.error, `${control.name} pipeline-v1 shader`).toBeUndefined();
+      expect(result.drawError, `${control.name} draw`).toBe(0);
+      expect(result.readError, `${control.name} readPixels`).toBe(0);
+      expect(result.contextLost, `${control.name} context`).toBe(false);
+      expect(result.alpha, `${control.name} readback`).toEqual([255, 255, 255]);
+    }
+
     console.log(
-      `FRM WebGL smoke: ${payload.rows.length} formulas, ${exact} exact / ${offByOne} off-by-one of ${pixelsTotal} pixels\n` +
+      `FRM WebGL smoke: ${payload.rows.length} formulas, ${exact} exact / ${offByOne} off-by-one of ${pixelsTotal} pixels; ` +
+        `${payload.b94Controls.length} B94 pipeline-v1 controls compile/link/draw passed\n` +
         summary.join('\n'),
     );
   });
