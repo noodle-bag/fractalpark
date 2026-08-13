@@ -162,6 +162,31 @@ RO {
     expect(lintError).toMatchObject({ line: 4, col: 5 });
   });
 
+  it('anchors renamed classic identifiers at their original first column', () => {
+    const source = `RenamedIdentifier {
+  c = 1:
+  z = c(1)
+  |z| < 4
+}`;
+    const compiled = compileClassicFrmEntry(
+      source,
+      'RenamedIdentifier',
+      'classic-renamed-identifier-column',
+      2,
+    );
+    const lintError = collectEditorErrors(source, 2).find((entry) =>
+      entry.message.includes('Unknown function: cclassic'),
+    );
+
+    expect(compiled.errors).toContain(
+      'Line 3, column 7: Unknown function: cclassic',
+    );
+    expect(lintError).toMatchObject({ line: 3, col: 7 });
+    expect(lintError?.message).toBe(
+      'Line 3, column 7: Unknown function: cclassic',
+    );
+  });
+
   it('reads the current semantics version without rebuilding the editor', () => {
     let semanticsVersion: 1 | 2 = 1;
     const currentSemanticsVersion = () => semanticsVersion;

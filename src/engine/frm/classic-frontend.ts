@@ -373,38 +373,49 @@ function alignGeneratedTextToSource(
     let i = generated.length;
     let j = sourceText.length;
     while (i > 0 && j > 0) {
-      if (
-        generatedFolded[i - 1] === sourceFolded[j - 1] &&
-        rows[i][j] === rows[i - 1][j - 1] + 1
-      ) {
+      const current = rows[i][j];
+      // Multiple LCS paths are common after an identifier expansion such as
+      // `c` -> `cclassic`: both `c` characters in the generated identifier
+      // can produce the same LCS length. Prefer the earliest generated/source
+      // occurrence so a diagnostic at the identifier start maps back to the
+      // original identifier start, not to preceding punctuation or spacing.
+      if (rows[i - 1][j] === current) {
+        i--;
+      } else if (rows[i][j - 1] === current) {
+        j--;
+      } else {
+        // The DP recurrence guarantees the remaining path is a matching
+        // diagonal; the other two branches already cover every non-match.
         matches.set(i - 1, j - 1);
         i--;
-        j--;
-      } else if (rows[i - 1][j] >= rows[i][j - 1]) {
-        i--;
-      } else {
         j--;
       }
     }
   } else {
-    // Bounded fallback for adversarially long single-line expressions.
-    let sourceIndex = 0;
-    for (let generatedIndex = 0; generatedIndex < generated.length; generatedIndex++) {
-      if (
-        sourceIndex < sourceFolded.length &&
-        generatedFolded[generatedIndex] === sourceFolded[sourceIndex]
-      ) {
-        matches.set(generatedIndex, sourceIndex);
-        sourceIndex++;
-        continue;
-      }
-      const found = sourceFolded.indexOf(
-        generatedFolded[generatedIndex],
-        sourceIndex,
-      );
-      if (found === -1) continue;
-      matches.set(generatedIndex, found);
-      sourceIndex = found + 1;
+    // Constant-space fallback for adversarially long single-line expressions.
+    // Keep exact anchors for the unchanged prefix and suffix; the unmatched
+    // middle inherits its nearest stable anchor below. This is intentionally
+    // more conservative than the bounded LCS path, but strictly O(g + s).
+    let prefixLength = 0;
+    const sharedLength = Math.min(generated.length, sourceText.length);
+    while (
+      prefixLength < sharedLength &&
+      generatedFolded[prefixLength] === sourceFolded[prefixLength]
+    ) {
+      matches.set(prefixLength, prefixLength);
+      prefixLength++;
+    }
+
+    let generatedIndex = generated.length - 1;
+    let sourceIndex = sourceText.length - 1;
+    while (
+      generatedIndex >= prefixLength &&
+      sourceIndex >= prefixLength &&
+      generatedFolded[generatedIndex] === sourceFolded[sourceIndex]
+    ) {
+      matches.set(generatedIndex, sourceIndex);
+      generatedIndex--;
+      sourceIndex--;
     }
   }
 

@@ -441,6 +441,41 @@ describe('classic dialect text rules (Slice 5b)', () => {
     expect(r.success).toBe(true);
   });
 
+  it('keeps long-token fallback provenance monotonic without quadratic rescans', () => {
+    const rhs = Array.from({ length: 2_100 }, () => '1').join('+');
+    const source = `LongMap {\n  const = ${rhs}:\n  z = const\n  |z| < 4\n}`;
+    const sourceLine = source.split('\n')[1];
+    const lowered = lowerClassicEntryToNative(source);
+    const nativeLines = lowered.native.split('\n');
+    const nativeLineIndex = nativeLines.findIndex((line) =>
+      line.startsWith('  const_ = '),
+    );
+    const nativeLine = nativeLines[nativeLineIndex];
+    const firstGeneratedColumn = nativeLine.indexOf('const_') + 1;
+    const finalGeneratedColumn = nativeLine.lastIndexOf('1') + 1;
+    const sourceOneColumns = Array.from(sourceLine.matchAll(/1/g), (match) =>
+      (match.index ?? -1) + 1,
+    );
+    const generatedOneColumns = Array.from(nativeLine.matchAll(/1/g), (match) =>
+      (match.index ?? -1) + 1,
+    );
+    const middleOneIndex = Math.floor(sourceOneColumns.length / 2);
+
+    expect(nativeLine.length).toBeGreaterThan(4_096);
+    expect(generatedOneColumns).toHaveLength(sourceOneColumns.length);
+    expect(
+      lowered.locationMap[nativeLineIndex].columnMap[firstGeneratedColumn - 1],
+    ).toEqual({ line: 2, col: sourceLine.indexOf('const') + 1 });
+    expect(
+      lowered.locationMap[nativeLineIndex].columnMap[
+        generatedOneColumns[middleOneIndex] - 1
+      ],
+    ).toEqual({ line: 2, col: sourceOneColumns[middleOneIndex] });
+    expect(
+      lowered.locationMap[nativeLineIndex].columnMap[finalGeneratedColumn - 1],
+    ).toEqual({ line: 2, col: sourceLine.lastIndexOf('1') + 1 });
+  });
+
   it('wraps a bare complex pair in a unary call as a complex literal', () => {
     const source = 'T {\n  s = exp(1.,0.), z = pixel:\n  z = z^s + c,\n  |z| < 100\n}';
     const { native, notes } = lowerClassicEntryToNative(source);
