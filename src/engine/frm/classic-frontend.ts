@@ -10,9 +10,9 @@
  * statements, and lexer-valid identifiers.
  *
  * This module lowers a single scanned classic entry (header included) into
- * an equivalent native source string plus a line map (native line →
- * classic line) for diagnostic back-referencing and a structured note list
- * describing every adaptation applied. The lowered source flows through
+ * an equivalent native source string plus line/column provenance for
+ * diagnostic back-referencing and a structured note list describing every
+ * adaptation applied. The lowered source flows through
  * the existing `compileFrmDetailed` pipeline unchanged (docs/specs/
  * frm-compatibility-v1.md §1).
  *
@@ -34,15 +34,14 @@
  * - `bailout=<value>` is an assignment and stays in its section (the
  *   variable is renamed because the native parser treats a statement
  *   starting with the `bailout` keyword as a section header);
- * - `c = pixel` is removed: in the native model `c` already equals the
- *   pixel for Mandelbrot mode (codegen: `pixel = u_isJulia ? point : c`),
- *   so the classic identity assignment is redundant there. Julia-mode
- *   pixel-binding has no native equivalent; entries relying on it classify
- *   Read-only downstream and the removal is always recorded as a note;
+ * - classic assignments to the native read-only `c` are lowered to a fresh
+ *   mutable `cclassic[N]` variable seeded from framework `c`; references in
+ *   init, loop, and bailout follow the same rename so Mandelbrot and Julia
+ *   modes retain classic cross-iteration state honestly;
  * - chained assignments `a = b = expr` are split into ordered single
  *   assignments (`b = expr`, `a = b`) so the native assignment grammar can
- *   express them; the `c = pixel` removal applies per split piece, so a
- *   chained `z = c = pixel` leaves only `z = c`;
+ *   express them; a chained `z = c = pixel` therefore becomes ordered
+ *   assignments to the renamed mutable `cclassic[N]` and then `z`;
  * - the body is fully case-insensitive in classic semantics (`Real` ≡
  *   `real`, `Z` ≡ `z`), so it is lowercased once before tokenization —
  *   entry names come from the header parse and keep their case;
@@ -57,10 +56,6 @@
  *   classic sources treat header notes.
  *
  * Known limitations (documented, not silently hidden):
- * - assignments to `c` with a non-pixel value (`c = p1`, `c = 1/pixel`)
- *   have no native equivalent (native `c` is the runtime Julia parameter)
- *   and are passed through, so such entries fail the native compiler and
- *   classify as read-only downstream;
  * - chained assignments nested inside parentheses are passed through;
  * - predicate extraction considers the last top-level (outside `if`)
  *   non-assignment expression only.
@@ -94,12 +89,32 @@ export interface LoweringNote {
   message: string;
 }
 
+/** A 1-based location in the selected classic entry source. */
+export interface ClassicSourceLocation {
+  line: number;
+  col: number;
+}
+
 /** Result of lowering one classic entry to native syntax. */
 export interface LoweredClassicEntry {
   /** Native-syntax source; safe to feed to `compileFrmDetailed`. */
   native: string;
   /** `lineMap[nativeLine - 1]` = 1-based classic source line. */
   lineMap: number[];
+  /** Per-generated-line provenance back to the selected classic entry. */
+  locationMap: Array<{
+    /** 1-based line/column anchor in the selected classic entry. */
+    line: number;
+    col: number;
+    /** 1-based column where source-derived text starts on the native line. */
+    generatedCol: number;
+    /**
+     * `columnMap[nativeColumn - 1]` gives the source-facing location used for
+     * diagnostics. Matched source characters are exact; characters inserted
+     * by lowering inherit the nearest stable source anchor.
+     */
+    columnMap: ClassicSourceLocation[];
+  }>;
   notes: LoweringNote[];
   /** The generated c-rebinding seed target (`cclassic[N]`) when the
    * rename fired — provenance marker consumed by the C2 init-binding
@@ -251,10 +266,18 @@ function splitChainedAssignment(text: string): string[] {
 
 interface BodyToken {
   type: 'expr' | 'if' | 'else' | 'elseif' | 'endif';
-  /** expr: expression text; if/elseif: condition text. */
+  /** expr: lowered expression text; if/elseif: lowered condition text. */
   text: string;
+  /** Token text before any length-changing lowering rewrite. */
+  sourceText: string;
+  /** Exact source location for every character in `sourceText`. */
+  sourceMap: ClassicSourceLocation[];
+  /** O(1) leading-whitespace tracking while the walker appends chars. */
+  hasNonWhitespace: boolean;
   /** 1-based classic line where the token started. */
   line: number;
+  /** 1-based classic column where the token started. */
+  col: number;
 }
 
 interface WalkResult {
@@ -263,11 +286,144 @@ interface WalkResult {
   boundary: number;
   /** 1-based classic line of the first top-level colon, or 0. */
   colonLine: number;
+  /** 1-based classic column of the first top-level colon, or 0. */
+  colonCol: number;
   /** 1-based classic line of the entry closing brace. */
   closeLine: number;
+  /** 1-based classic column of the entry closing brace. */
+  closeCol: number;
 }
 
 const KEYWORD_RE = /^(if|else|elseif|endif)(?![a-zA-Z0-9_])/i;
+
+function newBodyToken(
+  type: BodyToken['type'],
+  line: number,
+  col: number,
+): BodyToken {
+  return {
+    type,
+    text: '',
+    sourceText: '',
+    sourceMap: [],
+    hasNonWhitespace: false,
+    line,
+    col,
+  };
+}
+
+function appendOriginChar(
+  token: BodyToken,
+  ch: string,
+  line: number,
+  col: number,
+): void {
+  token.sourceText += ch;
+  token.sourceMap.push({ line, col });
+}
+
+function appendSourceChar(
+  token: BodyToken,
+  ch: string,
+  line: number,
+  col: number,
+): void {
+  token.text += ch;
+  token.sourceMap.push({ line, col });
+  if (!/[ \t\r]/.test(ch)) token.hasNonWhitespace = true;
+}
+
+const MAX_SOURCE_MAP_ALIGNMENT_CELLS = 262_144;
+const MAX_SOURCE_MAP_ALIGNMENT_DIMENSION = 4_096;
+
+function alignGeneratedTextToSource(
+  generated: string,
+  sourceText: string,
+  sourceMap: readonly ClassicSourceLocation[],
+  fallback: ClassicSourceLocation,
+): ClassicSourceLocation[] {
+  if (generated.length === 0) return [];
+  if (sourceText.length === 0 || sourceMap.length !== sourceText.length) {
+    return Array.from({ length: generated.length }, () => fallback);
+  }
+
+  const generatedFolded = generated.toLowerCase();
+  const sourceFolded = sourceText.toLowerCase();
+  if (generatedFolded === sourceFolded) return [...sourceMap];
+  const matches = new Map<number, number>();
+
+  if (
+    generated.length <= MAX_SOURCE_MAP_ALIGNMENT_DIMENSION &&
+    sourceText.length <= MAX_SOURCE_MAP_ALIGNMENT_DIMENSION &&
+    generated.length * sourceText.length <=
+    MAX_SOURCE_MAP_ALIGNMENT_CELLS
+  ) {
+    const rows = Array.from(
+      { length: generated.length + 1 },
+      () => new Uint32Array(sourceText.length + 1),
+    );
+    for (let i = 1; i <= generated.length; i++) {
+      for (let j = 1; j <= sourceText.length; j++) {
+        rows[i][j] =
+          generatedFolded[i - 1] === sourceFolded[j - 1]
+            ? rows[i - 1][j - 1] + 1
+            : Math.max(rows[i - 1][j], rows[i][j - 1]);
+      }
+    }
+    let i = generated.length;
+    let j = sourceText.length;
+    while (i > 0 && j > 0) {
+      if (
+        generatedFolded[i - 1] === sourceFolded[j - 1] &&
+        rows[i][j] === rows[i - 1][j - 1] + 1
+      ) {
+        matches.set(i - 1, j - 1);
+        i--;
+        j--;
+      } else if (rows[i - 1][j] >= rows[i][j - 1]) {
+        i--;
+      } else {
+        j--;
+      }
+    }
+  } else {
+    // Bounded fallback for adversarially long single-line expressions.
+    let sourceIndex = 0;
+    for (let generatedIndex = 0; generatedIndex < generated.length; generatedIndex++) {
+      if (
+        sourceIndex < sourceFolded.length &&
+        generatedFolded[generatedIndex] === sourceFolded[sourceIndex]
+      ) {
+        matches.set(generatedIndex, sourceIndex);
+        sourceIndex++;
+        continue;
+      }
+      const found = sourceFolded.indexOf(
+        generatedFolded[generatedIndex],
+        sourceIndex,
+      );
+      if (found === -1) continue;
+      matches.set(generatedIndex, found);
+      sourceIndex = found + 1;
+    }
+  }
+
+  const exact = Array.from({ length: generated.length }, (_, index) => {
+    const sourceIndex = matches.get(index);
+    return sourceIndex === undefined ? undefined : sourceMap[sourceIndex];
+  });
+  let previous: ClassicSourceLocation | undefined;
+  for (let index = 0; index < exact.length; index++) {
+    if (exact[index]) previous = exact[index];
+    else if (previous) exact[index] = previous;
+  }
+  let next: ClassicSourceLocation | undefined;
+  for (let index = exact.length - 1; index >= 0; index--) {
+    if (exact[index]) next = exact[index];
+    else if (next) exact[index] = next;
+  }
+  return exact.map((location) => location ?? fallback);
+}
 
 // This marker represents the physical newline removed by a classic `\\`
 // continuation.  `walkBody` consumes it without ending the current token,
@@ -339,51 +495,37 @@ function joinClassicLineContinuations(body: string, notes: LoweringNote[]): { te
   return { text: out.join(''), physicalLines };
 }
 
-/** Build a regex matching `literal` with optional continuation markers
- * between characters (a backslash join may split an identifier). */
-function markerFlexRegExp(literal: string, flags = 'g'): RegExp {
-  const flex = literal
-    .split('')
-    .map((c) => c.replace(/[.*+?^${}()|[\]\\]/g, '\\$&'))
-    .join(`${LINE_CONTINUATION_MARKER}?`);
-  return new RegExp(`\\b${flex}\\b`, flags);
-}
-
-/** Rebuild `target` over a marker-flex match, keeping any continuation
- * markers in place so walkBody's physical-line accounting survives. */
-function replacePreservingMarkers(match: string, target: string): string {
-  const markerless = match.replace(new RegExp(LINE_CONTINUATION_MARKER, 'g'), '');
-  if (markerless === match) return target;
-  let out = '';
-  let ti = 0;
-  for (const ch of match) {
-    if (ch === LINE_CONTINUATION_MARKER) {
-      out += LINE_CONTINUATION_MARKER;
-    } else {
-      out += target[ti++] ?? '';
-    }
-  }
-  return out + target.slice(ti);
-}
-
 /**
  * Tokenize a classic body into expression and structural tokens. Comments,
  * separators (`,`, newline, `:`), and the closing `}` are consumed here.
  */
-function walkBody(body: string, startLine: number, notes: LoweringNote[]): WalkResult {
+function walkBody(
+  body: string,
+  startLine: number,
+  startCol: number,
+  notes: LoweringNote[],
+): WalkResult {
   const tokens: BodyToken[] = [];
   let current: BodyToken | null = null;
   let parenDepth = 0;
   let line = startLine;
+  let col = startCol;
   let boundary = -1;
   let colonLine = 0;
+  let colonCol = 0;
   let closeLine = 0;
+  let closeCol = 0;
 
   const endCurrent = () => {
     if (current) {
-      const text = current.text.trim();
+      const leading = current.text.length - current.text.trimStart().length;
+      const trailing = current.text.length - current.text.trimEnd().length;
+      const end = current.text.length - trailing;
+      const text = current.text.slice(leading, end);
       if (text.length > 0 || current.type !== 'expr') {
         current.text = text;
+        current.sourceText = text;
+        current.sourceMap = current.sourceMap.slice(leading, end);
         tokens.push(current);
       }
       current = null;
@@ -399,6 +541,7 @@ function walkBody(body: string, startLine: number, notes: LoweringNote[]): WalkR
       // This is a removed `\\` plus its following physical newline. Keep
       // the current token open, but account for the original line break.
       line++;
+      col = 1;
       i++;
       continue;
     }
@@ -406,6 +549,7 @@ function walkBody(body: string, startLine: number, notes: LoweringNote[]): WalkR
     if (ch === '\n') {
       endCurrent();
       line++;
+      col = 1;
       i++;
       continue;
     }
@@ -416,7 +560,10 @@ function walkBody(body: string, startLine: number, notes: LoweringNote[]): WalkR
         line,
         message: 'Classic `;` comment removed during lowering',
       });
-      while (i < n && body[i] !== '\n') i++;
+      while (i < n && body[i] !== '\n') {
+        i++;
+        col++;
+      }
       continue;
     }
 
@@ -425,12 +572,22 @@ function walkBody(body: string, startLine: number, notes: LoweringNote[]): WalkR
       const m = KEYWORD_RE.exec(body.slice(i));
       if (m) {
         const kw = m[1].toLowerCase();
+        const tokenCol = col;
         i += m[1].length;
+        col += m[1].length;
         if (kw === 'else' || kw === 'endif') {
-          tokens.push({ type: kw, text: '', line });
+          const token = newBodyToken(kw, line, tokenCol);
+          for (let offset = 0; offset < m[1].length; offset++) {
+            appendOriginChar(token, m[1][offset], line, tokenCol + offset);
+          }
+          tokens.push(token);
         } else {
           // if / elseif: the condition is the rest of this token.
-          current = { type: kw === 'elseif' ? 'elseif' : 'if', text: '', line };
+          current = newBodyToken(
+            kw === 'elseif' ? 'elseif' : 'if',
+            line,
+            tokenCol,
+          );
         }
         continue;
       }
@@ -438,21 +595,27 @@ function walkBody(body: string, startLine: number, notes: LoweringNote[]): WalkR
 
     if (ch === '(') {
       parenDepth++;
-      if (!current) current = { type: 'expr', text: '', line };
-      current.text += ch;
+      if (!current) current = newBodyToken('expr', line, col);
+      if (current.type === 'expr' && !current.hasNonWhitespace) {
+        current.col = col;
+      }
+      appendSourceChar(current, ch, line, col);
       i++;
+      col++;
       continue;
     }
     if (ch === ')') {
       if (parenDepth > 0) parenDepth--;
-      if (current) current.text += ch;
+      if (current) appendSourceChar(current, ch, line, col);
       i++;
+      col++;
       continue;
     }
     if (ch === ',') {
       if (parenDepth === 0) endCurrent();
-      else if (current) current.text += ch;
+      else if (current) appendSourceChar(current, ch, line, col);
       i++;
+      col++;
       continue;
     }
     if (ch === ':') {
@@ -461,37 +624,52 @@ function walkBody(body: string, startLine: number, notes: LoweringNote[]): WalkR
         if (boundary === -1) {
           boundary = tokens.length;
           colonLine = line;
+          colonCol = col;
         }
       } else if (current) {
-        current.text += ch;
+        appendSourceChar(current, ch, line, col);
       }
       i++;
+      col++;
       continue;
     }
     if (ch === '}') {
       if (parenDepth === 0) {
         endCurrent();
         closeLine = line;
+        closeCol = col;
         break;
       }
-      if (current) current.text += ch;
+      if (current) appendSourceChar(current, ch, line, col);
       i++;
+      col++;
       continue;
     }
 
-    if (!current) current = { type: 'expr', text: '', line };
-    current.text += ch;
+    if (!current) current = newBodyToken('expr', line, col);
+    if (
+      current.type === 'expr' &&
+      !current.hasNonWhitespace &&
+      !/[ \t\r]/.test(ch)
+    ) {
+      current.col = col;
+    }
+    appendSourceChar(current, ch, line, col);
     i++;
+    col++;
   }
 
   endCurrent();
   if (closeLine === 0) closeLine = line;
+  if (closeCol === 0) closeCol = col;
 
   return {
     tokens,
     boundary: boundary === -1 ? tokens.length : boundary,
     colonLine,
+    colonCol,
     closeLine,
+    closeCol,
   };
 }
 
@@ -631,21 +809,15 @@ export function lowerClassicEntryToNative(entrySource: string): LoweredClassicEn
   // once, before tokenization — entry names come from the header parse and
   // are unaffected.
   const joinedBody = joinClassicLineContinuations(bodyText.toLowerCase(), notes);
-  let prepared = joinedBody.text;
-  const logicalLine = (idx: number) => joinedBody.physicalLines[idx] ?? idx + 1;
-  // 5b — three classic-dialect text rules, applied per line to the code
-  // portion only (a `;` comment never triggers or receives a rewrite, so
-  // notes never claim phantom adaptations). Each note records the first
-  // affected source line (body-relative +1: the body starts after the
-  // header line, and walkBody's line accounting is 1-based from the body).
+  const walk = walkBody(joinedBody.text, 1, bodyStart + 1, notes);
+
+  // 5b — three classic-dialect text rules. Apply them AFTER walkBody so
+  // source positions come from the original classic text; length-changing
+  // rewrites (for example exp(1.,0.) → exp((1.,0.))) must not shift the
+  // column of a later comma-separated statement on the same source line.
   const PAIR_FN_NAMES = ['sin', 'cos', 'cosxx', 'cotanh', 'tan', 'sinh', 'cosh', 'tanh', 'exp', 'log', 'sqrt', 'abs', 'sqr', 'conj', 'flip', 'recip', 'cabs', 'real', 'imag', 'fn1', 'fn2', 'fn3', 'fn4'];
-  const flexOf = (lit: string) =>
-    lit
-      .split('')
-      .map((c) => c.replace(/[.*+?^${}()|[\]\\]/g, '\\$&'))
-      .join(`${LINE_CONTINUATION_MARKER}?`);
   const pairRe = new RegExp(
-    `\\b(${PAIR_FN_NAMES.map(flexOf).join('|')})\\s*\\(\\s*([^(),]+?)\\s*,\\s*([^(),]+?)\\s*\\)`,
+    `\\b(${PAIR_FN_NAMES.join('|')})\\s*\\(\\s*([^(),]+?)\\s*,\\s*([^(),]+?)\\s*\\)`,
     'g',
   );
   let recased = 0;
@@ -654,36 +826,23 @@ export function lowerClassicEntryToNative(entrySource: string): LoweredClassicEn
   let constLine = 0;
   let pairWrapped = 0;
   let pairLine = 0;
-  prepared = prepared
-    .split('\n')
-    .map((line, idx) => {
-      const semi = line.indexOf(';');
-      const code = semi < 0 ? line : line.slice(0, semi);
-      const comment = semi < 0 ? '' : line.slice(semi);
-      let out = code.replace(markerFlexRegExp('lastsqr'), (m) => {
-        recased++;
-        if (!recasedLine) recasedLine = logicalLine(idx);
-        return replacePreservingMarkers(m, 'LastSqr');
-      });
-      // `const` is a legal classic variable name (fractint.hlp reserves
-      // only operator symbols) but is GLSL-reserved — rename to const_.
-      out = out.replace(markerFlexRegExp('const'), (m) => {
-        constRenamed = true;
-        if (!constLine) constLine = logicalLine(idx);
-        return replacePreservingMarkers(m, 'const_');
-      });
-      // Unary function applied to a bare complex pair: classic
-      // `exp(1.,0.)` means exp((1,0)) — wrap the pair as a complex
-      // literal. Simple (no-nested-paren) pairs only; anything left over
-      // (nested calls, multi-arg shapes) fails loudly at validator arity.
-      out = out.replace(pairRe, (_m, fn, a, b) => {
-        pairWrapped++;
-        if (!pairLine) pairLine = logicalLine(idx);
-        return `${fn}((${a},${b}))`;
-      });
-      return out + comment;
-    })
-    .join('\n');
+  for (const token of walk.tokens) {
+    token.text = token.text.replace(/\blastsqr\b/g, () => {
+      recased++;
+      if (!recasedLine) recasedLine = token.line;
+      return 'LastSqr';
+    });
+    token.text = token.text.replace(/\bconst\b/g, () => {
+      constRenamed = true;
+      if (!constLine) constLine = token.line;
+      return 'const_';
+    });
+    token.text = token.text.replace(pairRe, (_m, fn, a, b) => {
+      pairWrapped++;
+      if (!pairLine) pairLine = token.line;
+      return `${fn}((${a},${b}))`;
+    });
+  }
   if (recased > 0) {
     notes.push({
       kind: 'builtin-name-recased',
@@ -705,7 +864,6 @@ export function lowerClassicEntryToNative(entrySource: string): LoweredClassicEn
       message: `${pairWrapped} unary call(s) with a bare complex pair wrapped as a complex literal (classic fn(a,b) ≡ fn((a,b)))`,
     });
   }
-  const walk = walkBody(prepared, 1, notes);
 
   const initTokens = walk.tokens.slice(0, walk.boundary);
   const loopTokens = walk.tokens.slice(walk.boundary);
@@ -731,7 +889,12 @@ export function lowerClassicEntryToNative(entrySource: string): LoweredClassicEn
     : loopTokens;
 
   let bailoutText = predicate ? predicate.text : '|z| < 4';
+  const bailoutSourceText = predicate?.sourceText ?? '';
+  const bailoutSourceMap = predicate?.sourceMap ?? [];
   const bailoutLine = predicate ? predicate.line : (loopBodyTokens.at(-1)?.line ?? walk.colonLine) || walk.closeLine;
+  const bailoutCol = predicate
+    ? predicate.col
+    : (loopBodyTokens.at(-1)?.col ?? walk.colonCol) || walk.closeCol;
   if (!predicate) {
     notes.push({
       kind: 'default-bailout',
@@ -783,14 +946,15 @@ export function lowerClassicEntryToNative(entrySource: string): LoweredClassicEn
     });
   }
 
-  // Flatten each section into single-assignment statement lines. Also
-  // report `c = pixel` pieces removed per section: a loop-section removal
-  // is a per-iteration c reset (cross-iteration state) and must suppress
-  // the init-rebinding rename below — the guard must see what flatten
-  // removed, not just what survived.
+  // Flatten each section into single-assignment statement lines. `c`
+  // assignments are deliberately retained here; the stateful rename below
+  // handles init and loop writes uniformly.
   interface Stmt {
     text: string;
     line: number;
+    col: number;
+    sourceText: string;
+    sourceMap: ClassicSourceLocation[];
     kind: 'stmt' | 'if' | 'else' | 'elseif' | 'endif';
   }
   const flatten = (tokensIn: BodyToken[]): Stmt[] => {
@@ -798,7 +962,14 @@ export function lowerClassicEntryToNative(entrySource: string): LoweredClassicEn
     for (const token of tokensIn) {
       if (token.type !== 'expr') {
         const kind = token.type === 'if' || token.type === 'else' || token.type === 'elseif' || token.type === 'endif' ? token.type : 'stmt';
-        out.push({ text: token.text, line: token.line, kind });
+        out.push({
+          text: token.text,
+          line: token.line,
+          col: token.col,
+          sourceText: token.sourceText,
+          sourceMap: token.sourceMap,
+          kind,
+        });
         continue;
       }
       const text = renameBailout(token.text);
@@ -815,7 +986,14 @@ export function lowerClassicEntryToNative(entrySource: string): LoweredClassicEn
         // is a real rebind (replacing the Julia constant), and in the loop
         // it is a per-iteration reset — both are expressed by the
         // c-rebinding rename below (Slice 5c). Nothing is dropped.
-        out.push({ text: piece, line: token.line, kind: 'stmt' });
+        out.push({
+          text: piece,
+          line: token.line,
+          col: token.col,
+          sourceText: token.sourceText,
+          sourceMap: token.sourceMap,
+          kind: 'stmt',
+        });
       }
     }
     return out;
@@ -860,7 +1038,18 @@ export function lowerClassicEntryToNative(entrySource: string): LoweredClassicEn
       initStmts.find((s) => s.kind === 'stmt' && s.text.startsWith(`${fresh}=`))?.line ??
       loopStmts.find((s) => s.kind === 'stmt' && s.text.startsWith(`${fresh} `))?.line ??
       1;
-    initStmts.unshift({ text: `${fresh} = c`, line: firstLine, kind: 'stmt' });
+    const firstCol =
+      initStmts.find((s) => s.line === firstLine)?.col ??
+      loopStmts.find((s) => s.line === firstLine)?.col ??
+      1;
+    initStmts.unshift({
+      text: `${fresh} = c`,
+      line: firstLine,
+      col: firstCol,
+      sourceText: '',
+      sourceMap: [],
+      kind: 'stmt',
+    });
     notes.push({
       kind: 'c-init-rebinding-renamed',
       line: firstLine,
@@ -870,12 +1059,38 @@ export function lowerClassicEntryToNative(entrySource: string): LoweredClassicEn
     });
   }
 
-  // Emit native source with a line map back to the classic source.
+  // Emit native source with line and per-column provenance back to classic.
   const native: string[] = [];
   const lineMap: number[] = [];
-  const push = (text: string, classicLine: number) => {
+  const locationMap: LoweredClassicEntry['locationMap'] = [];
+  const push = (
+    text: string,
+    classicLine: number,
+    classicCol = 1,
+    generatedCol = 1,
+    sourceText = '',
+    sourceMap: readonly ClassicSourceLocation[] = [],
+  ) => {
+    const fallback = { line: classicLine, col: classicCol };
+    const prefixLength = Math.max(0, generatedCol - 1);
+    const sourceDerivedText = text.slice(prefixLength);
+    const mappedText = alignGeneratedTextToSource(
+      sourceDerivedText,
+      sourceText,
+      sourceMap,
+      fallback,
+    );
     native.push(text);
     lineMap.push(classicLine);
+    locationMap.push({
+      line: classicLine,
+      col: classicCol,
+      generatedCol,
+      columnMap: [
+        ...Array.from({ length: prefixLength }, () => fallback),
+        ...mappedText,
+      ],
+    });
   };
 
   push(`${name} {`, 1);
@@ -884,33 +1099,66 @@ export function lowerClassicEntryToNative(entrySource: string): LoweredClassicEn
   const emitStmt = (stmt: Stmt) => {
     if (stmt.kind === 'if') {
       const cond = stmt.text;
-      push(`  if ${isFullyParenWrapped(cond) ? cond : `(${cond})`}`, stmt.line);
+      push(
+        `  if ${isFullyParenWrapped(cond) ? cond : `(${cond})`}`,
+        stmt.line,
+        stmt.col,
+        6,
+        stmt.sourceText,
+        stmt.sourceMap,
+      );
     } else if (stmt.kind === 'elseif') {
       const cond = stmt.text;
-      push(`  elseif ${isFullyParenWrapped(cond) ? cond : `(${cond})`}`, stmt.line);
+      push(
+        `  elseif ${isFullyParenWrapped(cond) ? cond : `(${cond})`}`,
+        stmt.line,
+        stmt.col,
+        10,
+        stmt.sourceText,
+        stmt.sourceMap,
+      );
     } else if (stmt.kind === 'else') {
-      push('  else', stmt.line);
+      push('  else', stmt.line, stmt.col, 3, stmt.sourceText, stmt.sourceMap);
     } else if (stmt.kind === 'endif') {
-      push('  endif', stmt.line);
+      push('  endif', stmt.line, stmt.col, 3, stmt.sourceText, stmt.sourceMap);
     } else {
-      push(`  ${stmt.text}`, stmt.line);
+      push(
+        `  ${stmt.text}`,
+        stmt.line,
+        stmt.col,
+        3,
+        stmt.sourceText,
+        stmt.sourceMap,
+      );
     }
   };
   if (initStmts.length > 0) {
-    push('init:', walk.colonLine || initStmts[0].line);
+    push(
+      'init:',
+      walk.colonLine || initStmts[0].line,
+      walk.colonCol || initStmts[0].col,
+    );
     for (const stmt of initStmts) emitStmt(stmt);
   }
   if (loopStmts.length > 0) {
-    push('loop:', loopStmts[0].line);
+    push('loop:', loopStmts[0].line, loopStmts[0].col);
     for (const stmt of loopStmts) emitStmt(stmt);
   }
-  push('bailout:', bailoutLine);
-  push(`  ${bailoutText}`, bailoutLine);
-  push('}', walk.closeLine);
+  push('bailout:', bailoutLine, bailoutCol);
+  push(
+    `  ${bailoutText}`,
+    bailoutLine,
+    bailoutCol,
+    3,
+    bailoutSourceText,
+    bailoutSourceMap,
+  );
+  push('}', walk.closeLine, walk.closeCol);
 
   return {
     native: native.join('\n'),
     lineMap,
+    locationMap,
     notes,
     ...(cSeedTarget !== undefined ? { cSeedTarget } : {}),
     ...(header.options !== undefined ? { options: header.options } : {}),

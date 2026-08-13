@@ -4,6 +4,7 @@ import {
   resolveFrmSemanticsVersion,
   type FrmSemanticsVersion,
 } from './frm/semantics-version';
+import { canonicalizeCloudCustomFormulaRuntimeId } from '@/lib/cloud/custom-formula-identity';
 
 export const FRACTAL_DOCUMENT_ENVELOPE_VERSION = 1 as const;
 
@@ -109,7 +110,7 @@ function readPortableFormulaAsset(
   }
 
   return {
-    id: value.id,
+    id: canonicalizeCloudCustomFormulaRuntimeId(value.id),
     language: 'frm',
     name: value.name as string | undefined,
     source: value.source,

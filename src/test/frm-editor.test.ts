@@ -23,6 +23,9 @@ bailout:
   |z| < 4
 }`;
 
+const STORAGE_ID = '550e8400-e29b-41d4-a716-446655440000';
+const RUNTIME_ID = `custom-${STORAGE_ID}`;
+
 describe('standalone FRM editor helpers', () => {
   it('reads a valid UTF-8 .frm file without rewriting its source', async () => {
     const source = `; keep this comment\n${SINGLE_SOURCE}\n`;
@@ -94,14 +97,29 @@ describe('standalone FRM editor helpers', () => {
   });
 
   it('builds, validates, and strips the one-time Editor to Explore intent', () => {
-    expect(editorToExploreHref('en', 'custom-local')).toBe(
-      '/en/explore?open=custom-formula&formula=custom-local'
+    expect(editorToExploreHref('en', STORAGE_ID)).toBe(
+      `/en/explore?open=custom-formula&formula=${RUNTIME_ID}`
     );
     expect(
       parseEditorToExploreIntent(
-        new URLSearchParams('open=custom-formula&formula=custom-local')
+        new URLSearchParams(`open=custom-formula&formula=${RUNTIME_ID}`)
       )
-    ).toEqual({ status: 'valid', formulaId: 'custom-local' });
+    ).toEqual({
+      status: 'valid',
+      formulaId: RUNTIME_ID,
+      storageId: STORAGE_ID,
+      legacy: false,
+    });
+    expect(
+      parseEditorToExploreIntent(
+        new URLSearchParams(`open=custom-formula&formula=${STORAGE_ID}`)
+      )
+    ).toEqual({
+      status: 'valid',
+      formulaId: RUNTIME_ID,
+      storageId: STORAGE_ID,
+      legacy: true,
+    });
     expect(
       parseEditorToExploreIntent(new URLSearchParams('open=custom-formula'))
     ).toEqual({ status: 'invalid', formulaId: '', reason: 'missing' });
@@ -115,13 +133,25 @@ describe('standalone FRM editor helpers', () => {
       reason: 'invalid-id',
     });
     expect(
-      parseEditorToExploreIntent(new URLSearchParams('formula=custom-local'))
+      parseEditorToExploreIntent(new URLSearchParams(`formula=${RUNTIME_ID}`))
     ).toEqual({ status: 'none' });
+    expect(
+      parseEditorToExploreIntent(
+        new URLSearchParams('open=custom-formula&formula=custom-local')
+      )
+    ).toEqual({
+      status: 'invalid',
+      formulaId: 'custom-local',
+      reason: 'invalid-id',
+    });
+    expect(() => editorToExploreHref('en', 'custom-local')).toThrow(
+      /Invalid cloud custom formula identity/,
+    );
     expect(
       stripEditorToExploreIntent(
         'zh',
         new URLSearchParams(
-          'open=custom-formula&formula=custom-local&panel=coloring'
+          `open=custom-formula&formula=${RUNTIME_ID}&panel=coloring`
         )
       )
     ).toBe('/zh/explore?panel=coloring');

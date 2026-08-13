@@ -2,7 +2,7 @@
 
 - Status: Frozen (v0.4.18 release candidate)
 - Date: 2026-08-12
-- Last verified: 2026-08-12 (PR #19 development closeout; release gates remain separate)
+- Last verified: 2026-08-13 (identity-contract repair; release gates remain separate)
 
 ## Purpose
 
@@ -214,6 +214,31 @@ an adaptation. `function=` slot defaults and `float=` options are recorded
 as informational notes (visible, never blocking).
 
 Lint, compile results, and status cards dedupe by `reasonCode + location`. Mobile keeps a single-line summary with on-demand details. Read-only/Invalid entries keep editing, copying, download, and source navigation.
+
+### 6.1 Cloud custom-formula identity
+
+Cloud custom formulas have three explicit identity roles. They are related,
+but they are not interchangeable strings:
+
+| Role | Canonical representation | Allowed boundary |
+|---|---|---|
+| Storage/resource ID | bare lowercase UUID | database keys, API DTOs and resource paths, revision and authorization checks |
+| Runtime ID | `custom-<uuid>` | plugin registry, Explore state, Documents, drafts, portable assets, and newly written handoff URLs |
+| Handoff reference | parsed identity carrying both `storageId` and `runtimeId` | Editor → Explore one-time intent and compatibility readers |
+
+The identity module is the only conversion boundary. Components must not
+concatenate `custom-`, strip it with `slice`, or infer cloud ownership from an
+arbitrary prefix. Storage/API code accepts only a strict UUID. Runtime parsing
+accepts only a strict `custom-<uuid>`; built-in IDs, `frm-*`, local/imported
+custom IDs, doubled prefixes, and malformed UUIDs are never cloud identities.
+
+Migration is **dual-read, canonical-write**. Historical Documents, drafts,
+portable envelopes, resolver inputs, and handoff URLs may contain the earlier
+bare-UUID runtime reference; readers convert it immediately to
+`custom-<uuid>`. New Documents, runtime registrations, session assets, and
+handoff URLs write only `custom-<uuid>`. CRUD converts back to the original
+bare UUID before constructing an API path. The database primary key and API
+resource contract remain bare UUIDs and require no data migration.
 
 ## 7. Coloring capability
 

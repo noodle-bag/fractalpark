@@ -1,6 +1,13 @@
-import { expect, test } from '@playwright/test';
+import { expect, test, type Page } from '@playwright/test';
 
 const ABSOLUTE_EDITOR_URL = 'http://127.0.0.1:3000/en/formulas/editor';
+
+async function replaceEditorSource(page: Page, source: string): Promise<void> {
+  const editor = page.locator('.cm-content');
+  await editor.click();
+  await page.keyboard.press('Control+A');
+  await page.keyboard.insertText(source);
+}
 
 test.describe('standalone FRM editor', () => {
   test.describe.configure({ mode: 'serial', timeout: 60_000 });
@@ -100,10 +107,59 @@ test.describe('standalone FRM editor', () => {
       .toBeNull();
   });
 
+  test('keeps Classic M1 compatibility, live lint, and Compile aligned', async ({ page }) => {
+    await page.goto('/en/formulas/editor?example=not-allowlisted');
+    await replaceEditorSource(
+      page,
+      `M1 {
+\tz=pixel:
+\tz=z*z+pixel
+\t|z|<=4
+}`,
+    );
+
+    await expect(page.getByTestId('frm-compat-card')).toContainText(/Supported/i);
+    await expect(page.getByText(/Expected COLON/)).toHaveCount(0);
+    await expect(page.getByText(/Unknown section: pixel/)).toHaveCount(0);
+    await expect(page.getByText(/Missing bailout expression/)).toHaveCount(0);
+
+    const compile = page.getByRole('button', { name: 'Compile', exact: true });
+    await expect(compile).toBeEnabled({ timeout: 15_000 });
+    await compile.click();
+    await expect(page.getByText('Compile Successful').first()).toBeVisible();
+  });
+
+  test('shows full classic source coordinates in status and live diagnostics', async ({ page }) => {
+    await page.goto('/en/formulas/editor?example=not-allowlisted');
+    await replaceEditorSource(
+      page,
+      `; preface
+
+RO {
+\tz=pixel:
+\tm=z
+\tz=z*z+pixel
+\tm<=4
+}`,
+    );
+
+    await expect(
+      page.locator('[data-testid="frm-compat-diagnostics"]:visible'),
+    ).toContainText(
+      /Line 7, column 2:/,
+      { timeout: 15_000 },
+    );
+    await expect(page.getByRole('button', { name: /Line 7/i })).toBeVisible();
+    await expect(page.getByRole('button', { name: 'Compile', exact: true })).toBeDisabled();
+  });
+
   test('consumes invalid and cross-device handoffs without a built-in fallback', async ({
     page,
   }) => {
-    for (const formulaId of ['mandelbrot', 'custom-on-another-device']) {
+    for (const formulaId of [
+      'mandelbrot',
+      'custom-88888888-8888-4888-8888-888888888888',
+    ]) {
       await page.goto(
         `/en/explore?open=custom-formula&formula=${formulaId}`
       );

@@ -24,7 +24,15 @@ import { PARAMETER_NAMES, FN_SLOT_OPTIONS } from './builtins';
 import { FRMSourceMap } from './sourcemap';
 import { frmParserCache } from './cache';
 import { scanFrmEntries, selectFrmEntry, FRM_BLOCKING_DIAGNOSTICS, type FrmEntry, type FrmScanDiagnostic, type FrmScanResult, type FrmSourceRange } from './scanner';
-import { lowerClassicEntryToNative, type LoweringNote } from './classic-frontend';
+import {
+  lowerClassicEntryToNative,
+  type ClassicSourceLocation,
+  type LoweringNote,
+} from './classic-frontend';
+import {
+  remapFormattedFrmDiagnostic,
+  type FrmDiagnosticLocation,
+} from './diagnostic-format';
 
 /** fn-slot option key (`sqr`) → uniform value, for fnDefaults consumption. */
 const FN_SLOT_KEY_TO_VALUE = new Map(FN_SLOT_OPTIONS.map((o) => [o.key, o.value]));
@@ -691,6 +699,13 @@ export interface ClassicEntryCompileResult extends EntryCompileResult {
   loweredNative?: string;
   /** `lineMap[nativeLine - 1]` = 1-based classic source line. */
   loweringLineMap?: number[];
+  /** Per-generated-line anchors back to the full classic source. */
+  loweringLocationMap?: Array<
+    FrmDiagnosticLocation & {
+      generatedCol: number;
+      columnMap: FrmDiagnosticLocation[];
+    }
+  >;
   /** Adaptations applied by the classic frontend. */
   loweringNotes?: LoweringNote[];
   /**
@@ -757,6 +772,59 @@ export function compileClassicFrmEntry(
       ? { classicSeedTarget: lowered.cSeedTarget }
       : {}),
   });
+  const prefix = source.slice(0, entry.range.startOffset);
+  const entryStartLine = prefix.split('\n').length;
+  const lastNewline = prefix.lastIndexOf('\n');
+  const entryStartCol = entry.range.startOffset - lastNewline;
+  const toFullSourceLocation = (
+    location: ClassicSourceLocation,
+  ): FrmDiagnosticLocation => ({
+    line: entryStartLine + location.line - 1,
+    col:
+      location.line === 1
+        ? entryStartCol + location.col - 1
+        : location.col,
+  });
+  const loweringLocationMap = lowered.locationMap.map((location) => ({
+    ...toFullSourceLocation(location),
+    generatedCol: location.generatedCol,
+    columnMap: location.columnMap.map(toFullSourceLocation),
+  }));
+  const loweringNotes = lowered.notes.map((note) => ({
+    ...note,
+    line: entryStartLine + note.line - 1,
+  }));
+  const mapLocation = (line: number, col: number): FrmDiagnosticLocation => {
+    const anchor = loweringLocationMap[line - 1];
+    if (!anchor) return { line, col };
+    const mapped = anchor.columnMap[col - 1];
+    if (mapped) return mapped;
+    const last = anchor.columnMap.at(-1);
+    if (last) {
+      return {
+        line: last.line,
+        col: last.col + Math.max(0, col - anchor.columnMap.length),
+      };
+    }
+    return {
+      line: anchor.line,
+      col: Math.max(1, anchor.col + Math.max(0, col - anchor.generatedCol)),
+    };
+  };
+  const errors = result.errors.map((message) =>
+    remapFormattedFrmDiagnostic(message, mapLocation),
+  );
+  const warnings = result.warnings.map((message) =>
+    remapFormattedFrmDiagnostic(message, mapLocation),
+  );
+  const lexerErrors = result.lexerErrors.map((issue) => ({
+    ...issue,
+    ...mapLocation(issue.line, issue.col),
+  }));
+  const parseErrors = result.parseErrors.map((issue) => ({
+    ...issue,
+    ...mapLocation(issue.line, issue.col),
+  }));
   // fnDefaults consumption (spec §2): known names become the u_fnN uniform
   // descriptor DEFAULTS, so every consumer (renderer default resolution,
   // future descriptor-driven UIs) executes the bracket-specified functions
@@ -780,11 +848,16 @@ export function compileClassicFrmEntry(
   const scanAnnotations = scan.diagnostics.filter((d) => !FRM_BLOCKING_DIAGNOSTICS.has(d.code));
   return {
     ...result,
+    errors,
+    warnings,
+    lexerErrors,
+    parseErrors,
     ...(plugin !== result.plugin ? { plugin } : {}),
     entry,
     loweredNative: lowered.native,
-    loweringLineMap: lowered.lineMap,
-    loweringNotes: lowered.notes,
+    loweringLineMap: loweringLocationMap.map((location) => location.line),
+    loweringLocationMap,
+    loweringNotes,
     ...(scanAnnotations.length > 0 ? { scanAnnotations } : {}),
   };
 }

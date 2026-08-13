@@ -39,6 +39,7 @@ interface CodeMirrorModules {
   EditorState: typeof import('@codemirror/state').EditorState;
   frmLanguage: Extension;
   createFRMLinter: typeof import('@/engine/frm/codemirror-lint').createFRMLinter;
+  forceLinting: typeof import('@codemirror/lint').forceLinting;
 }
 
 let cmModules: CodeMirrorModules | null = null;
@@ -82,6 +83,7 @@ async function loadCodeMirror(): Promise<CodeMirrorModules> {
       EditorState: state.EditorState,
       frmLanguage: lang.frmLanguage,
       createFRMLinter: lint.createFRMLinter,
+      forceLinting: lint.forceLinting,
     };
   }
   return cmModules;
@@ -104,10 +106,21 @@ interface FormulaEditorProps {
     name: string,
     source: string,
     experienceHint?: FormulaExperienceHint,
-    formulaId?: string,
   ) =>
-    | { success: boolean; error?: string; id?: string; silent?: boolean }
-    | Promise<{ success: boolean; error?: string; id?: string; silent?: boolean }>
+    | {
+        success: boolean;
+        error?: string;
+        storageId?: string;
+        runtimeId?: string;
+        silent?: boolean;
+      }
+    | Promise<{
+        success: boolean;
+        error?: string;
+        storageId?: string;
+        runtimeId?: string;
+        silent?: boolean;
+      }>
     | void;
   onClose?: () => void;
 }
@@ -204,6 +217,8 @@ export function FormulaEditor({
 
   // Stable callback ref for the linter to avoid recreating the editor
   const errorsCallbackRef = useRef<(errors: EditorError[]) => void>(() => {});
+  const frmSemanticsVersionRef = useRef(frmSemanticsVersion);
+  frmSemanticsVersionRef.current = frmSemanticsVersion;
   errorsCallbackRef.current = (errors: EditorError[]) => {
     setEditorErrors(prev => {
       const prevStr = JSON.stringify(prev);
@@ -225,7 +240,7 @@ export function FormulaEditor({
 
         const frmLinter = createFRMLinter((errors) => {
           errorsCallbackRef.current(errors);
-        });
+        }, () => frmSemanticsVersionRef.current);
 
         const editorState = ES.create({
           doc: source,
@@ -328,6 +343,12 @@ export function FormulaEditor({
       }
     };
   }, []); // eslint-disable-line react-hooks/exhaustive-deps
+
+  useEffect(() => {
+    const view = cmViewRef.current;
+    if (!view || !cmModules) return;
+    cmModules.forceLinting(view);
+  }, [frmSemanticsVersion]);
 
   // Source-location jump (four-level diagnostics → editor cursor). The nonce
   // retriggers the same location; out-of-range lines clamp to the document.
@@ -469,7 +490,7 @@ export function FormulaEditor({
     try {
       const name = compileResult?.plugin?.name || 'Untitled';
       const effectiveHint = compileResult?.effectiveExperienceHint ?? experienceHint;
-      const saveResult = await onSave?.(name, source, effectiveHint, formulaId);
+      const saveResult = await onSave?.(name, source, effectiveHint);
       if (saveResult && 'silent' in saveResult && saveResult.silent) {
         // A sign-in intent owns the UI now (v0.4.16): no toast either way.
         return;
@@ -492,7 +513,7 @@ export function FormulaEditor({
     } finally {
       savingRef.current = false;
     }
-  }, [source, compileResult, experienceHint, formulaId, onSave, toast, t]);
+  }, [source, compileResult, experienceHint, onSave, toast, t]);
 
   const handleRestoreLastSuccessful = useCallback(() => {
     if (!lastSuccessfulSource) return;

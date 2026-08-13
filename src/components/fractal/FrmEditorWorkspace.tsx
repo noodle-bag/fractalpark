@@ -38,6 +38,10 @@ import { classifyImportedFrmSource } from '@/engine/frm/compat-status';
 import { FrmCompatStatusCard } from '@/components/fractal/FrmCompatStatusCard';
 import { sliceFrmEntrySource } from '@/lib/frm-editor';
 import {
+  parseCloudCustomFormulaStorageId,
+  toCloudCustomFormulaRuntimeId,
+} from '@/lib/cloud/custom-formula-identity';
+import {
   createFrmDownload,
   editorToExploreHref,
   formulaMutationErrorKey,
@@ -71,6 +75,12 @@ function experienceHintKey(hint?: FormulaExperienceHint): string {
     hint?.coloring?.insideColoringId ?? null,
     hint?.coloring?.paletteIndex ?? null,
   ]);
+}
+
+function runtimeIdForStorageId(formulaId?: string): string | undefined {
+  if (!formulaId) return undefined;
+  const storageId = parseCloudCustomFormulaStorageId(formulaId);
+  return storageId ? toCloudCustomFormulaRuntimeId(storageId) : undefined;
 }
 
 export function FrmEditorWorkspace() {
@@ -333,7 +343,13 @@ export function FrmEditorWorkspace() {
       currentSource: string,
       experienceHint?: FormulaExperienceHint,
       id?: string
-    ): Promise<{ success: boolean; error?: string; id?: string; silent?: boolean }> => {
+    ): Promise<{
+      success: boolean;
+      error?: string;
+      storageId?: string;
+      runtimeId?: string;
+      silent?: boolean;
+    }> => {
       const result = await saveFormula({
         name,
         source: currentSource,
@@ -341,12 +357,16 @@ export function FrmEditorWorkspace() {
         formulaId: id ?? recordId,
       });
       if (result.success) {
-        setRecordId(result.formulaId);
+        setRecordId(result.storageId);
         setSavedSource(currentSource);
         setSavedHintKey(experienceHintKey(experienceHint));
         setHint(experienceHint);
         setNotice(t('saved'));
-        return { success: true, id: result.formulaId };
+        return {
+          success: true,
+          storageId: result.storageId,
+          runtimeId: result.runtimeId,
+        };
       }
       if (result.code === 'auth-cancelled') {
         // Dialog closed without verifying — nothing saved, nothing to say.
@@ -400,8 +420,8 @@ export function FrmEditorWorkspace() {
       recordId
     ).then((result) => {
       // auth-intent (silent) leaves navigation to the post-OTP resume.
-      if (result.success && !result.silent && result.id) {
-        router.push(editorToExploreHref(locale, result.id));
+      if (result.success && !result.silent && result.runtimeId) {
+        router.push(editorToExploreHref(locale, result.runtimeId));
       }
     });
   }, [compiledPreview, hint, locale, recordId, router, save, source, t]);
@@ -603,7 +623,7 @@ export function FrmEditorWorkspace() {
 
           <FormulaEditor
             currentBounds={bounds}
-            formulaId={recordId}
+            formulaId={runtimeIdForStorageId(recordId)}
             frmSemanticsVersion={frmSemanticsVersion}
             initialExperienceHint={hint}
             initialSource={source}

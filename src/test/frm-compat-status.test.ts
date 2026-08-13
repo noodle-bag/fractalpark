@@ -162,6 +162,55 @@ describe('compat-status multi-entry and diagnostics discipline', () => {
     expect(new Set(keys).size).toBe(keys.length);
   });
 
+  it('dedupes multiline parser messages without a phantom compile error', () => {
+    const r = classifyImportedFrmSource(`NoBailoutNative {
+init:
+  z = 0
+loop:
+  z = z^2 + c
+}`, 2);
+    const diagnostics = r.entries[0].diagnostics;
+    const bailoutErrors = diagnostics.filter(
+      (entry) => entry.message === 'Missing bailout expression',
+    );
+
+    expect(bailoutErrors).toHaveLength(1);
+    expect(bailoutErrors[0]).toMatchObject({
+      reasonCode: 'parse-error',
+      line: 6,
+      col: 2,
+    });
+    expect(bailoutErrors[0].suggestion).toContain(
+      'Every formula must include a bailout block',
+    );
+    expect(
+      diagnostics.some((entry) => entry.reasonCode === 'compile-error'),
+    ).toBe(false);
+  });
+
+  it('keeps formatted warning coordinates source-facing', () => {
+    const r = classifyImportedFrmSource(`WarnNative {
+init:
+  z = 0
+loop:
+  z = z^2 + c
+bailout:
+  z
+}`, 1);
+    const warning = r.entries[0].diagnostics.find(
+      (entry) => entry.reasonCode === 'compile-warning',
+    );
+
+    expect(warning).toMatchObject({
+      severity: 'warning',
+      blocking: false,
+      line: 7,
+      col: 3,
+      message:
+        'Bailout expression should be a comparison expression, for example |z| < 4',
+    });
+  });
+
   it('never emits an adaptation outside the declared vocabulary', () => {
     const sources = [
       'A1 {\n  z=pixel:\n  z=z*z+pixel\n  |z|<=p2\n}',

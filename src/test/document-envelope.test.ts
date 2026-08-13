@@ -5,6 +5,37 @@ import documentV3Future from './fixtures/documents/document-v3-future.json';
 import envelopeV1 from './fixtures/documents/envelope-v1.json';
 
 describe('document envelope', () => {
+  it('dual-reads a legacy bare cloud UUID and canonicalizes every runtime reference', () => {
+    const storageId = '55555555-5555-4555-8555-555555555555';
+    const runtimeId = `custom-${storageId}`;
+    const legacyEnvelope = {
+      ...envelopeV1,
+      document: {
+        ...envelopeV1.document,
+        formula: { ...envelopeV1.document.formula, formulaId: storageId },
+        assets: {
+          formula: {
+            ...envelopeV1.document.assets.formula,
+            id: storageId,
+          },
+        },
+      },
+      assets: {
+        formulas: [
+          { ...envelopeV1.assets.formulas[0], id: storageId },
+        ],
+      },
+    };
+
+    const result = readFractalDocumentEnvelope(legacyEnvelope);
+
+    expect(result.mode).toBe('editable');
+    if (result.mode !== 'editable') return;
+    expect(result.envelope.document.formula.formulaId).toBe(runtimeId);
+    expect(result.envelope.document.assets?.formula?.id).toBe(runtimeId);
+    expect(result.envelope.assets?.formulas?.[0]?.id).toBe(runtimeId);
+  });
+
   it('reads and normalizes an Envelope v1 project', () => {
     const result = readFractalDocumentEnvelope(envelopeV1);
 

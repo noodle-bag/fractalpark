@@ -125,6 +125,24 @@ beforeEach(() => {
 });
 
 describe('CustomFormulaList semantics UI (Upgrade & Compare)', () => {
+  it('marks only the matching cloud runtime identity as Active', () => {
+    const activeId = '88888888-8888-4888-8888-888888888888';
+    const otherId = '99999999-9999-4999-8999-999999999999';
+    formulasFixture = [summary(2, activeId), summary(2, otherId)];
+
+    render(
+      <CustomFormulaList
+        currentBounds={bounds}
+        currentFormula={`custom-${activeId}`}
+      />,
+    );
+
+    expect(screen.getByTestId(`active-formula-${activeId}`)).toHaveTextContent(
+      'formula.active',
+    );
+    expect(screen.queryByTestId(`active-formula-${otherId}`)).toBeNull();
+  });
+
   it('shows strict/revert and legacy/upgrade states without fetching source', () => {
     formulasFixture = [summary(2, 'f-v2'), summary(1, 'f-v1')];
     render(<CustomFormulaList currentBounds={bounds} />);

@@ -1,23 +1,18 @@
 /**
  * FRM Language Lint/Diagnostics for CodeMirror 6
- * M4.4 - CodeMirror Inline Diagnostics
  *
- * Single source of truth for real-time formula error highlighting.
- * Runs tokenize → parse → validate pipeline and converts results
- * to CodeMirror Diagnostic[] for inline display.
+ * Real-time diagnostics at the authoring/import boundary. The linter consumes
+ * the same dialect router and stage-based classification as the compatibility
+ * card and explicit Compile action, so classic sources are never fed directly
+ * to the native parser.
  */
 
 import { linter, lintGutter, type Diagnostic } from '@codemirror/lint';
 import { type Extension } from '@codemirror/state';
-import { tokenize } from './lexer';
-import { parse } from './parser';
-import { createCanonicalFormula } from './ast';
-import { parseFormulaSourceDirectives } from './source-directives';
-import { validate, type ValidationError } from './validator';
+import { classifyImportedFrmSource } from './compat-status';
+import type { FrmSemanticsVersion } from './semantics-version';
 
-/**
- * Structured error for external consumers (e.g. FormulaEditor error panel)
- */
+/** Structured error for external consumers (e.g. FormulaEditor error panel). */
 export interface EditorError {
   line: number;
   col: number;
@@ -26,111 +21,88 @@ export interface EditorError {
   suggestion?: string;
 }
 
-/**
- * Callback type for error state updates
- */
 export type OnErrorsChanged = (errors: EditorError[]) => void;
+export type FrmSemanticsVersionSource =
+  | FrmSemanticsVersion
+  | (() => FrmSemanticsVersion);
 
-/**
- * Calculate exact document offset from line/col (1-based)
- */
+function readSemanticsVersion(
+  source: FrmSemanticsVersionSource,
+): FrmSemanticsVersion {
+  return typeof source === 'function' ? source() : source;
+}
+
+/** Calculate exact document offset from line/col (1-based). */
 function calculateOffset(doc: string, line: number, col: number): number {
   const lines = doc.split('\n');
   let offset = 0;
 
   for (let i = 0; i < line - 1 && i < lines.length; i++) {
-    offset += lines[i].length + 1; // +1 for newline
+    offset += lines[i].length + 1;
   }
 
   offset += Math.min(col - 1, lines[line - 1]?.length || 0);
   return offset;
 }
 
-/**
- * Create a CodeMirror linter extension for FRM formulas.
- *
- * @param onErrorsChanged - Optional callback invoked with structured errors
- *   whenever diagnostics change. Used by FormulaEditor to display the error panel.
- */
-export function collectEditorErrors(doc: string): EditorError[] {
-  const { tokens, errors: lexerErrors } = tokenize(doc);
-  const { ast, errors: parseErrors } = parse(tokens);
-  const sourceDirectives = parseFormulaSourceDirectives(doc);
+export function collectEditorErrors(
+  doc: string,
+  semanticsVersion: FrmSemanticsVersionSource = 2,
+): EditorError[] {
+  if (!doc.trim()) return [];
 
-  let validationErrors: ValidationError[] = [];
-  if (ast) {
-    const validation = validate(ast);
-    validationErrors = validation.errors;
-  }
+  const classification = classifyImportedFrmSource(
+    doc,
+    readSemanticsVersion(semanticsVersion),
+  );
+  // A multi-entry source must be sliced through the explicit picker before
+  // compilation. Entry diagnostics are entry-relative until then, so surface
+  // source-level findings only; the workspace preflight owns the selection
+  // requirement. Single-entry/sliced sources have displayed-source locations.
+  const diagnostics =
+    classification.entries.length > 1
+      ? classification.sourceDiagnostics
+      : [
+          ...classification.sourceDiagnostics,
+          ...classification.entries.flatMap((entry) => entry.diagnostics),
+        ];
 
-  const compatibilityErrors: EditorError[] = [
-    ...sourceDirectives.compatibilityNotes,
-    ...(ast ? createCanonicalFormula(ast, doc).compatibilityNotes : []),
-  ]
-    .filter((note, index, notes) => {
-      return notes.findIndex(
-        candidate =>
-          candidate.kind === note.kind &&
-          candidate.message === note.message &&
-          candidate.loc?.line === note.loc?.line &&
-          candidate.loc?.col === note.loc?.col,
-      ) === index;
-    })
-    .map((note): EditorError => ({
-        line: note.loc?.line ?? 1,
-        col: note.loc?.col ?? 1,
-        message: note.message,
-        severity: note.kind === 'info' ? 'info' : 'warning',
-      }));
-
-  return [
-    ...lexerErrors.map(e => ({
-      line: e.line,
-      col: e.col,
-      message: e.message,
-      severity: e.severity,
-      suggestion: e.suggestion,
-    })),
-    ...parseErrors.map(e => ({
-      line: e.line,
-      col: e.col,
-      message: e.message,
-      severity: e.severity,
-      suggestion: e.suggestion,
-    })),
-    ...validationErrors.map(e => ({
-      line: e.line,
-      col: e.col,
-      message: e.message,
-      severity: e.severity,
-    })),
-    ...compatibilityErrors,
-  ];
+  return diagnostics.map((diagnostic) => ({
+    line: diagnostic.line ?? 1,
+    col: diagnostic.col ?? 1,
+    message: diagnostic.message,
+    severity:
+      diagnostic.severity === 'note' ? 'info' : diagnostic.severity,
+    ...(diagnostic.suggestion
+      ? { suggestion: diagnostic.suggestion }
+      : {}),
+  }));
 }
 
-export function createFRMLinter(onErrorsChanged?: OnErrorsChanged): Extension {
+/** Create a CodeMirror linter extension for FRM formulas. */
+export function createFRMLinter(
+  onErrorsChanged?: OnErrorsChanged,
+  semanticsVersion: FrmSemanticsVersionSource = 2,
+): Extension {
   const lint = linter(view => {
     const doc = view.state.doc.toString();
-    const editorErrors = collectEditorErrors(doc);
+    const editorErrors = collectEditorErrors(doc, semanticsVersion);
 
-    if (onErrorsChanged) {
-      onErrorsChanged(editorErrors);
-    }
+    onErrorsChanged?.(editorErrors);
 
-    const diagnostics: Diagnostic[] = [];
-    for (const err of editorErrors) {
-      const from = calculateOffset(doc, err.line, err.col);
-      const to = from + 1;
-      diagnostics.push({
+    return editorErrors.map((error): Diagnostic => {
+      const from = calculateOffset(doc, error.line, error.col);
+      return {
         from,
-        to,
-        severity: err.severity,
-        message: err.suggestion ? `${err.message}\n💡 ${err.suggestion}` : err.message,
-        source: err.severity === 'info' ? 'frm-compatibility' : 'frm',
-      });
-    }
-
-    return diagnostics;
+        to: Math.min(from + 1, doc.length),
+        severity: error.severity,
+        message: error.suggestion
+          ? `${error.message}\n💡 ${error.suggestion}`
+          : error.message,
+        source:
+          error.severity === 'info' ? 'frm-compatibility' : 'frm',
+      };
+    });
   }, {
     delay: 300,
   });
@@ -138,7 +110,5 @@ export function createFRMLinter(onErrorsChanged?: OnErrorsChanged): Extension {
   return [lint, lintGutter()];
 }
 
-/**
- * Re-export types for convenience
- */
+export { forceLinting } from '@codemirror/lint';
 export type { Diagnostic } from '@codemirror/lint';

@@ -77,6 +77,10 @@ export class PluginRegistry {
     return Array.from(this.formulas.values());
   }
 
+  listFormulasBySource(source: FractalPlugin['source']): FormulaPlugin[] {
+    return this.listFormulas().filter((formula) => formula.source === source);
+  }
+
   listOutsideColoring(): OutsideColoringPlugin[] {
     return Array.from(this.outsideColoring.values());
   }

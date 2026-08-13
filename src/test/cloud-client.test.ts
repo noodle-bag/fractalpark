@@ -122,6 +122,7 @@ describe('cloud client draft calls', () => {
 
   it('waits out the semantics POST cooldown before retrying a lost response with the same key', async () => {
     vi.useFakeTimers();
+    const formulaId = '66666666-6666-4666-8666-666666666666';
     const calls: Array<{ url: string; init?: RequestInit }> = [];
     vi.stubGlobal(
       'fetch',
@@ -133,7 +134,7 @@ describe('cloud client draft calls', () => {
         return Promise.resolve(
           new Response(
             JSON.stringify({
-              formulaId: 'f-1',
+              formulaId,
               revision: 2,
               frmSemanticsVersion: 2,
             }),
@@ -144,7 +145,7 @@ describe('cloud client draft calls', () => {
     );
 
     const change = changeCustomFormulaSemantics(
-      'f-1',
+      formulaId,
       'upgradeSemantics',
       1,
     );
@@ -152,12 +153,15 @@ describe('cloud client draft calls', () => {
     expect(calls).toHaveLength(1);
     await vi.advanceTimersByTimeAsync(100);
     await expect(change).resolves.toMatchObject({
-      formulaId: 'f-1',
+      formulaId,
       revision: 2,
       frmSemanticsVersion: 2,
     });
 
     expect(calls).toHaveLength(2);
+    expect(calls[0].url).toBe(
+      `/api/creation/custom-formulas/${formulaId}/semantics`,
+    );
     const firstKey = new Headers(calls[0].init?.headers).get('idempotency-key');
     const secondKey = new Headers(calls[1].init?.headers).get('idempotency-key');
     expect(secondKey).toBe(firstKey);

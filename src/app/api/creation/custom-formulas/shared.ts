@@ -15,14 +15,21 @@ import { compileImportedFrm } from '@/engine/frm/compile';
 import type { FrmSemanticsVersion } from '@/engine/frm/semantics-version';
 import { registerBuiltins } from '@/engine/plugins/builtins';
 import { getFormulaMetadata } from '@/engine/plugins/formula-catalog';
+import {
+  parseCloudCustomFormulaStorageId,
+  toCloudCustomFormulaRuntimeId,
+  type CloudCustomFormulaRuntimeId,
+  type CloudCustomFormulaStorageId,
+} from '@/lib/cloud/custom-formula-identity';
 
 const MAX_BODY_BYTES = 128 * 1024;
 
-export function requireUuid(value: string): string {
-  if (!/^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i.test(value)) {
+export function requireUuid(value: string): CloudCustomFormulaStorageId {
+  const storageId = parseCloudCustomFormulaStorageId(value);
+  if (!storageId) {
     throw new CloudApiError('validation_failed');
   }
-  return value;
+  return storageId;
 }
 
 export function requireIdempotencyKey(request: Request): string {
@@ -30,8 +37,10 @@ export function requireIdempotencyKey(request: Request): string {
   return requireUuid(key.trim());
 }
 
-export function newFormulaRuntimeId(formulaId: string): string {
-  return `custom-${formulaId}`;
+export function newFormulaRuntimeId(
+  formulaId: string,
+): CloudCustomFormulaRuntimeId {
+  return toCloudCustomFormulaRuntimeId(requireUuid(formulaId));
 }
 
 export interface FormulaWriteInput {

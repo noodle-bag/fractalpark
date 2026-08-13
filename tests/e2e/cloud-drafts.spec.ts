@@ -2,6 +2,7 @@ import { test, expect, type Locator, type Page } from '@playwright/test';
 
 import { DEFAULT_FRACTAL_DOCUMENT } from '../../src/engine/document';
 import { createFractalDocumentEnvelope } from '../../src/lib/fractal-file';
+import { parseCloudCustomFormulaRuntimeId } from '../../src/lib/cloud/custom-formula-identity';
 
 const FORMULA_SOURCE_ATTESTATION_VERSION = '2026-08-08.v1';
 const RIGHTS_ATTESTATION_VERSION = '2026-08-02.v1';
@@ -163,8 +164,15 @@ test.describe('Cloud drafts journey', () => {
       formulas: Array<{ id: string; frmSemanticsVersion?: number }>;
     };
     const editorFormulaId = new URL(page.url()).searchParams.get('fm');
+    const editorFormulaIdentity = editorFormulaId
+      ? parseCloudCustomFormulaRuntimeId(editorFormulaId)
+      : null;
+    expect(editorFormulaIdentity).not.toBeNull();
     expect(formulaListBody.formulas).toContainEqual(
-      expect.objectContaining({ id: editorFormulaId, frmSemanticsVersion: 2 }),
+      expect.objectContaining({
+        id: editorFormulaIdentity?.storageId,
+        frmSemanticsVersion: 2,
+      }),
     );
 
     // 8. Publish through the real UI. The first response is deliberately

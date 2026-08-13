@@ -12,6 +12,7 @@ import { registerBuiltins } from '@/engine/plugins/builtins';
 import { getFormulaMetadata } from '@/engine/plugins/formula-catalog';
 import { pluginRegistry } from '@/engine/plugins/registry';
 import type { FormulaPlugin } from '@/engine/plugins/types';
+import { canonicalizeCloudCustomFormulaRuntimeId } from '@/lib/cloud/custom-formula-identity';
 
 export interface ResolvableCustomFormula {
   id: string;
@@ -86,6 +87,13 @@ function experienceHintsEqual(
  *  persisted. */
 const sessionAssets = new Map<string, ResolvableCustomFormula>();
 
+function canonicalizeCustomFormula(
+  formula: ResolvableCustomFormula,
+): ResolvableCustomFormula {
+  const id = canonicalizeCloudCustomFormulaRuntimeId(formula.id);
+  return id === formula.id ? formula : { ...formula, id };
+}
+
 export function readSessionFormulaAssets(): ResolvableCustomFormula[] {
   return [...sessionAssets.values()].map((asset) => ({ ...asset }));
 }
@@ -103,53 +111,58 @@ export function readEffectiveFormulaAssets(
   referencedFormulaId?: string,
 ): ResolvableCustomFormula[] {
   const all = readSessionFormulaAssets();
+  const canonicalReference =
+    referencedFormulaId === undefined
+      ? undefined
+      : canonicalizeCloudCustomFormulaRuntimeId(referencedFormulaId);
   return referencedFormulaId === undefined
     ? all
-    : all.filter((asset) => asset.id === referencedFormulaId);
+    : all.filter((asset) => asset.id === canonicalReference);
 }
 
 export function resolveCustomFormula(
   formula: ResolvableCustomFormula,
   options: ResolveCustomFormulaOptions = {}
 ): FormulaResolution {
-  if (getFormulaMetadata(formula.id)) {
-    return failure(formula.id, 'builtin-id-conflict', [
-      `Custom formula ID conflicts with built-in formula: ${formula.id}.`,
+  const canonicalFormula = canonicalizeCustomFormula(formula);
+  if (getFormulaMetadata(canonicalFormula.id)) {
+    return failure(canonicalFormula.id, 'builtin-id-conflict', [
+      `Custom formula ID conflicts with built-in formula: ${canonicalFormula.id}.`,
     ]);
   }
 
   const frmSemanticsVersion = resolveFrmSemanticsVersion(
-    formula.frmSemanticsVersion,
+    canonicalFormula.frmSemanticsVersion,
   );
   const result = compileImportedFrm(
-    formula.source,
-    formula.id,
+    canonicalFormula.source,
+    canonicalFormula.id,
     frmSemanticsVersion,
   );
   const experienceHint = mergeFormulaExperienceHints(
-    formula.experienceHint,
+    canonicalFormula.experienceHint,
     formulaMetadataToExperienceHint(result.canonicalFormula?.metadata)
   );
 
   if (!result.success || !result.plugin) {
     return failure(
-      formula.id,
+      canonicalFormula.id,
       'compile-failed',
       result.errors.length > 0
         ? result.errors
-        : [`Custom formula could not be compiled: ${formula.id}.`]
+        : [`Custom formula could not be compiled: ${canonicalFormula.id}.`]
     );
   }
 
   if (options.register !== false) {
     try {
-      const previous = sessionAssets.get(formula.id);
+      const previous = sessionAssets.get(canonicalFormula.id);
       pluginRegistry.register(result.plugin);
       const nextAsset: ResolvableCustomFormula = {
-        ...formula,
+        ...canonicalFormula,
         frmSemanticsVersion,
       };
-      sessionAssets.set(formula.id, nextAsset);
+      sessionAssets.set(canonicalFormula.id, nextAsset);
       // Re-resolve Explore only when the effective asset changed. An exact
       // re-registration stays silent (B1 event-storm guard), while an
       // explicit v1↔v2 change must replace the active runtime immediately.
@@ -165,17 +178,17 @@ export function resolveCustomFormula(
         window.dispatchEvent(new Event(CUSTOM_FORMULAS_CHANGED_EVENT));
       }
     } catch (error) {
-      return failure(formula.id, 'registration-failed', [
+      return failure(canonicalFormula.id, 'registration-failed', [
         error instanceof Error
           ? error.message
-          : `Custom formula could not be registered: ${formula.id}.`,
+          : `Custom formula could not be registered: ${canonicalFormula.id}.`,
       ]);
     }
   }
 
   return {
     success: true,
-    formulaId: formula.id,
+    formulaId: canonicalFormula.id,
     kind: 'custom',
     plugin: result.plugin,
     experienceHint,
@@ -187,34 +200,38 @@ export function resolveFormulaReference(
   formulaId: string,
   customFormulas: readonly ResolvableCustomFormula[]
 ): FormulaResolution {
-  if (getFormulaMetadata(formulaId)) {
-    let plugin = pluginRegistry.getFormula(formulaId);
+  const canonicalFormulaId = canonicalizeCloudCustomFormulaRuntimeId(formulaId);
+  if (getFormulaMetadata(canonicalFormulaId)) {
+    let plugin = pluginRegistry.getFormula(canonicalFormulaId);
     if (!plugin) {
       registerBuiltins({ quiet: true });
-      plugin = pluginRegistry.getFormula(formulaId);
+      plugin = pluginRegistry.getFormula(canonicalFormulaId);
     }
 
     if (!plugin) {
-      return failure(formulaId, 'builtin-unavailable', [
-        `Built-in formula plugin is unavailable: ${formulaId}.`,
+      return failure(canonicalFormulaId, 'builtin-unavailable', [
+        `Built-in formula plugin is unavailable: ${canonicalFormulaId}.`,
       ]);
     }
 
     return {
       success: true,
-      formulaId,
+      formulaId: canonicalFormulaId,
       kind: 'builtin',
       plugin,
     };
   }
 
-  const customFormula = customFormulas.find((formula) => formula.id === formulaId);
+  const customFormula = customFormulas.find(
+    (formula) =>
+      canonicalizeCloudCustomFormulaRuntimeId(formula.id) === canonicalFormulaId,
+  );
   if (!customFormula) {
-    const transientPlugin = pluginRegistry.getFormula(formulaId);
+    const transientPlugin = pluginRegistry.getFormula(canonicalFormulaId);
     if (transientPlugin) {
       return {
         success: true,
-        formulaId,
+        formulaId: canonicalFormulaId,
         kind: 'custom',
         plugin: transientPlugin,
         frmSemanticsVersion: resolveFrmSemanticsVersion(
@@ -223,13 +240,15 @@ export function resolveFormulaReference(
       };
     }
 
-    return failure(formulaId, 'formula-not-found', [
-      `Custom formula source is unavailable on this device: ${formulaId}.`,
+    return failure(canonicalFormulaId, 'formula-not-found', [
+      `Custom formula source is unavailable on this device: ${canonicalFormulaId}.`,
     ]);
   }
 
   // register:false — the formula listed in session assets was registered
   // when it entered; re-registering here would re-dispatch the changed
   // event and self-excite the resolution listener (review B1 storm).
-  return resolveCustomFormula(customFormula, { register: false });
+  return resolveCustomFormula(canonicalizeCustomFormula(customFormula), {
+    register: false,
+  });
 }

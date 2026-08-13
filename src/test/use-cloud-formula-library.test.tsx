@@ -60,17 +60,109 @@ const HINT: FormulaExperienceHint = {
   },
 };
 
+const NEW_STORAGE_ID = '11111111-1111-4111-8111-111111111111';
+const NEW_RUNTIME_ID = `custom-${NEW_STORAGE_ID}`;
+const LEGACY_STORAGE_ID = '22222222-2222-4222-8222-222222222222';
+const LEGACY_RUNTIME_ID = `custom-${LEGACY_STORAGE_ID}`;
+const RACE_STORAGE_ID = '33333333-3333-4333-8333-333333333333';
+const RACE_RUNTIME_ID = `custom-${RACE_STORAGE_ID}`;
+const RESCUE_STORAGE_ID = '66666666-6666-4666-8666-666666666666';
+const RESCUE_RUNTIME_ID = `custom-${RESCUE_STORAGE_ID}`;
+const BROKEN_STORAGE_ID = '77777777-7777-4777-8777-777777777777';
+const BROKEN_RUNTIME_ID = `custom-${BROKEN_STORAGE_ID}`;
+const BROKEN_SOURCE = `BrokenCloud {
+init:
+  z = 0
+loop:
+  z = z^2 + nope
+bailout:
+  |z| < 4
+}`;
+
 beforeEach(() => {
   vi.clearAllMocks();
 });
 
 describe('useCloudFormulaLibrary session registration', () => {
+  it('rescues an Explore runtime ID through a bare-UUID API fetch', async () => {
+    cloudMocks.listCustomFormulas.mockResolvedValueOnce([]);
+    cloudMocks.getCustomFormula.mockResolvedValueOnce({
+      id: RESCUE_STORAGE_ID,
+      name: 'Rescued formula',
+      revision: 1,
+      sourceBytes: NEW_SOURCE.length,
+      hasExperienceHint: true,
+      frmSemanticsVersion: 2,
+      createdAt: '2026-08-13T00:00:00.000Z',
+      updatedAt: '2026-08-13T00:00:00.000Z',
+      source: NEW_SOURCE,
+      experienceHint: HINT,
+    });
+
+    const { result } = renderHook(() => useCloudFormulaLibrary());
+    await waitFor(() => expect(result.current.isLoading).toBe(false));
+
+    await expect(
+      result.current.ensureRegistered(RESCUE_RUNTIME_ID),
+    ).resolves.toBe(true);
+    expect(cloudMocks.getCustomFormula).toHaveBeenCalledWith(RESCUE_STORAGE_ID);
+    expect(
+      readSessionFormulaAssets().find(
+        (asset) => asset.id === RESCUE_RUNTIME_ID,
+      ),
+    ).toMatchObject({
+      id: RESCUE_RUNTIME_ID,
+      source: NEW_SOURCE,
+      frmSemanticsVersion: 2,
+    });
+  });
+
+  it('keeps an un-runnable cloud formula editable without registering it', async () => {
+    cloudMocks.listCustomFormulas.mockResolvedValueOnce([]);
+    cloudMocks.getCustomFormula.mockResolvedValue({
+      id: BROKEN_STORAGE_ID,
+      name: 'Broken but editable',
+      revision: 1,
+      sourceBytes: BROKEN_SOURCE.length,
+      hasExperienceHint: false,
+      frmSemanticsVersion: 2,
+      createdAt: '2026-08-13T00:00:00.000Z',
+      updatedAt: '2026-08-13T00:00:00.000Z',
+      source: BROKEN_SOURCE,
+      experienceHint: null,
+    });
+
+    const { result } = renderHook(() => useCloudFormulaLibrary());
+    await waitFor(() => expect(result.current.isLoading).toBe(false));
+
+    await expect(
+      result.current.ensureRegistered(BROKEN_RUNTIME_ID),
+    ).resolves.toBe(false);
+    await expect(result.current.getDetail(BROKEN_RUNTIME_ID)).resolves.toMatchObject({
+      id: BROKEN_STORAGE_ID,
+      source: BROKEN_SOURCE,
+    });
+    expect(
+      readSessionFormulaAssets().find(
+        (asset) => asset.id === BROKEN_RUNTIME_ID,
+      ),
+    ).toBeUndefined();
+    expect(cloudMocks.getCustomFormula).toHaveBeenNthCalledWith(
+      1,
+      BROKEN_STORAGE_ID,
+    );
+    expect(cloudMocks.getCustomFormula).toHaveBeenNthCalledWith(
+      2,
+      BROKEN_STORAGE_ID,
+    );
+  });
+
   it('registers a newly saved formula as strict v2 with its experience hint even if refresh fails', async () => {
     cloudMocks.listCustomFormulas
       .mockResolvedValueOnce([])
       .mockRejectedValueOnce(new Error('refresh unavailable'));
     cloudMocks.createCustomFormula.mockResolvedValueOnce({
-      formulaId: 'hook-new-v2',
+      formulaId: NEW_STORAGE_ID,
       revision: 1,
     });
 
@@ -86,14 +178,15 @@ describe('useCloudFormulaLibrary session registration', () => {
       expect(saved).toMatchObject({
         success: true,
         code: 'ok',
-        formulaId: 'hook-new-v2',
+        storageId: NEW_STORAGE_ID,
+        runtimeId: NEW_RUNTIME_ID,
       });
     });
 
     expect(
-      readSessionFormulaAssets().find((asset) => asset.id === 'hook-new-v2'),
+      readSessionFormulaAssets().find((asset) => asset.id === NEW_RUNTIME_ID),
     ).toEqual({
-      id: 'hook-new-v2',
+      id: NEW_RUNTIME_ID,
       source: NEW_SOURCE,
       experienceHint: HINT,
       frmSemanticsVersion: 2,
@@ -104,7 +197,7 @@ describe('useCloudFormulaLibrary session registration', () => {
     cloudMocks.listCustomFormulas
       .mockResolvedValueOnce([
         {
-          id: 'hook-legacy-v1',
+          id: LEGACY_STORAGE_ID,
           name: 'Hook legacy',
           revision: 3,
           sourceBytes: LEGACY_SOURCE.length,
@@ -116,7 +209,7 @@ describe('useCloudFormulaLibrary session registration', () => {
       ])
       .mockRejectedValueOnce(new Error('refresh unavailable'));
     cloudMocks.updateCustomFormula.mockResolvedValueOnce({
-      formulaId: 'hook-legacy-v1',
+      formulaId: LEGACY_STORAGE_ID,
       revision: 4,
     });
 
@@ -128,17 +221,18 @@ describe('useCloudFormulaLibrary session registration', () => {
         name: 'Hook legacy edited',
         source: LEGACY_SOURCE,
         experienceHint: HINT,
-        formulaId: 'hook-legacy-v1',
+        formulaId: LEGACY_RUNTIME_ID,
       });
       expect(saved).toMatchObject({
         success: true,
         code: 'ok',
-        formulaId: 'hook-legacy-v1',
+        storageId: LEGACY_STORAGE_ID,
+        runtimeId: LEGACY_RUNTIME_ID,
       });
     });
 
     expect(cloudMocks.updateCustomFormula).toHaveBeenCalledWith(
-      'hook-legacy-v1',
+      LEGACY_STORAGE_ID,
       expect.objectContaining({
         expectedRevision: 3,
         experienceHint: HINT,
@@ -146,10 +240,10 @@ describe('useCloudFormulaLibrary session registration', () => {
     );
     expect(
       readSessionFormulaAssets().find(
-        (asset) => asset.id === 'hook-legacy-v1',
+        (asset) => asset.id === LEGACY_RUNTIME_ID,
       ),
     ).toEqual({
-      id: 'hook-legacy-v1',
+      id: LEGACY_RUNTIME_ID,
       source: LEGACY_SOURCE,
       experienceHint: HINT,
       frmSemanticsVersion: 1,
@@ -159,7 +253,7 @@ describe('useCloudFormulaLibrary session registration', () => {
   it('never registers stale bytes as v2 when a semantics write conflicts', async () => {
     cloudMocks.listCustomFormulas.mockResolvedValueOnce([
       {
-        id: 'hook-race-v1',
+        id: RACE_STORAGE_ID,
         name: 'Hook race',
         revision: 1,
         sourceBytes: LEGACY_SOURCE.length,
@@ -170,7 +264,7 @@ describe('useCloudFormulaLibrary session registration', () => {
       },
     ]);
     cloudMocks.getCustomFormula.mockResolvedValueOnce({
-      id: 'hook-race-v1',
+      id: RACE_STORAGE_ID,
       name: 'Hook race',
       revision: 1,
       sourceBytes: LEGACY_SOURCE.length,
@@ -190,14 +284,14 @@ describe('useCloudFormulaLibrary session registration', () => {
 
     await act(async () => {
       const changed = await result.current.changeSemantics(
-        'hook-race-v1',
+        RACE_RUNTIME_ID,
         'upgradeSemantics',
       );
       expect(changed).toMatchObject({ success: false, code: 'conflict' });
     });
 
     expect(
-      readSessionFormulaAssets().find((asset) => asset.id === 'hook-race-v1'),
+      readSessionFormulaAssets().find((asset) => asset.id === RACE_RUNTIME_ID),
     ).toBeUndefined();
   });
 });

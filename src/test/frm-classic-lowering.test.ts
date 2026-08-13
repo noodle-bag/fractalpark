@@ -273,6 +273,23 @@ describe('compileClassicFrmEntry: round-trip through production compiler', () =>
     expect(result.loweringLineMap?.[0]).toBe(1);
     expect(kinds(result.loweringNotes ?? [])).toContain('symmetry-recorded');
   });
+
+  it('maps lowering notes for a selected later entry to full-source lines', () => {
+    const source = `First {
+ z=0:
+ z=z*z+c
+ |z|<4
+}
+
+Second {
+ z=0:
+ z=z*z+c
+}`;
+    const result = compileClassicFrmEntry(source, 'Second', 'later-entry-note', 2);
+    expect(result.loweringNotes).toContainEqual(
+      expect.objectContaining({ kind: 'default-bailout', line: 9 }),
+    );
+  });
 });
 
 describe('T0 grammar coverage (corpus-evidence forms, project-authored samples)', () => {

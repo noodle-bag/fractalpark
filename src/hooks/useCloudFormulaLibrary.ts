@@ -31,6 +31,13 @@ import {
   resolveFrmSemanticsVersion,
   type FrmSemanticsVersion,
 } from '@/engine/frm/semantics-version';
+import {
+  parseCloudCustomFormulaReference,
+  parseCloudCustomFormulaStorageId,
+  toCloudCustomFormulaRuntimeId,
+  type CloudCustomFormulaRuntimeId,
+  type CloudCustomFormulaStorageId,
+} from '@/lib/cloud/custom-formula-identity';
 
 export type FormulaMutationCode =
   | 'ok'
@@ -45,8 +52,52 @@ export type FormulaMutationCode =
 export interface FormulaMutationResult {
   success: boolean;
   code: FormulaMutationCode;
-  formulaId?: string;
+  /** Bare UUID used by cloud CRUD and revision maps. */
+  storageId?: CloudCustomFormulaStorageId;
+  /** Canonical ID used by plugins, Documents, Explore, and handoffs. */
+  runtimeId?: CloudCustomFormulaRuntimeId;
   error?: string;
+}
+
+function requireStorageId(value: string): CloudCustomFormulaStorageId {
+  const storageId = parseCloudCustomFormulaStorageId(value);
+  if (!storageId) throw new CloudClientError('malformed_response');
+  return storageId;
+}
+
+function requireReference(value: string) {
+  const identity = parseCloudCustomFormulaReference(value);
+  if (!identity) throw new CloudClientError('validation_failed');
+  return identity;
+}
+
+function normalizeSummary(
+  summary: CloudCustomFormulaSummary,
+): CloudCustomFormulaSummary {
+  return { ...summary, id: requireStorageId(summary.id) };
+}
+
+function normalizeDetail(
+  detail: CloudCustomFormulaDetail,
+): CloudCustomFormulaDetail {
+  return { ...detail, id: requireStorageId(detail.id) };
+}
+
+function resolveCloudDetail(detail: CloudCustomFormulaDetail) {
+  const normalizedDetail = normalizeDetail(detail);
+  const storageId = requireStorageId(normalizedDetail.id);
+  const runtimeId = toCloudCustomFormulaRuntimeId(storageId);
+  const resolution = resolveCustomFormula({
+    id: runtimeId,
+    source: normalizedDetail.source,
+    experienceHint: (normalizedDetail.experienceHint ?? undefined) as
+      | FormulaExperienceHint
+      | undefined,
+    frmSemanticsVersion: resolveFrmSemanticsVersion(
+      normalizedDetail.frmSemanticsVersion,
+    ),
+  });
+  return { normalizedDetail, storageId, runtimeId, resolution };
 }
 
 function mapError(error: unknown): FormulaMutationResult {
@@ -82,8 +133,9 @@ export interface CloudFormulaLibrary {
   /** Fetch a formula's source and register it in memory. Returns false
    *  when the formula no longer exists or the cloud is unreachable. */
   ensureRegistered: (formulaId: string) => Promise<boolean>;
-  /** Detail fetch for the editor (source + experience hint); registers
-   *  the plugin as a side effect. Null on not_found/unavailable. */
+  /** Detail fetch for the editor (source + experience hint). A formula that
+   *  no longer compiles client-side remains editable for repair. Null only
+   *  on malformed identity, not_found, or unavailable cloud access. */
   getDetail: (formulaId: string) => Promise<CloudCustomFormulaDetail | null>;
   /** Read-only detail fetch for semantics comparison. Never registers the
    *  formula or mutates the session-scoped asset registry. */
@@ -115,7 +167,7 @@ export function useCloudFormulaLibrary(): CloudFormulaLibrary {
       return;
     }
     try {
-      const list = await listCustomFormulas();
+      const list = (await listCustomFormulas()).map(normalizeSummary);
       revisionsRef.current = new Map(list.map((item) => [item.id, item.revision]));
       semanticsVersionsRef.current = new Map(
         list.map((item) => [
@@ -139,16 +191,9 @@ export function useCloudFormulaLibrary(): CloudFormulaLibrary {
 
   const ensureRegistered = useCallback(async (formulaId: string): Promise<boolean> => {
     try {
-      const detail = await getCustomFormula(formulaId);
-      const resolved = resolveCustomFormula({
-        id: detail.id,
-        source: detail.source,
-        experienceHint: (detail.experienceHint ?? undefined) as FormulaExperienceHint | undefined,
-        frmSemanticsVersion: resolveFrmSemanticsVersion(
-          detail.frmSemanticsVersion,
-        ),
-      });
-      return resolved.success;
+      const { storageId } = requireReference(formulaId);
+      const detail = await getCustomFormula(storageId);
+      return resolveCloudDetail(detail).resolution.success;
     } catch {
       return false;
     }
@@ -157,16 +202,8 @@ export function useCloudFormulaLibrary(): CloudFormulaLibrary {
   const getDetail = useCallback(
     async (formulaId: string): Promise<CloudCustomFormulaDetail | null> => {
       try {
-        const detail = await getCustomFormula(formulaId);
-        resolveCustomFormula({
-          id: detail.id,
-          source: detail.source,
-          experienceHint: (detail.experienceHint ?? undefined) as FormulaExperienceHint | undefined,
-          frmSemanticsVersion: resolveFrmSemanticsVersion(
-            detail.frmSemanticsVersion,
-          ),
-        });
-        return detail;
+        const { storageId } = requireReference(formulaId);
+        return normalizeDetail(await getCustomFormula(storageId));
       } catch {
         return null;
       }
@@ -177,7 +214,8 @@ export function useCloudFormulaLibrary(): CloudFormulaLibrary {
   const inspectDetail = useCallback(
     async (formulaId: string): Promise<CloudCustomFormulaDetail | null> => {
       try {
-        return await getCustomFormula(formulaId);
+        const { storageId } = requireReference(formulaId);
+        return normalizeDetail(await getCustomFormula(storageId));
       } catch {
         return null;
       }
@@ -190,9 +228,10 @@ export function useCloudFormulaLibrary(): CloudFormulaLibrary {
       const execute = async (): Promise<FormulaMutationResult> => {
         try {
           if (input.formulaId) {
-            const revision = revisionsRef.current.get(input.formulaId);
+            const identity = requireReference(input.formulaId);
+            const revision = revisionsRef.current.get(identity.storageId);
             if (revision === undefined) return { success: false, code: 'not_found' };
-            const result = await updateCustomFormula(input.formulaId, {
+            const result = await updateCustomFormula(identity.storageId, {
               expectedRevision: revision,
               name: input.name,
               source: input.source,
@@ -200,16 +239,25 @@ export function useCloudFormulaLibrary(): CloudFormulaLibrary {
                 ? { experienceHint: input.experienceHint }
                 : {}),
             });
-            revisionsRef.current.set(input.formulaId, result.revision);
+            const responseStorageId = requireStorageId(result.formulaId);
+            if (responseStorageId !== identity.storageId) {
+              throw new CloudClientError('malformed_response');
+            }
+            revisionsRef.current.set(identity.storageId, result.revision);
             resolveCustomFormula({
-              id: input.formulaId,
+              id: identity.runtimeId,
               source: input.source,
               experienceHint: input.experienceHint,
               frmSemanticsVersion:
-                semanticsVersionsRef.current.get(input.formulaId) ?? 1,
+                semanticsVersionsRef.current.get(identity.storageId) ?? 1,
             });
             await refresh();
-            return { success: true, code: 'ok', formulaId: input.formulaId };
+            return {
+              success: true,
+              code: 'ok',
+              storageId: identity.storageId,
+              runtimeId: identity.runtimeId,
+            };
           }
           const result = await createCustomFormula({
             name: input.name,
@@ -218,18 +266,20 @@ export function useCloudFormulaLibrary(): CloudFormulaLibrary {
               ? { experienceHint: input.experienceHint }
               : {}),
           });
+          const storageId = requireStorageId(result.formulaId);
+          const runtimeId = toCloudCustomFormulaRuntimeId(storageId);
           // Prefill the revision map before refresh so a failed refresh can
           // never strand the new id behind false not_found results (N1).
-          revisionsRef.current.set(result.formulaId, result.revision);
-          semanticsVersionsRef.current.set(result.formulaId, 2);
+          revisionsRef.current.set(storageId, result.revision);
+          semanticsVersionsRef.current.set(storageId, 2);
           resolveCustomFormula({
-            id: result.formulaId,
+            id: runtimeId,
             source: input.source,
             experienceHint: input.experienceHint,
             frmSemanticsVersion: 2,
           });
           await refresh();
-          return { success: true, code: 'ok', formulaId: result.formulaId };
+          return { success: true, code: 'ok', storageId, runtimeId };
         } catch (error) {
           return mapError(error);
         }
@@ -255,13 +305,25 @@ export function useCloudFormulaLibrary(): CloudFormulaLibrary {
 
   const renameFormula = useCallback(
     async (formulaId: string, name: string): Promise<FormulaMutationResult> => {
-      const revision = revisionsRef.current.get(formulaId);
-      if (revision === undefined) return { success: false, code: 'not_found' };
       try {
-        const result = await updateCustomFormula(formulaId, { expectedRevision: revision, name });
-        revisionsRef.current.set(formulaId, result.revision);
+        const identity = requireReference(formulaId);
+        const revision = revisionsRef.current.get(identity.storageId);
+        if (revision === undefined) return { success: false, code: 'not_found' };
+        const result = await updateCustomFormula(identity.storageId, {
+          expectedRevision: revision,
+          name,
+        });
+        if (requireStorageId(result.formulaId) !== identity.storageId) {
+          throw new CloudClientError('malformed_response');
+        }
+        revisionsRef.current.set(identity.storageId, result.revision);
         await refresh();
-        return { success: true, code: 'ok', formulaId };
+        return {
+          success: true,
+          code: 'ok',
+          storageId: identity.storageId,
+          runtimeId: identity.runtimeId,
+        };
       } catch (error) {
         return mapError(error);
       }
@@ -271,13 +333,19 @@ export function useCloudFormulaLibrary(): CloudFormulaLibrary {
 
   const deleteFormula = useCallback(
     async (formulaId: string): Promise<FormulaMutationResult> => {
-      const revision = revisionsRef.current.get(formulaId);
-      if (revision === undefined) return { success: false, code: 'not_found' };
       try {
-        await deleteCustomFormula(formulaId, revision);
-        revisionsRef.current.delete(formulaId);
+        const identity = requireReference(formulaId);
+        const revision = revisionsRef.current.get(identity.storageId);
+        if (revision === undefined) return { success: false, code: 'not_found' };
+        await deleteCustomFormula(identity.storageId, revision);
+        revisionsRef.current.delete(identity.storageId);
         await refresh();
-        return { success: true, code: 'ok', formulaId };
+        return {
+          success: true,
+          code: 'ok',
+          storageId: identity.storageId,
+          runtimeId: identity.runtimeId,
+        };
       } catch (error) {
         return mapError(error);
       }
@@ -290,25 +358,33 @@ export function useCloudFormulaLibrary(): CloudFormulaLibrary {
       formulaId: string,
       action: CustomFormulaSemanticsAction,
     ): Promise<FormulaMutationResult> => {
-      const revision = revisionsRef.current.get(formulaId);
-      if (revision === undefined) return { success: false, code: 'not_found' };
       try {
+        const identity = requireReference(formulaId);
+        const revision = revisionsRef.current.get(identity.storageId);
+        if (revision === undefined) return { success: false, code: 'not_found' };
         // Lock a local copy before the revision-checked write. The server
         // still re-reads and validates the same record under expectedRevision;
         // this copy lets a successful response update the active session
         // immediately without a second, fallible network read.
-        const detail = await getCustomFormula(formulaId);
-        if (detail.revision !== revision) {
+        const detail = normalizeDetail(await getCustomFormula(identity.storageId));
+        if (detail.revision !== revision || detail.id !== identity.storageId) {
           return { success: false, code: 'conflict' };
         }
-        const result = await changeCustomFormulaSemantics(formulaId, action, revision);
-        revisionsRef.current.set(formulaId, result.revision);
+        const result = await changeCustomFormulaSemantics(
+          identity.storageId,
+          action,
+          revision,
+        );
+        if (requireStorageId(result.formulaId) !== identity.storageId) {
+          throw new CloudClientError('malformed_response');
+        }
+        revisionsRef.current.set(identity.storageId, result.revision);
         semanticsVersionsRef.current.set(
-          formulaId,
+          identity.storageId,
           result.frmSemanticsVersion,
         );
         resolveCustomFormula({
-          id: detail.id,
+          id: identity.runtimeId,
           source: detail.source,
           experienceHint: (detail.experienceHint ?? undefined) as
             | FormulaExperienceHint
@@ -316,7 +392,12 @@ export function useCloudFormulaLibrary(): CloudFormulaLibrary {
           frmSemanticsVersion: result.frmSemanticsVersion,
         });
         await refresh();
-        return { success: true, code: 'ok', formulaId };
+        return {
+          success: true,
+          code: 'ok',
+          storageId: identity.storageId,
+          runtimeId: identity.runtimeId,
+        };
       } catch (error) {
         return mapError(error);
       }

@@ -7,6 +7,8 @@
  * envelopes never pretend to be API errors.
  */
 
+import { parseCloudCustomFormulaStorageId } from '@/lib/cloud/custom-formula-identity';
+
 export type CloudClientErrorCode =
   | 'offline'
   | 'malformed_response'
@@ -412,6 +414,12 @@ export async function getCommunityPublication(publicationId: string): Promise<Co
 // ---------------------------------------------------------------------------
 // Custom formula cloud library (v0.4.16, spec §17.1)
 
+function customFormulaPath(formulaId: string, suffix = ''): string {
+  const storageId = parseCloudCustomFormulaStorageId(formulaId);
+  if (!storageId) throw new CloudClientError('validation_failed');
+  return `/api/creation/custom-formulas/${storageId}${suffix}`;
+}
+
 export interface CloudCustomFormulaSummary {
   id: string;
   name: string;
@@ -440,7 +448,7 @@ export async function getCustomFormula(
   formulaId: string,
 ): Promise<CloudCustomFormulaDetail> {
   const data = await call<{ formula: CloudCustomFormulaDetail }>(
-    `/api/creation/custom-formulas/${formulaId}`,
+    customFormulaPath(formulaId),
   );
   return data.formula;
 }
@@ -470,7 +478,7 @@ export async function updateCustomFormula(
     experienceHint?: unknown;
   },
 ): Promise<{ formulaId: string; revision: number }> {
-  return call(`/api/creation/custom-formulas/${formulaId}`, {
+  return call(customFormulaPath(formulaId), {
     method: 'PATCH',
     headers: { 'idempotency-key': crypto.randomUUID() },
     body: JSON.stringify(input),
@@ -481,7 +489,7 @@ export async function deleteCustomFormula(
   formulaId: string,
   expectedRevision: number,
 ): Promise<void> {
-  return call(`/api/creation/custom-formulas/${formulaId}`, {
+  return call(customFormulaPath(formulaId), {
     method: 'DELETE',
     headers: { 'idempotency-key': crypto.randomUUID() },
     body: JSON.stringify({ expectedRevision }),
@@ -500,7 +508,7 @@ export async function changeCustomFormulaSemantics(
   action: CustomFormulaSemanticsAction,
   expectedRevision: number,
 ): Promise<{ formulaId: string; revision: number; frmSemanticsVersion: 1 | 2 }> {
-  return call(`/api/creation/custom-formulas/${formulaId}/semantics`, {
+  return call(customFormulaPath(formulaId, '/semantics'), {
     method: 'POST',
     headers: { 'idempotency-key': crypto.randomUUID() },
     body: JSON.stringify({ action, expectedRevision }),

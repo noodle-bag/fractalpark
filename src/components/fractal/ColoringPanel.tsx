@@ -89,12 +89,12 @@ export function ColoringPanel({
         </div>
 
         {outsideColoring === 'smooth' && effectiveSmoothMethod === 'radial-crossing-v1' && (
-          <p className="text-xs text-amber-200/90" data-testid="smooth-capability-note">
+          <p className="text-xs text-amber-800 dark:text-amber-300" data-testid="smooth-capability-note">
             {t('coloring.smoothAdapted')}
           </p>
         )}
         {outsideColoring === 'smooth' && effectiveSmoothMethod === 'escape-time' && (
-          <p className="text-xs text-amber-200/90" data-testid="smooth-capability-note">
+          <p className="text-xs text-amber-800 dark:text-amber-300" data-testid="smooth-capability-note">
             {t('coloring.smoothUnavailable')}
           </p>
         )}

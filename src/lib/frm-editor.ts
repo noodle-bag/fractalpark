@@ -1,9 +1,12 @@
 /** Browser helpers and one-time intent parsing for the standalone FRM editor. */
 import type { FrmEntry } from '@/engine/frm/scanner';
+import {
+  parseCloudCustomFormulaReference,
+  type CloudCustomFormulaStorageId,
+} from '@/lib/cloud/custom-formula-identity';
 
 export const MAX_FRM_FILE_BYTES = 256 * 1024;
 
-const CUSTOM_FORMULA_ID_PATTERN = /^custom-[A-Za-z0-9._~-]{1,180}$/;
 
 export type FrmFileReadResult =
   | { success: true; source: string }
@@ -16,7 +19,14 @@ export type FrmSourcePreflight =
 export type EditorToExploreIntent =
   | { status: 'none' }
   | { status: 'invalid'; formulaId: string; reason: 'missing' | 'invalid-id' }
-  | { status: 'valid'; formulaId: string };
+  | {
+      status: 'valid';
+      /** Canonical runtime/document identity. */
+      formulaId: string;
+      /** Bare resource identity for cloud API paths. */
+      storageId: CloudCustomFormulaStorageId;
+      legacy: boolean;
+    };
 
 export function formulaMutationErrorKey(
   code: string,
@@ -145,7 +155,11 @@ export function createFrmDownload(source: string, name?: string) {
 }
 
 export function editorToExploreHref(locale: string, formulaId: string): string {
-  return `/${locale}/explore?open=custom-formula&formula=${encodeURIComponent(formulaId)}`;
+  const identity = parseCloudCustomFormulaReference(formulaId);
+  if (!identity) {
+    throw new Error('Invalid cloud custom formula identity.');
+  }
+  return `/${locale}/explore?open=custom-formula&formula=${encodeURIComponent(identity.runtimeId)}`;
 }
 
 export function parseEditorToExploreIntent(
@@ -159,11 +173,17 @@ export function parseEditorToExploreIntent(
   if (!formulaId) {
     return { status: 'invalid', formulaId, reason: 'missing' };
   }
-  if (!CUSTOM_FORMULA_ID_PATTERN.test(formulaId)) {
+  const identity = parseCloudCustomFormulaReference(formulaId);
+  if (!identity) {
     return { status: 'invalid', formulaId, reason: 'invalid-id' };
   }
 
-  return { status: 'valid', formulaId };
+  return {
+    status: 'valid',
+    formulaId: identity.runtimeId,
+    storageId: identity.storageId,
+    legacy: identity.source === 'legacy-storage',
+  };
 }
 
 export function stripEditorToExploreIntent(

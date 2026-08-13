@@ -41,6 +41,10 @@ import {
 } from './bailout-descriptor';
 import type { FrmSemanticsVersion } from './semantics-version';
 import { STRICT_FRM_SEMANTICS_VERSION } from './semantics-version';
+import {
+  parseFormattedFrmDiagnostic,
+  primaryFrmDiagnosticMessage,
+} from './diagnostic-format';
 
 export type FrmCompatLevel = 'supported' | 'adapted' | 'read-only' | 'invalid';
 
@@ -61,6 +65,7 @@ export interface FrmCompatDiagnostic {
   /** 1-based classic source line when known. */
   line?: number;
   col?: number;
+  suggestion?: string;
 }
 
 export interface FrmEntryCompat {
@@ -97,10 +102,6 @@ function extractReasonCode(message: string): string | null {
   return REJECT_REASON_SET.has(match[1]) ? match[1] : null;
 }
 
-/** Engine formatted errors look like `Line 5, column 9: <msg>`; warnings
- * carry a `⚠️ ` prefix on the same shape. */
-const FORMATTED_ERROR_RE = /^(⚠️\s*)?Line (\d+), column (\d+): ([\s\S]*)$/;
-
 function dedupe(diagnostics: FrmCompatDiagnostic[]): FrmCompatDiagnostic[] {
   const seen = new Set<string>();
   return diagnostics.filter((d) => {
@@ -114,6 +115,14 @@ function dedupe(diagnostics: FrmCompatDiagnostic[]): FrmCompatDiagnostic[] {
   });
 }
 
+function structuredDiagnosticKey(
+  line: number,
+  col: number,
+  message: string,
+): string {
+  return `${line}:${col}:${primaryFrmDiagnosticMessage(message)}`;
+}
+
 function classifyEntry(
   source: string,
   key: string,
@@ -125,38 +134,33 @@ function classifyEntry(
     `compat-${hashString(key)}`,
     semanticsVersion,
   );
-  const toClassicLine = (nativeLine: number | undefined): number | undefined => {
-    if (nativeLine === undefined) return undefined;
-    const map = result.loweringLineMap;
-    if (!map || nativeLine < 1 || nativeLine > map.length) return nativeLine;
-    return map[nativeLine - 1];
-  };
-
   const diagnostics: FrmCompatDiagnostic[] = [];
-  // Structured lexer/parser issues — remember their NATIVE coordinates so
-  // the formatted duplicates in result.errors can be skipped (Codex 7e1:
-  // formatted and structured reports of the same issue must not both land).
-  const structuredNative = new Set<string>();
+  // The classic import boundary has already mapped structured and formatted
+  // diagnostics back to the displayed source. Remember that one coordinate
+  // space so formatted duplicates can be skipped deterministically.
+  const structured = new Set<string>();
   for (const e of result.lexerErrors ?? []) {
-    structuredNative.add(`${e.line}:${e.message}`);
+    structured.add(structuredDiagnosticKey(e.line, e.col, e.message));
     diagnostics.push({
       reasonCode: 'lexer-error',
       severity: e.severity === 'error' ? 'error' : 'warning',
       blocking: e.severity === 'error',
       message: e.message,
-      line: toClassicLine(e.line),
+      line: e.line,
       col: e.col,
+      ...(e.suggestion ? { suggestion: e.suggestion } : {}),
     });
   }
   for (const e of result.parseErrors ?? []) {
-    structuredNative.add(`${e.line}:${e.message}`);
+    structured.add(structuredDiagnosticKey(e.line, e.col, e.message));
     diagnostics.push({
       reasonCode: 'parse-error',
       severity: e.severity === 'error' ? 'error' : 'warning',
       blocking: e.severity === 'error',
       message: e.message,
-      line: toClassicLine(e.line),
+      line: e.line,
       col: e.col,
+      ...(e.suggestion ? { suggestion: e.suggestion } : {}),
     });
   }
 
@@ -181,19 +185,28 @@ function classifyEntry(
       result.selectionError?.code === 'invalid-source' || scanBlocking;
 
     for (const message of result.errors) {
-      const formatted = FORMATTED_ERROR_RE.exec(message);
-      if (formatted && structuredNative.has(`${Number(formatted[2])}:${formatted[4]}`)) {
+      const formatted = parseFormattedFrmDiagnostic(message);
+      if (
+        formatted &&
+        structured.has(
+          structuredDiagnosticKey(
+            formatted.line,
+            formatted.col,
+            formatted.message,
+          ),
+        )
+      ) {
         continue; // already emitted as a structured lexer/parser diagnostic
       }
       const code = extractReasonCode(message);
-      const isWarningMarker = Boolean(formatted?.[1]);
+      const isWarningMarker = formatted?.prefix.includes('⚠️') ?? false;
       diagnostics.push({
         reasonCode: code ?? (isWarningMarker ? 'compile-warning' : 'compile-error'),
         severity: isWarningMarker ? 'warning' : 'error',
         blocking: !isWarningMarker,
         message,
         ...(formatted
-          ? { line: toClassicLine(Number(formatted[2])), col: Number(formatted[3]) }
+          ? { line: formatted.line, col: formatted.col }
           : {}),
       });
     }
@@ -257,11 +270,15 @@ function classifyEntry(
     });
   }
   for (const message of result.warnings) {
+    const formatted = parseFormattedFrmDiagnostic(message);
     diagnostics.push({
       reasonCode: 'compile-warning',
       severity: 'warning',
       blocking: false,
-      message,
+      message: formatted?.message ?? message,
+      ...(formatted
+        ? { line: formatted.line, col: formatted.col }
+        : {}),
     });
   }
 
@@ -331,7 +348,9 @@ export function classifyImportedFrmSource(
   const structured = new Set<string>();
 
   for (const issue of result.lexerErrors) {
-    structured.add(`${issue.line}:${issue.message}`);
+    structured.add(
+      structuredDiagnosticKey(issue.line, issue.col, issue.message),
+    );
     diagnostics.push({
       reasonCode: 'lexer-error',
       severity: issue.severity === 'error' ? 'error' : 'warning',
@@ -339,10 +358,13 @@ export function classifyImportedFrmSource(
       message: issue.message,
       line: issue.line,
       col: issue.col,
+      ...(issue.suggestion ? { suggestion: issue.suggestion } : {}),
     });
   }
   for (const issue of result.parseErrors) {
-    structured.add(`${issue.line}:${issue.message}`);
+    structured.add(
+      structuredDiagnosticKey(issue.line, issue.col, issue.message),
+    );
     diagnostics.push({
       reasonCode: 'parse-error',
       severity: issue.severity === 'error' ? 'error' : 'warning',
@@ -350,29 +372,43 @@ export function classifyImportedFrmSource(
       message: issue.message,
       line: issue.line,
       col: issue.col,
+      ...(issue.suggestion ? { suggestion: issue.suggestion } : {}),
     });
   }
   for (const message of result.errors) {
-    const formatted = FORMATTED_ERROR_RE.exec(message);
-    if (formatted && structured.has(`${Number(formatted[2])}:${formatted[4]}`)) {
+    const formatted = parseFormattedFrmDiagnostic(message);
+    if (
+      formatted &&
+      structured.has(
+        structuredDiagnosticKey(
+          formatted.line,
+          formatted.col,
+          formatted.message,
+        ),
+      )
+    ) {
       continue;
     }
     diagnostics.push({
       reasonCode: extractReasonCode(message) ?? 'compile-error',
       severity: 'error',
       blocking: true,
-      message,
+      message: formatted?.message ?? message,
       ...(formatted
-        ? { line: Number(formatted[2]), col: Number(formatted[3]) }
+        ? { line: formatted.line, col: formatted.col }
         : {}),
     });
   }
   for (const message of result.warnings) {
+    const formatted = parseFormattedFrmDiagnostic(message);
     diagnostics.push({
       reasonCode: 'compile-warning',
       severity: 'warning',
       blocking: false,
-      message,
+      message: formatted?.message ?? message,
+      ...(formatted
+        ? { line: formatted.line, col: formatted.col }
+        : {}),
     });
   }
   for (const note of result.canonicalFormula?.compatibilityNotes ?? []) {

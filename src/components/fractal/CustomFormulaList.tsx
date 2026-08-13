@@ -38,8 +38,16 @@ import {
   type FormulaMutationResult,
 } from '@/hooks/useCloudFormulaLibrary';
 import type { CustomFormulaSemanticsAction } from '@/lib/cloud/client';
-import { resolveFormulaReference } from '@/lib/formula-resolver';
-import { readSessionFormulaAssets } from '@/lib/formula-resolver';
+import {
+  parseCloudCustomFormulaReference,
+  parseCloudCustomFormulaStorageId,
+  toCloudCustomFormulaRuntimeId,
+} from '@/lib/cloud/custom-formula-identity';
+import {
+  MAX_CUSTOM_FORMULAS,
+  readSessionFormulaAssets,
+  resolveFormulaReference,
+} from '@/lib/formula-resolver';
 import { FormulaEditor } from './FormulaEditor';
 import { FrmSemanticsComparisonView } from './FrmSemanticsComparisonView';
 import type { FormulaPlugin } from '@/engine/plugins/types';
@@ -50,7 +58,7 @@ import {
 } from '@/engine/frm/semantics-version';
 import { CUSTOM_FORMULA_EXAMPLES } from '@/engine/frm/example-library';
 import type { ViewBounds } from '@/engine/types';
-import { MAX_CUSTOM_FORMULAS } from '@/lib/formula-resolver';
+
 import type {
   CloudCustomFormulaDetail,
   CloudCustomFormulaSummary,
@@ -60,7 +68,13 @@ import {
   type FrmSemanticsComparison,
 } from '@/lib/frm-semantics-comparison';
 
+function runtimeIdForStorageId(formulaId: string): string | undefined {
+  const storageId = parseCloudCustomFormulaStorageId(formulaId);
+  return storageId ? toCloudCustomFormulaRuntimeId(storageId) : undefined;
+}
+
 interface CustomFormulaListProps {
+  currentFormula?: string;
   currentBounds?: ViewBounds;
   onSelectFormula?: (plugin: FormulaPlugin, experienceHint?: FormulaExperienceHint) => void;
 }
@@ -70,7 +84,11 @@ function isStrictV2(formula: CloudCustomFormulaSummary): boolean {
   return formula.frmSemanticsVersion === 2;
 }
 
-export function CustomFormulaList({ currentBounds, onSelectFormula }: CustomFormulaListProps) {
+export function CustomFormulaList({
+  currentFormula,
+  currentBounds,
+  onSelectFormula,
+}: CustomFormulaListProps) {
   const t = useTranslations('explore');
   const customT = useTranslations('explore.formula.customLibrary');
   const semanticsT = useTranslations('cloud.customFormulas.semantics');
@@ -111,6 +129,9 @@ export function CustomFormulaList({ currentBounds, onSelectFormula }: CustomForm
   const semanticsRequestRef = useRef(0);
 
   const authenticated = session.status === 'authenticated';
+  const activeCloudStorageId = parseCloudCustomFormulaReference(
+    currentFormula ?? '',
+  )?.storageId;
 
   const localizeError = (result: FormulaMutationResult): string => {
     switch (result.code) {
@@ -162,7 +183,13 @@ export function CustomFormulaList({ currentBounds, onSelectFormula }: CustomForm
     name: string,
     source: string,
     experienceHint?: FormulaExperienceHint,
-  ): Promise<{ success: boolean; error?: string; id?: string; silent?: boolean }> => {
+  ): Promise<{
+    success: boolean;
+    error?: string;
+    storageId?: string;
+    runtimeId?: string;
+    silent?: boolean;
+  }> => {
     const result = await saveFormula({
       name,
       source,
@@ -170,9 +197,14 @@ export function CustomFormulaList({ currentBounds, onSelectFormula }: CustomForm
       formulaId: editingFormulaId,
     });
     if (result.success) {
+      if (!result.runtimeId) {
+        const message = customT('unavailable');
+        setActionError(message);
+        return { success: false, error: message };
+      }
       setActionError('');
       const resolved = resolveFormulaReference(
-        result.formulaId ?? '',
+        result.runtimeId,
         readSessionFormulaAssets(),
       );
       if (resolved.success && resolved.kind === 'custom') {
@@ -180,7 +212,11 @@ export function CustomFormulaList({ currentBounds, onSelectFormula }: CustomForm
       }
       setShowEditor(false);
       setEditingFormulaId(undefined);
-      return { success: true, id: result.formulaId };
+      return {
+        success: true,
+        storageId: result.storageId,
+        runtimeId: result.runtimeId,
+      };
     }
     if (result.code === 'auth-cancelled') {
       // Dialog closed without verifying — nothing saved, nothing to say.
@@ -241,7 +277,7 @@ export function CustomFormulaList({ currentBounds, onSelectFormula }: CustomForm
     try {
       setSemanticsComparison(
         compareFrmSemantics({
-          formulaId: detail.id,
+          formulaId: runtimeIdForStorageId(detail.id) ?? detail.id,
           source: detail.source,
           experienceHint: (detail.experienceHint ?? undefined) as
             | FormulaExperienceHint
@@ -301,19 +337,31 @@ export function CustomFormulaList({ currentBounds, onSelectFormula }: CustomForm
       setActionError(customT('unavailable'));
       return;
     }
-    const resolved = resolveFormulaReference(formula.id, readSessionFormulaAssets());
-    if (resolved.success) {
+    const storageId = parseCloudCustomFormulaStorageId(formula.id);
+    const resolved = storageId
+      ? resolveFormulaReference(
+          toCloudCustomFormulaRuntimeId(storageId),
+          readSessionFormulaAssets(),
+        )
+      : null;
+    if (resolved?.success) {
       setActionError('');
       onSelectFormula?.(resolved.plugin, resolved.experienceHint);
     } else {
-      setActionError(resolved.errors.join('; '));
+      setActionError(
+        resolved ? resolved.errors.join('; ') : customT('unavailable'),
+      );
     }
   };
 
   if (showEditor) {
     return (
       <FormulaEditor
-        formulaId={editingFormulaId}
+        formulaId={
+          editingFormulaId
+            ? runtimeIdForStorageId(editingFormulaId)
+            : undefined
+        }
         frmSemanticsVersion={editorSemanticsVersion}
         initialSource={editorSource}
         initialExperienceHint={editorExperienceHint}
@@ -415,7 +463,11 @@ export function CustomFormulaList({ currentBounds, onSelectFormula }: CustomForm
             {formulas.map((formula) => (
               <div
                 key={formula.id}
-                className="flex items-center justify-between p-3 border rounded-lg hover:bg-muted/50 transition-colors"
+                className={`flex items-center justify-between p-3 border rounded-lg hover:bg-muted/50 transition-colors ${
+                  activeCloudStorageId === parseCloudCustomFormulaStorageId(formula.id)
+                    ? 'border-primary/50 bg-primary/10 ring-1 ring-primary/30'
+                    : ''
+                }`}
               >
                 <div className="flex items-center gap-3 flex-1 min-w-0">
                   {/* Cloud formulas compiled server-side at save time — a
@@ -455,6 +507,16 @@ export function CustomFormulaList({ currentBounds, onSelectFormula }: CustomForm
                         >
                           {formula.name}
                         </button>
+                        {activeCloudStorageId ===
+                          parseCloudCustomFormulaStorageId(formula.id) && (
+                          <Badge
+                            className="shrink-0 text-[10px] leading-4"
+                            data-testid={`active-formula-${formula.id}`}
+                            variant="secondary"
+                          >
+                            {t('formula.active')}
+                          </Badge>
+                        )}
                         {/* FRM semantics contract badge: explicit v2 vs legacy v1. */}
                         <Badge
                           variant="secondary"
