@@ -11,7 +11,10 @@
  */
 
 import { describe, it, expect, beforeEach } from 'vitest';
-import { extractBailoutDescriptor, type BailoutDescriptor } from '../engine/frm/bailout-descriptor';
+import {
+  evaluateC2Threshold,
+  extractBailoutDescriptor,
+} from '../engine/frm/bailout-descriptor';
 import { compileFrmDetailed, compileFrm } from '../engine/frm/compile';
 import { frmParserCache } from '../engine/frm/cache';
 import { tokenize } from '../engine/frm/lexer';
@@ -65,6 +68,19 @@ describe('extractBailoutDescriptor: bounded forms', () => {
     if (!r.ok || r.descriptor.kind !== 'C2') return;
     expect(r.descriptor.params).toEqual(['p1']);
     expect(r.descriptor.thresholdNode.type).toBe('binary');
+  });
+
+  it('C2 treats pi and e as loop-invariant built-in constants', () => {
+    const r = extractBailoutDescriptor(bailoutAst('|z| < pi + e'), NO_PARAMS);
+    expect(r.ok).toBe(true);
+    if (!r.ok || r.descriptor.kind !== 'C2') return;
+    expect(r.descriptor.params).toEqual([]);
+    expect(evaluateC2Threshold(r.descriptor, new Map())).toBeCloseTo(Math.PI + Math.E);
+
+    const compiled = compileFrm(probeSource('BuiltInConstants', '|z| < pi + e'), undefined, 2);
+    expect(compiled.success).toBe(true);
+    expect(compiled.plugin?.c2ThresholdGlsl).toContain('3.141592653589793');
+    expect(compiled.plugin?.c2ThresholdGlsl).toContain('2.718281828459045');
   });
 
   it('C4-R abs-real and real forms with numeric thresholds', () => {

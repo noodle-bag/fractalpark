@@ -940,20 +940,40 @@ export function lowerClassicEntryToNative(entrySource: string): LoweredClassicEn
     }
   }
 
-  // Variable `bailout` rename: the native parser treats a statement that
-  // starts with the `bailout` keyword as a section header.
-  const hasBailoutVar = [...initTokens, ...loopBodyTokens].some((t) =>
-    t.type === 'expr' && /\bbailout\b/.test(t.text),
-  );
-  const renameBailout = (text: string): string => text.replace(/\bbailout\b/g, 'bailoutVar');
-  if (hasBailoutVar) {
+  // Classic allows variables named `init`, `loop`, and `bailout`; the native
+  // parser reserves all three as section headers. Rename every reference in
+  // both statement sections, structural conditions, and the bailout
+  // predicate so a legal classic identifier cannot be misparsed as syntax.
+  const sectionKeywordRenames = [
+    { keyword: 'init', replacement: 'initVar', noteKind: 'reserved-word-renamed' as const },
+    { keyword: 'loop', replacement: 'loopVar', noteKind: 'reserved-word-renamed' as const },
+    {
+      keyword: 'bailout',
+      replacement: 'bailoutVar',
+      noteKind: 'bailout-variable-renamed' as const,
+    },
+  ];
+  const allBodyTokens = [...initTokens, ...loopBodyTokens];
+  const activeSectionKeywordRenames = sectionKeywordRenames.filter(({ keyword }) => {
+    const probe = new RegExp(`\\b${keyword}\\b`);
+    return allBodyTokens.some((token) => probe.test(token.text)) || probe.test(bailoutText);
+  });
+  const renameSectionKeywords = (text: string): string => {
+    let renamed = text;
+    for (const { keyword, replacement } of activeSectionKeywordRenames) {
+      renamed = renamed.replace(new RegExp(`\\b${keyword}\\b`, 'g'), replacement);
+    }
+    return renamed;
+  };
+  for (const { keyword, replacement, noteKind } of activeSectionKeywordRenames) {
+    const probe = new RegExp(`\\b${keyword}\\b`);
     const firstLine =
-      [...initTokens, ...loopBodyTokens].find((t) => t.type === 'expr' && /\bbailout\b/.test(t.text))
-        ?.line ?? 1;
+      allBodyTokens.find((token) => probe.test(token.text))?.line ??
+      (probe.test(bailoutText) ? bailoutLine : 1);
     notes.push({
-      kind: 'bailout-variable-renamed',
+      kind: noteKind,
       line: firstLine,
-      message: 'Classic `bailout` variable renamed to `bailoutVar` (native section keyword)',
+      message: `Classic \`${keyword}\` variable renamed to \`${replacement}\` (native section keyword)`,
     });
   }
 
@@ -971,10 +991,11 @@ export function lowerClassicEntryToNative(entrySource: string): LoweredClassicEn
   const flatten = (tokensIn: BodyToken[]): Stmt[] => {
     const out: Stmt[] = [];
     for (const token of tokensIn) {
+      const renamedText = renameSectionKeywords(token.text);
       if (token.type !== 'expr') {
         const kind = token.type === 'if' || token.type === 'else' || token.type === 'elseif' || token.type === 'endif' ? token.type : 'stmt';
         out.push({
-          text: token.text,
+          text: renamedText,
           line: token.line,
           col: token.col,
           sourceText: token.sourceText,
@@ -983,7 +1004,7 @@ export function lowerClassicEntryToNative(entrySource: string): LoweredClassicEn
         });
         continue;
       }
-      const text = renameBailout(token.text);
+      const text = renamedText;
       const pieces = splitChainedAssignment(text);
       if (pieces.length > 1 && pieces.join(' ') !== text.replace(/\s+/g, ' ')) {
         notes.push({
@@ -1012,7 +1033,7 @@ export function lowerClassicEntryToNative(entrySource: string): LoweredClassicEn
 
   const initStmts = flatten(initTokens);
   const loopStmts = flatten(loopBodyTokens);
-  if (predicate) bailoutText = renameBailout(bailoutText);
+  bailoutText = renameSectionKeywords(bailoutText);
 
   // `c` rebinding (init AND/OR loop): classic pre-seeds `c` at entry
   // (Mandelbrot: pixel; Julia: the julia constant) and treats it as

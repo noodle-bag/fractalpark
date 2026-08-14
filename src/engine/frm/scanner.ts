@@ -119,12 +119,13 @@ function tryParseHeader(source: string, start: number): ParsedHeader | null {
   let name = source.slice(start, i);
   if (name.length === 0) return null;
   // A trailing `=` glued to the name is the optional header equals, not
-  // part of the name (`T={` / `T= {`) — but only when a `{` follows it;
-  // `z^3-1=0(...)` keeps its `=` because the name does not end with one.
+  // part of the name (`T={` / `T= (XAXIS) {` / `T=[float=y] {`) — but only
+  // when a header suffix or `{` follows it; `z^3-1=0(...)` keeps its `=`
+  // because the name does not end with one.
   if (name.endsWith('=')) {
     let k = i;
     while (k < n && (source[k] === ' ' || source[k] === '\t' || source[k] === '\r')) k++;
-    if (source[k] === '{') {
+    if (source[k] === '{' || source[k] === '(' || source[k] === '[') {
       name = name.slice(0, -1);
       i = k;
     }
@@ -212,6 +213,16 @@ function scanBody(source: string, start: number): BodyScan {
 }
 
 /**
+ * Skip a Fractint `comment { ... }` documentation block. Its contents are
+ * prose, not formula syntax, so an opening brace inside the prose must not
+ * increase formula-body depth; the first `}` closes the dummy block.
+ */
+function skipCommentBlock(source: string, start: number): number {
+  const close = source.indexOf('}', start);
+  return close === -1 ? source.length : close + 1;
+}
+
+/**
  * Scan a classic FRM source into its entries and diagnostics. The returned
  * ranges slice the original source exactly; the source is never modified.
  */
@@ -288,6 +299,15 @@ export function scanFrmEntries(source: string): FrmScanResult {
 
     closeTrailingRegion();
 
+    // Fractint's special-name `comment { ... }` blocks are documentation
+    // dummy formulas, not selectable entries. The name is case-insensitive
+    // under classic semantics. Brace-led anonymous comment blocks are
+    // already handled as file noise above.
+    if (header.name.toLowerCase() === 'comment') {
+      i = skipCommentBlock(source, header.braceOffset + 1);
+      continue;
+    }
+
     const count = (nameCounts.get(header.name) ?? 0) + 1;
     nameCounts.set(header.name, count);
     // Keys must stay unique even when a literal name collides with a
@@ -302,10 +322,9 @@ export function scanFrmEntries(source: string): FrmScanResult {
     usedKeys.add(key);
     if (count > 1) {
       // Classic files carry intentional duplicates (authors re-release
-      // formulas; `comment { }` doc blocks repeat per file). Keys stay
-      // unique and selection is always by key, so this annotates instead of
-      // blocking — a bare name deterministically resolves to the FIRST
-      // occurrence, later ones need their `#2`/`#3` keys.
+      // formulas). Keys stay unique and selection is always by key, so this
+      // annotates instead of blocking — a bare name deterministically
+      // resolves to the FIRST occurrence, later ones need their `#2`/`#3` keys.
       diagnostics.push({
         code: 'duplicate-name',
         message: `Duplicate formula name "${header.name}" (entry key "${key}"; bare-name selection resolves to the first occurrence)`,

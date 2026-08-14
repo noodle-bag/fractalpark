@@ -173,6 +173,10 @@ function evalNumericLiteral(node: ASTNode): number | null {
 /** Pure functions allowed inside a C2 threshold expression. */
 const PURE_THRESHOLD_FUNCTIONS = new Set(['sqrt', 'abs', 'sqr', 'exp', 'log', 'sin', 'cos', 'cosxx', 'cotanh', 'tan', 'sinh', 'cosh', 'tanh', 'real']);
 const ARITHMETIC_OPS = new Set(['+', '-', '*', '/', '^']);
+const INVARIANT_CONSTANTS = new Map<string, number>([
+  ['pi', Math.PI],
+  ['e', Math.E],
+]);
 /** Boolean-arithmetic ops over invariant operands are themselves invariant
  * (classic 0/1 semantics; T2 `test=(4*(p2<=0))+...` idiom). `imag` stays
  * out: the scalar evaluators track real defaults only. */
@@ -235,6 +239,9 @@ function checkLoopInvariance(node: ASTNode, declaredParams: Set<string>): Invari
     case 'number':
       return { invariant: true, params: [] };
     case 'ident':
+      if (INVARIANT_CONSTANTS.has(node.name)) {
+        return { invariant: true, params: [] };
+      }
       if (declaredParams.has(node.name)) {
         return { invariant: true, params: [node.name] };
       }
@@ -285,6 +292,9 @@ export function evaluateC2Threshold(
       case 'number':
         return node.value;
       case 'ident':
+        if (INVARIANT_CONSTANTS.has(node.name)) {
+          return INVARIANT_CONSTANTS.get(node.name)!;
+        }
         return paramDefaults.get(node.name) ?? null;
       case 'unary':
         if (node.op !== '-') return null;

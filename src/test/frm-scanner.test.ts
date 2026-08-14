@@ -146,6 +146,27 @@ describe('scanFrmEntries: entry boundaries', () => {
     // Unbalanced braces hide inside comments; the separator block is noise.
     expect(scan.diagnostics).toEqual([]);
   });
+
+  it('skips special-name comment documentation blocks instead of exposing pseudo-entries', () => {
+    const source = `comment {
+Documentation can contain an unmatched opening brace { without formula semantics.
+}
+One {
+  z=0:
+  z=z^2+c
+  |z|<4
+}
+comment { one-line documentation }
+Two {
+  z=0:
+  z=z^2+c
+  |z|<4
+}`;
+    const scan = scanFrmEntries(source);
+    expect(scan.entries.map((entry) => entry.key)).toEqual(['One', 'Two']);
+    expect(scan.diagnostics).toEqual([]);
+    expect(requiresSelection(scan)).toBe(true);
+  });
 });
 
 describe('scanFrmEntries: selection contract', () => {
@@ -338,6 +359,16 @@ describe('classic header variants (T0 corpus evidence)', () => {
     const entry = scanOne('FlipLambdaJ = {');
     expect(entry.name).toBe('FlipLambdaJ');
     expect(entry.options).toBeUndefined();
+  });
+
+  it('accepts attached equals before symmetry and option suffixes', () => {
+    const symmetry = scanOne('EqSym=(XAXIS) {');
+    expect(symmetry.name).toBe('EqSym');
+    expect(symmetry.symmetry).toBe('XAXIS');
+
+    const options = scanOne('EqOptions=[float=y] {');
+    expect(options.name).toBe('EqOptions');
+    expect(options.options).toBe('float=y');
   });
 
   it('accepts a spaced `[...]` option block and records it verbatim', () => {

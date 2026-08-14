@@ -50,6 +50,23 @@ describe('lowerClassicEntryToNative: section mapping', () => {
     expect(kinds(notes)).toContain('bailout-variable-renamed');
   });
 
+  it('renames all classic variables that collide with native section keywords', () => {
+    const source = `SectionVars {
+  init=1, loop=2, bailout=4:
+  z=z^2+c+init*0+loop*0
+  |z|<bailout
+}`;
+    const { native, notes } = lowerClassicEntryToNative(source);
+    expect(native).toContain('initVar=1');
+    expect(native).toContain('loopVar=2');
+    expect(native).toContain('bailoutVar=4');
+    expect(native).toContain('initVar*0+loopVar*0');
+    expect(native).toContain('|z|<bailoutVar');
+    expect(notes.filter((note) => note.kind === 'reserved-word-renamed')).toHaveLength(2);
+    expect(kinds(notes)).toContain('bailout-variable-renamed');
+    expect(compileClassicFrmEntry(source, 'SectionVars', 'section-vars', 2).success).toBe(true);
+  });
+
   it('supplies the Fractint default bailout when the predicate is absent', () => {
     const { native, notes } = lowerClassicEntryToNative('NoPred {\n\tz=0:\n\tz=z^2+c\n}');
     expect(native).toContain('bailout:\n  |z| < 4');

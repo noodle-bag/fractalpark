@@ -22,14 +22,21 @@ function glslFloatLiteral(value: number): string {
   return text.includes('.') || text.includes('e') || text.includes('E') ? text : `${text}.0`;
 }
 
+/** Resolve the active formula identically for source assembly and cache keys. */
+function resolveFormula(
+  combo: PluginCombination,
+  formulaOverride?: FormulaPlugin,
+): FormulaPlugin | undefined {
+  return formulaOverride?.id === combo.formulaId
+    ? formulaOverride
+    : pluginRegistry.getFormula(combo.formulaId);
+}
+
 export function assembleShader(
   combo: PluginCombination,
   formulaOverride?: FormulaPlugin,
 ): string {
-  const formula =
-    formulaOverride?.id === combo.formulaId
-      ? formulaOverride
-      : pluginRegistry.getFormula(combo.formulaId);
+  const formula = resolveFormula(combo, formulaOverride);
   const outside = pluginRegistry.getOutsideColoring(combo.outsideColoringId);
   const inside = pluginRegistry.getInsideColoring(combo.insideColoringId);
   const transform = pluginRegistry.getTransform(combo.transformId);
@@ -48,9 +55,11 @@ export function assembleShader(
   // pipeline-v1 document renders the legacy path even for strict-v2
   // formulas. C1 thresholds are magnitude values, so the zz comparison
   // consumes threshold²; inverse directions (>, >=) flip the escape
-  // condition, and inclusive operators use an inclusive boundary. Legacy
-  // combinations keep the historical BAILOUT_RADIUS semantics
-  // byte-for-byte.
+  // condition. Because ESCAPE_CHECK is the negation of the FRM continue
+  // predicate, strict continue operators (<, >) produce inclusive escape
+  // boundaries, while inclusive continue operators (<=, >=) produce strict
+  // escape boundaries. Legacy combinations keep the historical
+  // BAILOUT_RADIUS semantics byte-for-byte.
   const pipelineV2 = combo.pipelineVersion === 2;
   const bailoutDescriptor = pipelineV2 ? formula.bailoutDescriptor : undefined;
   if (bailoutDescriptor?.kind === 'C1') {
@@ -60,7 +69,7 @@ export function assembleShader(
     if (bailoutDescriptor.op === '>' || bailoutDescriptor.op === '>=') {
       defines.push('#define ESCAPE_INVERSE_DIRECTION');
     }
-    if (bailoutDescriptor.op === '<=' || bailoutDescriptor.op === '>=') {
+    if (bailoutDescriptor.op === '<' || bailoutDescriptor.op === '>') {
       defines.push('#define BAILOUT_INCLUSIVE');
     }
   } else if (bailoutDescriptor?.kind === 'C2' && formula.c2ThresholdGlsl) {
@@ -159,8 +168,13 @@ export function makeCacheKey(combo: PluginCombination, formulaOverride?: Formula
   // fingerprint applies only to pipeline-v2 combinations: a pipeline-v1
   // render of the same formula uses the legacy path and the legacy key.
   if (combo.pipelineVersion !== 2) return base;
-  const descriptor = formulaOverride?.bailoutDescriptor;
-  const timingBit = formulaOverride?.afterStepTiming ? '|t:after' : '';
+  // Resolve the formula through the exact same path as assembleShader.
+  // Registry-backed custom formulas normally have no instance override; if
+  // their descriptor were omitted here, pipeline v1 and v2 could reuse one
+  // compiled program even though assembleShader emits different source.
+  const formula = resolveFormula(combo, formulaOverride);
+  const descriptor = formula?.bailoutDescriptor;
+  const timingBit = formula?.afterStepTiming ? '|t:after' : '';
   if (!descriptor) return `${base}${timingBit}`;
   const fingerprint =
     descriptor.kind === 'C2'

@@ -15,7 +15,6 @@ import { validate } from './validator';
 import { generateC2ThresholdGLSL, generateGLSL } from './codegen';
 import { resolveSmoothCapability } from './smooth-capability';
 import {
-  evaluateC2Threshold,
   extractBailoutDescriptor,
   type BailoutDescriptor,
   type BailoutRejectReason,
@@ -398,29 +397,11 @@ function compileFrmUncached(
       bailoutDescriptor = extraction.descriptor;
     }
 
-    // Step 4: Generate GLSL with source map
+    // Step 4: Generate GLSL with source map. The numeric bailout is the
+    // frozen v1 channel for every compiled semantics version; renderer
+    // pipeline v2 consumes bailoutDescriptor/c2ThresholdGlsl instead.
     const sourceMap = new FRMSourceMap();
     const { glsl, initGlsl, uniforms, bailout } = generateGLSL(ast, sourceMap);
-
-    // C2 interim rendering: a parameterized radial descriptor evaluates
-    // its threshold against declared parameter defaults so the legacy
-    // numeric channel carries a correct default zz threshold (magnitude²)
-    // instead of the v1 4.0 fallback. Parameter changes still need the
-    // GLSL-inlining slice; an unevaluable expression keeps the v1 value.
-    let effectiveBailout = bailout;
-    if (bailoutDescriptor?.kind === 'C2') {
-      const defaults = new Map<string, number>();
-      for (const p of ast.params) {
-        if (typeof p.default === 'number') defaults.set(p.name, p.default);
-      }
-      for (const pn of PARAMETER_NAMES) {
-        if (!defaults.has(pn)) defaults.set(pn, 0);
-      }
-      const evaluated = evaluateC2Threshold(bailoutDescriptor, defaults);
-      if (evaluated !== null) {
-        effectiveBailout = evaluated ** 2;
-      }
-    }
 
     // C2 GLSL inlining: serialize the verified threshold AST through the
     // compiler's own expression pipeline. Parameters map to u_p* uniforms —
@@ -462,7 +443,7 @@ function compileFrmUncached(
       frmSemanticsVersion: semanticsVersion,
       supportsPower: false, // DEPRECATED per ADR-0007: capability resolves from AST/dataflow, not this flag.
       supportsJulia: true,
-      bailout: effectiveBailout,
+      bailout,
       ...(bailoutDescriptor ? { bailoutDescriptor } : {}),
       // Classic dialect + strict v2 → after-step bailout timing (Fractint
       // evaluates the predicate after each loop step; the native dialect

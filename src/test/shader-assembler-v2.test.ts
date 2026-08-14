@@ -13,6 +13,7 @@
 import { describe, it, expect, beforeAll } from 'vitest';
 import { assembleShader, makeCacheKey } from '@/engine/shaders/assembler';
 import { registerBuiltins } from '@/engine/plugins/builtins/index';
+import { pluginRegistry } from '@/engine/plugins/registry';
 import { compileFrm, compileClassicFrmEntry } from '@/engine/frm/compile';
 import { frmParserCache } from '@/engine/frm/cache';
 import type { PluginCombination } from '@/engine/plugins/types';
@@ -68,8 +69,8 @@ describe('assembleShader: renderer-pipeline v2 (bailout descriptor consumption)'
     // magnitude 4 → zz threshold 16 (strict-v2 radius semantics).
     expect(shader).toMatch(injectedRadius('16.0'));
     expect(shader).not.toMatch(INJECTED_INVERSE);
-    // `<` continues while |z| < 4 → escape at the inclusive boundary.
-    expect(shader).not.toMatch(INJECTED_INCLUSIVE);
+    // `<` continues while |z| < 4 → escape when |z| >= 4.
+    expect(shader).toMatch(INJECTED_INCLUSIVE);
     // FRM codegen owns exactly one declaration. LastSqr is a general classic
     // side channel, so even this C1 formula resets it per orbit.
     expect(shader.match(/\bfloat frmLastSqr\b/g)).toHaveLength(1);
@@ -82,24 +83,26 @@ describe('assembleShader: renderer-pipeline v2 (bailout descriptor consumption)'
     const shader = assembleShader({ formulaId: plugin.id, ...COMBO_BASE }, plugin);
     expect(shader).toMatch(injectedRadius('16.0'));
     expect(shader).toMatch(INJECTED_INVERSE);
+    // `>` continues while |z| > 4 → escape when |z| <= 4.
+    expect(shader).toMatch(INJECTED_INCLUSIVE);
     // Smooth is not meaningful for inside-out escapes: Escape Time fallback.
     expect(shader).toContain('smoothIter = float(i);');
   });
 
-  it('v2 C1 <= keeps the inclusive boundary without direction flip', () => {
+  it('v2 C1 <= negates to a strict escape boundary without direction flip', () => {
     const plugin = compileV2('V2Le', '|z| <= 9', 'v2-le');
     const shader = assembleShader({ formulaId: plugin.id, ...COMBO_BASE }, plugin);
     expect(shader).toMatch(injectedRadius('81.0'));
     expect(shader).not.toMatch(INJECTED_INVERSE);
-    expect(shader).toMatch(INJECTED_INCLUSIVE);
+    expect(shader).not.toMatch(INJECTED_INCLUSIVE);
   });
 
-  it('v2 C1 >= flips direction and keeps the inclusive boundary', () => {
+  it('v2 C1 >= flips direction and negates to a strict escape boundary', () => {
     const plugin = compileV2('V2Ge', '9 <= |z|', 'v2-ge'); // ≡ |z| >= 9
     const shader = assembleShader({ formulaId: plugin.id, ...COMBO_BASE }, plugin);
     expect(shader).toMatch(injectedRadius('81.0'));
     expect(shader).toMatch(INJECTED_INVERSE);
-    expect(shader).toMatch(INJECTED_INCLUSIVE);
+    expect(shader).not.toMatch(INJECTED_INCLUSIVE);
   });
 
   it('v1 compile of the same source produces no descriptor defines', () => {
@@ -149,6 +152,22 @@ describe('assembleShader: renderer-pipeline v2 (bailout descriptor consumption)'
     expect(keyV2).toContain('bo:C1:<:4');
     // A descriptor-less formula keeps the legacy key shape byte-for-byte.
     expect(keyV1).toBe('same-id|smooth|black|none');
+  });
+
+  it('registry-backed strict formulas use the same descriptor for source and cache key', () => {
+    const plugin = compileV2('RegistryV2', '|z| < 4', 'registry-v2-key');
+    pluginRegistry.register(plugin);
+    try {
+      const combo: PluginCombination = { formulaId: plugin.id, ...COMBO_BASE };
+      const key = makeCacheKey(combo);
+      const shader = assembleShader(combo);
+      expect(key).toContain('bo:C1:<:4');
+      expect(shader).toMatch(/^#define BAILOUT_RADIUS 16\.0$/m);
+      expect(shader).toMatch(INJECTED_INCLUSIVE);
+      expect(makeCacheKey({ ...combo, pipelineVersion: 1 })).not.toBe(key);
+    } finally {
+      pluginRegistry.unregister('formula', plugin.id);
+    }
   });
 
   it('pipeline v1 renders a strict-v2 formula through the LEGACY path (spec §7)', () => {
@@ -259,10 +278,10 @@ describe('assembleShader: C4-R projection escapes and after-step timing', () => 
     expect(nativeKey).not.toContain('|t:after');
   });
 
-  it('C2 descriptors evaluate the threshold against parameter defaults for the legacy channel', () => {
-    // Native FRM infers parameters from usage; p1's uniform default is 0,
-    // so |z| < p1 + 1 evaluates to magnitude 1 → zz threshold 1 — matching
-    // the uniform the user actually sees, not the v1 4.0 fallback.
+  it('C2 parameter expressions keep the frozen numeric v1 channel', () => {
+    // The descriptor/GLSL channel is authoritative for pipeline v2. The
+    // numeric plugin.bailout remains the v1 heuristic fallback so a
+    // pipeline-v1 render of the same compiled formula stays byte-compatible.
     const result = compileFrm(
       `C2Default {\ninit:\n  z = 0\nloop:\n  z = z^2 + c\nbailout:\n  |z| < p1 + 1\n}`,
       'c2-default',
@@ -270,10 +289,10 @@ describe('assembleShader: C4-R projection escapes and after-step timing', () => 
     );
     expect(result.success).toBe(true);
     expect(result.bailoutDescriptor?.kind).toBe('C2');
-    expect(result.plugin?.bailout).toBe(1);
+    expect(result.plugin?.bailout).toBe(4);
   });
 
-  it('C2 constant expressions evaluate exactly (sqrt(16) → zz threshold 16)', () => {
+  it('C2 constant expressions also leave the numeric v1 channel unchanged', () => {
     const result = compileFrm(
       `C2Const {\ninit:\n  z = 0\nloop:\n  z = z^2 + c\nbailout:\n  |z| < sqrt(16)\n}`,
       'c2-const',
@@ -281,7 +300,7 @@ describe('assembleShader: C4-R projection escapes and after-step timing', () => 
     );
     expect(result.success).toBe(true);
     expect(result.bailoutDescriptor?.kind).toBe('C2');
-    expect(result.plugin?.bailout).toBe(16);
+    expect(result.plugin?.bailout).toBe(4);
   });
 
   it('C2 thresholds inline as uniform-driven GLSL (parameter edits need no recompile)', () => {
