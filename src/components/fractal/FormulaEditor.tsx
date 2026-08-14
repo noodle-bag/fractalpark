@@ -768,10 +768,11 @@ export function FormulaEditor({
         data-testid="formula-editor-footer"
       >
         <div
-          className="flex min-w-0 flex-1 flex-wrap gap-2"
+          className="flex min-w-0 flex-1 basis-64 flex-wrap gap-2"
           data-testid="formula-editor-actions"
         >
           <Button
+            className="h-auto min-h-9 max-w-full shrink whitespace-normal text-center"
             onClick={handleCompile}
             disabled={
               isCompiling ||
@@ -794,21 +795,33 @@ export function FormulaEditor({
           </Button>
 
           {compileResult?.success && (
-            <Button variant="outline" onClick={() => void handleSave()}>
+            <Button
+              className="h-auto min-h-9 max-w-full shrink whitespace-normal text-center"
+              variant="outline"
+              onClick={() => void handleSave()}
+            >
               <Save className="w-4 h-4 mr-2" />
               {t('save')}
             </Button>
           )}
 
           {!compileResult?.success && lastSuccessfulSource && (
-            <Button variant="ghost" onClick={handleRestoreLastSuccessful}>
+            <Button
+              className="h-auto min-h-9 max-w-full shrink whitespace-normal text-center"
+              variant="ghost"
+              onClick={handleRestoreLastSuccessful}
+            >
               <RotateCcw className="w-4 h-4 mr-2" />
               {t('restoreLastSuccessful')}
             </Button>
           )}
 
           {currentBounds && (
-            <Button variant="ghost" onClick={handleSetCurrentViewAsDefault}>
+            <Button
+              className="h-auto min-h-9 max-w-full shrink whitespace-normal text-center"
+              variant="ghost"
+              onClick={handleSetCurrentViewAsDefault}
+            >
               {t('setCurrentViewAsDefault')}
             </Button>
           )}

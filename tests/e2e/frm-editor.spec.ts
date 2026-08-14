@@ -1,4 +1,5 @@
 import { expect, test, type Page } from '@playwright/test';
+import ruMessages from '../../messages/ru.json';
 
 const ABSOLUTE_EDITOR_URL = 'http://127.0.0.1:3000/en/formulas/editor';
 
@@ -153,15 +154,24 @@ RO {
     await expect(page.getByRole('button', { name: 'Compile', exact: true })).toBeDisabled();
   });
 
-  test('keeps footer metadata inside the card when recovery actions are visible', async ({
+  test('keeps localized footer actions and metadata inside a compact card', async ({
     page,
   }) => {
-    await page.setViewportSize({ width: 1280, height: 900 });
-    await page.goto('/en/formulas/editor?example=starter-brot');
+    const editorMessages = ruMessages.explore.editor;
+    await page.setViewportSize({ width: 390, height: 900 });
+    await page.goto('/ru/formulas/editor?example=starter-brot');
 
-    const compile = page.getByRole('button', { name: 'Compile', exact: true });
+    const compile = page.getByRole('button', {
+      name: editorMessages.compile,
+      exact: true,
+    });
     await compile.click();
-    await expect(page.getByText('Compile Successful').first()).toBeVisible();
+    await expect(page.getByTestId('frm-preview-mode')).toHaveAttribute(
+      'aria-selected',
+      'true',
+    );
+    await page.getByTestId('frm-editor-mode').click();
+    await expect(page.getByText(editorMessages.compileSuccess).first()).toBeVisible();
 
     await replaceEditorSource(
       page,
@@ -175,13 +185,14 @@ RO {
 
     await expect(compile).toBeDisabled({ timeout: 15_000 });
     await expect(
-      page.getByRole('button', { name: 'Restore Last Successful Version' }),
+      page.getByRole('button', { name: editorMessages.restoreLastSuccessful }),
     ).toBeVisible();
     await expect(
-      page.getByRole('button', { name: 'Use Current View as Default' }),
+      page.getByRole('button', { name: editorMessages.setCurrentViewAsDefault }),
     ).toBeVisible();
 
     const footer = page.getByTestId('formula-editor-footer');
+    const actions = page.getByTestId('formula-editor-actions');
     const metadata = page.getByTestId('formula-editor-metadata');
     await expect(metadata).toBeVisible();
 
@@ -192,8 +203,18 @@ RO {
 
     const footerBox = await footer.boundingBox();
     const metadataBox = await metadata.boundingBox();
+    const actionBoxes = await actions.locator('button').evaluateAll((buttons) =>
+      buttons.map((button) => {
+        const box = button.getBoundingClientRect();
+        return { left: box.left, right: box.right };
+      }),
+    );
     expect(footerBox).not.toBeNull();
     expect(metadataBox).not.toBeNull();
+    for (const actionBox of actionBoxes) {
+      expect(actionBox.left).toBeGreaterThanOrEqual(footerBox!.x - 1);
+      expect(actionBox.right).toBeLessThanOrEqual(footerBox!.x + footerBox!.width + 1);
+    }
     expect(metadataBox!.x + metadataBox!.width).toBeLessThanOrEqual(
       footerBox!.x + footerBox!.width + 1,
     );
