@@ -31,6 +31,8 @@ export const KNOWN_FUNCTION_NAMES = [
   'real',
   'imag',
   'atan2',
+  'cosxx',
+  'cotanh',
   ...FN_SLOT_NAMES,
 ] as const;
 
@@ -53,6 +55,10 @@ export const FN_SLOT_OPTIONS: FnSlotOption[] = [
   { value: 15, key: 'sinh', label: 'sinh' },
   { value: 16, key: 'cosh', label: 'cosh' },
   { value: 17, key: 'tanh', label: 'tanh' },
+  // FractInt truth function: cos with the pre-v16 sign bug (conj(cos z)).
+  { value: 18, key: 'cosxx', label: 'cosxx' },
+  // FractInt classic fn option: hyperbolic cotangent cosh(z)/sinh(z).
+  { value: 19, key: 'cotanh', label: 'cotanh' },
 ] as const;
 
 export function isParameterName(name: string): name is ParameterName {

@@ -59,7 +59,7 @@ export async function POST(request: Request): Promise<Response> {
     const input = await parseFormulaWriteBody(request);
 
     const formulaId = randomUUID();
-    assertFormulaCompiles(newFormulaRuntimeId(formulaId), input.source);
+    assertFormulaCompiles(newFormulaRuntimeId(formulaId), input.source, 2);
 
     const requestHash = formulaRequestHash({
       operation: 'save_custom_formula',
@@ -79,6 +79,10 @@ export async function POST(request: Request): Promise<Response> {
         name: input.name,
         source: input.source,
         experienceHint: input.experienceHint,
+        // New formulas are created under the strict v2 semantics contract
+        // (slice 2, commit 6). Explicit here on purpose: saveCustomFormula
+        // never defaults to v2 so ordinary saves cannot auto-upgrade.
+        frmSemanticsVersion: 2,
       });
       return jsonOk(
         request,

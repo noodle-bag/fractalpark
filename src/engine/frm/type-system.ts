@@ -35,6 +35,8 @@ export const BUILTIN_TYPES: Record<string, VarType> = {
 const FUNCTION_RETURN_TYPES: Record<string, VarType> = {
   'sin': { kind: 'complex' },
   'cos': { kind: 'complex' },
+  'cosxx': { kind: 'complex' },
+  'cotanh': { kind: 'complex' },
   'tan': { kind: 'complex' },
   'exp': { kind: 'complex' },
   'log': { kind: 'complex' },
@@ -106,7 +108,12 @@ export function inferType(node: ASTNode, ctx: TypeContext): VarType {
 
         case '*':
         case '/':
-          // Any multiplication/division with complex returns complex
+          // Narrow like actualBinaryType: real op real stays real, so the
+          // type tag agrees with the emitted real-arithmetic text and
+          // coercion wraps at complex boundaries (fn slots, complex vars).
+          if (left.kind === 'real' && right.kind === 'real') {
+            return { kind: 'real' };
+          }
           return { kind: 'complex' };
 
         case '^':
@@ -148,7 +155,9 @@ export function inferType(node: ASTNode, ctx: TypeContext): VarType {
       return { kind: 'real' };
 
     case 'assignment': {
-      return inferType(node.value, ctx);
+      // The expression value is what the target holds after the store:
+      // the target's fixed type when known, else the value's own type.
+      return ctx.getVariableType(node.target) ?? inferType(node.value, ctx);
     }
 
     case 'if': {
@@ -189,6 +198,11 @@ export function collectVariables(
   const processNode = (node: ASTNode) => {
     switch (node.type) {
       case 'assignment': {
+        if (node.component) {
+          // A component store (real(x)/imag(x)) requires a complex target.
+          vars.set(node.target, { kind: 'complex' });
+          break;
+        }
         const inferredType = inferType(node.value, ctx);
         const existing = vars.get(node.target);
         

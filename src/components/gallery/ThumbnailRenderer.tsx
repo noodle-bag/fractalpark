@@ -44,6 +44,7 @@ export function ThumbnailRenderer({
         pluginParams={params.pluginParams}
         useSSAA={useSSAA}
         adaptiveIterations={params.adaptiveIterations}
+        pipelineVersion={params.pipelineVersion ?? 1}
         lighting={params.lighting}
         customGradient={params.customGradient}
         onBoundsChange={setBounds}

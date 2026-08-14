@@ -130,7 +130,7 @@ export function runtimeParamsToDocument(
       params: cleanRecord(split.formula ?? {}) ? { formula: split.formula } : undefined,
     },
     coloring: {
-      pipelineVersion: 1,
+      pipelineVersion: params.pipelineVersion ?? 1,
       paletteIndex: params.paletteIndex,
       customGradient: params.customGradient,
       outsideColoringId: params.outsideColoring,
@@ -181,6 +181,7 @@ export function documentToRuntimeParams(doc: FractalDocument): FractalParams {
     orbitTrap: doc.coloring.orbitTrap,
     useSSAA: doc.render.useSSAA,
     adaptiveIterations: doc.render.adaptiveIterations,
+    pipelineVersion: doc.coloring.pipelineVersion ?? 1,
     lighting: doc.coloring.lighting,
   };
 }

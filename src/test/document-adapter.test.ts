@@ -46,6 +46,7 @@ describe('document adapter', () => {
       },
       useSSAA: true,
       adaptiveIterations: true,
+      pipelineVersion: 2,
       lighting: {
         enabled: true,
         mode: 'normalMap',

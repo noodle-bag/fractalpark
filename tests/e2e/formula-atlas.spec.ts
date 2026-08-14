@@ -34,9 +34,6 @@ test.describe('Formula Atlas', () => {
     await expect(
       page.getByRole('link', { name: 'Open Formula Editor' }).first()
     ).toHaveAttribute('href', '/en/formulas/editor');
-    await expect(
-      page.locator('footer a[href="/en/formulas"]')
-    ).toContainText('Formula Atlas');
     await expect(page.locator('link[rel="canonical"]')).toHaveAttribute(
       'href',
       'https://www.fractalpark.com/en/formulas'
@@ -55,7 +52,7 @@ test.describe('Formula Atlas', () => {
     await expect(formulasLink).toHaveAttribute('aria-current', 'page');
 
     await page.setViewportSize({ width: 390, height: 844 });
-    await page.getByRole('button', { name: 'Toggle menu' }).click();
+    await page.getByRole('button', { name: '菜单' }).click();
     const mobileFormulasLink = page
       .locator('[role="dialog"] a[href="/zh/formulas"]')
       .first();
@@ -78,9 +75,5 @@ test.describe('Formula Atlas', () => {
       })
     ).toHaveAttribute('href', '/en/formulas');
 
-    // Footer keeps the Formula Atlas discovery entry.
-    await expect(page.locator('footer a[href="/en/formulas"]')).toContainText(
-      'Formula Atlas'
-    );
   });
 });

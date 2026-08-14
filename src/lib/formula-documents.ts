@@ -11,6 +11,7 @@ import {
   getFormulaSelectionDefaults,
 } from '@/engine/plugins/formula-catalog';
 import { pluginRegistry } from '@/engine/plugins/registry';
+import type { FormulaPlugin } from '@/engine/plugins/types';
 import type {
   PluginParamRecord,
   PluginParamValue,
@@ -22,6 +23,15 @@ function clonePluginParamValue(value: PluginParamValue): PluginParamValue {
     : value;
 }
 
+export function getFormulaUniformDefaults(plugin: FormulaPlugin): PluginParamRecord {
+  return Object.fromEntries(
+    plugin.uniforms.map((uniform) => [
+      uniform.name,
+      clonePluginParamValue(uniform.default as PluginParamValue),
+    ])
+  );
+}
+
 function getBuiltinFormulaUniformDefaults(formulaId: string): PluginParamRecord {
   registerBuiltins({ quiet: true });
   const plugin = pluginRegistry.getFormula(formulaId);
@@ -30,12 +40,7 @@ function getBuiltinFormulaUniformDefaults(formulaId: string): PluginParamRecord 
     throw new Error(`Built-in formula plugin is unavailable: ${formulaId}`);
   }
 
-  return Object.fromEntries(
-    plugin.uniforms.map((uniform) => [
-      uniform.name,
-      clonePluginParamValue(uniform.default as PluginParamValue),
-    ])
-  );
+  return getFormulaUniformDefaults(plugin);
 }
 
 function mergeFormulaSelection(

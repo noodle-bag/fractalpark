@@ -10,6 +10,7 @@
 
 import { getSupabaseConfig } from './config';
 import { CloudApiError } from './api';
+import { resolveFrmSemanticsVersion, type FrmSemanticsVersion } from '@/engine/frm/semantics-version';
 
 export class CustomFormulaServiceError extends Error {
   readonly code:
@@ -18,14 +19,23 @@ export class CustomFormulaServiceError extends Error {
     | 'revision_conflict'
     | 'idempotency_conflict'
     | 'account_deleting'
+    | 'validation_failed'
     | 'unavailable';
   readonly status?: number;
+  /** Structured PostgREST/PostgreSQL code, retained for safe read fallback. */
+  readonly backendCode?: string;
 
-  constructor(code: CustomFormulaServiceError['code'], message?: string, status?: number) {
+  constructor(
+    code: CustomFormulaServiceError['code'],
+    message?: string,
+    status?: number,
+    backendCode?: string,
+  ) {
     super(message ?? code);
     this.name = 'CustomFormulaServiceError';
     this.code = code;
     this.status = status;
+    this.backendCode = backendCode;
   }
 }
 
@@ -52,9 +62,35 @@ async function postgrest(path: string, options: PostgrestOptions = {}): Promise<
 async function postgrestJson<T>(path: string): Promise<T> {
   const response = await postgrest(path);
   if (!response.ok) {
-    throw new CustomFormulaServiceError('unavailable', `PostgREST ${response.status}`, response.status);
+    let backendCode: string | undefined;
+    let backendMessage: string | undefined;
+    try {
+      const body = (await response.json()) as { code?: unknown; message?: unknown };
+      backendCode = typeof body.code === 'string' ? body.code : undefined;
+      backendMessage = typeof body.message === 'string' ? body.message : undefined;
+    } catch {
+      // Preserve the HTTP status even when the backend body is not JSON.
+    }
+    throw new CustomFormulaServiceError(
+      'unavailable',
+      backendMessage ?? `PostgREST ${response.status}`,
+      response.status,
+      backendCode,
+    );
   }
   return (await response.json()) as T;
+}
+
+const MISSING_SEMANTICS_COLUMN_CODES = new Set(['42703', 'PGRST204']);
+
+function isMissingSemanticsColumn(error: unknown): boolean {
+  return (
+    error instanceof CustomFormulaServiceError &&
+    error.code === 'unavailable' &&
+    error.backendCode !== undefined &&
+    MISSING_SEMANTICS_COLUMN_CODES.has(error.backendCode) &&
+    error.message.includes('frm_semantics_version')
+  );
 }
 
 function mapRpcError(raw: string): CustomFormulaServiceError {
@@ -70,6 +106,8 @@ function mapRpcError(raw: string): CustomFormulaServiceError {
       return new CustomFormulaServiceError('not_found');
     case 'account_deleting':
       return new CustomFormulaServiceError('account_deleting');
+    case 'validation_failed':
+      return new CustomFormulaServiceError('validation_failed');
     default:
       return new CustomFormulaServiceError('unavailable');
   }
@@ -100,6 +138,8 @@ export interface CustomFormulaSummaryDto {
   revision: number;
   sourceBytes: number;
   hasExperienceHint: boolean;
+  /** FRM compile-semantics contract (spec §3); absent when the column is missing/NULL (reads as v1). */
+  frmSemanticsVersion?: FrmSemanticsVersion;
   createdAt: string;
   updatedAt: string;
 }
@@ -115,13 +155,18 @@ interface CustomFormulaRow {
   revision: number;
   source_bytes: number;
   experience_hint?: unknown | null;
+  frm_semantics_version?: number | null;
   created_at: string;
   updated_at: string;
   source?: string;
 }
 
-const SUMMARY_SELECT = 'id,name,revision,source_bytes,experience_hint,created_at,updated_at';
+const SUMMARY_SELECT = 'id,name,revision,source_bytes,experience_hint,created_at,updated_at,frm_semantics_version';
+/** Pre-migration summary select: identical minus the additive column. */
+const SUMMARY_SELECT_LEGACY = 'id,name,revision,source_bytes,experience_hint,created_at,updated_at';
 const DETAIL_SELECT = `${SUMMARY_SELECT},source`;
+/** Pre-migration detail select: identical minus the additive column. */
+const DETAIL_SELECT_LEGACY = `${SUMMARY_SELECT_LEGACY},source`;
 
 function toSummaryDto(row: CustomFormulaRow): CustomFormulaSummaryDto {
   return {
@@ -130,6 +175,10 @@ function toSummaryDto(row: CustomFormulaRow): CustomFormulaSummaryDto {
     revision: row.revision,
     sourceBytes: row.source_bytes,
     hasExperienceHint: row.experience_hint != null,
+    frmSemanticsVersion:
+      row.frm_semantics_version == null
+        ? undefined
+        : resolveFrmSemanticsVersion(row.frm_semantics_version),
     createdAt: row.created_at,
     updatedAt: row.updated_at,
   };
@@ -144,17 +193,34 @@ function toDetailDto(row: CustomFormulaRow): CustomFormulaDetailDto {
 }
 
 export async function listCustomFormulas(ownerId: string): Promise<CustomFormulaSummaryDto[]> {
-  const rows = await postgrestJson<CustomFormulaRow[]>(
-    `custom_formulas?select=${SUMMARY_SELECT}&owner_id=eq.${ownerId}` +
-      '&order=updated_at.desc,id.desc',
-  );
+  const listUrl = (select: string) =>
+    `custom_formulas?select=${select}&owner_id=eq.${ownerId}` + '&order=updated_at.desc,id.desc';
+  let rows: CustomFormulaRow[];
+  try {
+    rows = await postgrestJson<CustomFormulaRow[]>(listUrl(SUMMARY_SELECT));
+  } catch (error) {
+    if (!isMissingSemanticsColumn(error)) throw error;
+    // Safe pre-migration fallback: only a structured missing-column error
+    // may retry without frm_semantics_version. Availability, auth, and
+    // permission failures must remain failures rather than masquerading as v1.
+    rows = await postgrestJson<CustomFormulaRow[]>(listUrl(SUMMARY_SELECT_LEGACY));
+  }
   return rows.map(toSummaryDto);
 }
 
 export async function getCustomFormula(ownerId: string, formulaId: string): Promise<CustomFormulaDetailDto> {
-  const rows = await postgrestJson<CustomFormulaRow[]>(
-    `custom_formulas?select=${DETAIL_SELECT}&id=eq.${formulaId}&owner_id=eq.${ownerId}&limit=1`,
-  );
+  const detailUrl = (select: string) =>
+    `custom_formulas?select=${select}&id=eq.${formulaId}&owner_id=eq.${ownerId}&limit=1`;
+  let rows: CustomFormulaRow[];
+  try {
+    rows = await postgrestJson<CustomFormulaRow[]>(detailUrl(DETAIL_SELECT));
+  } catch (error) {
+    if (!isMissingSemanticsColumn(error)) throw error;
+    // Pre-migration fallback: frm_semantics_version is an additive column
+    // applied under hosted-ops review. Retry only when PostgREST identifies
+    // that exact missing column; the DTO then reports undefined/read-as-v1.
+    rows = await postgrestJson<CustomFormulaRow[]>(detailUrl(DETAIL_SELECT_LEGACY));
+  }
   if (rows.length === 0) {
     throw new CustomFormulaServiceError('not_found');
   }
@@ -183,6 +249,8 @@ export async function saveCustomFormula(args: {
   name: string;
   source: string;
   experienceHint: unknown | null;
+  /** Only forwarded when explicitly given; ordinary saves never auto-upgrade the version. */
+  frmSemanticsVersion?: FrmSemanticsVersion;
 }): Promise<CustomFormulaSaveResult> {
   const payload = await callFormulaRpc<RpcFormulaSavePayload>('fractalpark_custom_formula_save', {
     p_owner_id: args.ownerId,
@@ -193,6 +261,9 @@ export async function saveCustomFormula(args: {
     p_experience_hint: args.experienceHint,
     p_formula_id: args.formulaId,
     p_expected_revision: args.expectedRevision,
+    ...(args.frmSemanticsVersion !== undefined
+      ? { p_frm_semantics_version: args.frmSemanticsVersion }
+      : {}),
   });
   if (payload.replayed) {
     if (!payload.formula_id || typeof payload.revision !== 'number') {
@@ -237,6 +308,8 @@ export function toCustomFormulaApiError(error: unknown): CloudApiError {
         return new CloudApiError('idempotency_conflict');
       case 'account_deleting':
         return new CloudApiError('account_deleting');
+      case 'validation_failed':
+        return new CloudApiError('validation_failed');
       default:
         return new CloudApiError('unavailable');
     }

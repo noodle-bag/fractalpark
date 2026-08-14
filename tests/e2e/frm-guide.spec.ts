@@ -12,7 +12,7 @@ test.describe('FRM Guide', () => {
         name: 'Write Fractals with FRM',
       })
     ).toBeVisible();
-    await expect(page.locator('main section > div > h2')).toHaveCount(8);
+    await expect(page.locator('main section > div > h2')).toHaveCount(9);
     await expect(page.getByRole('table')).toContainText('Supported');
     await expect(page.locator('.frm-code-block')).toHaveCount(3);
     await expect(page.locator('.frm-code-block').first()).toContainText(

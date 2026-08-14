@@ -58,6 +58,13 @@ export interface FractalParams {
   ssaaLevel?: number; // 0=off, 4=2x2, 9=3x3, 16=4x4; overrides useSSAA when set
   adaptiveIterations: boolean;
   lighting: LightingConfig;
+  /**
+   * Rendering pipeline version (spec §7): 1 = legacy frozen behavior,
+   * 2 = strict-v2 (bailout descriptors, after-step timing, smooth
+   * capability). Defaults to 1 when absent — historical documents stay v1
+   * even when the referenced formula was compiled strict-v2.
+   */
+  pipelineVersion?: 1 | 2;
   /** Internal: tiled export info. u_resolution = full image; u_tileOffset = pixel offset. */
   _tileInfo?: { fullWidth: number; fullHeight: number; offsetX: number; offsetY: number };
 }

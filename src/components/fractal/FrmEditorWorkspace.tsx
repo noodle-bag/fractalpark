@@ -1,6 +1,6 @@
 'use client';
 
-import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
+import { useCallback, useDeferredValue, useEffect, useMemo, useRef, useState } from 'react';
 import {
   BookOpen,
   Download,
@@ -22,6 +22,10 @@ import {
 } from '@/content/frm-guide';
 import { DEFAULT_FRACTAL_DOCUMENT } from '@/engine/document';
 import type { FormulaExperienceHint } from '@/engine/frm/authoring';
+import {
+  resolveFrmSemanticsVersion,
+  type FrmSemanticsVersion,
+} from '@/engine/frm/semantics-version';
 import type { FormulaPlugin } from '@/engine/plugins/types';
 import { useCloudSession } from '@/components/cloud/CloudSessionProvider';
 import {
@@ -29,9 +33,18 @@ import {
   type FormulaMutationResult,
 } from '@/hooks/useCloudFormulaLibrary';
 import { MAX_CUSTOM_FORMULAS } from '@/lib/formula-resolver';
+import { scanFrmEntries } from '@/engine/frm/scanner';
+import { classifyImportedFrmSource } from '@/engine/frm/compat-status';
+import { FrmCompatStatusCard } from '@/components/fractal/FrmCompatStatusCard';
+import { sliceFrmEntrySource } from '@/lib/frm-editor';
+import {
+  parseCloudCustomFormulaStorageId,
+  toCloudCustomFormulaRuntimeId,
+} from '@/lib/cloud/custom-formula-identity';
 import {
   createFrmDownload,
   editorToExploreHref,
+  formulaMutationErrorKey,
   preflightFrmSource,
   readFrmFile,
 } from '@/lib/frm-editor';
@@ -62,6 +75,12 @@ function experienceHintKey(hint?: FormulaExperienceHint): string {
     hint?.coloring?.insideColoringId ?? null,
     hint?.coloring?.paletteIndex ?? null,
   ]);
+}
+
+function runtimeIdForStorageId(formulaId?: string): string | undefined {
+  if (!formulaId) return undefined;
+  const storageId = parseCloudCustomFormulaStorageId(formulaId);
+  return storageId ? toCloudCustomFormulaRuntimeId(storageId) : undefined;
 }
 
 export function FrmEditorWorkspace() {
@@ -102,6 +121,8 @@ export function FrmEditorWorkspace() {
     initialDraft.hint
   );
   const [recordId, setRecordId] = useState<string | undefined>();
+  const [frmSemanticsVersion, setFrmSemanticsVersion] =
+    useState<FrmSemanticsVersion>(2);
   const [revision, setRevision] = useState(0);
   const [notice, setNotice] = useState(
     initialDraft.unknown ? t('unknownExample') : ''
@@ -121,16 +142,48 @@ export function FrmEditorWorkspace() {
       ? source.length > 0 || currentHintKey !== experienceHintKey(undefined)
       : source !== savedSource || currentHintKey !== savedHintKey;
   const sourcePreflight = useMemo(() => preflightFrmSource(source), [source]);
+  // Card rendering uses deferred classification (no per-keystroke flicker).
+  // Run gating on the live source — a brief gap between a selection-slice
+  // and deferred catch-up could let a read-only entry compile (Codex 7e2).
+  const deferredSource = useDeferredValue(source);
+  const classification = useMemo(
+    () =>
+      deferredSource.trim()
+        ? classifyImportedFrmSource(deferredSource, frmSemanticsVersion)
+        : null,
+    [deferredSource, frmSemanticsVersion]
+  );
+  const gatingEntry = useMemo(() => {
+    if (!source.trim()) return null;
+    return classifyImportedFrmSource(source, frmSemanticsVersion).entries[0] ?? null;
+  }, [source, frmSemanticsVersion]);
+  const scan = useMemo(
+    () => (deferredSource.trim() ? scanFrmEntries(deferredSource) : null),
+    [deferredSource]
+  );
+  const [jumpTo, setJumpTo] = useState<
+    { line: number; col?: number; nonce: number } | undefined
+  >();
   const sourcePreflightError =
     sourcePreflight.status === 'multiple'
       ? t('source.multiple')
       : sourcePreflight.status === 'trailing'
         ? t('source.trailing')
         : undefined;
+  // Compile gating: preflight blocks as before; additionally a single
+  // recognized entry that is read-only/invalid under strict v2 cannot run
+  // (four-level contract — no silent default radius, no other entry runs).
+  const compileBlockError =
+    sourcePreflightError ??
+    (!gatingEntry?.runnable
+      ? gatingEntry?.diagnostics.find((d) => d.blocking)?.message ??
+        t('compat.blockedCompile')
+      : undefined);
   const canSaveAndOpen = Boolean(
     compiledPreview &&
       compiledPreview.source === source &&
-      !sourcePreflightError
+      !sourcePreflightError &&
+      (gatingEntry ? gatingEntry.runnable : true)
   );
   const previewIsStale = Boolean(
     compiledPreview && compiledPreview.source !== source
@@ -140,7 +193,8 @@ export function FrmEditorWorkspace() {
     (
       nextSource: string,
       nextHint?: FormulaExperienceHint,
-      id?: string
+      id?: string,
+      nextSemanticsVersion: FrmSemanticsVersion = 2,
     ): boolean => {
       const nextHintKey = experienceHintKey(nextHint);
       if (
@@ -156,6 +210,7 @@ export function FrmEditorWorkspace() {
       setSavedHintKey(id ? nextHintKey : experienceHintKey(undefined));
       setHint(nextHint);
       setRecordId(id);
+      setFrmSemanticsVersion(nextSemanticsVersion);
       setCompiledPreview(null);
       setBounds(nextHint?.bounds ?? DEFAULT_FRACTAL_DOCUMENT.scene.bounds);
       setRevision((value) => value + 1);
@@ -164,6 +219,21 @@ export function FrmEditorWorkspace() {
     },
     [currentHintKey, isDirty, source, t]
   );
+
+  // Multi-entry picker: slice the chosen entry into the editor (the dirty
+  // guard in loadSource protects unsaved edits).
+  const selectEntry = useCallback(
+    (key: string) => {
+      if (!scan) return;
+      const entry = scan.entries.find((e) => e.key === key);
+      if (!entry) return;
+      loadSource(sliceFrmEntrySource(deferredSource, entry));
+    },
+    [scan, deferredSource, loadSource]
+  );
+  const jumpToLocation = useCallback((line: number, col?: number) => {
+    setJumpTo({ line, col, nonce: Date.now() });
+  }, []);
 
   useEffect(() => {
     if (lastExampleRequestRef.current === requestedExample) return;
@@ -260,16 +330,8 @@ export function FrmEditorWorkspace() {
       switch (result.code) {
         case 'quota':
           return t('errors.maxCount', { count: MAX_CUSTOM_FORMULAS });
-        case 'conflict':
-          return t('errors.conflict');
-        case 'not_found':
-          return t('errors.formulaNotFound');
-        case 'compile-failed':
-          return t('errors.compileFailed');
-        case 'builtin-conflict':
-          return t('errors.builtinConflict');
         default:
-          return result.error ?? t('saveError');
+          return t(formulaMutationErrorKey(result.code));
       }
     },
     [t]
@@ -281,7 +343,13 @@ export function FrmEditorWorkspace() {
       currentSource: string,
       experienceHint?: FormulaExperienceHint,
       id?: string
-    ): Promise<{ success: boolean; error?: string; id?: string; silent?: boolean }> => {
+    ): Promise<{
+      success: boolean;
+      error?: string;
+      storageId?: string;
+      runtimeId?: string;
+      silent?: boolean;
+    }> => {
       const result = await saveFormula({
         name,
         source: currentSource,
@@ -289,12 +357,16 @@ export function FrmEditorWorkspace() {
         formulaId: id ?? recordId,
       });
       if (result.success) {
-        setRecordId(result.formulaId);
+        setRecordId(result.storageId);
         setSavedSource(currentSource);
         setSavedHintKey(experienceHintKey(experienceHint));
         setHint(experienceHint);
         setNotice(t('saved'));
-        return { success: true, id: result.formulaId };
+        return {
+          success: true,
+          storageId: result.storageId,
+          runtimeId: result.runtimeId,
+        };
       }
       if (result.code === 'auth-cancelled') {
         // Dialog closed without verifying — nothing saved, nothing to say.
@@ -348,8 +420,8 @@ export function FrmEditorWorkspace() {
       recordId
     ).then((result) => {
       // auth-intent (silent) leaves navigation to the post-OTP resume.
-      if (result.success && !result.silent && result.id) {
-        router.push(editorToExploreHref(locale, result.id));
+      if (result.success && !result.silent && result.runtimeId) {
+        router.push(editorToExploreHref(locale, result.runtimeId));
       }
     });
   }, [compiledPreview, hint, locale, recordId, router, save, source, t]);
@@ -518,7 +590,10 @@ export function FrmEditorWorkspace() {
                           (detail.experienceHint ?? undefined) as
                             | FormulaExperienceHint
                             | undefined,
-                          detail.id
+                          detail.id,
+                          resolveFrmSemanticsVersion(
+                            detail.frmSemanticsVersion
+                          )
                         );
                       });
                     }}
@@ -536,11 +611,23 @@ export function FrmEditorWorkspace() {
             </div>
           </details>
 
+          {classification && (
+            <FrmCompatStatusCard
+              classification={classification}
+              onJumpToLocation={jumpToLocation}
+              onSelectEntry={
+                classification.entries.length > 1 ? selectEntry : undefined
+              }
+            />
+          )}
+
           <FormulaEditor
             currentBounds={bounds}
-            formulaId={recordId}
+            formulaId={runtimeIdForStorageId(recordId)}
+            frmSemanticsVersion={frmSemanticsVersion}
             initialExperienceHint={hint}
             initialSource={source}
+            jumpTo={jumpTo}
             key={revision}
             onCompile={(plugin, effectiveHint) => {
               setCompiledPreview({ plugin, source });
@@ -554,7 +641,7 @@ export function FrmEditorWorkspace() {
             onExperienceHintChange={setHint}
             onSave={save}
             onSourceChange={setSource}
-            sourcePreflightError={sourcePreflightError}
+            sourcePreflightError={compileBlockError}
           />
         </div>
 
@@ -612,6 +699,11 @@ export function FrmEditorWorkspace() {
                   DEFAULT_FRACTAL_DOCUMENT.coloring.paletteIndex
                 }
                 power={DEFAULT_FRACTAL_DOCUMENT.formula.power}
+                // The editor renders through the same frozen pipeline as
+                // the compiler contract selected for this record. New
+                // formulas are v2; historical formulas remain v1 until an
+                // explicit Upgrade & Compare succeeds.
+                pipelineVersion={frmSemanticsVersion}
                 useSSAA={false}
               />
             </div>

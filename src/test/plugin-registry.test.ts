@@ -120,6 +120,20 @@ describe('PluginRegistry', () => {
       expect(formulas[0].id).toBe('testFormula');
     });
 
+    it('should list formulas by source without mixing dynamic custom entries', () => {
+      registry.register(mockFormula);
+      registry.register({ ...mockFormula, id: 'frm-dynamic', source: 'frm' });
+      registry.register({ ...mockFormula, id: 'custom-dynamic', source: 'custom' });
+
+      expect(registry.listFormulasBySource('builtin')).toEqual([mockFormula]);
+      expect(registry.listFormulasBySource('frm').map((formula) => formula.id)).toEqual([
+        'frm-dynamic',
+      ]);
+      expect(registry.listFormulasBySource('custom').map((formula) => formula.id)).toEqual([
+        'custom-dynamic',
+      ]);
+    });
+
     it('should list all outside coloring modes', () => {
       registry.register(mockOutsideColoring);
       const modes = registry.listOutsideColoring();

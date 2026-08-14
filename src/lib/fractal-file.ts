@@ -10,6 +10,11 @@ import type { FractalDocument } from '@/engine/document';
 import { FORMULA_CATALOG } from '@/engine/plugins/formula-catalog';
 import { pluginRegistry } from '@/engine/plugins/registry';
 import { resolveCustomFormula } from '@/lib/formula-resolver';
+import {
+  DEFAULT_FRM_SEMANTICS_VERSION,
+  resolveFrmSemanticsVersion,
+  type FrmSemanticsVersion,
+} from '@/engine/frm/semantics-version';
 
 export const FRACTAL_PROJECT_FILE_MAX_BYTES = 1024 * 1024;
 export const PORTABLE_FORMULA_SOURCE_MAX_BYTES = 256 * 1024;
@@ -38,6 +43,8 @@ export interface LocalFormulaAsset {
   id: string;
   name?: string;
   source: string;
+  /** Stored compile-semantics contract; preserved verbatim on export. */
+  frmSemanticsVersion?: FrmSemanticsVersion;
 }
 
 export interface PreparedFormulaAsset extends LocalFormulaAsset {
@@ -227,6 +234,7 @@ export async function createFractalDocumentEnvelope(
             name: localFormula.name,
             source: localFormula.source,
             hash,
+            frmSemanticsVersion: localFormula.frmSemanticsVersion ?? DEFAULT_FRM_SEMANTICS_VERSION,
           },
         ],
       },
@@ -364,7 +372,12 @@ export async function prepareFractalProjectImport(
 
     const localFormula = localById.get(asset.id);
     const localHash = localHashes.get(asset.id);
-    const shouldReuse = Boolean(localFormula && localHash === asset.hash);
+    const shouldReuse = Boolean(
+      localFormula &&
+        localHash === asset.hash &&
+        resolveFrmSemanticsVersion(localFormula.frmSemanticsVersion) ===
+          resolveFrmSemanticsVersion(asset.frmSemanticsVersion)
+    );
     let resolvedId = asset.id;
 
     if (!shouldReuse && occupiedIds.has(asset.id)) {
@@ -372,7 +385,11 @@ export async function prepareFractalProjectImport(
     }
 
     const resolution = resolveCustomFormula(
-      { id: resolvedId, source: asset.source },
+      {
+        id: resolvedId,
+        source: asset.source,
+        frmSemanticsVersion: asset.frmSemanticsVersion,
+      },
       { register: false }
     );
     if (!resolution.success) {
@@ -396,6 +413,7 @@ export async function prepareFractalProjectImport(
       name: asset.name ?? resolution.plugin.name,
       source: asset.source,
       hash: asset.hash,
+      frmSemanticsVersion: asset.frmSemanticsVersion,
     });
   }
 

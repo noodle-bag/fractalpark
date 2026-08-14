@@ -313,8 +313,9 @@ placed in the URL.
 
 The standalone Editor owns source authoring, lint, explicit compilation,
 diagnostics, a compiled preview, and local formula defaults. It reuses the
-existing custom-formula storage, `compileFrm`, plugin registration, cache
-invalidation, experience hints, and shared formula resolver.
+owner-scoped cloud formula library, `compileFrm`, plugin registration, cache
+invalidation, experience hints, and shared formula resolver. Before an
+explicit cloud save, source and preview stay only in the current tab.
 
 ### P0 workflow
 
@@ -325,17 +326,18 @@ invalidation, experience hints, and shared formula resolver.
 - A failed compile preserves the last successful preview.
 - Preview controls are limited to pan, zoom, reset, and setting the formula's
   default bounds/basic coloring hint.
-- Save is explicit and uses the current device-local formula library and its
-  existing 50-item limit.
+- Save is explicit, requires sign-in, and uses the owner-scoped cloud formula
+  library and its 50-item account quota. Cloud-disabled/unavailable saves fail
+  closed and never restore browser persistence.
 - Replacing dirty source or leaving the workspace requires confirmation.
-- `Save & Open in Explorer` requires a successful compile and save, then hands
-  off the local formula ID through
-  `/[locale]/explore?open=custom-formula&formula=<local-id>`. The URL never
-  contains FRM source. Explore resolves and registers the local formula before
-  rendering, applies its experience hint, and removes both one-time intent
-  parameters from the canonicalized URL.
-- Missing or invalid device-local formula IDs produce an explicit error and
-  never resolve to a built-in formula.
+- `Save & Open in Explorer` requires a successful compile and cloud save, then
+  hands off the cloud formula ID through
+  `/[locale]/explore?open=custom-formula&formula=<formula-id>`. The URL never
+  contains FRM source. Explore resolves and registers the cloud formula (using
+  an owner detail read in a fresh tab), applies its experience hint, and
+  removes both one-time intent parameters from the canonicalized URL.
+- Missing, invalid, cross-account, or cloud-unavailable formula IDs produce an
+  explicit error and never resolve to a built-in formula or local fallback.
 
 Full coloring controls, transforms, render/SSAA/iteration controls, animation,
 image or project export, Gallery saving, and fullscreen playback remain in
@@ -365,20 +367,20 @@ alternate links, `WebPage`, and `BreadcrumbList`.
   fails, using a sanitized formula name or a stable fallback filename.
 
 Multi-entry selection, classic syntax conversion, compatibility reports,
-cloud sync, collaboration, tabs, version history, and automatic draft saving
-are outside v0.4.13.
+collaboration, tabs, version history, and automatic draft saving remain outside
+this contract; owner-scoped cloud persistence was added by v0.4.16.
 
 ## Shared Resolver Contract
 
 Editor and Explore resolve formulas through the same boundary:
 
 - a catalog ID resolves to a registered built-in plugin;
-- a local ID resolves source from the device library, compiles, registers,
-  and returns the merged experience hint;
+- a cloud ID resolves source from the owner detail API (or current session
+  registration), compiles, registers, and returns the merged experience hint;
 - a transient in-session compiled plugin may support an unsaved preview;
 - built-in ID conflicts, missing source, compile failures, and registration
   failures have distinct typed results;
 - no failure path silently selects another formula.
 
-The resolver does not own storage. Callers provide the current custom-formula
-records from the existing storage layer.
+The resolver does not own storage. Callers provide owner cloud records,
+session registrations, or portable snapshots through named boundaries.

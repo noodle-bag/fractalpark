@@ -62,10 +62,16 @@ export default function Navbar() {
           : 'border-b border-border bg-white/80 backdrop-blur-sm'
       )}
     >
-      <div className="container mx-auto flex h-12 items-center justify-between px-4">
+      <div
+        className="flex h-12 w-full items-center px-4"
+        data-testid="navbar-layout"
+      >
         {/* Brand link goes to the canonical Explore landing; the tagline is
             wide-screen only (the mobile Sheet carries the full sentence). */}
-        <div className="flex min-w-0 items-baseline gap-2.5">
+        <div
+          className="flex min-w-0 flex-1 items-baseline gap-3 text-left"
+          data-testid="navbar-brand-group"
+        >
           <Link
             href="/explore"
             className={cn(
@@ -77,7 +83,7 @@ export default function Navbar() {
           </Link>
           <span
             className={cn(
-              'hidden truncate text-[11px] font-normal lg:inline',
+              'hidden min-w-0 truncate text-sm font-normal lg:inline',
               navbarTransparent ? 'text-white/60' : 'text-muted-foreground'
             )}
           >
@@ -85,7 +91,10 @@ export default function Navbar() {
           </span>
         </div>
 
-        <div className="hidden md:flex md:items-center md:gap-4">
+        <div
+          className="ml-auto hidden shrink-0 justify-end lg:flex lg:items-center lg:gap-4"
+          data-testid="navbar-desktop-actions"
+        >
           <NavigationMenu>
             <NavigationMenuList>
               {links.map((link) => (
@@ -120,7 +129,10 @@ export default function Navbar() {
           </div>
         </div>
 
-        <div className="flex items-center gap-2 md:hidden">
+        <div
+          className="ml-auto flex shrink-0 items-center gap-2 lg:hidden"
+          data-testid="navbar-mobile-actions"
+        >
           <div className={navbarTransparent ? 'text-white' : ''}>
             <LanguageSwitcher />
           </div>
@@ -141,7 +153,7 @@ export default function Navbar() {
             <SheetContent side="right" className="w-[280px] sm:max-w-xs">
               <SheetHeader>
                 <SheetTitle className="text-left pl-1">{SITE.name}</SheetTitle>
-                <p className="pl-1 text-left text-xs text-muted-foreground">{t('tagline')}</p>
+                <p className="pl-1 text-left text-sm text-muted-foreground">{t('tagline')}</p>
               </SheetHeader>
               <div className="mt-8 flex flex-col gap-4 pl-1">
                 {links.map((link) => (

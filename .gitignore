@@ -63,3 +63,4 @@ AGENTS.local.md
 # local OS/editor metadata
 .vscode/
 .idea/
+tests/e2e/.fixtures/

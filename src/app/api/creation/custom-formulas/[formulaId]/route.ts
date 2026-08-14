@@ -25,6 +25,7 @@ import {
 } from '@/lib/cloud/custom-formulas';
 import { consumeRateLimit } from '@/lib/cloud/rate-limit';
 import { resolveRequestSession } from '@/lib/cloud/request-session';
+import { resolveFrmSemanticsVersion } from '@/engine/frm/semantics-version';
 import {
   assertFormulaCompiles,
   formulaRequestHash,
@@ -48,13 +49,21 @@ function rotationHeaders(rotatedSetCookie?: string): Headers | undefined {
   return headers;
 }
 
+async function getOwnedCustomFormula(ownerId: string, formulaId: string) {
+  try {
+    return await getCustomFormula(ownerId, formulaId);
+  } catch (error) {
+    throw toCustomFormulaApiError(error);
+  }
+}
+
 export async function GET(request: Request, context: RouteContext): Promise<Response> {
   try {
     assertCloudEnabled();
     const { formulaId } = await context.params;
     requireUuid(formulaId);
     const { session, rotatedSetCookie } = await resolveRequestSession(request);
-    const formula = await getCustomFormula(session.userId, formulaId);
+    const formula = await getOwnedCustomFormula(session.userId, formulaId);
     return jsonOk(request, { formula }, 200, rotationHeaders(rotatedSetCookie));
   } catch (error) {
     return toErrorResponse(request, error);
@@ -77,9 +86,23 @@ export async function PATCH(request: Request, context: RouteContext): Promise<Re
 
     // Uniform not_found before any side effect; the RPC re-checks ownership
     // and revision atomically.
-    await getCustomFormula(session.userId, formulaId);
-    const input = await parseFormulaWriteBody(request, { requireExpectedRevision: true });
-    assertFormulaCompiles(newFormulaRuntimeId(formulaId), input.source);
+    const storedFormula = await getOwnedCustomFormula(session.userId, formulaId);
+    const input = await parseFormulaWriteBody(request, {
+      requireExpectedRevision: true,
+      defaults: {
+        name: storedFormula.name,
+        source: storedFormula.source,
+        experienceHint: storedFormula.experienceHint,
+      },
+    });
+    const frmSemanticsVersion = resolveFrmSemanticsVersion(
+      storedFormula.frmSemanticsVersion,
+    );
+    assertFormulaCompiles(
+      newFormulaRuntimeId(formulaId),
+      input.source,
+      frmSemanticsVersion,
+    );
 
     const requestHash = formulaRequestHash({
       operation: 'save_custom_formula',
@@ -104,7 +127,11 @@ export async function PATCH(request: Request, context: RouteContext): Promise<Re
       });
       return jsonOk(
         request,
-        { formulaId: result.formulaId, revision: result.revision },
+        {
+          formulaId: result.formulaId,
+          revision: result.revision,
+          frmSemanticsVersion,
+        },
         200,
         rotationHeaders(rotatedSetCookie),
       );

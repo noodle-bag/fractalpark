@@ -7,6 +7,7 @@ import { registerBuiltins } from '@/engine/plugins/builtins';
 import { getFormulaMetadata } from '@/engine/plugins/formula-catalog';
 import type { FormulaPlugin } from '@/engine/plugins/types';
 import type { FractalParams, Keyframe } from '@/engine/types';
+import { resolveRendererPipelineVersion } from '@/engine/frm/semantics-version';
 import { resolveCustomFormula, resolveFormulaReference } from '@/lib/formula-resolver';
 import { sha256Hex } from '@/lib/fractal-file';
 
@@ -44,6 +45,7 @@ export async function prepareArtworkPreview(envelope: unknown): Promise<ArtworkP
   const document = read.envelope.document;
   const formulaId = document.formula.formulaId;
   let customFormulaPlugin: FormulaPlugin | null = null;
+  let customFormulaSemanticsVersion: 1 | 2 | undefined;
 
   if (getFormulaMetadata(formulaId)) {
     const resolution = resolveFormulaReference(formulaId, []);
@@ -52,6 +54,7 @@ export async function prepareArtworkPreview(envelope: unknown): Promise<ArtworkP
     const reference = document.assets?.formula;
     const asset = findPortableFormulaAsset(read.envelope.assets?.formulas, formulaId);
     if (!reference || reference.id !== formulaId || !asset) return null;
+    customFormulaSemanticsVersion = asset.frmSemanticsVersion;
 
     const actualHash = await sha256Hex(asset.source);
     if (
@@ -65,6 +68,7 @@ export async function prepareArtworkPreview(envelope: unknown): Promise<ArtworkP
       {
         id: asset.id,
         source: asset.source,
+        frmSemanticsVersion: asset.frmSemanticsVersion,
       },
       { register: false },
     );
@@ -84,7 +88,13 @@ export async function prepareArtworkPreview(envelope: unknown): Promise<ArtworkP
   }
 
   return {
-    params: documentToRuntimeParams(document),
+    params: {
+      ...documentToRuntimeParams(document),
+      pipelineVersion: resolveRendererPipelineVersion(
+        customFormulaSemanticsVersion,
+        document.coloring.pipelineVersion,
+      ),
+    },
     keyframes: document.animation?.viewKeyframes ?? [],
     customFormulaPlugin,
   };

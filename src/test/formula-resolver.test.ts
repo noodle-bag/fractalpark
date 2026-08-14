@@ -22,6 +22,8 @@ const CUSTOM_IDS = [
   'custom-invalid-resolver',
   'custom-missing-resolver',
   'custom-transient-resolver',
+  'custom-classic-resolver',
+  'custom-strict-resolver',
 ];
 
 describe('formula resolver', () => {
@@ -110,6 +112,39 @@ describe('formula resolver', () => {
       success: true,
       formulaId: 'custom-transient-resolver',
       kind: 'custom',
+    });
+  });
+
+  it('routes imported classic FRM through the classic compiler and registers its used uniforms', () => {
+    const resolution = resolveCustomFormula({
+      id: 'custom-classic-resolver',
+      source: `ClassicImport {
+  z = p1:
+  z = fn2(z) + p3
+  |z| < 16
+}`,
+    });
+
+    expect(resolution).toMatchObject({ success: true, kind: 'custom' });
+    if (!resolution.success) return;
+    expect(resolution.plugin.uniforms.map((uniform) => uniform.name)).toEqual([
+      'u_p1',
+      'u_p3',
+      'u_fn2',
+    ]);
+  });
+
+  it('returns the explicit semantics version used to compile a custom formula', () => {
+    const resolution = resolveCustomFormula({
+      id: 'custom-strict-resolver',
+      source: SOURCE,
+      frmSemanticsVersion: 2,
+    });
+
+    expect(resolution).toMatchObject({
+      success: true,
+      kind: 'custom',
+      frmSemanticsVersion: 2,
     });
   });
 

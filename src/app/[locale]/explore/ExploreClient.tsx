@@ -42,6 +42,10 @@ import {
   readSessionFormulaAssets,
   type FormulaResolution,
 } from '@/lib/formula-resolver';
+import { pluginRegistry } from '@/engine/plugins/registry';
+import { resolveEffectiveSmoothMethod } from '@/engine/frm/smooth-capability';
+import { resolveRendererPipelineVersion } from '@/engine/frm/semantics-version';
+import { getFormulaUniformDefaults } from '@/lib/formula-documents';
 
 type ExploreFormulaResolution =
   | FormulaResolution
@@ -186,7 +190,10 @@ function ExploreClient({ posterImage }: { posterImage?: string }) {
               queueMicrotask(() => {
                 setHandoffTargetId(intent.formulaId);
                 setHandoffError(null);
-                updateFormula({ formulaId: intent.formulaId });
+                updateFormula({
+                  formulaId: intent.formulaId,
+                  params: { formula: getFormulaUniformDefaults(retry.plugin) },
+                });
                 updateBounds(
                   retry.experienceHint?.bounds ??
                     getDefaultBounds(intent.formulaId)
@@ -229,7 +236,10 @@ function ExploreClient({ posterImage }: { posterImage?: string }) {
       queueMicrotask(() => {
         setHandoffTargetId(intent.formulaId);
         setHandoffError(null);
-        updateFormula({ formulaId: intent.formulaId });
+        updateFormula({
+          formulaId: intent.formulaId,
+          params: { formula: getFormulaUniformDefaults(resolution.plugin) },
+        });
         updateBounds(
           resolution.experienceHint?.bounds ??
             getDefaultBounds(intent.formulaId)
@@ -402,7 +412,11 @@ function ExploreClient({ posterImage }: { posterImage?: string }) {
     const read = readFractalDocumentEnvelope(handoff.envelope);
     if (read.mode !== 'editable') return;
     for (const asset of read.envelope.assets?.formulas ?? []) {
-      resolveCustomFormula({ id: asset.id, source: asset.source });
+      resolveCustomFormula({
+        id: asset.id,
+        source: asset.source,
+        frmSemanticsVersion: asset.frmSemanticsVersion,
+      });
     }
     cloudDraft.setPendingRemixSource({ type: 'publication', id: handoff.publicationId });
     handleLoadDocument(read.envelope.document);
@@ -435,7 +449,11 @@ function ExploreClient({ posterImage }: { posterImage?: string }) {
         if (!loaded) return;
         draftLoadConsumedRef.current = draftId;
         for (const asset of loaded.formulaAssets) {
-          resolveCustomFormula({ id: asset.id, source: asset.source });
+          resolveCustomFormula({
+            id: asset.id,
+            source: asset.source,
+            frmSemanticsVersion: asset.frmSemanticsVersion,
+          });
         }
         handleLoadDocument(loaded.document);
       });
@@ -546,7 +564,16 @@ function ExploreClient({ posterImage }: { posterImage?: string }) {
 
   const handleCustomFormulaSelect = useCallback((selection: FormulaSelectionRequest) => {
     clearHandoffFailure();
-    updateFormula({ formulaId: selection.formulaId });
+    const plugin = pluginRegistry.getFormula(selection.formulaId);
+    updateFormula({
+      formulaId: selection.formulaId,
+      // Seed descriptor defaults only when SWITCHING formulas — a re-select
+      // of the same formula must not clobber the user's edits (Codex 5f
+      // round-1).
+      ...(selection.formulaId === document.formula.formulaId
+        ? {}
+        : { params: { formula: plugin ? getFormulaUniformDefaults(plugin) : {} } }),
+    });
 
     const targetBounds = selection.experienceHint?.bounds ?? getDefaultBounds(selection.formulaId);
     updateBounds(targetBounds);
@@ -557,7 +584,7 @@ function ExploreClient({ posterImage }: { posterImage?: string }) {
         ...selection.experienceHint.coloring,
       });
     }
-  }, [clearHandoffFailure, updateBounds, updateColoring, updateFormula]);
+  }, [clearHandoffFailure, document.formula.formulaId, updateBounds, updateColoring, updateFormula]);
 
   // Handle transform change
   const handleTransformChange = useCallback((newTransform: string) => {
@@ -594,6 +621,15 @@ function ExploreClient({ posterImage }: { posterImage?: string }) {
     formulaResolution?.formulaId === formula;
   const isFormulaReady =
     !handoffError && formulaResolutionMatches && formulaResolution?.success === true;
+  // Renderer pipeline version (spec §7): custom-formula resolution carries
+  // the same explicit semantics version used by the compiler. Built-ins keep
+  // the document's stored pipeline version (historical default 1).
+  const explorePipelineVersion: 1 | 2 = resolveRendererPipelineVersion(
+    isFormulaReady && formulaResolution?.success === true
+      ? formulaResolution.frmSemanticsVersion
+      : undefined,
+    document.coloring.pipelineVersion,
+  );
   let formulaResolutionMessage = t('formula.resolution.loading');
 
   if (
@@ -712,6 +748,7 @@ function ExploreClient({ posterImage }: { posterImage?: string }) {
             pluginParams={pluginParams}
             useSSAA={useSSAA}
             adaptiveIterations={adaptiveIterations}
+            pipelineVersion={explorePipelineVersion}
             lighting={lighting}
             customGradient={customGradient}
             onBoundsChange={updateBounds}
@@ -736,6 +773,7 @@ function ExploreClient({ posterImage }: { posterImage?: string }) {
               pluginParams,
               useSSAA: false,
               adaptiveIterations,
+              pipelineVersion: explorePipelineVersion,
               lighting,
               customGradient,
             }}
@@ -777,7 +815,11 @@ function ExploreClient({ posterImage }: { posterImage?: string }) {
               setConflictBusy(false);
               if (!loaded) return;
               for (const asset of loaded.formulaAssets) {
-                resolveCustomFormula({ id: asset.id, source: asset.source });
+                resolveCustomFormula({
+                  id: asset.id,
+                  source: asset.source,
+                  frmSemanticsVersion: asset.frmSemanticsVersion,
+                });
               }
               handleLoadDocument(loaded.document);
               artworkActions.clearStatus();
@@ -856,6 +898,9 @@ function ExploreClient({ posterImage }: { posterImage?: string }) {
                 insideColoring={insideColoring}
                 orbitTrap={orbitTrap}
                 customGradient={customGradient}
+                effectiveSmoothMethod={resolveEffectiveSmoothMethod(
+                  pluginRegistry.getFormula(formula) ?? {},
+                )}
                 onPaletteChange={(index) => updateColoring({ paletteIndex: index })}
                 onOutsideColoringChange={(mode) => updateColoring({ outsideColoringId: mode })}
                 onInsideColoringChange={(mode) => updateColoring({ insideColoringId: mode })}

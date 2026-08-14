@@ -232,6 +232,24 @@ describe('custom formula routes', () => {
     expect(body.formula.source).toBe(VALID_SOURCE);
   });
 
+  it('GET detail maps a missing owner record to not_found', async () => {
+    stubFetch((call) => {
+      if (call.url.includes('custom_formulas')) {
+        return new Response('[]', { status: 200 });
+      }
+      return defaultRespond(call);
+    });
+
+    const res = await formulaGET(
+      authedRequest(`https://fractalpark.test/api/creation/custom-formulas/${FORMULA_ID}`),
+      detailContext(),
+    );
+    expect(res.status).toBe(404);
+    await expect(res.json()).resolves.toMatchObject({
+      error: { code: 'not_found' },
+    });
+  });
+
   it('PATCH updates with expectedRevision and maps revision_conflict', async () => {
     stubFetch((call) => {
       if (call.url.includes('rpc/fractalpark_custom_formula_save')) {
@@ -250,6 +268,82 @@ describe('custom formula routes', () => {
     expect(res.status).toBe(409);
     const body = (await res.json()) as { error: { code: string } };
     expect(body.error.code).toBe('revision_conflict');
+  });
+
+  it('PATCH accepts a rename-only body and preserves stored source, hint, and semantics', async () => {
+    const storedHint = { bailout: 9 };
+    stubFetch((call) => {
+      if (call.url.includes('custom_formulas')) {
+        return new Response(
+          JSON.stringify([
+            {
+              id: FORMULA_ID,
+              name: 'Route formula',
+              revision: 1,
+              source_bytes: 40,
+              experience_hint: storedHint,
+              frm_semantics_version: 2,
+              created_at: '2026-08-03T00:00:00Z',
+              updated_at: '2026-08-03T00:00:00Z',
+              source: VALID_SOURCE,
+            },
+          ]),
+          { status: 200 },
+        );
+      }
+      return defaultRespond(call);
+    });
+
+    const res = await formulaPATCH(
+      authedRequest(`https://fractalpark.test/api/creation/custom-formulas/${FORMULA_ID}`, {
+        method: 'PATCH',
+        headers: { 'idempotency-key': IDEMPOTENCY_KEY },
+        body: { name: 'Renamed only', expectedRevision: 1 },
+      }),
+      detailContext(),
+    );
+
+    expect(res.status).toBe(200);
+    await expect(res.json()).resolves.toMatchObject({
+      formulaId: FORMULA_ID,
+      revision: 2,
+      frmSemanticsVersion: 2,
+    });
+    const rpcCall = fetchCalls.find((call) =>
+      call.url.includes('rpc/fractalpark_custom_formula_save'),
+    );
+    const rpcArgs = JSON.parse(rpcCall?.body ?? '{}') as Record<string, unknown>;
+    expect(rpcArgs).toMatchObject({
+      p_name: 'Renamed only',
+      p_source: VALID_SOURCE,
+      p_experience_hint: storedHint,
+      p_expected_revision: 1,
+    });
+    expect(rpcArgs).not.toHaveProperty('p_frm_semantics_version');
+  });
+
+  it('PATCH maps a missing pre-read record and never calls the save RPC', async () => {
+    stubFetch((call) => {
+      if (call.url.includes('custom_formulas')) {
+        return new Response('[]', { status: 200 });
+      }
+      return defaultRespond(call);
+    });
+
+    const res = await formulaPATCH(
+      authedRequest(`https://fractalpark.test/api/creation/custom-formulas/${FORMULA_ID}`, {
+        method: 'PATCH',
+        headers: { 'idempotency-key': IDEMPOTENCY_KEY },
+        body: { name: 'Missing', expectedRevision: 1 },
+      }),
+      detailContext(),
+    );
+    expect(res.status).toBe(404);
+    expect(
+      fetchCalls.some((call) =>
+        call.url.includes('rpc/fractalpark_custom_formula_save'),
+      ),
+    ).toBe(false);
   });
 
   it('PATCH requires expectedRevision', async () => {
@@ -318,6 +412,26 @@ describe('custom formula routes', () => {
       detailContext(),
     );
     expect(res.status).toBe(404);
+  });
+
+  it('validation_failed from the save RPC maps to 400', async () => {
+    stubFetch((call) => {
+      if (call.url.includes('rpc/fractalpark_custom_formula_save')) {
+        return rpcError('validation_failed: unsupported semantics version');
+      }
+      return defaultRespond(call);
+    });
+    const res = await formulasPOST(
+      authedRequest('https://fractalpark.test/api/creation/custom-formulas', {
+        method: 'POST',
+        headers: { 'idempotency-key': IDEMPOTENCY_KEY },
+        body: { name: 'Rejected by RPC', source: VALID_SOURCE },
+      }),
+    );
+    expect(res.status).toBe(400);
+    await expect(res.json()).resolves.toMatchObject({
+      error: { code: 'validation_failed' },
+    });
   });
 
   it('quota_exceeded maps to 422', async () => {

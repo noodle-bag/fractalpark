@@ -60,6 +60,7 @@ export function FormulaTab({ currentFormula, currentBounds, onFormulaChange, onC
 
         <TabsContent value="custom" className="mt-4">
           <CustomFormulaList
+            currentFormula={currentFormula}
             currentBounds={currentBounds}
             onSelectFormula={handleSelectCustomFormula}
           />

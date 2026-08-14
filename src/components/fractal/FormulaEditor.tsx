@@ -16,7 +16,7 @@ import { Alert, AlertDescription } from '@/components/ui/alert';
 import { useToast } from '@/hooks/use-toast';
 import { Loader2, Play, Save, AlertCircle, CheckCircle, ChevronDown, ChevronUp, Info, RotateCcw } from 'lucide-react';
 import type { FormulaPlugin } from '@/engine/plugins/types';
-import { compileFrm, mapGLSLErrorToFRM } from '@/engine/frm/compile';
+import { compileImportedFrm, mapGLSLErrorToFRM } from '@/engine/frm/compile';
 import type { FormulaCompatibilityNote, FormulaDialect } from '@/engine/frm/ast';
 import {
   formulaMetadataToExperienceHint,
@@ -24,6 +24,7 @@ import {
   type FormulaExperienceHint,
 } from '@/engine/frm/authoring';
 import type { FRMSourceMap } from '@/engine/frm/sourcemap';
+import type { FrmSemanticsVersion } from '@/engine/frm/semantics-version';
 import { detectFormulaDialect } from '@/engine/frm/source-directives';
 import { pluginRegistry } from '@/engine/plugins/registry';
 import type { ViewBounds } from '@/engine/types';
@@ -38,6 +39,7 @@ interface CodeMirrorModules {
   EditorState: typeof import('@codemirror/state').EditorState;
   frmLanguage: Extension;
   createFRMLinter: typeof import('@/engine/frm/codemirror-lint').createFRMLinter;
+  forceLinting: typeof import('@codemirror/lint').forceLinting;
 }
 
 let cmModules: CodeMirrorModules | null = null;
@@ -81,6 +83,7 @@ async function loadCodeMirror(): Promise<CodeMirrorModules> {
       EditorState: state.EditorState,
       frmLanguage: lang.frmLanguage,
       createFRMLinter: lint.createFRMLinter,
+      forceLinting: lint.forceLinting,
     };
   }
   return cmModules;
@@ -88,10 +91,14 @@ async function loadCodeMirror(): Promise<CodeMirrorModules> {
 
 interface FormulaEditorProps {
   formulaId?: string;
+  /** New formulas use strict v2; stored formulas pass their frozen version. */
+  frmSemanticsVersion?: FrmSemanticsVersion;
   initialSource?: string;
   initialExperienceHint?: FormulaExperienceHint;
   currentBounds?: ViewBounds;
   sourcePreflightError?: string;
+  /** Request a cursor jump to a 1-based source line/col (nonce retriggers). */
+  jumpTo?: { line: number; col?: number; nonce: number };
   onCompile?: (plugin: FormulaPlugin, experienceHint?: FormulaExperienceHint) => void;
   onSourceChange?: (source: string) => void;
   onExperienceHintChange?: (experienceHint?: FormulaExperienceHint) => void;
@@ -99,10 +106,21 @@ interface FormulaEditorProps {
     name: string,
     source: string,
     experienceHint?: FormulaExperienceHint,
-    formulaId?: string,
   ) =>
-    | { success: boolean; error?: string; id?: string; silent?: boolean }
-    | Promise<{ success: boolean; error?: string; id?: string; silent?: boolean }>
+    | {
+        success: boolean;
+        error?: string;
+        storageId?: string;
+        runtimeId?: string;
+        silent?: boolean;
+      }
+    | Promise<{
+        success: boolean;
+        error?: string;
+        storageId?: string;
+        runtimeId?: string;
+        silent?: boolean;
+      }>
     | void;
   onClose?: () => void;
 }
@@ -138,8 +156,10 @@ function parseGLSLErrorLog(log: string): { line: number; col: number; message: s
 
 export function FormulaEditor({
   formulaId,
+  frmSemanticsVersion = 2,
   initialSource = DEFAULT_SOURCE,
   initialExperienceHint,
+  jumpTo,
   currentBounds,
   sourcePreflightError,
   onCompile,
@@ -197,6 +217,8 @@ export function FormulaEditor({
 
   // Stable callback ref for the linter to avoid recreating the editor
   const errorsCallbackRef = useRef<(errors: EditorError[]) => void>(() => {});
+  const frmSemanticsVersionRef = useRef(frmSemanticsVersion);
+  frmSemanticsVersionRef.current = frmSemanticsVersion;
   errorsCallbackRef.current = (errors: EditorError[]) => {
     setEditorErrors(prev => {
       const prevStr = JSON.stringify(prev);
@@ -218,7 +240,7 @@ export function FormulaEditor({
 
         const frmLinter = createFRMLinter((errors) => {
           errorsCallbackRef.current(errors);
-        });
+        }, () => frmSemanticsVersionRef.current);
 
         const editorState = ES.create({
           doc: source,
@@ -322,13 +344,42 @@ export function FormulaEditor({
     };
   }, []); // eslint-disable-line react-hooks/exhaustive-deps
 
+  useEffect(() => {
+    const view = cmViewRef.current;
+    if (!view || !cmModules) return;
+    cmModules.forceLinting(view);
+  }, [frmSemanticsVersion]);
+
+  // Source-location jump (four-level diagnostics → editor cursor). The nonce
+  // retriggers the same location; out-of-range lines clamp to the document.
+  useEffect(() => {
+    if (!jumpTo) return;
+    const view = cmViewRef.current;
+    if (!view) return;
+    const doc = view.state.doc;
+    const line = Math.max(1, Math.min(jumpTo.line, doc.lines));
+    const lineInfo = doc.line(line);
+    const col = Math.max(1, jumpTo.col ?? 1);
+    const pos = Math.min(lineInfo.from + col - 1, lineInfo.to);
+    view.dispatch({
+      selection: { anchor: pos },
+      scrollIntoView: true,
+    });
+    view.focus();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [jumpTo?.nonce]);
+
   const handleCompile = useCallback(async () => {
     if (sourcePreflightError) return;
     setIsCompiling(true);
     setCompileResult(null);
 
     try {
-      const result = compileFrm(source);
+      const result = compileImportedFrm(
+        source,
+        formulaId,
+        frmSemanticsVersion,
+      );
 
       // Store source map for potential GLSL error mapping
       if (result.sourceMap) {
@@ -422,7 +473,16 @@ export function FormulaEditor({
     } finally {
       setIsCompiling(false);
     }
-  }, [experienceHint, source, sourcePreflightError, onCompile, toast, t]);
+  }, [
+    experienceHint,
+    formulaId,
+    frmSemanticsVersion,
+    source,
+    sourcePreflightError,
+    onCompile,
+    toast,
+    t,
+  ]);
 
   const handleSave = useCallback(async () => {
     if (savingRef.current) return; // double-click guard (review N8)
@@ -430,7 +490,7 @@ export function FormulaEditor({
     try {
       const name = compileResult?.plugin?.name || 'Untitled';
       const effectiveHint = compileResult?.effectiveExperienceHint ?? experienceHint;
-      const saveResult = await onSave?.(name, source, effectiveHint, formulaId);
+      const saveResult = await onSave?.(name, source, effectiveHint);
       if (saveResult && 'silent' in saveResult && saveResult.silent) {
         // A sign-in intent owns the UI now (v0.4.16): no toast either way.
         return;
@@ -453,7 +513,7 @@ export function FormulaEditor({
     } finally {
       savingRef.current = false;
     }
-  }, [source, compileResult, experienceHint, formulaId, onSave, toast, t]);
+  }, [source, compileResult, experienceHint, onSave, toast, t]);
 
   const handleRestoreLastSuccessful = useCallback(() => {
     if (!lastSuccessfulSource) return;
@@ -703,9 +763,16 @@ export function FormulaEditor({
         )}
       </CardContent>
 
-      <CardFooter className="flex justify-between">
-        <div className="flex gap-2">
+      <CardFooter
+        className="flex flex-wrap items-center gap-3"
+        data-testid="formula-editor-footer"
+      >
+        <div
+          className="flex min-w-0 flex-1 basis-64 flex-wrap gap-2"
+          data-testid="formula-editor-actions"
+        >
           <Button
+            className="h-auto min-h-9 max-w-full shrink whitespace-normal text-center"
             onClick={handleCompile}
             disabled={
               isCompiling ||
@@ -728,27 +795,42 @@ export function FormulaEditor({
           </Button>
 
           {compileResult?.success && (
-            <Button variant="outline" onClick={() => void handleSave()}>
+            <Button
+              className="h-auto min-h-9 max-w-full shrink whitespace-normal text-center"
+              variant="outline"
+              onClick={() => void handleSave()}
+            >
               <Save className="w-4 h-4 mr-2" />
               {t('save')}
             </Button>
           )}
 
           {!compileResult?.success && lastSuccessfulSource && (
-            <Button variant="ghost" onClick={handleRestoreLastSuccessful}>
+            <Button
+              className="h-auto min-h-9 max-w-full shrink whitespace-normal text-center"
+              variant="ghost"
+              onClick={handleRestoreLastSuccessful}
+            >
               <RotateCcw className="w-4 h-4 mr-2" />
               {t('restoreLastSuccessful')}
             </Button>
           )}
 
           {currentBounds && (
-            <Button variant="ghost" onClick={handleSetCurrentViewAsDefault}>
+            <Button
+              className="h-auto min-h-9 max-w-full shrink whitespace-normal text-center"
+              variant="ghost"
+              onClick={handleSetCurrentViewAsDefault}
+            >
               {t('setCurrentViewAsDefault')}
             </Button>
           )}
         </div>
 
-        <div className="flex items-center gap-3 text-sm text-muted-foreground">
+        <div
+          className="ml-auto flex shrink-0 items-center gap-3 whitespace-nowrap text-sm text-muted-foreground"
+          data-testid="formula-editor-metadata"
+        >
           <span className="rounded-full border px-2 py-0.5 text-xs">
             {t(currentDialect === 'myfrac-native' ? 'modeNative' : 'modeCompat')}
           </span>

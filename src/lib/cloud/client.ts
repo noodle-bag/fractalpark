@@ -7,6 +7,8 @@
  * envelopes never pretend to be API errors.
  */
 
+import { parseCloudCustomFormulaStorageId } from '@/lib/cloud/custom-formula-identity';
+
 export type CloudClientErrorCode =
   | 'offline'
   | 'malformed_response'
@@ -60,15 +62,25 @@ const API_CODES = new Set<CloudClientErrorCode>([
   'unavailable',
 ]);
 
-// Both idempotent PATCH endpoints enforce a five-second per-resource save
-// cooldown before reaching their RPC replay gate. If the first response is
-// lost after commit, an immediate retry is guaranteed to receive 429. Wait
-// just beyond that window before spending the single same-key retry.
-const PATCH_REPLAY_DELAY_MS = 5_100;
+// Revision-checked PATCH writes and the custom-formula semantics POST enforce
+// a five-second per-resource save cooldown before reaching their RPC replay
+// gate. If the first response is lost after commit, an immediate retry is
+// guaranteed to receive 429. Wait just beyond that window before spending
+// the single same-key retry.
+const COOLDOWN_REPLAY_DELAY_MS = 5_100;
 
-async function waitForReplayWindow(init: RequestInit): Promise<void> {
-  if (init.method?.toUpperCase() !== 'PATCH') return;
-  await new Promise<void>((resolve) => setTimeout(resolve, PATCH_REPLAY_DELAY_MS));
+async function waitForReplayWindow(
+  path: string,
+  init: RequestInit,
+): Promise<void> {
+  const method = init.method?.toUpperCase();
+  const hasCooldown =
+    method === 'PATCH' ||
+    (method === 'POST' && /\/custom-formulas\/[^/]+\/semantics$/.test(path));
+  if (!hasCooldown) return;
+  await new Promise<void>((resolve) =>
+    setTimeout(resolve, COOLDOWN_REPLAY_DELAY_MS),
+  );
 }
 
 async function call<T>(path: string, init: RequestInit = {}): Promise<T> {
@@ -91,7 +103,7 @@ async function call<T>(path: string, init: RequestInit = {}): Promise<T> {
       throw new CloudClientError('offline');
     }
     try {
-      await waitForReplayWindow(requestInit);
+      await waitForReplayWindow(path, requestInit);
       response = await fetch(path, requestInit);
     } catch {
       throw new CloudClientError('offline');
@@ -402,12 +414,20 @@ export async function getCommunityPublication(publicationId: string): Promise<Co
 // ---------------------------------------------------------------------------
 // Custom formula cloud library (v0.4.16, spec §17.1)
 
+function customFormulaPath(formulaId: string, suffix = ''): string {
+  const storageId = parseCloudCustomFormulaStorageId(formulaId);
+  if (!storageId) throw new CloudClientError('validation_failed');
+  return `/api/creation/custom-formulas/${storageId}${suffix}`;
+}
+
 export interface CloudCustomFormulaSummary {
   id: string;
   name: string;
   revision: number;
   sourceBytes: number;
   hasExperienceHint: boolean;
+  /** FRM compile-semantics contract (spec §3); absent/1 = legacy v1, 2 = strict v2. */
+  frmSemanticsVersion?: 1 | 2;
   createdAt: string;
   updatedAt: string;
 }
@@ -428,7 +448,7 @@ export async function getCustomFormula(
   formulaId: string,
 ): Promise<CloudCustomFormulaDetail> {
   const data = await call<{ formula: CloudCustomFormulaDetail }>(
-    `/api/creation/custom-formulas/${formulaId}`,
+    customFormulaPath(formulaId),
   );
   return data.formula;
 }
@@ -457,8 +477,12 @@ export async function updateCustomFormula(
     source?: string;
     experienceHint?: unknown;
   },
-): Promise<{ formulaId: string; revision: number }> {
-  return call(`/api/creation/custom-formulas/${formulaId}`, {
+): Promise<{
+  formulaId: string;
+  revision: number;
+  frmSemanticsVersion: 1 | 2;
+}> {
+  return call(customFormulaPath(formulaId), {
     method: 'PATCH',
     headers: { 'idempotency-key': crypto.randomUUID() },
     body: JSON.stringify(input),
@@ -469,9 +493,28 @@ export async function deleteCustomFormula(
   formulaId: string,
   expectedRevision: number,
 ): Promise<void> {
-  return call(`/api/creation/custom-formulas/${formulaId}`, {
+  return call(customFormulaPath(formulaId), {
     method: 'DELETE',
     headers: { 'idempotency-key': crypto.randomUUID() },
     body: JSON.stringify({ expectedRevision }),
+  });
+}
+
+export type CustomFormulaSemanticsAction = 'upgradeSemantics' | 'revertSemantics';
+
+/**
+ * Explicit, reversible FRM semantics-version change (v0.4.18 slice 2,
+ * commit 6): upgradeSemantics moves v1→v2, revertSemantics moves v2→v1.
+ * Revision-checked like an update; the response carries the new version.
+ */
+export async function changeCustomFormulaSemantics(
+  formulaId: string,
+  action: CustomFormulaSemanticsAction,
+  expectedRevision: number,
+): Promise<{ formulaId: string; revision: number; frmSemanticsVersion: 1 | 2 }> {
+  return call(customFormulaPath(formulaId, '/semantics'), {
+    method: 'POST',
+    headers: { 'idempotency-key': crypto.randomUUID() },
+    body: JSON.stringify({ action, expectedRevision }),
   });
 }

@@ -2,6 +2,29 @@ precision highp float;
 
 // #define lines injected by assembler
 // #define BAILOUT_RADIUS 4.0
+// Escape-condition macro, driven by the v2 bailout descriptor defines when
+// present. Signature is (z, zz) so C4-R real-projection escapes can use z.x
+// while radial escapes use the precomputed zz = dot(z, z). Default (no v2
+// defines): the historical zz > BAILOUT_RADIUS.
+#if defined(ESCAPE_C4R)
+  // C4R_ESCAPE_CHECK(z) is fully injected by the assembler.
+  #define ESCAPE_CHECK(z, zz) C4R_ESCAPE_CHECK(z)
+#elif defined(ESCAPE_C5)
+  // C5 reads the LastSqr side channel (modulus at the last sqr() call),
+  // not the predicate-time |z|².
+  #define ESCAPE_CHECK(z, zz) C5_ESCAPE_CHECK(frmLastSqr)
+#elif defined(ESCAPE_C2)
+  // C2_ESCAPE_CHECK(zz) is fully injected by the assembler (uniform-driven).
+  #define ESCAPE_CHECK(z, zz) C2_ESCAPE_CHECK(zz)
+#elif defined(ESCAPE_INVERSE_DIRECTION) && defined(BAILOUT_INCLUSIVE)
+  #define ESCAPE_CHECK(z, zz) ((zz) <= BAILOUT_RADIUS)
+#elif defined(ESCAPE_INVERSE_DIRECTION)
+  #define ESCAPE_CHECK(z, zz) ((zz) < BAILOUT_RADIUS)
+#elif defined(BAILOUT_INCLUSIVE)
+  #define ESCAPE_CHECK(z, zz) ((zz) >= BAILOUT_RADIUS)
+#else
+  #define ESCAPE_CHECK(z, zz) ((zz) > BAILOUT_RADIUS)
+#endif
 // #define ESCAPE_CONVERGE
 // #define CONVERGE_EPSILON 0.000001
 // #define NEED_ORBIT_TRAP
@@ -67,21 +90,49 @@ float escapeHeight(vec2 point) {
 #else
   vec2 z = u_isJulia ? point : vec2(0.0);
   vec2 c = u_isJulia ? u_juliaC : point;
+  // Per-orbit FRM side-channel reset. LastSqr can be read by loop expressions
+  // even when the bailout is C1/C2/C4-R; lighting also runs extra orbits.
+  // Native/B94 shaders do not declare it and omit HAS_FRM_LAST_SQR entirely.
+#ifdef HAS_FRM_LAST_SQR
+  frmLastSqr = 0.0;
+#endif
 #ifdef HAS_INIT_FORMULA
   z = initFormula(z, c, point);
 #endif
   vec2 zPrev = vec2(0.0);
   for (int i = 0; i < 10000; i++) {
     if (i >= u_maxIterations) break;
+#ifdef ESCAPE_AFTER_STEP
+    // Classic v2 timing: evaluate the predicate AFTER this loop step.
+    vec2 steppedZ = iterateStep(z, c, zPrev, point);
+    zPrev = z;
+    z = steppedZ;
+#endif
     float zz = dot(z, z);
-    if (zz > BAILOUT_RADIUS) {
+    if (ESCAPE_CHECK(z, zz)) {
+#if defined(ESCAPE_INVERSE_DIRECTION) || defined(SMOOTH_ESCAPE_TIME)
+      // Deterministic Escape Time fallback — see the main loop for the
+      // same contract (inverse-direction and capability-unavailable paths).
+      #ifdef ESCAPE_AFTER_STEP
+      return clamp(float(i + 1) / float(u_maxIterations), 0.0, 1.0);
+      #else
+      return clamp(float(i) / float(u_maxIterations), 0.0, 1.0);
+      #endif
+#else
       float zn = sqrt(zz);
+      #ifdef ESCAPE_AFTER_STEP
+      float si = float(i + 1) - log2(log2(max(zn, 1.00001))) / log2(max(u_power, 2.0)) + 4.0;
+      #else
       float si = float(i) - log2(log2(max(zn, 1.00001))) / log2(max(u_power, 2.0)) + 4.0;
+      #endif
       return clamp(si / float(u_maxIterations), 0.0, 1.0);
+#endif
     }
+#ifndef ESCAPE_AFTER_STEP
     vec2 nextZ = iterateStep(z, c, zPrev, point);
     zPrev = z;
     z = nextZ;
+#endif
   }
   return 0.0;
 #endif
@@ -127,6 +178,10 @@ vec3 colorAtComplex(vec2 point) {
   vec2 z = u_isJulia ? point : vec2(0.0);
 #endif
   vec2 c = u_isJulia ? u_juliaC : point;
+  // Per-orbit FRM side-channel reset (see escapeHeight).
+#ifdef HAS_FRM_LAST_SQR
+  frmLastSqr = 0.0;
+#endif
 #ifdef HAS_INIT_FORMULA
   z = initFormula(z, c, point);
 #endif
@@ -154,6 +209,16 @@ vec3 colorAtComplex(vec2 point) {
 
   for (int i = 0; i < 10000; i++) {
     if (i >= u_maxIterations) break;
+#ifdef ESCAPE_AFTER_STEP
+    // Classic v2 timing: run this loop step first, then evaluate the
+    // predicate against the freshly produced orbit state.
+    vec2 steppedZ = iterateStep(z, c, zPrev, point);
+    if (u_lightingEnabled && u_lightingMode == 1) {
+      demDz = 2.0 * vec2(z.x * demDz.x - z.y * demDz.y, z.x * demDz.y + z.y * demDz.x) + vec2(1.0, 0.0);
+    }
+    zPrev = z;
+    z = steppedZ;
+#endif
     float zz = dot(z, z);
     float angle = atan(z.y, z.x);
 
@@ -174,11 +239,34 @@ vec3 colorAtComplex(vec2 point) {
       break;
     }
 #else
-    if (zz > BAILOUT_RADIUS) {
+    if (ESCAPE_CHECK(z, zz)) {
       escaped = true;
+#if defined(ESCAPE_INVERSE_DIRECTION) || defined(SMOOTH_ESCAPE_TIME)
+      // Deterministic Escape Time fallback (coloring-capability contract,
+      // spec §7): inverse-direction escapes make the radial smooth formula
+      // meaningless, and SMOOTH_ESCAPE_TIME marks formulas whose capability
+      // resolved to unavailable (C4-R projection / inside-out radial).
+  #ifdef ESCAPE_AFTER_STEP
+      smoothIter = float(i + 1);
+  #else
+      smoothIter = float(i);
+  #endif
+#else
       float zn = sqrt(zz);
+  #ifdef ESCAPE_AFTER_STEP
+      // After-step timing: i+1 steps were executed before this evaluation —
+      // the smooth formula must count them too.
+      smoothIter = float(i + 1) - log2(log2(max(zn, 1.00001))) / log2(max(u_power, 2.0)) + 4.0;
+  #else
       smoothIter = float(i) - log2(log2(max(zn, 1.00001))) / log2(max(u_power, 2.0)) + 4.0;
+  #endif
+#endif
+#ifdef ESCAPE_AFTER_STEP
+      // After-step timing: i+1 steps were executed before this evaluation.
+      iter = i + 1;
+#else
       iter = i;
+#endif
       break;
     }
 #endif
@@ -197,6 +285,7 @@ vec3 colorAtComplex(vec2 point) {
     if (denom > 0.00001) stats.tiaSum += abs(zr - cr) / denom;
 #endif
 
+#ifndef ESCAPE_AFTER_STEP
     vec2 nextZ = iterateStep(z, c, zPrev, point);
     // Track dz/dc = 2*z*(dz/dc) + 1 for DEM lighting (generalised, correct for z^2+c family)
     if (u_lightingEnabled && u_lightingMode == 1) {
@@ -204,6 +293,8 @@ vec3 colorAtComplex(vec2 point) {
     }
     zPrev = z;
     z = nextZ;
+#endif
+    // Both timings: after iteration i the loop has executed i+1 steps.
     iter = i + 1;
   }
 

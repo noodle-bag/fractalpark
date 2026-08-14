@@ -1,5 +1,51 @@
 # Changelog
 
+## 0.4.18 - 2026-08-14
+
+Trusted classic FRM compatibility: one versioned compiler path now preserves existing v1 visuals while making strict v2 semantics explicit, inspectable, and reversible.
+
+### Added
+
+- Added the authoritative classic `.frm` scanner and frontend lowering pipeline, including selected-entry handling, classic syntax, parameters and `fn1`–`fn4`, assignment expressions, line continuation, and the compatibility extensions required by the frozen target set.
+- Added strict-v2 bailout descriptors (C1, C2, C4-R, and C5), exact comparison direction, classic after-step timing, parameter-driven thresholds, and three-tier Smooth coloring capability with deterministic fallback.
+- Added a real Upgrade & Compare flow: the stored source compiles under legacy v1 and strict v2 side by side, with isolated visual previews, semantic summaries, and diagnostics; only explicit confirmation changes the persisted version, and reverting restores v1.
+- Added four-level Editor classification (Supported, Supported with adaptations, Read-only, Invalid source), structured diagnostics, source navigation, and manifest-driven compatibility facts in the FRM Guide.
+- Added public Level 1 drift gates and a private-corpus Level 2 report contract. The frozen 588-target baseline is reported honestly as 579 strict-v2 passes plus 9 documented waivers, with 117 separate exclusions carrying stable reasons.
+
+### Changed
+
+- New cloud formulas use strict v2; existing rows and portable assets with a missing version remain on frozen legacy v1. Ordinary save, reopen, publish, import, sync, and remix paths preserve the stored version and never auto-upgrade.
+- Formula semantics versions now round-trip through cloud DTOs, session assets, drafts, portable projects, public previews, publication validation, and the renderer pipeline.
+- Added the forward-only cloud schema pair for semantics versioning: the nullable compatibility column plus the version-aware custom-formula save RPC, where ordinary updates preserve the stored version and explicit Upgrade/Revert writes persist `2`/`1`.
+- The FRM Guide, frozen Spec, ADR, regression matrix, and seven locales now consume the same versioned capability and migration contract without presenting waivers as verified passes.
+
+### Fixed
+
+- Fixed swapped-operand bailout direction, exact C1 equality boundaries, unknown-predicate fallback, loop timing, C2 threshold coercion, registry-backed descriptor-aware shader cache keys, and strict-v2 rendering paths without changing legacy v1 output.
+- Fixed Classic special-name `comment { ... }` blocks appearing as selectable formulas, section-keyword variable collisions (`init`, `loop`, `bailout`), and strict constant thresholds using `pi`/`e`.
+- Fixed Upgrade & Compare being only a confirmation dialog; comparison is now read-only until confirmation and strict-v2 failures block the write with actionable diagnostics.
+- Fixed same-source portable assets with different semantics versions being treated as interchangeable, and fixed successful version changes leaving the active session on a stale compiled plugin.
+- Fixed native Editor sources being sent through the classic-only classifier, legacy-v1 custom assets inheriting a document's v2 renderer pipeline, and stale semantics confirmations bypassing revision conflict handling.
+- Fixed custom-formula reads masking unrelated PostgREST failures as legacy-v1 data, owner pre-read errors losing their API mapping, and rename-only PATCH requests being rejected instead of preserving stored source, hint, and semantics.
+- Fixed the standalone Editor's remaining local-storage copy and E2E assumptions: cloud-disabled saves now fail closed without navigation or a local write, while the real Supabase/Mailpit journey verifies strict-v2 cloud persistence before the Explore handoff.
+- Fixed B94/native-v1 shaders failing compilation after the FRM `LastSqr` side channel was added: declarations remain FRM-owned, the assembler now gates per-orbit resets for every FRM formula that carries the channel (including non-C5 loop reads), and the project-owned maintainer WebGL gate covers LastSqr GPU/CPU orbits plus four pipeline-v1 compile/link/draw controls.
+- Fixed compact navigation, Explore stacking, and Editor footer overflow across desktop, tablet, mobile, and long localized labels.
+- Fixed unnamed custom-formula rename, edit, and delete icon actions with localized accessible names.
+
+## 0.4.17 - 2026-08-09
+
+Five-language international expansion: the full UI and content surface now ships in Portuguese, Korean, Russian, Spanish, and French alongside English and Chinese.
+
+### Added
+
+- Added pt/ko/ru/es/fr UI translations and localized content across Explore, Gallery, Formula Atlas, About, privacy, terms, and community rules.
+- Added localized `og:locale`, HTML `lang`, and gallery date formatting for every route.
+
+### Fixed
+
+- Fixed the Explore tab overflow on localized navigation bars.
+- Fixed `og:locale` and `lang` drifting from the active locale on localized routes.
+
 ## 0.4.16 - 2026-08-04
 
 Cloud-first creation: accounts stop being an optional sync layer and become the single place where artworks and formulas live. Rendering stays entirely in the browser; creating needs no account; saving does.

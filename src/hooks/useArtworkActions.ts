@@ -286,7 +286,11 @@ export function useArtworkActions({
           fail('import', 'invalid-envelope');
           return false;
         }
-        const resolved = resolveCustomFormula({ id: asset.id, source: asset.source });
+        const resolved = resolveCustomFormula({
+          id: asset.id,
+          source: asset.source,
+          frmSemanticsVersion: asset.frmSemanticsVersion,
+        });
         if (!resolved.success) {
           fail('import', 'asset-compile-failed');
           return false;

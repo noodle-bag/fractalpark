@@ -75,6 +75,28 @@ export function validate(ast: FrmAST): { valid: boolean; errors: ValidationError
         if (isFnSlotName(node.name) && node.args.length !== 1) {
           addError(node.loc.line, node.loc.col, `${node.name} requires exactly 1 argument`);
         }
+        // Arity honesty: every known unary function takes exactly one
+        // (complex) argument; atan2 is the sole two-argument builtin.
+        // A wrong-arity call must fail loudly here — codegen evaluates
+        // only the arguments the semantics define, so a silently-dropped
+        // second argument would be semantic corruption.
+        if (VALID_FUNCTIONS.has(node.name as (typeof KNOWN_FUNCTION_NAMES)[number])) {
+          // atan2 accepts 1 arg (classic atan degradation — established
+          // dialect) or 2; every other known function is exactly 1.
+          const arityOk =
+            node.name === 'atan2'
+              ? node.args.length === 1 || node.args.length === 2
+              : node.args.length === 1;
+          if (!arityOk) {
+            addError(
+              node.loc.line,
+              node.loc.col,
+              node.name === 'atan2'
+                ? `atan2 takes 1 or 2 arguments, got ${node.args.length}`
+                : `${node.name} takes exactly 1 argument, got ${node.args.length}`,
+            );
+          }
+        }
         // Validate arguments
         for (const arg of node.args) {
           validateNode(arg, scopeVars);

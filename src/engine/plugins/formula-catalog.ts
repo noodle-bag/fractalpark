@@ -1092,7 +1092,7 @@ export const FORMULA_CATALOG: FormulaMetadata[] = [
   },
   {
     id: 'novaBasin',
-    family: 'exotic',
+    family: 'newton',
     defaultBounds: { centerX: 0.0, centerY: 0.0, zoom: 1.45 },
     suggestedPalette: 3,
     difficulty: 'hard',

@@ -30,19 +30,35 @@ const FAMILY_COLORS: Record<string, string> = {
 
 const FAMILY_ORDER: FormulaFamily[] = ['all', 'classic', 'burning-ship', 'newton', 'magnet', 'phoenix', 'transcendental', 'exotic'];
 
+/** Built-in browsing is catalog-owned. The runtime registry also contains
+ * cloud and imported formulas, but those belong to the Custom tab. */
+export function listBuiltinBrowserFormulas(): FormulaPlugin[] {
+  return pluginRegistry
+    .listFormulasBySource('builtin')
+    .filter((formula) => getFormulaMetadata(formula.id) !== undefined);
+}
+
+export function isBuiltinBrowserFormulaId(formulaId: string): boolean {
+  return (
+    getFormulaMetadata(formulaId) !== undefined &&
+    pluginRegistry.getFormula(formulaId)?.source === 'builtin'
+  );
+}
+
 // Hook to get formulas with client-side hydration handling
 function useFormulas() {
   const [formulas, setFormulas] = useState<FormulaPlugin[]>([]);
   const [isReady, setIsReady] = useState(false);
 
   useEffect(() => {
-    // Small delay to ensure plugins are registered
-    const timeout = setTimeout(() => {
-      setFormulas(pluginRegistry.listFormulas());
+    // Sync immediately, then follow registry changes so late-registered
+    // plugins appear without a one-shot timing guess.
+    const sync = () => {
+      setFormulas(listBuiltinBrowserFormulas());
       setIsReady(true);
-    }, 50);
-
-    return () => clearTimeout(timeout);
+    };
+    sync();
+    return pluginRegistry.subscribeToFormulaEvents(sync);
   }, []);
 
   return { formulas, isReady };
@@ -52,6 +68,11 @@ export function FormulaBrowser({ currentFormula, onFormulaChange }: FormulaBrows
   const t = useTranslations('explore');
   const [searchQuery, setSearchQuery] = useState('');
   const { formulas: allFormulas, isReady } = useFormulas();
+  const selectBuiltin = (formulaId: string) => {
+    if (isBuiltinBrowserFormulaId(formulaId)) {
+      onFormulaChange(formulaId);
+    }
+  };
 
   // Compute the family of the current formula
   const currentFormulaFamily = useMemo(() => {
@@ -172,7 +193,7 @@ export function FormulaBrowser({ currentFormula, onFormulaChange }: FormulaBrows
                       key={formula.id}
                       formula={formula}
                       isActive={formula.id === currentFormula}
-                      onClick={() => onFormulaChange(formula.id)}
+                      onClick={() => selectBuiltin(formula.id)}
                       t={t}
                     />
                   ))}
@@ -188,7 +209,7 @@ export function FormulaBrowser({ currentFormula, onFormulaChange }: FormulaBrows
                 key={formula.id}
                 formula={formula}
                 isActive={formula.id === currentFormula}
-                onClick={() => onFormulaChange(formula.id)}
+                onClick={() => selectBuiltin(formula.id)}
                 t={t}
               />
             ))}

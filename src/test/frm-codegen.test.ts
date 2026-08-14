@@ -229,3 +229,80 @@ bailout:
     );
   });
 });
+
+describe('fn-slot argument coercion (WebGL-smoke regression)', () => {
+  it('wraps a statically-real fn argument as vec2 (dissected-b pathology)', () => {
+    // x = real(z) is float; fn1(x*x) must emit applyFn1(vec2((x*x), 0.0)) —
+    // inferType('*'/'/') used to tag real*real as complex, so the raw real
+    // text reached the vec2 parameter unwrapped and SwiftShader rejected
+    // the assembled shader (no matching overloaded function).
+    const source =
+      'T {\ninit:\n  z = 0\nloop:\n  x = real(z)\n  newx = fn1(x*x)\n  z = newx + c\nbailout:\n  |z| < 4\n}';
+    const { tokens, errors: lexErrors } = tokenize(source);
+    expect(lexErrors).toEqual([]);
+    const { ast, errors } = parse(tokens);
+    expect(errors).toEqual([]);
+    const { glsl } = generateGLSL(ast!, new FRMSourceMap());
+    expect(glsl).toContain('applyFn1(vec2((x * x), 0.0))');
+    expect(glsl).toContain('float x;');
+  });
+});
+
+describe('predicate float materialization (WebGL-smoke ghost regression)', () => {
+  const emit = (source: string) => {
+    const { tokens, errors: lexErrors } = tokenize(source);
+    expect(lexErrors).toEqual([]);
+    const { ast, errors } = parse(tokens);
+    expect(errors).toEqual([]);
+    return generateGLSL(ast!, new FRMSourceMap()).glsl;
+  };
+
+  it('a comparison feeding arithmetic materializes to float 0/1', () => {
+    // ghost: a = (dist <= olddist) * c1 — bare bool text cannot multiply.
+    const glsl = emit(
+      'T {\ninit:\n  z = 0\nloop:\n  dist = real(z)\n  a = (dist <= 4.0) * c\n  z = a\nbailout:\n  |z| < 4\n}',
+    );
+    expect(glsl).toContain('? 1.0 : 0.0');
+    expect(glsl).not.toMatch(/= \(\(dist <= 4\.0?\) \*/);
+  });
+
+  it('an if condition keeps bare bool text (no float materialization inside if())', () => {
+    const glsl = emit(
+      'T {\ninit:\n  z = 0\nloop:\n  if real(z) < 1\n    z = z + c\n  endif\nbailout:\n  |z| < 4\n}',
+    );
+    expect(glsl).toMatch(/if \(\(.*< 1\.0.*\)\)/);
+    expect(glsl).not.toMatch(/if \(\(\(.*\? 1\.0/);
+  });
+
+  it('unary ! preserves the negation in value position', () => {
+    const glsl = emit(
+      'T {\ninit:\n  z = 0\nloop:\n  f = !(real(z) < 1)\n  z = z + f * c\nbailout:\n  |z| < 4\n}',
+    );
+    expect(glsl).toContain('(!(');
+    expect(glsl).toContain('? 1.0 : 0.0');
+  });
+});
+
+describe('cosxx (FractInt pre-v16 truth function)', () => {
+  it('emits complexCosxx for direct calls and fn-slot case 18', () => {
+    const source =
+      'T {\ninit:\n  z = 0\nloop:\n  z = cosxx(z) + c\nbailout:\n  |z| < 4\n}';
+    const { tokens, errors: lexErrors } = tokenize(source);
+    expect(lexErrors).toEqual([]);
+    const { ast, errors } = parse(tokens);
+    expect(errors).toEqual([]);
+    const { glsl } = generateGLSL(ast!, new FRMSourceMap());
+    expect(glsl).toContain('complexCosxx(');
+  });
+
+  it('fn-slot helper dispatches option 18 to complexCosxx', () => {
+    const source =
+      'T {\ninit:\n  z = 0\nloop:\n  z = fn1(z) + c\nbailout:\n  |z| < 4\n}';
+    const { tokens, errors: lexErrors } = tokenize(source);
+    expect(lexErrors).toEqual([]);
+    const { ast, errors } = parse(tokens);
+    expect(errors).toEqual([]);
+    const { glsl } = generateGLSL(ast!, new FRMSourceMap());
+    expect(glsl).toContain('if (u_fn1 == 18) return complexCosxx(value);');
+  });
+});

@@ -11,17 +11,25 @@ import {
   CUSTOM_FORMULA_MAX_SOURCE_BYTES,
   CUSTOM_FORMULA_NAME_MAX_LENGTH,
 } from '@/lib/cloud/custom-formulas';
-import { compileFrm } from '@/engine/frm/compile';
+import { compileImportedFrm } from '@/engine/frm/compile';
+import type { FrmSemanticsVersion } from '@/engine/frm/semantics-version';
 import { registerBuiltins } from '@/engine/plugins/builtins';
 import { getFormulaMetadata } from '@/engine/plugins/formula-catalog';
+import {
+  parseCloudCustomFormulaStorageId,
+  toCloudCustomFormulaRuntimeId,
+  type CloudCustomFormulaRuntimeId,
+  type CloudCustomFormulaStorageId,
+} from '@/lib/cloud/custom-formula-identity';
 
 const MAX_BODY_BYTES = 128 * 1024;
 
-export function requireUuid(value: string): string {
-  if (!/^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i.test(value)) {
+export function requireUuid(value: string): CloudCustomFormulaStorageId {
+  const storageId = parseCloudCustomFormulaStorageId(value);
+  if (!storageId) {
     throw new CloudApiError('validation_failed');
   }
-  return value;
+  return storageId;
 }
 
 export function requireIdempotencyKey(request: Request): string {
@@ -29,8 +37,10 @@ export function requireIdempotencyKey(request: Request): string {
   return requireUuid(key.trim());
 }
 
-export function newFormulaRuntimeId(formulaId: string): string {
-  return `custom-${formulaId}`;
+export function newFormulaRuntimeId(
+  formulaId: string,
+): CloudCustomFormulaRuntimeId {
+  return toCloudCustomFormulaRuntimeId(requireUuid(formulaId));
 }
 
 export interface FormulaWriteInput {
@@ -40,9 +50,18 @@ export interface FormulaWriteInput {
   expectedRevision: number | null;
 }
 
+export interface FormulaWriteDefaults {
+  name: string;
+  source: string;
+  experienceHint: unknown | null;
+}
+
 export async function parseFormulaWriteBody(
   request: Request,
-  options: { requireExpectedRevision?: boolean } = {},
+  options: {
+    requireExpectedRevision?: boolean;
+    defaults?: FormulaWriteDefaults;
+  } = {},
 ): Promise<FormulaWriteInput> {
   const contentLength = Number(request.headers.get('content-length') ?? '0');
   if (contentLength > MAX_BODY_BYTES) {
@@ -58,12 +77,14 @@ export async function parseFormulaWriteBody(
     throw new CloudApiError('validation_failed');
   }
 
-  const name = typeof body.name === 'string' ? body.name.trim() : '';
+  const rawName = 'name' in body ? body.name : options.defaults?.name;
+  const name = typeof rawName === 'string' ? rawName.trim() : '';
   if (name.length < 1 || name.length > CUSTOM_FORMULA_NAME_MAX_LENGTH) {
     throw new CloudApiError('validation_failed');
   }
 
-  const source = typeof body.source === 'string' ? body.source : '';
+  const rawSource = 'source' in body ? body.source : options.defaults?.source;
+  const source = typeof rawSource === 'string' ? rawSource : '';
   const sourceBytes = Buffer.byteLength(source, 'utf8');
   if (sourceBytes < 1) {
     throw new CloudApiError('validation_failed');
@@ -72,22 +93,26 @@ export async function parseFormulaWriteBody(
     throw new CloudApiError('payload_too_large');
   }
 
-  let experienceHint: unknown | null = null;
-  if ('experienceHint' in body && body.experienceHint !== null && body.experienceHint !== undefined) {
-    const hint = body.experienceHint;
-    if (typeof hint !== 'object' || Array.isArray(hint)) {
-      throw new CloudApiError('validation_failed');
-    }
-    // Round-trip through JSON to strip prototypes/functions and cap size.
-    try {
-      const serialized = JSON.stringify(hint);
-      if (Buffer.byteLength(serialized, 'utf8') > 4096) {
+  let experienceHint: unknown | null = options.defaults?.experienceHint ?? null;
+  if ('experienceHint' in body) {
+    if (body.experienceHint === null || body.experienceHint === undefined) {
+      experienceHint = null;
+    } else {
+      const hint = body.experienceHint;
+      if (typeof hint !== 'object' || Array.isArray(hint)) {
         throw new CloudApiError('validation_failed');
       }
-      experienceHint = JSON.parse(serialized);
-    } catch (error) {
-      if (error instanceof CloudApiError) throw error;
-      throw new CloudApiError('validation_failed');
+      // Round-trip through JSON to strip prototypes/functions and cap size.
+      try {
+        const serialized = JSON.stringify(hint);
+        if (Buffer.byteLength(serialized, 'utf8') > 4096) {
+          throw new CloudApiError('validation_failed');
+        }
+        experienceHint = JSON.parse(serialized);
+      } catch (error) {
+        if (error instanceof CloudApiError) throw error;
+        throw new CloudApiError('validation_failed');
+      }
     }
   }
 
@@ -108,12 +133,20 @@ export async function parseFormulaWriteBody(
  * the source must compile. registerBuiltins() is idempotent; the catalog
  * check mirrors formula-resolver's builtin-id-conflict semantics.
  */
-export function assertFormulaCompiles(runtimeId: string, source: string): void {
+export function assertFormulaCompiles(
+  runtimeId: string,
+  source: string,
+  frmSemanticsVersion: FrmSemanticsVersion,
+): void {
   registerBuiltins();
   if (getFormulaMetadata(runtimeId)) {
     throw new CloudApiError('formula_builtin_conflict');
   }
-  const result = compileFrm(source, runtimeId);
+  const result = compileImportedFrm(
+    source,
+    runtimeId,
+    frmSemanticsVersion,
+  );
   if (!result.success || !result.plugin) {
     throw new CloudApiError('formula_compile_failed');
   }

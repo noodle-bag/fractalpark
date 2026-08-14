@@ -1,4 +1,5 @@
 import type { FractalUrlState } from '@/lib/url-params';
+import { canonicalizeCloudCustomFormulaRuntimeId } from '@/lib/cloud/custom-formula-identity';
 import type { FractalParams, Keyframe, PluginParamRecord, PluginParamValue, SavedFractal } from './types';
 import {
   DEFAULT_DOCUMENT_BOUNDS,
@@ -229,7 +230,7 @@ function normalizeAssetReference(value: unknown): AssetReference | undefined {
   }
 
   return {
-    id: value.id,
+    id: canonicalizeCloudCustomFormulaRuntimeId(value.id),
     hash: typeof value.hash === 'string' ? value.hash : undefined,
   };
 }
@@ -326,7 +327,7 @@ export function normalizeFractalDocument(doc: DeepPartial<FractalDocument>): Fra
     formula: {
       formulaId:
         typeof source.formula?.formulaId === 'string'
-          ? source.formula.formulaId
+          ? canonicalizeCloudCustomFormulaRuntimeId(source.formula.formulaId)
           : DEFAULT_FRACTAL_DOCUMENT.formula.formulaId,
       isJulia:
         typeof source.formula?.isJulia === 'boolean'

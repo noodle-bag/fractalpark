@@ -102,23 +102,41 @@ test.describe('Formula Switching', () => {
     }
   });
 
-  test('should maintain view bounds when switching formulas', async ({ page }) => {
-    // Set specific view bounds via URL
+  test('resets view bounds to the selected formula defaults', async ({ page }) => {
+    // One cold Explore render plus a real formula switch takes ~37s on the
+    // release-gate SwiftShader host; keep a bounded margin without relaxing
+    // any state assertions.
+    test.setTimeout(60_000);
     await page.goto(`${baseUrl}/en/explore?cx=-0.5&cy=0&z=2.0`);
     await waitForFractalCanvasReady(page);
-    
-    // Switch formula
-    const formulaTab = page.getByRole('tab', { name: /formula/i });
-    if (await formulaTab.isVisible().catch(() => false)) {
-      await formulaTab.click();
-      
-      const burningShip = await formulaCard(page, 'Burning Ship');
-      await expect(burningShip).toBeVisible();
-      await burningShip.click();
 
-      // Switching formulas resets view to formula defaults.
-      await expect(page).toHaveURL(/[?&]fm=bs(?:[&#]|$)/, { timeout: 5000 });
-    }
+    const formulaTab = page.getByRole('tab', { name: /formula/i });
+    await expect(formulaTab).toBeVisible();
+    await formulaTab.click();
+
+    const burningShip = await formulaCard(page, 'Burning Ship');
+    await expect(burningShip).toBeVisible();
+    await burningShip.click();
+
+    await expect.poll(
+      () => {
+        const params = new URL(page.url()).searchParams;
+        return {
+          fm: params.get('fm'),
+          cx: params.get('cx'),
+          cy: params.get('cy'),
+          z: params.get('z'),
+          rot: params.get('rot'),
+        };
+      },
+      { timeout: 10000 },
+    ).toEqual({
+      fm: 'bs',
+      cx: '-1.7076963837',
+      cy: '-0.0375484240',
+      z: '6.34',
+      rot: '3.1416',
+    });
   });
 
   test('should handle Julia mode toggle with different formulas', async ({ page }) => {
@@ -134,43 +152,64 @@ test.describe('Formula Switching', () => {
   });
 
   test('should render all 4 original formulas without errors', async ({ page }) => {
-    const formulas = ['mandelbrot', 'burningShip', 'tricorn', 'phoenix'];
-    
-    for (const formulaId of formulas) {
-      // Navigate with formula param
-      await page.goto(`${baseUrl}/en/explore?fm=${formulaId}`);
-      await waitForFractalCanvasReady(page);
-      await page.waitForTimeout(300);
-      
-      // Verify no console errors
-      const consoleErrors: string[] = [];
-      page.on('console', msg => {
-        if (msg.type() === 'error') {
-          consoleErrors.push(msg.text());
-        }
+    const formulas = [
+      { name: 'Burning Ship', urlKey: 'bs' },
+      { name: 'Tricorn', urlKey: 'tr' },
+      { name: 'Phoenix', urlKey: 'ph' },
+      { name: 'Mandelbrot', urlKey: null },
+    ];
+    const shaderErrors: string[] = [];
+    const recordShaderError = (message: string) => {
+      if (/shader|compile|webgl/i.test(message)) {
+        shaderErrors.push(message);
+      }
+    };
+    page.on('console', msg => {
+      if (msg.type() === 'error') recordShaderError(msg.text());
+    });
+    page.on('pageerror', error => recordShaderError(error.message));
+
+    await page.getByRole('tab', { name: /formula/i }).click();
+    const search = page.getByPlaceholder('Search formulas...');
+
+    for (const { name, urlKey } of formulas) {
+      await page.getByRole('button', { name: /^All$/i }).click();
+      await search.fill(name);
+      const card = page.getByRole('button', {
+        name: new RegExp(`^${name} Julia(?: Active)? `, 'i'),
       });
-      
-      // Canvas should still be visible
-      const canvas = page.locator('canvas');
-      await expect(canvas).toBeVisible();
-      
-      // Should not have shader compilation errors
-      expect(consoleErrors.filter(e => e.includes('shader') || e.includes('compile'))).toHaveLength(0);
+      await expect(card).toBeVisible();
+      await card.click();
+      await expect.poll(
+        () => new URL(page.url()).searchParams.get('fm'),
+        { timeout: 10000 },
+      ).toBe(urlKey);
+      await waitForFractalCanvasReady(page);
     }
+
+    expect(shaderErrors).toEqual([]);
   });
 
-  test('URL should restore formula on page reload', async ({ page }) => {
-    // Navigate with specific formula (short key is used after page reloads with encoded URL)
+  test('restores the selected formula after a real page reload', async ({ page }) => {
+    // The contract includes two cold SwiftShader renders (initial + reload),
+    // measured at ~55s on the release-gate host.
+    test.setTimeout(90_000);
     await page.goto(`${baseUrl}/en/explore?fm=bs`);
     await waitForFractalCanvasReady(page);
-    await page.waitForTimeout(300);
-    
-    // Reload page
+    await expect.poll(
+      () => new URL(page.url()).searchParams.get('fm'),
+    ).toBe('bs');
+
     await page.reload();
     await waitForFractalCanvasReady(page);
-    
-    // Verify formula still in URL (short key 'bs' is used)
-    const url = page.url();
-    expect(url).toContain('fm=bs');
+    await expect.poll(
+      () => new URL(page.url()).searchParams.get('fm'),
+    ).toBe('bs');
+
+    const formulaTab = page.getByRole('tab', { name: /formula/i });
+    await expect(formulaTab).toBeVisible();
+    await formulaTab.click();
+    const burningShip = await formulaCard(page, 'Burning Ship');
+    await expect(burningShip).toHaveAccessibleName(/^Burning Ship Julia Active /i);
   });
 });

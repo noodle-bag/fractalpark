@@ -135,37 +135,41 @@ test.describe('Transform System', () => {
 
   test('should handle all 7 transforms without shader errors', async ({ page }) => {
     const transforms = [
-      'none',
-      'kaleidoscope',
-      'mobius',
-      'inversion',
-      'polar',
-      'sinusoidal',
-      'spherical',
+      { name: 'Kaleidoscope', id: 'kaleidoscope' },
+      { name: 'Mobius', id: 'mobius' },
+      { name: 'Inversion', id: 'inversion' },
+      { name: 'Polar', id: 'polar' },
+      { name: 'Sine', id: 'sinusoidal' },
+      { name: 'Spherical', id: 'spherical' },
+      { name: 'None', id: null },
     ];
-
-    const consoleErrors: string[] = [];
-    page.on('console', msg => {
-      if (msg.type() === 'error') {
-        consoleErrors.push(msg.text());
+    const shaderErrors: string[] = [];
+    const recordShaderError = (message: string) => {
+      if (/shader|compile|webgl/i.test(message)) {
+        shaderErrors.push(message);
       }
+    };
+    page.on('console', msg => {
+      if (msg.type() === 'error') recordShaderError(msg.text());
     });
+    page.on('pageerror', error => recordShaderError(error.message));
 
-    for (const transformId of transforms) {
-      await page.goto(`${baseUrl}/en/explore?tr=${transformId}`);
+    const transformTab = page.getByRole('tab', { name: /transform/i });
+    await expect(transformTab).toBeVisible();
+    await transformTab.click();
+
+    for (const { name, id } of transforms) {
+      const button = page.getByRole('button', { name: new RegExp(`^${name}$`, 'i') });
+      await expect(button).toBeVisible();
+      await button.click();
+      await expect.poll(
+        () => new URL(page.url()).searchParams.get('tr'),
+        { timeout: 10000 },
+      ).toBe(id);
       await waitForFractalCanvasReady(page);
-      await page.waitForTimeout(300);
-      
-      const canvas = page.locator('canvas');
-      await expect(canvas).toBeVisible();
     }
 
-    // Should not have shader compilation errors
-    expect(consoleErrors.filter(e => 
-      e.includes('shader') || 
-      e.includes('compile') ||
-      e.includes('WebGL')
-    )).toHaveLength(0);
+    expect(shaderErrors).toEqual([]);
   });
 
   test('should handle transform with Julia mode', async ({ page }) => {
@@ -178,16 +182,31 @@ test.describe('Transform System', () => {
     expect(url).toContain('julia=1');
   });
 
-  test('transform should be preserved on page reload', async ({ page }) => {
+  test('restores the transform after a real page reload', async ({ page }) => {
+    // The contract includes two cold SwiftShader renders (initial + reload),
+    // measured at ~60s on the release-gate host.
+    test.setTimeout(90_000);
     await page.goto(`${baseUrl}/en/explore?tr=spherical&z=1.5`);
     await waitForFractalCanvasReady(page);
-    await page.waitForTimeout(300);
+    await expect.poll(
+      () => {
+        const params = new URL(page.url()).searchParams;
+        return { tr: params.get('tr'), z: params.get('z') };
+      },
+    ).toEqual({ tr: 'spherical', z: '1.50' });
 
     await page.reload();
     await waitForFractalCanvasReady(page);
-    
-    const url = page.url();
-    expect(url).toContain('tr=spherical');
-    expect(url).toContain('z=1.5');
+    await expect.poll(
+      () => {
+        const params = new URL(page.url()).searchParams;
+        return { tr: params.get('tr'), z: params.get('z') };
+      },
+    ).toEqual({ tr: 'spherical', z: '1.50' });
+
+    const transformTab = page.getByRole('tab', { name: /transform/i });
+    await expect(transformTab).toBeVisible();
+    await transformTab.click();
+    await expect(page.getByText('Spherical Amount', { exact: true })).toBeVisible();
   });
 });

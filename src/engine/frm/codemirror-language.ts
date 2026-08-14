@@ -40,7 +40,7 @@ const frmParser: StreamParser<{ expectBlock?: boolean }> = {
     }
 
     // Functions
-    if (stream.match(/^(sin|cos|tan|exp|log|sqrt|abs|real|imag|conj|flip|sqr|recip|cabs|atan2|sinh|cosh|tanh)$/i)) {
+    if (stream.match(/^(sin|cos|cosxx|cotanh|tan|exp|log|sqrt|abs|real|imag|conj|flip|sqr|recip|cabs|atan2|sinh|cosh|tanh)$/i)) {
       return 'function';
     }
 

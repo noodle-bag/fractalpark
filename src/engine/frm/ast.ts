@@ -25,6 +25,9 @@ export interface SourceLocation {
 export interface AssignmentNode {
   type: 'assignment';
   target: string;
+  /** Component lvalue: `real(tmp) = e` stores into tmp.x, `imag(tmp)` into
+   * tmp.y. Absent for plain whole-variable assignments. */
+  component?: 'real' | 'imag';
   value: ASTNode;
   loc: SourceLocation;
 }
@@ -213,7 +216,7 @@ function collectCompatibilityNotes(ast: FrmAST): FormulaCompatibilityNote[] {
     const slots = Array.from(usedFnSlots.keys()).sort().join(', ');
     notes.push({
       kind: 'info',
-      message: `Used ${slots}; fn slots currently expand through compile-time dispatch, so function selection takes effect before rendering.`,
+      message: `Used ${slots}; fn slots dispatch through a runtime integer uniform, so function selection updates without recompiling the shader.`,
       loc: usedFnSlots.values().next().value,
     });
   }

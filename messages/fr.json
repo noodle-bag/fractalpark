@@ -141,6 +141,52 @@
         "unauthenticated": "Reconnecte-toi pour continuer.",
         "generic": "Une erreur s'est produite. Réessaie."
       }
+    },
+    "customFormulas": {
+      "semantics": {
+        "badgeV1": "v1 héritée",
+        "badgeV2": "v2 stricte",
+        "upgradeButton": "Mettre à niveau et comparer",
+        "revertButton": "Revenir à v1",
+        "upgradeTitle": "Passer à la v2 stricte ?",
+        "revertTitle": "Revenir à la v1 héritée ?",
+        "upgradeIntro": "La mise à niveau fait passer votre formule au contrat de sémantique stricte v2 :",
+        "revertIntro": "Le retour fait repasser votre formule au contrat de sémantique héritée v1 :",
+        "diffSelectedEntry": "Entrée sélectionnée : la v2 impose des règles strictes de sélection d'entrée — une formule à plusieurs entrées doit choisir explicitement laquelle utiliser au lieu de prendre la première par défaut.",
+        "diffBailout": "Descripteurs de bailout : la v2 normalise les conditions d'échappement (radial fixe/paramétré, direction de comparaison préservée) au lieu de conserver les particularités de la v1 avec opérandes inversés.",
+        "diffStrictPredicates": "Rejet strict des prédicats : la v2 rejette les prédicats inconnus à la compilation au lieu de revenir silencieusement à 4.0.",
+        "upgradeNote": "Les aperçus ci-dessus montrent les différences réelles d’exécution entre v1 et v2. Confirmer bascule cette formule enregistrée vers v2 stricte ; tu peux revenir à v1 plus tard.",
+        "revertNote": "Revenir en arrière rétablit immédiatement le contrat hérité figé de compilation et de rendu v1. Tu peux relancer « Mettre à niveau et comparer » plus tard.",
+        "confirmUpgrade": "Mettre à niveau",
+        "confirmRevert": "Revenir",
+        "cancel": "Annuler",
+        "upgradeSuccess": "Formule mise à niveau vers la v2 stricte.",
+        "revertSuccess": "Formule revenue à la v1 héritée.",
+        "upgradeFailed": "Impossible de mettre la formule à niveau.",
+        "revertFailed": "Impossible de revenir en arrière pour la formule.",
+        "comparisonLoading": "Chargement de la formule enregistrée pour une comparaison en lecture seule…",
+        "comparisonFailed": "Le code source enregistré n’a pas pu être chargé. Rien n’a été modifié.",
+        "comparisonReadOnly": "Cette comparaison est en lecture seule. Aucun changement de version n’a lieu tant que tu n’as pas confirmé.",
+        "upgradeBlocked": "La v2 stricte a rejeté ce code source. La formule reste en v1 héritée ; utilise d’abord les diagnostics ci-dessus pour modifier une copie compatible.",
+        "legacyColumn": "v1 héritée",
+        "strictColumn": "v2 stricte",
+        "runnable": "Exécutable",
+        "readOnly": "Lecture seule",
+        "visualPreview": "Aperçu visuel",
+        "visualUnavailable": "Aucun aperçu exécutable pour ce contrat.",
+        "descriptorLabel": "Bailout",
+        "timingLabel": "Minutage de la boucle",
+        "legacyTiming": "Étape préalable héritée",
+        "afterStep": "Après l’étape",
+        "beforeStep": "Avant l’étape",
+        "smoothLabel": "Coloration lissée",
+        "legacyFrozen": "Comportement hérité figé",
+        "diagnosticsHeading": "Diagnostics",
+        "noDiagnostics": "Aucun diagnostic du compilateur.",
+        "diagnosticError": "Erreur",
+        "diagnosticWarning": "Avertissement",
+        "diagnosticNote": "Note"
+      }
     }
   },
   "common": {
@@ -252,7 +298,7 @@
       "frm": {
         "eyebrow": "Crée les tiennes",
         "title": "Apprends et écris des formules avec FRM",
-        "description": "FRM est le parcours d'écriture textuel et testé de FractalPark. Lis le guide de compatibilité, étudie les exemples vérifiés à la compilation, puis écris et prévisualise une formule localement dans l'éditeur autonome.",
+        "description": "FRM est le parcours de création textuel testé de FractalPark. Lis le guide de compatibilité, étudie des exemples vérifiés à la compilation, puis écris et prévisualise une formule dans l’éditeur autonome.",
         "learn": "Apprendre le FRM",
         "openEditor": "Ouvrir l'éditeur de formules"
       },
@@ -273,7 +319,7 @@
       },
       "cta": {
         "title": "Pars d'une formule ou écris la tienne",
-        "description": "Utilise l'Explorateur pour les formules intégrées, ou ouvre l'éditeur FRM local lorsque tu veux définir l'itération toi-même.",
+        "description": "Utilise l’Explorateur pour les formules intégrées, ou ouvre l’Éditeur FRM autonome lorsque tu veux définir toi-même l’itération.",
         "explore": "Ouvrir l'Explorateur",
         "editor": "Ouvrir l'éditeur de formules"
       }
@@ -336,7 +382,7 @@
           "table": {
             "level": "Niveau",
             "meaning": "Signification",
-            "scope": "Périmètre v0.4.13"
+            "scope": "Périmètre vérifié"
           },
           "levels": {
             "supported": {
@@ -372,7 +418,26 @@
             "preprocessor": "les fonctionnalités de préprocesseur",
             "rejected-constructs": "toute construction rejetée par le pipeline de compilation actuel"
           },
-          "disclaimer": "Il s'agit d'une base de compatibilité testée, et non d'une revendication de compatibilité totale avec Fractint. Lorsque le compilateur change, cette matrice et ses tests doivent changer ensemble."
+          "disclaimer": "Il s'agit d'une base de compatibilité testée, et non d'une revendication de compatibilité totale avec Fractint. Lorsque le compilateur change, cette matrice et ses tests doivent changer ensemble.",
+          "verified": {
+            "title": "Compatibilité vérifiée",
+            "intro": "Ces décomptes de capacités proviennent du manifeste versionné : 588 entrées cibles comprennent 579 validations strict-v2 et 9 dérogations documentées ; 117 entrées distinctes sont exclues pour des raisons stables.",
+            "stats": {
+              "builtins": "Fonctions intégrées",
+              "descriptors": "Types de descripteurs de bailout",
+              "target": "Entrées cibles",
+              "passed": "Validations strict-v2",
+              "waivers": "Dérogations documentées",
+              "excluded": "Exclues avec justification"
+            },
+            "groups": {
+              "descriptors": "Descripteurs de bailout",
+              "rejectReasons": "Motifs de rejet stables",
+              "builtins": "Fonctions intégrées"
+            },
+            "paramsLine": "Paramètres : {params} · Emplacements de fonction : {fnSlots}",
+            "manifestLine": "Manifeste de capacités v{manifest} · Sémantique stricte v{semantics}"
+          }
         },
         "anatomy": {
           "title": "Anatomie d'une formule",
@@ -455,7 +520,7 @@
             "parameter-drift": "Objectif : les emplacements de paramètres p1 et p2, un littéral complexe et cabs(z) comme fonction de magnitude explicite.",
             "orbit-echo": "Objectif : zPrev comme état d'orbite précédent. La rétroaction ajoute de la mémoire sans introduire une seconde variable d'état gérée manuellement."
           },
-          "editorNote": "L'éditeur FRM ouvre ces mêmes exemples vérifiés à la compilation par identifiant stable. La source de la formule reste locale et n'est jamais intégrée dans l'URL."
+          "editorNote": "L’Éditeur FRM ouvre ces mêmes exemples vérifiés à la compilation grâce à un ID stable. Le code source de la formule reste uniquement dans l’onglet actuel jusqu’à ce que tu l’enregistres dans ta bibliothèque de formules cloud, et n’est jamais intégré à l’URL."
         },
         "diagnostics": {
           "title": "Erreurs et diagnostics",
@@ -485,7 +550,7 @@
           "exploreTitle": "Voir le moteur de rendu en contexte",
           "exploreBody": "Ouvre l'Explorateur pour comparer le comportement des formules intégrées, la colorisation, les transformations, l'animation et les contrôles d'export avant d'écrire une formule personnalisée.",
           "exploreCta": "Ouvrir l'Explorateur",
-          "editorNote": "Utilise l'éditeur FRM dédié pour compiler, prévisualiser, importer, télécharger et enregistrer des formules locales avant d'en confier une à l'Explorateur.",
+          "editorNote": "Utilise l’Éditeur FRM dédié pour compiler, prévisualiser, importer et télécharger des formules ; connecte-toi pour en enregistrer une dans ta bibliothèque de formules cloud avant de la transmettre à l’Explorateur.",
           "referencesTitle": "Références",
           "referencesIntro": "Le contexte historique et les détails d'implémentation sont liés séparément afin que le guide puisse distinguer la lignée Fractint du contrat de compilateur actuel de FractalPark.",
           "references": {
@@ -1328,6 +1393,9 @@
         "empty": "Aucune formule personnalisée pour l'instant",
         "createFirst": "Crée ta première formule",
         "renameConfirm": "Confirmer",
+        "renameAction": "Renommer {name}",
+        "editAction": "Modifier {name}",
+        "deleteAction": "Supprimer {name}",
         "deleteConfirm": "Supprimer cette formule ?",
         "maxReached": "Limite maximale de formules atteinte ({count})",
         "formulaNotFound": "Cette formule n'existe plus dans ta bibliothèque cloud.",
@@ -1484,6 +1552,8 @@
         "outside": "Colorisation externe",
         "inside": "Colorisation interne",
         "smooth": "Lisse",
+        "smoothAdapted": "Adapted: radial-crossing-v1 approximation",
+        "smoothUnavailable": "Unavailable for this formula — rendering with Escape Time",
         "orbitTrap": "Piège d'orbite",
         "orbitEcho": "Écho d'orbite",
         "stripe": "Bandes",
@@ -1592,7 +1662,7 @@
       "compiling": "Compilation en cours...",
       "save": "Enregistrer",
       "saved": "Enregistré",
-      "savedDescription": "Formule « {name} » enregistrée localement",
+      "savedDescription": "La formule « {name} » a été enregistrée dans ta bibliothèque de formules cloud",
       "saveFailed": "Échec de l'enregistrement",
       "saveFailedDescription": "Impossible d'enregistrer la formule actuelle",
       "compileSuccess": "Compilation réussie",
@@ -1670,15 +1740,15 @@
     "previewEmpty": "Compile une formule valide pour mettre à jour cet aperçu.",
     "previewStale": "La source a changé. Ceci est le dernier aperçu réussi ; recompile avant d'enregistrer ou d'ouvrir.",
     "reset": "Réinitialiser la vue",
-    "unknownExample": "Cet exemple n'est pas disponible. Commence plutôt avec une formule locale vierge.",
+    "unknownExample": "Cet exemple n’est pas disponible. Commence plutôt avec une formule vide.",
     "replaceConfirm": "Remplacer le brouillon actuel non enregistré ?",
     "leaveConfirm": "Quitter cet éditeur et abandonner les modifications non enregistrées du brouillon ?",
-    "saved": "Enregistré localement.",
-    "saveError": "La formule n'a pas pu être enregistrée localement.",
+    "saved": "Enregistré dans ta bibliothèque de formules cloud.",
+    "saveError": "La bibliothèque de formules cloud est indisponible. Ta formule n’a pas été enregistrée.",
     "errors": {
       "maxCount": "Limite maximale de formules atteinte ({count}).",
-      "formulaNotFound": "Cette formule locale n'existe plus.",
-      "storageUnavailable": "La bibliothèque locale de formules n'a pas pu être mise à jour.",
+      "formulaNotFound": "Cette formule n’existe plus dans ta bibliothèque de formules cloud.",
+      "storageUnavailable": "Impossible de mettre à jour la bibliothèque de formules cloud.",
       "compileFailed": "La formule n'a pas pu être compilée.",
       "conflict": "Cette formule a été modifiée ailleurs. Recharge et réessaie.",
       "builtinConflict": "Cet identifiant est réservé par une formule intégrée."
@@ -1693,7 +1763,25 @@
       "size": "Les fichiers FRM doivent faire 256 Kio ou moins.",
       "encoding": "Le fichier doit être en UTF-8 valide."
     },
-    "librarySignIn": "Connecte-toi pour ouvrir ta bibliothèque cloud de formules."
+    "librarySignIn": "Connecte-toi pour ouvrir ta bibliothèque cloud de formules.",
+    "compat": {
+      "level": {
+        "supported": "Pris en charge",
+        "adapted": "Pris en charge avec adaptations",
+        "readOnly": "Lecture seule",
+        "invalid": "Source invalide"
+      },
+      "entriesTitle": "{count} entrées de formule trouvées — choisissez-en une pour l’ouvrir",
+      "entriesSummary": "{count} entrées, dont {blocked} non exécutables — appuyez pour choisir",
+      "select": "Ouvrir",
+      "adaptationsTitle": "Adaptations :",
+      "blockingTag": "Bloquant :",
+      "lineJump": "Ligne {line}",
+      "blockedHint": "Les sources en lecture seule ou invalides ne peuvent pas s’exécuter ; la modification, la copie et le téléchargement restent disponibles",
+      "blockedCompile": "Cette source est hors du contrat de compatibilité pris en charge et ne peut pas s’exécuter.",
+      "summary": "{level} · {errors, plural, =0 {aucune erreur} one {# erreur} other {# erreurs}} · {warnings, plural, =0 {aucun avertissement} one {# avertissement} other {# avertissements}}",
+      "selectEntry": "Ouvrir {name}"
+    }
   },
   "metadata": {
     "explore": {

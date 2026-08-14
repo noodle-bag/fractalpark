@@ -10,6 +10,7 @@ import type { VarType } from './type-system';
 import { collectVariables, inferType } from './type-system';
 import { FRMSourceMap } from './sourcemap';
 import { FN_SLOT_OPTIONS, isFnSlotName, isParameterName } from './builtins';
+import type { BailoutDescriptorC2 } from './bailout-descriptor';
 
 type CodeGenUniformType = 'float' | 'int' | 'vec2';
 
@@ -33,6 +34,7 @@ const COMPLEX_TYPE: VarType = { kind: 'complex' };
 
 export function generateGLSL(ast: FrmAST, sourceMap: FRMSourceMap): CodeGenResult {
   const variableTypes = collectVariables(ast.initBlock, ast.loopBlock);
+  const usedParameterSlots = collectUsedParameterSlots(ast);
   const ctx: CodeGenContext = {
     getVariableType: (name) => variableTypes.get(name),
     getNodeType: (node) => inferType(node, { getVariableType: (name) => variableTypes.get(name) }),
@@ -46,6 +48,7 @@ export function generateGLSL(ast: FrmAST, sourceMap: FRMSourceMap): CodeGenResul
     if (BUILTINS.has(name)) continue;
 
     if (isParameterName(name)) {
+      if (!usedParameterSlots.has(name)) continue;
       uniforms.push({ name: `u_${name}`, type: type.kind === 'complex' ? 'vec2' : 'float' });
       continue;
     }
@@ -104,6 +107,19 @@ function generateStatement(node: ASTNode, ctx: CodeGenContext, indent: number): 
 
   switch (node.type) {
     case 'assignment': {
+      if (node.component) {
+        // Component store: `real(tmp) = e` writes tmp.x only, `imag(tmp)`
+        // writes tmp.y only (classic dafrm09 idiom). The value coerces to
+        // real through the standard .x collapse.
+        const value = generateExpression(node.value, ctx, REAL_TYPE);
+        const line =
+          node.component === 'real'
+            ? `${spaces}${node.target} = vec2(${value}, ${node.target}.y);`
+            : `${spaces}${node.target} = vec2(${node.target}.x, ${value});`;
+        ctx.sourceMap.record(node, line);
+        ctx.sourceMap.advanceLine();
+        return line;
+      }
       const targetType = ctx.getVariableType(node.target) ?? ctx.getNodeType(node.value);
       const value = generateExpression(node.value, ctx, targetType);
       const line = `${spaces}${node.target} = ${value};`;
@@ -167,7 +183,10 @@ function generateBooleanExpression(node: ASTNode, ctx: CodeGenContext): string {
   }
 
   if (node.type === 'binary' && ['<', '>', '<=', '>=', '==', '!='].includes(node.op)) {
-    return generateExpression(node, ctx, REAL_TYPE);
+    // Boolean context: keep the GLSL bool text — generateExpressionRaw
+    // emits it directly (generateExpression would materialize float 0/1
+    // for arithmetic positions, which is not valid inside if()).
+    return generateExpressionRaw(node, ctx, REAL_TYPE);
   }
 
   if (node.type === 'unary' && node.op === '!') {
@@ -181,7 +200,18 @@ function generateBooleanExpression(node: ASTNode, ctx: CodeGenContext): string {
 
 function generateExpression(node: ASTNode, ctx: CodeGenContext, expectedType?: VarType): string {
   const actualType = ctx.getNodeType(node);
-  const expr = generateExpressionRaw(node, ctx, actualType);
+  let expr = generateExpressionRaw(node, ctx, actualType);
+  // Predicate ops emit GLSL BOOL text, but the dialect types them real
+  // 0/1 and they can feed arithmetic (ghost: (dist <= olddist) * c1).
+  // Value positions need the float materialization; boolean contexts go
+  // through generateBooleanExpression → generateExpressionRaw directly.
+  if (
+    (node.type === 'binary' &&
+      ['<', '>', '<=', '>=', '==', '!=', '&&', '||'].includes(node.op)) ||
+    (node.type === 'unary' && node.op === '!')
+  ) {
+    expr = `((${expr}) ? 1.0 : 0.0)`;
+  }
   return expectedType ? coerceExpression(expr, actualType, expectedType) : expr;
 }
 
@@ -203,7 +233,7 @@ function generateExpressionRaw(node: ASTNode, ctx: CodeGenContext, actualType: V
 
     case 'unary': {
       if (node.op === '!') {
-        return generateBooleanExpression(node.operand, ctx);
+        return `(!${generateBooleanExpression(node.operand, ctx)})`;
       }
 
       const operandType = ctx.getNodeType(node.operand);
@@ -369,6 +399,10 @@ function generateCallExpression(
       return `complexSin(${coerceExpression(args[0]?.expr ?? '0.0', args[0]?.type ?? REAL_TYPE, COMPLEX_TYPE)})`;
     case 'cos':
       return `complexCos(${coerceExpression(args[0]?.expr ?? '0.0', args[0]?.type ?? REAL_TYPE, COMPLEX_TYPE)})`;
+    case 'cosxx':
+      return `complexCosxx(${coerceExpression(args[0]?.expr ?? '0.0', args[0]?.type ?? REAL_TYPE, COMPLEX_TYPE)})`;
+    case 'cotanh':
+      return `frmCotanh(${coerceExpression(args[0]?.expr ?? '0.0', args[0]?.type ?? REAL_TYPE, COMPLEX_TYPE)})`;
     case 'tan':
       return `complexTan(${coerceExpression(args[0]?.expr ?? '0.0', args[0]?.type ?? REAL_TYPE, COMPLEX_TYPE)})`;
     case 'exp':
@@ -521,6 +555,51 @@ function collectUsedFnSlots(ast: FrmAST): Set<string> {
   return used;
 }
 
+/** Parameters are listed in BUILTIN_TYPES for type inference, so collect
+ * their actual identifier reads separately before exposing runtime uniforms.
+ */
+function collectUsedParameterSlots(ast: FrmAST): Set<string> {
+  const used = new Set<string>();
+
+  const visit = (node: ASTNode) => {
+    switch (node.type) {
+      case 'ident':
+        if (isParameterName(node.name)) used.add(node.name);
+        break;
+      case 'assignment':
+        visit(node.value);
+        break;
+      case 'binary':
+        visit(node.left);
+        visit(node.right);
+        break;
+      case 'unary':
+      case 'magnitude':
+        visit(node.operand);
+        break;
+      case 'call':
+        node.args.forEach(visit);
+        break;
+      case 'if':
+        visit(node.condition);
+        node.then.forEach(visit);
+        node.elseIf?.forEach((branch) => {
+          visit(branch.condition);
+          branch.body.forEach(visit);
+        });
+        node.else?.forEach(visit);
+        break;
+      default:
+        break;
+    }
+  };
+
+  ast.initBlock.forEach(visit);
+  ast.loopBlock.forEach(visit);
+  visit(ast.bailoutExpr);
+  return used;
+}
+
 function buildPrelude(fnSlots: string[], declarations: string[]): string {
   const parts: string[] = [];
 
@@ -567,6 +646,10 @@ vec2 frmComplexSqrt(vec2 value) {
 
 vec2 frmTanh(vec2 value) {
   return complexDiv(complexSinhVec(value), complexCoshVec(value));
+}
+
+vec2 frmCotanh(vec2 value) {
+  return complexDiv(complexCoshVec(value), complexSinhVec(value));
 }`);
 
   for (const fnSlot of fnSlots) {
@@ -591,6 +674,10 @@ function buildFnSlotHelper(fnSlot: string): string {
         return `  if (${uniformName} == ${option.value}) return complexSin(value);`;
       case 'cos':
         return `  if (${uniformName} == ${option.value}) return complexCos(value);`;
+      case 'cosxx':
+        return `  if (${uniformName} == ${option.value}) return complexCosxx(value);`;
+      case 'cotanh':
+        return `  if (${uniformName} == ${option.value}) return frmCotanh(value);`;
       case 'tan':
         return `  if (${uniformName} == ${option.value}) return complexTan(value);`;
       case 'exp':
@@ -658,4 +745,26 @@ function isDefaultInit(initBlock: ASTNode[]): boolean {
   if (stmt.value.type === 'number' && stmt.value.value === 0) return true;
   if (stmt.value.type === 'complex' && stmt.value.real === 0 && stmt.value.imag === 0) return true;
   return false;
+}
+
+/**
+ * Serialize a verified C2 threshold AST to GLSL through the SAME expression
+ * pipeline as the formula body (spec §4: consumers must not re-serialize in
+ * a divergent dialect). Parameter identifiers map to their uniforms
+ * (u_p1…u_p5), so parameter edits take effect without recompilation.
+ */
+export function generateC2ThresholdGLSL(
+  descriptor: BailoutDescriptorC2,
+  ast: FrmAST,
+): string {
+  const variableTypes = collectVariables(ast.initBlock, ast.loopBlock);
+  const ctx: CodeGenContext = {
+    getVariableType: (name) => variableTypes.get(name),
+    getNodeType: (node) => inferType(node, { getVariableType: (name) => variableTypes.get(name) }),
+    sourceMap: new FRMSourceMap(),
+  };
+  // The expression coerces to real through the type system's standard path:
+  // complex parameter expressions collapse to their real part (`.x`), which
+  // is exact for real-valued parameters (imag = 0).
+  return generateExpression(descriptor.thresholdNode, ctx, REAL_TYPE);
 }

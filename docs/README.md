@@ -22,6 +22,9 @@ govern FractalPark development.
 - [Analytics Event Schema v1](specs/analytics-events-v1.md) registers existing
   events and defines the Formula Atlas, FRM, artwork, and Remix event
   contracts.
+- [FRM Compatibility and Migration Contracts v1](specs/frm-compatibility-v1.md)
+  freezes the authoritative scanner, v1/v2 semantics, descriptor, diagnostics,
+  compatibility-evidence, and migration boundaries for v0.4.18.
 
 ## Architecture Decision Records
 
@@ -38,6 +41,8 @@ govern FractalPark development.
 - [ADR 0006](adr/0006-cloud-authoritative-creation-persistence.md): cloud
   draft is the only persistence; My Formulas move to the cloud; one-time
   clean cut of business localStorage.
+- [ADR 0007](adr/0007-frm-semantics-versioning.md): freeze legacy v1 visuals
+  and make strict v2 an explicit, reversible formula contract.
 
 ## Test Plans
 
@@ -49,6 +54,9 @@ govern FractalPark development.
 - [v0.4.16 Regression Matrix](testing/v0.4.16-regression-matrix.md) defines
   commit and release gates for cloud-first navigation and the unified
   creation experience.
+- [v0.4.18 Regression Matrix](testing/v0.4.18-regression-matrix.md) defines
+  public Level 1 and maintainer-local Level 2 gates for trusted FRM
+  compatibility.
 
 ## Maintenance
 

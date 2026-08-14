@@ -8,12 +8,21 @@
 
 'use client';
 
-import React, { useState } from 'react';
+import React, { useRef, useState } from 'react';
 import { useLocale, useTranslations } from 'next-intl';
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogFooter,
+  DialogHeader,
+  DialogTitle,
+} from '@/components/ui/dialog';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
 import { Badge } from '@/components/ui/badge';
+import { useToast } from '@/hooks/use-toast';
 import {
   Edit2,
   Trash2,
@@ -28,46 +37,101 @@ import {
   useCloudFormulaLibrary,
   type FormulaMutationResult,
 } from '@/hooks/useCloudFormulaLibrary';
-import { resolveFormulaReference } from '@/lib/formula-resolver';
-import { readSessionFormulaAssets } from '@/lib/formula-resolver';
+import type { CustomFormulaSemanticsAction } from '@/lib/cloud/client';
+import {
+  parseCloudCustomFormulaReference,
+  parseCloudCustomFormulaStorageId,
+  toCloudCustomFormulaRuntimeId,
+} from '@/lib/cloud/custom-formula-identity';
+import {
+  MAX_CUSTOM_FORMULAS,
+  readSessionFormulaAssets,
+  resolveFormulaReference,
+} from '@/lib/formula-resolver';
 import { FormulaEditor } from './FormulaEditor';
+import { FrmSemanticsComparisonView } from './FrmSemanticsComparisonView';
 import type { FormulaPlugin } from '@/engine/plugins/types';
 import type { FormulaExperienceHint } from '@/engine/frm/authoring';
+import {
+  resolveFrmSemanticsVersion,
+  type FrmSemanticsVersion,
+} from '@/engine/frm/semantics-version';
 import { CUSTOM_FORMULA_EXAMPLES } from '@/engine/frm/example-library';
 import type { ViewBounds } from '@/engine/types';
-import { MAX_CUSTOM_FORMULAS } from '@/lib/formula-resolver';
-import type { CloudCustomFormulaSummary } from '@/lib/cloud/client';
+
+import type {
+  CloudCustomFormulaDetail,
+  CloudCustomFormulaSummary,
+} from '@/lib/cloud/client';
+import {
+  compareFrmSemantics,
+  type FrmSemanticsComparison,
+} from '@/lib/frm-semantics-comparison';
+
+function runtimeIdForStorageId(formulaId: string): string | undefined {
+  const storageId = parseCloudCustomFormulaStorageId(formulaId);
+  return storageId ? toCloudCustomFormulaRuntimeId(storageId) : undefined;
+}
 
 interface CustomFormulaListProps {
+  currentFormula?: string;
   currentBounds?: ViewBounds;
   onSelectFormula?: (plugin: FormulaPlugin, experienceHint?: FormulaExperienceHint) => void;
 }
 
-export function CustomFormulaList({ currentBounds, onSelectFormula }: CustomFormulaListProps) {
+/** Strict v2 (explicit column) vs legacy v1 (missing column reads as v1). */
+function isStrictV2(formula: CloudCustomFormulaSummary): boolean {
+  return formula.frmSemanticsVersion === 2;
+}
+
+export function CustomFormulaList({
+  currentFormula,
+  currentBounds,
+  onSelectFormula,
+}: CustomFormulaListProps) {
   const t = useTranslations('explore');
   const customT = useTranslations('explore.formula.customLibrary');
+  const semanticsT = useTranslations('cloud.customFormulas.semantics');
   const locale = useLocale();
+  const { toast } = useToast();
   const { state: session, openSignIn } = useCloudSession();
   const {
     formulas,
     isLoading,
     getDetail,
+    inspectDetail,
     ensureRegistered,
     saveFormula,
     deleteFormula,
     renameFormula,
+    changeSemantics,
   } = useCloudFormulaLibrary();
 
   const [showEditor, setShowEditor] = useState(false);
   const [editingFormulaId, setEditingFormulaId] = useState<string | undefined>(undefined);
   const [editorSource, setEditorSource] = useState<string | undefined>(undefined);
   const [editorExperienceHint, setEditorExperienceHint] = useState<FormulaExperienceHint | undefined>(undefined);
+  const [editorSemanticsVersion, setEditorSemanticsVersion] =
+    useState<FrmSemanticsVersion>(2);
   const [renamingId, setRenamingId] = useState<string | null>(null);
   const [newName, setNewName] = useState('');
   const [actionError, setActionError] = useState('');
   const [busyId, setBusyId] = useState<string | null>(null);
+  /** Pending explicit FRM semantics change awaiting confirmation (v0.4.18). */
+  const [semanticsAction, setSemanticsAction] = useState<{
+    formulaId: string;
+    action: CustomFormulaSemanticsAction;
+  } | null>(null);
+  const [semanticsComparison, setSemanticsComparison] =
+    useState<FrmSemanticsComparison | null>(null);
+  const [semanticsCompareStatus, setSemanticsCompareStatus] =
+    useState<'idle' | 'loading' | 'ready' | 'failed'>('idle');
+  const semanticsRequestRef = useRef(0);
 
   const authenticated = session.status === 'authenticated';
+  const activeCloudStorageId = parseCloudCustomFormulaReference(
+    currentFormula ?? '',
+  )?.storageId;
 
   const localizeError = (result: FormulaMutationResult): string => {
     switch (result.code) {
@@ -91,6 +155,7 @@ export function CustomFormulaList({ currentBounds, onSelectFormula }: CustomForm
     setEditingFormulaId(undefined);
     setEditorSource(undefined);
     setEditorExperienceHint(undefined);
+    setEditorSemanticsVersion(2);
     setShowEditor(true);
   };
 
@@ -108,6 +173,9 @@ export function CustomFormulaList({ currentBounds, onSelectFormula }: CustomForm
     setEditorExperienceHint(
       (detail.experienceHint ?? undefined) as FormulaExperienceHint | undefined,
     );
+    setEditorSemanticsVersion(
+      resolveFrmSemanticsVersion(detail.frmSemanticsVersion),
+    );
     setShowEditor(true);
   };
 
@@ -115,7 +183,13 @@ export function CustomFormulaList({ currentBounds, onSelectFormula }: CustomForm
     name: string,
     source: string,
     experienceHint?: FormulaExperienceHint,
-  ): Promise<{ success: boolean; error?: string; id?: string; silent?: boolean }> => {
+  ): Promise<{
+    success: boolean;
+    error?: string;
+    storageId?: string;
+    runtimeId?: string;
+    silent?: boolean;
+  }> => {
     const result = await saveFormula({
       name,
       source,
@@ -123,9 +197,14 @@ export function CustomFormulaList({ currentBounds, onSelectFormula }: CustomForm
       formulaId: editingFormulaId,
     });
     if (result.success) {
+      if (!result.runtimeId) {
+        const message = customT('unavailable');
+        setActionError(message);
+        return { success: false, error: message };
+      }
       setActionError('');
       const resolved = resolveFormulaReference(
-        result.formulaId ?? '',
+        result.runtimeId,
         readSessionFormulaAssets(),
       );
       if (resolved.success && resolved.kind === 'custom') {
@@ -133,7 +212,11 @@ export function CustomFormulaList({ currentBounds, onSelectFormula }: CustomForm
       }
       setShowEditor(false);
       setEditingFormulaId(undefined);
-      return { success: true, id: result.formulaId };
+      return {
+        success: true,
+        storageId: result.storageId,
+        runtimeId: result.runtimeId,
+      };
     }
     if (result.code === 'auth-cancelled') {
       // Dialog closed without verifying — nothing saved, nothing to say.
@@ -167,6 +250,85 @@ export function CustomFormulaList({ currentBounds, onSelectFormula }: CustomForm
     setNewName('');
   };
 
+  const openSemanticsDialog = async (
+    formula: CloudCustomFormulaSummary,
+  ) => {
+    const action: CustomFormulaSemanticsAction = isStrictV2(formula)
+      ? 'revertSemantics'
+      : 'upgradeSemantics';
+    const requestId = semanticsRequestRef.current + 1;
+    semanticsRequestRef.current = requestId;
+    setSemanticsAction({ formulaId: formula.id, action });
+    setSemanticsComparison(null);
+
+    if (action === 'revertSemantics') {
+      setSemanticsCompareStatus('idle');
+      return;
+    }
+
+    setSemanticsCompareStatus('loading');
+    const detail: CloudCustomFormulaDetail | null = await inspectDetail(formula.id);
+    if (semanticsRequestRef.current !== requestId) return;
+    if (!detail) {
+      setSemanticsCompareStatus('failed');
+      return;
+    }
+
+    try {
+      setSemanticsComparison(
+        compareFrmSemantics({
+          formulaId: runtimeIdForStorageId(detail.id) ?? detail.id,
+          source: detail.source,
+          experienceHint: (detail.experienceHint ?? undefined) as
+            | FormulaExperienceHint
+            | undefined,
+        }),
+      );
+      setSemanticsCompareStatus('ready');
+    } catch {
+      setSemanticsCompareStatus('failed');
+    }
+  };
+
+  const closeSemanticsDialog = () => {
+    semanticsRequestRef.current += 1;
+    setSemanticsAction(null);
+    setSemanticsComparison(null);
+    setSemanticsCompareStatus('idle');
+  };
+
+  /**
+   * Explicit FRM semantics change (v0.4.18 Upgrade & Compare): comparison
+   * is read-only; only this final confirmation persists the revision-checked
+   * version change.
+   */
+  const handleSemanticsChange = async (
+    formulaId: string,
+    action: CustomFormulaSemanticsAction,
+  ) => {
+    setBusyId(formulaId);
+    closeSemanticsDialog();
+    const result = await changeSemantics(formulaId, action);
+    setBusyId(null);
+    if (result.success) {
+      setActionError('');
+      toast({
+        title:
+          action === 'upgradeSemantics'
+            ? semanticsT('upgradeSuccess')
+            : semanticsT('revertSuccess'),
+      });
+      return;
+    }
+    toast({
+      title:
+        action === 'upgradeSemantics'
+          ? semanticsT('upgradeFailed')
+          : semanticsT('revertFailed'),
+      variant: 'destructive',
+    });
+  };
+
   const handleSelect = async (formula: CloudCustomFormulaSummary) => {
     setBusyId(formula.id);
     const registered = await ensureRegistered(formula.id);
@@ -175,19 +337,32 @@ export function CustomFormulaList({ currentBounds, onSelectFormula }: CustomForm
       setActionError(customT('unavailable'));
       return;
     }
-    const resolved = resolveFormulaReference(formula.id, readSessionFormulaAssets());
-    if (resolved.success) {
+    const storageId = parseCloudCustomFormulaStorageId(formula.id);
+    const resolved = storageId
+      ? resolveFormulaReference(
+          toCloudCustomFormulaRuntimeId(storageId),
+          readSessionFormulaAssets(),
+        )
+      : null;
+    if (resolved?.success) {
       setActionError('');
       onSelectFormula?.(resolved.plugin, resolved.experienceHint);
     } else {
-      setActionError(resolved.errors.join('; '));
+      setActionError(
+        resolved ? resolved.errors.join('; ') : customT('unavailable'),
+      );
     }
   };
 
   if (showEditor) {
     return (
       <FormulaEditor
-        formulaId={editingFormulaId}
+        formulaId={
+          editingFormulaId
+            ? runtimeIdForStorageId(editingFormulaId)
+            : undefined
+        }
+        frmSemanticsVersion={editorSemanticsVersion}
         initialSource={editorSource}
         initialExperienceHint={editorExperienceHint}
         currentBounds={currentBounds}
@@ -200,6 +375,7 @@ export function CustomFormulaList({ currentBounds, onSelectFormula }: CustomForm
           setEditingFormulaId(undefined);
           setEditorSource(undefined);
           setEditorExperienceHint(undefined);
+          setEditorSemanticsVersion(2);
         }}
       />
     );
@@ -249,6 +425,7 @@ export function CustomFormulaList({ currentBounds, onSelectFormula }: CustomForm
                   setEditingFormulaId(undefined);
                   setEditorSource(example.source);
                   setEditorExperienceHint(example.experienceHint);
+                  setEditorSemanticsVersion(2);
                   setShowEditor(true);
                 }}
               >
@@ -286,16 +463,21 @@ export function CustomFormulaList({ currentBounds, onSelectFormula }: CustomForm
             {formulas.map((formula) => (
               <div
                 key={formula.id}
-                className="flex items-center justify-between p-3 border rounded-lg hover:bg-muted/50 transition-colors"
+                className={`rounded-lg border p-3 transition-colors hover:bg-muted/50 ${
+                  activeCloudStorageId === parseCloudCustomFormulaStorageId(formula.id)
+                    ? 'border-primary/50 bg-primary/10 ring-1 ring-primary/30'
+                    : ''
+                }`}
+                data-testid={`custom-formula-row-${formula.id}`}
               >
-                <div className="flex items-center gap-3 flex-1 min-w-0">
+                <div className="flex min-w-0 items-start gap-3">
                   {/* Cloud formulas compiled server-side at save time — a
                       listed formula is a valid one. */}
-                  <CheckCircle className="w-5 h-5 text-green-500 shrink-0" />
+                  <CheckCircle className="mt-0.5 h-5 w-5 shrink-0 text-green-500" />
 
-                  <div className="flex-1 min-w-0">
+                  <div className="min-w-0 flex-1">
                     {renamingId === formula.id ? (
-                      <div className="flex items-center gap-2">
+                      <div className="flex min-w-0 flex-wrap items-center gap-2">
                         <Input
                           value={newName}
                           onChange={(e) => setNewName(e.target.value)}
@@ -307,7 +489,7 @@ export function CustomFormulaList({ currentBounds, onSelectFormula }: CustomForm
                             }
                           }}
                           autoFocus
-                          className="h-8"
+                          className="h-8 min-w-0 flex-1 basis-48"
                         />
                         <Button
                           size="sm"
@@ -318,54 +500,90 @@ export function CustomFormulaList({ currentBounds, onSelectFormula }: CustomForm
                         </Button>
                       </div>
                     ) : (
-                      <div>
+                      <div className="flex min-w-0 flex-wrap items-center gap-x-2 gap-y-1">
                         <button
                           onClick={() => void handleSelect(formula)}
-                          className="font-medium hover:underline text-left truncate block"
+                          className="min-w-0 max-w-full break-words text-left font-medium hover:underline"
                           disabled={busyId === formula.id}
                         >
                           {formula.name}
                         </button>
+                        {activeCloudStorageId ===
+                          parseCloudCustomFormulaStorageId(formula.id) && (
+                          <Badge
+                            className="shrink-0 text-[10px] leading-4"
+                            data-testid={`active-formula-${formula.id}`}
+                            variant="secondary"
+                          >
+                            {t('formula.active')}
+                          </Badge>
+                        )}
+                        {/* FRM semantics contract badge: explicit v2 vs legacy v1. */}
+                        <Badge
+                          variant="secondary"
+                          className="shrink-0 text-[10px] leading-4"
+                          data-testid={`semantics-badge-${formula.id}`}
+                        >
+                          {isStrictV2(formula)
+                            ? semanticsT('badgeV2')
+                            : semanticsT('badgeV1')}
+                        </Badge>
                       </div>
                     )}
                   </div>
                 </div>
 
-                <div className="flex items-center gap-1 shrink-0">
-                  {renamingId !== formula.id && (
-                    <>
-                      <Button
-                        variant="ghost"
-                        size="icon"
-                        onClick={() => {
-                          setRenamingId(formula.id);
-                          setNewName(formula.name);
-                        }}
-                      >
-                        <Edit2 className="w-4 h-4" />
-                      </Button>
+                {renamingId !== formula.id && (
+                  <div
+                    className="mt-2 flex w-full flex-wrap items-center justify-end gap-1 pt-1"
+                    data-testid={`custom-formula-actions-${formula.id}`}
+                  >
+                    {/* Explicit, reversible FRM semantics change (v0.4.18). */}
+                    <Button
+                      variant="outline"
+                      size="sm"
+                      disabled={busyId === formula.id}
+                      onClick={() => void openSemanticsDialog(formula)}
+                    >
+                      {isStrictV2(formula)
+                        ? semanticsT('revertButton')
+                        : semanticsT('upgradeButton')}
+                    </Button>
 
-                      <Button
-                        variant="ghost"
-                        size="icon"
-                        disabled={busyId === formula.id}
-                        onClick={() => void openFormulaEditor(formula)}
-                      >
-                        <Code className="w-4 h-4" />
-                      </Button>
+                    <Button
+                      variant="ghost"
+                      size="icon"
+                      aria-label={customT('renameAction', { name: formula.name })}
+                      onClick={() => {
+                        setRenamingId(formula.id);
+                        setNewName(formula.name);
+                      }}
+                    >
+                      <Edit2 className="w-4 h-4" />
+                    </Button>
 
-                      <Button
-                        variant="ghost"
-                        size="icon"
-                        disabled={busyId === formula.id}
-                        onClick={() => void handleDelete(formula.id)}
-                        data-testid="delete-formula"
-                      >
-                        <Trash2 className="w-4 h-4 text-red-500" />
-                      </Button>
-                    </>
-                  )}
-                </div>
+                    <Button
+                      variant="ghost"
+                      size="icon"
+                      aria-label={customT('editAction', { name: formula.name })}
+                      disabled={busyId === formula.id}
+                      onClick={() => void openFormulaEditor(formula)}
+                    >
+                      <Code className="w-4 h-4" />
+                    </Button>
+
+                    <Button
+                      variant="ghost"
+                      size="icon"
+                      aria-label={customT('deleteAction', { name: formula.name })}
+                      disabled={busyId === formula.id}
+                      onClick={() => void handleDelete(formula.id)}
+                      data-testid="delete-formula"
+                    >
+                      <Trash2 className="w-4 h-4 text-red-500" />
+                    </Button>
+                  </div>
+                )}
               </div>
             ))}
           </div>
@@ -377,6 +595,102 @@ export function CustomFormulaList({ currentBounds, onSelectFormula }: CustomForm
           </p>
         )}
       </CardContent>
+
+      {/* Explicit FRM semantics change. Upgrade compares the stored source
+          through both frozen contracts before the revision-checked write;
+          revert remains a direct, reversible confirmation. */}
+      <Dialog
+        open={semanticsAction !== null}
+        onOpenChange={(open) => {
+          if (!open) closeSemanticsDialog();
+        }}
+      >
+        <DialogContent className="max-h-[calc(100dvh-2rem)] overflow-y-auto sm:max-w-5xl">
+          <DialogHeader>
+            <DialogTitle>
+              {semanticsAction?.action === 'upgradeSemantics'
+                ? semanticsT('upgradeTitle')
+                : semanticsT('revertTitle')}
+            </DialogTitle>
+            <DialogDescription asChild>
+              <div className="space-y-2 text-sm">
+                <p>
+                  {semanticsAction?.action === 'upgradeSemantics'
+                    ? semanticsT('upgradeIntro')
+                    : semanticsT('revertIntro')}
+                </p>
+                <ul className="list-disc space-y-1 pl-5">
+                  <li>{semanticsT('diffSelectedEntry')}</li>
+                  <li>{semanticsT('diffBailout')}</li>
+                  <li>{semanticsT('diffStrictPredicates')}</li>
+                </ul>
+              </div>
+            </DialogDescription>
+          </DialogHeader>
+
+          {semanticsAction?.action === 'upgradeSemantics' ? (
+            <div aria-live="polite" className="space-y-3">
+              {semanticsCompareStatus === 'loading' ? (
+                <div
+                  className="flex min-h-48 items-center justify-center rounded-lg border bg-muted/30 text-sm text-muted-foreground"
+                  data-testid="semantics-comparison-loading"
+                >
+                  {semanticsT('comparisonLoading')}
+                </div>
+              ) : semanticsCompareStatus === 'failed' ? (
+                <p
+                  className="rounded-lg border border-destructive/40 bg-destructive/10 p-3 text-sm text-destructive"
+                  role="alert"
+                >
+                  {semanticsT('comparisonFailed')}
+                </p>
+              ) : semanticsComparison ? (
+                <FrmSemanticsComparisonView comparison={semanticsComparison} />
+              ) : null}
+              <p className="text-sm text-muted-foreground">
+                {semanticsComparison?.v2.result.success
+                  ? semanticsT('upgradeNote')
+                  : semanticsCompareStatus === 'ready'
+                    ? semanticsT('upgradeBlocked')
+                    : semanticsT('comparisonReadOnly')}
+              </p>
+            </div>
+          ) : (
+            <p className="text-sm text-muted-foreground">
+              {semanticsT('revertNote')}
+            </p>
+          )}
+
+          <DialogFooter>
+            <Button onClick={closeSemanticsDialog} type="button" variant="outline">
+              {semanticsT('cancel')}
+            </Button>
+            <Button
+              disabled={
+                semanticsAction?.action === 'upgradeSemantics' &&
+                !(
+                  semanticsCompareStatus === 'ready' &&
+                  semanticsComparison?.v2.result.success &&
+                  semanticsComparison.v2.result.plugin
+                )
+              }
+              onClick={() => {
+                if (semanticsAction) {
+                  void handleSemanticsChange(
+                    semanticsAction.formulaId,
+                    semanticsAction.action,
+                  );
+                }
+              }}
+              type="button"
+            >
+              {semanticsAction?.action === 'upgradeSemantics'
+                ? semanticsT('confirmUpgrade')
+                : semanticsT('confirmRevert')}
+            </Button>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
     </Card>
   );
 }

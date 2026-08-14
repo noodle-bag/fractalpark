@@ -6,6 +6,22 @@ import { migrateFractalDocument, normalizeFractalDocument, normalizeRuntimeFract
 import type { SavedFractal } from '@/engine/types';
 
 describe('document migrate / normalize', () => {
+  it('canonicalizes historical cloud UUID references without touching other custom IDs', () => {
+    const storageId = '44444444-4444-4444-8444-444444444444';
+    const runtimeId = `custom-${storageId}`;
+    const doc = normalizeFractalDocument({
+      formula: { formulaId: storageId },
+      assets: { formula: { id: storageId } },
+    });
+
+    expect(doc.formula.formulaId).toBe(runtimeId);
+    expect(doc.assets?.formula?.id).toBe(runtimeId);
+    expect(
+      normalizeFractalDocument({ formula: { formulaId: 'custom-fixture' } })
+        .formula.formulaId,
+    ).toBe('custom-fixture');
+  });
+
   it('normalizes partial documents to schema v2 defaults', () => {
     const doc = normalizeFractalDocument({
       scene: {

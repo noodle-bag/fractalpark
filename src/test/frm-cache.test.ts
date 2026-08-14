@@ -9,7 +9,7 @@ import { compileFrm } from '../engine/frm/compile';
 import type { CompileResult } from '../engine/frm/compile';
 
 function makeSuccessfulResult(): CompileResult {
-  return { success: true, errors: [], warnings: [] };
+  return { success: true, errors: [], warnings: [], frmSemanticsVersion: 1 };
 }
 
 type CacheEntryView = { timestamp: number };
