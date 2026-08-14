@@ -92,7 +92,7 @@ export default function Navbar() {
         </div>
 
         <div
-          className="ml-auto hidden shrink-0 justify-end md:flex md:items-center md:gap-4"
+          className="ml-auto hidden shrink-0 justify-end lg:flex lg:items-center lg:gap-4"
           data-testid="navbar-desktop-actions"
         >
           <NavigationMenu>
@@ -129,7 +129,10 @@ export default function Navbar() {
           </div>
         </div>
 
-        <div className="ml-auto flex shrink-0 items-center gap-2 md:hidden">
+        <div
+          className="ml-auto flex shrink-0 items-center gap-2 lg:hidden"
+          data-testid="navbar-mobile-actions"
+        >
           <div className={navbarTransparent ? 'text-white' : ''}>
             <LanguageSwitcher />
           </div>

@@ -60,6 +60,12 @@ describe('Navbar desktop alignment', () => {
     expect(actions.className).toContain('ml-auto');
     expect(actions.className).toContain('shrink-0');
     expect(actions.className).toContain('justify-end');
+    expect(actions.className).toContain('lg:flex');
+    expect(actions.className).not.toContain('md:flex');
+
+    const mobileActions = screen.getByTestId('navbar-mobile-actions');
+    expect(mobileActions.className).toContain('lg:hidden');
+    expect(mobileActions.className).not.toContain('md:hidden');
   });
 
   it('uses a larger, truncation-safe tagline in the desktop navbar', () => {
