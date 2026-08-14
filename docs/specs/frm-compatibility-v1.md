@@ -1,8 +1,8 @@
 # FRM Compatibility and Migration Contracts v1
 
 - Status: Frozen (v0.4.18 release candidate)
-- Date: 2026-08-12
-- Last verified: 2026-08-13 (identity-contract repair; release gates remain separate)
+- Date: 2026-08-14
+- Last verified: 2026-08-14 (formal-review remediation; release gates remain separate)
 
 ## Purpose
 
@@ -101,6 +101,10 @@ Rules:
   while NULL preserves the current version on ordinary updates and reads as
   legacy v1 when absent. Both remain pending hosted-ops review; build and
   application startup never apply them.
+- Hosted deployment must apply and verify both migrations **before** serving
+  route code that sends `p_frm_semantics_version`. Explicit v2 creation fails
+  closed against the old RPC; it must never be retried through the legacy
+  contract, because that would persist v2-authored source as an implicit v1 row.
 - `coloring.pipelineVersion` describes the coloring pipeline only and is
   persisted and migrated separately from `frmSemanticsVersion`.
 
@@ -118,6 +122,12 @@ Rules:
   `imag()` is intentionally excluded (its scalar default is always 0).
 - Comparison direction (`<`, `<=`, `>`, `>=`) is preserved exactly; operand
   swapping must not smuggle in a changed meaning.
+- In strict v2, C1/C2 radial thresholds are **true magnitudes**. A source such
+  as `|z| < 4` continues while the radius is below 4; the shader therefore
+  compares `dot(z, z)` with the squared threshold `16`. This intentionally
+  differs from frozen v1/Fractint-compatible numeric bailout behavior, where
+  the same numeric channel is compared directly with `dot(z, z)` (effective
+  radius 2). The difference is version-gated; ordinary saves never upgrade it.
 - Legacy v1 mis-extraction of swapped operands may exist only inside the
   compatibility reader/controls — never in v2 descriptors, capability
   conclusions, or strict-pass evidence.
@@ -258,9 +268,9 @@ resource contract remain bare UUIDs and require no data migration.
   any classic loop expression may also read it under a C1/C2/C4-R bailout.
   The assembler derives `HAS_FRM_LAST_SQR` from the codegen-owned declaration
   and the framework resets it at every orbit entry; B94/native-v1 shaders
-  neither declare nor pay for that state. Public WebGL controls must match
-  both a C5 bailout orbit and a non-C5 loop-side-channel orbit, then compile,
-  link, draw, and read back representative pipeline-v1 formulas.
+  neither declare nor pay for that state. Project-owned WebGL controls must
+  match both a C5 bailout orbit and a non-C5 loop-side-channel orbit,
+  then compile, link, draw, and read back representative pipeline-v1 formulas.
 - Normal-map/DEM is not implied by Smooth availability; it requires its
   own capability.
 
@@ -287,26 +297,25 @@ Five layers, split across two execution levels:
 | Syntax | native/Classic → canonical IR | target set generatable, exclusions definitively rejected |
 | Semantics | descriptor, params/fn, timing, capability | unknown = 0; all four runtime descriptor kinds covered by real compiler probes |
 | Orbit | per-iteration z/LastSqr/continue/iteration | full target set |
-| WebGL | compile/link/first frame/NaN/basic interaction | starter-profile smoke (sampled CI) / full-coverage smoke (maintainer Level 2) |
+| WebGL | compile/link/first frame/NaN/basic interaction | project-owned starter smoke / private-corpus full-coverage smoke (both maintainer Level 2) |
 
-- **Level 1 (public PR CI)** runs clean-room fixtures, project-owned B94
-  controls, v1/v2 round-trips, message key-set/interpolation parity across
-  all supported locales, capability-manifest drift checks (7a), compat-
-  report schema verifier (7d), leakage scan, lint, unit, build, and
-  affected Playwright. It must not require private corpora. The sampled
-  smoke runs a deterministic stride of the ledger and always stays green
-  in CI.
-- **Level 2 (maintainer-local pre-merge hard gate)** injects the private
-  corpus via local path on the same candidate commit that passed Level 1,
-  and persists only report schema/version, compiler commit, source
-  snapshot hash, selector version, device/environment, aggregate results,
-  duration, and report content hash — never corpus text or local paths.
-  The full-coverage smoke mode (`FRM_SMOKE_FULL=1`) covers every corpus-
-  resolvable ledger row including anchor-reconstructed entries (source
-  text derived from the ledger's sha256-anchored normalised cells); a
-  single row of chaotic-f32-boundary divergence is documented with
-  per-round trajectory evidence and gated by an exact GPU/CPU fingerprint
-  (Slice 7d).
+- **Level 1 (committed public PR CI)** runs clean-room fixtures, v1/v2
+  round-trips, message key-set/interpolation parity across all supported
+  locales, capability-manifest drift checks (7a), compat-report schema
+  verifier (7d), leakage scan, lint, unit, and build. It must not require
+  private corpora. The current committed workflow does not run Playwright or
+  WebGL; those results must never be described as public-CI enforcement.
+- **Level 2 (maintainer-local pre-merge hard gate)** runs affected Playwright
+  and the project-owned starter WebGL smoke on the same candidate commit that
+  passed Level 1. Its private-corpus modes inject source via a local path and
+  persist only report schema/version, compiler commit, source snapshot hash,
+  selector version, device/environment, aggregate results, duration, and
+  report content hash — never corpus text or local paths. The full-coverage
+  smoke mode (`FRM_SMOKE_FULL=1`) covers every corpus-resolvable ledger row
+  including anchor-reconstructed entries (source text derived from the
+  ledger's sha256-anchored normalised cells); a single row of chaotic-f32-
+  boundary divergence is documented with per-round trajectory evidence and
+  gated by an exact GPU/CPU fingerprint (Slice 7d).
 
 ## 10. Compatibility facts baseline (frozen at Slice 7, release candidate)
 

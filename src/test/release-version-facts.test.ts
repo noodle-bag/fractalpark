@@ -29,4 +29,28 @@ describe('release-candidate version facts', () => {
       new RegExp(`^## ${pkg.version.replace(/\./g, '\\.')}(?: -|$)`, 'm'),
     );
   });
+
+  it('keeps the WebGL gate classified by its actual executor', () => {
+    const ci = readFileSync(
+      join(process.cwd(), '.github/workflows/ci.yml'),
+      'utf8',
+    );
+    const matrix = readFileSync(
+      join(process.cwd(), 'docs/testing/v0.4.18-regression-matrix.md'),
+      'utf8',
+    );
+    const spec = readFileSync(
+      join(process.cwd(), 'docs/specs/frm-compatibility-v1.md'),
+      'utf8',
+    );
+    const changelog = readFileSync(join(process.cwd(), 'CHANGELOG.md'), 'utf8');
+
+    expect(ci).not.toContain('test:webgl-smoke');
+    expect(matrix).toMatch(/\| CC-5 \|[^\n]+\| L2 \(project-owned maintainer WebGL gate\) \|/);
+    expect(spec).toContain(
+      'The current committed workflow does not run Playwright or\n  WebGL',
+    );
+    expect(changelog).not.toMatch(/public WebGL gate/i);
+    expect(changelog).toContain('project-owned maintainer WebGL gate');
+  });
 });

@@ -1,6 +1,6 @@
 # Changelog
 
-## 0.4.18 - 2026-08-12
+## 0.4.18 - 2026-08-14
 
 Trusted classic FRM compatibility: one versioned compiler path now preserves existing v1 visuals while making strict v2 semantics explicit, inspectable, and reversible.
 
@@ -21,12 +21,16 @@ Trusted classic FRM compatibility: one versioned compiler path now preserves exi
 
 ### Fixed
 
-- Fixed swapped-operand bailout direction, unknown-predicate fallback, loop timing, C2 threshold coercion, descriptor-aware shader cache keys, and strict-v2 rendering paths without changing legacy v1 output.
+- Fixed swapped-operand bailout direction, exact C1 equality boundaries, unknown-predicate fallback, loop timing, C2 threshold coercion, registry-backed descriptor-aware shader cache keys, and strict-v2 rendering paths without changing legacy v1 output.
+- Fixed Classic special-name `comment { ... }` blocks appearing as selectable formulas, section-keyword variable collisions (`init`, `loop`, `bailout`), and strict constant thresholds using `pi`/`e`.
 - Fixed Upgrade & Compare being only a confirmation dialog; comparison is now read-only until confirmation and strict-v2 failures block the write with actionable diagnostics.
 - Fixed same-source portable assets with different semantics versions being treated as interchangeable, and fixed successful version changes leaving the active session on a stale compiled plugin.
 - Fixed native Editor sources being sent through the classic-only classifier, legacy-v1 custom assets inheriting a document's v2 renderer pipeline, and stale semantics confirmations bypassing revision conflict handling.
+- Fixed custom-formula reads masking unrelated PostgREST failures as legacy-v1 data, owner pre-read errors losing their API mapping, and rename-only PATCH requests being rejected instead of preserving stored source, hint, and semantics.
 - Fixed the standalone Editor's remaining local-storage copy and E2E assumptions: cloud-disabled saves now fail closed without navigation or a local write, while the real Supabase/Mailpit journey verifies strict-v2 cloud persistence before the Explore handoff.
-- Fixed B94/native-v1 shaders failing compilation after the FRM `LastSqr` side channel was added: declarations remain FRM-owned, the assembler now gates per-orbit resets for every FRM formula that carries the channel (including non-C5 loop reads), and the public WebGL gate covers LastSqr GPU/CPU orbits plus four pipeline-v1 compile/link/draw controls.
+- Fixed B94/native-v1 shaders failing compilation after the FRM `LastSqr` side channel was added: declarations remain FRM-owned, the assembler now gates per-orbit resets for every FRM formula that carries the channel (including non-C5 loop reads), and the project-owned maintainer WebGL gate covers LastSqr GPU/CPU orbits plus four pipeline-v1 compile/link/draw controls.
+- Fixed compact navigation, Explore stacking, and Editor footer overflow across desktop, tablet, mobile, and long localized labels.
+- Fixed unnamed custom-formula rename, edit, and delete icon actions with localized accessible names.
 
 ## 0.4.17 - 2026-08-09
 
