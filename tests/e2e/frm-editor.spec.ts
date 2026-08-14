@@ -153,6 +153,52 @@ RO {
     await expect(page.getByRole('button', { name: 'Compile', exact: true })).toBeDisabled();
   });
 
+  test('keeps footer metadata inside the card when recovery actions are visible', async ({
+    page,
+  }) => {
+    await page.setViewportSize({ width: 1280, height: 900 });
+    await page.goto('/en/formulas/editor?example=starter-brot');
+
+    const compile = page.getByRole('button', { name: 'Compile', exact: true });
+    await compile.click();
+    await expect(page.getByText('Compile Successful').first()).toBeVisible();
+
+    await replaceEditorSource(
+      page,
+      `R01 {
+\tz=pixel:
+\tm=z
+\tz=z*z+pixel
+\tm<=4
+}`,
+    );
+
+    await expect(compile).toBeDisabled({ timeout: 15_000 });
+    await expect(
+      page.getByRole('button', { name: 'Restore Last Successful Version' }),
+    ).toBeVisible();
+    await expect(
+      page.getByRole('button', { name: 'Use Current View as Default' }),
+    ).toBeVisible();
+
+    const footer = page.getByTestId('formula-editor-footer');
+    const metadata = page.getByTestId('formula-editor-metadata');
+    await expect(metadata).toBeVisible();
+
+    const horizontalOverflow = await footer.evaluate(
+      (element) => element.scrollWidth - element.clientWidth,
+    );
+    expect(horizontalOverflow).toBeLessThanOrEqual(1);
+
+    const footerBox = await footer.boundingBox();
+    const metadataBox = await metadata.boundingBox();
+    expect(footerBox).not.toBeNull();
+    expect(metadataBox).not.toBeNull();
+    expect(metadataBox!.x + metadataBox!.width).toBeLessThanOrEqual(
+      footerBox!.x + footerBox!.width + 1,
+    );
+  });
+
   test('consumes invalid and cross-device handoffs without a built-in fallback', async ({
     page,
   }) => {

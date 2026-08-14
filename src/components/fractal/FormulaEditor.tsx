@@ -763,8 +763,14 @@ export function FormulaEditor({
         )}
       </CardContent>
 
-      <CardFooter className="flex justify-between">
-        <div className="flex gap-2">
+      <CardFooter
+        className="flex flex-wrap items-center gap-3"
+        data-testid="formula-editor-footer"
+      >
+        <div
+          className="flex min-w-0 flex-1 flex-wrap gap-2"
+          data-testid="formula-editor-actions"
+        >
           <Button
             onClick={handleCompile}
             disabled={
@@ -808,7 +814,10 @@ export function FormulaEditor({
           )}
         </div>
 
-        <div className="flex items-center gap-3 text-sm text-muted-foreground">
+        <div
+          className="ml-auto flex shrink-0 items-center gap-3 whitespace-nowrap text-sm text-muted-foreground"
+          data-testid="formula-editor-metadata"
+        >
           <span className="rounded-full border px-2 py-0.5 text-xs">
             {t(currentDialect === 'myfrac-native' ? 'modeNative' : 'modeCompat')}
           </span>
