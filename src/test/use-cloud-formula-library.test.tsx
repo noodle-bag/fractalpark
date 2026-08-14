@@ -66,6 +66,8 @@ const LEGACY_STORAGE_ID = '22222222-2222-4222-8222-222222222222';
 const LEGACY_RUNTIME_ID = `custom-${LEGACY_STORAGE_ID}`;
 const RACE_STORAGE_ID = '33333333-3333-4333-8333-333333333333';
 const RACE_RUNTIME_ID = `custom-${RACE_STORAGE_ID}`;
+const UPDATED_STORAGE_ID = '44444444-4444-4444-8444-444444444444';
+const UPDATED_RUNTIME_ID = `custom-${UPDATED_STORAGE_ID}`;
 const RESCUE_STORAGE_ID = '66666666-6666-4666-8666-666666666666';
 const RESCUE_RUNTIME_ID = `custom-${RESCUE_STORAGE_ID}`;
 const BROKEN_STORAGE_ID = '77777777-7777-4777-8777-777777777777';
@@ -211,6 +213,7 @@ describe('useCloudFormulaLibrary session registration', () => {
     cloudMocks.updateCustomFormula.mockResolvedValueOnce({
       formulaId: LEGACY_STORAGE_ID,
       revision: 4,
+      frmSemanticsVersion: 1,
     });
 
     const { result } = renderHook(() => useCloudFormulaLibrary());
@@ -248,6 +251,84 @@ describe('useCloudFormulaLibrary session registration', () => {
       experienceHint: HINT,
       frmSemanticsVersion: 1,
     });
+  });
+
+  it('uses the authoritative PATCH semantics version when re-registering an edit', async () => {
+    cloudMocks.listCustomFormulas
+      .mockResolvedValueOnce([
+        {
+          id: UPDATED_STORAGE_ID,
+          name: 'Updated elsewhere',
+          revision: 7,
+          sourceBytes: LEGACY_SOURCE.length,
+          hasExperienceHint: false,
+          frmSemanticsVersion: 1,
+          createdAt: '2026-08-12T00:00:00.000Z',
+          updatedAt: '2026-08-12T00:00:00.000Z',
+        },
+      ])
+      .mockRejectedValueOnce(new Error('refresh unavailable'));
+    cloudMocks.updateCustomFormula.mockResolvedValueOnce({
+      formulaId: UPDATED_STORAGE_ID,
+      revision: 8,
+      frmSemanticsVersion: 2,
+    });
+
+    const { result } = renderHook(() => useCloudFormulaLibrary());
+    await waitFor(() => expect(result.current.formulas).toHaveLength(1));
+
+    await act(async () => {
+      await expect(
+        result.current.saveFormula({
+          name: 'Edited after upgrade',
+          source: NEW_SOURCE,
+          formulaId: UPDATED_RUNTIME_ID,
+        }),
+      ).resolves.toMatchObject({ success: true, code: 'ok' });
+    });
+
+    expect(
+      readSessionFormulaAssets().find(
+        (asset) => asset.id === UPDATED_RUNTIME_ID,
+      ),
+    ).toMatchObject({
+      source: NEW_SOURCE,
+      frmSemanticsVersion: 2,
+    });
+  });
+
+  it('sends Rename as a partial PATCH and accepts the authoritative version', async () => {
+    const initial = {
+      id: UPDATED_STORAGE_ID,
+      name: 'Before rename',
+      revision: 9,
+      sourceBytes: NEW_SOURCE.length,
+      hasExperienceHint: false,
+      frmSemanticsVersion: 2 as const,
+      createdAt: '2026-08-12T00:00:00.000Z',
+      updatedAt: '2026-08-12T00:00:00.000Z',
+    };
+    cloudMocks.listCustomFormulas
+      .mockResolvedValueOnce([initial])
+      .mockResolvedValueOnce([{ ...initial, name: 'After rename', revision: 10 }]);
+    cloudMocks.updateCustomFormula.mockResolvedValueOnce({
+      formulaId: UPDATED_STORAGE_ID,
+      revision: 10,
+      frmSemanticsVersion: 2,
+    });
+
+    const { result } = renderHook(() => useCloudFormulaLibrary());
+    await waitFor(() => expect(result.current.formulas).toHaveLength(1));
+
+    await act(async () => {
+      await expect(
+        result.current.renameFormula(UPDATED_RUNTIME_ID, 'After rename'),
+      ).resolves.toMatchObject({ success: true, code: 'ok' });
+    });
+    expect(cloudMocks.updateCustomFormula).toHaveBeenCalledWith(
+      UPDATED_STORAGE_ID,
+      { expectedRevision: 9, name: 'After rename' },
+    );
   });
 
   it('never registers stale bytes as v2 when a semantics write conflicts', async () => {

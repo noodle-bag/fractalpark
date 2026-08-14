@@ -29,7 +29,12 @@ import {
 import { frmParserCache } from '../engine/frm/cache';
 import { readFractalDocumentEnvelope } from '../engine/document-envelope';
 import { createFractalDocumentEnvelope } from '../lib/fractal-file';
-import { getCustomFormula, listCustomFormulas, saveCustomFormula } from '../lib/cloud/custom-formulas';
+import {
+  CustomFormulaServiceError,
+  getCustomFormula,
+  listCustomFormulas,
+  saveCustomFormula,
+} from '../lib/cloud/custom-formulas';
 import envelopeV1 from './fixtures/documents/envelope-v1.json';
 
 const MANDELBROT = `Mandelbrot {
@@ -345,6 +350,24 @@ describe('cloud custom-formula DTO mapping', () => {
     expect(requestedUrls[1]).not.toContain('frm_semantics_version');
   });
 
+  it('does not hide a detail backend outage behind the legacy select', async () => {
+    const requestedUrls: string[] = [];
+    vi.stubGlobal(
+      'fetch',
+      vi.fn(async (input: RequestInfo | URL) => {
+        requestedUrls.push(String(input));
+        return new Response(
+          JSON.stringify({ code: 'PGRST000', message: 'database unavailable' }),
+          { status: 503 },
+        );
+      }),
+    );
+
+    const request = getCustomFormula('owner-id', FORMULA_ID);
+    await expect(request).rejects.toBeInstanceOf(CustomFormulaServiceError);
+    expect(requestedUrls).toHaveLength(1);
+  });
+
   it('lists a persisted v2 version in summary DTOs', async () => {
     vi.stubGlobal(
       'fetch',
@@ -368,8 +391,9 @@ describe('cloud custom-formula DTO mapping', () => {
         if (url.includes('frm_semantics_version')) {
           return new Response(
             JSON.stringify({
-              code: '42703',
-              message: 'column custom_formulas.frm_semantics_version does not exist',
+              code: 'PGRST204',
+              message:
+                "Could not find the 'frm_semantics_version' column of 'custom_formulas' in the schema cache",
             }),
             { status: 400 },
           );
@@ -382,5 +406,26 @@ describe('cloud custom-formula DTO mapping', () => {
     expect(requestedUrls).toHaveLength(2);
     expect(requestedUrls[0]).toContain('frm_semantics_version');
     expect(requestedUrls[1]).not.toContain('frm_semantics_version');
+  });
+
+  it('does not turn a list permission failure into legacy v1 data', async () => {
+    const requestedUrls: string[] = [];
+    vi.stubGlobal(
+      'fetch',
+      vi.fn(async (input: RequestInfo | URL) => {
+        requestedUrls.push(String(input));
+        return new Response(
+          JSON.stringify({ code: '42501', message: 'permission denied for table custom_formulas' }),
+          { status: 403 },
+        );
+      }),
+    );
+
+    await expect(listCustomFormulas('owner-id')).rejects.toMatchObject({
+      code: 'unavailable',
+      status: 403,
+      backendCode: '42501',
+    });
+    expect(requestedUrls).toHaveLength(1);
   });
 });

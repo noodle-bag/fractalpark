@@ -477,7 +477,11 @@ export async function updateCustomFormula(
     source?: string;
     experienceHint?: unknown;
   },
-): Promise<{ formulaId: string; revision: number }> {
+): Promise<{
+  formulaId: string;
+  revision: number;
+  frmSemanticsVersion: 1 | 2;
+}> {
   return call(customFormulaPath(formulaId), {
     method: 'PATCH',
     headers: { 'idempotency-key': crypto.randomUUID() },

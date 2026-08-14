@@ -244,12 +244,18 @@ export function useCloudFormulaLibrary(): CloudFormulaLibrary {
               throw new CloudClientError('malformed_response');
             }
             revisionsRef.current.set(identity.storageId, result.revision);
+            const frmSemanticsVersion = resolveFrmSemanticsVersion(
+              result.frmSemanticsVersion,
+            );
+            semanticsVersionsRef.current.set(
+              identity.storageId,
+              frmSemanticsVersion,
+            );
             resolveCustomFormula({
               id: identity.runtimeId,
               source: input.source,
               experienceHint: input.experienceHint,
-              frmSemanticsVersion:
-                semanticsVersionsRef.current.get(identity.storageId) ?? 1,
+              frmSemanticsVersion,
             });
             await refresh();
             return {
@@ -317,6 +323,10 @@ export function useCloudFormulaLibrary(): CloudFormulaLibrary {
           throw new CloudClientError('malformed_response');
         }
         revisionsRef.current.set(identity.storageId, result.revision);
+        semanticsVersionsRef.current.set(
+          identity.storageId,
+          resolveFrmSemanticsVersion(result.frmSemanticsVersion),
+        );
         await refresh();
         return {
           success: true,
