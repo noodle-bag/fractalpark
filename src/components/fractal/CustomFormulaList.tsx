@@ -553,6 +553,7 @@ export function CustomFormulaList({
                     <Button
                       variant="ghost"
                       size="icon"
+                      aria-label={customT('renameAction', { name: formula.name })}
                       onClick={() => {
                         setRenamingId(formula.id);
                         setNewName(formula.name);
@@ -564,6 +565,7 @@ export function CustomFormulaList({
                     <Button
                       variant="ghost"
                       size="icon"
+                      aria-label={customT('editAction', { name: formula.name })}
                       disabled={busyId === formula.id}
                       onClick={() => void openFormulaEditor(formula)}
                     >
@@ -573,6 +575,7 @@ export function CustomFormulaList({
                     <Button
                       variant="ghost"
                       size="icon"
+                      aria-label={customT('deleteAction', { name: formula.name })}
                       disabled={busyId === formula.id}
                       onClick={() => void handleDelete(formula.id)}
                       data-testid="delete-formula"

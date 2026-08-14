@@ -76,6 +76,24 @@ describe('locale metadata maps', () => {
     }
   });
 
+  it('every locale carries accessible custom-formula action labels', () => {
+    for (const locale of [...SUPPORTED_LOCALES]) {
+      const messages = JSON.parse(
+        readFileSync(join(__dirname, '../../messages', `${locale}.json`), 'utf-8'),
+      ) as {
+        explore: { formula: { customLibrary: Record<string, unknown> } };
+      };
+      const customLibrary = messages.explore.formula.customLibrary;
+      for (const key of ['renameAction', 'editAction', 'deleteAction']) {
+        const value = customLibrary[key];
+        expect(value, `missing ${key} in ${locale}`).toBeTypeOf('string');
+        expect(String(value), `${key} in ${locale} must identify the formula`).toContain(
+          '{name}',
+        );
+      }
+    }
+  });
+
   it('Editor persistence copy is cloud-only in every locale', () => {
     const localPersistenceMarkers: Record<SupportedLocale, RegExp> = {
       en: /\blocal(?:ly)?\b/i,

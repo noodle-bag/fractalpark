@@ -170,6 +170,9 @@ describe('CustomFormulaList semantics UI (Upgrade & Compare)', () => {
     expect(actions.className).toContain('flex-wrap');
     expect(actions.className).toContain('justify-end');
     expect(actions.className).toContain('mt-2');
+    expect(screen.getByRole('button', { name: 'renameAction' })).toBeTruthy();
+    expect(screen.getByRole('button', { name: 'editAction' })).toBeTruthy();
+    expect(screen.getByRole('button', { name: 'deleteAction' })).toBeTruthy();
   });
 
   it('treats a missing version as legacy v1', () => {
