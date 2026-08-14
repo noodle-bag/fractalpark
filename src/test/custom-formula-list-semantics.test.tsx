@@ -154,6 +154,24 @@ describe('CustomFormulaList semantics UI (Upgrade & Compare)', () => {
     expect(inspectDetailMock).not.toHaveBeenCalled();
   });
 
+  it('keeps formula identity above a wrapping, right-aligned action row', () => {
+    formulasFixture = [summary(2, 'f-layout')];
+    render(<CustomFormulaList currentBounds={bounds} />);
+
+    const row = screen.getByTestId('custom-formula-row-f-layout');
+    expect(row.className).not.toContain('justify-between');
+
+    const name = screen.getByRole('button', { name: 'Formula f-layout' });
+    expect(name.className).toContain('break-words');
+    expect(name.className).not.toContain('truncate');
+
+    const actions = screen.getByTestId('custom-formula-actions-f-layout');
+    expect(actions.className).toContain('w-full');
+    expect(actions.className).toContain('flex-wrap');
+    expect(actions.className).toContain('justify-end');
+    expect(actions.className).toContain('mt-2');
+  });
+
   it('treats a missing version as legacy v1', () => {
     formulasFixture = [summary(undefined, 'f-missing')];
     render(<CustomFormulaList currentBounds={bounds} />);

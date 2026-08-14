@@ -463,20 +463,21 @@ export function CustomFormulaList({
             {formulas.map((formula) => (
               <div
                 key={formula.id}
-                className={`flex items-center justify-between p-3 border rounded-lg hover:bg-muted/50 transition-colors ${
+                className={`rounded-lg border p-3 transition-colors hover:bg-muted/50 ${
                   activeCloudStorageId === parseCloudCustomFormulaStorageId(formula.id)
                     ? 'border-primary/50 bg-primary/10 ring-1 ring-primary/30'
                     : ''
                 }`}
+                data-testid={`custom-formula-row-${formula.id}`}
               >
-                <div className="flex items-center gap-3 flex-1 min-w-0">
+                <div className="flex min-w-0 items-start gap-3">
                   {/* Cloud formulas compiled server-side at save time — a
                       listed formula is a valid one. */}
-                  <CheckCircle className="w-5 h-5 text-green-500 shrink-0" />
+                  <CheckCircle className="mt-0.5 h-5 w-5 shrink-0 text-green-500" />
 
-                  <div className="flex-1 min-w-0">
+                  <div className="min-w-0 flex-1">
                     {renamingId === formula.id ? (
-                      <div className="flex items-center gap-2">
+                      <div className="flex min-w-0 flex-wrap items-center gap-2">
                         <Input
                           value={newName}
                           onChange={(e) => setNewName(e.target.value)}
@@ -488,7 +489,7 @@ export function CustomFormulaList({
                             }
                           }}
                           autoFocus
-                          className="h-8"
+                          className="h-8 min-w-0 flex-1 basis-48"
                         />
                         <Button
                           size="sm"
@@ -499,10 +500,10 @@ export function CustomFormulaList({
                         </Button>
                       </div>
                     ) : (
-                      <div className="flex items-center gap-2 min-w-0">
+                      <div className="flex min-w-0 flex-wrap items-center gap-x-2 gap-y-1">
                         <button
                           onClick={() => void handleSelect(formula)}
-                          className="font-medium hover:underline text-left truncate"
+                          className="min-w-0 max-w-full break-words text-left font-medium hover:underline"
                           disabled={busyId === formula.id}
                         >
                           {formula.name}
@@ -532,53 +533,54 @@ export function CustomFormulaList({
                   </div>
                 </div>
 
-                <div className="flex items-center gap-1 shrink-0">
-                  {renamingId !== formula.id && (
-                    <>
-                      {/* Explicit, reversible FRM semantics change (v0.4.18). */}
-                      <Button
-                        variant="outline"
-                        size="sm"
-                        disabled={busyId === formula.id}
-                        onClick={() => void openSemanticsDialog(formula)}
-                      >
-                        {isStrictV2(formula)
-                          ? semanticsT('revertButton')
-                          : semanticsT('upgradeButton')}
-                      </Button>
+                {renamingId !== formula.id && (
+                  <div
+                    className="mt-2 flex w-full flex-wrap items-center justify-end gap-1 pt-1"
+                    data-testid={`custom-formula-actions-${formula.id}`}
+                  >
+                    {/* Explicit, reversible FRM semantics change (v0.4.18). */}
+                    <Button
+                      variant="outline"
+                      size="sm"
+                      disabled={busyId === formula.id}
+                      onClick={() => void openSemanticsDialog(formula)}
+                    >
+                      {isStrictV2(formula)
+                        ? semanticsT('revertButton')
+                        : semanticsT('upgradeButton')}
+                    </Button>
 
-                      <Button
-                        variant="ghost"
-                        size="icon"
-                        onClick={() => {
-                          setRenamingId(formula.id);
-                          setNewName(formula.name);
-                        }}
-                      >
-                        <Edit2 className="w-4 h-4" />
-                      </Button>
+                    <Button
+                      variant="ghost"
+                      size="icon"
+                      onClick={() => {
+                        setRenamingId(formula.id);
+                        setNewName(formula.name);
+                      }}
+                    >
+                      <Edit2 className="w-4 h-4" />
+                    </Button>
 
-                      <Button
-                        variant="ghost"
-                        size="icon"
-                        disabled={busyId === formula.id}
-                        onClick={() => void openFormulaEditor(formula)}
-                      >
-                        <Code className="w-4 h-4" />
-                      </Button>
+                    <Button
+                      variant="ghost"
+                      size="icon"
+                      disabled={busyId === formula.id}
+                      onClick={() => void openFormulaEditor(formula)}
+                    >
+                      <Code className="w-4 h-4" />
+                    </Button>
 
-                      <Button
-                        variant="ghost"
-                        size="icon"
-                        disabled={busyId === formula.id}
-                        onClick={() => void handleDelete(formula.id)}
-                        data-testid="delete-formula"
-                      >
-                        <Trash2 className="w-4 h-4 text-red-500" />
-                      </Button>
-                    </>
-                  )}
-                </div>
+                    <Button
+                      variant="ghost"
+                      size="icon"
+                      disabled={busyId === formula.id}
+                      onClick={() => void handleDelete(formula.id)}
+                      data-testid="delete-formula"
+                    >
+                      <Trash2 className="w-4 h-4 text-red-500" />
+                    </Button>
+                  </div>
+                )}
               </div>
             ))}
           </div>
