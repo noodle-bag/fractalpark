@@ -25,6 +25,10 @@ govern FractalPark development.
 - [FRM Compatibility and Migration Contracts v1](specs/frm-compatibility-v1.md)
   freezes the authoritative scanner, v1/v2 semantics, descriptor, diagnostics,
   compatibility-evidence, and migration boundaries for v0.4.18.
+- [Unified Formula Library and FRM-like Language Contract v1](specs/unified-formula-library-v1.md)
+  defines the gated FRM-like parameter-grammar candidate and freezes v0.4.19's
+  source-budget, formula-asset, rights-evidence, reader-first migration, and
+  rollback boundaries while retaining v0.4.18 reader compatibility.
 
 ## Architecture Decision Records
 
@@ -43,6 +47,8 @@ govern FractalPark development.
   clean cut of business localStorage.
 - [ADR 0007](adr/0007-frm-semantics-versioning.md): freeze legacy v1 visuals
   and make strict v2 an explicit, reversible formula contract.
+- [ADR 0008](adr/0008-unified-formula-library-contract.md): introduce the
+  v0.4.19 neutral formula-asset model and reader-first writer activation.
 
 ## Test Plans
 
@@ -57,6 +63,9 @@ govern FractalPark development.
 - [v0.4.18 Regression Matrix](testing/v0.4.18-regression-matrix.md) defines
   public Level 1 and maintainer-local Level 2 gates for trusted FRM
   compatibility.
+- [v0.4.19 Regression Matrix](testing/v0.4.19-regression-matrix.md) freezes the
+  unified formula-language, asset, evidence, and reader-first migration gates
+  while keeping implementation status explicit.
 
 ## Maintenance
 
