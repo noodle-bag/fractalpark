@@ -246,8 +246,15 @@ an explicit stdlib upgrade and Upgrade & Compare; it cannot mutate a pinned work
 - `semanticHash`: lowercase SHA-256 of the versioned canonical serialization of
   typed semantic IR, including parameter declarations and semantic directives,
   but excluding comments, whitespace, Profile, Record, and backend artifacts.
-- `profileRevision`: lowercase SHA-256 of canonical JSON for Formula Profile.
-- `backendRevision`: immutable backend build identifier plus artifact hash.
+- `profileRevision`: lowercase SHA-256 of canonical JSON for Formula Profile,
+  excluding only the recursive `profileRevision` field. The projection includes
+  Formula ID and sourceRevision; object keys use locale-independent code-unit
+  order, arrays preserve order, `-0` becomes `0`, and non-finite numbers,
+  undefined values, sparse arrays, lone surrogates, cycles, and non-plain objects
+  are fatal.
+- `backendRevision`: `{ schemaVersion: 1, buildId, artifactSha256 }`, where
+  `buildId` is a stable 1–128 character ASCII build token and
+  `artifactSha256` is the lowercase SHA-256 of the immutable backend artifact.
 
 Text-only changes may alter sourceRevision without altering semanticHash. Backend
 optimization never alters either sourceRevision or semanticHash.
@@ -296,6 +303,15 @@ and cannot branch on alias kind.
 
 Formula ID is public identity, not authorization. Mine assets still require owner
 access.
+
+The production resolver is revision-pinned: a request carries exact
+`sourceRevision` and `profileRevision`; the injected immutable store is queried by
+Formula ID plus those revisions. The resolver validates identity/scope separately,
+then passes a projection with no Formula ID, scope, alias, provenance, rights, or
+trust fields through the Universal Safety Envelope. Only after Definition/Profile
+linkage and both hashes pass may an injected compiler receive
+`{ definition, profile, ir }`. Store and compiler failures return stable typed
+codes; no fallback to a mutable current catalog is allowed.
 
 ## 3. Nine-waiver maintenance disposition
 
@@ -358,7 +374,10 @@ interface FormulaDefinitionV1 {
 ```
 
 The Definition is the executable asset and is where the 65,536-byte source limit
-applies.
+applies. Its `source` must already equal the canonical formatter output for its
+validated typed IR; comments, alternative whitespace, CRLF normalization, or any
+other parseable-but-noncanonical spelling are rejected at the asset boundary rather
+than stored under a second sourceRevision.
 
 ```ts
 interface FormulaParameterSchemaV1 {
