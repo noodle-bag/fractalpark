@@ -26,12 +26,12 @@ would make rollback unsafe.
 ### One language and one execution policy
 
 Adopt FractalPark FRM-like Language v1, stdlib v1, and NumericProfile
-`standard32`, subject to the spec's explicitly provisional parameter grammar.
-That spelling does not freeze until the Slice 0 parser, 677 projection,
-round-trip, UI-schema, and hash evidence passes and the spec is amended. Standard,
-Mine, and future Community definitions compile through one typed pipeline and
-Universal Safety Envelope. Formula ID, scope, provenance, rights class, alias,
-or trust cannot affect language acceptance or resource limits.
+`standard32`. The parameter spelling froze only after the Slice 0 parser, 677
+projection, round-trip, UI-schema, hash-layering, and ownership evidence passed;
+the prototype is not production activation. Standard, Mine, and future Community
+definitions compile through one typed pipeline and Universal Safety Envelope.
+Formula ID, scope, provenance, rights class, alias, or trust cannot affect
+language acceptance or resource limits.
 
 ### Neutral identity
 

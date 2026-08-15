@@ -1,6 +1,6 @@
 # Unified Formula Library and FRM-like Language Contract v1
 
-- Status: Accepted asset/rights contract; parameter grammar candidate; production activation is gated
+- Status: Accepted contract; production activation is gated
 - Date: 2026-08-15
 - Target release: FractalPark v0.4.19
 - Related: [FRM Compatibility and Migration Contracts v1](frm-compatibility-v1.md)
@@ -14,11 +14,12 @@ and future Community formulas use one language, one compiler path, one safety
 envelope, and the same four asset layers. Legacy B94/F588 labels remain migration
 inputs only; they are not public product tiers or runtime trust signals.
 
-This document freezes the v1 asset, identity, rights, safety, and migration
-contracts. Section 1.2 records the sole candidate parameter grammar and remains
-provisional until its named Slice 0 evidence passes; no production parser may
-claim `frm-like/1` before that amendment. This document does not claim that the
-677-Formula migration, new writers, hosted schema, or discovery UI are active.
+This document freezes the v1 language, asset, identity, rights, safety, and
+migration contracts. The grammar was frozen only after the Slice 0 parser,
+round-trip, all-677 projection, UI-schema, hash-layering, and ownership fixtures
+passed. Those fixtures remain prototype evidence; this document does not claim
+that the production parser, 677-Formula migration, new writers, hosted schema,
+or discovery UI are active.
 
 ## Non-negotiable invariants
 
@@ -63,17 +64,17 @@ Canonical source begins with these semantic directives:
 
 Although directives use comment markers for Classic-reader tolerance, the three
 recognized directives are semantic input. Changing one changes semanticHash.
-Ordinary comments and formatting do not.
+They appear exactly once in the preamble; a directive-looking comment elsewhere
+is fatal. Ordinary comments use `;` at the start of a physical line or whitespace
+followed by `;` after executable text. Ordinary comments and insignificant ASCII
+whitespace around declaration/expression punctuation do not change semanticHash.
 
-### 1.2 Candidate formula and parameter grammar (not yet frozen)
+### 1.2 Frozen formula and parameter grammar
 
-The grammar below is the only Slice 0 candidate, not an accepted implementation
-fact. It freezes only after parser positive/negative fixtures, all-677 schema and
-source-size projection, `.frm` import/export round-trip, UI-schema projection,
-and sourceRevision/semanticHash layering evidence pass regression rows A1–A3,
-A6, and A14. If any evidence fails, this section and its prototypes change
-together before `frm-like/1` activation; no compatibility promise attaches to
-the candidate spelling before then.
+The grammar below passed the named Slice 0 evidence in regression rows A1–A3,
+A6, and A14 and is now the v1 compatibility promise. Production activation is a
+separate gate: the prototype does not replace the released parser/compiler, and
+any implementation must reproduce these fixtures rather than reinterpret them.
 
 The v1 parameter form is deliberately small and line-oriented:
 
@@ -118,21 +119,28 @@ PowerJulia {
 Rules:
 
 - One parameter declaration occupies one physical line.
+- Canonical executable sections emit one statement per physical line. A semicolon
+  is a comment marker only in the forms defined above; any residual semicolon or
+  unsupported punctuation after comment stripping is fatal.
+- ASCII whitespace around `:`, `=`, comma, brackets, and expression operators is
+  insignificant. The canonical exporter emits the example spacing above.
 - `real` defaults are finite real literals. An optional inclusive hard domain is
   mathematical validation, not a UI hint; `min <= default <= max` is required.
 - `complex` defaults are `(real, imaginary)` and do not use v1 scalar domains.
 - `function` defaults name a v1 stdlib function.
 - A `classic` binding is optional for native formulas and unique within one
   definition. It records import/export interoperability; it is not the runtime
-  parameter name.
+  parameter name. `real`/`complex` parameters bind only to `p1`–`p5`; `function`
+  parameters bind only to `fn1`–`fn4`.
 - UI range, step, grouping, labels, current values, view, palette, and coloring
   do not belong in a parameter declaration. They belong to Profile or Record.
 - External inputs must be declared. Assignment introduces a local only when the
   name is not a parameter, system input, builtin constant, section keyword, or
   stdlib function.
-- `pixel`, `c`, `pi`, `e`, `maxit`, language keywords, and stdlib names cannot be
-  assigned or shadowed. Import lowering may introduce a fresh local binding; it
-  may not make the host input mutable.
+- `pixel`, `c`, `zPrev`, `LastSqr`, `pi`, `e`, `maxit`, `ismand`, `p1`–`p5`,
+  `fn1`–`fn4`, language keywords, and stdlib names cannot be assigned or
+  shadowed. `z` is the writable orbit state. Import lowering may introduce a
+  fresh local binding; it may not make an immutable host input mutable.
 - Unknown semantic directives, duplicate parameters/bindings, undeclared reads,
   out-of-domain defaults, and trailing executable tokens are fatal for canonical
   source. Import diagnostics may remain more descriptive but cannot silently

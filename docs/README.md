@@ -26,9 +26,9 @@ govern FractalPark development.
   freezes the authoritative scanner, v1/v2 semantics, descriptor, diagnostics,
   compatibility-evidence, and migration boundaries for v0.4.18.
 - [Unified Formula Library and FRM-like Language Contract v1](specs/unified-formula-library-v1.md)
-  defines the gated FRM-like parameter-grammar candidate and freezes v0.4.19's
-  source-budget, formula-asset, rights-evidence, reader-first migration, and
-  rollback boundaries while retaining v0.4.18 reader compatibility.
+  freezes the evidence-validated FRM-like v1 grammar plus v0.4.19's source
+  budget, formula-asset, rights-evidence, reader-first migration, and rollback
+  boundaries while retaining v0.4.18 reader compatibility.
 
 ## Architecture Decision Records
 
@@ -66,6 +66,9 @@ govern FractalPark development.
 - [v0.4.19 Regression Matrix](testing/v0.4.19-regression-matrix.md) freezes the
   unified formula-language, asset, evidence, and reader-first migration gates
   while keeping implementation status explicit.
+- [v0.4.19 Slice 0 Baseline and Formula Route Probe](testing/v0.4.19-slice0-baseline.md)
+  records the released build/Atlas baseline, selective pre-generation decision,
+  comparison contract, and still-unmeasured browser/device work.
 
 ## Maintenance
 
