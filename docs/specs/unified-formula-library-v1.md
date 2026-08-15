@@ -127,11 +127,16 @@ Rules:
 - `real` defaults are finite real literals. An optional inclusive hard domain is
   mathematical validation, not a UI hint; `min <= default <= max` is required.
 - `complex` defaults are `(real, imaginary)` and do not use v1 scalar domains.
-- `function` defaults name a v1 stdlib function.
+- `function` defaults name a unary v1 stdlib function. `atan2` remains available
+  only as a direct two-argument call and cannot populate a `function`/`fn1`–`fn4`
+  selector.
 - A `classic` binding is optional for native formulas and unique within one
   definition. It records import/export interoperability; it is not the runtime
   parameter name. `real`/`complex` parameters bind only to `p1`–`p5`; `function`
-  parameters bind only to `fn1`–`fn4`.
+  parameters bind only to `fn1`–`fn4`. A direct `fn1`–`fn4` call is valid only
+  when the same Definition declares the matching `function` binding; an unmapped
+  slot is fatal. Backend lowering resolves every bound `pN`/`fnN` read to that
+  named parameter, so CPU and GLSL never depend on duplicate host values.
 - UI range, step, grouping, labels, current values, view, palette, and coloring
   do not belong in a parameter declaration. They belong to Profile or Record.
 - External inputs must be declared. Assignment introduces a local only when the
@@ -154,9 +159,20 @@ clarifications:
 
 - evaluation order is source order and left-to-right within an expression;
 - exponentiation remains right-associative;
+- numeric scalars promote to complex as `(value, 0)` when assigned to complex
+  state or consumed by a complex operation; booleans promote as `false = 0` and
+  `true = 1`; function values are callable only and never numeric values;
+- `<`, `>`, `<=`, and `>=` compare the real projection; complex `==` and `!=`
+  compare both components; logical operators use zero/nonzero numeric truthiness;
+- complex exponentiation retains the released real-exponent contract: the right
+  operand uses its real projection. `|x|` is the true absolute value for real
+  inputs and true Euclidean magnitude for complex inputs, not squared magnitude;
+- `real(x) = value` and `imag(x) = value` require an already definitely
+  initialized complex target and store the real projection of `value`;
 - a backend may not reassociate floating-point expressions unless the
   NumericProfile explicitly permits it and conformance evidence remains green;
-- the bailout expression is the **continue-iteration predicate**;
+- the bailout expression is the **continue-iteration predicate**, evaluated
+  after the current loop body;
 - a non-finite required orbit value emits the versioned `nonFinite` termination
   event and stops; it is never converted silently to zero;
 - generated backend code may optimize typed IR but may not become a second
@@ -175,10 +191,22 @@ the general additions needed by the frozen Standard migration:
 
 Frozen semantics:
 
+- `standard32` canonicalizes every exact zero component, including `-0`, to
+  `+0` at language-visible operation boundaries and before branch-sensitive
+  stdlib evaluation. Nonzero one-sided branch-cut inputs retain their sign.
+  This rule avoids backend-specific sign-bit probes that WebGL 1 cannot provide
+  portably; exact-cut values use the canonical upper-cut side.
+- `zPrev` and `LastSqr` both start at canonical `+0` before `init`; they are not
+  external runtime inputs. Immediately before each `loop`, the backend snapshots
+  `z` into `zPrev`, and after a successful loop it records squared magnitude in
+  `LastSqr`.
 - `log` uses the principal argument in `(-pi, pi]`; the non-positive real axis
   is its branch cut. `log(0)` produces a non-finite event.
-- `sqrt` is the principal square root, with non-negative real component and the
-  imaginary sign inherited from the input on the cut.
+- `cabs` and the radii used by `log`/`sqrt` follow one shared `sqrt(re²+im²)`
+  order with per-primitive `standard32` rounding on both CPU and GLSL; no
+  separately rounded double-precision `hypot` is permitted on either backend.
+  imaginary sign inherited from nonzero one-sided input on the cut; exact
+  `+0`/`-0` uses the canonical upper-cut value.
 - `asin(z) = -i * log(i*z + sqrt(1 - z*z))`.
 - `acos(z) = pi/2 - asin(z)`.
 - `atan(z) = (log(1 + i*z) - log(1 - i*z)) / (2*i)`.

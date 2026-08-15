@@ -1,0 +1,238 @@
+import { describe, expect, it } from "vitest";
+
+import {
+  FRM_V1_FUNCTION_SLOT_NAMES,
+  FRM_V1_STDLIB_NAMES,
+  FRM_V1_UNARY_FUNCTION_NAMES,
+  frmV1Acos,
+  frmV1Acosh,
+  frmV1Asin,
+  frmV1Asinh,
+  frmV1Atan,
+  frmV1Atanh,
+  frmV1Classify,
+  frmV1Cotanh,
+  frmV1QuantizeStandard32Boundary,
+  frmV1Log,
+  frmV1Round,
+  frmV1Sin,
+  frmV1Sqrt,
+  frmV1Standard32Close,
+  frmV1Tanh,
+  resolveFrmV1FunctionSlot,
+  type FrmV1Complex,
+} from "@/engine/frm/frm-v1-stdlib";
+import { FRM_V1_GLSL_PRELUDE } from "@/engine/frm/frm-v1-glsl-prelude";
+
+const closeTo = (
+  actual: FrmV1Complex,
+  expected: FrmV1Complex,
+  tolerance = 1e-12,
+) => {
+  expect(actual.re).toBeCloseTo(
+    expected.re,
+    Math.max(0, Math.floor(-Math.log10(tolerance))),
+  );
+  expect(actual.im).toBeCloseTo(
+    expected.im,
+    Math.max(0, Math.floor(-Math.log10(tolerance))),
+  );
+};
+
+const conjugate = (z: FrmV1Complex): FrmV1Complex => ({ re: z.re, im: -z.im });
+
+describe("isolated FRM-like stdlib v1 CPU reference", () => {
+  it("separates frozen stdlib names from typed fn1-fn4 mappings", () => {
+    expect(FRM_V1_STDLIB_NAMES).toEqual([
+      "abs",
+      "sqr",
+      "sqrt",
+      "exp",
+      "log",
+      "recip",
+      "conj",
+      "flip",
+      "real",
+      "imag",
+      "cabs",
+      "round",
+      "atan2",
+      "sin",
+      "cos",
+      "tan",
+      "asin",
+      "acos",
+      "atan",
+      "sinh",
+      "cosh",
+      "tanh",
+      "asinh",
+      "acosh",
+      "atanh",
+      "cotanh",
+      "cosxx",
+    ]);
+    expect(Object.isFrozen(FRM_V1_STDLIB_NAMES)).toBe(true);
+    expect(FRM_V1_FUNCTION_SLOT_NAMES).toEqual(["fn1", "fn2", "fn3", "fn4"]);
+    expect(FRM_V1_UNARY_FUNCTION_NAMES).toEqual(
+      FRM_V1_STDLIB_NAMES.filter((name) => name !== "atan2"),
+    );
+    expect(resolveFrmV1FunctionSlot("fn3", { fn1: "sin", fn3: "asinh" })).toBe(
+      "asinh",
+    );
+    expect(resolveFrmV1FunctionSlot("fn2", { fn1: "sin" })).toBeUndefined();
+  });
+
+  it("uses the principal log and sqrt on their cuts without a zero-radius repair", () => {
+    const logZero = frmV1Log({ re: 0, im: 0 });
+    expect(logZero.re).toBe(-Infinity);
+    expect(logZero.im).toBe(0);
+    expect(frmV1Classify(logZero)).toEqual({
+      finite: false,
+      event: "nonFinite",
+    });
+    expect(frmV1Log({ re: -2, im: 0 }).im).toBeCloseTo(Math.PI, 14);
+
+    closeTo(frmV1Sqrt({ re: -4, im: 0 }), { re: 0, im: 2 });
+    const canonicalizedNegativeZero = frmV1Sqrt({ re: -4, im: -0 });
+    expect(canonicalizedNegativeZero.re).toBe(0);
+    expect(canonicalizedNegativeZero.im).toBe(2);
+    expect(frmV1Log({ re: -2, im: -0 }).im).toBeCloseTo(Math.PI, 14);
+  });
+
+  it("preserves nonzero one-sided branch-cut limits while canonicalizing exact zero", () => {
+    const epsilon = 1e-9;
+    const upperRoot = frmV1Sqrt({ re: -4, im: epsilon });
+    const lowerRoot = frmV1Sqrt({ re: -4, im: -epsilon });
+    expect(upperRoot.im).toBeGreaterThan(0);
+    expect(lowerRoot.im).toBeLessThan(0);
+
+    const upperAcosh = frmV1Acosh({ re: -2, im: epsilon });
+    const lowerAcosh = frmV1Acosh({ re: -2, im: -epsilon });
+    expect(upperAcosh.re).toBeCloseTo(Math.acosh(2), 10);
+    expect(lowerAcosh.re).toBeCloseTo(Math.acosh(2), 10);
+    expect(upperAcosh.im).toBeCloseTo(Math.PI, 8);
+    expect(lowerAcosh.im).toBeCloseTo(-Math.PI, 8);
+
+    const upperAtanh = frmV1Atanh({ re: 2, im: epsilon });
+    const lowerAtanh = frmV1Atanh({ re: 2, im: -epsilon });
+    expect(upperAtanh.re).toBeCloseTo(Math.log(3) / 2, 10);
+    expect(lowerAtanh.re).toBeCloseTo(Math.log(3) / 2, 10);
+    expect(upperAtanh.im).toBeCloseTo(Math.PI / 2, 8);
+    expect(lowerAtanh.im).toBeCloseTo(-Math.PI / 2, 8);
+  });
+
+  it("matches real-axis golden values for inverse circular and hyperbolic functions", () => {
+    closeTo(frmV1Asin({ re: 0.5, im: 0 }), { re: Math.PI / 6, im: 0 });
+    closeTo(frmV1Acos({ re: 0.5, im: 0 }), { re: Math.PI / 3, im: 0 });
+    closeTo(frmV1Atan({ re: 1, im: 0 }), { re: Math.PI / 4, im: 0 });
+    closeTo(frmV1Asinh({ re: 1, im: 0 }), { re: Math.asinh(1), im: 0 });
+    closeTo(frmV1Acosh({ re: 2, im: 0 }), { re: Math.acosh(2), im: 0 });
+    closeTo(frmV1Atanh({ re: 0.5, im: 0 }), { re: Math.atanh(0.5), im: 0 });
+  });
+
+  it("preserves conjugate symmetry away from branch cuts", () => {
+    const samples = [
+      { re: 0.4, im: 0.7 },
+      { re: -0.3, im: 0.4 },
+    ];
+    for (const fn of [
+      frmV1Sin,
+      frmV1Asin,
+      frmV1Acos,
+      frmV1Atan,
+      frmV1Asinh,
+      frmV1Acosh,
+      frmV1Atanh,
+      frmV1Tanh,
+      frmV1Cotanh,
+    ]) {
+      for (const sample of samples) {
+        closeTo(fn(conjugate(sample)), conjugate(fn(sample)), 1e-10);
+      }
+    }
+  });
+
+  it("classifies singularities and non-finite inputs as a nonFinite event instead of throwing", () => {
+    expect(frmV1Classify(frmV1Atanh({ re: 1, im: 0 }))).toEqual({
+      finite: false,
+      event: "nonFinite",
+    });
+    expect(frmV1Classify(frmV1Atanh({ re: -1, im: 0 }))).toEqual({
+      finite: false,
+      event: "nonFinite",
+    });
+    expect(frmV1Classify(frmV1Asin({ re: Infinity, im: 0 }))).toEqual({
+      finite: false,
+      event: "nonFinite",
+    });
+    expect(frmV1Classify({ re: NaN, im: 0 })).toEqual({
+      finite: false,
+      event: "nonFinite",
+    });
+  });
+
+  it("rounds every component with exact ties away from zero", () => {
+    expect(frmV1Round({ re: -1.5, im: -0.5 })).toEqual({ re: -2, im: -1 });
+    expect(frmV1Round({ re: 0.5, im: 1.5 })).toEqual({ re: 1, im: 2 });
+  });
+
+  it("labels boundary quantization as tolerance evidence, not a standard32 oracle", () => {
+    const input = { re: 1 / 3, im: -1 / 3 };
+    const result = frmV1QuantizeStandard32Boundary(
+      (z) => ({ re: z.re * 3, im: z.im * 3 }),
+      input,
+    );
+    expect(result.value).toEqual({
+      re: Math.fround(Math.fround(1 / 3) * 3),
+      im: Math.fround(Math.fround(-1 / 3) * 3),
+    });
+    expect(result.classification).toEqual({ finite: true });
+    expect(frmV1Standard32Close(result.value, { re: 1, im: -1 }, 1e-6)).toBe(
+      true,
+    );
+  });
+});
+
+describe("isolated FRM-like stdlib v1 GLSL source-shape contract", () => {
+  it("contains the same unintegrated principal inverse formulas and no legacy log call", () => {
+    expect(FRM_V1_GLSL_PRELUDE).toContain("vec2 frmV1Log(vec2 z) {");
+    expect(FRM_V1_GLSL_PRELUDE).toContain("frmV1NonFiniteEvent = true;");
+    expect(FRM_V1_GLSL_PRELUDE).toContain("log(radius)");
+    expect(FRM_V1_GLSL_PRELUDE).toContain("vec2 frmV1Asin(vec2 z)");
+    expect(FRM_V1_GLSL_PRELUDE).toContain("vec2 frmV1Acosh(vec2 z)");
+    expect(FRM_V1_GLSL_PRELUDE).toContain(
+      "return frmV1Mul(vec2(0.0, -1.0), frmV1Log(frmV1Add(iz, root)));",
+    );
+    expect(FRM_V1_GLSL_PRELUDE).toContain(
+      "frmV1Sub(frmV1Log(frmV1Add(vec2(1.0, 0.0), iz)), frmV1Log(frmV1Sub(vec2(1.0, 0.0), iz)))",
+    );
+    expect(FRM_V1_GLSL_PRELUDE).toContain(
+      "frmV1Sqrt(frmV1Sub(z, vec2(1.0, 0.0)))",
+    );
+    expect(FRM_V1_GLSL_PRELUDE).toContain(
+      "frmV1Sub(frmV1Log(frmV1Add(vec2(1.0, 0.0), z)), frmV1Log(frmV1Sub(vec2(1.0, 0.0), z))) * 0.5",
+    );
+    expect(FRM_V1_GLSL_PRELUDE).toContain(
+      "float frmV1SinhReal(float value) { return (exp(value) - exp(-value)) * 0.5; }",
+    );
+    expect(FRM_V1_GLSL_PRELUDE).not.toContain("complexLog");
+    expect(FRM_V1_GLSL_PRELUDE).not.toMatch(/max\s*\(\s*length\s*\(/);
+    expect(FRM_V1_GLSL_PRELUDE).not.toContain("1.0 / z.y");
+    expect(FRM_V1_GLSL_PRELUDE).toContain(
+      "if (imaginary == 0.0 && z.x < 0.0) return 3.14159265358979323846;",
+    );
+  });
+
+  it("has deterministic componentwise ties-away rounding and no identity/provenance branches", () => {
+    expect(FRM_V1_GLSL_PRELUDE).toContain(
+      "value < 0.0 ? ceil(value - 0.5) : floor(value + 0.5)",
+    );
+    expect(FRM_V1_GLSL_PRELUDE).toContain(
+      "return frmV1Checked(vec2(frmV1RoundComponent(z.x), frmV1RoundComponent(z.y)));",
+    );
+    expect(FRM_V1_GLSL_PRELUDE).not.toMatch(
+      /\b(?:formulaId|scope|provenance|trusted)\b/i,
+    );
+  });
+});
