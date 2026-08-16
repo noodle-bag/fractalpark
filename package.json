@@ -13,6 +13,8 @@
     "formula:provisional-assets": "tsx scripts/formula-library-bulk-migration.ts --provisional-assets --write",
     "formula:publication-readiness": "tsx scripts/generate-formula-publication-readiness.ts --write",
     "formula:publication-readiness:verify": "tsx scripts/verify-formula-publication-readiness.ts",
+    "formula:direct-adaptation-evidence": "tsx scripts/generate-formula-direct-adaptation-evidence.ts --write",
+    "formula:direct-adaptation-evidence:verify": "tsx scripts/verify-formula-direct-adaptation-evidence.ts",
     "thumbnails:presets": "node scripts/generate-thumbnails.mjs",
     "images:formula-guides": "node --import tsx scripts/generate-formula-guide-images.ts",
     "indexnow:submit": "node --import tsx scripts/submit-indexnow.ts",
