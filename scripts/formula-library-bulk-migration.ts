@@ -3,6 +3,8 @@ import {
   closeSync,
   constants,
   fchmodSync,
+  fstatSync,
+  ftruncateSync,
   lstatSync,
   mkdirSync,
   openSync,
@@ -12,9 +14,10 @@ import {
   type Stats,
   writeFileSync,
 } from "node:fs";
-import { dirname, join, relative, resolve } from "node:path";
+import { join, relative, resolve } from "node:path";
 import { pathToFileURL } from "node:url";
 import { spawnSync } from "node:child_process";
+import { deflateSync } from "node:zlib";
 
 import { chromium } from "@playwright/test";
 
@@ -25,7 +28,10 @@ import {
   hashFrmLikeV1,
   parseFrmLikeV1,
 } from "../src/engine/frm/v1";
-import { compileFrmLikeV1Backend } from "../src/engine/frm/v1-backend";
+import {
+  compileFrmLikeV1Backend,
+  type FrmLikeV1Backend,
+} from "../src/engine/frm/v1-backend";
 import {
   projectClassicAstToFrmLikeV1,
   runFormulaLibraryCpuSmoke,
@@ -42,6 +48,16 @@ import {
   type FormulaIdV1,
   type FormulaRevisionV1,
 } from "../src/engine/formulas/v1";
+import {
+  composeProvisionalContactSheetV1,
+  renderProvisionalPreviewV1,
+} from "../src/engine/formulas/v1/provisional-preview";
+import {
+  PROVISIONAL_FAMILY_SAFE_FALLBACKS_V1,
+  PROVISIONAL_PROFILE_POLICY_V1,
+  projectProvisionalProfileV1,
+  type ProvisionalBoundsCandidatesV1,
+} from "../src/engine/formulas/v1/provisional-profile";
 
 const CONTROLLER_VERSION = "formula-library-bulk-migration/2";
 const EXPECTED_ROWS = 677;
@@ -54,11 +70,21 @@ const EXPECTED_RIGHTS_PROTOCOL_SHA256 =
   "f537fc71512cd3ffcc0a24deb436009d50d267afd21e4b09d8fa569805b1a1ea";
 const EXPECTED_WORK_PACKAGE_SHA256 =
   "29d4501d05f712f154d11809414876f9625c5efa202885579080d61fa88633bd";
+const EXPECTED_RUNNABLE_LEDGER_SHA256 =
+  "0c494e773a918051e1efc398999de6b5ab684ac96af8cad7be0c0c2156aea545";
+const EXPECTED_RUNNABLE_ROWS = 20;
+const PROVISIONAL_CONTROLLER_VERSION = "formula-library-provisional-assets/1";
 const PRIVATE_OUTPUT_COMPONENTS = [
   ".formula-library-private",
   "formula-library-v1",
 ] as const;
 const PRIVATE_OUTPUT_FILENAME = "bulk-migration-ledger.json";
+const PRIVATE_PRESENTABLE_COMPONENTS = [
+  ...PRIVATE_OUTPUT_COMPONENTS,
+  "provisional-assets-v1",
+] as const;
+const PRIVATE_PRESENTABLE_MANIFEST = "manifest.json";
+const PRIVATE_PRESENTABLE_CONTACT_SHEET = "contact-sheet.png";
 const WORK_PACKAGE_START =
   "<!-- BEGIN STANDARD_MIGRATION_WORK_PACKAGES_JSON -->";
 const PUBLIC_CONTROLLER_ERROR_CODES = new Set([
@@ -96,6 +122,10 @@ const PUBLIC_CONTROLLER_ERROR_CODES = new Set([
   "private-output-root-invalid",
   "private-output-symlink-rejected",
   "private-output-write-failed",
+  "provisional-assets-input-invalid",
+  "provisional-assets-ledger-mismatch",
+  "provisional-assets-render-failed",
+  "provisional-assets-revalidation-failed",
   "repository-binding-unavailable",
   "repository-revision-not-ancestor",
   "repository-scope-mismatch",
@@ -137,6 +167,7 @@ interface TypedAlias {
 export interface WorkRow {
   readonly formulaId: string;
   readonly sourceSet: "F588" | "B94";
+  readonly primaryFamily?: string;
   readonly typedLegacyAliases: readonly TypedAlias[];
   readonly rights: {
     readonly class: "A" | "B" | "C" | "P";
@@ -163,6 +194,17 @@ export interface WorkRow {
     readonly artifact?: string;
     readonly artifactSha256?: string;
     readonly evidenceKey?: string;
+  };
+  readonly defaultProfileCandidate?: {
+    readonly status?: string;
+    readonly candidate?: unknown;
+    readonly explicitLegacyDefaultProfile?: boolean;
+    readonly verification?: string;
+  };
+  readonly previewInput?: {
+    readonly status?: string;
+    readonly candidate?: unknown;
+    readonly verification?: string;
   };
 }
 
@@ -239,7 +281,7 @@ interface PreflightContext {
   };
 }
 
-interface PassedRow {
+export interface PassedRow {
   readonly formulaId: string;
   readonly sourceSet: "F588" | "B94";
   readonly status: "passed";
@@ -296,6 +338,8 @@ interface GpuCase {
 
 interface PendingPass {
   readonly row: WorkRow;
+  readonly definition: FormulaDefinitionV1;
+  readonly backend: FrmLikeV1Backend;
   readonly sourceRevision: string;
   readonly semanticHash: string;
   readonly backendArtifactSha256: string;
@@ -520,6 +564,27 @@ function gitPaths(repositoryRoot: string, args: readonly string[]): string[] {
     .filter(Boolean);
 }
 
+interface RepositoryIndexBinding {
+  readonly repositoryHead: string;
+  readonly repositoryIndexTree: string;
+}
+
+function captureRepositoryIndexBinding(repositoryRoot: string): RepositoryIndexBinding {
+  const unstaged = spawnSync("git", ["diff", "--quiet", "--no-ext-diff"], {
+    cwd: repositoryRoot,
+    stdio: "ignore",
+  });
+  invariant(unstaged.status === 0, "repository-binding-unavailable");
+  const repositoryHead = gitPaths(repositoryRoot, ["rev-parse", "HEAD"])[0];
+  const repositoryIndexTree = gitPaths(repositoryRoot, ["write-tree"])[0];
+  invariant(
+    /^[0-9a-f]{40}$/.test(repositoryHead) &&
+      /^[0-9a-f]{40}$/.test(repositoryIndexTree),
+    "repository-binding-unavailable",
+  );
+  return { repositoryHead, repositoryIndexTree };
+}
+
 function assertRepositoryScope(
   repositoryRoot: string,
   baseRevision: string,
@@ -529,7 +594,11 @@ function assertRepositoryScope(
     "package.json",
     "scripts/formula-library-bulk-migration.ts",
     "src/engine/formulas/v1/bulk-migration.ts",
+    "src/engine/formulas/v1/index.ts",
+    "src/engine/formulas/v1/provisional-preview.ts",
+    "src/engine/formulas/v1/provisional-profile.ts",
     "src/test/formula-library-bulk-migration.test.ts",
+    "src/test/formula-library-provisional-assets.test.ts",
   ]);
   const changed = new Set([
     ...gitPaths(repositoryRoot, ["diff", "--name-only", `${baseRevision}...HEAD`]),
@@ -926,6 +995,8 @@ async function prepareRow(
   }));
   return {
     row,
+    definition,
+    backend: compiled.backend,
     sourceRevision: revisions.sourceRevision,
     semanticHash: revisions.semanticHash,
     backendArtifactSha256,
@@ -1281,32 +1352,111 @@ function ensurePrivateLedgerDirectory(repositoryRoot: string): string {
   return current;
 }
 
-function writePrivateLedgerUnchecked(repositoryRoot: string, content: string): string {
-  const outputDirectory = ensurePrivateLedgerDirectory(repositoryRoot);
-  const output = join(outputDirectory, PRIVATE_OUTPUT_FILENAME);
-  const existing = lstatIfPresent(output);
+function openVerifiedPrivateDirectory(path: string, expectedReal: string): number {
+  const descriptor = openSync(
+    path,
+    constants.O_RDONLY | constants.O_DIRECTORY | constants.O_NOFOLLOW,
+  );
+  try {
+    fchmodSync(descriptor, 0o700);
+    const metadata = fstatSync(descriptor);
+    invariant(
+      metadata.isDirectory() &&
+        (metadata.mode & 0o777) === 0o700 &&
+        realpathSync(`/proc/self/fd/${descriptor}`) === expectedReal,
+      "private-output-containment-failed",
+    );
+    return descriptor;
+  } catch (error) {
+    closeSync(descriptor);
+    throw error;
+  }
+}
+
+function assertPrivateDirectoryDescriptorStillBound(
+  descriptor: number,
+  path: string,
+  expectedReal: string,
+): void {
+  const opened = fstatSync(descriptor);
+  const current = lstatSync(path);
+  invariant(
+    current.isDirectory() &&
+      !current.isSymbolicLink() &&
+      current.dev === opened.dev &&
+      current.ino === opened.ino &&
+      realpathSync(path) === expectedReal,
+    "private-output-containment-failed",
+  );
+}
+
+function writePrivateFileThroughDirectoryDescriptor(
+  directoryDescriptor: number,
+  filename: string,
+  content: string | Buffer,
+): void {
+  const descriptorPath = join(`/proc/self/fd/${directoryDescriptor}`, filename);
+  const existing = lstatIfPresent(descriptorPath);
   if (existing !== null)
     invariant(
       existing.isFile() && !existing.isSymbolicLink(),
       "private-output-symlink-rejected",
     );
   const descriptor = openSync(
-    output,
+    descriptorPath,
     constants.O_WRONLY |
       constants.O_CREAT |
-      constants.O_TRUNC |
       constants.O_NOFOLLOW,
     0o600,
   );
   try {
+    const opened = fstatSync(descriptor);
+    invariant(
+      opened.isFile() && opened.nlink === 1,
+      "private-output-containment-failed",
+    );
+    ftruncateSync(descriptor, 0);
     fchmodSync(descriptor, 0o600);
-    writeFileSync(descriptor, content, { encoding: "utf8" });
+    writeFileSync(descriptor, content);
+    const metadata = fstatSync(descriptor);
+    invariant(
+      metadata.isFile() &&
+        metadata.nlink === 1 &&
+        (metadata.mode & 0o777) === 0o600,
+      "private-output-permissions-invalid",
+    );
   } finally {
     closeSync(descriptor);
   }
-  assertPrivateMode(output, "file");
-  invariant(dirname(output) === outputDirectory, "private-output-containment-failed");
-  return output;
+}
+
+function writePrivateLedgerUnchecked(repositoryRoot: string, content: string): string {
+  const outputDirectory = ensurePrivateLedgerDirectory(repositoryRoot);
+  const expectedReal = join(realpathSync(repositoryRoot), ...PRIVATE_OUTPUT_COMPONENTS);
+  const directoryDescriptor = openVerifiedPrivateDirectory(
+    outputDirectory,
+    expectedReal,
+  );
+  try {
+    assertPrivateDirectoryDescriptorStillBound(
+      directoryDescriptor,
+      outputDirectory,
+      expectedReal,
+    );
+    writePrivateFileThroughDirectoryDescriptor(
+      directoryDescriptor,
+      PRIVATE_OUTPUT_FILENAME,
+      content,
+    );
+    assertPrivateDirectoryDescriptorStillBound(
+      directoryDescriptor,
+      outputDirectory,
+      expectedReal,
+    );
+  } finally {
+    closeSync(directoryDescriptor);
+  }
+  return join(outputDirectory, PRIVATE_OUTPUT_FILENAME);
 }
 
 export function writePrivateLedger(repositoryRoot: string, content: string): string {
@@ -1319,8 +1469,569 @@ export function writePrivateLedger(repositoryRoot: string, content: string): str
   }
 }
 
+function ensurePrivatePresentableDirectory(repositoryRoot: string): string {
+  const base = ensurePrivateLedgerDirectory(repositoryRoot);
+  const output = join(base, PRIVATE_PRESENTABLE_COMPONENTS.at(-1)!);
+  const metadata = lstatIfPresent(output);
+  if (metadata === null) mkdirSync(output, { mode: 0o700 });
+  else
+    invariant(
+      metadata.isDirectory() && !metadata.isSymbolicLink(),
+      "private-output-symlink-rejected",
+    );
+  securePrivateOutputDirectory(output);
+  invariant(
+    realpathSync(output) ===
+      join(realpathSync(repositoryRoot), ...PRIVATE_PRESENTABLE_COMPONENTS),
+    "private-output-containment-failed",
+  );
+  return output;
+}
+
+function validPresentableFilename(filename: string): boolean {
+  return (
+    filename === PRIVATE_PRESENTABLE_MANIFEST ||
+    filename === PRIVATE_PRESENTABLE_CONTACT_SHEET ||
+    /^preview-(?:00[1-9]|0[1-9][0-9]|[1-9][0-9]{2})\.png$/.test(filename)
+  );
+}
+
+export function writePrivatePresentableFile(
+  repositoryRoot: string,
+  filename: string,
+  content: string | Buffer,
+): string {
+  try {
+    invariant(validPresentableFilename(filename), "private-output-containment-failed");
+    const outputDirectory = ensurePrivatePresentableDirectory(repositoryRoot);
+    const expectedReal = join(
+      realpathSync(repositoryRoot),
+      ...PRIVATE_PRESENTABLE_COMPONENTS,
+    );
+    const directoryDescriptor = openVerifiedPrivateDirectory(
+      outputDirectory,
+      expectedReal,
+    );
+    try {
+      assertPrivateDirectoryDescriptorStillBound(
+        directoryDescriptor,
+        outputDirectory,
+        expectedReal,
+      );
+      writePrivateFileThroughDirectoryDescriptor(
+        directoryDescriptor,
+        filename,
+        content,
+      );
+      assertPrivateDirectoryDescriptorStillBound(
+        directoryDescriptor,
+        outputDirectory,
+        expectedReal,
+      );
+    } finally {
+      closeSync(directoryDescriptor);
+    }
+    return join(outputDirectory, filename);
+  } catch (error) {
+    const code = sanitizeControllerError(error);
+    if (code.startsWith("private-output-")) throw new Error(code);
+    throw new Error("private-output-write-failed");
+  }
+}
+
+function expectedPresentableFilenames(): readonly string[] {
+  return [
+    PRIVATE_PRESENTABLE_MANIFEST,
+    PRIVATE_PRESENTABLE_CONTACT_SHEET,
+    ...Array.from(
+      { length: EXPECTED_RUNNABLE_ROWS },
+      (_, index) => `preview-${String(index + 1).padStart(3, "0")}.png`,
+    ),
+  ].sort();
+}
+
+function assertPrivatePresentableOutputSet(
+  repositoryRoot: string,
+  requireComplete: boolean,
+): void {
+  const directory = ensurePrivatePresentableDirectory(repositoryRoot);
+  const expected = new Set(expectedPresentableFilenames());
+  const actual = readdirSync(directory).sort();
+  invariant(
+    actual.every((filename) => expected.has(filename)) &&
+      (!requireComplete ||
+        actual.join("\u0000") === expectedPresentableFilenames().join("\u0000")),
+    "private-output-containment-failed",
+  );
+  for (const filename of actual) {
+    const metadata = lstatSync(join(directory, filename));
+    invariant(
+      metadata.isFile() &&
+        !metadata.isSymbolicLink() &&
+        (metadata.mode & 0o777) === 0o600,
+      "private-output-permissions-invalid",
+    );
+  }
+}
+
+export function encodeDeterministicPng(
+  width: number,
+  height: number,
+  rgba: Uint8Array,
+): Buffer {
+  invariant(
+    Number.isInteger(width) &&
+      Number.isInteger(height) &&
+      width > 0 &&
+      height > 0 &&
+      rgba.length === width * height * 4,
+    "provisional-assets-render-failed",
+  );
+  const signature = Buffer.from([137, 80, 78, 71, 13, 10, 26, 10]);
+  const ihdr = Buffer.alloc(13);
+  ihdr.writeUInt32BE(width, 0);
+  ihdr.writeUInt32BE(height, 4);
+  ihdr[8] = 8;
+  ihdr[9] = 6;
+  const scanlines = Buffer.alloc(height * (width * 4 + 1));
+  for (let y = 0; y < height; y++) {
+    const target = y * (width * 4 + 1);
+    scanlines[target] = 0;
+    scanlines.set(rgba.subarray(y * width * 4, (y + 1) * width * 4), target + 1);
+  }
+  const crc32 = (value: Buffer): number => {
+    let crc = 0xffffffff;
+    for (const octet of value) {
+      crc ^= octet;
+      for (let bit = 0; bit < 8; bit++)
+        crc = (crc >>> 1) ^ (crc & 1 ? 0xedb88320 : 0);
+    }
+    return (crc ^ 0xffffffff) >>> 0;
+  };
+  const chunk = (type: string, data: Buffer): Buffer => {
+    const typeBytes = Buffer.from(type, "ascii");
+    const output = Buffer.alloc(12 + data.length);
+    output.writeUInt32BE(data.length, 0);
+    typeBytes.copy(output, 4);
+    data.copy(output, 8);
+    output.writeUInt32BE(crc32(Buffer.concat([typeBytes, data])), 8 + data.length);
+    return output;
+  };
+  return Buffer.concat([
+    signature,
+    chunk("IHDR", ihdr),
+    chunk("IDAT", deflateSync(scanlines, { level: 9 })),
+    chunk("IEND", Buffer.alloc(0)),
+  ]);
+}
+
+export interface RunnableLedgerSelectionContract {
+  readonly total: number;
+  readonly passed: number;
+  readonly contentHash: string;
+}
+
+function record(value: unknown): value is Record<string, unknown> {
+  return Boolean(value && typeof value === "object" && !Array.isArray(value));
+}
+
+function nestedViewCandidate(value: unknown): unknown {
+  if (!record(value)) return undefined;
+  if (
+    Object.hasOwn(value, "centerX") &&
+    Object.hasOwn(value, "centerY") &&
+    Object.hasOwn(value, "zoom")
+  )
+    return value;
+  if (record(value.scene) && Object.hasOwn(value.scene, "bounds"))
+    return value.scene.bounds;
+  if (Object.hasOwn(value, "view")) return value.view;
+  return undefined;
+}
+
+export function provisionalBoundsCandidatesForRow(
+  row: Pick<
+    WorkRow,
+    | "sourceSet"
+    | "primaryFamily"
+    | "defaultProfileCandidate"
+    | "previewInput"
+  >,
+): ProvisionalBoundsCandidatesV1 {
+  const profileCandidate = row.defaultProfileCandidate?.candidate;
+  const upstreamCandidate =
+    row.sourceSet === "B94"
+      ? row.defaultProfileCandidate?.explicitLegacyDefaultProfile === true
+        ? nestedViewCandidate(profileCandidate)
+        : undefined
+      : nestedViewCandidate(profileCandidate);
+  const b94CatalogCandidate =
+    row.sourceSet === "B94" && record(row.previewInput?.candidate)
+      ? row.previewInput.candidate.view
+      : undefined;
+  const familyFallback =
+    typeof row.primaryFamily === "string"
+      ? PROVISIONAL_FAMILY_SAFE_FALLBACKS_V1[row.primaryFamily]
+      : undefined;
+  return { upstreamCandidate, b94CatalogCandidate, familyFallback };
+}
+
+export function computeRunnableLedgerContentHash(value: unknown): string {
+  invariant(record(value), "provisional-assets-ledger-mismatch");
+  const withoutHash = { ...value };
+  delete withoutHash.ledgerContentHash;
+  return sha256Bytes(canonical(withoutHash as unknown as JsonValue));
+}
+
+export function validateRunnableLedgerSelection(
+  value: unknown,
+  expectedRows: readonly Pick<WorkRow, "formulaId" | "sourceSet">[],
+  expectedInputHashes: unknown,
+  contract: RunnableLedgerSelectionContract,
+): PassedRow[] {
+  invariant(record(value), "provisional-assets-ledger-mismatch");
+  invariant(
+    Object.keys(value).sort().join("\u0000") ===
+      [
+        "controllerVersion",
+        "deterministic",
+        "inputHashes",
+        "ledgerContentHash",
+        "ledgerHashAlgorithm",
+        "rows",
+        "schema",
+        "summary",
+      ]
+        .sort()
+        .join("\u0000") &&
+      value.schema === "fractalpark-formula-library-bulk-migration-ledger/v2" &&
+      value.controllerVersion === CONTROLLER_VERSION &&
+      value.ledgerHashAlgorithm === "sha256-ecmascript-sorted-json/1" &&
+      value.deterministic === true &&
+      value.ledgerContentHash === contract.contentHash &&
+      computeRunnableLedgerContentHash(value) === contract.contentHash &&
+      stableEqual(
+        value.inputHashes as JsonValue,
+        expectedInputHashes as JsonValue,
+      ) &&
+      Array.isArray(value.rows) &&
+      value.rows.length === contract.total &&
+      expectedRows.length === contract.total &&
+      record(value.summary) &&
+      value.summary.total === contract.total &&
+      value.summary.passed === contract.passed &&
+      value.summary.failed === contract.total - contract.passed,
+    "provisional-assets-ledger-mismatch",
+  );
+  const selected: PassedRow[] = [];
+  for (const [index, raw] of value.rows.entries()) {
+    invariant(record(raw), "provisional-assets-ledger-mismatch");
+    const expected = expectedRows[index];
+    invariant(
+      raw.formulaId === expected.formulaId &&
+        raw.sourceSet === expected.sourceSet &&
+        raw.publicationEligible === false &&
+        (raw.status === "passed" || raw.status === "failed"),
+      "provisional-assets-ledger-mismatch",
+    );
+    if (raw.status === "passed") {
+      invariant(
+        raw.sourceSet === "F588" &&
+          typeof raw.sourceRevision === "string" &&
+          /^[0-9a-f]{64}$/.test(raw.sourceRevision) &&
+          typeof raw.semanticHash === "string" &&
+          /^[0-9a-f]{64}$/.test(raw.semanticHash) &&
+          typeof raw.backendArtifactSha256 === "string" &&
+          /^[0-9a-f]{64}$/.test(raw.backendArtifactSha256) &&
+          record(raw.releaseOracle) &&
+          raw.releaseOracle.status === "passed" &&
+          record(raw.webgl) &&
+          raw.webgl.compileLinkDraw === "passed" &&
+          raw.webgl.deterministicDraw === "passed" &&
+          raw.webgl.cpuParity === "passed",
+        "provisional-assets-ledger-mismatch",
+      );
+      selected.push(raw as unknown as PassedRow);
+    }
+  }
+  invariant(selected.length === contract.passed, "provisional-assets-ledger-mismatch");
+  return selected;
+}
+
+function readFrozenRunnableLedgerValue(repositoryRoot: string): unknown {
+  const privateRoot = join(repositoryRoot, PRIVATE_OUTPUT_COMPONENTS[0]);
+  const privateLeaf = join(privateRoot, PRIVATE_OUTPUT_COMPONENTS[1]);
+  const ledgerPath = join(privateLeaf, PRIVATE_OUTPUT_FILENAME);
+  assertPrivateMode(privateRoot, "directory");
+  assertPrivateMode(privateLeaf, "directory");
+  assertPrivateMode(ledgerPath, "file");
+  let value: unknown;
+  try {
+    value = JSON.parse(readFileSync(ledgerPath, "utf8"));
+  } catch {
+    throw new Error("provisional-assets-input-invalid");
+  }
+  invariant(
+    record(value) &&
+      value.schema === "fractalpark-formula-library-bulk-migration-ledger/v2" &&
+      value.controllerVersion === CONTROLLER_VERSION &&
+      value.ledgerContentHash === EXPECTED_RUNNABLE_LEDGER_SHA256 &&
+      computeRunnableLedgerContentHash(value) === EXPECTED_RUNNABLE_LEDGER_SHA256 &&
+      Array.isArray(value.rows) &&
+      value.rows.length === EXPECTED_ROWS &&
+      value.rows.filter(
+        (row) =>
+          record(row) &&
+          row.status === "passed" &&
+          row.sourceSet === "F588" &&
+          row.publicationEligible === false,
+      ).length === EXPECTED_RUNNABLE_ROWS &&
+      value.rows.every(
+        (row) =>
+          record(row) &&
+          row.publicationEligible === false &&
+          (row.status === "passed" || row.status === "failed"),
+      ),
+    "provisional-assets-ledger-mismatch",
+  );
+  return value;
+}
+
+function readRunnableLedger(
+  repositoryRoot: string,
+  context: PreflightContext,
+): PassedRow[] {
+  const value = readFrozenRunnableLedgerValue(repositoryRoot);
+  return validateRunnableLedgerSelection(
+    value,
+    context.workPackage.rows,
+    context.inputHashes,
+    {
+      total: EXPECTED_ROWS,
+      passed: EXPECTED_RUNNABLE_ROWS,
+      contentHash: EXPECTED_RUNNABLE_LEDGER_SHA256,
+    },
+  );
+}
+
+export function computeProvisionalManifestContentHash(value: unknown): string {
+  invariant(record(value), "provisional-assets-input-invalid");
+  const withoutHash = { ...value };
+  delete withoutHash.manifestContentHash;
+  return sha256Bytes(canonical(withoutHash as unknown as JsonValue));
+}
+
+async function writeProvisionalAssets(
+  repositoryRoot: string,
+  context: PreflightContext,
+  initialRepositoryBinding: RepositoryIndexBinding,
+): Promise<Readonly<Record<string, JsonValue>>> {
+  const selectedRows = readRunnableLedger(repositoryRoot, context);
+  const selectedById = new Map(selectedRows.map((row) => [row.formulaId, row]));
+  const prepared: PendingPass[] = [];
+  for (const row of context.workPackage.rows) {
+    const ledgerRow = selectedById.get(row.formulaId);
+    if (!ledgerRow) continue;
+    let candidate: FailedRow | PendingPass;
+    try {
+      candidate = await prepareRow(row, context);
+    } catch {
+      throw new Error("provisional-assets-revalidation-failed");
+    }
+    invariant("gpuCase" in candidate, "provisional-assets-revalidation-failed");
+    invariant(
+      candidate.sourceRevision === ledgerRow.sourceRevision &&
+        candidate.semanticHash === ledgerRow.semanticHash &&
+        candidate.backendArtifactSha256 === ledgerRow.backendArtifactSha256,
+      "provisional-assets-revalidation-failed",
+    );
+    prepared.push(candidate);
+  }
+  invariant(
+    prepared.length === EXPECTED_RUNNABLE_ROWS &&
+      prepared.every((candidate, index) => candidate.row.formulaId === selectedRows[index].formulaId),
+    "provisional-assets-revalidation-failed",
+  );
+  const gpu = await runWebgl(prepared.map((candidate) => candidate.gpuCase));
+  invariant(
+    prepared.every((candidate) => gpu.get(candidate.row.formulaId) === "passed"),
+    "provisional-assets-revalidation-failed",
+  );
+
+  const previews: ReturnType<typeof renderProvisionalPreviewV1>[] = [];
+  const rows: Array<Record<string, JsonValue>> = [];
+  for (const [index, candidate] of prepared.entries()) {
+    const projected = await projectProvisionalProfileV1(
+      candidate.definition,
+      provisionalBoundsCandidatesForRow(candidate.row),
+    );
+    const first = renderProvisionalPreviewV1(
+      candidate.backend,
+      projected.profile,
+      PROVISIONAL_PROFILE_POLICY_V1.preview.width,
+      PROVISIONAL_PROFILE_POLICY_V1.preview.height,
+    );
+    const second = renderProvisionalPreviewV1(
+      candidate.backend,
+      projected.profile,
+      PROVISIONAL_PROFILE_POLICY_V1.preview.width,
+      PROVISIONAL_PROFILE_POLICY_V1.preview.height,
+    );
+    invariant(
+      Buffer.from(first.rgba).equals(Buffer.from(second.rgba)) &&
+        stableEqual(
+          {
+            escapedPixels: first.escapedPixels,
+            interiorPixels: first.interiorPixels,
+            nonFinitePixels: first.nonFinitePixels,
+            uniqueColors: first.uniqueColors,
+            anomalies: first.anomalies,
+          } as unknown as JsonValue,
+          {
+            escapedPixels: second.escapedPixels,
+            interiorPixels: second.interiorPixels,
+            nonFinitePixels: second.nonFinitePixels,
+            uniqueColors: second.uniqueColors,
+            anomalies: second.anomalies,
+          } as unknown as JsonValue,
+        ),
+      "provisional-assets-render-failed",
+    );
+    const png = encodeDeterministicPng(first.width, first.height, first.rgba);
+    const filename = `preview-${String(index + 1).padStart(3, "0")}.png`;
+    previews.push(first);
+    rows.push({
+      slot: index + 1,
+      formulaId: candidate.row.formulaId,
+      status: "presentable-candidate",
+      provisionalDefaultProfile: true,
+      verifiedDefaultProfile: false,
+      publicationEligible: false,
+      sourceRevision: candidate.sourceRevision,
+      semanticHash: candidate.semanticHash,
+      backendArtifactSha256: candidate.backendArtifactSha256,
+      boundsSource: projected.boundsSource,
+      profile: projected.profile as unknown as JsonValue,
+      preview: {
+        file: filename,
+        width: first.width,
+        height: first.height,
+        rawRgbaSha256: sha256Bytes(Buffer.from(first.rgba)),
+        pngSha256: sha256Bytes(png),
+        escapedPixels: first.escapedPixels,
+        interiorPixels: first.interiorPixels,
+        nonFinitePixels: first.nonFinitePixels,
+        uniqueColors: first.uniqueColors,
+        anomalies: first.anomalies,
+      },
+    });
+  }
+  const contact = composeProvisionalContactSheetV1(previews, 5);
+  const contactPng = encodeDeterministicPng(contact.width, contact.height, contact.rgba);
+  const anomalyList = rows.flatMap((row) => {
+    const preview = row.preview as Record<string, JsonValue>;
+    const anomalies = preview.anomalies as readonly JsonValue[];
+    return anomalies.length > 0 ? [{ slot: row.slot, anomalies }] : [];
+  });
+  const finalRepositoryBinding = captureRepositoryIndexBinding(repositoryRoot);
+  invariant(
+    stableEqual(
+      initialRepositoryBinding as unknown as JsonValue,
+      finalRepositoryBinding as unknown as JsonValue,
+    ),
+    "repository-binding-unavailable",
+  );
+  const toolSourceHashes = {
+    "scripts/formula-library-bulk-migration.ts": sha256File(
+      join(repositoryRoot, "scripts", "formula-library-bulk-migration.ts"),
+    ),
+    "src/engine/formulas/v1/provisional-preview.ts": sha256File(
+      join(repositoryRoot, "src", "engine", "formulas", "v1", "provisional-preview.ts"),
+    ),
+    "src/engine/formulas/v1/provisional-profile.ts": sha256File(
+      join(repositoryRoot, "src", "engine", "formulas", "v1", "provisional-profile.ts"),
+    ),
+  };
+  const generatorRevision = sha256Bytes(
+    canonical({
+      repositoryIndexTree: initialRepositoryBinding.repositoryIndexTree,
+      toolSourceHashes,
+    } as unknown as JsonValue),
+  );
+  const manifestWithoutHash = {
+    schema: "fractalpark-formula-library-provisional-assets/v1",
+    controllerVersion: PROVISIONAL_CONTROLLER_VERSION,
+    policyVersion: PROVISIONAL_PROFILE_POLICY_V1.version,
+    generationBinding: {
+      ...initialRepositoryBinding,
+      workingTreeMatchesIndex: true,
+      generatorRevision,
+      toolSourceHashes,
+    },
+    deterministic: true,
+    runnableLedgerContentHash: EXPECTED_RUNNABLE_LEDGER_SHA256,
+    publicationEligible: false,
+    verifiedDefaultProfiles: 0,
+    summary: {
+      accounted: EXPECTED_ROWS,
+      runnableSelection: EXPECTED_RUNNABLE_ROWS,
+      failedHeldFailClosed: EXPECTED_ROWS - EXPECTED_RUNNABLE_ROWS,
+      presentableCandidates: EXPECTED_RUNNABLE_ROWS,
+      anomalyRows: anomalyList.length,
+    },
+    anomalyList,
+    contactSheet: {
+      file: PRIVATE_PRESENTABLE_CONTACT_SHEET,
+      width: contact.width,
+      height: contact.height,
+      tileColumns: 5,
+      tileRows: Math.ceil(rows.length / 5),
+      rawRgbaSha256: sha256Bytes(Buffer.from(contact.rgba)),
+      pngSha256: sha256Bytes(contactPng),
+    },
+    rows,
+  };
+  const manifestContentHash = computeProvisionalManifestContentHash(
+    manifestWithoutHash,
+  );
+  const previewPngs = rows.map((row, index) => ({
+    filename: (row.preview as Record<string, JsonValue>).file as string,
+    png: encodeDeterministicPng(
+      previews[index].width,
+      previews[index].height,
+      previews[index].rgba,
+    ),
+  }));
+  assertPrivatePresentableOutputSet(repositoryRoot, false);
+  for (const preview of previewPngs)
+    writePrivatePresentableFile(repositoryRoot, preview.filename, preview.png);
+  writePrivatePresentableFile(
+    repositoryRoot,
+    PRIVATE_PRESENTABLE_CONTACT_SHEET,
+    contactPng,
+  );
+  const manifest = { ...manifestWithoutHash, manifestContentHash };
+  const output = writePrivatePresentableFile(
+    repositoryRoot,
+    PRIVATE_PRESENTABLE_MANIFEST,
+    `${JSON.stringify(manifest, null, 2)}\n`,
+  );
+  assertPrivatePresentableOutputSet(repositoryRoot, true);
+  return {
+    output: relative(repositoryRoot, output).replaceAll("\\", "/"),
+    manifestContentHash,
+    summary: manifest.summary,
+    contactSheet: manifest.contactSheet,
+  } as unknown as Readonly<Record<string, JsonValue>>;
+}
+
 async function main(): Promise<void> {
   const repositoryRoot = process.cwd();
+  const provisionalAssets = process.argv.includes("--provisional-assets");
+  const provisionalRepositoryBinding = provisionalAssets
+    ? captureRepositoryIndexBinding(repositoryRoot)
+    : null;
+  if (provisionalAssets) readFrozenRunnableLedgerValue(repositoryRoot);
   const context = preflight(repositoryRoot);
   const preflightOnly = process.argv.includes("--preflight");
   if (preflightOnly) {
@@ -1337,6 +2048,22 @@ async function main(): Promise<void> {
     return;
   }
   invariant(process.argv.includes("--write"), "write-flag-required");
+  if (provisionalAssets) {
+    invariant(provisionalRepositoryBinding, "repository-binding-unavailable");
+    const result = await writeProvisionalAssets(
+      repositoryRoot,
+      context,
+      provisionalRepositoryBinding,
+    );
+    process.stdout.write(
+      `${JSON.stringify({
+        ok: true,
+        controllerVersion: PROVISIONAL_CONTROLLER_VERSION,
+        ...result,
+      })}\n`,
+    );
+    return;
+  }
   const rows = await run(context);
   invariant(rows.length === EXPECTED_ROWS, "census-row-count-mismatch");
   const failedRows = rows.filter((row): row is FailedRow => row.status === "failed");
