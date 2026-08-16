@@ -15,6 +15,8 @@
     "formula:publication-readiness:verify": "tsx scripts/verify-formula-publication-readiness.ts",
     "formula:direct-adaptation-evidence": "tsx scripts/generate-formula-direct-adaptation-evidence.ts --write",
     "formula:direct-adaptation-evidence:verify": "tsx scripts/verify-formula-direct-adaptation-evidence.ts",
+    "formula:clean-room-evidence": "tsx scripts/generate-formula-clean-room-evidence.ts --write",
+    "formula:clean-room-evidence:verify": "tsx scripts/verify-formula-clean-room-evidence.ts",
     "thumbnails:presets": "node scripts/generate-thumbnails.mjs",
     "images:formula-guides": "node --import tsx scripts/generate-formula-guide-images.ts",
     "indexnow:submit": "node --import tsx scripts/submit-indexnow.ts",
