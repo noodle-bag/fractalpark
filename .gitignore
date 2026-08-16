@@ -16,6 +16,9 @@
 /playwright-report/
 .playwright-mcp/
 
+# private local formula evidence
+/.formula-library-private/
+
 # next.js
 /.next/
 /out/

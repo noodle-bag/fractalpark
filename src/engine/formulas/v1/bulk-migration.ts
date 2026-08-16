@@ -23,6 +23,7 @@ export const FORMULA_LIBRARY_BULK_REASON_CODES = Object.freeze([
   "cpu-runtime-failed",
   "release-oracle-mismatch",
   "webgl-compile-link-draw-failed",
+  "webgl-cpu-mismatch",
   "nondeterministic-output",
   "controller-internal-error",
 ] as const);
@@ -110,16 +111,17 @@ export function selectClassicMigrationEntry(
       .split(/\s+/)
       .map((option) => option.trim())
       .filter(Boolean);
-    const actualOptions = new Set(
-      (entry.options ?? "")
-        .toLowerCase()
-        .split(/\s+/)
-        .map((option) => option.trim())
-        .filter(Boolean),
-    );
+    const actualOptions = (entry.options ?? "")
+      .toLowerCase()
+      .split(/\s+/)
+      .map((option) => option.trim())
+      .filter(Boolean)
+      .sort();
+    const normalizedExpected = [...new Set(expectedOptions)].sort();
     return (
-      expectedOptions.length > 0 &&
-      expectedOptions.every((option) => actualOptions.has(option))
+      normalizedExpected.length > 0 &&
+      normalizedExpected.length === actualOptions.length &&
+      normalizedExpected.every((option, index) => option === actualOptions[index])
     );
   });
   return matches.length === 1 ? matches[0] : null;

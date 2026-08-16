@@ -1,6 +1,30 @@
+import {
+  chmodSync,
+  mkdtempSync,
+  mkdirSync,
+  rmSync,
+  statSync,
+  symlinkSync,
+  writeFileSync,
+} from "node:fs";
+import { tmpdir } from "node:os";
+import { dirname, join } from "node:path";
+
 import { describe, expect, it } from "vitest";
 
 import identitiesManifest from "../../resources/formula-library/v1/standard-formula-ids.json";
+import {
+  assertPrivateMode,
+  assertRightsContract,
+  corpusPathSnapshotHash,
+  corpusSnapshotHash,
+  gpuFailureReason,
+  releaseOracleMatches,
+  sanitizeControllerError,
+  walkCorpus,
+  writePrivateLedger,
+  type WorkRow,
+} from "../../scripts/formula-library-bulk-migration";
 import { compileClassicFrmEntry } from "@/engine/frm/compile";
 import { scanFrmEntries } from "@/engine/frm/scanner";
 import {
@@ -58,10 +82,168 @@ describe("formula-library bulk migration foundations", () => {
       "cpu-runtime-failed",
       "release-oracle-mismatch",
       "webgl-compile-link-draw-failed",
+      "webgl-cpu-mismatch",
       "nondeterministic-output",
       "controller-internal-error",
     ]);
     expect(Object.isFrozen(FORMULA_LIBRARY_BULK_REASON_CODES)).toBe(true);
+    expect(gpuFailureReason("passed")).toBeNull();
+    expect(gpuFailureReason("semantic-mismatch")).toBe("webgl-cpu-mismatch");
+    expect(gpuFailureReason("nondeterministic")).toBe("nondeterministic-output");
+    expect(gpuFailureReason("failed")).toBe("webgl-compile-link-draw-failed");
+    expect(gpuFailureReason(undefined)).toBe("webgl-compile-link-draw-failed");
+    expect(
+      sanitizeControllerError(
+        new Error("ENOENT: no such file or directory, lstat '/private/secret.frm'"),
+      ),
+    ).toBe("controller-internal-error");
+    expect(sanitizeControllerError(new Error("private-input-unavailable"))).toBe(
+      "private-input-unavailable",
+    );
+  });
+
+  it("enforces per-row rights lanes before source access", () => {
+    const baseRevision = "a".repeat(40);
+    const direct: WorkRow = {
+      formulaId: FORMULA_ID,
+      sourceSet: "F588",
+      typedLegacyAliases: [],
+      rights: {
+        class: "A",
+        lane: "direct-adaptation",
+        canonicalLicenseTarget: "MIT",
+        rightsEvidenceStatus: "frozen-per-record-classification",
+        sourceVisibility: "source-visible-after-content-gate",
+      },
+      implementationInput: {
+        status: "ready-direct-source",
+        inputKind: "approved-direct-source",
+        safeSourceLocator: "formulas/example.frm",
+        forbiddenForIsolatedImplementer: [],
+      },
+      workStartEligibility: "blocked-incomplete-package",
+      review: { status: "blocked-incomplete-package" },
+      fixturesOrOracle: {},
+    };
+    expect(() => assertRightsContract(direct, baseRevision)).not.toThrow();
+    expect(() =>
+      assertRightsContract(
+        {
+          ...direct,
+          rights: { ...direct.rights, lane: "clean-room" },
+        },
+        baseRevision,
+      ),
+    ).toThrow("rights-contract-mismatch");
+
+    const cleanRoom: WorkRow = {
+      ...direct,
+      rights: {
+        class: "C",
+        lane: "clean-room",
+        canonicalLicenseTarget: "MIT",
+        rightsEvidenceStatus: "frozen-per-record-classification",
+        sourceVisibility: "isolated-controller-only",
+      },
+      implementationInput: {
+        status: "blocked-missing-approved-nonreversible-behavior-spec",
+        inputKind: "clean-room-math-behavior-spec",
+        safeSourceLocator: null,
+        behaviorSpecAuthor: null,
+        behaviorSpecRevision: null,
+        behaviorSpecSha256: null,
+        forbiddenForIsolatedImplementer: [
+          "third-party-original-source",
+          "source-comments",
+          "source-variable-names",
+          "statement-layout",
+          "complete-ast-or-ir",
+          "private-source-paths",
+        ],
+      },
+    };
+    expect(() => assertRightsContract(cleanRoom, baseRevision)).not.toThrow();
+    expect(() =>
+      assertRightsContract(
+        {
+          ...cleanRoom,
+          implementationInput: {
+            ...cleanRoom.implementationInput,
+            safeSourceLocator: "private/example.frm",
+          },
+        },
+        baseRevision,
+      ),
+    ).toThrow("rights-contract-mismatch");
+  });
+
+  it("binds corpus paths and writes the private ledger with restrictive modes", () => {
+    const root = mkdtempSync(join(tmpdir(), "formula-bulk-controller-"));
+    try {
+      chmodSync(root, 0o700);
+      expect(() => assertPrivateMode(join(root, "missing-private.frm"), "file")).toThrow(
+        "private-input-unavailable",
+      );
+      expect(() =>
+        writePrivateLedger(join(root, "missing-repository"), "leak\n"),
+      ).toThrow("private-output-write-failed");
+      const corpus = join(root, "corpus");
+      mkdirSync(corpus, { mode: 0o700 });
+      const firstPath = join(corpus, "first.frm");
+      const secondPath = join(corpus, "second.frm");
+      writeFileSync(firstPath, "alpha", { mode: 0o600 });
+      writeFileSync(secondPath, "beta", { mode: 0o600 });
+      const before = walkCorpus(corpus);
+      const contentHash = corpusSnapshotHash(before);
+      const pathHash = corpusPathSnapshotHash(before);
+
+      chmodSync(firstPath, 0o644);
+      expect(() => assertPrivateMode(firstPath, "file")).toThrow(
+        "private-input-permissions-too-broad",
+      );
+      chmodSync(firstPath, 0o600);
+
+      writeFileSync(firstPath, "beta");
+      writeFileSync(secondPath, "alpha");
+      const after = walkCorpus(corpus);
+      expect(corpusSnapshotHash(after)).toBe(contentHash);
+      expect(corpusPathSnapshotHash(after)).not.toBe(pathHash);
+
+      const repository = join(root, "repo");
+      mkdirSync(repository, { mode: 0o700 });
+      const privateRoot = join(repository, ".formula-library-private");
+      const privateLeaf = join(privateRoot, "formula-library-v1");
+      mkdirSync(privateLeaf, { recursive: true, mode: 0o755 });
+      chmodSync(privateRoot, 0o755);
+      chmodSync(privateLeaf, 0o755);
+      const ledger = writePrivateLedger(repository, "{}\n");
+      expect(statSync(privateRoot).mode & 0o777).toBe(0o700);
+      expect(statSync(privateLeaf).mode & 0o777).toBe(0o700);
+      expect(statSync(dirname(ledger)).mode & 0o777).toBe(0o700);
+      expect(statSync(ledger).mode & 0o777).toBe(0o600);
+
+      const symlinkRepository = join(root, "symlink-repo");
+      const escape = join(root, "escape");
+      mkdirSync(symlinkRepository, { mode: 0o700 });
+      mkdirSync(escape, { mode: 0o700 });
+      symlinkSync(
+        escape,
+        join(symlinkRepository, ".formula-library-private"),
+        "dir",
+      );
+      expect(() => writePrivateLedger(symlinkRepository, "leak\n")).toThrow(
+        "private-output-symlink-rejected",
+      );
+      expect(() =>
+        statSync(join(escape, "formula-library-v1", "bulk-migration-ledger.json")),
+      ).toThrow();
+
+      const linked = join(corpus, "linked.frm");
+      symlinkSync(firstPath, linked);
+      expect(() => walkCorpus(corpus)).toThrow("corpus-symlink-rejected");
+    } finally {
+      rmSync(root, { recursive: true, force: true });
+    }
   });
 
   it("resolves Classic bracket selectors by name plus option token", () => {
@@ -86,6 +268,14 @@ describe("formula-library bulk migration foundations", () => {
     });
     expect(
       selectClassicMigrationEntry(scan.entries, "variant[float=n]"),
+    ).toBeNull();
+    const broaderOnly = scanFrmEntries(`Variant[float=y extra=yes] {
+      z = pixel:
+      z = z + c,
+      |z| < 4
+    }`);
+    expect(
+      selectClassicMigrationEntry(broaderOnly.entries, "variant[float=y]"),
     ).toBeNull();
   });
 
@@ -181,6 +371,33 @@ describe("formula-library bulk migration foundations", () => {
     );
     expect(oracle).toHaveLength(2);
     expect(oracle.every((run) => run.orbit.length > 0)).toBe(true);
+    const expectedOracle = {
+      maxIterations: 4,
+      runs: oracle.map((run) => ({
+        pixel: run.pixel,
+        escapedAt: run.escapedAt,
+        orbit: run.orbit.map((point) => {
+          if (point[0] === "non-finite" || point[1] === "non-finite")
+            throw new Error("unexpected-non-finite-test-orbit");
+          return [point[0], point[1]] as const;
+        }),
+      })),
+    } as const;
+    expect(releaseOracleMatches(oracle, expectedOracle)).toBe(true);
+    const mismatchedOracle = {
+      ...expectedOracle,
+      runs: expectedOracle.runs.map((run, index) =>
+        index === 0
+          ? {
+              ...run,
+              orbit: run.orbit.map((point, pointIndex) =>
+                pointIndex === 0 ? ([point[0] + 1, point[1]] as const) : point,
+              ),
+            }
+          : run,
+      ),
+    } as const;
+    expect(releaseOracleMatches(oracle, mismatchedOracle)).toBe(false);
   });
 
   it("fails closed when Classic identity fn defaults are absent from frozen stdlib/1", () => {

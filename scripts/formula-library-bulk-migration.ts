@@ -1,13 +1,19 @@
 import { createHash } from "node:crypto";
 import {
-  chmodSync,
+  closeSync,
+  constants,
+  fchmodSync,
+  lstatSync,
   mkdirSync,
+  openSync,
   readFileSync,
   readdirSync,
-  statSync,
+  realpathSync,
+  type Stats,
   writeFileSync,
 } from "node:fs";
-import { basename, dirname, join, relative, resolve } from "node:path";
+import { dirname, join, relative, resolve } from "node:path";
+import { pathToFileURL } from "node:url";
 import { spawnSync } from "node:child_process";
 
 import { chromium } from "@playwright/test";
@@ -37,21 +43,87 @@ import {
   type FormulaRevisionV1,
 } from "../src/engine/formulas/v1";
 
-const CONTROLLER_VERSION = "formula-library-bulk-migration/1";
+const CONTROLLER_VERSION = "formula-library-bulk-migration/2";
 const EXPECTED_ROWS = 677;
 const EXPECTED_CORPUS_FILES = 2196;
 const EXPECTED_CORPUS_SHA256 =
   "ae81a9248e16d96bbbcfd949f0169f750db31b8b6cc0a3f822bd713160e0601e";
+const EXPECTED_CORPUS_PATH_SNAPSHOT_SHA256 =
+  "0772c31746aefa3d9e26fcc82a564334cccfb92aef8483f75ba64cd1dd229a0b";
+const EXPECTED_RIGHTS_PROTOCOL_SHA256 =
+  "f537fc71512cd3ffcc0a24deb436009d50d267afd21e4b09d8fa569805b1a1ea";
 const EXPECTED_WORK_PACKAGE_SHA256 =
   "29d4501d05f712f154d11809414876f9625c5efa202885579080d61fa88633bd";
-const DEFAULT_OUTPUT = join(
-  "node_modules",
-  ".cache",
+const PRIVATE_OUTPUT_COMPONENTS = [
+  ".formula-library-private",
   "formula-library-v1",
-  "bulk-migration-ledger.json",
-);
+] as const;
+const PRIVATE_OUTPUT_FILENAME = "bulk-migration-ledger.json";
 const WORK_PACKAGE_START =
   "<!-- BEGIN STANDARD_MIGRATION_WORK_PACKAGES_JSON -->";
+const PUBLIC_CONTROLLER_ERROR_CODES = new Set([
+  "alias-binding-mismatch",
+  "alias-row-mismatch",
+  "census-row-count-mismatch",
+  "controller-internal-error",
+  "corpus-env-missing",
+  "corpus-entry-kind-invalid",
+  "corpus-file-count-mismatch",
+  "corpus-path-snapshot-mismatch",
+  "corpus-permissions-too-broad",
+  "corpus-snapshot-mismatch",
+  "corpus-symlink-rejected",
+  "corpus-unavailable",
+  "handoff-env-missing",
+  "identity-binding-mismatch",
+  "identity-count-mismatch",
+  "identity-order-mismatch",
+  "identity-source-set-mismatch",
+  "oracle-artifact-invalid",
+  "oracle-artifact-unavailable",
+  "oracle-binding-conflict",
+  "oracle-env-missing",
+  "oracle-hash-mismatch",
+  "oracle-name-invalid",
+  "oracle-row-duplicate",
+  "oracle-row-status-mismatch",
+  "private-input-kind-mismatch",
+  "private-input-permissions-too-broad",
+  "private-input-symlink-rejected",
+  "private-input-unavailable",
+  "private-output-containment-failed",
+  "private-output-permissions-invalid",
+  "private-output-root-invalid",
+  "private-output-symlink-rejected",
+  "private-output-write-failed",
+  "repository-binding-unavailable",
+  "repository-revision-not-ancestor",
+  "repository-scope-mismatch",
+  "repository-scope-query-failed",
+  "rights-contract-mismatch",
+  "rights-protocol-binding-mismatch",
+  "row-oracle-binding-missing",
+  "row-oracle-evidence-missing",
+  "work-package-content-hash-mismatch",
+  "work-package-frozen-hash-mismatch",
+  "work-package-identity-duplicate",
+  "work-package-invalid",
+  "work-package-json-missing",
+  "work-package-marker-missing",
+  "work-package-row-count-mismatch",
+  "work-package-schema-mismatch",
+  "work-package-source-set-count-mismatch",
+  "work-package-status-mismatch",
+  "work-package-unavailable",
+  "write-flag-required",
+]);
+
+export function sanitizeControllerError(error: unknown): string {
+  const message = error instanceof Error ? error.message : "";
+  return PUBLIC_CONTROLLER_ERROR_CODES.has(message)
+    ? message
+    : "controller-internal-error";
+}
 
 type JsonPrimitive = string | number | boolean | null;
 type JsonValue = JsonPrimitive | readonly JsonValue[] | { readonly [key: string]: JsonValue };
@@ -62,14 +134,30 @@ interface TypedAlias {
   readonly formulaId: string;
 }
 
-interface WorkRow {
+export interface WorkRow {
   readonly formulaId: string;
   readonly sourceSet: "F588" | "B94";
   readonly typedLegacyAliases: readonly TypedAlias[];
+  readonly rights: {
+    readonly class: "A" | "B" | "C" | "P";
+    readonly lane: "direct-adaptation" | "clean-room";
+    readonly canonicalLicenseTarget: string;
+    readonly rightsEvidenceStatus: string;
+    readonly sourceVisibility: string;
+  };
   readonly implementationInput: {
     readonly status: string;
+    readonly inputKind: string;
     readonly safeSourceLocator?: string | null;
     readonly runtimeId?: string;
+    readonly behaviorSpecAuthor?: string | null;
+    readonly behaviorSpecRevision?: string | null;
+    readonly behaviorSpecSha256?: string | null;
+    readonly forbiddenForIsolatedImplementer: readonly string[];
+  };
+  readonly workStartEligibility: string;
+  readonly review: {
+    readonly status: string;
   };
   readonly fixturesOrOracle: {
     readonly artifact?: string;
@@ -85,6 +173,7 @@ interface WorkPackage {
   readonly sourceBindings: {
     readonly standardFormulaIds: { readonly sha256: string };
     readonly legacyFormulaAliases: { readonly sha256: string };
+    readonly rightsProtocol: { readonly sha256: string };
     readonly repositoryRevision: string;
   };
   readonly rows: readonly WorkRow[];
@@ -103,18 +192,18 @@ interface AliasManifest {
 
 interface CorpusFile {
   readonly path: string;
+  readonly relativePath: string;
   readonly relativeLower: string;
-  readonly basenameLower: string;
 }
 
-interface ExpectedOracleRun {
+export interface ExpectedOracleRun {
   readonly pixel: readonly [number, number];
   readonly escapedAt: number | null;
   readonly orbit?: readonly (readonly [number, number])[];
   readonly rounds?: number;
 }
 
-interface ExpectedOracleRow {
+export interface ExpectedOracleRow {
   readonly maxIterations: number;
   readonly runs: readonly ExpectedOracleRun[];
 }
@@ -141,6 +230,8 @@ interface PreflightContext {
   readonly inputHashes: {
     readonly workPackage: string;
     readonly corpusSnapshot: string;
+    readonly corpusPathSnapshot: string;
+    readonly rightsProtocol: string;
     readonly standardFormulaIds: string;
     readonly legacyFormulaAliases: string;
     readonly repositoryRevision: string;
@@ -152,6 +243,7 @@ interface PassedRow {
   readonly formulaId: string;
   readonly sourceSet: "F588" | "B94";
   readonly status: "passed";
+  readonly publicationEligible: false;
   readonly sourceRevision: string;
   readonly semanticHash: string;
   readonly backendArtifactSha256: string;
@@ -163,6 +255,9 @@ interface PassedRow {
   readonly webgl: {
     readonly compileLinkDraw: "passed";
     readonly deterministicDraw: "passed";
+    readonly cpuParity: "passed";
+    readonly oracleRuns: number;
+    readonly orbitPoints: number;
   };
 }
 
@@ -170,11 +265,17 @@ interface FailedRow {
   readonly formulaId: string;
   readonly sourceSet: "F588" | "B94";
   readonly status: "failed";
+  readonly publicationEligible: false;
   readonly failureStage: FormulaLibraryBulkFailureStage;
   readonly reasonCode: FormulaLibraryBulkReasonCode;
 }
 
 type CensusRow = PassedRow | FailedRow;
+
+interface GpuRun {
+  readonly pixel: readonly [number, number];
+  readonly expectedOrbit: readonly (readonly [number, number])[];
+}
 
 interface GpuCase {
   readonly formulaId: string;
@@ -183,6 +284,8 @@ interface GpuCase {
   readonly loop: string;
   readonly continuePredicate: string;
   readonly eventFlag: string;
+  readonly maxIterations: number;
+  readonly runs: readonly GpuRun[];
   readonly parameters: readonly {
     readonly name: string;
     readonly type: "real" | "complex" | "function";
@@ -223,32 +326,67 @@ function sha256File(path: string): string {
   return sha256Bytes(readFileSync(path));
 }
 
-function parseJsonFile<T>(path: string): T {
-  return JSON.parse(readFileSync(path, "utf8")) as T;
+function parseJsonFile<T>(path: string, failureCode: string): T {
+  try {
+    return JSON.parse(readFileSync(path, "utf8")) as T;
+  } catch {
+    throw new Error(failureCode);
+  }
 }
 
 function extractWorkPackage(path: string): WorkPackage {
-  const markdown = readFileSync(path, "utf8");
+  let markdown: string;
+  try {
+    markdown = readFileSync(path, "utf8");
+  } catch {
+    throw new Error("work-package-unavailable");
+  }
   const marker = markdown.indexOf(WORK_PACKAGE_START);
   invariant(marker >= 0, "work-package-marker-missing");
   const start = markdown.indexOf("{", marker);
   const end = markdown.indexOf("```", start);
   invariant(start >= 0 && end > start, "work-package-json-missing");
-  return JSON.parse(markdown.slice(start, end)) as WorkPackage;
+  try {
+    return JSON.parse(markdown.slice(start, end)) as WorkPackage;
+  } catch {
+    throw new Error("work-package-invalid");
+  }
 }
 
-function walkCorpus(root: string): CorpusFile[] {
+export function assertPrivateMode(path: string, kind: "file" | "directory"): void {
+  let metadata: Stats;
+  try {
+    metadata = lstatSync(path);
+  } catch {
+    throw new Error("private-input-unavailable");
+  }
+  invariant(!metadata.isSymbolicLink(), "private-input-symlink-rejected");
+  invariant(
+    kind === "file" ? metadata.isFile() : metadata.isDirectory(),
+    "private-input-kind-mismatch",
+  );
+  invariant((metadata.mode & 0o077) === 0, "private-input-permissions-too-broad");
+}
+
+export function walkCorpus(root: string): CorpusFile[] {
+  assertPrivateMode(root, "directory");
   const output: CorpusFile[] = [];
   const walk = (directory: string): void => {
     for (const name of readdirSync(directory).sort()) {
       const path = join(directory, name);
-      if (statSync(path).isDirectory()) walk(path);
-      else {
+      const metadata = lstatSync(path);
+      invariant(!metadata.isSymbolicLink(), "corpus-symlink-rejected");
+      if (metadata.isDirectory()) {
+        invariant((metadata.mode & 0o077) === 0, "corpus-permissions-too-broad");
+        walk(path);
+      } else {
+        invariant(metadata.isFile(), "corpus-entry-kind-invalid");
+        invariant((metadata.mode & 0o077) === 0, "corpus-permissions-too-broad");
         const relativePath = relative(root, path).replaceAll("\\", "/");
         output.push({
           path,
+          relativePath,
           relativeLower: relativePath.toLowerCase(),
-          basenameLower: basename(path).toLowerCase(),
         });
       }
     }
@@ -257,9 +395,16 @@ function walkCorpus(root: string): CorpusFile[] {
   return output;
 }
 
-function corpusSnapshotHash(files: readonly CorpusFile[]): string {
+export function corpusSnapshotHash(files: readonly CorpusFile[]): string {
   const hashes = files.map((file) => sha256File(file.path)).sort();
   return sha256Bytes(hashes.join("\n"));
+}
+
+export function corpusPathSnapshotHash(files: readonly CorpusFile[]): string {
+  const bindings = files
+    .map((file) => `${file.relativePath}\u0000${sha256File(file.path)}`)
+    .sort();
+  return sha256Bytes(bindings.join("\n"));
 }
 
 function sortedAliasKey(aliases: readonly TypedAlias[]): string {
@@ -267,6 +412,91 @@ function sortedAliasKey(aliases: readonly TypedAlias[]): string {
     .map((alias) => `${alias.kind}\u0000${alias.value}\u0000${alias.formulaId}`)
     .sort()
     .join("\n");
+}
+
+const CLEAN_ROOM_FORBIDDEN_INPUTS = Object.freeze([
+  "third-party-original-source",
+  "source-comments",
+  "source-variable-names",
+  "statement-layout",
+  "complete-ast-or-ir",
+  "private-source-paths",
+]);
+
+function sameStringSet(actual: readonly string[], expected: readonly string[]): boolean {
+  const normalizedActual = [...actual].sort();
+  const normalizedExpected = [...expected].sort();
+  return (
+    normalizedActual.length === normalizedExpected.length &&
+    normalizedActual.every((value, index) => value === normalizedExpected[index])
+  );
+}
+
+export function assertRightsContract(row: WorkRow, baseRevision: string): void {
+  invariant(row.workStartEligibility === "blocked-incomplete-package", "rights-contract-mismatch");
+  invariant(row.review.status === "blocked-incomplete-package", "rights-contract-mismatch");
+  invariant(row.rights.canonicalLicenseTarget === "MIT", "rights-contract-mismatch");
+
+  if (row.implementationInput.status === "ready-direct-source") {
+    invariant(
+      row.sourceSet === "F588" &&
+        row.rights.class === "A" &&
+        row.rights.lane === "direct-adaptation" &&
+        row.rights.rightsEvidenceStatus === "frozen-per-record-classification" &&
+        row.rights.sourceVisibility === "source-visible-after-content-gate" &&
+        row.implementationInput.inputKind === "approved-direct-source" &&
+        typeof row.implementationInput.safeSourceLocator === "string" &&
+        row.implementationInput.safeSourceLocator.length > 0 &&
+        row.implementationInput.runtimeId == null &&
+        row.implementationInput.behaviorSpecAuthor == null &&
+        row.implementationInput.behaviorSpecRevision == null &&
+        row.implementationInput.behaviorSpecSha256 == null &&
+        sameStringSet(row.implementationInput.forbiddenForIsolatedImplementer, []),
+      "rights-contract-mismatch",
+    );
+    return;
+  }
+
+  if (row.implementationInput.status === "ready-project-owned-runtime-contract") {
+    invariant(
+      row.sourceSet === "B94" &&
+        row.rights.class === "P" &&
+        row.rights.lane === "direct-adaptation" &&
+        row.rights.rightsEvidenceStatus === "project-owned-runtime-source" &&
+        row.rights.sourceVisibility === "source-visible" &&
+        row.implementationInput.inputKind === "project-owned-runtime-source-and-contract" &&
+        row.implementationInput.safeSourceLocator == null &&
+        typeof row.implementationInput.runtimeId === "string" &&
+        row.implementationInput.runtimeId.length > 0 &&
+        row.implementationInput.behaviorSpecAuthor === "FractalPark project" &&
+        row.implementationInput.behaviorSpecRevision === baseRevision &&
+        /^[a-f0-9]{64}$/.test(row.implementationInput.behaviorSpecSha256 ?? "") &&
+        sameStringSet(row.implementationInput.forbiddenForIsolatedImplementer, []),
+      "rights-contract-mismatch",
+    );
+    return;
+  }
+
+  invariant(
+    row.implementationInput.status ===
+      "blocked-missing-approved-nonreversible-behavior-spec" &&
+      row.sourceSet === "F588" &&
+      row.rights.class !== "P" &&
+      row.rights.lane === "clean-room" &&
+      row.rights.rightsEvidenceStatus === "frozen-per-record-classification" &&
+      row.rights.sourceVisibility === "isolated-controller-only" &&
+      row.implementationInput.inputKind === "clean-room-math-behavior-spec" &&
+      row.implementationInput.safeSourceLocator == null &&
+      row.implementationInput.runtimeId == null &&
+      row.implementationInput.behaviorSpecAuthor == null &&
+      row.implementationInput.behaviorSpecRevision == null &&
+      row.implementationInput.behaviorSpecSha256 == null &&
+      sameStringSet(
+        row.implementationInput.forbiddenForIsolatedImplementer,
+        CLEAN_ROOM_FORBIDDEN_INPUTS,
+      ),
+    "rights-contract-mismatch",
+  );
 }
 
 function gitBaseIsAncestor(repositoryRoot: string, revision: string): boolean {
@@ -295,6 +525,7 @@ function assertRepositoryScope(
   baseRevision: string,
 ): void {
   const allowed = new Set([
+    ".gitignore",
     "package.json",
     "scripts/formula-library-bulk-migration.ts",
     "src/engine/formulas/v1/bulk-migration.ts",
@@ -319,6 +550,8 @@ function preflight(repositoryRoot: string): PreflightContext {
   invariant(workPackagePath, "handoff-env-missing");
   invariant(corpusRoot, "corpus-env-missing");
   invariant(oracleRoot, "oracle-env-missing");
+  assertPrivateMode(workPackagePath, "file");
+  assertPrivateMode(oracleRoot, "directory");
 
   const workPackage = extractWorkPackage(workPackagePath);
   invariant(
@@ -346,6 +579,11 @@ function preflight(repositoryRoot: string): PreflightContext {
     "work-package-identity-duplicate",
   );
   invariant(
+    workPackage.sourceBindings.rightsProtocol.sha256 ===
+      EXPECTED_RIGHTS_PROTOCOL_SHA256,
+    "rights-protocol-binding-mismatch",
+  );
+  invariant(
     workPackage.rows.filter((row) => row.sourceSet === "F588").length === 588 &&
       workPackage.rows.filter((row) => row.sourceSet === "B94").length === 89,
     "work-package-source-set-count-mismatch",
@@ -365,8 +603,14 @@ function preflight(repositoryRoot: string): PreflightContext {
     "v1",
     "legacy-formula-aliases.json",
   );
-  const identities = parseJsonFile<IdentityManifest>(identitiesPath);
-  const aliases = parseJsonFile<AliasManifest>(aliasesPath);
+  const identities = parseJsonFile<IdentityManifest>(
+    identitiesPath,
+    "repository-binding-unavailable",
+  );
+  const aliases = parseJsonFile<AliasManifest>(
+    aliasesPath,
+    "repository-binding-unavailable",
+  );
   invariant(
     identities.formulaCount === EXPECTED_ROWS &&
       identities.formulas.length === EXPECTED_ROWS,
@@ -387,6 +631,7 @@ function preflight(repositoryRoot: string): PreflightContext {
     aliasesByFormula.set(alias.formulaId, grouped);
   }
   workPackage.rows.forEach((row, index) => {
+    assertRightsContract(row, workPackage.sourceBindings.repositoryRevision);
     const identity = identities.formulas[index];
     invariant(identity?.formulaId === row.formulaId, "identity-order-mismatch");
     const rowAliases = aliasesByFormula.get(row.formulaId) ?? [];
@@ -412,6 +657,11 @@ function preflight(repositoryRoot: string): PreflightContext {
   invariant(corpusFiles.length === EXPECTED_CORPUS_FILES, "corpus-file-count-mismatch");
   const corpusHash = corpusSnapshotHash(corpusFiles);
   invariant(corpusHash === EXPECTED_CORPUS_SHA256, "corpus-snapshot-mismatch");
+  const corpusPathHash = corpusPathSnapshotHash(corpusFiles);
+  invariant(
+    corpusPathHash === EXPECTED_CORPUS_PATH_SNAPSHOT_SHA256,
+    "corpus-path-snapshot-mismatch",
+  );
 
   const expectedArtifacts = new Map<string, string>();
   for (const row of workPackage.rows) {
@@ -427,10 +677,14 @@ function preflight(repositoryRoot: string): PreflightContext {
   for (const [artifact, expected] of [...expectedArtifacts].sort()) {
     invariant(!artifact.includes("/") && !artifact.includes("\\"), "oracle-name-invalid");
     const artifactPath = join(oracleRoot, artifact);
+    assertPrivateMode(artifactPath, "file");
     const actual = sha256File(artifactPath);
     invariant(actual === expected, "oracle-hash-mismatch");
     actualArtifacts[artifact] = actual;
-    const payload = parseJsonFile<OracleArtifactPayload>(artifactPath);
+    const payload = parseJsonFile<OracleArtifactPayload>(
+      artifactPath,
+      "oracle-artifact-invalid",
+    );
     if (!Number.isInteger(payload.maxIter) || payload.maxIter < 1) continue;
     for (const oracle of payload.rows ?? []) {
       invariant(oracle.status === "ok", "oracle-row-status-mismatch");
@@ -469,6 +723,8 @@ function preflight(repositoryRoot: string): PreflightContext {
     inputHashes: {
       workPackage: workPackage.payloadContentHash,
       corpusSnapshot: corpusHash,
+      corpusPathSnapshot: corpusPathHash,
+      rightsProtocol: workPackage.sourceBindings.rightsProtocol.sha256,
       standardFormulaIds: sha256File(identitiesPath),
       legacyFormulaAliases: sha256File(aliasesPath),
       repositoryRevision: workPackage.sourceBindings.repositoryRevision,
@@ -508,6 +764,7 @@ function failed(
     formulaId: row.formulaId,
     sourceSet: row.sourceSet,
     status: "failed",
+    publicationEligible: false,
     failureStage,
     reasonCode,
   };
@@ -526,7 +783,7 @@ function oracleNumberMatches(
   return Math.abs(actual - expected) <= tolerance;
 }
 
-function releaseOracleMatches(
+export function releaseOracleMatches(
   actual: ReturnType<typeof runFormulaLibraryOracle>,
   expected: ExpectedOracleRow,
 ): boolean {
@@ -659,6 +916,14 @@ async function prepareRow(
       glsl: compiled.backend.glsl,
     } as unknown as JsonValue),
   );
+  const gpuRuns: GpuRun[] = actualOracle.map((run) => ({
+    pixel: run.pixel,
+    expectedOrbit: run.orbit.map((point) => {
+      if (point[0] === "non-finite" || point[1] === "non-finite")
+        throw new Error("gpu-orbit-non-finite");
+      return [point[0], point[1]] as const;
+    }),
+  }));
   return {
     row,
     sourceRevision: revisions.sourceRevision,
@@ -673,6 +938,8 @@ async function prepareRow(
       loop: compiled.backend.glsl.loop,
       continuePredicate: compiled.backend.glsl.continuePredicate,
       eventFlag: compiled.backend.glsl.eventFlag,
+      maxIterations: expectedOracle.maxIterations,
+      runs: gpuRuns,
       parameters: safety.ir.parameters.map((parameter) => ({
         name: parameter.name,
         type: parameter.type,
@@ -683,10 +950,23 @@ async function prepareRow(
   };
 }
 
-async function runWebgl(
-  cases: readonly GpuCase[],
-): Promise<ReadonlyMap<string, "passed" | "failed" | "nondeterministic">> {
-  const results = new Map<string, "passed" | "failed" | "nondeterministic">();
+export type GpuStatus =
+  | "passed"
+  | "failed"
+  | "nondeterministic"
+  | "semantic-mismatch";
+
+export function gpuFailureReason(
+  status: GpuStatus | undefined,
+): FormulaLibraryBulkReasonCode | null {
+  if (status === "passed") return null;
+  if (status === "nondeterministic") return "nondeterministic-output";
+  if (status === "semantic-mismatch") return "webgl-cpu-mismatch";
+  return "webgl-compile-link-draw-failed";
+}
+
+async function runWebgl(cases: readonly GpuCase[]): Promise<ReadonlyMap<string, GpuStatus>> {
+  const results = new Map<string, GpuStatus>();
   if (cases.length === 0) return results;
   const browser = await chromium.launch({
     headless: true,
@@ -703,12 +983,11 @@ async function runWebgl(
       "globalThis.__name = globalThis.__name || function(target){ return target; };",
     );
     const evaluated = await page.evaluate((payloads) => {
-      const outputs: Array<{
-        formulaId: string;
-        status: "passed" | "failed" | "nondeterministic";
-      }> = [];
+      const outputs: Array<{ formulaId: string; status: GpuStatus }> = [];
       for (const payload of payloads) {
         try {
+          if (!Number.isInteger(payload.maxIterations) || payload.maxIterations < 1)
+            throw new Error("gpu-iteration-budget-invalid");
           const canvas = document.createElement("canvas");
           canvas.width = 1;
           canvas.height = 1;
@@ -717,6 +996,18 @@ async function runWebgl(
             preserveDrawingBuffer: true,
           });
           if (!gl) throw new Error("webgl-unavailable");
+          if (!gl.getExtension("OES_texture_float"))
+            throw new Error("oes-texture-float-unavailable");
+          if (!gl.getExtension("WEBGL_color_buffer_float"))
+            throw new Error("webgl-color-buffer-float-unavailable");
+          const debug = gl.getExtension("WEBGL_debug_renderer_info");
+          const renderer = String(
+            debug
+              ? gl.getParameter(debug.UNMASKED_RENDERER_WEBGL)
+              : gl.getParameter(gl.RENDERER),
+          );
+          if (!renderer.includes("SwiftShader"))
+            throw new Error("swiftshader-renderer-required");
           const compile = (type: number, source: string): WebGLShader => {
             const shader = gl.createShader(type);
             if (!shader) throw new Error("shader-allocation-failed");
@@ -732,7 +1023,24 @@ async function runWebgl(
           );
           const fragment = compile(
             gl.FRAGMENT_SHADER,
-            `precision highp float;\n${payload.declarations}\nvoid main(){frmV1NonFiniteEvent=false;${payload.init}\n${payload.loop}\nbool keep=${payload.continuePredicate};gl_FragColor=vec4(keep?1.0:0.0,${payload.eventFlag}?1.0:0.0,0.0,1.0);}`,
+            `precision highp float;
+${payload.declarations}
+uniform float u_bulk_steps;
+void main(){
+  frmV1NonFiniteEvent=false;
+  ${payload.init}
+  bool active=true;
+  float iterations=0.0;
+  for(int i=0;i<${payload.maxIterations};i++){
+    if(active&&float(i)<u_bulk_steps){
+      ${payload.loop}
+      iterations+=1.0;
+      if(${payload.eventFlag}) active=false;
+      else active=${payload.continuePredicate};
+    }
+  }
+  gl_FragColor=vec4(z,iterations,${payload.eventFlag}?1.0:0.0);
+}`,
           );
           const program = gl.createProgram();
           if (!program) throw new Error("program-allocation-failed");
@@ -752,13 +1060,40 @@ async function runWebgl(
           );
           gl.enableVertexAttribArray(position);
           gl.vertexAttribPointer(position, 2, gl.FLOAT, false, 0, 0);
+
+          const texture = gl.createTexture();
+          gl.bindTexture(gl.TEXTURE_2D, texture);
+          gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MIN_FILTER, gl.NEAREST);
+          gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MAG_FILTER, gl.NEAREST);
+          gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_S, gl.CLAMP_TO_EDGE);
+          gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_T, gl.CLAMP_TO_EDGE);
+          gl.texImage2D(
+            gl.TEXTURE_2D,
+            0,
+            gl.RGBA,
+            1,
+            1,
+            0,
+            gl.RGBA,
+            gl.FLOAT,
+            null,
+          );
+          const framebuffer = gl.createFramebuffer();
+          gl.bindFramebuffer(gl.FRAMEBUFFER, framebuffer);
+          gl.framebufferTexture2D(
+            gl.FRAMEBUFFER,
+            gl.COLOR_ATTACHMENT0,
+            gl.TEXTURE_2D,
+            texture,
+            0,
+          );
+          if (gl.checkFramebufferStatus(gl.FRAMEBUFFER) !== gl.FRAMEBUFFER_COMPLETE)
+            throw new Error("float-framebuffer-incomplete");
+
           const vec2 = (name: string, x: number, y: number): void => {
             const location = gl.getUniformLocation(program, name);
             if (location !== null) gl.uniform2f(location, x, y);
           };
-          vec2("pixel", 0.25, 0.1);
-          vec2("c", 0.25, 0.1);
-          vec2("maxit", 16, 0);
           const ismand = gl.getUniformLocation(program, "ismand");
           if (ismand !== null) gl.uniform1i(ismand, 1);
           for (const parameter of payload.parameters) {
@@ -774,21 +1109,54 @@ async function runWebgl(
               vec2(parameter.name, value[0], value[1]);
             }
           }
-          const draw = (): string => {
+          const draw = (): Float32Array => {
             gl.viewport(0, 0, 1, 1);
             gl.drawArrays(gl.TRIANGLES, 0, 3);
             gl.finish();
-            const pixel = new Uint8Array(4);
-            gl.readPixels(0, 0, 1, 1, gl.RGBA, gl.UNSIGNED_BYTE, pixel);
+            const pixel = new Float32Array(4);
+            gl.readPixels(0, 0, 1, 1, gl.RGBA, gl.FLOAT, pixel);
             if (gl.getError() !== gl.NO_ERROR) throw new Error("draw-failed");
-            return [...pixel].join(",");
+            return pixel;
           };
-          const first = draw();
-          const second = draw();
-          outputs.push({
-            formulaId: payload.formulaId,
-            status: first === second ? "passed" : "nondeterministic",
-          });
+          const sameNumber = (left: number, right: number): boolean =>
+            Object.is(left, right) || (Number.isNaN(left) && Number.isNaN(right));
+          const close = (actual: number, expected: number): boolean => {
+            const tolerance = 3e-4 * Math.max(1, Math.abs(actual), Math.abs(expected));
+            return Number.isFinite(actual) && Math.abs(actual - expected) <= tolerance;
+          };
+          const stepsLocation = gl.getUniformLocation(program, "u_bulk_steps");
+          if (stepsLocation === null) throw new Error("gpu-step-uniform-missing");
+          let status: GpuStatus = "passed";
+          for (const run of payload.runs) {
+            vec2("pixel", run.pixel[0], run.pixel[1]);
+            vec2("c", run.pixel[0], run.pixel[1]);
+            vec2("maxit", payload.maxIterations, 0);
+            for (const [pointIndex, expectedZ] of run.expectedOrbit.entries()) {
+              const expectedIterations = pointIndex + 1;
+              gl.uniform1f(stepsLocation, expectedIterations);
+              const first = draw();
+              const second = draw();
+              if (
+                ![0, 1, 2, 3].every((index) =>
+                  sameNumber(first[index], second[index]),
+                )
+              ) {
+                status = "nondeterministic";
+                break;
+              }
+              const parity =
+                first[3] < 0.5 &&
+                Math.abs(first[2] - expectedIterations) <= 0.25 &&
+                close(first[0], expectedZ[0]) &&
+                close(first[1], expectedZ[1]);
+              if (!parity) {
+                status = "semantic-mismatch";
+                break;
+              }
+            }
+            if (status !== "passed") break;
+          }
+          outputs.push({ formulaId: payload.formulaId, status });
         } catch {
           outputs.push({ formulaId: payload.formulaId, status: "failed" });
         }
@@ -817,7 +1185,7 @@ async function run(context: PreflightContext): Promise<CensusRow[]> {
       prepared.push(failed(row, "controller", "controller-internal-error"));
     }
   }
-  let gpu: ReadonlyMap<string, "passed" | "failed" | "nondeterministic">;
+  let gpu: ReadonlyMap<string, GpuStatus>;
   try {
     gpu = await runWebgl(
       prepared.filter((item): item is PendingPass => "gpuCase" in item).map((item) => item.gpuCase),
@@ -828,22 +1196,14 @@ async function run(context: PreflightContext): Promise<CensusRow[]> {
   return prepared.map((item) => {
     if (!("gpuCase" in item)) return item;
     const gpuStatus = gpu.get(item.row.formulaId);
-    if (gpuStatus === "nondeterministic")
-      return failed(
-        item.row,
-        "webgl-compile-link-draw",
-        "nondeterministic-output",
-      );
-    if (gpuStatus !== "passed")
-      return failed(
-        item.row,
-        "webgl-compile-link-draw",
-        "webgl-compile-link-draw-failed",
-      );
+    const gpuReason = gpuFailureReason(gpuStatus);
+    if (gpuReason !== null)
+      return failed(item.row, "webgl-compile-link-draw", gpuReason);
     return {
       formulaId: item.row.formulaId,
       sourceSet: item.row.sourceSet,
       status: "passed",
+      publicationEligible: false,
       sourceRevision: item.sourceRevision,
       semanticHash: item.semanticHash,
       backendArtifactSha256: item.backendArtifactSha256,
@@ -855,9 +1215,108 @@ async function run(context: PreflightContext): Promise<CensusRow[]> {
       webgl: {
         compileLinkDraw: "passed",
         deterministicDraw: "passed",
+        cpuParity: "passed",
+        oracleRuns: item.oracleRuns,
+        orbitPoints: item.gpuCase.runs.reduce(
+          (total, run) => total + run.expectedOrbit.length,
+          0,
+        ),
       },
     };
   });
+}
+
+function lstatIfPresent(path: string): Stats | null {
+  try {
+    return lstatSync(path);
+  } catch (error) {
+    if ((error as NodeJS.ErrnoException).code === "ENOENT") return null;
+    throw error;
+  }
+}
+
+function securePrivateOutputDirectory(path: string): void {
+  const descriptor = openSync(
+    path,
+    constants.O_RDONLY | constants.O_DIRECTORY | constants.O_NOFOLLOW,
+  );
+  try {
+    fchmodSync(descriptor, 0o700);
+  } finally {
+    closeSync(descriptor);
+  }
+  const metadata = lstatSync(path);
+  invariant(
+    metadata.isDirectory() && !metadata.isSymbolicLink(),
+    "private-output-symlink-rejected",
+  );
+  invariant((metadata.mode & 0o777) === 0o700, "private-output-permissions-invalid");
+}
+
+function ensurePrivateLedgerDirectory(repositoryRoot: string): string {
+  const rootMetadata = lstatSync(repositoryRoot);
+  invariant(
+    rootMetadata.isDirectory() && !rootMetadata.isSymbolicLink(),
+    "private-output-root-invalid",
+  );
+  const realRepositoryRoot = realpathSync(repositoryRoot);
+  let current = repositoryRoot;
+  let expectedReal = realRepositoryRoot;
+  for (const component of PRIVATE_OUTPUT_COMPONENTS) {
+    current = join(current, component);
+    expectedReal = join(expectedReal, component);
+    const metadata = lstatIfPresent(current);
+    if (metadata === null) mkdirSync(current, { mode: 0o700 });
+    else
+      invariant(
+        metadata.isDirectory() && !metadata.isSymbolicLink(),
+        "private-output-symlink-rejected",
+      );
+    securePrivateOutputDirectory(current);
+    invariant(
+      realpathSync(current) === expectedReal,
+      "private-output-containment-failed",
+    );
+  }
+  return current;
+}
+
+function writePrivateLedgerUnchecked(repositoryRoot: string, content: string): string {
+  const outputDirectory = ensurePrivateLedgerDirectory(repositoryRoot);
+  const output = join(outputDirectory, PRIVATE_OUTPUT_FILENAME);
+  const existing = lstatIfPresent(output);
+  if (existing !== null)
+    invariant(
+      existing.isFile() && !existing.isSymbolicLink(),
+      "private-output-symlink-rejected",
+    );
+  const descriptor = openSync(
+    output,
+    constants.O_WRONLY |
+      constants.O_CREAT |
+      constants.O_TRUNC |
+      constants.O_NOFOLLOW,
+    0o600,
+  );
+  try {
+    fchmodSync(descriptor, 0o600);
+    writeFileSync(descriptor, content, { encoding: "utf8" });
+  } finally {
+    closeSync(descriptor);
+  }
+  assertPrivateMode(output, "file");
+  invariant(dirname(output) === outputDirectory, "private-output-containment-failed");
+  return output;
+}
+
+export function writePrivateLedger(repositoryRoot: string, content: string): string {
+  try {
+    return writePrivateLedgerUnchecked(repositoryRoot, content);
+  } catch (error) {
+    const code = sanitizeControllerError(error);
+    if (code.startsWith("private-output-")) throw new Error(code);
+    throw new Error("private-output-write-failed");
+  }
 }
 
 async function main(): Promise<void> {
@@ -882,7 +1341,7 @@ async function main(): Promise<void> {
   invariant(rows.length === EXPECTED_ROWS, "census-row-count-mismatch");
   const failedRows = rows.filter((row): row is FailedRow => row.status === "failed");
   const ledgerWithoutHash = {
-    schema: "fractalpark-formula-library-bulk-migration-ledger/v1",
+    schema: "fractalpark-formula-library-bulk-migration-ledger/v2",
     controllerVersion: CONTROLLER_VERSION,
     ledgerHashAlgorithm: "sha256-ecmascript-sorted-json/1",
     deterministic: true,
@@ -901,15 +1360,10 @@ async function main(): Promise<void> {
     canonical(ledgerWithoutHash as unknown as JsonValue),
   );
   const ledger = { ...ledgerWithoutHash, ledgerContentHash };
-  const output = resolve(repositoryRoot, DEFAULT_OUTPUT);
-  const outputDirectory = dirname(output);
-  mkdirSync(outputDirectory, { recursive: true, mode: 0o700 });
-  chmodSync(outputDirectory, 0o700);
-  writeFileSync(output, `${JSON.stringify(ledger, null, 2)}\n`, {
-    encoding: "utf8",
-    mode: 0o600,
-  });
-  chmodSync(output, 0o600);
+  const output = writePrivateLedger(
+    repositoryRoot,
+    `${JSON.stringify(ledger, null, 2)}\n`,
+  );
   process.stdout.write(
     `${JSON.stringify({
       ok: true,
@@ -920,8 +1374,13 @@ async function main(): Promise<void> {
   );
 }
 
-main().catch((error: unknown) => {
-  const code = error instanceof Error ? error.message : "controller-internal-error";
-  process.stderr.write(`${JSON.stringify({ ok: false, code })}\n`);
-  process.exitCode = 1;
-});
+const executableUrl = process.argv[1]
+  ? pathToFileURL(resolve(process.argv[1])).href
+  : null;
+if (executableUrl === import.meta.url) {
+  main().catch((error: unknown) => {
+    const code = sanitizeControllerError(error);
+    process.stderr.write(`${JSON.stringify({ ok: false, code })}\n`);
+    process.exitCode = 1;
+  });
+}
