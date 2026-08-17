@@ -101,6 +101,7 @@ function hasLoneSurrogate(value: string): boolean {
 
 interface CanonicalState {
   nodes: number;
+  readonly maxNodes: number;
   readonly active: WeakSet<object>;
 }
 
@@ -112,7 +113,7 @@ function canonicalJsonValueV1(
   if (depth > MAX_CANONICAL_JSON_DEPTH)
     throw new Error("canonical-json-too-deep");
   state.nodes++;
-  if (state.nodes > MAX_CANONICAL_JSON_NODES)
+  if (state.nodes > state.maxNodes)
     throw new Error("canonical-json-too-large");
   if (value === null || typeof value === "boolean")
     return JSON.stringify(value);
@@ -184,9 +185,23 @@ function canonicalJsonValueV1(
   }
 }
 
-/** Locale-independent canonical JSON used by Formula Profile revision v1. */
-export function canonicalJsonV1(value: unknown): string {
-  return canonicalJsonValueV1(value, { nodes: 0, active: new WeakSet() }, 0);
+/**
+ * Locale-independent canonical JSON used by Formula Profile revision v1.
+ * `maxNodes` raises the DoS node budget only for already-validated, bounded
+ * machine-generated assets such as the exact-677 publication decision ledger;
+ * interactive/user-controlled input must keep the default.
+ */
+export function canonicalJsonV1(
+  value: unknown,
+  maxNodes: number = MAX_CANONICAL_JSON_NODES,
+): string {
+  if (!Number.isInteger(maxNodes) || maxNodes < 1)
+    throw new Error("invalid-canonical-json-budget");
+  return canonicalJsonValueV1(
+    value,
+    { nodes: 0, active: new WeakSet(), maxNodes },
+    0,
+  );
 }
 
 export async function sha256HexV1(value: string): Promise<FormulaRevisionV1> {

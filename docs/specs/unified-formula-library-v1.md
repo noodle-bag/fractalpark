@@ -2,7 +2,7 @@
 
 - Status: Accepted contract; production activation is gated
 - Date: 2026-08-15
-- Amended: 2026-08-17 (677 identities; implementation publication is per-row)
+- Amended: 2026-08-17 (677 identities; implementation publication is per-row; publication decision ledger asset frozen)
 - Target release: FractalPark v0.4.19
 - Related: [FRM Compatibility and Migration Contracts v1](frm-compatibility-v1.md)
 - Related: [Fractal Document v2 and Envelope v1](fractal-document-v2.md)
@@ -621,6 +621,22 @@ The ledger records `formulaId`, source name/author/URL/artifact hash,
 engineering audit trail. No custom root, signed registry, credential binding,
 multi-role approval, admission, or implementation authorization is required or
 claimed.
+
+The decision layer is frozen as the public asset
+`resources/formula-library/v1/publication-decisions.json` (schema
+`fractalpark-formula-library-publication-decisions/v1`): exactly 677 rows in
+Standard-manifest order, one per neutral Formula ID, with rights status,
+decision, reason, basis fields, scan status, and review date. The engine
+validator `src/engine/formulas/v1/publication-decisions.ts` enforces the
+exact-677 set, the P89/A137/B73/C378 rights accounting, the
+`publish + hold + exclude = 677` decision accounting, the 604 implementation
+candidate ceiling, and the fixed `hold` of all 73 `gpl-3.0-only` rows at load
+time; `scripts/verify-formula-publication-decisions.ts` independently
+recomputes the same accounting from raw bytes and the frozen private
+work-package handoff. The baseline records `publish = 0`; a row may flip to
+`publish` only with a recorded basis, basis timestamp, and a passed leakage
+scan. Per-record source name/author/URL/artifact projections join the ledger
+with the Formula Record assets in a later commit.
 
 Remix shows and exports only a published canonical Definition. `originalSource`
 is separately access-controlled and never copied into public exports when the
