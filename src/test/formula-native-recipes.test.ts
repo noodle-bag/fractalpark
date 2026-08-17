@@ -1,0 +1,235 @@
+import { beforeAll, describe, expect, it } from "vitest";
+
+import { registerBuiltins } from "@/engine/plugins/builtins";
+import {
+  NATIVE_FORMULA_RECIPES_V1,
+  NATIVE_RECIPE_CROSS_CHECK_CONTRACT_V1,
+  compareNativeRecipeOrbitsV1,
+  validateNativeRecipeV1,
+  type NativeFormulaRecipeV1,
+  type NativeRecipeOrbitRunV1,
+} from "@/engine/formulas/v1/native-recipes";
+import { parseFrmLikeV1 } from "@/engine/frm/v1";
+import { compileFrmLikeV1Backend } from "@/engine/frm/v1-backend";
+import { runFormulaLibraryOracle } from "@/engine/formulas/v1/bulk-migration";
+import type { FormulaIdV1 } from "@/engine/formulas/v1";
+
+beforeAll(() => {
+  registerBuiltins({ quiet: true });
+});
+
+describe("native recipe layer v1", () => {
+  it("keeps the shared cross-check contract frozen and row-independent", () => {
+    expect(NATIVE_RECIPE_CROSS_CHECK_CONTRACT_V1).toEqual({
+      probePixels: [
+        [0.25, 0.1],
+        [-0.5, 0.3],
+        [0.3, -0.02],
+      ],
+      maxIterations: 16,
+      relativeTolerance: 3e-4,
+    });
+    expect(Object.isFrozen(NATIVE_RECIPE_CROSS_CHECK_CONTRACT_V1)).toBe(true);
+    expect(Object.isFrozen(NATIVE_FORMULA_RECIPES_V1)).toBe(true);
+  });
+
+  it("validates every registered pilot recipe through the full v1 chain", async () => {
+    expect(NATIVE_FORMULA_RECIPES_V1.length).toBe(3);
+    for (const recipe of NATIVE_FORMULA_RECIPES_V1) {
+      const result = await validateNativeRecipeV1(recipe);
+      if (!result.ok) throw new Error(`${recipe.runtimeId}: ${result.reasonCode}`);
+      expect(result.definition.formulaId).toBe(recipe.formulaId);
+      expect(result.definition.source).toBe(recipe.source);
+      expect(result.sourceRevision).toMatch(/^[0-9a-f]{64}$/);
+      expect(result.semanticHash).toMatch(/^[0-9a-f]{64}$/);
+    }
+  });
+
+  it("fails closed on identity, alias, plugin, family, parse, and canonical tampering", async () => {
+    const [mandelbrot] = NATIVE_FORMULA_RECIPES_V1;
+    const cases: Array<[string, NativeFormulaRecipeV1, string]> = [
+      [
+        "non-v5 identity",
+        { ...mandelbrot, formulaId: "11111111-1111-4111-8111-111111111111" as FormulaIdV1 },
+        "recipe-identity-invalid",
+      ],
+      [
+        "alias join mismatch",
+        {
+          ...mandelbrot,
+          formulaId: "c09b9dec-60a6-5a26-8f03-d5ea40f0d49b" as FormulaIdV1,
+        },
+        "recipe-runtime-alias-mismatch",
+      ],
+      [
+        "missing runtime plugin",
+        { ...mandelbrot, runtimeId: "no-such-plugin" },
+        "recipe-runtime-alias-mismatch",
+      ],
+      [
+        "family mismatch",
+        { ...mandelbrot, family: "exotic" as const },
+        "recipe-family-mismatch",
+      ],
+      [
+        "invalid syntax",
+        { ...mandelbrot, source: mandelbrot.source.replace("z = z * z + c", "z = = z") },
+        "recipe-parse-failed",
+      ],
+      [
+        "non-canonical whitespace",
+        { ...mandelbrot, source: mandelbrot.source.replace("z = z * z + c", "z  =  z * z + c") },
+        "recipe-canonical-roundtrip-failed",
+      ],
+      [
+        "off-formatter source",
+        { ...mandelbrot, source: `${mandelbrot.source}\n` },
+        "recipe-canonical-roundtrip-failed",
+      ],
+    ];
+    for (const [label, recipe, expected] of cases) {
+      const result = await validateNativeRecipeV1(recipe);
+      expect(result.ok, label).toBe(false);
+      if (!result.ok) expect(result.reasonCode, label).toBe(expected);
+    }
+  });
+
+  it("reproduces the native mandelbrot orbit through the v1 CPU backend", async () => {
+    const recipe = NATIVE_FORMULA_RECIPES_V1[0]!;
+    const parsed = parseFrmLikeV1(recipe.source);
+    if (!parsed.ok) throw new Error("parse");
+    const compiled = compileFrmLikeV1Backend(parsed.ir);
+    if (!compiled.ok) throw new Error("compile");
+    const [run] = runFormulaLibraryOracle(compiled.backend, [[0.25, 0.1]], 4);
+    // parameter-plane: z0 = 0, c = pixel; power = 2 fast path z -> z*z + c
+    // z1 = c; z2 = c^2 + c; z3 = (c^2+c)^2 + c (double-precision reference)
+    const c = { re: 0.25, im: 0.1 };
+    const z1 = c;
+    const z2 = {
+      re: z1.re * z1.re - z1.im * z1.im + c.re,
+      im: 2 * z1.re * z1.im + c.im,
+    };
+    const z3 = {
+      re: z2.re * z2.re - z2.im * z2.im + c.re,
+      im: 2 * z2.re * z2.im + c.im,
+    };
+    const expected = [z1, z2, z3];
+    expect(run.orbit.length).toBeGreaterThanOrEqual(3);
+    for (const [index, point] of expected.entries()) {
+      const actual = run.orbit[index]!;
+      if (actual[0] === "non-finite" || actual[1] === "non-finite")
+        throw new Error("unexpected non-finite");
+      expect(actual[0]).toBeCloseTo(point.re, 5);
+      expect(actual[1]).toBeCloseTo(point.im, 5);
+    }
+  });
+
+  it("reproduces the native phoenix two-step orbit memory", async () => {
+    const recipe = NATIVE_FORMULA_RECIPES_V1.find(
+      (entry) => entry.runtimeId === "phoenix",
+    )!;
+    const parsed = parseFrmLikeV1(recipe.source);
+    if (!parsed.ok) throw new Error("parse");
+    const compiled = compileFrmLikeV1Backend(parsed.ir);
+    if (!compiled.ok) throw new Error("compile");
+    const [run] = runFormulaLibraryOracle(compiled.backend, [[0.25, 0.1]], 4);
+    // z1 = c (memory term zero); z2 = z1^2 + c; z3 = z2^2 + c + P * z1, P = -0.5
+    const c = { re: 0.25, im: 0.1 };
+    const p = -0.5;
+    const square = (z: { re: number; im: number }) => ({
+      re: z.re * z.re - z.im * z.im,
+      im: 2 * z.re * z.im,
+    });
+    const z1 = c;
+    const z2base = square(z1);
+    const z2 = { re: z2base.re + c.re, im: z2base.im + c.im };
+    const z3base = square(z2);
+    const z3 = {
+      re: z3base.re + c.re + p * z1.re,
+      im: z3base.im + c.im + p * z1.im,
+    };
+    const z3Point = run.orbit[2]!;
+    if (z3Point[0] === "non-finite" || z3Point[1] === "non-finite")
+      throw new Error("unexpected non-finite");
+    expect(z3Point[0]).toBeCloseTo(z3.re, 5);
+    expect(z3Point[1]).toBeCloseTo(z3.im, 5);
+  });
+});
+
+describe("native recipe orbit comparison", () => {
+  const baseRun: NativeRecipeOrbitRunV1 = {
+    pixel: [0.25, 0.1],
+    escapedAt: null,
+    event: null,
+    orbit: [
+      [0.25, 0.1],
+      [0.3025, 0.15],
+    ],
+  };
+
+  it("accepts identical and tolerance-close runs", () => {
+    expect(compareNativeRecipeOrbitsV1([baseRun], [baseRun]).ok).toBe(true);
+    const close: NativeRecipeOrbitRunV1 = {
+      ...baseRun,
+      orbit: [
+        [0.25 + 1e-6, 0.1],
+        [0.3025, 0.15 - 1e-6],
+      ],
+    };
+    const verdict = compareNativeRecipeOrbitsV1([baseRun], [close]);
+    expect(verdict.ok).toBe(true);
+    expect(verdict.maxRelativeDelta).toBeGreaterThan(0);
+  });
+
+  it("rejects every mismatch class with its stable reason code", () => {
+    expect(compareNativeRecipeOrbitsV1([baseRun], []).reasonCode).toBe(
+      "run-count-mismatch",
+    );
+    expect(
+      compareNativeRecipeOrbitsV1([baseRun], [{ ...baseRun, pixel: [0.26, 0.1] }])
+        .reasonCode,
+    ).toBe("pixel-mismatch");
+    expect(
+      compareNativeRecipeOrbitsV1([baseRun], [{ ...baseRun, event: "nonFinite" }])
+        .reasonCode,
+    ).toBe("event-mismatch");
+    expect(
+      compareNativeRecipeOrbitsV1([baseRun], [{ ...baseRun, escapedAt: 2 }])
+        .reasonCode,
+    ).toBe("escape-index-mismatch");
+    expect(
+      compareNativeRecipeOrbitsV1(
+        [baseRun],
+        [{ ...baseRun, orbit: baseRun.orbit.slice(0, 1) }],
+      ).reasonCode,
+    ).toBe("orbit-length-mismatch");
+    expect(
+      compareNativeRecipeOrbitsV1(
+        [baseRun],
+        [{ ...baseRun, orbit: [[0.25, 0.1], [0.4, 0.15]] }],
+      ).reasonCode,
+    ).toBe("orbit-value-mismatch");
+  });
+
+  it("requires exact non-finite token agreement", () => {
+    const nonFinite: NativeRecipeOrbitRunV1 = {
+      ...baseRun,
+      event: "nonFinite",
+      orbit: [
+        [0.25, 0.1],
+        ["non-finite", "non-finite"],
+      ],
+    };
+    expect(compareNativeRecipeOrbitsV1([nonFinite], [nonFinite]).ok).toBe(true);
+    const mismatched: NativeRecipeOrbitRunV1 = {
+      ...nonFinite,
+      orbit: [
+        [0.25, 0.1],
+        [0, 0],
+      ],
+    };
+    expect(
+      compareNativeRecipeOrbitsV1([nonFinite], [mismatched]).reasonCode,
+    ).toBe("orbit-value-mismatch");
+  });
+});

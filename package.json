@@ -16,6 +16,7 @@
     "formula:publication-decisions": "tsx scripts/generate-formula-publication-decisions.ts",
     "formula:publication-decisions:write": "tsx scripts/generate-formula-publication-decisions.ts --write",
     "formula:publication-decisions:verify": "tsx scripts/verify-formula-publication-decisions.ts",
+    "formula:native-recipes:cross-check": "tsx scripts/cross-check-native-recipes.ts",
     "formula:direct-adaptation-evidence": "tsx scripts/generate-formula-direct-adaptation-evidence.ts --write",
     "formula:direct-adaptation-evidence:verify": "tsx scripts/verify-formula-direct-adaptation-evidence.ts",
     "formula:clean-room-evidence": "tsx scripts/generate-formula-clean-room-evidence.ts --write",

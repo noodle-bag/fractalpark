@@ -314,12 +314,12 @@ interface FailedRow {
 
 type CensusRow = PassedRow | FailedRow;
 
-interface GpuRun {
+export interface GpuRun {
   readonly pixel: readonly [number, number];
   readonly expectedOrbit: readonly (readonly [number, number])[];
 }
 
-interface GpuCase {
+export interface GpuCase {
   readonly formulaId: string;
   readonly declarations: string;
   readonly init: string;
@@ -1036,7 +1036,7 @@ export function gpuFailureReason(
   return "webgl-compile-link-draw-failed";
 }
 
-async function runWebgl(cases: readonly GpuCase[]): Promise<ReadonlyMap<string, GpuStatus>> {
+export async function runWebgl(cases: readonly GpuCase[]): Promise<ReadonlyMap<string, GpuStatus>> {
   const results = new Map<string, GpuStatus>();
   if (cases.length === 0) return results;
   const browser = await chromium.launch({
