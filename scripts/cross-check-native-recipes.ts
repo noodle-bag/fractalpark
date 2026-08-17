@@ -26,8 +26,10 @@ import {
   NATIVE_FORMULA_RECIPES_V1,
   NATIVE_RECIPE_CROSS_CHECK_CONTRACT_V1,
   compareNativeRecipeOrbitsV1,
+  nativeRecipeProbesToOrbitRunV1,
   validateNativeRecipeV1,
   type NativeRecipeOrbitRunV1,
+  type NativeRecipeProbeV1,
 } from "../src/engine/formulas/v1/native-recipes";
 import {
   runFormulaLibraryOracle,
@@ -37,11 +39,7 @@ import {
   type GpuCase,
 } from "./formula-library-bulk-migration";
 
-interface NativeProbeResult {
-  readonly z: readonly [number, number];
-  readonly iterations: number;
-  readonly escaped: boolean;
-}
+type NativeProbeResult = NativeRecipeProbeV1;
 
 const complexMathLib = readFileSync(
   join(__dirname, "../src/engine/shaders/complex-math.glsl"),
@@ -265,19 +263,9 @@ function nativeProbesToRuns(
   probes: readonly NativeProbeResult[][],
   pixels: readonly (readonly [number, number])[],
 ): NativeRecipeOrbitRunV1[] {
-  return probes.map((perPixel, index) => {
-    const orbit: [number, number][] = [];
-    let escapedAt: number | null = null;
-    for (const probe of perPixel) {
-      if (probe.iterations < orbit.length + 1) break;
-      orbit.push([probe.z[0], probe.z[1]]);
-      if (probe.escaped) {
-        escapedAt = probe.iterations;
-        break;
-      }
-    }
-    return { pixel: pixels[index]!, escapedAt, event: null, orbit };
-  });
+  return probes.map((perPixel, index) =>
+    nativeRecipeProbesToOrbitRunV1(perPixel, pixels[index]!),
+  );
 }
 
 async function main(): Promise<void> {

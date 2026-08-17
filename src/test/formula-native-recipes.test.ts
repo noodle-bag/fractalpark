@@ -5,9 +5,11 @@ import {
   NATIVE_FORMULA_RECIPES_V1,
   NATIVE_RECIPE_CROSS_CHECK_CONTRACT_V1,
   compareNativeRecipeOrbitsV1,
+  nativeRecipeProbesToOrbitRunV1,
   validateNativeRecipeV1,
   type NativeFormulaRecipeV1,
   type NativeRecipeOrbitRunV1,
+  type NativeRecipeProbeV1,
 } from "@/engine/formulas/v1/native-recipes";
 import { parseFrmLikeV1 } from "@/engine/frm/v1";
 import { compileFrmLikeV1Backend } from "@/engine/frm/v1-backend";
@@ -25,6 +27,7 @@ describe("native recipe layer v1", () => {
         [0.25, 0.1],
         [-0.5, 0.3],
         [0.3, -0.02],
+        [2, 2],
       ],
       maxIterations: 16,
       relativeTolerance: 3e-4,
@@ -153,6 +156,38 @@ describe("native recipe layer v1", () => {
       throw new Error("unexpected non-finite");
     expect(z3Point[0]).toBeCloseTo(z3.re, 5);
     expect(z3Point[1]).toBeCloseTo(z3.im, 5);
+  });
+});
+
+describe("native probe conversion", () => {
+  it("records the escape index without duplicating the escaping point", () => {
+    // z_3 escapes: the u_steps=3 draw returns z_3 unescaped (its pre-step
+    // check never ran); the u_steps=4 draw returns the same z_3 with the
+    // escape flag and iterations=3.
+    const probes: NativeRecipeProbeV1[] = [
+      { z: [0.5, 0.2], iterations: 1, escaped: false },
+      { z: [0.55, 0.4], iterations: 2, escaped: false },
+      { z: [1.2, 0.9], iterations: 3, escaped: false },
+      { z: [1.2, 0.9], iterations: 3, escaped: true },
+    ];
+    const run = nativeRecipeProbesToOrbitRunV1(probes, [2, 2]);
+    expect(run.escapedAt).toBe(3);
+    expect(run.orbit).toEqual([
+      [0.5, 0.2],
+      [0.55, 0.4],
+      [1.2, 0.9],
+    ]);
+    expect(run.event).toBeNull();
+  });
+
+  it("ignores draws after the escape and keeps a complete bounded orbit", () => {
+    const bounded: NativeRecipeProbeV1[] = [
+      { z: [0.5, 0.2], iterations: 1, escaped: false },
+      { z: [0.55, 0.4], iterations: 2, escaped: false },
+    ];
+    const run = nativeRecipeProbesToOrbitRunV1(bounded, [0.25, 0.1]);
+    expect(run.escapedAt).toBeNull();
+    expect(run.orbit).toHaveLength(2);
   });
 });
 

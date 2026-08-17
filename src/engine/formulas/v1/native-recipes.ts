@@ -49,6 +49,9 @@ export const NATIVE_RECIPE_CROSS_CHECK_CONTRACT_V1 = Object.freeze({
     Object.freeze([0.25, 0.1] as const),
     Object.freeze([-0.5, 0.3] as const),
     Object.freeze([0.3, -0.02] as const),
+    // Exercises the escape path: diverges well within the iteration budget
+    // for classic-type divergent formulas.
+    Object.freeze([2, 2] as const),
   ]),
   maxIterations: 16,
   /** Same relative tolerance family as the exact-677 census CPU/GPU parity gate. */
@@ -147,6 +150,43 @@ export function compareNativeRecipeOrbitsV1(
     }
   }
   return { ok: true, maxRelativeDelta };
+}
+
+/**
+ * One raw native probe draw result: the orbit state after `iterations`
+ * completed steps, plus the framework's before-step escape flag.
+ */
+export interface NativeRecipeProbeV1 {
+  readonly z: readonly [number, number];
+  readonly iterations: number;
+  readonly escaped: boolean;
+}
+
+/**
+ * Converts a monotone probe series (u_steps = 1, 2, 3, …) into one orbit run.
+ * The native framework checks divergence BEFORE stepping, so the escaping
+ * value z_j is observed twice: the `u_steps = j` draw returns it as
+ * non-escaped (its pre-step check never ran) and the `u_steps = j + 1` draw
+ * returns the same z_j with the escape flag and `iterations = j`. The
+ * escaping draw therefore contributes only the escape index — pushing its
+ * point again would duplicate z_j, and skipping the flag would silently drop
+ * the escape. Draws after an escape are ignored.
+ */
+export function nativeRecipeProbesToOrbitRunV1(
+  probes: readonly NativeRecipeProbeV1[],
+  pixel: readonly [number, number],
+): NativeRecipeOrbitRunV1 {
+  const orbit: [number, number][] = [];
+  let escapedAt: number | null = null;
+  for (const probe of probes) {
+    if (probe.escaped) {
+      escapedAt = probe.iterations;
+      break;
+    }
+    if (probe.iterations < orbit.length + 1) break;
+    orbit.push([probe.z[0], probe.z[1]]);
+  }
+  return { pixel, escapedAt, event: null, orbit };
 }
 
 export type NativeRecipeValidationFailureV1 =
