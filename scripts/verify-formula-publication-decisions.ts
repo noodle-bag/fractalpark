@@ -143,7 +143,10 @@ function canonicalJson(value: unknown): string {
   invariant(isRecord(value));
   return `{${Object.keys(value)
     .sort()
-    .map((key) => `${JSON.stringify(key)}:${canonicalJson(value[key])}`)
+    .map((key) => {
+      invariant(!hasLoneSurrogate(key));
+      return `${JSON.stringify(key)}:${canonicalJson(value[key])}`;
+    })
     .join(",")}}`;
 }
 

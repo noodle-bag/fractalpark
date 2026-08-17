@@ -123,10 +123,10 @@ function canonicalJson(value: unknown): string {
   invariant(isRecord(value), "decisions-output-invalid");
   return `{${Object.keys(value)
     .sort()
-    .map(
-      (key) =>
-        `${JSON.stringify(key)}:${canonicalJson(value[key])}`,
-    )
+    .map((key) => {
+      invariant(!hasLoneSurrogate(key), "decisions-output-invalid");
+      return `${JSON.stringify(key)}:${canonicalJson(value[key])}`;
+    })
     .join(",")}}`;
 }
 
@@ -342,9 +342,14 @@ export function buildPublicationDecisionAsset(
   return { ...unsigned, contentHash: sha256Bytes(canonicalJson(unsigned)) };
 }
 
-function writePublicAsset(path: string, serialized: string): void {
+export function writePublicAsset(path: string, serialized: string): void {
   const directory = dirname(path);
-  const directoryMetadata = lstatSync(directory);
+  let directoryMetadata: ReturnType<typeof lstatSync>;
+  try {
+    directoryMetadata = lstatSync(directory);
+  } catch {
+    throw new Error("decisions-asset-write-failed");
+  }
   invariant(
     directoryMetadata.isDirectory() &&
       !directoryMetadata.isSymbolicLink() &&
@@ -367,6 +372,22 @@ function writePublicAsset(path: string, serialized: string): void {
   } catch {
     throw new Error("decisions-asset-write-failed");
   }
+  const assertDirectoryStable = (openedDirectory: {
+    dev: number;
+    ino: number;
+  }): void => {
+    const currentDirectory = fstatSync(directoryDescriptor);
+    const directoryNow = lstatSync(directory);
+    invariant(
+      currentDirectory.dev === openedDirectory.dev &&
+        currentDirectory.ino === openedDirectory.ino &&
+        directoryNow.isDirectory() &&
+        !directoryNow.isSymbolicLink() &&
+        directoryNow.dev === openedDirectory.dev &&
+        directoryNow.ino === openedDirectory.ino,
+      "decisions-asset-write-failed",
+    );
+  };
   try {
     const openedDirectory = fstatSync(directoryDescriptor);
     const temporary = join(
@@ -393,23 +414,21 @@ function writePublicAsset(path: string, serialized: string): void {
     } finally {
       closeSync(descriptor);
     }
+    // Abort before rename if the directory was replaced while writing, so
+    // the rename cannot plant the asset into a redirected location.
+    try {
+      assertDirectoryStable(openedDirectory);
+    } catch (error) {
+      unlinkSync(temporary);
+      throw error;
+    }
     try {
       renameSync(temporary, path);
     } catch (error) {
       unlinkSync(temporary);
       throw error;
     }
-    const currentDirectory = fstatSync(directoryDescriptor);
-    const directoryAfter = lstatSync(directory);
-    invariant(
-      currentDirectory.dev === openedDirectory.dev &&
-        currentDirectory.ino === openedDirectory.ino &&
-        directoryAfter.isDirectory() &&
-        !directoryAfter.isSymbolicLink() &&
-        directoryAfter.dev === openedDirectory.dev &&
-        directoryAfter.ino === openedDirectory.ino,
-      "decisions-asset-write-failed",
-    );
+    assertDirectoryStable(openedDirectory);
   } finally {
     closeSync(directoryDescriptor);
   }
