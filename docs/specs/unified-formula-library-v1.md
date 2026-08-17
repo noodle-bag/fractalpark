@@ -2,6 +2,7 @@
 
 - Status: Accepted contract; production activation is gated
 - Date: 2026-08-15
+- Amended: 2026-08-17 (677 identities; implementation publication is per-row)
 - Target release: FractalPark v0.4.19
 - Related: [FRM Compatibility and Migration Contracts v1](frm-compatibility-v1.md)
 - Related: [Fractal Document v2 and Envelope v1](fractal-document-v2.md)
@@ -37,9 +38,10 @@ or discovery UI are active.
    scope and entry point. The 256 KiB ceiling is legacy-read-only.
 7. Document v3 / Envelope v2 are reader-first. Production writers remain legacy
    until the separate writer gate is explicitly enabled.
-8. Public source is published only through an approved direct-adaptation or
-   clean-room lane. Private source and reversible intermediates never leak into
-   public artifacts.
+8. Public source is published only for a row with a recorded implementation
+   basis, zero prohibited-source leakage, and a `publish` decision. Identity
+   presence alone never implies a runnable implementation. Private source and
+   reversible intermediates never leak into public artifacts.
 
 ## 1. FRM-like Language v1
 
@@ -332,16 +334,17 @@ private source text, private paths, or reversible intermediates.
 | `f588:mandelbrotbc3` | write to builtin constant | controlled source + public reason code | IR rehabilitation | alpha-rename the intended local in clean-room source; builtin constants remain immutable; resolver/type negative fixtures |
 
 Maintenance disposition: all nine remain in the 677 identity set. None receives a
-Formula-ID special case. Four malformed/missing/non-runnable rows use the same
-rehabilitated clean-room lane and must be visibly identified in Formula Record.
-They are not described as recovered originals. Failure to produce clean-room
-source plus the required fixtures blocks the **entire** 677 Standard activation;
-it does not authorize silent omission or a run-only tier.
+Formula-ID special case. A malformed/missing/non-runnable row may use the same
+separated independent-rewrite workflow and must be visibly identified in Formula
+Record. It is not described as a recovered original. Failure to produce a safe
+canonical implementation plus the required fixtures holds that row; it does not
+block unrelated published rows or authorize a placeholder/run-only Definition.
 
-The private Level 2 ledger must additionally bind each row to provenance evidence,
-source availability, spec author, isolated implementer, review status, fixtures,
-rights class, and final revision/hash. Public Level 1 verifies cardinality,
-schema completeness, dispositions, and absence of source/path leakage.
+The private evidence ledger binds each row to provenance, source availability,
+implementation basis, leakage-scan status, publication decision, decision reason,
+review time, and final revision/hash when published. Public projections verify
+identity cardinality, decision completeness, aggregate counts, and absence of
+source/path leakage.
 
 ## 4. Four asset layers
 
@@ -574,52 +577,54 @@ A higher source limit is a forward-only contract change requiring coordinated
 DB/API migration, worker/GPU budget evidence, and a new rollback floor. One
 surface cannot raise it independently.
 
-## 7. Rights and clean-room addendum
+## 7. Rights and publication addendum
 
 ### 7.1 Evidence layers
 
-- **Level 1 (public):** neutral Formula IDs, canonical project source, public
-  provenance/rights projection, aggregate and schema-completeness gates.
-- **Level 2 (private):** source paths, reversible semantic intermediates,
-  licensing evidence, fingerprints, migration joins, clean-room role records,
-  and exact acceptance artifacts.
+- **Public:** neutral Formula IDs, published project source, public
+  provenance/rights projection, publication decisions, aggregate counts, and
+  schema-completeness gates.
+- **Private:** source paths, reversible semantic intermediates, licensing
+  evidence, fingerprints, migration joins, and exact technical artifacts.
 
 Public repository, build output, logs, client bundles, route payloads, fixtures,
 screenshots, and error messages must not contain private paths, uncontrolled
 original source, or reversible private intermediates.
 
-### 7.2 Publication lanes
+### 7.2 Publication decisions and implementation bases
 
-This section is the v0.4.19 clean-room addendum to the earlier internal rights
-protocol. It supersedes that protocol only where `run-only` was previously
-applied to a future FractalPark-owned canonical implementation. B/C/R third-party
-`originalSource` and every reversible derivative remain run-only and private;
-an independently implemented `canonicalSource` may be MIT and source-visible
-only after the lane gate below passes.
+The exact-677 catalog and the implementation bundle are separate projections.
+Each identity has one rights status and one publication decision:
 
-1. **Direct adaptation:** allowed only when the private ledger proves a compatible
-   license/ownership and records attribution/notice obligations. Project-owned
-   code is included here.
-2. **Clean-room implementation:** required when original publication rights are
-   absent, incompatible, uncertain, or deliberately avoided. The implementer
-   receives only a non-reversible mathematical/behavior specification and public
-   API contract. They must not inspect original source, normalized source cells,
-   reversible semantic IR, or private fingerprints.
-3. **Rehabilitated clean-room:** the same isolation as clean-room, plus a Record
-   disclosure when the historical source is missing, malformed, or intentionally
-   non-runnable. The canonical source is a project interpretation, not a recovered
-   original.
-4. **Blocked:** no public canonical source, no Standard activation, and no claim
-   of support until the evidence/implementation gate closes.
+- rights: `project-owned`, `source-declared-public-domain-assumption`,
+  `gpl-3.0-only`, or `no-explicit-permission`;
+- decision: `publish`, `hold`, or `exclude`.
 
-The private ledger records rights class, lane, original availability, spec author,
-implementer isolation, review, attribution, sourceRevision, semanticHash, and
-fixtures. A source generator that reads private source or reversible IR is not
-clean-room merely because it changes formatting or variable names.
+The current candidate ceiling is 604 (`89 + 137 + 378`). All 73
+`gpl-3.0-only` identities are held: their Record and provenance remain visible,
+but no canonical implementation, runnable entry, default Profile, or Remix action
+ships in the MIT bundle. They may be reconsidered individually if their
+publication basis changes.
 
-Remix shows and exports only the approved canonical Definition. `originalSource`
+Project-owned implementations use recorded ownership evidence. A
+`source-declared-public-domain-assumption` row additionally records the source's
+declaration, author, URL, and artifact hash; this label is not a claim of legally
+verified public-domain status. A `no-explicit-permission` row may publish only
+through separated independent rewrite: basis-before-code, non-reversible
+math/behavior inputs, fresh project expression, leakage scanning, technical
+fixtures, and a maintainer decision. A generator that reads private source or
+reversible IR is not independent merely because it changes formatting or names.
+
+The ledger records `formulaId`, source name/author/URL/artifact hash,
+`rightsStatus`, `implementationBasis`, basis timestamp, `leakageScanStatus`,
+`publicationDecision`, decision reason, and review time. Git/PR/CI provide the
+engineering audit trail. No custom root, signed registry, credential binding,
+multi-role approval, admission, or implementation authorization is required or
+claimed.
+
+Remix shows and exports only a published canonical Definition. `originalSource`
 is separately access-controlled and never copied into public exports when the
-rights class forbids it.
+rights status forbids it.
 
 ## 8. Reader-first migration and rollback
 
@@ -636,8 +641,9 @@ legacy reader + legacy writer
    corrupted/tampered, cloud, and portable fixtures before any production v3/v2
    write.
 2. Representative Standard/Mine walking skeletons are Preview/test evidence only.
-   Legacy writer remains Production default until the 677 Definitions, resolver,
-   runtime, cloud lifecycle, and release gates close.
+   Legacy writer remains Production default until exact-677 publication decisions,
+   the published-N Definitions, resolver, runtime, cloud lifecycle, and release
+   gates close.
 3. The new writer has an independent feature flag. Production schema migration
    and writer enablement are separate authorization gates. Backup/restore,
    deployed-reader reread, and writer-off smoke are required first.
@@ -655,7 +661,10 @@ legacy reader + legacy writer
 No production Standard activation is complete until evidence proves:
 
 - exactly 677 neutral IDs and the complete typed alias accounting;
-- every Definition has readable canonical source and verified default Profile;
+- exactly 677 publication decisions, with
+  `published + held + excluded = 677` and all 73 GPL identities held;
+- every published Definition has readable canonical source and a verified default
+  Profile; held/excluded identities expose no runnable or placeholder assets;
 - all nine waiver dispositions have source, rights, and conformance evidence;
 - source/semantic/profile hashes are deterministic and drift-checked;
 - Standard and Mine use the same compiler and Safety Envelope;
@@ -666,9 +675,11 @@ No production Standard activation is complete until evidence proves:
 - build, test, lint, responsive, accessibility, real-device, and rollback evidence
   is recorded.
 
-A partial 677 candidate can exist behind test/Preview gates, but public Standard
-activation is all-or-nothing. Run-only hidden tiers and silent omissions are not
-acceptable completion states.
+Private technical candidates can exist behind test/Preview gates, but they do not
+become public implementations without a `publish` decision. The catalog remains
+exact-677 while runnable implementation publication is per-row. Hidden run-only
+tiers, placeholder assets, and silent omissions are not acceptable completion
+states.
 
 ## 10. Explicit non-goals for v1
 

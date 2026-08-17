@@ -2,6 +2,7 @@
 
 - Status: Accepted
 - Date: 2026-08-15
+- Amended: 2026-08-17 (identity/publication split and lightweight evidence model)
 - Target release: FractalPark v0.4.19
 - Spec: [Unified Formula Library and FRM-like Language Contract v1](../specs/unified-formula-library-v1.md)
 - Extends: [ADR 0007](0007-frm-semantics-versioning.md)
@@ -67,24 +68,38 @@ surfaces. Keep 256 KiB only as a legacy preserve/read ceiling; over-64-KiB legac
 source is non-executable, non-publishable, and non-overwritable until explicitly
 reduced and revalidated.
 
-### Rights lanes and nine-waiver disposition
+### Identity, rights, and publication decisions
 
-Public canonical source enters Git only through a proven direct-adaptation lane
-or an isolated clean-room lane. Private original source and reversible semantic
-intermediates remain Level 2 evidence and never enter public artifacts.
+The frozen catalog contains exactly 677 identities. Identity completeness is not
+an assertion that every identity has a runnable implementation. Each row carries
+an independent `publish`, `hold`, or `exclude` decision backed by a lightweight
+evidence ledger. The current implementation-candidate ceiling is 604:
 
-This is an explicit addendum to the earlier rights protocol: its B/C/R run-only
-rule continues to govern third-party `originalSource`, but no longer forbids a
-separately proven FractalPark-owned canonical implementation from being MIT and
-source-visible. The distinction and implementation relationship are both shown
-in Formula Record.
+- 89 project-owned rows;
+- 137 rows labelled `source-declared-public-domain-assumption`;
+- 378 `no-explicit-permission` rows requiring separated independent rewrite;
+- 73 `gpl-3.0-only` rows retained in the identity catalog but held outside the
+  current MIT implementation bundle.
 
-All nine waived identities remain in the 677 set. The four malformed, missing,
-or intentionally non-runnable rows use a general rehabilitated clean-room lane:
-their Records disclose the interpretation, and their Definitions require
-independent specs, isolated implementation, and conformance fixtures. No ID gets
-a parser/runtime exception. Failure of any row blocks all-or-nothing Standard
-activation.
+Public canonical source enters Git only when FractalPark has a recorded
+implementation basis and the row's publication decision is `publish`. Private
+original source and reversible semantic intermediates never enter public
+artifacts. A separated independent rewrite receives only a non-reversible
+mathematical/behavior specification and public API contract; formatting or
+variable renaming is not independent implementation.
+
+Publication is evidence-led rather than certificate-led. Git history, the Draft
+PR, CI, public provenance, leakage scans, a maintainer decision, and takedown
+handling form the audit trail. FractalPark does not operate a custom root key,
+signed reviewer registry, multi-role credential ceremony, or cryptographic
+approval/admission authority. Exact-set commitments and independent verifiers are
+engineering QA only and do not establish legal clearance or reviewer identity.
+
+All nine waived identities remain in the 677 set. A malformed, missing, or
+intentionally non-runnable historical row may be rehabilitated through the same
+separated independent-rewrite workflow and disclosed in its Record. Failure to
+close one row holds that row; it does not block unrelated published rows. No ID
+gets a parser/runtime exception.
 
 ## Consequences
 
@@ -96,15 +111,17 @@ activation.
 - Offline replay no longer depends on a mutable registry or network catalog.
 - Standard and user formulas share security and performance rules.
 - Reader-first deployment keeps rollback honest after new-format writes exist.
-- Rights status is explicit without publishing controlled source.
+- Rights and implementation availability are explicit without publishing
+  controlled source.
 
 ### Cost
 
 - The plugin registry can no longer serve as the catalog of truth.
 - Existing Document, Envelope, cloud, resolver, import/export, Remix, and editor
   paths require coordinated dual-read migration.
-- 677 public Definitions and default Profiles need deterministic generation,
-  clean-room isolation where required, and CPU/WebGL evidence.
+- Every published Definition and default Profile needs deterministic generation,
+  appropriate implementation evidence, and CPU/WebGL conformance. The published
+  count may be lower than the 677-identity catalog.
 - Build payload, lazy loading, previews, localization, SEO, and device QA must be
   treated as release engineering, not deferred polish.
 
@@ -134,3 +151,6 @@ activation.
 3. Do not enable a new writer, Production migration, deployment, tag, release, or
    IndexNow submission without its explicit gate and evidence.
 4. Record the exact rollback floor before first production v3/v2 write.
+5. Require an exact-677 decision ledger whose counts satisfy
+   `published + held + excluded = 677`; keep all 73 GPL rows held unless their
+   publication basis is explicitly reconsidered.

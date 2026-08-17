@@ -3,25 +3,14 @@ import { createHash } from "node:crypto";
 const ERROR_CODE =
   "clean-room-behavior-package-independent-verification-invalid";
 const RESULT_SCHEMA =
-  "fractalpark-formula-library-clean-room-behavior-package-gate/v1";
-const CONTROLLER_VERSION = "formula-library-clean-room-behavior-package-gate/1";
+  "fractalpark-formula-library-clean-room-behavior-package-gate/v2";
+const CONTROLLER_VERSION = "formula-library-clean-room-behavior-package-gate/2";
 const FROZEN_EXACT_SET_BINDING_SHA256 =
-  "cc2fdecb4dd210ebb0d55d212ea973d65fb2c443b687cd8f137c8b98a6402243";
+  "afeb8ddde456b10426da0732bd13f906e30a73eff8239c284bf639d07e2a5713";
 const SHA256 = /^[a-f0-9]{64}$/;
 const UUID =
   /^[a-f0-9]{8}-[a-f0-9]{4}-[1-5][a-f0-9]{3}-[89ab][a-f0-9]{3}-[a-f0-9]{12}$/;
 const REVIEWER_ID = /^[a-z0-9][a-z0-9._:-]{0,127}$/;
-const BLOCKERS = Object.freeze([
-  "advancement-review-not-approved",
-  "clean-behavior-spec-missing",
-  "technical-missing-input",
-  "final-parameter-schema-missing",
-  "isolation-evidence-missing",
-  "approved-executable-oracle-missing",
-  "leakage-review-receipt-missing",
-  "final-profile-preview-record-missing",
-  "independent-admission-not-passed",
-]);
 const REVIEW_CODES = new Set([
   "behavior-anchor-missing",
   "bounded-scope",
@@ -48,10 +37,7 @@ const DIMENSIONS = Object.freeze({
   functionBinding: ["clean-room-function-binding/v1", "assertionCount"],
   initialization: ["clean-room-initialization/v1", "assertionCount"],
   recurrence: ["clean-room-recurrence/v1", "assertionCount"],
-  terminationProtocol: [
-    "clean-room-termination-protocol/v1",
-    "assertionCount",
-  ],
+  terminationProtocol: ["clean-room-termination-protocol/v1", "assertionCount"],
   zeroIterationContract: [
     "clean-room-zero-iteration-contract/v1",
     "assertionCount",
@@ -100,7 +86,8 @@ type UnknownRecord = Record<string, unknown>;
 interface JsonObject {
   readonly [key: string]: JsonValue;
 }
-type JsonValue = null | boolean | number | string | readonly JsonValue[] | JsonObject;
+type JsonValue =
+  null | boolean | number | string | readonly JsonValue[] | JsonObject;
 
 type Evidence = Readonly<{
   formulaId: string;
@@ -113,7 +100,7 @@ type Evidence = Readonly<{
 type Review = Readonly<{
   reviewerId: string;
   reviewedBehaviorObjectSha256: string;
-  decision: "declare-candidate-contract-satisfied" | "block";
+  decision: "declare-contract-satisfied" | "block";
   reasonCodes: readonly string[];
   findingCodes: readonly string[];
 }>;
@@ -130,7 +117,10 @@ function fail(): never {
   throw new Error(ERROR_CODE);
 }
 
-function record(value: unknown, expectedKeys: readonly string[]): Readonly<UnknownRecord> {
+function record(
+  value: unknown,
+  expectedKeys: readonly string[],
+): Readonly<UnknownRecord> {
   try {
     if (
       value === null ||
@@ -153,7 +143,8 @@ function record(value: unknown, expectedKeys: readonly string[]): Readonly<Unkno
     const copy: UnknownRecord = {};
     for (const key of expectedKeys) {
       const descriptor = Object.getOwnPropertyDescriptor(value, key);
-      if (!descriptor || !("value" in descriptor) || !descriptor.enumerable) fail();
+      if (!descriptor || !("value" in descriptor) || !descriptor.enumerable)
+        fail();
       copy[key] = descriptor.value;
     }
     return Object.freeze(copy);
@@ -184,7 +175,8 @@ function dense(value: unknown, maxLength: number): readonly unknown[] {
     const copy: unknown[] = [];
     for (let index = 0; index < value.length; index += 1) {
       const descriptor = Object.getOwnPropertyDescriptor(value, String(index));
-      if (!descriptor || !("value" in descriptor) || !descriptor.enumerable) fail();
+      if (!descriptor || !("value" in descriptor) || !descriptor.enumerable)
+        fail();
       copy.push(descriptor.value);
     }
     return Object.freeze(copy);
@@ -212,16 +204,19 @@ function safeJson(
     return value;
   }
   if (Array.isArray(value)) {
-    return Object.freeze(dense(value, 50_000).map((item) => safeJson(item, depth + 1, state)));
+    return Object.freeze(
+      dense(value, 50_000).map((item) => safeJson(item, depth + 1, state)),
+    );
   }
   const source = value as object;
   if (Object.getPrototypeOf(source) !== Object.prototype) fail();
   const keys = Reflect.ownKeys(source);
   if (
     keys.length > 50_000 - state.nodes ||
-    keys.some((key) =>
-      typeof key !== "string" ||
-      ["__proto__", "constructor", "prototype"].includes(key),
+    keys.some(
+      (key) =>
+        typeof key !== "string" ||
+        ["__proto__", "constructor", "prototype"].includes(key),
     )
   ) {
     fail();
@@ -229,7 +224,8 @@ function safeJson(
   const result: Record<string, JsonValue> = {};
   for (const key of (keys as string[]).sort()) {
     const descriptor = Object.getOwnPropertyDescriptor(source, key);
-    if (!descriptor || !("value" in descriptor) || !descriptor.enumerable) fail();
+    if (!descriptor || !("value" in descriptor) || !descriptor.enumerable)
+      fail();
     result[key] = safeJson(descriptor.value, depth + 1, state);
   }
   return Object.freeze(result);
@@ -251,7 +247,9 @@ function hash(value: JsonValue): string {
 
 function codeList(value: unknown): readonly string[] {
   const values = dense(value, 16);
-  if (values.some((item) => typeof item !== "string" || !REVIEW_CODES.has(item))) {
+  if (
+    values.some((item) => typeof item !== "string" || !REVIEW_CODES.has(item))
+  ) {
     fail();
   }
   return Object.freeze(values as string[]);
@@ -260,40 +258,18 @@ function codeList(value: unknown): readonly string[] {
 function evidence(value: unknown): Evidence {
   const row = record(value, [
     "formulaId",
-    "sourceSet",
     "rightsClass",
-    "rightsProvenanceClassificationBound",
-    "privateProvenanceEvidenceBound",
     "sourceOracleStatus",
-    "sourceOracleEvidenceBound",
-    "workInputStatus",
-    "technicalStatus",
-    "technicalFailureReason",
-    "provisionalCandidate",
-    "admissionStatus",
-    "blockers",
     "rowProjectionHash",
   ]);
-  const blockers = dense(row.blockers, BLOCKERS.length);
   if (
     typeof row.formulaId !== "string" ||
     !UUID.test(row.formulaId) ||
-    row.sourceSet !== "F588" ||
     !["A", "B", "C"].includes(String(row.rightsClass)) ||
-    row.rightsProvenanceClassificationBound !== true ||
-    row.privateProvenanceEvidenceBound !== true ||
     ![
       "legacy-compatibility-orbit-oracle-available",
       "waiver-probe-not-executable-oracle",
     ].includes(String(row.sourceOracleStatus)) ||
-    row.sourceOracleEvidenceBound !== true ||
-    row.workInputStatus !== "blocked-missing-approved-nonreversible-behavior-spec" ||
-    row.technicalStatus !== "failed" ||
-    row.technicalFailureReason !== "missing-input" ||
-    row.provisionalCandidate !== false ||
-    row.admissionStatus !== "blocked" ||
-    blockers.length !== BLOCKERS.length ||
-    blockers.some((item, index) => item !== BLOCKERS[index]) ||
     typeof row.rowProjectionHash !== "string" ||
     !SHA256.test(row.rowProjectionHash)
   ) {
@@ -302,7 +278,8 @@ function evidence(value: unknown): Evidence {
   return Object.freeze({
     formulaId: row.formulaId,
     rightsClass: row.rightsClass as "A" | "B" | "C",
-    sourceOracleStatus: row.sourceOracleStatus as Evidence["sourceOracleStatus"],
+    sourceOracleStatus:
+      row.sourceOracleStatus as Evidence["sourceOracleStatus"],
     rowProjectionHash: row.rowProjectionHash,
   });
 }
@@ -332,7 +309,12 @@ function digestReceipt(
 }
 
 function oracleReceipt(value: unknown): Readonly<Record<string, JsonValue>> {
-  const item = record(value, ["schema", "contentSha256", "status", "caseCount"]);
+  const item = record(value, [
+    "schema",
+    "contentSha256",
+    "status",
+    "caseCount",
+  ]);
   if (
     item.schema !== "clean-room-executable-oracle/v1" ||
     typeof item.contentSha256 !== "string" ||
@@ -402,9 +384,7 @@ function review(
     item.allowedInputSurface !== surface ||
     typeof item.reviewedBehaviorObjectSha256 !== "string" ||
     !SHA256.test(item.reviewedBehaviorObjectSha256) ||
-    !["declare-candidate-contract-satisfied", "block"].includes(
-      String(item.decision),
-    ) ||
+    !["declare-contract-satisfied", "block"].includes(String(item.decision)) ||
     (item.decision === "block" && reasons.length === 0 && findings.length === 0)
   ) {
     fail();
@@ -457,7 +437,8 @@ function submission(value: unknown): Submission {
     item.packageGeneration,
     "clean",
   );
-  if (contaminated && clean && contaminated.reviewerId === clean.reviewerId) fail();
+  if (contaminated && clean && contaminated.reviewerId === clean.reviewerId)
+    fail();
   return Object.freeze({
     formulaId: item.formulaId,
     packageGeneration: item.packageGeneration,
@@ -471,7 +452,7 @@ function submission(value: unknown): Submission {
 function status(item: Review | null, expectedHash: string): string {
   if (!item) return "missing";
   if (item.reviewedBehaviorObjectSha256 !== expectedHash) return "stale";
-  return item.decision === "declare-candidate-contract-satisfied"
+  return item.decision === "declare-contract-satisfied"
     ? "declared-satisfied"
     : "blocked";
 }
@@ -491,8 +472,8 @@ function unionCodes(...items: readonly (Review | null)[]): readonly string[] {
 function verifyInternal(
   input: unknown,
   output: unknown,
-  requireAuthority: boolean,
-): Readonly<{ total: 452; syntheticCandidateContractsSatisfied: number }> {
+  requireCommitment: boolean,
+): Readonly<{ total: 452; syntheticContractsSatisfied: number }> {
   const root = record(input, ["evidenceRows", "submissionRows"]);
   const evidenceRows = dense(root.evidenceRows, 452).map(evidence);
   const submissions = dense(root.submissionRows, 452).map(submission);
@@ -520,14 +501,20 @@ function verifyInternal(
   const setBinding = hash(
     evidenceRows.map((row) => ({
       formulaId: row.formulaId,
+      rightsClass: row.rightsClass,
+      sourceOracleStatus: row.sourceOracleStatus,
       rowProjectionHash: row.rowProjectionHash,
     })),
   );
-  const authorityStatus =
-    setBinding === FROZEN_EXACT_SET_BINDING_SHA256 ? "bound" : "synthetic-unbound";
-  if (requireAuthority && authorityStatus !== "bound") fail();
+  const commitmentStatus =
+    setBinding === FROZEN_EXACT_SET_BINDING_SHA256
+      ? "bound"
+      : "synthetic-unbound";
+  if (requireCommitment && commitmentStatus !== "bound") fail();
 
-  const byId = new Map(submissions.map((item) => [item.formulaId, item] as const));
+  const byId = new Map(
+    submissions.map((item) => [item.formulaId, item] as const),
+  );
   const rows = evidenceRows.map((evidenceRow) => {
     const item = byId.get(evidenceRow.formulaId);
     if (!item) {
@@ -539,22 +526,18 @@ function verifyInternal(
         submissionStatus: "missing",
         contaminatedReviewStatus: "missing",
         cleanReviewStatus: "missing",
-        strictCandidateClosure: "blocked",
-        syntheticCandidateContractSatisfied: false,
-        behaviorPackageCandidateApproved: false,
-        behaviorPackageAdmitted: false,
-        behaviorPackageContentAttestationStatus: "digest-only-unverified",
-        roleAttestationStatus: "unverified-synthetic",
+        contractClosure: "blocked",
+        syntheticContractSatisfied: false,
+        contentEvaluationStatus: "digest-only-not-content-reviewed",
+        reviewIdentityStatus: "self-reported-not-verified",
         reviewRationale: [],
-        implementationAuthorized: false,
-        blockReasons: [
+        contractIssues: [
           "behavior-package-missing",
           "contaminated-review-missing",
           "clean-review-missing",
-          ...(authorityStatus === "bound" ? [] : ["exact-set-authority-unbound"]),
-          "behavior-package-content-attestation-not-in-scope",
-          "behavior-package-admission-not-in-scope",
-          "implementation-authorization-not-in-scope",
+          ...(commitmentStatus === "bound"
+            ? []
+            : ["exact-set-commitment-unbound"]),
         ],
       };
     }
@@ -569,7 +552,10 @@ function verifyInternal(
       item.contaminatedReview,
       item.reviewedBehaviorObjectSha256,
     );
-    const cleanStatus = status(item.cleanReview, item.reviewedBehaviorObjectSha256);
+    const cleanStatus = status(
+      item.cleanReview,
+      item.reviewedBehaviorObjectSha256,
+    );
     const satisfied =
       contaminatedStatus === "declared-satisfied" &&
       cleanStatus === "declared-satisfied";
@@ -581,15 +567,12 @@ function verifyInternal(
       submissionStatus: "present",
       contaminatedReviewStatus: contaminatedStatus,
       cleanReviewStatus: cleanStatus,
-      strictCandidateClosure: satisfied ? "synthetic-contract-satisfied" : "blocked",
-      syntheticCandidateContractSatisfied: satisfied,
-      behaviorPackageCandidateApproved: false,
-      behaviorPackageAdmitted: false,
-      behaviorPackageContentAttestationStatus: "digest-only-unverified",
-      roleAttestationStatus: "unverified-synthetic",
+      contractClosure: satisfied ? "synthetic-contract-satisfied" : "blocked",
+      syntheticContractSatisfied: satisfied,
+      contentEvaluationStatus: "digest-only-not-content-reviewed",
+      reviewIdentityStatus: "self-reported-not-verified",
       reviewRationale: unionCodes(item.contaminatedReview, item.cleanReview),
-      implementationAuthorized: false,
-      blockReasons: [
+      contractIssues: [
         contaminatedStatus === "missing" ? "contaminated-review-missing" : null,
         contaminatedStatus === "stale"
           ? "contaminated-review-stale-object-hash"
@@ -598,22 +581,19 @@ function verifyInternal(
         cleanStatus === "missing" ? "clean-review-missing" : null,
         cleanStatus === "stale" ? "clean-review-stale-object-hash" : null,
         cleanStatus === "blocked" ? "clean-review-blocked" : null,
-        authorityStatus === "bound" ? null : "exact-set-authority-unbound",
-        "behavior-package-content-attestation-not-in-scope",
-        "behavior-package-admission-not-in-scope",
-        "implementation-authorization-not-in-scope",
+        commitmentStatus === "bound" ? null : "exact-set-commitment-unbound",
       ].filter((reason): reason is string => reason !== null),
     };
   });
-  const syntheticCandidateContractsSatisfied = rows.filter(
-    (row) => row.syntheticCandidateContractSatisfied,
+  const syntheticContractsSatisfied = rows.filter(
+    (row) => row.syntheticContractSatisfied,
   ).length;
   const expected: JsonValue = {
     schema: RESULT_SCHEMA,
     controllerVersion: CONTROLLER_VERSION,
     deterministic: true,
     exactSetBindingSha256: setBinding,
-    exactSetAuthorityStatus: authorityStatus,
+    exactSetCommitmentStatus: commitmentStatus,
     summary: {
       total: 452,
       submissions: submissions.length,
@@ -624,33 +604,21 @@ function verifyInternal(
       cleanReviewDeclarationsSatisfied: rows.filter(
         (row) => row.cleanReviewStatus === "declared-satisfied",
       ).length,
-      syntheticCandidateContractsSatisfied,
-      behaviorPackageCandidatesApproved: 0,
-      behaviorPackagesAdmitted: 0,
-      behaviorPackagesBlocked: 452,
-      implementationAuthorized: 0,
+      syntheticContractsSatisfied,
     },
     rows,
-    candidateAdmissions: 0,
-    publicCandidateAssemblyAllowed: false,
-    publicPromotionAllowed: false,
-    implementationProjectionsWritten: 0,
-    canonicalSourcesWritten: 0,
-    profilesWritten: 0,
-    previewsWritten: 0,
-    publicAssetsWritten: 0,
   };
   if (canonical(safeJson(output)) !== canonical(expected)) fail();
   return Object.freeze({
     total: 452 as const,
-    syntheticCandidateContractsSatisfied,
+    syntheticContractsSatisfied,
   });
 }
 
-export function verifySyntheticCleanRoomBehaviorPackageContractV1(
+export function verifySyntheticCleanRoomBehaviorPackageContractV2(
   input: unknown,
   output: unknown,
-): Readonly<{ total: 452; syntheticCandidateContractsSatisfied: number }> {
+): Readonly<{ total: 452; syntheticContractsSatisfied: number }> {
   try {
     return verifyInternal(input, output, false);
   } catch {
@@ -658,10 +626,10 @@ export function verifySyntheticCleanRoomBehaviorPackageContractV1(
   }
 }
 
-export function verifyCleanRoomBehaviorPackageGateV1(
+export function verifyCleanRoomBehaviorPackageGateV2(
   input: unknown,
   output: unknown,
-): Readonly<{ total: 452; syntheticCandidateContractsSatisfied: number }> {
+): Readonly<{ total: 452; syntheticContractsSatisfied: number }> {
   try {
     return verifyInternal(input, output, true);
   } catch {

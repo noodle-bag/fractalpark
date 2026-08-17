@@ -1,12 +1,12 @@
 import { createHash } from "node:crypto";
 
-export const CLEAN_ROOM_BEHAVIOR_PACKAGE_GATE_VERSION_V1 =
-  "formula-library-clean-room-behavior-package-gate/1";
+export const CLEAN_ROOM_BEHAVIOR_PACKAGE_GATE_VERSION_V2 =
+  "formula-library-clean-room-behavior-package-gate/2";
 
 const RESULT_SCHEMA =
-  "fractalpark-formula-library-clean-room-behavior-package-gate/v1";
+  "fractalpark-formula-library-clean-room-behavior-package-gate/v2";
 const FROZEN_EXACT_SET_BINDING_SHA256 =
-  "cc2fdecb4dd210ebb0d55d212ea973d65fb2c443b687cd8f137c8b98a6402243";
+  "afeb8ddde456b10426da0732bd13f906e30a73eff8239c284bf639d07e2a5713";
 const SHA256 = /^[a-f0-9]{64}$/;
 const UUID =
   /^[a-f0-9]{8}-[a-f0-9]{4}-[1-5][a-f0-9]{3}-[89ab][a-f0-9]{3}-[a-f0-9]{12}$/;
@@ -17,18 +17,6 @@ const EXPECTED_CLASS_B = 73;
 const EXPECTED_CLASS_C = 378;
 const EXPECTED_LEGACY_ORACLES = 443;
 const EXPECTED_WAIVER_PROBES = 9;
-
-const EVIDENCE_BLOCKERS = Object.freeze([
-  "advancement-review-not-approved",
-  "clean-behavior-spec-missing",
-  "technical-missing-input",
-  "final-parameter-schema-missing",
-  "isolation-evidence-missing",
-  "approved-executable-oracle-missing",
-  "leakage-review-receipt-missing",
-  "final-profile-preview-record-missing",
-  "independent-admission-not-passed",
-] as const);
 
 const ALLOWED_REVIEW_CODES = new Set([
   "behavior-anchor-missing",
@@ -57,10 +45,7 @@ const DIMENSION_SPECS = Object.freeze({
   functionBinding: ["clean-room-function-binding/v1", "assertionCount"],
   initialization: ["clean-room-initialization/v1", "assertionCount"],
   recurrence: ["clean-room-recurrence/v1", "assertionCount"],
-  terminationProtocol: [
-    "clean-room-termination-protocol/v1",
-    "assertionCount",
-  ],
+  terminationProtocol: ["clean-room-termination-protocol/v1", "assertionCount"],
   zeroIterationContract: [
     "clean-room-zero-iteration-contract/v1",
     "assertionCount",
@@ -117,9 +102,9 @@ type RightsClass = "A" | "B" | "C";
 type SourceOracleStatus =
   | "legacy-compatibility-orbit-oracle-available"
   | "waiver-probe-not-executable-oracle";
-type ReviewDecision = "declare-candidate-contract-satisfied" | "block";
+type ReviewDecision = "declare-contract-satisfied" | "block";
 type ReviewStatus = "missing" | "stale" | "blocked" | "declared-satisfied";
-type AuthorityStatus = "bound" | "synthetic-unbound";
+type SetCommitmentStatus = "bound" | "synthetic-unbound";
 
 type EvidenceProjection = Readonly<{
   formulaId: string;
@@ -145,23 +130,19 @@ type SubmissionProjection = Readonly<{
   cleanReview: ReviewReceipt | null;
 }>;
 
-export type CleanRoomBehaviorPackageGateResultV1 = Readonly<{
+export type CleanRoomBehaviorPackageGateResultV2 = Readonly<{
   schema: typeof RESULT_SCHEMA;
-  controllerVersion: typeof CLEAN_ROOM_BEHAVIOR_PACKAGE_GATE_VERSION_V1;
+  controllerVersion: typeof CLEAN_ROOM_BEHAVIOR_PACKAGE_GATE_VERSION_V2;
   deterministic: true;
   exactSetBindingSha256: string;
-  exactSetAuthorityStatus: AuthorityStatus;
+  exactSetCommitmentStatus: SetCommitmentStatus;
   summary: Readonly<{
     total: 452;
     submissions: number;
     missingSubmissions: number;
     contaminatedReviewDeclarationsSatisfied: number;
     cleanReviewDeclarationsSatisfied: number;
-    syntheticCandidateContractsSatisfied: number;
-    behaviorPackageCandidatesApproved: 0;
-    behaviorPackagesAdmitted: 0;
-    behaviorPackagesBlocked: 452;
-    implementationAuthorized: 0;
+    syntheticContractsSatisfied: number;
   }>;
   rows: readonly Readonly<{
     formulaId: string;
@@ -171,24 +152,13 @@ export type CleanRoomBehaviorPackageGateResultV1 = Readonly<{
     submissionStatus: "missing" | "present";
     contaminatedReviewStatus: ReviewStatus;
     cleanReviewStatus: ReviewStatus;
-    strictCandidateClosure: "blocked" | "synthetic-contract-satisfied";
-    syntheticCandidateContractSatisfied: boolean;
-    behaviorPackageCandidateApproved: false;
-    behaviorPackageAdmitted: false;
-    behaviorPackageContentAttestationStatus: "digest-only-unverified";
-    roleAttestationStatus: "unverified-synthetic";
+    contractClosure: "blocked" | "synthetic-contract-satisfied";
+    syntheticContractSatisfied: boolean;
+    contentEvaluationStatus: "digest-only-not-content-reviewed";
+    reviewIdentityStatus: "self-reported-not-verified";
     reviewRationale: readonly string[];
-    implementationAuthorized: false;
-    blockReasons: readonly string[];
+    contractIssues: readonly string[];
   }>[];
-  candidateAdmissions: 0;
-  publicCandidateAssemblyAllowed: false;
-  publicPromotionAllowed: false;
-  implementationProjectionsWritten: 0;
-  canonicalSourcesWritten: 0;
-  profilesWritten: 0;
-  previewsWritten: 0;
-  publicAssetsWritten: 0;
 }>;
 
 function fail(code: string): never {
@@ -300,49 +270,17 @@ function readStringList(value: unknown, code: string): readonly string[] {
 function readEvidenceRow(value: unknown): EvidenceProjection {
   const row = readPlainRecord(
     value,
-    [
-      "formulaId",
-      "sourceSet",
-      "rightsClass",
-      "rightsProvenanceClassificationBound",
-      "privateProvenanceEvidenceBound",
-      "sourceOracleStatus",
-      "sourceOracleEvidenceBound",
-      "workInputStatus",
-      "technicalStatus",
-      "technicalFailureReason",
-      "provisionalCandidate",
-      "admissionStatus",
-      "blockers",
-      "rowProjectionHash",
-    ],
+    ["formulaId", "rightsClass", "sourceOracleStatus", "rowProjectionHash"],
     "clean-room-behavior-package-evidence-row-invalid",
-  );
-  const blockers = readDenseArray(
-    row.blockers,
-    "clean-room-behavior-package-evidence-row-invalid",
-    EVIDENCE_BLOCKERS.length,
   );
   if (
     typeof row.formulaId !== "string" ||
     !UUID.test(row.formulaId) ||
-    row.sourceSet !== "F588" ||
     !["A", "B", "C"].includes(String(row.rightsClass)) ||
-    row.rightsProvenanceClassificationBound !== true ||
-    row.privateProvenanceEvidenceBound !== true ||
     ![
       "legacy-compatibility-orbit-oracle-available",
       "waiver-probe-not-executable-oracle",
     ].includes(String(row.sourceOracleStatus)) ||
-    row.sourceOracleEvidenceBound !== true ||
-    row.workInputStatus !==
-      "blocked-missing-approved-nonreversible-behavior-spec" ||
-    row.technicalStatus !== "failed" ||
-    row.technicalFailureReason !== "missing-input" ||
-    row.provisionalCandidate !== false ||
-    row.admissionStatus !== "blocked" ||
-    blockers.length !== EVIDENCE_BLOCKERS.length ||
-    blockers.some((blocker, index) => blocker !== EVIDENCE_BLOCKERS[index]) ||
     typeof row.rowProjectionHash !== "string" ||
     !SHA256.test(row.rowProjectionHash)
   ) {
@@ -491,7 +429,7 @@ function readReview(
     review.allowedInputSurface !== expectedSurface ||
     typeof review.reviewedBehaviorObjectSha256 !== "string" ||
     !SHA256.test(review.reviewedBehaviorObjectSha256) ||
-    !["declare-candidate-contract-satisfied", "block"].includes(
+    !["declare-contract-satisfied", "block"].includes(
       String(review.decision),
     ) ||
     (review.decision === "block" &&
@@ -577,7 +515,7 @@ function reviewStatus(
 ): ReviewStatus {
   if (!review) return "missing";
   if (review.reviewedBehaviorObjectSha256 !== expectedHash) return "stale";
-  return review.decision === "declare-candidate-contract-satisfied"
+  return review.decision === "declare-contract-satisfied"
     ? "declared-satisfied"
     : "blocked";
 }
@@ -600,6 +538,8 @@ function exactSetBinding(rows: readonly EvidenceProjection[]): string {
   return sha256Canonical(
     rows.map((row) => ({
       formulaId: row.formulaId,
+      rightsClass: row.rightsClass,
+      sourceOracleStatus: row.sourceOracleStatus,
       rowProjectionHash: row.rowProjectionHash,
     })),
   );
@@ -607,8 +547,8 @@ function exactSetBinding(rows: readonly EvidenceProjection[]): string {
 
 function evaluateCore(
   input: unknown,
-  requireFrozenAuthority: boolean,
-): CleanRoomBehaviorPackageGateResultV1 {
+  requireFrozenCommitment: boolean,
+): CleanRoomBehaviorPackageGateResultV2 {
   const root = readPlainRecord(
     input,
     ["evidenceRows", "submissionRows"],
@@ -643,17 +583,16 @@ function evaluateCore(
         "legacy-compatibility-orbit-oracle-available",
     ).length !== EXPECTED_LEGACY_ORACLES ||
     evidenceRows.filter(
-      (row) =>
-        row.sourceOracleStatus === "waiver-probe-not-executable-oracle",
+      (row) => row.sourceOracleStatus === "waiver-probe-not-executable-oracle",
     ).length !== EXPECTED_WAIVER_PROBES
   ) {
     fail("clean-room-behavior-package-exact-set-invalid");
   }
   const binding = exactSetBinding(evidenceRows);
-  const authorityStatus: AuthorityStatus =
+  const commitmentStatus: SetCommitmentStatus =
     binding === FROZEN_EXACT_SET_BINDING_SHA256 ? "bound" : "synthetic-unbound";
-  if (requireFrozenAuthority && authorityStatus !== "bound") {
-    fail("clean-room-behavior-package-exact-set-authority-invalid");
+  if (requireFrozenCommitment && commitmentStatus !== "bound") {
+    fail("clean-room-behavior-package-exact-set-commitment-invalid");
   }
 
   const submissions = new Map(
@@ -671,23 +610,18 @@ function evaluateCore(
           submissionStatus: "missing" as const,
           contaminatedReviewStatus: "missing" as const,
           cleanReviewStatus: "missing" as const,
-          strictCandidateClosure: "blocked" as const,
-          syntheticCandidateContractSatisfied: false,
-          behaviorPackageCandidateApproved: false as const,
-          behaviorPackageAdmitted: false as const,
-          behaviorPackageContentAttestationStatus:
-            "digest-only-unverified" as const,
-          roleAttestationStatus: "unverified-synthetic" as const,
+          contractClosure: "blocked" as const,
+          syntheticContractSatisfied: false,
+          contentEvaluationStatus: "digest-only-not-content-reviewed" as const,
+          reviewIdentityStatus: "self-reported-not-verified" as const,
           reviewRationale: Object.freeze([]) as readonly string[],
-          implementationAuthorized: false as const,
-          blockReasons: Object.freeze([
+          contractIssues: Object.freeze([
             "behavior-package-missing",
             "contaminated-review-missing",
             "clean-review-missing",
-            ...(authorityStatus === "bound" ? [] : ["exact-set-authority-unbound"]),
-            "behavior-package-content-attestation-not-in-scope",
-            "behavior-package-admission-not-in-scope",
-            "implementation-authorization-not-in-scope",
+            ...(commitmentStatus === "bound"
+              ? []
+              : ["exact-set-commitment-unbound"]),
           ]),
         });
       }
@@ -715,7 +649,7 @@ function evaluateCore(
         submission.contaminatedReview,
         submission.cleanReview,
       );
-      const blockReasons = [
+      const contractIssues = [
         contaminatedStatus === "missing" ? "contaminated-review-missing" : null,
         contaminatedStatus === "stale"
           ? "contaminated-review-stale-object-hash"
@@ -724,42 +658,34 @@ function evaluateCore(
         cleanStatus === "missing" ? "clean-review-missing" : null,
         cleanStatus === "stale" ? "clean-review-stale-object-hash" : null,
         cleanStatus === "blocked" ? "clean-review-blocked" : null,
-        authorityStatus === "bound" ? null : "exact-set-authority-unbound",
-        "behavior-package-content-attestation-not-in-scope",
-        "behavior-package-admission-not-in-scope",
-        "implementation-authorization-not-in-scope",
+        commitmentStatus === "bound" ? null : "exact-set-commitment-unbound",
       ].filter((reason): reason is string => reason !== null);
       return Object.freeze({
         formulaId: evidence.formulaId,
         evidenceRowProjectionHash: evidence.rowProjectionHash,
         packageGeneration: submission.packageGeneration,
-        reviewedBehaviorObjectSha256:
-          submission.reviewedBehaviorObjectSha256,
+        reviewedBehaviorObjectSha256: submission.reviewedBehaviorObjectSha256,
         submissionStatus: "present" as const,
         contaminatedReviewStatus: contaminatedStatus,
         cleanReviewStatus: cleanStatus,
-        strictCandidateClosure: syntheticSatisfied
+        contractClosure: syntheticSatisfied
           ? ("synthetic-contract-satisfied" as const)
           : ("blocked" as const),
-        syntheticCandidateContractSatisfied: syntheticSatisfied,
-        behaviorPackageCandidateApproved: false as const,
-        behaviorPackageAdmitted: false as const,
-        behaviorPackageContentAttestationStatus:
-          "digest-only-unverified" as const,
-        roleAttestationStatus: "unverified-synthetic" as const,
+        syntheticContractSatisfied: syntheticSatisfied,
+        contentEvaluationStatus: "digest-only-not-content-reviewed" as const,
+        reviewIdentityStatus: "self-reported-not-verified" as const,
         reviewRationale: reasons,
-        implementationAuthorized: false as const,
-        blockReasons: Object.freeze(blockReasons),
+        contractIssues: Object.freeze(contractIssues),
       });
     }),
   );
 
   return Object.freeze({
     schema: RESULT_SCHEMA,
-    controllerVersion: CLEAN_ROOM_BEHAVIOR_PACKAGE_GATE_VERSION_V1,
+    controllerVersion: CLEAN_ROOM_BEHAVIOR_PACKAGE_GATE_VERSION_V2,
     deterministic: true as const,
     exactSetBindingSha256: binding,
-    exactSetAuthorityStatus: authorityStatus,
+    exactSetCommitmentStatus: commitmentStatus,
     summary: Object.freeze({
       total: 452 as const,
       submissions: submissionRows.length,
@@ -770,36 +696,24 @@ function evaluateCore(
       cleanReviewDeclarationsSatisfied: rows.filter(
         (row) => row.cleanReviewStatus === "declared-satisfied",
       ).length,
-      syntheticCandidateContractsSatisfied: rows.filter(
-        (row) => row.syntheticCandidateContractSatisfied,
+      syntheticContractsSatisfied: rows.filter(
+        (row) => row.syntheticContractSatisfied,
       ).length,
-      behaviorPackageCandidatesApproved: 0 as const,
-      behaviorPackagesAdmitted: 0 as const,
-      behaviorPackagesBlocked: 452 as const,
-      implementationAuthorized: 0 as const,
     }),
     rows,
-    candidateAdmissions: 0 as const,
-    publicCandidateAssemblyAllowed: false as const,
-    publicPromotionAllowed: false as const,
-    implementationProjectionsWritten: 0 as const,
-    canonicalSourcesWritten: 0 as const,
-    profilesWritten: 0 as const,
-    previewsWritten: 0 as const,
-    publicAssetsWritten: 0 as const,
   });
 }
 
-/** Synthetic contract exercise only. It never supplies exact-set authority. */
-export function evaluateSyntheticCleanRoomBehaviorPackageContractV1(
+/** Synthetic contract exercise only. It never binds the frozen exact set. */
+export function evaluateSyntheticCleanRoomBehaviorPackageContractV2(
   input: unknown,
-): CleanRoomBehaviorPackageGateResultV1 {
+): CleanRoomBehaviorPackageGateResultV2 {
   return evaluateCore(input, false);
 }
 
-/** Exact gate. The ordered evidence-set binding must match frozen authority. */
-export function evaluateCleanRoomBehaviorPackageGateV1(
+/** Exact QA gate. The ordered evidence-set binding must match the frozen commitment. */
+export function evaluateCleanRoomBehaviorPackageGateV2(
   input: unknown,
-): CleanRoomBehaviorPackageGateResultV1 {
+): CleanRoomBehaviorPackageGateResultV2 {
   return evaluateCore(input, true);
 }

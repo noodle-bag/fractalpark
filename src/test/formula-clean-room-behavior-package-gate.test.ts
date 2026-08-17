@@ -3,25 +3,14 @@ import { createHash } from "node:crypto";
 import { describe, expect, it } from "vitest";
 
 import {
-  evaluateCleanRoomBehaviorPackageGateV1,
-  evaluateSyntheticCleanRoomBehaviorPackageContractV1,
+  evaluateCleanRoomBehaviorPackageGateV2,
+  evaluateSyntheticCleanRoomBehaviorPackageContractV2,
 } from "@/engine/formulas/v1/clean-room-behavior-package-gate";
 import {
-  verifyCleanRoomBehaviorPackageGateV1,
-  verifySyntheticCleanRoomBehaviorPackageContractV1,
+  verifyCleanRoomBehaviorPackageGateV2,
+  verifySyntheticCleanRoomBehaviorPackageContractV2,
 } from "@/engine/formulas/v1/clean-room-behavior-package-gate-verifier";
 
-const BLOCKERS = [
-  "advancement-review-not-approved",
-  "clean-behavior-spec-missing",
-  "technical-missing-input",
-  "final-parameter-schema-missing",
-  "isolation-evidence-missing",
-  "approved-executable-oracle-missing",
-  "leakage-review-receipt-missing",
-  "final-profile-preview-record-missing",
-  "independent-admission-not-passed",
-] as const;
 const REVIEW_CODES = [
   "behavior-anchor-missing",
   "bounded-scope",
@@ -48,7 +37,7 @@ type TestReview = {
   reviewerRole: string;
   allowedInputSurface: string;
   reviewedBehaviorObjectSha256: string;
-  decision: "declare-candidate-contract-satisfied" | "block";
+  decision: "declare-contract-satisfied" | "block";
   reasonCodes: string[];
   findingCodes: string[];
 };
@@ -69,21 +58,11 @@ function formulaId(index: number): string {
 function evidenceRows() {
   return Array.from({ length: 452 }, (_, index) => ({
     formulaId: formulaId(index),
-    sourceSet: "F588",
     rightsClass: index === 0 ? "A" : index <= 73 ? "B" : "C",
-    rightsProvenanceClassificationBound: true,
-    privateProvenanceEvidenceBound: true,
     sourceOracleStatus:
       index < 443
         ? "legacy-compatibility-orbit-oracle-available"
         : "waiver-probe-not-executable-oracle",
-    sourceOracleEvidenceBound: true,
-    workInputStatus: "blocked-missing-approved-nonreversible-behavior-spec",
-    technicalStatus: "failed",
-    technicalFailureReason: "missing-input",
-    provisionalCandidate: false,
-    admissionStatus: "blocked",
-    blockers: [...BLOCKERS],
     rowProjectionHash: index.toString(16).padStart(64, "0"),
   }));
 }
@@ -112,10 +91,7 @@ function behaviorEnvelope(index = 0): Record<string, unknown> {
       "clean-room-function-binding/v1",
       "assertionCount",
     ),
-    initialization: receipt(
-      "clean-room-initialization/v1",
-      "assertionCount",
-    ),
+    initialization: receipt("clean-room-initialization/v1", "assertionCount"),
     recurrence: receipt("clean-room-recurrence/v1", "assertionCount"),
     terminationProtocol: receipt(
       "clean-room-termination-protocol/v1",
@@ -153,10 +129,7 @@ function behaviorEnvelope(index = 0): Record<string, unknown> {
       "clean-room-row-variation-binding/v1",
       "assertionCount",
     ),
-    fieldProvenance: receipt(
-      "clean-room-field-provenance/v1",
-      "fieldCount",
-    ),
+    fieldProvenance: receipt("clean-room-field-provenance/v1", "fieldCount"),
     executableOracle: {
       schema: "clean-room-executable-oracle/v1",
       contentSha256: HASH,
@@ -193,8 +166,7 @@ function review(
   formula: string,
   side: "contaminated" | "clean",
   hash: string,
-  decision: TestReview["decision"] =
-    "declare-candidate-contract-satisfied",
+  decision: TestReview["decision"] = "declare-contract-satisfied",
 ): TestReview {
   return {
     formulaId: formula,
@@ -214,8 +186,7 @@ function review(
 
 function submission(
   index = 0,
-  decision: TestReview["decision"] =
-    "declare-candidate-contract-satisfied",
+  decision: TestReview["decision"] = "declare-contract-satisfied",
   suppliedHash?: string,
 ): TestSubmission {
   const value: TestSubmission = {
@@ -228,7 +199,12 @@ function submission(
   };
   const hash = suppliedHash ?? objectHash(value);
   value.reviewedBehaviorObjectSha256 = hash;
-  value.contaminatedReview = review(value.formulaId, "contaminated", hash, decision);
+  value.contaminatedReview = review(
+    value.formulaId,
+    "contaminated",
+    hash,
+    decision,
+  );
   value.cleanReview = review(value.formulaId, "clean", hash, decision);
   return value;
 }
@@ -238,47 +214,41 @@ function syntheticInput(submissions: readonly TestSubmission[] = []) {
 }
 
 describe("clean-room behavior-package gate", () => {
-  it("keeps the public synthetic zero state explicitly unbound and fail closed", () => {
+  it("keeps the public synthetic zero state explicitly unbound", () => {
     const input = syntheticInput();
-    const result = evaluateSyntheticCleanRoomBehaviorPackageContractV1(input);
+    const result = evaluateSyntheticCleanRoomBehaviorPackageContractV2(input);
 
-    expect(result.exactSetAuthorityStatus).toBe("synthetic-unbound");
+    expect(result.exactSetCommitmentStatus).toBe("synthetic-unbound");
     expect(result.summary).toEqual({
       total: 452,
       submissions: 0,
       missingSubmissions: 452,
       contaminatedReviewDeclarationsSatisfied: 0,
       cleanReviewDeclarationsSatisfied: 0,
-      syntheticCandidateContractsSatisfied: 0,
-      behaviorPackageCandidatesApproved: 0,
-      behaviorPackagesAdmitted: 0,
-      behaviorPackagesBlocked: 452,
-      implementationAuthorized: 0,
+      syntheticContractsSatisfied: 0,
     });
     expect(result.rows).toHaveLength(452);
-    expect(result.rows.every((row) => row.blockReasons.includes("exact-set-authority-unbound"))).toBe(true);
-    expect(result.candidateAdmissions).toBe(0);
-    expect(result.publicCandidateAssemblyAllowed).toBe(false);
-    expect(result.publicPromotionAllowed).toBe(false);
-    expect(result.publicAssetsWritten).toBe(0);
     expect(
-      verifySyntheticCleanRoomBehaviorPackageContractV1(input, result),
-    ).toEqual({ total: 452, syntheticCandidateContractsSatisfied: 0 });
+      result.rows.every((row) =>
+        row.contractIssues.includes("exact-set-commitment-unbound"),
+      ),
+    ).toBe(true);
+    expect(
+      verifySyntheticCleanRoomBehaviorPackageContractV2(input, result),
+    ).toEqual({ total: 452, syntheticContractsSatisfied: 0 });
   });
 
-  it("rejects a fabricated 452-row set at the exact authority boundary", () => {
+  it("rejects a fabricated 452-row set at the exact commitment boundary", () => {
     const input = syntheticInput();
-    expect(() => evaluateCleanRoomBehaviorPackageGateV1(input)).toThrow(
-      "clean-room-behavior-package-exact-set-authority-invalid",
+    expect(() => evaluateCleanRoomBehaviorPackageGateV2(input)).toThrow(
+      "clean-room-behavior-package-exact-set-commitment-invalid",
     );
     expect(() =>
-      verifyCleanRoomBehaviorPackageGateV1(
+      verifyCleanRoomBehaviorPackageGateV2(
         input,
-        evaluateSyntheticCleanRoomBehaviorPackageContractV1(input),
+        evaluateSyntheticCleanRoomBehaviorPackageContractV2(input),
       ),
-    ).toThrow(
-      "clean-room-behavior-package-independent-verification-invalid",
-    );
+    ).toThrow("clean-room-behavior-package-independent-verification-invalid");
   });
 
   it("keeps both implementations aligned for all 452 typed envelopes", () => {
@@ -294,20 +264,16 @@ describe("clean-room behavior-package gate", () => {
       return value;
     });
     const input = syntheticInput(submissions);
-    const result = evaluateSyntheticCleanRoomBehaviorPackageContractV1(input);
+    const result = evaluateSyntheticCleanRoomBehaviorPackageContractV2(input);
 
     expect(result.summary).toMatchObject({
       submissions: 452,
       missingSubmissions: 0,
-      syntheticCandidateContractsSatisfied: 452,
-      behaviorPackageCandidatesApproved: 0,
-      behaviorPackagesAdmitted: 0,
-      behaviorPackagesBlocked: 452,
-      implementationAuthorized: 0,
+      syntheticContractsSatisfied: 452,
     });
     expect(
-      verifySyntheticCleanRoomBehaviorPackageContractV1(input, result),
-    ).toEqual({ total: 452, syntheticCandidateContractsSatisfied: 452 });
+      verifySyntheticCleanRoomBehaviorPackageContractV2(input, result),
+    ).toEqual({ total: 452, syntheticContractsSatisfied: 452 });
   });
 
   it("preserves only the mechanical allowlisted code union", () => {
@@ -320,21 +286,18 @@ describe("clean-room behavior-package gate", () => {
     candidate.cleanReview.reasonCodes = ["clean-anchor-checked"];
     candidate.cleanReview.findingCodes = ["shared-condition"];
     const input = syntheticInput([candidate]);
-    const result = evaluateSyntheticCleanRoomBehaviorPackageContractV1(input);
+    const result = evaluateSyntheticCleanRoomBehaviorPackageContractV2(input);
 
     expect(result.rows[0]).toMatchObject({
-      strictCandidateClosure: "synthetic-contract-satisfied",
-      syntheticCandidateContractSatisfied: true,
-      behaviorPackageCandidateApproved: false,
-      behaviorPackageAdmitted: false,
-      behaviorPackageContentAttestationStatus: "digest-only-unverified",
-      roleAttestationStatus: "unverified-synthetic",
+      contractClosure: "synthetic-contract-satisfied",
+      syntheticContractSatisfied: true,
+      contentEvaluationStatus: "digest-only-not-content-reviewed",
+      reviewIdentityStatus: "self-reported-not-verified",
       reviewRationale: [
         "bounded-scope",
         "clean-anchor-checked",
         "shared-condition",
       ],
-      implementationAuthorized: false,
     });
   });
 
@@ -346,13 +309,13 @@ describe("clean-room behavior-package gate", () => {
     if (!stale.cleanReview) throw new Error("test-review-missing");
     stale.cleanReview.reviewedBehaviorObjectSha256 = "b".repeat(64);
 
-    const result = evaluateSyntheticCleanRoomBehaviorPackageContractV1(
+    const result = evaluateSyntheticCleanRoomBehaviorPackageContractV2(
       syntheticInput([oneSided, rejected, stale]),
     );
     expect(result.rows[0]?.cleanReviewStatus).toBe("missing");
-    expect(result.rows[1]?.strictCandidateClosure).toBe("blocked");
+    expect(result.rows[1]?.contractClosure).toBe("blocked");
     expect(result.rows[2]?.cleanReviewStatus).toBe("stale");
-    expect(result.summary.syntheticCandidateContractsSatisfied).toBe(0);
+    expect(result.summary.syntheticContractsSatisfied).toBe(0);
   });
 
   it("rejects incomplete dimensions and oracle/evidence mismatch", () => {
@@ -361,7 +324,7 @@ describe("clean-room behavior-package gate", () => {
       "assertionCount"
     ] = 0;
     expect(() =>
-      evaluateSyntheticCleanRoomBehaviorPackageContractV1(
+      evaluateSyntheticCleanRoomBehaviorPackageContractV2(
         syntheticInput([incomplete]),
       ),
     ).toThrow("clean-room-behavior-package-dimension-invalid");
@@ -381,7 +344,7 @@ describe("clean-room behavior-package gate", () => {
     mismatch.contaminatedReview.reviewedBehaviorObjectSha256 = mismatchHash;
     mismatch.cleanReview.reviewedBehaviorObjectSha256 = mismatchHash;
     expect(() =>
-      evaluateSyntheticCleanRoomBehaviorPackageContractV1(
+      evaluateSyntheticCleanRoomBehaviorPackageContractV2(
         syntheticInput([mismatch]),
       ),
     ).toThrow("clean-room-behavior-package-oracle-binding-invalid");
@@ -391,7 +354,7 @@ describe("clean-room behavior-package gate", () => {
       negativeZero.behaviorPackage.executableOracle as Record<string, unknown>
     ).caseCount = -0;
     expect(() =>
-      evaluateSyntheticCleanRoomBehaviorPackageContractV1(
+      evaluateSyntheticCleanRoomBehaviorPackageContractV2(
         syntheticInput([negativeZero]),
       ),
     ).toThrow("clean-room-behavior-package-dimension-invalid");
@@ -399,7 +362,7 @@ describe("clean-room behavior-package gate", () => {
 
   it("rejects object-hash substitution, role overlap, and free review text", () => {
     expect(() =>
-      evaluateSyntheticCleanRoomBehaviorPackageContractV1(
+      evaluateSyntheticCleanRoomBehaviorPackageContractV2(
         syntheticInput([submission(0, undefined, "b".repeat(64))]),
       ),
     ).toThrow("clean-room-behavior-package-object-hash-invalid");
@@ -410,7 +373,7 @@ describe("clean-room behavior-package gate", () => {
     }
     overlap.cleanReview.reviewerId = overlap.contaminatedReview.reviewerId;
     expect(() =>
-      evaluateSyntheticCleanRoomBehaviorPackageContractV1(
+      evaluateSyntheticCleanRoomBehaviorPackageContractV2(
         syntheticInput([overlap]),
       ),
     ).toThrow("clean-room-behavior-package-review-role-conflict");
@@ -419,7 +382,7 @@ describe("clean-room behavior-package gate", () => {
     if (!leaky.cleanReview) throw new Error("test-review-missing");
     leaky.cleanReview.findingCodes = ["private source fragment"];
     expect(() =>
-      evaluateSyntheticCleanRoomBehaviorPackageContractV1(
+      evaluateSyntheticCleanRoomBehaviorPackageContractV2(
         syntheticInput([leaky]),
       ),
     ).toThrow("clean-room-behavior-package-review-invalid");
@@ -432,7 +395,7 @@ describe("clean-room behavior-package gate", () => {
       get: () => receipt("clean-room-recurrence/v1", "assertionCount"),
     });
     expect(() =>
-      evaluateSyntheticCleanRoomBehaviorPackageContractV1(
+      evaluateSyntheticCleanRoomBehaviorPackageContractV2(
         syntheticInput([accessor]),
       ),
     ).toThrow("clean-room-behavior-package-input-invalid");
@@ -443,21 +406,19 @@ describe("clean-room behavior-package gate", () => {
       enumerable: true,
     });
     expect(() =>
-      evaluateSyntheticCleanRoomBehaviorPackageContractV1(
+      evaluateSyntheticCleanRoomBehaviorPackageContractV2(
         syntheticInput([prototypeKey]),
       ),
     ).toThrow("clean-room-behavior-package-input-invalid");
 
     const input = syntheticInput([submission()]);
-    const result = evaluateSyntheticCleanRoomBehaviorPackageContractV1(input);
+    const result = evaluateSyntheticCleanRoomBehaviorPackageContractV2(input);
     const tampered = structuredClone(result) as unknown as {
-      summary: { behaviorPackagesAdmitted: number };
+      summary: { syntheticContractsSatisfied: number };
     };
-    tampered.summary.behaviorPackagesAdmitted = 1;
+    tampered.summary.syntheticContractsSatisfied = 2;
     expect(() =>
-      verifySyntheticCleanRoomBehaviorPackageContractV1(input, tampered),
-    ).toThrow(
-      "clean-room-behavior-package-independent-verification-invalid",
-    );
+      verifySyntheticCleanRoomBehaviorPackageContractV2(input, tampered),
+    ).toThrow("clean-room-behavior-package-independent-verification-invalid");
   });
 });
