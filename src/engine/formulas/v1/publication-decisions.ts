@@ -261,6 +261,12 @@ export function createPublicationDecisionLedgerV1(
   const declaredHold = input.decisionCounts.hold;
   const declaredExclude = input.decisionCounts.exclude;
   if (
+    !nonNegativeInteger(declaredPublish) ||
+    !nonNegativeInteger(declaredHold) ||
+    !nonNegativeInteger(declaredExclude)
+  )
+    return invalid();
+  if (
     declaredPublish + declaredHold + declaredExclude !==
       PUBLICATION_DECISION_FORMULA_COUNT_V1 ||
     declaredPublish > IMPLEMENTATION_CANDIDATE_CEILING_V1
