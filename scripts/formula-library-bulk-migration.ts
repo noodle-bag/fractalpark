@@ -1156,24 +1156,28 @@ async function runWebglSubprocess(
         `fractalpark-webgl-chunk-${process.pid}-${Math.random().toString(36).slice(2)}.json`,
       );
       let child: ReturnType<typeof spawn> | null = null;
-      const cleanup = () => {
-        if (child && child.exitCode === null && !child.killed && child.pid)
-          try {
-            // detached group kill: also reaps orphaned SwiftShader browsers
-            // that would otherwise survive and OOM the next attempt.
-            process.kill(-child.pid, "SIGKILL");
-          } catch {
-            // group already gone
-          }
-        // Chromium spawns its own session/process groups, so the group kill
-        // above can miss the browser. On this dedicated runner every
-        // chrome-headless-shell process belongs to these harnesses; sweep by
-        // name as the second line of defense.
+      // The name sweep is failure-path only: on a clean worker exit its
+      // chromium dies with it, and an unconditional pkill could hit another
+      // pipeline's browser on a shared machine. After a forced group kill,
+      // however, chromium can survive in its own session, so the sweep runs
+      // there as the second line of defense.
+      const sweepBrowsers = () => {
         try {
           spawnSync("pkill", ["-x", "chrome-headless"], { stdio: "ignore" });
         } catch {
           // pkill unavailable — rely on the group kill
         }
+      };
+      const cleanup = (forced: boolean) => {
+        if (forced && child && child.exitCode === null && !child.killed && child.pid)
+          try {
+            // detached group kill: also reaps the worker's children that
+            // stayed in its process group.
+            process.kill(-child.pid, "SIGKILL");
+          } catch {
+            // group already gone
+          }
+        if (forced) sweepBrowsers();
         try {
           unlinkSync(tempPath);
         } catch {
@@ -1183,6 +1187,11 @@ async function runWebglSubprocess(
       try {
         writeFileSync(tempPath, JSON.stringify(chunk), { mode: 0o600 });
       } catch {
+        try {
+          unlinkSync(tempPath);
+        } catch {
+          // nothing written or already gone
+        }
         resolvePromise(false);
         return;
       }
@@ -1197,11 +1206,11 @@ async function runWebglSubprocess(
         output += data.toString("utf8");
       });
       const timer = setTimeout(() => {
-        cleanup();
+        cleanup(true);
       }, WEBGL_CHUNK_TIMEOUT_MS);
       child.on("error", () => {
         clearTimeout(timer);
-        cleanup();
+        cleanup(true);
         resolvePromise(false);
       });
       child.on("close", (code: number | null) => {
@@ -1210,14 +1219,14 @@ async function runWebglSubprocess(
           try {
             const parsed = JSON.parse(output.trim()) as Record<string, GpuStatus>;
             for (const [key, value] of Object.entries(parsed)) merged.set(key, value);
-            cleanup();
+            cleanup(false);
             resolvePromise(true);
             return;
           } catch {
             // fall through to failure
           }
         }
-        cleanup();
+        cleanup(code !== 0);
         resolvePromise(false);
       });
     });
