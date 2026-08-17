@@ -137,6 +137,7 @@ function canonicalJson(value: unknown): string {
     typeof value === "string"
   ) {
     if (typeof value === "string") invariant(!hasLoneSurrogate(value));
+    if (typeof value === "number") invariant(Number.isFinite(value));
     return JSON.stringify(value);
   }
   if (isDenseArray(value)) return `[${value.map(canonicalJson).join(",")}]`;

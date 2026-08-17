@@ -10,10 +10,11 @@ import {
   readFileSync,
   realpathSync,
   renameSync,
+  statSync,
   unlinkSync,
   writeSync,
 } from "node:fs";
-import { dirname, join, resolve } from "node:path";
+import { basename, dirname, join, resolve } from "node:path";
 import { pathToFileURL } from "node:url";
 
 /**
@@ -115,6 +116,8 @@ function canonicalJson(value: unknown): string {
   ) {
     if (typeof value === "string")
       invariant(!hasLoneSurrogate(value), "decisions-output-invalid");
+    if (typeof value === "number")
+      invariant(Number.isFinite(value), "decisions-output-invalid");
     return JSON.stringify(value);
   }
   if (isDenseArray(value)) {
@@ -390,10 +393,29 @@ export function writePublicAsset(path: string, serialized: string): void {
   };
   try {
     const openedDirectory = fstatSync(directoryDescriptor);
+    // On Linux, resolve the write and rename through /proc/self/fd so the
+    // pinned directory inode is used even if the path is replaced mid-write.
+    const pinnedBase = (() => {
+      const procPath = `/proc/self/fd/${directoryDescriptor}`;
+      try {
+        const throughProc = statSync(procPath);
+        if (
+          throughProc.isDirectory() &&
+          throughProc.dev === openedDirectory.dev &&
+          throughProc.ino === openedDirectory.ino
+        )
+          return procPath;
+      } catch {
+        // procfs unavailable; the before/after stability checks remain the
+        // detection layer for path-based writes.
+      }
+      return directory;
+    })();
     const temporary = join(
-      directory,
+      pinnedBase,
       `.publication-decisions.${process.pid}.tmp`,
     );
+    const target = join(pinnedBase, basename(path));
     let descriptor: number;
     try {
       descriptor = openSync(
@@ -423,7 +445,7 @@ export function writePublicAsset(path: string, serialized: string): void {
       throw error;
     }
     try {
-      renameSync(temporary, path);
+      renameSync(temporary, target);
     } catch (error) {
       unlinkSync(temporary);
       throw error;
