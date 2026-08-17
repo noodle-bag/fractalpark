@@ -1,6 +1,6 @@
 import decisionAsset from "../../../../resources/formula-library/v1/publication-decisions.json";
 import { isStandardFormulaIdV1 } from "./identity";
-import { canonicalJsonV1, sha256HexV1 } from "./revisions";
+import { canonicalJsonV1, sha256HexSyncV1 } from "./revisions";
 import {
   STANDARD_MANIFEST_INDEX_V1,
   type StandardManifestIndexV1,
@@ -210,12 +210,12 @@ function nonNegativeInteger(value: unknown): value is number {
 
 /**
  * Validates the frozen exact-677 publication decision ledger against the
- * Standard identity manifest. Structural validation is synchronous and
- * fail-closed; the content hash is verified separately by
- * verifyPublicationDecisionContentHashV1 and by the independent script
- * verifier. A ledger never authorizes implementation by itself: `publish`
- * rows additionally require a recorded basis, basis timestamp, and a passed
- * leakage scan, and all 73 `gpl-3.0-only` rows are fixed `hold`.
+ * Standard identity manifest. Validation is synchronous and fail-closed: it
+ * ends with a load-time self-hash recomputation so any content drift,
+ * including count-preserving row tampering that retains the frozen hash
+ * field, is rejected. A ledger never authorizes implementation by itself:
+ * `publish` rows additionally require a recorded basis, basis timestamp, and
+ * a passed leakage scan, and all 73 `gpl-3.0-only` rows are fixed `hold`.
  */
 export function createPublicationDecisionLedgerV1(
   input: unknown = decisionAsset,
@@ -366,6 +366,13 @@ export function createPublicationDecisionLedgerV1(
     decisionCounts.exclude !== declaredExclude
   )
     return invalid();
+  // Load-time self-hash: any content drift, including count-preserving row
+  // tampering that retains the frozen hash field, is rejected here.
+  try {
+    if (recomputeContentHashV1(input) !== input.contentHash) return invalid();
+  } catch {
+    return invalid();
+  }
 
   const rows = Object.freeze([...byId.values()].map((row) => row));
   const frozenPublished = Object.freeze(published);
@@ -392,21 +399,28 @@ export function createPublicationDecisionLedgerV1(
  */
 const LEDGER_CANONICAL_NODE_BUDGET_V1 = 8_192;
 
+function recomputeContentHashV1(input: Record<string, unknown>): string {
+  const unsigned: Record<string, unknown> = { ...input };
+  delete unsigned.contentHash;
+  return sha256HexSyncV1(
+    canonicalJsonV1(unsigned, LEDGER_CANONICAL_NODE_BUDGET_V1),
+  );
+}
+
 /**
  * Recomputes the ledger self-hash over the canonical projection with the
  * `contentHash` field removed. Returns false instead of throwing so callers
  * can treat a mismatch as data, not as an exception.
  */
-export async function verifyPublicationDecisionContentHashV1(
+export function verifyPublicationDecisionContentHashV1(
   input: unknown = decisionAsset,
-): Promise<boolean> {
+): boolean {
   if (!record(input) || typeof input.contentHash !== "string") return false;
-  const unsigned: Record<string, unknown> = { ...input };
-  delete unsigned.contentHash;
-  const digest = await sha256HexV1(
-    canonicalJsonV1(unsigned, LEDGER_CANONICAL_NODE_BUDGET_V1),
-  );
-  return digest === input.contentHash;
+  try {
+    return recomputeContentHashV1(input) === input.contentHash;
+  } catch {
+    return false;
+  }
 }
 
 const built = createPublicationDecisionLedgerV1();

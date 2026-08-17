@@ -20,9 +20,12 @@ import { pathToFileURL } from "node:url";
  * Generates the frozen public publication-decision baseline from the frozen
  * private exact-677 migration work-package ledger. The output contains only
  * neutral formula IDs, rights status, decision fields, and aggregate counts;
- * it never carries private paths, source text, fingerprints, or reversible
- * intermediates. This script records decisions; it does not authorize any
- * implementation, publication, or hosted write.
+ * it never carries private paths, source text, or reversible intermediates.
+ * The script pins the frozen handoff's canonical content hash as a public
+ * tamper-evident binding, consistent with the previously reviewed gate
+ * scripts in this repository; a one-way digest exposes no private content.
+ * This script records decisions; it does not authorize any implementation,
+ * publication, or hosted write.
  */
 
 const EXPECTED_WORK_PACKAGE_HASH =
@@ -88,6 +91,21 @@ function isDenseArray(value: unknown): value is readonly unknown[] {
   );
 }
 
+function hasLoneSurrogate(value: string): boolean {
+  for (let index = 0; index < value.length; index++) {
+    const code = value.charCodeAt(index);
+    if (code >= 0xd800 && code <= 0xdbff) {
+      if (index + 1 >= value.length) return true;
+      const next = value.charCodeAt(index + 1);
+      if (next < 0xdc00 || next > 0xdfff) return true;
+      index++;
+    } else if (code >= 0xdc00 && code <= 0xdfff) {
+      return true;
+    }
+  }
+  return false;
+}
+
 function canonicalJson(value: unknown): string {
   if (
     value === null ||
@@ -95,6 +113,8 @@ function canonicalJson(value: unknown): string {
     typeof value === "number" ||
     typeof value === "string"
   ) {
+    if (typeof value === "string")
+      invariant(!hasLoneSurrogate(value), "decisions-output-invalid");
     return JSON.stringify(value);
   }
   if (isDenseArray(value)) {
@@ -103,7 +123,10 @@ function canonicalJson(value: unknown): string {
   invariant(isRecord(value), "decisions-output-invalid");
   return `{${Object.keys(value)
     .sort()
-    .map((key) => `${JSON.stringify(key)}:${canonicalJson(value[key])}`)
+    .map(
+      (key) =>
+        `${JSON.stringify(key)}:${canonicalJson(value[key])}`,
+    )
     .join(",")}}`;
 }
 
@@ -333,32 +356,62 @@ function writePublicAsset(path: string, serialized: string): void {
     existing == null || (existing.isFile() && !existing.isSymbolicLink()),
     "decisions-asset-write-failed",
   );
-  const temporary = join(
-    directory,
-    `.publication-decisions.${process.pid}.tmp`,
-  );
-  let descriptor: number;
+  // Pin the parent directory by file descriptor so a post-check directory
+  // replacement is detected instead of silently redirecting the write.
+  let directoryDescriptor: number;
   try {
-    descriptor = openSync(
-      temporary,
-      constants.O_WRONLY | constants.O_CREAT | constants.O_EXCL | constants.O_NOFOLLOW,
-      0o644,
+    directoryDescriptor = openSync(
+      directory,
+      constants.O_RDONLY | constants.O_DIRECTORY | constants.O_NOFOLLOW,
     );
   } catch {
     throw new Error("decisions-asset-write-failed");
   }
   try {
-    writeSync(descriptor, serialized);
-    fsyncSync(descriptor);
-    fchmodSync(descriptor, 0o644);
+    const openedDirectory = fstatSync(directoryDescriptor);
+    const temporary = join(
+      directory,
+      `.publication-decisions.${process.pid}.tmp`,
+    );
+    let descriptor: number;
+    try {
+      descriptor = openSync(
+        temporary,
+        constants.O_WRONLY |
+          constants.O_CREAT |
+          constants.O_EXCL |
+          constants.O_NOFOLLOW,
+        0o644,
+      );
+    } catch {
+      throw new Error("decisions-asset-write-failed");
+    }
+    try {
+      writeSync(descriptor, serialized);
+      fsyncSync(descriptor);
+      fchmodSync(descriptor, 0o644);
+    } finally {
+      closeSync(descriptor);
+    }
+    try {
+      renameSync(temporary, path);
+    } catch (error) {
+      unlinkSync(temporary);
+      throw error;
+    }
+    const currentDirectory = fstatSync(directoryDescriptor);
+    const directoryAfter = lstatSync(directory);
+    invariant(
+      currentDirectory.dev === openedDirectory.dev &&
+        currentDirectory.ino === openedDirectory.ino &&
+        directoryAfter.isDirectory() &&
+        !directoryAfter.isSymbolicLink() &&
+        directoryAfter.dev === openedDirectory.dev &&
+        directoryAfter.ino === openedDirectory.ino,
+      "decisions-asset-write-failed",
+    );
   } finally {
-    closeSync(descriptor);
-  }
-  try {
-    renameSync(temporary, path);
-  } catch (error) {
-    unlinkSync(temporary);
-    throw error;
+    closeSync(directoryDescriptor);
   }
   const written = readStableFile(path, false);
   invariant(
@@ -424,7 +477,6 @@ if (
         assetSha256: result.assetSha256,
         drift: result.drift,
         publicAssetsWritten: 0,
-        implementationsAuthorized: 0,
       })}\n`,
     );
   } catch (error) {

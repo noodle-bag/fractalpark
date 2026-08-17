@@ -114,6 +114,21 @@ function exactKeys(value: JsonRecord, expected: readonly string[]): boolean {
   );
 }
 
+function hasLoneSurrogate(value: string): boolean {
+  for (let index = 0; index < value.length; index++) {
+    const code = value.charCodeAt(index);
+    if (code >= 0xd800 && code <= 0xdbff) {
+      if (index + 1 >= value.length) return true;
+      const next = value.charCodeAt(index + 1);
+      if (next < 0xdc00 || next > 0xdfff) return true;
+      index++;
+    } else if (code >= 0xdc00 && code <= 0xdfff) {
+      return true;
+    }
+  }
+  return false;
+}
+
 function canonicalJson(value: unknown): string {
   if (
     value === null ||
@@ -121,6 +136,7 @@ function canonicalJson(value: unknown): string {
     typeof value === "number" ||
     typeof value === "string"
   ) {
+    if (typeof value === "string") invariant(!hasLoneSurrogate(value));
     return JSON.stringify(value);
   }
   if (isDenseArray(value)) return `[${value.map(canonicalJson).join(",")}]`;
@@ -412,7 +428,6 @@ if (
         gplHeld: result.gplHeld,
         contentHash: result.contentHash,
         assetSha256: result.assetSha256,
-        implementationsAuthorized: 0,
       })}\n`,
     );
   } catch {

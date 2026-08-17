@@ -7,6 +7,10 @@ import {
   PUBLICATION_DECISION_LEDGER_V1,
   verifyPublicationDecisionContentHashV1,
 } from "@/engine/formulas/v1/publication-decisions";
+import {
+  canonicalJsonV1,
+  sha256HexSyncV1,
+} from "@/engine/formulas/v1/revisions";
 import { STANDARD_MANIFEST_INDEX_V1 } from "@/engine/formulas/v1/standard-manifest";
 
 interface MutableRow {
@@ -39,8 +43,37 @@ function clone(): Asset {
 function expectInvalid(asset: unknown) {
   const result = createPublicationDecisionLedgerV1(asset);
   expect(result.ok).toBe(false);
-  if (!result.ok) expect(result.code).toBe("invalid-publication-decision-ledger");
+  if (!result.ok)
+    expect(result.code).toBe("invalid-publication-decision-ledger");
 }
+
+/**
+ * Re-hashes a mutated fixture so each tamper test exercises its targeted
+ * invariant instead of the load-time self-hash check.
+ */
+function refreshContentHash(asset: Asset) {
+  const unsigned: Record<string, unknown> = { ...asset };
+  delete unsigned.contentHash;
+  asset.contentHash = sha256HexSyncV1(canonicalJsonV1(unsigned, 8_192));
+}
+
+describe("sha256HexSyncV1", () => {
+  it("matches published SHA-256 test vectors", () => {
+    expect(sha256HexSyncV1("")).toBe(
+      "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    );
+    expect(sha256HexSyncV1("abc")).toBe(
+      "ba7816bf8f01cfea414140de5dae2223b00361a396177a9cb410ff61f20015ad",
+    );
+    expect(
+      sha256HexSyncV1(
+        "abcdbcdecdefdefgefghfghighijhijkijkljklmklmnlmnomnopnopq",
+      ),
+    ).toBe(
+      "248d6a61d20638b8e5c026930c3e6039a33ce45964ff2167f6ecedd419db06c1",
+    );
+  });
+});
 
 describe("formula publication decision ledger", () => {
   it("loads the committed exact-677 baseline", () => {
@@ -68,16 +101,25 @@ describe("formula publication decision ledger", () => {
     expect(ledger.publishedFormulaIds()).toEqual([]);
   });
 
-  it("verifies the committed content hash and detects tampering", async () => {
-    await expect(verifyPublicationDecisionContentHashV1()).resolves.toBe(true);
+  it("verifies the committed content hash and detects tampering", () => {
+    expect(verifyPublicationDecisionContentHashV1()).toBe(true);
     const tampered = clone();
     tampered.rows[0]!.reviewedAt = "2026-08-18";
-    await expect(
-      verifyPublicationDecisionContentHashV1(tampered),
-    ).resolves.toBe(false);
-    await expect(
-      verifyPublicationDecisionContentHashV1({ contentHash: 42 }),
-    ).resolves.toBe(false);
+    expect(verifyPublicationDecisionContentHashV1(tampered)).toBe(false);
+    expect(verifyPublicationDecisionContentHashV1({ contentHash: 42 })).toBe(
+      false,
+    );
+  });
+
+  it("rejects count-preserving tampering that retains the frozen hash", () => {
+    const asset = clone();
+    const first = asset.rows[0]!;
+    const second = asset.rows[1]!;
+    const reviewedAt = first.reviewedAt;
+    first.reviewedAt = second.reviewedAt;
+    second.reviewedAt = reviewedAt;
+    first.decisionReason = second.decisionReason;
+    expectInvalid(asset);
   });
 
   it("covers every Standard identity in manifest order", () => {
@@ -134,6 +176,7 @@ describe("formula publication decision ledger", () => {
     row.leakageScanStatus = "passed";
     asset.decisionCounts.publish = 1;
     asset.decisionCounts.hold = 676;
+    refreshContentHash(asset);
     const result = createPublicationDecisionLedgerV1(asset);
     expect(result.ok).toBe(true);
     if (!result.ok) return;
@@ -148,12 +191,14 @@ describe("formula publication decision ledger", () => {
   it("rejects a missing row", () => {
     const asset = clone();
     asset.rows.splice(0, 1);
+    refreshContentHash(asset);
     expectInvalid(asset);
   });
 
   it("rejects a duplicate formula ID", () => {
     const asset = clone();
     asset.rows[1]!.formulaId = asset.rows[0]!.formulaId;
+    refreshContentHash(asset);
     expectInvalid(asset);
   });
 
@@ -162,12 +207,14 @@ describe("formula publication decision ledger", () => {
     const first = asset.rows[0]!;
     asset.rows[0] = asset.rows[1]!;
     asset.rows[1] = first;
+    refreshContentHash(asset);
     expectInvalid(asset);
   });
 
   it("rejects an unknown Standard formula ID", () => {
     const asset = clone();
     asset.rows[0]!.formulaId = "33333333-3333-5333-8333-333333333333";
+    refreshContentHash(asset);
     expectInvalid(asset);
   });
 
@@ -183,6 +230,7 @@ describe("formula publication decision ledger", () => {
     row.leakageScanStatus = "passed";
     asset.decisionCounts.publish = 1;
     asset.decisionCounts.hold = 676;
+    refreshContentHash(asset);
     expectInvalid(asset);
   });
 
@@ -192,6 +240,7 @@ describe("formula publication decision ledger", () => {
       (candidate) => candidate.rightsStatus === "gpl-3.0-only",
     )!;
     row.leakageScanStatus = "pending";
+    refreshContentHash(asset);
     expectInvalid(asset);
   });
 
@@ -203,6 +252,7 @@ describe("formula publication decision ledger", () => {
     row.publicationDecision = "publish";
     asset.decisionCounts.publish = 1;
     asset.decisionCounts.hold = 676;
+    refreshContentHash(asset);
     expectInvalid(asset);
   });
 
@@ -217,24 +267,28 @@ describe("formula publication decision ledger", () => {
     row.leakageScanStatus = "pending";
     asset.decisionCounts.publish = 1;
     asset.decisionCounts.hold = 676;
+    refreshContentHash(asset);
     expectInvalid(asset);
   });
 
   it("rejects an empty decision reason", () => {
     const asset = clone();
     asset.rows[0]!.decisionReason = "";
+    refreshContentHash(asset);
     expectInvalid(asset);
   });
 
   it("rejects a malformed reviewedAt", () => {
     const asset = clone();
     asset.rows[0]!.reviewedAt = "17 August 2026";
+    refreshContentHash(asset);
     expectInvalid(asset);
   });
 
   it("rejects a basis timestamp without a basis", () => {
     const asset = clone();
     asset.rows[0]!.implementationBasisRecordedAt = "2026-08-17T00:00:00.000Z";
+    refreshContentHash(asset);
     expectInvalid(asset);
   });
 
@@ -244,6 +298,7 @@ describe("formula publication decision ledger", () => {
       (candidate) => candidate.rightsStatus === "no-explicit-permission",
     )!;
     row.leakageScanStatus = "not-applicable";
+    refreshContentHash(asset);
     expectInvalid(asset);
   });
 
@@ -251,6 +306,7 @@ describe("formula publication decision ledger", () => {
     const asset = clone();
     asset.decisionCounts.publish = 1;
     asset.decisionCounts.hold = 676;
+    refreshContentHash(asset);
     expectInvalid(asset);
   });
 
@@ -258,24 +314,28 @@ describe("formula publication decision ledger", () => {
     const asset = clone();
     asset.rightsStatusCounts["project-owned"] = 90;
     asset.rightsStatusCounts["no-explicit-permission"] = 377;
+    refreshContentHash(asset);
     expectInvalid(asset);
   });
 
   it("rejects a rebound identity manifest hash", () => {
     const asset = clone();
     asset.identityBinding.standardFormulaIdsSha256 = "0".repeat(64);
+    refreshContentHash(asset);
     expectInvalid(asset);
   });
 
   it("rejects an unexpected top-level key", () => {
     const asset = clone() as Asset & { extra?: unknown };
     asset.extra = true;
+    refreshContentHash(asset);
     expectInvalid(asset);
   });
 
   it("rejects an unexpected row key", () => {
     const asset = clone();
     (asset.rows[0] as unknown as Record<string, unknown>).sourcePath = "x";
+    refreshContentHash(asset);
     expectInvalid(asset);
   });
 
