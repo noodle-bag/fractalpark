@@ -254,7 +254,8 @@ function standard32Stdlib(
     case "conj":
       return tracked({ re: f32(first.re), im: f32(-first.im) });
     case "flip":
-      return tracked({ re: f32(-first.im), im: f32(first.re) });
+      // Fractint-documented swap: (x, y) becomes (y, x).
+      return tracked({ re: f32(first.im), im: f32(first.re) });
     case "identity":
       return tracked({ re: f32(first.re), im: f32(first.im) });
     case "real":
@@ -611,6 +612,7 @@ function glslBoolean(value: Typed): string {
 function compileExpression(
   expression: FrmLikeV1Expression,
   values: Readonly<Record<string, FrmLikeV1ValueType>>,
+  context?: GlslEmissionContext,
 ): Typed {
   const type = typeOfExpression(expression, values);
   if (expression.kind === "number")
@@ -621,34 +623,50 @@ function compileExpression(
       code: `vec2(${numberText(expression.real)}, ${numberText(expression.imaginary)})`,
     };
   if (expression.kind === "identifier") return { type, code: expression.name };
+  // Flattening: compound complex operations are emitted as sequential
+  // temporaries (source-order left-to-right, one frmV1Checked call per op —
+  // exactly the nested evaluation order) instead of deeply nested calls.
+  // Deep nesting blows up shader-compiler memory/time (SwiftShader JIT
+  // observed >1.4GB transient on a 5KB liar4 shader, 2026-08-18) and risks
+  // real driver compilers the same way. Boolean/real scalar operators stay
+  // inline; their complex operands still flatten.
+  const flatten = (code: string): string => {
+    if (!context) return code;
+    const temporary = nextTemporary(context);
+    context.prelude.push(`vec2 ${temporary} = ${code};`);
+    return temporary;
+  };
   if (expression.kind === "magnitude") {
-    const operand = compileExpression(expression.operand, values);
+    const operand = compileExpression(expression.operand, values, context);
     return {
       type,
-      code: `frmV1Checked(vec2(length(${glslComplex(operand)}), 0.0))`,
+      code: flatten(`frmV1Checked(vec2(length(${glslComplex(operand)}), 0.0))`),
     };
   }
   if (expression.kind === "unary") {
-    const operand = compileExpression(expression.operand, values);
+    const operand = compileExpression(expression.operand, values, context);
     return expression.operator === "!"
       ? { type, code: `(!${glslBoolean(operand)})` }
       : {
           type,
-          code: `frmV1Checked(-${glslComplex(operand)})`,
+          code: flatten(`frmV1Checked(-${glslComplex(operand)})`),
         };
   }
   if (expression.kind === "call") {
     const args = expression.args
-      .map((argument) => glslComplex(compileExpression(argument, values)))
+      .map((argument) => glslComplex(compileExpression(argument, values, context)))
       .join(", ");
     const call =
       values[expression.callee] === "function"
         ? `frmV1Dispatch_${expression.callee}(${args})`
         : `${glslFns[expression.callee]}(${args})`;
-    return { type, code: `frmV1Checked(${call})` };
+    return { type, code: flatten(`frmV1Checked(${call})`) };
   }
-  const left = compileExpression(expression.left, values);
+  const left = compileExpression(expression.left, values, context);
   if (expression.operator === "&&") {
+    // Short-circuit fidelity: the right side must stay nested so its checked
+    // operations do not execute (and cannot raise the non-finite event) when
+    // the left side is false. Only the always-evaluated left may flatten.
     const right = compileExpression(expression.right, values);
     return {
       type,
@@ -662,7 +680,7 @@ function compileExpression(
       code: `(${glslBoolean(left)} || ${glslBoolean(right)})`,
     };
   }
-  const right = compileExpression(expression.right, values);
+  const right = compileExpression(expression.right, values, context);
   if (["<", ">", "<=", ">="].includes(expression.operator))
     return {
       type,
@@ -680,25 +698,31 @@ function compileExpression(
   const leftCode = glslComplex(left);
   const rightCode = glslComplex(right);
   if (expression.operator === "+")
-    return { type, code: `frmV1Checked(frmV1Add(${leftCode}, ${rightCode}))` };
+    return { type, code: flatten(`frmV1Checked(frmV1Add(${leftCode}, ${rightCode}))`) };
   if (expression.operator === "-")
-    return { type, code: `frmV1Checked(frmV1Sub(${leftCode}, ${rightCode}))` };
+    return { type, code: flatten(`frmV1Checked(frmV1Sub(${leftCode}, ${rightCode}))`) };
   if (expression.operator === "*")
-    return { type, code: `frmV1Checked(frmV1Mul(${leftCode}, ${rightCode}))` };
+    return { type, code: flatten(`frmV1Checked(frmV1Mul(${leftCode}, ${rightCode}))`) };
   if (expression.operator === "/")
-    return { type, code: `frmV1Checked(frmV1Div(${leftCode}, ${rightCode}))` };
+    return { type, code: flatten(`frmV1Checked(frmV1Div(${leftCode}, ${rightCode}))`) };
   return {
     type,
-    code: `frmV1Checked(frmV1Pow(${leftCode}, ${glslReal(right)}))`,
+    code: flatten(`frmV1Checked(frmV1Pow(${leftCode}, ${glslReal(right)}))`),
   };
 }
 interface GlslEmissionContext {
   nextTemporary: number;
+  prelude: string[];
 }
 function nextTemporary(context: GlslEmissionContext): string {
   const name = `frmV1Temporary${context.nextTemporary}`;
   context.nextTemporary += 1;
   return name;
+}
+function takePrelude(context: GlslEmissionContext, indent: string): string[] {
+  const lines = context.prelude.map((line) => `${indent}${line}`);
+  context.prelude = [];
+  return lines;
 }
 function emitStatements(
   body: FrmLikeV1Statement[],
@@ -709,7 +733,8 @@ function emitStatements(
   return body
     .map((statement) => {
       if (statement.kind === "assignment") {
-        const value = compileExpression(statement.value, values);
+        const value = compileExpression(statement.value, values, context);
+        const prelude = takePrelude(context, `${indent}  `);
         const targetType =
           values[statement.target] ?? fail("unsupported-store");
         const code =
@@ -718,21 +743,28 @@ function emitStatements(
         const temporaryType = targetType === "boolean" ? "bool" : "vec2";
         return [
           `${indent}if (!frmV1NonFiniteEvent) {`,
+          ...prelude,
           `${indent}  ${temporaryType} ${temporary} = ${code};`,
           `${indent}  if (!frmV1NonFiniteEvent) { ${statement.target} = ${temporary}; }`,
           `${indent}}`,
         ].join("\n");
       }
       if (statement.kind === "component-assignment") {
-        const value = compileExpression(statement.value, values);
+        const value = compileExpression(statement.value, values, context);
+        const prelude = takePrelude(context, `${indent}  `);
         const temporary = nextTemporary(context);
         return [
           `${indent}if (!frmV1NonFiniteEvent) {`,
+          ...prelude,
           `${indent}  float ${temporary} = ${glslReal(value)};`,
           `${indent}  if (!frmV1NonFiniteEvent) { ${statement.target}.${statement.component === "real" ? "x" : "y"} = ${temporary}; }`,
           `${indent}}`,
         ].join("\n");
       }
+      // Conditions stay nested (no flattening): else-if conditions must not
+      // evaluate at all when an earlier branch matched, and hoisted prelude
+      // temporaries would always execute their checked operations. Condition
+      // expressions are small in practice.
       const branches = [
         `${indent}if (!frmV1NonFiniteEvent && ${glslBoolean(compileExpression(statement.condition, values))}) {`,
         emitStatements(statement.then, values, context, `${indent}  `),
@@ -1030,7 +1062,7 @@ export function compileFrmLikeV1Backend(
       ),
       ...functionSelectors.map(dispatchGlsl),
     ].join("\n");
-    const emissionContext: GlslEmissionContext = { nextTemporary: 0 };
+    const emissionContext: GlslEmissionContext = { nextTemporary: 0, prelude: [] };
     const initGlsl = emitStatements(ir.init, values, emissionContext);
     const lastSqrTemporary = nextTemporary(emissionContext);
     const loopGlsl = [

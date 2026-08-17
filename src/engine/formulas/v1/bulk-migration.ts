@@ -2,7 +2,7 @@ import type { FrmLikeV1Backend } from "@/engine/frm/v1-backend";
 import type { ASTNode, FrmAST } from "@/engine/frm/ast";
 import type { FrmEntry } from "@/engine/frm/scanner";
 import { FRM_V1_UNARY_FUNCTION_NAMES } from "@/engine/frm/frm-v1-stdlib";
-import { BUILTIN_TYPES, collectVariables } from "@/engine/frm/type-system";
+import { BUILTIN_TYPES, collectVariables, inferType, type TypeContext } from "@/engine/frm/type-system";
 import type {
   FrmLikeV1Expression,
   FrmLikeV1Ir,
@@ -131,7 +131,7 @@ function fail(): never {
   throw new ProjectionFailure("v1-projection-unsupported");
 }
 
-function expression(node: ASTNode): FrmLikeV1Expression {
+function expression(node: ASTNode, typeContext?: TypeContext): FrmLikeV1Expression {
   switch (node.type) {
     case "number":
       if (!Number.isFinite(node.value)) fail();
@@ -142,22 +142,40 @@ function expression(node: ASTNode): FrmLikeV1Expression {
     case "ident":
       if (!IDENTIFIER.test(node.name)) fail();
       return { kind: "identifier", name: node.name };
-    case "call":
+    case "call": {
       if (!IDENTIFIER.test(node.name)) fail();
+      // Classic FRM is statically typed and its overloads key off the
+      // argument's static kind: frmFlip(float) is the identity while
+      // frmFlip(vec2) swaps (production GLSL + orbit-eval semantics). v1
+      // expressions are always complex, so projecting flip(real-typed) as
+      // v1 flip would silently move the value into the imaginary slot.
+      // Lower the real-typed case to the operand itself, exactly the
+      // classic behavior. (sqrt(real) — NaN on negatives vs the v1 complex
+      // principal root — is intentionally NOT special-cased: no migrated
+      // row uses it; adding it later requires its own evidence pass.)
+      if (
+        typeContext &&
+        node.name === "flip" &&
+        node.args.length === 1 &&
+        node.args[0] &&
+        inferType(node.args[0], typeContext).kind === "real"
+      )
+        return expression(node.args[0], typeContext);
       return {
         kind: "call",
         callee: node.name,
-        args: node.args.map(expression),
+        args: node.args.map((arg) => expression(arg, typeContext)),
       };
+    }
     case "unary":
       if (node.op !== "-" && node.op !== "!") fail();
       return {
         kind: "unary",
         operator: node.op,
-        operand: expression(node.operand),
+        operand: expression(node.operand, typeContext),
       };
     case "magnitude":
-      return { kind: "magnitude", operand: expression(node.operand) };
+      return { kind: "magnitude", operand: expression(node.operand, typeContext) };
     case "binary":
       if (
         ![
@@ -180,8 +198,8 @@ function expression(node: ASTNode): FrmLikeV1Expression {
       return {
         kind: "binary",
         operator: node.op,
-        left: expression(node.left),
-        right: expression(node.right),
+        left: expression(node.left, typeContext),
+        right: expression(node.right, typeContext),
       };
     case "assignment":
     case "if":
@@ -189,7 +207,7 @@ function expression(node: ASTNode): FrmLikeV1Expression {
   }
 }
 
-function statements(nodes: readonly ASTNode[]): FrmLikeV1Statement[] {
+function statements(nodes: readonly ASTNode[], typeContext?: TypeContext): FrmLikeV1Statement[] {
   return nodes.map((node) => {
     if (node.type === "assignment") {
       if (!IDENTIFIER.test(node.target)) fail();
@@ -198,25 +216,25 @@ function statements(nodes: readonly ASTNode[]): FrmLikeV1Statement[] {
           kind: "component-assignment",
           component: node.component,
           target: node.target,
-          value: expression(node.value),
+          value: expression(node.value, typeContext),
         };
       }
       return {
         kind: "assignment",
         target: node.target,
-        value: expression(node.value),
+        value: expression(node.value, typeContext),
       };
     }
     if (node.type === "if") {
       return {
         kind: "if",
-        condition: expression(node.condition),
-        then: statements(node.then),
+        condition: expression(node.condition, typeContext),
+        then: statements(node.then, typeContext),
         elseIf: (node.elseIf ?? []).map((branch) => ({
-          condition: expression(branch.condition),
-          body: statements(branch.body),
+          condition: expression(branch.condition, typeContext),
+          body: statements(branch.body, typeContext),
         })),
-        ...(node.else ? { else: statements(node.else) } : {}),
+        ...(node.else ? { else: statements(node.else, typeContext) } : {}),
       };
     }
     return fail();
@@ -350,6 +368,12 @@ export function projectClassicAstToFrmLikeV1(
       projectedParameters.map((parameter) => parameter.name),
     );
     const variables = collectVariables(input.ast.initBlock, input.ast.loopBlock);
+    // Static-kind context for dialect-faithful lowering (e.g. flip(real) is
+    // the identity in classic FRM): the same variable map the classic orbit
+    // evaluator uses, with inferType resolving builtins internally.
+    const projectionTypeContext: TypeContext = {
+      getVariableType: (name: string) => variables.get(name),
+    };
     const locals = [...variables]
       .filter(
         ([name]) =>
@@ -374,9 +398,9 @@ export function projectClassicAstToFrmLikeV1(
         parameters: projectedParameters,
         locals,
         evaluationOrder: "source-order-left-to-right",
-        init: statements(input.ast.initBlock),
-        loop: statements(input.ast.loopBlock),
-        bailout: expression(input.ast.bailoutExpr),
+        init: statements(input.ast.initBlock, projectionTypeContext),
+        loop: statements(input.ast.loopBlock, projectionTypeContext),
+        bailout: expression(input.ast.bailoutExpr, projectionTypeContext),
       },
     };
   } catch {

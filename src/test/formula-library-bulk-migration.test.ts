@@ -450,6 +450,46 @@ describe("formula-library bulk migration foundations", () => {
     }
   });
 
+  it("lowers flip of a statically real argument to the identity (classic dialect)", () => {
+    // Classic FRM is statically typed: frmFlip(float) is the identity while
+    // frmFlip(vec2) swaps (production GLSL + orbit-eval semantics). The v1
+    // projection must not move a real-typed value into the imaginary slot.
+    const compiled = compiledClassic(`FlipRealDialect {
+      z = pixel:
+      y = imag(z)
+      z = z + flip(y) + flip(z),
+      |z| < 4
+    }`);
+    const projected = projectClassicAstToFrmLikeV1({
+      formulaId: FORMULA_ID,
+      ast: compiled.ast!,
+      functionDefaults: compiled.plugin?.fnDefaults,
+    });
+    expect(projected.ok).toBe(true);
+    if (!projected.ok) throw new Error(projected.reasonCode);
+
+    const source = canonicalizeFrmLikeV1(projected.ir);
+    // flip(y) with y real-typed is lowered to plain y; flip(z) stays a swap.
+    expect(source).toContain("z = z + y + flip(z)");
+    expect(source).not.toContain("flip(y)");
+
+    const reparsed = parseFrmLikeV1(source);
+    expect(reparsed.ok).toBe(true);
+    if (!reparsed.ok) throw new Error(reparsed.reason);
+    const backend = compileFrmLikeV1Backend(reparsed.ir);
+    expect(backend.ok).toBe(true);
+    if (!backend.ok) throw new Error(backend.reason);
+
+    const [run] = runFormulaLibraryOracle(backend.backend, [[0.25, 0.1]], 2);
+    // z_0 = (0.25, 0.1); y = 0.1; z_1 = z_0 + (0.1, 0) + flip(z_0)
+    //       = (0.25 + 0.1 + 0.1, 0.1 + 0.25) = (0.45, 0.35)
+    const first = run.orbit[0];
+    if (!first || first[0] === "non-finite" || first[1] === "non-finite")
+      throw new Error("unexpected-non-finite-flip-orbit");
+    expect(first[0]).toBeCloseTo(0.45, 6);
+    expect(first[1]).toBeCloseTo(0.35, 6);
+  });
+
   it("fails closed when the production AST contains a statement shape absent from FRM-like v1", () => {
     const compiled = compiledClassic(`BareExpression {
       z = pixel:

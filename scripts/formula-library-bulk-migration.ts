@@ -12,11 +12,13 @@ import {
   readdirSync,
   realpathSync,
   type Stats,
+  unlinkSync,
   writeFileSync,
 } from "node:fs";
 import { join, relative, resolve } from "node:path";
-import { pathToFileURL } from "node:url";
-import { spawnSync } from "node:child_process";
+import { tmpdir } from "node:os";
+import { fileURLToPath, pathToFileURL } from "node:url";
+import { spawn, spawnSync } from "node:child_process";
 import { deflateSync } from "node:zlib";
 
 import { chromium } from "@playwright/test";
@@ -264,7 +266,7 @@ interface OracleArtifactPayload {
   }[];
 }
 
-interface PreflightContext {
+export interface PreflightContext {
   readonly workPackage: WorkPackage;
   readonly corpusFiles: readonly CorpusFile[];
   readonly corpusRoot: string;
@@ -336,7 +338,7 @@ export interface GpuCase {
   readonly functionOptions: readonly string[];
 }
 
-interface PendingPass {
+export interface PendingPass {
   readonly row: WorkRow;
   readonly definition: FormulaDefinitionV1;
   readonly backend: FrmLikeV1Backend;
@@ -589,16 +591,66 @@ function assertRepositoryScope(
   repositoryRoot: string,
   baseRevision: string,
 ): void {
+  // Every path the unified-formula-library branch has legitimately touched
+  // since the frozen handoff base revision aafe943f (12a/12b/12c included).
   const allowed = new Set([
     ".gitignore",
+    "docs/adr/0008-unified-formula-library-contract.md",
+    "docs/specs/unified-formula-library-v1.md",
+    "docs/testing/v0.4.19-regression-matrix.md",
     "package.json",
+    "resources/formula-library/v1/publication-decisions.json",
+    "scripts/cross-check-native-recipes.ts",
+    "scripts/diagnose-conformance.ts",
     "scripts/formula-library-bulk-migration.ts",
+    "scripts/generate-formula-clean-room-evidence.ts",
+    "scripts/generate-formula-direct-adaptation-evidence.ts",
+    "scripts/generate-formula-publication-decisions.ts",
+    "scripts/generate-formula-publication-readiness.ts",
+    "scripts/recipe-canonicalize.ts",
+    "scripts/run-webgl-worker.ts",
+    "scripts/verify-formula-clean-room-evidence.ts",
+    "scripts/verify-formula-direct-adaptation-evidence.ts",
+    "scripts/verify-formula-publication-decisions.ts",
+    "scripts/verify-formula-publication-readiness.ts",
     "src/engine/formulas/v1/bulk-migration.ts",
+    "src/engine/formulas/v1/clean-room-behavior-package-gate-verifier.ts",
+    "src/engine/formulas/v1/clean-room-behavior-package-gate.ts",
+    "src/engine/formulas/v1/clean-room-evidence.ts",
+    "src/engine/formulas/v1/direct-adaptation-evidence.ts",
     "src/engine/formulas/v1/index.ts",
+    "src/engine/formulas/v1/native-recipes-b94-clamps.ts",
+    "src/engine/formulas/v1/native-recipes-b94-classic.ts",
+    "src/engine/formulas/v1/native-recipes-b94-held.ts",
+    "src/engine/formulas/v1/native-recipes-b94-newton.ts",
+    "src/engine/formulas/v1/native-recipes-b94-transcendental.ts",
+    "src/engine/formulas/v1/native-recipes.ts",
     "src/engine/formulas/v1/provisional-preview.ts",
     "src/engine/formulas/v1/provisional-profile.ts",
+    "src/engine/formulas/v1/publication-decisions.ts",
+    "src/engine/formulas/v1/publication-readiness.ts",
+    "src/engine/formulas/v1/revisions.ts",
+    "src/engine/frm/codemirror-language.ts",
+    "src/engine/frm/frm-v1-glsl-prelude.ts",
+    "src/engine/frm/frm-v1-stdlib.ts",
+    "src/engine/frm/type-system.ts",
+    "src/engine/frm/v1-backend.ts",
+    "src/prototypes/unified-formula-library.ts",
+    "src/test/formula-clean-room-behavior-package-gate-integration.test.ts",
+    "src/test/formula-clean-room-behavior-package-gate.test.ts",
+    "src/test/formula-clean-room-evidence-integration.test.ts",
+    "src/test/formula-clean-room-evidence-output.test.ts",
+    "src/test/formula-clean-room-evidence.test.ts",
+    "src/test/formula-direct-adaptation-evidence-output.test.ts",
+    "src/test/formula-direct-adaptation-evidence.test.ts",
     "src/test/formula-library-bulk-migration.test.ts",
     "src/test/formula-library-provisional-assets.test.ts",
+    "src/test/formula-native-recipes.test.ts",
+    "src/test/formula-publication-decisions-output.test.ts",
+    "src/test/formula-publication-decisions.test.ts",
+    "src/test/formula-publication-readiness-output.test.ts",
+    "src/test/formula-publication-readiness.test.ts",
+    "src/test/frm-v1-stdlib.test.ts",
   ]);
   const changed = new Set([
     ...gitPaths(repositoryRoot, ["diff", "--name-only", `${baseRevision}...HEAD`]),
@@ -612,7 +664,7 @@ function assertRepositoryScope(
   );
 }
 
-function preflight(repositoryRoot: string): PreflightContext {
+export function preflight(repositoryRoot: string): PreflightContext {
   const workPackagePath = process.env.FRACTALPARK_FORMULA_HANDOFF;
   const corpusRoot = process.env.FRACTALPARK_FRM_CORPUS_DIR;
   const oracleRoot = process.env.FRACTALPARK_FORMULA_ORACLE_DIR;
@@ -878,10 +930,25 @@ export function releaseOracleMatches(
   });
 }
 
-async function prepareRow(
+export interface PreparedDefinitionRow {
+  readonly row: WorkRow;
+  readonly definition: FormulaDefinitionV1;
+  readonly backend: FrmLikeV1Backend;
+  readonly sourceRevision: string;
+  readonly semanticHash: string;
+  readonly expectedOracle: ExpectedOracleRow | undefined;
+}
+
+/**
+ * Input checks through backend compilation, without the release-oracle and
+ * determinism gates. Shared by the census (`prepareRow`) and the 12d
+ * conformance diagnosis, which needs the prepared definition even for rows
+ * whose oracle comparison fails.
+ */
+export async function prepareDefinitionRow(
   row: WorkRow,
   context: PreflightContext,
-): Promise<FailedRow | PendingPass> {
+): Promise<FailedRow | PreparedDefinitionRow> {
   if (row.implementationInput.status === "blocked-missing-approved-nonreversible-behavior-spec")
     return failed(row, "input", "missing-input");
   if (row.implementationInput.status === "ready-project-owned-runtime-contract")
@@ -958,6 +1025,29 @@ async function prepareRow(
   const expectedOracle = artifact
     ? context.oracleRows.get(`${artifact}\u0000${evidenceKey.toLowerCase()}`)
     : undefined;
+  return {
+    row,
+    definition,
+    backend: compiled.backend,
+    sourceRevision: revisions.sourceRevision,
+    semanticHash: revisions.semanticHash,
+    expectedOracle,
+  };
+}
+
+export async function prepareRow(
+  row: WorkRow,
+  context: PreflightContext,
+): Promise<FailedRow | PendingPass> {
+  const preparedDefinition = await prepareDefinitionRow(row, context);
+  if (!("definition" in preparedDefinition)) return preparedDefinition;
+  const {
+    definition,
+    backend: compiledBackend,
+    sourceRevision,
+    semanticHash,
+    expectedOracle,
+  } = preparedDefinition;
   if (!expectedOracle)
     return failed(row, "release-oracle", "release-oracle-mismatch");
   let firstCpu: FormulaLibraryCpuSmokeSnapshot;
@@ -965,12 +1055,12 @@ async function prepareRow(
   let actualOracle: ReturnType<typeof runFormulaLibraryOracle>;
   try {
     actualOracle = runFormulaLibraryOracle(
-      compiled.backend,
+      compiledBackend,
       expectedOracle.runs.map((run) => run.pixel),
       expectedOracle.maxIterations,
     );
-    firstCpu = runFormulaLibraryCpuSmoke(compiled.backend);
-    secondCpu = runFormulaLibraryCpuSmoke(compiled.backend);
+    firstCpu = runFormulaLibraryCpuSmoke(compiledBackend);
+    secondCpu = runFormulaLibraryCpuSmoke(compiledBackend);
   } catch {
     return failed(row, "cpu-runtime", "cpu-runtime-failed");
   }
@@ -981,8 +1071,8 @@ async function prepareRow(
 
   const backendArtifactSha256 = sha256Bytes(
     canonical({
-      metadata: compiled.backend.metadata,
-      glsl: compiled.backend.glsl,
+      metadata: compiledBackend.metadata,
+      glsl: compiledBackend.glsl,
     } as unknown as JsonValue),
   );
   const gpuRuns: GpuRun[] = actualOracle.map((run) => ({
@@ -996,27 +1086,27 @@ async function prepareRow(
   return {
     row,
     definition,
-    backend: compiled.backend,
-    sourceRevision: revisions.sourceRevision,
-    semanticHash: revisions.semanticHash,
+    backend: compiledBackend,
+    sourceRevision,
+    semanticHash,
     backendArtifactSha256,
     cpu: firstCpu,
     oracleRuns: expectedOracle.runs.length,
     gpuCase: {
       formulaId: row.formulaId,
-      declarations: compiled.backend.glsl.declarations,
-      init: compiled.backend.glsl.init,
-      loop: compiled.backend.glsl.loop,
-      continuePredicate: compiled.backend.glsl.continuePredicate,
-      eventFlag: compiled.backend.glsl.eventFlag,
+      declarations: compiledBackend.glsl.declarations,
+      init: compiledBackend.glsl.init,
+      loop: compiledBackend.glsl.loop,
+      continuePredicate: compiledBackend.glsl.continuePredicate,
+      eventFlag: compiledBackend.glsl.eventFlag,
       maxIterations: expectedOracle.maxIterations,
       runs: gpuRuns,
-      parameters: safety.ir.parameters.map((parameter) => ({
+      parameters: definition.parameters.map((parameter) => ({
         name: parameter.name,
         type: parameter.type,
         value: parameter.default,
       })),
-      functionOptions: compiled.backend.glsl.functionOptions,
+      functionOptions: compiledBackend.glsl.functionOptions,
     },
   };
 }
@@ -1034,6 +1124,121 @@ export function gpuFailureReason(
   if (status === "nondeterministic") return "nondeterministic-output";
   if (status === "semantic-mismatch") return "webgl-cpu-mismatch";
   return "webgl-compile-link-draw-failed";
+}
+
+// SwiftShader wedges its GPU channel after several heavy shader
+// compilations inside one browser session, and individual shaders can cost
+// tens of seconds plus multi-GB transient JIT memory at first draw
+// (observed 2026-08-17/18). Each chunk therefore runs in a short-lived
+// subprocess (memory fully reclaimed by the OS) with a hard timeout; a
+// failed chunk is retried case-by-case so one pathological shader only
+// costs its own row its GPU evidence. Comparison semantics are unchanged.
+const WEBGL_CHUNK_TIMEOUT_MS = 300_000;
+
+async function runWebglSubprocess(
+  cases: readonly GpuCase[],
+): Promise<Map<string, GpuStatus>> {
+  const merged = new Map<string, GpuStatus>();
+  if (cases.length === 0) return merged;
+  const workerPath = fileURLToPath(new URL("./run-webgl-worker.ts", import.meta.url));
+  const tsxCli = join(
+    fileURLToPath(new URL(".", import.meta.url)),
+    "..",
+    "node_modules",
+    "tsx",
+    "dist",
+    "cli.mjs",
+  );
+  const runChunk = (chunk: readonly GpuCase[]): Promise<boolean> =>
+    new Promise((resolvePromise) => {
+      const tempPath = join(
+        tmpdir(),
+        `fractalpark-webgl-chunk-${process.pid}-${Math.random().toString(36).slice(2)}.json`,
+      );
+      let child: ReturnType<typeof spawn> | null = null;
+      const cleanup = () => {
+        if (child && child.exitCode === null && !child.killed && child.pid)
+          try {
+            // detached group kill: also reaps orphaned SwiftShader browsers
+            // that would otherwise survive and OOM the next attempt.
+            process.kill(-child.pid, "SIGKILL");
+          } catch {
+            // group already gone
+          }
+        // Chromium spawns its own session/process groups, so the group kill
+        // above can miss the browser. On this dedicated runner every
+        // chrome-headless-shell process belongs to these harnesses; sweep by
+        // name as the second line of defense.
+        try {
+          spawnSync("pkill", ["-x", "chrome-headless"], { stdio: "ignore" });
+        } catch {
+          // pkill unavailable — rely on the group kill
+        }
+        try {
+          unlinkSync(tempPath);
+        } catch {
+          // temp cleanup is best-effort; /tmp is transient
+        }
+      };
+      try {
+        writeFileSync(tempPath, JSON.stringify(chunk), { mode: 0o600 });
+      } catch {
+        resolvePromise(false);
+        return;
+      }
+      // detached: the worker gets its own process group so a timeout can
+      // SIGKILL the whole group (see cleanup).
+      child = spawn(process.execPath, [tsxCli, workerPath, tempPath], {
+        detached: true,
+        stdio: ["ignore", "pipe", "ignore"],
+      });
+      let output = "";
+      child.stdout?.on("data", (data: Buffer) => {
+        output += data.toString("utf8");
+      });
+      const timer = setTimeout(() => {
+        cleanup();
+      }, WEBGL_CHUNK_TIMEOUT_MS);
+      child.on("error", () => {
+        clearTimeout(timer);
+        cleanup();
+        resolvePromise(false);
+      });
+      child.on("close", (code: number | null) => {
+        clearTimeout(timer);
+        if (code === 0 && output.trim()) {
+          try {
+            const parsed = JSON.parse(output.trim()) as Record<string, GpuStatus>;
+            for (const [key, value] of Object.entries(parsed)) merged.set(key, value);
+            cleanup();
+            resolvePromise(true);
+            return;
+          } catch {
+            // fall through to failure
+          }
+        }
+        cleanup();
+        resolvePromise(false);
+      });
+    });
+  if (await runChunk(cases)) return merged;
+  // Chunk failed (timeout / wedge / OOM kill): retry each case alone so a
+  // single pathological shader does not take down its chunk-mates.
+  for (const single of cases) await runChunk([single]);
+  return merged;
+}
+
+async function runWebglChunked(
+  cases: readonly GpuCase[],
+): Promise<ReadonlyMap<string, GpuStatus>> {
+  const merged = new Map<string, GpuStatus>();
+  const totalChunks = Math.ceil(cases.length / 3);
+  for (let offset = 0; offset < cases.length; offset += 3) {
+    const chunkResults = await runWebglSubprocess(cases.slice(offset, offset + 3));
+    for (const [key, value] of chunkResults) merged.set(key, value);
+    console.error(`webgl chunk ${offset / 3 + 1}/${totalChunks} done (${merged.size}/${cases.length} answered)`);
+  }
+  return merged;
 }
 
 export async function runWebgl(cases: readonly GpuCase[]): Promise<ReadonlyMap<string, GpuStatus>> {
@@ -1258,7 +1463,7 @@ async function run(context: PreflightContext): Promise<CensusRow[]> {
   }
   let gpu: ReadonlyMap<string, GpuStatus>;
   try {
-    gpu = await runWebgl(
+    gpu = await runWebglChunked(
       prepared.filter((item): item is PendingPass => "gpuCase" in item).map((item) => item.gpuCase),
     );
   } catch {
@@ -1852,7 +2057,7 @@ async function writeProvisionalAssets(
       prepared.every((candidate, index) => candidate.row.formulaId === selectedRows[index].formulaId),
     "provisional-assets-revalidation-failed",
   );
-  const gpu = await runWebgl(prepared.map((candidate) => candidate.gpuCase));
+  const gpu = await runWebglChunked(prepared.map((candidate) => candidate.gpuCase));
   invariant(
     prepared.every((candidate) => gpu.get(candidate.row.formulaId) === "passed"),
     "provisional-assets-revalidation-failed",

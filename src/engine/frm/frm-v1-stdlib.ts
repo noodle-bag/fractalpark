@@ -159,8 +159,9 @@ export function frmV1Conj(z: FrmV1Complex): FrmV1Complex {
   return { re: z.re, im: -z.im };
 }
 
+/** Fractint-documented flip: swap the components — (x, y) becomes (y, x). */
 export function frmV1Flip(z: FrmV1Complex): FrmV1Complex {
-  return { re: -z.im, im: z.re };
+  return { re: z.im, im: z.re };
 }
 
 /** Identity returns its input unchanged; numeric-profile boundaries quantize it like any other primitive result. */

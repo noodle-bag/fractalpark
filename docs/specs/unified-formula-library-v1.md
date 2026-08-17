@@ -187,7 +187,12 @@ clarifications:
 the general additions needed by the frozen Standard migration:
 
 - arithmetic/helpers: `abs`, `sqr`, `sqrt`, `exp`, `log`, `recip`, `conj`,
-  `flip`, `real`, `imag`, `cabs`, `round`, and `atan2`;
+  `flip`, `real`, `imag`, `cabs`, `round`, and `atan2`. `flip` is the
+  Fractint-documented component swap — `(x, y)` becomes `(y, x)`. Classic
+  FRM is statically typed and its `flip` overload on a real-typed argument
+  is the identity; the Classic → v1 projection preserves that dialect by
+  lowering `flip(real-typed)` to the operand itself, since v1 expressions
+  are always complex;
 - circular: `sin`, `cos`, `tan`, `asin`, `acos`, `atan`;
 - hyperbolic: `sinh`, `cosh`, `tanh`, `asinh`, `acosh`, `atanh`, `cotanh`;
 - compatibility functions: `cosxx`, `identity`, and declared `fn1`–`fn4`

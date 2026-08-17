@@ -24,6 +24,8 @@ import {
   type FrmV1Complex,
 } from "@/engine/frm/frm-v1-stdlib";
 import { FRM_V1_GLSL_PRELUDE } from "@/engine/frm/frm-v1-glsl-prelude";
+import { compileClassicFrmEntry } from "@/engine/frm/compile";
+import { evaluateOrbit } from "@/engine/frm/orbit-eval";
 
 const closeTo = (
   actual: FrmV1Complex,
@@ -258,4 +260,95 @@ describe("isolated FRM-like stdlib v1 GLSL source-shape contract", () => {
       /\b(?:formulaId|scope|provenance|trusted)\b/i,
     );
   });
+});
+
+/**
+ * Differential guard: every v1 stdlib function whose name the classic
+ * dialect shares must agree with the classic orbit evaluator (the fixture
+ * generator for the migration evidence) on complex probe inputs. This is
+ * the test that would have caught the v1 flip rotation bug found by the 12d
+ * conformance diagnosis (v1 had (-im, re); Fractint documents and the
+ * classic engine implements the component swap).
+ *
+ * Probe regime note: classic clamps hyperbolic scalar inputs to ±80 and
+ * floors the log radius at 1e-20 — v1 deliberately does neither — so the
+ * probes stay in the moderate range where the two semantics coincide.
+ */
+describe("v1 stdlib vs classic orbit-eval differential", () => {
+  const probes: readonly (readonly [number, number])[] = [
+    [0.25, 0.1],
+    [-0.5, 0.3],
+    [1.1, -0.4],
+    [0.7, 0.9],
+  ];
+
+  const sharedUnary = [
+    "sin",
+    "cos",
+    "cosxx",
+    "cotanh",
+    "tan",
+    "sinh",
+    "cosh",
+    "tanh",
+    "exp",
+    "log",
+    "sqrt",
+    "abs",
+    "sqr",
+    "conj",
+    "flip",
+    "recip",
+    "cabs",
+    "real",
+    "imag",
+  ] as const;
+
+  for (const name of sharedUnary) {
+    it(`${name} matches the classic evaluator on moderate complex inputs`, async () => {
+      const v1 = (await import("@/engine/frm/frm-v1-stdlib")) as Record<
+        string,
+        unknown
+      >;
+      const exportName = `frmV1${name[0]!.toUpperCase()}${name.slice(1)}`;
+      const v1Fn = v1[exportName] as (z: FrmV1Complex) => FrmV1Complex;
+      expect(typeof v1Fn).toBe("function");
+
+      const classic = compileClassicFrmEntry(
+        `DiffProbe {\n  z = pixel:\n  z = ${name}(z),\n  |z| <= 4\n}`,
+        "DiffProbe",
+        "stdlib-differential-fixture",
+        2,
+      );
+      expect(classic.success).toBe(true);
+      if (!classic.success || !classic.ast || !classic.bailoutDescriptor)
+        throw new Error(`classic-compile-failed:${name}`);
+
+      for (const [re, im] of probes) {
+        const classicResult = evaluateOrbit(classic.ast, {
+          pixel: { re, im },
+          maxIterations: 1,
+          descriptor: classic.bailoutDescriptor,
+        });
+        const classicZ1 = classicResult.orbit[0];
+        expect(classicZ1).toBeDefined();
+        const v1Z1 = v1Fn({ re, im });
+        const scale = Math.max(
+          1,
+          Math.abs(classicZ1!.re),
+          Math.abs(classicZ1!.im),
+          Math.abs(v1Z1.re),
+          Math.abs(v1Z1.im),
+        );
+        expect(
+          Math.abs(v1Z1.re - classicZ1!.re) / scale,
+          `${name}(${re},${im}) re: v1=${v1Z1.re} classic=${classicZ1!.re}`,
+        ).toBeLessThan(1e-9);
+        expect(
+          Math.abs(v1Z1.im - classicZ1!.im) / scale,
+          `${name}(${re},${im}) im: v1=${v1Z1.im} classic=${classicZ1!.im}`,
+        ).toBeLessThan(1e-9);
+      }
+    });
+  }
 });
