@@ -10,6 +10,7 @@ import {
   type FrmV1UnaryFunctionName,
 } from "./frm-v1-stdlib";
 import type {
+  FrmLikeV1ClassicGuard,
   FrmLikeV1Expression,
   FrmLikeV1Ir,
   FrmLikeV1SafetyLimits,
@@ -67,6 +68,7 @@ export interface FrmLikeV1CpuState {
   readonly values: Record<string, FrmV1Complex>;
   readonly functions: Record<string, FrmV1UnaryFunctionName>;
   readonly booleans: Record<string, boolean>;
+  readonly guards?: readonly FrmLikeV1ClassicGuard[];
   terminated?: "nonFinite";
 }
 export interface FrmLikeV1CpuResult {
@@ -195,20 +197,65 @@ function standard32Stdlib(
     args[0] ?? fail("runtime-missing-function-argument"),
   );
   const tracked = (result: FrmV1Complex) => checkedComplex(state, result);
+  const guards: ReadonlySet<FrmLikeV1ClassicGuard> = new Set(
+    state.guards ?? [],
+  );
+  // Classic dialect guards (declared per row only). zero-division: at the
+  // singular point the guarded division always yields (0, 0) — d === 0 in
+  // the surface's precision hits the classic divGuarded branch, and an
+  // overflowing d flushes the finite quotient to zero exactly like the
+  // classic GPU surface (x / Inf === 0), which the frozen fixtures record.
+  // When the numerator products overflow as well, the IEEE Inf / Inf NaN
+  // propagates to the event — the same value the classic GPU surface
+  // computes there, so the surfaces stay in lockstep.
+  // hyperbolic-clamp clamps hyperbolic inputs to +/-80 like clampSinhCosh.
+  const guardedDiv = (a: FrmV1Complex, b: FrmV1Complex): FrmV1Complex => {
+    if (!guards.has("zero-division")) return s32Div(a, b);
+    const denominator = f32Add(f32Mul(b.re, b.re), f32Mul(b.im, b.im));
+    if (denominator === 0) return { re: 0, im: 0 };
+    return {
+      re: f32Div(
+        f32Add(f32Mul(a.re, b.re), f32Mul(a.im, b.im)),
+        denominator,
+      ),
+      im: f32Div(
+        f32Sub(f32Mul(a.im, b.re), f32Mul(a.re, b.im)),
+        denominator,
+      ),
+    };
+  };
+  const clampHyperbolic = (value: number): number =>
+    guards.has("hyperbolic-clamp")
+      ? Math.max(-80, Math.min(80, value))
+      : value;
   const one = { re: 1, im: 0 };
   const imaginaryUnit = { re: 0, im: 1 };
-  const sinhReal = (value: number) =>
-    f32Mul(f32Sub(f32(Math.exp(f32(value))), f32(Math.exp(f32(-value)))), 0.5);
-  const coshReal = (value: number) =>
-    f32Mul(f32Add(f32(Math.exp(f32(value))), f32(Math.exp(f32(-value)))), 0.5);
+  const sinhReal = (value: number) => {
+    const clamped = clampHyperbolic(value);
+    return f32Mul(
+      f32Sub(f32(Math.exp(f32(clamped))), f32(Math.exp(f32(-clamped)))),
+      0.5,
+    );
+  };
+  const coshReal = (value: number) => {
+    const clamped = clampHyperbolic(value);
+    return f32Mul(
+      f32Add(f32(Math.exp(f32(clamped))), f32(Math.exp(f32(-clamped)))),
+      0.5,
+    );
+  };
   const radiusOf = (value: FrmV1Complex) =>
     f32(
       Math.sqrt(f32Add(f32Mul(value.re, value.re), f32Mul(value.im, value.im))),
     );
   const logarithm = (value: FrmV1Complex) => {
-    const radius = radiusOf(value);
-    if (radius === 0 || !Number.isFinite(radius))
+    let radius = radiusOf(value);
+    if (!Number.isFinite(radius))
       return tracked({ re: Number.NaN, im: Number.NaN });
+    // floored-log dialect guard: classic floors the radius at 1e-20 instead
+    // of reporting a nonFinite event (orbit-eval log).
+    if (guards.has("floored-log")) radius = Math.max(radius, 1e-20);
+    if (radius === 0) return tracked({ re: Number.NaN, im: Number.NaN });
     const imaginary = value.im === 0 ? 0 : value.im;
     const argument =
       imaginary === 0 && value.re < 0
@@ -250,7 +297,7 @@ function standard32Stdlib(
     case "log":
       return logarithm(first);
     case "recip":
-      return tracked(s32Div(one, first));
+      return tracked(guardedDiv(one, first));
     case "conj":
       return tracked({ re: f32(first.re), im: f32(-first.im) });
     case "flip":
@@ -299,7 +346,7 @@ function standard32Stdlib(
         im: f32Mul(f32(Math.sin(first.re)), sinhReal(first.im)),
       });
     case "tan":
-      return tracked(s32Div(call("sin", [first]), call("cos", [first])));
+      return tracked(guardedDiv(call("sin", [first]), call("cos", [first])));
     case "sinh":
       return tracked({
         re: f32Mul(sinhReal(first.re), f32(Math.cos(first.im))),
@@ -311,9 +358,9 @@ function standard32Stdlib(
         im: f32Mul(sinhReal(first.re), f32(Math.sin(first.im))),
       });
     case "tanh":
-      return tracked(s32Div(call("sinh", [first]), call("cosh", [first])));
+      return tracked(guardedDiv(call("sinh", [first]), call("cosh", [first])));
     case "cotanh":
-      return tracked(s32Div(call("cosh", [first]), call("sinh", [first])));
+      return tracked(guardedDiv(call("cosh", [first]), call("sinh", [first])));
     case "asin": {
       const iz = tracked(s32Mul(imaginaryUnit, first));
       const radicand = tracked(s32Sub(one, tracked(s32Mul(first, first))));
@@ -609,10 +656,105 @@ function glslBoolean(value: Typed): string {
     ? value.code
     : `frmV1Truthy(${glslComplex(value)})`;
 }
+interface GlslDialectOptions {
+  readonly fns: Readonly<Record<string, string>>;
+  readonly guardedDiv: boolean;
+}
+/** Guarded GLSL helpers emitted only for rows with declared dialect guards. */
+function guardedPreludeLines(
+  guards: ReadonlySet<FrmLikeV1ClassicGuard>,
+): string[] {
+  const lines: string[] = [];
+  const zeroDivision = guards.has("zero-division");
+  const flooredLog = guards.has("floored-log");
+  const hyperbolicClamp = guards.has("hyperbolic-clamp");
+  if (zeroDivision) {
+    lines.push(
+      // d === 0 hits the classic guard; an overflowing d flushes the finite
+      // quotient to zero naturally (x / Inf === 0), like the classic GPU
+      // surface the frozen fixtures record.
+      "vec2 frmV1DivGuarded(vec2 a, vec2 b) { float d = dot(b, b); if (d == 0.0) return vec2(0.0); return frmV1Checked(vec2(a.x * b.x + a.y * b.y, a.y * b.x - a.x * b.y) / d); }",
+      "vec2 frmV1RecipGuarded(vec2 z) { return frmV1DivGuarded(vec2(1.0, 0.0), z); }",
+    );
+  }
+  if (flooredLog) {
+    lines.push(
+      "vec2 frmV1LogGuarded(vec2 z) { float radius = frmV1Radius(z); if (!frmV1FiniteComponent(radius)) { frmV1NonFiniteEvent = true; return vec2(0.0); } radius = max(radius, 1e-20); return frmV1Checked(vec2(log(radius), frmV1Arg(z))); }",
+      // Log-composed inverses must route through the floored log too — the
+      // CPU composites use the floored helper internally, and the two
+      // surfaces must agree (atanh(1) is finite on the guarded CPU).
+      "vec2 frmV1AsinGuarded(vec2 z) { vec2 iz = frmV1Mul(vec2(0.0, 1.0), z); vec2 root = frmV1Sqrt(frmV1Sub(vec2(1.0, 0.0), frmV1Sqr(z))); return frmV1Mul(vec2(0.0, -1.0), frmV1LogGuarded(frmV1Add(iz, root))); }",
+      "vec2 frmV1AcosGuarded(vec2 z) { vec2 value = frmV1AsinGuarded(z); return frmV1Checked(vec2(1.57079632679489661923 - value.x, -value.y)); }",
+      "vec2 frmV1AsinhGuarded(vec2 z) { return frmV1LogGuarded(frmV1Add(z, frmV1Sqrt(frmV1Add(frmV1Sqr(z), vec2(1.0, 0.0))))); }",
+      "vec2 frmV1AcoshGuarded(vec2 z) { vec2 product = frmV1Mul(frmV1Sqrt(frmV1Sub(z, vec2(1.0, 0.0))), frmV1Sqrt(frmV1Add(z, vec2(1.0, 0.0)))); return frmV1LogGuarded(frmV1Add(z, product)); }",
+      "vec2 frmV1AtanhGuarded(vec2 z) { return frmV1Checked(frmV1Sub(frmV1LogGuarded(frmV1Add(vec2(1.0, 0.0), z)), frmV1LogGuarded(frmV1Sub(vec2(1.0, 0.0), z))) * 0.5); }",
+    );
+    const div = zeroDivision ? "frmV1DivGuarded" : "frmV1Div";
+    lines.push(
+      `vec2 frmV1AtanGuarded(vec2 z) { vec2 iz = frmV1Mul(vec2(0.0, 1.0), z); return ${div}(frmV1Sub(frmV1LogGuarded(frmV1Add(vec2(1.0, 0.0), iz)), frmV1LogGuarded(frmV1Sub(vec2(1.0, 0.0), iz))), vec2(0.0, 2.0)); }`,
+    );
+  }
+  if (hyperbolicClamp) {
+    lines.push(
+      "float frmV1ClampHyperbolic(float value) { return clamp(value, -80.0, 80.0); }",
+      "vec2 frmV1SinGuarded(vec2 z) { float im = frmV1ClampHyperbolic(z.y); return frmV1Checked(vec2(sin(z.x) * frmV1CoshReal(im), cos(z.x) * frmV1SinhReal(im))); }",
+      "vec2 frmV1CosGuarded(vec2 z) { float im = frmV1ClampHyperbolic(z.y); return frmV1Checked(vec2(cos(z.x) * frmV1CoshReal(im), -sin(z.x) * frmV1SinhReal(im))); }",
+      "vec2 frmV1CosxxGuarded(vec2 z) { float im = frmV1ClampHyperbolic(z.y); return frmV1Checked(vec2(cos(z.x) * frmV1CoshReal(im), sin(z.x) * frmV1SinhReal(im))); }",
+      "vec2 frmV1SinhGuarded(vec2 z) { float re = frmV1ClampHyperbolic(z.x); return frmV1Checked(vec2(frmV1SinhReal(re) * cos(z.y), frmV1CoshReal(re) * sin(z.y))); }",
+      "vec2 frmV1CoshGuarded(vec2 z) { float re = frmV1ClampHyperbolic(z.x); return frmV1Checked(vec2(frmV1CoshReal(re) * cos(z.y), frmV1SinhReal(re) * sin(z.y))); }",
+    );
+  }
+  if (zeroDivision || hyperbolicClamp) {
+    const div = zeroDivision ? "frmV1DivGuarded" : "frmV1Div";
+    const sin = hyperbolicClamp ? "frmV1SinGuarded" : "frmV1Sin";
+    const cos = hyperbolicClamp ? "frmV1CosGuarded" : "frmV1Cos";
+    const sinh = hyperbolicClamp ? "frmV1SinhGuarded" : "frmV1Sinh";
+    const cosh = hyperbolicClamp ? "frmV1CoshGuarded" : "frmV1Cosh";
+    lines.push(
+      `vec2 frmV1TanGuarded(vec2 z) { return ${div}(${sin}(z), ${cos}(z)); }`,
+      `vec2 frmV1TanhGuarded(vec2 z) { return ${div}(${sinh}(z), ${cosh}(z)); }`,
+      `vec2 frmV1CotanhGuarded(vec2 z) { return ${div}(${cosh}(z), ${sinh}(z)); }`,
+    );
+  }
+  return lines;
+}
+function dialectFns(
+  guards: ReadonlySet<FrmLikeV1ClassicGuard>,
+): Readonly<Record<string, string>> {
+  if (guards.size === 0) return glslFns;
+  const zeroDivision = guards.has("zero-division");
+  const flooredLog = guards.has("floored-log");
+  const hyperbolicClamp = guards.has("hyperbolic-clamp");
+  const out: Record<string, string> = { ...glslFns };
+  if (flooredLog) {
+    out.log = "frmV1LogGuarded";
+    out.asin = "frmV1AsinGuarded";
+    out.acos = "frmV1AcosGuarded";
+    out.atan = "frmV1AtanGuarded";
+    out.asinh = "frmV1AsinhGuarded";
+    out.acosh = "frmV1AcoshGuarded";
+    out.atanh = "frmV1AtanhGuarded";
+  }
+  if (zeroDivision) out.recip = "frmV1RecipGuarded";
+  if (hyperbolicClamp) {
+    out.sin = "frmV1SinGuarded";
+    out.cos = "frmV1CosGuarded";
+    out.cosxx = "frmV1CosxxGuarded";
+    out.sinh = "frmV1SinhGuarded";
+    out.cosh = "frmV1CoshGuarded";
+  }
+  if (zeroDivision || hyperbolicClamp) {
+    out.tan = "frmV1TanGuarded";
+    out.tanh = "frmV1TanhGuarded";
+    out.cotanh = "frmV1CotanhGuarded";
+  }
+  return out;
+}
 function compileExpression(
   expression: FrmLikeV1Expression,
   values: Readonly<Record<string, FrmLikeV1ValueType>>,
   context?: GlslEmissionContext,
+  dialect?: GlslDialectOptions,
 ): Typed {
   const type = typeOfExpression(expression, values);
   if (expression.kind === "number")
@@ -637,14 +779,14 @@ function compileExpression(
     return temporary;
   };
   if (expression.kind === "magnitude") {
-    const operand = compileExpression(expression.operand, values, context);
+    const operand = compileExpression(expression.operand, values, context, dialect);
     return {
       type,
       code: flatten(`frmV1Checked(vec2(length(${glslComplex(operand)}), 0.0))`),
     };
   }
   if (expression.kind === "unary") {
-    const operand = compileExpression(expression.operand, values, context);
+    const operand = compileExpression(expression.operand, values, context, dialect);
     return expression.operator === "!"
       ? { type, code: `(!${glslBoolean(operand)})` }
       : {
@@ -654,33 +796,33 @@ function compileExpression(
   }
   if (expression.kind === "call") {
     const args = expression.args
-      .map((argument) => glslComplex(compileExpression(argument, values, context)))
+      .map((argument) => glslComplex(compileExpression(argument, values, context, dialect)))
       .join(", ");
     const call =
       values[expression.callee] === "function"
         ? `frmV1Dispatch_${expression.callee}(${args})`
-        : `${glslFns[expression.callee]}(${args})`;
+        : `${(dialect?.fns ?? glslFns)[expression.callee]}(${args})`;
     return { type, code: flatten(`frmV1Checked(${call})`) };
   }
-  const left = compileExpression(expression.left, values, context);
+  const left = compileExpression(expression.left, values, context, dialect);
   if (expression.operator === "&&") {
     // Short-circuit fidelity: the right side must stay nested so its checked
     // operations do not execute (and cannot raise the non-finite event) when
     // the left side is false. Only the always-evaluated left may flatten.
-    const right = compileExpression(expression.right, values);
+    const right = compileExpression(expression.right, values, undefined, dialect);
     return {
       type,
       code: `(${glslBoolean(left)} && ${glslBoolean(right)})`,
     };
   }
   if (expression.operator === "||") {
-    const right = compileExpression(expression.right, values);
+    const right = compileExpression(expression.right, values, undefined, dialect);
     return {
       type,
       code: `(${glslBoolean(left)} || ${glslBoolean(right)})`,
     };
   }
-  const right = compileExpression(expression.right, values, context);
+  const right = compileExpression(expression.right, values, context, dialect);
   if (["<", ">", "<=", ">="].includes(expression.operator))
     return {
       type,
@@ -704,7 +846,12 @@ function compileExpression(
   if (expression.operator === "*")
     return { type, code: flatten(`frmV1Checked(frmV1Mul(${leftCode}, ${rightCode}))`) };
   if (expression.operator === "/")
-    return { type, code: flatten(`frmV1Checked(frmV1Div(${leftCode}, ${rightCode}))`) };
+    return {
+      type,
+      code: flatten(
+        `frmV1Checked(${dialect?.guardedDiv ? "frmV1DivGuarded" : "frmV1Div"}(${leftCode}, ${rightCode}))`,
+      ),
+    };
   return {
     type,
     code: flatten(`frmV1Checked(frmV1Pow(${leftCode}, ${glslReal(right)}))`),
@@ -729,11 +876,12 @@ function emitStatements(
   values: Readonly<Record<string, FrmLikeV1ValueType>>,
   context: GlslEmissionContext,
   indent = "",
+  dialect?: GlslDialectOptions,
 ): string {
   return body
     .map((statement) => {
       if (statement.kind === "assignment") {
-        const value = compileExpression(statement.value, values, context);
+        const value = compileExpression(statement.value, values, context, dialect);
         const prelude = takePrelude(context, `${indent}  `);
         const targetType =
           values[statement.target] ?? fail("unsupported-store");
@@ -750,7 +898,7 @@ function emitStatements(
         ].join("\n");
       }
       if (statement.kind === "component-assignment") {
-        const value = compileExpression(statement.value, values, context);
+        const value = compileExpression(statement.value, values, context, dialect);
         const prelude = takePrelude(context, `${indent}  `);
         const temporary = nextTemporary(context);
         return [
@@ -766,33 +914,36 @@ function emitStatements(
       // temporaries would always execute their checked operations. Condition
       // expressions are small in practice.
       const branches = [
-        `${indent}if (!frmV1NonFiniteEvent && ${glslBoolean(compileExpression(statement.condition, values))}) {`,
-        emitStatements(statement.then, values, context, `${indent}  `),
+        `${indent}if (!frmV1NonFiniteEvent && ${glslBoolean(compileExpression(statement.condition, values, undefined, dialect))}) {`,
+        emitStatements(statement.then, values, context, `${indent}  `, dialect),
         `${indent}}`,
       ];
       for (const branch of statement.elseIf)
         branches.push(
-          ` else if (!frmV1NonFiniteEvent && ${glslBoolean(compileExpression(branch.condition, values))}) {`,
-          emitStatements(branch.body, values, context, `${indent}  `),
+          ` else if (!frmV1NonFiniteEvent && ${glslBoolean(compileExpression(branch.condition, values, undefined, dialect))}) {`,
+          emitStatements(branch.body, values, context, `${indent}  `, dialect),
           `${indent}}`,
         );
       if (statement.else)
         branches.push(
           " else {",
-          emitStatements(statement.else, values, context, `${indent}  `),
+          emitStatements(statement.else, values, context, `${indent}  `, dialect),
           `${indent}}`,
         );
       return branches.join("\n");
     })
     .join("\n");
 }
-function dispatchGlsl(name: string): string {
+function dispatchGlsl(
+  name: string,
+  fns: Readonly<Record<string, string>> = glslFns,
+): string {
   const names = FRM_V1_STDLIB_NAMES.filter((name) => unaryStdlib.has(name));
   return [
     `vec2 frmV1Dispatch_${name}(vec2 value) {`,
     ...names.map(
       (functionName, index) =>
-        `  if (u_frm_${name} == ${index}) return ${glslFns[functionName]}(value);`,
+        `  if (u_frm_${name} == ${index}) return ${fns[functionName]}(value);`,
     ),
     "  frmV1NonFiniteEvent = true;",
     "  return vec2(0.0);",
@@ -923,8 +1074,36 @@ function cpuExpression(
     return value(s32Sub(leftComplex, rightComplex));
   if (expression.operator === "*")
     return value(s32Mul(leftComplex, rightComplex));
-  if (expression.operator === "/")
+  if (expression.operator === "/") {
+    // zero-division dialect guard (declared rows only): at the singular
+    // point the division yields (0, 0) — d === 0 in standard32, or an
+    // overflowing d flushing the finite quotient to zero like the classic
+    // GPU surface.
+    if ((state.guards ?? []).includes("zero-division")) {
+      const denominator = f32Add(
+        f32Mul(rightComplex.re, rightComplex.re),
+        f32Mul(rightComplex.im, rightComplex.im),
+      );
+      if (denominator === 0) return value({ re: 0, im: 0 });
+      return value({
+        re: f32Div(
+          f32Add(
+            f32Mul(leftComplex.re, rightComplex.re),
+            f32Mul(leftComplex.im, rightComplex.im),
+          ),
+          denominator,
+        ),
+        im: f32Div(
+          f32Sub(
+            f32Mul(leftComplex.im, rightComplex.re),
+            f32Mul(leftComplex.re, rightComplex.im),
+          ),
+          denominator,
+        ),
+      });
+    }
     return value(s32Div(leftComplex, rightComplex));
+  }
   if (leftComplex.re === 0 && leftComplex.im === 0)
     return value({ re: 0, im: 0 });
   const logarithm = checkedComplex(
@@ -1018,6 +1197,16 @@ export function compileFrmLikeV1Backend(
     ir = validated.ir;
     const values = validate(ir);
     ir = lowerClassicBindings(ir);
+    const guardSet: ReadonlySet<FrmLikeV1ClassicGuard> = new Set(
+      ir.classicGuards ?? [],
+    );
+    const dialect: GlslDialectOptions | undefined =
+      guardSet.size > 0
+        ? {
+            fns: dialectFns(guardSet),
+            guardedDiv: guardSet.has("zero-division"),
+          }
+        : undefined;
     const functionParams = ir.parameters.filter((p) => p.type === "function");
     const functionSelectors = functionParams.map((parameter) => parameter.name);
     const classicBindings = Object.fromEntries(
@@ -1037,6 +1226,7 @@ export function compileFrmLikeV1Backend(
       FRM_V1_GLSL_PRELUDE,
       "bool frmV1Truthy(vec2 value) { return value.x != 0.0; }",
       "vec2 frmV1Pow(vec2 base, float exponent) { if (base.x == 0.0 && base.y == 0.0) return vec2(0.0); return frmV1Checked(frmV1Exp(frmV1Mul(vec2(exponent, 0.0), frmV1Log(base)))); }",
+      ...guardedPreludeLines(guardSet),
       ...ir.parameters
         .filter((parameter) => parameter.type !== "function")
         .map((parameter) => `uniform vec2 ${parameter.name};`),
@@ -1060,20 +1250,22 @@ export function compileFrmLikeV1Backend(
           ? `bool ${local.name} = false;`
           : `vec2 ${local.name} = vec2(0.0);`,
       ),
-      ...functionSelectors.map(dispatchGlsl),
+      ...functionSelectors.map((name) =>
+        dispatchGlsl(name, dialect?.fns ?? glslFns),
+      ),
     ].join("\n");
     const emissionContext: GlslEmissionContext = { nextTemporary: 0, prelude: [] };
-    const initGlsl = emitStatements(ir.init, values, emissionContext);
+    const initGlsl = emitStatements(ir.init, values, emissionContext, "", dialect);
     const lastSqrTemporary = nextTemporary(emissionContext);
     const loopGlsl = [
       "if (!frmV1NonFiniteEvent) { zPrev = z; }",
-      emitStatements(ir.loop, values, emissionContext),
+      emitStatements(ir.loop, values, emissionContext, "", dialect),
       "if (!frmV1NonFiniteEvent) {",
       `  vec2 ${lastSqrTemporary} = frmV1Checked(vec2(dot(z, z), 0.0));`,
       `  if (!frmV1NonFiniteEvent) { LastSqr = ${lastSqrTemporary}; }`,
       "}",
     ].join("\n");
-    const bailout = compileExpression(ir.bailout, values);
+    const bailout = compileExpression(ir.bailout, values, undefined, dialect);
     const continuePredicate = `(!frmV1NonFiniteEvent && ${glslBoolean(bailout)} && !frmV1NonFiniteEvent)`;
     const generatedBytes = new TextEncoder().encode(
       [declarations, initGlsl, loopGlsl, continuePredicate].join("\n"),
@@ -1177,6 +1369,9 @@ export function compileFrmLikeV1Backend(
             values: stateValues,
             functions,
             booleans,
+            ...(guardSet.size > 0
+              ? { guards: [...guardSet] as FrmLikeV1ClassicGuard[] }
+              : {}),
           };
           if (!finite(state)) state.terminated = "nonFinite";
           return state;

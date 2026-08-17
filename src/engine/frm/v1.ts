@@ -55,6 +55,27 @@ export interface FrmLikeV1Parameter {
   hardDomain?: readonly [number, number];
   classicBinding?: FrmLikeV1ClassicBinding;
 }
+/**
+ * Classic-engine dialect guards, declarable per formula only. The v1 stdlib
+ * itself is nonFinite-by-design and never guards; a guard on this list makes
+ * the backend reproduce the classic behavior at the singular point, for that
+ * formula alone:
+ * - "zero-division": at the singular point a complex division or recip
+ *   yields (0, 0) instead of a nonFinite event — d === 0 in the surface's
+ *   precision (classic divGuarded) or an overflowing d flushing the finite
+ *   quotient to zero (classic GPU surface, x / Inf === 0);
+ * - "floored-log": log radius is floored at 1e-20 instead of a nonFinite
+ *   event at exact zero;
+ * - "hyperbolic-clamp": hyperbolic evaluations clamp their input to +/-80
+ *   instead of overflowing into a nonFinite event.
+ */
+export const FRM_LIKE_V1_CLASSIC_GUARDS = [
+  "zero-division",
+  "floored-log",
+  "hyperbolic-clamp",
+] as const;
+export type FrmLikeV1ClassicGuard =
+  (typeof FRM_LIKE_V1_CLASSIC_GUARDS)[number];
 export interface FrmLikeV1Ir {
   languageVersion: "frm-like/1";
   stdlibVersion: 1;
@@ -63,6 +84,7 @@ export interface FrmLikeV1Ir {
   parameters: FrmLikeV1Parameter[];
   locals: { name: string; type: FrmLikeV1ValueType }[];
   evaluationOrder: "source-order-left-to-right";
+  classicGuards?: FrmLikeV1ClassicGuard[];
   init: FrmLikeV1Statement[];
   loop: FrmLikeV1Statement[];
   bailout: FrmLikeV1Expression;
@@ -167,7 +189,12 @@ const classicBindings = new Set<FrmLikeV1ClassicBinding>([
   "fn3",
   "fn4",
 ]);
-const directiveNames = new Set(["language", "stdlib", "numeric-profile"]);
+const directiveNames = new Set([
+  "language",
+  "stdlib",
+  "numeric-profile",
+  "classic-guards",
+]);
 const binaryPrecedence: Readonly<Record<string, number>> = Object.freeze({
   "||": 1,
   "&&": 2,
@@ -600,6 +627,11 @@ export function canonicalizeFrmLikeV1(ir: FrmLikeV1Ir): string {
     "; @language: frm-like/1",
     "; @stdlib: 1",
     "; @numeric-profile: standard32",
+    ...(ir.classicGuards && ir.classicGuards.length > 0
+      ? [
+          `; @classic-guards: ${FRM_LIKE_V1_CLASSIC_GUARDS.filter((guard) => ir.classicGuards!.includes(guard)).join(", ")}`,
+        ]
+      : []),
     `${ir.formulaName} {`,
   ];
   if (ir.parameters.length) {
@@ -895,12 +927,26 @@ function semanticProjection(ir: FrmLikeV1Ir) {
     statements: 0,
     active: new WeakSet(),
   };
+  let classicGuards: FrmLikeV1ClassicGuard[] | undefined;
+  if (ir.classicGuards !== undefined) {
+    if (!Array.isArray(ir.classicGuards)) fail("invalid-semantic-ir");
+    const seen = new Set<string>();
+    classicGuards = FRM_LIKE_V1_CLASSIC_GUARDS.filter((guard) => {
+      if (!(ir.classicGuards as string[]).includes(guard)) return false;
+      if (seen.has(guard)) fail("invalid-semantic-ir");
+      seen.add(guard);
+      return true;
+    });
+    if (seen.size !== ir.classicGuards.length) fail("invalid-semantic-ir");
+    if (classicGuards.length === 0) classicGuards = undefined;
+  }
   return {
     format: "frm-like/1-semantic-ir/1",
     languageVersion: ir.languageVersion,
     stdlibVersion: ir.stdlibVersion,
     numericProfile: ir.numericProfile,
     evaluationOrder: ir.evaluationOrder,
+    ...(classicGuards ? { classicGuards } : {}),
     parameters,
     locals,
     init: encodeStatements(ir.init, context),
@@ -1001,9 +1047,27 @@ export function parseFrmLikeV1(
       directives.get("language") !== "frm-like/1" ||
       directives.get("stdlib") !== "1" ||
       directives.get("numeric-profile") !== "standard32" ||
-      directives.size !== 3
+      directives.size < 3 ||
+      directives.size > 4
     )
       fail("invalid-semantic-directives");
+    let classicGuards: FrmLikeV1ClassicGuard[] | undefined;
+    const guardsDirective = directives.get("classic-guards");
+    if (guardsDirective !== undefined) {
+      const names = guardsDirective
+        .split(",")
+        .map((name) => name.trim())
+        .filter((name) => name !== "");
+      if (names.length === 0) fail("invalid-semantic-directives");
+      const seen = new Set<string>();
+      classicGuards = FRM_LIKE_V1_CLASSIC_GUARDS.filter((guard) => {
+        if (!names.includes(guard)) return false;
+        if (seen.has(guard)) fail("invalid-semantic-directives");
+        seen.add(guard);
+        return true;
+      });
+      if (seen.size !== names.length) fail("invalid-semantic-directives");
+    }
     const header = /^\s*([A-Za-z_][A-Za-z0-9_]*)\s*\{\s*$/.exec(
       rawLines[index] ?? "",
     );
@@ -1400,6 +1464,7 @@ export function parseFrmLikeV1(
         parameters,
         locals: [...locals].map(([name, type]) => ({ name, type })),
         evaluationOrder: "source-order-left-to-right",
+        ...(classicGuards ? { classicGuards } : {}),
         init: initResult.statements,
         loop: loopResult.statements,
         bailout,

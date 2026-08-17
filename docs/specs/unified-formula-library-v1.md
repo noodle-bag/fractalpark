@@ -199,6 +199,31 @@ the general additions needed by the frozen Standard migration:
   mappings. A Classic entry that references `fn1`–`fn4` without an explicit
   `function=` default maps that slot to `identity`.
 
+Classic dialect guards (declared per formula, never global): the v1 stdlib is
+nonFinite-by-design and never repairs singular inputs. A small number of
+migrated Classic formulas rely on the classic engine's guarded behavior at a
+singular point; for exactly those rows the formula IR carries a
+`; @classic-guards:` directive and every backend surface (CPU standard32 and
+generated GLSL, including `fn1`–`fn4` dispatch tables) reproduces the classic
+behavior for that formula alone:
+
+- `zero-division`: at the singular point a complex division or `recip`
+  yields `(0, 0)` instead of a nonFinite event — both when the divisor's
+  squared magnitude is zero in the surface's precision (classic `divGuarded`)
+  and when it overflows, flushing the finite quotient to zero like the
+  classic GPU surface (`x / Inf === 0`), which the frozen fixtures record;
+- `floored-log`: the `log` radius is floored at `1e-20` instead of a
+  nonFinite event at exact zero (classic orbit-eval `log`);
+- `hyperbolic-clamp`: hyperbolic evaluations clamp their input to `±80`
+  instead of overflowing into a nonFinite event (classic `clampSinhCosh`).
+  The clamp bounds finiteness only — a clamped argument near `2.8e34` is
+  quantized into standard32 and decorrelates downstream transcendental values
+  from the classic binary64 oracle, so rows whose orbit actually crosses the
+  clamp remain diagnosis-held rather than publishable.
+
+The declared row set lives in `src/engine/formulas/v1/classic-dialect-guards.ts`
+and changes only with per-row diagnosis evidence and a maintainer decision.
+
 Frozen semantics:
 
 - `standard32` canonicalizes every exact zero component, including `-0`, to

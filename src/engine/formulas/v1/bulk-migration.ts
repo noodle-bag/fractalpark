@@ -4,6 +4,7 @@ import type { FrmEntry } from "@/engine/frm/scanner";
 import { FRM_V1_UNARY_FUNCTION_NAMES } from "@/engine/frm/frm-v1-stdlib";
 import { BUILTIN_TYPES, collectVariables, inferType, type TypeContext } from "@/engine/frm/type-system";
 import type {
+  FrmLikeV1ClassicGuard,
   FrmLikeV1Expression,
   FrmLikeV1Ir,
   FrmLikeV1Parameter,
@@ -48,6 +49,13 @@ export interface ClassicAstProjectionInput {
   readonly formulaId: string;
   readonly ast: FrmAST;
   readonly functionDefaults?: Readonly<Record<string, string>>;
+  /**
+   * Classic dialect guards declared for this row (see classic-dialect-guards).
+   * Stamped onto the projected IR so every backend surface reproduces the
+   * classic guarded behavior at the singular point. Absent means the pure
+   * nonFinite-by-design v1 semantics.
+   */
+  readonly classicGuards?: readonly FrmLikeV1ClassicGuard[];
 }
 
 export type ClassicAstProjectionResult =
@@ -398,6 +406,9 @@ export function projectClassicAstToFrmLikeV1(
         parameters: projectedParameters,
         locals,
         evaluationOrder: "source-order-left-to-right",
+        ...(input.classicGuards && input.classicGuards.length > 0
+          ? { classicGuards: [...input.classicGuards] }
+          : {}),
         init: statements(input.ast.initBlock, projectionTypeContext),
         loop: statements(input.ast.loopBlock, projectionTypeContext),
         bailout: expression(input.ast.bailoutExpr, projectionTypeContext),

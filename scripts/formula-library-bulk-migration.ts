@@ -43,6 +43,7 @@ import {
   type FormulaLibraryBulkReasonCode,
   type FormulaLibraryCpuSmokeSnapshot,
 } from "../src/engine/formulas/v1/bulk-migration";
+import { classicDialectGuardsForV1 } from "../src/engine/formulas/v1/classic-dialect-guards";
 import {
   projectExecutableFormulaDefinitionV1,
   validateFormulaSafetyEnvelopeV1,
@@ -614,6 +615,7 @@ function assertRepositoryScope(
     "scripts/verify-formula-publication-decisions.ts",
     "scripts/verify-formula-publication-readiness.ts",
     "src/engine/formulas/v1/bulk-migration.ts",
+    "src/engine/formulas/v1/classic-dialect-guards.ts",
     "src/engine/formulas/v1/clean-room-behavior-package-gate-verifier.ts",
     "src/engine/formulas/v1/clean-room-behavior-package-gate.ts",
     "src/engine/formulas/v1/clean-room-evidence.ts",
@@ -635,6 +637,7 @@ function assertRepositoryScope(
     "src/engine/frm/frm-v1-stdlib.ts",
     "src/engine/frm/type-system.ts",
     "src/engine/frm/v1-backend.ts",
+    "src/engine/frm/v1.ts",
     "src/prototypes/unified-formula-library.ts",
     "src/test/formula-clean-room-behavior-package-gate-integration.test.ts",
     "src/test/formula-clean-room-behavior-package-gate.test.ts",
@@ -650,6 +653,7 @@ function assertRepositoryScope(
     "src/test/formula-publication-decisions.test.ts",
     "src/test/formula-publication-readiness-output.test.ts",
     "src/test/formula-publication-readiness.test.ts",
+    "src/test/frm-v1-classic-guards.test.ts",
     "src/test/frm-v1-stdlib.test.ts",
   ]);
   const changed = new Set([
@@ -981,6 +985,7 @@ export async function prepareDefinitionRow(
     formulaId: row.formulaId,
     ast: classic.ast,
     functionDefaults: classic.plugin?.fnDefaults,
+    classicGuards: classicDialectGuardsForV1(row.formulaId),
   });
   if (!projected.ok)
     return failed(row, "v1-projection", "v1-projection-unsupported");
