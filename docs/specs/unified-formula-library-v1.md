@@ -3,6 +3,7 @@
 - Status: Accepted contract; production activation is gated
 - Date: 2026-08-15
 - Amended: 2026-08-17 (677 identities; implementation publication is per-row; publication decision ledger asset frozen)
+- Amended: 2026-08-17 (stdlib v1 adds `identity`; Classic fn-slot defaults without an explicit `function=` mapping resolve to `identity`)
 - Target release: FractalPark v0.4.19
 - Related: [FRM Compatibility and Migration Contracts v1](frm-compatibility-v1.md)
 - Related: [Fractal Document v2 and Envelope v1](fractal-document-v2.md)
@@ -189,7 +190,9 @@ the general additions needed by the frozen Standard migration:
   `flip`, `real`, `imag`, `cabs`, `round`, and `atan2`;
 - circular: `sin`, `cos`, `tan`, `asin`, `acos`, `atan`;
 - hyperbolic: `sinh`, `cosh`, `tanh`, `asinh`, `acosh`, `atanh`, `cotanh`;
-- compatibility functions: `cosxx` and declared `fn1`–`fn4` mappings.
+- compatibility functions: `cosxx`, `identity`, and declared `fn1`–`fn4`
+  mappings. A Classic entry that references `fn1`–`fn4` without an explicit
+  `function=` default maps that slot to `identity`.
 
 Frozen semantics:
 
@@ -224,6 +227,9 @@ Frozen semantics:
   not host-dependent rounding.
 - division by zero and non-finite function inputs do not throw. They propagate to
   the versioned non-finite termination behavior.
+- `identity(z) = z`. Under `standard32` its result is the per-component binary32
+  rounding of its input with canonical `+0`, exactly like any other primitive
+  boundary; non-finite input propagates to the versioned non-finite event.
 
 Any visual change to an existing definition caused by stdlib semantics requires
 an explicit stdlib upgrade and Upgrade & Compare; it cannot mutate a pinned work.

@@ -400,22 +400,54 @@ describe("formula-library bulk migration foundations", () => {
     expect(releaseOracleMatches(oracle, mismatchedOracle)).toBe(false);
   });
 
-  it("fails closed when Classic identity fn defaults are absent from frozen stdlib/1", () => {
+  it("projects Classic fn slots without explicit function defaults onto the v1 identity stdlib function", () => {
     const compiled = compiledClassic(`IdentityDefault {
       z = pixel:
       z = fn1(z) + c,
       |z| < 4
     }`);
-    expect(
-      projectClassicAstToFrmLikeV1({
-        formulaId: FORMULA_ID,
-        ast: compiled.ast!,
-        functionDefaults: compiled.plugin?.fnDefaults,
-      }),
-    ).toEqual({
-      ok: false,
-      reasonCode: "v1-projection-unsupported",
+    const projected = projectClassicAstToFrmLikeV1({
+      formulaId: FORMULA_ID,
+      ast: compiled.ast!,
+      functionDefaults: compiled.plugin?.fnDefaults,
     });
+    expect(projected.ok).toBe(true);
+    if (!projected.ok) throw new Error(projected.reasonCode);
+    expect(projected.ir.parameters).toEqual([
+      {
+        name: "function1",
+        type: "function",
+        default: "identity",
+        classicBinding: "fn1",
+      },
+    ]);
+
+    const source = canonicalizeFrmLikeV1(projected.ir);
+    const reparsed = parseFrmLikeV1(source);
+    expect(reparsed.ok).toBe(true);
+    if (!reparsed.ok) throw new Error(reparsed.reason);
+    expect(canonicalizeFrmLikeV1(reparsed.ir)).toBe(source);
+
+    const backend = compileFrmLikeV1Backend(reparsed.ir);
+    expect(backend.ok).toBe(true);
+    if (!backend.ok) throw new Error(backend.reason);
+    expect(backend.backend.glsl.functionOptions).toContain("identity");
+
+    const oracle = runFormulaLibraryOracle(backend.backend, [[0.25, 0.1]], 4);
+    expect(oracle).toEqual(
+      runFormulaLibraryOracle(backend.backend, [[0.25, 0.1]], 4),
+    );
+    expect(oracle).toHaveLength(1);
+    const [run] = oracle;
+    // init z = pixel; loop z = fn1(z) + c = z + c with c = pixel in
+    // parameter-plane mode, so the orbit is an exact arithmetic progression.
+    expect(run.orbit.length).toBeGreaterThanOrEqual(3);
+    for (const [index, point] of run.orbit.entries()) {
+      if (point[0] === "non-finite" || point[1] === "non-finite")
+        throw new Error("unexpected-non-finite-identity-orbit");
+      expect(point[0]).toBeCloseTo(0.25 * (index + 2), 6);
+      expect(point[1]).toBeCloseTo(0.1 * (index + 2), 6);
+    }
   });
 
   it("fails closed when the production AST contains a statement shape absent from FRM-like v1", () => {

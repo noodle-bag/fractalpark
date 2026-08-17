@@ -60,6 +60,7 @@ vec2 frmV1Exp(vec2 z) {
 vec2 frmV1Recip(vec2 z) { return frmV1Div(vec2(1.0, 0.0), z); }
 vec2 frmV1Conj(vec2 z) { return frmV1Checked(vec2(z.x, -z.y)); }
 vec2 frmV1Flip(vec2 z) { return frmV1Checked(vec2(-z.y, z.x)); }
+vec2 frmV1Identity(vec2 z) { return frmV1Checked(z); }
 vec2 frmV1Real(vec2 z) { return frmV1Checked(vec2(z.x, 0.0)); }
 vec2 frmV1Imag(vec2 z) { return frmV1Checked(vec2(z.y, 0.0)); }
 vec2 frmV1Abs(vec2 z) { return frmV1Checked(abs(z)); }

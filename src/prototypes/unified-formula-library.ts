@@ -54,6 +54,7 @@ const STDLIB_FUNCTIONS = new Set([
   'abs', 'sqr', 'sqrt', 'exp', 'log', 'recip', 'conj', 'flip', 'real', 'imag',
   'cabs', 'round', 'atan2', 'sin', 'cos', 'tan', 'asin', 'acos', 'atan',
   'sinh', 'cosh', 'tanh', 'asinh', 'acosh', 'atanh', 'cotanh', 'cosxx',
+  'identity',
 ]);
 const IDENTIFIER = /^[A-Za-z_][A-Za-z0-9_]*$/;
 const REAL_LITERAL = /^(?:-?(?:0|[1-9]\d*)(?:\.\d+)?(?:[eE][+-]?\d+)?)$/;

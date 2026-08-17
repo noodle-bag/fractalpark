@@ -131,6 +131,7 @@ const glslFns: Readonly<Record<string, string>> = Object.freeze({
   atanh: "frmV1Atanh",
   cotanh: "frmV1Cotanh",
   cosxx: "frmV1Cosxx",
+  identity: "frmV1Identity",
 });
 function fail(reason: string): never {
   throw new Error(reason);
@@ -254,6 +255,8 @@ function standard32Stdlib(
       return tracked({ re: f32(first.re), im: f32(-first.im) });
     case "flip":
       return tracked({ re: f32(-first.im), im: f32(first.re) });
+    case "identity":
+      return tracked({ re: f32(first.re), im: f32(first.im) });
     case "real":
       return tracked({ re: f32(first.re), im: 0 });
     case "imag":

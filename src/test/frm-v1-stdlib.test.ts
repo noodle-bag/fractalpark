@@ -12,6 +12,7 @@ import {
   frmV1Atanh,
   frmV1Classify,
   frmV1Cotanh,
+  frmV1Identity,
   frmV1QuantizeStandard32Boundary,
   frmV1Log,
   frmV1Round,
@@ -71,6 +72,7 @@ describe("isolated FRM-like stdlib v1 CPU reference", () => {
       "atanh",
       "cotanh",
       "cosxx",
+      "identity",
     ]);
     expect(Object.isFrozen(FRM_V1_STDLIB_NAMES)).toBe(true);
     expect(FRM_V1_FUNCTION_SLOT_NAMES).toEqual(["fn1", "fn2", "fn3", "fn4"]);
@@ -192,6 +194,24 @@ describe("isolated FRM-like stdlib v1 CPU reference", () => {
       true,
     );
   });
+
+  it("identity returns its input unchanged and quantizes like any other primitive boundary", () => {
+    const input = { re: 0.1, im: -2.5 };
+    expect(frmV1Identity(input)).toEqual({ re: 0.1, im: -2.5 });
+    expect(Object.is(frmV1Identity({ re: -0, im: 1 }).re, -0)).toBe(true);
+    expect(frmV1Classify(frmV1Identity({ re: Number.NaN, im: 0 }))).toEqual({
+      finite: false,
+      event: "nonFinite",
+    });
+
+    const boundary = frmV1QuantizeStandard32Boundary(frmV1Identity, {
+      re: 0.1,
+      im: -0,
+    });
+    expect(boundary.classification).toEqual({ finite: true });
+    expect(boundary.value.re).toBe(Math.fround(0.1));
+    expect(Object.is(boundary.value.im, 0)).toBe(true);
+  });
 });
 
 describe("isolated FRM-like stdlib v1 GLSL source-shape contract", () => {
@@ -221,6 +241,9 @@ describe("isolated FRM-like stdlib v1 GLSL source-shape contract", () => {
     expect(FRM_V1_GLSL_PRELUDE).not.toContain("1.0 / z.y");
     expect(FRM_V1_GLSL_PRELUDE).toContain(
       "if (imaginary == 0.0 && z.x < 0.0) return 3.14159265358979323846;",
+    );
+    expect(FRM_V1_GLSL_PRELUDE).toContain(
+      "vec2 frmV1Identity(vec2 z) { return frmV1Checked(z); }",
     );
   });
 

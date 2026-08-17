@@ -54,6 +54,7 @@ export const FRM_V1_STDLIB_NAMES = Object.freeze([
   "atanh",
   "cotanh",
   "cosxx",
+  "identity",
 ] as const);
 
 export type FrmV1StdlibName = (typeof FRM_V1_STDLIB_NAMES)[number];
@@ -160,6 +161,11 @@ export function frmV1Conj(z: FrmV1Complex): FrmV1Complex {
 
 export function frmV1Flip(z: FrmV1Complex): FrmV1Complex {
   return { re: -z.im, im: z.re };
+}
+
+/** Identity returns its input unchanged; numeric-profile boundaries quantize it like any other primitive result. */
+export function frmV1Identity(z: FrmV1Complex): FrmV1Complex {
+  return { re: z.re, im: z.im };
 }
 
 export function frmV1Real(z: FrmV1Complex): FrmV1Complex {
