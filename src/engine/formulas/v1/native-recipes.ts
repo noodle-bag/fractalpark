@@ -20,6 +20,10 @@ import {
   type FormulaRevisionV1,
 } from "@/engine/formulas/v1";
 import { resolveStandardAliasV1 } from "@/engine/formulas/v1/standard-manifest";
+import { RECIPES as B94_CLASSIC_RECIPES } from "./native-recipes-b94-classic";
+import { RECIPES as B94_TRANSCENDENTAL_RECIPES } from "./native-recipes-b94-transcendental";
+import { RECIPES as B94_CLAMP_RECIPES } from "./native-recipes-b94-clamps";
+import { RECIPES as B94_NEWTON_RECIPES } from "./native-recipes-b94-newton";
 
 export const NATIVE_RECIPE_SCHEMA_V1 = "fractalpark-native-formula-recipes/v1";
 
@@ -175,6 +179,7 @@ export interface NativeRecipeProbeV1 {
 export function nativeRecipeProbesToOrbitRunV1(
   probes: readonly NativeRecipeProbeV1[],
   pixel: readonly [number, number],
+  maxIterations: number,
 ): NativeRecipeOrbitRunV1 {
   const orbit: [number, number][] = [];
   let escapedAt: number | null = null;
@@ -184,9 +189,139 @@ export function nativeRecipeProbesToOrbitRunV1(
       break;
     }
     if (probe.iterations < orbit.length + 1) break;
+    // The budget+1 draw exists only to observe a boundary escape: it steps
+    // past the budget when no escape fires, and that extra point is never
+    // part of the orbit under comparison.
+    if (orbit.length >= maxIterations) break;
     orbit.push([probe.z[0], probe.z[1]]);
   }
   return { pixel, escapedAt, event: null, orbit };
+}
+
+export type NativeRecipeFidelityFailureV1 =
+  | "fidelity-plugin-missing"
+  | "fidelity-parameter-set-mismatch"
+  | "fidelity-parameter-default-mismatch"
+  | "fidelity-parameter-domain-mismatch"
+  | "fidelity-bailout-mismatch"
+  | "fidelity-init-mismatch"
+  | "fidelity-uniform-type-unsupported";
+
+export type NativeRecipeFidelityVerdictV1 =
+  | { readonly ok: true }
+  | { readonly ok: false; readonly reasonCode: NativeRecipeFidelityFailureV1 };
+
+function recipeParameters(recipe: NativeFormulaRecipeV1) {
+  const parsed = parseFrmLikeV1(recipe.source);
+  if (!parsed.ok) return undefined;
+  return parsed.ir;
+}
+
+/**
+ * Mechanical fidelity audit of a recipe against its native plugin: parameter
+ * set/defaults/domains mirror the declared uniforms (plus u_power when the
+ * plugin reads it), the bailout predicate matches the framework contract
+ * (diverge: |z| <= sqrt(bailout); converge: |z - zPrev| >= 1e-6), and the
+ * init shape matches the framework init convention (converge starts from
+ * pixel; diverge keeps the ismand preamble; initGlsl hooks add statements).
+ * This complements — never replaces — the orbit cross-check.
+ */
+export function auditNativeRecipeFidelityV1(
+  recipe: NativeFormulaRecipeV1,
+): NativeRecipeFidelityVerdictV1 {
+  const plugin = pluginRegistry.getFormula(recipe.runtimeId);
+  if (!plugin) return { ok: false, reasonCode: "fidelity-plugin-missing" };
+  const ir = recipeParameters(recipe);
+  if (!ir) return { ok: false, reasonCode: "fidelity-plugin-missing" };
+
+  const expectedParams = new Map<string, { default: number | readonly [number, number]; domain?: readonly [number, number] }>();
+  for (const uniform of plugin.uniforms) {
+    const name = uniform.name.replace(/^u_/, "");
+    if (uniform.type === "vec3" || uniform.type === "bool")
+      return { ok: false, reasonCode: "fidelity-uniform-type-unsupported" };
+    if (uniform.type === "vec2") {
+      if (!Array.isArray(uniform.default) || uniform.default.length !== 2)
+        return { ok: false, reasonCode: "fidelity-parameter-default-mismatch" };
+      expectedParams.set(name, {
+        default: [uniform.default[0] as number, uniform.default[1] as number] as const,
+      });
+    } else {
+      if (typeof uniform.default !== "number")
+        return { ok: false, reasonCode: "fidelity-parameter-default-mismatch" };
+      expectedParams.set(name, {
+        default: uniform.default,
+        ...(uniform.min !== undefined && uniform.max !== undefined
+          ? { domain: [uniform.min, uniform.max] as const }
+          : {}),
+      });
+    }
+  }
+  const readsPower = new RegExp(`\\bu_power\\b`).test(plugin.glsl);
+  if (readsPower) expectedParams.set("power", { default: 2 });
+
+  const actualParams = ir.parameters;
+  if (actualParams.length !== expectedParams.size)
+    return { ok: false, reasonCode: "fidelity-parameter-set-mismatch" };
+  for (const parameter of actualParams) {
+    const expected = expectedParams.get(parameter.name);
+    if (!expected) return { ok: false, reasonCode: "fidelity-parameter-set-mismatch" };
+    if (Array.isArray(expected.default)) {
+      const actualDefault = parameter.default;
+      if (
+        !Array.isArray(actualDefault) ||
+        actualDefault[0] !== expected.default[0] ||
+        actualDefault[1] !== expected.default[1]
+      )
+        return { ok: false, reasonCode: "fidelity-parameter-default-mismatch" };
+    } else if (parameter.default !== expected.default) {
+      return { ok: false, reasonCode: "fidelity-parameter-default-mismatch" };
+    }
+    if (expected.domain) {
+      if (
+        !parameter.hardDomain ||
+        parameter.hardDomain[0] !== expected.domain[0] ||
+        parameter.hardDomain[1] !== expected.domain[1]
+      )
+        return { ok: false, reasonCode: "fidelity-parameter-domain-mismatch" };
+    } else if (parameter.hardDomain) {
+      return { ok: false, reasonCode: "fidelity-parameter-domain-mismatch" };
+    }
+  }
+
+  const bailoutText = recipe.source.split("bailout:")[1]?.replace(/}\s*$/, "").trim();
+  if (plugin.escapeType === "converge") {
+    if (bailoutText !== "|z - zPrev| >= 0.000001")
+      return { ok: false, reasonCode: "fidelity-bailout-mismatch" };
+  } else {
+    const threshold = Math.sqrt(plugin.bailout ?? 4.0);
+    if (bailoutText !== `|z| <= ${String(threshold)}`)
+      return { ok: false, reasonCode: "fidelity-bailout-mismatch" };
+  }
+
+  const initBody = recipe.source.split("init:")[1]?.split("loop:")[0]?.trim() ?? "";
+  const hasHook = Boolean(plugin.initGlsl);
+  if (plugin.escapeType === "converge") {
+    if (!/^z = pixel\b/m.test(initBody))
+      return { ok: false, reasonCode: "fidelity-init-mismatch" };
+    if (/\bismand\b/.test(initBody))
+      return { ok: false, reasonCode: "fidelity-init-mismatch" };
+  } else {
+    if (!/if ismand/.test(initBody) || !/z = pixel/.test(initBody))
+      return { ok: false, reasonCode: "fidelity-init-mismatch" };
+  }
+  const preambleStatements = plugin.escapeType === "converge" ? 1 : 5;
+  const statementCount = initBody
+    .split("\n")
+    .filter((line) => line.trim().length > 0).length;
+  // Without an init hook, the preamble alone is the minimum; extra init
+  // lines are explicit loop-state locals (e.g. phoenix previousZ), which the
+  // v1 language requires for second-previous orbit memory. With a hook, the
+  // init must contain at least one translated hook statement.
+  if (hasHook && statementCount <= preambleStatements)
+    return { ok: false, reasonCode: "fidelity-init-mismatch" };
+  if (!hasHook && statementCount < preambleStatements)
+    return { ok: false, reasonCode: "fidelity-init-mismatch" };
+  return { ok: true };
 }
 
 export type NativeRecipeValidationFailureV1 =
@@ -329,11 +464,30 @@ Formula_e2456b54_ef50_5ac9_9faa_dcb576c5e774 {
     |z| <= 256
 }`;
 
+const NEWTON3_SOURCE = `; @language: frm-like/1
+; @stdlib: 1
+; @numeric-profile: standard32
+Formula_dd052c9f_868f_5516_9af0_3f4e78ac7a13 {
+  init:
+    z = pixel
+  loop:
+    z2 = z * z
+    z3 = z2 * z
+    numerator = 2 * z3 + 1
+    denominator = 3 * z2
+    z = numerator / denominator
+  bailout:
+    |z - zPrev| >= 0.000001
+}`;
+
 /**
- * Pilot registry (planned commit 12b): one recipe per construct class —
- * direct-multiply power branch (classic), transcendental stdlib mapping
- * (transcendental), and explicit two-step orbit memory (phoenix). The
- * remaining 86 B94 rows migrate family-by-family in planned commit 12c.
+ * Accepted registry: the four 12b pilots (one per construct class) plus every
+ * 12c batch row whose full evidence chain closed — alias join, plugin/family
+ * consistency, parse, canonical round-trip, Safety Envelope, backend compile,
+ * fidelity audit, v1 CPU oracle, v1 WebGL parity, and the native WebGL
+ * cross-check under the frozen shared contract. Rows whose translations are
+ * structurally faithful but whose conformance evidence cannot close live in
+ * native-recipes-b94-held.ts with their diagnosed hold class (12d scope).
  */
 export const NATIVE_FORMULA_RECIPES_V1: readonly NativeFormulaRecipeV1[] =
   Object.freeze([
@@ -355,4 +509,14 @@ export const NATIVE_FORMULA_RECIPES_V1: readonly NativeFormulaRecipeV1[] =
       family: "phoenix",
       source: PHOENIX_SOURCE,
     }),
+    Object.freeze({
+      formulaId: "dd052c9f-868f-5516-9af0-3f4e78ac7a13" as FormulaIdV1,
+      runtimeId: "newton3",
+      family: "newton",
+      source: NEWTON3_SOURCE,
+    }),
+    ...B94_CLASSIC_RECIPES,
+    ...B94_TRANSCENDENTAL_RECIPES,
+    ...B94_CLAMP_RECIPES,
+    ...B94_NEWTON_RECIPES,
   ]);

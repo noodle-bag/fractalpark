@@ -25,6 +25,7 @@ import { compileFrmLikeV1Backend } from "../src/engine/frm/v1-backend";
 import {
   NATIVE_FORMULA_RECIPES_V1,
   NATIVE_RECIPE_CROSS_CHECK_CONTRACT_V1,
+  auditNativeRecipeFidelityV1,
   compareNativeRecipeOrbitsV1,
   nativeRecipeProbesToOrbitRunV1,
   validateNativeRecipeV1,
@@ -47,8 +48,7 @@ const complexMathLib = readFileSync(
 );
 
 function nativeFragmentSource(plugin: FormulaPlugin): string {
-  if (plugin.escapeType === "converge")
-    throw new Error("converge-plugins-unsupported-in-this-harness-revision");
+  const converge = plugin.escapeType === "converge";
   const uniformDeclaration = (uniform: PluginUniformDescriptor): string => {
     const glslType =
       uniform.type === "float"
@@ -80,15 +80,15 @@ uniform float u_steps;
 uniform float u_bailout2;
 void main() {
   vec2 point = u_pixel;
-  vec2 z = u_isJulia ? point : vec2(0.0);
+  ${converge ? "// Newton-type: start from point to avoid div-by-zero.\n  vec2 z = point;" : "vec2 z = u_isJulia ? point : vec2(0.0);"}
   vec2 c = u_isJulia ? u_juliaC : point;
   ${plugin.initGlsl ? "z = initFormula(z, c, point);" : ""}
   vec2 zPrev = vec2(0.0);
   float iterations = 0.0;
   float escaped = 0.0;
-  for (int i = 0; i < 16384; i++) {
+  for (int i = 0; i < 64; i++) {
     if (float(i) >= u_steps) break;
-    if (dot(z, z) > u_bailout2) { escaped = 1.0; break; }
+    ${converge ? "if (i > 0 && length(z - zPrev) < 0.000001) { escaped = 1.0; break; }" : "if (dot(z, z) > u_bailout2) { escaped = 1.0; break; }"}
     vec2 nextZ = iterateStep(z, c, zPrev, point);
     zPrev = z;
     z = nextZ;
@@ -105,22 +105,28 @@ async function runNativeProbes(
 ): Promise<ReadonlyMap<string, readonly NativeProbeResult[][]>> {
   const output = new Map<string, readonly NativeProbeResult[][]>();
   if (cases.length === 0) return output;
-  const browser = await chromium.launch({
-    headless: true,
-    args: [
-      "--use-gl=angle",
-      "--use-angle=swiftshader",
-      "--enable-unsafe-swiftshader",
-      "--disable-gpu-sandbox",
-    ],
-  });
-  try {
-    const page = await browser.newPage({ viewport: { width: 8, height: 8 } });
-    await page.evaluate(
-      "globalThis.__name = globalThis.__name || function(target){ return target; };",
-    );
-    const evaluated = await page.evaluate(
-      ({ cases: payloadCases, pixels: payloadPixels, maxIterations: budget }) => {
+  // SwiftShader accumulates state across many heavy shader compilations in
+  // one browser session and eventually wedges the GPU channel at 0% CPU.
+  // Chunk the cases and give each chunk a fresh browser.
+  const CHUNK = 4;
+  for (let offset = 0; offset < cases.length; offset += CHUNK) {
+    const chunk = cases.slice(offset, offset + CHUNK);
+    const browser = await chromium.launch({
+      headless: true,
+      args: [
+        "--use-gl=angle",
+        "--use-angle=swiftshader",
+        "--enable-unsafe-swiftshader",
+        "--disable-gpu-sandbox",
+      ],
+    });
+    try {
+      const page = await browser.newPage({ viewport: { width: 8, height: 8 } });
+      await page.evaluate(
+        "globalThis.__name = globalThis.__name || function(target){ return target; };",
+      );
+      const evaluated = await page.evaluate(
+        ({ cases: payloadCases, pixels: payloadPixels, maxIterations: budget }) => {
         const results: Record<string, { z: [number, number]; iterations: number; escaped: boolean }[][]> = {};
         for (const payload of payloadCases) {
           try {
@@ -215,7 +221,10 @@ async function runNativeProbes(
             const perPixel: { z: [number, number]; iterations: number; escaped: boolean }[][] = [];
             for (const pixel of payloadPixels) {
               const probes: { z: [number, number]; iterations: number; escaped: boolean }[] = [];
-              for (let steps = 1; steps <= budget; steps++) {
+              // budget + 1: the escape check runs before each step, so an
+              // escape at exactly the budgeted step is only observed by one
+              // extra draw (which contributes no orbit point).
+              for (let steps = 1; steps <= budget + 1; steps++) {
                 const result = draw(pixel as readonly number[], steps);
                 probes.push(result);
                 if (result.escaped) break;
@@ -232,7 +241,7 @@ async function runNativeProbes(
         return results;
       },
       {
-        cases: cases.map((item) => ({
+        cases: chunk.map((item) => ({
           formulaId: item.formulaId,
           source: item.source,
           bailout2: item.plugin.bailout ?? 4.0,
@@ -245,16 +254,17 @@ async function runNativeProbes(
         pixels,
         maxIterations,
       },
-    );
-    for (const item of cases) {
-      const rows = evaluated[item.formulaId];
-      const error = (evaluated as Record<string, unknown>)[`${item.formulaId}__error`];
-      if (!rows || rows.length === 0)
-        throw new Error(`native-probe-failed:${item.formulaId}:${String(error ?? "no-output")}`);
-      output.set(item.formulaId, rows);
+      );
+      for (const item of chunk) {
+        const rows = evaluated[item.formulaId];
+        const error = (evaluated as Record<string, unknown>)[`${item.formulaId}__error`];
+        if (!rows || rows.length === 0)
+          throw new Error(`native-probe-failed:${item.formulaId}:${String(error ?? "no-output")}`);
+        output.set(item.formulaId, rows);
+      }
+    } finally {
+      await browser.close();
     }
-  } finally {
-    await browser.close();
   }
   return output;
 }
@@ -262,14 +272,25 @@ async function runNativeProbes(
 function nativeProbesToRuns(
   probes: readonly NativeProbeResult[][],
   pixels: readonly (readonly [number, number])[],
+  maxIterations: number,
 ): NativeRecipeOrbitRunV1[] {
   return probes.map((perPixel, index) =>
-    nativeRecipeProbesToOrbitRunV1(perPixel, pixels[index]!),
+    nativeRecipeProbesToOrbitRunV1(perPixel, pixels[index]!, maxIterations),
   );
 }
 
 async function main(): Promise<void> {
   registerBuiltins({ quiet: true });
+  // Batch-migration support: when FRACTALPARK_RECIPE_BATCH_FILE points at a
+  // module exporting `RECIPES`, cross-check that batch instead of the
+  // built-in registry. Same harness, same contract, same verdict shape.
+  const batchFile = process.env.FRACTALPARK_RECIPE_BATCH_FILE;
+  const recipes: readonly import("../src/engine/formulas/v1/native-recipes").NativeFormulaRecipeV1[] =
+    batchFile
+      ? (await import(
+          batchFile.startsWith("/") ? batchFile : join(process.cwd(), batchFile)
+        )).RECIPES
+      : NATIVE_FORMULA_RECIPES_V1;
   const contract = NATIVE_RECIPE_CROSS_CHECK_CONTRACT_V1;
   const pixels = contract.probePixels.map((pixel) => [pixel[0], pixel[1]] as const);
   const rows: unknown[] = [];
@@ -283,11 +304,17 @@ async function main(): Promise<void> {
     sourceRevision: string;
   }[] = [];
 
-  for (const recipe of NATIVE_FORMULA_RECIPES_V1) {
+  for (const recipe of recipes) {
     const validation = await validateNativeRecipeV1(recipe);
     if (!validation.ok) {
       failed += 1;
       rows.push({ formulaId: recipe.formulaId, runtimeId: recipe.runtimeId, ok: false, reasonCode: validation.reasonCode });
+      continue;
+    }
+    const fidelity = auditNativeRecipeFidelityV1(recipe);
+    if (!fidelity.ok) {
+      failed += 1;
+      rows.push({ formulaId: recipe.formulaId, runtimeId: recipe.runtimeId, ok: false, reasonCode: fidelity.reasonCode });
       continue;
     }
     const parsedSource = parseFrmLikeV1(recipe.source);
@@ -337,13 +364,21 @@ async function main(): Promise<void> {
     });
   }
 
-  const gpuResults = await runWebgl(gpuCases);
+  // runWebgl keeps one browser for all cases; SwiftShader wedges after
+  // several heavy shader compilations in a single session, so chunk the
+  // v1 leg the same way as the native probe leg.
+  const gpuResults = new Map<string, string>();
+  for (let offset = 0; offset < gpuCases.length; offset += 3) {
+    const chunk = gpuCases.slice(offset, offset + 3);
+    const chunkResults = await runWebgl(chunk);
+    for (const [key, value] of chunkResults) gpuResults.set(key, value);
+  }
   const nativeResults = await runNativeProbes(nativeCases, pixels, contract.maxIterations);
 
   for (const item of prepared) {
-    const recipe = NATIVE_FORMULA_RECIPES_V1.find((entry) => entry.formulaId === item.recipeId)!;
+    const recipe = recipes.find((entry) => entry.formulaId === item.recipeId)!;
     const gpuStatus = gpuResults.get(item.recipeId) ?? "failed";
-    const nativeRuns = nativeProbesToRuns(nativeResults.get(item.recipeId)!, pixels);
+    const nativeRuns = nativeProbesToRuns(nativeResults.get(item.recipeId)!, pixels, contract.maxIterations);
     const verdict = compareNativeRecipeOrbitsV1(item.cpuRuns, nativeRuns);
     const ok = gpuStatus === "passed" && verdict.ok;
     if (!ok) failed += 1;
@@ -366,8 +401,8 @@ async function main(): Promise<void> {
       maxIterations: contract.maxIterations,
       relativeTolerance: contract.relativeTolerance,
     },
-    recipes: NATIVE_FORMULA_RECIPES_V1.length,
-    passed: NATIVE_FORMULA_RECIPES_V1.length - failed,
+    recipes: recipes.length,
+    passed: recipes.length - failed,
     failed,
     rows,
   };

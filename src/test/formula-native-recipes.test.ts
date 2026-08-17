@@ -37,7 +37,7 @@ describe("native recipe layer v1", () => {
   });
 
   it("validates every registered pilot recipe through the full v1 chain", async () => {
-    expect(NATIVE_FORMULA_RECIPES_V1.length).toBe(3);
+    expect(NATIVE_FORMULA_RECIPES_V1.length).toBe(68);
     for (const recipe of NATIVE_FORMULA_RECIPES_V1) {
       const result = await validateNativeRecipeV1(recipe);
       if (!result.ok) throw new Error(`${recipe.runtimeId}: ${result.reasonCode}`);
@@ -159,6 +159,32 @@ describe("native recipe layer v1", () => {
   });
 });
 
+describe("native recipe holds", () => {
+  it("keeps every held row canonical, valid, and disjoint from the registry", async () => {
+    const { NATIVE_RECIPE_HOLDS_V1 } = await import(
+      "@/engine/formulas/v1/native-recipes-b94-held"
+    );
+    expect(NATIVE_RECIPE_HOLDS_V1.length).toBe(21);
+    const accepted = new Set(NATIVE_FORMULA_RECIPES_V1.map((r) => r.runtimeId));
+    const classes = new Set<string>();
+    for (const hold of NATIVE_RECIPE_HOLDS_V1) {
+      expect(accepted.has(hold.recipe.runtimeId)).toBe(false);
+      classes.add(hold.holdClass);
+      expect(hold.evidence.length).toBeGreaterThan(0);
+      const result = await validateNativeRecipeV1(hold.recipe);
+      if (!result.ok)
+        throw new Error(`${hold.recipe.runtimeId}: ${result.reasonCode}`);
+    }
+    expect([...classes].sort()).toEqual([
+      "chaotic-amplification",
+      "ill-conditioned-cancellation",
+      "swiftshader-transcendental",
+    ]);
+    // held + accepted = the full B94 canonical identity set
+    expect(NATIVE_RECIPE_HOLDS_V1.length + NATIVE_FORMULA_RECIPES_V1.length).toBe(89);
+  });
+});
+
 describe("native probe conversion", () => {
   it("records the escape index without duplicating the escaping point", () => {
     // z_3 escapes: the u_steps=3 draw returns z_3 unescaped (its pre-step
@@ -170,7 +196,7 @@ describe("native probe conversion", () => {
       { z: [1.2, 0.9], iterations: 3, escaped: false },
       { z: [1.2, 0.9], iterations: 3, escaped: true },
     ];
-    const run = nativeRecipeProbesToOrbitRunV1(probes, [2, 2]);
+    const run = nativeRecipeProbesToOrbitRunV1(probes, [2, 2], 16);
     expect(run.escapedAt).toBe(3);
     expect(run.orbit).toEqual([
       [0.5, 0.2],
@@ -185,9 +211,30 @@ describe("native probe conversion", () => {
       { z: [0.5, 0.2], iterations: 1, escaped: false },
       { z: [0.55, 0.4], iterations: 2, escaped: false },
     ];
-    const run = nativeRecipeProbesToOrbitRunV1(bounded, [0.25, 0.1]);
+    const run = nativeRecipeProbesToOrbitRunV1(bounded, [0.25, 0.1], 16);
     expect(run.escapedAt).toBeNull();
     expect(run.orbit).toHaveLength(2);
+  });
+
+  it("observes a boundary escape from the budget+1 draw without a 17th point", () => {
+    // Orbit converges exactly at the budgeted step 16: draws 1..16 produce
+    // the points unescaped; draw 17 reports iterations=16 with the flag.
+    const probes: NativeRecipeProbeV1[] = [];
+    for (let step = 1; step <= 16; step++)
+      probes.push({ z: [step, 0], iterations: step, escaped: false });
+    probes.push({ z: [16, 0], iterations: 16, escaped: true });
+    const run = nativeRecipeProbesToOrbitRunV1(probes, [2, 2], 16);
+    expect(run.escapedAt).toBe(16);
+    expect(run.orbit).toHaveLength(16);
+  });
+
+  it("drops the budget+1 point when no escape fires at the boundary", () => {
+    const probes: NativeRecipeProbeV1[] = [];
+    for (let step = 1; step <= 17; step++)
+      probes.push({ z: [step, 0], iterations: step, escaped: false });
+    const run = nativeRecipeProbesToOrbitRunV1(probes, [2, 2], 16);
+    expect(run.escapedAt).toBeNull();
+    expect(run.orbit).toHaveLength(16);
   });
 });
 
