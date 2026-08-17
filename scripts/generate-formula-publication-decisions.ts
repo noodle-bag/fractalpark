@@ -393,64 +393,68 @@ export function writePublicAsset(path: string, serialized: string): void {
   };
   try {
     const openedDirectory = fstatSync(directoryDescriptor);
-    // On Linux, resolve the write and rename through /proc/self/fd so the
-    // pinned directory inode is used even if the path is replaced mid-write.
-    const pinnedBase = (() => {
-      const procPath = `/proc/self/fd/${directoryDescriptor}`;
-      try {
-        const throughProc = statSync(procPath);
-        if (
-          throughProc.isDirectory() &&
+    // Writes are pinned to the opened directory inode through procfs and are
+    // fail-closed without it: a path-based write could be redirected by a
+    // mid-write directory replacement, so regeneration requires Linux.
+    const pinnedBase = `/proc/self/fd/${directoryDescriptor}`;
+    try {
+      const throughProc = statSync(pinnedBase);
+      invariant(
+        throughProc.isDirectory() &&
           throughProc.dev === openedDirectory.dev &&
-          throughProc.ino === openedDirectory.ino
-        )
-          return procPath;
-      } catch {
-        // procfs unavailable; the before/after stability checks remain the
-        // detection layer for path-based writes.
-      }
-      return directory;
-    })();
+          throughProc.ino === openedDirectory.ino,
+        "decisions-asset-write-failed",
+      );
+    } catch (error) {
+      if (
+        error instanceof Error &&
+        error.message === "decisions-asset-write-failed"
+      )
+        throw error;
+      throw new Error("decisions-asset-write-failed");
+    }
     const temporary = join(
       pinnedBase,
       `.publication-decisions.${process.pid}.tmp`,
     );
     const target = join(pinnedBase, basename(path));
-    let descriptor: number;
+    let temporaryCreated = false;
     try {
-      descriptor = openSync(
-        temporary,
-        constants.O_WRONLY |
-          constants.O_CREAT |
-          constants.O_EXCL |
-          constants.O_NOFOLLOW,
-        0o644,
-      );
-    } catch {
-      throw new Error("decisions-asset-write-failed");
-    }
-    try {
-      writeSync(descriptor, serialized);
-      fsyncSync(descriptor);
-      fchmodSync(descriptor, 0o644);
-    } finally {
-      closeSync(descriptor);
-    }
-    // Abort before rename if the directory was replaced while writing, so
-    // the rename cannot plant the asset into a redirected location.
-    try {
+      let descriptor: number;
+      try {
+        descriptor = openSync(
+          temporary,
+          constants.O_WRONLY |
+            constants.O_CREAT |
+            constants.O_EXCL |
+            constants.O_NOFOLLOW,
+          0o644,
+        );
+      } catch {
+        throw new Error("decisions-asset-write-failed");
+      }
+      temporaryCreated = true;
+      try {
+        writeSync(descriptor, serialized);
+        fsyncSync(descriptor);
+        fchmodSync(descriptor, 0o644);
+      } finally {
+        closeSync(descriptor);
+      }
+      // Abort before rename if the directory was replaced while writing.
       assertDirectoryStable(openedDirectory);
-    } catch (error) {
-      unlinkSync(temporary);
-      throw error;
-    }
-    try {
       renameSync(temporary, target);
-    } catch (error) {
-      unlinkSync(temporary);
-      throw error;
+      temporaryCreated = false;
+      assertDirectoryStable(openedDirectory);
+    } finally {
+      if (temporaryCreated) {
+        try {
+          unlinkSync(temporary);
+        } catch {
+          // Best-effort cleanup through the pinned directory inode.
+        }
+      }
     }
-    assertDirectoryStable(openedDirectory);
   } finally {
     closeSync(directoryDescriptor);
   }
