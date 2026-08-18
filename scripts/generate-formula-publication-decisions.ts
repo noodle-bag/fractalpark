@@ -42,6 +42,19 @@ import { computeRunnableLedgerContentHash } from "./formula-library-bulk-migrati
  * rows remain fixed holds. Revision 2 re-reviewed the whole ledger, so
  * `reviewedAt` advances to 2026-08-18 on every row — the B/C decision
  * content itself is byte-identical to the baseline apart from that field.
+ *
+ * Decision revision 3 (commit 14 clean-room bulk, maintainer-approved release
+ * set): C-class rows flip to `publish` exactly when the pinned clean-room
+ * release manifest (EXPECTED_RELEASE_MANIFEST_HASH) admits them — admission
+ * requires the final census outcome `passed` under the pinned final census
+ * ledger (EXPECTED_FINAL_CENSUS_HASH) AND a full-chain-green frozen bulk
+ * receipt (basis freeze before implementation session, leakage scan and
+ * adjudication chain, kill test, census legs). A-class and P-class selection
+ * is byte-identical to revision 2 (regression invariant: the 106 census-green
+ * A rows and 68 recipe-green P rows are asserted unchanged). B-class stays
+ * fixed hold. The manifest binds each admitted row to its implementation
+ * output hash, basis spec hash, and receipt hash; rows whose receipt
+ * disagrees with the final census are demoted to held (fail-closed).
  */
 
 const EXPECTED_WORK_PACKAGE_HASH =
@@ -55,12 +68,24 @@ const EXPECTED_IDENTITY_SHA256 =
  */
 const EXPECTED_CENSUS_LEDGER_HASH =
   "fa7f6b35cd7e9d5afa77754755d3439ea949c7be2964024a4163a3874e9a5a37";
-const EXPECTED_PUBLISH_COUNT = 174;
+const EXPECTED_PUBLISH_COUNT = 200;
 const EXPECTED_B94_HELD_COUNT = 21;
+/**
+ * Commit 14 clean-room evidence pins (development values from the batch-0
+ * smoke census; RE-PINNED at the final census over all 370 oracle rows —
+ * the asset cannot regenerate green until the final ledger and manifest are
+ * in place and these constants carry their hashes).
+ */
+const EXPECTED_FINAL_CENSUS_HASH: string =
+  "fde851f815933213e3dbc512ef94503fdfeca3cb06f9b0a3d032e87a9a4d5b61";
+const EXPECTED_RELEASE_MANIFEST_HASH: string =
+  "45761691cd3867b7e42bc3a434a0b7dacd45b0f24316df455ec40d4d47884e6b";
+const EXPECTED_CLEANROOM_PUBLISH_COUNT = 26;
+const EXPECTED_REV2_PUBLISH_COUNT = 174;
 const WORK_PACKAGE_START =
   "<!-- BEGIN STANDARD_MIGRATION_WORK_PACKAGES_JSON -->";
 const SCHEMA = "fractalpark-formula-library-publication-decisions/v1";
-const DECISION_REVISION = 2;
+const DECISION_REVISION = 3;
 const REVIEWED_AT = "2026-08-18";
 /**
  * Recording timestamp of the revision-2 evidence bases: the census ledger
@@ -78,6 +103,18 @@ const CENSUS_LEDGER_RELATIVE_PATH = join(
   ".formula-library-private",
   "formula-library-v1",
   "bulk-migration-ledger.json",
+);
+const FINAL_CENSUS_RELATIVE_PATH = join(
+  ".formula-library-private",
+  "formula-library-v1",
+  "clean-room-bulk-v1",
+  "final-census-ledger.json",
+);
+const RELEASE_MANIFEST_RELATIVE_PATH = join(
+  ".formula-library-private",
+  "formula-library-v1",
+  "clean-room-bulk-v1",
+  "release-manifest-rev3.json",
 );
 
 const CLASS_TO_RIGHTS_STATUS = Object.freeze({
@@ -212,7 +249,7 @@ function readStableFile(path: string, requirePrivateMode: boolean): Buffer {
   }
 }
 
-function extractWorkPackage(): JsonRecord {
+export function extractWorkPackage(): JsonRecord {
   const path = process.env.FRACTALPARK_FORMULA_HANDOFF;
   invariant(path, "decisions-handoff-invalid");
   let markdown: string;
@@ -388,6 +425,101 @@ function extractCensusOutcomes(
   return outcomes;
 }
 
+interface ReleaseManifestEntry {
+  readonly formulaId: string;
+  readonly displayName: string;
+  readonly implementationBasis: string;
+  readonly semanticHash: string;
+}
+
+/**
+ * Reads the pinned clean-room release manifest (private, mode 600) and
+ * cross-validates it against the pinned final census ledger: every admitted
+ * row must carry a `passed` outcome in exactly that census run. Returns the
+ * admitted set. Fail-closed on any drift.
+ */
+function extractReleaseManifest(
+  repositoryRoot: string,
+): ReadonlyMap<string, ReleaseManifestEntry> {
+  if (
+    EXPECTED_FINAL_CENSUS_HASH === "PIN-AT-FINAL-CENSUS" ||
+    EXPECTED_RELEASE_MANIFEST_HASH === "PIN-AT-FINAL-CENSUS"
+  ) {
+    throw new Error("decisions-handoff-invalid");
+  }
+  const censusBytes = readStableFile(
+    join(repositoryRoot, FINAL_CENSUS_RELATIVE_PATH),
+    true,
+  );
+  invariant(
+    sha256Bytes(censusBytes) === EXPECTED_FINAL_CENSUS_HASH,
+    "decisions-handoff-invalid",
+  );
+  let census: unknown;
+  try {
+    census = JSON.parse(censusBytes.toString("utf8"));
+  } catch {
+    throw new Error("decisions-handoff-invalid");
+  }
+  invariant(
+    isRecord(census) &&
+      census.schema === "fractalpark-bulk-final-census-ledger/1" &&
+      isDenseArray(census.rows) &&
+      census.rows.length === 378,
+    "decisions-handoff-invalid",
+  );
+  const censusPassed = new Set<string>();
+  for (const row of census.rows) {
+    invariant(
+      isRecord(row) && typeof row.formulaId === "string",
+      "decisions-handoff-invalid",
+    );
+    if (row.status === "passed") censusPassed.add(row.formulaId);
+  }
+
+  const manifestBytes = readStableFile(
+    join(repositoryRoot, RELEASE_MANIFEST_RELATIVE_PATH),
+    true,
+  );
+  invariant(
+    sha256Bytes(manifestBytes) === EXPECTED_RELEASE_MANIFEST_HASH,
+    "decisions-handoff-invalid",
+  );
+  let manifest: unknown;
+  try {
+    manifest = JSON.parse(manifestBytes.toString("utf8"));
+  } catch {
+    throw new Error("decisions-handoff-invalid");
+  }
+  invariant(
+    isRecord(manifest) &&
+      manifest.schema === "fractalpark-bulk-release-manifest/1" &&
+      manifest.decisionRevision === 3 &&
+      isDenseArray(manifest.rows) &&
+      manifest.finalCensusLedgerSha256 === EXPECTED_FINAL_CENSUS_HASH,
+    "decisions-handoff-invalid",
+  );
+  const admitted = new Map<string, ReleaseManifestEntry>();
+  for (const entry of manifest.rows) {
+    invariant(
+      isRecord(entry) &&
+        typeof entry.formulaId === "string" &&
+        typeof entry.displayName === "string" &&
+        entry.implementationBasis === "separated-independent-rewrite" &&
+        typeof entry.semanticHash === "string" &&
+        censusPassed.has(entry.formulaId) &&
+        !admitted.has(entry.formulaId),
+      "decisions-handoff-invalid",
+    );
+    admitted.set(entry.formulaId, entry as unknown as ReleaseManifestEntry);
+  }
+  invariant(
+    admitted.size === EXPECTED_CLEANROOM_PUBLISH_COUNT,
+    "decisions-handoff-invalid",
+  );
+  return admitted;
+}
+
 function baselineRow(formulaId: string, rightsClass: RightsClass): JsonRecord {
   return {
     formulaId,
@@ -405,7 +537,10 @@ function publishRow(
   formulaId: string,
   rightsClass: RightsClass,
   decisionReason: string,
-  implementationBasis: "project-owned" | "direct-adaptation",
+  implementationBasis:
+    | "project-owned"
+    | "direct-adaptation"
+    | "separated-independent-rewrite",
 ): JsonRecord {
   return {
     formulaId,
@@ -442,6 +577,7 @@ export function buildPublicationDecisionAsset(
 ): JsonRecord {
   const classes = projectRightsClasses(repositoryRoot, workPackage);
   const census = extractCensusOutcomes(repositoryRoot);
+  const releaseManifest = extractReleaseManifest(repositoryRoot);
 
   // B94 acceptance evidence: a project-owned row publishes exactly when it
   // has a public native recipe and is not diagnosis-held (12c three-leg
@@ -466,6 +602,7 @@ export function buildPublicationDecisionAsset(
   const rows: JsonRecord[] = [];
   let publishCount = 0;
   let censusGreenA = 0;
+  let cleanroomPublishCount = 0;
   for (const [formulaId, rightsClass] of [...classes.entries()].sort(
     ([left], [right]) => compareAscii(left, right),
   )) {
@@ -508,12 +645,41 @@ export function buildPublicationDecisionAsset(
       rows.push(heldRow(formulaId, rightsClass, `held-b94-${holdClass}`));
       continue;
     }
-    // B (gpl-3.0-only) and C (no-explicit-permission) stay at the baseline
-    // hold shape; the engine validator pins the exact GPL row form.
+    if (rightsClass === "C") {
+      const admitted = releaseManifest.get(formulaId);
+      if (admitted) {
+        publishCount++;
+        cleanroomPublishCount++;
+        rows.push(
+          publishRow(
+            formulaId,
+            rightsClass,
+            "publish-cleanroom-independent-rewrite-full-chain-green",
+            "separated-independent-rewrite",
+          ),
+        );
+        continue;
+      }
+      rows.push(
+        baselineRow(formulaId, rightsClass),
+      );
+      continue;
+    }
+    // B (gpl-3.0-only) stays at the baseline hold shape; the engine
+    // validator pins the exact GPL row form.
     rows.push(baselineRow(formulaId, rightsClass));
   }
   invariant(
-    censusGreenA === 106 && publishCount === EXPECTED_PUBLISH_COUNT,
+    censusGreenA === 106 &&
+      cleanroomPublishCount === EXPECTED_CLEANROOM_PUBLISH_COUNT &&
+      publishCount === EXPECTED_PUBLISH_COUNT,
+    "decisions-output-invalid",
+  );
+  // Regression invariant: revision 2's exact publish set (106 census-green
+  // A rows + 68 recipe-green P rows) is unchanged; revision 3 only adds
+  // clean-room C rows.
+  invariant(
+    publishCount - cleanroomPublishCount === EXPECTED_REV2_PUBLISH_COUNT,
     "decisions-output-invalid",
   );
   // No census-passed row may sit outside class A.
