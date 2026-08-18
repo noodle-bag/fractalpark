@@ -531,17 +531,37 @@ function verifyPublicationDecisions(repositoryRoot: string): {
     }
     if (rightsClass === "A") {
       invariant(
-        censusOutcome.reasonCode !== null &&
+        row.publicationDecision === "hold" &&
+          row.implementationBasis === null &&
+          row.implementationBasisRecordedAt === null &&
+          row.leakageScanStatus === "pending" &&
+          row.reviewedAt === REVIEWED_AT &&
+          censusOutcome.reasonCode !== null &&
           row.decisionReason ===
             CENSUS_HELD_REASONS[censusOutcome.reasonCode],
       );
     } else if (rightsClass === "P") {
       const holdClass = b94HoldClassById.get(row.formulaId);
       invariant(
-        holdClass !== undefined &&
+        row.publicationDecision === "hold" &&
+          row.implementationBasis === null &&
+          row.implementationBasisRecordedAt === null &&
+          row.leakageScanStatus === "pending" &&
+          row.reviewedAt === REVIEWED_AT &&
+          holdClass !== undefined &&
           row.decisionReason === `held-b94-${holdClass}`,
       );
+    } else if (rightsClass === "C") {
+      invariant(
+        row.publicationDecision === "hold" &&
+          row.implementationBasis === null &&
+          row.implementationBasisRecordedAt === null &&
+          row.leakageScanStatus === "pending" &&
+          row.reviewedAt === REVIEWED_AT &&
+          row.decisionReason === "held-awaiting-independent-rewrite",
+      );
     }
+    // gpl-3.0-only (class B) rows are pinned exactly in the row loop above.
   }
   invariant(
     actualPublish.size === expectedPublish.size &&
