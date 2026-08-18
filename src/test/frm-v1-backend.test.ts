@@ -229,6 +229,25 @@ describe("isolated FRM-like v1 backend candidate", () => {
     expect(powers.glsl.loop).toMatch(/frmV1Pow\([^\n]+\.x\)/);
   });
 
+  it("saturates the LastSqr side channel instead of terminating finite orbits whose squared modulus overflows f32", () => {
+    const compiled = backend(sourceFor("    z = z * z", "|z| < 100"));
+    const state = compiled.cpu.createState({
+      pixel: { re: 1e6, im: 0 },
+    });
+    compiled.cpu.init(state);
+    compiled.cpu.step(state);
+    expect(state.values.z).toEqual({ re: Math.fround(1e12), im: 0 });
+    const second = compiled.cpu.step(state);
+    // z = 1e24 is finite, but dot(z, z) = 1e48 overflows f32: the decision
+    // channel saturates instead of terminating the orbit (classic evaluates
+    // the channel at host precision and escapes normally).
+    expect(second.event).toBeUndefined();
+    expect(state.values.LastSqr.re).toBe(Number.POSITIVE_INFINITY);
+    const continuation = compiled.cpu.shouldContinue(state);
+    expect(continuation.event).toBeUndefined();
+    expect(continuation.continue).toBe(false);
+  });
+
   it("rounds every primitive complex multiplication and short-circuits an unselected singular RHS", () => {
     const arithmetic = backend(
       sourceFor("    z = (0.1, 0.1) * (0.1, 0.1)", "0 && recip((0, 0))"),

@@ -1119,8 +1119,11 @@ function cpuExpression(
   return value(standard32Stdlib("exp", [product], state));
 }
 function finite(state: FrmLikeV1CpuState): boolean {
-  return Object.values(state.values).every(
-    (value) => frmV1Classify(value).finite,
+  return Object.entries(state.values).every(
+    // LastSqr is a saturating decision side-channel (see step()): +inf is a
+    // valid escape signal there, not orbit corruption. Expressions that
+    // genuinely consume it still terminate via checkedComplex on read.
+    ([name, value]) => name === "LastSqr" || frmV1Classify(value).finite,
   );
 }
 function run(
@@ -1387,14 +1390,22 @@ export function compileFrmLikeV1Backend(
           if (!state.terminated) {
             state.values.zPrev = q(state.values.z);
             run(ir.loop, state, values);
-            if (!state.terminated)
-              state.values.LastSqr = checkedComplex(state, {
-                re: f32Add(
-                  f32Mul(state.values.z.re, state.values.z.re),
-                  f32Mul(state.values.z.im, state.values.z.im),
-                ),
-                im: 0,
-              });
+            if (!state.terminated) {
+              // LastSqr is a decision side-channel, not orbit state: for
+              // finite z with |z| > sqrt(f32max) ≈ 1.8e19 the squared
+              // modulus legitimately overflows f32. Classic evaluates this
+              // channel at host precision, where it stays finite and the
+              // escape predicate still fires. Saturate to +inf instead of
+              // terminating the orbit: C5-style predicates then escape
+              // (+inf <= t is false), and a formula that reads LastSqr as
+              // a value still terminates on use via checkedComplex, which
+              // keeps nonFinite-by-design semantics for genuine consumers.
+              const lastSqr = f32Add(
+                f32Mul(state.values.z.re, state.values.z.re),
+                f32Mul(state.values.z.im, state.values.z.im),
+              );
+              state.values.LastSqr = { re: lastSqr, im: 0 };
+            }
           }
           return {
             state,
