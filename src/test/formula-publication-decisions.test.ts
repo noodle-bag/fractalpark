@@ -76,7 +76,7 @@ describe("sha256HexSyncV1", () => {
 });
 
 describe("formula publication decision ledger", () => {
-  it("loads the committed exact-677 baseline", () => {
+  it("loads the committed exact-677 decision ledger (revision 2)", () => {
     const result = createPublicationDecisionLedgerV1();
     expect(result.ok).toBe(true);
     if (!result.ok) return;
@@ -85,7 +85,7 @@ describe("formula publication decision ledger", () => {
       "fractalpark-formula-library-publication-decisions/v1",
     );
     expect(ledger.version).toBe(1);
-    expect(ledger.decisionRevision).toBe(1);
+    expect(ledger.decisionRevision).toBe(2);
     expect(ledger.rows).toHaveLength(677);
     expect(ledger.rightsStatusCounts).toEqual({
       "project-owned": 89,
@@ -94,17 +94,17 @@ describe("formula publication decision ledger", () => {
       "no-explicit-permission": 378,
     });
     expect(ledger.decisionCounts).toEqual({
-      publish: 0,
-      hold: 677,
+      publish: 174,
+      hold: 503,
       exclude: 0,
     });
-    expect(ledger.publishedFormulaIds()).toEqual([]);
+    expect(ledger.publishedFormulaIds()).toHaveLength(174);
   });
 
   it("verifies the committed content hash and detects tampering", () => {
     expect(verifyPublicationDecisionContentHashV1()).toBe(true);
     const tampered = clone();
-    tampered.rows[0]!.reviewedAt = "2026-08-18";
+    tampered.rows[0]!.reviewedAt = "2026-08-19";
     expect(verifyPublicationDecisionContentHashV1(tampered)).toBe(false);
     expect(verifyPublicationDecisionContentHashV1({ contentHash: 42 })).toBe(
       false,
@@ -147,43 +147,106 @@ describe("formula publication decision ledger", () => {
       expect(row.implementationBasis).toBeNull();
       expect(row.implementationBasisRecordedAt).toBeNull();
       expect(row.leakageScanStatus).toBe("not-applicable");
-      expect(row.reviewedAt).toBe("2026-08-17");
+      expect(row.reviewedAt).toBe("2026-08-18");
     }
   });
 
-  it("keeps every non-GPL baseline row held and unpublished", () => {
+  it("publishes exactly the revision-2 green set with recorded bases", () => {
+    const ledger = PUBLICATION_DECISION_LEDGER_V1;
+    const published = ledger.rows.filter(
+      (row) => row.publicationDecision === "publish",
+    );
+    expect(published).toHaveLength(174);
+    let directAdaptation = 0;
+    let projectOwned = 0;
+    for (const row of published) {
+      expect(row.implementationBasisRecordedAt).toBe(
+        "2026-08-18T00:05:00.000Z",
+      );
+      expect(row.leakageScanStatus).toBe("passed");
+      expect(row.reviewedAt).toBe("2026-08-18");
+      if (row.implementationBasis === "direct-adaptation") {
+        directAdaptation++;
+        expect(row.rightsStatus).toBe(
+          "source-declared-public-domain-assumption",
+        );
+        expect(row.decisionReason).toBe("publish-census-full-chain-green");
+      } else {
+        projectOwned++;
+        expect(row.implementationBasis).toBe("project-owned");
+        expect(row.rightsStatus).toBe("project-owned");
+        expect(row.decisionReason).toBe("publish-project-owned-native-recipe");
+      }
+    }
+    expect(directAdaptation).toBe(106);
+    expect(projectOwned).toBe(68);
+  });
+
+  it("keeps every held non-GPL row basis-free with a pending scan", () => {
     for (const row of PUBLICATION_DECISION_LEDGER_V1.rows) {
-      if (row.rightsStatus === "gpl-3.0-only") continue;
+      if (row.publicationDecision === "publish") continue;
       expect(row.publicationDecision).toBe("hold");
       expect(row.implementationBasis).toBeNull();
       expect(row.implementationBasisRecordedAt).toBeNull();
-      expect(row.leakageScanStatus).toBe("pending");
+      if (row.rightsStatus !== "gpl-3.0-only")
+        expect(row.leakageScanStatus).toBe("pending");
       expect(row.decisionReason.length).toBeGreaterThan(0);
     }
+  });
+
+  it("pins the 12e guarded-dialect outcomes per row", () => {
+    const ledger = PUBLICATION_DECISION_LEDGER_V1;
+    const published = [
+      "97e2fc76-3590-5119-8b38-d8cc43f18d74", // ent
+      "f978281a-4cea-5545-a9c6-7ca68ca084f0", // ent2
+      "7ce8c07c-0ba6-560c-9316-9aa2439997b3", // pseudozeepi
+      "300db23f-8a8a-59d7-b4f1-bc77757286c6", // zeepi
+    ];
+    for (const formulaId of published)
+      expect(
+        ledger.decisionFor(formulaId)?.publicationDecision,
+        formulaId,
+      ).toBe("publish");
+    expect(
+      ledger.decisionFor("df663e75-a1ab-5eb2-a710-d0e9b466fa9c")
+        ?.decisionReason,
+    ).toBe("held-census-release-oracle-mismatch"); // richard6
+    for (const formulaId of [
+      "d30d2e42-cdc2-5a2a-b9e5-cb167617180a", // richard2
+      "93724077-ebed-5039-956b-7a66910a40d2", // richard4
+      "b8c9d4a5-5b89-5ea7-af30-addd315fd806", // richard10
+      "66f1c52e-0d3a-576b-bc3c-75f65786bff5", // richard11
+    ])
+      expect(
+        ledger.decisionFor(formulaId)?.decisionReason,
+        formulaId,
+      ).toBe("held-census-webgl-cpu-mismatch");
   });
 
   it("accepts a future publish row with basis, basis time, and passed scan", () => {
     const asset = clone();
     const index = asset.rows.findIndex(
-      (row) => row.rightsStatus === "project-owned",
+      (row) =>
+        row.rightsStatus === "project-owned" &&
+        row.publicationDecision === "hold",
     );
     expect(index).toBeGreaterThanOrEqual(0);
     const row = asset.rows[index]!;
     row.publicationDecision = "publish";
     row.decisionReason = "published-project-owned-batch-1";
     row.implementationBasis = "project-owned";
-    row.implementationBasisRecordedAt = "2026-08-17T00:00:00.000Z";
+    row.implementationBasisRecordedAt = "2026-08-18T00:05:00.000Z";
     row.leakageScanStatus = "passed";
-    asset.decisionCounts.publish = 1;
-    asset.decisionCounts.hold = 676;
+    asset.decisionCounts.publish = 175;
+    asset.decisionCounts.hold = 502;
     refreshContentHash(asset);
     const result = createPublicationDecisionLedgerV1(asset);
     expect(result.ok).toBe(true);
     if (!result.ok) return;
-    expect(result.ledger.publishedFormulaIds()).toEqual([row.formulaId]);
+    expect(result.ledger.publishedFormulaIds()).toContain(row.formulaId);
     expect(result.ledger.decisionCounts).toEqual({
-      publish: 1,
-      hold: 676,
+      publish: 175,
+      hold: 502,
       exclude: 0,
     });
   });
@@ -226,10 +289,10 @@ describe("formula publication decision ledger", () => {
     row.publicationDecision = "publish";
     row.decisionReason = "published-gpl-batch";
     row.implementationBasis = "separated-independent-rewrite";
-    row.implementationBasisRecordedAt = "2026-08-17T00:00:00.000Z";
+    row.implementationBasisRecordedAt = "2026-08-18T00:05:00.000Z";
     row.leakageScanStatus = "passed";
-    asset.decisionCounts.publish = 1;
-    asset.decisionCounts.hold = 676;
+    asset.decisionCounts.publish = 175;
+    asset.decisionCounts.hold = 502;
     refreshContentHash(asset);
     expectInvalid(asset);
   });
@@ -247,11 +310,10 @@ describe("formula publication decision ledger", () => {
   it("rejects a publish row without a recorded basis", () => {
     const asset = clone();
     const row = asset.rows.find(
-      (candidate) => candidate.rightsStatus === "project-owned",
+      (candidate) => candidate.publicationDecision === "publish",
     )!;
-    row.publicationDecision = "publish";
-    asset.decisionCounts.publish = 1;
-    asset.decisionCounts.hold = 676;
+    row.implementationBasis = null;
+    row.implementationBasisRecordedAt = null;
     refreshContentHash(asset);
     expectInvalid(asset);
   });
@@ -259,14 +321,9 @@ describe("formula publication decision ledger", () => {
   it("rejects a publish row without a passed leakage scan", () => {
     const asset = clone();
     const row = asset.rows.find(
-      (candidate) => candidate.rightsStatus === "project-owned",
+      (candidate) => candidate.publicationDecision === "publish",
     )!;
-    row.publicationDecision = "publish";
-    row.implementationBasis = "project-owned";
-    row.implementationBasisRecordedAt = "2026-08-17T00:00:00.000Z";
     row.leakageScanStatus = "pending";
-    asset.decisionCounts.publish = 1;
-    asset.decisionCounts.hold = 676;
     refreshContentHash(asset);
     expectInvalid(asset);
   });
@@ -287,7 +344,10 @@ describe("formula publication decision ledger", () => {
 
   it("rejects a basis timestamp without a basis", () => {
     const asset = clone();
-    asset.rows[0]!.implementationBasisRecordedAt = "2026-08-17T00:00:00.000Z";
+    const row = asset.rows.find(
+      (candidate) => candidate.publicationDecision === "hold",
+    )!;
+    row.implementationBasisRecordedAt = "2026-08-18T00:05:00.000Z";
     refreshContentHash(asset);
     expectInvalid(asset);
   });

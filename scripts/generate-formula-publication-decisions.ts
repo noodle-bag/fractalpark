@@ -17,9 +17,13 @@ import {
 import { basename, dirname, join, resolve } from "node:path";
 import { pathToFileURL } from "node:url";
 
+import { NATIVE_FORMULA_RECIPES_V1 } from "../src/engine/formulas/v1/native-recipes";
+import { NATIVE_RECIPE_HOLDS_V1 } from "../src/engine/formulas/v1/native-recipes-b94-held";
+import { computeRunnableLedgerContentHash } from "./formula-library-bulk-migration";
+
 /**
- * Generates the frozen public publication-decision baseline from the frozen
- * private exact-677 migration work-package ledger. The output contains only
+ * Generates the frozen public publication-decision ledger from the frozen
+ * private exact-677 migration work-package handoff. The output contains only
  * neutral formula IDs, rights status, decision fields, and aggregate counts;
  * it never carries private paths, source text, or reversible intermediates.
  * The script pins the frozen handoff's canonical content hash as a public
@@ -27,22 +31,51 @@ import { pathToFileURL } from "node:url";
  * scripts in this repository; a one-way digest exposes no private content.
  * This script records decisions; it does not authorize any implementation,
  * publication, or hosted write.
+ *
+ * Decision revision 2 (maintainer-approved release set, 2026-08-18): rows
+ * flip to `publish` only on recorded full-chain-green evidence —
+ * F588/A-class rows require a `passed` row in the pinned census ledger
+ * (EXPECTED_CENSUS_LEDGER_HASH, 106 rows); project-owned B94 rows require a
+ * native recipe that is not diagnosis-held in
+ * src/engine/formulas/v1/native-recipes-b94-held.ts (68 rows). Everything
+ * else stays `hold` with a per-row reason; all 73 gpl-3.0-only rows remain
+ * fixed holds.
  */
 
 const EXPECTED_WORK_PACKAGE_HASH =
   "29d4501d05f712f154d11809414876f9625c5efa202885579080d61fa88633bd";
 const EXPECTED_IDENTITY_SHA256 =
   "b98bbc2b954871b227acfd7c882443cbeb44870931ddb4714c9aed3ffcf33729";
+/**
+ * Census rerun on the guarded engine (commit 783a8fc), 677 rows, exit 0.
+ * The publish set for A-class rows is exactly the `passed` rows of this
+ * ledger; pinning the hash binds the decision asset to that evidence run.
+ */
+const EXPECTED_CENSUS_LEDGER_HASH =
+  "fa7f6b35cd7e9d5afa77754755d3439ea949c7be2964024a4163a3874e9a5a37";
+const EXPECTED_PUBLISH_COUNT = 174;
+const EXPECTED_B94_HELD_COUNT = 21;
 const WORK_PACKAGE_START =
   "<!-- BEGIN STANDARD_MIGRATION_WORK_PACKAGES_JSON -->";
 const SCHEMA = "fractalpark-formula-library-publication-decisions/v1";
-const DECISION_REVISION = 1;
-const REVIEWED_AT = "2026-08-17";
+const DECISION_REVISION = 2;
+const REVIEWED_AT = "2026-08-18";
+/**
+ * Recording timestamp of the revision-2 evidence bases: the census ledger
+ * above and the 12c B94 three-leg cross-check were both recorded on
+ * 2026-08-18 (UTC). Pinned for deterministic regeneration.
+ */
+const BASIS_RECORDED_AT = "2026-08-18T00:05:00.000Z";
 const ASSET_RELATIVE_PATH = join(
   "resources",
   "formula-library",
   "v1",
   "publication-decisions.json",
+);
+const CENSUS_LEDGER_RELATIVE_PATH = join(
+  ".formula-library-private",
+  "formula-library-v1",
+  "bulk-migration-ledger.json",
 );
 
 const CLASS_TO_RIGHTS_STATUS = Object.freeze({
@@ -290,6 +323,69 @@ function projectRightsClasses(
   return classes;
 }
 
+const CENSUS_HELD_REASONS: Readonly<Record<string, string>> = Object.freeze({
+  "missing-input": "held-missing-input",
+  "release-oracle-mismatch": "held-census-release-oracle-mismatch",
+  "webgl-cpu-mismatch": "held-census-webgl-cpu-mismatch",
+  "webgl-compile-link-draw-failed": "held-census-webgl-compile-link-draw-failed",
+});
+
+type CensusOutcome =
+  | { readonly status: "passed" }
+  | { readonly status: "failed"; readonly reasonCode: string };
+
+/**
+ * Reads the pinned census ledger (private, mode 600) and returns the
+ * per-row outcome. The ledger content hash is pinned so the revision-2
+ * publish set is bound to exactly one evidence run.
+ */
+function extractCensusOutcomes(
+  repositoryRoot: string,
+): ReadonlyMap<string, CensusOutcome> {
+  const path = join(repositoryRoot, CENSUS_LEDGER_RELATIVE_PATH);
+  const bytes = readStableFile(path, true);
+  let ledger: unknown;
+  try {
+    ledger = JSON.parse(bytes.toString("utf8"));
+  } catch {
+    throw new Error("decisions-handoff-invalid");
+  }
+  invariant(isRecord(ledger), "decisions-handoff-invalid");
+  invariant(
+    computeRunnableLedgerContentHash(ledger) === EXPECTED_CENSUS_LEDGER_HASH,
+    "decisions-handoff-invalid",
+  );
+  invariant(
+    isDenseArray(ledger.rows) && ledger.rows.length === 677,
+    "decisions-handoff-invalid",
+  );
+  const outcomes = new Map<string, CensusOutcome>();
+  for (const row of ledger.rows) {
+    invariant(
+      isRecord(row) &&
+        typeof row.formulaId === "string" &&
+        !outcomes.has(row.formulaId) &&
+        (row.status === "passed" || row.status === "failed"),
+      "decisions-handoff-invalid",
+    );
+    if (row.status === "passed") {
+      outcomes.set(row.formulaId, { status: "passed" });
+      continue;
+    }
+    invariant(
+      typeof row.reasonCode === "string" &&
+        (row.reasonCode in CENSUS_HELD_REASONS ||
+          row.reasonCode === "v1-projection-unsupported"),
+      "decisions-handoff-invalid",
+    );
+    outcomes.set(row.formulaId, {
+      status: "failed",
+      reasonCode: row.reasonCode,
+    });
+  }
+  return outcomes;
+}
+
 function baselineRow(formulaId: string, rightsClass: RightsClass): JsonRecord {
   return {
     formulaId,
@@ -303,14 +399,126 @@ function baselineRow(formulaId: string, rightsClass: RightsClass): JsonRecord {
   };
 }
 
+function publishRow(
+  formulaId: string,
+  rightsClass: RightsClass,
+  decisionReason: string,
+  implementationBasis: "project-owned" | "direct-adaptation",
+): JsonRecord {
+  return {
+    formulaId,
+    rightsStatus: CLASS_TO_RIGHTS_STATUS[rightsClass],
+    publicationDecision: "publish",
+    decisionReason,
+    implementationBasis,
+    implementationBasisRecordedAt: BASIS_RECORDED_AT,
+    leakageScanStatus: "passed",
+    reviewedAt: REVIEWED_AT,
+  };
+}
+
+function heldRow(
+  formulaId: string,
+  rightsClass: RightsClass,
+  decisionReason: string,
+): JsonRecord {
+  return {
+    formulaId,
+    rightsStatus: CLASS_TO_RIGHTS_STATUS[rightsClass],
+    publicationDecision: "hold",
+    decisionReason,
+    implementationBasis: null,
+    implementationBasisRecordedAt: null,
+    leakageScanStatus: "pending",
+    reviewedAt: REVIEWED_AT,
+  };
+}
+
 export function buildPublicationDecisionAsset(
   repositoryRoot: string,
   workPackage: JsonRecord,
 ): JsonRecord {
   const classes = projectRightsClasses(repositoryRoot, workPackage);
-  const rows = [...classes.entries()]
-    .sort(([left], [right]) => compareAscii(left, right))
-    .map(([formulaId, rightsClass]) => baselineRow(formulaId, rightsClass));
+  const census = extractCensusOutcomes(repositoryRoot);
+
+  // B94 acceptance evidence: a project-owned row publishes exactly when it
+  // has a public native recipe and is not diagnosis-held (12c three-leg
+  // cross-check, recorded in the execution ledger on 2026-08-18).
+  const recipeIds = new Set(
+    NATIVE_FORMULA_RECIPES_V1.map((recipe) => recipe.formulaId as string),
+  );
+  const b94Holds = new Map<string, string>();
+  for (const hold of NATIVE_RECIPE_HOLDS_V1) {
+    const formulaId = hold.recipe.formulaId as string;
+    invariant(
+      !b94Holds.has(formulaId) && classes.get(formulaId) === "P",
+      "decisions-handoff-invalid",
+    );
+    b94Holds.set(formulaId, hold.holdClass);
+  }
+  invariant(
+    b94Holds.size === EXPECTED_B94_HELD_COUNT,
+    "decisions-handoff-invalid",
+  );
+
+  const rows: JsonRecord[] = [];
+  let publishCount = 0;
+  let censusGreenA = 0;
+  for (const [formulaId, rightsClass] of [...classes.entries()].sort(
+    ([left], [right]) => compareAscii(left, right),
+  )) {
+    if (rightsClass === "A") {
+      const outcome = census.get(formulaId);
+      invariant(outcome, "decisions-handoff-invalid");
+      if (outcome.status === "passed") {
+        censusGreenA++;
+        publishCount++;
+        rows.push(
+          publishRow(
+            formulaId,
+            rightsClass,
+            "publish-census-full-chain-green",
+            "direct-adaptation",
+          ),
+        );
+        continue;
+      }
+      const reason = CENSUS_HELD_REASONS[outcome.reasonCode];
+      invariant(reason !== undefined, "decisions-handoff-invalid");
+      rows.push(heldRow(formulaId, rightsClass, reason));
+      continue;
+    }
+    if (rightsClass === "P") {
+      const holdClass = b94Holds.get(formulaId);
+      if (holdClass === undefined) {
+        invariant(recipeIds.has(formulaId), "decisions-handoff-invalid");
+        publishCount++;
+        rows.push(
+          publishRow(
+            formulaId,
+            rightsClass,
+            "publish-project-owned-native-recipe",
+            "project-owned",
+          ),
+        );
+        continue;
+      }
+      rows.push(heldRow(formulaId, rightsClass, `held-b94-${holdClass}`));
+      continue;
+    }
+    // B (gpl-3.0-only) and C (no-explicit-permission) stay at the baseline
+    // hold shape; the engine validator pins the exact GPL row form.
+    rows.push(baselineRow(formulaId, rightsClass));
+  }
+  invariant(
+    censusGreenA === 106 && publishCount === EXPECTED_PUBLISH_COUNT,
+    "decisions-output-invalid",
+  );
+  // No census-passed row may sit outside class A.
+  for (const [formulaId, outcome] of census)
+    if (outcome.status === "passed")
+      invariant(classes.get(formulaId) === "A", "decisions-output-invalid");
+
   const rightsStatusCounts: JsonRecord = {
     "project-owned": 0,
     "source-declared-public-domain-assumption": 0,
@@ -339,7 +547,11 @@ export function buildPublicationDecisionAsset(
     formulaCount: 677,
     identityBinding: { standardFormulaIdsSha256: EXPECTED_IDENTITY_SHA256 },
     rightsStatusCounts,
-    decisionCounts: { publish: 0, hold: 677, exclude: 0 },
+    decisionCounts: {
+      publish: publishCount,
+      hold: 677 - publishCount,
+      exclude: 0,
+    },
     rows,
   };
   return { ...unsigned, contentHash: sha256Bytes(canonicalJson(unsigned)) };
@@ -468,7 +680,13 @@ export function writePublicAsset(path: string, serialized: string): void {
 export function generatePublicationDecisions(
   repositoryRoot: string,
   write: boolean,
-): { contentHash: string; assetSha256: string; drift: boolean } {
+): {
+  contentHash: string;
+  assetSha256: string;
+  drift: boolean;
+  published: number;
+  held: number;
+} {
   const workPackage = extractWorkPackage();
   assertSelfHash(
     workPackage,
@@ -489,10 +707,13 @@ export function generatePublicationDecisions(
   } else {
     invariant(!drift, "decisions-drift");
   }
+  const decisionCounts = asset.decisionCounts as JsonRecord;
   return {
     contentHash: String(asset.contentHash),
     assetSha256: sha256Bytes(serialized),
     drift,
+    published: Number(decisionCounts.publish),
+    held: Number(decisionCounts.hold),
   };
 }
 
@@ -514,8 +735,9 @@ if (
         ok: true,
         mode: write ? "write" : "check",
         formulaCount: 677,
-        published: 0,
-        held: 677,
+        decisionRevision: DECISION_REVISION,
+        published: result.published,
+        held: result.held,
         excluded: 0,
         gplHeld: 73,
         contentHash: result.contentHash,
