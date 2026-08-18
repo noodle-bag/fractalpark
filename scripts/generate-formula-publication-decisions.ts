@@ -38,8 +38,10 @@ import { computeRunnableLedgerContentHash } from "./formula-library-bulk-migrati
  * (EXPECTED_CENSUS_LEDGER_HASH, 106 rows); project-owned B94 rows require a
  * native recipe that is not diagnosis-held in
  * src/engine/formulas/v1/native-recipes-b94-held.ts (68 rows). Everything
- * else stays `hold` with a per-row reason; all 73 gpl-3.0-only rows remain
- * fixed holds.
+ * else keeps its baseline `hold` decision and reason; all 73 gpl-3.0-only
+ * rows remain fixed holds. Revision 2 re-reviewed the whole ledger, so
+ * `reviewedAt` advances to 2026-08-18 on every row — the B/C decision
+ * content itself is byte-identical to the baseline apart from that field.
  */
 
 const EXPECTED_WORK_PACKAGE_HASH =

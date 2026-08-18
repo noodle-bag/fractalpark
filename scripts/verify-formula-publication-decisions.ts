@@ -10,16 +10,39 @@ import {
 import { join, resolve } from "node:path";
 import { pathToFileURL } from "node:url";
 
+import { NATIVE_FORMULA_RECIPES_V1 } from "../src/engine/formulas/v1/native-recipes";
+import { NATIVE_RECIPE_HOLDS_V1 } from "../src/engine/formulas/v1/native-recipes-b94-held";
+
 /**
  * Independent accounting verifier for the frozen publication decision ledger.
  * It imports neither the generator nor the engine validator: every invariant
  * is recomputed from raw bytes — the committed public asset, the public
- * identity manifest, and the frozen private work-package handoff. A pass is
- * accounting evidence only; it never authorizes implementation or publication.
+ * identity manifest, the frozen private work-package handoff, and (since
+ * decision revision 2) the pinned private census ledger. The native-recipe
+ * registry and diagnosis-held list are imported as evidence data only; the
+ * publish selection is recomputed here, never taken from the generator.
+ * A pass is accounting evidence only; it never authorizes implementation or
+ * publication.
  */
 
 const EXPECTED_WORK_PACKAGE_HASH =
   "29d4501d05f712f154d11809414876f9625c5efa202885579080d61fa88633bd";
+/**
+ * Census rerun on the guarded engine (commit 783a8fc): the revision-2
+ * A-class publish set is exactly the `passed` rows of this ledger. The hash
+ * is recomputed here from raw bytes with this script's own canonical JSON.
+ */
+const EXPECTED_CENSUS_LEDGER_HASH =
+  "fa7f6b35cd7e9d5afa77754755d3439ea949c7be2964024a4163a3874e9a5a37";
+const EXPECTED_PUBLISH_COUNT = 174;
+const EXPECTED_B94_HELD_COUNT = 21;
+const BASIS_RECORDED_AT = "2026-08-18T00:05:00.000Z";
+const REVIEWED_AT = "2026-08-18";
+const CENSUS_LEDGER_RELATIVE_PATH = join(
+  ".formula-library-private",
+  "formula-library-v1",
+  "bulk-migration-ledger.json",
+);
 const WORK_PACKAGE_START =
   "<!-- BEGIN STANDARD_MIGRATION_WORK_PACKAGES_JSON -->";
 const SCHEMA = "fractalpark-formula-library-publication-decisions/v1";
@@ -389,6 +412,7 @@ function verifyPublicationDecisions(repositoryRoot: string): {
         EXPECTED_WORK_PACKAGE_HASH,
   );
   const handoffSeen = new Set<string>();
+  const classById = new Map<string, string>();
   for (const rawRow of workPackage.rows) {
     invariant(
       isRecord(rawRow) &&
@@ -399,12 +423,130 @@ function verifyPublicationDecisions(repositoryRoot: string): {
         !handoffSeen.has(rawRow.formulaId),
     );
     handoffSeen.add(rawRow.formulaId);
+    classById.set(rawRow.formulaId, rawRow.rights.class);
     invariant(
       statusById.get(rawRow.formulaId) ===
         CLASS_TO_RIGHTS_STATUS[rawRow.rights.class],
     );
   }
   invariant(handoffSeen.size === 677);
+
+  // Independent revision-2 publish-selection recomputation. The expected
+  // set is derived from the pinned census ledger and the native-recipe
+  // evidence — never from the generator — and must equal the asset's set
+  // exactly, with per-row basis/scan/review fields in the revision-2 shape.
+  const censusBytes = readStableFile(
+    join(repositoryRoot, CENSUS_LEDGER_RELATIVE_PATH),
+    true,
+  );
+  const censusLedger = JSON.parse(censusBytes.toString("utf8")) as unknown;
+  invariant(isRecord(censusLedger));
+  const censusUnhashed = { ...censusLedger };
+  delete censusUnhashed.ledgerContentHash;
+  invariant(
+    typeof censusLedger.ledgerContentHash === "string" &&
+      censusLedger.ledgerContentHash === EXPECTED_CENSUS_LEDGER_HASH &&
+      sha256Bytes(canonicalJson(censusUnhashed)) ===
+        EXPECTED_CENSUS_LEDGER_HASH,
+  );
+  invariant(
+    isDenseArray(censusLedger.rows) && censusLedger.rows.length === 677,
+  );
+  const censusOutcomeById = new Map<
+    string,
+    { passed: boolean; reasonCode: string | null }
+  >();
+  for (const censusRow of censusLedger.rows) {
+    invariant(
+      isRecord(censusRow) &&
+        typeof censusRow.formulaId === "string" &&
+        !censusOutcomeById.has(censusRow.formulaId) &&
+        (censusRow.status === "passed" || censusRow.status === "failed"),
+    );
+    censusOutcomeById.set(censusRow.formulaId, {
+      passed: censusRow.status === "passed",
+      reasonCode:
+        typeof censusRow.reasonCode === "string" ? censusRow.reasonCode : null,
+    });
+  }
+  const recipeIds = new Set(
+    NATIVE_FORMULA_RECIPES_V1.map((recipe) => recipe.formulaId as string),
+  );
+  const b94HoldClassById = new Map<string, string>();
+  for (const hold of NATIVE_RECIPE_HOLDS_V1) {
+    const formulaId = hold.recipe.formulaId as string;
+    invariant(!b94HoldClassById.has(formulaId));
+    b94HoldClassById.set(formulaId, hold.holdClass);
+  }
+  invariant(b94HoldClassById.size === EXPECTED_B94_HELD_COUNT);
+  const CENSUS_HELD_REASONS: Readonly<Record<string, string>> = Object.freeze({
+    "missing-input": "held-missing-input",
+    "release-oracle-mismatch": "held-census-release-oracle-mismatch",
+    "webgl-cpu-mismatch": "held-census-webgl-cpu-mismatch",
+    "webgl-compile-link-draw-failed":
+      "held-census-webgl-compile-link-draw-failed",
+  });
+
+  const expectedPublish = new Set<string>();
+  for (const formulaId of handoffSeen) {
+    const rightsClass = classById.get(formulaId);
+    const censusOutcome = censusOutcomeById.get(formulaId);
+    invariant(rightsClass !== undefined && censusOutcome !== undefined);
+    if (rightsClass === "A" && censusOutcome.passed)
+      expectedPublish.add(formulaId);
+    if (
+      rightsClass === "P" &&
+      !b94HoldClassById.has(formulaId) &&
+      recipeIds.has(formulaId)
+    )
+      expectedPublish.add(formulaId);
+  }
+  invariant(expectedPublish.size === EXPECTED_PUBLISH_COUNT);
+
+  const actualPublish = new Set<string>();
+  for (const row of asset.rows) {
+    invariant(isRecord(row) && typeof row.formulaId === "string");
+    const rightsClass = classById.get(row.formulaId);
+    const censusOutcome = censusOutcomeById.get(row.formulaId);
+    invariant(rightsClass !== undefined && censusOutcome !== undefined);
+    if (row.publicationDecision === "publish") {
+      actualPublish.add(row.formulaId);
+      invariant(
+        row.reviewedAt === REVIEWED_AT &&
+          row.implementationBasisRecordedAt === BASIS_RECORDED_AT &&
+          row.leakageScanStatus === "passed",
+      );
+      if (rightsClass === "A")
+        invariant(
+          row.implementationBasis === "direct-adaptation" &&
+            row.decisionReason === "publish-census-full-chain-green",
+        );
+      else if (rightsClass === "P")
+        invariant(
+          row.implementationBasis === "project-owned" &&
+            row.decisionReason === "publish-project-owned-native-recipe",
+        );
+      else invariant(false);
+      continue;
+    }
+    if (rightsClass === "A") {
+      invariant(
+        censusOutcome.reasonCode !== null &&
+          row.decisionReason ===
+            CENSUS_HELD_REASONS[censusOutcome.reasonCode],
+      );
+    } else if (rightsClass === "P") {
+      const holdClass = b94HoldClassById.get(row.formulaId);
+      invariant(
+        holdClass !== undefined &&
+          row.decisionReason === `held-b94-${holdClass}`,
+      );
+    }
+  }
+  invariant(
+    actualPublish.size === expectedPublish.size &&
+      [...actualPublish].every((formulaId) => expectedPublish.has(formulaId)),
+  );
 
   return {
     published,
