@@ -268,8 +268,7 @@ function verifyPublicationDecisions(repositoryRoot: string): {
       exactKeys(asset, TOP_LEVEL_KEYS) &&
       asset.schema === SCHEMA &&
       asset.version === 1 &&
-      nonNegativeInteger(asset.decisionRevision) &&
-      asset.decisionRevision >= 1 &&
+      asset.decisionRevision === 2 &&
       asset.formulaCount === 677 &&
       typeof asset.contentHash === "string" &&
       SHA256.test(asset.contentHash),
@@ -357,7 +356,8 @@ function verifyPublicationDecisions(repositoryRoot: string): {
           decisionReason === GPL_FIXED_HOLD_REASON &&
           implementationBasis === null &&
           implementationBasisRecordedAt === null &&
-          leakageScanStatus === "not-applicable",
+          leakageScanStatus === "not-applicable" &&
+          reviewedAt === REVIEWED_AT,
       );
       gplHeld++;
     } else {
