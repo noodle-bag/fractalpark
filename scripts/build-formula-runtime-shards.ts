@@ -1,5 +1,5 @@
 import { createHash } from "node:crypto";
-import { readFileSync } from "node:fs";
+import { readFileSync, mkdirSync } from "node:fs";
 import { join } from "node:path";
 import { pathToFileURL } from "node:url";
 import { resolve } from "node:path";
@@ -154,6 +154,9 @@ async function main(): Promise<void> {
   });
 
   if (write) {
+    // The rev3 runtime namespace is created on first write (additive-only
+    // asset family; see docs/runbooks/formula-library-rev3-rollback.md).
+    mkdirSync(join(repositoryRoot, RUNTIME_RELATIVE_DIR), { recursive: true });
     for (const { path, serialized } of writes) {
       writePublicAsset(path, serialized);
     }

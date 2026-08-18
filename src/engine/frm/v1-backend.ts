@@ -1259,13 +1259,15 @@ export function compileFrmLikeV1Backend(
     ].join("\n");
     const emissionContext: GlslEmissionContext = { nextTemporary: 0, prelude: [] };
     const initGlsl = emitStatements(ir.init, values, emissionContext, "", dialect);
-    const lastSqrTemporary = nextTemporary(emissionContext);
     const loopGlsl = [
       "if (!frmV1NonFiniteEvent) { zPrev = z; }",
       emitStatements(ir.loop, values, emissionContext, "", dialect),
+      // LastSqr is a saturating decision side-channel (see the CPU step()):
+      // dot(z, z) may legitimately reach +Inf for finite z, and that must
+      // not raise the nonFinite event — the escape predicate still fires.
+      // Expression reads of LastSqr stay guarded on use.
       "if (!frmV1NonFiniteEvent) {",
-      `  vec2 ${lastSqrTemporary} = frmV1Checked(vec2(dot(z, z), 0.0));`,
-      `  if (!frmV1NonFiniteEvent) { LastSqr = ${lastSqrTemporary}; }`,
+      "  LastSqr = vec2(dot(z, z), 0.0);",
       "}",
     ].join("\n");
     const bailout = compileExpression(ir.bailout, values, undefined, dialect);

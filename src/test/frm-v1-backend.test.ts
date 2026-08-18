@@ -248,6 +248,16 @@ describe("isolated FRM-like v1 backend candidate", () => {
     expect(continuation.continue).toBe(false);
   });
 
+  it("emits the GLSL LastSqr side-channel update without the nonFinite guard", () => {
+    const compiled = backend(sourceFor("    z = z * z", "|z| < 100"));
+    // dot(z, z) may saturate to +Inf for finite z; the shader must mirror
+    // the CPU's saturating decision channel instead of raising the event.
+    expect(compiled.glsl.loop).toContain("LastSqr = vec2(dot(z, z), 0.0);");
+    expect(compiled.glsl.loop).not.toContain(
+      "frmV1Checked(vec2(dot(z, z), 0.0))",
+    );
+  });
+
   it("rounds every primitive complex multiplication and short-circuits an unselected singular RHS", () => {
     const arithmetic = backend(
       sourceFor("    z = (0.1, 0.1) * (0.1, 0.1)", "0 && recip((0, 0))"),
