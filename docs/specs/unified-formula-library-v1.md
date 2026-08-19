@@ -662,17 +662,28 @@ The decision layer is frozen as the public asset
 `resources/formula-library/v1/publication-decisions.json` (schema
 `fractalpark-formula-library-publication-decisions/v1`): exactly 677 rows in
 Standard-manifest order, one per neutral Formula ID, with rights status,
-decision, reason, basis fields, scan status, and review date. The engine
-validator `src/engine/formulas/v1/publication-decisions.ts` enforces the
-exact-677 set, the P89/A137/B73/C378 rights accounting, the
+decision, reason, basis fields, scan status, and review date. Decision revision
+3 records `publish = 513`, `hold = 164`, and `exclude = 0`: 106
+`direct-adaptation`, 68 `project-owned`, and 339
+`separated-independent-rewrite` rows publish; every other row remains held.
+The engine validator `src/engine/formulas/v1/publication-decisions.ts` enforces
+the exact-677 set, the P89/A137/B73/C378 rights accounting, the
 `publish + hold + exclude = 677` decision accounting, the 604 implementation
 candidate ceiling, and the fixed `hold` of all 73 `gpl-3.0-only` rows at load
-time; `scripts/verify-formula-publication-decisions.ts` independently
-recomputes the same accounting from raw bytes and the frozen private
-work-package handoff. The baseline records `publish = 0`; a row may flip to
-`publish` only with a recorded basis, basis timestamp, and a passed leakage
-scan. Per-record source name/author/URL/artifact projections join the ledger
-with the Formula Record assets in a later commit.
+time. `scripts/verify-formula-publication-decisions.ts` independently
+recomputes the same accounting from raw bytes and frozen private evidence.
+
+Published Definition bytes are additive, immutable runtime projections rather
+than a second source of truth. `runtime/rev3` contains the 339 accepted
+clean-room Definitions. `runtime/rev4` contains only the missing revision-2
+published set (A106 + P68), split into hash-pinned shards. Its controlled build
+reconstructs Definitions from the frozen F588 work package/census and accepted
+native Recipes, writes 0600 private staging, rereads and rehashes that staging,
+and only then emits public shards. The private release-manifest hash, decision
+content hash, exact Formula-ID set, sourceRevision, semanticHash, and every
+shard byte hash are independently verified by
+`scripts/verify-formula-runtime-rev4.ts`. Held/excluded identities must never
+appear in either runtime projection.
 
 Remix shows and exports only a published canonical Definition. `originalSource`
 is separately access-controlled and never copied into public exports when the
