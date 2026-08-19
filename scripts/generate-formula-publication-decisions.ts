@@ -68,19 +68,20 @@ const EXPECTED_IDENTITY_SHA256 =
  */
 const EXPECTED_CENSUS_LEDGER_HASH =
   "fa7f6b35cd7e9d5afa77754755d3439ea949c7be2964024a4163a3874e9a5a37";
-const EXPECTED_PUBLISH_COUNT = 200;
+const EXPECTED_PUBLISH_COUNT = 513;
 const EXPECTED_B94_HELD_COUNT = 21;
 /**
- * Commit 14 clean-room evidence pins (development values from the batch-0
- * smoke census; RE-PINNED at the final census over all 370 oracle rows —
- * the asset cannot regenerate green until the final ledger and manifest are
- * in place and these constants carry their hashes).
+ * Commit 14 clean-room evidence pins — RE-PINNED 2026-08-19 at the final
+ * census over all 378 rows (360 bulk + 9 carryover + 8 waiver + 1
+ * source-gap) under the hardened webgl-rev2 toolchain (Codex R3-R6 closed,
+ * R6 PASS). 339 clean-room rows admitted (331 bulk accepted + 8 carryover),
+ * 5 kill-held demoted fail-closed.
  */
 const EXPECTED_FINAL_CENSUS_HASH: string =
-  "fde851f815933213e3dbc512ef94503fdfeca3cb06f9b0a3d032e87a9a4d5b61";
+  "6de7caa2c1921db8f4e9a851fce6cd281dd77dd2c1fc1d44ba20f63132ef2e95";
 const EXPECTED_RELEASE_MANIFEST_HASH: string =
-  "45761691cd3867b7e42bc3a434a0b7dacd45b0f24316df455ec40d4d47884e6b";
-const EXPECTED_CLEANROOM_PUBLISH_COUNT = 26;
+  "0dc2a95de29e939987db5cedc84685c6b5a027d2ae24db780c95a3f3d5ea849f";
+const EXPECTED_CLEANROOM_PUBLISH_COUNT = 339;
 const EXPECTED_REV2_PUBLISH_COUNT = 174;
 const WORK_PACKAGE_START =
   "<!-- BEGIN STANDARD_MIGRATION_WORK_PACKAGES_JSON -->";

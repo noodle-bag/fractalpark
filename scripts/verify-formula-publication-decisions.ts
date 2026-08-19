@@ -34,14 +34,47 @@ const EXPECTED_WORK_PACKAGE_HASH =
  */
 const EXPECTED_CENSUS_LEDGER_HASH =
   "fa7f6b35cd7e9d5afa77754755d3439ea949c7be2964024a4163a3874e9a5a37";
-const EXPECTED_PUBLISH_COUNT = 174;
+const EXPECTED_REV2_PUBLISH_COUNT = 174;
 const EXPECTED_B94_HELD_COUNT = 21;
+/**
+ * Decision revision 3 pins (2026-08-19): the final census over all 378
+ * oracle/waiver rows under the hardened webgl-rev2 toolchain (Codex R3-R6
+ * closed, R6 PASS) and the clean-room release manifest rebuilt from it
+ * (339 admitted rows: 331 bulk accepted + 8 pilot carryover; 5 kill-held
+ * demoted fail-closed). The rev3 publish set = rev2's 174 (unchanged) +
+ * these 339 class-C clean-room rows.
+ */
+const EXPECTED_FINAL_CENSUS_HASH =
+  "6de7caa2c1921db8f4e9a851fce6cd281dd77dd2c1fc1d44ba20f63132ef2e95";
+const EXPECTED_RELEASE_MANIFEST_HASH =
+  "0dc2a95de29e939987db5cedc84685c6b5a027d2ae24db780c95a3f3d5ea849f";
+const EXPECTED_CLEANROOM_PUBLISH_COUNT = 339;
+const EXPECTED_REV3_PUBLISH_COUNT = 513;
 const BASIS_RECORDED_AT = "2026-08-18T00:05:00.000Z";
 const REVIEWED_AT = "2026-08-18";
 const CENSUS_LEDGER_RELATIVE_PATH = join(
   ".formula-library-private",
   "formula-library-v1",
   "bulk-migration-ledger.json",
+);
+const FINAL_CENSUS_RELATIVE_PATH = join(
+  ".formula-library-private",
+  "formula-library-v1",
+  "clean-room-bulk-v1",
+  "final-census-ledger.json",
+);
+const RELEASE_MANIFEST_RELATIVE_PATH = join(
+  ".formula-library-private",
+  "formula-library-v1",
+  "clean-room-bulk-v1",
+  "release-manifest-rev3.json",
+);
+const RUNTIME_REV3_RELATIVE_DIR = join(
+  "resources",
+  "formula-library",
+  "v1",
+  "runtime",
+  "rev3",
 );
 const WORK_PACKAGE_START =
   "<!-- BEGIN STANDARD_MIGRATION_WORK_PACKAGES_JSON -->";
@@ -264,11 +297,12 @@ function verifyPublicationDecisions(repositoryRoot: string): {
       exactKeys(asset, TOP_LEVEL_KEYS) &&
       asset.schema === SCHEMA &&
       asset.version === 1 &&
-      asset.decisionRevision === 2 &&
+      (asset.decisionRevision === 2 || asset.decisionRevision === 3) &&
       asset.formulaCount === 677 &&
       typeof asset.contentHash === "string" &&
       SHA256.test(asset.contentHash),
   );
+  const decisionRevision = asset.decisionRevision as 2 | 3;
   invariant(
     isRecord(asset.identityBinding) &&
       exactKeys(asset.identityBinding, ["standardFormulaIdsSha256"]) &&
@@ -497,7 +531,72 @@ function verifyPublicationDecisions(repositoryRoot: string): {
     )
       expectedPublish.add(formulaId);
   }
-  invariant(expectedPublish.size === EXPECTED_PUBLISH_COUNT);
+  invariant(expectedPublish.size === EXPECTED_REV2_PUBLISH_COUNT);
+
+  // Revision 3: independently re-derive the clean-room admitted set from the
+  // pinned final census ledger + release manifest (never from the asset).
+  const cleanroomPublish = new Set<string>();
+  const releaseManifestRowById = new Map<
+    string,
+    { semanticHash: string | null; pilotCarryover: boolean }
+  >();
+  if (decisionRevision === 3) {
+    const finalCensusBytes = readStableFile(
+      join(repositoryRoot, FINAL_CENSUS_RELATIVE_PATH),
+      true,
+    );
+    invariant(
+      sha256Bytes(finalCensusBytes) === EXPECTED_FINAL_CENSUS_HASH,
+    );
+    const finalCensus = JSON.parse(
+      finalCensusBytes.toString("utf8"),
+    ) as unknown;
+    invariant(isRecord(finalCensus) && isDenseArray(finalCensus.rows));
+    const finalCensusPassed = new Set<string>();
+    for (const row of finalCensus.rows) {
+      invariant(isRecord(row) && typeof row.formulaId === "string");
+      if (row.status === "passed") finalCensusPassed.add(row.formulaId);
+    }
+    const releaseManifestBytes = readStableFile(
+      join(repositoryRoot, RELEASE_MANIFEST_RELATIVE_PATH),
+      true,
+    );
+    invariant(
+      sha256Bytes(releaseManifestBytes) === EXPECTED_RELEASE_MANIFEST_HASH,
+    );
+    const releaseManifest = JSON.parse(
+      releaseManifestBytes.toString("utf8"),
+    ) as unknown;
+    invariant(
+      isRecord(releaseManifest) &&
+        releaseManifest.schema === "fractalpark-bulk-release-manifest/1" &&
+        releaseManifest.decisionRevision === 3 &&
+        releaseManifest.finalCensusLedgerSha256 ===
+          EXPECTED_FINAL_CENSUS_HASH &&
+        isDenseArray(releaseManifest.rows),
+    );
+    for (const row of releaseManifest.rows) {
+      invariant(
+        isRecord(row) &&
+          typeof row.formulaId === "string" &&
+          typeof row.displayName === "string" &&
+          finalCensusPassed.has(row.formulaId) &&
+          classById.get(row.formulaId) === "C" &&
+          !releaseManifestRowById.has(row.formulaId),
+      );
+      releaseManifestRowById.set(row.formulaId, {
+        semanticHash:
+          typeof row.semanticHash === "string" ? row.semanticHash : null,
+        pilotCarryover: row.pilotCarryover === true,
+      });
+      cleanroomPublish.add(row.formulaId);
+    }
+    invariant(cleanroomPublish.size === EXPECTED_CLEANROOM_PUBLISH_COUNT);
+    for (const formulaId of cleanroomPublish) expectedPublish.add(formulaId);
+    invariant(
+      (expectedPublish.size as number) === EXPECTED_REV3_PUBLISH_COUNT,
+    );
+  }
 
   const actualPublish = new Set<string>();
   for (const row of asset.rows) {
@@ -521,6 +620,14 @@ function verifyPublicationDecisions(repositoryRoot: string): {
         invariant(
           row.implementationBasis === "project-owned" &&
             row.decisionReason === "publish-project-owned-native-recipe",
+        );
+      else if (rightsClass === "C")
+        invariant(
+          decisionRevision === 3 &&
+            cleanroomPublish.has(row.formulaId) &&
+            row.implementationBasis === "separated-independent-rewrite" &&
+            row.decisionReason ===
+              "publish-cleanroom-independent-rewrite-full-chain-green",
         );
       else invariant(false);
       continue;
@@ -563,6 +670,82 @@ function verifyPublicationDecisions(repositoryRoot: string): {
     actualPublish.size === expectedPublish.size &&
       [...actualPublish].every((formulaId) => expectedPublish.has(formulaId)),
   );
+
+  // Revision 3 runtime shards: verify the runtime manifest pins the release
+  // manifest hash, every shard file matches its pinned sha256, the shard row
+  // union equals the clean-room publish set exactly, and per-row
+  // semanticHash agrees with the release manifest.
+  if (decisionRevision === 3) {
+    const runtimeManifestBytes = readStableFile(
+      join(repositoryRoot, RUNTIME_REV3_RELATIVE_DIR, "manifest.json"),
+      false,
+    );
+    const runtimeManifest = JSON.parse(
+      runtimeManifestBytes.toString("utf8"),
+    ) as unknown;
+    invariant(
+      isRecord(runtimeManifest) &&
+        runtimeManifest.schema ===
+          "fractalpark-formula-library-runtime-manifest/v1" &&
+        runtimeManifest.decisionRevision === 3 &&
+        runtimeManifest.releaseManifestSha256 ===
+          EXPECTED_RELEASE_MANIFEST_HASH &&
+        runtimeManifest.rowCount === EXPECTED_CLEANROOM_PUBLISH_COUNT &&
+        typeof runtimeManifest.shardCount === "number" &&
+        isDenseArray(runtimeManifest.shards) &&
+        runtimeManifest.shards.length === runtimeManifest.shardCount,
+    );
+    const shardRowIds = new Set<string>();
+    let shardRowTotal = 0;
+    for (let index = 0; index < runtimeManifest.shards.length; index++) {
+      const shardEntry = runtimeManifest.shards[index];
+      invariant(
+        isRecord(shardEntry) &&
+          typeof shardEntry.file === "string" &&
+          typeof shardEntry.sha256 === "string" &&
+          SHA256.test(shardEntry.sha256) &&
+          typeof shardEntry.rows === "number",
+      );
+      const shardBytes = readStableFile(
+        join(repositoryRoot, RUNTIME_REV3_RELATIVE_DIR, shardEntry.file),
+        false,
+      );
+      invariant(sha256Bytes(shardBytes) === shardEntry.sha256);
+      const shard = JSON.parse(shardBytes.toString("utf8")) as unknown;
+      invariant(
+        isRecord(shard) &&
+          shard.schema === "fractalpark-formula-library-runtime-shard/v1" &&
+          shard.decisionRevision === 3 &&
+          shard.shardIndex === index &&
+          shard.shardCount === runtimeManifest.shardCount &&
+          isDenseArray(shard.rows) &&
+          shard.rows.length === shardEntry.rows,
+      );
+      for (const row of shard.rows) {
+        invariant(
+          isRecord(row) &&
+            typeof row.formulaId === "string" &&
+            cleanroomPublish.has(row.formulaId) &&
+            !shardRowIds.has(row.formulaId) &&
+            row.implementationBasis === "separated-independent-rewrite" &&
+            typeof row.semanticHash === "string" &&
+            row.semanticHash ===
+              releaseManifestRowById.get(row.formulaId)?.semanticHash &&
+            typeof row.definition === "string" &&
+            row.definition.length > 0,
+        );
+        shardRowIds.add(row.formulaId);
+        shardRowTotal++;
+      }
+    }
+    invariant(
+      shardRowTotal === EXPECTED_CLEANROOM_PUBLISH_COUNT &&
+        shardRowIds.size === EXPECTED_CLEANROOM_PUBLISH_COUNT &&
+        [...cleanroomPublish].every((formulaId) =>
+          shardRowIds.has(formulaId),
+        ),
+    );
+  }
 
   return {
     published,

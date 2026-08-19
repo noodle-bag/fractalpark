@@ -320,6 +320,13 @@ type CensusRow = PassedRow | FailedRow;
 export interface GpuRun {
   readonly pixel: readonly [number, number];
   readonly expectedOrbit: readonly (readonly [number, number])[];
+  /** webgl-rev2 semantic-parity mode: CPU-emulated escape round (null = never). */
+  readonly expectedEscapedAt?: number | null;
+  /** webgl-rev2 semantic-parity mode: whether the CPU emulation run ended in a
+   * nonFinite event (at the final orbit point). When false, the GPU must stay
+   * event-free at every step of the orbit window; when true, the GPU may raise
+   * its event at the final window step. */
+  readonly expectedEvent?: boolean;
 }
 
 export interface GpuCase {
@@ -331,6 +338,19 @@ export interface GpuCase {
   readonly eventFlag: string;
   readonly maxIterations: number;
   readonly runs: readonly GpuRun[];
+  /**
+   * webgl leg rev2 (2026-08-19, controller-approved): when true, the
+   * comparison proves GPU/CPU semantic agreement instead of absolute f64
+   * fixture accuracy — SwiftShader's SPIR-V sin/cos carry ~1.6e-4 relative
+   * error (measured: cos(0.1) off by 1.65e-4), which trig-amplifying orbits
+   * push past the 3e-4 contract within 2-3 rounds. In this mode each run is
+   * checked for: (a) GPU determinism, (b) eventFlag parity per step,
+   * (c) the first two recorded orbit points within 5e-3 relative of the CPU
+   * standard32 emulation (chaos has not amplified yet; a semantic error —
+   * wrong function, branch, or constant — diverges macroscopically),
+   * (d) escape-round parity against the CPU emulation.
+   */
+  readonly semanticParity?: boolean;
   readonly parameters: readonly {
     readonly name: string;
     readonly type: "real" | "complex" | "function";
@@ -597,10 +617,12 @@ function assertRepositoryScope(
   const allowed = new Set([
     ".gitignore",
     "docs/adr/0008-unified-formula-library-contract.md",
+    "docs/runbooks/formula-library-rev3-rollback.md",
     "docs/specs/unified-formula-library-v1.md",
     "docs/testing/v0.4.19-regression-matrix.md",
     "package.json",
     "resources/formula-library/v1/publication-decisions.json",
+    "scripts/build-formula-runtime-shards.ts",
     "scripts/cross-check-native-recipes.ts",
     "scripts/diagnose-conformance.ts",
     "scripts/formula-library-bulk-migration.ts",
@@ -653,6 +675,7 @@ function assertRepositoryScope(
     "src/test/formula-publication-decisions.test.ts",
     "src/test/formula-publication-readiness-output.test.ts",
     "src/test/formula-publication-readiness.test.ts",
+    "src/test/frm-v1-backend.test.ts",
     "src/test/frm-v1-classic-guards.test.ts",
     "src/test/frm-v1-stdlib.test.ts",
   ]);
@@ -1421,6 +1444,89 @@ void main(){
             vec2("pixel", run.pixel[0], run.pixel[1]);
             vec2("c", run.pixel[0], run.pixel[1]);
             vec2("maxit", payload.maxIterations, 0);
+            if (payload.semanticParity) {
+              // rev2: determinism + exact per-step event parity + early-orbit
+              // 5e-3 values + escape-round parity (baseline = CPU standard32
+              // emulation).
+              const loose = (actual: number, expected: number): boolean => {
+                const tolerance = 5e-3 * Math.max(1, Math.abs(actual), Math.abs(expected));
+                return Number.isFinite(actual) && Math.abs(actual - expected) <= tolerance;
+              };
+              const windowLength = run.expectedOrbit.length;
+              // Exact two-way event parity (Codex R4): the GPU event flag
+              // must equal the CPU expectation at EVERY step — event-free
+              // CPU run ⇒ GPU event-free through the whole window; CPU event
+              // at the final window step ⇒ GPU event REQUIRED at that step
+              // (previously only allowed). Empty window = CPU event during
+              // init ⇒ require the GPU event already at steps=0.
+              const cpuEventStep = run.expectedEvent ? windowLength : -1;
+              if (windowLength === 0) {
+                gl.uniform1f(stepsLocation, 0);
+                const initDraw = draw();
+                const initEventExpected = run.expectedEvent === true;
+                const initEventOk = initEventExpected
+                  ? initDraw[3] >= 0.5
+                  : initDraw[3] < 0.5;
+                if (!initEventOk) {
+                  status = "semantic-mismatch";
+                  break;
+                }
+              }
+              for (let pointIndex = 0; pointIndex < windowLength; pointIndex++) {
+                gl.uniform1f(stepsLocation, pointIndex + 1);
+                const first = draw();
+                const second = draw();
+                if (
+                  ![0, 1, 2, 3].every((index) =>
+                    sameNumber(first[index], second[index]),
+                  )
+                ) {
+                  status = "nondeterministic";
+                  break;
+                }
+                const step = pointIndex + 1;
+                const gpuEvent = first[3] >= 0.5;
+                const eventOk = gpuEvent === (step === cpuEventStep);
+                if (!eventOk) {
+                  status = "semantic-mismatch";
+                  break;
+                }
+                if (pointIndex < 2) {
+                  const expectedZ = run.expectedOrbit[pointIndex];
+                  const parity =
+                    Math.abs(first[2] - step) <= 0.25 &&
+                    loose(first[0], expectedZ[0]) &&
+                    loose(first[1], expectedZ[1]);
+                  if (!parity) {
+                    status = "semantic-mismatch";
+                    break;
+                  }
+                }
+              }
+              if (status !== "passed") break;
+              // escape-round parity: run the full budget and compare the
+              // executed iteration count against the CPU-emulated escape.
+              // Boundary-straddle tolerance: SwiftShader trig noise
+              // (~1.6e-4 relative) flips the escape round by +/-1 when the
+              // orbit magnitude grazes the threshold (measured: rcl_4_j GPU
+              // escapes at 7 vs CPU 8 with identical early orbits). The
+              // authoritative exact-escape contract remains the CPU leg.
+              if (run.expectedEscapedAt !== undefined) {
+                gl.uniform1f(stepsLocation, payload.maxIterations);
+                const full = draw();
+                const expectedIterations =
+                  run.expectedEscapedAt === null
+                    ? run.expectedEvent
+                      ? run.expectedOrbit.length
+                      : payload.maxIterations
+                    : run.expectedEscapedAt;
+                if (Math.abs(full[2] - expectedIterations) > 1.25) {
+                  status = "semantic-mismatch";
+                  break;
+                }
+              }
+              continue;
+            }
             for (const [pointIndex, expectedZ] of run.expectedOrbit.entries()) {
               const expectedIterations = pointIndex + 1;
               gl.uniform1f(stepsLocation, expectedIterations);

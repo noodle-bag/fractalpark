@@ -85,7 +85,7 @@ describe("formula publication decision ledger", () => {
       "fractalpark-formula-library-publication-decisions/v1",
     );
     expect(ledger.version).toBe(1);
-    expect(ledger.decisionRevision).toBe(2);
+    expect(ledger.decisionRevision).toBe(3);
     expect(ledger.rows).toHaveLength(677);
     expect(ledger.rightsStatusCounts).toEqual({
       "project-owned": 89,
@@ -94,11 +94,11 @@ describe("formula publication decision ledger", () => {
       "no-explicit-permission": 378,
     });
     expect(ledger.decisionCounts).toEqual({
-      publish: 174,
-      hold: 503,
+      publish: 513,
+      hold: 164,
       exclude: 0,
     });
-    expect(ledger.publishedFormulaIds()).toHaveLength(174);
+    expect(ledger.publishedFormulaIds()).toHaveLength(513);
   });
 
   it("verifies the committed content hash and detects tampering", () => {
@@ -151,14 +151,15 @@ describe("formula publication decision ledger", () => {
     }
   });
 
-  it("publishes exactly the revision-2 green set with recorded bases", () => {
+  it("publishes exactly the revision-3 green set with recorded bases", () => {
     const ledger = PUBLICATION_DECISION_LEDGER_V1;
     const published = ledger.rows.filter(
       (row) => row.publicationDecision === "publish",
     );
-    expect(published).toHaveLength(174);
+    expect(published).toHaveLength(513);
     let directAdaptation = 0;
     let projectOwned = 0;
+    let cleanroom = 0;
     for (const row of published) {
       expect(row.implementationBasisRecordedAt).toBe(
         "2026-08-18T00:05:00.000Z",
@@ -171,15 +172,24 @@ describe("formula publication decision ledger", () => {
           "source-declared-public-domain-assumption",
         );
         expect(row.decisionReason).toBe("publish-census-full-chain-green");
-      } else {
+      } else if (row.implementationBasis === "project-owned") {
         projectOwned++;
-        expect(row.implementationBasis).toBe("project-owned");
         expect(row.rightsStatus).toBe("project-owned");
         expect(row.decisionReason).toBe("publish-project-owned-native-recipe");
+      } else {
+        cleanroom++;
+        expect(row.implementationBasis).toBe(
+          "separated-independent-rewrite",
+        );
+        expect(row.rightsStatus).toBe("no-explicit-permission");
+        expect(row.decisionReason).toBe(
+          "publish-cleanroom-independent-rewrite-full-chain-green",
+        );
       }
     }
     expect(directAdaptation).toBe(106);
     expect(projectOwned).toBe(68);
+    expect(cleanroom).toBe(339);
   });
 
   it("keeps every held non-GPL row basis-free with a pending scan", () => {
@@ -237,16 +247,16 @@ describe("formula publication decision ledger", () => {
     row.implementationBasis = "project-owned";
     row.implementationBasisRecordedAt = "2026-08-18T00:05:00.000Z";
     row.leakageScanStatus = "passed";
-    asset.decisionCounts.publish = 175;
-    asset.decisionCounts.hold = 502;
+    asset.decisionCounts.publish = 514;
+    asset.decisionCounts.hold = 163;
     refreshContentHash(asset);
     const result = createPublicationDecisionLedgerV1(asset);
     expect(result.ok).toBe(true);
     if (!result.ok) return;
     expect(result.ledger.publishedFormulaIds()).toContain(row.formulaId);
     expect(result.ledger.decisionCounts).toEqual({
-      publish: 175,
-      hold: 502,
+      publish: 514,
+      hold: 163,
       exclude: 0,
     });
   });
@@ -291,8 +301,8 @@ describe("formula publication decision ledger", () => {
     row.implementationBasis = "separated-independent-rewrite";
     row.implementationBasisRecordedAt = "2026-08-18T00:05:00.000Z";
     row.leakageScanStatus = "passed";
-    asset.decisionCounts.publish = 175;
-    asset.decisionCounts.hold = 502;
+    asset.decisionCounts.publish = 514;
+    asset.decisionCounts.hold = 163;
     refreshContentHash(asset);
     expectInvalid(asset);
   });

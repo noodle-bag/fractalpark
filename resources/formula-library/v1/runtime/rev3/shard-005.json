@@ -1,0 +1,160 @@
+{
+  "schema": "fractalpark-formula-library-runtime-shard/v1",
+  "decisionRevision": 3,
+  "shardIndex": 5,
+  "shardCount": 6,
+  "rows": [
+    {
+      "formulaId": "ed7e4ea5-2118-5ade-8fbc-19b5c2a6c8fc",
+      "displayName": "m_tchebychevt3",
+      "family": "algebraic-power",
+      "implementationBasis": "separated-independent-rewrite",
+      "semanticHash": "3b282c3d1e73274d3f2c116be5d6aa8913a9c1d7982ebb18983fed4536075b65",
+      "definition": "; @language: frm-like/1\n; @stdlib: 1\n; @numeric-profile: standard32\nFormula_ed7e4ea5_2118_5ade_8fbc_19b5c2a6c8fc {\n  parameters:\n    carrier: complex = (0, 0) classic p1\n  init:\n    z = pixel\n  loop:\n    z = carrier * z * (4 * sqr(z) - 3)\n  bailout:\n    |z| < 100\n}\n"
+    },
+    {
+      "formulaId": "ed92fb8b-18a9-5e2b-acd7-ee933bf7df93",
+      "displayName": "tobeyrichard1",
+      "family": "function-composition",
+      "implementationBasis": "separated-independent-rewrite",
+      "semanticHash": "6d8be97e4989fd08e82b3254bc31e567ec4081ac5383839094e0bb40aef2438f",
+      "definition": "; @language: frm-like/1\n; @stdlib: 1\n; @numeric-profile: standard32\nFormula_ed92fb8b_18a9_5e2b_acd7_ee933bf7df93 {\n  parameters:\n    transform: function = identity classic fn1\n  init:\n    z = pixel\n  loop:\n    squared = z * z\n    z = squared * transform(squared) + squared + pixel\n  bailout:\n    |z| <= 50\n}\n"
+    },
+    {
+      "formulaId": "ee3be07b-bfde-53bf-bea2-db01f18ab0f2",
+      "displayName": "juliconj09",
+      "family": "algebraic-power",
+      "implementationBasis": "separated-independent-rewrite",
+      "semanticHash": "c3aa53e7a58854696add89e12fdc05579cdbeb244d408974feabc4d69d6e9b41",
+      "definition": "; @language: frm-like/1\n; @stdlib: 1\n; @numeric-profile: standard32\nFormula_ee3be07b_bfde_53bf_bea2_db01f18ab0f2 {\n  parameters:\n    offset: complex = (0, 0) classic p1\n    exponent: complex = (0, 0) classic p2\n  init:\n    z = pixel\n  loop:\n    z = conj(z) ^ exponent + offset\n  bailout:\n    |z| <= 4\n}\n"
+    },
+    {
+      "formulaId": "ef6d6019-b21e-59df-99ca-dea6b70c0f63",
+      "displayName": "phoenix_m",
+      "family": "orbit-memory",
+      "implementationBasis": "separated-independent-rewrite",
+      "semanticHash": "efd173f8ec0115d5866d99f77b5c73787ff3b07219ab88e2056981e2cf29f96a",
+      "definition": "; @language: frm-like/1\n; @stdlib: 1\n; @numeric-profile: standard32\nFormula_ef6d6019_b21e_59df_99ca_dea6b70c0f63 {\n  init:\n    r = 0\n    s = 0\n    pr = 0\n    ps = 0\n    z = 0\n  loop:\n    rq = r * r\n    sq = s * s\n    rn = (rq - sq) + real(pixel) + imag(pixel) * pr\n    sn = (2 * r) * s + imag(pixel) * ps\n    pr = r\n    ps = s\n    r = rn\n    s = sn\n    z = r + s\n  bailout:\n    |z| <= 4\n}\n"
+    },
+    {
+      "formulaId": "f03e39ad-e077-5e01-8085-f25d653b506e",
+      "displayName": "mandconj07",
+      "family": "algebraic-power",
+      "implementationBasis": "separated-independent-rewrite",
+      "semanticHash": "47c68deaaf351048fbdba58a77d0a85e9ce3d8280f71507da79d95c33b9f83a3",
+      "definition": "; @language: frm-like/1\n; @stdlib: 1\n; @numeric-profile: standard32\nFormula_f03e39ad_e077_5e01_8085_f25d653b506e {\n  init:\n    carrier = pixel\n    z = carrier\n  loop:\n    z = sqr(sqr(z)) + conj(pixel)\n  bailout:\n    |z| <= 4\n}\n"
+    },
+    {
+      "formulaId": "f0680a59-42e8-52e4-8444-a1b4026d87b6",
+      "displayName": "j_tchebychevs6",
+      "family": "algebraic-power",
+      "implementationBasis": "separated-independent-rewrite",
+      "semanticHash": "95c72dc5162a5ae933071576355ad58054c396d84c4063fb95f884b3e979c3b3",
+      "definition": "; @language: frm-like/1\n; @stdlib: 1\n; @numeric-profile: standard32\nFormula_f0680a59_42e8_52e4_8444_a1b4026d87b6 {\n  parameters:\n    seed: complex = (0, 0) classic p1\n  init:\n    carrier = pixel\n    z = seed\n  loop:\n    square = sqr(z)\n    z = carrier * (square * (square * (square - 5) + 6) - 1)\n  bailout:\n    |z| < 100\n}\n"
+    },
+    {
+      "formulaId": "f2305da6-5fc0-59e4-8204-9b0adb61bc74",
+      "displayName": "a---mand",
+      "family": "algebraic-power",
+      "implementationBasis": "separated-independent-rewrite",
+      "semanticHash": "78a0bcbf5d8540b904173038a286c804207718dce3cf7a64ec508c98833f26a2",
+      "definition": "; @language: frm-like/1\n; @stdlib: 1\n; @numeric-profile: standard32\nFormula_f2305da6_5fc0_59e4_8204_9b0adb61bc74 {\n  parameters:\n    threshold: complex = (0, 0) classic p1\n  init:\n    carrier = pixel\n    z = carrier\n  loop:\n    z = z ^ carrier + sin(carrier)\n  bailout:\n    |z| < real(threshold)\n}\n"
+    },
+    {
+      "formulaId": "f2ef0d24-8eff-5bf2-b896-aa111350aa5b",
+      "displayName": "inandout04",
+      "family": "orbit-memory",
+      "implementationBasis": "separated-independent-rewrite",
+      "semanticHash": "7a13a7366ea8098dea085923dc0c689a68f6798512ba098f59a8443753e14707",
+      "definition": "; @language: frm-like/1\n; @stdlib: 1\n; @numeric-profile: standard32\nFormula_f2ef0d24_8eff_5bf2_b896_aa111350aa5b {\n  parameters:\n    scaleInput: complex = (0, 0) classic p1\n    thresholdInput: complex = (0, 0) classic p2\n    transform: function = identity classic fn1\n  init:\n    if real(scaleInput) != 0 || imag(scaleInput) != 0\n      k = scaleInput\n    else\n      k = (1, 0)\n    endif\n    if real(thresholdInput) <= 0\n      t = 4\n    else\n      t = real(thresholdInput)\n    endif\n    s = pixel\n    u = s\n    z = u\n    m = |z|\n    w = m\n  loop:\n    if m > w\n      s = s * k\n    endif\n    u = z\n    w = m\n    z = transform(sqr(z)) + s\n    m = |z|\n  bailout:\n    m <= t\n}\n"
+    },
+    {
+      "formulaId": "f4216f6d-c8ed-5837-8417-8ae719f186a8",
+      "displayName": "rcl_4_j",
+      "family": "transcendental",
+      "implementationBasis": "separated-independent-rewrite",
+      "semanticHash": "68b0b1478b3c241602ad9b85bf10490451074422c169b1a8ea0b737ba3dc61a8",
+      "definition": "; @language: frm-like/1\n; @stdlib: 1\n; @numeric-profile: standard32\n; @classic-guards: hyperbolic-clamp\nFormula_f4216f6d_c8ed_5837_8417_8ae719f186a8 {\n  parameters:\n    offset: complex = (0, 0) classic p1\n  init:\n    z = pixel\n  loop:\n    z = sin(sqr(z)) + sin(z) + sin(offset)\n  bailout:\n    |z| <= 4\n}\n\n"
+    },
+    {
+      "formulaId": "f50a14b0-7031-5d9a-a9b8-f7bdee1b69a2",
+      "displayName": "aaa-dealsfix1",
+      "family": "algebraic-power",
+      "implementationBasis": "separated-independent-rewrite",
+      "semanticHash": "ba53c4dc539446608921be5d55a11c67c31c1b2a88da33dfacd0254fcecbffcc",
+      "definition": "; @language: frm-like/1\n; @stdlib: 1\n; @numeric-profile: standard32\nFormula_f50a14b0_7031_5d9a_a9b8_f7bdee1b69a2 {\n  parameters:\n    threshold: complex = (0, 0) classic p1\n  init:\n    z = pixel\n    baseReal = real(pixel)\n    baseImag = imag(pixel)\n    root = (0, -1) ^ 0.5\n  loop:\n    xCoord = real(z)\n    yCoord = imag(z)\n    radial = xCoord * xCoord + yCoord * yCoord + baseReal\n    twisted = (0, -2) * xCoord * yCoord + baseImag\n    z = radial + twisted * root\n  bailout:\n    |z| < real(threshold)\n}\n"
+    },
+    {
+      "formulaId": "f6126a12-f689-5eac-8917-71580950caba",
+      "displayName": "fzppsiex",
+      "family": "transcendental",
+      "implementationBasis": "separated-independent-rewrite",
+      "semanticHash": "833cda8e03fd18e151260da9976b11f38ce779f93a02c2f7a155785a7e12370e",
+      "definition": "; @language: frm-like/1\n; @stdlib: 1\n; @numeric-profile: standard32\n; @classic-guards: hyperbolic-clamp\nFormula_f6126a12_f689_5eac_8917_71580950caba {\n  init:\n    z = pixel\n    offsetValue = exp(pixel)\n  loop:\n    z = sin(z) + offsetValue\n  bailout:\n    |z| <= 50\n}\n\n"
+    },
+    {
+      "formulaId": "f9a6409b-130b-5dd5-be4f-789927e47ad2",
+      "displayName": "m_tchebychevt4",
+      "family": "algebraic-power",
+      "implementationBasis": "separated-independent-rewrite",
+      "semanticHash": "99f85ef3a5cd63065d1e9cc0283e2488f872d64f56dd62b9a9b72369046b71db",
+      "definition": "; @language: frm-like/1\n; @stdlib: 1\n; @numeric-profile: standard32\nFormula_f9a6409b_130b_5dd5_be4f_789927e47ad2 {\n  parameters:\n    carrier: complex = (0, 0) classic p1\n  init:\n    z = pixel\n  loop:\n    square = sqr(z)\n    z = carrier * (square * (8 * square + 8) + 1)\n  bailout:\n    |z| < 100\n}\n"
+    },
+    {
+      "formulaId": "f9cfda9b-5757-5fa2-bd63-ca10c88a7295",
+      "displayName": "aaa-dealsfix2",
+      "family": "algebraic-power",
+      "implementationBasis": "separated-independent-rewrite",
+      "semanticHash": "e20bb6f996eb2f8470dabb6e214fa6553962a57611920631289cec2bf272cc3b",
+      "definition": "; @language: frm-like/1\n; @stdlib: 1\n; @numeric-profile: standard32\nFormula_f9cfda9b_5757_5fa2_bd63_ca10c88a7295 {\n  parameters:\n    threshold: complex = (0, 0) classic p1\n  init:\n    z = pixel\n    baseReal = real(pixel)\n    baseImag = imag(pixel)\n    root = (0, 1) ^ 0.5\n  loop:\n    xCoord = real(z)\n    yCoord = imag(z)\n    radial = xCoord * xCoord + yCoord * yCoord + baseReal\n    twisted = (0, 2) * xCoord * yCoord + baseImag\n    z = radial + twisted * root\n  bailout:\n    |z| < real(threshold)\n}\n"
+    },
+    {
+      "formulaId": "f9fd2a6b-2734-50d3-9431-5ccf33887682",
+      "displayName": "joc",
+      "family": "orbit-memory",
+      "implementationBasis": "separated-independent-rewrite",
+      "semanticHash": "dbde7de763d6e4b168f3f338d420e8dab3aed706c7833778c0f77517369c48fe",
+      "definition": "; @language: frm-like/1\n; @stdlib: 1\n; @numeric-profile: standard32\n; @classic-guards: zero-division\njoc {\n  parameters:\n    seed: complex = (0, 0) classic p1\n    drift: complex = (0, 0) classic p2\n  init:\n    z = pixel\n    state = seed\n  loop:\n    z = sqr(z) + state\n    state = state + drift / state\n  bailout:\n    |z| <= 4\n}\n"
+    },
+    {
+      "formulaId": "fb27a5ed-2865-5fca-ad62-76118c39414f",
+      "displayName": "michaelbrot",
+      "family": "algebraic-power",
+      "implementationBasis": "separated-independent-rewrite",
+      "semanticHash": "4a061883db59d2c6c93e3d74e64aa34b0f8d37f82143b1690b0ba3e179bc3e38",
+      "definition": "; @language: frm-like/1\n; @stdlib: 1\n; @numeric-profile: standard32\nFormula_fb27a5ed_2865_5fca_ad62_76118c39414f {\n  parameters:\n    adjustment: complex = (0, 0) classic p1\n  init:\n    z = pixel\n  loop:\n    z = sqr(z) + (adjustment + 1) / 2\n  bailout:\n    |z| <= 4\n}\n"
+    },
+    {
+      "formulaId": "fbde208b-8c88-5d55-8e5a-ecac4245add1",
+      "displayName": "sineggc",
+      "family": "function-composition",
+      "implementationBasis": "separated-independent-rewrite",
+      "semanticHash": "063eac48e85aea29c2d9354ae46dc39f40bc6df9c06749ab02f63d8e4f837384",
+      "definition": "; @language: frm-like/1\n; @stdlib: 1\n; @numeric-profile: standard32\nFormula_fbde208b_8c88_5d55_8e5a_ecac4245add1 {\n  parameters:\n    seed: complex = (0, 0) classic p1\n    limit: complex = (0, 0) classic p2\n    firstTransform: function = identity classic fn1\n    secondTransform: function = identity classic fn2\n  init:\n    z = seed\n    magnitude = |z|\n  loop:\n    z = firstTransform(z) + pixel\n    z = secondTransform(z) + pixel\n    magnitude = |z|\n  bailout:\n    |z| <= real(limit)\n}\n"
+    },
+    {
+      "formulaId": "fdbbc343-f4c3-5eb4-94de-f5a1d9ef2525",
+      "displayName": "fzpcopsh",
+      "family": "transcendental",
+      "implementationBasis": "separated-independent-rewrite",
+      "semanticHash": "7b2662304a33d6f260bf345807e95e5b513f54226ab70357649f6c3bea4d2403",
+      "definition": "; @language: frm-like/1\n; @stdlib: 1\n; @numeric-profile: standard32\n; @classic-guards: hyperbolic-clamp\nFormula_fdbbc343_f4c3_5eb4_94de_f5a1d9ef2525 {\n  init:\n    z = pixel\n    offsetValue = pixel ^ sinh(pixel)\n  loop:\n    z = cosxx(z) + offsetValue\n  bailout:\n    |z| <= 50\n}\n\n"
+    },
+    {
+      "formulaId": "fedcfb68-071a-5b21-9552-ac641af3ecce",
+      "displayName": "ikenagamap",
+      "family": "algebraic-power",
+      "implementationBasis": "separated-independent-rewrite",
+      "semanticHash": "a81c04491532b0711bf48915087c2599420867a7d4217161df61b1d988605880",
+      "definition": "; @language: frm-like/1\n; @stdlib: 1\n; @numeric-profile: standard32\nFormula_fedcfb68_071a_5b21_9552_ac641af3ecce {\n  init:\n    z = ((1 - pixel) / 3) ^ 0.5\n  loop:\n    z = sqr(z) * z + (pixel - 1) * z - pixel\n  bailout:\n    |z| <= 4\n}\n"
+    },
+    {
+      "formulaId": "ff90e8db-2d3f-5cef-a493-489752eed57b",
+      "displayName": "jfnz",
+      "family": "orbit-memory",
+      "implementationBasis": "separated-independent-rewrite",
+      "semanticHash": "aa8705c5ad6c187e78fe647ea42e337ca8a0ff82eadc1fce0eea1d830e3792da",
+      "definition": "; @language: frm-like/1\n; @stdlib: 1\n; @numeric-profile: standard32\njfnz {\n  parameters:\n    seed: complex = (0, 0) classic p1\n    drift: complex = (0, 0) classic p2\n    transform: function = identity classic fn1\n  init:\n    z = pixel\n    state = seed\n  loop:\n    z = sqr(z) + state\n    state = state + drift * transform(z)\n  bailout:\n    |z| <= 4\n}\n"
+    }
+  ]
+}
