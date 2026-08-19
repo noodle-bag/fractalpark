@@ -1,0 +1,29 @@
+{
+  "schema": "fractalpark-published-formula-runtime-manifest/v1",
+  "decisionRevision": 3,
+  "publicationDecisionsContentHash": "7106736785e8bbb7cc310056f93f550413b6a0b76ad21e648b50e55480a2a52c",
+  "rowCount": 513,
+  "definitionCount": 513,
+  "indexFile": "index.json",
+  "indexSha256": "1b27e129a102c0d64774bce7112be41de102028743cbcf440ba12bb45d906ff8",
+  "indexCanonicalSha256": "1c543581ce6569d9c43e1e9505020dc51088f51e54cb3f2fa9e814b020bb710f",
+  "sourceManifests": [
+    {
+      "runtimeRevision": 3,
+      "sha256": "f30e655504c14edb63582cbdb08d715771feddb9a4e911db84f8847bd99cde5b",
+      "rowCount": 339,
+      "shardCount": 6
+    },
+    {
+      "runtimeRevision": 4,
+      "sha256": "9b79915127e9704cf7da5256c5012ac307a5979b9fcfd9d07a661db791f78ebe",
+      "rowCount": 174,
+      "shardCount": 3
+    }
+  ],
+  "profileCounts": {
+    "mechanical": 308,
+    "family": 205,
+    "none": 0
+  }
+}

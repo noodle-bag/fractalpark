@@ -685,6 +685,30 @@ shard byte hash are independently verified by
 `scripts/verify-formula-runtime-rev4.ts`. Held/excluded identities must never
 appear in either runtime projection.
 
+The engine-facing published runtime is generated at
+`public/formula-library/v1/runtime/published/`. It derives its exact 513-ID set
+from decision revision 3, joins the 339 rev3 and 174 rev4 rows by Formula ID,
+and emits a light `index.json` plus one immutable
+`definitions/<sourceRevision>.frm` body per row. The index freezes metadata,
+implementation basis, source/semantic revisions, versioned parameter binding
+descriptors, and one mechanical or family-fallback default Profile. Before
+exposing any row, the runtime recomputes a canonical whole-index SHA-256 against
+a commitment compiled into the v1 loader; self-asserted revision strings and
+basis counts are not sufficient authority. Definition bodies never enter an
+eager JavaScript import; the selected body is fetched and revalidated before
+compilation. Missing, duplicate, held, index-commitment-mismatched,
+hash-mismatched, parse-invalid, or backend-invalid rows fail closed with no
+legacy-formula fallback.
+
+Candidate-C execution compiles a selected Definition through the frozen v1
+backend into namespaced `frmV1_*` state, an explicit state-reset hook, an
+arbitrary continue-predicate hook, and a source-revision cache fingerprint. The
+framework calls reset once per orbit and per supersample, then evaluates the
+Definition's own continue predicate after every step. The adapter does not alter
+legacy B94 or classic-FRM assembly bytes. This is an engine capability only:
+selector, parameter UI, Lucky/Profile ranking, and Production activation remain
+separate gates.
+
 Remix shows and exports only a published canonical Definition. `originalSource`
 is separately access-controlled and never copied into public exports when the
 rights status forbids it.

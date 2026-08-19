@@ -616,9 +616,12 @@ function assertRepositoryScope(
   // since the frozen handoff base revision aafe943f (12a/12b/12c included).
   const allowed = new Set([
     ".gitignore",
+    ".gitattributes",
+    ".github/workflows/published-formula-webgl.yml",
     "docs/adr/0008-unified-formula-library-contract.md",
     "docs/runbooks/formula-library-rev3-rollback.md",
     "docs/runbooks/formula-library-rev4-runtime.md",
+    "docs/runbooks/formula-library-published-runtime.md",
     "docs/specs/unified-formula-library-v1.md",
     "docs/testing/v0.4.19-regression-matrix.md",
     "messages/en.json",
@@ -629,6 +632,8 @@ function assertRepositoryScope(
     "messages/ru.json",
     "messages/zh.json",
     "package.json",
+    "public/formula-library/v1/runtime/published/index.json",
+    "public/formula-library/v1/runtime/published/manifest.json",
     "resources/formula-library/v1/publication-decisions.json",
     "resources/formula-library/v1/runtime/rev3/manifest.json",
     "resources/formula-library/v1/runtime/rev3/shard-000.json",
@@ -643,6 +648,7 @@ function assertRepositoryScope(
     "resources/formula-library/v1/runtime/rev4/shard-002.json",
     "scripts/build-formula-runtime-rev4.ts",
     "scripts/build-formula-runtime-shards.ts",
+    "scripts/build-published-formula-runtime.ts",
     "scripts/cross-check-native-recipes.ts",
     "scripts/diagnose-conformance.ts",
     "scripts/formula-library-bulk-migration.ts",
@@ -652,11 +658,14 @@ function assertRepositoryScope(
     "scripts/generate-formula-publication-readiness.ts",
     "scripts/recipe-canonicalize.ts",
     "scripts/run-webgl-worker.ts",
+    "scripts/run-published-formula-webgl-worker.ts",
     "scripts/verify-formula-clean-room-evidence.ts",
     "scripts/verify-formula-direct-adaptation-evidence.ts",
     "scripts/verify-formula-publication-decisions.ts",
     "scripts/verify-formula-publication-readiness.ts",
     "scripts/verify-formula-runtime-rev4.ts",
+    "scripts/verify-published-formula-runtime-webgl.ts",
+    "scripts/verify-published-formula-webgl-reports.ts",
     "src/app/[locale]/formulas/directory/page.tsx",
     "src/app/[locale]/formulas/page.tsx",
     "src/engine/formulas/v1/bulk-migration.ts",
@@ -677,6 +686,8 @@ function assertRepositoryScope(
     "src/engine/formulas/v1/provisional-profile.ts",
     "src/engine/formulas/v1/publication-decisions.ts",
     "src/engine/formulas/v1/publication-readiness.ts",
+    "src/engine/formulas/v1/published-adapter.ts",
+    "src/engine/formulas/v1/published-runtime.ts",
     "src/engine/formulas/v1/revisions.ts",
     "src/engine/frm/codemirror-language.ts",
     "src/engine/frm/frm-v1-glsl-prelude.ts",
@@ -684,6 +695,8 @@ function assertRepositoryScope(
     "src/engine/frm/type-system.ts",
     "src/engine/frm/v1-backend.ts",
     "src/engine/frm/v1.ts",
+    "src/engine/plugins/types.ts",
+    "src/engine/shaders/assembler.ts",
     "src/prototypes/unified-formula-library.ts",
     "src/test/formula-clean-room-behavior-package-gate-integration.test.ts",
     "src/test/formula-clean-room-behavior-package-gate.test.ts",
@@ -701,6 +714,8 @@ function assertRepositoryScope(
     "src/test/formula-publication-readiness-output.test.ts",
     "src/test/formula-publication-readiness.test.ts",
     "src/test/formula-runtime-rev4.test.ts",
+    "src/test/published-formula-adapter.test.ts",
+    "src/test/published-formula-runtime.test.ts",
     "src/test/frm-v1-backend.test.ts",
     "src/test/frm-v1-classic-guards.test.ts",
     "src/test/frm-v1-stdlib.test.ts",
@@ -712,7 +727,13 @@ function assertRepositoryScope(
     ...gitPaths(repositoryRoot, ["ls-files", "--others", "--exclude-standard"]),
   ]);
   invariant(
-    [...changed].every((path) => allowed.has(path)),
+    [...changed].every(
+      (path) =>
+        allowed.has(path) ||
+        /^public\/formula-library\/v1\/runtime\/published\/definitions\/[a-f0-9]{64}\.frm$/.test(
+          path,
+        ),
+    ),
     "repository-scope-mismatch",
   );
 }

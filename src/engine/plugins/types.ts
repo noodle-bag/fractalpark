@@ -43,6 +43,19 @@ export interface FractalPlugin {
 
 export interface FormulaPlugin extends FractalPlugin {
   category: 'formula';
+  /** Immutable source fingerprint appended to the shader cache key. */
+  cacheFingerprint?: string;
+  /**
+   * Optional stateful orbit lifecycle. The shared framework stays byte-identical
+   * for every plugin that omits this descriptor; the assembler injects the
+   * reset and arbitrary-continue hooks only for the candidate-C v1 adapter.
+   */
+  orbitLifecycle?: Readonly<{
+    kind: 'frm-like-v1';
+    resetFunction: 'frmV1ResetState';
+    continueFunction: 'frmV1ShouldContinue';
+    eventFunction: 'frmV1HasEvent';
+  }>;
   /** Explicit compile-semantics contract for FRM/custom plugins. Built-ins
    * omit it and continue to follow the document renderer pipeline. */
   frmSemanticsVersion?: import('../frm/semantics-version').FrmSemanticsVersion;

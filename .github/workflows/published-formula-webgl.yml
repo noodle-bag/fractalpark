@@ -1,0 +1,79 @@
+name: Published Formula WebGL
+
+on:
+  pull_request:
+    paths:
+      - "public/formula-library/v1/runtime/published/**"
+      - "resources/formula-library/v1/runtime/**"
+      - "src/engine/formulas/v1/**"
+      - "src/engine/frm/**"
+      - "src/engine/plugins/**"
+      - "src/engine/shaders/**"
+      - "scripts/build-published-formula-runtime.ts"
+      - "scripts/run-published-formula-webgl-worker.ts"
+      - "scripts/verify-published-formula-runtime-webgl.ts"
+      - "scripts/verify-published-formula-webgl-reports.ts"
+      - "package.json"
+      - "package-lock.json"
+      - ".github/workflows/published-formula-webgl.yml"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  published-formula-webgl:
+    runs-on: ubuntu-latest
+    timeout-minutes: 60
+    strategy:
+      fail-fast: false
+      matrix:
+        shard:
+          - { start: 0, count: 65 }
+          - { start: 65, count: 64 }
+          - { start: 129, count: 64 }
+          - { start: 193, count: 64 }
+          - { start: 257, count: 64 }
+          - { start: 321, count: 64 }
+          - { start: 385, count: 64 }
+          - { start: 449, count: 64 }
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+      - run: npm ci
+      - run: npx playwright install --with-deps chromium
+      - run: npm run formula:published-runtime
+      - name: Link full shaders and run CPU/GPU probes
+        run: >-
+          npm run formula:published-runtime:webgl --
+          --start=${{ matrix.shard.start }}
+          --limit=${{ matrix.shard.count }}
+          --chunk-size=3
+          --report=/tmp/published-webgl-${{ matrix.shard.start }}.json
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: published-webgl-${{ matrix.shard.start }}
+          path: /tmp/published-webgl-${{ matrix.shard.start }}.json
+          if-no-files-found: error
+
+  published-formula-webgl-coverage:
+    needs: published-formula-webgl
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+      - run: npm ci
+      - uses: actions/download-artifact@v4
+        with:
+          pattern: published-webgl-*
+          path: /tmp/published-webgl-reports
+      - run: >-
+          npm run formula:published-runtime:webgl:reports --
+          /tmp/published-webgl-reports

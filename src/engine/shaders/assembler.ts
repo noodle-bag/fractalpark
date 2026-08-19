@@ -48,6 +48,15 @@ export function assembleShader(
   }
 
   const defines: string[] = [];
+  const orbitLifecycle = formula.orbitLifecycle;
+  if (orbitLifecycle?.kind === 'frm-like-v1') {
+    defines.push('#define PLUGIN_HAS_STATE_RESET');
+    defines.push('#define PLUGIN_HAS_CONTINUE_PREDICATE');
+    // The v1 backend evaluates its arbitrary continue predicate after every
+    // step and has no polynomial smooth-escape guarantee.
+    defines.push('#define ESCAPE_AFTER_STEP');
+    defines.push('#define SMOOTH_ESCAPE_TIME');
+  }
   // Renderer-pipeline v2: a formula carrying a bounded bailout descriptor
   // (strict-v2 FRM compile) drives the escape defines from the descriptor
   // instead of the legacy numeric bailout field — but only when the
@@ -105,7 +114,7 @@ export function assembleShader(
     defines.push(`#define BAILOUT_RADIUS ${(formula.bailout ?? 4.0).toFixed(1)}`);
   }
   // Strict-v2 classic timing: bailout evaluated after each loop step.
-  if (pipelineV2 && formula.afterStepTiming) {
+  if (pipelineV2 && formula.afterStepTiming && !orbitLifecycle) {
     defines.push('#define ESCAPE_AFTER_STEP');
   }
   if (pipelineV2 && formula.smoothCapability === 'unavailable') {
@@ -119,7 +128,7 @@ export function assembleShader(
     defines.push('#define ESCAPE_CONVERGE');
     defines.push('#define CONVERGE_EPSILON 0.000001');
   }
-  if (formula.initGlsl) {
+  if (formula.initGlsl || orbitLifecycle) {
     defines.push('#define HAS_INIT_FORMULA');
   }
   const frmSource = `${formula.initGlsl ?? ''}\n${formula.glsl}`;
@@ -140,6 +149,55 @@ export function assembleShader(
   const orbitTrapSection = allNeeded.has('trapMin') ? ORBIT_TRAP_GLSL : '';
 
   let shader = frameworkTemplate;
+  if (orbitLifecycle?.kind === 'frm-like-v1') {
+    const { resetFunction, continueFunction, eventFunction } = orbitLifecycle;
+    const escapeAnchor = '#if defined(ESCAPE_C4R)';
+    if (!shader.includes(escapeAnchor)) {
+      throw new Error('Formula lifecycle escape hook anchor missing');
+    }
+    shader = shader.replace(
+      escapeAnchor,
+      `#if defined(PLUGIN_HAS_CONTINUE_PREDICATE)\n  #define ESCAPE_CHECK(z, zz) (!${continueFunction}())\n#elif defined(ESCAPE_C4R)`,
+    );
+
+    const orbitInput = '  vec2 c = u_isJulia ? u_juliaC : point;\n';
+    const orbitCount = shader.split(orbitInput).length - 1;
+    if (orbitCount !== 2) {
+      throw new Error(`Formula lifecycle reset hook anchor count: ${orbitCount}`);
+    }
+    shader = shader.replaceAll(
+      orbitInput,
+      `${orbitInput}#ifdef PLUGIN_HAS_STATE_RESET\n  ${resetFunction}(point, c, u_maxIterations, !u_isJulia);\n#endif\n`,
+    );
+
+    const heightInitAnchor =
+      '  vec2 zPrev = vec2(0.0);\n  for (int i = 0; i < 10000; i++) {';
+    if (!shader.includes(heightInitAnchor)) {
+      throw new Error('Formula lifecycle height-init hook anchor missing');
+    }
+    shader = shader.replace(
+      heightInitAnchor,
+      `  vec2 zPrev = vec2(0.0);\n#ifdef PLUGIN_HAS_CONTINUE_PREDICATE\n  if (${eventFunction}()) return 0.0;\n#endif\n  for (int i = 0; i < 10000; i++) {`,
+    );
+
+    const colorInitAnchor = '  bool escaped = false;';
+    if (!shader.includes(colorInitAnchor)) {
+      throw new Error('Formula lifecycle color-init hook anchor missing');
+    }
+    shader = shader.replace(
+      colorInitAnchor,
+      `${colorInitAnchor}\n#ifdef PLUGIN_HAS_CONTINUE_PREDICATE\n  escaped = ${eventFunction}();\n#endif`,
+    );
+    const colorLoopAnchor =
+      '  stats.angleAccum = 0.0;\n\n  for (int i = 0; i < 10000; i++) {\n    if (i >= u_maxIterations) break;';
+    if (!shader.includes(colorLoopAnchor)) {
+      throw new Error('Formula lifecycle color-loop hook anchor missing');
+    }
+    shader = shader.replace(
+      colorLoopAnchor,
+      '  stats.angleAccum = 0.0;\n\n  for (int i = 0; i < 10000; i++) {\n#ifdef PLUGIN_HAS_CONTINUE_PREDICATE\n    if (escaped) break;\n#endif\n    if (i >= u_maxIterations) break;',
+    );
+  }
   shader = shader.replace('precision highp float;', `precision highp float;\n${defines.join('\n')}`);
   shader = shader.replace('/* INJECT_UNIFORMS */', uniformDecls);
   shader = shader.replace('/* INJECT_COMPLEX_MATH */', complexMathLib);
@@ -161,21 +219,24 @@ export function assembleShader(
 }
 
 export function makeCacheKey(combo: PluginCombination, formulaOverride?: FormulaPlugin): ShaderCacheKey {
+  const formula = resolveFormula(combo, formulaOverride);
   const base = `${combo.formulaId}|${combo.outsideColoringId}|${combo.insideColoringId}|${combo.transformId}`;
+  const sourceBase = formula?.cacheFingerprint
+    ? `${base}|src:${formula.cacheFingerprint}`
+    : base;
   // Shader semantics now depend on the formula's bailout descriptor (strict
   // v2). A v1 and a v2 variant of the same formula id must never share a
   // compiled program — fingerprint the descriptor into the key. The
   // fingerprint applies only to pipeline-v2 combinations: a pipeline-v1
   // render of the same formula uses the legacy path and the legacy key.
-  if (combo.pipelineVersion !== 2) return base;
+  if (combo.pipelineVersion !== 2) return sourceBase;
   // Resolve the formula through the exact same path as assembleShader.
   // Registry-backed custom formulas normally have no instance override; if
   // their descriptor were omitted here, pipeline v1 and v2 could reuse one
   // compiled program even though assembleShader emits different source.
-  const formula = resolveFormula(combo, formulaOverride);
   const descriptor = formula?.bailoutDescriptor;
   const timingBit = formula?.afterStepTiming ? '|t:after' : '';
-  if (!descriptor) return `${base}${timingBit}`;
+  if (!descriptor) return `${sourceBase}${timingBit}`;
   const fingerprint =
     descriptor.kind === 'C2'
       ? `C2:${descriptor.op}:${descriptor.params.join(',')}`
@@ -184,5 +245,5 @@ export function makeCacheKey(combo: PluginCombination, formulaOverride?: Formula
         : descriptor.kind === 'C4R'
           ? `C4R:${descriptor.form}:${descriptor.op}:${descriptor.threshold}`
           : `C5:${descriptor.op}:${descriptor.threshold}`;
-  return `${base}|bo:${fingerprint}${timingBit}`;
+  return `${sourceBase}|bo:${fingerprint}${timingBit}`;
 }

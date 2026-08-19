@@ -9,8 +9,9 @@ revision-2 published rows:
 - no `separated-independent-rewrite`, held, excluded, or GPL row.
 
 Runtime revision 3 remains the immutable 339-row clean-room projection. The
-subsequent loader combines rev3 + rev4 by Formula ID; this runbook does not
-authorize loader activation, deployment, merge, or Production changes.
+published runtime builder combines rev3 + rev4 by Formula ID into a light
+513-row engine index plus content-addressed Definition bodies. This runbook does
+not authorize selector/UI activation, deployment, merge, or Production changes.
 
 ## Preconditions
 

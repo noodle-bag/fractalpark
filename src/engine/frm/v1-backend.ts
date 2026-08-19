@@ -28,6 +28,13 @@ export interface FrmLikeV1BackendOptions {
   readonly limits?: Readonly<
     Pick<FrmLikeV1SafetyLimits, "maxGeneratedShaderBytes">
   >;
+  /** Optional GLSL-only integration target. CPU semantics stay unchanged. */
+  readonly glsl?: Readonly<{
+    /** Prefix every formula-owned state/parameter/local identifier. */
+    identifierPrefix?: string;
+    /** Emit pixel/c/maxit/ismand as mutable orbit state, not uniforms. */
+    orbitPlugin?: boolean;
+  }>;
 }
 export interface FrmLikeV1Backend {
   readonly metadata: Readonly<{
@@ -137,6 +144,9 @@ const glslFns: Readonly<Record<string, string>> = Object.freeze({
 });
 function fail(reason: string): never {
   throw new Error(reason);
+}
+function glslIdentifier(name: string, prefix: string): string {
+  return `${prefix}${name}`;
 }
 function q(z: FrmV1Complex): FrmV1Complex {
   return frmV1QuantizeStandard32(z);
@@ -755,6 +765,7 @@ function compileExpression(
   values: Readonly<Record<string, FrmLikeV1ValueType>>,
   context?: GlslEmissionContext,
   dialect?: GlslDialectOptions,
+  identifierPrefix = "",
 ): Typed {
   const type = typeOfExpression(expression, values);
   if (expression.kind === "number")
@@ -764,7 +775,8 @@ function compileExpression(
       type,
       code: `vec2(${numberText(expression.real)}, ${numberText(expression.imaginary)})`,
     };
-  if (expression.kind === "identifier") return { type, code: expression.name };
+  if (expression.kind === "identifier")
+    return { type, code: glslIdentifier(expression.name, identifierPrefix) };
   // Flattening: compound complex operations are emitted as sequential
   // temporaries (source-order left-to-right, one frmV1Checked call per op —
   // exactly the nested evaluation order) instead of deeply nested calls.
@@ -779,14 +791,26 @@ function compileExpression(
     return temporary;
   };
   if (expression.kind === "magnitude") {
-    const operand = compileExpression(expression.operand, values, context, dialect);
+    const operand = compileExpression(
+      expression.operand,
+      values,
+      context,
+      dialect,
+      identifierPrefix,
+    );
     return {
       type,
       code: flatten(`frmV1Checked(vec2(length(${glslComplex(operand)}), 0.0))`),
     };
   }
   if (expression.kind === "unary") {
-    const operand = compileExpression(expression.operand, values, context, dialect);
+    const operand = compileExpression(
+      expression.operand,
+      values,
+      context,
+      dialect,
+      identifierPrefix,
+    );
     return expression.operator === "!"
       ? { type, code: `(!${glslBoolean(operand)})` }
       : {
@@ -796,7 +820,17 @@ function compileExpression(
   }
   if (expression.kind === "call") {
     const args = expression.args
-      .map((argument) => glslComplex(compileExpression(argument, values, context, dialect)))
+      .map((argument) =>
+        glslComplex(
+          compileExpression(
+            argument,
+            values,
+            context,
+            dialect,
+            identifierPrefix,
+          ),
+        ),
+      )
       .join(", ");
     const call =
       values[expression.callee] === "function"
@@ -804,25 +838,49 @@ function compileExpression(
         : `${(dialect?.fns ?? glslFns)[expression.callee]}(${args})`;
     return { type, code: flatten(`frmV1Checked(${call})`) };
   }
-  const left = compileExpression(expression.left, values, context, dialect);
+  const left = compileExpression(
+    expression.left,
+    values,
+    context,
+    dialect,
+    identifierPrefix,
+  );
   if (expression.operator === "&&") {
     // Short-circuit fidelity: the right side must stay nested so its checked
     // operations do not execute (and cannot raise the non-finite event) when
     // the left side is false. Only the always-evaluated left may flatten.
-    const right = compileExpression(expression.right, values, undefined, dialect);
+    const right = compileExpression(
+      expression.right,
+      values,
+      undefined,
+      dialect,
+      identifierPrefix,
+    );
     return {
       type,
       code: `(${glslBoolean(left)} && ${glslBoolean(right)})`,
     };
   }
   if (expression.operator === "||") {
-    const right = compileExpression(expression.right, values, undefined, dialect);
+    const right = compileExpression(
+      expression.right,
+      values,
+      undefined,
+      dialect,
+      identifierPrefix,
+    );
     return {
       type,
       code: `(${glslBoolean(left)} || ${glslBoolean(right)})`,
     };
   }
-  const right = compileExpression(expression.right, values, context, dialect);
+  const right = compileExpression(
+    expression.right,
+    values,
+    context,
+    dialect,
+    identifierPrefix,
+  );
   if (["<", ">", "<=", ">="].includes(expression.operator))
     return {
       type,
@@ -877,11 +935,18 @@ function emitStatements(
   context: GlslEmissionContext,
   indent = "",
   dialect?: GlslDialectOptions,
+  identifierPrefix = "",
 ): string {
   return body
     .map((statement) => {
       if (statement.kind === "assignment") {
-        const value = compileExpression(statement.value, values, context, dialect);
+        const value = compileExpression(
+          statement.value,
+          values,
+          context,
+          dialect,
+          identifierPrefix,
+        );
         const prelude = takePrelude(context, `${indent}  `);
         const targetType =
           values[statement.target] ?? fail("unsupported-store");
@@ -893,19 +958,25 @@ function emitStatements(
           `${indent}if (!frmV1NonFiniteEvent) {`,
           ...prelude,
           `${indent}  ${temporaryType} ${temporary} = ${code};`,
-          `${indent}  if (!frmV1NonFiniteEvent) { ${statement.target} = ${temporary}; }`,
+          `${indent}  if (!frmV1NonFiniteEvent) { ${glslIdentifier(statement.target, identifierPrefix)} = ${temporary}; }`,
           `${indent}}`,
         ].join("\n");
       }
       if (statement.kind === "component-assignment") {
-        const value = compileExpression(statement.value, values, context, dialect);
+        const value = compileExpression(
+          statement.value,
+          values,
+          context,
+          dialect,
+          identifierPrefix,
+        );
         const prelude = takePrelude(context, `${indent}  `);
         const temporary = nextTemporary(context);
         return [
           `${indent}if (!frmV1NonFiniteEvent) {`,
           ...prelude,
           `${indent}  float ${temporary} = ${glslReal(value)};`,
-          `${indent}  if (!frmV1NonFiniteEvent) { ${statement.target}.${statement.component === "real" ? "x" : "y"} = ${temporary}; }`,
+          `${indent}  if (!frmV1NonFiniteEvent) { ${glslIdentifier(statement.target, identifierPrefix)}.${statement.component === "real" ? "x" : "y"} = ${temporary}; }`,
           `${indent}}`,
         ].join("\n");
       }
@@ -914,20 +985,57 @@ function emitStatements(
       // temporaries would always execute their checked operations. Condition
       // expressions are small in practice.
       const branches = [
-        `${indent}if (!frmV1NonFiniteEvent && ${glslBoolean(compileExpression(statement.condition, values, undefined, dialect))}) {`,
-        emitStatements(statement.then, values, context, `${indent}  `, dialect),
+        `${indent}if (!frmV1NonFiniteEvent && ${glslBoolean(
+          compileExpression(
+            statement.condition,
+            values,
+            undefined,
+            dialect,
+            identifierPrefix,
+          ),
+        )}) {`,
+        emitStatements(
+          statement.then,
+          values,
+          context,
+          `${indent}  `,
+          dialect,
+          identifierPrefix,
+        ),
         `${indent}}`,
       ];
       for (const branch of statement.elseIf)
         branches.push(
-          ` else if (!frmV1NonFiniteEvent && ${glslBoolean(compileExpression(branch.condition, values, undefined, dialect))}) {`,
-          emitStatements(branch.body, values, context, `${indent}  `, dialect),
+          ` else if (!frmV1NonFiniteEvent && ${glslBoolean(
+            compileExpression(
+              branch.condition,
+              values,
+              undefined,
+              dialect,
+              identifierPrefix,
+            ),
+          )}) {`,
+          emitStatements(
+            branch.body,
+            values,
+            context,
+            `${indent}  `,
+            dialect,
+            identifierPrefix,
+          ),
           `${indent}}`,
         );
       if (statement.else)
         branches.push(
           " else {",
-          emitStatements(statement.else, values, context, `${indent}  `, dialect),
+          emitStatements(
+            statement.else,
+            values,
+            context,
+            `${indent}  `,
+            dialect,
+            identifierPrefix,
+          ),
           `${indent}}`,
         );
       return branches.join("\n");
@@ -1195,6 +1303,12 @@ export function compileFrmLikeV1Backend(
       requestedGeneratedBytes ??
         FRM_LIKE_V1_DEFAULT_LIMITS.maxGeneratedShaderBytes,
     );
+    const identifierPrefix = options.glsl?.identifierPrefix ?? "";
+    if (identifierPrefix !== "" && !identifiers.test(identifierPrefix))
+      fail("invalid-glsl-identifier-prefix");
+    const orbitPlugin = options.glsl?.orbitPlugin === true;
+    if (orbitPlugin && identifierPrefix === "")
+      fail("orbit-plugin-prefix-required");
     const validated = validateFrmLikeV1Ir(ir);
     if (validated.ok === false) fail(validated.reason);
     ir = validated.ir;
@@ -1230,47 +1344,96 @@ export function compileFrmLikeV1Backend(
       "bool frmV1Truthy(vec2 value) { return value.x != 0.0; }",
       "vec2 frmV1Pow(vec2 base, float exponent) { if (base.x == 0.0 && base.y == 0.0) return vec2(0.0); return frmV1Checked(frmV1Exp(frmV1Mul(vec2(exponent, 0.0), frmV1Log(base)))); }",
       ...guardedPreludeLines(guardSet),
-      ...ir.parameters
-        .filter((parameter) => parameter.type !== "function")
-        .map((parameter) => `uniform vec2 ${parameter.name};`),
-      ...functionSelectors.map((name) => `uniform int u_frm_${name};`),
-      ...Object.entries(systems)
-        .filter(
-          ([name, type]) =>
-            type !== "function" &&
-            !["z", "zPrev", "LastSqr", "pi", "e", "ismand"].includes(name) &&
-            !(name in classicBindings),
-        )
-        .map(([name]) => `uniform vec2 ${name};`),
-      "uniform bool ismand;",
-      "const vec2 pi = vec2(3.14159265358979323846, 0.0);",
-      "const vec2 e = vec2(2.71828182845904523536, 0.0);",
-      "vec2 z = vec2(0.0);",
-      "vec2 zPrev = vec2(0.0);",
-      "vec2 LastSqr = vec2(0.0);",
+      ...(orbitPlugin
+        ? []
+        : ir.parameters
+            .filter((parameter) => parameter.type !== "function")
+            .map(
+              (parameter) =>
+                `uniform vec2 ${glslIdentifier(parameter.name, identifierPrefix)};`,
+            )),
+      ...(orbitPlugin
+        ? []
+        : functionSelectors.map((name) => `uniform int u_frm_${name};`)),
+      ...(orbitPlugin
+        ? [
+            `vec2 ${glslIdentifier("pixel", identifierPrefix)} = vec2(0.0);`,
+            `vec2 ${glslIdentifier("c", identifierPrefix)} = vec2(0.0);`,
+            `vec2 ${glslIdentifier("maxit", identifierPrefix)} = vec2(0.0);`,
+            `bool ${glslIdentifier("ismand", identifierPrefix)} = false;`,
+          ]
+        : [
+            ...Object.entries(systems)
+              .filter(
+                ([name, type]) =>
+                  type !== "function" &&
+                  ![
+                    "z",
+                    "zPrev",
+                    "LastSqr",
+                    "pi",
+                    "e",
+                    "ismand",
+                  ].includes(name) &&
+                  !(name in classicBindings),
+              )
+              .map(
+                ([name]) =>
+                  `uniform vec2 ${glslIdentifier(name, identifierPrefix)};`,
+              ),
+            `uniform bool ${glslIdentifier("ismand", identifierPrefix)};`,
+          ]),
+      `const vec2 ${glslIdentifier("pi", identifierPrefix)} = vec2(3.14159265358979323846, 0.0);`,
+      `const vec2 ${glslIdentifier("e", identifierPrefix)} = vec2(2.71828182845904523536, 0.0);`,
+      `vec2 ${glslIdentifier("z", identifierPrefix)} = vec2(0.0);`,
+      `vec2 ${glslIdentifier("zPrev", identifierPrefix)} = vec2(0.0);`,
+      `vec2 ${glslIdentifier("LastSqr", identifierPrefix)} = vec2(0.0);`,
       ...ir.locals.map((local) =>
         local.type === "boolean"
-          ? `bool ${local.name} = false;`
-          : `vec2 ${local.name} = vec2(0.0);`,
+          ? `bool ${glslIdentifier(local.name, identifierPrefix)} = false;`
+          : `vec2 ${glslIdentifier(local.name, identifierPrefix)} = vec2(0.0);`,
       ),
       ...functionSelectors.map((name) =>
         dispatchGlsl(name, dialect?.fns ?? glslFns),
       ),
     ].join("\n");
     const emissionContext: GlslEmissionContext = { nextTemporary: 0, prelude: [] };
-    const initGlsl = emitStatements(ir.init, values, emissionContext, "", dialect);
+    const initGlsl = emitStatements(
+      ir.init,
+      values,
+      emissionContext,
+      "",
+      dialect,
+      identifierPrefix,
+    );
+    const z = glslIdentifier("z", identifierPrefix);
+    const zPrev = glslIdentifier("zPrev", identifierPrefix);
+    const lastSqr = glslIdentifier("LastSqr", identifierPrefix);
     const loopGlsl = [
-      "if (!frmV1NonFiniteEvent) { zPrev = z; }",
-      emitStatements(ir.loop, values, emissionContext, "", dialect),
+      `if (!frmV1NonFiniteEvent) { ${zPrev} = ${z}; }`,
+      emitStatements(
+        ir.loop,
+        values,
+        emissionContext,
+        "",
+        dialect,
+        identifierPrefix,
+      ),
       // LastSqr is a saturating decision side-channel (see the CPU step()):
       // dot(z, z) may legitimately reach +Inf for finite z, and that must
       // not raise the nonFinite event — the escape predicate still fires.
       // Expression reads of LastSqr stay guarded on use.
       "if (!frmV1NonFiniteEvent) {",
-      "  LastSqr = vec2(dot(z, z), 0.0);",
+      `  ${lastSqr} = vec2(dot(${z}, ${z}), 0.0);`,
       "}",
     ].join("\n");
-    const bailout = compileExpression(ir.bailout, values, undefined, dialect);
+    const bailout = compileExpression(
+      ir.bailout,
+      values,
+      undefined,
+      dialect,
+      identifierPrefix,
+    );
     const continuePredicate = `(!frmV1NonFiniteEvent && ${glslBoolean(bailout)} && !frmV1NonFiniteEvent)`;
     const generatedBytes = new TextEncoder().encode(
       [declarations, initGlsl, loopGlsl, continuePredicate].join("\n"),
