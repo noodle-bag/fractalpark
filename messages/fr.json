@@ -322,6 +322,10 @@
         "description": "Utilise l’Explorateur pour les formules intégrées, ou ouvre l’Éditeur FRM autonome lorsque tu veux définir toi-même l’itération.",
         "explore": "Ouvrir l'Explorateur",
         "editor": "Ouvrir l'éditeur de formules"
+      },
+      "standardDirectory": {
+        "cta": "Parcourir le répertoire standard",
+        "hint": "Les 677 identités de formules standard avec leur statut de publication, dont les 513 actuellement publiées."
       }
     },
     "guide": {
@@ -1110,6 +1114,36 @@
         },
         "history": "Zubieta belongs to a broader family of \"abs\" fractal variants — maps that apply absolute-value folds at different stages of the quadratic iteration. The best-known member of this family is the Burning Ship fractal, discovered by Michael Michelitsch and Otto E. Rössler in 1992, which folds the components before squaring. The Buffalo fractal, another relative, applies the fold after squaring but before adding c.\n\nThe Zubieta variant applies the component-wise absolute value after both squaring and the addition of c. Its precise origin is difficult to pin to a single published academic source. Variants of this kind circulated among fractal-rendering communities and software packages (Ultra Fractal, Fractint, XaoS) in the 1990s and 2000s, often named after whoever first implemented or popularized them in a given program.\n\nFractalPark's implementation follows the standard component-wise fold and renders the parameter plane in Mandelbrot mode."
       }
+    },
+    "directory": {
+      "breadcrumbLabel": "Fil d'Ariane",
+      "breadcrumbAtlas": "Atlas des formules",
+      "breadcrumb": "Répertoire",
+      "eyebrow": "Répertoire des formules standard",
+      "title": "Répertoire des formules standard",
+      "description": "Le répertoire complet des 677 identités de formules standard de FractalPark avec leur statut de publication actuel, navigable par famille et par statut.",
+      "intro": "Les 677 identités de formules standard dans un seul répertoire. Filtrez par famille et statut de publication ; les formules publiées sont entièrement implémentées et exécutables, les formules retenues sont documentées mais pas encore disponibles.",
+      "facets": {
+        "title": "Parcourir par facette",
+        "family": "Famille",
+        "status": "Statut de publication",
+        "all": "Toutes"
+      },
+      "family": {
+        "algebraic-power": "Puissance algébrique",
+        "transcendental": "Transcendante",
+        "function-composition": "Composition de fonctions",
+        "rational-reciprocal": "Réciproque rationnelle",
+        "orbit-memory": "Mémoire d'orbite",
+        "folded-absolute": "Valeur absolue repliée",
+        "root-finding": "Recherche de racines"
+      },
+      "status": {
+        "publish": "Publiée",
+        "hold": "Retenue",
+        "exclude": "Exclue"
+      },
+      "resultCount": "{count} identités"
     }
   },
   "artworks": {

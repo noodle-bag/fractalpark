@@ -162,6 +162,18 @@ export default async function FormulaAtlasPage({
             <Stat value={atlas.families.length} label={t('stats.families')} />
             <Stat value={atlas.guides.length} label={t('stats.guides')} />
           </dl>
+
+          <div className="mt-8">
+            <Button asChild variant="outline">
+              <Link href="/formulas/directory">
+                {t('standardDirectory.cta')}
+                <ArrowRight aria-hidden />
+              </Link>
+            </Button>
+            <p className="mt-3 max-w-2xl text-sm leading-6 text-muted-foreground">
+              {t('standardDirectory.hint')}
+            </p>
+          </div>
         </div>
       </header>
 

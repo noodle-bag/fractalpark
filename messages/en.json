@@ -322,6 +322,10 @@
         "description": "Use the Explorer for built-in formulas, or open the standalone FRM Editor when you want to define the iteration yourself.",
         "explore": "Open Explorer",
         "editor": "Open Formula Editor"
+      },
+      "standardDirectory": {
+        "cta": "Browse the standard directory",
+        "hint": "All 677 Standard Formula identities with publication status — including the 513 currently published."
       }
     },
     "guide": {
@@ -1110,6 +1114,36 @@
         },
         "history": "Zubieta belongs to a broader family of \"abs\" fractal variants — maps that apply absolute-value folds at different stages of the quadratic iteration. The best-known member of this family is the Burning Ship fractal, discovered by Michael Michelitsch and Otto E. Rössler in 1992, which folds the components before squaring. The Buffalo fractal, another relative, applies the fold after squaring but before adding c.\n\nThe Zubieta variant applies the component-wise absolute value after both squaring and the addition of c. Its precise origin is difficult to pin to a single published academic source. Variants of this kind circulated among fractal-rendering communities and software packages (Ultra Fractal, Fractint, XaoS) in the 1990s and 2000s, often named after whoever first implemented or popularized them in a given program.\n\nFractalPark's implementation follows the standard component-wise fold and renders the parameter plane in Mandelbrot mode."
       }
+    },
+    "directory": {
+      "breadcrumbLabel": "Breadcrumb",
+      "breadcrumbAtlas": "Formula Atlas",
+      "breadcrumb": "Directory",
+      "eyebrow": "Standard Formula Directory",
+      "title": "Standard Formula Directory",
+      "description": "The complete directory of FractalPark's 677 Standard Formula identities with their current publication status, browsable by family and status.",
+      "intro": "All 677 Standard Formula identities in one directory. Filter by family and publication status; published formulas are fully implemented and runnable, held formulas are documented but not yet available.",
+      "facets": {
+        "title": "Browse by facet",
+        "family": "Family",
+        "status": "Publication status",
+        "all": "All"
+      },
+      "family": {
+        "algebraic-power": "Algebraic power",
+        "transcendental": "Transcendental",
+        "function-composition": "Function composition",
+        "rational-reciprocal": "Rational reciprocal",
+        "orbit-memory": "Orbit memory",
+        "folded-absolute": "Folded absolute",
+        "root-finding": "Root finding"
+      },
+      "status": {
+        "publish": "Published",
+        "hold": "Held",
+        "exclude": "Excluded"
+      },
+      "resultCount": "{count} identities"
     }
   },
   "artworks": {

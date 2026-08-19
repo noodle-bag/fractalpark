@@ -322,6 +322,10 @@
         "description": "Use o Explorar para fórmulas integradas ou abra o Editor FRM independente quando quiser definir a iteração por conta própria.",
         "explore": "Abrir o Explorar",
         "editor": "Abrir Editor de Fórmulas"
+      },
+      "standardDirectory": {
+        "cta": "Explorar o diretório padrão",
+        "hint": "Todas as 677 identidades de fórmulas padrão com status de publicação — incluindo as 513 atualmente publicadas."
       }
     },
     "guide": {
@@ -1110,6 +1114,36 @@
         },
         "history": "Zubieta belongs to a broader family of \"abs\" fractal variants — maps that apply absolute-value folds at different stages of the quadratic iteration. The best-known member of this family is the Burning Ship fractal, discovered by Michael Michelitsch and Otto E. Rössler in 1992, which folds the components before squaring. The Buffalo fractal, another relative, applies the fold after squaring but before adding c.\n\nThe Zubieta variant applies the component-wise absolute value after both squaring and the addition of c. Its precise origin is difficult to pin to a single published academic source. Variants of this kind circulated among fractal-rendering communities and software packages (Ultra Fractal, Fractint, XaoS) in the 1990s and 2000s, often named after whoever first implemented or popularized them in a given program.\n\nFractalPark's implementation follows the standard component-wise fold and renders the parameter plane in Mandelbrot mode."
       }
+    },
+    "directory": {
+      "breadcrumbLabel": "Trilha de navegação",
+      "breadcrumbAtlas": "Atlas de fórmulas",
+      "breadcrumb": "Diretório",
+      "eyebrow": "Diretório de fórmulas padrão",
+      "title": "Diretório de fórmulas padrão",
+      "description": "O diretório completo das 677 identidades de fórmulas padrão do FractalPark com seu status de publicação atual, navegável por família e status.",
+      "intro": "Todas as 677 identidades de fórmulas padrão em um único diretório. Filtre por família e status de publicação; as fórmulas publicadas estão totalmente implementadas e prontas para executar, as retidas estão documentadas mas ainda não disponíveis.",
+      "facets": {
+        "title": "Navegar por faceta",
+        "family": "Família",
+        "status": "Status de publicação",
+        "all": "Todas"
+      },
+      "family": {
+        "algebraic-power": "Potência algébrica",
+        "transcendental": "Transcendental",
+        "function-composition": "Composição de funções",
+        "rational-reciprocal": "Recíproca racional",
+        "orbit-memory": "Memória de órbita",
+        "folded-absolute": "Valor absoluto dobrado",
+        "root-finding": "Busca de raízes"
+      },
+      "status": {
+        "publish": "Publicada",
+        "hold": "Retida",
+        "exclude": "Excluída"
+      },
+      "resultCount": "{count} identidades"
     }
   },
   "artworks": {

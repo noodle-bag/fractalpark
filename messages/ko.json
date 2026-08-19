@@ -322,6 +322,10 @@
         "description": "기본 제공 수식은 탐색기를 사용하고, 반복을 직접 정의하려면 독립형 FRM 편집기를 여세요.",
         "explore": "탐색기 열기",
         "editor": "수식 에디터 열기"
+      },
+      "standardDirectory": {
+        "cta": "표준 디렉터리 탐색",
+        "hint": "677개 표준 수식 identity 전체와 게시 상태 — 현재 게시된 513개 포함."
       }
     },
     "guide": {
@@ -1110,6 +1114,36 @@
         },
         "history": "Zubieta belongs to a broader family of \"abs\" fractal variants — maps that apply absolute-value folds at different stages of the quadratic iteration. The best-known member of this family is the Burning Ship fractal, discovered by Michael Michelitsch and Otto E. Rössler in 1992, which folds the components before squaring. The Buffalo fractal, another relative, applies the fold after squaring but before adding c.\n\nThe Zubieta variant applies the component-wise absolute value after both squaring and the addition of c. Its precise origin is difficult to pin to a single published academic source. Variants of this kind circulated among fractal-rendering communities and software packages (Ultra Fractal, Fractint, XaoS) in the 1990s and 2000s, often named after whoever first implemented or popularized them in a given program.\n\nFractalPark's implementation follows the standard component-wise fold and renders the parameter plane in Mandelbrot mode."
       }
+    },
+    "directory": {
+      "breadcrumbLabel": "탐색 경로",
+      "breadcrumbAtlas": "수식 아틀라스",
+      "breadcrumb": "디렉터리",
+      "eyebrow": "표준 수식 디렉터리",
+      "title": "표준 수식 디렉터리",
+      "description": "FractalPark의 677개 표준 수식 identity 전체 디렉터리. 현재 게시 상태와 함께 제공되며 계열과 상태별로 탐색할 수 있습니다.",
+      "intro": "677개 표준 수식 identity가 모두 이 디렉터리에 있습니다. 계열과 게시 상태로 필터링하세요. 게시된 수식은 완전히 구현되어 바로 실행할 수 있고, 보류된 수식은 기록되어 있지만 아직 사용할 수 없습니다.",
+      "facets": {
+        "title": "패싯으로 탐색",
+        "family": "계열",
+        "status": "게시 상태",
+        "all": "전체"
+      },
+      "family": {
+        "algebraic-power": "대수적 거듭제곱",
+        "transcendental": "초월 함수",
+        "function-composition": "함수 합성",
+        "rational-reciprocal": "유리 역수",
+        "orbit-memory": "궤도 메모리",
+        "folded-absolute": "접힌 절댓값",
+        "root-finding": "근 찾기"
+      },
+      "status": {
+        "publish": "게시됨",
+        "hold": "보류",
+        "exclude": "제외"
+      },
+      "resultCount": "identity {count}개"
     }
   },
   "artworks": {

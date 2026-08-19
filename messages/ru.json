@@ -322,6 +322,10 @@
         "description": "Используйте Обзор для встроенных формул или откройте отдельный редактор FRM, когда захотите самостоятельно определить итерацию.",
         "explore": "Открыть Обзор",
         "editor": "Открыть редактор формул"
+      },
+      "standardDirectory": {
+        "cta": "Открыть стандартный каталог",
+        "hint": "Все 677 стандартных идентичностей формул со статусом публикации, включая 513 опубликованных."
       }
     },
     "guide": {
@@ -1110,6 +1114,36 @@
         },
         "history": "Zubieta belongs to a broader family of \"abs\" fractal variants — maps that apply absolute-value folds at different stages of the quadratic iteration. The best-known member of this family is the Burning Ship fractal, discovered by Michael Michelitsch and Otto E. Rössler in 1992, which folds the components before squaring. The Buffalo fractal, another relative, applies the fold after squaring but before adding c.\n\nThe Zubieta variant applies the component-wise absolute value after both squaring and the addition of c. Its precise origin is difficult to pin to a single published academic source. Variants of this kind circulated among fractal-rendering communities and software packages (Ultra Fractal, Fractint, XaoS) in the 1990s and 2000s, often named after whoever first implemented or popularized them in a given program.\n\nFractalPark's implementation follows the standard component-wise fold and renders the parameter plane in Mandelbrot mode."
       }
+    },
+    "directory": {
+      "breadcrumbLabel": "Хлебные крошки",
+      "breadcrumbAtlas": "Атлас формул",
+      "breadcrumb": "Каталог",
+      "eyebrow": "Каталог стандартных формул",
+      "title": "Каталог стандартных формул",
+      "description": "Полный каталог 677 стандартных идентичностей формул FractalPark с текущим статусом публикации, с навигацией по семействам и статусам.",
+      "intro": "Все 677 стандартных идентичностей формул в одном каталоге. Фильтруйте по семейству и статусу публикации; опубликованные формулы полностью реализованы и готовы к запуску, отложенные задокументированы, но пока недоступны.",
+      "facets": {
+        "title": "Обзор по фасетам",
+        "family": "Семейство",
+        "status": "Статус публикации",
+        "all": "Все"
+      },
+      "family": {
+        "algebraic-power": "Алгебраическая степень",
+        "transcendental": "Трансцендентные",
+        "function-composition": "Композиция функций",
+        "rational-reciprocal": "Рациональная обратная",
+        "orbit-memory": "Память орбиты",
+        "folded-absolute": "Свёрнутый модуль",
+        "root-finding": "Поиск корней"
+      },
+      "status": {
+        "publish": "Опубликована",
+        "hold": "Отложена",
+        "exclude": "Исключена"
+      },
+      "resultCount": "Идентичностей: {count}"
     }
   },
   "artworks": {
