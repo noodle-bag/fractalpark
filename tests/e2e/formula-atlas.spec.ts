@@ -16,12 +16,12 @@ test.describe('Formula Atlas', () => {
     await expect(page.locator('[data-guide-formula-id]')).toHaveCount(21);
     await expect(
       page.locator(
-        '[data-guide-formula-id="mandelbrot"] a[href="/en/formulas/mandelbrot"]'
+        '[data-guide-formula-id="mandelbrot"] a[href="/en/formulas/00e14aa8-b766-54ea-a359-3f5d20d329b7"]'
       )
     ).toHaveCount(1);
     await expect(
       page.locator(
-        '[data-guide-formula-id="lambda"] a[href="/en/formulas/lambda"]'
+        '[data-guide-formula-id="lambda"] a[href="/en/formulas/c1c898f3-c9a3-583d-9a0a-d09968ba0db3"]'
       )
     ).toHaveCount(1);
     await expect(
@@ -37,6 +37,28 @@ test.describe('Formula Atlas', () => {
     await expect(page.locator('link[rel="canonical"]')).toHaveAttribute(
       'href',
       'https://www.fractalpark.com/en/formulas'
+    );
+
+    await context.close();
+  });
+
+  test('links every Standard directory identity to its canonical ID route', async ({
+    browser,
+  }) => {
+    const context = await browser.newContext({ javaScriptEnabled: false });
+    const page = await context.newPage();
+
+    await page.goto('/en/formulas/directory');
+
+    const rows = page.locator('[data-formula-id]');
+    await expect(rows).toHaveCount(677);
+    await expect(
+      rows
+        .filter({ has: page.getByText('3damand01', { exact: true }) })
+        .getByRole('link', { name: '3damand01' })
+    ).toHaveAttribute(
+      'href',
+      '/en/formulas/1cd7a16f-0474-5b8f-a974-e122ea893769'
     );
 
     await context.close();

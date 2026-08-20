@@ -110,6 +110,18 @@ function buildDirectory(): readonly FormulaDirectoryEntryV1[] {
 export const STANDARD_FORMULA_DIRECTORY_V1: readonly FormulaDirectoryEntryV1[] =
   buildDirectory();
 
+const STANDARD_FORMULA_DIRECTORY_BY_ID_V1 = new Map(
+  STANDARD_FORMULA_DIRECTORY_V1.map((entry) => [entry.formulaId, entry]),
+);
+
+export function getFormulaDirectoryEntryV1(
+  formulaId: unknown,
+): FormulaDirectoryEntryV1 | undefined {
+  return typeof formulaId === "string"
+    ? STANDARD_FORMULA_DIRECTORY_BY_ID_V1.get(formulaId as FormulaIdV1)
+    : undefined;
+}
+
 export interface FormulaDirectoryFilterV1 {
   readonly family?: FormulaDirectoryFamilyV1;
   readonly decision?: FormulaPublicationDecisionV1;

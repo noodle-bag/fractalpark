@@ -1,5 +1,6 @@
 import type { Metadata } from 'next';
 import Image from 'next/image';
+import { cache } from 'react';
 import {
   ArrowRight,
   BookOpen,
@@ -8,7 +9,7 @@ import {
   Sigma,
   SlidersHorizontal,
 } from 'lucide-react';
-import { notFound } from 'next/navigation';
+import { notFound, permanentRedirect } from 'next/navigation';
 import { getTranslations, setRequestLocale } from 'next-intl/server';
 import presetsFile from '../../../../../public/gallery-presets.json';
 import { MathBlock } from '@/components/content/MathBlock';
@@ -23,7 +24,8 @@ import {
   formulaGuideImagePath,
   formulaGuideOpenGraphImagePath,
   formulaGuidePath,
-  getPublishedFormulaGuideBySlug,
+  getPublishedFormulaGuideByFormulaId,
+  getPublishedFormulaGuideFormulaId,
   isPublishedFormulaGuideId,
 } from '@/content/formula-guides';
 import { getFormulaContentById } from '@/content/formula-manifest';
@@ -41,28 +43,80 @@ import { splitProseParagraphs } from '@/lib/content-text';
 import { appendRemixSource } from '@/lib/remix-source';
 import { documentToExploreHref } from '@/lib/url-params';
 import { OG_LOCALE, type SupportedLocale } from '@/i18n/supported-locales';
+import {
+  FORMULA_ROUTE_RECORD_REVISION_V1,
+  buildFormulaCanonicalPathV1,
+  buildFormulaRouteRecordV1,
+  resolveFormulaRouteV1,
+  type FormulaRouteRecordV1,
+} from '@/lib/formula-routes';
+import type { FormulaIdV1 } from '@/engine/formulas/v1/types';
 
-interface FormulaGuidePageProps {
+interface FormulaPageProps {
   params: Promise<{
     locale: string;
-    slug: string;
+    formulaId: string;
   }>;
 }
 
-export const dynamicParams = false;
+export const dynamicParams = true;
 
 export function generateStaticParams() {
-  return PUBLISHED_FORMULA_GUIDES.map(({ slug }) => ({ slug }));
+  return PUBLISHED_FORMULA_GUIDES.map((entry) => ({
+    formulaId: getPublishedFormulaGuideFormulaId(entry),
+  }));
+}
+
+async function loadFormulaRouteRecord(
+  formulaId: FormulaIdV1,
+  recordRevision: string,
+  locale: string
+): Promise<FormulaRouteRecordV1 | undefined> {
+  return buildFormulaRouteRecordV1(formulaId, recordRevision, locale);
+}
+
+/** generateMetadata and the page share one route projection per render. */
+const loadFormulaRouteRecordCached = cache(loadFormulaRouteRecord);
+
+function resolveRouteOrRedirect(
+  routeValue: string,
+  locale: string
+): FormulaIdV1 {
+  const resolution = resolveFormulaRouteV1(routeValue);
+  if (resolution.kind === 'legacy-redirect') {
+    permanentRedirect(
+      `/${locale}${buildFormulaCanonicalPathV1(resolution.formulaId)}`
+    );
+  }
+  if (resolution.kind === 'not-found') notFound();
+  return resolution.formulaId;
 }
 
 export async function generateMetadata({
   params,
-}: FormulaGuidePageProps): Promise<Metadata> {
-  const { locale, slug } = await params;
-  const entry = getPublishedFormulaGuideBySlug(slug);
+}: FormulaPageProps): Promise<Metadata> {
+  const { locale, formulaId: routeValue } = await params;
+  const formulaId = resolveRouteOrRedirect(routeValue, locale);
+  const routeRecord = await loadFormulaRouteRecordCached(
+    formulaId,
+    FORMULA_ROUTE_RECORD_REVISION_V1,
+    locale
+  );
+  if (!routeRecord) notFound();
 
+  const entry = getPublishedFormulaGuideByFormulaId(formulaId);
   if (!entry) {
-    notFound();
+    const t = await getTranslations({
+      locale,
+      namespace: 'formulas.directory',
+    });
+    const path = buildFormulaCanonicalPathV1(formulaId);
+    return {
+      title: routeRecord.displayName,
+      description: t('description'),
+      robots: { index: false, follow: true },
+      alternates: { canonical: `/${locale}${path}` },
+    };
   }
 
   const t = await getTranslations({
@@ -104,15 +158,21 @@ export async function generateMetadata({
   };
 }
 
-export default async function FormulaGuidePage({
-  params,
-}: FormulaGuidePageProps) {
-  const { locale, slug } = await params;
+export default async function FormulaPage({ params }: FormulaPageProps) {
+  const { locale, formulaId: routeValue } = await params;
   setRequestLocale(locale);
 
-  const entry = getPublishedFormulaGuideBySlug(slug);
+  const formulaId = resolveRouteOrRedirect(routeValue, locale);
+  const routeRecord = await loadFormulaRouteRecordCached(
+    formulaId,
+    FORMULA_ROUTE_RECORD_REVISION_V1,
+    locale
+  );
+  if (!routeRecord) notFound();
+
+  const entry = getPublishedFormulaGuideByFormulaId(formulaId);
   if (!entry) {
-    notFound();
+    return <FormulaIdentityPage locale={locale} record={routeRecord} />;
   }
 
   const metadata = getFormulaMetadata(entry.formulaId);
@@ -520,6 +580,50 @@ export default async function FormulaGuidePage({
           </GuideSection>
         ) : null}
       </div>
+    </main>
+  );
+}
+
+async function FormulaIdentityPage({
+  locale,
+  record,
+}: {
+  locale: string;
+  record: FormulaRouteRecordV1;
+}) {
+  const t = await getTranslations({
+    locale,
+    namespace: 'formulas.directory',
+  });
+
+  return (
+    <main className="pb-24" data-formula-id={record.formulaId}>
+      <header className="border-b bg-muted/20">
+        <div className="mx-auto max-w-5xl px-5 py-14 sm:px-8 sm:py-16">
+          <nav
+            aria-label={t('breadcrumbLabel')}
+            className="mb-8 text-sm text-muted-foreground"
+          >
+            <Link className="hover:text-foreground" href="/formulas">
+              {t('breadcrumbAtlas')}
+            </Link>
+            <span className="mx-2">/</span>
+            <Link className="hover:text-foreground" href="/formulas/directory">
+              {t('breadcrumb')}
+            </Link>
+            <span className="mx-2">/</span>
+            <span>{record.displayName}</span>
+          </nav>
+
+          <Badge variant="outline">{t(`family.${record.primaryFamily}`)}</Badge>
+          <h1 className="mt-5 text-balance text-4xl font-semibold tracking-tight sm:text-5xl">
+            {record.displayName}
+          </h1>
+          <p className="mt-6 break-all font-mono text-sm text-muted-foreground">
+            {record.formulaId}
+          </p>
+        </div>
+      </header>
     </main>
   );
 }

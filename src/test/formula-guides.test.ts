@@ -7,8 +7,10 @@ import {
   PUBLISHED_FORMULA_GUIDES,
   PUBLISHED_FORMULA_GUIDE_IDS,
   formulaGuideImagePath,
+  formulaGuideLegacyPath,
   formulaGuideOpenGraphImagePath,
   formulaGuidePath,
+  getPublishedFormulaGuideFormulaId,
   getPublishedFormulaGuideBySlug,
 } from '@/content/formula-guides';
 import sitemap from '@/app/sitemap';
@@ -107,8 +109,14 @@ describe('published formula guides', () => {
 
   it('resolves every guide route and stable canonical image path', () => {
     for (const entry of PUBLISHED_FORMULA_GUIDES) {
+      const formulaId = getPublishedFormulaGuideFormulaId(entry);
+
       expect(getPublishedFormulaGuideBySlug(entry.slug)).toBe(entry);
-      expect(formulaGuidePath(entry)).toBe(`/formulas/${entry.slug}`);
+      expect(formulaId).toMatch(
+        /^[0-9a-f]{8}-[0-9a-f]{4}-5[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/
+      );
+      expect(formulaGuidePath(entry)).toBe(`/formulas/${formulaId}`);
+      expect(formulaGuideLegacyPath(entry)).toBe(`/formulas/${entry.slug}`);
       expect(formulaGuideImagePath(entry)).toBe(
         `/images/formulas/guides/${entry.slug}.jpg`
       );
@@ -168,7 +176,7 @@ describe('published formula guides', () => {
     expect(formulaGuideUrls).toEqual(expectedUrls);
     expect(formulaGuideUrls).toHaveLength(42);
     expect(urls).not.toContain(
-      'https://www.fractalpark.com/en/formulas/tricorn'
+      'https://www.fractalpark.com/en/formulas/mandelbrot'
     );
   });
 

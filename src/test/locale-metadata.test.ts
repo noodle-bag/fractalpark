@@ -9,9 +9,22 @@ import {
   SUPPORTED_LOCALES,
   type SupportedLocale,
 } from '@/i18n/supported-locales';
-import { htmlLangForLocale } from '@/app/[locale]/layout';
+import {
+  dynamicParams,
+  htmlLangForLocale,
+  isSupportedLocaleRoute,
+} from '@/app/[locale]/layout';
 
 describe('locale metadata maps', () => {
+  it('allows child route fallbacks while rejecting unsupported locale values', () => {
+    expect(dynamicParams).toBe(true);
+    for (const locale of SUPPORTED_LOCALES) {
+      expect(isSupportedLocaleRoute(locale)).toBe(true);
+    }
+    expect(isSupportedLocaleRoute('de')).toBe(false);
+    expect(isSupportedLocaleRoute('EN')).toBe(false);
+  });
+
   it('covers every supported locale exactly once', () => {
     expect(Object.keys(HTML_LANG).sort()).toEqual([...SUPPORTED_LOCALES].sort());
     expect(Object.keys(OG_LOCALE).sort()).toEqual([...SUPPORTED_LOCALES].sort());

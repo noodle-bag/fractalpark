@@ -3,7 +3,6 @@ import { getTranslations, setRequestLocale } from 'next-intl/server';
 import { Badge } from '@/components/ui/badge';
 import {
   FORMULA_DIRECTORY_FAMILIES_V1,
-  STANDARD_FORMULA_DIRECTORY_V1,
   buildFormulaDirectoryFacetsV1,
   filterFormulaDirectoryV1,
   type FormulaDirectoryEntryV1,
@@ -14,6 +13,7 @@ import { Link } from '@/i18n/routing';
 import { OG_LOCALE, type SupportedLocale } from '@/i18n/supported-locales';
 import { renderJsonLd } from '@/lib/json-ld';
 import { SITE, buildLocaleAlternates } from '@/lib/site';
+import { buildFormulaCanonicalPathV1 } from '@/lib/formula-routes';
 
 const DIRECTORY_PATH = '/formulas/directory';
 
@@ -243,11 +243,15 @@ export default async function FormulaDirectoryPage({
                 {rows.map((entry) => (
                   <li
                     className="flex items-center justify-between gap-3 rounded-lg border bg-card px-4 py-3"
+                    data-formula-id={entry.formulaId}
                     key={entry.formulaId}
                   >
-                    <span className="truncate font-medium">
+                    <Link
+                      className="truncate font-medium hover:underline"
+                      href={buildFormulaCanonicalPathV1(entry.formulaId)}
+                    >
                       {entry.displayName}
-                    </span>
+                    </Link>
                     <StatusBadge
                       decision={entry.publicationDecision}
                       label={t(`status.${entry.publicationDecision}`)}

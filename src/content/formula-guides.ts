@@ -3,6 +3,11 @@ import {
   FORMULA_CONTENT_MANIFEST,
   type FormulaContentEntry,
 } from './formula-manifest';
+import {
+  resolveStandardAliasV1,
+  STANDARD_MANIFEST_INDEX_V1,
+} from '@/engine/formulas/v1/standard-manifest';
+import type { FormulaIdV1 } from '@/engine/formulas/v1/types';
 
 export const PUBLISHED_FORMULA_GUIDES: readonly FormulaContentEntry[] =
   FORMULA_CONTENT_MANIFEST;
@@ -31,7 +36,34 @@ export function getPublishedFormulaGuideBySlug(
     : undefined;
 }
 
+export function getPublishedFormulaGuideFormulaId(
+  entry: FormulaContentEntry
+): FormulaIdV1 {
+  const formulaId = resolveStandardAliasV1('guide-slug', entry.slug);
+  if (!formulaId) {
+    throw new Error(`Missing canonical Formula ID for Guide slug: ${entry.slug}`);
+  }
+  return formulaId;
+}
+
+export function getPublishedFormulaGuideByFormulaId(
+  formulaId: FormulaIdV1
+): FormulaContentEntry | undefined {
+  const guideAlias = STANDARD_MANIFEST_INDEX_V1.aliasesFor(formulaId).find(
+    (alias) => alias.kind === 'guide-slug'
+  );
+  return guideAlias
+    ? getPublishedFormulaGuideBySlug(guideAlias.value)
+    : undefined;
+}
+
 export function formulaGuidePath(
+  entry: FormulaContentEntry
+): `/formulas/${string}` {
+  return `/formulas/${getPublishedFormulaGuideFormulaId(entry)}`;
+}
+
+export function formulaGuideLegacyPath(
   entry: FormulaContentEntry
 ): `/formulas/${string}` {
   return `/formulas/${entry.slug}`;

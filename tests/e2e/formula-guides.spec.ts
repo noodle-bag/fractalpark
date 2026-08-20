@@ -1,4 +1,5 @@
 import { expect, test } from '@playwright/test';
+import aliasManifest from '../../resources/formula-library/v1/legacy-formula-aliases.json';
 
 const publishedSlugs = [
   'mandelbrot',
@@ -24,6 +25,18 @@ const publishedSlugs = [
   'zubieta',
 ] as const;
 
+function guideFormulaId(slug: (typeof publishedSlugs)[number]): string {
+  const alias = aliasManifest.aliases.find(
+    (entry) => entry.kind === 'guide-slug' && entry.value === slug
+  );
+  if (!alias) throw new Error(`Missing Guide alias: ${slug}`);
+  return alias.formulaId;
+}
+
+function guidePath(locale: string, slug: (typeof publishedSlugs)[number]): string {
+  return `/${locale}/formulas/${guideFormulaId(slug)}`;
+}
+
 test.describe('Formula guides', () => {
   test('renders the English Mandelbrot guide without JavaScript', async ({
     browser,
@@ -31,7 +44,7 @@ test.describe('Formula guides', () => {
     const context = await browser.newContext({ javaScriptEnabled: false });
     const page = await context.newPage();
 
-    await page.goto('/en/formulas/mandelbrot');
+    await page.goto(guidePath('en', 'mandelbrot'));
 
     await expect(
       page.getByRole('heading', { level: 1, name: 'Mandelbrot Set' })
@@ -65,11 +78,11 @@ test.describe('Formula guides', () => {
     );
     await expect(page.locator('link[rel="canonical"]')).toHaveAttribute(
       'href',
-      'https://www.fractalpark.com/en/formulas/mandelbrot'
+      `https://www.fractalpark.com${guidePath('en', 'mandelbrot')}`
     );
     await expect(page.locator('link[hreflang="zh"]')).toHaveAttribute(
       'href',
-      'https://www.fractalpark.com/zh/formulas/mandelbrot'
+      `https://www.fractalpark.com${guidePath('zh', 'mandelbrot')}`
     );
     await expect(page.locator('meta[property="og:image"]')).toHaveAttribute(
       'content',
@@ -83,11 +96,11 @@ test.describe('Formula guides', () => {
     page,
   }) => {
     for (const slug of publishedSlugs) {
-      const response = await page.goto(`/en/formulas/${slug}`);
+      const response = await page.goto(guidePath('en', slug));
       expect(response?.status(), slug).toBe(200);
     }
 
-    await page.goto('/zh/formulas/burning-ship');
+    await page.goto(guidePath('zh', 'burning-ship'));
     await expect(
       page.getByRole('heading', { level: 1, name: '燃烧船' })
     ).toBeVisible();
@@ -102,7 +115,7 @@ test.describe('Formula guides', () => {
   test('renders formula images at their native target aspect ratios', async ({
     page,
   }) => {
-    await page.goto('/en/formulas/mandelbrot');
+    await page.goto(guidePath('en', 'mandelbrot'));
 
     const heroImage = page.getByTestId('formula-guide-hero-image');
     await expect(heroImage).toHaveAttribute('width', '1200');
@@ -162,15 +175,70 @@ test.describe('Formula guides', () => {
       });
   });
 
-  test('does not create a thin page for a non-guide formula', async ({ request }) => {
-    const response = await request.get('/en/formulas/tricorn');
+  test('permanently redirects all 21 legacy Guide slugs to canonical IDs', async ({
+    request,
+  }) => {
+    for (const slug of publishedSlugs) {
+      const response = await request.get(`/en/formulas/${slug}`, {
+        maxRedirects: 0,
+      });
+      expect(response.status(), slug).toBe(308);
+      expect(
+        new Set(
+          response
+            .headers()
+            .location.split(',')
+            .map((value) => value.trim())
+        ),
+        slug
+      ).toEqual(new Set([guidePath('en', slug)]));
+    }
 
-    expect(response.status()).toBe(404);
+    const localized = await request.get('/zh/formulas/mandelbrot', {
+      maxRedirects: 0,
+    });
+    expect(localized.status()).toBe(308);
+    expect(
+      new Set(
+        localized
+          .headers()
+          .location.split(',')
+          .map((value) => value.trim())
+      )
+    ).toEqual(new Set([guidePath('zh', 'mandelbrot')]));
+  });
+
+  test('serves the canonical long tail as noindex and rejects unknown IDs', async ({
+    request,
+  }) => {
+    const response = await request.get(
+      '/en/formulas/1cd7a16f-0474-5b8f-a974-e122ea893769'
+    );
+
+    expect(response.status()).toBe(200);
+    expect(await response.text()).toContain(
+      'name="robots" content="noindex, follow"'
+    );
+
+    const unknown = await request.get(
+      '/en/formulas/00000000-0000-5000-8000-000000000000'
+    );
+    expect(unknown.status()).toBe(404);
+
+    const uppercase = await request.get(
+      `/en/formulas/${guideFormulaId('mandelbrot').toUpperCase()}`
+    );
+    expect(uppercase.status()).toBe(404);
+
+    const unsupportedLocale = await request.get(
+      `/de/formulas/${guideFormulaId('mandelbrot')}`
+    );
+    expect(unsupportedLocale.status()).toBe(404);
   });
 
   test('keeps the guide layout within a mobile viewport', async ({ page }) => {
     await page.setViewportSize({ width: 390, height: 844 });
-    await page.goto('/en/formulas/mcmullen-2-3');
+    await page.goto(guidePath('en', 'mcmullen-2-3'));
 
     const overflow = await page.evaluate(
       () => document.documentElement.scrollWidth - window.innerWidth
