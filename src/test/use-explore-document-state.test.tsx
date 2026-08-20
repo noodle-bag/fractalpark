@@ -1,5 +1,5 @@
 import { act, renderHook } from '@testing-library/react';
-import { beforeAll, describe, expect, it } from 'vitest';
+import { beforeAll, describe, expect, it, vi } from 'vitest';
 import { registerBuiltins } from '@/engine/plugins/builtins/index';
 import { useExploreDocumentState } from '@/hooks/useExploreDocumentState';
 
@@ -255,6 +255,169 @@ describe('useExploreDocumentState', () => {
       adaptiveIterations: true,
     });
     expect(result.current.document.animation?.viewKeyframes).toHaveLength(2);
+  });
+
+  it('applies a published formula profile atomically and supports one-step undo', () => {
+    const { result } = renderHook(() =>
+      useExploreDocumentState(
+        new URLSearchParams(
+          'fm=phoenix&cx=1&cy=-2&z=8&iter=640&julia=0&oc=st&tr=polar&ssaa=1&ait=1&pp=u_phoenixP:-0.2,u_stripeDensity:6,u_polarAngleScale:1.5',
+        ),
+      ),
+    );
+
+    act(() => {
+      result.current.updateTransform({
+        params: { transform: { u_polarAngleScale: 1.5 } },
+      });
+      result.current.updateAnimation({
+        viewKeyframes: [
+          { id: 'a', bounds: { centerX: 0, centerY: 0, zoom: 1, rotation: 0 } },
+          { id: 'b', bounds: { centerX: 1, centerY: 1, zoom: 2, rotation: 0.2 } },
+        ],
+      });
+    });
+    const previous = structuredClone(result.current.document);
+
+    act(() => {
+      result.current.applyPublishedFormulaSelection({
+        formulaId: '0d5e8e2e-45bd-5a45-beab-2f989d765db4',
+        formulaParams: { frmV1_scale: [0.25, 0] },
+        profile: {
+          schema: 'fractalpark-published-formula-profile/v1',
+          quality: 'mechanical',
+          mode: 'julia',
+          center: [0.1, -0.2],
+          zoom: 0.4,
+          rotation: 0.3,
+          iterations: 96,
+          juliaC: [-0.8, 0.156],
+        },
+      });
+    });
+
+    expect(result.current.document.scene.bounds).toEqual({
+      centerX: 0.1,
+      centerY: -0.2,
+      zoom: 0.4,
+      rotation: 0.3,
+    });
+    expect(result.current.document.formula).toMatchObject({
+      formulaId: '0d5e8e2e-45bd-5a45-beab-2f989d765db4',
+      isJulia: true,
+      juliaC: [-0.8, 0.156],
+      params: { formula: { frmV1_scale: [0.25, 0] } },
+    });
+    expect(result.current.document.render).toEqual({
+      maxIterations: 96,
+      useSSAA: true,
+      adaptiveIterations: true,
+    });
+    expect(result.current.document.coloring).toEqual(previous.coloring);
+    expect(result.current.document.transform).toEqual(previous.transform);
+    expect(result.current.document.animation).toEqual(previous.animation);
+    expect(result.current.canUndoPublishedFormulaSelection).toBe(true);
+
+    act(() => {
+      result.current.replacePluginParamDomains({
+        formula: { frmV1_scale: [0.5, 0] },
+        transform: { u_polarAngleScale: 1.75 },
+      });
+    });
+    expect(result.current.canUndoPublishedFormulaSelection).toBe(true);
+
+    act(() => {
+      result.current.undoPublishedFormulaSelection();
+    });
+
+    expect(result.current.document).toEqual(previous);
+    expect(result.current.canUndoPublishedFormulaSelection).toBe(false);
+  });
+
+  it('invalidates the one-step formula undo after a later document edit', () => {
+    const { result } = renderHook(() => useExploreDocumentState(new URLSearchParams()));
+
+    act(() => {
+      result.current.applyPublishedFormulaSelection({
+        formulaId: '00e14aa8-b766-54ea-a359-3f5d20d329b7',
+        formulaParams: {},
+        profile: {
+          schema: 'fractalpark-published-formula-profile/v1',
+          quality: 'mechanical',
+          mode: 'parameter-plane',
+          center: [-0.5, 0],
+          zoom: 0.4,
+          rotation: 0,
+          iterations: 96,
+        },
+      });
+    });
+    expect(result.current.canUndoPublishedFormulaSelection).toBe(true);
+
+    act(() => {
+      result.current.updateBounds({
+        ...result.current.document.scene.bounds,
+        zoom: 0.8,
+      });
+    });
+    expect(result.current.canUndoPublishedFormulaSelection).toBe(false);
+  });
+
+  it('notifies synchronously for manual mutations but not published atomic maintenance', () => {
+    const onBeforeDocumentMutation = vi.fn();
+    const { result } = renderHook(() =>
+      useExploreDocumentState(new URLSearchParams(), onBeforeDocumentMutation),
+    );
+
+    act(() => {
+      result.current.applyPublishedFormulaSelection({
+        formulaId: '00e14aa8-b766-54ea-a359-3f5d20d329b7',
+        formulaParams: {},
+        profile: {
+          schema: 'fractalpark-published-formula-profile/v1',
+          quality: 'mechanical',
+          mode: 'parameter-plane',
+          center: [-0.5, 0],
+          zoom: 0.4,
+          rotation: 0,
+          iterations: 96,
+        },
+      });
+      result.current.replacePluginParamDomains({ formula: {} });
+    });
+    expect(onBeforeDocumentMutation).not.toHaveBeenCalled();
+
+    act(() => {
+      result.current.updateBounds({
+        ...result.current.document.scene.bounds,
+        zoom: 0.8,
+      });
+    });
+    expect(onBeforeDocumentMutation).toHaveBeenCalledTimes(1);
+  });
+
+  it('keeps the dormant Julia constant when a parameter-plane profile omits it', () => {
+    const { result } = renderHook(() => useExploreDocumentState(new URLSearchParams()));
+
+    act(() => {
+      result.current.updateFormula({ isJulia: true, juliaC: [0.4, -0.6] });
+      result.current.applyPublishedFormulaSelection({
+        formulaId: '00e14aa8-b766-54ea-a359-3f5d20d329b7',
+        formulaParams: {},
+        profile: {
+          schema: 'fractalpark-published-formula-profile/v1',
+          quality: 'mechanical',
+          mode: 'parameter-plane',
+          center: [-0.5, 0],
+          zoom: 0.4,
+          rotation: 0,
+          iterations: 96,
+        },
+      });
+    });
+
+    expect(result.current.document.formula.isJulia).toBe(false);
+    expect(result.current.document.formula.juliaC).toEqual([0.4, -0.6]);
   });
 
   it('applies the Quad Julia URL profile while preserving transform, render, and animation', () => {

@@ -32,6 +32,12 @@ const HARD_DOMAIN_REPRESENTATIVE = {
     'definitions/a9fa9931913aeafac8b527f31cae7b519db79c8d54829ffcea20bcb6fc9dce4d.frm',
 } as const;
 
+const LUCKY_REPRESENTATIVE = {
+  formulaId: '00e14aa8-b766-54ea-a359-3f5d20d329b7',
+  definitionPath:
+    'definitions/e4d2259a5dd3fe7b3af646514a4313e83efcc80e887e04c07b7469bb27a66b90.frm',
+} as const;
+
 async function waitForFractalCanvasReady(page: Page) {
   await expect(page.locator('[data-testid="fractal-canvas"]')).toBeVisible({
     timeout: 20_000,
@@ -229,6 +235,114 @@ test.describe('Published Formula Library', () => {
         url.endsWith(HARD_DOMAIN_REPRESENTATIVE.definitionPath),
       ),
     ).toBe(true);
+  });
+
+  test('applies a verified Lucky profile atomically and restores it in one Undo', async ({ page }) => {
+    const definitionRequests: string[] = [];
+    page.on('request', (request) => {
+      if (request.url().includes('/formula-library/v1/runtime/published/definitions/')) {
+        definitionRequests.push(request.url());
+      }
+    });
+
+    await page.goto(
+      '/en/explore?fm=ph&cx=1&cy=-2&z=8&iter=640&julia=1&jre=0.4&jim=-0.6&oc=st&tr=polar&ssaa=1&ait=1&pp=u_phoenixP:-0.2',
+    );
+    await waitForFractalCanvasReady(page);
+    await expect(page).toHaveURL(/(?:\?|&)pal=0(?:&|$)/, { timeout: 60_000 });
+    await waitForFractalCanvasReady(page);
+
+    await page.getByRole('tab', { name: 'Transform', exact: true }).click();
+    const angleScale = page.locator(
+      '[role="slider"][aria-valuemin="0.25"][aria-valuemax="3"]',
+    );
+    await expect(angleScale).toHaveAttribute('aria-valuenow', '1');
+    await angleScale.focus();
+    for (let step = 0; step < 10; step += 1) {
+      await angleScale.press('ArrowRight');
+    }
+    await expect(angleScale).toHaveAttribute('aria-valuenow', '1.5');
+    await page.getByRole('tab', { name: 'Formula', exact: true }).click();
+    await expect.poll(
+      () => new URL(page.url()).searchParams.get('pp'),
+      { timeout: 60_000 },
+    ).toBe('u_phoenixP:-0.2,u_polarAngleScale:1.5');
+
+    await page.evaluate(() => {
+      Math.random = () => 0;
+    });
+
+    const lucky = page.getByRole('button', { name: 'Feeling Lucky?' });
+    await lucky.click();
+    await waitForFractalCanvasReady(page);
+
+    await expect.poll(
+      () => {
+        const params = new URL(page.url()).searchParams;
+        return {
+          formula: params.get('fm'),
+          centerX: Number(params.get('cx')),
+          centerY: Number(params.get('cy')),
+          zoom: Number(params.get('z')),
+          iterations: Number(params.get('iter')),
+          julia: params.get('julia'),
+          coloring: params.get('oc'),
+          transform: params.get('tr'),
+          ssaa: params.get('ssaa'),
+          adaptive: params.get('ait'),
+          pluginParams: (params.get('pp') ?? '').split(',').filter(Boolean).sort(),
+        };
+      },
+      { timeout: 60_000 },
+    ).toEqual({
+      formula: LUCKY_REPRESENTATIVE.formulaId,
+      centerX: -0.5,
+      centerY: 0,
+      zoom: 0.4,
+      iterations: 96,
+      julia: '0',
+      coloring: 'st',
+      transform: 'polar',
+      ssaa: '1',
+      adaptive: '1',
+      pluginParams: ['u_polarAngleScale:1.5'],
+    });
+    expect(definitionRequests).toEqual([
+      expect.stringContaining(LUCKY_REPRESENTATIVE.definitionPath),
+    ]);
+
+    const undo = page.getByRole('button', { name: 'Undo Formula Change' });
+    await expect(undo).toBeEnabled();
+    await undo.click();
+    await waitForFractalCanvasReady(page);
+    await expect.poll(
+      () => {
+        const params = new URL(page.url()).searchParams;
+        return {
+          formula: params.get('fm'),
+          centerX: Number(params.get('cx')),
+          centerY: Number(params.get('cy')),
+          zoom: Number(params.get('z')),
+          iterations: Number(params.get('iter')),
+          julia: params.get('julia'),
+          pluginParams: (params.get('pp') ?? '').split(',').filter(Boolean).sort(),
+        };
+      },
+      { timeout: 60_000 },
+    ).toEqual({
+      formula: 'ph',
+      centerX: 1,
+      centerY: -2,
+      zoom: 8,
+      iterations: 640,
+      julia: '1',
+      pluginParams: [
+        'u_phoenixP:-0.2',
+        'u_polarAngleScale:1.5',
+      ],
+    });
+    await expect(undo).toBeDisabled();
+    expect(definitionRequests).toHaveLength(1);
   });
 
   test('is a full-width keyboard-operable layer at 390px', async ({ page }) => {

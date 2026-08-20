@@ -1,9 +1,15 @@
 import { describe, expect, it, vi } from "vitest";
 
-import type { PublishedFormulaPluginArtifactV1 } from "@/engine/formulas/v1";
+import type {
+  PublishedFormulaPluginArtifactV1,
+  PublishedFormulaRuntimeIndexRowV1,
+} from "@/engine/formulas/v1";
 import {
+  PublishedFormulaActionCoordinator,
   PublishedFormulaSelectionCoordinator,
+  pickPublishedFormulaLuckyRow,
   type PublishedFormulaSelectionClient,
+  type PublishedFormulaSelectionResult,
 } from "@/lib/published-formula-selection";
 
 function artifact(formulaId: string): PublishedFormulaPluginArtifactV1 {
@@ -34,6 +40,80 @@ function deferred<T>() {
   });
   return { promise, resolve };
 }
+
+function row(formulaId: string): PublishedFormulaRuntimeIndexRowV1 {
+  return {
+    formulaId,
+    displayName: formulaId,
+    family: "algebraic-power",
+    implementationBasis: "direct-adaptation",
+    sourceRevision: "a".repeat(64),
+    semanticHash: "b".repeat(64),
+    definitionPath: `definitions/${"a".repeat(64)}.frm`,
+    descriptorSchema: "fractalpark-published-formula-descriptor/v1",
+    parameters: [],
+    profile: {
+      schema: "fractalpark-published-formula-profile/v1",
+      quality: "mechanical",
+      mode: "parameter-plane",
+      center: [0, 0],
+      zoom: 1,
+      rotation: 0,
+      iterations: 96,
+    },
+  };
+}
+
+describe("pickPublishedFormulaLuckyRow", () => {
+  it("selects only published rows and avoids the current formula when possible", () => {
+    const rows = [row("first"), row("current"), row("last")];
+
+    expect(pickPublishedFormulaLuckyRow(rows, "current", () => 0)?.formulaId).toBe(
+      "first",
+    );
+    expect(
+      pickPublishedFormulaLuckyRow(rows, "current", () => 0.999999)?.formulaId,
+    ).toBe("last");
+    expect(pickPublishedFormulaLuckyRow([rows[1]], "current", () => 0)).toBe(
+      rows[1],
+    );
+    expect(pickPublishedFormulaLuckyRow([], "current", () => 0)).toBeUndefined();
+  });
+
+  it("fails closed to the first eligible row for a non-finite random sample", () => {
+    const rows = [row("first"), row("second")];
+    expect(
+      pickPublishedFormulaLuckyRow(rows, undefined, () => Number.NaN)?.formulaId,
+    ).toBe("first");
+  });
+});
+
+describe("PublishedFormulaActionCoordinator", () => {
+  it("supersedes an action that is still awaiting the library index", async () => {
+    const coordinator = new PublishedFormulaActionCoordinator();
+    const index = deferred<string>();
+    const generation = coordinator.begin();
+    let applied = false;
+
+    const action = (async (): Promise<PublishedFormulaSelectionResult> => {
+      await index.promise;
+      if (!coordinator.isCurrent(generation)) {
+        return { ok: false, code: "selection-superseded" };
+      }
+      applied = true;
+      return { ok: true };
+    })();
+
+    coordinator.cancel();
+    index.resolve("ready");
+
+    await expect(action).resolves.toEqual({
+      ok: false,
+      code: "selection-superseded",
+    });
+    expect(applied).toBe(false);
+  });
+});
 
 describe("PublishedFormulaSelectionCoordinator", () => {
   it("applies only the latest successful selection", async () => {

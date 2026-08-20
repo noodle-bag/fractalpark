@@ -1400,7 +1400,10 @@
         "unavailable": "지금은 표준 수식 라이브러리를 사용할 수 없어요.",
         "selectionFailed": "이 수식을 불러오지 못했습니다. 현재 수식은 그대로 유지됩니다.",
         "familyFilter": "계열별 수식 필터",
-        "loadMore": "더 보기"
+        "loadMore": "더 보기",
+        "lucky": "운이 좋을까요?",
+        "resetProfile": "수식 프로필 초기화",
+        "undoFormulaChange": "수식 변경 실행 취소"
       },
       "resolution": {
         "loading": "수식 불러오는 중...",

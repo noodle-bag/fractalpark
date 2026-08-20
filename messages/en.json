@@ -1400,7 +1400,10 @@
         "unavailable": "The standard formula library is unavailable right now.",
         "selectionFailed": "This formula could not be loaded. Your current formula was kept.",
         "familyFilter": "Filter formulas by family",
-        "loadMore": "Load more"
+        "loadMore": "Load more",
+        "lucky": "Feeling Lucky?",
+        "resetProfile": "Reset Formula Profile",
+        "undoFormulaChange": "Undo Formula Change"
       },
       "resolution": {
         "loading": "Loading formula...",

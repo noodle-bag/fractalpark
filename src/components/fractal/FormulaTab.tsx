@@ -28,10 +28,27 @@ interface FormulaTabProps {
     beforeApply?: PublishedFormulaBeforeApply,
   ) => Promise<PublishedFormulaSelectionResult>;
   onPublishedFormulaCancel?: () => void;
+  onFeelingLucky?: () => Promise<PublishedFormulaSelectionResult>;
+  onPublishedProfileReset?: () => Promise<PublishedFormulaSelectionResult>;
+  canResetPublishedProfile?: boolean;
+  canUndoPublishedFormulaSelection?: boolean;
+  onUndoPublishedFormulaSelection?: () => void;
   onCustomFormulaSelect?: (selection: FormulaSelectionRequest) => void;
 }
 
-export function FormulaTab({ currentFormula, currentBounds, onPublishedFormulaSelect, onPublishedFormulaCancel, onFormulaChange, onCustomFormulaSelect }: FormulaTabProps) {
+export function FormulaTab({
+  currentFormula,
+  currentBounds,
+  onPublishedFormulaSelect,
+  onPublishedFormulaCancel,
+  onFeelingLucky,
+  onPublishedProfileReset,
+  canResetPublishedProfile = false,
+  canUndoPublishedFormulaSelection = false,
+  onUndoPublishedFormulaSelection,
+  onFormulaChange,
+  onCustomFormulaSelect,
+}: FormulaTabProps) {
   const t = useTranslations('explore');
   const [activeTab, setActiveTab] = useState('standard');
 
@@ -64,6 +81,11 @@ export function FormulaTab({ currentFormula, currentBounds, onPublishedFormulaSe
             currentFormula={currentFormula}
             onSelect={onPublishedFormulaSelect}
             onCancel={onPublishedFormulaCancel}
+            onFeelingLucky={onFeelingLucky}
+            onResetProfile={onPublishedProfileReset}
+            canResetProfile={canResetPublishedProfile}
+            canUndo={canUndoPublishedFormulaSelection}
+            onUndo={onUndoPublishedFormulaSelection}
           />
         </TabsContent>
 

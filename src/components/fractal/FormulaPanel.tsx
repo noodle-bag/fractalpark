@@ -37,6 +37,11 @@ interface FormulaPanelProps {
     beforeApply?: PublishedFormulaBeforeApply,
   ) => Promise<PublishedFormulaSelectionResult>;
   onPublishedFormulaCancel?: () => void;
+  onFeelingLucky?: () => Promise<PublishedFormulaSelectionResult>;
+  onPublishedProfileReset?: () => Promise<PublishedFormulaSelectionResult>;
+  canResetPublishedProfile?: boolean;
+  canUndoPublishedFormulaSelection?: boolean;
+  onUndoPublishedFormulaSelection?: () => void;
   onFormulaParamChange: (name: string, value: PluginParamValue) => void;
   onCustomFormulaSelect?: (selection: FormulaSelectionRequest) => void;
 }
@@ -53,6 +58,11 @@ export function FormulaPanel({
   onFormulaChange,
   onPublishedFormulaSelect = async () => ({ ok: false, code: 'formula-not-published' }),
   onPublishedFormulaCancel,
+  onFeelingLucky,
+  onPublishedProfileReset,
+  canResetPublishedProfile = false,
+  canUndoPublishedFormulaSelection = false,
+  onUndoPublishedFormulaSelection,
   onFormulaParamChange,
   onCustomFormulaSelect,
 }: FormulaPanelProps) {
@@ -138,6 +148,11 @@ export function FormulaPanel({
         onFormulaChange={onFormulaChange}
         onPublishedFormulaSelect={onPublishedFormulaSelect}
         onPublishedFormulaCancel={onPublishedFormulaCancel}
+        onFeelingLucky={onFeelingLucky}
+        onPublishedProfileReset={onPublishedProfileReset}
+        canResetPublishedProfile={canResetPublishedProfile}
+        canUndoPublishedFormulaSelection={canUndoPublishedFormulaSelection}
+        onUndoPublishedFormulaSelection={onUndoPublishedFormulaSelection}
         onCustomFormulaSelect={onCustomFormulaSelect}
       />
 

@@ -1,7 +1,7 @@
 'use client';
 
 import { useMemo, useRef, useState } from 'react';
-import { Library, Loader2 } from 'lucide-react';
+import { Dices, Library, Loader2, RotateCcw, Undo2 } from 'lucide-react';
 import { useTranslations } from 'next-intl';
 
 import { Button } from '@/components/ui/button';
@@ -43,6 +43,11 @@ interface PublishedFormulaLibraryProps {
     beforeApply?: PublishedFormulaBeforeApply,
   ) => Promise<PublishedFormulaSelectionResult>;
   onCancel?: () => void;
+  onFeelingLucky?: () => Promise<PublishedFormulaSelectionResult>;
+  onResetProfile?: () => Promise<PublishedFormulaSelectionResult>;
+  canResetProfile?: boolean;
+  canUndo?: boolean;
+  onUndo?: () => void;
   loadClient?: () => Promise<PublishedFormulaLibraryClientResult>;
 }
 
@@ -58,6 +63,11 @@ export function PublishedFormulaLibrary({
   currentFormula,
   onSelect,
   onCancel,
+  onFeelingLucky,
+  onResetProfile,
+  canResetProfile = false,
+  canUndo = false,
+  onUndo,
   loadClient = getPublishedFormulaLibraryClient,
 }: PublishedFormulaLibraryProps) {
   const t = useTranslations('explore');
@@ -69,6 +79,8 @@ export function PublishedFormulaLibrary({
   const [selectedFamily, setSelectedFamily] = useState('all');
   const [visibleCount, setVisibleCount] = useState(PAGE_SIZE);
   const [selectingId, setSelectingId] = useState<string | null>(null);
+  const [actionPending, setActionPending] = useState<'lucky' | 'reset' | null>(null);
+  const [actionError, setActionError] = useState(false);
   const selectionGeneration = useRef(0);
   const libraryGeneration = useRef(0);
   const commitClose = useRef(false);
@@ -97,6 +109,9 @@ export function PublishedFormulaLibrary({
     selectionGeneration.current += 1;
     setSelectingId(null);
     setSelectionError(false);
+    if (next && actionPending !== null) onCancel?.();
+    setActionPending(null);
+    setActionError(false);
     if (next) {
       setSelectedFamily('all');
       setVisibleCount(PAGE_SIZE);
@@ -125,6 +140,8 @@ export function PublishedFormulaLibrary({
     const generation = ++selectionGeneration.current;
     setSelectingId(formulaId);
     setSelectionError(false);
+    setActionPending(null);
+    setActionError(false);
     const result = await onSelect(formulaId, async () => {
       commitClose.current = true;
       setOpen(false);
@@ -142,6 +159,28 @@ export function PublishedFormulaLibrary({
     if (result.code !== 'selection-superseded') setSelectionError(true);
   };
 
+  const runDiscoveryAction = async (
+    action: 'lucky' | 'reset',
+    callback: () => Promise<PublishedFormulaSelectionResult>,
+  ) => {
+    const generation = ++selectionGeneration.current;
+    setActionPending(action);
+    setActionError(false);
+    const result = await callback();
+    if (generation !== selectionGeneration.current) return;
+    setActionPending(null);
+    if (!result.ok && result.code !== 'selection-superseded') {
+      setActionError(true);
+    }
+  };
+
+  const handleUndo = () => {
+    selectionGeneration.current += 1;
+    setActionPending(null);
+    setActionError(false);
+    onUndo?.();
+  };
+
   return (
     <div className="space-y-3 rounded-lg border bg-muted/30 p-3">
       <div className="space-y-1">
@@ -152,6 +191,62 @@ export function PublishedFormulaLibrary({
           {currentFormulaName(currentFormula, t)}
         </p>
       </div>
+
+      {onFeelingLucky && (
+        <Button
+          type="button"
+          className="w-full justify-center gap-2"
+          aria-busy={actionPending === 'lucky'}
+          onClick={() => void runDiscoveryAction('lucky', onFeelingLucky)}
+        >
+          {actionPending === 'lucky' ? (
+            <Loader2 className="h-4 w-4 animate-spin" aria-hidden="true" />
+          ) : (
+            <Dices className="h-4 w-4" aria-hidden="true" />
+          )}
+          {t('formula.library.lucky')}
+        </Button>
+      )}
+
+      {(onResetProfile || onUndo) && (
+        <div className="grid grid-cols-2 gap-2">
+          {onResetProfile && (
+            <Button
+              type="button"
+              variant="outline"
+              className="min-w-0 gap-1.5 whitespace-normal"
+              disabled={!canResetProfile}
+              aria-busy={actionPending === 'reset'}
+              onClick={() => void runDiscoveryAction('reset', onResetProfile)}
+            >
+              {actionPending === 'reset' ? (
+                <Loader2 className="h-4 w-4 shrink-0 animate-spin" aria-hidden="true" />
+              ) : (
+                <RotateCcw className="h-4 w-4 shrink-0" aria-hidden="true" />
+              )}
+              {t('formula.library.resetProfile')}
+            </Button>
+          )}
+          {onUndo && (
+            <Button
+              type="button"
+              variant="outline"
+              className="min-w-0 gap-1.5 whitespace-normal"
+              disabled={!canUndo}
+              onClick={handleUndo}
+            >
+              <Undo2 className="h-4 w-4 shrink-0" aria-hidden="true" />
+              {t('formula.library.undoFormulaChange')}
+            </Button>
+          )}
+        </div>
+      )}
+
+      {actionError && (
+        <p role="alert" className="rounded-md border border-destructive/30 p-3 text-sm text-destructive">
+          {t('formula.library.selectionFailed')}
+        </p>
+      )}
 
       <Sheet open={open} onOpenChange={handleOpenChange}>
         <SheetTrigger asChild>

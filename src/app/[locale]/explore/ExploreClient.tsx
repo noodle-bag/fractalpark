@@ -54,7 +54,9 @@ import {
 import { getPublishedFormulaLibraryClient } from '@/lib/published-formula-library';
 import { partitionPublishedFormulaParams } from '@/lib/published-formula-params';
 import {
+  PublishedFormulaActionCoordinator,
   PublishedFormulaSelectionCoordinator,
+  pickPublishedFormulaLuckyRow,
   type PublishedFormulaBeforeApply,
   type PublishedFormulaSelectionResult,
 } from '@/lib/published-formula-selection';
@@ -79,6 +81,23 @@ function ExploreClient({ posterImage }: { posterImage?: string }) {
   const initializedRef = useRef(false);
   const handoffConsumedRef = useRef<string | null>(null);
   const debounceRef = useRef<ReturnType<typeof setTimeout> | null>(null);
+  const [publishedActionPendingCount, setPublishedActionPendingCount] = useState(0);
+  const [publishedRestoreRevision, setPublishedRestoreRevision] = useState(0);
+  const publishedPendingActionsRef = useRef(new Set<number>());
+  const isExploreMountedRef = useRef(true);
+  const publishedActionRef = useRef(new PublishedFormulaActionCoordinator());
+  const publishedRestoreActionRef = useRef(new PublishedFormulaActionCoordinator());
+  const publishedSelectionRef = useRef(new PublishedFormulaSelectionCoordinator());
+  const publishedRestoreRef = useRef(new PublishedFormulaSelectionCoordinator());
+  const cancelPublishedFormulaActions = useCallback(() => {
+    publishedActionRef.current.cancel();
+    publishedSelectionRef.current.cancel();
+    publishedRestoreActionRef.current.cancel();
+    publishedRestoreRef.current.cancel();
+    publishedPendingActionsRef.current.clear();
+    setPublishedActionPendingCount(0);
+    setPublishedRestoreRevision((revision) => revision + 1);
+  }, []);
 
   const {
     document,
@@ -90,9 +109,16 @@ function ExploreClient({ posterImage }: { posterImage?: string }) {
     updateRender,
     updateAnimation,
     replacePluginParamDomains,
+    applyPublishedFormulaSelection,
+    canUndoPublishedFormulaSelection,
+    undoPublishedFormulaSelection,
+    clearPublishedFormulaSelectionUndo,
     selectBuiltInFormula,
     loadFromDocument,
-  } = useExploreDocumentState(new URLSearchParams(searchParams.toString()));
+  } = useExploreDocumentState(
+    new URLSearchParams(searchParams.toString()),
+    cancelPublishedFormulaActions,
+  );
 
   const {
     paletteIndex,
@@ -123,8 +149,6 @@ function ExploreClient({ posterImage }: { posterImage?: string }) {
     useState<ExploreFormulaResolution | null>(null);
   const [publishedDescriptor, setPublishedDescriptor] =
     useState<PublishedFormulaDescriptorV1 | null>(null);
-  const publishedSelectionRef = useRef(new PublishedFormulaSelectionCoordinator());
-  const publishedRestoreRef = useRef(new PublishedFormulaSelectionCoordinator());
   const [handoffTargetId, setHandoffTargetId] = useState<string | null>(() =>
     initialHandoffIntentRef.current.status === 'valid'
       ? initialHandoffIntentRef.current.formulaId
@@ -362,19 +386,29 @@ function ExploreClient({ posterImage }: { posterImage?: string }) {
   useEffect(() => {
     if (!isStandardFormulaIdV1(formula)) return;
     if (publishedDescriptor?.formulaId === formula) return;
+    if (publishedActionPendingCount > 0) return;
 
     const target = formula;
     let active = true;
+    const publishedRestoreAction = publishedRestoreActionRef.current;
+    const restoreGeneration = publishedRestoreAction.begin();
     const publishedRestore = publishedRestoreRef.current;
     void getPublishedFormulaLibraryClient().then(async (clientResult) => {
-      if (!active || !clientResult.ok) return;
+      if (
+        !active ||
+        !publishedRestoreAction.isCurrent(restoreGeneration) ||
+        !clientResult.ok
+      ) return;
       if (!clientResult.value.get(target)) return;
 
       await publishedRestore.select(
         target,
         clientResult.value,
         (artifact) => {
-          if (!active || formula !== target) return;
+          if (
+            !active ||
+            !publishedRestoreAction.isCurrent(restoreGeneration)
+          ) return;
           registerBuiltins({ quiet: true });
           const restoredParams = partitionPublishedFormulaParams(
             artifact.descriptor,
@@ -408,6 +442,7 @@ function ExploreClient({ posterImage }: { posterImage?: string }) {
 
     return () => {
       active = false;
+      publishedRestoreAction.cancel();
       publishedRestore.cancel();
     };
   }, [
@@ -419,7 +454,9 @@ function ExploreClient({ posterImage }: { posterImage?: string }) {
     document.transform.params?.transform,
     document.transform.transformId,
     formula,
+    publishedActionPendingCount,
     publishedDescriptor,
+    publishedRestoreRevision,
     replacePluginParamDomains,
   ]);
 
@@ -489,6 +526,10 @@ function ExploreClient({ posterImage }: { posterImage?: string }) {
 
     if (debounceRef.current) clearTimeout(debounceRef.current);
     debounceRef.current = setTimeout(() => {
+      // A published selection owns the next URL projection. Canonicalizing
+      // the previous document while its index/Definition is still loading
+      // can remount Explore and cancel the action before its atomic apply.
+      if (publishedActionPendingCount > 0) return;
       // Never project while a ?draft= load is unresolved: rebuilding the
       // URL from the canvas would erase the param before identity lands
       // and the draft would silently never load (review N1).
@@ -522,6 +563,7 @@ function ExploreClient({ posterImage }: { posterImage?: string }) {
     draftParam,
     formulaResolution,
     publishedDescriptor,
+    publishedActionPendingCount,
   ]);
 
   // Anonymous remix handoff consumption (spec §17 transient): a one-shot
@@ -552,6 +594,23 @@ function ExploreClient({ posterImage }: { posterImage?: string }) {
     setHandoffError(null);
     setHandoffTargetId(null);
   }, []);
+
+  const runPublishedFormulaAction = useCallback(async (
+    action: (generation: number) => Promise<PublishedFormulaSelectionResult>,
+  ): Promise<PublishedFormulaSelectionResult> => {
+    cancelPublishedFormulaActions();
+    const generation = publishedActionRef.current.begin();
+    publishedPendingActionsRef.current.add(generation);
+    setPublishedActionPendingCount(publishedPendingActionsRef.current.size);
+    try {
+      return await action(generation);
+    } finally {
+      publishedPendingActionsRef.current.delete(generation);
+      if (isExploreMountedRef.current) {
+        setPublishedActionPendingCount(publishedPendingActionsRef.current.size);
+      }
+    }
+  }, [cancelPublishedFormulaActions]);
 
   const handleLoadDocument = useCallback((nextDocument: typeof document) => {
     clearHandoffFailure();
@@ -656,10 +715,18 @@ function ExploreClient({ posterImage }: { posterImage?: string }) {
   }, [t, updateFormula]);
 
   useEffect(() => {
+    isExploreMountedRef.current = true;
+    const publishedAction = publishedActionRef.current;
+    const publishedRestoreAction = publishedRestoreActionRef.current;
     const publishedSelection = publishedSelectionRef.current;
     const publishedRestore = publishedRestoreRef.current;
+    const publishedPendingActions = publishedPendingActionsRef.current;
     return () => {
+      isExploreMountedRef.current = false;
       if (pickToastTimerRef.current) clearTimeout(pickToastTimerRef.current);
+      publishedPendingActions.clear();
+      publishedAction.cancel();
+      publishedRestoreAction.cancel();
       publishedSelection.cancel();
       publishedRestore.cancel();
     };
@@ -681,27 +748,42 @@ function ExploreClient({ posterImage }: { posterImage?: string }) {
 
   // Handle formula change - reset to formula's default bounds
   const handleFormulaChange = useCallback((newFormula: string) => {
-    publishedSelectionRef.current.cancel();
+    cancelPublishedFormulaActions();
     setPublishedDescriptor(null);
     clearHandoffFailure();
     selectBuiltInFormula(newFormula);
     trackEvent('change_formula', { formula: newFormula });
-  }, [clearHandoffFailure, selectBuiltInFormula]);
+  }, [cancelPublishedFormulaActions, clearHandoffFailure, selectBuiltInFormula]);
 
-  const handlePublishedFormulaSelect = useCallback(async (
+  const selectPublishedFormula = useCallback(async (
     formulaId: string,
-    beforeApply?: PublishedFormulaBeforeApply,
+    beforeApply: PublishedFormulaBeforeApply | undefined,
+    options: {
+      forceProfile?: boolean;
+      source: 'published-library' | 'feeling-lucky' | 'profile-reset';
+    },
+    generation: number,
   ): Promise<PublishedFormulaSelectionResult> => {
+    if (!publishedActionRef.current.isCurrent(generation)) {
+      return { ok: false, code: 'selection-superseded' };
+    }
     if (
+      !options.forceProfile &&
       formulaId === document.formula.formulaId &&
       publishedDescriptor?.formulaId === formulaId &&
       pluginRegistry.getFormula(formulaId)
     ) {
+      publishedSelectionRef.current.cancel();
       return { ok: true };
     }
 
     const clientResult = await getPublishedFormulaLibraryClient();
+    if (!publishedActionRef.current.isCurrent(generation)) {
+      return { ok: false, code: 'selection-superseded' };
+    }
     if (!clientResult.ok) return clientResult;
+    const row = clientResult.value.get(formulaId);
+    if (!row) return { ok: false, code: 'formula-not-published' };
 
     return publishedSelectionRef.current.select(
       formulaId,
@@ -710,20 +792,76 @@ function ExploreClient({ posterImage }: { posterImage?: string }) {
         clearHandoffFailure();
         pluginRegistry.register(artifact.plugin);
         setPublishedDescriptor(artifact.descriptor);
-        updateFormula({
+        applyPublishedFormulaSelection({
           formulaId,
-          ...(formulaId === document.formula.formulaId
-            ? {}
-            : { params: { formula: getFormulaUniformDefaults(artifact.plugin) } }),
+          formulaParams: getFormulaUniformDefaults(artifact.plugin),
+          profile: row.profile,
         });
         trackEvent('change_formula', {
           formula: formulaId,
-          source: 'published-library',
+          source: options.source,
         });
       },
       beforeApply,
     );
-  }, [clearHandoffFailure, document.formula.formulaId, publishedDescriptor, updateFormula]);
+  }, [
+    applyPublishedFormulaSelection,
+    clearHandoffFailure,
+    document.formula.formulaId,
+    publishedDescriptor,
+  ]);
+
+  const handlePublishedFormulaSelect = useCallback((
+    formulaId: string,
+    beforeApply?: PublishedFormulaBeforeApply,
+  ): Promise<PublishedFormulaSelectionResult> => (
+    runPublishedFormulaAction((generation) =>
+      selectPublishedFormula(formulaId, beforeApply, {
+        source: 'published-library',
+      }, generation)
+    )
+  ), [runPublishedFormulaAction, selectPublishedFormula]);
+
+  const handleFeelingLucky = useCallback((): Promise<PublishedFormulaSelectionResult> => (
+    runPublishedFormulaAction(async (generation) => {
+      const clientResult = await getPublishedFormulaLibraryClient();
+      if (!publishedActionRef.current.isCurrent(generation)) {
+        return { ok: false, code: 'selection-superseded' };
+      }
+      if (!clientResult.ok) return clientResult;
+      const row = pickPublishedFormulaLuckyRow(
+        clientResult.value.index.rows,
+        document.formula.formulaId,
+      );
+      if (!row) return { ok: false, code: 'formula-not-published' };
+      return selectPublishedFormula(row.formulaId, undefined, {
+        source: 'feeling-lucky',
+      }, generation);
+    })
+  ), [document.formula.formulaId, runPublishedFormulaAction, selectPublishedFormula]);
+
+  const handlePublishedProfileReset = useCallback((): Promise<PublishedFormulaSelectionResult> => {
+    if (!isStandardFormulaIdV1(document.formula.formulaId)) {
+      return Promise.resolve({ ok: false, code: 'formula-not-published' });
+    }
+    return runPublishedFormulaAction((generation) =>
+      selectPublishedFormula(document.formula.formulaId, undefined, {
+        forceProfile: true,
+        source: 'profile-reset',
+      }, generation)
+    );
+  }, [
+    document.formula.formulaId,
+    runPublishedFormulaAction,
+    selectPublishedFormula,
+  ]);
+
+  const handleUndoPublishedFormulaSelection = useCallback(() => {
+    cancelPublishedFormulaActions();
+    clearHandoffFailure();
+    undoPublishedFormulaSelection();
+    trackEvent('undo_formula_change', { source: 'published-library' });
+  }, [cancelPublishedFormulaActions, clearHandoffFailure, undoPublishedFormulaSelection]);
 
   const handleFormulaParamChange = useCallback((name: string, value: PluginParamValue) => {
     updateFormula({
@@ -737,7 +875,8 @@ function ExploreClient({ posterImage }: { posterImage?: string }) {
   }, [document.formula.params?.formula, updateFormula]);
 
   const handleCustomFormulaSelect = useCallback((selection: FormulaSelectionRequest) => {
-    publishedSelectionRef.current.cancel();
+    cancelPublishedFormulaActions();
+    clearPublishedFormulaSelectionUndo();
     setPublishedDescriptor(null);
     clearHandoffFailure();
     const plugin = pluginRegistry.getFormula(selection.formulaId);
@@ -760,7 +899,15 @@ function ExploreClient({ posterImage }: { posterImage?: string }) {
         ...selection.experienceHint.coloring,
       });
     }
-  }, [clearHandoffFailure, document.formula.formulaId, updateBounds, updateColoring, updateFormula]);
+  }, [
+    cancelPublishedFormulaActions,
+    clearHandoffFailure,
+    clearPublishedFormulaSelectionUndo,
+    document.formula.formulaId,
+    updateBounds,
+    updateColoring,
+    updateFormula,
+  ]);
 
   // Handle transform change
   const handleTransformChange = useCallback((newTransform: string) => {
@@ -1064,7 +1211,12 @@ function ExploreClient({ posterImage }: { posterImage?: string }) {
                 publishedDescriptor={publishedDescriptor}
                 onFormulaChange={handleFormulaChange}
                 onPublishedFormulaSelect={handlePublishedFormulaSelect}
-                onPublishedFormulaCancel={() => publishedSelectionRef.current.cancel()}
+                onPublishedFormulaCancel={cancelPublishedFormulaActions}
+                onFeelingLucky={handleFeelingLucky}
+                onPublishedProfileReset={handlePublishedProfileReset}
+                canResetPublishedProfile={publishedDescriptor?.formulaId === formula}
+                canUndoPublishedFormulaSelection={canUndoPublishedFormulaSelection}
+                onUndoPublishedFormulaSelection={handleUndoPublishedFormulaSelection}
                 onFormulaParamChange={handleFormulaParamChange}
                 onCustomFormulaSelect={handleCustomFormulaSelect}
               />

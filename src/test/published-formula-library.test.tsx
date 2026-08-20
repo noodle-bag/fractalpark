@@ -77,6 +77,94 @@ describe("PublishedFormulaLibrary", () => {
     expect(await screen.findByRole("button", { name: "Formula 60" })).toBeInTheDocument();
   });
 
+  it("offers Lucky, Profile Reset, and one-step Undo as keyboard-accessible actions", async () => {
+    const onFeelingLucky = vi.fn(async (): Promise<PublishedFormulaSelectionResult> => ({
+      ok: true,
+    }));
+    const onResetProfile = vi.fn(async (): Promise<PublishedFormulaSelectionResult> => ({
+      ok: true,
+    }));
+    const onUndo = vi.fn();
+
+    render(
+      <PublishedFormulaLibrary
+        currentFormula="00000000-0000-4000-8000-000000000001"
+        loadClient={successfulClient(client(2))}
+        onSelect={vi.fn(async (): Promise<PublishedFormulaSelectionResult> => ({ ok: true }))}
+        onFeelingLucky={onFeelingLucky}
+        onResetProfile={onResetProfile}
+        canResetProfile
+        canUndo
+        onUndo={onUndo}
+      />,
+    );
+
+    fireEvent.click(
+      screen.getByRole("button", { name: "formula.library.lucky" }),
+    );
+    await waitFor(() => expect(onFeelingLucky).toHaveBeenCalledTimes(1));
+
+    fireEvent.click(
+      screen.getByRole("button", { name: "formula.library.resetProfile" }),
+    );
+    await waitFor(() => expect(onResetProfile).toHaveBeenCalledTimes(1));
+
+    fireEvent.click(
+      screen.getByRole("button", { name: "formula.library.undoFormulaChange" }),
+    );
+    expect(onUndo).toHaveBeenCalledTimes(1);
+  });
+
+  it("keeps only the latest rapid Lucky result visible and preserves failures", async () => {
+    let finishFirst!: (result: PublishedFormulaSelectionResult) => void;
+    let finishSecond!: (result: PublishedFormulaSelectionResult) => void;
+    const onFeelingLucky = vi
+      .fn()
+      .mockImplementationOnce(
+        () =>
+          new Promise<PublishedFormulaSelectionResult>((resolve) => {
+            finishFirst = resolve;
+          }),
+      )
+      .mockImplementationOnce(
+        () =>
+          new Promise<PublishedFormulaSelectionResult>((resolve) => {
+            finishSecond = resolve;
+          }),
+      )
+      .mockResolvedValueOnce({ ok: false, code: "definition-compile-failed" });
+
+    render(
+      <PublishedFormulaLibrary
+        currentFormula="mandelbrot"
+        loadClient={successfulClient(client(2))}
+        onSelect={vi.fn(async (): Promise<PublishedFormulaSelectionResult> => ({ ok: true }))}
+        onFeelingLucky={onFeelingLucky}
+      />,
+    );
+
+    const lucky = screen.getByRole("button", {
+      name: "formula.library.lucky",
+    });
+    fireEvent.click(lucky);
+    fireEvent.click(lucky);
+    expect(onFeelingLucky).toHaveBeenCalledTimes(2);
+
+    finishFirst({ ok: false, code: "definition-compile-failed" });
+    finishSecond({ ok: true });
+    await waitFor(() =>
+      expect(
+        screen.queryByText("formula.library.selectionFailed"),
+      ).not.toBeInTheDocument(),
+    );
+
+    fireEvent.click(lucky);
+    await waitFor(() => expect(onFeelingLucky).toHaveBeenCalledTimes(3));
+    expect(
+      await screen.findByText("formula.library.selectionFailed"),
+    ).toBeInTheDocument();
+  });
+
   it("closes only after a successful selection and keeps failures visible", async () => {
     const onCancel = vi.fn();
     const onSelect = vi

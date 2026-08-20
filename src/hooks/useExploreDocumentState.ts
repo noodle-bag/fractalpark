@@ -13,6 +13,7 @@ import {
   type TransformState,
 } from '@/engine/document';
 import { migrateFractalDocument, normalizeFractalDocument } from '@/engine/document-migrate';
+import type { PublishedFormulaProfileV1 } from '@/engine/formulas/v1';
 import type { FractalParams, PluginParamRecord } from '@/engine/types';
 import { applyFormulaSelectionDefaults } from '@/lib/formula-documents';
 import { applyRemixSource, parseRemixSource } from '@/lib/remix-source';
@@ -140,6 +141,21 @@ export interface ResolvedPluginParamDomains {
   transform?: PluginParamRecord;
 }
 
+export interface PublishedFormulaDocumentSelection {
+  formulaId: string;
+  formulaParams: PluginParamRecord;
+  profile: PublishedFormulaProfileV1;
+}
+
+interface ExploreDocumentHistoryState {
+  document: FractalDocument;
+  publishedFormulaUndo: FractalDocument | null;
+}
+
+type FractalDocumentUpdate =
+  | FractalDocument
+  | ((previous: FractalDocument) => FractalDocument);
+
 export interface ExploreDocumentState {
   document: FractalDocument;
   runtimeParams: FractalParams;
@@ -150,81 +166,175 @@ export interface ExploreDocumentState {
   updateRender: (patch: Partial<RenderState>) => void;
   updateAnimation: (patch: Partial<AnimationState>) => void;
   replacePluginParamDomains: (domains: ResolvedPluginParamDomains) => void;
+  applyPublishedFormulaSelection: (selection: PublishedFormulaDocumentSelection) => void;
+  canUndoPublishedFormulaSelection: boolean;
+  undoPublishedFormulaSelection: () => void;
+  clearPublishedFormulaSelectionUndo: () => void;
   selectBuiltInFormula: (formulaId: string) => void;
   resetToDefault: () => void;
   loadFromDocument: (doc: FractalDocument) => void;
 }
 
-export function useExploreDocumentState(initialSearchParams: URLSearchParams): ExploreDocumentState {
-  const [document, setDocument] = useState<FractalDocument>(() => createInitialDocument(initialSearchParams));
+export function useExploreDocumentState(
+  initialSearchParams: URLSearchParams,
+  onBeforeDocumentMutation?: () => void,
+): ExploreDocumentState {
+  const [historyState, setHistoryState] = useState<ExploreDocumentHistoryState>(() => ({
+    document: createInitialDocument(initialSearchParams),
+    publishedFormulaUndo: null,
+  }));
+  const document = historyState.document;
+  const canUndoPublishedFormulaSelection = historyState.publishedFormulaUndo !== null;
+  const setDocument = useCallback((update: FractalDocumentUpdate) => {
+    onBeforeDocumentMutation?.();
+    setHistoryState((previous) => ({
+      document: typeof update === 'function'
+        ? update(previous.document)
+        : update,
+      publishedFormulaUndo: null,
+    }));
+  }, [onBeforeDocumentMutation]);
 
   const runtimeParams = useMemo(() => documentToRuntimeParams(document), [document]);
 
   const updateBounds = useCallback((bounds: SceneState['bounds']) => {
     setDocument((prev) => mergeSceneState(prev, { bounds }));
-  }, []);
+  }, [setDocument]);
 
   const updateFormula = useCallback((patch: Partial<FormulaState>) => {
     setDocument((prev) => mergeFormulaState(prev, patch));
-  }, []);
+  }, [setDocument]);
 
   const updateColoring = useCallback((patch: Partial<ColoringState>) => {
     setDocument((prev) => mergeColoringState(prev, patch));
-  }, []);
+  }, [setDocument]);
 
   const updateTransform = useCallback((patch: Partial<TransformState>) => {
     setDocument((prev) => mergeTransformState(prev, patch));
-  }, []);
+  }, [setDocument]);
 
   const updateRender = useCallback((patch: Partial<RenderState>) => {
     setDocument((prev) => mergeRenderState(prev, patch));
-  }, []);
+  }, [setDocument]);
 
   const updateAnimation = useCallback((patch: Partial<AnimationState>) => {
     setDocument((prev) => mergeAnimationState(prev, patch));
-  }, []);
+  }, [setDocument]);
 
   const replacePluginParamDomains = useCallback(
     (domains: ResolvedPluginParamDomains) => {
-      setDocument((prev) => {
+      setHistoryState((previous) => {
         const formula = cleanPluginParams(domains.formula);
         const outside = cleanPluginParams(domains.outside);
         const inside = cleanPluginParams(domains.inside);
         const transform = cleanPluginParams(domains.transform);
-        const coloringScript = prev.coloring.params?.coloringScript;
-        return normalizeFractalDocument({
-          ...prev,
-          formula: {
-            ...prev.formula,
-            params: formula ? { formula } : undefined,
-          },
-          coloring: {
-            ...prev.coloring,
-            params: outside || inside || coloringScript
-              ? { outside, inside, coloringScript }
-              : undefined,
-          },
-          transform: {
-            ...prev.transform,
-            params: transform ? { transform } : undefined,
-          },
-        });
+        const coloringScript = previous.document.coloring.params?.coloringScript;
+        return {
+          ...previous,
+          document: normalizeFractalDocument({
+            ...previous.document,
+            formula: {
+              ...previous.document.formula,
+              params: formula ? { formula } : undefined,
+            },
+            coloring: {
+              ...previous.document.coloring,
+              params: outside || inside || coloringScript
+                ? { outside, inside, coloringScript }
+                : undefined,
+            },
+            transform: {
+              ...previous.document.transform,
+              params: transform ? { transform } : undefined,
+            },
+          }),
+        };
       });
     },
     [],
   );
 
-  const selectBuiltInFormula = useCallback((formulaId: string) => {
-    setDocument((prev) => applyFormulaSelectionDefaults(prev, formulaId));
+  const clearPublishedFormulaSelectionUndo = useCallback(() => {
+    setHistoryState((previous) =>
+      previous.publishedFormulaUndo
+        ? { ...previous, publishedFormulaUndo: null }
+        : previous,
+    );
   }, []);
+
+  const applyPublishedFormulaSelection = useCallback(
+    (selection: PublishedFormulaDocumentSelection) => {
+      setHistoryState((previous) => {
+        const current = previous.document;
+        const formulaParams = cleanPluginParams(selection.formulaParams);
+        const juliaC: [number, number] = selection.profile.juliaC
+          ? [selection.profile.juliaC[0], selection.profile.juliaC[1]]
+          : current.formula.juliaC;
+        const next = normalizeFractalDocument({
+          ...current,
+          scene: {
+            ...current.scene,
+            bounds: {
+              centerX: selection.profile.center[0],
+              centerY: selection.profile.center[1],
+              zoom: selection.profile.zoom,
+              rotation: selection.profile.rotation,
+            },
+          },
+          formula: {
+            ...current.formula,
+            formulaId: selection.formulaId,
+            isJulia: selection.profile.mode === 'julia',
+            juliaC,
+            params: formulaParams ? { formula: formulaParams } : undefined,
+          },
+          render: {
+            ...current.render,
+            maxIterations: selection.profile.iterations,
+          },
+        });
+        return {
+          document: next,
+          publishedFormulaUndo: current,
+        };
+      });
+    },
+    [],
+  );
+
+  const undoPublishedFormulaSelection = useCallback(() => {
+    setHistoryState((previous) => {
+      if (!previous.publishedFormulaUndo) return previous;
+      return {
+        document: normalizeFractalDocument(previous.publishedFormulaUndo),
+        publishedFormulaUndo: null,
+      };
+    });
+  }, []);
+
+  const selectBuiltInFormula = useCallback((formulaId: string) => {
+    onBeforeDocumentMutation?.();
+    setHistoryState((previous) => ({
+      document: applyFormulaSelectionDefaults(previous.document, formulaId),
+      publishedFormulaUndo: null,
+    }));
+  }, [onBeforeDocumentMutation]);
 
   const resetToDefault = useCallback(() => {
-    setDocument(normalizeFractalDocument(DEFAULT_FRACTAL_DOCUMENT));
-  }, []);
+    onBeforeDocumentMutation?.();
+    setHistoryState({
+      document: normalizeFractalDocument(DEFAULT_FRACTAL_DOCUMENT),
+      publishedFormulaUndo: null,
+    });
+  }, [onBeforeDocumentMutation]);
 
   const loadFromDocument = useCallback((doc: FractalDocument) => {
-    setDocument(normalizeFractalDocument(doc));
-  }, []);
+    onBeforeDocumentMutation?.();
+    setHistoryState({
+      document: normalizeFractalDocument(doc),
+      publishedFormulaUndo: null,
+    });
+  }, [onBeforeDocumentMutation]);
 
   return {
     document,
@@ -236,6 +346,10 @@ export function useExploreDocumentState(initialSearchParams: URLSearchParams): E
     updateRender,
     updateAnimation,
     replacePluginParamDomains,
+    applyPublishedFormulaSelection,
+    canUndoPublishedFormulaSelection,
+    undoPublishedFormulaSelection,
+    clearPublishedFormulaSelectionUndo,
     selectBuiltInFormula,
     resetToDefault,
     loadFromDocument,

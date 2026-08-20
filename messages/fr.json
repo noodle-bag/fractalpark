@@ -1400,7 +1400,10 @@
         "unavailable": "La bibliothèque de formules standard est momentanément indisponible.",
         "selectionFailed": "Impossible de charger cette formule. La formule actuelle a été conservée.",
         "familyFilter": "Filtrer les formules par famille",
-        "loadMore": "Afficher plus"
+        "loadMore": "Afficher plus",
+        "lucky": "J’ai de la chance ?",
+        "resetProfile": "Réinitialiser le profil de formule",
+        "undoFormulaChange": "Annuler le changement de formule"
       },
       "resolution": {
         "loading": "Chargement de la formule...",

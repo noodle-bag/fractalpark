@@ -1,5 +1,6 @@
 import type {
   PublishedFormulaPluginArtifactV1,
+  PublishedFormulaRuntimeIndexRowV1,
   PublishedFormulaRuntimeResultV1,
 } from "@/engine/formulas/v1";
 
@@ -11,6 +12,25 @@ export interface PublishedFormulaSelectionClient {
 }
 
 export type PublishedFormulaBeforeApply = () => void | Promise<void>;
+
+export function pickPublishedFormulaLuckyRow(
+  rows: readonly PublishedFormulaRuntimeIndexRowV1[],
+  currentFormulaId?: string,
+  random: () => number = Math.random,
+): PublishedFormulaRuntimeIndexRowV1 | undefined {
+  if (rows.length === 0) return undefined;
+
+  const eligible =
+    rows.length > 1
+      ? rows.filter((row) => row.formulaId !== currentFormulaId)
+      : rows;
+  const candidates = eligible.length > 0 ? eligible : rows;
+  const sample = random();
+  const boundedSample = Number.isFinite(sample)
+    ? Math.min(1 - Number.EPSILON, Math.max(0, sample))
+    : 0;
+  return candidates[Math.floor(boundedSample * candidates.length)];
+}
 
 type PublishedFormulaSelectionFailureCode =
   Exclude<
@@ -27,6 +47,23 @@ export type PublishedFormulaSelectionResult =
         | "library-unavailable"
         | "selection-superseded";
     };
+
+export class PublishedFormulaActionCoordinator {
+  private generation = 0;
+
+  begin(): number {
+    this.generation += 1;
+    return this.generation;
+  }
+
+  cancel(): void {
+    this.generation += 1;
+  }
+
+  isCurrent(generation: number): boolean {
+    return generation === this.generation;
+  }
+}
 
 export class PublishedFormulaSelectionCoordinator {
   private generation = 0;
