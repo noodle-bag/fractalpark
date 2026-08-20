@@ -13,7 +13,7 @@ import {
   type TransformState,
 } from '@/engine/document';
 import { migrateFractalDocument, normalizeFractalDocument } from '@/engine/document-migrate';
-import type { FractalParams } from '@/engine/types';
+import type { FractalParams, PluginParamRecord } from '@/engine/types';
 import { applyFormulaSelectionDefaults } from '@/lib/formula-documents';
 import { applyRemixSource, parseRemixSource } from '@/lib/remix-source';
 import { decodeParams } from '@/lib/url-params';
@@ -127,6 +127,19 @@ function mergeAnimationState(prev: FractalDocument, patch: Partial<AnimationStat
   });
 }
 
+function cleanPluginParams(
+  params: PluginParamRecord | undefined,
+): PluginParamRecord | undefined {
+  return params && Object.keys(params).length > 0 ? params : undefined;
+}
+
+export interface ResolvedPluginParamDomains {
+  formula: PluginParamRecord;
+  outside?: PluginParamRecord;
+  inside?: PluginParamRecord;
+  transform?: PluginParamRecord;
+}
+
 export interface ExploreDocumentState {
   document: FractalDocument;
   runtimeParams: FractalParams;
@@ -136,6 +149,7 @@ export interface ExploreDocumentState {
   updateTransform: (patch: Partial<TransformState>) => void;
   updateRender: (patch: Partial<RenderState>) => void;
   updateAnimation: (patch: Partial<AnimationState>) => void;
+  replacePluginParamDomains: (domains: ResolvedPluginParamDomains) => void;
   selectBuiltInFormula: (formulaId: string) => void;
   resetToDefault: () => void;
   loadFromDocument: (doc: FractalDocument) => void;
@@ -170,6 +184,36 @@ export function useExploreDocumentState(initialSearchParams: URLSearchParams): E
     setDocument((prev) => mergeAnimationState(prev, patch));
   }, []);
 
+  const replacePluginParamDomains = useCallback(
+    (domains: ResolvedPluginParamDomains) => {
+      setDocument((prev) => {
+        const formula = cleanPluginParams(domains.formula);
+        const outside = cleanPluginParams(domains.outside);
+        const inside = cleanPluginParams(domains.inside);
+        const transform = cleanPluginParams(domains.transform);
+        const coloringScript = prev.coloring.params?.coloringScript;
+        return normalizeFractalDocument({
+          ...prev,
+          formula: {
+            ...prev.formula,
+            params: formula ? { formula } : undefined,
+          },
+          coloring: {
+            ...prev.coloring,
+            params: outside || inside || coloringScript
+              ? { outside, inside, coloringScript }
+              : undefined,
+          },
+          transform: {
+            ...prev.transform,
+            params: transform ? { transform } : undefined,
+          },
+        });
+      });
+    },
+    [],
+  );
+
   const selectBuiltInFormula = useCallback((formulaId: string) => {
     setDocument((prev) => applyFormulaSelectionDefaults(prev, formulaId));
   }, []);
@@ -191,6 +235,7 @@ export function useExploreDocumentState(initialSearchParams: URLSearchParams): E
     updateTransform,
     updateRender,
     updateAnimation,
+    replacePluginParamDomains,
     selectBuiltInFormula,
     resetToDefault,
     loadFromDocument,

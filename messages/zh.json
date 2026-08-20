@@ -1389,6 +1389,19 @@
       "active": "当前",
       "builtin": "内置公式",
       "custom": "自定义公式",
+      "standard": "标准公式库",
+      "mine": "我的公式",
+      "library": {
+        "current": "当前公式",
+        "open": "打开公式库",
+        "title": "标准公式库",
+        "description": "浏览全部 {count} 条已发布公式。只有选中后才会加载公式定义。",
+        "loading": "正在加载公式索引……",
+        "unavailable": "标准公式库暂时不可用。",
+        "selectionFailed": "无法加载该公式，当前公式已保留。",
+        "familyFilter": "按家族筛选公式",
+        "loadMore": "加载更多"
+      },
       "resolution": {
         "loading": "正在加载公式...",
         "notFound": "自定义公式「{formula}」加载失败。",
@@ -1445,6 +1458,12 @@
       },
       "family": {
         "all": "全部",
+        "algebraic-power": "代数幂",
+        "folded-absolute": "绝对值折叠",
+        "function-composition": "函数组合",
+        "orbit-memory": "轨道记忆",
+        "rational-reciprocal": "有理与倒数",
+        "root-finding": "求根",
         "classic": "经典",
         "burning-ship": "燃烧船",
         "newton": "牛顿",

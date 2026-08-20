@@ -10,6 +10,7 @@ import {
 
 const STORAGE_ID = '550e8400-e29b-41d4-a716-446655440000';
 const RUNTIME_ID = `custom-${STORAGE_ID}`;
+const STANDARD_ID = '00e14aa8-b766-54ea-a359-3f5d20d329b7';
 
 describe('cloud custom-formula identity', () => {
   it('keeps storage UUIDs and runtime IDs explicit and reversible', () => {
@@ -36,6 +37,10 @@ describe('cloud custom-formula identity', () => {
         acceptLegacyStorageId: false,
       }),
     ).toBeNull();
+  });
+
+  it('preserves Standard UUIDv5 identities outside the custom namespace', () => {
+    expect(canonicalizeCloudCustomFormulaRuntimeId(STANDARD_ID)).toBe(STANDARD_ID);
   });
 
   it.each([

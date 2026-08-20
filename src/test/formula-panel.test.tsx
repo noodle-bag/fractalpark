@@ -1,5 +1,5 @@
 import { beforeAll, describe, expect, it, vi } from 'vitest';
-import { render, screen } from '@testing-library/react';
+import { fireEvent, render, screen } from '@testing-library/react';
 import { registerBuiltins } from '@/engine/plugins/builtins/index';
 import { compileClassicFrmEntry, compileFrm } from '@/engine/frm/compile';
 import { pluginRegistry } from '@/engine/plugins/registry';
@@ -18,6 +18,7 @@ describe('FormulaPanel', () => {
     }
 
     globalThis.ResizeObserver = ResizeObserverMock as typeof ResizeObserver;
+    HTMLElement.prototype.scrollIntoView = vi.fn();
 
     registerBuiltins();
     const compiled = compileFrm(`FnSlotWeave {
@@ -133,5 +134,71 @@ bailout:
     expect(screen.getAllByRole('combobox')).toHaveLength(1);
     expect(screen.queryByText('p2')).not.toBeInTheDocument();
     expect(screen.queryByText('fn1')).not.toBeInTheDocument();
+  });
+
+  it('renders and edits published parameters from their versioned descriptor types', async () => {
+    const onFormulaParamChange = vi.fn();
+    render(
+      <FormulaPanel
+        isJulia={false}
+        juliaC={[-0.7, 0.27]}
+        currentFormula="00000000-0000-4000-8000-000000000001"
+        currentBounds={{ centerX: 0, centerY: 0, zoom: 1, rotation: 0 }}
+        pluginParams={{
+          frmV1_scale: [0.25, 0],
+          frmV1_offset: [0.1, -0.2],
+          u_frm_fn1: 1,
+        }}
+        publishedDescriptor={{
+          schema: 'fractalpark-published-formula-descriptor/v1',
+          formulaId: '00000000-0000-4000-8000-000000000001',
+          sourceRevision: 'a'.repeat(64),
+          semanticHash: 'b'.repeat(64),
+          parameters: [
+            {
+              slotName: 'scale',
+              type: 'real',
+              default: 0.5,
+              hardDomain: [-1, 1],
+              uniformName: 'frmV1_scale',
+            },
+            {
+              slotName: 'offset',
+              type: 'complex',
+              default: [0, 0],
+              uniformName: 'frmV1_offset',
+            },
+            {
+              slotName: 'fn1',
+              type: 'function',
+              default: 'identity',
+              uniformName: 'u_frm_fn1',
+              options: ['identity', 'sin'],
+            },
+          ],
+        }}
+        onJuliaModeChange={() => {}}
+        onJuliaCChange={() => {}}
+        onFormulaChange={() => {}}
+        onFormulaParamChange={onFormulaParamChange}
+      />
+    );
+
+    expect(screen.getByLabelText('scale')).toHaveValue(0.25);
+    expect(screen.getByLabelText('offset controls.complexReal')).toHaveValue(0.1);
+    expect(screen.getByLabelText('offset controls.complexImaginary')).toHaveValue(-0.2);
+    expect(screen.getByRole('combobox', { name: 'fn1' })).toHaveTextContent('sin');
+
+    fireEvent.change(screen.getByLabelText('scale'), { target: { value: '2' } });
+    expect(onFormulaParamChange).toHaveBeenCalledWith('frmV1_scale', [1, 0]);
+
+    fireEvent.change(screen.getByLabelText('offset controls.complexReal'), {
+      target: { value: '0.4' },
+    });
+    expect(onFormulaParamChange).toHaveBeenCalledWith('frmV1_offset', [0.4, -0.2]);
+
+    fireEvent.click(screen.getByRole('combobox', { name: 'fn1' }));
+    fireEvent.click(await screen.findByRole('option', { name: 'identity' }));
+    expect(onFormulaParamChange).toHaveBeenCalledWith('u_frm_fn1', 0);
   });
 });

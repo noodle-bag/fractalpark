@@ -1,215 +1,258 @@
-import { test, expect, type Page } from '@playwright/test';
+import { expect, test, type Page } from '@playwright/test';
 
-const baseUrl = process.env.BASE_URL || 'http://localhost:3000';
+const REPRESENTATIVES = [
+  {
+    basis: 'project-owned',
+    formulaId: 'd541fbeb-4dcc-5fc9-9b88-116bb28bf327',
+    displayName: 'tanJulia',
+    definitionPath:
+      'definitions/f892ebc14d4ae2437f5858f1c79d466b2c320024c6318e53dff1baabbfbd78d4.frm',
+  },
+  {
+    basis: 'direct-adaptation',
+    formulaId: 'cc489215-c7d7-5f2c-b11a-1be049b167bd',
+    displayName: 'richard7',
+    definitionPath:
+      'definitions/773efa8273598ca70432c3e628ee1e6f22d176b0fb2d680a613c5d6921f899cb.frm',
+  },
+  {
+    basis: 'separated-independent-rewrite',
+    formulaId: 'b8b69fda-a887-58b0-995a-8343f768477e',
+    displayName: 'juliaconj',
+    definitionPath:
+      'definitions/907f245aabcd6b1d53822b2c78c8468a58eb2c6ef5af26b06fba6fcbd55d5529.frm',
+  },
+] as const;
+
+const HARD_DOMAIN_REPRESENTATIVE = {
+  formulaId: '0f49d971-917e-50a5-ae83-20e11fd4854c',
+  displayName: 'phoenixMulti',
+  uniformName: 'frmV1_phoenixMultiP',
+  definitionPath:
+    'definitions/a9fa9931913aeafac8b527f31cae7b519db79c8d54829ffcea20bcb6fc9dce4d.frm',
+} as const;
 
 async function waitForFractalCanvasReady(page: Page) {
-  const canvas = page.locator('[data-testid="fractal-canvas"]');
-  await expect(canvas).toBeVisible({ timeout: 15000 });
-  await page.waitForTimeout(500);
-}
-
-async function formulaCard(page: Page, name: string) {
-  await page.getByRole('button', {
-    name: new RegExp(`^${name}$`, 'i'),
-  }).click();
-  await page.getByPlaceholder('Search formulas...').fill(name);
-  return page.getByRole('button', {
-    name: new RegExp(`^${name} Julia(?: Active)? `, 'i'),
+  await expect(page.locator('[data-testid="fractal-canvas"]')).toBeVisible({
+    timeout: 20_000,
   });
 }
 
-test.describe('Formula Switching', () => {
-  test.beforeEach(async ({ page }) => {
-    // Navigate to explore page
-    await page.goto(`${baseUrl}/en/explore`);
-    // Wait for canvas to be visible and initial render to settle
+async function openLibrary(page: Page) {
+  const trigger = page.getByRole('button', { name: 'Open Library' });
+  await expect(trigger).toBeVisible({ timeout: 45_000 });
+  await trigger.click();
+  await expect(
+    page.getByRole('dialog', { name: 'Standard Formula Library' }),
+  ).toBeVisible({ timeout: 15_000 });
+}
+
+async function selectDirectoryRow(page: Page, displayName: string) {
+  const row = page.getByRole('button', { name: displayName, exact: true }).first();
+  for (let pageNumber = 0; pageNumber < 11; pageNumber += 1) {
+    if (await row.isVisible().catch(() => false)) {
+      await row.click();
+      return;
+    }
+    const loadMore = page.getByRole('button', { name: 'Load more' });
+    await expect(loadMore).toBeVisible();
+    await loadMore.click();
+  }
+  throw new Error(`Published formula row not reachable: ${displayName}`);
+}
+
+test.describe('Published Formula Library', () => {
+  test.describe.configure({ timeout: 420_000 });
+  test('lazily loads and renders all three implementation bases', async ({ page }) => {
+    test.setTimeout(420_000);
+    const definitionRequests: string[] = [];
+    const shaderErrors: string[] = [];
+    page.on('request', (request) => {
+      if (request.url().includes('/formula-library/v1/runtime/published/definitions/')) {
+        definitionRequests.push(request.url());
+      }
+    });
+    page.on('console', (message) => {
+      if (message.type() === 'error' && /shader|compile|webgl/i.test(message.text())) {
+        shaderErrors.push(message.text());
+      }
+    });
+    page.on('pageerror', (error) => {
+      if (/shader|compile|webgl/i.test(error.message)) shaderErrors.push(error.message);
+    });
+
+    await page.goto('/en/explore');
     await waitForFractalCanvasReady(page);
-  });
+    await openLibrary(page);
 
-  test('should display default mandelbrot formula', async ({ page }) => {
-    // Check canvas is present
-    const canvas = page.locator('canvas');
-    await expect(canvas).toBeVisible();
-    
-    // Verify URL doesn't have formula param for default
-    const url = page.url();
-    expect(url).not.toContain('fm=');
-  });
+    await expect(page.getByRole('searchbox')).toHaveCount(0);
+    await expect(page.getByRole('button', { name: 'Algebraic Power' })).toBeVisible();
+    await expect(page.getByRole('button', { name: 'Root Finding' })).toBeVisible();
+    expect(definitionRequests).toEqual([]);
 
-  test('should switch to burning ship formula', async ({ page }) => {
-    // Click on Formula tab if present
-    const formulaTab = page.getByRole('tab', { name: /formula/i });
-    if (await formulaTab.isVisible().catch(() => false)) {
-      await formulaTab.click();
+    for (const representative of REPRESENTATIVES) {
+      await selectDirectoryRow(page, representative.displayName);
+      await expect(
+        page.getByRole('dialog', { name: 'Standard Formula Library' }),
+      ).toBeHidden({ timeout: 45_000 });
+      await expect(
+        page.getByText(representative.displayName, { exact: true }),
+      ).toBeVisible({ timeout: 45_000 });
+      await waitForFractalCanvasReady(page);
+      if (representative.displayName !== 'juliaconj') await openLibrary(page);
     }
 
-    // Find and click burning ship formula
-    const burningShip = await formulaCard(page, 'Burning Ship');
-    await expect(burningShip).toBeVisible();
-    await burningShip.click();
+    const realPart = page.getByLabel('offset Re');
+    const imaginaryPart = page.getByLabel('offset Im');
+    await expect(realPart).toHaveValue('0', { timeout: 45_000 });
+    await expect(imaginaryPart).toHaveValue('0');
+    await realPart.fill('0.25');
+    await expect(realPart).toHaveValue('0.25');
 
-    await expect(page).toHaveURL(/[?&]fm=bs(?:[&#]|$)/, { timeout: 5000 });
-  });
-
-  test('should switch to tricorn formula', async ({ page }) => {
-    const formulaTab = page.getByRole('tab', { name: /formula/i });
-    if (await formulaTab.isVisible().catch(() => false)) {
-      await formulaTab.click();
+    expect(definitionRequests).toHaveLength(REPRESENTATIVES.length);
+    for (const representative of REPRESENTATIVES) {
+      expect(
+        definitionRequests.some((url) => url.endsWith(representative.definitionPath)),
+        `${representative.basis} Definition was requested`,
+      ).toBe(true);
     }
-
-    const tricorn = page.getByRole('button', { name: /Tricorn/i });
-    if (await tricorn.isVisible().catch(() => false)) {
-      await tricorn.click();
-
-      // Wait for URL to update (debounced 500ms + buffer)
-      await page.waitForTimeout(1000);
-
-      // Verify URL updated (uses short key 'tr' for tricorn)
-      const url = page.url();
-      expect(url).toContain('fm=tr');
-    }
-  });
-
-  test('should switch to phoenix formula', async ({ page }) => {
-    const formulaTab = page.getByRole('tab', { name: /formula/i });
-    if (await formulaTab.isVisible().catch(() => false)) {
-      await formulaTab.click();
-    }
-
-    const phoenix = await formulaCard(page, 'Phoenix');
-    await expect(phoenix).toBeVisible();
-    await phoenix.click();
-
-    await expect(page).toHaveURL(/[?&]fm=ph(?:[&#]|$)/, { timeout: 5000 });
-  });
-
-  test('should switch to Newton formula', async ({ page }) => {
-    const formulaTab = page.getByRole('tab', { name: /formula/i });
-    if (await formulaTab.isVisible().catch(() => false)) {
-      await formulaTab.click();
-    }
-
-    // Newton formulas are in a specific category
-    const newton3 = page.getByRole('button', { name: /Newton.*3rd/i });
-    if (await newton3.isVisible().catch(() => false)) {
-      await newton3.click();
-
-      // Wait for URL to update (debounced 500ms + buffer)
-      await page.waitForTimeout(1000);
-
-      const url = page.url();
-      expect(url).toContain('fm=newton3');
-    }
-  });
-
-  test('resets view bounds to the selected formula defaults', async ({ page }) => {
-    // One cold Explore render plus a real formula switch takes ~37s on the
-    // release-gate SwiftShader host; keep a bounded margin without relaxing
-    // any state assertions.
-    test.setTimeout(60_000);
-    await page.goto(`${baseUrl}/en/explore?cx=-0.5&cy=0&z=2.0`);
-    await waitForFractalCanvasReady(page);
-
-    const formulaTab = page.getByRole('tab', { name: /formula/i });
-    await expect(formulaTab).toBeVisible();
-    await formulaTab.click();
-
-    const burningShip = await formulaCard(page, 'Burning Ship');
-    await expect(burningShip).toBeVisible();
-    await burningShip.click();
+    expect(shaderErrors).toEqual([]);
 
     await expect.poll(
       () => {
-        const params = new URL(page.url()).searchParams;
+        const url = new URL(page.url());
         return {
-          fm: params.get('fm'),
-          cx: params.get('cx'),
-          cy: params.get('cy'),
-          z: params.get('z'),
-          rot: params.get('rot'),
+          formula: url.searchParams.get('fm'),
+          params: url.searchParams.get('pp'),
         };
       },
-      { timeout: 10000 },
+      { timeout: 60_000 },
     ).toEqual({
-      fm: 'bs',
-      cx: '-1.7076963837',
-      cy: '-0.0375484240',
-      z: '6.34',
-      rot: '3.1416',
+      formula: REPRESENTATIVES[2].formulaId,
+      params: 'frmV1_offset:0.25|0',
     });
-  });
-
-  test('should handle Julia mode toggle with different formulas', async ({ page }) => {
-    // Enable Julia mode
-    const juliaToggle = page.getByRole('switch', { name: /julia/i });
-    if (await juliaToggle.isVisible().catch(() => false)) {
-      await juliaToggle.click();
-      await page.waitForTimeout(300);
-      
-      const url = page.url();
-      expect(url).toContain('julia=1');
-    }
-  });
-
-  test('should render all 4 original formulas without errors', async ({ page }) => {
-    const formulas = [
-      { name: 'Burning Ship', urlKey: 'bs' },
-      { name: 'Tricorn', urlKey: 'tr' },
-      { name: 'Phoenix', urlKey: 'ph' },
-      { name: 'Mandelbrot', urlKey: null },
-    ];
-    const shaderErrors: string[] = [];
-    const recordShaderError = (message: string) => {
-      if (/shader|compile|webgl/i.test(message)) {
-        shaderErrors.push(message);
-      }
-    };
-    page.on('console', msg => {
-      if (msg.type() === 'error') recordShaderError(msg.text());
-    });
-    page.on('pageerror', error => recordShaderError(error.message));
-
-    await page.getByRole('tab', { name: /formula/i }).click();
-    const search = page.getByPlaceholder('Search formulas...');
-
-    for (const { name, urlKey } of formulas) {
-      await page.getByRole('button', { name: /^All$/i }).click();
-      await search.fill(name);
-      const card = page.getByRole('button', {
-        name: new RegExp(`^${name} Julia(?: Active)? `, 'i'),
-      });
-      await expect(card).toBeVisible();
-      await card.click();
-      await expect.poll(
-        () => new URL(page.url()).searchParams.get('fm'),
-        { timeout: 10000 },
-      ).toBe(urlKey);
-      await waitForFractalCanvasReady(page);
-    }
-
-    expect(shaderErrors).toEqual([]);
-  });
-
-  test('restores the selected formula after a real page reload', async ({ page }) => {
-    // The contract includes two cold SwiftShader renders (initial + reload),
-    // measured at ~55s on the release-gate host.
-    test.setTimeout(90_000);
-    await page.goto(`${baseUrl}/en/explore?fm=bs`);
-    await waitForFractalCanvasReady(page);
-    await expect.poll(
-      () => new URL(page.url()).searchParams.get('fm'),
-    ).toBe('bs');
 
     await page.reload();
     await waitForFractalCanvasReady(page);
-    await expect.poll(
-      () => new URL(page.url()).searchParams.get('fm'),
-    ).toBe('bs');
+    await expect(
+      page.getByText(REPRESENTATIVES[2].displayName, { exact: true }),
+    ).toBeVisible({ timeout: 60_000 });
+    await expect(page.getByLabel('offset Re')).toHaveValue('0.25');
+    await expect(page.getByLabel('offset Im')).toHaveValue('0');
+    expect(definitionRequests).toHaveLength(REPRESENTATIVES.length + 1);
+    expect(definitionRequests.at(-1)).toContain(REPRESENTATIVES[2].definitionPath);
 
-    const formulaTab = page.getByRole('tab', { name: /formula/i });
-    await expect(formulaTab).toBeVisible();
-    await formulaTab.click();
-    const burningShip = await formulaCard(page, 'Burning Ship');
-    await expect(burningShip).toHaveAccessibleName(/^Burning Ship Julia Active /i);
+    await page.reload();
+    await waitForFractalCanvasReady(page);
+    await expect(
+      page.getByText(REPRESENTATIVES[2].displayName, { exact: true }),
+    ).toBeVisible({ timeout: 60_000 });
+    await expect(page.getByLabel('offset Re')).toHaveValue('0.25');
+    await expect(page.getByLabel('offset Im')).toHaveValue('0');
+    expect(definitionRequests).toHaveLength(REPRESENTATIVES.length + 2);
+    expect(definitionRequests.at(-1)).toContain(REPRESENTATIVES[2].definitionPath);
+    expect(shaderErrors).toEqual([]);
+  });
+
+  test('fails crafted Standard URL parameters closed in cold and warm sessions', async ({ page }) => {
+    test.setTimeout(180_000);
+    const definitionRequests: string[] = [];
+    page.on('request', (request) => {
+      if (request.url().includes('/formula-library/v1/runtime/published/definitions/')) {
+        definitionRequests.push(request.url());
+      }
+    });
+
+    const craftedHref = (angleScale: number) => {
+      const query = new URLSearchParams({
+        fm: HARD_DOMAIN_REPRESENTATIVE.formulaId,
+        tr: 'polar',
+        pp: [
+          `${HARD_DOMAIN_REPRESENTATIVE.uniformName}:999`,
+          `u_polarAngleScale:${angleScale}`,
+          'hostile_unknown:1',
+        ].join(','),
+      });
+      return `/en/explore?${query.toString()}`;
+    };
+
+    await page.goto(craftedHref(1.5));
+    await waitForFractalCanvasReady(page);
+    await expect(
+      page.getByText(HARD_DOMAIN_REPRESENTATIVE.displayName, { exact: true }),
+    ).toBeVisible({ timeout: 60_000 });
+    await expect(page.getByLabel('phoenixMultiP')).toHaveValue('0.5');
+    await expect.poll(
+      () => {
+        const url = new URL(page.url());
+        return {
+          transform: url.searchParams.get('tr'),
+          params: url.searchParams.get('pp'),
+        };
+      },
+      { timeout: 60_000 },
+    ).toEqual({
+      transform: 'polar',
+      params: 'u_polarAngleScale:1.5',
+    });
+    expect(definitionRequests).toEqual([
+      expect.stringContaining(HARD_DOMAIN_REPRESENTATIVE.definitionPath),
+    ]);
+
+    // Keep the loaded plugin in the module registry. Build a normal Next.js
+    // forward entry first, then replace only the Explore entry's URL while
+    // preserving its router state. The final browser back is a real
+    // client-side remount with a warm registry and hostile params.
+    await page.getByRole('link', { name: 'Formulas', exact: true }).first().click();
+    await expect(page).toHaveURL(/\/en\/formulas$/, { timeout: 60_000 });
+    await page.goBack();
+    await expect(page).toHaveURL(/\/en\/explore\?/, { timeout: 60_000 });
+    await page.evaluate((href) => {
+      window.history.replaceState(window.history.state, '', href);
+    }, craftedHref(1.75));
+    await page.goForward();
+    await expect(page).toHaveURL(/\/en\/formulas$/, { timeout: 60_000 });
+    await page.goBack();
+    await expect(page).toHaveURL(/\/en\/explore\?/, { timeout: 60_000 });
+    await waitForFractalCanvasReady(page);
+    await expect(
+      page.getByText(HARD_DOMAIN_REPRESENTATIVE.displayName, { exact: true }),
+    ).toBeVisible({ timeout: 60_000 });
+    await expect(page.getByLabel('phoenixMultiP')).toHaveValue('0.5');
+    await expect.poll(
+      () => new URL(page.url()).searchParams.get('pp'),
+      { timeout: 60_000 },
+    ).toBe('u_polarAngleScale:1.75');
+    expect(definitionRequests).toHaveLength(3);
+    expect(
+      definitionRequests.every((url) =>
+        url.endsWith(HARD_DOMAIN_REPRESENTATIVE.definitionPath),
+      ),
+    ).toBe(true);
+  });
+
+  test('is a full-width keyboard-operable layer at 390px', async ({ page }) => {
+    await page.setViewportSize({ width: 390, height: 844 });
+    await page.goto('/en/explore');
+    await waitForFractalCanvasReady(page);
+
+    const trigger = page.getByRole('button', { name: 'Open Library' });
+    await trigger.focus();
+    await page.keyboard.press('Enter');
+    const dialog = page.getByRole('dialog', { name: 'Standard Formula Library' });
+    await expect(dialog).toBeVisible();
+    await dialog.evaluate(async (element) => {
+      await Promise.all(
+        element.getAnimations().map((animation) => animation.finished.catch(() => undefined)),
+      );
+    });
+    const box = await dialog.boundingBox();
+    expect(box).not.toBeNull();
+    expect(box?.x).toBe(0);
+    expect(box?.width).toBe(390);
+
+    await page.keyboard.press('Escape');
+    await expect(dialog).toHaveCount(0);
+    await expect(trigger).toBeFocused();
   });
 });

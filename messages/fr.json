@@ -1389,6 +1389,19 @@
       "active": "Active",
       "builtin": "Intégrée",
       "custom": "Personnalisée",
+      "standard": "Bibliothèque standard",
+      "mine": "Mes formules",
+      "library": {
+        "current": "Formule actuelle",
+        "open": "Ouvrir la bibliothèque",
+        "title": "Bibliothèque de formules standard",
+        "description": "Parcourez les {count} formules publiées. La définition n’est chargée qu’après sélection.",
+        "loading": "Chargement de l’index des formules...",
+        "unavailable": "La bibliothèque de formules standard est momentanément indisponible.",
+        "selectionFailed": "Impossible de charger cette formule. La formule actuelle a été conservée.",
+        "familyFilter": "Filtrer les formules par famille",
+        "loadMore": "Afficher plus"
+      },
       "resolution": {
         "loading": "Chargement de la formule...",
         "notFound": "La formule personnalisée « {formula} » n'a pas pu être chargée.",
@@ -1445,6 +1458,12 @@
       },
       "family": {
         "all": "Toutes",
+        "algebraic-power": "Puissance algébrique",
+        "folded-absolute": "Valeur absolue repliée",
+        "function-composition": "Composition de fonctions",
+        "orbit-memory": "Mémoire d’orbite",
+        "rational-reciprocal": "Rationnelle et réciproque",
+        "root-finding": "Recherche de racines",
         "classic": "Classique",
         "burning-ship": "Burning Ship",
         "newton": "Newton",

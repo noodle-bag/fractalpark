@@ -115,6 +115,45 @@ describe('useExploreDocumentState', () => {
     expect(result.current.runtimeParams.useSSAA).toBe(true);
   });
 
+  it('replaces plugin parameter domains atomically while preserving coloring-script state', () => {
+    const { result } = renderHook(() =>
+      useExploreDocumentState(
+        new URLSearchParams(
+          'fm=phoenix&oc=st&tr=polar&pp=u_phoenixP:-0.2,u_stripeDensity:6,u_polarAngleScale:1.5,unknown:1',
+        ),
+      ),
+    );
+
+    act(() => {
+      result.current.updateColoring({
+        params: { coloringScript: { u_scriptOwned: 2 } },
+      });
+      result.current.replacePluginParamDomains({
+        formula: { u_phoenixP: -0.2 },
+        outside: { u_stripeDensity: 6 },
+        transform: { u_polarAngleScale: 1.5 },
+      });
+    });
+
+    expect(result.current.document.formula.params?.formula).toEqual({
+      u_phoenixP: -0.2,
+    });
+    expect(result.current.document.coloring.params).toEqual({
+      outside: { u_stripeDensity: 6 },
+      inside: undefined,
+      coloringScript: { u_scriptOwned: 2 },
+    });
+    expect(result.current.document.transform.params?.transform).toEqual({
+      u_polarAngleScale: 1.5,
+    });
+    expect(result.current.runtimeParams.pluginParams).toEqual({
+      u_phoenixP: -0.2,
+      u_stripeDensity: 6,
+      u_scriptOwned: 2,
+      u_polarAngleScale: 1.5,
+    });
+  });
+
   it('applies a built-in default profile without changing excluded domains', () => {
     const { result } = renderHook(() => useExploreDocumentState(new URLSearchParams()));
 

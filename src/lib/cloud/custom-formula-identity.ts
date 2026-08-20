@@ -7,6 +7,8 @@
  * writers always emit the namespaced form.
  */
 
+import { isStandardFormulaIdV1 } from '@/engine/formulas/v1/identity';
+
 const UUID_PATTERN = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i;
 const RUNTIME_PREFIX = 'custom-';
 
@@ -79,5 +81,9 @@ export function parseCloudCustomFormulaReference(
 
 /** Canonicalize only strict cloud identities; preserve all other formula IDs. */
 export function canonicalizeCloudCustomFormulaRuntimeId(value: string): string {
+  // Standard identities are deterministic UUIDv5 values. They share the
+  // historical bare-UUID shape but must never enter the cloud-custom
+  // namespace; Mine/Community identities are UUIDv4 by contract.
+  if (isStandardFormulaIdV1(value)) return value;
   return parseCloudCustomFormulaReference(value)?.runtimeId ?? value;
 }

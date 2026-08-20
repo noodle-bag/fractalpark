@@ -1389,6 +1389,19 @@
       "active": "Active",
       "builtin": "Built-in",
       "custom": "Custom",
+      "standard": "Standard Library",
+      "mine": "My Formulas",
+      "library": {
+        "current": "Current formula",
+        "open": "Open Library",
+        "title": "Standard Formula Library",
+        "description": "Browse all {count} published formulas. Definitions load only when selected.",
+        "loading": "Loading the formula index...",
+        "unavailable": "The standard formula library is unavailable right now.",
+        "selectionFailed": "This formula could not be loaded. Your current formula was kept.",
+        "familyFilter": "Filter formulas by family",
+        "loadMore": "Load more"
+      },
       "resolution": {
         "loading": "Loading formula...",
         "notFound": "The custom formula “{formula}” could not be loaded.",
@@ -1445,6 +1458,12 @@
       },
       "family": {
         "all": "All",
+        "algebraic-power": "Algebraic Power",
+        "folded-absolute": "Folded Absolute",
+        "function-composition": "Function Composition",
+        "orbit-memory": "Orbit Memory",
+        "rational-reciprocal": "Rational & Reciprocal",
+        "root-finding": "Root Finding",
         "classic": "Classic",
         "burning-ship": "Burning Ship",
         "newton": "Newton",

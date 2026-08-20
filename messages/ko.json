@@ -1389,6 +1389,19 @@
       "active": "활성",
       "builtin": "내장",
       "custom": "커스텀",
+      "standard": "표준 라이브러리",
+      "mine": "내 수식",
+      "library": {
+        "current": "현재 수식",
+        "open": "라이브러리 열기",
+        "title": "표준 수식 라이브러리",
+        "description": "게시된 수식 {count}개를 둘러보세요. 수식 정의는 선택한 뒤에만 불러옵니다.",
+        "loading": "수식 색인을 불러오는 중...",
+        "unavailable": "지금은 표준 수식 라이브러리를 사용할 수 없어요.",
+        "selectionFailed": "이 수식을 불러오지 못했습니다. 현재 수식은 그대로 유지됩니다.",
+        "familyFilter": "계열별 수식 필터",
+        "loadMore": "더 보기"
+      },
       "resolution": {
         "loading": "수식 불러오는 중...",
         "notFound": "커스텀 수식 “{formula}”을(를) 불러올 수 없었어요.",
@@ -1445,6 +1458,12 @@
       },
       "family": {
         "all": "전체",
+        "algebraic-power": "대수 거듭제곱",
+        "folded-absolute": "절댓값 접기",
+        "function-composition": "함수 합성",
+        "orbit-memory": "궤도 메모리",
+        "rational-reciprocal": "유리식과 역수",
+        "root-finding": "근 찾기",
         "classic": "클래식",
         "burning-ship": "버닝 쉽",
         "newton": "뉴턴",

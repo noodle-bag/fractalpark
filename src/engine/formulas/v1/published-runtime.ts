@@ -266,12 +266,13 @@ export interface PublishedFormulaRuntimeLoaderV1 {
   get(formulaId: string): PublishedFormulaRuntimeIndexRowV1 | undefined;
   load(
     formulaId: string,
+    signal?: AbortSignal,
   ): Promise<PublishedFormulaRuntimeResultV1<PublishedFormulaPluginArtifactV1>>;
 }
 
 export function createPublishedFormulaRuntimeLoaderV1(
   indexValue: unknown,
-  fetchDefinition: (path: string) => Promise<string>,
+  fetchDefinition: (path: string, signal?: AbortSignal) => Promise<string>,
 ): PublishedFormulaRuntimeResultV1<PublishedFormulaRuntimeLoaderV1> {
   const parsed = parsePublishedFormulaRuntimeIndexV1(indexValue);
   if (!parsed.ok) return parsed;
@@ -283,12 +284,12 @@ export function createPublishedFormulaRuntimeLoaderV1(
       get(formulaId) {
         return byId.get(formulaId);
       },
-      async load(formulaId) {
+      async load(formulaId, signal) {
         const row = byId.get(formulaId);
         if (!row) return { ok: false, code: "formula-not-published" };
         let source: string;
         try {
-          source = await fetchDefinition(row.definitionPath);
+          source = await fetchDefinition(row.definitionPath, signal);
         } catch {
           return { ok: false, code: "definition-fetch-failed" };
         }
