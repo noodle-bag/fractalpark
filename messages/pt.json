@@ -1144,6 +1144,75 @@
         "exclude": "Excluída"
       },
       "resultCount": "{count} identidades"
+    },
+    "record": {
+      "eyebrow": "Registro da fórmula",
+      "identity": "Identidade e proveniência",
+      "canonicalName": "Nome canônico",
+      "originalName": "Nome original",
+      "author": "Autor",
+      "originalResource": "Recurso original",
+      "originalVersion": "Versão original",
+      "unconfirmed": "Não confirmado",
+      "provenance": "Coleção de proveniência",
+      "aliases": "Aliases legados",
+      "rights": "Direitos e escopo público",
+      "rightsStatus": "Status dos direitos",
+      "rightsScope": "Escopo público",
+      "canonicalLicense": "Licença da implementação canônica",
+      "decision": "Decisão de publicação",
+      "reason": "Motivo",
+      "basis": "Base da implementação",
+      "reviewed": "Revisado em",
+      "leakage": "Verificação de vazamento",
+      "publishedSummary": "Esta implementação canônica do FractalPark está publicada e pode ser executada.",
+      "unavailableSummary": "Esta identidade está documentada, mas a decisão atual não permite ações de código-fonte, execução, edição ou remix.",
+      "source": "Código-fonte canônico",
+      "language": "Linguagem",
+      "stdlib": "Biblioteca padrão",
+      "profileMode": "Modo do perfil",
+      "profileCenter": "Centro do perfil",
+      "profileZoom": "Zoom do perfil",
+      "profileIterations": "Iterações do perfil",
+      "profileQuality": "Evidência do perfil",
+      "sourceRevision": "Revisão do código-fonte",
+      "semanticHash": "Hash semântico",
+      "parameters": "Parâmetros",
+      "noParameters": "Nenhum parâmetro declarado",
+      "previewAlt": "Prévia determinística de {name}",
+      "previewDiagnostic": "Prévia aguardando revisão visual",
+      "previewDiagnosticBody": "A renderização determinística relatou anomalias visuais. Ela é preservada como evidência diagnóstica, mas não é exibida como prévia verificada.",
+      "viewDiagnosticPreview": "Ver renderização diagnóstica",
+      "openExplore": "Abrir no Explorador",
+      "remix": "Remixar anonimamente",
+      "viewSource": "Ver código-fonte",
+      "downloadSource": "Baixar código-fonte",
+      "takedown": "Problema de direitos ou atribuição?",
+      "takedownBody": "Envie o ID da fórmula e as evidências. O mantenedor pode suspender ou retirar a implementação durante a análise.",
+      "rightsValues": {
+        "project-owned": "Propriedade do projeto",
+        "source-declared-public-domain-assumption": "Suposição de domínio público declarada pela fonte",
+        "gpl3Only": "Somente GPL-3.0",
+        "no-explicit-permission": "Sem permissão explícita"
+      },
+      "scopeValues": {
+        "project-canonical-implementation": "Implementação canônica do FractalPark",
+        "original-source-public-domain-assumption-and-project-canonical-implementation": "Suposição de domínio público para a fonte; MIT para a implementação canônica do FractalPark",
+        "project-independent-rewrite-only": "Somente reescrita independente do FractalPark",
+        "identity-and-provenance-metadata-only": "Somente metadados de identidade e proveniência"
+      },
+      "basisValues": {
+        "project-owned": "Propriedade do projeto",
+        "direct-adaptation": "Adaptação direta",
+        "separated-independent-rewrite": "Reescrita independente separada",
+        "none": "Não se aplica"
+      },
+      "scanValues": {
+        "not-applicable": "Não se aplica",
+        "pending": "Pendente",
+        "passed": "Aprovada",
+        "failed": "Reprovada"
+      }
     }
   },
   "artworks": {

@@ -433,6 +433,37 @@ describe("formula-library provisional Profile projection", () => {
     expect(Array.from(sheet.rgba.subarray(0, first.rgba.length))).not.toEqual(
       Array.from(first.rgba),
     );
+    const juliaProfile = {
+      ...projected.profile,
+      mode: "julia" as const,
+      juliaC: [-0.8, 0.156] as const,
+    };
+    const juliaFirst = renderProvisionalPreviewV1(
+      backendResult.backend,
+      juliaProfile,
+      16,
+      10,
+    );
+    const juliaSecond = renderProvisionalPreviewV1(
+      backendResult.backend,
+      juliaProfile,
+      16,
+      10,
+    );
+    expect(juliaSecond).toEqual(juliaFirst);
+    expect(juliaFirst.uniqueColors).toBeGreaterThan(1);
+    const juliaWithoutC = {
+      ...projected.profile,
+      mode: "julia" as const,
+    };
+    expect(() =>
+      renderProvisionalPreviewV1(
+        backendResult.backend,
+        juliaWithoutC,
+        16,
+        10,
+      ),
+    ).toThrow("provisional-preview-policy-unsupported");
     expect(() =>
       renderProvisionalPreviewV1(
         backendResult.backend,

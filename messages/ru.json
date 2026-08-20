@@ -1144,6 +1144,75 @@
         "exclude": "Исключена"
       },
       "resultCount": "Идентичностей: {count}"
+    },
+    "record": {
+      "eyebrow": "Карточка формулы",
+      "identity": "Идентичность и происхождение",
+      "canonicalName": "Каноническое имя",
+      "originalName": "Исходное имя",
+      "author": "Автор",
+      "originalResource": "Исходный ресурс",
+      "originalVersion": "Исходная версия",
+      "unconfirmed": "Не подтверждено",
+      "provenance": "Коллекция происхождения",
+      "aliases": "Устаревшие псевдонимы",
+      "rights": "Права и публичный объём",
+      "rightsStatus": "Статус прав",
+      "rightsScope": "Публичный объём",
+      "canonicalLicense": "Лицензия канонической реализации",
+      "decision": "Решение о публикации",
+      "reason": "Причина",
+      "basis": "Основание реализации",
+      "reviewed": "Дата проверки",
+      "leakage": "Проверка утечек",
+      "publishedSummary": "Эта каноническая реализация FractalPark опубликована и готова к запуску.",
+      "unavailableSummary": "Эта идентичность задокументирована, но текущее решение не разрешает исходный код, запуск, редактирование или ремикс.",
+      "source": "Канонический исходный код",
+      "language": "Язык",
+      "stdlib": "Стандартная библиотека",
+      "profileMode": "Режим профиля",
+      "profileCenter": "Центр профиля",
+      "profileZoom": "Масштаб профиля",
+      "profileIterations": "Итерации профиля",
+      "profileQuality": "Основание профиля",
+      "sourceRevision": "Ревизия исходного кода",
+      "semanticHash": "Семантический хеш",
+      "parameters": "Параметры",
+      "noParameters": "Объявленных параметров нет",
+      "previewAlt": "Детерминированный предпросмотр {name}",
+      "previewDiagnostic": "Превью ожидает визуальной проверки",
+      "previewDiagnosticBody": "Детерминированный рендер выявил визуальные аномалии. Он сохранён как диагностическое свидетельство, но не показывается как проверенное превью.",
+      "viewDiagnosticPreview": "Открыть диагностический рендер",
+      "openExplore": "Открыть в обозревателе",
+      "remix": "Создать анонимный ремикс",
+      "viewSource": "Посмотреть исходный код",
+      "downloadSource": "Скачать исходный код",
+      "takedown": "Есть вопрос о правах или атрибуции?",
+      "takedownBody": "Отправьте ID формулы и подтверждающие материалы. На время проверки сопровождающий может приостановить или отозвать реализацию.",
+      "rightsValues": {
+        "project-owned": "Собственность проекта",
+        "source-declared-public-domain-assumption": "Заявленное источником предположение об общественном достоянии",
+        "gpl3Only": "Только GPL-3.0",
+        "no-explicit-permission": "Нет явного разрешения"
+      },
+      "scopeValues": {
+        "project-canonical-implementation": "Каноническая реализация FractalPark",
+        "original-source-public-domain-assumption-and-project-canonical-implementation": "Для источника предполагается общественное достояние; каноническая реализация FractalPark — MIT",
+        "project-independent-rewrite-only": "Только независимая реализация FractalPark",
+        "identity-and-provenance-metadata-only": "Только метаданные идентичности и происхождения"
+      },
+      "basisValues": {
+        "project-owned": "Собственность проекта",
+        "direct-adaptation": "Прямая адаптация",
+        "separated-independent-rewrite": "Изолированная независимая реализация",
+        "none": "Не применимо"
+      },
+      "scanValues": {
+        "not-applicable": "Не применимо",
+        "pending": "Ожидается",
+        "passed": "Пройдено",
+        "failed": "Не пройдено"
+      }
     }
   },
   "artworks": {

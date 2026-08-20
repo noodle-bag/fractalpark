@@ -149,6 +149,7 @@ test.describe('Formula guides', () => {
 
     const exploreHref = await page
       .getByRole('link', { name: 'Open in Explorer' })
+      .first()
       .getAttribute('href');
     expect(exploreHref).toBeTruthy();
 
@@ -236,6 +237,87 @@ test.describe('Formula guides', () => {
     expect(unsupportedLocale.status()).toBe(404);
   });
 
+  test('renders published Record source, preview, and actions without JavaScript', async ({
+    browser,
+  }) => {
+    const context = await browser.newContext({ javaScriptEnabled: false });
+    const page = await context.newPage();
+    const formulaId = '1cd7a16f-0474-5b8f-a974-e122ea893769';
+    await page.goto(`/en/formulas/${formulaId}`);
+
+    await expect(page.getByTestId('formula-record')).toHaveAttribute(
+      'data-formula-record-availability',
+      'published'
+    );
+    const preview = page.getByAltText('Deterministic preview of 3damand01');
+    await expect(preview).toHaveAttribute(
+      'src',
+      `/formula-library/v1/previews/${formulaId}.png`
+    );
+    const previewBox = await preview.boundingBox();
+    expect(previewBox).not.toBeNull();
+    expect((previewBox?.width ?? 0) / (previewBox?.height ?? 1)).toBeCloseTo(
+      8 / 5,
+      1
+    );
+    await expect(page.getByRole('link', { name: 'Open in Explorer' })).toHaveAttribute(
+      'href',
+      `/en/explore?open=standard-formula&formula=${formulaId}`
+    );
+    await expect(page.getByRole('link', { name: 'Remix anonymously' })).toHaveAttribute(
+      'href',
+      `/en/explore?open=standard-formula&formula=${formulaId}&intent=remix`
+    );
+    await expect(page.getByRole('link', { name: 'View source' })).toHaveAttribute(
+      'href',
+      /^\/formula-library\/v1\/runtime\/published\/definitions\/[a-f0-9]{64}\.frm$/
+    );
+    await expect(page.getByRole('link', { name: 'Download source' })).toHaveAttribute(
+      'download',
+      ''
+    );
+    await context.close();
+  });
+
+  test('renders held rights and reason facts with zero runnable actions', async ({
+    page,
+  }) => {
+    const formulaId = '0e0fa64e-9005-52e3-b9aa-83e73b933dfe';
+    await page.goto(`/en/formulas/${formulaId}`);
+
+    await expect(page.getByTestId('formula-record')).toHaveAttribute(
+      'data-formula-record-availability',
+      'hold'
+    );
+    await expect(page.getByText('held-license-gpl-3.0-only')).toBeVisible();
+    await expect(page.getByText('GPL-3.0-only', { exact: true })).toBeVisible();
+    await expect(page.getByRole('link', { name: 'Open in Explorer' })).toHaveCount(0);
+    await expect(page.getByRole('link', { name: 'Remix anonymously' })).toHaveCount(0);
+    await expect(page.getByRole('link', { name: 'View source' })).toHaveCount(0);
+    await expect(page.getByRole('link', { name: 'Download source' })).toHaveCount(0);
+  });
+
+  test('keeps anomalous renders as explicit diagnostics instead of verified previews', async ({
+    page,
+  }) => {
+    const formulaId = '06504747-8ee8-5c39-869b-8b3a992e8c24';
+    await page.goto(`/en/formulas/${formulaId}`);
+
+    await expect(page.getByTestId('formula-record')).toHaveAttribute(
+      'data-formula-record-availability',
+      'published'
+    );
+    await expect(page.getByTestId('formula-record-diagnostic-preview')).toBeVisible();
+    await expect(page.getByText('flat-preview')).toBeVisible();
+    await expect(page.getByText('no-escaped-pixels')).toBeVisible();
+    await expect(page.getByRole('link', { name: 'View diagnostic render' })).toHaveAttribute(
+      'href',
+      `/formula-library/v1/previews/${formulaId}.png`
+    );
+    await expect(page.locator(`img[src="/formula-library/v1/previews/${formulaId}.png"]`)).toHaveCount(0);
+    await expect(page.getByRole('link', { name: 'Open in Explorer' })).toHaveCount(1);
+  });
+
   test('keeps the guide layout within a mobile viewport', async ({ page }) => {
     await page.setViewportSize({ width: 390, height: 844 });
     await page.goto(guidePath('en', 'mcmullen-2-3'));
@@ -244,5 +326,42 @@ test.describe('Formula guides', () => {
       () => document.documentElement.scrollWidth - window.innerWidth
     );
     expect(overflow).toBeLessThanOrEqual(1);
+  });
+
+  test('rejects an ambiguous duplicate UUID handoff without selecting either target', async ({
+    page,
+  }) => {
+    const formulaId = '1cd7a16f-0474-5b8f-a974-e122ea893769';
+    const otherFormulaId = '00e14aa8-b766-54ea-a359-3f5d20d329b7';
+    await page.goto(
+      `/en/explore?open=standard-formula&formula=${formulaId}&formula=${otherFormulaId}`
+    );
+
+    await expect(page).toHaveURL('/en/explore', { timeout: 30_000 });
+    await expect(page.getByTestId('explore-root')).not.toHaveAttribute(
+      'data-formula-id',
+      formulaId
+    );
+    await expect(page.getByTestId('explore-root')).not.toHaveAttribute(
+      'data-formula-id',
+      otherFormulaId
+    );
+  });
+
+  test('opens a published Record in Explorer through a one-shot UUID handoff', async ({
+    page,
+  }) => {
+    test.setTimeout(60_000);
+    const formulaId = '1cd7a16f-0474-5b8f-a974-e122ea893769';
+    await page.goto(
+      `/en/explore?open=standard-formula&formula=${formulaId}`
+    );
+
+    await expect(page.getByTestId('explore-root')).toHaveAttribute(
+      'data-formula-id',
+      formulaId,
+      { timeout: 30_000 }
+    );
+    await expect(page).toHaveURL('/en/explore', { timeout: 30_000 });
   });
 });

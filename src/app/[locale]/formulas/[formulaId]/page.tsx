@@ -13,6 +13,7 @@ import { notFound, permanentRedirect } from 'next/navigation';
 import { getTranslations, setRequestLocale } from 'next-intl/server';
 import presetsFile from '../../../../../public/gallery-presets.json';
 import { MathBlock } from '@/components/content/MathBlock';
+import { FormulaRecordPanel } from '@/components/formulas/FormulaRecordPanel';
 import {
   ContentViewTracker,
   TrackedContentLink,
@@ -580,6 +581,7 @@ export default async function FormulaPage({ params }: FormulaPageProps) {
           </GuideSection>
         ) : null}
       </div>
+      <FormulaRecordPanel locale={locale} record={routeRecord.formulaRecord} />
     </main>
   );
 }
@@ -624,6 +626,7 @@ async function FormulaIdentityPage({
           </p>
         </div>
       </header>
+      <FormulaRecordPanel locale={locale} record={record.formulaRecord} />
     </main>
   );
 }

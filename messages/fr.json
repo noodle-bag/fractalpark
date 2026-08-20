@@ -1144,6 +1144,75 @@
         "exclude": "Exclue"
       },
       "resultCount": "{count} identités"
+    },
+    "record": {
+      "eyebrow": "Fiche de formule",
+      "identity": "Identité et provenance",
+      "canonicalName": "Nom canonique",
+      "originalName": "Nom d'origine",
+      "author": "Auteur",
+      "originalResource": "Ressource d'origine",
+      "originalVersion": "Version d'origine",
+      "unconfirmed": "Non confirmé",
+      "provenance": "Collection de provenance",
+      "aliases": "Alias historiques",
+      "rights": "Droits et périmètre public",
+      "rightsStatus": "Statut des droits",
+      "rightsScope": "Périmètre public",
+      "canonicalLicense": "Licence de l'implémentation canonique",
+      "decision": "Décision de publication",
+      "reason": "Motif",
+      "basis": "Base de l'implémentation",
+      "reviewed": "Date de révision",
+      "leakage": "Analyse des fuites",
+      "publishedSummary": "Cette implémentation canonique de FractalPark est publiée et exécutable.",
+      "unavailableSummary": "Cette identité est documentée, mais la décision actuelle ne permet ni source, ni exécution, ni édition, ni remix.",
+      "source": "Source canonique",
+      "language": "Langage",
+      "stdlib": "Bibliothèque standard",
+      "profileMode": "Mode du profil",
+      "profileCenter": "Centre du profil",
+      "profileZoom": "Zoom du profil",
+      "profileIterations": "Itérations du profil",
+      "profileQuality": "Niveau de preuve du profil",
+      "sourceRevision": "Révision de la source",
+      "semanticHash": "Empreinte sémantique",
+      "parameters": "Paramètres",
+      "noParameters": "Aucun paramètre déclaré",
+      "previewAlt": "Aperçu déterministe de {name}",
+      "previewDiagnostic": "Aperçu en attente de validation visuelle",
+      "previewDiagnosticBody": "Le rendu déterministe a signalé des anomalies visuelles. Il est conservé comme preuve de diagnostic, mais n'est pas présenté comme un aperçu validé.",
+      "viewDiagnosticPreview": "Voir le rendu de diagnostic",
+      "openExplore": "Ouvrir dans l'Explorateur",
+      "remix": "Remixer anonymement",
+      "viewSource": "Voir la source",
+      "downloadSource": "Télécharger la source",
+      "takedown": "Un problème de droits ou d'attribution ?",
+      "takedownBody": "Envoyez l'ID de la formule et les justificatifs. Le mainteneur peut suspendre ou retirer l'implémentation pendant l'examen.",
+      "rightsValues": {
+        "project-owned": "Propriété du projet",
+        "source-declared-public-domain-assumption": "Présomption de domaine public déclarée par la source",
+        "gpl3Only": "GPL-3.0 uniquement",
+        "no-explicit-permission": "Aucune autorisation explicite"
+      },
+      "scopeValues": {
+        "project-canonical-implementation": "Implémentation canonique de FractalPark",
+        "original-source-public-domain-assumption-and-project-canonical-implementation": "Présomption de domaine public pour la source ; MIT pour l'implémentation canonique de FractalPark",
+        "project-independent-rewrite-only": "Réécriture indépendante de FractalPark uniquement",
+        "identity-and-provenance-metadata-only": "Métadonnées d'identité et de provenance uniquement"
+      },
+      "basisValues": {
+        "project-owned": "Propriété du projet",
+        "direct-adaptation": "Adaptation directe",
+        "separated-independent-rewrite": "Réécriture indépendante séparée",
+        "none": "Sans objet"
+      },
+      "scanValues": {
+        "not-applicable": "Sans objet",
+        "pending": "En attente",
+        "passed": "Réussie",
+        "failed": "Échouée"
+      }
     }
   },
   "artworks": {

@@ -187,7 +187,11 @@ export function PublishedFormulaLibrary({
         <p className="text-xs font-medium uppercase tracking-wider text-muted-foreground">
           {t('formula.library.current')}
         </p>
-        <p className="break-words text-sm font-medium">
+        <p
+          className="break-words text-sm font-medium"
+          data-formula-id={currentFormula}
+          data-testid="published-formula-current"
+        >
           {currentFormulaName(currentFormula, t)}
         </p>
       </div>

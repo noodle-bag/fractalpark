@@ -1144,6 +1144,75 @@
         "exclude": "排除"
       },
       "resultCount": "{count} 个身份"
+    },
+    "record": {
+      "eyebrow": "公式档案",
+      "identity": "身份与来源",
+      "canonicalName": "规范名称",
+      "originalName": "原始名称",
+      "author": "作者",
+      "originalResource": "原始资源",
+      "originalVersion": "原始版本",
+      "unconfirmed": "未确认",
+      "provenance": "来源集合",
+      "aliases": "历史别名",
+      "rights": "权利与公开范围",
+      "rightsStatus": "权利状态",
+      "rightsScope": "公开范围",
+      "canonicalLicense": "规范实现许可",
+      "decision": "发布决定",
+      "reason": "原因",
+      "basis": "实现依据",
+      "reviewed": "复核日期",
+      "leakage": "泄漏扫描",
+      "publishedSummary": "该 FractalPark 规范实现已发布并可运行。",
+      "unavailableSummary": "该身份已记录，但按当前决定不提供源码、运行、编辑或再创作入口。",
+      "source": "规范源码",
+      "language": "语言",
+      "stdlib": "标准库",
+      "profileMode": "Profile 模式",
+      "profileCenter": "Profile 中心",
+      "profileZoom": "Profile 缩放",
+      "profileIterations": "Profile 迭代次数",
+      "profileQuality": "Profile 证据等级",
+      "sourceRevision": "源码版本",
+      "semanticHash": "语义哈希",
+      "parameters": "参数",
+      "noParameters": "没有声明参数",
+      "previewAlt": "{name} 的确定性预览",
+      "previewDiagnostic": "预览等待视觉审查",
+      "previewDiagnosticBody": "确定性渲染报告了视觉异常。原图作为诊断证据保留，但不会当作已验证预览展示。",
+      "viewDiagnosticPreview": "查看诊断渲染图",
+      "openExplore": "在探索器中打开",
+      "remix": "匿名再创作",
+      "viewSource": "查看源码",
+      "downloadSource": "下载源码",
+      "takedown": "对权利或署名有异议？",
+      "takedownBody": "请附上公式 ID 和支持证据。维护者可在复核期间暂缓或撤下该实现。",
+      "rightsValues": {
+        "project-owned": "项目自有",
+        "source-declared-public-domain-assumption": "来源声明的公有领域假设",
+        "gpl3Only": "仅 GPL-3.0",
+        "no-explicit-permission": "无明确许可"
+      },
+      "scopeValues": {
+        "project-canonical-implementation": "FractalPark 规范实现",
+        "original-source-public-domain-assumption-and-project-canonical-implementation": "原始来源按公有领域假设处理；FractalPark 规范实现采用 MIT",
+        "project-independent-rewrite-only": "仅 FractalPark 独立重写实现",
+        "identity-and-provenance-metadata-only": "仅身份与来源元数据"
+      },
+      "basisValues": {
+        "project-owned": "项目自有",
+        "direct-adaptation": "直接适配",
+        "separated-independent-rewrite": "隔离式独立重写",
+        "none": "不适用"
+      },
+      "scanValues": {
+        "not-applicable": "不适用",
+        "pending": "待处理",
+        "passed": "已通过",
+        "failed": "未通过"
+      }
     }
   },
   "artworks": {

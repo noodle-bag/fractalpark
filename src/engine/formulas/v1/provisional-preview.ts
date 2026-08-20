@@ -63,7 +63,11 @@ export function provisionalLegacySmoothIterationV1(
 
 function assertSupportedVisualPolicy(profile: FormulaProfileV1): void {
   if (
-    profile.mode !== "parameter-plane" ||
+    (profile.mode !== "parameter-plane" &&
+      (profile.mode !== "julia" ||
+        !Array.isArray(profile.juliaC) ||
+        profile.juliaC.length !== 2 ||
+        !profile.juliaC.every(Number.isFinite))) ||
     profile.coloring.pipelineVersion !== 1 ||
     profile.coloring.outsideColoringId !== "smooth" ||
     profile.coloring.insideColoringId !== "black" ||
@@ -120,9 +124,12 @@ export function renderProvisionalPreviewV1(
       };
       const state = backend.cpu.createState({
         pixel: coordinate,
-        c: coordinate,
+        c:
+          profile.mode === "parameter-plane"
+            ? coordinate
+            : { re: profile.juliaC![0], im: profile.juliaC![1] },
         maxit: profile.iterations,
-        ismand: true,
+        ismand: profile.mode === "parameter-plane",
         parameters: profile.parameters as Readonly<
           Record<string, number | readonly [number, number] | FrmV1UnaryFunctionName>
         >,

@@ -2,12 +2,16 @@ import {
   getFormulaDirectoryEntryV1,
   type FormulaDirectoryFamilyV1,
 } from '@/engine/formulas/v1/directory';
-import { PUBLICATION_DECISION_LEDGER_V1 } from '@/engine/formulas/v1/publication-decisions';
 import { STANDARD_MANIFEST_INDEX_V1 } from '@/engine/formulas/v1/standard-manifest';
 import type { FormulaIdV1 } from '@/engine/formulas/v1/types';
+import {
+  FORMULA_RECORD_REVISION_V1,
+  buildFormulaRecordV1,
+  type PublicFormulaRecordV1,
+} from '@/lib/formula-records';
 
 export const FORMULA_ROUTE_RECORD_REVISION_V1 =
-  `standard-directory-v1-decision-${PUBLICATION_DECISION_LEDGER_V1.decisionRevision}` as const;
+  `standard-directory-v1-${FORMULA_RECORD_REVISION_V1}` as const;
 
 export type FormulaRouteResolutionV1 =
   | Readonly<{
@@ -28,6 +32,7 @@ export interface FormulaRouteRecordV1 {
   readonly locale: string;
   readonly displayName: string;
   readonly primaryFamily: FormulaDirectoryFamilyV1;
+  readonly formulaRecord: PublicFormulaRecordV1;
 }
 
 const NOT_FOUND = Object.freeze({ kind: 'not-found' } as const);
@@ -72,7 +77,8 @@ export function buildFormulaRouteRecordV1(
   }
 
   const entry = getFormulaDirectoryEntryV1(formulaId);
-  if (!entry) return undefined;
+  const formulaRecord = buildFormulaRecordV1(formulaId, locale);
+  if (!entry || !formulaRecord) return undefined;
 
   return Object.freeze({
     formulaId: entry.formulaId,
@@ -80,5 +86,6 @@ export function buildFormulaRouteRecordV1(
     locale,
     displayName: entry.displayName,
     primaryFamily: entry.primaryFamily,
+    formulaRecord,
   });
 }

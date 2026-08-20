@@ -1144,6 +1144,75 @@
         "exclude": "Excluded"
       },
       "resultCount": "{count} identities"
+    },
+    "record": {
+      "eyebrow": "Formula Record",
+      "identity": "Identity and provenance",
+      "canonicalName": "Canonical name",
+      "originalName": "Original name",
+      "author": "Author",
+      "originalResource": "Original resource",
+      "originalVersion": "Original version",
+      "unconfirmed": "Unconfirmed",
+      "provenance": "Provenance collection",
+      "aliases": "Legacy aliases",
+      "rights": "Rights and public scope",
+      "rightsStatus": "Rights status",
+      "rightsScope": "Public scope",
+      "canonicalLicense": "Canonical implementation license",
+      "decision": "Publication decision",
+      "reason": "Reason",
+      "basis": "Implementation basis",
+      "reviewed": "Reviewed",
+      "leakage": "Leakage scan",
+      "publishedSummary": "This canonical FractalPark implementation is published and runnable.",
+      "unavailableSummary": "This identity is documented, but no source, run, edit, or remix action is available under the current decision.",
+      "source": "Canonical source",
+      "language": "Language",
+      "stdlib": "Standard library",
+      "profileMode": "Profile mode",
+      "profileCenter": "Profile center",
+      "profileZoom": "Profile zoom",
+      "profileIterations": "Profile iterations",
+      "profileQuality": "Profile evidence",
+      "sourceRevision": "Source revision",
+      "semanticHash": "Semantic hash",
+      "parameters": "Parameters",
+      "noParameters": "No declared parameters",
+      "previewAlt": "Deterministic preview of {name}",
+      "previewDiagnostic": "Preview awaiting visual review",
+      "previewDiagnosticBody": "The deterministic render reported visual anomalies. It is preserved as diagnostic evidence but is not shown as a verified preview.",
+      "viewDiagnosticPreview": "View diagnostic render",
+      "openExplore": "Open in Explorer",
+      "remix": "Remix anonymously",
+      "viewSource": "View source",
+      "downloadSource": "Download source",
+      "takedown": "Rights or attribution concern?",
+      "takedownBody": "Send the Formula ID and supporting evidence. The maintainer can hold or withdraw the implementation while the claim is reviewed.",
+      "rightsValues": {
+        "project-owned": "Project-owned",
+        "source-declared-public-domain-assumption": "Source-declared public-domain assumption",
+        "gpl3Only": "GPL-3.0-only",
+        "no-explicit-permission": "No explicit permission"
+      },
+      "scopeValues": {
+        "project-canonical-implementation": "FractalPark canonical implementation",
+        "original-source-public-domain-assumption-and-project-canonical-implementation": "Public-domain assumption for the source; MIT for FractalPark's canonical implementation",
+        "project-independent-rewrite-only": "FractalPark independent rewrite only",
+        "identity-and-provenance-metadata-only": "Identity and provenance metadata only"
+      },
+      "basisValues": {
+        "project-owned": "Project-owned",
+        "direct-adaptation": "Direct adaptation",
+        "separated-independent-rewrite": "Separated independent rewrite",
+        "none": "Not applicable"
+      },
+      "scanValues": {
+        "not-applicable": "Not applicable",
+        "pending": "Pending",
+        "passed": "Passed",
+        "failed": "Failed"
+      }
     }
   },
   "artworks": {

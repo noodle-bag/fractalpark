@@ -1144,6 +1144,75 @@
         "exclude": "제외"
       },
       "resultCount": "identity {count}개"
+    },
+    "record": {
+      "eyebrow": "수식 레코드",
+      "identity": "식별 정보와 출처",
+      "canonicalName": "표준 이름",
+      "originalName": "원래 이름",
+      "author": "작성자",
+      "originalResource": "원본 리소스",
+      "originalVersion": "원본 버전",
+      "unconfirmed": "확인되지 않음",
+      "provenance": "출처 컬렉션",
+      "aliases": "레거시 별칭",
+      "rights": "권리와 공개 범위",
+      "rightsStatus": "권리 상태",
+      "rightsScope": "공개 범위",
+      "canonicalLicense": "표준 구현 라이선스",
+      "decision": "게시 결정",
+      "reason": "사유",
+      "basis": "구현 근거",
+      "reviewed": "검토일",
+      "leakage": "유출 검사",
+      "publishedSummary": "이 FractalPark 표준 구현은 게시되어 실행할 수 있습니다.",
+      "unavailableSummary": "이 identity는 기록되어 있지만 현재 결정에 따라 소스, 실행, 편집 또는 리믹스 기능을 제공하지 않습니다.",
+      "source": "표준 소스",
+      "language": "언어",
+      "stdlib": "표준 라이브러리",
+      "profileMode": "프로필 모드",
+      "profileCenter": "프로필 중심",
+      "profileZoom": "프로필 확대",
+      "profileIterations": "프로필 반복 횟수",
+      "profileQuality": "프로필 근거",
+      "sourceRevision": "소스 리비전",
+      "semanticHash": "시맨틱 해시",
+      "parameters": "매개변수",
+      "noParameters": "선언된 매개변수 없음",
+      "previewAlt": "{name}의 결정적 미리보기",
+      "previewDiagnostic": "시각 검토 대기 중인 미리보기",
+      "previewDiagnosticBody": "결정적 렌더링에서 시각적 이상이 보고되었습니다. 진단 증거로 보존되지만 검증된 미리보기로 표시하지 않습니다.",
+      "viewDiagnosticPreview": "진단 렌더링 보기",
+      "openExplore": "탐색기에서 열기",
+      "remix": "익명으로 리믹스",
+      "viewSource": "소스 보기",
+      "downloadSource": "소스 다운로드",
+      "takedown": "권리 또는 저작자 표시에 문제가 있나요?",
+      "takedownBody": "수식 ID와 근거 자료를 보내 주세요. 검토 중에는 관리자가 구현을 보류하거나 철회할 수 있습니다.",
+      "rightsValues": {
+        "project-owned": "프로젝트 소유",
+        "source-declared-public-domain-assumption": "출처가 선언한 퍼블릭 도메인 가정",
+        "gpl3Only": "GPL-3.0 전용",
+        "no-explicit-permission": "명시적 허가 없음"
+      },
+      "scopeValues": {
+        "project-canonical-implementation": "FractalPark 표준 구현",
+        "original-source-public-domain-assumption-and-project-canonical-implementation": "원 출처는 퍼블릭 도메인 가정, FractalPark 표준 구현은 MIT",
+        "project-independent-rewrite-only": "FractalPark 독립 재작성만",
+        "identity-and-provenance-metadata-only": "식별 정보와 출처 메타데이터만"
+      },
+      "basisValues": {
+        "project-owned": "프로젝트 소유",
+        "direct-adaptation": "직접 적용",
+        "separated-independent-rewrite": "분리된 독립 재작성",
+        "none": "해당 없음"
+      },
+      "scanValues": {
+        "not-applicable": "해당 없음",
+        "pending": "대기 중",
+        "passed": "통과",
+        "failed": "실패"
+      }
     }
   },
   "artworks": {

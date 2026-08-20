@@ -502,6 +502,29 @@ A Record may disclose that a Definition is a clean-room rehabilitation, that two
 Records currently share a semanticHash, or that an original is unavailable. It
 must not claim historical facts not supported by provenance evidence.
 
+The active public v1 projection is exact-set and decision-ledger-backed:
+
+- all 677 Standard identities expose canonical/original names, typed legacy
+  aliases, Formula ID, F588/B94 provenance collection, rights status/scope,
+  decision/reason, implementation basis, leakage status, review date, and a
+  takedown contact;
+- unknown author, original resource, and original version are rendered as
+  `unconfirmed`, never filled from private evidence or guessed;
+- each of the 513 `publish` rows exposes its content-addressed canonical `.frm`,
+  source/semantic revisions, parameter schema, pinned default Profile facts, a
+  deterministic 96 x 60 static PNG generated from the pinned source and Profile,
+  and locale-preserving Explore/Remix plus view/download-source actions;
+- 340 generated previews are anomaly-free and shown by default; 173 report one
+  or more deterministic visual diagnostics and are preserved behind an explicit
+  diagnostic link instead of being presented as verified imagery;
+- each of the 164 `hold` rows, and any future `exclude` row, exposes the factual
+  decision and rights projection but has no source, preview, or runnable CTA.
+
+`scripts/generate-formula-record-previews.ts` regenerates or byte-verifies the
+exact 513-file preview set in four deterministic worker shards. Its content-hash
+manifest is public evidence for static preview reproducibility only; it does not
+close the representative GPU/device image-difference gate C9.
+
 ## 5. Self-contained formats
 
 ### 5.1 Formula Snapshot v1

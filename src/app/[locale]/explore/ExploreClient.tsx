@@ -38,6 +38,10 @@ import {
   stripEditorToExploreIntent,
 } from '@/lib/frm-editor';
 import {
+  parsePublishedFormulaExploreIntent,
+  stripPublishedFormulaExploreIntent,
+} from '@/lib/published-formula-handoff';
+import {
   resolveFormulaReference,
   readSessionFormulaAssets,
   type FormulaResolution,
@@ -80,6 +84,7 @@ function ExploreClient({ posterImage }: { posterImage?: string }) {
   );
   const initializedRef = useRef(false);
   const handoffConsumedRef = useRef<string | null>(null);
+  const publishedHandoffConsumedRef = useRef<string | null>(null);
   const debounceRef = useRef<ReturnType<typeof setTimeout> | null>(null);
   const [publishedActionPendingCount, setPublishedActionPendingCount] = useState(0);
   const [publishedRestoreRevision, setPublishedRestoreRevision] = useState(0);
@@ -822,6 +827,32 @@ function ExploreClient({ posterImage }: { posterImage?: string }) {
     )
   ), [runPublishedFormulaAction, selectPublishedFormula]);
 
+  useEffect(() => {
+    const currentParams = new URLSearchParams(searchParams.toString());
+    const intent = parsePublishedFormulaExploreIntent(currentParams);
+    if (intent.status === 'none') return;
+
+    const handoffKey = `${intent.status}:${intent.formulaId}:${
+      intent.status === 'valid' ? intent.action : 'invalid'
+    }`;
+    if (publishedHandoffConsumedRef.current === handoffKey) return;
+    publishedHandoffConsumedRef.current = handoffKey;
+    const destination = stripPublishedFormulaExploreIntent(locale, currentParams);
+
+    if (intent.status === 'invalid') {
+      router.replace(destination, { scroll: false });
+      return;
+    }
+
+    void handlePublishedFormulaSelect(intent.formulaId).then((result) => {
+      if (!isExploreMountedRef.current) return;
+      if (!result.ok) {
+        setPickToast(t('controls.formula.library.selectionFailed'));
+      }
+      router.replace(destination, { scroll: false });
+    });
+  }, [handlePublishedFormulaSelect, locale, router, searchParams, t]);
+
   const handleFeelingLucky = useCallback((): Promise<PublishedFormulaSelectionResult> => (
     runPublishedFormulaAction(async (generation) => {
       const clientResult = await getPublishedFormulaLibraryClient();
@@ -989,7 +1020,11 @@ function ExploreClient({ posterImage }: { posterImage?: string }) {
   }
 
   return (
-    <div className="flex flex-col lg:flex-row h-[calc(100dvh-3rem)] overflow-hidden">
+    <div
+      className="flex h-[calc(100dvh-3rem)] flex-col overflow-hidden lg:flex-row"
+      data-formula-id={document.formula.formulaId}
+      data-testid="explore-root"
+    >
       <div
         className={`relative bg-black lg:flex-1 ${isPanelCollapsed ? 'flex-1' : 'min-h-[50vh] lg:min-h-0'}`}
         style={posterImage ? {
