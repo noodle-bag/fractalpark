@@ -1,0 +1,33 @@
+{
+  "schema": "fractalpark-teaching-locale/v1",
+  "formulaId": "280229ec-dd2f-5982-9954-75829a37a5f2",
+  "locale": "fr",
+  "sourceRevision": "503739d928f438a7edc79d8d7fb1931b1435b45b0c8231950a2b11cf7104d22c",
+  "semanticHash": "98af05f90861656958d24b58d63d4b9eb08eca323b126001c38eb467e5646e5c",
+  "englishContentHash": "4bff26a131cb3d7291ac0abfa91a6c336b86cc3030038995dae885a4997d3810",
+  "localizedName": "liar4",
+  "overview": "Dans FRM-like/1, liar4 suit l’initialisation, la boucle et le test de sortie du code source. Considère chaque étape comme une opération explicite sur l’état, sans déduire des règles du nom. Le profil fixé te permet d’observer le même processus itératif.",
+  "sourceWalkthrough": {
+    "280229ec-dd2f-5982-9954-75829a37a5f2:503739d928f438a7edc79d8d7fb1931b1435b45b0c8231950a2b11cf7104d22c:init": "Le nœud d’initialisation exécute : `z = pixel`",
+    "280229ec-dd2f-5982-9954-75829a37a5f2:503739d928f438a7edc79d8d7fb1931b1435b45b0c8231950a2b11cf7104d22c:loop": "Le nœud de boucle exécute : `z = 1 - abs(imag(z) * p - real(z)) + (1 - abs(1 - real(z) - imag(z)))`",
+    "280229ec-dd2f-5982-9954-75829a37a5f2:503739d928f438a7edc79d8d7fb1931b1435b45b0c8231950a2b11cf7104d22c:bailout": "Le test d’arrêt est : `|z| <= 1`"
+  },
+  "syntaxFeatures": {
+    "source-sequence": "Cette structure organise les étapes citées du code source dans une séquence vérifiable. 280229ec-dd2f-5982-9954-75829a37a5f2:503739d928f438a7edc79d8d7fb1931b1435b45b0c8231950a2b11cf7104d22c:init, 280229ec-dd2f-5982-9954-75829a37a5f2:503739d928f438a7edc79d8d7fb1931b1435b45b0c8231950a2b11cf7104d22c:loop, 280229ec-dd2f-5982-9954-75829a37a5f2:503739d928f438a7edc79d8d7fb1931b1435b45b0c8231950a2b11cf7104d22c:bailout"
+  },
+  "parameterExperiment": {
+    "steps": [
+      "Utilise le profil fixé (mode parameter-plane; center (-0.5, 0); zoom 0.4; rotation 0; iterations 96). Exécute une fois avec la valeur par défaut (0, 0) de parameter1, puis une seconde fois avec parameter1 = (1, 0) ; note le résultat visible de chaque exécution."
+    ],
+    "expectedObservation": "Compare les deux exécutions et note si `z = 1 - abs(imag(z) * p - real(z)) + (1 - abs(1 - real(z) - imag(z)))` donne le même résultat visible et le même comportement itératif."
+  },
+  "exercise": {
+    "prompt": "Trouve les annotations sources liées à `z = 1 - abs(imag(z) * p - real(z)) + (1 - abs(1 - real(z) - imag(z)))` et explique l’ordre entre initialisation, boucle et arrêt.",
+    "completionCheck": "Pour terminer, liste les trois clés d’annotation citées pour `z = 1 - abs(imag(z) * p - real(z)) + (1 - abs(1 - real(z) - imag(z)))` et range-les de l’initialisation à la boucle puis à l’arrêt."
+  },
+  "factsPresentation": {
+    "provenanceLead": "Provenance :",
+    "rightsLead": "Droits :"
+  },
+  "contentHash": "5eee6ac02ac1c49bbf6019202687cc1ba4bf1fea6ee6dcb9ac06ff7313bdf0f4"
+}

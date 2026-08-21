@@ -1,0 +1,72 @@
+{
+  "schema": "fractalpark-teaching-en-fact/v1",
+  "formulaId": "3a83800c-4a44-5e61-9651-d3d5adb71213",
+  "sourceRevision": "12a2fd990373fc6f7467674871cbd2c82c78ec9b8354a805b442ef4c6ef58b06",
+  "semanticHash": "491ebbc691a954b85f04cbbf05afa44e877026f31cb3eaa403db6dbf61fd435e",
+  "overview": "perpendicularTricorn is presented from its pinned FRM-like/1 source rather than from its name. The source supplies an initialization block, a loop block, and a bailout test; the pinned profile uses mode parameter-plane; center (-0.5, 0); zoom 0.4; rotation 0; iterations 96. Follow the cited operations to compare repeated runs.",
+  "mathDisclosure": "exact-structured",
+  "mathSummary": "The source is structured as init, loop, and bailout blocks. Its loop operations are p = (0, 0); real(p) = abs(real(z)); imag(p) = imag(z); z = conj(p * p) + c.",
+  "sourceWalkthrough": [
+    {
+      "annotationId": "3a83800c-4a44-5e61-9651-d3d5adb71213:12a2fd990373fc6f7467674871cbd2c82c78ec9b8354a805b442ef4c6ef58b06:init",
+      "nodeId": "frm-v1:12a2fd990373fc6f7467674871cbd2c82c78ec9b8354a805b442ef4c6ef58b06:init/0",
+      "explanation": "The init source node begins with `if ismand`; it establishes the starting path before the loop."
+    },
+    {
+      "annotationId": "3a83800c-4a44-5e61-9651-d3d5adb71213:12a2fd990373fc6f7467674871cbd2c82c78ec9b8354a805b442ef4c6ef58b06:loop",
+      "nodeId": "frm-v1:12a2fd990373fc6f7467674871cbd2c82c78ec9b8354a805b442ef4c6ef58b06:loop/0",
+      "explanation": "The loop source node executes `p = (0, 0)` on each pass."
+    },
+    {
+      "annotationId": "3a83800c-4a44-5e61-9651-d3d5adb71213:12a2fd990373fc6f7467674871cbd2c82c78ec9b8354a805b442ef4c6ef58b06:bailout",
+      "nodeId": "frm-v1:12a2fd990373fc6f7467674871cbd2c82c78ec9b8354a805b442ef4c6ef58b06:bailout",
+      "explanation": "The bailout source node tests `|z| <= 256`; the iteration continues while that condition holds."
+    }
+  ],
+  "syntaxFeatures": [
+    {
+      "featureId": "source-sequence",
+      "annotationIds": [
+        "3a83800c-4a44-5e61-9651-d3d5adb71213:12a2fd990373fc6f7467674871cbd2c82c78ec9b8354a805b442ef4c6ef58b06:init",
+        "3a83800c-4a44-5e61-9651-d3d5adb71213:12a2fd990373fc6f7467674871cbd2c82c78ec9b8354a805b442ef4c6ef58b06:loop",
+        "3a83800c-4a44-5e61-9651-d3d5adb71213:12a2fd990373fc6f7467674871cbd2c82c78ec9b8354a805b442ef4c6ef58b06:bailout"
+      ],
+      "explanation": "The cited source nodes for perpendicularTricorn—`if ismand`, `p = (0, 0)`, and `|z| <= 256`—form its source-ordered path from setup through update to termination."
+    }
+  ],
+  "parameterExperiment": {
+    "parameterSymbols": [],
+    "steps": [
+      "Use the pinned profile (mode parameter-plane; center (-0.5, 0); zoom 0.4; rotation 0; iterations 96). Run it once and record the visible result, then repeat with the same profile."
+    ],
+    "expectedObservation": "Compare the perpendicularTricorn runs and record whether `p = (0, 0)` has matching visible results and iteration behavior."
+  },
+  "exercise": {
+    "prompt": "Use the cited annotations for perpendicularTricorn—`if ismand`, `p = (0, 0)`, and `|z| <= 256`—to describe the source order.",
+    "completionCheck": "Your response lists the 3 cited annotation IDs and orders perpendicularTricorn’s `if ismand`, `p = (0, 0)`, and `|z| <= 256` from initialization through loop to termination.",
+    "answerDisclosure": "none"
+  },
+  "facts": {
+    "provenanceStatement": "Grounded in the pinned runtime source revision 12a2fd990373fc6f7467674871cbd2c82c78ec9b8354a805b442ef4c6ef58b06 and its semantic anchors.",
+    "rightsStatement": "rightsStatus: project-owned; implementationBasis: project-owned; publicationDecision: publish; decisionReason: publish-project-owned-native-recipe. This does not make any broader claim about a third-party original.",
+    "sourceIds": [
+      "runtime:12a2fd990373fc6f7467674871cbd2c82c78ec9b8354a805b442ef4c6ef58b06",
+      "decision:3a83800c-4a44-5e61-9651-d3d5adb71213"
+    ],
+    "licenseIds": [],
+    "claims": [
+      {
+        "text": "The runtime profile specifies mode parameter-plane; center (-0.5, 0); zoom 0.4; rotation 0; iterations 96.",
+        "sourceIds": [
+          "runtime:12a2fd990373fc6f7467674871cbd2c82c78ec9b8354a805b442ef4c6ef58b06"
+        ]
+      },
+      {
+        "text": "The publication record states publish with reason publish-project-owned-native-recipe.",
+        "sourceIds": [
+          "decision:3a83800c-4a44-5e61-9651-d3d5adb71213"
+        ]
+      }
+    ]
+  }
+}

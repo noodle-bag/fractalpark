@@ -1,0 +1,33 @@
+{
+  "schema": "fractalpark-teaching-locale/v1",
+  "formulaId": "17b83663-a502-5e34-bd4c-a116e49eab5f",
+  "locale": "zh",
+  "sourceRevision": "581fbcb6400907433c24d3061ac2585a5090574f7ee6e7288bffe177432eaafa",
+  "semanticHash": "b0539f17c0e00e498da7c745374933b658189a600327bf3ec201522a0903a8e7",
+  "englishContentHash": "44b9a09b266c216f316f52535d117fd49c711b7a0e278f8fc9ef8e634368f322",
+  "localizedName": "cubic",
+  "overview": "在 FRM-like/1 中，cubic 按源代码的初始化、循环和退出测试运行。请把每一步当作对当前状态的明确操作，而不是从名称推测规则。固定配置让你能观察同一迭代过程。",
+  "sourceWalkthrough": {
+    "17b83663-a502-5e34-bd4c-a116e49eab5f:581fbcb6400907433c24d3061ac2585a5090574f7ee6e7288bffe177432eaafa:init": "初始化节点执行： `p = pixel`",
+    "17b83663-a502-5e34-bd4c-a116e49eab5f:581fbcb6400907433c24d3061ac2585a5090574f7ee6e7288bffe177432eaafa:loop": "循环节点执行： `z = z * z * z - aa3 * z + b`",
+    "17b83663-a502-5e34-bd4c-a116e49eab5f:581fbcb6400907433c24d3061ac2585a5090574f7ee6e7288bffe177432eaafa:bailout": "终止测试为： `|z| < test`"
+  },
+  "syntaxFeatures": {
+    "source-sequence": "此结构把所引用的源代码步骤组织为一个可检查的顺序。 17b83663-a502-5e34-bd4c-a116e49eab5f:581fbcb6400907433c24d3061ac2585a5090574f7ee6e7288bffe177432eaafa:init, 17b83663-a502-5e34-bd4c-a116e49eab5f:581fbcb6400907433c24d3061ac2585a5090574f7ee6e7288bffe177432eaafa:loop, 17b83663-a502-5e34-bd4c-a116e49eab5f:581fbcb6400907433c24d3061ac2585a5090574f7ee6e7288bffe177432eaafa:bailout"
+  },
+  "parameterExperiment": {
+    "steps": [
+      "从默认值开始，然后一次只改变一个运行时槽位：parameter1 (0, 0)→(1, 0)。每次都记录可见结果。"
+    ],
+    "expectedObservation": "比较两次运行，记录`z = z * z * z - aa3 * z + b`是否得到相同的可见结果和迭代行为。"
+  },
+  "exercise": {
+    "prompt": "找出与`z = z * z * z - aa3 * z + b`有关的源注释，并说明初始化、循环和终止测试的顺序。",
+    "completionCheck": "完成时列出所引用的三个注释键，并按`z = z * z * z - aa3 * z + b`对应的初始化、循环和终止顺序排列。"
+  },
+  "factsPresentation": {
+    "provenanceLead": "来源：",
+    "rightsLead": "权利："
+  },
+  "contentHash": "014474cda1189e59300ed2cc33f78114b6b914e65b0bbeb3684aa1b3f58f2be6"
+}

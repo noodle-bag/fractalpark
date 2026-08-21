@@ -1,0 +1,33 @@
+{
+  "schema": "fractalpark-teaching-locale/v1",
+  "formulaId": "a569d2c4-d397-5634-9dfe-21b2ab1a386a",
+  "locale": "ru",
+  "sourceRevision": "b7dd588e3cf8c70a1ec52801a03b6ee1b6980009c0725f8a32ecfa8fe1a6dfad",
+  "semanticHash": "89e7b983a7455e1e3f1c4179ba6894492bcee9066e57e829ba9dc42efb44e1a9",
+  "englishContentHash": "369d555eed6b8b72baa0f8dec31e8d3c22416d94d5271028080f842cdcfecba2",
+  "localizedName": "buffalo",
+  "overview": "В FRM-like/1 формула buffalo следует инициализации, циклу и проверке выхода из исходного кода. Рассматривайте каждый шаг как явную операцию над состоянием, не выводя правила из названия. Закреплённый профиль позволяет вам наблюдать один и тот же итерационный процесс.",
+  "sourceWalkthrough": {
+    "a569d2c4-d397-5634-9dfe-21b2ab1a386a:b7dd588e3cf8c70a1ec52801a03b6ee1b6980009c0725f8a32ecfa8fe1a6dfad:init": "Узел инициализации выполняет: `if ismand`",
+    "a569d2c4-d397-5634-9dfe-21b2ab1a386a:b7dd588e3cf8c70a1ec52801a03b6ee1b6980009c0725f8a32ecfa8fe1a6dfad:loop": "Узел цикла выполняет: `x2 = abs(real(z)) * abs(real(z))`",
+    "a569d2c4-d397-5634-9dfe-21b2ab1a386a:b7dd588e3cf8c70a1ec52801a03b6ee1b6980009c0725f8a32ecfa8fe1a6dfad:bailout": "Проверка завершения: `|z| <= 256`"
+  },
+  "syntaxFeatures": {
+    "source-sequence": "Эта структура располагает процитированные шаги исходного кода в проверяемой последовательности. a569d2c4-d397-5634-9dfe-21b2ab1a386a:b7dd588e3cf8c70a1ec52801a03b6ee1b6980009c0725f8a32ecfa8fe1a6dfad:init, a569d2c4-d397-5634-9dfe-21b2ab1a386a:b7dd588e3cf8c70a1ec52801a03b6ee1b6980009c0725f8a32ecfa8fe1a6dfad:loop, a569d2c4-d397-5634-9dfe-21b2ab1a386a:b7dd588e3cf8c70a1ec52801a03b6ee1b6980009c0725f8a32ecfa8fe1a6dfad:bailout"
+  },
+  "parameterExperiment": {
+    "steps": [
+      "Используйте закреплённый профиль: mode parameter-plane; center (-0.5, 0); zoom 0.4; rotation 0; iterations 96. Выполните его один раз и запишите результат, затем повторите с тем же профилем."
+    ],
+    "expectedObservation": "Сравните два запуска и отметьте, совпадают ли видимый результат и поведение итераций для `x2 = abs(real(z)) * abs(real(z))`."
+  },
+  "exercise": {
+    "prompt": "Найдите исходные аннотации, связанные с `x2 = abs(real(z)) * abs(real(z))`, и объясните порядок инициализации, цикла и завершения.",
+    "completionCheck": "Для завершения перечислите три процитированных ключа аннотаций для `x2 = abs(real(z)) * abs(real(z))` и расположите их от инициализации через цикл к завершению."
+  },
+  "factsPresentation": {
+    "provenanceLead": "Происхождение:",
+    "rightsLead": "Права:"
+  },
+  "contentHash": "9eb7e213eb8f05ee4e145af7709bab2749927c1a36882c08971cf1d2a8c640d5"
+}

@@ -44,7 +44,7 @@ function rehashLocale<T extends { contentHash: string }>(value: T): T {
 }
 
 const resourceRoot = join(process.cwd(), 'resources/formula-library/v1');
-const EXPECTED_APPROVED_FORMULAS = 10;
+const EXPECTED_APPROVED_FORMULAS = 20;
 const EXPECTED_APPROVED_UNITS = EXPECTED_APPROVED_FORMULAS * 7;
 const semanticAnchorAsset = JSON.parse(
   readFileSync(join(resourceRoot, 'teaching-semantic-anchors.v1.json'), 'utf8'),

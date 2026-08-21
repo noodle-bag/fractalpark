@@ -1,0 +1,34 @@
+{
+  "schema": "fractalpark-teaching-locale/v1",
+  "formulaId": "0e1b1705-ae4c-5685-b0fc-b82586ff144e",
+  "locale": "ko",
+  "sourceRevision": "ae01647cb774c689e3b51db29ed4e42fee4f0a1f63716ae8a5fe10d41aa4a985",
+  "semanticHash": "0960756fc1dc1b8a80afcb65aa073a990f64c1801605934bb4a473dd102f5652",
+  "englishContentHash": "856c806fd04ca678954c6e938babb483fd770c70f69128fe9d8aa633a62bac17",
+  "localizedName": "ok-34",
+  "overview": "FRM-like/1에서 ok-34은 소스의 초기화, 반복, 종료 검사를 따라 실행돼요. 이름으로 규칙을 추측하지 말고 각 단계를 현재 상태에 대한 명시적 연산으로 보세요. 고정 프로필로 같은 반복 과정을 관찰할 수 있어요.",
+  "sourceWalkthrough": {
+    "0e1b1705-ae4c-5685-b0fc-b82586ff144e:ae01647cb774c689e3b51db29ed4e42fee4f0a1f63716ae8a5fe10d41aa4a985:init": "초기화 노드가 실행하는 내용: `z = pixel`",
+    "0e1b1705-ae4c-5685-b0fc-b82586ff144e:ae01647cb774c689e3b51db29ed4e42fee4f0a1f63716ae8a5fe10d41aa4a985:loop": "반복 노드가 실행하는 내용: `horizontal = abs(real(z))`",
+    "0e1b1705-ae4c-5685-b0fc-b82586ff144e:ae01647cb774c689e3b51db29ed4e42fee4f0a1f63716ae8a5fe10d41aa4a985:branch": "반복 안의 분기가 여기서 시작돼요: `if horizontal <= vertical`",
+    "0e1b1705-ae4c-5685-b0fc-b82586ff144e:ae01647cb774c689e3b51db29ed4e42fee4f0a1f63716ae8a5fe10d41aa4a985:bailout": "종료 검사는 다음과 같아요: `LastSqr <= real(limit) * real(limit)`"
+  },
+  "syntaxFeatures": {
+    "source-sequence": "이 구조는 인용된 소스 단계들을 확인 가능한 순서로 정리해요. 0e1b1705-ae4c-5685-b0fc-b82586ff144e:ae01647cb774c689e3b51db29ed4e42fee4f0a1f63716ae8a5fe10d41aa4a985:init, 0e1b1705-ae4c-5685-b0fc-b82586ff144e:ae01647cb774c689e3b51db29ed4e42fee4f0a1f63716ae8a5fe10d41aa4a985:loop, 0e1b1705-ae4c-5685-b0fc-b82586ff144e:ae01647cb774c689e3b51db29ed4e42fee4f0a1f63716ae8a5fe10d41aa4a985:branch, 0e1b1705-ae4c-5685-b0fc-b82586ff144e:ae01647cb774c689e3b51db29ed4e42fee4f0a1f63716ae8a5fe10d41aa4a985:bailout"
+  },
+  "parameterExperiment": {
+    "steps": [
+      "기본값에서 시작하고 한 번에 런타임 슬롯 하나만 바꾸세요: multiplier (0, 0)→(1, 0), thresholdOffset (0, 0)→(1, 0), initialMap identity→abs, orbitMap identity→sqr. 매번 보이는 결과를 기록하세요."
+    ],
+    "expectedObservation": "여러 실행을 비교하고 `if horizontal <= vertical`에서 보이는 결과와 반복 동작이 같은지 기록하세요."
+  },
+  "exercise": {
+    "prompt": "ok-34에서 인용된 네 주석인 `z = pixel`, `horizontal = abs(real(z))`, `horizontal <= vertical` 분기, LastSqr 검사의 소스 순서를 설명하세요.",
+    "completionCheck": "완료하려면 네 주석 키를 적고 `z = pixel`, `horizontal = abs(real(z))`, `horizontal <= vertical` 분기, LastSqr 검사의 소스 순서로 배열하세요."
+  },
+  "factsPresentation": {
+    "provenanceLead": "출처:",
+    "rightsLead": "권리:"
+  },
+  "contentHash": "034d33f198ddee040dfc4836a3252205695e9798a63a2afa7f3542090323ea69"
+}

@@ -1,0 +1,78 @@
+{
+  "schema": "fractalpark-teaching-en-fact/v1",
+  "formulaId": "38c3b212-c33b-5dd3-aae5-a514fc7e37e3",
+  "sourceRevision": "824eda8dc180b39ab6c7e32f187530e1c35edeaec7db3f9d00c7a7acef78df63",
+  "semanticHash": "4d4a33c69523f26a7d553ecdc0a52d6a166aa8ea602de09bea6de0af124927cc",
+  "overview": "airship is presented from its pinned FRM-like/1 source rather than from its name. The source supplies an initialization block, a loop block, and a bailout test; the pinned profile uses mode parameter-plane; center (-0.5, 0); zoom 0.4; rotation 0; iterations 96. Follow the cited operations to compare repeated runs.",
+  "mathDisclosure": "exact-structured",
+  "mathSummary": "The source is structured as init, loop, and bailout blocks. Its loop operations are safeY = (1, 0); then, only when abs(imag(z)) >= 1e-10, real(safeY) = imag(z) / abs(imag(z)); folded = (0, 0); real(folded) = abs(real(z)); imag(folded) = real(z) * imag(z) / real(safeY); z = folded * folded + c.",
+  "sourceWalkthrough": [
+    {
+      "annotationId": "38c3b212-c33b-5dd3-aae5-a514fc7e37e3:824eda8dc180b39ab6c7e32f187530e1c35edeaec7db3f9d00c7a7acef78df63:init",
+      "nodeId": "frm-v1:824eda8dc180b39ab6c7e32f187530e1c35edeaec7db3f9d00c7a7acef78df63:init/0",
+      "explanation": "The init source node begins with `if ismand`; it establishes the starting path before the loop."
+    },
+    {
+      "annotationId": "38c3b212-c33b-5dd3-aae5-a514fc7e37e3:824eda8dc180b39ab6c7e32f187530e1c35edeaec7db3f9d00c7a7acef78df63:loop",
+      "nodeId": "frm-v1:824eda8dc180b39ab6c7e32f187530e1c35edeaec7db3f9d00c7a7acef78df63:loop/0",
+      "explanation": "The loop source node executes `safeY = (1, 0)` on each pass."
+    },
+    {
+      "annotationId": "38c3b212-c33b-5dd3-aae5-a514fc7e37e3:824eda8dc180b39ab6c7e32f187530e1c35edeaec7db3f9d00c7a7acef78df63:branch",
+      "nodeId": "frm-v1:824eda8dc180b39ab6c7e32f187530e1c35edeaec7db3f9d00c7a7acef78df63:loop/1",
+      "explanation": "This loop branch is the source operation `if abs(imag(z)) >= 1e-10`; its condition selects whether its nested assignment runs."
+    },
+    {
+      "annotationId": "38c3b212-c33b-5dd3-aae5-a514fc7e37e3:824eda8dc180b39ab6c7e32f187530e1c35edeaec7db3f9d00c7a7acef78df63:bailout",
+      "nodeId": "frm-v1:824eda8dc180b39ab6c7e32f187530e1c35edeaec7db3f9d00c7a7acef78df63:bailout",
+      "explanation": "The bailout source node tests `|z| <= 256`; the iteration continues while that condition holds."
+    }
+  ],
+  "syntaxFeatures": [
+    {
+      "featureId": "source-sequence",
+      "annotationIds": [
+        "38c3b212-c33b-5dd3-aae5-a514fc7e37e3:824eda8dc180b39ab6c7e32f187530e1c35edeaec7db3f9d00c7a7acef78df63:init",
+        "38c3b212-c33b-5dd3-aae5-a514fc7e37e3:824eda8dc180b39ab6c7e32f187530e1c35edeaec7db3f9d00c7a7acef78df63:loop",
+        "38c3b212-c33b-5dd3-aae5-a514fc7e37e3:824eda8dc180b39ab6c7e32f187530e1c35edeaec7db3f9d00c7a7acef78df63:branch",
+        "38c3b212-c33b-5dd3-aae5-a514fc7e37e3:824eda8dc180b39ab6c7e32f187530e1c35edeaec7db3f9d00c7a7acef78df63:bailout"
+      ],
+      "explanation": "The cited source nodes for airship—`if ismand`, `safeY = (1, 0)`, its guarded safeY branch, and `|z| <= 256`—form its source-ordered path from setup through update to termination."
+    }
+  ],
+  "parameterExperiment": {
+    "parameterSymbols": [],
+    "steps": [
+      "Use the pinned profile (mode parameter-plane; center (-0.5, 0); zoom 0.4; rotation 0; iterations 96). Run it once and record the visible result, then repeat with the same profile."
+    ],
+    "expectedObservation": "Compare the airship runs and record whether `safeY = (1, 0)` has matching visible results and iteration behavior."
+  },
+  "exercise": {
+    "prompt": "Use the cited annotations for airship—`if ismand`, `safeY = (1, 0)`, its guarded safeY branch, and `|z| <= 256`—to describe the source order.",
+    "completionCheck": "Your response lists the 4 cited annotation IDs and orders airship’s `if ismand`, `safeY = (1, 0)`, its guarded safeY branch, and `|z| <= 256` from initialization through loop to termination.",
+    "answerDisclosure": "none"
+  },
+  "facts": {
+    "provenanceStatement": "Grounded in the pinned runtime source revision 824eda8dc180b39ab6c7e32f187530e1c35edeaec7db3f9d00c7a7acef78df63 and its semantic anchors.",
+    "rightsStatement": "rightsStatus: project-owned; implementationBasis: project-owned; publicationDecision: publish; decisionReason: publish-project-owned-native-recipe. This does not make any broader claim about a third-party original.",
+    "sourceIds": [
+      "runtime:824eda8dc180b39ab6c7e32f187530e1c35edeaec7db3f9d00c7a7acef78df63",
+      "decision:38c3b212-c33b-5dd3-aae5-a514fc7e37e3"
+    ],
+    "licenseIds": [],
+    "claims": [
+      {
+        "text": "The runtime profile specifies mode parameter-plane; center (-0.5, 0); zoom 0.4; rotation 0; iterations 96.",
+        "sourceIds": [
+          "runtime:824eda8dc180b39ab6c7e32f187530e1c35edeaec7db3f9d00c7a7acef78df63"
+        ]
+      },
+      {
+        "text": "The publication record states publish with reason publish-project-owned-native-recipe.",
+        "sourceIds": [
+          "decision:38c3b212-c33b-5dd3-aae5-a514fc7e37e3"
+        ]
+      }
+    ]
+  }
+}

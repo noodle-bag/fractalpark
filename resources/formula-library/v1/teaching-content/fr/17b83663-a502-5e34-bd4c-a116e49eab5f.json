@@ -1,0 +1,33 @@
+{
+  "schema": "fractalpark-teaching-locale/v1",
+  "formulaId": "17b83663-a502-5e34-bd4c-a116e49eab5f",
+  "locale": "fr",
+  "sourceRevision": "581fbcb6400907433c24d3061ac2585a5090574f7ee6e7288bffe177432eaafa",
+  "semanticHash": "b0539f17c0e00e498da7c745374933b658189a600327bf3ec201522a0903a8e7",
+  "englishContentHash": "44b9a09b266c216f316f52535d117fd49c711b7a0e278f8fc9ef8e634368f322",
+  "localizedName": "cubic",
+  "overview": "Dans FRM-like/1, cubic suit l’initialisation, la boucle et le test de sortie du code source. Considère chaque étape comme une opération explicite sur l’état, sans déduire des règles du nom. Le profil fixé te permet d’observer le même processus itératif.",
+  "sourceWalkthrough": {
+    "17b83663-a502-5e34-bd4c-a116e49eab5f:581fbcb6400907433c24d3061ac2585a5090574f7ee6e7288bffe177432eaafa:init": "Le nœud d’initialisation exécute : `p = pixel`",
+    "17b83663-a502-5e34-bd4c-a116e49eab5f:581fbcb6400907433c24d3061ac2585a5090574f7ee6e7288bffe177432eaafa:loop": "Le nœud de boucle exécute : `z = z * z * z - aa3 * z + b`",
+    "17b83663-a502-5e34-bd4c-a116e49eab5f:581fbcb6400907433c24d3061ac2585a5090574f7ee6e7288bffe177432eaafa:bailout": "Le test d’arrêt est : `|z| < test`"
+  },
+  "syntaxFeatures": {
+    "source-sequence": "Cette structure organise les étapes citées du code source dans une séquence vérifiable. 17b83663-a502-5e34-bd4c-a116e49eab5f:581fbcb6400907433c24d3061ac2585a5090574f7ee6e7288bffe177432eaafa:init, 17b83663-a502-5e34-bd4c-a116e49eab5f:581fbcb6400907433c24d3061ac2585a5090574f7ee6e7288bffe177432eaafa:loop, 17b83663-a502-5e34-bd4c-a116e49eab5f:581fbcb6400907433c24d3061ac2585a5090574f7ee6e7288bffe177432eaafa:bailout"
+  },
+  "parameterExperiment": {
+    "steps": [
+      "Commence avec les valeurs par défaut et ne modifie qu’un emplacement d’exécution à la fois : parameter1 (0, 0)→(1, 0). Note le résultat visible à chaque fois."
+    ],
+    "expectedObservation": "Compare les deux exécutions et note si `z = z * z * z - aa3 * z + b` donne le même résultat visible et le même comportement itératif."
+  },
+  "exercise": {
+    "prompt": "Trouve les annotations sources liées à `z = z * z * z - aa3 * z + b` et explique l’ordre entre initialisation, boucle et arrêt.",
+    "completionCheck": "Pour terminer, liste les trois clés d’annotation citées pour `z = z * z * z - aa3 * z + b` et range-les de l’initialisation à la boucle puis à l’arrêt."
+  },
+  "factsPresentation": {
+    "provenanceLead": "Provenance :",
+    "rightsLead": "Droits :"
+  },
+  "contentHash": "ae2885dda5a1b3541885403460717184cd57b87f4e5c413c147cca61ac0a778f"
+}

@@ -1,0 +1,33 @@
+{
+  "schema": "fractalpark-teaching-locale/v1",
+  "formulaId": "1768f194-bdc1-5881-b269-a58730967c2c",
+  "locale": "ru",
+  "sourceRevision": "d8e2c1950f3a30b27d380c3132e6a62ebe287cd26cd24c3dbc28dfd47ad784ed",
+  "semanticHash": "0c21f93a3361be1da89f3199f91349e0980e617ded57c2347f8294faf02bd622",
+  "englishContentHash": "4f0b53f0b2ae83da119a9d6e1b0e1709165266592e7e029b48ac7d4aaff6b874",
+  "localizedName": "quarticMandelbrot",
+  "overview": "В FRM-like/1 формула quarticMandelbrot следует инициализации, циклу и проверке выхода из исходного кода. Рассматривайте каждый шаг как явную операцию над состоянием, не выводя правила из названия. Закреплённый профиль позволяет вам наблюдать один и тот же итерационный процесс.",
+  "sourceWalkthrough": {
+    "1768f194-bdc1-5881-b269-a58730967c2c:d8e2c1950f3a30b27d380c3132e6a62ebe287cd26cd24c3dbc28dfd47ad784ed:init": "Узел инициализации выполняет: `if ismand`",
+    "1768f194-bdc1-5881-b269-a58730967c2c:d8e2c1950f3a30b27d380c3132e6a62ebe287cd26cd24c3dbc28dfd47ad784ed:loop": "Узел цикла выполняет: `z2 = z * z`",
+    "1768f194-bdc1-5881-b269-a58730967c2c:d8e2c1950f3a30b27d380c3132e6a62ebe287cd26cd24c3dbc28dfd47ad784ed:bailout": "Проверка завершения: `|z| <= 256`"
+  },
+  "syntaxFeatures": {
+    "source-sequence": "Эта структура располагает процитированные шаги исходного кода в проверяемой последовательности. 1768f194-bdc1-5881-b269-a58730967c2c:d8e2c1950f3a30b27d380c3132e6a62ebe287cd26cd24c3dbc28dfd47ad784ed:init, 1768f194-bdc1-5881-b269-a58730967c2c:d8e2c1950f3a30b27d380c3132e6a62ebe287cd26cd24c3dbc28dfd47ad784ed:loop, 1768f194-bdc1-5881-b269-a58730967c2c:d8e2c1950f3a30b27d380c3132e6a62ebe287cd26cd24c3dbc28dfd47ad784ed:bailout"
+  },
+  "parameterExperiment": {
+    "steps": [
+      "Используйте закреплённый профиль: mode parameter-plane; center (-0.5, 0); zoom 0.4; rotation 0; iterations 96. Выполните его один раз и запишите результат, затем повторите с тем же профилем."
+    ],
+    "expectedObservation": "Сравните два запуска и отметьте, совпадают ли видимый результат и поведение итераций на шаге `z = z2 * z2 + c`, следующем за `z2 = z * z`."
+  },
+  "exercise": {
+    "prompt": "Найдите исходные аннотации с `if ismand`, `z2 = z * z; z = z2 * z2 + c` и `|z| <= 256` и объясните их порядок.",
+    "completionCheck": "Для завершения перечислите три процитированных ключа аннотаций в исходном порядке: `if ismand`, `z2 = z * z; z = z2 * z2 + c`, `|z| <= 256`."
+  },
+  "factsPresentation": {
+    "provenanceLead": "Происхождение:",
+    "rightsLead": "Права:"
+  },
+  "contentHash": "e7ff842cb0f4416cb2c9d2c0c7366274297b149f78a33528a6a957b4d0dfa619"
+}

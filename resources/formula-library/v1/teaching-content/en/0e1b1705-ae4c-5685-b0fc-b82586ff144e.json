@@ -1,0 +1,83 @@
+{
+  "schema": "fractalpark-teaching-en-fact/v1",
+  "formulaId": "0e1b1705-ae4c-5685-b0fc-b82586ff144e",
+  "sourceRevision": "ae01647cb774c689e3b51db29ed4e42fee4f0a1f63716ae8a5fe10d41aa4a985",
+  "semanticHash": "0960756fc1dc1b8a80afcb65aa073a990f64c1801605934bb4a473dd102f5652",
+  "overview": "ok-34 is presented from its pinned FRM-like/1 source rather than from its name. The source supplies an initialization block, a loop block, and a bailout test; the pinned profile uses mode parameter-plane; center (-0.5, 0); zoom 0.4; rotation 0; iterations 96. Follow the cited operations to compare repeated runs.",
+  "mathDisclosure": "exact-structured",
+  "mathSummary": "The source is structured as init, loop, and bailout blocks. Its loop operations are horizontal = abs(real(z)); vertical = abs(imag(z)); then exactly one branch runs: if horizontal <= vertical, z = orbitMap(z) + vertical + addition; otherwise z = orbitMap(z) + horizontal + addition.",
+  "sourceWalkthrough": [
+    {
+      "annotationId": "0e1b1705-ae4c-5685-b0fc-b82586ff144e:ae01647cb774c689e3b51db29ed4e42fee4f0a1f63716ae8a5fe10d41aa4a985:init",
+      "nodeId": "frm-v1:ae01647cb774c689e3b51db29ed4e42fee4f0a1f63716ae8a5fe10d41aa4a985:init/0",
+      "explanation": "The init source node begins with `z = pixel`; it establishes the starting path before the loop."
+    },
+    {
+      "annotationId": "0e1b1705-ae4c-5685-b0fc-b82586ff144e:ae01647cb774c689e3b51db29ed4e42fee4f0a1f63716ae8a5fe10d41aa4a985:loop",
+      "nodeId": "frm-v1:ae01647cb774c689e3b51db29ed4e42fee4f0a1f63716ae8a5fe10d41aa4a985:loop/0",
+      "explanation": "The loop source node executes `horizontal = abs(real(z))` on each pass."
+    },
+    {
+      "annotationId": "0e1b1705-ae4c-5685-b0fc-b82586ff144e:ae01647cb774c689e3b51db29ed4e42fee4f0a1f63716ae8a5fe10d41aa4a985:branch",
+      "nodeId": "frm-v1:ae01647cb774c689e3b51db29ed4e42fee4f0a1f63716ae8a5fe10d41aa4a985:loop/2",
+      "explanation": "This loop branch is the source operation `if horizontal <= vertical`; its condition selects whether its nested assignment runs."
+    },
+    {
+      "annotationId": "0e1b1705-ae4c-5685-b0fc-b82586ff144e:ae01647cb774c689e3b51db29ed4e42fee4f0a1f63716ae8a5fe10d41aa4a985:bailout",
+      "nodeId": "frm-v1:ae01647cb774c689e3b51db29ed4e42fee4f0a1f63716ae8a5fe10d41aa4a985:bailout",
+      "explanation": "The bailout source node tests `LastSqr <= real(limit) * real(limit)`; the iteration continues while that condition holds."
+    }
+  ],
+  "syntaxFeatures": [
+    {
+      "featureId": "source-sequence",
+      "annotationIds": [
+        "0e1b1705-ae4c-5685-b0fc-b82586ff144e:ae01647cb774c689e3b51db29ed4e42fee4f0a1f63716ae8a5fe10d41aa4a985:init",
+        "0e1b1705-ae4c-5685-b0fc-b82586ff144e:ae01647cb774c689e3b51db29ed4e42fee4f0a1f63716ae8a5fe10d41aa4a985:loop",
+        "0e1b1705-ae4c-5685-b0fc-b82586ff144e:ae01647cb774c689e3b51db29ed4e42fee4f0a1f63716ae8a5fe10d41aa4a985:branch",
+        "0e1b1705-ae4c-5685-b0fc-b82586ff144e:ae01647cb774c689e3b51db29ed4e42fee4f0a1f63716ae8a5fe10d41aa4a985:bailout"
+      ],
+      "explanation": "The cited source nodes for ok-34—`z = pixel`, `horizontal = abs(real(z))`, the `horizontal <= vertical` branch, and its LastSqr test—form its source-ordered path from setup through update to termination."
+    }
+  ],
+  "parameterExperiment": {
+    "parameterSymbols": [
+      "multiplier",
+      "thresholdOffset",
+      "initialMap",
+      "orbitMap"
+    ],
+    "steps": [
+      "Begin with the source defaults for multiplier, thresholdOffset, initialMap, orbitMap. Change one runtime slot at a time from its default: multiplier (0, 0) to (1, 0); thresholdOffset (0, 0) to (1, 0); initialMap identity to abs; orbitMap identity to sqr. Record the visible result after each single-slot change."
+    ],
+    "expectedObservation": "Compare the ok-34 runs and record whether `if horizontal <= vertical` has matching visible results and iteration behavior."
+  },
+  "exercise": {
+    "prompt": "Use the cited annotations for ok-34—`z = pixel`, `horizontal = abs(real(z))`, the `horizontal <= vertical` branch, and its LastSqr test—to describe the source order.",
+    "completionCheck": "Your response lists the 4 cited annotation IDs and orders ok-34’s `z = pixel`, `horizontal = abs(real(z))`, the `horizontal <= vertical` branch, and its LastSqr test from initialization through loop to termination.",
+    "answerDisclosure": "none"
+  },
+  "facts": {
+    "provenanceStatement": "Grounded in the pinned runtime source revision ae01647cb774c689e3b51db29ed4e42fee4f0a1f63716ae8a5fe10d41aa4a985 and its semantic anchors.",
+    "rightsStatement": "rightsStatus: no-explicit-permission; implementationBasis: separated-independent-rewrite; publicationDecision: publish; decisionReason: publish-cleanroom-independent-rewrite-full-chain-green. This does not make any broader claim about a third-party original.",
+    "sourceIds": [
+      "runtime:ae01647cb774c689e3b51db29ed4e42fee4f0a1f63716ae8a5fe10d41aa4a985",
+      "decision:0e1b1705-ae4c-5685-b0fc-b82586ff144e"
+    ],
+    "licenseIds": [],
+    "claims": [
+      {
+        "text": "The runtime profile specifies mode parameter-plane; center (-0.5, 0); zoom 0.4; rotation 0; iterations 96.",
+        "sourceIds": [
+          "runtime:ae01647cb774c689e3b51db29ed4e42fee4f0a1f63716ae8a5fe10d41aa4a985"
+        ]
+      },
+      {
+        "text": "The publication record states publish with reason publish-cleanroom-independent-rewrite-full-chain-green.",
+        "sourceIds": [
+          "decision:0e1b1705-ae4c-5685-b0fc-b82586ff144e"
+        ]
+      }
+    ]
+  }
+}

@@ -1,0 +1,33 @@
+{
+  "schema": "fractalpark-teaching-locale/v1",
+  "formulaId": "1768f194-bdc1-5881-b269-a58730967c2c",
+  "locale": "zh",
+  "sourceRevision": "d8e2c1950f3a30b27d380c3132e6a62ebe287cd26cd24c3dbc28dfd47ad784ed",
+  "semanticHash": "0c21f93a3361be1da89f3199f91349e0980e617ded57c2347f8294faf02bd622",
+  "englishContentHash": "4f0b53f0b2ae83da119a9d6e1b0e1709165266592e7e029b48ac7d4aaff6b874",
+  "localizedName": "quarticMandelbrot",
+  "overview": "在 FRM-like/1 中，quarticMandelbrot 按源代码的初始化、循环和退出测试运行。请把每一步当作对当前状态的明确操作，而不是从名称推测规则。固定配置让你能观察同一迭代过程。",
+  "sourceWalkthrough": {
+    "1768f194-bdc1-5881-b269-a58730967c2c:d8e2c1950f3a30b27d380c3132e6a62ebe287cd26cd24c3dbc28dfd47ad784ed:init": "初始化节点执行： `if ismand`",
+    "1768f194-bdc1-5881-b269-a58730967c2c:d8e2c1950f3a30b27d380c3132e6a62ebe287cd26cd24c3dbc28dfd47ad784ed:loop": "循环节点执行： `z2 = z * z`",
+    "1768f194-bdc1-5881-b269-a58730967c2c:d8e2c1950f3a30b27d380c3132e6a62ebe287cd26cd24c3dbc28dfd47ad784ed:bailout": "终止测试为： `|z| <= 256`"
+  },
+  "syntaxFeatures": {
+    "source-sequence": "此结构把所引用的源代码步骤组织为一个可检查的顺序。 1768f194-bdc1-5881-b269-a58730967c2c:d8e2c1950f3a30b27d380c3132e6a62ebe287cd26cd24c3dbc28dfd47ad784ed:init, 1768f194-bdc1-5881-b269-a58730967c2c:d8e2c1950f3a30b27d380c3132e6a62ebe287cd26cd24c3dbc28dfd47ad784ed:loop, 1768f194-bdc1-5881-b269-a58730967c2c:d8e2c1950f3a30b27d380c3132e6a62ebe287cd26cd24c3dbc28dfd47ad784ed:bailout"
+  },
+  "parameterExperiment": {
+    "steps": [
+      "使用固定配置：mode parameter-plane; center (-0.5, 0); zoom 0.4; rotation 0; iterations 96。运行一次并记录结果；再以同一配置重复运行。"
+    ],
+    "expectedObservation": "比较两次运行，记录在`z2 = z * z`之后执行`z = z2 * z2 + c`时，可见结果和迭代行为是否一致。"
+  },
+  "exercise": {
+    "prompt": "找出包含`if ismand`、`z2 = z * z; z = z2 * z2 + c`和`|z| <= 256`的源注释，并说明它们的顺序。",
+    "completionCheck": "完成时列出所引用的三个注释键，并按`if ismand`、`z2 = z * z; z = z2 * z2 + c`、`|z| <= 256`的源顺序排列。"
+  },
+  "factsPresentation": {
+    "provenanceLead": "来源：",
+    "rightsLead": "权利："
+  },
+  "contentHash": "7b49d46f9f4afa712d0b4967de564d9efc90151905c8b5101bf4482b0fa6ce22"
+}

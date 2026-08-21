@@ -1,0 +1,33 @@
+{
+  "schema": "fractalpark-teaching-locale/v1",
+  "formulaId": "280229ec-dd2f-5982-9954-75829a37a5f2",
+  "locale": "pt",
+  "sourceRevision": "503739d928f438a7edc79d8d7fb1931b1435b45b0c8231950a2b11cf7104d22c",
+  "semanticHash": "98af05f90861656958d24b58d63d4b9eb08eca323b126001c38eb467e5646e5c",
+  "englishContentHash": "4bff26a131cb3d7291ac0abfa91a6c336b86cc3030038995dae885a4997d3810",
+  "localizedName": "liar4",
+  "overview": "Em FRM-like/1, liar4 segue a inicialização, o laço e o teste de saída do código-fonte. Trate cada passo como uma operação explícita sobre o estado, sem deduzir regras pelo nome. O perfil fixado permite observar o mesmo processo iterativo.",
+  "sourceWalkthrough": {
+    "280229ec-dd2f-5982-9954-75829a37a5f2:503739d928f438a7edc79d8d7fb1931b1435b45b0c8231950a2b11cf7104d22c:init": "O nó de inicialização executa: `z = pixel`",
+    "280229ec-dd2f-5982-9954-75829a37a5f2:503739d928f438a7edc79d8d7fb1931b1435b45b0c8231950a2b11cf7104d22c:loop": "O nó do laço executa: `z = 1 - abs(imag(z) * p - real(z)) + (1 - abs(1 - real(z) - imag(z)))`",
+    "280229ec-dd2f-5982-9954-75829a37a5f2:503739d928f438a7edc79d8d7fb1931b1435b45b0c8231950a2b11cf7104d22c:bailout": "O teste de término é: `|z| <= 1`"
+  },
+  "syntaxFeatures": {
+    "source-sequence": "Esta estrutura organiza os passos do código-fonte citados em uma sequência verificável. 280229ec-dd2f-5982-9954-75829a37a5f2:503739d928f438a7edc79d8d7fb1931b1435b45b0c8231950a2b11cf7104d22c:init, 280229ec-dd2f-5982-9954-75829a37a5f2:503739d928f438a7edc79d8d7fb1931b1435b45b0c8231950a2b11cf7104d22c:loop, 280229ec-dd2f-5982-9954-75829a37a5f2:503739d928f438a7edc79d8d7fb1931b1435b45b0c8231950a2b11cf7104d22c:bailout"
+  },
+  "parameterExperiment": {
+    "steps": [
+      "Use o perfil fixado (mode parameter-plane; center (-0.5, 0); zoom 0.4; rotation 0; iterations 96). Execute uma vez com parameter1 no valor padrão (0, 0) e outra com parameter1 definido como (1, 0); registre o resultado visível de cada execução."
+    ],
+    "expectedObservation": "Compare as duas execuções e registre se `z = 1 - abs(imag(z) * p - real(z)) + (1 - abs(1 - real(z) - imag(z)))` produz o mesmo resultado visível e comportamento iterativo."
+  },
+  "exercise": {
+    "prompt": "Encontre as anotações de fonte ligadas a `z = 1 - abs(imag(z) * p - real(z)) + (1 - abs(1 - real(z) - imag(z)))` e explique a ordem entre inicialização, laço e término.",
+    "completionCheck": "Para concluir, liste as três chaves de anotação citadas para `z = 1 - abs(imag(z) * p - real(z)) + (1 - abs(1 - real(z) - imag(z)))` e ordene-as de inicialização a laço e término."
+  },
+  "factsPresentation": {
+    "provenanceLead": "Proveniência:",
+    "rightsLead": "Direitos:"
+  },
+  "contentHash": "37e42932d1f2116f57755dd53e374581832b91e1f6527846d4e72cb2c9b017c5"
+}

@@ -1,0 +1,34 @@
+{
+  "schema": "fractalpark-teaching-locale/v1",
+  "formulaId": "0e1b1705-ae4c-5685-b0fc-b82586ff144e",
+  "locale": "fr",
+  "sourceRevision": "ae01647cb774c689e3b51db29ed4e42fee4f0a1f63716ae8a5fe10d41aa4a985",
+  "semanticHash": "0960756fc1dc1b8a80afcb65aa073a990f64c1801605934bb4a473dd102f5652",
+  "englishContentHash": "856c806fd04ca678954c6e938babb483fd770c70f69128fe9d8aa633a62bac17",
+  "localizedName": "ok-34",
+  "overview": "Dans FRM-like/1, ok-34 suit l’initialisation, la boucle et le test de sortie du code source. Considère chaque étape comme une opération explicite sur l’état, sans déduire des règles du nom. Le profil fixé te permet d’observer le même processus itératif.",
+  "sourceWalkthrough": {
+    "0e1b1705-ae4c-5685-b0fc-b82586ff144e:ae01647cb774c689e3b51db29ed4e42fee4f0a1f63716ae8a5fe10d41aa4a985:init": "Le nœud d’initialisation exécute : `z = pixel`",
+    "0e1b1705-ae4c-5685-b0fc-b82586ff144e:ae01647cb774c689e3b51db29ed4e42fee4f0a1f63716ae8a5fe10d41aa4a985:loop": "Le nœud de boucle exécute : `horizontal = abs(real(z))`",
+    "0e1b1705-ae4c-5685-b0fc-b82586ff144e:ae01647cb774c689e3b51db29ed4e42fee4f0a1f63716ae8a5fe10d41aa4a985:branch": "La branche dans la boucle commence ici : `if horizontal <= vertical`",
+    "0e1b1705-ae4c-5685-b0fc-b82586ff144e:ae01647cb774c689e3b51db29ed4e42fee4f0a1f63716ae8a5fe10d41aa4a985:bailout": "Le test d’arrêt est : `LastSqr <= real(limit) * real(limit)`"
+  },
+  "syntaxFeatures": {
+    "source-sequence": "Cette structure organise les étapes citées du code source dans une séquence vérifiable. 0e1b1705-ae4c-5685-b0fc-b82586ff144e:ae01647cb774c689e3b51db29ed4e42fee4f0a1f63716ae8a5fe10d41aa4a985:init, 0e1b1705-ae4c-5685-b0fc-b82586ff144e:ae01647cb774c689e3b51db29ed4e42fee4f0a1f63716ae8a5fe10d41aa4a985:loop, 0e1b1705-ae4c-5685-b0fc-b82586ff144e:ae01647cb774c689e3b51db29ed4e42fee4f0a1f63716ae8a5fe10d41aa4a985:branch, 0e1b1705-ae4c-5685-b0fc-b82586ff144e:ae01647cb774c689e3b51db29ed4e42fee4f0a1f63716ae8a5fe10d41aa4a985:bailout"
+  },
+  "parameterExperiment": {
+    "steps": [
+      "Commence avec les valeurs par défaut et ne modifie qu’un emplacement d’exécution à la fois : multiplier (0, 0)→(1, 0), thresholdOffset (0, 0)→(1, 0), initialMap identity→abs, orbitMap identity→sqr. Note le résultat visible à chaque fois."
+    ],
+    "expectedObservation": "Compare les exécutions et note si `if horizontal <= vertical` donne le même résultat visible et le même comportement itératif."
+  },
+  "exercise": {
+    "prompt": "Utilise les quatre annotations citées d’ok-34 — `z = pixel`, `horizontal = abs(real(z))`, la branche `horizontal <= vertical` et le test LastSqr — pour expliquer l’ordre du code source.",
+    "completionCheck": "Pour terminer, liste les quatre clés et range `z = pixel`, `horizontal = abs(real(z))`, la branche `horizontal <= vertical` et le test LastSqr dans l’ordre du code source."
+  },
+  "factsPresentation": {
+    "provenanceLead": "Provenance :",
+    "rightsLead": "Droits :"
+  },
+  "contentHash": "df817323fcfc492ef51a07638ea1d8578e1333b25eb440c617a04de685e3b947"
+}

@@ -1,0 +1,34 @@
+{
+  "schema": "fractalpark-teaching-locale/v1",
+  "formulaId": "38c3b212-c33b-5dd3-aae5-a514fc7e37e3",
+  "locale": "pt",
+  "sourceRevision": "824eda8dc180b39ab6c7e32f187530e1c35edeaec7db3f9d00c7a7acef78df63",
+  "semanticHash": "4d4a33c69523f26a7d553ecdc0a52d6a166aa8ea602de09bea6de0af124927cc",
+  "englishContentHash": "93faba75dfbe05531b274054b5fe731212d14c86ecd3635a16f697e715e30b48",
+  "localizedName": "airship",
+  "overview": "Em FRM-like/1, airship segue a inicialização, o laço e o teste de saída do código-fonte. Trate cada passo como uma operação explícita sobre o estado, sem deduzir regras pelo nome. O perfil fixado permite observar o mesmo processo iterativo.",
+  "sourceWalkthrough": {
+    "38c3b212-c33b-5dd3-aae5-a514fc7e37e3:824eda8dc180b39ab6c7e32f187530e1c35edeaec7db3f9d00c7a7acef78df63:init": "O nó de inicialização executa: `if ismand`",
+    "38c3b212-c33b-5dd3-aae5-a514fc7e37e3:824eda8dc180b39ab6c7e32f187530e1c35edeaec7db3f9d00c7a7acef78df63:loop": "O nó do laço executa: `safeY = (1, 0)`",
+    "38c3b212-c33b-5dd3-aae5-a514fc7e37e3:824eda8dc180b39ab6c7e32f187530e1c35edeaec7db3f9d00c7a7acef78df63:branch": "O ramo no laço começa aqui: `if abs(imag(z)) >= 1e-10`",
+    "38c3b212-c33b-5dd3-aae5-a514fc7e37e3:824eda8dc180b39ab6c7e32f187530e1c35edeaec7db3f9d00c7a7acef78df63:bailout": "O teste de término é: `|z| <= 256`"
+  },
+  "syntaxFeatures": {
+    "source-sequence": "Esta estrutura organiza os passos do código-fonte citados em uma sequência verificável. 38c3b212-c33b-5dd3-aae5-a514fc7e37e3:824eda8dc180b39ab6c7e32f187530e1c35edeaec7db3f9d00c7a7acef78df63:init, 38c3b212-c33b-5dd3-aae5-a514fc7e37e3:824eda8dc180b39ab6c7e32f187530e1c35edeaec7db3f9d00c7a7acef78df63:loop, 38c3b212-c33b-5dd3-aae5-a514fc7e37e3:824eda8dc180b39ab6c7e32f187530e1c35edeaec7db3f9d00c7a7acef78df63:branch, 38c3b212-c33b-5dd3-aae5-a514fc7e37e3:824eda8dc180b39ab6c7e32f187530e1c35edeaec7db3f9d00c7a7acef78df63:bailout"
+  },
+  "parameterExperiment": {
+    "steps": [
+      "Use o perfil fixado: mode parameter-plane; center (-0.5, 0); zoom 0.4; rotation 0; iterations 96. Execute uma vez e registre o resultado; depois repita com o mesmo perfil."
+    ],
+    "expectedObservation": "Compare as duas execuções e registre se `safeY = (1, 0)` produz o mesmo resultado visível e comportamento iterativo."
+  },
+  "exercise": {
+    "prompt": "Use as quatro anotações citadas de airship — `if ismand`, `safeY = (1, 0)`, o ramo protegido de safeY e `|z| <= 256` — para explicar a ordem no código-fonte.",
+    "completionCheck": "Para concluir, liste as quatro chaves citadas e ordene `if ismand`, `safeY = (1, 0)`, o ramo protegido de safeY e `|z| <= 256` conforme a ordem no código-fonte."
+  },
+  "factsPresentation": {
+    "provenanceLead": "Proveniência:",
+    "rightsLead": "Direitos:"
+  },
+  "contentHash": "5b77a8bb52b96c03ce8eb5c0477c7a369660f190d0d118c0b0725aefa2a860a0"
+}

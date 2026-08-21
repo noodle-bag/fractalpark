@@ -1,0 +1,33 @@
+{
+  "schema": "fractalpark-teaching-locale/v1",
+  "formulaId": "a569d2c4-d397-5634-9dfe-21b2ab1a386a",
+  "locale": "fr",
+  "sourceRevision": "b7dd588e3cf8c70a1ec52801a03b6ee1b6980009c0725f8a32ecfa8fe1a6dfad",
+  "semanticHash": "89e7b983a7455e1e3f1c4179ba6894492bcee9066e57e829ba9dc42efb44e1a9",
+  "englishContentHash": "369d555eed6b8b72baa0f8dec31e8d3c22416d94d5271028080f842cdcfecba2",
+  "localizedName": "buffalo",
+  "overview": "Dans FRM-like/1, buffalo suit l’initialisation, la boucle et le test de sortie du code source. Considère chaque étape comme une opération explicite sur l’état, sans déduire des règles du nom. Le profil fixé te permet d’observer le même processus itératif.",
+  "sourceWalkthrough": {
+    "a569d2c4-d397-5634-9dfe-21b2ab1a386a:b7dd588e3cf8c70a1ec52801a03b6ee1b6980009c0725f8a32ecfa8fe1a6dfad:init": "Le nœud d’initialisation exécute : `if ismand`",
+    "a569d2c4-d397-5634-9dfe-21b2ab1a386a:b7dd588e3cf8c70a1ec52801a03b6ee1b6980009c0725f8a32ecfa8fe1a6dfad:loop": "Le nœud de boucle exécute : `x2 = abs(real(z)) * abs(real(z))`",
+    "a569d2c4-d397-5634-9dfe-21b2ab1a386a:b7dd588e3cf8c70a1ec52801a03b6ee1b6980009c0725f8a32ecfa8fe1a6dfad:bailout": "Le test d’arrêt est : `|z| <= 256`"
+  },
+  "syntaxFeatures": {
+    "source-sequence": "Cette structure organise les étapes citées du code source dans une séquence vérifiable. a569d2c4-d397-5634-9dfe-21b2ab1a386a:b7dd588e3cf8c70a1ec52801a03b6ee1b6980009c0725f8a32ecfa8fe1a6dfad:init, a569d2c4-d397-5634-9dfe-21b2ab1a386a:b7dd588e3cf8c70a1ec52801a03b6ee1b6980009c0725f8a32ecfa8fe1a6dfad:loop, a569d2c4-d397-5634-9dfe-21b2ab1a386a:b7dd588e3cf8c70a1ec52801a03b6ee1b6980009c0725f8a32ecfa8fe1a6dfad:bailout"
+  },
+  "parameterExperiment": {
+    "steps": [
+      "Utilise le profil fixé : mode parameter-plane; center (-0.5, 0); zoom 0.4; rotation 0; iterations 96. Exécute-le une fois et note le résultat ; puis répète avec le même profil."
+    ],
+    "expectedObservation": "Compare les deux exécutions et note si `x2 = abs(real(z)) * abs(real(z))` donne le même résultat visible et le même comportement itératif."
+  },
+  "exercise": {
+    "prompt": "Trouve les annotations sources liées à `x2 = abs(real(z)) * abs(real(z))` et explique l’ordre entre initialisation, boucle et arrêt.",
+    "completionCheck": "Pour terminer, liste les trois clés d’annotation citées pour `x2 = abs(real(z)) * abs(real(z))` et range-les de l’initialisation à la boucle puis à l’arrêt."
+  },
+  "factsPresentation": {
+    "provenanceLead": "Provenance :",
+    "rightsLead": "Droits :"
+  },
+  "contentHash": "5daebfbcdb1be43106ad73b2949c62a78ceddc7541277ef7c8fcebeb390c839c"
+}

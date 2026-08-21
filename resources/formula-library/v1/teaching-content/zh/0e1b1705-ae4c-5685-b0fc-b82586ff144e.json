@@ -1,0 +1,34 @@
+{
+  "schema": "fractalpark-teaching-locale/v1",
+  "formulaId": "0e1b1705-ae4c-5685-b0fc-b82586ff144e",
+  "locale": "zh",
+  "sourceRevision": "ae01647cb774c689e3b51db29ed4e42fee4f0a1f63716ae8a5fe10d41aa4a985",
+  "semanticHash": "0960756fc1dc1b8a80afcb65aa073a990f64c1801605934bb4a473dd102f5652",
+  "englishContentHash": "856c806fd04ca678954c6e938babb483fd770c70f69128fe9d8aa633a62bac17",
+  "localizedName": "ok-34",
+  "overview": "在 FRM-like/1 中，ok-34 按源代码的初始化、循环和退出测试运行。请把每一步当作对当前状态的明确操作，而不是从名称推测规则。固定配置让你能观察同一迭代过程。",
+  "sourceWalkthrough": {
+    "0e1b1705-ae4c-5685-b0fc-b82586ff144e:ae01647cb774c689e3b51db29ed4e42fee4f0a1f63716ae8a5fe10d41aa4a985:init": "初始化节点执行： `z = pixel`",
+    "0e1b1705-ae4c-5685-b0fc-b82586ff144e:ae01647cb774c689e3b51db29ed4e42fee4f0a1f63716ae8a5fe10d41aa4a985:loop": "循环节点执行： `horizontal = abs(real(z))`",
+    "0e1b1705-ae4c-5685-b0fc-b82586ff144e:ae01647cb774c689e3b51db29ed4e42fee4f0a1f63716ae8a5fe10d41aa4a985:branch": "循环中的分支从此处开始： `if horizontal <= vertical`",
+    "0e1b1705-ae4c-5685-b0fc-b82586ff144e:ae01647cb774c689e3b51db29ed4e42fee4f0a1f63716ae8a5fe10d41aa4a985:bailout": "终止测试为： `LastSqr <= real(limit) * real(limit)`"
+  },
+  "syntaxFeatures": {
+    "source-sequence": "此结构把所引用的源代码步骤组织为一个可检查的顺序。 0e1b1705-ae4c-5685-b0fc-b82586ff144e:ae01647cb774c689e3b51db29ed4e42fee4f0a1f63716ae8a5fe10d41aa4a985:init, 0e1b1705-ae4c-5685-b0fc-b82586ff144e:ae01647cb774c689e3b51db29ed4e42fee4f0a1f63716ae8a5fe10d41aa4a985:loop, 0e1b1705-ae4c-5685-b0fc-b82586ff144e:ae01647cb774c689e3b51db29ed4e42fee4f0a1f63716ae8a5fe10d41aa4a985:branch, 0e1b1705-ae4c-5685-b0fc-b82586ff144e:ae01647cb774c689e3b51db29ed4e42fee4f0a1f63716ae8a5fe10d41aa4a985:bailout"
+  },
+  "parameterExperiment": {
+    "steps": [
+      "从默认值开始，然后一次只改变一个运行时槽位：multiplier (0, 0)→(1, 0), thresholdOffset (0, 0)→(1, 0), initialMap identity→abs, orbitMap identity→sqr。每次都记录可见结果。"
+    ],
+    "expectedObservation": "比较各次运行，记录`if horizontal <= vertical`是否呈现相同的可见结果和迭代行为。"
+  },
+  "exercise": {
+    "prompt": "按源顺序说明ok-34的四个引用注释：`z = pixel`、`horizontal = abs(real(z))`、`horizontal <= vertical`分支和LastSqr测试。",
+    "completionCheck": "完成时列出这四个注释键，并按`z = pixel`、`horizontal = abs(real(z))`、`horizontal <= vertical`分支、LastSqr测试的源顺序排列。"
+  },
+  "factsPresentation": {
+    "provenanceLead": "来源：",
+    "rightsLead": "权利："
+  },
+  "contentHash": "28f609ddf0727a5e4a768b0147b80cb07e2efef572a3239183eee022a1866dc3"
+}

@@ -1,0 +1,33 @@
+{
+  "schema": "fractalpark-teaching-locale/v1",
+  "formulaId": "e435bbb6-d866-5876-9f16-f04fbe61ff2b",
+  "locale": "ko",
+  "sourceRevision": "04817a2a54e195117685266ac9b569e294050cd4617bf3df518390c17ca0cf5f",
+  "semanticHash": "05fe294dadeb96fb7f8268f7fd5134f9a91882770485d3379f7c47bbe4425cb5",
+  "englishContentHash": "dda24ac4488bf55d772e1a7e2e01dc5eebfdf95dc6acde7077e900ad787b14b0",
+  "localizedName": "zubieta",
+  "overview": "FRM-like/1에서 zubieta은 소스의 초기화, 반복, 종료 검사를 따라 실행돼요. 이름으로 규칙을 추측하지 말고 각 단계를 현재 상태에 대한 명시적 연산으로 보세요. 고정 프로필로 같은 반복 과정을 관찰할 수 있어요.",
+  "sourceWalkthrough": {
+    "e435bbb6-d866-5876-9f16-f04fbe61ff2b:04817a2a54e195117685266ac9b569e294050cd4617bf3df518390c17ca0cf5f:init": "초기화 노드가 실행하는 내용: `if ismand`",
+    "e435bbb6-d866-5876-9f16-f04fbe61ff2b:04817a2a54e195117685266ac9b569e294050cd4617bf3df518390c17ca0cf5f:loop": "반복 노드가 실행하는 내용: `z2 = z * z`",
+    "e435bbb6-d866-5876-9f16-f04fbe61ff2b:04817a2a54e195117685266ac9b569e294050cd4617bf3df518390c17ca0cf5f:bailout": "종료 검사는 다음과 같아요: `|z| <= 256`"
+  },
+  "syntaxFeatures": {
+    "source-sequence": "이 구조는 인용된 소스 단계들을 확인 가능한 순서로 정리해요. e435bbb6-d866-5876-9f16-f04fbe61ff2b:04817a2a54e195117685266ac9b569e294050cd4617bf3df518390c17ca0cf5f:init, e435bbb6-d866-5876-9f16-f04fbe61ff2b:04817a2a54e195117685266ac9b569e294050cd4617bf3df518390c17ca0cf5f:loop, e435bbb6-d866-5876-9f16-f04fbe61ff2b:04817a2a54e195117685266ac9b569e294050cd4617bf3df518390c17ca0cf5f:bailout"
+  },
+  "parameterExperiment": {
+    "steps": [
+      "고정 프로필을 사용하세요: mode parameter-plane; center (-0.5, 0); zoom 0.4; rotation 0; iterations 96. 한 번 실행해 결과를 기록하고, 같은 프로필로 다시 실행하세요."
+    ],
+    "expectedObservation": "두 실행을 비교하고 `z2 = z * z` 뒤의 `z = abs(z2 + c)` 단계에서 보이는 결과와 반복 동작이 같은지 기록하세요."
+  },
+  "exercise": {
+    "prompt": "`if ismand`, `z2 = z * z; z = abs(z2 + c)`, `|z| <= 256`를 담은 소스 주석을 찾아 그 순서를 설명하세요.",
+    "completionCheck": "완료하려면 인용된 주석 키 세 개를 `if ismand`, `z2 = z * z; z = abs(z2 + c)`, `|z| <= 256`의 소스 순서로 적으세요."
+  },
+  "factsPresentation": {
+    "provenanceLead": "출처:",
+    "rightsLead": "권리:"
+  },
+  "contentHash": "358c5928b50aaf09f98fbeaf95214046e36dc45ac131623524b2b66dddb53d07"
+}

@@ -1,0 +1,34 @@
+{
+  "schema": "fractalpark-teaching-locale/v1",
+  "formulaId": "0e1b1705-ae4c-5685-b0fc-b82586ff144e",
+  "locale": "ru",
+  "sourceRevision": "ae01647cb774c689e3b51db29ed4e42fee4f0a1f63716ae8a5fe10d41aa4a985",
+  "semanticHash": "0960756fc1dc1b8a80afcb65aa073a990f64c1801605934bb4a473dd102f5652",
+  "englishContentHash": "856c806fd04ca678954c6e938babb483fd770c70f69128fe9d8aa633a62bac17",
+  "localizedName": "ok-34",
+  "overview": "В FRM-like/1 формула ok-34 следует инициализации, циклу и проверке выхода из исходного кода. Рассматривайте каждый шаг как явную операцию над состоянием, не выводя правила из названия. Закреплённый профиль позволяет вам наблюдать один и тот же итерационный процесс.",
+  "sourceWalkthrough": {
+    "0e1b1705-ae4c-5685-b0fc-b82586ff144e:ae01647cb774c689e3b51db29ed4e42fee4f0a1f63716ae8a5fe10d41aa4a985:init": "Узел инициализации выполняет: `z = pixel`",
+    "0e1b1705-ae4c-5685-b0fc-b82586ff144e:ae01647cb774c689e3b51db29ed4e42fee4f0a1f63716ae8a5fe10d41aa4a985:loop": "Узел цикла выполняет: `horizontal = abs(real(z))`",
+    "0e1b1705-ae4c-5685-b0fc-b82586ff144e:ae01647cb774c689e3b51db29ed4e42fee4f0a1f63716ae8a5fe10d41aa4a985:branch": "Ветвление внутри цикла начинается здесь: `if horizontal <= vertical`",
+    "0e1b1705-ae4c-5685-b0fc-b82586ff144e:ae01647cb774c689e3b51db29ed4e42fee4f0a1f63716ae8a5fe10d41aa4a985:bailout": "Проверка завершения: `LastSqr <= real(limit) * real(limit)`"
+  },
+  "syntaxFeatures": {
+    "source-sequence": "Эта структура располагает процитированные шаги исходного кода в проверяемой последовательности. 0e1b1705-ae4c-5685-b0fc-b82586ff144e:ae01647cb774c689e3b51db29ed4e42fee4f0a1f63716ae8a5fe10d41aa4a985:init, 0e1b1705-ae4c-5685-b0fc-b82586ff144e:ae01647cb774c689e3b51db29ed4e42fee4f0a1f63716ae8a5fe10d41aa4a985:loop, 0e1b1705-ae4c-5685-b0fc-b82586ff144e:ae01647cb774c689e3b51db29ed4e42fee4f0a1f63716ae8a5fe10d41aa4a985:branch, 0e1b1705-ae4c-5685-b0fc-b82586ff144e:ae01647cb774c689e3b51db29ed4e42fee4f0a1f63716ae8a5fe10d41aa4a985:bailout"
+  },
+  "parameterExperiment": {
+    "steps": [
+      "Начните со значений по умолчанию и меняйте по одному слоту времени выполнения: multiplier (0, 0)→(1, 0), thresholdOffset (0, 0)→(1, 0), initialMap identity→abs, orbitMap identity→sqr. Каждый раз записывайте видимый результат."
+    ],
+    "expectedObservation": "Сравните запуски и отметьте, совпадают ли видимый результат и поведение итераций для `if horizontal <= vertical`."
+  },
+  "exercise": {
+    "prompt": "Объясните порядок четырёх процитированных аннотаций ok-34: `z = pixel`, `horizontal = abs(real(z))`, ветви `horizontal <= vertical` и теста LastSqr.",
+    "completionCheck": "Для завершения перечислите четыре ключа и расположите `z = pixel`, `horizontal = abs(real(z))`, ветвь `horizontal <= vertical` и тест LastSqr в порядке исходного кода."
+  },
+  "factsPresentation": {
+    "provenanceLead": "Происхождение:",
+    "rightsLead": "Права:"
+  },
+  "contentHash": "c2586bad4dd51cfdb3703178c589c0ea0fb07ba2c352e95c996cf66713b818f3"
+}

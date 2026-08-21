@@ -1,0 +1,34 @@
+{
+  "schema": "fractalpark-teaching-locale/v1",
+  "formulaId": "38c3b212-c33b-5dd3-aae5-a514fc7e37e3",
+  "locale": "fr",
+  "sourceRevision": "824eda8dc180b39ab6c7e32f187530e1c35edeaec7db3f9d00c7a7acef78df63",
+  "semanticHash": "4d4a33c69523f26a7d553ecdc0a52d6a166aa8ea602de09bea6de0af124927cc",
+  "englishContentHash": "93faba75dfbe05531b274054b5fe731212d14c86ecd3635a16f697e715e30b48",
+  "localizedName": "airship",
+  "overview": "Dans FRM-like/1, airship suit l’initialisation, la boucle et le test de sortie du code source. Considère chaque étape comme une opération explicite sur l’état, sans déduire des règles du nom. Le profil fixé te permet d’observer le même processus itératif.",
+  "sourceWalkthrough": {
+    "38c3b212-c33b-5dd3-aae5-a514fc7e37e3:824eda8dc180b39ab6c7e32f187530e1c35edeaec7db3f9d00c7a7acef78df63:init": "Le nœud d’initialisation exécute : `if ismand`",
+    "38c3b212-c33b-5dd3-aae5-a514fc7e37e3:824eda8dc180b39ab6c7e32f187530e1c35edeaec7db3f9d00c7a7acef78df63:loop": "Le nœud de boucle exécute : `safeY = (1, 0)`",
+    "38c3b212-c33b-5dd3-aae5-a514fc7e37e3:824eda8dc180b39ab6c7e32f187530e1c35edeaec7db3f9d00c7a7acef78df63:branch": "La branche dans la boucle commence ici : `if abs(imag(z)) >= 1e-10`",
+    "38c3b212-c33b-5dd3-aae5-a514fc7e37e3:824eda8dc180b39ab6c7e32f187530e1c35edeaec7db3f9d00c7a7acef78df63:bailout": "Le test d’arrêt est : `|z| <= 256`"
+  },
+  "syntaxFeatures": {
+    "source-sequence": "Cette structure organise les étapes citées du code source dans une séquence vérifiable. 38c3b212-c33b-5dd3-aae5-a514fc7e37e3:824eda8dc180b39ab6c7e32f187530e1c35edeaec7db3f9d00c7a7acef78df63:init, 38c3b212-c33b-5dd3-aae5-a514fc7e37e3:824eda8dc180b39ab6c7e32f187530e1c35edeaec7db3f9d00c7a7acef78df63:loop, 38c3b212-c33b-5dd3-aae5-a514fc7e37e3:824eda8dc180b39ab6c7e32f187530e1c35edeaec7db3f9d00c7a7acef78df63:branch, 38c3b212-c33b-5dd3-aae5-a514fc7e37e3:824eda8dc180b39ab6c7e32f187530e1c35edeaec7db3f9d00c7a7acef78df63:bailout"
+  },
+  "parameterExperiment": {
+    "steps": [
+      "Utilise le profil fixé : mode parameter-plane; center (-0.5, 0); zoom 0.4; rotation 0; iterations 96. Exécute-le une fois et note le résultat ; puis répète avec le même profil."
+    ],
+    "expectedObservation": "Compare les deux exécutions et note si `safeY = (1, 0)` donne le même résultat visible et le même comportement itératif."
+  },
+  "exercise": {
+    "prompt": "Utilise les quatre annotations citées d’airship — `if ismand`, `safeY = (1, 0)`, la branche protégée de safeY et `|z| <= 256` — pour expliquer l’ordre du code source.",
+    "completionCheck": "Pour terminer, liste les quatre clés et range `if ismand`, `safeY = (1, 0)`, la branche protégée de safeY et `|z| <= 256` dans l’ordre du code source."
+  },
+  "factsPresentation": {
+    "provenanceLead": "Provenance :",
+    "rightsLead": "Droits :"
+  },
+  "contentHash": "b63638e72a546c57d18f976fbe3584111e2f7548af4b6bf8efec3a3e00e33176"
+}

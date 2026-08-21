@@ -1,0 +1,34 @@
+{
+  "schema": "fractalpark-teaching-locale/v1",
+  "formulaId": "38c3b212-c33b-5dd3-aae5-a514fc7e37e3",
+  "locale": "ko",
+  "sourceRevision": "824eda8dc180b39ab6c7e32f187530e1c35edeaec7db3f9d00c7a7acef78df63",
+  "semanticHash": "4d4a33c69523f26a7d553ecdc0a52d6a166aa8ea602de09bea6de0af124927cc",
+  "englishContentHash": "93faba75dfbe05531b274054b5fe731212d14c86ecd3635a16f697e715e30b48",
+  "localizedName": "airship",
+  "overview": "FRM-like/1에서 airship은 소스의 초기화, 반복, 종료 검사를 따라 실행돼요. 이름으로 규칙을 추측하지 말고 각 단계를 현재 상태에 대한 명시적 연산으로 보세요. 고정 프로필로 같은 반복 과정을 관찰할 수 있어요.",
+  "sourceWalkthrough": {
+    "38c3b212-c33b-5dd3-aae5-a514fc7e37e3:824eda8dc180b39ab6c7e32f187530e1c35edeaec7db3f9d00c7a7acef78df63:init": "초기화 노드가 실행하는 내용: `if ismand`",
+    "38c3b212-c33b-5dd3-aae5-a514fc7e37e3:824eda8dc180b39ab6c7e32f187530e1c35edeaec7db3f9d00c7a7acef78df63:loop": "반복 노드가 실행하는 내용: `safeY = (1, 0)`",
+    "38c3b212-c33b-5dd3-aae5-a514fc7e37e3:824eda8dc180b39ab6c7e32f187530e1c35edeaec7db3f9d00c7a7acef78df63:branch": "반복 안의 분기가 여기서 시작돼요: `if abs(imag(z)) >= 1e-10`",
+    "38c3b212-c33b-5dd3-aae5-a514fc7e37e3:824eda8dc180b39ab6c7e32f187530e1c35edeaec7db3f9d00c7a7acef78df63:bailout": "종료 검사는 다음과 같아요: `|z| <= 256`"
+  },
+  "syntaxFeatures": {
+    "source-sequence": "이 구조는 인용된 소스 단계들을 확인 가능한 순서로 정리해요. 38c3b212-c33b-5dd3-aae5-a514fc7e37e3:824eda8dc180b39ab6c7e32f187530e1c35edeaec7db3f9d00c7a7acef78df63:init, 38c3b212-c33b-5dd3-aae5-a514fc7e37e3:824eda8dc180b39ab6c7e32f187530e1c35edeaec7db3f9d00c7a7acef78df63:loop, 38c3b212-c33b-5dd3-aae5-a514fc7e37e3:824eda8dc180b39ab6c7e32f187530e1c35edeaec7db3f9d00c7a7acef78df63:branch, 38c3b212-c33b-5dd3-aae5-a514fc7e37e3:824eda8dc180b39ab6c7e32f187530e1c35edeaec7db3f9d00c7a7acef78df63:bailout"
+  },
+  "parameterExperiment": {
+    "steps": [
+      "고정 프로필을 사용하세요: mode parameter-plane; center (-0.5, 0); zoom 0.4; rotation 0; iterations 96. 한 번 실행해 결과를 기록하고, 같은 프로필로 다시 실행하세요."
+    ],
+    "expectedObservation": "두 실행을 비교하고 `safeY = (1, 0)`에서 보이는 결과와 반복 동작이 같은지 기록하세요."
+  },
+  "exercise": {
+    "prompt": "airship에서 인용된 네 주석인 `if ismand`, `safeY = (1, 0)`, 보호된 safeY 분기, `|z| <= 256`의 소스 순서를 설명하세요.",
+    "completionCheck": "완료하려면 네 주석 키를 적고 `if ismand`, `safeY = (1, 0)`, 보호된 safeY 분기, `|z| <= 256`의 소스 순서로 배열하세요."
+  },
+  "factsPresentation": {
+    "provenanceLead": "출처:",
+    "rightsLead": "권리:"
+  },
+  "contentHash": "4f9ee1fac98da3c2d072d270b71fb73336b6318e48aac8d5e33662f9b123d78a"
+}

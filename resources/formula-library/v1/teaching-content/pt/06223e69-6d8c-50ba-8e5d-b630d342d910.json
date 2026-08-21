@@ -1,0 +1,33 @@
+{
+  "schema": "fractalpark-teaching-locale/v1",
+  "formulaId": "06223e69-6d8c-50ba-8e5d-b630d342d910",
+  "locale": "pt",
+  "sourceRevision": "6fd1272cca8d356da5f0c49cbbb4278f0e5d727cefab5ad1daefa83fb4c1f3ce",
+  "semanticHash": "88a93741043d5f43532adda4f96b789b0e10c4bd3d31319b8c9aa7ba3af5fee9",
+  "englishContentHash": "dbff8e9436104f3caedd85de72fcbf92209ab78b3312bad81ab9f84813408da3",
+  "localizedName": "celticMandelbar",
+  "overview": "Em FRM-like/1, celticMandelbar segue a inicialização, o laço e o teste de saída do código-fonte. Trate cada passo como uma operação explícita sobre o estado, sem deduzir regras pelo nome. O perfil fixado permite observar o mesmo processo iterativo.",
+  "sourceWalkthrough": {
+    "06223e69-6d8c-50ba-8e5d-b630d342d910:6fd1272cca8d356da5f0c49cbbb4278f0e5d727cefab5ad1daefa83fb4c1f3ce:init": "O nó de inicialização executa: `if ismand`",
+    "06223e69-6d8c-50ba-8e5d-b630d342d910:6fd1272cca8d356da5f0c49cbbb4278f0e5d727cefab5ad1daefa83fb4c1f3ce:loop": "O nó do laço executa: `z2 = z * z`",
+    "06223e69-6d8c-50ba-8e5d-b630d342d910:6fd1272cca8d356da5f0c49cbbb4278f0e5d727cefab5ad1daefa83fb4c1f3ce:bailout": "O teste de término é: `|z| <= 256`"
+  },
+  "syntaxFeatures": {
+    "source-sequence": "Esta estrutura organiza os passos do código-fonte citados em uma sequência verificável. 06223e69-6d8c-50ba-8e5d-b630d342d910:6fd1272cca8d356da5f0c49cbbb4278f0e5d727cefab5ad1daefa83fb4c1f3ce:init, 06223e69-6d8c-50ba-8e5d-b630d342d910:6fd1272cca8d356da5f0c49cbbb4278f0e5d727cefab5ad1daefa83fb4c1f3ce:loop, 06223e69-6d8c-50ba-8e5d-b630d342d910:6fd1272cca8d356da5f0c49cbbb4278f0e5d727cefab5ad1daefa83fb4c1f3ce:bailout"
+  },
+  "parameterExperiment": {
+    "steps": [
+      "Use o perfil fixado: mode parameter-plane; center (-0.5, 0); zoom 0.4; rotation 0; iterations 96. Execute uma vez e registre o resultado; depois repita com o mesmo perfil."
+    ],
+    "expectedObservation": "Compare as duas execuções e registre se `z = conj(folded) + c` produz o mesmo resultado visível e comportamento iterativo."
+  },
+  "exercise": {
+    "prompt": "Encontre as anotações de fonte ligadas a `z = conj(folded) + c` e explique a ordem entre inicialização, laço e término.",
+    "completionCheck": "Para concluir, liste as três chaves de anotação citadas para `z = conj(folded) + c` e ordene-as de inicialização a laço e término."
+  },
+  "factsPresentation": {
+    "provenanceLead": "Proveniência:",
+    "rightsLead": "Direitos:"
+  },
+  "contentHash": "10ab564e188dc3f016a364b5836ce737f85e8490efca99e92fff84e14b1d530c"
+}

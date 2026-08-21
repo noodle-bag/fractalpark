@@ -1,0 +1,33 @@
+{
+  "schema": "fractalpark-teaching-locale/v1",
+  "formulaId": "e435bbb6-d866-5876-9f16-f04fbe61ff2b",
+  "locale": "zh",
+  "sourceRevision": "04817a2a54e195117685266ac9b569e294050cd4617bf3df518390c17ca0cf5f",
+  "semanticHash": "05fe294dadeb96fb7f8268f7fd5134f9a91882770485d3379f7c47bbe4425cb5",
+  "englishContentHash": "dda24ac4488bf55d772e1a7e2e01dc5eebfdf95dc6acde7077e900ad787b14b0",
+  "localizedName": "zubieta",
+  "overview": "在 FRM-like/1 中，zubieta 按源代码的初始化、循环和退出测试运行。请把每一步当作对当前状态的明确操作，而不是从名称推测规则。固定配置让你能观察同一迭代过程。",
+  "sourceWalkthrough": {
+    "e435bbb6-d866-5876-9f16-f04fbe61ff2b:04817a2a54e195117685266ac9b569e294050cd4617bf3df518390c17ca0cf5f:init": "初始化节点执行： `if ismand`",
+    "e435bbb6-d866-5876-9f16-f04fbe61ff2b:04817a2a54e195117685266ac9b569e294050cd4617bf3df518390c17ca0cf5f:loop": "循环节点执行： `z2 = z * z`",
+    "e435bbb6-d866-5876-9f16-f04fbe61ff2b:04817a2a54e195117685266ac9b569e294050cd4617bf3df518390c17ca0cf5f:bailout": "终止测试为： `|z| <= 256`"
+  },
+  "syntaxFeatures": {
+    "source-sequence": "此结构把所引用的源代码步骤组织为一个可检查的顺序。 e435bbb6-d866-5876-9f16-f04fbe61ff2b:04817a2a54e195117685266ac9b569e294050cd4617bf3df518390c17ca0cf5f:init, e435bbb6-d866-5876-9f16-f04fbe61ff2b:04817a2a54e195117685266ac9b569e294050cd4617bf3df518390c17ca0cf5f:loop, e435bbb6-d866-5876-9f16-f04fbe61ff2b:04817a2a54e195117685266ac9b569e294050cd4617bf3df518390c17ca0cf5f:bailout"
+  },
+  "parameterExperiment": {
+    "steps": [
+      "使用固定配置：mode parameter-plane; center (-0.5, 0); zoom 0.4; rotation 0; iterations 96。运行一次并记录结果；再以同一配置重复运行。"
+    ],
+    "expectedObservation": "比较两次运行，记录在`z2 = z * z`之后执行`z = abs(z2 + c)`时，可见结果和迭代行为是否一致。"
+  },
+  "exercise": {
+    "prompt": "找出包含`if ismand`、`z2 = z * z; z = abs(z2 + c)`和`|z| <= 256`的源注释，并说明它们的顺序。",
+    "completionCheck": "完成时列出所引用的三个注释键，并按`if ismand`、`z2 = z * z; z = abs(z2 + c)`、`|z| <= 256`的源顺序排列。"
+  },
+  "factsPresentation": {
+    "provenanceLead": "来源：",
+    "rightsLead": "权利："
+  },
+  "contentHash": "11c479ab8e55064f147294383eb74a63de2ffe4591d690cb60ed8ceb74bd9a5f"
+}

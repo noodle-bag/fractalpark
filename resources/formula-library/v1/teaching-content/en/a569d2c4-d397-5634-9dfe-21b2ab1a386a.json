@@ -1,0 +1,72 @@
+{
+  "schema": "fractalpark-teaching-en-fact/v1",
+  "formulaId": "a569d2c4-d397-5634-9dfe-21b2ab1a386a",
+  "sourceRevision": "b7dd588e3cf8c70a1ec52801a03b6ee1b6980009c0725f8a32ecfa8fe1a6dfad",
+  "semanticHash": "89e7b983a7455e1e3f1c4179ba6894492bcee9066e57e829ba9dc42efb44e1a9",
+  "overview": "buffalo is presented from its pinned FRM-like/1 source rather than from its name. The source supplies an initialization block, a loop block, and a bailout test; the pinned profile uses mode parameter-plane; center (-0.5, 0); zoom 0.4; rotation 0; iterations 96. Follow the cited operations to compare repeated runs.",
+  "mathDisclosure": "exact-structured",
+  "mathSummary": "The source is structured as init, loop, and bailout blocks. Its loop operations are x2 = abs(real(z)) * abs(real(z)); y2 = abs(imag(z)) * abs(imag(z)); nextZ = (0, 0); real(nextZ) = x2 - y2; imag(nextZ) = 2 * real(z) * abs(imag(z)); z = nextZ + c.",
+  "sourceWalkthrough": [
+    {
+      "annotationId": "a569d2c4-d397-5634-9dfe-21b2ab1a386a:b7dd588e3cf8c70a1ec52801a03b6ee1b6980009c0725f8a32ecfa8fe1a6dfad:init",
+      "nodeId": "frm-v1:b7dd588e3cf8c70a1ec52801a03b6ee1b6980009c0725f8a32ecfa8fe1a6dfad:init/0",
+      "explanation": "The init source node begins with `if ismand`; it establishes the starting path before the loop."
+    },
+    {
+      "annotationId": "a569d2c4-d397-5634-9dfe-21b2ab1a386a:b7dd588e3cf8c70a1ec52801a03b6ee1b6980009c0725f8a32ecfa8fe1a6dfad:loop",
+      "nodeId": "frm-v1:b7dd588e3cf8c70a1ec52801a03b6ee1b6980009c0725f8a32ecfa8fe1a6dfad:loop/0",
+      "explanation": "The loop source node executes `x2 = abs(real(z)) * abs(real(z))` on each pass."
+    },
+    {
+      "annotationId": "a569d2c4-d397-5634-9dfe-21b2ab1a386a:b7dd588e3cf8c70a1ec52801a03b6ee1b6980009c0725f8a32ecfa8fe1a6dfad:bailout",
+      "nodeId": "frm-v1:b7dd588e3cf8c70a1ec52801a03b6ee1b6980009c0725f8a32ecfa8fe1a6dfad:bailout",
+      "explanation": "The bailout source node tests `|z| <= 256`; the iteration continues while that condition holds."
+    }
+  ],
+  "syntaxFeatures": [
+    {
+      "featureId": "source-sequence",
+      "annotationIds": [
+        "a569d2c4-d397-5634-9dfe-21b2ab1a386a:b7dd588e3cf8c70a1ec52801a03b6ee1b6980009c0725f8a32ecfa8fe1a6dfad:init",
+        "a569d2c4-d397-5634-9dfe-21b2ab1a386a:b7dd588e3cf8c70a1ec52801a03b6ee1b6980009c0725f8a32ecfa8fe1a6dfad:loop",
+        "a569d2c4-d397-5634-9dfe-21b2ab1a386a:b7dd588e3cf8c70a1ec52801a03b6ee1b6980009c0725f8a32ecfa8fe1a6dfad:bailout"
+      ],
+      "explanation": "The cited source nodes for buffalo—`if ismand`, `x2 = abs(real(z)) * abs(real(z))`, and `|z| <= 256`—form its source-ordered path from setup through update to termination."
+    }
+  ],
+  "parameterExperiment": {
+    "parameterSymbols": [],
+    "steps": [
+      "Use the pinned profile (mode parameter-plane; center (-0.5, 0); zoom 0.4; rotation 0; iterations 96). Run it once and record the visible result, then repeat with the same profile."
+    ],
+    "expectedObservation": "Compare the buffalo runs and record whether `x2 = abs(real(z)) * abs(real(z))` has matching visible results and iteration behavior."
+  },
+  "exercise": {
+    "prompt": "Use the cited annotations for buffalo—`if ismand`, `x2 = abs(real(z)) * abs(real(z))`, and `|z| <= 256`—to describe the source order.",
+    "completionCheck": "Your response lists the 3 cited annotation IDs and orders buffalo’s `if ismand`, `x2 = abs(real(z)) * abs(real(z))`, and `|z| <= 256` from initialization through loop to termination.",
+    "answerDisclosure": "none"
+  },
+  "facts": {
+    "provenanceStatement": "Grounded in the pinned runtime source revision b7dd588e3cf8c70a1ec52801a03b6ee1b6980009c0725f8a32ecfa8fe1a6dfad and its semantic anchors.",
+    "rightsStatement": "rightsStatus: project-owned; implementationBasis: project-owned; publicationDecision: publish; decisionReason: publish-project-owned-native-recipe. This does not make any broader claim about a third-party original.",
+    "sourceIds": [
+      "runtime:b7dd588e3cf8c70a1ec52801a03b6ee1b6980009c0725f8a32ecfa8fe1a6dfad",
+      "decision:a569d2c4-d397-5634-9dfe-21b2ab1a386a"
+    ],
+    "licenseIds": [],
+    "claims": [
+      {
+        "text": "The runtime profile specifies mode parameter-plane; center (-0.5, 0); zoom 0.4; rotation 0; iterations 96.",
+        "sourceIds": [
+          "runtime:b7dd588e3cf8c70a1ec52801a03b6ee1b6980009c0725f8a32ecfa8fe1a6dfad"
+        ]
+      },
+      {
+        "text": "The publication record states publish with reason publish-project-owned-native-recipe.",
+        "sourceIds": [
+          "decision:a569d2c4-d397-5634-9dfe-21b2ab1a386a"
+        ]
+      }
+    ]
+  }
+}
