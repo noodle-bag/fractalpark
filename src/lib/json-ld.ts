@@ -23,19 +23,69 @@ import { SITE } from '@/lib/site';
 const baseUrl = SITE.url;
 const ogImage = `${baseUrl}${SITE.ogImage}`;
 
+const JSON_LD_LANGUAGE_BY_LOCALE: Readonly<Record<string, string>> = Object.freeze({
+  en: 'en',
+  zh: 'zh-CN',
+  pt: 'pt-BR',
+  ko: 'ko-KR',
+  ru: 'ru-RU',
+  es: 'es-ES',
+  fr: 'fr-FR',
+});
+
 /** BCP 47 language tags for JSON-LD `inLanguage`, derived from routing. */
 const IN_LANGUAGE: readonly string[] = routing.locales.map((locale) => {
-  const map: Record<string, string> = {
-    en: 'en',
-    zh: 'zh-CN',
-    pt: 'pt-BR',
-    ko: 'ko-KR',
-    ru: 'ru-RU',
-    es: 'es-ES',
-    fr: 'fr-FR',
-  };
-  return map[locale] ?? locale;
+  return JSON_LD_LANGUAGE_BY_LOCALE[locale] ?? locale;
 });
+
+export interface FormulaTeachingJsonLdOptionsV1 {
+  readonly url: string;
+  readonly locale: string;
+  readonly formulaId: string;
+  readonly canonicalName: string;
+  readonly name: string;
+  readonly description: string;
+  readonly image?: Readonly<{ url: string; width: number; height: number }>;
+  readonly breadcrumb?: object;
+}
+
+export function buildFormulaTeachingJsonLdV1(
+  options: FormulaTeachingJsonLdOptionsV1,
+) {
+  return {
+    '@context': 'https://schema.org',
+    '@type': ['WebPage', 'LearningResource'],
+    '@id': `${options.url}#learning-resource`,
+    url: options.url,
+    name: options.name,
+    description: options.description,
+    inLanguage: JSON_LD_LANGUAGE_BY_LOCALE[options.locale] ?? options.locale,
+    learningResourceType: 'Interactive formula guide',
+    educationalUse: 'instruction',
+    isPartOf: { '@id': `${baseUrl}/#website` },
+    about: {
+      '@type': 'Thing',
+      identifier: options.formulaId,
+      name: options.canonicalName,
+    },
+    license: PUBLIC_PROJECT.license.url,
+    provider: {
+      '@type': 'Organization',
+      '@id': `${baseUrl}/#organization`,
+      name: `${SITE.name} Project`,
+      url: baseUrl,
+    },
+    ...(options.image
+      ? {
+          primaryImageOfPage: {
+            '@type': 'ImageObject',
+            ...options.image,
+          },
+        }
+      : {}),
+    ...(options.breadcrumb ? { breadcrumb: options.breadcrumb } : {}),
+  } as const;
+}
 
 /**
  * WebSite schema — emitted on every page via [locale]/layout.tsx.

@@ -7,6 +7,10 @@ import {
 } from '@/content/formula-guides';
 import { PUBLISHED_TEACHING_GUIDES_V1 } from '@/content/teaching/guide-route-policy';
 import {
+  formulaLocaleKeyV1,
+  loadFormulaSeoSetsV1,
+} from '@/content/teaching/formula-seo-policy';
+import {
   INDEXABLE_PAGE_PATHS,
   buildIndexableAlternates,
   buildIndexableUrls,
@@ -38,10 +42,10 @@ describe('indexable pages', () => {
     ]) {
       expect(INDEXABLE_PAGE_PATHS).toContain(required);
     }
-    // Two formula tools and exactly 17 selected published Guides ride the set.
+    // Two formula tools and exactly 50 reviewed teaching formulas ride the set.
     expect(
       INDEXABLE_PAGE_PATHS.filter((page) => page.startsWith('/formulas/')).length
-    ).toBe(19);
+    ).toBe(52);
     for (const held of heldGuideAsset.rows) {
       expect(INDEXABLE_PAGE_PATHS).not.toContain(`/formulas/${held.formulaId}`);
     }
@@ -88,14 +92,22 @@ describe('sitemap', () => {
     const guide = PUBLISHED_TEACHING_GUIDES_V1[0];
     const formulaId = getPublishedFormulaGuideFormulaId(guide);
     const page = formulaGuidePath(guide);
-    const entries = buildSitemapV1((candidateId) =>
-      candidateId === formulaId ? ['en'] : SUPPORTED_LOCALES,
-    );
+    const production = loadFormulaSeoSetsV1();
+    const fallbackKey = formulaLocaleKeyV1('zh', formulaId);
+    const withoutZh = production.indexSet.filter((key) => key !== fallbackKey);
+    const entries = buildSitemapV1({
+      ...production,
+      indexSet: withoutZh,
+      sitemapSet: withoutZh,
+      hreflangSet: withoutZh,
+    });
     expect(entries.some((entry) => entry.url === `${SITE.url}/zh${page}`)).toBe(false);
     const english = entries.find((entry) => entry.url === `${SITE.url}/en${page}`);
-    expect(english?.alternates?.languages).toEqual({
-      en: `${SITE.url}/en${page}`,
-      'x-default': `${SITE.url}/en${page}`,
-    });
+    const languages = english?.alternates?.languages;
+    expect(languages).toBeDefined();
+    expect(languages).not.toHaveProperty('zh');
+    expect(languages?.en).toBe(`${SITE.url}/en${page}`);
+    expect(languages?.['x-default']).toBe(`${SITE.url}/en${page}`);
+    expect(Object.keys(languages ?? {})).toHaveLength(7);
   });
 });

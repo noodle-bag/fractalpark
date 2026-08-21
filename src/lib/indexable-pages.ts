@@ -1,25 +1,18 @@
-import { formulaGuidePath } from '@/content/formula-guides';
-import { PUBLISHED_TEACHING_GUIDES_V1 } from '@/content/teaching/guide-route-policy';
+import { PUBLISHED_ARTWORK_PAGES, artworkPagePath } from '@/content/artwork-pages';
 import {
-  PUBLISHED_ARTWORK_PAGES,
-  artworkPagePath,
-} from '@/content/artwork-pages';
+  loadFormulaSeoSetsV1,
+  loadIndexableTeachingFormulaIdsV1,
+  parseFormulaLocaleKeyV1,
+} from '@/content/teaching/formula-seo-policy';
 import { routing } from '@/i18n/routing';
 import { SITE } from '@/lib/site';
 
 /**
- * Canonical indexable URL set — the single source shared by `src/app/sitemap.ts`
- * and `scripts/submit-indexnow.ts`.
- *
- * Rules (Slice 2.1 contract):
- *  - Only pages we actually want indexed appear here.
- *  - The legacy locale roots `/en` and `/zh` are 301 redirect sources and are
- *    excluded; `/[locale]/explore` is the primary product entry.
- *  - `/[locale]/drift` is `noindex, follow` and is excluded.
- *  - No fabricated `lastModified`, `priority`, or `changeFrequency` signals.
+ * Canonical non-formula indexable page paths. Formula pages are projected from
+ * the reviewed teaching index set below so fallback locales never leak into
+ * sitemap or IndexNow inputs.
  */
-
-export const INDEXABLE_PAGE_PATHS: readonly string[] = [
+export const BASE_INDEXABLE_PAGE_PATHS: readonly string[] = Object.freeze([
   '/explore',
   '/gallery',
   '/formulas',
@@ -29,21 +22,39 @@ export const INDEXABLE_PAGE_PATHS: readonly string[] = [
   '/privacy',
   '/terms',
   '/community-rules',
-  ...PUBLISHED_TEACHING_GUIDES_V1.map(formulaGuidePath),
   ...PUBLISHED_ARTWORK_PAGES.map(artworkPagePath),
-];
+]);
 
-/** All canonical indexable absolute URLs, every locale × page. */
+export const INDEXABLE_FORMULA_PATHS_V1: readonly string[] = Object.freeze(
+  loadIndexableTeachingFormulaIdsV1().map(
+    (formulaId) => `/formulas/${formulaId}`,
+  ),
+);
+
+/** Maximum candidate set; runtime URL builders still filter formula locales. */
+export const INDEXABLE_PAGE_PATHS: readonly string[] = Object.freeze([
+  ...BASE_INDEXABLE_PAGE_PATHS,
+  ...INDEXABLE_FORMULA_PATHS_V1,
+]);
+
+/** All canonical indexable absolute URLs using the exact formula locale set. */
 export function buildIndexableUrls(baseUrl: string = SITE.url): string[] {
   const origin = baseUrl.replace(/\/$/, '');
-  return routing.locales.flatMap((locale) =>
-    INDEXABLE_PAGE_PATHS.map((page) => `${origin}/${locale}${page}`)
+  const baseUrls = routing.locales.flatMap((locale) =>
+    BASE_INDEXABLE_PAGE_PATHS.map((page) => `${origin}/${locale}${page}`),
   );
+  const formulaUrls = loadFormulaSeoSetsV1().indexSet.flatMap((key) => {
+    const parsed = parseFormulaLocaleKeyV1(key);
+    return parsed
+      ? [`${origin}/${parsed.locale}/formulas/${parsed.formulaId}`]
+      : [];
+  });
+  return [...baseUrls, ...formulaUrls];
 }
 
 /** Locale alternates (hreflang) for a given page path. */
 export function buildIndexableAlternates(
-  page: string
+  page: string,
 ): Record<string, string> {
   const languages: Record<string, string> = {};
   for (const locale of routing.locales) {

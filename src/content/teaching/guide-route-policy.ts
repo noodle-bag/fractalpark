@@ -39,7 +39,7 @@ export function isTeachingPageIndexableAtCommit20dV1(
   return hasLegacyGuide && delivery === 'delivered';
 }
 
-export function filterTeachingAlternatesAtCommit20dV1(
+export function filterTeachingAlternatesV1(
   alternates: Readonly<Record<string, string>>,
   deliveredLocales: readonly string[],
 ): Readonly<Record<string, string>> {
@@ -53,6 +53,9 @@ export function filterTeachingAlternatesAtCommit20dV1(
   }
   return Object.freeze(filtered);
 }
+
+/** @deprecated Commit 20d compatibility alias. */
+export const filterTeachingAlternatesAtCommit20dV1 = filterTeachingAlternatesV1;
 
 /**
  * Fail closed before the legacy Guide branch can expose teaching/runtime UI.

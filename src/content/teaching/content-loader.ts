@@ -357,6 +357,7 @@ interface GlobalTeachingContextV1 {
   readonly bindings: ReadonlyMap<string, TeachingBindingV1>;
   readonly ledgerUnits: ReadonlyMap<string, JsonRecord>;
   readonly maintainers: ReadonlySet<string>;
+  readonly runtimeFormulaIds: readonly string[];
   readonly approval: Readonly<{
     evidenceRef: string;
     actorId: string;
@@ -538,6 +539,7 @@ function buildGlobalContextUnchecked(
     bindings,
     ledgerUnits: units,
     maintainers: new Set(ledger.maintainerActorIds as string[]),
+    runtimeFormulaIds: Object.freeze([...(runtimeFormulaIds as string[])]),
     approval,
   };
 }
@@ -843,5 +845,15 @@ export function loadDeliveredTeachingLocalesV1(
   return resolveDeliveredTeachingLocalesFromAssetsV1(
     PRODUCTION_ASSETS_V1,
     formulaId,
+  );
+}
+
+export function loadPublishedRuntimeFormulaIdsV1(): readonly string[] {
+  return resolveGlobalContext(PRODUCTION_ASSETS_V1)?.runtimeFormulaIds ?? [];
+}
+
+export function loadSelectedTeachingFormulaIdsV1(): readonly string[] {
+  return Object.freeze(
+    TEACHING_SELECTION_BINDINGS_V1.map((binding) => binding.formulaId),
   );
 }

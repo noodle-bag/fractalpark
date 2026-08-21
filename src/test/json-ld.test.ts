@@ -1,5 +1,6 @@
 import { describe, expect, it } from 'vitest';
 import {
+  buildFormulaTeachingJsonLdV1,
   buildSoftwareApplicationJsonLd,
   renderJsonLd,
   websiteJsonLd,
@@ -59,6 +60,27 @@ describe('SoftwareApplication JSON-LD builder', () => {
     ) as Record<string, unknown>;
     expect(parsed['@context']).toBe('https://schema.org');
     expect(parsed['@id']).toBe(`${SITE.url}/#software`);
+  });
+});
+
+describe('Formula teaching JSON-LD', () => {
+  it('uses canonical locale URLs, BCP 47 language, and reviewed learning goals', () => {
+    const url = `${SITE.url}/zh/formulas/00e14aa8-b766-54ea-a359-3f5d20d329b7`;
+    const jsonLd = buildFormulaTeachingJsonLdV1({
+      url,
+      locale: 'zh',
+      formulaId: '00e14aa8-b766-54ea-a359-3f5d20d329b7',
+      canonicalName: 'mandelbrot',
+      name: '曼德勃罗教学页',
+      description: '已审校说明',
+    });
+    expect(jsonLd['@id']).toBe(`${url}#learning-resource`);
+    expect(jsonLd['@type']).toEqual(['WebPage', 'LearningResource']);
+    expect(jsonLd.inLanguage).toBe('zh-CN');
+    expect(jsonLd.url).toBe(url);
+    expect(jsonLd.description).toBe('已审校说明');
+    expect(jsonLd.isPartOf['@id']).toBe(`${SITE.url}/#website`);
+    expect(JSON.parse(renderJsonLd(jsonLd))).toEqual(jsonLd);
   });
 });
 

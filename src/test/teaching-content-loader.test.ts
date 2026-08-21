@@ -467,9 +467,9 @@ describe('teaching content loader v1', () => {
     );
     expect(source.match(/loadTeachingContentCached\(formulaId, locale\)/g)).toHaveLength(2);
     expect(source.match(/<TeachingContentPanel/g)).toHaveLength(2);
-    expect(source).toContain('isTeachingPageIndexableAtCommit20dV1(');
-    expect(source).toContain('loadDeliveredTeachingLocalesCached(formulaId)');
-    expect(source).toContain('filterTeachingAlternatesAtCommit20dV1(');
+    expect(source).toContain('isFormulaLocaleIndexableV1(formulaId, locale)');
+    expect(source).toContain('loadIndexableTeachingLocalesCached(formulaId)');
+    expect(source).toContain('filterTeachingAlternatesV1(');
     expect(source).not.toContain('TEACHING_CONTENT_REGISTRY_V1');
   });
 });

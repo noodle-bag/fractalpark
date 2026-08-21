@@ -22,23 +22,24 @@ import {
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import {
-  PUBLISHED_FORMULA_GUIDES,
   formulaGuideImagePath,
   formulaGuideOpenGraphImagePath,
   formulaGuidePath,
-  getPublishedFormulaGuideFormulaId,
 } from '@/content/formula-guides';
 import {
-  filterTeachingAlternatesAtCommit20dV1,
+  filterTeachingAlternatesV1,
   getLegacyGuideRecordPathV1,
   getTeachingGuideForFormulaRecordV1,
-  isTeachingPageIndexableAtCommit20dV1,
 } from '@/content/teaching/guide-route-policy';
 import {
-  loadDeliveredTeachingLocalesV1,
   loadTeachingContentV1,
   type TeachingContentResolutionV1,
 } from '@/content/teaching/content-loader';
+import {
+  isFormulaLocaleIndexableV1,
+  loadIndexableTeachingFormulaIdsForLocaleV1,
+  loadIndexableTeachingLocalesV1,
+} from '@/content/teaching/formula-seo-policy';
 import { getFormulaMetadata } from '@/engine/plugins/formula-catalog';
 import { Link } from '@/i18n/routing';
 import { buildFormulaDefaultDocument } from '@/lib/formula-documents';
@@ -47,7 +48,7 @@ import {
   findBuiltinPresetConfigById,
   parseGalleryPresetsFile,
 } from '@/lib/gallery-presets';
-import { renderJsonLd } from '@/lib/json-ld';
+import { buildFormulaTeachingJsonLdV1, renderJsonLd } from '@/lib/json-ld';
 import { SITE, buildLocaleAlternates } from '@/lib/site';
 import { splitProseParagraphs } from '@/lib/content-text';
 import { appendRemixSource } from '@/lib/remix-source';
@@ -71,10 +72,14 @@ interface FormulaPageProps {
 
 export const dynamicParams = true;
 
-export function generateStaticParams() {
-  return PUBLISHED_FORMULA_GUIDES.map((entry) => ({
-    formulaId: getPublishedFormulaGuideFormulaId(entry),
-  }));
+export function generateStaticParams({
+  params,
+}: {
+  params: { locale: string };
+}) {
+  return loadIndexableTeachingFormulaIdsForLocaleV1(params.locale).map(
+    (formulaId) => ({ formulaId }),
+  );
 }
 
 async function loadFormulaRouteRecord(
@@ -88,8 +93,8 @@ async function loadFormulaRouteRecord(
 /** generateMetadata and the page share one route projection per render. */
 const loadFormulaRouteRecordCached = cache(loadFormulaRouteRecord);
 const loadTeachingContentCached = cache(loadTeachingContentV1);
-const loadDeliveredTeachingLocalesCached = cache(
-  loadDeliveredTeachingLocalesV1,
+const loadIndexableTeachingLocalesCached = cache(
+  loadIndexableTeachingLocalesV1,
 );
 
 function resolveRouteOrRedirect(
@@ -119,6 +124,10 @@ export async function generateMetadata({
   if (!routeRecord) notFound();
 
   const teaching = loadTeachingContentCached(formulaId, locale);
+  const indexable = isFormulaLocaleIndexableV1(formulaId, locale);
+  const indexedLocales = indexable
+    ? loadIndexableTeachingLocalesCached(formulaId)
+    : [];
   const entry = getTeachingGuideForFormulaRecordV1(routeRecord.formulaRecord);
   if (!entry) {
     const t = await getTranslations({
@@ -132,11 +141,41 @@ export async function generateMetadata({
       teaching.delivery === 'not-delivered'
         ? t('description')
         : localized?.overview ?? teaching.english.overview;
+    const title = localized?.localizedName ?? routeRecord.displayName;
+    const languages = indexable
+      ? filterTeachingAlternatesV1(
+          buildLocaleAlternates(path),
+          indexedLocales,
+        )
+      : undefined;
+    const image = `${SITE.url}${SITE.ogImage}`;
     return {
-      title: localized?.localizedName ?? routeRecord.displayName,
+      title,
       description,
-      robots: { index: false, follow: true },
-      alternates: { canonical: `/${locale}${path}` },
+      robots: indexable ? undefined : { index: false, follow: true },
+      alternates: {
+        canonical: `/${locale}${path}`,
+        ...(languages ? { languages } : {}),
+      },
+      ...(indexable
+        ? {
+            openGraph: {
+              title,
+              description,
+              url: `${SITE.url}/${locale}${path}`,
+              siteName: SITE.name,
+              locale: OG_LOCALE[locale as SupportedLocale] ?? OG_LOCALE.en,
+              type: 'article' as const,
+              images: [image],
+            },
+            twitter: {
+              card: 'summary_large_image' as const,
+              title,
+              description,
+              images: [image],
+            },
+          }
+        : {}),
     };
   }
 
@@ -146,14 +185,10 @@ export async function generateMetadata({
   });
   const path = formulaGuidePath(entry);
   const image = `${SITE.url}${formulaGuideOpenGraphImagePath(entry)}`;
-  const indexable = isTeachingPageIndexableAtCommit20dV1(
-    true,
-    teaching.delivery,
-  );
   const languages = indexable
-    ? filterTeachingAlternatesAtCommit20dV1(
+    ? filterTeachingAlternatesV1(
         buildLocaleAlternates(path),
-        loadDeliveredTeachingLocalesCached(formulaId),
+        indexedLocales,
       )
     : undefined;
 
@@ -203,10 +238,12 @@ export default async function FormulaPage({ params }: FormulaPageProps) {
   if (!routeRecord) notFound();
 
   const teaching = loadTeachingContentCached(formulaId, locale);
+  const indexable = isFormulaLocaleIndexableV1(formulaId, locale);
   const entry = getTeachingGuideForFormulaRecordV1(routeRecord.formulaRecord);
   if (!entry) {
     return (
       <FormulaIdentityPage
+        indexable={indexable}
         locale={locale}
         record={routeRecord}
         teaching={teaching}
@@ -276,42 +313,52 @@ export default async function FormulaPage({ params }: FormulaPageProps) {
       href,
     };
   });
-  const jsonLd = {
-    '@context': 'https://schema.org',
-    '@type': 'WebPage',
-    name: t('title'),
-    description: t('summary'),
-    url: pageUrl,
-    primaryImageOfPage: {
-      '@type': 'ImageObject',
-      url: `${SITE.url}${imagePath}`,
-      width: 1200,
-      height: 750,
-    },
-    breadcrumb: {
-      '@type': 'BreadcrumbList',
-      itemListElement: [
-        {
-          '@type': 'ListItem',
-          position: 1,
-          name: guideT('breadcrumbHome'),
-          item: `${SITE.url}/${locale}/explore`,
-        },
-        {
-          '@type': 'ListItem',
-          position: 2,
-          name: guideT('breadcrumbFormulas'),
-          item: `${SITE.url}/${locale}/formulas`,
-        },
-        {
-          '@type': 'ListItem',
-          position: 3,
-          name: t('title'),
-          item: pageUrl,
-        },
-      ],
-    },
+  const localizedTeaching =
+    teaching.delivery === 'delivered' ? teaching.localized : null;
+  const reviewedDescription =
+    teaching.delivery === 'not-delivered'
+      ? t('summary')
+      : localizedTeaching?.overview ?? teaching.english.overview;
+  const breadcrumb = {
+    '@type': 'BreadcrumbList',
+    itemListElement: [
+      {
+        '@type': 'ListItem',
+        position: 1,
+        name: guideT('breadcrumbHome'),
+        item: `${SITE.url}/${locale}/explore`,
+      },
+      {
+        '@type': 'ListItem',
+        position: 2,
+        name: guideT('breadcrumbFormulas'),
+        item: `${SITE.url}/${locale}/formulas`,
+      },
+      {
+        '@type': 'ListItem',
+        position: 3,
+        name: t('title'),
+        item: pageUrl,
+      },
+    ],
   };
+  const jsonLd =
+    indexable && teaching.delivery === 'delivered'
+      ? buildFormulaTeachingJsonLdV1({
+          url: pageUrl,
+          locale,
+          formulaId: entry.formulaId,
+          canonicalName: routeRecord.displayName,
+          name: t('title'),
+          description: reviewedDescription,
+          image: {
+            url: `${SITE.url}${imagePath}`,
+            width: 1200,
+            height: 750,
+          },
+          breadcrumb,
+        })
+      : null;
 
   return (
     <main className="pb-24">
@@ -319,10 +366,12 @@ export default async function FormulaPage({ params }: FormulaPageProps) {
         eventName="view_formula"
         eventParams={{ formula_id: entry.formulaId, locale }}
       />
-      <script
-        dangerouslySetInnerHTML={{ __html: renderJsonLd(jsonLd) }}
-        type="application/ld+json"
-      />
+      {jsonLd ? (
+        <script
+          dangerouslySetInnerHTML={{ __html: renderJsonLd(jsonLd) }}
+          type="application/ld+json"
+        />
+      ) : null}
 
       <header className="border-b bg-muted/20">
         <div className="mx-auto max-w-7xl px-5 py-12 sm:px-8 sm:py-16 lg:py-20">
@@ -629,10 +678,12 @@ export default async function FormulaPage({ params }: FormulaPageProps) {
 }
 
 async function FormulaIdentityPage({
+  indexable,
   locale,
   record,
   teaching,
 }: {
+  indexable: boolean;
   locale: string;
   record: FormulaRouteRecordV1;
   teaching: TeachingContentResolutionV1;
@@ -641,9 +692,33 @@ async function FormulaIdentityPage({
     locale,
     namespace: 'formulas.directory',
   });
+  const localized = teaching.delivery === 'delivered' ? teaching.localized : null;
+  const name = localized?.localizedName ?? record.displayName;
+  const description =
+    teaching.delivery === 'not-delivered'
+      ? t('description')
+      : localized?.overview ?? teaching.english.overview;
+  const pageUrl = `${SITE.url}/${locale}${buildFormulaCanonicalPathV1(record.formulaId)}`;
+  const jsonLd =
+    indexable && teaching.delivery === 'delivered'
+      ? buildFormulaTeachingJsonLdV1({
+          url: pageUrl,
+          locale,
+          formulaId: record.formulaId,
+          canonicalName: record.displayName,
+          name,
+          description,
+        })
+      : null;
 
   return (
     <main className="pb-24" data-formula-id={record.formulaId}>
+      {jsonLd ? (
+        <script
+          dangerouslySetInnerHTML={{ __html: renderJsonLd(jsonLd) }}
+          type="application/ld+json"
+        />
+      ) : null}
       <header className="border-b bg-muted/20">
         <div className="mx-auto max-w-5xl px-5 py-14 sm:px-8 sm:py-16">
           <nav
