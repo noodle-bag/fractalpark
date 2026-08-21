@@ -1,0 +1,33 @@
+{
+  "schema": "fractalpark-teaching-locale/v1",
+  "formulaId": "20e16f12-e0e9-5f56-9364-5c2b60c05f20",
+  "locale": "es",
+  "sourceRevision": "cccfbd116d3760e4b3cd57e20f2cb9f5102c7326c75c5d89137be22c2352892c",
+  "semanticHash": "72efb4d2a055e760c18f96b5776a3e25000f7d57d81352136617b91d8199344c",
+  "englishContentHash": "dacdad9b8155a4ececb9a74b010134188c76050c8adee67842a02f1dfc74b2db",
+  "overview": "En FRM-like/1, la inicialización hace z = pixel. En cada iteración, el nodo ejecuta z = exp(z * log(z)). La terminación comprueba |z| <= real(threshold).",
+  "sourceWalkthrough": {
+    "20e16f12-e0e9-5f56-9364-5c2b60c05f20:cccfbd116d3760e4b3cd57e20f2cb9f5102c7326c75c5d89137be22c2352892c:init": "En FRM-like/1, la inicialización hace z = pixel.",
+    "20e16f12-e0e9-5f56-9364-5c2b60c05f20:cccfbd116d3760e4b3cd57e20f2cb9f5102c7326c75c5d89137be22c2352892c:loop": "En cada iteración, el nodo ejecuta z = exp(z * log(z)).",
+    "20e16f12-e0e9-5f56-9364-5c2b60c05f20:cccfbd116d3760e4b3cd57e20f2cb9f5102c7326c75c5d89137be22c2352892c:termination": "La terminación comprueba |z| <= real(threshold)."
+  },
+  "syntaxFeatures": {
+    "sequence": "En cada iteración, el nodo ejecuta z = exp(z * log(z))."
+  },
+  "parameterExperiment": {
+    "steps": [
+      "Usa el perfil fijado y los valores predeterminados como base. Cambia solo threshold, mantén los demás espacios de ejecución fijos, ejecuta 96 iteraciones, restaura el valor predeterminado de threshold y registra si el resultado difiere."
+    ],
+    "expectedObservation": "Registra si difiere z = exp(z * log(z)) o |z| <= real(threshold)."
+  },
+  "exercise": {
+    "prompt": "Explica z = exp(z * log(z)).",
+    "completionCheck": "Para terminar, debes nombrar exactamente las 3 anotaciones y explicar este detalle de la fórmula: Pista: z = exp(z * log(z)).",
+    "hint": "Pista: z = exp(z * log(z))."
+  },
+  "factsPresentation": {
+    "provenanceLead": "La procedencia figura en el registro de fuente fijado.",
+    "rightsLead": "El estado de derechos y la decisión de publicación figuran en el registro de decisión fijado."
+  },
+  "contentHash": "193804e7bcc317a50137ad910522022bb080145b482a4faa87a2cb700d3d0fe0"
+}

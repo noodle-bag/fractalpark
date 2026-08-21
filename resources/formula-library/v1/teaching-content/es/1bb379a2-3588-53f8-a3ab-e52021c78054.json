@@ -1,0 +1,33 @@
+{
+  "schema": "fractalpark-teaching-locale/v1",
+  "formulaId": "1bb379a2-3588-53f8-a3ab-e52021c78054",
+  "locale": "es",
+  "sourceRevision": "d51707785f4d59fbfa309c2dbd8da93ac1a0ca152c067e6e34c4851585652768",
+  "semanticHash": "597a8cb34733ab22b5f2452fa41e5f56f5bae984c8ae2c8e6fdc43d5c45a4318",
+  "englishContentHash": "1608ffe1a8a2eb227fdac49d45bb2acd6e8c1cc72c87ad2aaba26f5086036ba6",
+  "overview": "En FRM-like/1, la inicialización hace seed = pixel; z = seed. En cada iteración, el nodo ejecuta z = sqr(z)+sin(z)+seed. La terminación comprueba |z| < 4.",
+  "sourceWalkthrough": {
+    "1bb379a2-3588-53f8-a3ab-e52021c78054:d51707785f4d59fbfa309c2dbd8da93ac1a0ca152c067e6e34c4851585652768:init": "En FRM-like/1, la inicialización hace seed = pixel; z = seed.",
+    "1bb379a2-3588-53f8-a3ab-e52021c78054:d51707785f4d59fbfa309c2dbd8da93ac1a0ca152c067e6e34c4851585652768:loop": "En cada iteración, el nodo ejecuta z = sqr(z)+sin(z)+seed.",
+    "1bb379a2-3588-53f8-a3ab-e52021c78054:d51707785f4d59fbfa309c2dbd8da93ac1a0ca152c067e6e34c4851585652768:termination": "La terminación comprueba |z| < 4."
+  },
+  "syntaxFeatures": {
+    "sequence": "En cada iteración, el nodo ejecuta z = sqr(z)+sin(z)+seed."
+  },
+  "parameterExperiment": {
+    "steps": [
+      "Usa el perfil fijado como base. Ejecuta 48 y luego 96 iteraciones, con todos los controles fijos, y registra si difieren z = sqr(z)+sin(z)+seed o |z| < 4."
+    ],
+    "expectedObservation": "El límite mayor puede revelar usos posteriores del seed almacenado en la actualización; registra si difieren los recuentos de escape observados."
+  },
+  "exercise": {
+    "prompt": "Explica z = sqr(z)+sin(z)+seed.",
+    "completionCheck": "Para terminar, debes nombrar exactamente las 3 anotaciones y explicar este detalle de la fórmula: Pista: z = sqr(z)+sin(z)+seed.",
+    "hint": "Pista: z = sqr(z)+sin(z)+seed."
+  },
+  "factsPresentation": {
+    "provenanceLead": "La procedencia figura en el registro de fuente fijado.",
+    "rightsLead": "El estado de derechos y la decisión de publicación figuran en el registro de decisión fijado."
+  },
+  "contentHash": "08e5372f67578a04e7fa2a733ca451b58b4a9a426e53e5b869ba7404a72eb586"
+}

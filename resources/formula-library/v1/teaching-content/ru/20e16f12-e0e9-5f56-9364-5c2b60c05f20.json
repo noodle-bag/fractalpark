@@ -1,0 +1,33 @@
+{
+  "schema": "fractalpark-teaching-locale/v1",
+  "formulaId": "20e16f12-e0e9-5f56-9364-5c2b60c05f20",
+  "locale": "ru",
+  "sourceRevision": "cccfbd116d3760e4b3cd57e20f2cb9f5102c7326c75c5d89137be22c2352892c",
+  "semanticHash": "72efb4d2a055e760c18f96b5776a3e25000f7d57d81352136617b91d8199344c",
+  "englishContentHash": "dacdad9b8155a4ececb9a74b010134188c76050c8adee67842a02f1dfc74b2db",
+  "overview": "В FRM-like/1 инициализация задаёт z = pixel. В цикле выполняется z = exp(z * log(z)). Завершение проверяет |z| <= real(threshold).",
+  "sourceWalkthrough": {
+    "20e16f12-e0e9-5f56-9364-5c2b60c05f20:cccfbd116d3760e4b3cd57e20f2cb9f5102c7326c75c5d89137be22c2352892c:init": "В FRM-like/1 инициализация задаёт z = pixel.",
+    "20e16f12-e0e9-5f56-9364-5c2b60c05f20:cccfbd116d3760e4b3cd57e20f2cb9f5102c7326c75c5d89137be22c2352892c:loop": "В цикле выполняется z = exp(z * log(z)).",
+    "20e16f12-e0e9-5f56-9364-5c2b60c05f20:cccfbd116d3760e4b3cd57e20f2cb9f5102c7326c75c5d89137be22c2352892c:termination": "Завершение проверяет |z| <= real(threshold)."
+  },
+  "syntaxFeatures": {
+    "sequence": "В цикле выполняется z = exp(z * log(z))."
+  },
+  "parameterExperiment": {
+    "steps": [
+      "Используйте закреплённый профиль и значения по умолчанию как базу. Измените только threshold, оставьте остальные слоты времени выполнения неизменными, выполните 96 итераций, восстановите значение threshold по умолчанию и запишите, различается ли результат."
+    ],
+    "expectedObservation": "Запишите, различается ли z = exp(z * log(z)) или |z| <= real(threshold)."
+  },
+  "exercise": {
+    "prompt": "Объясните z = exp(z * log(z)).",
+    "completionCheck": "Для завершения вы должны точно назвать все 3 аннотации и объяснить следующую деталь формулы: Подсказка: z = exp(z * log(z)).",
+    "hint": "Подсказка: z = exp(z * log(z))."
+  },
+  "factsPresentation": {
+    "provenanceLead": "Сведения о происхождении приведены в закреплённой записи источника.",
+    "rightsLead": "Статус прав и решение о публикации приведены в закреплённой записи решения."
+  },
+  "contentHash": "0cbedb9b3940d003850c4ae8b54fc1efa59ad5797d3d62bc0dd69693492eb58d"
+}

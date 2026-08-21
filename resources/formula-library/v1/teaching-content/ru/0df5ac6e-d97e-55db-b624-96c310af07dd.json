@@ -1,0 +1,35 @@
+{
+  "schema": "fractalpark-teaching-locale/v1",
+  "formulaId": "0df5ac6e-d97e-55db-b624-96c310af07dd",
+  "locale": "ru",
+  "sourceRevision": "bb7d3fd03ddb3b27f66b28fea82cdfa4da6c88cf15a23c6da8fe27a8adf1e34e",
+  "semanticHash": "b3d93634d09622186eeef16d005021fb8bf551698b662dbdf5da191841efe1d5",
+  "englishContentHash": "95137002ad32c06577e02def4799eacd6fb98795877b8144428777fb641352d1",
+  "overview": "В FRM-like/1 инициализация задаёт z = pixel. В цикле выполняется denom = cos(z). Завершение проверяет |z - zPrev| >= 0.000001.",
+  "sourceWalkthrough": {
+    "0df5ac6e-d97e-55db-b624-96c310af07dd:bb7d3fd03ddb3b27f66b28fea82cdfa4da6c88cf15a23c6da8fe27a8adf1e34e:init": "В FRM-like/1 инициализация задаёт z = pixel.",
+    "0df5ac6e-d97e-55db-b624-96c310af07dd:bb7d3fd03ddb3b27f66b28fea82cdfa4da6c88cf15a23c6da8fe27a8adf1e34e:loop": "В цикле выполняется denom = cos(z).",
+    "0df5ac6e-d97e-55db-b624-96c310af07dd:bb7d3fd03ddb3b27f66b28fea82cdfa4da6c88cf15a23c6da8fe27a8adf1e34e:branch": "Ветвление использует |denom|² < 1e-10 → z = z; |denom|² >= 1e-10 → z = z - sin(z)/denom + 0.18*c.",
+    "0df5ac6e-d97e-55db-b624-96c310af07dd:bb7d3fd03ddb3b27f66b28fea82cdfa4da6c88cf15a23c6da8fe27a8adf1e34e:termination": "Завершение проверяет |z - zPrev| >= 0.000001."
+  },
+  "syntaxFeatures": {
+    "sequence": "В цикле выполняется denom = cos(z).",
+    "branch": "Ветвление использует |denom|² < 1e-10 → z = z; |denom|² >= 1e-10 → z = z - sin(z)/denom + 0.18*c."
+  },
+  "parameterExperiment": {
+    "steps": [
+      "Используйте закреплённый профиль как базу. Выполните 48, затем 96 итераций при неизменных настройках и запишите, различаются ли denom = cos(z) или |z - zPrev| >= 0.000001."
+    ],
+    "expectedObservation": "Больший предел итераций может показать дополнительные защищённые или незащищённые обновления sin/cos; зафиксируйте, различаются ли числа итераций."
+  },
+  "exercise": {
+    "prompt": "Опишите два исхода проверки величины cos(z) denom.",
+    "completionCheck": "Для завершения вы должны точно назвать все 4 аннотации и указать два исхода защиты: z = z и z = z - sin(z)/denom + 0.18*c.",
+    "hint": "Подсказка: при |denom|² < 1e-10 выполняется z = z; иначе z = z - sin(z)/denom + 0.18*c."
+  },
+  "factsPresentation": {
+    "provenanceLead": "Сведения о происхождении приведены в закреплённой записи источника.",
+    "rightsLead": "Статус прав и решение о публикации приведены в закреплённой записи решения."
+  },
+  "contentHash": "5fad36a51c96e458efc64df35d8750f4b2cffe2a715b42c20b9f311b08e29f92"
+}

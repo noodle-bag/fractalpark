@@ -1,0 +1,28 @@
+{
+  "id": "386aad6c-d341-4e8a-8a70-a20badcb9676",
+  "object": "chat.completion",
+  "created": 1787320775,
+  "model": "deepseek-v4-flash",
+  "choices": [
+    {
+      "index": 0,
+      "message": {
+        "role": "assistant",
+        "content": "{\"verdict\":\"APPROVE\",\"summary\":\"All 10 formulas and 70 content units reviewed. Technical fidelity, rights/provenance, locale fidelity, and teaching quality are consistent with the source packet. No blockers or high-severity issues found.\",\"findings\":[],\"coverageGaps\":[]}"
+      },
+      "logprobs": null,
+      "finish_reason": "stop"
+    }
+  ],
+  "usage": {
+    "prompt_tokens": 112594,
+    "completion_tokens": 65,
+    "total_tokens": 112659,
+    "prompt_tokens_details": {
+      "cached_tokens": 47488
+    },
+    "prompt_cache_hit_tokens": 47488,
+    "prompt_cache_miss_tokens": 65106
+  },
+  "system_fingerprint": "a26a7955944dc5c60445bff77fac9c8e"
+}

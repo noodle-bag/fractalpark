@@ -1,0 +1,33 @@
+{
+  "schema": "fractalpark-teaching-locale/v1",
+  "formulaId": "75e70076-b422-5535-b3c9-c484fbf879e6",
+  "locale": "zh",
+  "sourceRevision": "be9ade0f6d4b272ca864da504bb66a6abab234322112686e72e1624353ce11ec",
+  "semanticHash": "2d2612cf6d0532accadd7fe047298eff9503b8ff553e32c1a87dfe3ac3c2469f",
+  "englishContentHash": "d9ce80f39061c879038b92a392a9d3785eaaba6b3e70b88d73dcd47383fa4d14",
+  "overview": "在 FRM-like/1 中，初始化执行 z = pixel。每轮处理 z2 = z*z，z3 = z2*z，z4 = z2*z2，随后 z = numerator/denominator。 终止条件为 |z - zPrev| >= 0.000001。",
+  "sourceWalkthrough": {
+    "75e70076-b422-5535-b3c9-c484fbf879e6:be9ade0f6d4b272ca864da504bb66a6abab234322112686e72e1624353ce11ec:init": "初始化节点执行 z = pixel。",
+    "75e70076-b422-5535-b3c9-c484fbf879e6:be9ade0f6d4b272ca864da504bb66a6abab234322112686e72e1624353ce11ec:loop": "循环节点执行 z2 = z*z，z3 = z2*z，z4 = z2*z2，随后 z = numerator/denominator。",
+    "75e70076-b422-5535-b3c9-c484fbf879e6:be9ade0f6d4b272ca864da504bb66a6abab234322112686e72e1624353ce11ec:termination": "终止节点检查 |z - zPrev| >= 0.000001。"
+  },
+  "syntaxFeatures": {
+    "sequence": "顺序展示 z = pixel、z2 = z*z，z3 = z2*z，z4 = z2*z2，随后 z = numerator/denominator 与 |z - zPrev| >= 0.000001。"
+  },
+  "parameterExperiment": {
+    "steps": [
+      "以固定配置为基线。运行 48 次迭代，再运行 96 次迭代，保持全部控制不变，并记录比较由 z2、z3、z4 构成的比值更新的后续次数或终止计数是否不同。"
+    ],
+    "expectedObservation": "较大的迭代上限可能暴露更多由 z2、z3、z4 构成的比值更新；记录迭代计数是否不同。"
+  },
+  "exercise": {
+    "prompt": "说明 numerator 和 denominator 如何得到。",
+    "completionCheck": "完成时必须准确点名全部 3 个注释，并说明以下公式细节：numerator = 3*z4+(1,0)，denominator = 4*z3。",
+    "hint": "numerator = 3*z4+(1,0)，denominator = 4*z3。"
+  },
+  "factsPresentation": {
+    "provenanceLead": "来源说明见固定源记录。",
+    "rightsLead": "权利状态与发布决定见固定决定记录。"
+  },
+  "contentHash": "862f7f0466799a85c79ac32ec744447b9528005188ddc653357ed921410b8bf9"
+}

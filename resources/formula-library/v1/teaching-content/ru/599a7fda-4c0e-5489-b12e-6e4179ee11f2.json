@@ -1,0 +1,35 @@
+{
+  "schema": "fractalpark-teaching-locale/v1",
+  "formulaId": "599a7fda-4c0e-5489-b12e-6e4179ee11f2",
+  "locale": "ru",
+  "sourceRevision": "6864baf1c6fb93ea8ce506200e19583fd0b7c1b361fb17764b661d6424762cfa",
+  "semanticHash": "a1fa3e6dd83f4cafacb8e242810e80e35de45513e75ec6cc7759d7a11f046193",
+  "englishContentHash": "90e78447859e27af456be2ff6cdbeadc31a08f9f7557e06d242347218dbc39b2",
+  "overview": "В FRM-like/1 инициализация задаёт z = pixel. В цикле выполняется correction = f / fp. Завершение проверяет |z - zPrev| >= 0.000001.",
+  "sourceWalkthrough": {
+    "599a7fda-4c0e-5489-b12e-6e4179ee11f2:6864baf1c6fb93ea8ce506200e19583fd0b7c1b361fb17764b661d6424762cfa:init": "В FRM-like/1 инициализация задаёт z = pixel.",
+    "599a7fda-4c0e-5489-b12e-6e4179ee11f2:6864baf1c6fb93ea8ce506200e19583fd0b7c1b361fb17764b661d6424762cfa:loop": "В цикле выполняется correction = f / fp.",
+    "599a7fda-4c0e-5489-b12e-6e4179ee11f2:6864baf1c6fb93ea8ce506200e19583fd0b7c1b361fb17764b661d6424762cfa:branch": "Ветвление использует |z| < 0.00001 → z = (0.00001,0).",
+    "599a7fda-4c0e-5489-b12e-6e4179ee11f2:6864baf1c6fb93ea8ce506200e19583fd0b7c1b361fb17764b661d6424762cfa:termination": "Завершение проверяет |z - zPrev| >= 0.000001."
+  },
+  "syntaxFeatures": {
+    "sequence": "В цикле выполняется correction = f / fp.",
+    "branch": "Ветвление использует |z| < 0.00001 → z = (0.00001,0)."
+  },
+  "parameterExperiment": {
+    "steps": [
+      "Используйте закреплённый профиль как базу. Выполните 48, затем 96 итераций при неизменных настройках и запишите, различаются ли correction = f / fp или |z - zPrev| >= 0.000001."
+    ],
+    "expectedObservation": "Больший предел итераций может показать больше обновлений correction = f / fp после начальной защиты; зафиксируйте, различаются ли числа итераций."
+  },
+  "exercise": {
+    "prompt": "Объясните, как определяется correction и каким значением начальная защита заменяет z.",
+    "completionCheck": "Для завершения вы должны точно назвать все 4 аннотации и указать correction = f / fp и значение замены (0.00001,0).",
+    "hint": "Подсказка: correction = f / fp; начальная защита заменяет z на (0.00001,0)."
+  },
+  "factsPresentation": {
+    "provenanceLead": "Сведения о происхождении приведены в закреплённой записи источника.",
+    "rightsLead": "Статус прав и решение о публикации приведены в закреплённой записи решения."
+  },
+  "contentHash": "6b76bd93f435c0e786ae3fbe0990bc4a20903651d3a5afddc13558c3b4655d3c"
+}

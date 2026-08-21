@@ -1,0 +1,35 @@
+{
+  "schema": "fractalpark-teaching-locale/v1",
+  "formulaId": "0ba0b082-c4b0-51d8-b981-7ca1ca25b9f3",
+  "locale": "ru",
+  "sourceRevision": "46f51a27e66b8e029ee20112496383b57cc510dbfcae0bc63dd9b0a6886dcb8f",
+  "semanticHash": "374bad563fd78d9d062b53d35dc9be8498dba81eb412aea6c35e29d54ef4456a",
+  "englishContentHash": "4d1388e4a77c8fb0a510057b3c870f9fd99512c188860dbca3ca32043bc404f0",
+  "overview": "В FRM-like/1 инициализация задаёт z = seed. В цикле выполняется roundCount < 10 → z = earlyTransform(z)+pixel; roundCount >= 10 → z = numeratorTransform(z)/denominatorTransform(z)+pixel. Завершение проверяет |z| <= real(escapeLimit).",
+  "sourceWalkthrough": {
+    "0ba0b082-c4b0-51d8-b981-7ca1ca25b9f3:46f51a27e66b8e029ee20112496383b57cc510dbfcae0bc63dd9b0a6886dcb8f:init": "В FRM-like/1 инициализация задаёт z = seed.",
+    "0ba0b082-c4b0-51d8-b981-7ca1ca25b9f3:46f51a27e66b8e029ee20112496383b57cc510dbfcae0bc63dd9b0a6886dcb8f:loop": "В цикле выполняется roundCount < 10 → z = earlyTransform(z)+pixel; roundCount >= 10 → z = numeratorTransform(z)/denominatorTransform(z)+pixel.",
+    "0ba0b082-c4b0-51d8-b981-7ca1ca25b9f3:46f51a27e66b8e029ee20112496383b57cc510dbfcae0bc63dd9b0a6886dcb8f:branch": "Ветвление использует roundCount < 10 → z = earlyTransform(z)+pixel; roundCount >= 10 → z = numeratorTransform(z)/denominatorTransform(z)+pixel.",
+    "0ba0b082-c4b0-51d8-b981-7ca1ca25b9f3:46f51a27e66b8e029ee20112496383b57cc510dbfcae0bc63dd9b0a6886dcb8f:termination": "Завершение проверяет |z| <= real(escapeLimit)."
+  },
+  "syntaxFeatures": {
+    "sequence": "В цикле выполняется roundCount < 10 → z = earlyTransform(z)+pixel; roundCount >= 10 → z = numeratorTransform(z)/denominatorTransform(z)+pixel.",
+    "branch": "Ветвление использует roundCount < 10 → z = earlyTransform(z)+pixel; roundCount >= 10 → z = numeratorTransform(z)/denominatorTransform(z)+pixel."
+  },
+  "parameterExperiment": {
+    "steps": [
+      "Используйте закреплённый профиль и значения по умолчанию как базу. Измените только seed, оставьте escapeLimit, earlyTransform, numeratorTransform, denominatorTransform неизменными, выполните 96 итераций, восстановите значение seed по умолчанию и запишите, различается ли результат."
+    ],
+    "expectedObservation": "Запишите, наблюдается ли roundCount < 10 → z = earlyTransform(z)+pixel; roundCount >= 10 → z = numeratorTransform(z)/denominatorTransform(z)+pixel."
+  },
+  "exercise": {
+    "prompt": "Объясните roundCount < 10 → z = earlyTransform(z)+pixel; roundCount >= 10 → z = numeratorTransform(z)/denominatorTransform(z)+pixel.",
+    "completionCheck": "Для завершения вы должны точно назвать все 4 аннотации и объяснить следующую деталь формулы: Подсказка: roundCount < 10 → z = earlyTransform(z)+pixel; roundCount >= 10 → z = numeratorTransform(z)/denominatorTransform(z)+pixel.",
+    "hint": "Подсказка: roundCount < 10 → z = earlyTransform(z)+pixel; roundCount >= 10 → z = numeratorTransform(z)/denominatorTransform(z)+pixel."
+  },
+  "factsPresentation": {
+    "provenanceLead": "Сведения о происхождении приведены в закреплённой записи источника.",
+    "rightsLead": "Статус прав и решение о публикации приведены в закреплённой записи решения."
+  },
+  "contentHash": "53869a27742ed46e88ae766b244d6f0c35a7f142b598cfea215363b19ba0ff74"
+}

@@ -1,0 +1,33 @@
+{
+  "schema": "fractalpark-teaching-locale/v1",
+  "formulaId": "1bb379a2-3588-53f8-a3ab-e52021c78054",
+  "locale": "pt",
+  "sourceRevision": "d51707785f4d59fbfa309c2dbd8da93ac1a0ca152c067e6e34c4851585652768",
+  "semanticHash": "597a8cb34733ab22b5f2452fa41e5f56f5bae984c8ae2c8e6fdc43d5c45a4318",
+  "englishContentHash": "1608ffe1a8a2eb227fdac49d45bb2acd6e8c1cc72c87ad2aaba26f5086036ba6",
+  "overview": "Em FRM-like/1, a inicialização faz seed = pixel; z = seed. Em cada iteração, o nó executa z = sqr(z)+sin(z)+seed. O término testa |z| < 4.",
+  "sourceWalkthrough": {
+    "1bb379a2-3588-53f8-a3ab-e52021c78054:d51707785f4d59fbfa309c2dbd8da93ac1a0ca152c067e6e34c4851585652768:init": "Em FRM-like/1, a inicialização faz seed = pixel; z = seed.",
+    "1bb379a2-3588-53f8-a3ab-e52021c78054:d51707785f4d59fbfa309c2dbd8da93ac1a0ca152c067e6e34c4851585652768:loop": "Em cada iteração, o nó executa z = sqr(z)+sin(z)+seed.",
+    "1bb379a2-3588-53f8-a3ab-e52021c78054:d51707785f4d59fbfa309c2dbd8da93ac1a0ca152c067e6e34c4851585652768:termination": "O término testa |z| < 4."
+  },
+  "syntaxFeatures": {
+    "sequence": "Em cada iteração, o nó executa z = sqr(z)+sin(z)+seed."
+  },
+  "parameterExperiment": {
+    "steps": [
+      "Use o perfil fixo como base. Execute 48 e depois 96 iterações, mantendo todos os controles fixos, e registre se z = sqr(z)+sin(z)+seed ou |z| < 4 diferem."
+    ],
+    "expectedObservation": "O limite maior pode revelar usos posteriores do seed armazenado na atualização; registre se as contagens de escape observadas diferem."
+  },
+  "exercise": {
+    "prompt": "Explique z = sqr(z)+sin(z)+seed.",
+    "completionCheck": "Para concluir, você deve nomear exatamente as 3 anotações e explicar este detalhe da fórmula: Dica: z = sqr(z)+sin(z)+seed.",
+    "hint": "Dica: z = sqr(z)+sin(z)+seed."
+  },
+  "factsPresentation": {
+    "provenanceLead": "A proveniência está no registro de fonte fixado.",
+    "rightsLead": "O status de direitos e a decisão de publicação estão no registro de decisão fixado."
+  },
+  "contentHash": "f7acc3ec15b43965d9c231556319e12fd7e6c4b3b6264459683b0a5bf98df173"
+}

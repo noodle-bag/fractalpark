@@ -1,0 +1,33 @@
+{
+  "schema": "fractalpark-teaching-locale/v1",
+  "formulaId": "75e70076-b422-5535-b3c9-c484fbf879e6",
+  "locale": "fr",
+  "sourceRevision": "be9ade0f6d4b272ca864da504bb66a6abab234322112686e72e1624353ce11ec",
+  "semanticHash": "2d2612cf6d0532accadd7fe047298eff9503b8ff553e32c1a87dfe3ac3c2469f",
+  "englishContentHash": "d9ce80f39061c879038b92a392a9d3785eaaba6b3e70b88d73dcd47383fa4d14",
+  "overview": "Dans FRM-like/1, l’initialisation effectue z = pixel. À chaque itération, le nœud exécute z2 = z*z; z3 = z2*z; z4 = z2*z2; z = numerator/denominator. La terminaison vérifie |z - zPrev| >= 0.000001.",
+  "sourceWalkthrough": {
+    "75e70076-b422-5535-b3c9-c484fbf879e6:be9ade0f6d4b272ca864da504bb66a6abab234322112686e72e1624353ce11ec:init": "Dans FRM-like/1, l’initialisation effectue z = pixel.",
+    "75e70076-b422-5535-b3c9-c484fbf879e6:be9ade0f6d4b272ca864da504bb66a6abab234322112686e72e1624353ce11ec:loop": "À chaque itération, le nœud exécute z2 = z*z; z3 = z2*z; z4 = z2*z2; z = numerator/denominator.",
+    "75e70076-b422-5535-b3c9-c484fbf879e6:be9ade0f6d4b272ca864da504bb66a6abab234322112686e72e1624353ce11ec:termination": "La terminaison vérifie |z - zPrev| >= 0.000001."
+  },
+  "syntaxFeatures": {
+    "sequence": "À chaque itération, le nœud exécute z2 = z*z; z3 = z2*z; z4 = z2*z2; z = numerator/denominator."
+  },
+  "parameterExperiment": {
+    "steps": [
+      "Utilise le profil fixé comme référence. Exécute 48 puis 96 itérations, tous les contrôles fixes, et note si z2 = z*z; z3 = z2*z; z4 = z2*z2; z = numerator/denominator ou |z - zPrev| >= 0.000001 diffèrent."
+    ],
+    "expectedObservation": "Note si ceci diffère : z2 = z*z; z3 = z2*z; z4 = z2*z2; z = numerator/denominator ou |z - zPrev| >= 0.000001."
+  },
+  "exercise": {
+    "prompt": "Explique z2 = z*z; z3 = z2*z; z4 = z2*z2; z = numerator/denominator.",
+    "completionCheck": "Pour terminer, tu dois nommer exactement les 3 annotations et expliquer ce détail de la formule : Indice : z2 = z*z; z3 = z2*z; z4 = z2*z2; z = numerator/denominator.",
+    "hint": "Indice : z2 = z*z; z3 = z2*z; z4 = z2*z2; z = numerator/denominator."
+  },
+  "factsPresentation": {
+    "provenanceLead": "La provenance figure dans l’enregistrement de source épinglé.",
+    "rightsLead": "Le statut des droits et la décision de publication figurent dans l’enregistrement de décision épinglé."
+  },
+  "contentHash": "b98c7750000a00980634a89842745eac063139471efc00df90c46965d1a8ccee"
+}

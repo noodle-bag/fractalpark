@@ -1,0 +1,72 @@
+{
+  "schema": "fractalpark-teaching-en-fact/v1",
+  "formulaId": "75e70076-b422-5535-b3c9-c484fbf879e6",
+  "sourceRevision": "be9ade0f6d4b272ca864da504bb66a6abab234322112686e72e1624353ce11ec",
+  "semanticHash": "2d2612cf6d0532accadd7fe047298eff9503b8ff553e32c1a87dfe3ac3c2469f",
+  "overview": "In FRM-like/1, newton4 initializes z from pixel. The loop builds z2, z3, and z4, then assigns numerator/denominator = (3*z4+(1,0))/(4*z3). The pinned parameter-plane profile uses 96 iterations.",
+  "mathDisclosure": "exact-structured",
+  "mathSummary": "starts z from pixel; repeatedly builds z2 = z*z, z3 = z2*z, z4 = z2*z2, numerator = 3*z4+(1,0), and denominator = 4*z3, then assigns z = numerator/denominator; bailout is |z - zPrev| >= 0.000001.",
+  "sourceWalkthrough": [
+    {
+      "annotationId": "75e70076-b422-5535-b3c9-c484fbf879e6:be9ade0f6d4b272ca864da504bb66a6abab234322112686e72e1624353ce11ec:init",
+      "nodeId": "frm-v1:be9ade0f6d4b272ca864da504bb66a6abab234322112686e72e1624353ce11ec:init/0",
+      "explanation": "Initialization: init/0 sets z from pixel."
+    },
+    {
+      "annotationId": "75e70076-b422-5535-b3c9-c484fbf879e6:be9ade0f6d4b272ca864da504bb66a6abab234322112686e72e1624353ce11ec:loop",
+      "nodeId": "frm-v1:be9ade0f6d4b272ca864da504bb66a6abab234322112686e72e1624353ce11ec:loop/0",
+      "explanation": "Iteration: loop/0 sets z2 = z*z; later loop nodes build z3, z4, numerator, and denominator before assigning their quotient."
+    },
+    {
+      "annotationId": "75e70076-b422-5535-b3c9-c484fbf879e6:be9ade0f6d4b272ca864da504bb66a6abab234322112686e72e1624353ce11ec:termination",
+      "nodeId": "frm-v1:be9ade0f6d4b272ca864da504bb66a6abab234322112686e72e1624353ce11ec:bailout",
+      "explanation": "Termination: bailout tests |z - zPrev| >= 0.000001."
+    }
+  ],
+  "syntaxFeatures": [
+    {
+      "featureId": "sequence",
+      "annotationIds": [
+        "75e70076-b422-5535-b3c9-c484fbf879e6:be9ade0f6d4b272ca864da504bb66a6abab234322112686e72e1624353ce11ec:init",
+        "75e70076-b422-5535-b3c9-c484fbf879e6:be9ade0f6d4b272ca864da504bb66a6abab234322112686e72e1624353ce11ec:loop",
+        "75e70076-b422-5535-b3c9-c484fbf879e6:be9ade0f6d4b272ca864da504bb66a6abab234322112686e72e1624353ce11ec:termination"
+      ],
+      "explanation": "The cited annotations connect z = pixel, the z2/z3/z4 construction leading to numerator/denominator, and the change-based bailout."
+    }
+  ],
+  "parameterExperiment": {
+    "parameterSymbols": [],
+    "steps": [
+      "Use the pinned profile with all controls fixed. Run 48 iterations and then 96 iterations, and record whether the z2/z3/z4 quotient update changes the observed iteration counts."
+    ],
+    "expectedObservation": "The larger cap may expose further applications of the degree-four quotient update; record whether the iteration counts differ."
+  },
+  "exercise": {
+    "prompt": "List the intermediate powers that precede the numerator/denominator assignment.",
+    "completionCheck": "Your response names all 3 annotations and lists z2, z3, and z4.",
+    "answerDisclosure": "hint"
+  },
+  "facts": {
+    "provenanceStatement": "This teaching unit is grounded in the pinned runtime source revision.",
+    "rightsStatement": "rightsStatus is project-owned; implementationBasis is project-owned; publicationDecision is publish; decisionReason is publish-project-owned-native-recipe. This does not make a broader claim about any third-party original.",
+    "sourceIds": [
+      "runtime:be9ade0f6d4b272ca864da504bb66a6abab234322112686e72e1624353ce11ec",
+      "decision:75e70076-b422-5535-b3c9-c484fbf879e6"
+    ],
+    "licenseIds": [],
+    "claims": [
+      {
+        "text": "The pinned runtime definition supplies the operations and profile used here.",
+        "sourceIds": [
+          "runtime:be9ade0f6d4b272ca864da504bb66a6abab234322112686e72e1624353ce11ec"
+        ]
+      },
+      {
+        "text": "The recorded publication decision is publish.",
+        "sourceIds": [
+          "decision:75e70076-b422-5535-b3c9-c484fbf879e6"
+        ]
+      }
+    ]
+  }
+}

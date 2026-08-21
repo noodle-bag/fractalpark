@@ -1,0 +1,72 @@
+{
+  "schema": "fractalpark-teaching-en-fact/v1",
+  "formulaId": "1936e9b5-1312-593e-ab67-72e95bc514b0",
+  "sourceRevision": "2f024a184f50b87076b883408a33387a2010e89996414646d1b51844d2f181fc",
+  "semanticHash": "c1fed8de512318463b90399a68d9eca445ab7908923d0a54ce4aed3bd2f631df",
+  "overview": "In FRM-like/1, richard8 initializes z from pixel and stores sin(pixel) as sinp. Each iteration assigns sin(z)+sinp, while the bailout checks |z| <= 50. The pinned parameter-plane profile uses 96 iterations.",
+  "mathDisclosure": "exact-structured",
+  "mathSummary": "starts z from pixel and stores sin(pixel) as sinp; repeatedly assigns sin(z)+sinp; bailout is |z| <= 50.",
+  "sourceWalkthrough": [
+    {
+      "annotationId": "1936e9b5-1312-593e-ab67-72e95bc514b0:2f024a184f50b87076b883408a33387a2010e89996414646d1b51844d2f181fc:init",
+      "nodeId": "frm-v1:2f024a184f50b87076b883408a33387a2010e89996414646d1b51844d2f181fc:init/0",
+      "explanation": "Initialization: init/0 sets z from pixel."
+    },
+    {
+      "annotationId": "1936e9b5-1312-593e-ab67-72e95bc514b0:2f024a184f50b87076b883408a33387a2010e89996414646d1b51844d2f181fc:loop",
+      "nodeId": "frm-v1:2f024a184f50b87076b883408a33387a2010e89996414646d1b51844d2f181fc:loop/0",
+      "explanation": "Iteration: loop/0 assigns z = sin(z)+sinp."
+    },
+    {
+      "annotationId": "1936e9b5-1312-593e-ab67-72e95bc514b0:2f024a184f50b87076b883408a33387a2010e89996414646d1b51844d2f181fc:termination",
+      "nodeId": "frm-v1:2f024a184f50b87076b883408a33387a2010e89996414646d1b51844d2f181fc:bailout",
+      "explanation": "Termination: bailout tests |z| <= 50."
+    }
+  ],
+  "syntaxFeatures": [
+    {
+      "featureId": "sequence",
+      "annotationIds": [
+        "1936e9b5-1312-593e-ab67-72e95bc514b0:2f024a184f50b87076b883408a33387a2010e89996414646d1b51844d2f181fc:init",
+        "1936e9b5-1312-593e-ab67-72e95bc514b0:2f024a184f50b87076b883408a33387a2010e89996414646d1b51844d2f181fc:loop",
+        "1936e9b5-1312-593e-ab67-72e95bc514b0:2f024a184f50b87076b883408a33387a2010e89996414646d1b51844d2f181fc:termination"
+      ],
+      "explanation": "The cited annotations connect z = pixel, the repeated sin(z)+sinp assignment, and the |z| <= 50 bailout."
+    }
+  ],
+  "parameterExperiment": {
+    "parameterSymbols": [],
+    "steps": [
+      "Use the pinned profile with all controls fixed. Run 48 iterations and then 96 iterations, and record whether the sin(z)+sinp escape pattern or iteration counts differ."
+    ],
+    "expectedObservation": "The larger cap may expose later applications of sin(z)+sinp; record whether the observed escape counts differ."
+  },
+  "exercise": {
+    "prompt": "Use the annotations to identify the stored pixel-derived value that is reused by the loop.",
+    "completionCheck": "Your response names all 3 annotations and identifies sinp as sin(pixel).",
+    "answerDisclosure": "hint"
+  },
+  "facts": {
+    "provenanceStatement": "This teaching unit is grounded in the pinned runtime source revision.",
+    "rightsStatement": "rightsStatus is source-declared-public-domain-assumption; implementationBasis is direct-adaptation; publicationDecision is publish; decisionReason is publish-census-full-chain-green. This does not make a broader claim about any third-party original.",
+    "sourceIds": [
+      "runtime:2f024a184f50b87076b883408a33387a2010e89996414646d1b51844d2f181fc",
+      "decision:1936e9b5-1312-593e-ab67-72e95bc514b0"
+    ],
+    "licenseIds": [],
+    "claims": [
+      {
+        "text": "The pinned runtime definition supplies the operations and profile used here.",
+        "sourceIds": [
+          "runtime:2f024a184f50b87076b883408a33387a2010e89996414646d1b51844d2f181fc"
+        ]
+      },
+      {
+        "text": "The recorded publication decision is publish.",
+        "sourceIds": [
+          "decision:1936e9b5-1312-593e-ab67-72e95bc514b0"
+        ]
+      }
+    ]
+  }
+}

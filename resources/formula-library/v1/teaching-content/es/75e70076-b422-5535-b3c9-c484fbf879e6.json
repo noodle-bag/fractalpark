@@ -1,0 +1,33 @@
+{
+  "schema": "fractalpark-teaching-locale/v1",
+  "formulaId": "75e70076-b422-5535-b3c9-c484fbf879e6",
+  "locale": "es",
+  "sourceRevision": "be9ade0f6d4b272ca864da504bb66a6abab234322112686e72e1624353ce11ec",
+  "semanticHash": "2d2612cf6d0532accadd7fe047298eff9503b8ff553e32c1a87dfe3ac3c2469f",
+  "englishContentHash": "d9ce80f39061c879038b92a392a9d3785eaaba6b3e70b88d73dcd47383fa4d14",
+  "overview": "En FRM-like/1, la inicialización hace z = pixel. En cada iteración, el nodo ejecuta z2 = z*z; z3 = z2*z; z4 = z2*z2; z = numerator/denominator. La terminación comprueba |z - zPrev| >= 0.000001.",
+  "sourceWalkthrough": {
+    "75e70076-b422-5535-b3c9-c484fbf879e6:be9ade0f6d4b272ca864da504bb66a6abab234322112686e72e1624353ce11ec:init": "En FRM-like/1, la inicialización hace z = pixel.",
+    "75e70076-b422-5535-b3c9-c484fbf879e6:be9ade0f6d4b272ca864da504bb66a6abab234322112686e72e1624353ce11ec:loop": "En cada iteración, el nodo ejecuta z2 = z*z; z3 = z2*z; z4 = z2*z2; z = numerator/denominator.",
+    "75e70076-b422-5535-b3c9-c484fbf879e6:be9ade0f6d4b272ca864da504bb66a6abab234322112686e72e1624353ce11ec:termination": "La terminación comprueba |z - zPrev| >= 0.000001."
+  },
+  "syntaxFeatures": {
+    "sequence": "En cada iteración, el nodo ejecuta z2 = z*z; z3 = z2*z; z4 = z2*z2; z = numerator/denominator."
+  },
+  "parameterExperiment": {
+    "steps": [
+      "Usa el perfil fijado como base. Ejecuta 48 y luego 96 iteraciones, con todos los controles fijos, y registra si difieren z2 = z*z; z3 = z2*z; z4 = z2*z2; z = numerator/denominator o |z - zPrev| >= 0.000001."
+    ],
+    "expectedObservation": "Registra si difiere z2 = z*z; z3 = z2*z; z4 = z2*z2; z = numerator/denominator o |z - zPrev| >= 0.000001."
+  },
+  "exercise": {
+    "prompt": "Explica z2 = z*z; z3 = z2*z; z4 = z2*z2; z = numerator/denominator.",
+    "completionCheck": "Para terminar, debes nombrar exactamente las 3 anotaciones y explicar este detalle de la fórmula: Pista: z2 = z*z; z3 = z2*z; z4 = z2*z2; z = numerator/denominator.",
+    "hint": "Pista: z2 = z*z; z3 = z2*z; z4 = z2*z2; z = numerator/denominator."
+  },
+  "factsPresentation": {
+    "provenanceLead": "La procedencia figura en el registro de fuente fijado.",
+    "rightsLead": "El estado de derechos y la decisión de publicación figuran en el registro de decisión fijado."
+  },
+  "contentHash": "721123e1b806e5cb46af9167fd6339ccd567e95addcdc43f5671a48d19347cdf"
+}

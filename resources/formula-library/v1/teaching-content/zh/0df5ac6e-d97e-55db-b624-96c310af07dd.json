@@ -1,0 +1,35 @@
+{
+  "schema": "fractalpark-teaching-locale/v1",
+  "formulaId": "0df5ac6e-d97e-55db-b624-96c310af07dd",
+  "locale": "zh",
+  "sourceRevision": "bb7d3fd03ddb3b27f66b28fea82cdfa4da6c88cf15a23c6da8fe27a8adf1e34e",
+  "semanticHash": "b3d93634d09622186eeef16d005021fb8bf551698b662dbdf5da191841efe1d5",
+  "englishContentHash": "95137002ad32c06577e02def4799eacd6fb98795877b8144428777fb641352d1",
+  "overview": "在 FRM-like/1 中，初始化执行 z = pixel。每轮处理 denom = cos(z)；denom 的实部和虚部平方和小于 1e-10 时 z = z，否则 z = z - sin(z)/denom + 0.18*c。 终止条件为 |z - zPrev| >= 0.000001。",
+  "sourceWalkthrough": {
+    "0df5ac6e-d97e-55db-b624-96c310af07dd:bb7d3fd03ddb3b27f66b28fea82cdfa4da6c88cf15a23c6da8fe27a8adf1e34e:init": "初始化节点执行 z = pixel。",
+    "0df5ac6e-d97e-55db-b624-96c310af07dd:bb7d3fd03ddb3b27f66b28fea82cdfa4da6c88cf15a23c6da8fe27a8adf1e34e:loop": "循环节点执行 denom = cos(z)。",
+    "0df5ac6e-d97e-55db-b624-96c310af07dd:bb7d3fd03ddb3b27f66b28fea82cdfa4da6c88cf15a23c6da8fe27a8adf1e34e:branch": "分支节点执行：denom 的实部和虚部平方和小于 1e-10 时 z = z，否则 z = z - sin(z)/denom + 0.18*c。",
+    "0df5ac6e-d97e-55db-b624-96c310af07dd:bb7d3fd03ddb3b27f66b28fea82cdfa4da6c88cf15a23c6da8fe27a8adf1e34e:termination": "终止节点检查 |z - zPrev| >= 0.000001。"
+  },
+  "syntaxFeatures": {
+    "sequence": "顺序展示 z = pixel、denom = cos(z) 与 |z - zPrev| >= 0.000001。",
+    "branch": "分支的精确行为是：denom 的实部和虚部平方和小于 1e-10 时 z = z，否则 z = z - sin(z)/denom + 0.18*c。"
+  },
+  "parameterExperiment": {
+    "steps": [
+      "以固定配置为基线。运行 48 次迭代，再运行 96 次迭代，保持全部控制不变，并记录比较 cos(z) 分母守卫后的保持或更新次数是否不同。"
+    ],
+    "expectedObservation": "较大的迭代上限可能暴露更多受保护或未受保护的 sin/cos 更新；记录迭代计数是否不同。"
+  },
+  "exercise": {
+    "prompt": "说明 cos(z) denom 大小保护的两种结果。",
+    "completionCheck": "完成时必须准确点名全部4个注释，并写出守卫的两种结果：z = z 与 z = z - sin(z)/denom + 0.18*c。",
+    "hint": "当 |denom|² < 1e-10 时 z = z；否则 z = z - sin(z)/denom + 0.18*c。"
+  },
+  "factsPresentation": {
+    "provenanceLead": "来源说明见固定源记录。",
+    "rightsLead": "权利状态与发布决定见固定决定记录。"
+  },
+  "contentHash": "712d17068eefe4dd3f68f0ea7d7f88c136b9d7517f9805ff7794f987db24fced"
+}

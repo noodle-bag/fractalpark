@@ -1,0 +1,35 @@
+{
+  "schema": "fractalpark-teaching-locale/v1",
+  "formulaId": "6d27b5fd-462b-5561-bac2-7c5f915e3cb5",
+  "locale": "es",
+  "sourceRevision": "7ef2bf1f2dd573053bbe1e8af171472dff08ed6346b2e760ab2780c9244d1e85",
+  "semanticHash": "62ccdf4f274bf35079ca98a39ad59a05132b3580ef937b766945087358c454e7",
+  "englishContentHash": "e6d09d556daddf1d6bf53de03354a43d35ae9954a4b7f0ab0e759c64518a9eb2",
+  "overview": "En FRM-like/1, la inicialización hace z = pixel. En cada iteración, el nodo ejecuta denom = cosh(z). La terminación comprueba |z - zPrev| >= 0.000001.",
+  "sourceWalkthrough": {
+    "6d27b5fd-462b-5561-bac2-7c5f915e3cb5:7ef2bf1f2dd573053bbe1e8af171472dff08ed6346b2e760ab2780c9244d1e85:init": "En FRM-like/1, la inicialización hace z = pixel.",
+    "6d27b5fd-462b-5561-bac2-7c5f915e3cb5:7ef2bf1f2dd573053bbe1e8af171472dff08ed6346b2e760ab2780c9244d1e85:loop": "En cada iteración, el nodo ejecuta denom = cosh(z).",
+    "6d27b5fd-462b-5561-bac2-7c5f915e3cb5:7ef2bf1f2dd573053bbe1e8af171472dff08ed6346b2e760ab2780c9244d1e85:branch": "La rama usa |denom|² < 1e-10 → z = z; |denom|² >= 1e-10 → z = z - sinh(z)/denom.",
+    "6d27b5fd-462b-5561-bac2-7c5f915e3cb5:7ef2bf1f2dd573053bbe1e8af171472dff08ed6346b2e760ab2780c9244d1e85:termination": "La terminación comprueba |z - zPrev| >= 0.000001."
+  },
+  "syntaxFeatures": {
+    "sequence": "En cada iteración, el nodo ejecuta denom = cosh(z).",
+    "branch": "La rama usa |denom|² < 1e-10 → z = z; |denom|² >= 1e-10 → z = z - sinh(z)/denom."
+  },
+  "parameterExperiment": {
+    "steps": [
+      "Usa el perfil fijado como base. Ejecuta 48 y luego 96 iteraciones, con todos los controles fijos, y registra si difieren denom = cosh(z) o |z - zPrev| >= 0.000001."
+    ],
+    "expectedObservation": "El límite mayor puede mostrar actualizaciones sinh/cosh adicionales, protegidas o no; registra si difieren los recuentos de iteraciones."
+  },
+  "exercise": {
+    "prompt": "Explica los dos resultados de la protección por tamaño de cosh(z) denom.",
+    "completionCheck": "Para terminar, debes nombrar exactamente las 4 anotaciones y explicar este detalle de la fórmula: Pista: denom = cosh(z).",
+    "hint": "Pista: denom = cosh(z)."
+  },
+  "factsPresentation": {
+    "provenanceLead": "La procedencia figura en el registro de fuente fijado.",
+    "rightsLead": "El estado de derechos y la decisión de publicación figuran en el registro de decisión fijado."
+  },
+  "contentHash": "801e247cd92bb73f8ef7071aee29aab511dcad7bb15de056d8020f29f52a2c68"
+}

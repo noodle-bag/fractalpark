@@ -1,0 +1,33 @@
+{
+  "schema": "fractalpark-teaching-locale/v1",
+  "formulaId": "20e16f12-e0e9-5f56-9364-5c2b60c05f20",
+  "locale": "fr",
+  "sourceRevision": "cccfbd116d3760e4b3cd57e20f2cb9f5102c7326c75c5d89137be22c2352892c",
+  "semanticHash": "72efb4d2a055e760c18f96b5776a3e25000f7d57d81352136617b91d8199344c",
+  "englishContentHash": "dacdad9b8155a4ececb9a74b010134188c76050c8adee67842a02f1dfc74b2db",
+  "overview": "Dans FRM-like/1, l’initialisation effectue z = pixel. À chaque itération, le nœud exécute z = exp(z * log(z)). La terminaison vérifie |z| <= real(threshold).",
+  "sourceWalkthrough": {
+    "20e16f12-e0e9-5f56-9364-5c2b60c05f20:cccfbd116d3760e4b3cd57e20f2cb9f5102c7326c75c5d89137be22c2352892c:init": "Dans FRM-like/1, l’initialisation effectue z = pixel.",
+    "20e16f12-e0e9-5f56-9364-5c2b60c05f20:cccfbd116d3760e4b3cd57e20f2cb9f5102c7326c75c5d89137be22c2352892c:loop": "À chaque itération, le nœud exécute z = exp(z * log(z)).",
+    "20e16f12-e0e9-5f56-9364-5c2b60c05f20:cccfbd116d3760e4b3cd57e20f2cb9f5102c7326c75c5d89137be22c2352892c:termination": "La terminaison vérifie |z| <= real(threshold)."
+  },
+  "syntaxFeatures": {
+    "sequence": "À chaque itération, le nœud exécute z = exp(z * log(z))."
+  },
+  "parameterExperiment": {
+    "steps": [
+      "Utilise le profil fixé et les valeurs par défaut comme référence. Modifie seulement threshold, garde les autres emplacements d’exécution fixes, exécute 96 itérations, rétablis la valeur par défaut de threshold et note si le résultat diffère."
+    ],
+    "expectedObservation": "Note si ceci diffère : z = exp(z * log(z)) ou |z| <= real(threshold)."
+  },
+  "exercise": {
+    "prompt": "Explique z = exp(z * log(z)).",
+    "completionCheck": "Pour terminer, tu dois nommer exactement les 3 annotations et expliquer ce détail de la formule : Indice : z = exp(z * log(z)).",
+    "hint": "Indice : z = exp(z * log(z))."
+  },
+  "factsPresentation": {
+    "provenanceLead": "La provenance figure dans l’enregistrement de source épinglé.",
+    "rightsLead": "Le statut des droits et la décision de publication figurent dans l’enregistrement de décision épinglé."
+  },
+  "contentHash": "a1816dbf14315deec7159b10796c49cef6a73cab2fc5e6c45229669da7c91244"
+}

@@ -1,0 +1,33 @@
+{
+  "schema": "fractalpark-teaching-locale/v1",
+  "formulaId": "20e16f12-e0e9-5f56-9364-5c2b60c05f20",
+  "locale": "zh",
+  "sourceRevision": "cccfbd116d3760e4b3cd57e20f2cb9f5102c7326c75c5d89137be22c2352892c",
+  "semanticHash": "72efb4d2a055e760c18f96b5776a3e25000f7d57d81352136617b91d8199344c",
+  "englishContentHash": "dacdad9b8155a4ececb9a74b010134188c76050c8adee67842a02f1dfc74b2db",
+  "overview": "在 FRM-like/1 中，初始化执行 z = pixel。每轮处理 z = exp(z * log(z))。 终止条件为 |z| <= real(threshold)。",
+  "sourceWalkthrough": {
+    "20e16f12-e0e9-5f56-9364-5c2b60c05f20:cccfbd116d3760e4b3cd57e20f2cb9f5102c7326c75c5d89137be22c2352892c:init": "初始化节点执行 z = pixel。",
+    "20e16f12-e0e9-5f56-9364-5c2b60c05f20:cccfbd116d3760e4b3cd57e20f2cb9f5102c7326c75c5d89137be22c2352892c:loop": "循环节点执行 z = exp(z * log(z))。",
+    "20e16f12-e0e9-5f56-9364-5c2b60c05f20:cccfbd116d3760e4b3cd57e20f2cb9f5102c7326c75c5d89137be22c2352892c:termination": "终止节点检查 |z| <= real(threshold)。"
+  },
+  "syntaxFeatures": {
+    "sequence": "顺序展示 z = pixel、z = exp(z * log(z)) 与 |z| <= real(threshold)。"
+  },
+  "parameterExperiment": {
+    "steps": [
+      "以固定配置和默认值为基线。仅修改 threshold，保持其他运行时槽位不变，运行 96 次迭代，恢复 threshold 默认值，并记录结果是否不同。"
+    ],
+    "expectedObservation": "观察 real(threshold) 的终止比较是否导致不同的通过结果。"
+  },
+  "exercise": {
+    "prompt": "说明更新 z 的表达式和提供终止界限的表达式。",
+    "completionCheck": "完成时必须准确点名全部 3 个注释，并说明以下公式细节：更新是 exp(z * log(z))，界限来自 real(threshold)。",
+    "hint": "更新是 exp(z * log(z))，界限来自 real(threshold)。"
+  },
+  "factsPresentation": {
+    "provenanceLead": "来源说明见固定源记录。",
+    "rightsLead": "权利状态与发布决定见固定决定记录。"
+  },
+  "contentHash": "683f3dbf4f0ad94931ac52320ca0cd67d059d618690b457284f31e63053e0967"
+}

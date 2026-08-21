@@ -1,0 +1,33 @@
+{
+  "schema": "fractalpark-teaching-locale/v1",
+  "formulaId": "75e70076-b422-5535-b3c9-c484fbf879e6",
+  "locale": "ru",
+  "sourceRevision": "be9ade0f6d4b272ca864da504bb66a6abab234322112686e72e1624353ce11ec",
+  "semanticHash": "2d2612cf6d0532accadd7fe047298eff9503b8ff553e32c1a87dfe3ac3c2469f",
+  "englishContentHash": "d9ce80f39061c879038b92a392a9d3785eaaba6b3e70b88d73dcd47383fa4d14",
+  "overview": "В FRM-like/1 инициализация задаёт z = pixel. В цикле выполняется z2 = z*z; z3 = z2*z; z4 = z2*z2; z = numerator/denominator. Завершение проверяет |z - zPrev| >= 0.000001.",
+  "sourceWalkthrough": {
+    "75e70076-b422-5535-b3c9-c484fbf879e6:be9ade0f6d4b272ca864da504bb66a6abab234322112686e72e1624353ce11ec:init": "В FRM-like/1 инициализация задаёт z = pixel.",
+    "75e70076-b422-5535-b3c9-c484fbf879e6:be9ade0f6d4b272ca864da504bb66a6abab234322112686e72e1624353ce11ec:loop": "В цикле выполняется z2 = z*z; z3 = z2*z; z4 = z2*z2; z = numerator/denominator.",
+    "75e70076-b422-5535-b3c9-c484fbf879e6:be9ade0f6d4b272ca864da504bb66a6abab234322112686e72e1624353ce11ec:termination": "Завершение проверяет |z - zPrev| >= 0.000001."
+  },
+  "syntaxFeatures": {
+    "sequence": "В цикле выполняется z2 = z*z; z3 = z2*z; z4 = z2*z2; z = numerator/denominator."
+  },
+  "parameterExperiment": {
+    "steps": [
+      "Используйте закреплённый профиль как базу. Выполните 48, затем 96 итераций при неизменных настройках и запишите, различаются ли z2 = z*z; z3 = z2*z; z4 = z2*z2; z = numerator/denominator или |z - zPrev| >= 0.000001."
+    ],
+    "expectedObservation": "Запишите, различается ли z2 = z*z; z3 = z2*z; z4 = z2*z2; z = numerator/denominator или |z - zPrev| >= 0.000001."
+  },
+  "exercise": {
+    "prompt": "Объясните z2 = z*z; z3 = z2*z; z4 = z2*z2; z = numerator/denominator.",
+    "completionCheck": "Для завершения вы должны точно назвать все 3 аннотации и объяснить следующую деталь формулы: Подсказка: z2 = z*z; z3 = z2*z; z4 = z2*z2; z = numerator/denominator.",
+    "hint": "Подсказка: z2 = z*z; z3 = z2*z; z4 = z2*z2; z = numerator/denominator."
+  },
+  "factsPresentation": {
+    "provenanceLead": "Сведения о происхождении приведены в закреплённой записи источника.",
+    "rightsLead": "Статус прав и решение о публикации приведены в закреплённой записи решения."
+  },
+  "contentHash": "7f9410e0e7eaaf7184cb1880d92920c6c41e5c7228cf9b7cf50ccb86e410c308"
+}

@@ -1,0 +1,35 @@
+{
+  "schema": "fractalpark-teaching-locale/v1",
+  "formulaId": "b79313f5-2181-5013-bd21-e59a7222dce5",
+  "locale": "zh",
+  "sourceRevision": "c9f11ef69b73ea2c6489025f83e6b53cabebc1df1e399f282b8ce44e7da4b05f",
+  "semanticHash": "d5bd7f170dde390fef7522afda11fb58b09ad9c2dabc99d47c413e79e3996a50",
+  "englishContentHash": "2c12da817e0836f218bfc3d7f04aa142abb4af1c201e11618814062a28084447",
+  "overview": "在 FRM-like/1 中，初始化执行 z = pixel。每轮处理 denom = 2*(fp*fp)-f*fpp；denom 的实部和虚部平方和小于 1e-10 时 z = z，否则 z = z - numer/denom。 终止条件为 |z - zPrev| >= 0.000001。",
+  "sourceWalkthrough": {
+    "b79313f5-2181-5013-bd21-e59a7222dce5:c9f11ef69b73ea2c6489025f83e6b53cabebc1df1e399f282b8ce44e7da4b05f:init": "初始化节点执行 z = pixel。",
+    "b79313f5-2181-5013-bd21-e59a7222dce5:c9f11ef69b73ea2c6489025f83e6b53cabebc1df1e399f282b8ce44e7da4b05f:loop": "循环节点先执行 z2 = z*z；后续节点再构建 f、fp、fpp 和 denom = 2*(fp*fp)-f*fpp。",
+    "b79313f5-2181-5013-bd21-e59a7222dce5:c9f11ef69b73ea2c6489025f83e6b53cabebc1df1e399f282b8ce44e7da4b05f:branch": "分支节点执行：denom 的实部和虚部平方和小于 1e-10 时 z = z，否则 z = z - numer/denom。",
+    "b79313f5-2181-5013-bd21-e59a7222dce5:c9f11ef69b73ea2c6489025f83e6b53cabebc1df1e399f282b8ce44e7da4b05f:termination": "终止节点检查 |z - zPrev| >= 0.000001。"
+  },
+  "syntaxFeatures": {
+    "sequence": "顺序展示 z = pixel、denom = 2*(fp*fp)-f*fpp 与 |z - zPrev| >= 0.000001。",
+    "branch": "分支的精确行为是：denom 的实部和虚部平方和小于 1e-10 时 z = z，否则 z = z - numer/denom。"
+  },
+  "parameterExperiment": {
+    "steps": [
+      "以固定配置为基线。运行 48 次迭代，再运行 96 次迭代，保持全部控制不变，并记录比较 denom 守卫后的保持或 Halley 更新次数是否不同。"
+    ],
+    "expectedObservation": "较大的迭代上限可能暴露更多受保护或未受保护的 Halley 更新；记录迭代计数是否不同。"
+  },
+  "exercise": {
+    "prompt": "说明 Halley denom 大小保护的两种结果。",
+    "completionCheck": "完成时必须准确点名全部 4 个注释，并说明以下公式细节：小 denom 保持 z；否则执行 z - numer/denom。",
+    "hint": "小 denom 保持 z；否则执行 z - numer/denom。"
+  },
+  "factsPresentation": {
+    "provenanceLead": "来源说明见固定源记录。",
+    "rightsLead": "权利状态与发布决定见固定决定记录。"
+  },
+  "contentHash": "7fbf34fa799d08b246be77c302065c4fb3e57865b121b6f5ecb5e09366d98560"
+}

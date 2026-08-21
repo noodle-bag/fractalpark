@@ -1,0 +1,33 @@
+{
+  "schema": "fractalpark-teaching-locale/v1",
+  "formulaId": "1936e9b5-1312-593e-ab67-72e95bc514b0",
+  "locale": "pt",
+  "sourceRevision": "2f024a184f50b87076b883408a33387a2010e89996414646d1b51844d2f181fc",
+  "semanticHash": "c1fed8de512318463b90399a68d9eca445ab7908923d0a54ce4aed3bd2f631df",
+  "englishContentHash": "8ad1ddfcd2a71b3a7a561c0247f2d30c48887de2d08a5ab54df6307c665db562",
+  "overview": "Em FRM-like/1, a inicialização faz z = pixel; sinp = sin(pixel). Em cada iteração, o nó executa z = sin(z)+sinp. O término testa |z| <= 50.",
+  "sourceWalkthrough": {
+    "1936e9b5-1312-593e-ab67-72e95bc514b0:2f024a184f50b87076b883408a33387a2010e89996414646d1b51844d2f181fc:init": "Em FRM-like/1, a inicialização faz z = pixel; sinp = sin(pixel).",
+    "1936e9b5-1312-593e-ab67-72e95bc514b0:2f024a184f50b87076b883408a33387a2010e89996414646d1b51844d2f181fc:loop": "Em cada iteração, o nó executa z = sin(z)+sinp.",
+    "1936e9b5-1312-593e-ab67-72e95bc514b0:2f024a184f50b87076b883408a33387a2010e89996414646d1b51844d2f181fc:termination": "O término testa |z| <= 50."
+  },
+  "syntaxFeatures": {
+    "sequence": "Em cada iteração, o nó executa z = sin(z)+sinp."
+  },
+  "parameterExperiment": {
+    "steps": [
+      "Use o perfil fixo como base. Execute 48 e depois 96 iterações, mantendo todos os controles fixos, e registre se z = sin(z)+sinp ou |z| <= 50 diferem."
+    ],
+    "expectedObservation": "O limite maior pode expor aplicações posteriores de sin(z)+sinp; registre se as contagens de escape observadas diferem."
+  },
+  "exercise": {
+    "prompt": "Identifique o valor sinp = sin(pixel), derivado de pixel e reutilizado pelo loop, e explique como ele entra em z = sin(z)+sinp.",
+    "completionCheck": "Para concluir, você deve nomear exatamente as 3 anotações e explicar este detalhe da fórmula: Dica: z = sin(z)+sinp.",
+    "hint": "Dica: z = sin(z)+sinp."
+  },
+  "factsPresentation": {
+    "provenanceLead": "A proveniência está no registro de fonte fixado.",
+    "rightsLead": "O status de direitos e a decisão de publicação estão no registro de decisão fixado."
+  },
+  "contentHash": "a0b2736a683b11e2499377eb53b4960ecd31f9cca226df6cd1eaf243a84d979c"
+}

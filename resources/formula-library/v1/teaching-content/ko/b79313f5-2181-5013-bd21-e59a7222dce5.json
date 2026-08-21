@@ -1,0 +1,35 @@
+{
+  "schema": "fractalpark-teaching-locale/v1",
+  "formulaId": "b79313f5-2181-5013-bd21-e59a7222dce5",
+  "locale": "ko",
+  "sourceRevision": "c9f11ef69b73ea2c6489025f83e6b53cabebc1df1e399f282b8ce44e7da4b05f",
+  "semanticHash": "d5bd7f170dde390fef7522afda11fb58b09ad9c2dabc99d47c413e79e3996a50",
+  "englishContentHash": "2c12da817e0836f218bfc3d7f04aa142abb4af1c201e11618814062a28084447",
+  "overview": "FRM-like/1에서 초기화는 다음 값을 설정해요: z = pixel. 반복 노드는 먼저 z2 = z*z를 실행해요. 뒤의 노드가 f, fp, fpp와 denom = 2*(fp*fp)-f*fpp를 만들어요. 다음 공식 세부 사항을 설명해요: 분기는 다음 식을 사용해요: |denom|² < 1e-10 → z = z; |denom|² >= 1e-10 → z = z - numer/denom. 종료 노드는 다음 조건을 검사해요: |z - zPrev| >= 0.000001.",
+  "sourceWalkthrough": {
+    "b79313f5-2181-5013-bd21-e59a7222dce5:c9f11ef69b73ea2c6489025f83e6b53cabebc1df1e399f282b8ce44e7da4b05f:init": "FRM-like/1에서 초기화는 다음 값을 설정해요: z = pixel.",
+    "b79313f5-2181-5013-bd21-e59a7222dce5:c9f11ef69b73ea2c6489025f83e6b53cabebc1df1e399f282b8ce44e7da4b05f:loop": "반복 노드는 먼저 z2 = z*z를 실행해요. 뒤의 노드가 f, fp, fpp와 denom = 2*(fp*fp)-f*fpp를 만들어요.",
+    "b79313f5-2181-5013-bd21-e59a7222dce5:c9f11ef69b73ea2c6489025f83e6b53cabebc1df1e399f282b8ce44e7da4b05f:branch": "다음 공식 세부 사항을 설명해요: 분기는 다음 식을 사용해요: |denom|² < 1e-10 → z = z; |denom|² >= 1e-10 → z = z - numer/denom.",
+    "b79313f5-2181-5013-bd21-e59a7222dce5:c9f11ef69b73ea2c6489025f83e6b53cabebc1df1e399f282b8ce44e7da4b05f:termination": "종료 노드는 다음 조건을 검사해요: |z - zPrev| >= 0.000001."
+  },
+  "syntaxFeatures": {
+    "sequence": "이 구문 기능은 다음 연산을 가리켜요: 반복 노드는 denom = 2*(fp*fp)-f*fpp.",
+    "branch": "이 구문 기능은 다음 연산을 가리켜요: 분기는 다음 식을 사용해요: |denom|² < 1e-10 → z = z; |denom|² >= 1e-10 → z = z - numer/denom."
+  },
+  "parameterExperiment": {
+    "steps": [
+      "고정 프로필을 기준으로 48회와 96회 반복을 실행해요. 그리고 모든 제어를 고정한 채 denom = 2*(fp*fp)-f*fpp 또는 |z - zPrev| >= 0.000001이 다른지 기록해요."
+    ],
+    "expectedObservation": "더 큰 반복 상한은 보호되거나 보호되지 않은 Halley 업데이트를 더 드러낼 수 있어요. 반복 횟수가 다른지 기록해요."
+  },
+  "exercise": {
+    "prompt": "Halley denom 크기 보호에서 나오는 두 결과를 설명해요.",
+    "completionCheck": "완료하려면 정확히 4개의 주석을 적고 다음 공식 세부 사항을 설명해야 해요: 힌트: denom = 2*(fp*fp)-f*fpp.",
+    "hint": "힌트에서 다음 공식 세부 사항을 확인해요: denom = 2*(fp*fp)-f*fpp."
+  },
+  "factsPresentation": {
+    "provenanceLead": "출처 정보는 고정된 소스 기록에 있어요.",
+    "rightsLead": "권리 상태와 게시 결정은 고정된 결정 기록에 있어요."
+  },
+  "contentHash": "38733194d1160d034cb736c446d46df73080e8a98ea5dbd9ccc926e3b81a3983"
+}

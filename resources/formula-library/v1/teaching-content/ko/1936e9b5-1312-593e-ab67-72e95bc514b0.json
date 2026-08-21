@@ -1,0 +1,33 @@
+{
+  "schema": "fractalpark-teaching-locale/v1",
+  "formulaId": "1936e9b5-1312-593e-ab67-72e95bc514b0",
+  "locale": "ko",
+  "sourceRevision": "2f024a184f50b87076b883408a33387a2010e89996414646d1b51844d2f181fc",
+  "semanticHash": "c1fed8de512318463b90399a68d9eca445ab7908923d0a54ce4aed3bd2f631df",
+  "englishContentHash": "8ad1ddfcd2a71b3a7a561c0247f2d30c48887de2d08a5ab54df6307c665db562",
+  "overview": "FRM-like/1에서 초기화는 z = pixel이고 sinp = sin(pixel)이에요. 반복 노드는 z = sin(z)+sinp를 실행해요. 종료 노드는 |z| <= 50을 검사해요.",
+  "sourceWalkthrough": {
+    "1936e9b5-1312-593e-ab67-72e95bc514b0:2f024a184f50b87076b883408a33387a2010e89996414646d1b51844d2f181fc:init": "FRM-like/1에서 초기화는 z = pixel이고 sinp = sin(pixel)이에요.",
+    "1936e9b5-1312-593e-ab67-72e95bc514b0:2f024a184f50b87076b883408a33387a2010e89996414646d1b51844d2f181fc:loop": "반복 노드는 z = sin(z)+sinp를 실행해요.",
+    "1936e9b5-1312-593e-ab67-72e95bc514b0:2f024a184f50b87076b883408a33387a2010e89996414646d1b51844d2f181fc:termination": "종료 노드는 |z| <= 50을 검사해요."
+  },
+  "syntaxFeatures": {
+    "sequence": "반복 노드는 z = sin(z)+sinp를 실행해요."
+  },
+  "parameterExperiment": {
+    "steps": [
+      "고정 프로필을 기준으로 48회와 96회 반복을 실행해요. 그리고 모든 제어를 고정한 채 z = sin(z)+sinp 또는 |z| <= 50이 다른지 기록해요."
+    ],
+    "expectedObservation": "더 큰 반복 상한은 sin(z)+sinp의 후속 적용을 드러낼 수 있어요. 관찰된 탈출 횟수가 다른지 기록해요."
+  },
+  "exercise": {
+    "prompt": "pixel에서 얻어 반복문이 재사용하는 sinp = sin(pixel)을 찾고, 이 값이 z = sin(z)+sinp에 어떻게 들어가는지 설명해요.",
+    "completionCheck": "완료하려면 정확히 3개의 주석을 적고 다음 공식 세부 사항을 설명해야 해요: 힌트: z = sin(z)+sinp.",
+    "hint": "힌트에서 다음 공식 세부 사항을 확인해요: z = sin(z)+sinp."
+  },
+  "factsPresentation": {
+    "provenanceLead": "출처 정보는 고정된 소스 기록에 있어요.",
+    "rightsLead": "권리 상태와 게시 결정은 고정된 결정 기록에 있어요."
+  },
+  "contentHash": "aa0083fe33cc9a10184b7fb8e38fd8e484773d1f444c5f21753e60d9cda93f1c"
+}

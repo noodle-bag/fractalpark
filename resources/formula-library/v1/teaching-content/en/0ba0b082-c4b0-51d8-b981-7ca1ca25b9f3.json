@@ -1,0 +1,90 @@
+{
+  "schema": "fractalpark-teaching-en-fact/v1",
+  "formulaId": "0ba0b082-c4b0-51d8-b981-7ca1ca25b9f3",
+  "sourceRevision": "46f51a27e66b8e029ee20112496383b57cc510dbfcae0bc63dd9b0a6886dcb8f",
+  "semanticHash": "374bad563fd78d9d062b53d35dc9be8498dba81eb412aea6c35e29d54ef4456a",
+  "overview": "In FRM-like/1, islandofchaos sets z to seed and roundCount to 1. Each iteration uses earlyTransform(z)+pixel while roundCount is below 10; afterward it uses numeratorTransform(z)/denominatorTransform(z)+pixel, then increments roundCount. The pinned parameter-plane profile uses 96 iterations.",
+  "mathDisclosure": "exact-structured",
+  "mathSummary": "starts z from seed and roundCount from 1; repeatedly uses earlyTransform(z)+pixel while roundCount < 10, otherwise numeratorTransform(z)/denominatorTransform(z)+pixel, then increments roundCount; earlyTransform, numeratorTransform, and denominatorTransform are runtime function slots; bailout is |z| <= real(escapeLimit).",
+  "sourceWalkthrough": [
+    {
+      "annotationId": "0ba0b082-c4b0-51d8-b981-7ca1ca25b9f3:46f51a27e66b8e029ee20112496383b57cc510dbfcae0bc63dd9b0a6886dcb8f:init",
+      "nodeId": "frm-v1:46f51a27e66b8e029ee20112496383b57cc510dbfcae0bc63dd9b0a6886dcb8f:init/0",
+      "explanation": "Initialization: init/0 sets z from seed."
+    },
+    {
+      "annotationId": "0ba0b082-c4b0-51d8-b981-7ca1ca25b9f3:46f51a27e66b8e029ee20112496383b57cc510dbfcae0bc63dd9b0a6886dcb8f:loop",
+      "nodeId": "frm-v1:46f51a27e66b8e029ee20112496383b57cc510dbfcae0bc63dd9b0a6886dcb8f:loop/0",
+      "explanation": "Iteration: loop/0 tests whether roundCount is below 10."
+    },
+    {
+      "annotationId": "0ba0b082-c4b0-51d8-b981-7ca1ca25b9f3:46f51a27e66b8e029ee20112496383b57cc510dbfcae0bc63dd9b0a6886dcb8f:branch",
+      "nodeId": "frm-v1:46f51a27e66b8e029ee20112496383b57cc510dbfcae0bc63dd9b0a6886dcb8f:loop/0",
+      "explanation": "Branch: when roundCount < 10, loop/0 assigns earlyTransform(z)+pixel; otherwise it assigns numeratorTransform(z)/denominatorTransform(z)+pixel."
+    },
+    {
+      "annotationId": "0ba0b082-c4b0-51d8-b981-7ca1ca25b9f3:46f51a27e66b8e029ee20112496383b57cc510dbfcae0bc63dd9b0a6886dcb8f:termination",
+      "nodeId": "frm-v1:46f51a27e66b8e029ee20112496383b57cc510dbfcae0bc63dd9b0a6886dcb8f:bailout",
+      "explanation": "Termination: bailout tests |z| <= real(escapeLimit)."
+    }
+  ],
+  "syntaxFeatures": [
+    {
+      "featureId": "sequence",
+      "annotationIds": [
+        "0ba0b082-c4b0-51d8-b981-7ca1ca25b9f3:46f51a27e66b8e029ee20112496383b57cc510dbfcae0bc63dd9b0a6886dcb8f:init",
+        "0ba0b082-c4b0-51d8-b981-7ca1ca25b9f3:46f51a27e66b8e029ee20112496383b57cc510dbfcae0bc63dd9b0a6886dcb8f:loop",
+        "0ba0b082-c4b0-51d8-b981-7ca1ca25b9f3:46f51a27e66b8e029ee20112496383b57cc510dbfcae0bc63dd9b0a6886dcb8f:termination"
+      ],
+      "explanation": "The cited annotations follow seed initialization, the roundCount < 10 test, and the escapeLimit bailout."
+    },
+    {
+      "featureId": "branch",
+      "annotationIds": [
+        "0ba0b082-c4b0-51d8-b981-7ca1ca25b9f3:46f51a27e66b8e029ee20112496383b57cc510dbfcae0bc63dd9b0a6886dcb8f:branch"
+      ],
+      "explanation": "The cited branch selects earlyTransform(z)+pixel before round 10 and numeratorTransform(z)/denominatorTransform(z)+pixel afterward."
+    }
+  ],
+  "parameterExperiment": {
+    "parameterSymbols": [
+      "seed",
+      "escapeLimit",
+      "earlyTransform",
+      "numeratorTransform",
+      "denominatorTransform"
+    ],
+    "steps": [
+      "Use the pinned profile as the baseline. Change seed only, keep escapeLimit, earlyTransform, numeratorTransform, and denominatorTransform fixed, run 96 iterations, restore seed, and record whether the result differs."
+    ],
+    "expectedObservation": "Changing seed may alter the path that reaches the early and later transform branches; record whether a difference occurs."
+  },
+  "exercise": {
+    "prompt": "Trace the roundCount < 10 switch and state the assignment on each side.",
+    "completionCheck": "Your trace names all 4 annotations and identifies both branch assignments.",
+    "answerDisclosure": "hint"
+  },
+  "facts": {
+    "provenanceStatement": "This teaching unit is grounded in the pinned runtime source revision.",
+    "rightsStatement": "rightsStatus is no-explicit-permission; implementationBasis is separated-independent-rewrite; publicationDecision is publish; decisionReason is publish-cleanroom-independent-rewrite-full-chain-green. This does not make a broader claim about any third-party original.",
+    "sourceIds": [
+      "runtime:46f51a27e66b8e029ee20112496383b57cc510dbfcae0bc63dd9b0a6886dcb8f",
+      "decision:0ba0b082-c4b0-51d8-b981-7ca1ca25b9f3"
+    ],
+    "licenseIds": [],
+    "claims": [
+      {
+        "text": "The pinned runtime definition supplies the operations and profile used here.",
+        "sourceIds": [
+          "runtime:46f51a27e66b8e029ee20112496383b57cc510dbfcae0bc63dd9b0a6886dcb8f"
+        ]
+      },
+      {
+        "text": "The recorded publication decision is publish.",
+        "sourceIds": [
+          "decision:0ba0b082-c4b0-51d8-b981-7ca1ca25b9f3"
+        ]
+      }
+    ]
+  }
+}

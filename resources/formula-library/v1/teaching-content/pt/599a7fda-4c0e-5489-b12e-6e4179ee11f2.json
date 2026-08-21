@@ -1,0 +1,35 @@
+{
+  "schema": "fractalpark-teaching-locale/v1",
+  "formulaId": "599a7fda-4c0e-5489-b12e-6e4179ee11f2",
+  "locale": "pt",
+  "sourceRevision": "6864baf1c6fb93ea8ce506200e19583fd0b7c1b361fb17764b661d6424762cfa",
+  "semanticHash": "a1fa3e6dd83f4cafacb8e242810e80e35de45513e75ec6cc7759d7a11f046193",
+  "englishContentHash": "90e78447859e27af456be2ff6cdbeadc31a08f9f7557e06d242347218dbc39b2",
+  "overview": "Em FRM-like/1, a inicialização faz z = pixel. Em cada iteração, o nó executa correction = f / fp. O término testa |z - zPrev| >= 0.000001.",
+  "sourceWalkthrough": {
+    "599a7fda-4c0e-5489-b12e-6e4179ee11f2:6864baf1c6fb93ea8ce506200e19583fd0b7c1b361fb17764b661d6424762cfa:init": "Em FRM-like/1, a inicialização faz z = pixel.",
+    "599a7fda-4c0e-5489-b12e-6e4179ee11f2:6864baf1c6fb93ea8ce506200e19583fd0b7c1b361fb17764b661d6424762cfa:loop": "Em cada iteração, o nó executa correction = f / fp.",
+    "599a7fda-4c0e-5489-b12e-6e4179ee11f2:6864baf1c6fb93ea8ce506200e19583fd0b7c1b361fb17764b661d6424762cfa:branch": "A ramificação usa |z| < 0.00001 → z = (0.00001,0).",
+    "599a7fda-4c0e-5489-b12e-6e4179ee11f2:6864baf1c6fb93ea8ce506200e19583fd0b7c1b361fb17764b661d6424762cfa:termination": "O término testa |z - zPrev| >= 0.000001."
+  },
+  "syntaxFeatures": {
+    "sequence": "Em cada iteração, o nó executa correction = f / fp.",
+    "branch": "A ramificação usa |z| < 0.00001 → z = (0.00001,0)."
+  },
+  "parameterExperiment": {
+    "steps": [
+      "Use o perfil fixo como base. Execute 48 e depois 96 iterações, mantendo todos os controles fixos, e registre se correction = f / fp ou |z - zPrev| >= 0.000001 diferem."
+    ],
+    "expectedObservation": "O limite maior pode expor mais atualizações correction = f / fp após a proteção inicial; registre se as contagens de iteração diferem."
+  },
+  "exercise": {
+    "prompt": "Explique como correction é definida e por qual valor a proteção inicial substitui z.",
+    "completionCheck": "Para concluir, você deve nomear exatamente as 4 anotações e indicar correction = f / fp e o valor de substituição (0.00001,0).",
+    "hint": "Dica: correction = f / fp; a proteção inicial substitui z por (0.00001,0)."
+  },
+  "factsPresentation": {
+    "provenanceLead": "A proveniência está no registro de fonte fixado.",
+    "rightsLead": "O status de direitos e a decisão de publicação estão no registro de decisão fixado."
+  },
+  "contentHash": "d8de922362a3c6ec624db7654f5fb87ed7250aac93a95dadbd2a56582436906c"
+}

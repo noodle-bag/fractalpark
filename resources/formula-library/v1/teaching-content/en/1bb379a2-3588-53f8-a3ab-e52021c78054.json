@@ -1,0 +1,72 @@
+{
+  "schema": "fractalpark-teaching-en-fact/v1",
+  "formulaId": "1bb379a2-3588-53f8-a3ab-e52021c78054",
+  "sourceRevision": "d51707785f4d59fbfa309c2dbd8da93ac1a0ca152c067e6e34c4851585652768",
+  "semanticHash": "597a8cb34733ab22b5f2452fa41e5f56f5bae984c8ae2c8e6fdc43d5c45a4318",
+  "overview": "In FRM-like/1, frm-d2 stores pixel as seed and initializes z from that seed. It repeatedly assigns sqr(z)+sin(z)+seed, with bailout |z| < 4. The pinned parameter-plane profile uses 96 iterations.",
+  "mathDisclosure": "exact-structured",
+  "mathSummary": "stores pixel as seed, starts z from seed, then repeatedly assigns sqr(z)+sin(z)+seed; bailout is |z| < 4.",
+  "sourceWalkthrough": [
+    {
+      "annotationId": "1bb379a2-3588-53f8-a3ab-e52021c78054:d51707785f4d59fbfa309c2dbd8da93ac1a0ca152c067e6e34c4851585652768:init",
+      "nodeId": "frm-v1:d51707785f4d59fbfa309c2dbd8da93ac1a0ca152c067e6e34c4851585652768:init/0",
+      "explanation": "Initialization: init/0 stores pixel as seed."
+    },
+    {
+      "annotationId": "1bb379a2-3588-53f8-a3ab-e52021c78054:d51707785f4d59fbfa309c2dbd8da93ac1a0ca152c067e6e34c4851585652768:loop",
+      "nodeId": "frm-v1:d51707785f4d59fbfa309c2dbd8da93ac1a0ca152c067e6e34c4851585652768:loop/0",
+      "explanation": "Iteration: loop/0 assigns z = sqr(z)+sin(z)+seed."
+    },
+    {
+      "annotationId": "1bb379a2-3588-53f8-a3ab-e52021c78054:d51707785f4d59fbfa309c2dbd8da93ac1a0ca152c067e6e34c4851585652768:termination",
+      "nodeId": "frm-v1:d51707785f4d59fbfa309c2dbd8da93ac1a0ca152c067e6e34c4851585652768:bailout",
+      "explanation": "Termination: bailout tests |z| < 4."
+    }
+  ],
+  "syntaxFeatures": [
+    {
+      "featureId": "sequence",
+      "annotationIds": [
+        "1bb379a2-3588-53f8-a3ab-e52021c78054:d51707785f4d59fbfa309c2dbd8da93ac1a0ca152c067e6e34c4851585652768:init",
+        "1bb379a2-3588-53f8-a3ab-e52021c78054:d51707785f4d59fbfa309c2dbd8da93ac1a0ca152c067e6e34c4851585652768:loop",
+        "1bb379a2-3588-53f8-a3ab-e52021c78054:d51707785f4d59fbfa309c2dbd8da93ac1a0ca152c067e6e34c4851585652768:termination"
+      ],
+      "explanation": "The cited annotations connect seed = pixel, the repeated sqr(z)+sin(z)+seed assignment, and the |z| < 4 bailout."
+    }
+  ],
+  "parameterExperiment": {
+    "parameterSymbols": [],
+    "steps": [
+      "Use the pinned profile with all controls fixed. Run 48 iterations and then 96 iterations, and record whether the sqr(z)+sin(z)+seed escape pattern or iteration counts differ."
+    ],
+    "expectedObservation": "The larger cap may reveal later uses of the stored seed in the update; record whether the observed escape counts differ."
+  },
+  "exercise": {
+    "prompt": "Trace how pixel becomes seed before the loop reuses seed in its update.",
+    "completionCheck": "Your response names all 3 annotations and identifies pixel as the value stored in seed.",
+    "answerDisclosure": "hint"
+  },
+  "facts": {
+    "provenanceStatement": "This teaching unit is grounded in the pinned runtime source revision.",
+    "rightsStatement": "rightsStatus is no-explicit-permission; implementationBasis is separated-independent-rewrite; publicationDecision is publish; decisionReason is publish-cleanroom-independent-rewrite-full-chain-green. This does not make a broader claim about any third-party original.",
+    "sourceIds": [
+      "runtime:d51707785f4d59fbfa309c2dbd8da93ac1a0ca152c067e6e34c4851585652768",
+      "decision:1bb379a2-3588-53f8-a3ab-e52021c78054"
+    ],
+    "licenseIds": [],
+    "claims": [
+      {
+        "text": "The pinned runtime definition supplies the operations and profile used here.",
+        "sourceIds": [
+          "runtime:d51707785f4d59fbfa309c2dbd8da93ac1a0ca152c067e6e34c4851585652768"
+        ]
+      },
+      {
+        "text": "The recorded publication decision is publish.",
+        "sourceIds": [
+          "decision:1bb379a2-3588-53f8-a3ab-e52021c78054"
+        ]
+      }
+    ]
+  }
+}

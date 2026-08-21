@@ -1,0 +1,84 @@
+{
+  "schema": "fractalpark-teaching-en-fact/v1",
+  "formulaId": "0df5ac6e-d97e-55db-b624-96c310af07dd",
+  "sourceRevision": "bb7d3fd03ddb3b27f66b28fea82cdfa4da6c88cf15a23c6da8fe27a8adf1e34e",
+  "semanticHash": "b3d93634d09622186eeef16d005021fb8bf551698b662dbdf5da191841efe1d5",
+  "overview": "In FRM-like/1, novaSine initializes z = pixel. Each loop defines denom = cos(z); when its squared real-and-imaginary size is below 1e-10 it keeps z, otherwise it assigns z - sin(z)/denom + 0.18*c. The pinned julia profile uses 96 iterations.",
+  "mathDisclosure": "exact-structured",
+  "mathSummary": "initializes z = pixel; each iteration defines denom = cos(z), keeps z unchanged when real(denom)*real(denom)+imag(denom)*imag(denom) < 1e-10, otherwise assigns z - sin(z)/denom + 0.18*c; bailout is |z - zPrev| >= 0.000001.",
+  "sourceWalkthrough": [
+    {
+      "annotationId": "0df5ac6e-d97e-55db-b624-96c310af07dd:bb7d3fd03ddb3b27f66b28fea82cdfa4da6c88cf15a23c6da8fe27a8adf1e34e:init",
+      "nodeId": "frm-v1:bb7d3fd03ddb3b27f66b28fea82cdfa4da6c88cf15a23c6da8fe27a8adf1e34e:init/0",
+      "explanation": "Initialization: init/0 sets z = pixel."
+    },
+    {
+      "annotationId": "0df5ac6e-d97e-55db-b624-96c310af07dd:bb7d3fd03ddb3b27f66b28fea82cdfa4da6c88cf15a23c6da8fe27a8adf1e34e:loop",
+      "nodeId": "frm-v1:bb7d3fd03ddb3b27f66b28fea82cdfa4da6c88cf15a23c6da8fe27a8adf1e34e:loop/0",
+      "explanation": "Iteration: loop/0 defines denom = cos(z)."
+    },
+    {
+      "annotationId": "0df5ac6e-d97e-55db-b624-96c310af07dd:bb7d3fd03ddb3b27f66b28fea82cdfa4da6c88cf15a23c6da8fe27a8adf1e34e:branch",
+      "nodeId": "frm-v1:bb7d3fd03ddb3b27f66b28fea82cdfa4da6c88cf15a23c6da8fe27a8adf1e34e:loop/1",
+      "explanation": "Branch: loop/1 keeps z when denom has squared size below 1e-10; otherwise it assigns z - sin(z)/denom + 0.18*c."
+    },
+    {
+      "annotationId": "0df5ac6e-d97e-55db-b624-96c310af07dd:bb7d3fd03ddb3b27f66b28fea82cdfa4da6c88cf15a23c6da8fe27a8adf1e34e:termination",
+      "nodeId": "frm-v1:bb7d3fd03ddb3b27f66b28fea82cdfa4da6c88cf15a23c6da8fe27a8adf1e34e:bailout",
+      "explanation": "Termination: bailout tests |z - zPrev| >= 0.000001."
+    }
+  ],
+  "syntaxFeatures": [
+    {
+      "featureId": "sequence",
+      "annotationIds": [
+        "0df5ac6e-d97e-55db-b624-96c310af07dd:bb7d3fd03ddb3b27f66b28fea82cdfa4da6c88cf15a23c6da8fe27a8adf1e34e:init",
+        "0df5ac6e-d97e-55db-b624-96c310af07dd:bb7d3fd03ddb3b27f66b28fea82cdfa4da6c88cf15a23c6da8fe27a8adf1e34e:loop",
+        "0df5ac6e-d97e-55db-b624-96c310af07dd:bb7d3fd03ddb3b27f66b28fea82cdfa4da6c88cf15a23c6da8fe27a8adf1e34e:termination"
+      ],
+      "explanation": "The cited annotations connect initialization from pixel, the denom = cos(z) loop assignment, and the change-based bailout."
+    },
+    {
+      "featureId": "branch",
+      "annotationIds": [
+        "0df5ac6e-d97e-55db-b624-96c310af07dd:bb7d3fd03ddb3b27f66b28fea82cdfa4da6c88cf15a23c6da8fe27a8adf1e34e:branch"
+      ],
+      "explanation": "The cited branch keeps z for a squared denom size below 1e-10; otherwise it applies z - sin(z)/denom + 0.18*c."
+    }
+  ],
+  "parameterExperiment": {
+    "parameterSymbols": [],
+    "steps": [
+      "Use the pinned julia profile with all controls fixed. Run 48 iterations and then 96 iterations, and record whether the denom guard or the z - sin(z)/denom + 0.18*c update changes the observed iteration counts."
+    ],
+    "expectedObservation": "The larger cap may expose additional guarded or unguarded updates; record whether the iteration counts differ."
+  },
+  "exercise": {
+    "prompt": "State the two outcomes of the cos(z) denominator-size guard.",
+    "completionCheck": "Your response names all 4 annotations and gives both keeping z and the sine update.",
+    "answerDisclosure": "hint"
+  },
+  "facts": {
+    "provenanceStatement": "This teaching unit is grounded in the pinned runtime source revision.",
+    "rightsStatement": "rightsStatus is project-owned; implementationBasis is project-owned; publicationDecision is publish; decisionReason is publish-project-owned-native-recipe. This does not make a broader claim about any third-party original.",
+    "sourceIds": [
+      "runtime:bb7d3fd03ddb3b27f66b28fea82cdfa4da6c88cf15a23c6da8fe27a8adf1e34e",
+      "decision:0df5ac6e-d97e-55db-b624-96c310af07dd"
+    ],
+    "licenseIds": [],
+    "claims": [
+      {
+        "text": "The pinned runtime definition supplies the operations and profile used here.",
+        "sourceIds": [
+          "runtime:bb7d3fd03ddb3b27f66b28fea82cdfa4da6c88cf15a23c6da8fe27a8adf1e34e"
+        ]
+      },
+      {
+        "text": "The recorded publication decision is publish.",
+        "sourceIds": [
+          "decision:0df5ac6e-d97e-55db-b624-96c310af07dd"
+        ]
+      }
+    ]
+  }
+}

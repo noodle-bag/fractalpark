@@ -1,0 +1,84 @@
+{
+  "schema": "fractalpark-teaching-en-fact/v1",
+  "formulaId": "6d27b5fd-462b-5561-bac2-7c5f915e3cb5",
+  "sourceRevision": "7ef2bf1f2dd573053bbe1e8af171472dff08ed6346b2e760ab2780c9244d1e85",
+  "semanticHash": "62ccdf4f274bf35079ca98a39ad59a05132b3580ef937b766945087358c454e7",
+  "overview": "In FRM-like/1, newtonSinh initializes z from pixel. Each loop computes denom = cosh(z), keeps z when its squared size is below 1e-10, and otherwise assigns z - sinh(z)/denom. The pinned julia profile uses 96 iterations.",
+  "mathDisclosure": "exact-structured",
+  "mathSummary": "starts z from pixel; in each iteration defines denom = cosh(z), keeps z unchanged when the squared real-and-imaginary size of denom is below 1e-10, otherwise assigns z - sinh(z)/denom; bailout is |z - zPrev| >= 0.000001.",
+  "sourceWalkthrough": [
+    {
+      "annotationId": "6d27b5fd-462b-5561-bac2-7c5f915e3cb5:7ef2bf1f2dd573053bbe1e8af171472dff08ed6346b2e760ab2780c9244d1e85:init",
+      "nodeId": "frm-v1:7ef2bf1f2dd573053bbe1e8af171472dff08ed6346b2e760ab2780c9244d1e85:init/0",
+      "explanation": "Initialization: init/0 sets z from pixel."
+    },
+    {
+      "annotationId": "6d27b5fd-462b-5561-bac2-7c5f915e3cb5:7ef2bf1f2dd573053bbe1e8af171472dff08ed6346b2e760ab2780c9244d1e85:loop",
+      "nodeId": "frm-v1:7ef2bf1f2dd573053bbe1e8af171472dff08ed6346b2e760ab2780c9244d1e85:loop/0",
+      "explanation": "Iteration: loop/0 defines denom = cosh(z)."
+    },
+    {
+      "annotationId": "6d27b5fd-462b-5561-bac2-7c5f915e3cb5:7ef2bf1f2dd573053bbe1e8af171472dff08ed6346b2e760ab2780c9244d1e85:branch",
+      "nodeId": "frm-v1:7ef2bf1f2dd573053bbe1e8af171472dff08ed6346b2e760ab2780c9244d1e85:loop/1",
+      "explanation": "Branch: loop/1 keeps z when denom has squared size below 1e-10; otherwise it assigns z - sinh(z)/denom."
+    },
+    {
+      "annotationId": "6d27b5fd-462b-5561-bac2-7c5f915e3cb5:7ef2bf1f2dd573053bbe1e8af171472dff08ed6346b2e760ab2780c9244d1e85:termination",
+      "nodeId": "frm-v1:7ef2bf1f2dd573053bbe1e8af171472dff08ed6346b2e760ab2780c9244d1e85:bailout",
+      "explanation": "Termination: bailout tests |z - zPrev| >= 0.000001."
+    }
+  ],
+  "syntaxFeatures": [
+    {
+      "featureId": "sequence",
+      "annotationIds": [
+        "6d27b5fd-462b-5561-bac2-7c5f915e3cb5:7ef2bf1f2dd573053bbe1e8af171472dff08ed6346b2e760ab2780c9244d1e85:init",
+        "6d27b5fd-462b-5561-bac2-7c5f915e3cb5:7ef2bf1f2dd573053bbe1e8af171472dff08ed6346b2e760ab2780c9244d1e85:loop",
+        "6d27b5fd-462b-5561-bac2-7c5f915e3cb5:7ef2bf1f2dd573053bbe1e8af171472dff08ed6346b2e760ab2780c9244d1e85:termination"
+      ],
+      "explanation": "The cited annotations connect z = pixel, denom = cosh(z), and the change-based bailout."
+    },
+    {
+      "featureId": "branch",
+      "annotationIds": [
+        "6d27b5fd-462b-5561-bac2-7c5f915e3cb5:7ef2bf1f2dd573053bbe1e8af171472dff08ed6346b2e760ab2780c9244d1e85:branch"
+      ],
+      "explanation": "The cited branch keeps z for a squared denom size below 1e-10; otherwise it applies z - sinh(z)/denom."
+    }
+  ],
+  "parameterExperiment": {
+    "parameterSymbols": [],
+    "steps": [
+      "Use the pinned julia profile with all controls fixed. Run 48 iterations and then 96 iterations, and record whether the cosh(z) denominator guard or the sinh(z) update changes the observed iteration counts."
+    ],
+    "expectedObservation": "The larger cap may expose additional guarded or unguarded sinh/cosh updates; record whether the iteration counts differ."
+  },
+  "exercise": {
+    "prompt": "State the two outcomes of the cosh(z) denominator-size guard.",
+    "completionCheck": "Your response names all 4 annotations and gives both keeping z and z - sinh(z)/denom.",
+    "answerDisclosure": "hint"
+  },
+  "facts": {
+    "provenanceStatement": "This teaching unit is grounded in the pinned runtime source revision.",
+    "rightsStatement": "rightsStatus is project-owned; implementationBasis is project-owned; publicationDecision is publish; decisionReason is publish-project-owned-native-recipe. This does not make a broader claim about any third-party original.",
+    "sourceIds": [
+      "runtime:7ef2bf1f2dd573053bbe1e8af171472dff08ed6346b2e760ab2780c9244d1e85",
+      "decision:6d27b5fd-462b-5561-bac2-7c5f915e3cb5"
+    ],
+    "licenseIds": [],
+    "claims": [
+      {
+        "text": "The pinned runtime definition supplies the operations and profile used here.",
+        "sourceIds": [
+          "runtime:7ef2bf1f2dd573053bbe1e8af171472dff08ed6346b2e760ab2780c9244d1e85"
+        ]
+      },
+      {
+        "text": "The recorded publication decision is publish.",
+        "sourceIds": [
+          "decision:6d27b5fd-462b-5561-bac2-7c5f915e3cb5"
+        ]
+      }
+    ]
+  }
+}

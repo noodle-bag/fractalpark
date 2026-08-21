@@ -1,0 +1,33 @@
+{
+  "schema": "fractalpark-teaching-locale/v1",
+  "formulaId": "1bb379a2-3588-53f8-a3ab-e52021c78054",
+  "locale": "fr",
+  "sourceRevision": "d51707785f4d59fbfa309c2dbd8da93ac1a0ca152c067e6e34c4851585652768",
+  "semanticHash": "597a8cb34733ab22b5f2452fa41e5f56f5bae984c8ae2c8e6fdc43d5c45a4318",
+  "englishContentHash": "1608ffe1a8a2eb227fdac49d45bb2acd6e8c1cc72c87ad2aaba26f5086036ba6",
+  "overview": "Dans FRM-like/1, l’initialisation effectue seed = pixel; z = seed. À chaque itération, le nœud exécute z = sqr(z)+sin(z)+seed. La terminaison vérifie |z| < 4.",
+  "sourceWalkthrough": {
+    "1bb379a2-3588-53f8-a3ab-e52021c78054:d51707785f4d59fbfa309c2dbd8da93ac1a0ca152c067e6e34c4851585652768:init": "Dans FRM-like/1, l’initialisation effectue seed = pixel; z = seed.",
+    "1bb379a2-3588-53f8-a3ab-e52021c78054:d51707785f4d59fbfa309c2dbd8da93ac1a0ca152c067e6e34c4851585652768:loop": "À chaque itération, le nœud exécute z = sqr(z)+sin(z)+seed.",
+    "1bb379a2-3588-53f8-a3ab-e52021c78054:d51707785f4d59fbfa309c2dbd8da93ac1a0ca152c067e6e34c4851585652768:termination": "La terminaison vérifie |z| < 4."
+  },
+  "syntaxFeatures": {
+    "sequence": "À chaque itération, le nœud exécute z = sqr(z)+sin(z)+seed."
+  },
+  "parameterExperiment": {
+    "steps": [
+      "Utilise le profil fixé comme référence. Exécute 48 puis 96 itérations, tous les contrôles fixes, et note si z = sqr(z)+sin(z)+seed ou |z| < 4 diffèrent."
+    ],
+    "expectedObservation": "La limite supérieure peut révéler des utilisations ultérieures du seed mémorisé dans la mise à jour ; note si les nombres de sorties observés diffèrent."
+  },
+  "exercise": {
+    "prompt": "Explique z = sqr(z)+sin(z)+seed.",
+    "completionCheck": "Pour terminer, tu dois nommer exactement les 3 annotations et expliquer ce détail de la formule : Indice : z = sqr(z)+sin(z)+seed.",
+    "hint": "Indice : z = sqr(z)+sin(z)+seed."
+  },
+  "factsPresentation": {
+    "provenanceLead": "La provenance figure dans l’enregistrement de source épinglé.",
+    "rightsLead": "Le statut des droits et la décision de publication figurent dans l’enregistrement de décision épinglé."
+  },
+  "contentHash": "d2af6095f21fa1668755f4a75a6ccf8d561b1c4ed6919f4dd025e8e83942170c"
+}

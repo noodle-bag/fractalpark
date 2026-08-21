@@ -1,0 +1,35 @@
+{
+  "schema": "fractalpark-teaching-locale/v1",
+  "formulaId": "b79313f5-2181-5013-bd21-e59a7222dce5",
+  "locale": "pt",
+  "sourceRevision": "c9f11ef69b73ea2c6489025f83e6b53cabebc1df1e399f282b8ce44e7da4b05f",
+  "semanticHash": "d5bd7f170dde390fef7522afda11fb58b09ad9c2dabc99d47c413e79e3996a50",
+  "englishContentHash": "2c12da817e0836f218bfc3d7f04aa142abb4af1c201e11618814062a28084447",
+  "overview": "Em FRM-like/1, a inicialização faz z = pixel. Em cada iteração, o nó executa denom = 2*(fp*fp)-f*fpp. O término testa |z - zPrev| >= 0.000001.",
+  "sourceWalkthrough": {
+    "b79313f5-2181-5013-bd21-e59a7222dce5:c9f11ef69b73ea2c6489025f83e6b53cabebc1df1e399f282b8ce44e7da4b05f:init": "Em FRM-like/1, a inicialização faz z = pixel.",
+    "b79313f5-2181-5013-bd21-e59a7222dce5:c9f11ef69b73ea2c6489025f83e6b53cabebc1df1e399f282b8ce44e7da4b05f:loop": "O nó do loop primeiro executa z2 = z*z; os nós seguintes constroem f, fp, fpp e denom = 2*(fp*fp)-f*fpp.",
+    "b79313f5-2181-5013-bd21-e59a7222dce5:c9f11ef69b73ea2c6489025f83e6b53cabebc1df1e399f282b8ce44e7da4b05f:branch": "A ramificação usa |denom|² < 1e-10 → z = z; |denom|² >= 1e-10 → z = z - numer/denom.",
+    "b79313f5-2181-5013-bd21-e59a7222dce5:c9f11ef69b73ea2c6489025f83e6b53cabebc1df1e399f282b8ce44e7da4b05f:termination": "O término testa |z - zPrev| >= 0.000001."
+  },
+  "syntaxFeatures": {
+    "sequence": "Em cada iteração, o nó executa denom = 2*(fp*fp)-f*fpp.",
+    "branch": "A ramificação usa |denom|² < 1e-10 → z = z; |denom|² >= 1e-10 → z = z - numer/denom."
+  },
+  "parameterExperiment": {
+    "steps": [
+      "Use o perfil fixo como base. Execute 48 e depois 96 iterações, mantendo todos os controles fixos, e registre se denom = 2*(fp*fp)-f*fpp ou |z - zPrev| >= 0.000001 diferem."
+    ],
+    "expectedObservation": "O limite maior pode expor atualizações Halley adicionais, protegidas ou não; registre se as contagens de iteração diferem."
+  },
+  "exercise": {
+    "prompt": "Explique os dois resultados da proteção pelo tamanho de Halley denom.",
+    "completionCheck": "Para concluir, você deve nomear exatamente as 4 anotações e explicar este detalhe da fórmula: Dica: denom = 2*(fp*fp)-f*fpp.",
+    "hint": "Dica: denom = 2*(fp*fp)-f*fpp."
+  },
+  "factsPresentation": {
+    "provenanceLead": "A proveniência está no registro de fonte fixado.",
+    "rightsLead": "O status de direitos e a decisão de publicação estão no registro de decisão fixado."
+  },
+  "contentHash": "c43b1acfdadcf341b90d2adca10c81724b0f2d2f62e0b896d1430d8ea4503394"
+}
