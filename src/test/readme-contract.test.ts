@@ -55,6 +55,10 @@ describe('README generator', () => {
     for (const cta of PUBLIC_PROJECT.ctas) {
       expect(block).toContain(`https://www.fractalpark.com/en${cta.href}`);
     }
+    expect(block).toContain(PUBLIC_PROJECT.readmeSourceLink.summaryEn);
+    expect(block).toContain(
+      `https://www.fractalpark.com/en${PUBLIC_PROJECT.readmeSourceLink.href}`
+    );
     expect(block).not.toContain('/drift');
   });
 

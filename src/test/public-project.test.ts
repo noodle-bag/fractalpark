@@ -60,8 +60,8 @@ describe('public-project contract facts', () => {
 
   it('uses the approved single-sentence positioning', () => {
     expect(PUBLIC_PROJECT.tagline).toContain('open-source, formula-first');
-    expect(PUBLIC_PROJECT.tagline).toContain('growing Fractint-compatible FRM support');
-    expect(PUBLIC_PROJECT.tagline).toContain('working to bring');
+    expect(PUBLIC_PROJECT.tagline).toContain('published formula source you can read and run');
+    expect(PUBLIC_PROJECT.tagline).toContain('Classic-compatible formula editor');
     // Must not over-claim full compatibility or shipped future features.
     expect(PUBLIC_PROJECT.tagline).not.toMatch(/fully Fractint/i);
     expect(PUBLIC_PROJECT.tagline).not.toMatch(/cloud/i);
@@ -78,6 +78,7 @@ describe('public-project contract facts', () => {
     const allowed = new Set([
       '/explore',
       '/formulas',
+      '/formulas/directory',
       '/formulas/frm',
       '/formulas/editor',
       '/gallery',
@@ -90,6 +91,7 @@ describe('public-project contract facts', () => {
     for (const cta of PUBLIC_PROJECT.ctas) {
       expect(allowed.has(cta.href)).toBe(true);
     }
+    expect(allowed.has(PUBLIC_PROJECT.readmeSourceLink.href)).toBe(true);
     // Drift is noindex and must not be a primary CTA.
     expect(PUBLIC_PROJECT.ctas.map((c) => c.href)).not.toContain('/drift');
   });

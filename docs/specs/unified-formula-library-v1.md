@@ -1,10 +1,12 @@
 # Unified Formula Library and FRM-like Language Contract v1
 
-- Status: Accepted contract; production activation is gated
+- Status: Accepted asset and lifecycle contract; activation remains gated per surface
 - Date: 2026-08-15
 - Amended: 2026-08-17 (677 identities; implementation publication is per-row; publication decision ledger asset frozen)
 - Amended: 2026-08-17 (stdlib v1 adds `identity`; Classic fn-slot defaults without an explicit `function=` mapping resolve to `identity`)
+- Amended: 2026-08-20 (language semantics delegated to the normative English reference; 513 published Definitions active)
 - Target release: FractalPark v0.4.19
+- Normative language: [FractalPark FRM-like Language v1](frm-like-language-v1.md)
 - Related: [FRM Compatibility and Migration Contracts v1](frm-compatibility-v1.md)
 - Related: [Fractal Document v2 and Envelope v1](fractal-document-v2.md)
 - Decision: [ADR 0008](../adr/0008-unified-formula-library-contract.md)
@@ -16,12 +18,15 @@ and future Community formulas use one language, one compiler path, one safety
 envelope, and the same four asset layers. Legacy B94/F588 labels remain migration
 inputs only; they are not public product tiers or runtime trust signals.
 
-This document freezes the v1 language, asset, identity, rights, safety, and
-migration contracts. The grammar was frozen only after the Slice 0 parser,
-round-trip, all-677 projection, UI-schema, hash-layering, and ownership fixtures
-passed. Those fixtures remain prototype evidence; this document does not claim
-that the production parser, 677-Formula migration, new writers, hosted schema,
-or discovery UI are active.
+This document freezes the v1 asset, identity, rights, safety, and migration
+contracts. The executable language semantics now live in the dedicated
+[normative English reference](frm-like-language-v1.md), which governs whenever
+older design-history wording differs. The v1 parser/backend is active on the 513
+published Standard Record runtime path, including pinned source/Profile artifacts
+and one-shot Open/Remix handoff (the E5/A19 evidence scope). C1 remains partial
+and C10 remains pending. Canonical writer/import, unified selector, full
+offline replay, hosted schema, new cloud writer, and remaining discovery/release
+gates keep their separate implementation status.
 
 ## Non-negotiable invariants
 
@@ -46,256 +51,56 @@ or discovery UI are active.
 
 ## 1. FRM-like Language v1
 
+The executable language is specified normatively by
+[FractalPark FRM-like Language v1](frm-like-language-v1.md). This asset and
+lifecycle contract does not duplicate its grammar or numeric semantics. The
+following subsection map preserves references from design notes and code review:
+
 ### 1.1 Public name and dialect boundary
 
-The public language name is **FractalPark FRM-like Language v1**.
-
-- `frm-like/1` is the canonical authoring language.
-- Classic Fractint FRM remains an import dialect. It is scanned, selected,
-  lowered, diagnosed, and then compiled through the same typed pipeline.
-- FDL remains a future research name and does not describe this runtime.
-- GLSL, WASM, Rust, compiled caches, and generated shaders are backend artifacts,
-  never authoring source or durable facts.
-
-Canonical source begins with these semantic directives:
-
-```frm
-; @language: frm-like/1
-; @stdlib: 1
-; @numeric-profile: standard32
-```
-
-Although directives use comment markers for Classic-reader tolerance, the three
-recognized directives are semantic input. Changing one changes semanticHash.
-They appear exactly once in the preamble; a directive-looking comment elsewhere
-is fatal. Ordinary comments use `;` at the start of a physical line or whitespace
-followed by `;` after executable text. Ordinary comments and insignificant ASCII
-whitespace around declaration/expression punctuation do not change semanticHash.
+See normative §§1–2 for `frm-like/1`, semantic directives, conformance language,
+and the Classic import boundary. `frmSemanticsVersion` remains a separate legacy
+compatibility axis.
 
 ### 1.2 Frozen formula and parameter grammar
 
-The grammar below passed the named Slice 0 evidence in regression rows A1–A3,
-A6, and A14 and is now the v1 compatibility promise. Production activation is a
-separate gate: the prototype does not replace the released parser/compiler, and
-any implementation must reproduce these fixtures rather than reinterpret them.
-
-The v1 parameter form is deliberately small and line-oriented:
-
-```ebnf
-source          = semanticDirective*, formula ;
-formula         = identifier, "{", parameters?, init, loop, bailout, "}" ;
-parameters      = "parameters", ":", NEWLINE, parameterDeclaration* ;
-parameterDeclaration
-                = identifier, ":", parameterType, "=", parameterDefault,
-                  domain?, classicBinding?, NEWLINE ;
-parameterType   = "real" | "complex" | "function" ;
-parameterDefault
-                = realLiteral | complexLiteral | functionName ;
-domain          = "domain", "[", realLiteral, ",", realLiteral, "]" ;
-classicBinding  = "classic", ("p1" | "p2" | "p3" | "p4" | "p5" |
-                                     "fn1" | "fn2" | "fn3" | "fn4") ;
-init            = "init", ":", statement* ;
-loop            = "loop", ":", statement* ;
-bailout         = "bailout", ":", expression ;
-```
-
-Example:
-
-```frm
-; @language: frm-like/1
-; @stdlib: 1
-; @numeric-profile: standard32
-PowerJulia {
-  parameters:
-    power: real = 2 domain [1, 16] classic p1
-    offset: complex = (-0.75, 0.1) classic p2
-    transform: function = sin classic fn1
-  init:
-    z = pixel
-  loop:
-    z = transform(z ^ power) + offset
-  bailout:
-    |z| <= 4
-}
-```
-
-Rules:
-
-- One parameter declaration occupies one physical line.
-- Canonical executable sections emit one statement per physical line. A semicolon
-  is a comment marker only in the forms defined above; any residual semicolon or
-  unsupported punctuation after comment stripping is fatal.
-- ASCII whitespace around `:`, `=`, comma, brackets, and expression operators is
-  insignificant. The canonical exporter emits the example spacing above.
-- `real` defaults are finite real literals. An optional inclusive hard domain is
-  mathematical validation, not a UI hint; `min <= default <= max` is required.
-- `complex` defaults are `(real, imaginary)` and do not use v1 scalar domains.
-- `function` defaults name a unary v1 stdlib function. `atan2` remains available
-  only as a direct two-argument call and cannot populate a `function`/`fn1`–`fn4`
-  selector.
-- A `classic` binding is optional for native formulas and unique within one
-  definition. It records import/export interoperability; it is not the runtime
-  parameter name. `real`/`complex` parameters bind only to `p1`–`p5`; `function`
-  parameters bind only to `fn1`–`fn4`. A direct `fn1`–`fn4` call is valid only
-  when the same Definition declares the matching `function` binding; an unmapped
-  slot is fatal. Backend lowering resolves every bound `pN`/`fnN` read to that
-  named parameter, so CPU and GLSL never depend on duplicate host values.
-- UI range, step, grouping, labels, current values, view, palette, and coloring
-  do not belong in a parameter declaration. They belong to Profile or Record.
-- External inputs must be declared. Assignment introduces a local only when the
-  name is not a parameter, system input, builtin constant, section keyword, or
-  stdlib function.
-- `pixel`, `c`, `zPrev`, `LastSqr`, `pi`, `e`, `maxit`, `ismand`, `p1`–`p5`,
-  `fn1`–`fn4`, language keywords, and stdlib names cannot be assigned or
-  shadowed. `z` is the writable orbit state. Import lowering may introduce a
-  fresh local binding; it may not make an immutable host input mutable.
-- Unknown semantic directives, duplicate parameters/bindings, undeclared reads,
-  out-of-domain defaults, and trailing executable tokens are fatal for canonical
-  source. Import diagnostics may remain more descriptive but cannot silently
-  accept a different program.
+See normative §§2 and 4 for source structure, parameter declarations, Classic
+bindings, system values, reserved names, and fail-closed parsing.
 
 ### 1.3 Statements, evaluation, and termination
 
-v1 retains the released arithmetic, assignment, component-store, conditional,
-and bailout vocabulary described by the compatibility spec, with these frozen
-clarifications:
-
-- evaluation order is source order and left-to-right within an expression;
-- exponentiation remains right-associative;
-- numeric scalars promote to complex as `(value, 0)` when assigned to complex
-  state or consumed by a complex operation; booleans promote as `false = 0` and
-  `true = 1`; function values are callable only and never numeric values;
-- `<`, `>`, `<=`, and `>=` compare the real projection; complex `==` and `!=`
-  compare both components; logical operators use zero/nonzero numeric truthiness;
-- complex exponentiation retains the released real-exponent contract: the right
-  operand uses its real projection. `|x|` is the true absolute value for real
-  inputs and true Euclidean magnitude for complex inputs, not squared magnitude;
-- `real(x) = value` and `imag(x) = value` require an already definitely
-  initialized complex target and store the real projection of `value`;
-- a backend may not reassociate floating-point expressions unless the
-  NumericProfile explicitly permits it and conformance evidence remains green;
-- the bailout expression is the **continue-iteration predicate**, evaluated
-  after the current loop body;
-- a non-finite required orbit value emits the versioned `nonFinite` termination
-  event and stops; it is never converted silently to zero;
-- generated backend code may optimize typed IR but may not become a second
-  formula definition.
+See normative §§3, 6, and 7 for typed expressions, definite assignment, source-
+order evaluation, after-step continuation, `standard32`, `nonFinite`, and the
+Universal Safety Envelope.
 
 ### 1.4 Standard library v1
 
-`stdlibVersion: 1` contains the released arithmetic and complex functions plus
-the general additions needed by the frozen Standard migration:
-
-- arithmetic/helpers: `abs`, `sqr`, `sqrt`, `exp`, `log`, `recip`, `conj`,
-  `flip`, `real`, `imag`, `cabs`, `round`, and `atan2`. `flip` is the
-  Fractint-documented component swap — `(x, y)` becomes `(y, x)`. Classic
-  FRM is statically typed and its `flip` overload on a real-typed argument
-  is the identity; the Classic → v1 projection preserves that dialect by
-  lowering `flip(real-typed)` to the operand itself, since v1 expressions
-  are always complex;
-- circular: `sin`, `cos`, `tan`, `asin`, `acos`, `atan`;
-- hyperbolic: `sinh`, `cosh`, `tanh`, `asinh`, `acosh`, `atanh`, `cotanh`;
-- compatibility functions: `cosxx`, `identity`, and declared `fn1`–`fn4`
-  mappings. A Classic entry that references `fn1`–`fn4` without an explicit
-  `function=` default maps that slot to `identity`.
-
-Classic dialect guards (declared per formula, never global): the v1 stdlib is
-nonFinite-by-design and never repairs singular inputs. A small number of
-migrated Classic formulas rely on the classic engine's guarded behavior at a
-singular point; for exactly those rows the formula IR carries a
-`; @classic-guards:` directive and every backend surface (CPU standard32 and
-generated GLSL, including `fn1`–`fn4` dispatch tables) reproduces the classic
-behavior for that formula alone:
-
-- `zero-division`: at the singular point a complex division or `recip`
-  yields `(0, 0)` instead of a nonFinite event — both when the divisor's
-  squared magnitude is zero in the surface's precision (classic `divGuarded`)
-  and when it overflows, flushing the finite quotient to zero like the
-  classic GPU surface (`x / Inf === 0`), which the frozen fixtures record;
-- `floored-log`: the `log` radius is floored at `1e-20` instead of a
-  nonFinite event at exact zero (classic orbit-eval `log`);
-- `hyperbolic-clamp`: hyperbolic evaluations clamp their input to `±80`
-  instead of overflowing into a nonFinite event (classic `clampSinhCosh`).
-  The clamp bounds finiteness only — a clamped argument near `2.8e34` is
-  quantized into standard32 and decorrelates downstream transcendental values
-  from the classic binary64 oracle, so rows whose orbit actually crosses the
-  clamp remain diagnosis-held rather than publishable.
-
-The declared row set lives in `src/engine/formulas/v1/classic-dialect-guards.ts`
-and changes only with per-row diagnosis evidence and a maintainer decision.
-
-Frozen semantics:
-
-- `standard32` canonicalizes every exact zero component, including `-0`, to
-  `+0` at language-visible operation boundaries and before branch-sensitive
-  stdlib evaluation. Nonzero one-sided branch-cut inputs retain their sign.
-  This rule avoids backend-specific sign-bit probes that WebGL 1 cannot provide
-  portably; exact-cut values use the canonical upper-cut side.
-- `zPrev` and `LastSqr` both start at canonical `+0` before `init`; they are not
-  external runtime inputs. Immediately before each `loop`, the backend snapshots
-  `z` into `zPrev`, and after a successful loop it records squared magnitude in
-  `LastSqr`.
-- `log` uses the principal argument in `(-pi, pi]`; the non-positive real axis
-  is its branch cut. `log(0)` produces a non-finite event.
-- `cabs` and the radii used by `log`/`sqrt` follow one shared `sqrt(re²+im²)`
-  order with per-primitive `standard32` rounding on both CPU and GLSL; no
-  separately rounded double-precision `hypot` is permitted on either backend.
-  imaginary sign inherited from nonzero one-sided input on the cut; exact
-  `+0`/`-0` uses the canonical upper-cut value.
-- `asin(z) = -i * log(i*z + sqrt(1 - z*z))`.
-- `acos(z) = pi/2 - asin(z)`.
-- `atan(z) = (log(1 + i*z) - log(1 - i*z)) / (2*i)`.
-- `asinh(z) = log(z + sqrt(z*z + 1))`.
-- `acosh(z) = log(z + sqrt(z - 1) * sqrt(z + 1))`.
-- `atanh(z) = (log(1 + z) - log(1 - z)) / 2`.
-- With the principal `log`/`sqrt` above, `asinh` uses cuts on the imaginary
-  axis from `i` and `-i` outward, `acosh` uses the real cut `(-infinity, 1]`,
-  and `atanh` uses real cuts `(-infinity, -1]` and `[1, infinity)`.
-  `atanh(1)` and `atanh(-1)` produce the versioned non-finite event.
-- `round` is component-wise for complex values and rounds exact halves away from
-  zero. CPU and GPU implementations must use an explicit equivalent expression,
-  not host-dependent rounding.
-- division by zero and non-finite function inputs do not throw. They propagate to
-  the versioned non-finite termination behavior.
-- `identity(z) = z`. Under `standard32` its result is the per-component binary32
-  rounding of its input with canonical `+0`, exactly like any other primitive
-  boundary; non-finite input propagates to the versioned non-finite event.
-
-Any visual change to an existing definition caused by stdlib semantics requires
-an explicit stdlib upgrade and Upgrade & Compare; it cannot mutate a pinned work.
+See normative §5 for the complete stdlib v1 vocabulary, principal functions,
+branch cuts, `identity`, deterministic rounding, and evidence-backed Classic
+guards.
 
 ### 1.5 NumericProfile `standard32`
 
-`standard32` is the only executable NumericProfile required by v1.
-
-- storage and shader arithmetic target IEEE-754 binary32 behavior;
-- typed-IR evaluation order is fixed and backend contraction/reassociation is
-  disabled unless specifically proven equivalent;
-- CPU/WebGL fixtures use declared tolerances and orbit/event evidence; this
-  contract does not promise bit-identical output across GPU vendors;
-- a work with an unsupported profile opens read-only with preview and metadata;
-  it is never silently downgraded;
-- an explicitly validated conversion creates an **Open Compatible Copy** with
-  lineage to the original. The original is unchanged.
+See normative §6. Unsupported profiles remain read-only and are never silently
+downgraded.
 
 ### 1.6 Revisions and hashes
 
-- `sourceRevision`: lowercase SHA-256 of exact canonical UTF-8 source bytes.
-- `semanticHash`: lowercase SHA-256 of the versioned canonical serialization of
-  typed semantic IR, including parameter declarations and semantic directives,
-  but excluding comments, whitespace, Profile, Record, and backend artifacts.
+See normative §8 for canonicalization, `sourceRevision`, `semanticHash`, and
+compiler conformance. The two non-language revision domains remain frozen here:
+
 - `profileRevision`: lowercase SHA-256 of canonical JSON for Formula Profile,
   excluding only the recursive `profileRevision` field. The projection includes
-  Formula ID and sourceRevision; object keys use locale-independent code-unit
+  Formula ID and `sourceRevision`; object keys use locale-independent code-unit
   order, arrays preserve order, `-0` becomes `0`, and non-finite numbers,
   undefined values, sparse arrays, lone surrogates, cycles, and non-plain objects
   are fatal.
 - `backendRevision`: `{ schemaVersion: 1, buildId, artifactSha256 }`, where
   `buildId` is a stable 1–128 character ASCII build token and
-  `artifactSha256` is the lowercase SHA-256 of the immutable backend artifact.
+  `artifactSha256` is lowercase SHA-256 of the immutable backend artifact.
 
-Text-only changes may alter sourceRevision without altering semanticHash. Backend
-optimization never alters either sourceRevision or semanticHash.
+Profile and backend revisions remain separate from source and semantic hashes.
+A backend optimization cannot alter `sourceRevision` or `semanticHash`.
 
 ## 2. Neutral Formula identity and aliases
 
@@ -364,7 +169,7 @@ private source text, private paths, or reversible intermediates.
 | `f588:fly` | unresolved predicate shape | controlled source; released behavior not executable | IR rehabilitation | express branches and continue predicate in ordinary v1 control flow from an isolated behavior spec; orbit and negative fixtures |
 | `f588:frm-d1` | undeclared symbol; historical example is intentionally invalid | controlled, intentionally non-runnable source | Record + IR rehabilitation | preserve the historical teaching identity and disclose rehabilitation; canonical executable definition uses the independently specified corrected intent; equality with a companion semanticHash is allowed |
 | `f588:g-3-03-m` | source missing in frozen corpus; missing `round` | semantic/provenance anchor only | stdlib + clean-room rehabilitation | add deterministic `round`; isolated implementer writes source from non-reversible math/orbit spec; provenance must not claim recovered original source |
-| `f588:julia` | executable trailing tokens after entry | controlled source | directly expressible | strict selected-entry extraction and clean canonical source; trailing executable content remains a fatal canonical-source error |
+| `f588:julia` | executable trailing tokens after entry | controlled source | directly expressible | strict selected-entry extraction and clean formatter-conformant source; trailing executable content remains a fatal canonical-source error |
 | `f588:mand_1` | executable trailing tokens after entry | controlled source | directly expressible | same general selected-entry extraction; separate identity may share semanticHash with another Record |
 | `f588:mandel` | executable trailing tokens after entry | controlled source | directly expressible | same general selected-entry extraction; no name-based parser exception |
 | `f588:mandelbrotbc3` | write to builtin constant | controlled source + public reason code | IR rehabilitation | alpha-rename the intended local in clean-room source; builtin constants remain immutable; resolver/type negative fixtures |
@@ -386,7 +191,7 @@ source/path leakage.
 
 | Layer | Owns | Does not own | Standard authority |
 |---|---|---|---|
-| Formula Definition | canonical source, parameter schema/default/domain and Classic mapping, program/termination/channels/capabilities, language/stdlib/NumericProfile support, sourceRevision, semanticHash | current values, view, coloring, editorial content | Git |
+| Formula Definition | pinned Definition source, parameter schema/default/domain and Classic mapping, program/termination/channels/capabilities, language/stdlib/NumericProfile support, sourceRevision, semanticHash | current values, view, coloring, editorial content | Git |
 | Formula Profile | current parameter values, mode/Julia C, view, iterations, coloring, palette, transform, and future recommended visual state | source or public identity | Git for verified defaults; cloud/portable for user profiles |
 | Formula Record | Formula ID, scope, names, facets/relations, localized editorial content, provenance/rights, preview, SEO/indexability, related content | executable source or resolved artwork state | Git for Standard |
 | FractalDocument | final resolved artwork state and embedded Formula Snapshot | mutable catalog defaults or remote lookups | portable/cloud artwork |
@@ -413,10 +218,12 @@ interface FormulaDefinitionV1 {
 ```
 
 The Definition is the executable asset and is where the 65,536-byte source limit
-applies. Its `source` must already equal the canonical formatter output for its
-validated typed IR; comments, alternative whitespace, CRLF normalization, or any
-other parseable-but-noncanonical spelling are rejected at the asset boundary rather
-than stored under a second sourceRevision.
+applies. Active published bodies are immutable byte-pinned source assets:
+`sourceRevision` hashes their exact stored bytes and the reader verifies both
+source and semantic revisions. The gated writer path is stricter: before any new
+persistence or publication, its Safety Envelope requires source bytes to equal
+the deterministic formatter output. The reader/writer distinction and revision
+rules are normative in [FRM-like Language v1 §8](frm-like-language-v1.md#8-canonicalization-revisions-and-conformance).
 
 ```ts
 interface FormulaParameterSchemaV1 {
@@ -510,7 +317,8 @@ The active public v1 projection is exact-set and decision-ledger-backed:
   takedown contact;
 - unknown author, original resource, and original version are rendered as
   `unconfirmed`, never filled from private evidence or guessed;
-- each of the 513 `publish` rows exposes its content-addressed canonical `.frm`,
+- each of the 513 `publish` rows exposes its content-addressed pinned `.frm`
+  Definition source,
   source/semantic revisions, parameter schema, pinned default Profile facts, a
   deterministic 96 x 60 static PNG generated from the pinned source and Profile,
   and locale-preserving Explore/Remix plus view/download-source actions;
@@ -588,7 +396,7 @@ DPR, and interactive temporary quality are excluded.
 
 ### 5.3 Envelope v2 and formula files
 
-- `.frm`: one canonical Formula Definition source file.
+- `.frm`: one content-addressed pinned Formula Definition source file.
 - `.fractal-formula.json`: one Formula Definition plus optional Profile and
   lineage/provenance projection.
 - `.fractal.json`: complete FractalDocument v3.
@@ -612,9 +420,12 @@ interface ContentAddressedAssetV1 {
 
 ## 6. Universal Safety Envelope
 
-All Standard, Mine, and future Community execution passes through one generated
-safety schema and the same enforcement stages: import, client compile, worker,
-server/API compile, publish, portable writer, and database constraints.
+All Standard, Mine, and future Community execution MUST pass through one Safety
+Envelope at every activated stage: import, client compile, worker, server/API
+compile, publish, portable writer, and database constraints. The published
+Standard Record runtime path is active; cross-surface writer/import/API/database
+enforcement remains gated by A8, A9, C1, D5, D6, and D9 rather than being claimed
+complete.
 
 `MAX_EXECUTABLE_FORMULA_SOURCE_BYTES = 65_536` counts UTF-8 bytes, not UTF-16
 code units. It applies to every new or rewritten executable Definition.
@@ -625,12 +436,17 @@ non-executable, non-publishable, non-overwritable, and never silently truncated.
 After the user explicitly reduces it to at most 65,536 bytes and passes current
 validation, it may be saved as a new Formula Asset.
 
-The generated envelope also owns finite limits for parameter count, AST/IR node
-count and depth, control-flow depth, expression complexity, compile time,
-generated shader size, iteration count, worker memory/cancellation, GPU timeout
-and recovery. Exact non-source numeric limits must be measured and frozen before
-compiler/core activation; they may vary by NumericProfile or device capability,
-not by Formula ID, scope, provenance, or trust.
+The exact v1 source and non-source limits are delegated to
+[normative §7](frm-like-language-v1.md#7-termination-and-safety-envelope) and are
+identical for Standard, Mine, and future Community Definitions. Those frozen
+source, IR, control-flow, and generated-shader limits MUST NOT vary at runtime by
+Formula ID, scope, provenance, trust, or device.
+
+Compile-time, iteration-count, worker memory/cancellation, and GPU
+timeout/recovery budgets remain owned by this universal envelope but are not yet
+frozen as measured v1 constants; their cross-surface evidence remains pending in
+A9 and F2. A future NumericProfile or measured device-capability contract may
+vary those runtime budgets, but not by Formula ID, scope, provenance, or trust.
 
 A higher source limit is a forward-only contract change requiring coordinated
 DB/API migration, worker/GPU budget evidence, and a new rollback floor. One
@@ -728,11 +544,15 @@ backend into namespaced `frmV1_*` state, an explicit state-reset hook, an
 arbitrary continue-predicate hook, and a source-revision cache fingerprint. The
 framework calls reset once per orbit and per supersample, then evaluates the
 Definition's own continue predicate after every step. The adapter does not alter
-legacy B94 or classic-FRM assembly bytes. This is an engine capability only:
-selector, parameter UI, Lucky/Profile ranking, and Production activation remain
-separate gates.
+legacy B94 or classic-FRM assembly bytes. The engine capability originally landed
+in isolation. The current application now activates Record-scoped published
+Definition/Profile resolution, descriptor parameter UI,
+and one-shot Record Open/Remix handoff for the 513 published rows. The unified
+discovery selector and Lucky eligibility/ranking remain A19/E1/E3/E4-pending.
+Canonical writer/import activation, hosted migration, and release remain separate
+gates.
 
-Remix shows and exports only a published canonical Definition. `originalSource`
+Remix shows and exports only a published pinned Definition source. `originalSource`
 is separately access-controlled and never copied into public exports when the
 rights status forbids it.
 
@@ -773,7 +593,7 @@ No production Standard activation is complete until evidence proves:
 - exactly 677 neutral IDs and the complete typed alias accounting;
 - exactly 677 publication decisions, with
   `published + held + excluded = 677` and all 73 GPL identities held;
-- every published Definition has readable canonical source and a verified default
+- every published Definition has readable pinned source and a verified default
   Profile; held/excluded identities expose no runnable or placeholder assets;
 - all nine waiver dispositions have source, rights, and conformance evidence;
 - source/semantic/profile hashes are deterministic and drift-checked;

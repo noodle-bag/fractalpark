@@ -24,11 +24,21 @@ govern FractalPark development.
   contracts.
 - [FRM Compatibility and Migration Contracts v1](specs/frm-compatibility-v1.md)
   freezes the authoritative scanner, v1/v2 semantics, descriptor, diagnostics,
-  compatibility-evidence, and migration boundaries for v0.4.18.
+  compatibility-evidence, and migration boundaries for v0.4.18 Classic `.frm`.
+- [FractalPark FRM-like Language v1](specs/frm-like-language-v1.md) is the
+  normative English language reference for canonical v1 source, typed semantics,
+  stdlib, `standard32`, safety limits, hashing, and conformance.
 - [Unified Formula Library and FRM-like Language Contract v1](specs/unified-formula-library-v1.md)
-  freezes the evidence-validated FRM-like v1 grammar plus v0.4.19's source
-  budget, formula-asset, rights-evidence, reader-first migration, and rollback
-  boundaries while retaining v0.4.18 reader compatibility.
+  freezes v0.4.19's formula assets, identity, source budget, rights evidence,
+  reader-first migration, and rollback boundaries while delegating language
+  semantics to the normative reference.
+
+## Manuals
+
+- [FRM-like v1 Author Manual](manuals/frm-like-v1.md) explains how to read pinned
+  Definitions, understand the gated canonical formatter contract, diagnose
+  failures, and distinguish the published v1 runtime from the current
+  Classic-compatible standalone Editor.
 
 ## Architecture Decision Records
 

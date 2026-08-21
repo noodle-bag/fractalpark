@@ -12,6 +12,9 @@ test.describe('Formula Atlas', () => {
     await expect(
       page.getByRole('heading', { level: 1, name: 'Formula Atlas' })
     ).toBeVisible();
+    await expect(
+      page.getByText(/learn how FRM source works and choose the matching authoring surface/)
+    ).toBeVisible();
     await expect(page.locator('[data-formula-id]')).toHaveCount(94);
     await expect(page.locator('[data-guide-formula-id]')).toHaveCount(21);
     await expect(
@@ -29,7 +32,7 @@ test.describe('Formula Atlas', () => {
     ).toHaveCount(1);
     await expect(page.locator('section[id^="family-"]')).toHaveCount(7);
     await expect(
-      page.getByRole('link', { name: 'Learn FRM' })
+      page.getByRole('link', { name: 'Understand FRM', exact: true })
     ).toHaveAttribute('href', '/en/formulas/frm');
     await expect(
       page.getByRole('link', { name: 'Open Formula Editor' }).first()

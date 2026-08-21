@@ -45,6 +45,10 @@ export function buildReadmeProductBlock(): string {
       .join(' · ')}**`
   );
   lines.push('');
+  lines.push(
+    `${p.readmeSourceLink.summaryEn} [${p.readmeSourceLink.labelEn}](${publicProjectHref(p.readmeSourceLink.href, 'en')}).`
+  );
+  lines.push('');
   lines.push('## Available today');
   lines.push('');
   for (const capability of p.capabilities) {

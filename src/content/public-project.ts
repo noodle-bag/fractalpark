@@ -20,7 +20,7 @@ import { SITE } from '@/lib/site';
 export const PUBLIC_PROJECT = {
   /** Approved single-sentence positioning. Used verbatim everywhere. */
   tagline:
-    'FractalPark is an open-source, formula-first fractal knowledge and creation platform with growing Fractint-compatible FRM support, working to bring Fractint’s formula heritage into the modern browser.',
+    'FractalPark is an open-source, formula-first fractal knowledge and creation platform with published formula source you can read and run, plus a distinct Classic-compatible formula editor.',
 
   url: SITE.url,
   repositoryUrl: SITE.repositoryUrl,
@@ -53,6 +53,14 @@ export const PUBLIC_PROJECT = {
     altZh: 'FractalPark WebGL 引擎实时渲染的 Mandelbrot 集',
   },
 
+  /** README-only route that makes the published-source claim directly inspectable. */
+  readmeSourceLink: {
+    labelEn: 'Open the Standard Formula directory',
+    href: '/formulas/directory',
+    summaryEn:
+      'Read pinned source on the 513 published Definitions; the directory also lists 164 held Records without runnable source.',
+  },
+
   /** The four things a user can do today, in canonical order. */
   capabilities: [
     {
@@ -72,9 +80,9 @@ export const PUBLIC_PROJECT = {
     {
       id: 'authorFrm',
       href: '/formulas/frm',
-      titleEn: 'Author FRM',
+      titleEn: 'Learn FRM and write custom formulas',
       summaryEn:
-        'Write custom formulas in the Fractint-compatible FRM language with the Guide and standalone Editor: AST validation, live GLSL preview, and clear diagnostics.',
+        "Write custom formulas in FractalPark's tested Classic-compatible FRM subset with the Guide and standalone Editor: AST validation, live GLSL preview, and clear diagnostics.",
     },
     {
       id: 'saveExport',
@@ -99,7 +107,7 @@ export const PUBLIC_PROJECT = {
    */
   boundaries: {
     currentEn: [
-      'Growing Fractint-compatible FRM support: a practical, tested subset of the Fractint formula language runs today — not a complete Fractint reimplementation.',
+      'Published Standard Definitions use FRM-like v1 source. The standalone Editor uses a separate, practical Classic-compatible subset — not a complete Fractint reimplementation.',
       'Creating needs no account. Saving artworks and formulas uses email one-time-code sign-in and stores them in your private cloud library; publishing is always explicit, and artworks carrying a custom formula publish its source under the MIT license.',
       'The interface is available in seven languages: English, Simplified Chinese, Portuguese, Korean, Russian, Spanish, and French.',
     ],
