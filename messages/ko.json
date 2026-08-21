@@ -360,6 +360,24 @@
         "cta": "탐색기에서 리믹스"
       }
     },
+    "teaching": {
+      "fallbackNotice": "요청한 번역을 사용할 수 없어 검토된 영어 학습 단원을 표시합니다. 이 대체 페이지는 색인에서 제외됩니다.",
+      "sections": {
+        "overview": "학습 개요",
+        "sourceWalkthrough": "소스 해설",
+        "syntaxFeatures": "구문 특징",
+        "parameterExperiment": "매개변수 실험",
+        "exercise": "연습",
+        "provenance": "출처 및 권리"
+      },
+      "labels": {
+        "steps": "단계",
+        "expectedObservation": "관찰할 내용",
+        "safetyNote": "안전 참고",
+        "completionCheck": "완료 확인",
+        "hint": "힌트"
+      }
+    },
     "frmGuide": {
       "eyebrow": "FRM 언어와 호환성",
       "title": "FractalPark에서 FRM 이해하기",

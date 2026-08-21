@@ -360,6 +360,24 @@
         "cta": "Remix en Explorar"
       }
     },
+    "teaching": {
+      "fallbackNotice": "Se muestra la unidad didáctica revisada en inglés porque la traducción solicitada no está disponible. Esta página alternativa se excluye de la indexación.",
+      "sections": {
+        "overview": "Resumen didáctico",
+        "sourceWalkthrough": "Recorrido por el código fuente",
+        "syntaxFeatures": "Características de sintaxis",
+        "parameterExperiment": "Experimento de parámetros",
+        "exercise": "Ejercicio",
+        "provenance": "Fuentes y derechos"
+      },
+      "labels": {
+        "steps": "Pasos",
+        "expectedObservation": "Qué observar",
+        "safetyNote": "Nota de seguridad",
+        "completionCheck": "Comprobación de finalización",
+        "hint": "Pista"
+      }
+    },
     "frmGuide": {
       "eyebrow": "Lenguaje FRM y compatibilidad",
       "title": "Comprende FRM en FractalPark",

@@ -360,6 +360,24 @@
         "cta": "Remixer dans l'Explorateur"
       }
     },
+    "teaching": {
+      "fallbackNotice": "L’unité pédagogique révisée en anglais est affichée, car la traduction demandée n’est pas disponible. Cette page de repli est exclue de l’indexation.",
+      "sections": {
+        "overview": "Vue d’ensemble pédagogique",
+        "sourceWalkthrough": "Parcours du code source",
+        "syntaxFeatures": "Caractéristiques syntaxiques",
+        "parameterExperiment": "Expérience sur les paramètres",
+        "exercise": "Exercice",
+        "provenance": "Sources et droits"
+      },
+      "labels": {
+        "steps": "Étapes",
+        "expectedObservation": "Ce qu’il faut observer",
+        "safetyNote": "Note de sécurité",
+        "completionCheck": "Vérification de réalisation",
+        "hint": "Indice"
+      }
+    },
     "frmGuide": {
       "eyebrow": "Langage FRM et compatibilité",
       "title": "Comprendre FRM dans FractalPark",

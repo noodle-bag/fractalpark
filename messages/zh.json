@@ -360,6 +360,24 @@
         "cta": "在探索器中再创作"
       }
     },
+    "teaching": {
+      "fallbackNotice": "请求的译文不可用，当前显示已审核的英文教学单元。此回退页面不会被索引。",
+      "sections": {
+        "overview": "教学概览",
+        "sourceWalkthrough": "源码导读",
+        "syntaxFeatures": "语法特征",
+        "parameterExperiment": "参数实验",
+        "exercise": "练习",
+        "provenance": "来源与权利"
+      },
+      "labels": {
+        "steps": "步骤",
+        "expectedObservation": "观察要点",
+        "safetyNote": "安全提示",
+        "completionCheck": "完成检查",
+        "hint": "提示"
+      }
+    },
     "frmGuide": {
       "eyebrow": "FRM 语言与兼容性",
       "title": "了解 FractalPark 中的 FRM",

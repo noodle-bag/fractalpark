@@ -14,6 +14,7 @@ import { getTranslations, setRequestLocale } from 'next-intl/server';
 import presetsFile from '../../../../../public/gallery-presets.json';
 import { MathBlock } from '@/components/content/MathBlock';
 import { FormulaRecordPanel } from '@/components/formulas/FormulaRecordPanel';
+import { TeachingContentPanel } from '@/components/formulas/TeachingContentPanel';
 import {
   ContentViewTracker,
   TrackedContentLink,
@@ -28,9 +29,16 @@ import {
   getPublishedFormulaGuideFormulaId,
 } from '@/content/formula-guides';
 import {
+  filterTeachingAlternatesAtCommit20dV1,
   getLegacyGuideRecordPathV1,
   getTeachingGuideForFormulaRecordV1,
+  isTeachingPageIndexableAtCommit20dV1,
 } from '@/content/teaching/guide-route-policy';
+import {
+  loadDeliveredTeachingLocalesV1,
+  loadTeachingContentV1,
+  type TeachingContentResolutionV1,
+} from '@/content/teaching/content-loader';
 import { getFormulaMetadata } from '@/engine/plugins/formula-catalog';
 import { Link } from '@/i18n/routing';
 import { buildFormulaDefaultDocument } from '@/lib/formula-documents';
@@ -79,6 +87,10 @@ async function loadFormulaRouteRecord(
 
 /** generateMetadata and the page share one route projection per render. */
 const loadFormulaRouteRecordCached = cache(loadFormulaRouteRecord);
+const loadTeachingContentCached = cache(loadTeachingContentV1);
+const loadDeliveredTeachingLocalesCached = cache(
+  loadDeliveredTeachingLocalesV1,
+);
 
 function resolveRouteOrRedirect(
   routeValue: string,
@@ -106,6 +118,7 @@ export async function generateMetadata({
   );
   if (!routeRecord) notFound();
 
+  const teaching = loadTeachingContentCached(formulaId, locale);
   const entry = getTeachingGuideForFormulaRecordV1(routeRecord.formulaRecord);
   if (!entry) {
     const t = await getTranslations({
@@ -113,9 +126,15 @@ export async function generateMetadata({
       namespace: 'formulas.directory',
     });
     const path = buildFormulaCanonicalPathV1(formulaId);
+    const localized =
+      teaching.delivery === 'delivered' ? teaching.localized : null;
+    const description =
+      teaching.delivery === 'not-delivered'
+        ? t('description')
+        : localized?.overview ?? teaching.english.overview;
     return {
-      title: routeRecord.displayName,
-      description: t('description'),
+      title: localized?.localizedName ?? routeRecord.displayName,
+      description,
       robots: { index: false, follow: true },
       alternates: { canonical: `/${locale}${path}` },
     };
@@ -127,13 +146,24 @@ export async function generateMetadata({
   });
   const path = formulaGuidePath(entry);
   const image = `${SITE.url}${formulaGuideOpenGraphImagePath(entry)}`;
+  const indexable = isTeachingPageIndexableAtCommit20dV1(
+    true,
+    teaching.delivery,
+  );
+  const languages = indexable
+    ? filterTeachingAlternatesAtCommit20dV1(
+        buildLocaleAlternates(path),
+        loadDeliveredTeachingLocalesCached(formulaId),
+      )
+    : undefined;
 
   return {
     title: t('title'),
     description: t('summary'),
+    robots: indexable ? undefined : { index: false, follow: true },
     alternates: {
       canonical: `/${locale}${path}`,
-      languages: buildLocaleAlternates(path),
+      ...(languages ? { languages } : {}),
     },
     openGraph: {
       title: t('title'),
@@ -172,9 +202,16 @@ export default async function FormulaPage({ params }: FormulaPageProps) {
   );
   if (!routeRecord) notFound();
 
+  const teaching = loadTeachingContentCached(formulaId, locale);
   const entry = getTeachingGuideForFormulaRecordV1(routeRecord.formulaRecord);
   if (!entry) {
-    return <FormulaIdentityPage locale={locale} record={routeRecord} />;
+    return (
+      <FormulaIdentityPage
+        locale={locale}
+        record={routeRecord}
+        teaching={teaching}
+      />
+    );
   }
 
   const metadata = getFormulaMetadata(entry.formulaId);
@@ -581,6 +618,11 @@ export default async function FormulaPage({ params }: FormulaPageProps) {
           </GuideSection>
         ) : null}
       </div>
+      <TeachingContentPanel
+        includeOverview={false}
+        locale={locale}
+        resolution={teaching}
+      />
       <FormulaRecordPanel locale={locale} record={routeRecord.formulaRecord} />
     </main>
   );
@@ -589,9 +631,11 @@ export default async function FormulaPage({ params }: FormulaPageProps) {
 async function FormulaIdentityPage({
   locale,
   record,
+  teaching,
 }: {
   locale: string;
   record: FormulaRouteRecordV1;
+  teaching: TeachingContentResolutionV1;
 }) {
   const t = await getTranslations({
     locale,
@@ -626,6 +670,7 @@ async function FormulaIdentityPage({
           </p>
         </div>
       </header>
+      <TeachingContentPanel locale={locale} resolution={teaching} />
       <FormulaRecordPanel locale={locale} record={record.formulaRecord} />
     </main>
   );

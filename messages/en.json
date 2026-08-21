@@ -360,6 +360,24 @@
         "cta": "Remix in Explorer"
       }
     },
+    "teaching": {
+      "fallbackNotice": "The reviewed English teaching unit is shown because the requested translation is unavailable. This fallback page is excluded from indexing.",
+      "sections": {
+        "overview": "Teaching overview",
+        "sourceWalkthrough": "Source walkthrough",
+        "syntaxFeatures": "Syntax features",
+        "parameterExperiment": "Parameter experiment",
+        "exercise": "Exercise",
+        "provenance": "Sources and rights"
+      },
+      "labels": {
+        "steps": "Steps",
+        "expectedObservation": "What to observe",
+        "safetyNote": "Safety note",
+        "completionCheck": "Completion check",
+        "hint": "Hint"
+      }
+    },
     "frmGuide": {
       "eyebrow": "FRM language and compatibility",
       "title": "Understand FRM in FractalPark",

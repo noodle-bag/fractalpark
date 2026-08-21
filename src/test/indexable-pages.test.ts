@@ -2,11 +2,16 @@ import { SUPPORTED_LOCALES } from '@/i18n/supported-locales';
 import { describe, expect, it } from 'vitest';
 import heldGuideAsset from '../../resources/formula-library/v1/teaching-held-guide-appendix.v1.json';
 import {
+  formulaGuidePath,
+  getPublishedFormulaGuideFormulaId,
+} from '@/content/formula-guides';
+import { PUBLISHED_TEACHING_GUIDES_V1 } from '@/content/teaching/guide-route-policy';
+import {
   INDEXABLE_PAGE_PATHS,
   buildIndexableAlternates,
   buildIndexableUrls,
 } from '@/lib/indexable-pages';
-import sitemap from '@/app/sitemap';
+import sitemap, { buildSitemapV1 } from '@/app/sitemap';
 import { SITE } from '@/lib/site';
 
 /**
@@ -77,5 +82,20 @@ describe('sitemap', () => {
       expect(entry.priority).toBeUndefined();
       expect(entry.alternates?.languages).toBeDefined();
     }
+  });
+
+  it('removes fallback Guide locales from both URLs and alternates', () => {
+    const guide = PUBLISHED_TEACHING_GUIDES_V1[0];
+    const formulaId = getPublishedFormulaGuideFormulaId(guide);
+    const page = formulaGuidePath(guide);
+    const entries = buildSitemapV1((candidateId) =>
+      candidateId === formulaId ? ['en'] : SUPPORTED_LOCALES,
+    );
+    expect(entries.some((entry) => entry.url === `${SITE.url}/zh${page}`)).toBe(false);
+    const english = entries.find((entry) => entry.url === `${SITE.url}/en${page}`);
+    expect(english?.alternates?.languages).toEqual({
+      en: `${SITE.url}/en${page}`,
+      'x-default': `${SITE.url}/en${page}`,
+    });
   });
 });

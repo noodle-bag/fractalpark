@@ -360,6 +360,24 @@
         "cta": "Remixar no Explorar"
       }
     },
+    "teaching": {
+      "fallbackNotice": "A unidade didática em inglês revisada é exibida porque a tradução solicitada não está disponível. Esta página de fallback não é indexada.",
+      "sections": {
+        "overview": "Visão geral didática",
+        "sourceWalkthrough": "Leitura guiada do código-fonte",
+        "syntaxFeatures": "Recursos de sintaxe",
+        "parameterExperiment": "Experimento de parâmetros",
+        "exercise": "Exercício",
+        "provenance": "Fontes e direitos"
+      },
+      "labels": {
+        "steps": "Etapas",
+        "expectedObservation": "O que observar",
+        "safetyNote": "Nota de segurança",
+        "completionCheck": "Verificação de conclusão",
+        "hint": "Dica"
+      }
+    },
     "frmGuide": {
       "eyebrow": "Linguagem FRM e compatibilidade",
       "title": "Entenda o FRM no FractalPark",

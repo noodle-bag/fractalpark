@@ -32,6 +32,28 @@ export function getLegacyGuideRecordPathV1(
   return guideRecordPathByLegacyFormulaId.get(legacyFormulaId);
 }
 
+export function isTeachingPageIndexableAtCommit20dV1(
+  hasLegacyGuide: boolean,
+  delivery: 'not-delivered' | 'fallback-browse-only' | 'delivered',
+): boolean {
+  return hasLegacyGuide && delivery === 'delivered';
+}
+
+export function filterTeachingAlternatesAtCommit20dV1(
+  alternates: Readonly<Record<string, string>>,
+  deliveredLocales: readonly string[],
+): Readonly<Record<string, string>> {
+  const delivered = new Set(deliveredLocales);
+  const filtered: Record<string, string> = {};
+  for (const locale of delivered) {
+    if (alternates[locale]) filtered[locale] = alternates[locale];
+  }
+  if (delivered.has('en') && alternates['x-default']) {
+    filtered['x-default'] = alternates['x-default'];
+  }
+  return Object.freeze(filtered);
+}
+
 /**
  * Fail closed before the legacy Guide branch can expose teaching/runtime UI.
  * Publication alone is insufficient: a formula must also be in the frozen
