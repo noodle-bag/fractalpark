@@ -1,0 +1,35 @@
+{
+  "schema": "fractalpark-teaching-locale/v1",
+  "formulaId": "00e14aa8-b766-54ea-a359-3f5d20d329b7",
+  "locale": "zh",
+  "sourceRevision": "e4d2259a5dd3fe7b3af646514a4313e83efcc80e887e04c07b7469bb27a66b90",
+  "semanticHash": "26270fc7b1577aa266c7a0eb23b2664ffcb020cf5a7528ea9be23950ba10a72c",
+  "englishContentHash": "33fdd9a9bed5aeb3d99c36e1707080931f4644906ecd7fca36a3afe1b75a3075",
+  "overview": "mandelbrot 按固定的 FRM-like/1 定义学习：请追踪 if power == 2, z = z * z + c; 否则 z = z ^ power + c，而不要把图像当作保证。固定配置只提供一个具体观察设置。",
+  "sourceWalkthrough": {
+    "00e14aa8-b766-54ea-a359-3f5d20d329b7:e4d2259a5dd3fe7b3af646514a4313e83efcc80e887e04c07b7469bb27a66b90:start-branch": "在 mandelbrot，此节点执行 if ismand: z = 0; 否则 z = pixel。",
+    "00e14aa8-b766-54ea-a359-3f5d20d329b7:e4d2259a5dd3fe7b3af646514a4313e83efcc80e887e04c07b7469bb27a66b90:power-branch": "在 mandelbrot，此节点执行 if power == 2: z = z * z + c; 否则 z = z ^ power + c。",
+    "00e14aa8-b766-54ea-a359-3f5d20d329b7:e4d2259a5dd3fe7b3af646514a4313e83efcc80e887e04c07b7469bb27a66b90:termination": "在 mandelbrot，此节点执行 |z| <= 256。"
+  },
+  "syntaxFeatures": {
+    "state-flow": "状态流具体为：若 ismand, z = 0; 否则 z = pixel, 随后 power 分支更新 z。",
+    "stopping-test": "停止测试只判断 |z| <= 256，不会给状态变量赋值。"
+  },
+  "parameterExperiment": {
+    "steps": [
+      "先按固定配置 运行 mandelbrot 并记录结果。",
+      "只改变 power，其余 运行时槽位和配置项保持固定后再次运行，并记录是否有差异。"
+    ],
+    "expectedObservation": "记录 if power == 2, z = z * z + c; 否则 z = z ^ power + c 相比基线是否改变可见结果或 |z| <= 256 的停止判断；源定义不保证差异。"
+  },
+  "exercise": {
+    "prompt": "追踪 mandelbrot 的标注，并说明 if power == 2, z = z * z + c; 否则 z = z ^ power + c 在每个相关操作中如何执行。",
+    "completionCheck": "答案准确解释全部 3 个标注，指出 if power == 2, z = z * z + c; 否则 z = z ^ power + c，并将 |z| <= 256 识别为停止测试而非状态赋值。",
+    "hint": "状态流按顺序执行 若 ismand: z = 0; 否则 z = pixel → 若 power == 2: z = z * z + c; 否则 z = z ^ power + c，其结果供下一步使用。"
+  },
+  "factsPresentation": {
+    "provenanceLead": "来源：固定的运行时定义与发布决定。",
+    "rightsLead": "权利信息见英文事实单元的固定决定。"
+  },
+  "contentHash": "9355a54365743274ea3d74ea0034e7025b9d3d9260f886754a1ad26bac5ee315"
+}

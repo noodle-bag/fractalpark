@@ -1,5 +1,5 @@
 import { createHash } from 'node:crypto';
-import { readFileSync } from 'node:fs';
+import { existsSync, readFileSync } from 'node:fs';
 import { join } from 'node:path';
 import { describe, expect, it } from 'vitest';
 import aliasesAsset from '../../resources/formula-library/v1/legacy-formula-aliases.json';
@@ -12,6 +12,7 @@ import selectionAsset from '../../resources/formula-library/v1/teaching-selectio
 import schemaAsset from '../../resources/formula-library/v1/teaching-content-schema.v1.json';
 import prototypeAsset from '../../resources/formula-library/v1/teaching-content-prototype.json';
 import terminologyAsset from '../../resources/formula-library/v1/teaching-terminology.v1.json';
+import approvalAsset from '../../resources/formula-library/v1/teaching-review-evidence/maintainer-approval.v1.json';
 import fixtureAsset from './fixtures/teaching/content-contract-fixtures.v1.json';
 import {
   contentHashV1,
@@ -43,6 +44,8 @@ function rehashLocale<T extends { contentHash: string }>(value: T): T {
 }
 
 const resourceRoot = join(process.cwd(), 'resources/formula-library/v1');
+const EXPECTED_APPROVED_FORMULAS = 10;
+const EXPECTED_APPROVED_UNITS = EXPECTED_APPROVED_FORMULAS * 7;
 const semanticAnchorAsset = JSON.parse(
   readFileSync(join(resourceRoot, 'teaching-semantic-anchors.v1.json'), 'utf8'),
 ) as {
@@ -234,11 +237,6 @@ describe('teaching selection and review contract', () => {
     expect(prototypeIds).toHaveLength(5);
     for (const formulaId of prototypeIds) {
       expect(selectionAsset.rows.find((row) => row.formulaId === formulaId)?.batch).toBe(1);
-      expect(ledgerAsset.units.find((unit) => unit.formulaId === formulaId)?.english).toEqual({
-        stage: 'not-started',
-        contentHash: null,
-        events: [],
-      });
     }
     expect(prototypeAsset.status).toBe('prototype-not-reviewed-localization');
     expect(
@@ -358,40 +356,337 @@ describe('teaching selection and review contract', () => {
     }
   });
 
-  it('keeps all 350 review units explicitly not-started with no false evidence', () => {
+  it('binds every delivered content file to monotonic review and human approval evidence', () => {
     expect(ledgerAsset.selectionSha256).toBe(
       sha256(join(resourceRoot, 'teaching-selection.v1.json')),
     );
     expect(ledgerAsset.units).toHaveLength(50);
     expect(new Set(ledgerAsset.units.map((unit) => unit.formulaId)).size).toBe(50);
+    expect(approvalAsset).toMatchObject({
+      schema: 'fractalpark-teaching-maintainer-approval/v1',
+      status: 'maintainer-approved',
+      actorId: 'fractalpark-maintainer',
+      actorKind: 'human-maintainer',
+      actorRole: 'maintainer',
+    });
+    expect(approvalAsset.approvalPacketSha256).toBe(
+      sha256(
+        join(
+          resourceRoot,
+          'teaching-review-evidence/maintainer-approval-packet.v1.json',
+        ),
+      ),
+    );
+
+    const maintainerActorIds = new Set(ledgerAsset.maintainerActorIds);
+    let approvedFormulas = 0;
+    let approvedUnits = 0;
     const stages: string[] = [];
     for (const [index, unit] of ledgerAsset.units.entries()) {
+      const selected = selectionAsset.rows[index];
+      const anchorRow = semanticAnchorAsset.rows.find(
+        (row) => row.formulaId === unit.formulaId,
+      );
+      const runtimeRow = runtimeIndexAsset.rows.find(
+        (row) => row.formulaId === unit.formulaId,
+      );
       expect(unit).toMatchObject({
-        formulaId: selectionAsset.rows[index].formulaId,
-        sourceRevision: selectionAsset.rows[index].sourceRevision,
-        semanticHash: selectionAsset.rows[index].semanticHash,
+        formulaId: selected.formulaId,
+        sourceRevision: selected.sourceRevision,
+        semanticHash: selected.semanticHash,
       });
+      expect(anchorRow).toBeTruthy();
+      expect(runtimeRow).toBeTruthy();
+      if (!anchorRow || !runtimeRow) continue;
+      const unitBinding = {
+        formulaId: unit.formulaId,
+        sourceRevision: unit.sourceRevision,
+        semanticHash: unit.semanticHash,
+        nodeIds: new Set(anchorRow.anchors.map((anchor) => anchor.nodeId)),
+        parameterSymbols: new Set(
+          runtimeRow.parameters.map((parameter) => parameter.slotName),
+        ),
+      };
+      const englishPath = join(
+        resourceRoot,
+        'teaching-content/en',
+        `${unit.formulaId}.json`,
+      );
       stages.push(unit.english.stage);
-      expect(unit.english).toEqual({
-        stage: 'not-started',
-        contentHash: null,
-        events: [],
-      });
+      if (unit.english.stage === 'not-started') {
+        expect(existsSync(englishPath)).toBe(false);
+        expect(unit.english).toEqual({
+          stage: 'not-started',
+          contentHash: null,
+          events: [],
+        });
+        expect(validateReviewContentLinkV1(unit.english, null)).toEqual({ ok: true });
+        expect(
+          validateReviewEventsV1(
+            unit.english.stage,
+            unit.english.events as ReviewEventV1[],
+            maintainerActorIds,
+          ),
+        ).toEqual({ ok: true });
+      } else {
+        approvedFormulas += 1;
+        approvedUnits += 1;
+        expect(unit.english.stage).toBe('maintainer-approved');
+        expect(existsSync(englishPath)).toBe(true);
+        const english = JSON.parse(readFileSync(englishPath, 'utf8')) as Record<
+          string,
+          unknown
+        >;
+        const englishHash = contentHashV1(english);
+        expect(validateEnglishTeachingUnitV1(english, unitBinding)).toEqual({ ok: true });
+        expect(validateReviewContentLinkV1(unit.english, englishHash)).toEqual({
+          ok: true,
+        });
+        expect(
+          validateReviewEventsV1(
+            unit.english.stage,
+            unit.english.events as ReviewEventV1[],
+            maintainerActorIds,
+          ),
+        ).toEqual({ ok: true });
+      }
+
       expect(Object.keys(unit.localized).sort()).toEqual(
         ['zh', 'pt', 'ko', 'ru', 'es', 'fr'].sort(),
       );
-      for (const localized of Object.values(unit.localized)) {
-        stages.push(localized.stage);
-        expect(localized).toEqual({
-          stage: 'not-started',
-          contentHash: null,
-          englishContentHash: null,
-          events: [],
-        });
+      for (const [locale, localizedReview] of Object.entries(unit.localized)) {
+        const localePath = join(
+          resourceRoot,
+          'teaching-content',
+          locale,
+          `${unit.formulaId}.json`,
+        );
+        stages.push(localizedReview.stage);
+        if (localizedReview.stage === 'not-started') {
+          expect(existsSync(localePath)).toBe(false);
+          expect(localizedReview).toEqual({
+            stage: 'not-started',
+            contentHash: null,
+            englishContentHash: null,
+            events: [],
+          });
+          expect(
+            validateReviewContentLinkV1(localizedReview, null, null),
+          ).toEqual({ ok: true });
+          expect(
+            validateReviewEventsV1(
+              localizedReview.stage,
+              localizedReview.events as ReviewEventV1[],
+              maintainerActorIds,
+            ),
+          ).toEqual({ ok: true });
+          continue;
+        }
+
+        approvedUnits += 1;
+        expect(localizedReview.stage).toBe('maintainer-approved');
+        expect(existsSync(englishPath)).toBe(true);
+        expect(existsSync(localePath)).toBe(true);
+        const english = JSON.parse(readFileSync(englishPath, 'utf8')) as Record<
+          string,
+          unknown
+        >;
+        const englishHash = contentHashV1(english);
+        const localized = JSON.parse(readFileSync(localePath, 'utf8')) as Record<
+          string,
+          unknown
+        >;
+        const localePayload = clone(localized);
+        delete localePayload.contentHash;
+        const localeHash = contentHashV1(localePayload);
+        expect(
+          validateLocaleTeachingUnitV1(
+            localized,
+            unitBinding,
+            english,
+            englishHash,
+          ),
+        ).toEqual({ ok: true });
+        expect(
+          validateReviewContentLinkV1(
+            localizedReview,
+            localeHash,
+            englishHash,
+          ),
+        ).toEqual({ ok: true });
+        expect(
+          validateReviewEventsV1(
+            localizedReview.stage,
+            localizedReview.events as ReviewEventV1[],
+            maintainerActorIds,
+          ),
+        ).toEqual({ ok: true });
       }
     }
     expect(stages).toHaveLength(350);
-    expect(new Set(stages)).toEqual(new Set(['not-started']));
+    expect(approvedFormulas).toBe(EXPECTED_APPROVED_FORMULAS);
+    expect(approvedUnits).toBe(EXPECTED_APPROVED_UNITS);
+    expect(new Set(stages)).toEqual(
+      EXPECTED_APPROVED_UNITS === 350
+        ? new Set(['maintainer-approved'])
+        : new Set(['maintainer-approved', 'not-started']),
+    );
+  });
+
+  it('rejects invalid or decreasing review event timestamps', () => {
+    const events = clone(ledgerAsset.units[0].english.events) as ReviewEventV1[];
+    expect(events).toHaveLength(4);
+    const decreasingEvents = events.map((event, index) => ({
+      ...event,
+      at: index === 1 ? '2026-08-21T00:00:00Z' : event.at,
+    }));
+    expect(
+      validateReviewEventsV1(
+        'maintainer-approved',
+        decreasingEvents,
+        new Set(ledgerAsset.maintainerActorIds),
+      ),
+    ).toEqual({ ok: false, code: 'review-event-time-invalid' });
+    const invalidEvents = events.map((event, index) => ({
+      ...event,
+      at: index === 1 ? 'not-a-timestamp' : event.at,
+    }));
+    expect(
+      validateReviewEventsV1(
+        'maintainer-approved',
+        invalidEvents,
+        new Set(ledgerAsset.maintainerActorIds),
+      ),
+    ).toEqual({ ok: false, code: 'review-event-time-invalid' });
+  });
+
+  it('binds each delivered batch to immutable model evidence and the approved candidate', () => {
+    const approvedBatchCount = EXPECTED_APPROVED_FORMULAS / 10;
+    expect(Number.isInteger(approvedBatchCount)).toBe(true);
+    const approvalPacket = JSON.parse(
+      readFileSync(
+        join(
+          resourceRoot,
+          'teaching-review-evidence/maintainer-approval-packet.v1.json',
+        ),
+        'utf8',
+      ),
+    ) as {
+      batches: Array<{
+        batch: number;
+        candidateSha256: string;
+        reviewManifestSha256: string;
+      }>;
+    };
+    for (let batch = 1; batch <= 5; batch += 1) {
+      const evidenceRoot = join(
+        resourceRoot,
+        'teaching-review-evidence',
+        `batch-${String(batch).padStart(2, '0')}`,
+      );
+      if (batch > approvedBatchCount) {
+        expect(existsSync(evidenceRoot)).toBe(false);
+        continue;
+      }
+      const approved = approvalPacket.batches.find((row) => row.batch === batch);
+      expect(approved).toBeTruthy();
+      if (!approved) continue;
+      const contentManifest = JSON.parse(
+        readFileSync(join(evidenceRoot, 'content-manifest.json'), 'utf8'),
+      ) as {
+        batch: number;
+        status: string;
+        candidateSha256: string;
+        reviewManifestSha256: string;
+        maintainerApprovalSha256: string;
+        formulaCount: number;
+        contentUnitCount: number;
+        formulaIds: string[];
+        unitHashes: Array<{
+          formulaId: string;
+          locale: string;
+          contentHash: string;
+        }>;
+        files: Array<{ path: string; sha256: string; contentHash: string }>;
+      };
+      const reviewManifest = JSON.parse(
+        readFileSync(join(evidenceRoot, 'manifest.json'), 'utf8'),
+      ) as {
+        batch: number;
+        status: string;
+        candidateSha256: string;
+        reviewers: Array<{
+          provider: string;
+          actualModel: string;
+          finishReason: string;
+          verdict: string;
+          findings: number;
+          coverageGaps: number;
+          rawSha256: string;
+          reviewSha256: string;
+        }>;
+      };
+      expect(contentManifest).toMatchObject({
+        batch,
+        status: 'maintainer-approved',
+        candidateSha256: approved.candidateSha256,
+        formulaCount: 10,
+        contentUnitCount: 70,
+      });
+      expect(contentManifest.formulaIds).toHaveLength(10);
+      expect(contentManifest.unitHashes).toHaveLength(70);
+      expect(contentManifest.files).toHaveLength(70);
+      expect(contentManifest.reviewManifestSha256).toBe(
+        sha256(join(evidenceRoot, 'manifest.json')),
+      );
+      expect(contentManifest.reviewManifestSha256).toBe(
+        approved.reviewManifestSha256,
+      );
+      expect(contentManifest.maintainerApprovalSha256).toBe(
+        sha256(
+          join(
+            resourceRoot,
+            'teaching-review-evidence/maintainer-approval.v1.json',
+          ),
+        ),
+      );
+      expect(reviewManifest).toMatchObject({
+        batch,
+        status: 'model-reviewed-maintainer-pending',
+        candidateSha256: approved.candidateSha256,
+      });
+      for (const file of contentManifest.files) {
+        expect(file.sha256).toBe(sha256(join(process.cwd(), file.path)));
+      }
+      for (const reviewer of reviewManifest.reviewers) {
+        expect(reviewer).toMatchObject({
+          finishReason: 'stop',
+          verdict: 'APPROVE',
+          findings: 0,
+          coverageGaps: 0,
+        });
+        const rawPath = join(evidenceRoot, `${reviewer.provider}.raw.json`);
+        const reviewPath = join(evidenceRoot, `${reviewer.provider}.review.json`);
+        expect(reviewer.rawSha256).toBe(sha256(rawPath));
+        expect(reviewer.reviewSha256).toBe(sha256(reviewPath));
+        const raw = JSON.parse(readFileSync(rawPath, 'utf8')) as {
+          model: string;
+          choices: Array<{ finish_reason: string }>;
+        };
+        const review = JSON.parse(readFileSync(reviewPath, 'utf8')) as {
+          verdict: string;
+          findings: unknown[];
+          coverageGaps: unknown[];
+        };
+        expect(raw.model).toBe(reviewer.actualModel);
+        expect(raw.choices[0]?.finish_reason).toBe('stop');
+        expect(review).toMatchObject({
+          verdict: 'APPROVE',
+          findings: [],
+          coverageGaps: [],
+        });
+      }
+    }
   });
 
   it('keeps locale schemas separate from English and forbids authorable review state', () => {

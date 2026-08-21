@@ -1,0 +1,35 @@
+{
+  "schema": "fractalpark-teaching-locale/v1",
+  "formulaId": "00e14aa8-b766-54ea-a359-3f5d20d329b7",
+  "locale": "fr",
+  "sourceRevision": "e4d2259a5dd3fe7b3af646514a4313e83efcc80e887e04c07b7469bb27a66b90",
+  "semanticHash": "26270fc7b1577aa266c7a0eb23b2664ffcb020cf5a7528ea9be23950ba10a72c",
+  "englishContentHash": "33fdd9a9bed5aeb3d99c36e1707080931f4644906ecd7fca36a3afe1b75a3075",
+  "overview": "mandelbrot s’étudie avec sa définition épinglée FRM-like/1 : tu suis if power == 2, z = z * z + c; sinon z = z ^ power + c, sans prendre une image pour une garantie. Le profil épinglé fournit seulement un réglage concret.",
+  "sourceWalkthrough": {
+    "00e14aa8-b766-54ea-a359-3f5d20d329b7:e4d2259a5dd3fe7b3af646514a4313e83efcc80e887e04c07b7469bb27a66b90:start-branch": "Dans mandelbrot, ce nœud exécute if ismand: z = 0; sinon z = pixel.",
+    "00e14aa8-b766-54ea-a359-3f5d20d329b7:e4d2259a5dd3fe7b3af646514a4313e83efcc80e887e04c07b7469bb27a66b90:power-branch": "Dans mandelbrot, ce nœud exécute if power == 2: z = z * z + c; sinon z = z ^ power + c.",
+    "00e14aa8-b766-54ea-a359-3f5d20d329b7:e4d2259a5dd3fe7b3af646514a4313e83efcc80e887e04c07b7469bb27a66b90:termination": "Dans mandelbrot, ce nœud exécute |z| <= 256."
+  },
+  "syntaxFeatures": {
+    "state-flow": "Le flux d’état concret est : si ismand est vrai, z = 0 ; sinon, z = pixel ; puis la branche de power met z à jour.",
+    "stopping-test": "Le test d’arrêt évalue seulement |z| <= 256 ; il n’affecte pas l’état."
+  },
+  "parameterExperiment": {
+    "steps": [
+      "Exécute mandelbrot avec le profil épinglé et note le résultat.",
+      "Change seulement power, garde les autres slots d’exécution et contrôles du profil fixes, exécute à nouveau et note s’il y a une différence."
+    ],
+    "expectedObservation": "Note si if power == 2, z = z * z + c; sinon z = z ^ power + c modifie le résultat visible ou le test d’arrêt |z| <= 256 par rapport à la référence ; la définition ne garantit pas de différence."
+  },
+  "exercise": {
+    "prompt": "Suis les annotations de mandelbrot et explique comment if power == 2, z = z * z + c; sinon z = z ^ power + c s’exécute dans les opérations indiquées.",
+    "completionCheck": "Ta réponse explique les 3 annotations, identifie if power == 2, z = z * z + c; sinon z = z ^ power + c et distingue |z| <= 256 comme test d’arrêt plutôt que comme affectation.",
+    "hint": "Le flux d’état exécute successivement if ismand: z = 0; sinon z = pixel → if power == 2: z = z * z + c; sinon z = z ^ power + c et transmet le résultat à l’étape suivante."
+  },
+  "factsPresentation": {
+    "provenanceLead": "Source : définition d’exécution épinglée et décision de publication.",
+    "rightsLead": "Les informations de droits suivent la décision épinglée dans l’unité anglaise."
+  },
+  "contentHash": "aa468ce79330bab0b8f72ec1faa2314d7c78882f38fea505823a2f4c3eb55104"
+}

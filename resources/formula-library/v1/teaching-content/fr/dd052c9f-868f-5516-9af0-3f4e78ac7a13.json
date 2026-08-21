@@ -1,0 +1,36 @@
+{
+  "schema": "fractalpark-teaching-locale/v1",
+  "formulaId": "dd052c9f-868f-5516-9af0-3f4e78ac7a13",
+  "locale": "fr",
+  "sourceRevision": "5e3522c53ca358df8d61d5a3b82aa0b90ff8009602b1952fb5022027f00fdd45",
+  "semanticHash": "d5933023730b2ec1a6c5c5cf8762478436fa9ccdf19311da910493d169bed0dd",
+  "englishContentHash": "0de1ccb97e10d1cd8d728f52e0247588fd9f5aac85560823c91225f73ea44e05",
+  "overview": "newton3 s’étudie avec sa définition épinglée FRM-like/1 : tu suis z2 = z * z; z3 = z2 * z; numerator = 2 * z3 + 1; denominator = 3 * z2; z = numerator / denominator, sans prendre une image pour une garantie. Le profil épinglé fournit seulement un réglage concret.",
+  "sourceWalkthrough": {
+    "dd052c9f-868f-5516-9af0-3f4e78ac7a13:5e3522c53ca358df8d61d5a3b82aa0b90ff8009602b1952fb5022027f00fdd45:initial-state": "Dans newton3, ce nœud exécute z = pixel.",
+    "dd052c9f-868f-5516-9af0-3f4e78ac7a13:5e3522c53ca358df8d61d5a3b82aa0b90ff8009602b1952fb5022027f00fdd45:square": "Dans newton3, ce nœud exécute z2 = z * z.",
+    "dd052c9f-868f-5516-9af0-3f4e78ac7a13:5e3522c53ca358df8d61d5a3b82aa0b90ff8009602b1952fb5022027f00fdd45:quotient-update": "Dans newton3, ce nœud exécute z = numerator / denominator.",
+    "dd052c9f-868f-5516-9af0-3f4e78ac7a13:5e3522c53ca358df8d61d5a3b82aa0b90ff8009602b1952fb5022027f00fdd45:termination": "Dans newton3, ce nœud exécute |z - zPrev| >= 0.000001."
+  },
+  "syntaxFeatures": {
+    "state-flow": "Le flux d’état concret est : z prend initialement la valeur pixel ; puis z2 et z3 alimentent numerator / denominator.",
+    "stopping-test": "Le test d’arrêt évalue seulement |z - zPrev| >= 0.000001 ; il n’affecte pas l’état."
+  },
+  "parameterExperiment": {
+    "steps": [
+      "En gardant les autres contrôles du profil fixes, exécute newton3 avec 48 itérations.",
+      "Utilise ensuite les 96 itérations du profil épinglé et note la différence."
+    ],
+    "expectedObservation": "Note si z2 = z * z; z3 = z2 * z; numerator = 2 * z3 + 1; denominator = 3 * z2; z = numerator / denominator modifie le résultat visible ou le test d’arrêt |z - zPrev| >= 0.000001 par rapport à la référence ; la définition ne garantit pas de différence."
+  },
+  "exercise": {
+    "prompt": "Suis les annotations de newton3 et explique comment z2 = z * z; z3 = z2 * z; numerator = 2 * z3 + 1; denominator = 3 * z2; z = numerator / denominator s’exécute dans les opérations indiquées.",
+    "completionCheck": "Ta réponse explique les 4 annotations, identifie z2 = z * z; z3 = z2 * z; numerator = 2 * z3 + 1; denominator = 3 * z2; z = numerator / denominator et distingue |z - zPrev| >= 0.000001 comme test d’arrêt plutôt que comme affectation.",
+    "hint": "Le flux d’état exécute successivement z = pixel → z2 = z * z → z3 = z2 * z → numerator = 2 * z3 + 1 → denominator = 3 * z2 → z = numerator / denominator et transmet le résultat à l’étape suivante."
+  },
+  "factsPresentation": {
+    "provenanceLead": "Source : définition d’exécution épinglée et décision de publication.",
+    "rightsLead": "Les informations de droits suivent la décision épinglée dans l’unité anglaise."
+  },
+  "contentHash": "6184c0b5c05c665dc8a97c671c72886acc81d578dd7287e4ffa3afb0a9c83bf0"
+}

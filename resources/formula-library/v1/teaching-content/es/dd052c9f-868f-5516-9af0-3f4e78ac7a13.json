@@ -1,0 +1,36 @@
+{
+  "schema": "fractalpark-teaching-locale/v1",
+  "formulaId": "dd052c9f-868f-5516-9af0-3f4e78ac7a13",
+  "locale": "es",
+  "sourceRevision": "5e3522c53ca358df8d61d5a3b82aa0b90ff8009602b1952fb5022027f00fdd45",
+  "semanticHash": "d5933023730b2ec1a6c5c5cf8762478436fa9ccdf19311da910493d169bed0dd",
+  "englishContentHash": "0de1ccb97e10d1cd8d728f52e0247588fd9f5aac85560823c91225f73ea44e05",
+  "overview": "newton3 se estudia con su definición fijada FRM-like/1: tú sigues z2 = z * z; z3 = z2 * z; numerator = 2 * z3 + 1; denominator = 3 * z2; z = numerator / denominator sin tratar una imagen como garantía. El perfil fijado aporta solo una configuración concreta.",
+  "sourceWalkthrough": {
+    "dd052c9f-868f-5516-9af0-3f4e78ac7a13:5e3522c53ca358df8d61d5a3b82aa0b90ff8009602b1952fb5022027f00fdd45:initial-state": "En newton3, este nodo ejecuta z = pixel.",
+    "dd052c9f-868f-5516-9af0-3f4e78ac7a13:5e3522c53ca358df8d61d5a3b82aa0b90ff8009602b1952fb5022027f00fdd45:square": "En newton3, este nodo ejecuta z2 = z * z.",
+    "dd052c9f-868f-5516-9af0-3f4e78ac7a13:5e3522c53ca358df8d61d5a3b82aa0b90ff8009602b1952fb5022027f00fdd45:quotient-update": "En newton3, este nodo ejecuta z = numerator / denominator.",
+    "dd052c9f-868f-5516-9af0-3f4e78ac7a13:5e3522c53ca358df8d61d5a3b82aa0b90ff8009602b1952fb5022027f00fdd45:termination": "En newton3, este nodo ejecuta |z - zPrev| >= 0.000001."
+  },
+  "syntaxFeatures": {
+    "state-flow": "El flujo de estado concreto es: z comienza como pixel; después, z2 y z3 alimentan numerator / denominator.",
+    "stopping-test": "La prueba de parada solo evalúa |z - zPrev| >= 0.000001; no asigna el estado."
+  },
+  "parameterExperiment": {
+    "steps": [
+      "Con los demás controles del perfil fijos, ejecuta newton3 con 48 iteraciones.",
+      "Después usa las 96 iteraciones del perfil fijado y anota si hay diferencia."
+    ],
+    "expectedObservation": "Anota si z2 = z * z; z3 = z2 * z; numerator = 2 * z3 + 1; denominator = 3 * z2; z = numerator / denominator cambia el resultado visible o la prueba de parada |z - zPrev| >= 0.000001 frente a la línea base; la definición no garantiza una diferencia."
+  },
+  "exercise": {
+    "prompt": "Sigue las anotaciones de newton3 y explica cómo se ejecuta z2 = z * z; z3 = z2 * z; numerator = 2 * z3 + 1; denominator = 3 * z2; z = numerator / denominator en las operaciones señaladas.",
+    "completionCheck": "Tu respuesta explica las 4 anotaciones, señala z2 = z * z; z3 = z2 * z; numerator = 2 * z3 + 1; denominator = 3 * z2; z = numerator / denominator y distingue |z - zPrev| >= 0.000001 como prueba de parada, no como asignación.",
+    "hint": "El flujo de estado ejecuta z = pixel → z2 = z * z → z3 = z2 * z → numerator = 2 * z3 + 1 → denominator = 3 * z2 → z = numerator / denominator en secuencia y entrega el resultado al paso siguiente."
+  },
+  "factsPresentation": {
+    "provenanceLead": "Fuente: definición de ejecución fijada y decisión de publicación.",
+    "rightsLead": "La información de derechos sigue la decisión fijada en la unidad en inglés."
+  },
+  "contentHash": "28267fef3b4994ede474c296133d9ace40eac28db805cf00a5c1688d8969593b"
+}

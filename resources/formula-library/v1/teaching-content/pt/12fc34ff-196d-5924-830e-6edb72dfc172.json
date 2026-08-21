@@ -1,0 +1,36 @@
+{
+  "schema": "fractalpark-teaching-locale/v1",
+  "formulaId": "12fc34ff-196d-5924-830e-6edb72dfc172",
+  "locale": "pt",
+  "sourceRevision": "3aec931a4991e14e53348c6d28e9fcbaf8127cad6298dafc2a8ee9e2ac8d8143",
+  "semanticHash": "a155deea383578e6e4ff5901f5c5a0adaa97b84e8c73df146732db9096cebee9",
+  "englishContentHash": "780fd1d12b9638344c5802cdcb2b61af7f8cafe3df046262af004db546d890ca",
+  "overview": "magnet1 é estudada pela definição fixa FRM-like/1: você acompanha numerator = z + c; denominator = z - c; ratio = numerator / denominator; z = ratio * ratio, sem tomar uma imagem como garantia. O perfil fixo oferece apenas uma configuração concreta.",
+  "sourceWalkthrough": {
+    "12fc34ff-196d-5924-830e-6edb72dfc172:3aec931a4991e14e53348c6d28e9fcbaf8127cad6298dafc2a8ee9e2ac8d8143:start-branch": "Em magnet1, este nó executa if ismand: z = 0; caso contrário z = pixel.",
+    "12fc34ff-196d-5924-830e-6edb72dfc172:3aec931a4991e14e53348c6d28e9fcbaf8127cad6298dafc2a8ee9e2ac8d8143:ratio": "Em magnet1, este nó executa ratio = numerator / denominator.",
+    "12fc34ff-196d-5924-830e-6edb72dfc172:3aec931a4991e14e53348c6d28e9fcbaf8127cad6298dafc2a8ee9e2ac8d8143:square-update": "Em magnet1, este nó executa z = ratio * ratio.",
+    "12fc34ff-196d-5924-830e-6edb72dfc172:3aec931a4991e14e53348c6d28e9fcbaf8127cad6298dafc2a8ee9e2ac8d8143:termination": "Em magnet1, este nó executa |z| <= 4."
+  },
+  "syntaxFeatures": {
+    "state-flow": "O fluxo de estado específico é: a escolha de ismand inicializa z; depois, numerator e denominator formam ratio antes de elevá-lo ao quadrado.",
+    "stopping-test": "O teste de parada verifica apenas |z| <= 4; ele não atribui um valor ao estado."
+  },
+  "parameterExperiment": {
+    "steps": [
+      "Com os outros controles do perfil fixos, execute magnet1 com 48 iterações.",
+      "Depois use as 96 iterações do perfil fixo e registre se há diferença."
+    ],
+    "expectedObservation": "Registre se numerator = z + c; denominator = z - c; ratio = numerator / denominator; z = ratio * ratio muda o resultado visível ou o teste de parada |z| <= 4 em relação à linha de base; a definição não garante diferença."
+  },
+  "exercise": {
+    "prompt": "Rastreie as anotações de magnet1 e explique como numerator = z + c; denominator = z - c; ratio = numerator / denominator; z = ratio * ratio é executado nas operações indicadas.",
+    "completionCheck": "Sua resposta explica as 4 anotações, identifica numerator = z + c; denominator = z - c; ratio = numerator / denominator; z = ratio * ratio e trata |z| <= 4 como teste de parada, não como atribuição.",
+    "hint": "O fluxo de estado executa if ismand: z = 0; caso contrário z = pixel → numerator = z + c → denominator = z - c → ratio = numerator / denominator → z = ratio * ratio em sequência, fornecendo o resultado à etapa seguinte."
+  },
+  "factsPresentation": {
+    "provenanceLead": "Fonte: definição de execução fixada e decisão de publicação.",
+    "rightsLead": "As informações de direitos seguem a decisão fixada na unidade em inglês."
+  },
+  "contentHash": "a46b705705ca676a81f8e031a8a97742da61cf5cff423d2cb2623819823efc98"
+}

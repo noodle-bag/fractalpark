@@ -1,0 +1,93 @@
+{
+  "schema": "fractalpark-teaching-en-fact/v1",
+  "formulaId": "0109434e-e9cc-5d80-ad3f-d25ec62cbfda",
+  "sourceRevision": "41794347e36147808476dcb16e41d7bdbf24b94327ce2f0bf13fd67a1cf1901f",
+  "semanticHash": "d26f1d44391d40c073dbec81bde9b52fe1fbf4e6235750ea29e9de422955fcd8",
+  "overview": "jm_18 is taught from its pinned FRM-like/1 definition. Follow the pixel seed, t = p1 + 4 threshold, and nested fn1/fn2/fn3 update as source operations, rather than treating an image as guaranteed. The pinned mechanical profile supplies one concrete viewing setup, not a universal visual prediction.",
+  "mathDisclosure": "exact-structured",
+  "mathSummary": "Initialization sets z = pixel and t = p1 + 4. The loop assigns z = fn1(z) * pixel * fn2(fn3(z) * pixel), while the bailout tests |z| <= t.",
+  "sourceWalkthrough": [
+    {
+      "annotationId": "0109434e-e9cc-5d80-ad3f-d25ec62cbfda:41794347e36147808476dcb16e41d7bdbf24b94327ce2f0bf13fd67a1cf1901f:initial-state",
+      "nodeId": "frm-v1:41794347e36147808476dcb16e41d7bdbf24b94327ce2f0bf13fd67a1cf1901f:init/0",
+      "explanation": "In jm_18, this node executes z = pixel."
+    },
+    {
+      "annotationId": "0109434e-e9cc-5d80-ad3f-d25ec62cbfda:41794347e36147808476dcb16e41d7bdbf24b94327ce2f0bf13fd67a1cf1901f:threshold-init",
+      "nodeId": "frm-v1:41794347e36147808476dcb16e41d7bdbf24b94327ce2f0bf13fd67a1cf1901f:init/1",
+      "explanation": "In jm_18, this node executes t = p1 + 4."
+    },
+    {
+      "annotationId": "0109434e-e9cc-5d80-ad3f-d25ec62cbfda:41794347e36147808476dcb16e41d7bdbf24b94327ce2f0bf13fd67a1cf1901f:function-update",
+      "nodeId": "frm-v1:41794347e36147808476dcb16e41d7bdbf24b94327ce2f0bf13fd67a1cf1901f:loop/0",
+      "explanation": "In jm_18, this node executes z = fn1(z) * pixel * fn2(fn3(z) * pixel)."
+    },
+    {
+      "annotationId": "0109434e-e9cc-5d80-ad3f-d25ec62cbfda:41794347e36147808476dcb16e41d7bdbf24b94327ce2f0bf13fd67a1cf1901f:termination",
+      "nodeId": "frm-v1:41794347e36147808476dcb16e41d7bdbf24b94327ce2f0bf13fd67a1cf1901f:bailout",
+      "explanation": "In jm_18, this node executes |z| <= t."
+    }
+  ],
+  "syntaxFeatures": [
+    {
+      "featureId": "state-flow",
+      "annotationIds": [
+        "0109434e-e9cc-5d80-ad3f-d25ec62cbfda:41794347e36147808476dcb16e41d7bdbf24b94327ce2f0bf13fd67a1cf1901f:initial-state",
+        "0109434e-e9cc-5d80-ad3f-d25ec62cbfda:41794347e36147808476dcb16e41d7bdbf24b94327ce2f0bf13fd67a1cf1901f:threshold-init",
+        "0109434e-e9cc-5d80-ad3f-d25ec62cbfda:41794347e36147808476dcb16e41d7bdbf24b94327ce2f0bf13fd67a1cf1901f:function-update"
+      ],
+      "explanation": "These annotations trace the formula-specific state flow: z = pixel; t = p1 + 4; z = fn1(z) * pixel * fn2(fn3(z) * pixel)."
+    },
+    {
+      "featureId": "stopping-test",
+      "annotationIds": [
+        "0109434e-e9cc-5d80-ad3f-d25ec62cbfda:41794347e36147808476dcb16e41d7bdbf24b94327ce2f0bf13fd67a1cf1901f:termination"
+      ],
+      "explanation": "This annotation is the stopping test, |z| <= t, rather than a state update."
+    }
+  ],
+  "parameterExperiment": {
+    "parameterSymbols": [
+      "parameter1",
+      "function1",
+      "function2",
+      "function3"
+    ],
+    "steps": [
+      "Run jm_18 with the pinned profile and record the result.",
+      "Change only parameter1, keep every other runtime slot and profile control fixed, run again, and record whether a difference occurs.",
+      "Change only function1, keep every other runtime slot and profile control fixed, run again, and record whether a difference occurs.",
+      "Change only function2, keep every other runtime slot and profile control fixed, run again, and record whether a difference occurs.",
+      "Change only function3, keep every other runtime slot and profile control fixed, run again, and record whether a difference occurs."
+    ],
+    "expectedObservation": "Record whether z = pixel; t = p1 + 4; then z = fn1(z) * pixel * fn2(fn3(z) * pixel) produces a visible-result or |z| <= t stopping-behavior difference from the baseline; the pinned definition does not guarantee a difference."
+  },
+  "exercise": {
+    "prompt": "Trace jm_18 through its annotations, explaining the source operation z = pixel; t = p1 + 4; then z = fn1(z) * pixel * fn2(fn3(z) * pixel) and the stopping test |z| <= t.",
+    "completionCheck": "Your trace explains all 4 annotations for jm_18, including z = pixel; t = p1 + 4; then z = fn1(z) * pixel * fn2(fn3(z) * pixel), and distinguishes |z| <= t from a state update.",
+    "answerDisclosure": "hint"
+  },
+  "facts": {
+    "provenanceStatement": "This teaching unit is grounded in runtime:41794347e36147808476dcb16e41d7bdbf24b94327ce2f0bf13fd67a1cf1901f and decision:0109434e-e9cc-5d80-ad3f-d25ec62cbfda.",
+    "rightsStatement": "rightsStatus is source-declared-public-domain-assumption; implementationBasis is direct-adaptation; publicationDecision is publish; decisionReason is publish-census-full-chain-green. This statement does not make broader claims about any third-party original.",
+    "sourceIds": [
+      "runtime:41794347e36147808476dcb16e41d7bdbf24b94327ce2f0bf13fd67a1cf1901f",
+      "decision:0109434e-e9cc-5d80-ad3f-d25ec62cbfda"
+    ],
+    "licenseIds": [],
+    "claims": [
+      {
+        "text": "The pinned runtime definition supplies the operations described in this unit.",
+        "sourceIds": [
+          "runtime:41794347e36147808476dcb16e41d7bdbf24b94327ce2f0bf13fd67a1cf1901f"
+        ]
+      },
+      {
+        "text": "The publication decision for this formula is publish.",
+        "sourceIds": [
+          "decision:0109434e-e9cc-5d80-ad3f-d25ec62cbfda"
+        ]
+      }
+    ]
+  }
+}

@@ -1,0 +1,36 @@
+{
+  "schema": "fractalpark-teaching-locale/v1",
+  "formulaId": "627c38a8-8f4d-548f-a5a6-dd9f215adf60",
+  "locale": "es",
+  "sourceRevision": "01058522dac48f2278d74a3e8a06b4c18e6d2589a3ccda69565dad37c325298d",
+  "semanticHash": "96e81ed9a1c4c222c0bf0ce8034a51d3291cde23ee6111f2082649d8854f6f5e",
+  "englishContentHash": "c7ab35c3b99b3ef9b70bd98940300799957c71eeaf2bf1571f104aea080a39a2",
+  "overview": "perpendicularCeltic se estudia con su definición fijada FRM-like/1: tú sigues p recibe abs(real(z)) y imag(z); z2 = p * p; z se reconstruye con abs(real(z2)) e imag(z2), entonces z = z + c sin tratar una imagen como garantía. El perfil fijado aporta solo una configuración concreta.",
+  "sourceWalkthrough": {
+    "627c38a8-8f4d-548f-a5a6-dd9f215adf60:01058522dac48f2278d74a3e8a06b4c18e6d2589a3ccda69565dad37c325298d:start-branch": "En perpendicularCeltic, este nodo ejecuta if ismand: z = 0; de otro modo z = pixel.",
+    "627c38a8-8f4d-548f-a5a6-dd9f215adf60:01058522dac48f2278d74a3e8a06b4c18e6d2589a3ccda69565dad37c325298d:fold-real": "En perpendicularCeltic, este nodo ejecuta real(p) = abs(real(z)).",
+    "627c38a8-8f4d-548f-a5a6-dd9f215adf60:01058522dac48f2278d74a3e8a06b4c18e6d2589a3ccda69565dad37c325298d:fold-result": "En perpendicularCeltic, este nodo ejecuta real(z) = abs(real(z2)).",
+    "627c38a8-8f4d-548f-a5a6-dd9f215adf60:01058522dac48f2278d74a3e8a06b4c18e6d2589a3ccda69565dad37c325298d:termination": "En perpendicularCeltic, este nodo ejecuta |z| <= 256."
+  },
+  "syntaxFeatures": {
+    "state-flow": "El flujo de estado concreto es: la elección de ismand inicializa z; p y z2 son estados temporales; después, z se reconstruye y se desplaza por c.",
+    "stopping-test": "La prueba de parada solo evalúa |z| <= 256; no asigna el estado."
+  },
+  "parameterExperiment": {
+    "steps": [
+      "Con los demás controles del perfil fijos, ejecuta perpendicularCeltic con 48 iteraciones.",
+      "Después usa las 96 iteraciones del perfil fijado y anota si hay diferencia."
+    ],
+    "expectedObservation": "Anota si p recibe abs(real(z)) y imag(z); z2 = p * p; z se reconstruye con abs(real(z2)) e imag(z2), entonces z = z + c cambia el resultado visible o la prueba de parada |z| <= 256 frente a la línea base; la definición no garantiza una diferencia."
+  },
+  "exercise": {
+    "prompt": "Sigue las anotaciones de perpendicularCeltic y explica cómo se ejecuta p recibe abs(real(z)) y imag(z); z2 = p * p; z se reconstruye con abs(real(z2)) e imag(z2), entonces z = z + c en las operaciones señaladas.",
+    "completionCheck": "Tu respuesta explica las 4 anotaciones, señala p recibe abs(real(z)) y imag(z); z2 = p * p; z se reconstruye con abs(real(z2)) e imag(z2), entonces z = z + c y distingue |z| <= 256 como prueba de parada, no como asignación.",
+    "hint": "El flujo de estado ejecuta if ismand: z = 0; de otro modo z = pixel → p = (0, 0) → real(p) = abs(real(z)) → z2 = p * p → real(z) = abs(real(z2)) → z = z + c en secuencia y entrega el resultado al paso siguiente."
+  },
+  "factsPresentation": {
+    "provenanceLead": "Fuente: definición de ejecución fijada y decisión de publicación.",
+    "rightsLead": "La información de derechos sigue la decisión fijada en la unidad en inglés."
+  },
+  "contentHash": "e6ca2cf1f563552cd00f8370018de33e6cb1477577ee3df9c5f1f4b52483f6c0"
+}

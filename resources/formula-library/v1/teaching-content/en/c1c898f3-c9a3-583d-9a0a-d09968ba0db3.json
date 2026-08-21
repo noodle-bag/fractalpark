@@ -1,0 +1,85 @@
+{
+  "schema": "fractalpark-teaching-en-fact/v1",
+  "formulaId": "c1c898f3-c9a3-583d-9a0a-d09968ba0db3",
+  "sourceRevision": "a265807bb53747d256b0cbfee89991527a72e8bb9ceac9a41888c3ad1419448e",
+  "semanticHash": "1316ce063761dd9a4c2c2a043c2a44723021e369cd01f42ae89454251079349f",
+  "overview": "lambda is taught from its pinned FRM-like/1 definition. Follow the shifted temporary actualZ, the product update using oneMinusZ, and the magnitude limit as source operations, rather than treating an image as guaranteed. The pinned mechanical profile supplies one concrete viewing setup, not a universal visual prediction.",
+  "mathDisclosure": "exact-structured",
+  "mathSummary": "Each iteration first sets actualZ = z + (0.5, 0), then oneMinusZ = (1, 0) - actualZ, and finally assigns z = c * (actualZ * oneMinusZ).",
+  "sourceWalkthrough": [
+    {
+      "annotationId": "c1c898f3-c9a3-583d-9a0a-d09968ba0db3:a265807bb53747d256b0cbfee89991527a72e8bb9ceac9a41888c3ad1419448e:start-branch",
+      "nodeId": "frm-v1:a265807bb53747d256b0cbfee89991527a72e8bb9ceac9a41888c3ad1419448e:init/0",
+      "explanation": "In lambda, this node executes if ismand: z = 0; otherwise z = pixel."
+    },
+    {
+      "annotationId": "c1c898f3-c9a3-583d-9a0a-d09968ba0db3:a265807bb53747d256b0cbfee89991527a72e8bb9ceac9a41888c3ad1419448e:shift",
+      "nodeId": "frm-v1:a265807bb53747d256b0cbfee89991527a72e8bb9ceac9a41888c3ad1419448e:loop/0",
+      "explanation": "In lambda, this node executes actualZ = z + (0.5, 0)."
+    },
+    {
+      "annotationId": "c1c898f3-c9a3-583d-9a0a-d09968ba0db3:a265807bb53747d256b0cbfee89991527a72e8bb9ceac9a41888c3ad1419448e:product-update",
+      "nodeId": "frm-v1:a265807bb53747d256b0cbfee89991527a72e8bb9ceac9a41888c3ad1419448e:loop/2",
+      "explanation": "In lambda, this node executes z = c * (actualZ * oneMinusZ)."
+    },
+    {
+      "annotationId": "c1c898f3-c9a3-583d-9a0a-d09968ba0db3:a265807bb53747d256b0cbfee89991527a72e8bb9ceac9a41888c3ad1419448e:termination",
+      "nodeId": "frm-v1:a265807bb53747d256b0cbfee89991527a72e8bb9ceac9a41888c3ad1419448e:bailout",
+      "explanation": "In lambda, this node executes |z| <= 256."
+    }
+  ],
+  "syntaxFeatures": [
+    {
+      "featureId": "state-flow",
+      "annotationIds": [
+        "c1c898f3-c9a3-583d-9a0a-d09968ba0db3:a265807bb53747d256b0cbfee89991527a72e8bb9ceac9a41888c3ad1419448e:start-branch",
+        "c1c898f3-c9a3-583d-9a0a-d09968ba0db3:a265807bb53747d256b0cbfee89991527a72e8bb9ceac9a41888c3ad1419448e:shift",
+        "c1c898f3-c9a3-583d-9a0a-d09968ba0db3:a265807bb53747d256b0cbfee89991527a72e8bb9ceac9a41888c3ad1419448e:product-update"
+      ],
+      "explanation": "These annotations trace the formula-specific state flow: if ismand: z = 0; otherwise z = pixel; actualZ = z + (0.5, 0); z = c * (actualZ * oneMinusZ)."
+    },
+    {
+      "featureId": "stopping-test",
+      "annotationIds": [
+        "c1c898f3-c9a3-583d-9a0a-d09968ba0db3:a265807bb53747d256b0cbfee89991527a72e8bb9ceac9a41888c3ad1419448e:termination"
+      ],
+      "explanation": "This annotation is the stopping test, |z| <= 256, rather than a state update."
+    }
+  ],
+  "parameterExperiment": {
+    "parameterSymbols": [],
+    "steps": [
+      "Run lambda with 48 iterations while keeping the pinned profile’s other controls fixed, and record the result.",
+      "Run lambda at the pinned profile iteration count of 96, compare the two runs, and record whether a difference occurs."
+    ],
+    "expectedObservation": "Record whether actualZ = z + (0.5, 0), oneMinusZ = (1, 0) - actualZ, then z = c * (actualZ * oneMinusZ) produces a visible-result or |z| <= 256 stopping-behavior difference from the baseline; the pinned definition does not guarantee a difference."
+  },
+  "exercise": {
+    "prompt": "Trace lambda through its annotations, explaining the source operation actualZ = z + (0.5, 0), oneMinusZ = (1, 0) - actualZ, then z = c * (actualZ * oneMinusZ) and the stopping test |z| <= 256.",
+    "completionCheck": "Your trace explains all 4 annotations for lambda, including actualZ = z + (0.5, 0), oneMinusZ = (1, 0) - actualZ, then z = c * (actualZ * oneMinusZ), and distinguishes |z| <= 256 from a state update.",
+    "answerDisclosure": "hint"
+  },
+  "facts": {
+    "provenanceStatement": "This teaching unit is grounded in runtime:a265807bb53747d256b0cbfee89991527a72e8bb9ceac9a41888c3ad1419448e and decision:c1c898f3-c9a3-583d-9a0a-d09968ba0db3.",
+    "rightsStatement": "rightsStatus is project-owned; implementationBasis is project-owned; publicationDecision is publish; decisionReason is publish-project-owned-native-recipe. This statement does not make broader claims about any third-party original.",
+    "sourceIds": [
+      "runtime:a265807bb53747d256b0cbfee89991527a72e8bb9ceac9a41888c3ad1419448e",
+      "decision:c1c898f3-c9a3-583d-9a0a-d09968ba0db3"
+    ],
+    "licenseIds": [],
+    "claims": [
+      {
+        "text": "The pinned runtime definition supplies the operations described in this unit.",
+        "sourceIds": [
+          "runtime:a265807bb53747d256b0cbfee89991527a72e8bb9ceac9a41888c3ad1419448e"
+        ]
+      },
+      {
+        "text": "The publication decision for this formula is publish.",
+        "sourceIds": [
+          "decision:c1c898f3-c9a3-583d-9a0a-d09968ba0db3"
+        ]
+      }
+    ]
+  }
+}

@@ -1,0 +1,36 @@
+{
+  "schema": "fractalpark-teaching-locale/v1",
+  "formulaId": "12fc34ff-196d-5924-830e-6edb72dfc172",
+  "locale": "ru",
+  "sourceRevision": "3aec931a4991e14e53348c6d28e9fcbaf8127cad6298dafc2a8ee9e2ac8d8143",
+  "semanticHash": "a155deea383578e6e4ff5901f5c5a0adaa97b84e8c73df146732db9096cebee9",
+  "englishContentHash": "780fd1d12b9638344c5802cdcb2b61af7f8cafe3df046262af004db546d890ca",
+  "overview": "magnet1 изучается по закреплённому определению FRM-like/1: вы прослеживаете numerator = z + c; denominator = z - c; ratio = numerator / denominator; z = ratio * ratio, не считая изображение гарантированным. Закреплённый профиль задаёт лишь одну конкретную настройку наблюдения.",
+  "sourceWalkthrough": {
+    "12fc34ff-196d-5924-830e-6edb72dfc172:3aec931a4991e14e53348c6d28e9fcbaf8127cad6298dafc2a8ee9e2ac8d8143:start-branch": "В magnet1, этот узел выполняет if ismand: z = 0; иначе z = pixel.",
+    "12fc34ff-196d-5924-830e-6edb72dfc172:3aec931a4991e14e53348c6d28e9fcbaf8127cad6298dafc2a8ee9e2ac8d8143:ratio": "В magnet1, этот узел выполняет ratio = numerator / denominator.",
+    "12fc34ff-196d-5924-830e-6edb72dfc172:3aec931a4991e14e53348c6d28e9fcbaf8127cad6298dafc2a8ee9e2ac8d8143:square-update": "В magnet1, этот узел выполняет z = ratio * ratio.",
+    "12fc34ff-196d-5924-830e-6edb72dfc172:3aec931a4991e14e53348c6d28e9fcbaf8127cad6298dafc2a8ee9e2ac8d8143:termination": "В magnet1, этот узел выполняет |z| <= 4."
+  },
+  "syntaxFeatures": {
+    "state-flow": "Конкретный поток состояния: выбор ismand задаёт начальное z, затем numerator и denominator образуют ratio, который возводится в квадрат.",
+    "stopping-test": "Проверка остановки оценивает только |z| <= 4; она не присваивает состояние."
+  },
+  "parameterExperiment": {
+    "steps": [
+      "Не меняя остальные настройки профиля, запустите magnet1 с 48 итерациями.",
+      "Затем используйте 96 итераций закреплённого профиля и запишите различие."
+    ],
+    "expectedObservation": "Запишите, меняет ли numerator = z + c; denominator = z - c; ratio = numerator / denominator; z = ratio * ratio видимый результат или проверку остановки |z| <= 4 относительно базового запуска; определение не гарантирует различие."
+  },
+  "exercise": {
+    "prompt": "Проследите аннотации magnet1 и объясните, как numerator = z + c; denominator = z - c; ratio = numerator / denominator; z = ratio * ratio выполняется в отмеченных операциях.",
+    "completionCheck": "Ваш ответ объясняет все 4 аннотации, указывает numerator = z + c; denominator = z - c; ratio = numerator / denominator; z = ratio * ratio и отличает |z| <= 4 как проверку остановки от присваивания.",
+    "hint": "Поток состояния последовательно выполняет если ismand: z = 0; иначе z = pixel → numerator = z + c → denominator = z - c → ratio = numerator / denominator → z = ratio * ratio и передаёт результат следующему шагу."
+  },
+  "factsPresentation": {
+    "provenanceLead": "Источник: закреплённое определение выполнения и решение о публикации.",
+    "rightsLead": "Сведения о правах следуют закреплённому решению в английском разделе."
+  },
+  "contentHash": "76c37b5e79f77a859de637e3aa618da467bd8d33d92a5ba42fe1a83060ce18d1"
+}

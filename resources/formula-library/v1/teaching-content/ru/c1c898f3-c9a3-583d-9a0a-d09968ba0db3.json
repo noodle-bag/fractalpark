@@ -1,0 +1,36 @@
+{
+  "schema": "fractalpark-teaching-locale/v1",
+  "formulaId": "c1c898f3-c9a3-583d-9a0a-d09968ba0db3",
+  "locale": "ru",
+  "sourceRevision": "a265807bb53747d256b0cbfee89991527a72e8bb9ceac9a41888c3ad1419448e",
+  "semanticHash": "1316ce063761dd9a4c2c2a043c2a44723021e369cd01f42ae89454251079349f",
+  "englishContentHash": "8da88c667957f2c7fa532fe359a78689ecd583ee9a8024a1a18f57c38b902838",
+  "overview": "lambda изучается по закреплённому определению FRM-like/1: вы прослеживаете actualZ = z + (0.5, 0), oneMinusZ = (1, 0) - actualZ, затем z = c * (actualZ * oneMinusZ), не считая изображение гарантированным. Закреплённый профиль задаёт лишь одну конкретную настройку наблюдения.",
+  "sourceWalkthrough": {
+    "c1c898f3-c9a3-583d-9a0a-d09968ba0db3:a265807bb53747d256b0cbfee89991527a72e8bb9ceac9a41888c3ad1419448e:start-branch": "В lambda, этот узел выполняет if ismand: z = 0; иначе z = pixel.",
+    "c1c898f3-c9a3-583d-9a0a-d09968ba0db3:a265807bb53747d256b0cbfee89991527a72e8bb9ceac9a41888c3ad1419448e:shift": "В lambda, этот узел выполняет actualZ = z + (0.5, 0).",
+    "c1c898f3-c9a3-583d-9a0a-d09968ba0db3:a265807bb53747d256b0cbfee89991527a72e8bb9ceac9a41888c3ad1419448e:product-update": "В lambda, этот узел выполняет z = c * (actualZ * oneMinusZ).",
+    "c1c898f3-c9a3-583d-9a0a-d09968ba0db3:a265807bb53747d256b0cbfee89991527a72e8bb9ceac9a41888c3ad1419448e:termination": "В lambda, этот узел выполняет |z| <= 256."
+  },
+  "syntaxFeatures": {
+    "state-flow": "Конкретный поток состояния: выбор ismand задаёт начальное z, затем actualZ и oneMinusZ участвуют в обновлении произведения.",
+    "stopping-test": "Проверка остановки оценивает только |z| <= 256; она не присваивает состояние."
+  },
+  "parameterExperiment": {
+    "steps": [
+      "Не меняя остальные настройки профиля, запустите lambda с 48 итерациями.",
+      "Затем используйте 96 итераций закреплённого профиля и запишите различие."
+    ],
+    "expectedObservation": "Запишите, меняет ли actualZ = z + (0.5, 0), oneMinusZ = (1, 0) - actualZ, затем z = c * (actualZ * oneMinusZ) видимый результат или проверку остановки |z| <= 256 относительно базового запуска; определение не гарантирует различие."
+  },
+  "exercise": {
+    "prompt": "Проследите аннотации lambda и объясните, как actualZ = z + (0.5, 0), oneMinusZ = (1, 0) - actualZ, затем z = c * (actualZ * oneMinusZ) выполняется в отмеченных операциях.",
+    "completionCheck": "Ваш ответ объясняет все 4 аннотации, указывает actualZ = z + (0.5, 0), oneMinusZ = (1, 0) - actualZ, затем z = c * (actualZ * oneMinusZ) и отличает |z| <= 256 как проверку остановки от присваивания.",
+    "hint": "Поток состояния последовательно выполняет если ismand: z = 0; иначе z = pixel → actualZ = z + (0.5, 0) → z = c * (actualZ * oneMinusZ) и передаёт результат следующему шагу."
+  },
+  "factsPresentation": {
+    "provenanceLead": "Источник: закреплённое определение выполнения и решение о публикации.",
+    "rightsLead": "Сведения о правах следуют закреплённому решению в английском разделе."
+  },
+  "contentHash": "84baae03b014a3188fbfb196e4fc3adf1d0f3f4cbcf100e2579b303e1f703385"
+}

@@ -1,0 +1,39 @@
+{
+  "schema": "fractalpark-teaching-locale/v1",
+  "formulaId": "0109434e-e9cc-5d80-ad3f-d25ec62cbfda",
+  "locale": "fr",
+  "sourceRevision": "41794347e36147808476dcb16e41d7bdbf24b94327ce2f0bf13fd67a1cf1901f",
+  "semanticHash": "d26f1d44391d40c073dbec81bde9b52fe1fbf4e6235750ea29e9de422955fcd8",
+  "englishContentHash": "c88a2faa701905966d39f5f3d225e0d8243056cfe486cfd081eebb33b3a5a15c",
+  "overview": "jm_18 s’étudie avec sa définition épinglée FRM-like/1 : tu suis z = pixel; t = p1 + 4; puis z = fn1(z) * pixel * fn2(fn3(z) * pixel), sans prendre une image pour une garantie. Le profil épinglé fournit seulement un réglage concret.",
+  "sourceWalkthrough": {
+    "0109434e-e9cc-5d80-ad3f-d25ec62cbfda:41794347e36147808476dcb16e41d7bdbf24b94327ce2f0bf13fd67a1cf1901f:initial-state": "Dans jm_18, ce nœud exécute z = pixel.",
+    "0109434e-e9cc-5d80-ad3f-d25ec62cbfda:41794347e36147808476dcb16e41d7bdbf24b94327ce2f0bf13fd67a1cf1901f:threshold-init": "Dans jm_18, ce nœud exécute t = p1 + 4.",
+    "0109434e-e9cc-5d80-ad3f-d25ec62cbfda:41794347e36147808476dcb16e41d7bdbf24b94327ce2f0bf13fd67a1cf1901f:function-update": "Dans jm_18, ce nœud exécute z = fn1(z) * pixel * fn2(fn3(z) * pixel).",
+    "0109434e-e9cc-5d80-ad3f-d25ec62cbfda:41794347e36147808476dcb16e41d7bdbf24b94327ce2f0bf13fd67a1cf1901f:termination": "Dans jm_18, ce nœud exécute |z| <= t."
+  },
+  "syntaxFeatures": {
+    "state-flow": "Le flux d’état concret est : z est initialisé avec pixel et t avec p1 + 4 avant la mise à jour par composition de fonctions.",
+    "stopping-test": "Le test d’arrêt évalue seulement |z| <= t ; il n’affecte pas l’état."
+  },
+  "parameterExperiment": {
+    "steps": [
+      "Exécute jm_18 avec le profil épinglé et note le résultat.",
+      "Change seulement parameter1, garde les autres slots d’exécution et contrôles du profil fixes, exécute à nouveau et note s’il y a une différence.",
+      "Change seulement function1, garde les autres slots d’exécution et contrôles du profil fixes, exécute à nouveau et note s’il y a une différence.",
+      "Change seulement function2, garde les autres slots d’exécution et contrôles du profil fixes, exécute à nouveau et note s’il y a une différence.",
+      "Change seulement function3, garde les autres slots d’exécution et contrôles du profil fixes, exécute à nouveau et note s’il y a une différence."
+    ],
+    "expectedObservation": "Note si z = pixel; t = p1 + 4; puis z = fn1(z) * pixel * fn2(fn3(z) * pixel) modifie le résultat visible ou le test d’arrêt |z| <= t par rapport à la référence ; la définition ne garantit pas de différence."
+  },
+  "exercise": {
+    "prompt": "Suis les annotations de jm_18 et explique comment z = pixel; t = p1 + 4; puis z = fn1(z) * pixel * fn2(fn3(z) * pixel) s’exécute dans les opérations indiquées.",
+    "completionCheck": "Ta réponse explique les 4 annotations, identifie z = pixel; t = p1 + 4; puis z = fn1(z) * pixel * fn2(fn3(z) * pixel) et distingue |z| <= t comme test d’arrêt plutôt que comme affectation.",
+    "hint": "Le flux d’état exécute successivement z = pixel → t = p1 + 4 → z = fn1(z) * pixel * fn2(fn3(z) * pixel) et transmet le résultat à l’étape suivante."
+  },
+  "factsPresentation": {
+    "provenanceLead": "Source : définition d’exécution épinglée et décision de publication.",
+    "rightsLead": "Les informations de droits suivent la décision épinglée dans l’unité anglaise."
+  },
+  "contentHash": "bb8ee0381825a87febbb145ac4a6e1676f1ee44c83de13294eb1ef31cbec78f3"
+}

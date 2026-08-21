@@ -362,7 +362,13 @@ export function validateReviewEventsV1(
       : { ok: false, code: 'review-not-started-has-events' };
   }
   let previousIndex = 0;
+  let previousAt = Number.NEGATIVE_INFINITY;
   for (const [eventIndex, event] of events.entries()) {
+    const eventAt = Date.parse(event.at);
+    if (!Number.isFinite(eventAt) || eventAt < previousAt) {
+      return { ok: false, code: 'review-event-time-invalid' };
+    }
+    previousAt = eventAt;
     const evidenceValid =
       nonempty(event.at) &&
       nonempty(event.actorId) &&

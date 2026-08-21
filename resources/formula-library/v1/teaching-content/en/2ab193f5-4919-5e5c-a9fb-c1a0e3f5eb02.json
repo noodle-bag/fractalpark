@@ -1,0 +1,87 @@
+{
+  "schema": "fractalpark-teaching-en-fact/v1",
+  "formulaId": "2ab193f5-4919-5e5c-a9fb-c1a0e3f5eb02",
+  "sourceRevision": "cfef49944d8f9bd8f2ee91b2d4ab4f9b30ad66475a6f783f52bb91a7a36b1617",
+  "semanticHash": "66120f8c30ea579f64ef57e054eb33b08e9c00eeed9c33c9cecc1e6bba600898",
+  "overview": "burningShip is taught from its pinned FRM-like/1 definition. Follow the absolute-value temporary a and the power-dependent reconstruction of z as source operations, rather than treating an image as guaranteed. The pinned mechanical profile supplies one concrete viewing setup, not a universal visual prediction.",
+  "mathDisclosure": "exact-structured",
+  "mathSummary": "The loop sets a = abs(z). When power == 2 it assigns real(z) = real(a) * real(a) - imag(a) * imag(a), imag(z) = 2 * real(a) * imag(a), and then z = z + c; otherwise it assigns z = a ^ power + c.",
+  "sourceWalkthrough": [
+    {
+      "annotationId": "2ab193f5-4919-5e5c-a9fb-c1a0e3f5eb02:cfef49944d8f9bd8f2ee91b2d4ab4f9b30ad66475a6f783f52bb91a7a36b1617:start-branch",
+      "nodeId": "frm-v1:cfef49944d8f9bd8f2ee91b2d4ab4f9b30ad66475a6f783f52bb91a7a36b1617:init/0",
+      "explanation": "In burningShip, this node executes if ismand: z = 0; otherwise z = pixel."
+    },
+    {
+      "annotationId": "2ab193f5-4919-5e5c-a9fb-c1a0e3f5eb02:cfef49944d8f9bd8f2ee91b2d4ab4f9b30ad66475a6f783f52bb91a7a36b1617:absolute-value",
+      "nodeId": "frm-v1:cfef49944d8f9bd8f2ee91b2d4ab4f9b30ad66475a6f783f52bb91a7a36b1617:loop/0",
+      "explanation": "In burningShip, this node executes a = abs(z)."
+    },
+    {
+      "annotationId": "2ab193f5-4919-5e5c-a9fb-c1a0e3f5eb02:cfef49944d8f9bd8f2ee91b2d4ab4f9b30ad66475a6f783f52bb91a7a36b1617:power-branch",
+      "nodeId": "frm-v1:cfef49944d8f9bd8f2ee91b2d4ab4f9b30ad66475a6f783f52bb91a7a36b1617:loop/1",
+      "explanation": "In burningShip, this node executes if power == 2: real(z) = real(a) * real(a) - imag(a) * imag(a); imag(z) = 2 * real(a) * imag(a); then z = z + c; otherwise z = a ^ power + c."
+    },
+    {
+      "annotationId": "2ab193f5-4919-5e5c-a9fb-c1a0e3f5eb02:cfef49944d8f9bd8f2ee91b2d4ab4f9b30ad66475a6f783f52bb91a7a36b1617:termination",
+      "nodeId": "frm-v1:cfef49944d8f9bd8f2ee91b2d4ab4f9b30ad66475a6f783f52bb91a7a36b1617:bailout",
+      "explanation": "In burningShip, this node executes |z| <= 256."
+    }
+  ],
+  "syntaxFeatures": [
+    {
+      "featureId": "state-flow",
+      "annotationIds": [
+        "2ab193f5-4919-5e5c-a9fb-c1a0e3f5eb02:cfef49944d8f9bd8f2ee91b2d4ab4f9b30ad66475a6f783f52bb91a7a36b1617:start-branch",
+        "2ab193f5-4919-5e5c-a9fb-c1a0e3f5eb02:cfef49944d8f9bd8f2ee91b2d4ab4f9b30ad66475a6f783f52bb91a7a36b1617:absolute-value",
+        "2ab193f5-4919-5e5c-a9fb-c1a0e3f5eb02:cfef49944d8f9bd8f2ee91b2d4ab4f9b30ad66475a6f783f52bb91a7a36b1617:power-branch"
+      ],
+      "explanation": "These annotations trace the formula-specific state flow: if ismand: z = 0; otherwise z = pixel; a = abs(z); if power == 2: rebuild z from a’s components and add c; otherwise z = a ^ power + c."
+    },
+    {
+      "featureId": "stopping-test",
+      "annotationIds": [
+        "2ab193f5-4919-5e5c-a9fb-c1a0e3f5eb02:cfef49944d8f9bd8f2ee91b2d4ab4f9b30ad66475a6f783f52bb91a7a36b1617:termination"
+      ],
+      "explanation": "This annotation is the stopping test, |z| <= 256, rather than a state update."
+    }
+  ],
+  "parameterExperiment": {
+    "parameterSymbols": [
+      "power"
+    ],
+    "steps": [
+      "Run burningShip with the pinned profile and record the result.",
+      "Change only power, keep every other runtime slot and profile control fixed, run again, and record whether a difference occurs."
+    ],
+    "expectedObservation": "Record whether a = abs(z); for power == 2 it rebuilds z from real(a) and imag(a) before z = z + c, otherwise z = a ^ power + c produces a visible-result or |z| <= 256 stopping-behavior difference from the baseline; the pinned definition does not guarantee a difference."
+  },
+  "exercise": {
+    "prompt": "Trace burningShip through its annotations, explaining the source operation a = abs(z); for power == 2 it rebuilds z from real(a) and imag(a) before z = z + c, otherwise z = a ^ power + c and the stopping test |z| <= 256.",
+    "completionCheck": "Your trace explains all 4 annotations for burningShip, including a = abs(z); for power == 2 it rebuilds z from real(a) and imag(a) before z = z + c, otherwise z = a ^ power + c, and distinguishes |z| <= 256 from a state update.",
+    "answerDisclosure": "hint"
+  },
+  "facts": {
+    "provenanceStatement": "This teaching unit is grounded in runtime:cfef49944d8f9bd8f2ee91b2d4ab4f9b30ad66475a6f783f52bb91a7a36b1617 and decision:2ab193f5-4919-5e5c-a9fb-c1a0e3f5eb02.",
+    "rightsStatement": "rightsStatus is project-owned; implementationBasis is project-owned; publicationDecision is publish; decisionReason is publish-project-owned-native-recipe. This statement does not make broader claims about any third-party original.",
+    "sourceIds": [
+      "runtime:cfef49944d8f9bd8f2ee91b2d4ab4f9b30ad66475a6f783f52bb91a7a36b1617",
+      "decision:2ab193f5-4919-5e5c-a9fb-c1a0e3f5eb02"
+    ],
+    "licenseIds": [],
+    "claims": [
+      {
+        "text": "The pinned runtime definition supplies the operations described in this unit.",
+        "sourceIds": [
+          "runtime:cfef49944d8f9bd8f2ee91b2d4ab4f9b30ad66475a6f783f52bb91a7a36b1617"
+        ]
+      },
+      {
+        "text": "The publication decision for this formula is publish.",
+        "sourceIds": [
+          "decision:2ab193f5-4919-5e5c-a9fb-c1a0e3f5eb02"
+        ]
+      }
+    ]
+  }
+}

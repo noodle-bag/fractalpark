@@ -1,0 +1,35 @@
+{
+  "schema": "fractalpark-teaching-locale/v1",
+  "formulaId": "059080eb-da12-5e85-a1a3-049929bdcf49",
+  "locale": "ko",
+  "sourceRevision": "ef31384c340c3899555f3de5048b4c9863b397c767e8ed72cae190d600f3ea48",
+  "semanticHash": "45f7a65ad99eb0a0b301fa2853808a2b9fc0c81ab14a8cd8f7eaab8335c61b12",
+  "englishContentHash": "70910a97be1e2dccc985a8ae1551a5cda1d037160ebc507819c92ece0208be6d",
+  "overview": "rcl_pick10은 고정된 FRM-like/1 정의로 배워요. z = z / pixel - pixel * sqr(z)를 따라가고 이미지를 보장으로 여기지 않아요. 고정 프로필은 하나의 구체적인 관찰 설정만 제공해요.",
+  "sourceWalkthrough": {
+    "059080eb-da12-5e85-a1a3-049929bdcf49:ef31384c340c3899555f3de5048b4c9863b397c767e8ed72cae190d600f3ea48:initial-state": "rcl_pick10에서 이 노드는 다음 연산을 실행해요: z = pixel.",
+    "059080eb-da12-5e85-a1a3-049929bdcf49:ef31384c340c3899555f3de5048b4c9863b397c767e8ed72cae190d600f3ea48:division-and-square-update": "rcl_pick10에서 이 노드는 다음 연산을 실행해요: z = z / pixel - pixel * sqr(z).",
+    "059080eb-da12-5e85-a1a3-049929bdcf49:ef31384c340c3899555f3de5048b4c9863b397c767e8ed72cae190d600f3ea48:termination": "rcl_pick10에서 이 노드는 다음 연산을 실행해요: |z| < 8."
+  },
+  "syntaxFeatures": {
+    "state-flow": "구체적인 상태 흐름은 z는 pixel로 시작하고, 이어서 pixel로 나눈 뒤 pixel * sqr(z)를 빼서 갱신해요.",
+    "stopping-test": "종료 검사는 |z| < 8만 판단하며 상태에 값을 대입하지 않아요."
+  },
+  "parameterExperiment": {
+    "steps": [
+      "다른 프로필 제어를 고정하고 rcl_pick10을 64회 반복으로 실행한 결과를 기록하세요.",
+      "고정 프로필의 128회 반복 실행과 비교하여 차이를 기록하세요."
+    ],
+    "expectedObservation": "기준 실행과 비교해 z = z / pixel - pixel * sqr(z)가 보이는 결과나 |z| < 8 종료 검사에 차이를 만드는지 기록하세요. 정의가 차이를 보장하지는 않아요."
+  },
+  "exercise": {
+    "prompt": "rcl_pick10의 주석을 추적하고 표시된 연산에서 z = z / pixel - pixel * sqr(z)가 어떻게 실행되는지 설명하세요.",
+    "completionCheck": "답에는 3개 주석의 설명, z = z / pixel - pixel * sqr(z)의 식별, 그리고 |z| < 8가 대입이 아닌 종료 검사라는 구분이 있어요.",
+    "hint": "상태 흐름에서는 z = pixel → z = z / pixel - pixel * sqr(z) 순서로 연산하고 결과를 다음 단계에 넘겨요."
+  },
+  "factsPresentation": {
+    "provenanceLead": "출처: 고정된 실행 정의와 공개 결정이에요.",
+    "rightsLead": "권리 정보는 영어 단원의 고정된 결정을 따라요."
+  },
+  "contentHash": "dd4100590cddc4a9a2dde70c9246ceb6fe33ad3fa16f6033f88277e673521846"
+}

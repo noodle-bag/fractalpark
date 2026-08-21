@@ -1,0 +1,36 @@
+{
+  "schema": "fractalpark-teaching-locale/v1",
+  "formulaId": "627c38a8-8f4d-548f-a5a6-dd9f215adf60",
+  "locale": "ko",
+  "sourceRevision": "01058522dac48f2278d74a3e8a06b4c18e6d2589a3ccda69565dad37c325298d",
+  "semanticHash": "96e81ed9a1c4c222c0bf0ce8034a51d3291cde23ee6111f2082649d8854f6f5e",
+  "englishContentHash": "c7ab35c3b99b3ef9b70bd98940300799957c71eeaf2bf1571f104aea080a39a2",
+  "overview": "perpendicularCeltic은 고정된 FRM-like/1 정의로 배워요. p의 실수부는 abs(real(z))이고 허수부는 imag(z)예요; z2 = p * p; abs(real(z2))와 imag(z2)로 z를 다시 만들어요, 이어서 z = z + c를 따라가고 이미지를 보장으로 여기지 않아요. 고정 프로필은 하나의 구체적인 관찰 설정만 제공해요.",
+  "sourceWalkthrough": {
+    "627c38a8-8f4d-548f-a5a6-dd9f215adf60:01058522dac48f2278d74a3e8a06b4c18e6d2589a3ccda69565dad37c325298d:start-branch": "perpendicularCeltic에서 이 노드는 다음 연산을 실행해요: ismand이면 z = 0; 아니면 z = pixel.",
+    "627c38a8-8f4d-548f-a5a6-dd9f215adf60:01058522dac48f2278d74a3e8a06b4c18e6d2589a3ccda69565dad37c325298d:fold-real": "perpendicularCeltic에서 이 노드는 다음 연산을 실행해요: real(p) = abs(real(z)).",
+    "627c38a8-8f4d-548f-a5a6-dd9f215adf60:01058522dac48f2278d74a3e8a06b4c18e6d2589a3ccda69565dad37c325298d:fold-result": "perpendicularCeltic에서 이 노드는 다음 연산을 실행해요: real(z) = abs(real(z2)).",
+    "627c38a8-8f4d-548f-a5a6-dd9f215adf60:01058522dac48f2278d74a3e8a06b4c18e6d2589a3ccda69565dad37c325298d:termination": "perpendicularCeltic에서 이 노드는 다음 연산을 실행해요: |z| <= 256."
+  },
+  "syntaxFeatures": {
+    "state-flow": "구체적인 상태 흐름은 ismand 선택이 z의 초기값을 정하고, p와 z2는 임시 상태예요. 이어서 z를 다시 만들고 c를 더해요.",
+    "stopping-test": "종료 검사는 |z| <= 256만 판단하며 상태에 값을 대입하지 않아요."
+  },
+  "parameterExperiment": {
+    "steps": [
+      "다른 프로필 제어를 고정하고 perpendicularCeltic을 48회 반복으로 실행한 결과를 기록하세요.",
+      "고정 프로필의 96회 반복 실행과 비교하여 차이를 기록하세요."
+    ],
+    "expectedObservation": "기준 실행과 비교해 p의 실수부를 abs(real(z))로, 허수부를 imag(z)로 두고 z2 = p * p를 계산한 뒤, abs(real(z2))와 imag(z2)로 z를 다시 만들고 z = z + c를 수행하는 일련의 연산이 보이는 결과나 |z| <= 256 종료 검사에 차이를 만드는지 기록하세요. 정의가 차이를 보장하지는 않아요."
+  },
+  "exercise": {
+    "prompt": "perpendicularCeltic의 주석을 추적하고, p의 실수부를 abs(real(z))로, 허수부를 imag(z)로 둔 뒤 z2 = p * p를 계산하고, abs(real(z2))와 imag(z2)로 z를 다시 만들어 z = z + c를 수행하는 과정이 표시된 각 단계에서 어떻게 실행되는지 설명하세요.",
+    "completionCheck": "답에는 4개 주석에 대한 설명과 p의 실수부를 abs(real(z))로, 허수부를 imag(z)로 둔 뒤 z2 = p * p를 계산하고, abs(real(z2))와 imag(z2)로 z를 다시 만들어 z = z + c를 수행하는 순서가 포함되어야 해요. 또한 |z| <= 256이 상태 대입이 아니라 종료 검사임을 구분해야 해요.",
+    "hint": "상태 흐름에서는 ismand이면: z = 0; 아니면 z = pixel → p = (0, 0) → real(p) = abs(real(z)) → z2 = p * p → real(z) = abs(real(z2)) → z = z + c 순서로 연산하고 결과를 다음 단계에 넘겨요."
+  },
+  "factsPresentation": {
+    "provenanceLead": "출처: 고정된 실행 정의와 공개 결정이에요.",
+    "rightsLead": "권리 정보는 영어 단원의 고정된 결정을 따라요."
+  },
+  "contentHash": "363fbbc8ef1d2341a9d7b4b1ada33a748b8a464fbd9fadc2fa037b2e61515190"
+}

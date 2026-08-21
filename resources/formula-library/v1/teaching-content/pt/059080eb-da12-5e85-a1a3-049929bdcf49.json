@@ -1,0 +1,35 @@
+{
+  "schema": "fractalpark-teaching-locale/v1",
+  "formulaId": "059080eb-da12-5e85-a1a3-049929bdcf49",
+  "locale": "pt",
+  "sourceRevision": "ef31384c340c3899555f3de5048b4c9863b397c767e8ed72cae190d600f3ea48",
+  "semanticHash": "45f7a65ad99eb0a0b301fa2853808a2b9fc0c81ab14a8cd8f7eaab8335c61b12",
+  "englishContentHash": "70910a97be1e2dccc985a8ae1551a5cda1d037160ebc507819c92ece0208be6d",
+  "overview": "rcl_pick10 é estudada pela definição fixa FRM-like/1: você acompanha z = z / pixel - pixel * sqr(z), sem tomar uma imagem como garantia. O perfil fixo oferece apenas uma configuração concreta.",
+  "sourceWalkthrough": {
+    "059080eb-da12-5e85-a1a3-049929bdcf49:ef31384c340c3899555f3de5048b4c9863b397c767e8ed72cae190d600f3ea48:initial-state": "Em rcl_pick10, este nó executa z = pixel.",
+    "059080eb-da12-5e85-a1a3-049929bdcf49:ef31384c340c3899555f3de5048b4c9863b397c767e8ed72cae190d600f3ea48:division-and-square-update": "Em rcl_pick10, este nó executa z = z / pixel - pixel * sqr(z).",
+    "059080eb-da12-5e85-a1a3-049929bdcf49:ef31384c340c3899555f3de5048b4c9863b397c767e8ed72cae190d600f3ea48:termination": "Em rcl_pick10, este nó executa |z| < 8."
+  },
+  "syntaxFeatures": {
+    "state-flow": "O fluxo de estado específico é: z começa como pixel; depois, a divisão por pixel e a subtração de pixel * sqr(z) atualizam z.",
+    "stopping-test": "O teste de parada verifica apenas |z| < 8; ele não atribui um valor ao estado."
+  },
+  "parameterExperiment": {
+    "steps": [
+      "Com os outros controles do perfil fixos, execute rcl_pick10 com 64 iterações.",
+      "Depois use as 128 iterações do perfil fixo e registre se há diferença."
+    ],
+    "expectedObservation": "Registre se z = z / pixel - pixel * sqr(z) muda o resultado visível ou o teste de parada |z| < 8 em relação à linha de base; a definição não garante diferença."
+  },
+  "exercise": {
+    "prompt": "Rastreie as anotações de rcl_pick10 e explique como z = z / pixel - pixel * sqr(z) é executado nas operações indicadas.",
+    "completionCheck": "Sua resposta explica as 3 anotações, identifica z = z / pixel - pixel * sqr(z) e trata |z| < 8 como teste de parada, não como atribuição.",
+    "hint": "O fluxo de estado executa z = pixel → z = z / pixel - pixel * sqr(z) em sequência, fornecendo o resultado à etapa seguinte."
+  },
+  "factsPresentation": {
+    "provenanceLead": "Fonte: definição de execução fixada e decisão de publicação.",
+    "rightsLead": "As informações de direitos seguem a decisão fixada na unidade em inglês."
+  },
+  "contentHash": "496ab7ef9364a3e685929352c6a188fc5cefd9d43119abbc5a1764f445ddf143"
+}

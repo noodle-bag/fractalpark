@@ -1,0 +1,87 @@
+{
+  "schema": "fractalpark-teaching-en-fact/v1",
+  "formulaId": "e2456b54-ef50-5ac9-9faa-dcb576c5e774",
+  "sourceRevision": "25f923b51ea1e36408f9c48e008187e67a946fc58ef634f93bf0cba216f622aa",
+  "semanticHash": "3d14554a8a35c0e2ee8fc80436926dd493babd846a9d5294bc6b58ad7580c62f",
+  "overview": "phoenix is taught from its pinned FRM-like/1 definition. Follow the initial previousZ memory, its phoenixP contribution, and the later memory shift as source operations, rather than treating an image as guaranteed. The pinned mechanical profile supplies one concrete viewing setup, not a universal visual prediction.",
+  "mathDisclosure": "exact-structured",
+  "mathSummary": "The loop calculates nextZ = z * z + c + phoenixP * previousZ, then shifts the old z into previousZ and assigns z = nextZ.",
+  "sourceWalkthrough": [
+    {
+      "annotationId": "e2456b54-ef50-5ac9-9faa-dcb576c5e774:25f923b51ea1e36408f9c48e008187e67a946fc58ef634f93bf0cba216f622aa:start-branch",
+      "nodeId": "frm-v1:25f923b51ea1e36408f9c48e008187e67a946fc58ef634f93bf0cba216f622aa:init/0",
+      "explanation": "In phoenix, this node executes if ismand: z = 0; otherwise z = pixel."
+    },
+    {
+      "annotationId": "e2456b54-ef50-5ac9-9faa-dcb576c5e774:25f923b51ea1e36408f9c48e008187e67a946fc58ef634f93bf0cba216f622aa:memory-init",
+      "nodeId": "frm-v1:25f923b51ea1e36408f9c48e008187e67a946fc58ef634f93bf0cba216f622aa:init/1",
+      "explanation": "In phoenix, this node executes previousZ = (0, 0)."
+    },
+    {
+      "annotationId": "e2456b54-ef50-5ac9-9faa-dcb576c5e774:25f923b51ea1e36408f9c48e008187e67a946fc58ef634f93bf0cba216f622aa:next-state",
+      "nodeId": "frm-v1:25f923b51ea1e36408f9c48e008187e67a946fc58ef634f93bf0cba216f622aa:loop/0",
+      "explanation": "In phoenix, this node executes nextZ = z * z + c + phoenixP * previousZ."
+    },
+    {
+      "annotationId": "e2456b54-ef50-5ac9-9faa-dcb576c5e774:25f923b51ea1e36408f9c48e008187e67a946fc58ef634f93bf0cba216f622aa:termination",
+      "nodeId": "frm-v1:25f923b51ea1e36408f9c48e008187e67a946fc58ef634f93bf0cba216f622aa:bailout",
+      "explanation": "In phoenix, this node executes |z| <= 256."
+    }
+  ],
+  "syntaxFeatures": [
+    {
+      "featureId": "state-flow",
+      "annotationIds": [
+        "e2456b54-ef50-5ac9-9faa-dcb576c5e774:25f923b51ea1e36408f9c48e008187e67a946fc58ef634f93bf0cba216f622aa:start-branch",
+        "e2456b54-ef50-5ac9-9faa-dcb576c5e774:25f923b51ea1e36408f9c48e008187e67a946fc58ef634f93bf0cba216f622aa:memory-init",
+        "e2456b54-ef50-5ac9-9faa-dcb576c5e774:25f923b51ea1e36408f9c48e008187e67a946fc58ef634f93bf0cba216f622aa:next-state"
+      ],
+      "explanation": "These annotations trace the formula-specific state flow through if ismand: z = 0; otherwise z = pixel; previousZ = (0, 0); nextZ = z * z + c + phoenixP * previousZ."
+    },
+    {
+      "featureId": "stopping-test",
+      "annotationIds": [
+        "e2456b54-ef50-5ac9-9faa-dcb576c5e774:25f923b51ea1e36408f9c48e008187e67a946fc58ef634f93bf0cba216f622aa:termination"
+      ],
+      "explanation": "This annotation is the stopping test, |z| <= 256, rather than a state update."
+    }
+  ],
+  "parameterExperiment": {
+    "parameterSymbols": [
+      "phoenixP"
+    ],
+    "steps": [
+      "Run phoenix with the pinned profile and record the result.",
+      "Change only phoenixP, keep every other runtime slot and profile control fixed, run again, and record whether a difference occurs."
+    ],
+    "expectedObservation": "Record whether nextZ = z * z + c + phoenixP * previousZ; previousZ = z; z = nextZ produces a visible-result or |z| <= 256 stopping-behavior difference from the baseline; the pinned definition does not guarantee a difference."
+  },
+  "exercise": {
+    "prompt": "Trace phoenix through its annotations, explaining the source operation nextZ = z * z + c + phoenixP * previousZ; previousZ = z; z = nextZ and the stopping test |z| <= 256.",
+    "completionCheck": "Your trace explains all 4 annotations for phoenix, including nextZ = z * z + c + phoenixP * previousZ; previousZ = z; z = nextZ, and distinguishes |z| <= 256 from a state update.",
+    "answerDisclosure": "hint"
+  },
+  "facts": {
+    "provenanceStatement": "This teaching unit is grounded in runtime:25f923b51ea1e36408f9c48e008187e67a946fc58ef634f93bf0cba216f622aa and decision:e2456b54-ef50-5ac9-9faa-dcb576c5e774.",
+    "rightsStatement": "rightsStatus is project-owned; implementationBasis is project-owned; publicationDecision is publish; decisionReason is publish-project-owned-native-recipe. This statement does not make broader claims about any third-party original.",
+    "sourceIds": [
+      "runtime:25f923b51ea1e36408f9c48e008187e67a946fc58ef634f93bf0cba216f622aa",
+      "decision:e2456b54-ef50-5ac9-9faa-dcb576c5e774"
+    ],
+    "licenseIds": [],
+    "claims": [
+      {
+        "text": "The pinned runtime definition supplies the operations described in this unit.",
+        "sourceIds": [
+          "runtime:25f923b51ea1e36408f9c48e008187e67a946fc58ef634f93bf0cba216f622aa"
+        ]
+      },
+      {
+        "text": "The publication decision for this formula is publish.",
+        "sourceIds": [
+          "decision:e2456b54-ef50-5ac9-9faa-dcb576c5e774"
+        ]
+      }
+    ]
+  }
+}

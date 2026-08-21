@@ -1,0 +1,36 @@
+{
+  "schema": "fractalpark-teaching-locale/v1",
+  "formulaId": "2ab193f5-4919-5e5c-a9fb-c1a0e3f5eb02",
+  "locale": "ko",
+  "sourceRevision": "cfef49944d8f9bd8f2ee91b2d4ab4f9b30ad66475a6f783f52bb91a7a36b1617",
+  "semanticHash": "66120f8c30ea579f64ef57e054eb33b08e9c00eeed9c33c9cecc1e6bba600898",
+  "englishContentHash": "01cf3e2d82e2a9fd405ea6049d5131f2dd13253e0195e0783ac932c11993f620",
+  "overview": "burningShip은 고정된 FRM-like/1 정의로 배워요. a = abs(z); power == 2이면 real(a)와 imag(a)로 z를 다시 만든 뒤 z = z + c, 아니면 z = a ^ power + c를 따라가고 이미지를 보장으로 여기지 않아요. 고정 프로필은 하나의 구체적인 관찰 설정만 제공해요.",
+  "sourceWalkthrough": {
+    "2ab193f5-4919-5e5c-a9fb-c1a0e3f5eb02:cfef49944d8f9bd8f2ee91b2d4ab4f9b30ad66475a6f783f52bb91a7a36b1617:start-branch": "burningShip에서 이 노드는 다음 연산을 실행해요: ismand이면 z = 0; 아니면 z = pixel.",
+    "2ab193f5-4919-5e5c-a9fb-c1a0e3f5eb02:cfef49944d8f9bd8f2ee91b2d4ab4f9b30ad66475a6f783f52bb91a7a36b1617:absolute-value": "burningShip에서 이 노드는 다음 연산을 실행해요: a = abs(z).",
+    "2ab193f5-4919-5e5c-a9fb-c1a0e3f5eb02:cfef49944d8f9bd8f2ee91b2d4ab4f9b30ad66475a6f783f52bb91a7a36b1617:power-branch": "burningShip에서 이 노드는 다음 연산을 실행해요: power == 2이면 real(z) = real(a) * real(a) - imag(a) * imag(a), imag(z) = 2 * real(a) * imag(a), 이어서 z = z + c; 아니면 z = a ^ power + c.",
+    "2ab193f5-4919-5e5c-a9fb-c1a0e3f5eb02:cfef49944d8f9bd8f2ee91b2d4ab4f9b30ad66475a6f783f52bb91a7a36b1617:termination": "burningShip에서 이 노드는 다음 연산을 실행해요: |z| <= 256."
+  },
+  "syntaxFeatures": {
+    "state-flow": "구체적인 상태 흐름은 ismand 선택이 z의 초기값을 정하고, abs(z)가 a가 돼요, 이어서 power 분기가 z를 다시 만들어요.",
+    "stopping-test": "종료 검사는 |z| <= 256만 판단하며 상태에 값을 대입하지 않아요."
+  },
+  "parameterExperiment": {
+    "steps": [
+      "고정 프로필에서 burningShip을 실행하고 결과를 기록하세요.",
+      "power만 바꾸고 다른 런타임 슬롯과 프로필 제어는 고정한 뒤 다시 실행하여 차이가 있는지 기록하세요."
+    ],
+    "expectedObservation": "기준 실행과 비교해 a = abs(z); power == 2이면 real(a)와 imag(a)로 z를 다시 만든 뒤 z = z + c, 아니면 z = a ^ power + c가 보이는 결과나 |z| <= 256 종료 검사에 차이를 만드는지 기록하세요. 정의가 차이를 보장하지는 않아요."
+  },
+  "exercise": {
+    "prompt": "burningShip의 주석을 추적하고 표시된 연산에서 a = abs(z); power == 2이면 real(a)와 imag(a)로 z를 다시 만든 뒤 z = z + c, 아니면 z = a ^ power + c가 어떻게 실행되는지 설명하세요.",
+    "completionCheck": "답에는 4개 주석의 설명, a = abs(z); power == 2이면 real(a)와 imag(a)로 z를 다시 만든 뒤 z = z + c, 아니면 z = a ^ power + c의 식별, 그리고 |z| <= 256가 대입이 아닌 종료 검사라는 구분이 있어요.",
+    "hint": "상태 흐름에서는 ismand이면: z = 0; 아니면 z = pixel → a = abs(z) → power == 2이면: a의 성분으로 z를 다시 만들고 c를 더해요; 아니면 z = a ^ power + c 순서로 연산하고 결과를 다음 단계에 넘겨요."
+  },
+  "factsPresentation": {
+    "provenanceLead": "출처: 고정된 실행 정의와 공개 결정이에요.",
+    "rightsLead": "권리 정보는 영어 단원의 고정된 결정을 따라요."
+  },
+  "contentHash": "f909796a8cf8abad7f9ec2d9b4f24e0508246e187227ae3fa969b5c2e3911ef4"
+}

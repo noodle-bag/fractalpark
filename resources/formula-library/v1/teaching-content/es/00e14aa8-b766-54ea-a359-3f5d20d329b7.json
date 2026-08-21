@@ -1,0 +1,35 @@
+{
+  "schema": "fractalpark-teaching-locale/v1",
+  "formulaId": "00e14aa8-b766-54ea-a359-3f5d20d329b7",
+  "locale": "es",
+  "sourceRevision": "e4d2259a5dd3fe7b3af646514a4313e83efcc80e887e04c07b7469bb27a66b90",
+  "semanticHash": "26270fc7b1577aa266c7a0eb23b2664ffcb020cf5a7528ea9be23950ba10a72c",
+  "englishContentHash": "33fdd9a9bed5aeb3d99c36e1707080931f4644906ecd7fca36a3afe1b75a3075",
+  "overview": "mandelbrot se estudia con su definición fijada FRM-like/1: tú sigues if power == 2, z = z * z + c; de otro modo z = z ^ power + c sin tratar una imagen como garantía. El perfil fijado aporta solo una configuración concreta.",
+  "sourceWalkthrough": {
+    "00e14aa8-b766-54ea-a359-3f5d20d329b7:e4d2259a5dd3fe7b3af646514a4313e83efcc80e887e04c07b7469bb27a66b90:start-branch": "En mandelbrot, este nodo ejecuta if ismand: z = 0; de otro modo z = pixel.",
+    "00e14aa8-b766-54ea-a359-3f5d20d329b7:e4d2259a5dd3fe7b3af646514a4313e83efcc80e887e04c07b7469bb27a66b90:power-branch": "En mandelbrot, este nodo ejecuta if power == 2: z = z * z + c; de otro modo z = z ^ power + c.",
+    "00e14aa8-b766-54ea-a359-3f5d20d329b7:e4d2259a5dd3fe7b3af646514a4313e83efcc80e887e04c07b7469bb27a66b90:termination": "En mandelbrot, este nodo ejecuta |z| <= 256."
+  },
+  "syntaxFeatures": {
+    "state-flow": "El flujo de estado concreto es: si ismand es verdadero, z = 0; de lo contrario, z = pixel; después, la rama de power actualiza z.",
+    "stopping-test": "La prueba de parada solo evalúa |z| <= 256; no asigna el estado."
+  },
+  "parameterExperiment": {
+    "steps": [
+      "Ejecuta mandelbrot con el perfil fijado y anota el resultado.",
+      "Cambia solo power, mantén fijas las demás ranuras de ejecución y los controles del perfil, ejecuta otra vez y anota si hay diferencia."
+    ],
+    "expectedObservation": "Anota si if power == 2, z = z * z + c; de otro modo z = z ^ power + c cambia el resultado visible o la prueba de parada |z| <= 256 frente a la línea base; la definición no garantiza una diferencia."
+  },
+  "exercise": {
+    "prompt": "Sigue las anotaciones de mandelbrot y explica cómo se ejecuta if power == 2, z = z * z + c; de otro modo z = z ^ power + c en las operaciones señaladas.",
+    "completionCheck": "Tu respuesta explica las 3 anotaciones, señala if power == 2, z = z * z + c; de otro modo z = z ^ power + c y distingue |z| <= 256 como prueba de parada, no como asignación.",
+    "hint": "El flujo de estado ejecuta if ismand: z = 0; de otro modo z = pixel → if power == 2: z = z * z + c; de otro modo z = z ^ power + c en secuencia y entrega el resultado al paso siguiente."
+  },
+  "factsPresentation": {
+    "provenanceLead": "Fuente: definición de ejecución fijada y decisión de publicación.",
+    "rightsLead": "La información de derechos sigue la decisión fijada en la unidad en inglés."
+  },
+  "contentHash": "f63c0645108b294cb057f7c06452c2ae14e7c1a1390d353744929801570071b0"
+}

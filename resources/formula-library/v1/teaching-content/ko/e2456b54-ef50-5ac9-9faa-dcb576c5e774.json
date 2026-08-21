@@ -1,0 +1,36 @@
+{
+  "schema": "fractalpark-teaching-locale/v1",
+  "formulaId": "e2456b54-ef50-5ac9-9faa-dcb576c5e774",
+  "locale": "ko",
+  "sourceRevision": "25f923b51ea1e36408f9c48e008187e67a946fc58ef634f93bf0cba216f622aa",
+  "semanticHash": "3d14554a8a35c0e2ee8fc80436926dd493babd846a9d5294bc6b58ad7580c62f",
+  "englishContentHash": "e7b4b6dd9db26d332b52d8767c96bf0b310f8354ab721d68a860b4cbcece3848",
+  "overview": "phoenix은 고정된 FRM-like/1 정의로 배워요. nextZ = z * z + c + phoenixP * previousZ; previousZ = z; z = nextZ를 따라가고 이미지를 보장으로 여기지 않아요. 고정 프로필은 하나의 구체적인 관찰 설정만 제공해요.",
+  "sourceWalkthrough": {
+    "e2456b54-ef50-5ac9-9faa-dcb576c5e774:25f923b51ea1e36408f9c48e008187e67a946fc58ef634f93bf0cba216f622aa:start-branch": "phoenix에서 이 노드는 다음 연산을 실행해요: ismand이면 z = 0; 아니면 z = pixel.",
+    "e2456b54-ef50-5ac9-9faa-dcb576c5e774:25f923b51ea1e36408f9c48e008187e67a946fc58ef634f93bf0cba216f622aa:memory-init": "phoenix에서 이 노드는 다음 연산을 실행해요: previousZ = (0, 0).",
+    "e2456b54-ef50-5ac9-9faa-dcb576c5e774:25f923b51ea1e36408f9c48e008187e67a946fc58ef634f93bf0cba216f622aa:next-state": "phoenix에서 이 노드는 다음 연산을 실행해요: nextZ = z * z + c + phoenixP * previousZ.",
+    "e2456b54-ef50-5ac9-9faa-dcb576c5e774:25f923b51ea1e36408f9c48e008187e67a946fc58ef634f93bf0cba216f622aa:termination": "phoenix에서 이 노드는 다음 연산을 실행해요: |z| <= 256."
+  },
+  "syntaxFeatures": {
+    "state-flow": "구체적인 상태 흐름은 ismand 선택이 z의 초기값과 previousZ = (0, 0)을 정하고, 이어서 nextZ가 이전 상태를 전달해요.",
+    "stopping-test": "종료 검사는 |z| <= 256만 판단하며 상태에 값을 대입하지 않아요."
+  },
+  "parameterExperiment": {
+    "steps": [
+      "고정 프로필에서 phoenix을 실행하고 결과를 기록하세요.",
+      "phoenixP만 바꾸고 다른 런타임 슬롯과 프로필 제어는 고정한 뒤 다시 실행하여 차이가 있는지 기록하세요."
+    ],
+    "expectedObservation": "기준 실행과 비교해 nextZ = z * z + c + phoenixP * previousZ; previousZ = z; z = nextZ가 보이는 결과나 |z| <= 256 종료 검사에 차이를 만드는지 기록하세요. 정의가 차이를 보장하지는 않아요."
+  },
+  "exercise": {
+    "prompt": "phoenix의 주석을 추적하고 표시된 연산에서 nextZ = z * z + c + phoenixP * previousZ; previousZ = z; z = nextZ가 어떻게 실행되는지 설명하세요.",
+    "completionCheck": "답에는 4개 주석의 설명, nextZ = z * z + c + phoenixP * previousZ; previousZ = z; z = nextZ의 식별, 그리고 |z| <= 256가 대입이 아닌 종료 검사라는 구분이 있어요.",
+    "hint": "상태 흐름에서는 ismand이면: z = 0; 아니면 z = pixel → previousZ = (0, 0) → nextZ = z * z + c + phoenixP * previousZ → previousZ = z → z = nextZ 순서로 연산하고 결과를 다음 단계에 넘겨요."
+  },
+  "factsPresentation": {
+    "provenanceLead": "출처: 고정된 실행 정의와 공개 결정이에요.",
+    "rightsLead": "권리 정보는 영어 단원의 고정된 결정을 따라요."
+  },
+  "contentHash": "4091791dbcb8a65bd1f201ea6a5790ab06e63b9cbd7f32a095864d7c2c8a9063"
+}

@@ -1,0 +1,85 @@
+{
+  "schema": "fractalpark-teaching-en-fact/v1",
+  "formulaId": "627c38a8-8f4d-548f-a5a6-dd9f215adf60",
+  "sourceRevision": "01058522dac48f2278d74a3e8a06b4c18e6d2589a3ccda69565dad37c325298d",
+  "semanticHash": "96e81ed9a1c4c222c0bf0ce8034a51d3291cde23ee6111f2082649d8854f6f5e",
+  "overview": "perpendicularCeltic is taught from its pinned FRM-like/1 definition. Follow the real-component absolute-value folds before and after squaring p as source operations, rather than treating an image as guaranteed. The pinned mechanical profile supplies one concrete viewing setup, not a universal visual prediction.",
+  "mathDisclosure": "exact-structured",
+  "mathSummary": "The loop makes p from abs(real(z)) and imag(z), squares p into z2, then rebuilds z with abs(real(z2)) as its real part and imag(z2) as its imaginary part before adding c.",
+  "sourceWalkthrough": [
+    {
+      "annotationId": "627c38a8-8f4d-548f-a5a6-dd9f215adf60:01058522dac48f2278d74a3e8a06b4c18e6d2589a3ccda69565dad37c325298d:start-branch",
+      "nodeId": "frm-v1:01058522dac48f2278d74a3e8a06b4c18e6d2589a3ccda69565dad37c325298d:init/0",
+      "explanation": "In perpendicularCeltic, this node executes if ismand: z = 0; otherwise z = pixel."
+    },
+    {
+      "annotationId": "627c38a8-8f4d-548f-a5a6-dd9f215adf60:01058522dac48f2278d74a3e8a06b4c18e6d2589a3ccda69565dad37c325298d:fold-real",
+      "nodeId": "frm-v1:01058522dac48f2278d74a3e8a06b4c18e6d2589a3ccda69565dad37c325298d:loop/1",
+      "explanation": "In perpendicularCeltic, this node executes real(p) = abs(real(z))."
+    },
+    {
+      "annotationId": "627c38a8-8f4d-548f-a5a6-dd9f215adf60:01058522dac48f2278d74a3e8a06b4c18e6d2589a3ccda69565dad37c325298d:fold-result",
+      "nodeId": "frm-v1:01058522dac48f2278d74a3e8a06b4c18e6d2589a3ccda69565dad37c325298d:loop/5",
+      "explanation": "In perpendicularCeltic, this node executes real(z) = abs(real(z2))."
+    },
+    {
+      "annotationId": "627c38a8-8f4d-548f-a5a6-dd9f215adf60:01058522dac48f2278d74a3e8a06b4c18e6d2589a3ccda69565dad37c325298d:termination",
+      "nodeId": "frm-v1:01058522dac48f2278d74a3e8a06b4c18e6d2589a3ccda69565dad37c325298d:bailout",
+      "explanation": "In perpendicularCeltic, this node executes |z| <= 256."
+    }
+  ],
+  "syntaxFeatures": [
+    {
+      "featureId": "state-flow",
+      "annotationIds": [
+        "627c38a8-8f4d-548f-a5a6-dd9f215adf60:01058522dac48f2278d74a3e8a06b4c18e6d2589a3ccda69565dad37c325298d:start-branch",
+        "627c38a8-8f4d-548f-a5a6-dd9f215adf60:01058522dac48f2278d74a3e8a06b4c18e6d2589a3ccda69565dad37c325298d:fold-real",
+        "627c38a8-8f4d-548f-a5a6-dd9f215adf60:01058522dac48f2278d74a3e8a06b4c18e6d2589a3ccda69565dad37c325298d:fold-result"
+      ],
+      "explanation": "These annotations trace the formula-specific state flow through if ismand: z = 0; otherwise z = pixel; real(p) = abs(real(z)); real(z) = abs(real(z2))."
+    },
+    {
+      "featureId": "stopping-test",
+      "annotationIds": [
+        "627c38a8-8f4d-548f-a5a6-dd9f215adf60:01058522dac48f2278d74a3e8a06b4c18e6d2589a3ccda69565dad37c325298d:termination"
+      ],
+      "explanation": "This annotation is the stopping test, |z| <= 256, rather than a state update."
+    }
+  ],
+  "parameterExperiment": {
+    "parameterSymbols": [],
+    "steps": [
+      "Run perpendicularCeltic with 48 iterations while keeping the pinned profile’s other controls fixed, and record the result.",
+      "Run perpendicularCeltic at the pinned profile iteration count of 96, compare the two runs, and record whether a difference occurs."
+    ],
+    "expectedObservation": "Record whether p takes abs(real(z)) and imag(z); z2 = p * p; z is rebuilt with abs(real(z2)) and imag(z2), then z = z + c produces a visible-result or |z| <= 256 stopping-behavior difference from the baseline; the pinned definition does not guarantee a difference."
+  },
+  "exercise": {
+    "prompt": "Trace perpendicularCeltic through its annotations, explaining the source operation p takes abs(real(z)) and imag(z); z2 = p * p; z is rebuilt with abs(real(z2)) and imag(z2), then z = z + c and the stopping test |z| <= 256.",
+    "completionCheck": "Your trace explains all 4 annotations for perpendicularCeltic, including p takes abs(real(z)) and imag(z); z2 = p * p; z is rebuilt with abs(real(z2)) and imag(z2), then z = z + c, and distinguishes |z| <= 256 from a state update.",
+    "answerDisclosure": "hint"
+  },
+  "facts": {
+    "provenanceStatement": "This teaching unit is grounded in runtime:01058522dac48f2278d74a3e8a06b4c18e6d2589a3ccda69565dad37c325298d and decision:627c38a8-8f4d-548f-a5a6-dd9f215adf60.",
+    "rightsStatement": "rightsStatus is project-owned; implementationBasis is project-owned; publicationDecision is publish; decisionReason is publish-project-owned-native-recipe. This statement does not make broader claims about any third-party original.",
+    "sourceIds": [
+      "runtime:01058522dac48f2278d74a3e8a06b4c18e6d2589a3ccda69565dad37c325298d",
+      "decision:627c38a8-8f4d-548f-a5a6-dd9f215adf60"
+    ],
+    "licenseIds": [],
+    "claims": [
+      {
+        "text": "The pinned runtime definition supplies the operations described in this unit.",
+        "sourceIds": [
+          "runtime:01058522dac48f2278d74a3e8a06b4c18e6d2589a3ccda69565dad37c325298d"
+        ]
+      },
+      {
+        "text": "The publication decision for this formula is publish.",
+        "sourceIds": [
+          "decision:627c38a8-8f4d-548f-a5a6-dd9f215adf60"
+        ]
+      }
+    ]
+  }
+}

@@ -1,0 +1,35 @@
+{
+  "schema": "fractalpark-teaching-locale/v1",
+  "formulaId": "07a0afc6-ced5-5765-9314-fdb0ef593cb9",
+  "locale": "ko",
+  "sourceRevision": "dce84ac5a7ee55fff27d70df826af67d386f905ee65cee65f5fa8d418e68ba27",
+  "semanticHash": "7d62c7f378c70b9fbfaeb2381d3c82383ab50a76fe5ea5cbe7fd788b451af907",
+  "englishContentHash": "698d89cd42589a9a021c5645d491bb8981449b2c531a297b45dee1f607c68f56",
+  "overview": "asinhMandelbrot은 고정된 FRM-like/1 정의로 배워요. z = asinh(z) + c를 따라가고 이미지를 보장으로 여기지 않아요. 고정 프로필은 하나의 구체적인 관찰 설정만 제공해요.",
+  "sourceWalkthrough": {
+    "07a0afc6-ced5-5765-9314-fdb0ef593cb9:dce84ac5a7ee55fff27d70df826af67d386f905ee65cee65f5fa8d418e68ba27:start-branch": "asinhMandelbrot에서 이 노드는 다음 연산을 실행해요: ismand이면 z = 0; 아니면 z = pixel.",
+    "07a0afc6-ced5-5765-9314-fdb0ef593cb9:dce84ac5a7ee55fff27d70df826af67d386f905ee65cee65f5fa8d418e68ba27:asinh-update": "asinhMandelbrot에서 이 노드는 다음 연산을 실행해요: z = asinh(z) + c.",
+    "07a0afc6-ced5-5765-9314-fdb0ef593cb9:dce84ac5a7ee55fff27d70df826af67d386f905ee65cee65f5fa8d418e68ba27:termination": "asinhMandelbrot에서 이 노드는 다음 연산을 실행해요: |z| <= 256."
+  },
+  "syntaxFeatures": {
+    "state-flow": "구체적인 상태 흐름은 ismand 선택이 z의 초기값을 정하고 그 뒤 asinh(z) + c가 z를 대체해요.",
+    "stopping-test": "종료 검사는 |z| <= 256만 판단하며 상태에 값을 대입하지 않아요."
+  },
+  "parameterExperiment": {
+    "steps": [
+      "다른 프로필 제어를 고정하고 asinhMandelbrot을 48회 반복으로 실행한 결과를 기록하세요.",
+      "고정 프로필의 96회 반복 실행과 비교하여 차이를 기록하세요."
+    ],
+    "expectedObservation": "기준 실행과 비교해 z = asinh(z) + c가 보이는 결과나 |z| <= 256 종료 검사에 차이를 만드는지 기록하세요. 정의가 차이를 보장하지는 않아요."
+  },
+  "exercise": {
+    "prompt": "asinhMandelbrot의 주석을 추적하고 표시된 연산에서 z = asinh(z) + c가 어떻게 실행되는지 설명하세요.",
+    "completionCheck": "답에는 3개 주석의 설명, z = asinh(z) + c의 식별, 그리고 |z| <= 256가 대입이 아닌 종료 검사라는 구분이 있어요.",
+    "hint": "상태 흐름에서는 ismand이면 z = 0; 아니면 z = pixel → z = asinh(z) + c 순서로 연산하고 결과를 다음 단계에 넘겨요."
+  },
+  "factsPresentation": {
+    "provenanceLead": "출처: 고정된 실행 정의와 공개 결정이에요.",
+    "rightsLead": "권리 정보는 영어 단원의 고정된 결정을 따라요."
+  },
+  "contentHash": "4c9dc937e31616c8f0a5a7c55c74fa945f20c3a1f134945debbc0c9ce5baff4b"
+}

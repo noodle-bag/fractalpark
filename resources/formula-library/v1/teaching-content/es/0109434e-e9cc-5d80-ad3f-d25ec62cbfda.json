@@ -1,0 +1,39 @@
+{
+  "schema": "fractalpark-teaching-locale/v1",
+  "formulaId": "0109434e-e9cc-5d80-ad3f-d25ec62cbfda",
+  "locale": "es",
+  "sourceRevision": "41794347e36147808476dcb16e41d7bdbf24b94327ce2f0bf13fd67a1cf1901f",
+  "semanticHash": "d26f1d44391d40c073dbec81bde9b52fe1fbf4e6235750ea29e9de422955fcd8",
+  "englishContentHash": "c88a2faa701905966d39f5f3d225e0d8243056cfe486cfd081eebb33b3a5a15c",
+  "overview": "jm_18 se estudia con su definición fijada FRM-like/1: tú sigues z = pixel; t = p1 + 4; entonces z = fn1(z) * pixel * fn2(fn3(z) * pixel) sin tratar una imagen como garantía. El perfil fijado aporta solo una configuración concreta.",
+  "sourceWalkthrough": {
+    "0109434e-e9cc-5d80-ad3f-d25ec62cbfda:41794347e36147808476dcb16e41d7bdbf24b94327ce2f0bf13fd67a1cf1901f:initial-state": "En jm_18, este nodo ejecuta z = pixel.",
+    "0109434e-e9cc-5d80-ad3f-d25ec62cbfda:41794347e36147808476dcb16e41d7bdbf24b94327ce2f0bf13fd67a1cf1901f:threshold-init": "En jm_18, este nodo ejecuta t = p1 + 4.",
+    "0109434e-e9cc-5d80-ad3f-d25ec62cbfda:41794347e36147808476dcb16e41d7bdbf24b94327ce2f0bf13fd67a1cf1901f:function-update": "En jm_18, este nodo ejecuta z = fn1(z) * pixel * fn2(fn3(z) * pixel).",
+    "0109434e-e9cc-5d80-ad3f-d25ec62cbfda:41794347e36147808476dcb16e41d7bdbf24b94327ce2f0bf13fd67a1cf1901f:termination": "En jm_18, este nodo ejecuta |z| <= t."
+  },
+  "syntaxFeatures": {
+    "state-flow": "El flujo de estado concreto es: z se inicializa con pixel y t con p1 + 4 antes de la actualización mediante la composición de funciones.",
+    "stopping-test": "La prueba de parada solo evalúa |z| <= t; no asigna el estado."
+  },
+  "parameterExperiment": {
+    "steps": [
+      "Ejecuta jm_18 con el perfil fijado y anota el resultado.",
+      "Cambia solo parameter1, mantén fijas las demás ranuras de ejecución y los controles del perfil, ejecuta otra vez y anota si hay diferencia.",
+      "Cambia solo function1, mantén fijas las demás ranuras de ejecución y los controles del perfil, ejecuta otra vez y anota si hay diferencia.",
+      "Cambia solo function2, mantén fijas las demás ranuras de ejecución y los controles del perfil, ejecuta otra vez y anota si hay diferencia.",
+      "Cambia solo function3, mantén fijas las demás ranuras de ejecución y los controles del perfil, ejecuta otra vez y anota si hay diferencia."
+    ],
+    "expectedObservation": "Anota si z = pixel; t = p1 + 4; entonces z = fn1(z) * pixel * fn2(fn3(z) * pixel) cambia el resultado visible o la prueba de parada |z| <= t frente a la línea base; la definición no garantiza una diferencia."
+  },
+  "exercise": {
+    "prompt": "Sigue las anotaciones de jm_18 y explica cómo se ejecuta z = pixel; t = p1 + 4; entonces z = fn1(z) * pixel * fn2(fn3(z) * pixel) en las operaciones señaladas.",
+    "completionCheck": "Tu respuesta explica las 4 anotaciones, señala z = pixel; t = p1 + 4; entonces z = fn1(z) * pixel * fn2(fn3(z) * pixel) y distingue |z| <= t como prueba de parada, no como asignación.",
+    "hint": "El flujo de estado ejecuta z = pixel → t = p1 + 4 → z = fn1(z) * pixel * fn2(fn3(z) * pixel) en secuencia y entrega el resultado al paso siguiente."
+  },
+  "factsPresentation": {
+    "provenanceLead": "Fuente: definición de ejecución fijada y decisión de publicación.",
+    "rightsLead": "La información de derechos sigue la decisión fijada en la unidad en inglés."
+  },
+  "contentHash": "2594bcd3d521f7333208718bd00e63562d35eebdff88b401df557c1b5ba83fc3"
+}

@@ -1,0 +1,36 @@
+{
+  "schema": "fractalpark-teaching-locale/v1",
+  "formulaId": "dd052c9f-868f-5516-9af0-3f4e78ac7a13",
+  "locale": "zh",
+  "sourceRevision": "5e3522c53ca358df8d61d5a3b82aa0b90ff8009602b1952fb5022027f00fdd45",
+  "semanticHash": "d5933023730b2ec1a6c5c5cf8762478436fa9ccdf19311da910493d169bed0dd",
+  "englishContentHash": "0de1ccb97e10d1cd8d728f52e0247588fd9f5aac85560823c91225f73ea44e05",
+  "overview": "newton3 按固定的 FRM-like/1 定义学习：请追踪 z2 = z * z; z3 = z2 * z; numerator = 2 * z3 + 1; denominator = 3 * z2; z = numerator / denominator，而不要把图像当作保证。固定配置只提供一个具体观察设置。",
+  "sourceWalkthrough": {
+    "dd052c9f-868f-5516-9af0-3f4e78ac7a13:5e3522c53ca358df8d61d5a3b82aa0b90ff8009602b1952fb5022027f00fdd45:initial-state": "在 newton3，此节点执行 z = pixel。",
+    "dd052c9f-868f-5516-9af0-3f4e78ac7a13:5e3522c53ca358df8d61d5a3b82aa0b90ff8009602b1952fb5022027f00fdd45:square": "在 newton3，此节点执行 z2 = z * z。",
+    "dd052c9f-868f-5516-9af0-3f4e78ac7a13:5e3522c53ca358df8d61d5a3b82aa0b90ff8009602b1952fb5022027f00fdd45:quotient-update": "在 newton3，此节点执行 z = numerator / denominator。",
+    "dd052c9f-868f-5516-9af0-3f4e78ac7a13:5e3522c53ca358df8d61d5a3b82aa0b90ff8009602b1952fb5022027f00fdd45:termination": "在 newton3，此节点执行 |z - zPrev| >= 0.000001。"
+  },
+  "syntaxFeatures": {
+    "state-flow": "状态流具体为：z 以 pixel 为初值, 随后 z2 和 z3 用于构成 numerator / denominator。",
+    "stopping-test": "停止测试只判断 |z - zPrev| >= 0.000001，不会给状态变量赋值。"
+  },
+  "parameterExperiment": {
+    "steps": [
+      "在其余 配置 控制固定时，以 48 次迭代运行 newton3。",
+      "再以固定配置 的 96 次迭代运行并记录是否有差异。"
+    ],
+    "expectedObservation": "记录 z2 = z * z; z3 = z2 * z; numerator = 2 * z3 + 1; denominator = 3 * z2; z = numerator / denominator 相比基线是否改变可见结果或 |z - zPrev| >= 0.000001 的停止判断；源定义不保证差异。"
+  },
+  "exercise": {
+    "prompt": "追踪 newton3 的标注，并说明 z2 = z * z; z3 = z2 * z; numerator = 2 * z3 + 1; denominator = 3 * z2; z = numerator / denominator 在每个相关操作中如何执行。",
+    "completionCheck": "答案准确解释全部 4 个标注，指出 z2 = z * z; z3 = z2 * z; numerator = 2 * z3 + 1; denominator = 3 * z2; z = numerator / denominator，并将 |z - zPrev| >= 0.000001 识别为停止测试而非状态赋值。",
+    "hint": "状态流按顺序执行 z = pixel → z2 = z * z → z3 = z2 * z → numerator = 2 * z3 + 1 → denominator = 3 * z2 → z = numerator / denominator，其结果供下一步使用。"
+  },
+  "factsPresentation": {
+    "provenanceLead": "来源：固定的运行时定义与发布决定。",
+    "rightsLead": "权利信息见英文事实单元的固定决定。"
+  },
+  "contentHash": "9eb381897932cf17e72cdd0ccc48e022e0704ae11f7bf65fb48acf1a75a1fffa"
+}
