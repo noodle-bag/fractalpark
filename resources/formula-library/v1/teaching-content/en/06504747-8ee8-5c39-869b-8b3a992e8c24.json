@@ -1,0 +1,83 @@
+{
+  "schema": "fractalpark-teaching-en-fact/v1",
+  "formulaId": "06504747-8ee8-5c39-869b-8b3a992e8c24",
+  "sourceRevision": "9550f75ecdb596526b8a5c980361843f70210a5bb6c19a90746736acb8f8faac",
+  "semanticHash": "8523153026068da89b9bcb85c15f28c87a878c2fd5a8c2fd113b28ddd7bf69a7",
+  "overview": "flyc’s FRM-like/1 source initializes z from seed. Each loop records coordinate = real(z), then replaces z with firstTransform(z) + pixel and again with secondTransform(z) - pixel. The bailout uses the dynamic threshold real(limit): |z| <= real(limit).",
+  "mathDisclosure": "exact-structured",
+  "mathSummary": "init: z = seed. loop: coordinate = real(z); z = firstTransform(z) + pixel; z = secondTransform(z) - pixel. bailout: |z| <= real(limit).",
+  "sourceWalkthrough": [
+    {
+      "annotationId": "06504747-8ee8-5c39-869b-8b3a992e8c24:9550f75ecdb596526b8a5c980361843f70210a5bb6c19a90746736acb8f8faac:coordinate",
+      "nodeId": "frm-v1:9550f75ecdb596526b8a5c980361843f70210a5bb6c19a90746736acb8f8faac:loop/0",
+      "explanation": "This assignment stores coordinate = real(z); no later source assignment reads coordinate."
+    },
+    {
+      "annotationId": "06504747-8ee8-5c39-869b-8b3a992e8c24:9550f75ecdb596526b8a5c980361843f70210a5bb6c19a90746736acb8f8faac:first-transform",
+      "nodeId": "frm-v1:9550f75ecdb596526b8a5c980361843f70210a5bb6c19a90746736acb8f8faac:loop/1",
+      "explanation": "This loop assignment sets z = firstTransform(z) + pixel."
+    },
+    {
+      "annotationId": "06504747-8ee8-5c39-869b-8b3a992e8c24:9550f75ecdb596526b8a5c980361843f70210a5bb6c19a90746736acb8f8faac:second-transform",
+      "nodeId": "frm-v1:9550f75ecdb596526b8a5c980361843f70210a5bb6c19a90746736acb8f8faac:loop/2",
+      "explanation": "This next assignment uses that updated z and sets z = secondTransform(z) - pixel."
+    },
+    {
+      "annotationId": "06504747-8ee8-5c39-869b-8b3a992e8c24:9550f75ecdb596526b8a5c980361843f70210a5bb6c19a90746736acb8f8faac:bailout",
+      "nodeId": "frm-v1:9550f75ecdb596526b8a5c980361843f70210a5bb6c19a90746736acb8f8faac:bailout",
+      "explanation": "The termination comparison uses real(limit) as the bound: |z| <= real(limit)."
+    }
+  ],
+  "syntaxFeatures": [
+    {
+      "featureId": "source-sequence",
+      "annotationIds": [
+        "06504747-8ee8-5c39-869b-8b3a992e8c24:9550f75ecdb596526b8a5c980361843f70210a5bb6c19a90746736acb8f8faac:coordinate",
+        "06504747-8ee8-5c39-869b-8b3a992e8c24:9550f75ecdb596526b8a5c980361843f70210a5bb6c19a90746736acb8f8faac:first-transform",
+        "06504747-8ee8-5c39-869b-8b3a992e8c24:9550f75ecdb596526b8a5c980361843f70210a5bb6c19a90746736acb8f8faac:second-transform",
+        "06504747-8ee8-5c39-869b-8b3a992e8c24:9550f75ecdb596526b8a5c980361843f70210a5bb6c19a90746736acb8f8faac:bailout"
+      ],
+      "explanation": "The coordinate assignment only records real(z); the two transforms run in sequence, and the termination bound is real(limit)."
+    }
+  ],
+  "parameterExperiment": {
+    "parameterSymbols": [
+      "seed",
+      "limit",
+      "firstTransform",
+      "secondTransform"
+    ],
+    "steps": [
+      "Use seed = 0 + 0i, limit = 0 + 0i, firstTransform = identity, and secondTransform = identity at the pinned profile. Keep all controls fixed, change only seed to 1 + 0i and render; restore it, then change only limit to 4 + 0i and render; restore it, then change only firstTransform to sqr and render; restore it, then change only secondTransform to sqr and render."
+    ],
+    "expectedObservation": "For each flyc one-slot trial, record a visible difference or no visible difference; the limit trial changes the bound through real(limit)."
+  },
+  "exercise": {
+    "prompt": "Explain the sequential transforms and real(limit) bailout, then compare the baseline with one one-slot trial.",
+    "completionCheck": "Your response explains all 4 annotated operations, records the requested comparison, and mentions `real(limit)`.",
+    "answerDisclosure": "none"
+  },
+  "facts": {
+    "provenanceStatement": "Pinned runtime revision 9550f75ecdb596526b8a5c980361843f70210a5bb6c19a90746736acb8f8faac and its publication decision ground this unit.",
+    "rightsStatement": "rightsStatus: no-explicit-permission; implementationBasis: separated-independent-rewrite; publicationDecision: publish; decisionReason: publish-cleanroom-independent-rewrite-full-chain-green. This statement makes no broader claim about any third-party original.",
+    "sourceIds": [
+      "runtime:9550f75ecdb596526b8a5c980361843f70210a5bb6c19a90746736acb8f8faac",
+      "decision:06504747-8ee8-5c39-869b-8b3a992e8c24"
+    ],
+    "licenseIds": [],
+    "claims": [
+      {
+        "text": "The pinned definition supplies initialization, loop, and bailout operations for flyc.",
+        "sourceIds": [
+          "runtime:9550f75ecdb596526b8a5c980361843f70210a5bb6c19a90746736acb8f8faac"
+        ]
+      },
+      {
+        "text": "The publication decision is publish for the recorded reason publish-cleanroom-independent-rewrite-full-chain-green.",
+        "sourceIds": [
+          "decision:06504747-8ee8-5c39-869b-8b3a992e8c24"
+        ]
+      }
+    ]
+  }
+}

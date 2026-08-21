@@ -1,0 +1,32 @@
+{
+  "schema": "fractalpark-teaching-locale/v1",
+  "formulaId": "09288426-4968-5e78-9ab0-00607cc290bd",
+  "locale": "ru",
+  "sourceRevision": "dbb90a875ab0a6e56b3210ab8021339e7f9ea19d4bc8f26f82ed22f37ff58ede",
+  "semanticHash": "807ce46c199ce20d11753c94f74ce710ad607335764e9ad485963c840d6a0f5c",
+  "englishContentHash": "cfbfffe90d61a29cb658da556e8f6b15b001f97965bd91a7bde807bfabe3361c",
+  "overview": "Этот раздел основан на следующих точных операциях FRM-like/1:  `init: z = seed. loop: z = cosxx(sqr(z) + pixel) + pixel. bailout: |z| <= 4.`",
+  "sourceWalkthrough": {
+    "09288426-4968-5e78-9ab0-00607cc290bd:dbb90a875ab0a6e56b3210ab8021339e7f9ea19d4bc8f26f82ed22f37ff58ede:init-seed": "Эта аннотация выполняет `z = seed`.",
+    "09288426-4968-5e78-9ab0-00607cc290bd:dbb90a875ab0a6e56b3210ab8021339e7f9ea19d4bc8f26f82ed22f37ff58ede:cosxx-update": "Эта аннотация выполняет `z = cosxx(sqr(z) + pixel) + pixel`.",
+    "09288426-4968-5e78-9ab0-00607cc290bd:dbb90a875ab0a6e56b3210ab8021339e7f9ea19d4bc8f26f82ed22f37ff58ede:bailout": "Эта аннотация выполняет `|z| <= 4`. Она завершает последовательность итераций этой формулы."
+  },
+  "syntaxFeatures": {
+    "source-sequence": "Этот признак последовательности связывает в порядке исходного кода процитированные операции, относящиеся к `cosxx(sqr(z) + pixel)`."
+  },
+  "parameterExperiment": {
+    "steps": [
+      "С закреплённым профилем сначала отрисуйте базовый результат при `seed = 0 + 0i`. Сохраняйте центр, масштаб, поворот, число итераций и остальные слоты; за один запуск меняйте только одно: `seed = 1 + 0i`. Перед новым испытанием восстанавливайте базовые значения."
+    ],
+    "expectedObservation": "В испытаниях birdofprey с `seed`, `cosxx` отметьте, есть ли видимое отличие от базового результата; отсутствие отличия также зафиксируйте."
+  },
+  "exercise": {
+    "prompt": "Объясните роль `cosxx(sqr(z) + pixel)` в порядке исходного кода и сравните запуски по шагам эксперимента с параметрами.",
+    "completionCheck": "Ваш ответ должен объяснить все 3 аннотированных операций, зафиксировать сравнение эксперимента и упомянуть `cosxx(sqr(z) + pixel)`."
+  },
+  "factsPresentation": {
+    "provenanceLead": "Источник: закреплённая ревизия выполнения и решение о публикации.",
+    "rightsLead": "Сведения о правах приведены в английском фактологическом разделе."
+  },
+  "contentHash": "3a370974725f147dab695a659ce6ebf6e6aeaef067e1b3467ee73fc7780ccc13"
+}

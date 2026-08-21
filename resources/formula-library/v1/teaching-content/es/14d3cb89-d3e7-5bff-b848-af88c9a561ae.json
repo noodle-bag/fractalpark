@@ -1,0 +1,33 @@
+{
+  "schema": "fractalpark-teaching-locale/v1",
+  "formulaId": "14d3cb89-d3e7-5bff-b848-af88c9a561ae",
+  "locale": "es",
+  "sourceRevision": "459d2a30210e9171b03fb5d7480eeeb22db0051d977a6dc000d39886924a66eb",
+  "semanticHash": "2ed2266b921e3c3ac6a495eec3da1ff79cc2dcd492e42d068ee21196337eb60f",
+  "englishContentHash": "3a658953f1970acadb7cc2ac012f462da0d3881b3577ddec29283d52015c16d5",
+  "overview": "Esta unidad se basa para ti en las siguientes operaciones exactas de FRM-like/1:  `init: cclassic = c; x = 1 / pixel; z = x; cclassic = fn1(z). loop: z = (x + cclassic) * (x - cclassic); x = fn2(z). bailout: |z| <= 3.`",
+  "sourceWalkthrough": {
+    "14d3cb89-d3e7-5bff-b848-af88c9a561ae:459d2a30210e9171b03fb5d7480eeeb22db0051d977a6dc000d39886924a66eb:init-transform": "Esta anotación ejecuta `cclassic = fn1(z)`.",
+    "14d3cb89-d3e7-5bff-b848-af88c9a561ae:459d2a30210e9171b03fb5d7480eeeb22db0051d977a6dc000d39886924a66eb:product": "Esta anotación ejecuta `z = (x + cclassic) * (x - cclassic)`.",
+    "14d3cb89-d3e7-5bff-b848-af88c9a561ae:459d2a30210e9171b03fb5d7480eeeb22db0051d977a6dc000d39886924a66eb:x-update": "Esta anotación ejecuta `x = fn2(z)`.",
+    "14d3cb89-d3e7-5bff-b848-af88c9a561ae:459d2a30210e9171b03fb5d7480eeeb22db0051d977a6dc000d39886924a66eb:bailout": "Esta anotación ejecuta `|z| <= 3`. Cierra la secuencia de iteración de esta fórmula."
+  },
+  "syntaxFeatures": {
+    "source-sequence": "Esta característica de secuencia conecta, en el orden del código fuente, las operaciones citadas relacionadas con `(x + cclassic) * (x - cclassic)`."
+  },
+  "parameterExperiment": {
+    "steps": [
+      "Con el perfil fijado, renderiza primero la base con `function1 = identity`, `function2 = identity`. Mantén fijos el centro, el zoom, la rotación, las iteraciones y los demás slots; haz y renderiza un solo cambio cada vez: `function1 = sqr`, `function2 = sqr`. Restaura la base antes de cada prueba nueva."
+    ],
+    "expectedObservation": "En las pruebas de `function1`, `function2` de bali, registra si hay una diferencia visible respecto de la base; registra también cuando no haya diferencia."
+  },
+  "exercise": {
+    "prompt": "Explica el papel de `(x + cclassic) * (x - cclassic)` en el orden del código fuente y compara las ejecuciones según los pasos del experimento de parámetros.",
+    "completionCheck": "Tu respuesta debe explicar las 4 operaciones anotadas, registrar la comparación del experimento y mencionar `(x + cclassic) * (x - cclassic)`."
+  },
+  "factsPresentation": {
+    "provenanceLead": "Fuente: revisión de ejecución fijada y decisión de publicación.",
+    "rightsLead": "La información de derechos está en la unidad factual en inglés."
+  },
+  "contentHash": "0ed9fd1c3d1dae89dfcd74da45ed5b69d4ba4177fb3fde9373e5f72bb84125f0"
+}

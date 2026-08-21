@@ -1,0 +1,33 @@
+{
+  "schema": "fractalpark-teaching-locale/v1",
+  "formulaId": "06504747-8ee8-5c39-869b-8b3a992e8c24",
+  "locale": "zh",
+  "sourceRevision": "9550f75ecdb596526b8a5c980361843f70210a5bb6c19a90746736acb8f8faac",
+  "semanticHash": "8523153026068da89b9bcb85c15f28c87a878c2fd5a8c2fd113b28ddd7bf69a7",
+  "englishContentHash": "d791836700559065de375e97e6fda686abe94513179d4e0e878385896fad4df3",
+  "overview": "本单元依据 FRM-like/1 的下列精确运算： `init: z = seed. loop: coordinate = real(z); z = firstTransform(z) + pixel; z = secondTransform(z) - pixel. bailout: |z| <= real(limit).`",
+  "sourceWalkthrough": {
+    "06504747-8ee8-5c39-869b-8b3a992e8c24:9550f75ecdb596526b8a5c980361843f70210a5bb6c19a90746736acb8f8faac:coordinate": "此标注执行 `coordinate = real(z)`.",
+    "06504747-8ee8-5c39-869b-8b3a992e8c24:9550f75ecdb596526b8a5c980361843f70210a5bb6c19a90746736acb8f8faac:first-transform": "此标注执行 `z = firstTransform(z) + pixel`.",
+    "06504747-8ee8-5c39-869b-8b3a992e8c24:9550f75ecdb596526b8a5c980361843f70210a5bb6c19a90746736acb8f8faac:second-transform": "此标注执行 `z = secondTransform(z) - pixel`.",
+    "06504747-8ee8-5c39-869b-8b3a992e8c24:9550f75ecdb596526b8a5c980361843f70210a5bb6c19a90746736acb8f8faac:bailout": "此标注执行 `|z| <= real(limit)`. 它终结本公式上方所述的迭代序列。"
+  },
+  "syntaxFeatures": {
+    "source-sequence": "该源顺序特征依次串联与 `real(limit)` 相关的已引用操作。"
+  },
+  "parameterExperiment": {
+    "steps": [
+      "在固定配置下先以 `seed = 0 + 0i`, `limit = 0 + 0i`, `firstTransform = identity`, `secondTransform = identity` 渲染基线。保持中心、缩放、旋转、迭代次数和其他槽位不变，每次只做一项变更并渲染：`seed = 1 + 0i`、`limit = 4 + 0i`、`firstTransform = sqr`、`secondTransform = sqr`；每次新试验前恢复基线。"
+    ],
+    "expectedObservation": "针对 flyc 的 `real(limit)`、`firstTransform`、`secondTransform` 试验，记录相对基线是否出现可见差异；没有差异也如实记录。"
+  },
+  "exercise": {
+    "prompt": "说明 `real(limit)` 在源顺序中的作用，并按照参数实验步骤比较各次运行。",
+    "completionCheck": "答案必须说明全部 4 个标注操作，记录实验比较，并提及 `real(limit)`。"
+  },
+  "factsPresentation": {
+    "provenanceLead": "来源：固定运行时修订与发布决定。",
+    "rightsLead": "权利信息见英文事实单元。"
+  },
+  "contentHash": "1e7e466f84804ef8d4dc8e9d00ccbdeb33bc2bab32bb2099bf9d028ec4b1f25a"
+}

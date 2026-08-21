@@ -1,0 +1,33 @@
+{
+  "schema": "fractalpark-teaching-locale/v1",
+  "formulaId": "05a7f40f-5cb6-538e-b376-40df4c543d49",
+  "locale": "zh",
+  "sourceRevision": "0107d6f68a942fd97a649693ec769e74382943bd54cec83f0d6327aec4336e0d",
+  "semanticHash": "b32fa945bfba42330ddf09bed9c93b53b14da83a922c3ced6c44d57c05c47598",
+  "englishContentHash": "17453b2804569eb8ac89795384c824dd64a4d67f3b370e14afaec11e55fb8e1a",
+  "overview": "本单元依据 FRM-like/1 的下列精确运算： `init: z = pixel; state = seed. loop: z = sqr(z) + state; state = state + drift * transform(state). bailout: |z| <= 4.`",
+  "sourceWalkthrough": {
+    "05a7f40f-5cb6-538e-b376-40df4c543d49:0107d6f68a942fd97a649693ec769e74382943bd54cec83f0d6327aec4336e0d:init-state": "此标注执行 `state = seed`.",
+    "05a7f40f-5cb6-538e-b376-40df4c543d49:0107d6f68a942fd97a649693ec769e74382943bd54cec83f0d6327aec4336e0d:z-update": "此标注执行 `z = sqr(z) + state`.",
+    "05a7f40f-5cb6-538e-b376-40df4c543d49:0107d6f68a942fd97a649693ec769e74382943bd54cec83f0d6327aec4336e0d:state-update": "此标注执行 `state = state + drift * transform(state)`.",
+    "05a7f40f-5cb6-538e-b376-40df4c543d49:0107d6f68a942fd97a649693ec769e74382943bd54cec83f0d6327aec4336e0d:bailout": "此标注执行 `|z| <= 4`. 它终结本公式上方所述的迭代序列。"
+  },
+  "syntaxFeatures": {
+    "source-sequence": "该源顺序特征依次串联与 `state` 和 `drift * transform(state)` 相关的已引用操作。"
+  },
+  "parameterExperiment": {
+    "steps": [
+      "在固定配置下先以 `seed = 0 + 0i`, `drift = 0 + 0i`, `transform = identity` 渲染基线。保持中心、缩放、旋转、迭代次数和其他槽位不变，每次只做一项变更并渲染：`seed = 1 + 0i`、`drift = 1 + 0i`、`transform = sqr`；每次新试验前恢复基线。"
+    ],
+    "expectedObservation": "针对 jfnc 的 `seed`、`drift`、`transform` 试验，记录相对基线是否出现可见差异；没有差异也如实记录。"
+  },
+  "exercise": {
+    "prompt": "说明 `state` 和 `drift * transform(state)` 在源顺序中的作用，并按照参数实验步骤比较各次运行。",
+    "completionCheck": "答案必须说明全部 4 个标注操作，记录实验比较，并提及 `state` 和 `drift * transform(state)`。"
+  },
+  "factsPresentation": {
+    "provenanceLead": "来源：固定运行时修订与发布决定。",
+    "rightsLead": "权利信息见英文事实单元。"
+  },
+  "contentHash": "bee9b6b4d1a0d70c8909a3db95777b2589e876329e76d4774abf73ba28aba2ac"
+}

@@ -1,0 +1,33 @@
+{
+  "schema": "fractalpark-teaching-locale/v1",
+  "formulaId": "05a7f40f-5cb6-538e-b376-40df4c543d49",
+  "locale": "pt",
+  "sourceRevision": "0107d6f68a942fd97a649693ec769e74382943bd54cec83f0d6327aec4336e0d",
+  "semanticHash": "b32fa945bfba42330ddf09bed9c93b53b14da83a922c3ced6c44d57c05c47598",
+  "englishContentHash": "17453b2804569eb8ac89795384c824dd64a4d67f3b370e14afaec11e55fb8e1a",
+  "overview": "Esta unidade se baseia nas seguintes operações exatas de FRM-like/1 para você:  `init: z = pixel; state = seed. loop: z = sqr(z) + state; state = state + drift * transform(state). bailout: |z| <= 4.`",
+  "sourceWalkthrough": {
+    "05a7f40f-5cb6-538e-b376-40df4c543d49:0107d6f68a942fd97a649693ec769e74382943bd54cec83f0d6327aec4336e0d:init-state": "Esta anotação executa `state = seed`.",
+    "05a7f40f-5cb6-538e-b376-40df4c543d49:0107d6f68a942fd97a649693ec769e74382943bd54cec83f0d6327aec4336e0d:z-update": "Esta anotação executa `z = sqr(z) + state`.",
+    "05a7f40f-5cb6-538e-b376-40df4c543d49:0107d6f68a942fd97a649693ec769e74382943bd54cec83f0d6327aec4336e0d:state-update": "Esta anotação executa `state = state + drift * transform(state)`.",
+    "05a7f40f-5cb6-538e-b376-40df4c543d49:0107d6f68a942fd97a649693ec769e74382943bd54cec83f0d6327aec4336e0d:bailout": "Esta anotação executa `|z| <= 4`. Ela encerra a sequência de iteração desta fórmula."
+  },
+  "syntaxFeatures": {
+    "source-sequence": "Este recurso de sequência conecta, na ordem do código-fonte, as operações citadas relacionadas a `state` e `drift * transform(state)`."
+  },
+  "parameterExperiment": {
+    "steps": [
+      "No perfil fixado, renderize primeiro a base com `seed = 0 + 0i`, `drift = 0 + 0i`, `transform = identity`. Mantenha centro, zoom, rotação, iterações e os demais slots fixos; faça e renderize apenas uma alteração por vez: `seed = 1 + 0i`, `drift = 1 + 0i`, `transform = sqr`. Restaure a base antes de cada novo teste."
+    ],
+    "expectedObservation": "Nos testes de `seed`, `drift`, `transform` em jfnc, registre se há diferença visível em relação à base; registre também quando não houver diferença."
+  },
+  "exercise": {
+    "prompt": "Explique o papel de `state` e `drift * transform(state)` na ordem do código-fonte e compare as execuções conforme o experimento de parâmetros.",
+    "completionCheck": "Sua resposta deve explicar todas as 4 operações anotadas, registrar a comparação do experimento e mencionar `state` e `drift * transform(state)`."
+  },
+  "factsPresentation": {
+    "provenanceLead": "Fonte: revisão de execução fixada e decisão de publicação.",
+    "rightsLead": "As informações de direitos estão na unidade factual em inglês."
+  },
+  "contentHash": "8263044cb376a2ed7c4196d458cbd0f0c94c3ef0354f06426ba7c9ede885a873"
+}

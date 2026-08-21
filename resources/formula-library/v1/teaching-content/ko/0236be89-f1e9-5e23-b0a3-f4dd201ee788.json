@@ -1,0 +1,33 @@
+{
+  "schema": "fractalpark-teaching-locale/v1",
+  "formulaId": "0236be89-f1e9-5e23-b0a3-f4dd201ee788",
+  "locale": "ko",
+  "sourceRevision": "373c7bfd6f8f05a21f9e9af35ea4c77fa92b6f63e3c3484f760a2ef3c03de052",
+  "semanticHash": "3028bb0a2c595da4c51aaf118c7e24c8c8036b63a5fe8b7271e4c7559243adac",
+  "englishContentHash": "d14be731368737a914ec81ee833488134cb171bd89d869b0a43484e03c32020f",
+  "overview": "이 단원은 FRM-like/1의 다음 정확한 연산을 바탕으로 해요:  `init: z = pixel; anchor = pixel. loop: z = fn1(z) + anchor; z = fn2(z) + anchor. bailout: |z| < 4.`",
+  "sourceWalkthrough": {
+    "0236be89-f1e9-5e23-b0a3-f4dd201ee788:373c7bfd6f8f05a21f9e9af35ea4c77fa92b6f63e3c3484f760a2ef3c03de052:init-anchor": "이 주석은 다음을 실행해요: `anchor = pixel`.",
+    "0236be89-f1e9-5e23-b0a3-f4dd201ee788:373c7bfd6f8f05a21f9e9af35ea4c77fa92b6f63e3c3484f760a2ef3c03de052:first-transform": "이 주석은 다음을 실행해요: `z = fn1(z) + anchor`.",
+    "0236be89-f1e9-5e23-b0a3-f4dd201ee788:373c7bfd6f8f05a21f9e9af35ea4c77fa92b6f63e3c3484f760a2ef3c03de052:second-transform": "이 주석은 다음을 실행해요: `z = fn2(z) + anchor`.",
+    "0236be89-f1e9-5e23-b0a3-f4dd201ee788:373c7bfd6f8f05a21f9e9af35ea4c77fa92b6f63e3c3484f760a2ef3c03de052:bailout": "이 주석은 다음을 실행해요: `|z| < 4`. 이 연산은 이 공식의 반복 순서를 끝내요."
+  },
+  "syntaxFeatures": {
+    "source-sequence": "이 소스 순서 특성은 `fn1(z)` 및 `fn2(z)`와 관련된 인용 연산을 소스 순서대로 연결해요."
+  },
+  "parameterExperiment": {
+    "steps": [
+      "고정 프로필에서 먼저 `first = identity`, `second = identity`로 기준 결과를 렌더링하세요. 중심, 확대, 회전, 반복 횟수와 다른 슬롯을 고정하고 한 번에 하나만 바꿔 렌더링하세요: `first = sqr`, `second = sqr`. 새 시험 전에는 기준값을 복원하세요."
+    ],
+    "expectedObservation": "ifthen-b1의 `first`, `second` 시험에서 기준과 비교해 보이는 차이가 있는지 기록하고, 차이가 없어도 그대로 기록하세요."
+  },
+  "exercise": {
+    "prompt": "`fn1(z)` 및 `fn2(z)`이 소스 순서에서 하는 역할을 설명하고 매개변수 실험 단계에 따라 실행 결과를 비교하세요.",
+    "completionCheck": "답에는 4개의 주석 연산에 대한 설명과 실험 비교 기록이 있어야 하며 `fn1(z)` 및 `fn2(z)`도 언급해야 해요."
+  },
+  "factsPresentation": {
+    "provenanceLead": "출처: 고정된 런타임 수정본과 게시 결정이에요.",
+    "rightsLead": "권리 정보는 영어 사실 단원에 있어요."
+  },
+  "contentHash": "4879c05af4b174c34b31d012e490446382defe9f83660f5a9fb2e91e1c22a7a3"
+}

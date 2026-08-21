@@ -1,0 +1,33 @@
+{
+  "schema": "fractalpark-teaching-locale/v1",
+  "formulaId": "0f49d971-917e-50a5-ae83-20e11fd4854c",
+  "locale": "ru",
+  "sourceRevision": "a9fa9931913aeafac8b527f31cae7b519db79c8d54829ffcea20bcb6fc9dce4d",
+  "semanticHash": "0af8be92998a0e683977cd229a71195010327ae03c66d87a8c5b97871dce6d72",
+  "englishContentHash": "0f849ac8ba8ad41ee8943e5a36d009b53faa78e773f99c8cfa6426c0af8867c5",
+  "overview": "Этот раздел основан на следующих точных операциях FRM-like/1:  `init: if ismand z = 0 else z = pixel endif; previousZ = (0, 0). loop: z2 = z * z; nextZ = z2 + c + phoenixMultiP * previousZ; previousZ = z; z = nextZ. bailout: |z| <= 256.`",
+  "sourceWalkthrough": {
+    "0f49d971-917e-50a5-ae83-20e11fd4854c:a9fa9931913aeafac8b527f31cae7b519db79c8d54829ffcea20bcb6fc9dce4d:init": "Эта аннотация выполняет `if ismand: z = 0; else: z = pixel`.",
+    "0f49d971-917e-50a5-ae83-20e11fd4854c:a9fa9931913aeafac8b527f31cae7b519db79c8d54829ffcea20bcb6fc9dce4d:recurrence": "Эта аннотация выполняет `nextZ = z2 + c + phoenixMultiP * previousZ`.",
+    "0f49d971-917e-50a5-ae83-20e11fd4854c:a9fa9931913aeafac8b527f31cae7b519db79c8d54829ffcea20bcb6fc9dce4d:state-shift": "Эта аннотация выполняет `previousZ = z`.",
+    "0f49d971-917e-50a5-ae83-20e11fd4854c:a9fa9931913aeafac8b527f31cae7b519db79c8d54829ffcea20bcb6fc9dce4d:bailout": "Эта аннотация выполняет `|z| <= 256`. Она завершает последовательность итераций этой формулы."
+  },
+  "syntaxFeatures": {
+    "source-sequence": "Этот признак последовательности связывает в порядке исходного кода процитированные операции, относящиеся к `ismand` и `previousZ`."
+  },
+  "parameterExperiment": {
+    "steps": [
+      "С закреплённым профилем сначала отрисуйте базовый результат при `phoenixMultiP = 0.5`. Сохраняйте центр, масштаб, поворот, число итераций и остальные слоты; за один запуск меняйте только одно: `phoenixMultiP = 0.0`, `phoenixMultiP = 1.0`. Перед новым испытанием восстанавливайте базовые значения."
+    ],
+    "expectedObservation": "В испытаниях phoenixMulti с `phoenixMultiP`, `previousZ` отметьте, есть ли видимое отличие от базового результата; отсутствие отличия также зафиксируйте."
+  },
+  "exercise": {
+    "prompt": "Объясните роль `ismand` и `previousZ` в порядке исходного кода и сравните запуски по шагам эксперимента с параметрами.",
+    "completionCheck": "Ваш ответ должен объяснить все 4 аннотированных операций, зафиксировать сравнение эксперимента и упомянуть `ismand` и `previousZ`."
+  },
+  "factsPresentation": {
+    "provenanceLead": "Источник: закреплённая ревизия выполнения и решение о публикации.",
+    "rightsLead": "Сведения о правах приведены в английском фактологическом разделе."
+  },
+  "contentHash": "74822b835c82e5dc416b1ba64a1a3d3b7d78edbe1c4387b0e7824aa8393335db"
+}

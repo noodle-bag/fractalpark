@@ -1,0 +1,33 @@
+{
+  "schema": "fractalpark-teaching-locale/v1",
+  "formulaId": "58edc237-4978-5aed-8229-028b1d9cbbb9",
+  "locale": "zh",
+  "sourceRevision": "e59afb2646e8e04f36955f7d7798930d0e752b7b0da90c11417283da41eb398a",
+  "semanticHash": "ed9a34c1038bc242b27bc60680e5be6ecdfe84818f3acf5a7a299fa0cfe643fb",
+  "englishContentHash": "e5d1e88e5e038bbf924642857cd0cbaf23aac57f85d3475a166aa88f3960d318",
+  "overview": "本单元依据 FRM-like/1 的下列精确运算： `init: cclassic = c; z = pixel; cclassic = z. loop: z = z * z + cclassic; cclassic = (1 + imag(cclassic)) * real(cclassic) / 2 + z. bailout: |z| <= 4.`",
+  "sourceWalkthrough": {
+    "58edc237-4978-5aed-8229-028b1d9cbbb9:e59afb2646e8e04f36955f7d7798930d0e752b7b0da90c11417283da41eb398a:init-overwrite": "此标注执行 `cclassic = z`.",
+    "58edc237-4978-5aed-8229-028b1d9cbbb9:e59afb2646e8e04f36955f7d7798930d0e752b7b0da90c11417283da41eb398a:z-update": "此标注执行 `z = z * z + cclassic`.",
+    "58edc237-4978-5aed-8229-028b1d9cbbb9:e59afb2646e8e04f36955f7d7798930d0e752b7b0da90c11417283da41eb398a:carrier-update": "此标注执行 `cclassic = (1 + imag(cclassic)) * real(cclassic) / 2 + z`.",
+    "58edc237-4978-5aed-8229-028b1d9cbbb9:e59afb2646e8e04f36955f7d7798930d0e752b7b0da90c11417283da41eb398a:bailout": "此标注执行 `|z| <= 4`. 它终结本公式上方所述的迭代序列。"
+  },
+  "syntaxFeatures": {
+    "source-sequence": "该源顺序特征依次串联与 `cclassic = z`及其后续更新 相关的已引用操作。"
+  },
+  "parameterExperiment": {
+    "steps": [
+      "先渲染 wineglass 的固定96次迭代基线，并跟踪 `cclassic = z`、`cclassic`。再保持中心、缩放、旋转和公式不变，把迭代上限改为48并渲染。"
+    ],
+    "expectedObservation": "针对 wineglass 的 `cclassic = z`、`cclassic` 试验，记录相对基线是否出现可见差异；没有差异也如实记录。"
+  },
+  "exercise": {
+    "prompt": "说明 `cclassic = z`及其后续更新 在源顺序中的作用，并按照参数实验步骤比较各次运行。",
+    "completionCheck": "答案必须说明全部 4 个标注操作，记录实验比较，并提及 `cclassic = z`及其后续更新。"
+  },
+  "factsPresentation": {
+    "provenanceLead": "来源：固定运行时修订与发布决定。",
+    "rightsLead": "权利信息见英文事实单元。"
+  },
+  "contentHash": "dad343913e5cf2b18e9c89dc3ab3785a45bda14e9039d501a611ddc556b8f957"
+}

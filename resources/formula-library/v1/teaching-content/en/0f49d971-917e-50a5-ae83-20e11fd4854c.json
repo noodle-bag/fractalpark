@@ -1,0 +1,80 @@
+{
+  "schema": "fractalpark-teaching-en-fact/v1",
+  "formulaId": "0f49d971-917e-50a5-ae83-20e11fd4854c",
+  "sourceRevision": "a9fa9931913aeafac8b527f31cae7b519db79c8d54829ffcea20bcb6fc9dce4d",
+  "semanticHash": "0af8be92998a0e683977cd229a71195010327ae03c66d87a8c5b97871dce6d72",
+  "overview": "phoenixMulti’s FRM-like/1 source chooses z = 0 when ismand is true and z = pixel otherwise, then keeps previousZ at 0 + 0i. Each iteration squares z, adds c and phoenixMultiP times the previous state, then shifts the two state values. The orbit continues while |z| <= 256.",
+  "mathDisclosure": "exact-structured",
+  "mathSummary": "init: if ismand z = 0 else z = pixel endif; previousZ = (0, 0). loop: z2 = z * z; nextZ = z2 + c + phoenixMultiP * previousZ; previousZ = z; z = nextZ. bailout: |z| <= 256.",
+  "sourceWalkthrough": [
+    {
+      "annotationId": "0f49d971-917e-50a5-ae83-20e11fd4854c:a9fa9931913aeafac8b527f31cae7b519db79c8d54829ffcea20bcb6fc9dce4d:init",
+      "nodeId": "frm-v1:a9fa9931913aeafac8b527f31cae7b519db79c8d54829ffcea20bcb6fc9dce4d:init/0",
+      "explanation": "The ismand branch assigns z = 0 on its true path and z = pixel on its false path."
+    },
+    {
+      "annotationId": "0f49d971-917e-50a5-ae83-20e11fd4854c:a9fa9931913aeafac8b527f31cae7b519db79c8d54829ffcea20bcb6fc9dce4d:recurrence",
+      "nodeId": "frm-v1:a9fa9931913aeafac8b527f31cae7b519db79c8d54829ffcea20bcb6fc9dce4d:loop/1",
+      "explanation": "This assignment sets nextZ = z2 + c + phoenixMultiP * previousZ after z2 has been set to z * z."
+    },
+    {
+      "annotationId": "0f49d971-917e-50a5-ae83-20e11fd4854c:a9fa9931913aeafac8b527f31cae7b519db79c8d54829ffcea20bcb6fc9dce4d:state-shift",
+      "nodeId": "frm-v1:a9fa9931913aeafac8b527f31cae7b519db79c8d54829ffcea20bcb6fc9dce4d:loop/2",
+      "explanation": "This state shift assigns previousZ = z before the following assignment replaces z with nextZ."
+    },
+    {
+      "annotationId": "0f49d971-917e-50a5-ae83-20e11fd4854c:a9fa9931913aeafac8b527f31cae7b519db79c8d54829ffcea20bcb6fc9dce4d:bailout",
+      "nodeId": "frm-v1:a9fa9931913aeafac8b527f31cae7b519db79c8d54829ffcea20bcb6fc9dce4d:bailout",
+      "explanation": "The termination comparison keeps iterating only while |z| <= 256."
+    }
+  ],
+  "syntaxFeatures": [
+    {
+      "featureId": "source-sequence",
+      "annotationIds": [
+        "0f49d971-917e-50a5-ae83-20e11fd4854c:a9fa9931913aeafac8b527f31cae7b519db79c8d54829ffcea20bcb6fc9dce4d:init",
+        "0f49d971-917e-50a5-ae83-20e11fd4854c:a9fa9931913aeafac8b527f31cae7b519db79c8d54829ffcea20bcb6fc9dce4d:recurrence",
+        "0f49d971-917e-50a5-ae83-20e11fd4854c:a9fa9931913aeafac8b527f31cae7b519db79c8d54829ffcea20bcb6fc9dce4d:state-shift",
+        "0f49d971-917e-50a5-ae83-20e11fd4854c:a9fa9931913aeafac8b527f31cae7b519db79c8d54829ffcea20bcb6fc9dce4d:bailout"
+      ],
+      "explanation": "The branch establishes the starting z; the recurrence combines the square, c, and retained previousZ before the state shift."
+    }
+  ],
+  "parameterExperiment": {
+    "parameterSymbols": [
+      "phoenixMultiP"
+    ],
+    "steps": [
+      "Use the pinned 96-iteration profile with phoenixMultiP = 0.5 as the baseline. Keeping center, zoom, rotation, and iterations fixed, change only phoenixMultiP to 0.0, render, then restore the baseline and change only phoenixMultiP to 1.0, rendering each trial."
+    ],
+    "expectedObservation": "For the phoenixMultiP trials, record a visible difference or no visible difference from the 0.5 baseline."
+  },
+  "exercise": {
+    "prompt": "Explain how ismand chooses z and how previousZ enters nextZ; compare the 0.5 and 0.0 trials.",
+    "completionCheck": "Your response explains all 4 annotated operations, records the requested comparison, and mentions `ismand` and `previousZ`.",
+    "answerDisclosure": "none"
+  },
+  "facts": {
+    "provenanceStatement": "Pinned runtime revision a9fa9931913aeafac8b527f31cae7b519db79c8d54829ffcea20bcb6fc9dce4d and its publication decision ground this unit.",
+    "rightsStatement": "rightsStatus: project-owned; implementationBasis: project-owned; publicationDecision: publish; decisionReason: publish-project-owned-native-recipe. This statement makes no broader claim about any third-party original.",
+    "sourceIds": [
+      "runtime:a9fa9931913aeafac8b527f31cae7b519db79c8d54829ffcea20bcb6fc9dce4d",
+      "decision:0f49d971-917e-50a5-ae83-20e11fd4854c"
+    ],
+    "licenseIds": [],
+    "claims": [
+      {
+        "text": "The pinned definition supplies initialization, loop, and bailout operations for phoenixMulti.",
+        "sourceIds": [
+          "runtime:a9fa9931913aeafac8b527f31cae7b519db79c8d54829ffcea20bcb6fc9dce4d"
+        ]
+      },
+      {
+        "text": "The publication decision is publish for the recorded reason publish-project-owned-native-recipe.",
+        "sourceIds": [
+          "decision:0f49d971-917e-50a5-ae83-20e11fd4854c"
+        ]
+      }
+    ]
+  }
+}

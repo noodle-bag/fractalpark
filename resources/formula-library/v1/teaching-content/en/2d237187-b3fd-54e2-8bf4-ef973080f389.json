@@ -1,0 +1,80 @@
+{
+  "schema": "fractalpark-teaching-en-fact/v1",
+  "formulaId": "2d237187-b3fd-54e2-8bf4-ef973080f389",
+  "sourceRevision": "a77dc97ca3eff72c3edb9516440760af7d5fdc967d84a7f08bdace726898d79e",
+  "semanticHash": "ce72da6bf2224d3a7cd796098acb1a1efa8c0b14caeb56d0376f33539b9ff6ee",
+  "overview": "quadrants’ FRM-like/1 source starts z at 0 and carrier at pixel. The loop squares z plus carrier, derives horizontal and vertical from its real and imaginary parts, and uses sign branches to choose a rotation before updating carrier with rotation * offset / z. The bailout is |z| <= 4.",
+  "mathDisclosure": "exact-structured",
+  "mathSummary": "init: z = 0; carrier = pixel. loop: z = z * z + carrier; horizontal = real(z); vertical = imag(z); rotation = (0, 0); sign branches set rotation; carrier = carrier + rotation * offset / z. bailout: |z| <= 4.",
+  "sourceWalkthrough": [
+    {
+      "annotationId": "2d237187-b3fd-54e2-8bf4-ef973080f389:a77dc97ca3eff72c3edb9516440760af7d5fdc967d84a7f08bdace726898d79e:positive-branches",
+      "nodeId": "frm-v1:a77dc97ca3eff72c3edb9516440760af7d5fdc967d84a7f08bdace726898d79e:loop/4",
+      "explanation": "With horizontal > 0, this branch sets rotation to (0, 1) only when vertical > 0 and to (1, 0) only when vertical < 0; zero components leave rotation at (0, 0)."
+    },
+    {
+      "annotationId": "2d237187-b3fd-54e2-8bf4-ef973080f389:a77dc97ca3eff72c3edb9516440760af7d5fdc967d84a7f08bdace726898d79e:negative-branches",
+      "nodeId": "frm-v1:a77dc97ca3eff72c3edb9516440760af7d5fdc967d84a7f08bdace726898d79e:loop/5",
+      "explanation": "With horizontal < 0, this branch sets rotation to (-1, 0) only when vertical > 0 and to (0, -1) only when vertical < 0; zero components leave rotation at (0, 0)."
+    },
+    {
+      "annotationId": "2d237187-b3fd-54e2-8bf4-ef973080f389:a77dc97ca3eff72c3edb9516440760af7d5fdc967d84a7f08bdace726898d79e:carrier-update",
+      "nodeId": "frm-v1:a77dc97ca3eff72c3edb9516440760af7d5fdc967d84a7f08bdace726898d79e:loop/6",
+      "explanation": "This assignment updates carrier = carrier + rotation * offset / z using the rotation selected by the sign branches."
+    },
+    {
+      "annotationId": "2d237187-b3fd-54e2-8bf4-ef973080f389:a77dc97ca3eff72c3edb9516440760af7d5fdc967d84a7f08bdace726898d79e:bailout",
+      "nodeId": "frm-v1:a77dc97ca3eff72c3edb9516440760af7d5fdc967d84a7f08bdace726898d79e:bailout",
+      "explanation": "The source keeps iterating only while |z| <= 4."
+    }
+  ],
+  "syntaxFeatures": [
+    {
+      "featureId": "source-sequence",
+      "annotationIds": [
+        "2d237187-b3fd-54e2-8bf4-ef973080f389:a77dc97ca3eff72c3edb9516440760af7d5fdc967d84a7f08bdace726898d79e:positive-branches",
+        "2d237187-b3fd-54e2-8bf4-ef973080f389:a77dc97ca3eff72c3edb9516440760af7d5fdc967d84a7f08bdace726898d79e:negative-branches",
+        "2d237187-b3fd-54e2-8bf4-ef973080f389:a77dc97ca3eff72c3edb9516440760af7d5fdc967d84a7f08bdace726898d79e:carrier-update",
+        "2d237187-b3fd-54e2-8bf4-ef973080f389:a77dc97ca3eff72c3edb9516440760af7d5fdc967d84a7f08bdace726898d79e:bailout"
+      ],
+      "explanation": "The two branches select one of four rotation values from the signs of real(z) and imag(z); the carrier update uses that selection with offset / z."
+    }
+  ],
+  "parameterExperiment": {
+    "parameterSymbols": [
+      "offset"
+    ],
+    "steps": [
+      "Use offset = 0 + 0i at the pinned profile. Keeping center, zoom, rotation, and iterations fixed, change only offset to 1 + 0i and render the trial."
+    ],
+    "expectedObservation": "For the offset trial, record a visible difference or no visible difference, especially in regions reached through different sign branches."
+  },
+  "exercise": {
+    "prompt": "State the four possible rotation values and compare the offset = 0 + 0i and offset = 1 + 0i renders.",
+    "completionCheck": "Your response explains all 4 annotated operations, records the requested comparison, and mentions `rotation * offset / z`.",
+    "answerDisclosure": "none"
+  },
+  "facts": {
+    "provenanceStatement": "Pinned runtime revision a77dc97ca3eff72c3edb9516440760af7d5fdc967d84a7f08bdace726898d79e and its publication decision ground this unit.",
+    "rightsStatement": "rightsStatus: no-explicit-permission; implementationBasis: separated-independent-rewrite; publicationDecision: publish; decisionReason: publish-cleanroom-independent-rewrite-full-chain-green. This statement makes no broader claim about any third-party original.",
+    "sourceIds": [
+      "runtime:a77dc97ca3eff72c3edb9516440760af7d5fdc967d84a7f08bdace726898d79e",
+      "decision:2d237187-b3fd-54e2-8bf4-ef973080f389"
+    ],
+    "licenseIds": [],
+    "claims": [
+      {
+        "text": "The pinned definition supplies initialization, loop, and bailout operations for quadrants.",
+        "sourceIds": [
+          "runtime:a77dc97ca3eff72c3edb9516440760af7d5fdc967d84a7f08bdace726898d79e"
+        ]
+      },
+      {
+        "text": "The publication decision is publish for the recorded reason publish-cleanroom-independent-rewrite-full-chain-green.",
+        "sourceIds": [
+          "decision:2d237187-b3fd-54e2-8bf4-ef973080f389"
+        ]
+      }
+    ]
+  }
+}

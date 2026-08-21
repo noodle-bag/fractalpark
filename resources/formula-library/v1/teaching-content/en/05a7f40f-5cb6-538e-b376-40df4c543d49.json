@@ -1,0 +1,82 @@
+{
+  "schema": "fractalpark-teaching-en-fact/v1",
+  "formulaId": "05a7f40f-5cb6-538e-b376-40df4c543d49",
+  "sourceRevision": "0107d6f68a942fd97a649693ec769e74382943bd54cec83f0d6327aec4336e0d",
+  "semanticHash": "b32fa945bfba42330ddf09bed9c93b53b14da83a922c3ced6c44d57c05c47598",
+  "overview": "jfnc’s FRM-like/1 source starts z from pixel and state from seed. Each loop squares z and adds state, then advances state by drift times transform(state). The orbit remains while |z| <= 4.",
+  "mathDisclosure": "exact-structured",
+  "mathSummary": "init: z = pixel; state = seed. loop: z = sqr(z) + state; state = state + drift * transform(state). bailout: |z| <= 4.",
+  "sourceWalkthrough": [
+    {
+      "annotationId": "05a7f40f-5cb6-538e-b376-40df4c543d49:0107d6f68a942fd97a649693ec769e74382943bd54cec83f0d6327aec4336e0d:init-state",
+      "nodeId": "frm-v1:0107d6f68a942fd97a649693ec769e74382943bd54cec83f0d6327aec4336e0d:init/1",
+      "explanation": "This initialization assignment sets state = seed; z was initialized separately from pixel."
+    },
+    {
+      "annotationId": "05a7f40f-5cb6-538e-b376-40df4c543d49:0107d6f68a942fd97a649693ec769e74382943bd54cec83f0d6327aec4336e0d:z-update",
+      "nodeId": "frm-v1:0107d6f68a942fd97a649693ec769e74382943bd54cec83f0d6327aec4336e0d:loop/0",
+      "explanation": "This loop assignment sets z = sqr(z) + state using the current state."
+    },
+    {
+      "annotationId": "05a7f40f-5cb6-538e-b376-40df4c543d49:0107d6f68a942fd97a649693ec769e74382943bd54cec83f0d6327aec4336e0d:state-update",
+      "nodeId": "frm-v1:0107d6f68a942fd97a649693ec769e74382943bd54cec83f0d6327aec4336e0d:loop/1",
+      "explanation": "This assignment advances state to state + drift * transform(state) after z has been updated."
+    },
+    {
+      "annotationId": "05a7f40f-5cb6-538e-b376-40df4c543d49:0107d6f68a942fd97a649693ec769e74382943bd54cec83f0d6327aec4336e0d:bailout",
+      "nodeId": "frm-v1:0107d6f68a942fd97a649693ec769e74382943bd54cec83f0d6327aec4336e0d:bailout",
+      "explanation": "The bailout comparison accepts the orbit while |z| <= 4."
+    }
+  ],
+  "syntaxFeatures": [
+    {
+      "featureId": "source-sequence",
+      "annotationIds": [
+        "05a7f40f-5cb6-538e-b376-40df4c543d49:0107d6f68a942fd97a649693ec769e74382943bd54cec83f0d6327aec4336e0d:init-state",
+        "05a7f40f-5cb6-538e-b376-40df4c543d49:0107d6f68a942fd97a649693ec769e74382943bd54cec83f0d6327aec4336e0d:z-update",
+        "05a7f40f-5cb6-538e-b376-40df4c543d49:0107d6f68a942fd97a649693ec769e74382943bd54cec83f0d6327aec4336e0d:state-update",
+        "05a7f40f-5cb6-538e-b376-40df4c543d49:0107d6f68a942fd97a649693ec769e74382943bd54cec83f0d6327aec4336e0d:bailout"
+      ],
+      "explanation": "The z update reads the current state, whereas the following assignment changes state through drift and transform."
+    }
+  ],
+  "parameterExperiment": {
+    "parameterSymbols": [
+      "seed",
+      "drift",
+      "transform"
+    ],
+    "steps": [
+      "Use seed = 0 + 0i, drift = 0 + 0i, and transform = identity at the pinned profile. Keeping all controls fixed, change only seed to 1 + 0i and render; restore it, then change only drift to 1 + 0i and render; restore it, then change only transform to sqr and render."
+    ],
+    "expectedObservation": "For each one-slot jfnc trial, record a visible change or no visible change from the baseline."
+  },
+  "exercise": {
+    "prompt": "Explain which assignment updates z and which updates state; compare the baseline with one one-slot trial.",
+    "completionCheck": "Your response explains all 4 annotated operations, records the requested comparison, and mentions `state` and `drift * transform(state)`.",
+    "answerDisclosure": "none"
+  },
+  "facts": {
+    "provenanceStatement": "Pinned runtime revision 0107d6f68a942fd97a649693ec769e74382943bd54cec83f0d6327aec4336e0d and its publication decision ground this unit.",
+    "rightsStatement": "rightsStatus: no-explicit-permission; implementationBasis: separated-independent-rewrite; publicationDecision: publish; decisionReason: publish-cleanroom-independent-rewrite-full-chain-green. This statement makes no broader claim about any third-party original.",
+    "sourceIds": [
+      "runtime:0107d6f68a942fd97a649693ec769e74382943bd54cec83f0d6327aec4336e0d",
+      "decision:05a7f40f-5cb6-538e-b376-40df4c543d49"
+    ],
+    "licenseIds": [],
+    "claims": [
+      {
+        "text": "The pinned definition supplies initialization, loop, and bailout operations for jfnc.",
+        "sourceIds": [
+          "runtime:0107d6f68a942fd97a649693ec769e74382943bd54cec83f0d6327aec4336e0d"
+        ]
+      },
+      {
+        "text": "The publication decision is publish for the recorded reason publish-cleanroom-independent-rewrite-full-chain-green.",
+        "sourceIds": [
+          "decision:05a7f40f-5cb6-538e-b376-40df4c543d49"
+        ]
+      }
+    ]
+  }
+}

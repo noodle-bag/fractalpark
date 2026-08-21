@@ -1,0 +1,81 @@
+{
+  "schema": "fractalpark-teaching-en-fact/v1",
+  "formulaId": "0236be89-f1e9-5e23-b0a3-f4dd201ee788",
+  "sourceRevision": "373c7bfd6f8f05a21f9e9af35ea4c77fa92b6f63e3c3484f760a2ef3c03de052",
+  "semanticHash": "3028bb0a2c595da4c51aaf118c7e24c8c8036b63a5fe8b7271e4c7559243adac",
+  "overview": "ifthen-b1’s FRM-like/1 source initializes both z and anchor from pixel. One iteration applies fn1 to z and adds anchor, then applies fn2 to that new z and adds anchor again. Its strict bailout is |z| < 4.",
+  "mathDisclosure": "exact-structured",
+  "mathSummary": "init: z = pixel; anchor = pixel. loop: z = fn1(z) + anchor; z = fn2(z) + anchor. bailout: |z| < 4.",
+  "sourceWalkthrough": [
+    {
+      "annotationId": "0236be89-f1e9-5e23-b0a3-f4dd201ee788:373c7bfd6f8f05a21f9e9af35ea4c77fa92b6f63e3c3484f760a2ef3c03de052:init-anchor",
+      "nodeId": "frm-v1:373c7bfd6f8f05a21f9e9af35ea4c77fa92b6f63e3c3484f760a2ef3c03de052:init/1",
+      "explanation": "This initialization assignment sets anchor = pixel; z is also initialized from pixel by the preceding assignment."
+    },
+    {
+      "annotationId": "0236be89-f1e9-5e23-b0a3-f4dd201ee788:373c7bfd6f8f05a21f9e9af35ea4c77fa92b6f63e3c3484f760a2ef3c03de052:first-transform",
+      "nodeId": "frm-v1:373c7bfd6f8f05a21f9e9af35ea4c77fa92b6f63e3c3484f760a2ef3c03de052:loop/0",
+      "explanation": "This first loop assignment sets z = fn1(z) + anchor."
+    },
+    {
+      "annotationId": "0236be89-f1e9-5e23-b0a3-f4dd201ee788:373c7bfd6f8f05a21f9e9af35ea4c77fa92b6f63e3c3484f760a2ef3c03de052:second-transform",
+      "nodeId": "frm-v1:373c7bfd6f8f05a21f9e9af35ea4c77fa92b6f63e3c3484f760a2ef3c03de052:loop/1",
+      "explanation": "This second loop assignment takes the already updated z and sets z = fn2(z) + anchor."
+    },
+    {
+      "annotationId": "0236be89-f1e9-5e23-b0a3-f4dd201ee788:373c7bfd6f8f05a21f9e9af35ea4c77fa92b6f63e3c3484f760a2ef3c03de052:bailout",
+      "nodeId": "frm-v1:373c7bfd6f8f05a21f9e9af35ea4c77fa92b6f63e3c3484f760a2ef3c03de052:bailout",
+      "explanation": "The strict termination test allows continuation only when |z| < 4."
+    }
+  ],
+  "syntaxFeatures": [
+    {
+      "featureId": "source-sequence",
+      "annotationIds": [
+        "0236be89-f1e9-5e23-b0a3-f4dd201ee788:373c7bfd6f8f05a21f9e9af35ea4c77fa92b6f63e3c3484f760a2ef3c03de052:init-anchor",
+        "0236be89-f1e9-5e23-b0a3-f4dd201ee788:373c7bfd6f8f05a21f9e9af35ea4c77fa92b6f63e3c3484f760a2ef3c03de052:first-transform",
+        "0236be89-f1e9-5e23-b0a3-f4dd201ee788:373c7bfd6f8f05a21f9e9af35ea4c77fa92b6f63e3c3484f760a2ef3c03de052:second-transform",
+        "0236be89-f1e9-5e23-b0a3-f4dd201ee788:373c7bfd6f8f05a21f9e9af35ea4c77fa92b6f63e3c3484f760a2ef3c03de052:bailout"
+      ],
+      "explanation": "The second transform consumes the z produced by the first transform, with anchor added at both steps."
+    }
+  ],
+  "parameterExperiment": {
+    "parameterSymbols": [
+      "first",
+      "second"
+    ],
+    "steps": [
+      "Use first = identity and second = identity at the pinned profile. Keeping the view and all other settings fixed, change only first to sqr and render; restore it, then change only second to sqr and render."
+    ],
+    "expectedObservation": "For each transform trial, record a visible difference or no visible difference from the identity baseline."
+  },
+  "exercise": {
+    "prompt": "Show why the second transform sees the first transform’s result, then compare one identity-to-sqr trial.",
+    "completionCheck": "Your response explains all 4 annotated operations, records the requested comparison, and mentions `fn1(z)` and `fn2(z)`.",
+    "answerDisclosure": "none"
+  },
+  "facts": {
+    "provenanceStatement": "Pinned runtime revision 373c7bfd6f8f05a21f9e9af35ea4c77fa92b6f63e3c3484f760a2ef3c03de052 and its publication decision ground this unit.",
+    "rightsStatement": "rightsStatus: no-explicit-permission; implementationBasis: separated-independent-rewrite; publicationDecision: publish; decisionReason: publish-cleanroom-independent-rewrite-full-chain-green. This statement makes no broader claim about any third-party original.",
+    "sourceIds": [
+      "runtime:373c7bfd6f8f05a21f9e9af35ea4c77fa92b6f63e3c3484f760a2ef3c03de052",
+      "decision:0236be89-f1e9-5e23-b0a3-f4dd201ee788"
+    ],
+    "licenseIds": [],
+    "claims": [
+      {
+        "text": "The pinned definition supplies initialization, loop, and bailout operations for ifthen-b1.",
+        "sourceIds": [
+          "runtime:373c7bfd6f8f05a21f9e9af35ea4c77fa92b6f63e3c3484f760a2ef3c03de052"
+        ]
+      },
+      {
+        "text": "The publication decision is publish for the recorded reason publish-cleanroom-independent-rewrite-full-chain-green.",
+        "sourceIds": [
+          "decision:0236be89-f1e9-5e23-b0a3-f4dd201ee788"
+        ]
+      }
+    ]
+  }
+}

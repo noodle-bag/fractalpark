@@ -1,0 +1,78 @@
+{
+  "schema": "fractalpark-teaching-en-fact/v1",
+  "formulaId": "58edc237-4978-5aed-8229-028b1d9cbbb9",
+  "sourceRevision": "e59afb2646e8e04f36955f7d7798930d0e752b7b0da90c11417283da41eb398a",
+  "semanticHash": "ed9a34c1038bc242b27bc60680e5be6ecdfe84818f3acf5a7a299fa0cfe643fb",
+  "overview": "wineglass’s FRM-like/1 source sets cclassic to c, starts z at pixel, and then overwrites cclassic with z. In the loop z becomes z * z + cclassic, while cclassic is rebuilt from its real and imaginary parts and the new z. The bailout is |z| <= 4.",
+  "mathDisclosure": "exact-structured",
+  "mathSummary": "init: cclassic = c; z = pixel; cclassic = z. loop: z = z * z + cclassic; cclassic = (1 + imag(cclassic)) * real(cclassic) / 2 + z. bailout: |z| <= 4.",
+  "sourceWalkthrough": [
+    {
+      "annotationId": "58edc237-4978-5aed-8229-028b1d9cbbb9:e59afb2646e8e04f36955f7d7798930d0e752b7b0da90c11417283da41eb398a:init-overwrite",
+      "nodeId": "frm-v1:e59afb2646e8e04f36955f7d7798930d0e752b7b0da90c11417283da41eb398a:init/2",
+      "explanation": "This initialization assignment overwrites the earlier cclassic = c by setting cclassic = z after z has been initialized from pixel."
+    },
+    {
+      "annotationId": "58edc237-4978-5aed-8229-028b1d9cbbb9:e59afb2646e8e04f36955f7d7798930d0e752b7b0da90c11417283da41eb398a:z-update",
+      "nodeId": "frm-v1:e59afb2646e8e04f36955f7d7798930d0e752b7b0da90c11417283da41eb398a:loop/0",
+      "explanation": "This loop assignment sets z = z * z + cclassic using the current state value."
+    },
+    {
+      "annotationId": "58edc237-4978-5aed-8229-028b1d9cbbb9:e59afb2646e8e04f36955f7d7798930d0e752b7b0da90c11417283da41eb398a:carrier-update",
+      "nodeId": "frm-v1:e59afb2646e8e04f36955f7d7798930d0e752b7b0da90c11417283da41eb398a:loop/1",
+      "explanation": "This assignment updates cclassic to (1 + imag(cclassic)) * real(cclassic) / 2 + z after z has changed."
+    },
+    {
+      "annotationId": "58edc237-4978-5aed-8229-028b1d9cbbb9:e59afb2646e8e04f36955f7d7798930d0e752b7b0da90c11417283da41eb398a:bailout",
+      "nodeId": "frm-v1:e59afb2646e8e04f36955f7d7798930d0e752b7b0da90c11417283da41eb398a:bailout",
+      "explanation": "The source continues the orbit only while |z| <= 4."
+    }
+  ],
+  "syntaxFeatures": [
+    {
+      "featureId": "source-sequence",
+      "annotationIds": [
+        "58edc237-4978-5aed-8229-028b1d9cbbb9:e59afb2646e8e04f36955f7d7798930d0e752b7b0da90c11417283da41eb398a:init-overwrite",
+        "58edc237-4978-5aed-8229-028b1d9cbbb9:e59afb2646e8e04f36955f7d7798930d0e752b7b0da90c11417283da41eb398a:z-update",
+        "58edc237-4978-5aed-8229-028b1d9cbbb9:e59afb2646e8e04f36955f7d7798930d0e752b7b0da90c11417283da41eb398a:carrier-update",
+        "58edc237-4978-5aed-8229-028b1d9cbbb9:e59afb2646e8e04f36955f7d7798930d0e752b7b0da90c11417283da41eb398a:bailout"
+      ],
+      "explanation": "The initialization overwrite makes cclassic equal to z, then the two loop assignments update z before rebuilding cclassic."
+    }
+  ],
+  "parameterExperiment": {
+    "parameterSymbols": [],
+    "steps": [
+      "Render the pinned profile at 96 iterations, then render the same fixed view at 48 iterations. Compare the result while tracking that cclassic is updated after z on each iteration."
+    ],
+    "expectedObservation": "For the two iteration caps, record a visible difference or no visible difference in the stateful orbit."
+  },
+  "exercise": {
+    "prompt": "Describe the overwrite of cclassic and its later update, then compare 96 and 48 iterations.",
+    "completionCheck": "Your response explains all 4 annotated operations, records the requested comparison, and mentions `cclassic = z` and its later update.",
+    "answerDisclosure": "none"
+  },
+  "facts": {
+    "provenanceStatement": "Pinned runtime revision e59afb2646e8e04f36955f7d7798930d0e752b7b0da90c11417283da41eb398a and its publication decision ground this unit.",
+    "rightsStatement": "rightsStatus: source-declared-public-domain-assumption; implementationBasis: direct-adaptation; publicationDecision: publish; decisionReason: publish-census-full-chain-green. This statement makes no broader claim about any third-party original.",
+    "sourceIds": [
+      "runtime:e59afb2646e8e04f36955f7d7798930d0e752b7b0da90c11417283da41eb398a",
+      "decision:58edc237-4978-5aed-8229-028b1d9cbbb9"
+    ],
+    "licenseIds": [],
+    "claims": [
+      {
+        "text": "The pinned definition supplies initialization, loop, and bailout operations for wineglass.",
+        "sourceIds": [
+          "runtime:e59afb2646e8e04f36955f7d7798930d0e752b7b0da90c11417283da41eb398a"
+        ]
+      },
+      {
+        "text": "The publication decision is publish for the recorded reason publish-census-full-chain-green.",
+        "sourceIds": [
+          "decision:58edc237-4978-5aed-8229-028b1d9cbbb9"
+        ]
+      }
+    ]
+  }
+}

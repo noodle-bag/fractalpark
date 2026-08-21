@@ -1,0 +1,33 @@
+{
+  "schema": "fractalpark-teaching-locale/v1",
+  "formulaId": "04338d55-9f3d-574a-8fb6-58ec7d530cc5",
+  "locale": "zh",
+  "sourceRevision": "fd21d1feee8546a286c7af891e3a671613d5b55571c0426f07c77c20d409eff6",
+  "semanticHash": "d4d06a88f0945a41992881622664918d3d41170d18777cae7554e4d2fe90f7ed",
+  "englishContentHash": "b25aaf88875f800e6740dd28bf82a8cab8dd089da3cfc2bc634439a7410be649",
+  "overview": "本单元依据 FRM-like/1 的下列精确运算： `init: z = 0; q = pixel. loop: q = flip(q); z = flip(z ^ 2 + q). bailout: |z| <= 4.`",
+  "sourceWalkthrough": {
+    "04338d55-9f3d-574a-8fb6-58ec7d530cc5:fd21d1feee8546a286c7af891e3a671613d5b55571c0426f07c77c20d409eff6:init": "此标注执行 `z = 0`.",
+    "04338d55-9f3d-574a-8fb6-58ec7d530cc5:fd21d1feee8546a286c7af891e3a671613d5b55571c0426f07c77c20d409eff6:flip-q": "此标注执行 `q = flip(q)`.",
+    "04338d55-9f3d-574a-8fb6-58ec7d530cc5:fd21d1feee8546a286c7af891e3a671613d5b55571c0426f07c77c20d409eff6:flip-z": "此标注执行 `z = flip(z ^ 2 + q)`.",
+    "04338d55-9f3d-574a-8fb6-58ec7d530cc5:fd21d1feee8546a286c7af891e3a671613d5b55571c0426f07c77c20d409eff6:bailout": "此标注执行 `|z| <= 4`. 它终结本公式上方所述的迭代序列。"
+  },
+  "syntaxFeatures": {
+    "source-sequence": "该源顺序特征依次串联与 `flip(q)` 和 `flip(z ^ 2 + q)` 相关的已引用操作。"
+  },
+  "parameterExperiment": {
+    "steps": [
+      "先渲染 flip2_man_m 的固定96次迭代基线，并跟踪 `flip(q)`、`flip(z ^ 2 + q)`。再保持中心、缩放、旋转和公式不变，把迭代上限改为48并渲染。"
+    ],
+    "expectedObservation": "针对 flip2_man_m 的 `flip(q)`、`flip(z ^ 2 + q)` 试验，记录相对基线是否出现可见差异；没有差异也如实记录。"
+  },
+  "exercise": {
+    "prompt": "说明 `flip(q)` 和 `flip(z ^ 2 + q)` 在源顺序中的作用，并按照参数实验步骤比较各次运行。",
+    "completionCheck": "答案必须说明全部 4 个标注操作，记录实验比较，并提及 `flip(q)` 和 `flip(z ^ 2 + q)`。"
+  },
+  "factsPresentation": {
+    "provenanceLead": "来源：固定运行时修订与发布决定。",
+    "rightsLead": "权利信息见英文事实单元。"
+  },
+  "contentHash": "3233e3e05861cef0fd44a8850a507371868298257785218137ed83dc5e8d51df"
+}

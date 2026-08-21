@@ -1,0 +1,33 @@
+{
+  "schema": "fractalpark-teaching-locale/v1",
+  "formulaId": "0236be89-f1e9-5e23-b0a3-f4dd201ee788",
+  "locale": "pt",
+  "sourceRevision": "373c7bfd6f8f05a21f9e9af35ea4c77fa92b6f63e3c3484f760a2ef3c03de052",
+  "semanticHash": "3028bb0a2c595da4c51aaf118c7e24c8c8036b63a5fe8b7271e4c7559243adac",
+  "englishContentHash": "d14be731368737a914ec81ee833488134cb171bd89d869b0a43484e03c32020f",
+  "overview": "Esta unidade se baseia nas seguintes operações exatas de FRM-like/1 para você:  `init: z = pixel; anchor = pixel. loop: z = fn1(z) + anchor; z = fn2(z) + anchor. bailout: |z| < 4.`",
+  "sourceWalkthrough": {
+    "0236be89-f1e9-5e23-b0a3-f4dd201ee788:373c7bfd6f8f05a21f9e9af35ea4c77fa92b6f63e3c3484f760a2ef3c03de052:init-anchor": "Esta anotação executa `anchor = pixel`.",
+    "0236be89-f1e9-5e23-b0a3-f4dd201ee788:373c7bfd6f8f05a21f9e9af35ea4c77fa92b6f63e3c3484f760a2ef3c03de052:first-transform": "Esta anotação executa `z = fn1(z) + anchor`.",
+    "0236be89-f1e9-5e23-b0a3-f4dd201ee788:373c7bfd6f8f05a21f9e9af35ea4c77fa92b6f63e3c3484f760a2ef3c03de052:second-transform": "Esta anotação executa `z = fn2(z) + anchor`.",
+    "0236be89-f1e9-5e23-b0a3-f4dd201ee788:373c7bfd6f8f05a21f9e9af35ea4c77fa92b6f63e3c3484f760a2ef3c03de052:bailout": "Esta anotação executa `|z| < 4`. Ela encerra a sequência de iteração desta fórmula."
+  },
+  "syntaxFeatures": {
+    "source-sequence": "Este recurso de sequência conecta, na ordem do código-fonte, as operações citadas relacionadas a `fn1(z)` e `fn2(z)`."
+  },
+  "parameterExperiment": {
+    "steps": [
+      "No perfil fixado, renderize primeiro a base com `first = identity`, `second = identity`. Mantenha centro, zoom, rotação, iterações e os demais slots fixos; faça e renderize apenas uma alteração por vez: `first = sqr`, `second = sqr`. Restaure a base antes de cada novo teste."
+    ],
+    "expectedObservation": "Nos testes de `first`, `second` em ifthen-b1, registre se há diferença visível em relação à base; registre também quando não houver diferença."
+  },
+  "exercise": {
+    "prompt": "Explique o papel de `fn1(z)` e `fn2(z)` na ordem do código-fonte e compare as execuções conforme o experimento de parâmetros.",
+    "completionCheck": "Sua resposta deve explicar todas as 4 operações anotadas, registrar a comparação do experimento e mencionar `fn1(z)` e `fn2(z)`."
+  },
+  "factsPresentation": {
+    "provenanceLead": "Fonte: revisão de execução fixada e decisão de publicação.",
+    "rightsLead": "As informações de direitos estão na unidade factual em inglês."
+  },
+  "contentHash": "559b45e62881a3435a1c9af2d3adde64363e6fecf1d472d17367d3fc40674009"
+}

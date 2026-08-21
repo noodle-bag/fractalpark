@@ -1,0 +1,33 @@
+{
+  "schema": "fractalpark-teaching-locale/v1",
+  "formulaId": "2d237187-b3fd-54e2-8bf4-ef973080f389",
+  "locale": "pt",
+  "sourceRevision": "a77dc97ca3eff72c3edb9516440760af7d5fdc967d84a7f08bdace726898d79e",
+  "semanticHash": "ce72da6bf2224d3a7cd796098acb1a1efa8c0b14caeb56d0376f33539b9ff6ee",
+  "englishContentHash": "95bbf3e3498902ce18ca0c2793ee663de817df11fef948c6147b7cbf92159361",
+  "overview": "Esta unidade se baseia nas seguintes operações exatas de FRM-like/1 para você:  `init: z = 0; carrier = pixel. loop: z = z * z + carrier; horizontal = real(z); vertical = imag(z); rotation = (0, 0); horizontal > 0, vertical > 0: rotation = (0, 1); horizontal > 0, vertical < 0: rotation = (1, 0); horizontal < 0, vertical > 0: rotation = (-1, 0); horizontal < 0, vertical < 0: rotation = (0, -1); carrier = carrier + rotation * offset / z. bailout: |z| <= 4.`",
+  "sourceWalkthrough": {
+    "2d237187-b3fd-54e2-8bf4-ef973080f389:a77dc97ca3eff72c3edb9516440760af7d5fdc967d84a7f08bdace726898d79e:positive-branches": "Com horizontal > 0, o ramo define rotation = (0, 1) somente quando vertical > 0 e rotation = (1, 0) somente quando vertical < 0; componentes nulos mantêm rotation = (0, 0).",
+    "2d237187-b3fd-54e2-8bf4-ef973080f389:a77dc97ca3eff72c3edb9516440760af7d5fdc967d84a7f08bdace726898d79e:negative-branches": "Com horizontal < 0, o ramo define rotation = (-1, 0) somente quando vertical > 0 e rotation = (0, -1) somente quando vertical < 0; componentes nulos mantêm rotation = (0, 0).",
+    "2d237187-b3fd-54e2-8bf4-ef973080f389:a77dc97ca3eff72c3edb9516440760af7d5fdc967d84a7f08bdace726898d79e:carrier-update": "Esta anotação executa `carrier = carrier + rotation * offset / z`.",
+    "2d237187-b3fd-54e2-8bf4-ef973080f389:a77dc97ca3eff72c3edb9516440760af7d5fdc967d84a7f08bdace726898d79e:bailout": "Esta anotação executa `|z| <= 4`. Ela encerra a sequência de iteração desta fórmula."
+  },
+  "syntaxFeatures": {
+    "source-sequence": "Este recurso de sequência conecta, na ordem do código-fonte, as operações citadas relacionadas a `rotation * offset / z`."
+  },
+  "parameterExperiment": {
+    "steps": [
+      "No perfil fixado, renderize primeiro a base com `offset = 0 + 0i`. Mantenha centro, zoom, rotação, iterações e os demais slots fixos; faça e renderize apenas uma alteração por vez: `offset = 1 + 0i`. Restaure a base antes de cada novo teste."
+    ],
+    "expectedObservation": "Nos testes de `offset`, `rotation` em quadrants, registre se há diferença visível em relação à base; registre também quando não houver diferença."
+  },
+  "exercise": {
+    "prompt": "Explique o papel de `rotation * offset / z` na ordem do código-fonte e compare as execuções conforme o experimento de parâmetros.",
+    "completionCheck": "Sua resposta deve explicar todas as 4 operações anotadas, registrar a comparação do experimento e mencionar `rotation * offset / z`."
+  },
+  "factsPresentation": {
+    "provenanceLead": "Fonte: revisão de execução fixada e decisão de publicação.",
+    "rightsLead": "As informações de direitos estão na unidade factual em inglês."
+  },
+  "contentHash": "a2f554e299a796e4b5438afa353782f534b1d49dfab810e285ec57072a861f39"
+}

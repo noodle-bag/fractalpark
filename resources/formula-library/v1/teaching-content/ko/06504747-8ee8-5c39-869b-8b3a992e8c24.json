@@ -1,0 +1,33 @@
+{
+  "schema": "fractalpark-teaching-locale/v1",
+  "formulaId": "06504747-8ee8-5c39-869b-8b3a992e8c24",
+  "locale": "ko",
+  "sourceRevision": "9550f75ecdb596526b8a5c980361843f70210a5bb6c19a90746736acb8f8faac",
+  "semanticHash": "8523153026068da89b9bcb85c15f28c87a878c2fd5a8c2fd113b28ddd7bf69a7",
+  "englishContentHash": "d791836700559065de375e97e6fda686abe94513179d4e0e878385896fad4df3",
+  "overview": "이 단원은 FRM-like/1의 다음 정확한 연산을 바탕으로 해요:  `init: z = seed. loop: coordinate = real(z); z = firstTransform(z) + pixel; z = secondTransform(z) - pixel. bailout: |z| <= real(limit).`",
+  "sourceWalkthrough": {
+    "06504747-8ee8-5c39-869b-8b3a992e8c24:9550f75ecdb596526b8a5c980361843f70210a5bb6c19a90746736acb8f8faac:coordinate": "이 주석은 다음을 실행해요: `coordinate = real(z)`.",
+    "06504747-8ee8-5c39-869b-8b3a992e8c24:9550f75ecdb596526b8a5c980361843f70210a5bb6c19a90746736acb8f8faac:first-transform": "이 주석은 다음을 실행해요: `z = firstTransform(z) + pixel`.",
+    "06504747-8ee8-5c39-869b-8b3a992e8c24:9550f75ecdb596526b8a5c980361843f70210a5bb6c19a90746736acb8f8faac:second-transform": "이 주석은 다음을 실행해요: `z = secondTransform(z) - pixel`.",
+    "06504747-8ee8-5c39-869b-8b3a992e8c24:9550f75ecdb596526b8a5c980361843f70210a5bb6c19a90746736acb8f8faac:bailout": "이 주석은 다음을 실행해요: `|z| <= real(limit)`. 이 연산은 이 공식의 반복 순서를 끝내요."
+  },
+  "syntaxFeatures": {
+    "source-sequence": "이 소스 순서 특성은 `real(limit)`와 관련된 인용 연산을 소스 순서대로 연결해요."
+  },
+  "parameterExperiment": {
+    "steps": [
+      "고정 프로필에서 먼저 `seed = 0 + 0i`, `limit = 0 + 0i`, `firstTransform = identity`, `secondTransform = identity`로 기준 결과를 렌더링하세요. 중심, 확대, 회전, 반복 횟수와 다른 슬롯을 고정하고 한 번에 하나만 바꿔 렌더링하세요: `seed = 1 + 0i`, `limit = 4 + 0i`, `firstTransform = sqr`, `secondTransform = sqr`. 새 시험 전에는 기준값을 복원하세요."
+    ],
+    "expectedObservation": "flyc의 `real(limit)`, `firstTransform`, `secondTransform` 시험에서 기준과 비교해 보이는 차이가 있는지 기록하고, 차이가 없어도 그대로 기록하세요."
+  },
+  "exercise": {
+    "prompt": "`real(limit)`이 소스 순서에서 하는 역할을 설명하고 매개변수 실험 단계에 따라 실행 결과를 비교하세요.",
+    "completionCheck": "답에는 4개의 주석 연산에 대한 설명과 실험 비교 기록이 있어야 하며 `real(limit)`도 언급해야 해요."
+  },
+  "factsPresentation": {
+    "provenanceLead": "출처: 고정된 런타임 수정본과 게시 결정이에요.",
+    "rightsLead": "권리 정보는 영어 사실 단원에 있어요."
+  },
+  "contentHash": "f0cc89e884a95c6094e5df9cd41cc6eb48be97d9882fd2fdcba6be3d60e81bb5"
+}

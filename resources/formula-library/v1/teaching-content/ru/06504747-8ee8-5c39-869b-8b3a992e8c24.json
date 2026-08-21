@@ -1,0 +1,33 @@
+{
+  "schema": "fractalpark-teaching-locale/v1",
+  "formulaId": "06504747-8ee8-5c39-869b-8b3a992e8c24",
+  "locale": "ru",
+  "sourceRevision": "9550f75ecdb596526b8a5c980361843f70210a5bb6c19a90746736acb8f8faac",
+  "semanticHash": "8523153026068da89b9bcb85c15f28c87a878c2fd5a8c2fd113b28ddd7bf69a7",
+  "englishContentHash": "d791836700559065de375e97e6fda686abe94513179d4e0e878385896fad4df3",
+  "overview": "Этот раздел основан на следующих точных операциях FRM-like/1:  `init: z = seed. loop: coordinate = real(z); z = firstTransform(z) + pixel; z = secondTransform(z) - pixel. bailout: |z| <= real(limit).`",
+  "sourceWalkthrough": {
+    "06504747-8ee8-5c39-869b-8b3a992e8c24:9550f75ecdb596526b8a5c980361843f70210a5bb6c19a90746736acb8f8faac:coordinate": "Эта аннотация выполняет `coordinate = real(z)`.",
+    "06504747-8ee8-5c39-869b-8b3a992e8c24:9550f75ecdb596526b8a5c980361843f70210a5bb6c19a90746736acb8f8faac:first-transform": "Эта аннотация выполняет `z = firstTransform(z) + pixel`.",
+    "06504747-8ee8-5c39-869b-8b3a992e8c24:9550f75ecdb596526b8a5c980361843f70210a5bb6c19a90746736acb8f8faac:second-transform": "Эта аннотация выполняет `z = secondTransform(z) - pixel`.",
+    "06504747-8ee8-5c39-869b-8b3a992e8c24:9550f75ecdb596526b8a5c980361843f70210a5bb6c19a90746736acb8f8faac:bailout": "Эта аннотация выполняет `|z| <= real(limit)`. Она завершает последовательность итераций этой формулы."
+  },
+  "syntaxFeatures": {
+    "source-sequence": "Этот признак последовательности связывает в порядке исходного кода процитированные операции, относящиеся к `real(limit)`."
+  },
+  "parameterExperiment": {
+    "steps": [
+      "С закреплённым профилем сначала отрисуйте базовый результат при `seed = 0 + 0i`, `limit = 0 + 0i`, `firstTransform = identity`, `secondTransform = identity`. Сохраняйте центр, масштаб, поворот, число итераций и остальные слоты; за один запуск меняйте только одно: `seed = 1 + 0i`, `limit = 4 + 0i`, `firstTransform = sqr`, `secondTransform = sqr`. Перед новым испытанием восстанавливайте базовые значения."
+    ],
+    "expectedObservation": "В испытаниях flyc с `real(limit)`, `firstTransform`, `secondTransform` отметьте, есть ли видимое отличие от базового результата; отсутствие отличия также зафиксируйте."
+  },
+  "exercise": {
+    "prompt": "Объясните роль `real(limit)` в порядке исходного кода и сравните запуски по шагам эксперимента с параметрами.",
+    "completionCheck": "Ваш ответ должен объяснить все 4 аннотированных операций, зафиксировать сравнение эксперимента и упомянуть `real(limit)`."
+  },
+  "factsPresentation": {
+    "provenanceLead": "Источник: закреплённая ревизия выполнения и решение о публикации.",
+    "rightsLead": "Сведения о правах приведены в английском фактологическом разделе."
+  },
+  "contentHash": "4904220caaab617fff3a73cb5a1759c34a96d93e1cb990d213fd9bf408a5ffeb"
+}

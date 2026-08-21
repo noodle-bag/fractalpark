@@ -1,0 +1,33 @@
+{
+  "schema": "fractalpark-teaching-locale/v1",
+  "formulaId": "05a7f40f-5cb6-538e-b376-40df4c543d49",
+  "locale": "ru",
+  "sourceRevision": "0107d6f68a942fd97a649693ec769e74382943bd54cec83f0d6327aec4336e0d",
+  "semanticHash": "b32fa945bfba42330ddf09bed9c93b53b14da83a922c3ced6c44d57c05c47598",
+  "englishContentHash": "17453b2804569eb8ac89795384c824dd64a4d67f3b370e14afaec11e55fb8e1a",
+  "overview": "Этот раздел основан на следующих точных операциях FRM-like/1:  `init: z = pixel; state = seed. loop: z = sqr(z) + state; state = state + drift * transform(state). bailout: |z| <= 4.`",
+  "sourceWalkthrough": {
+    "05a7f40f-5cb6-538e-b376-40df4c543d49:0107d6f68a942fd97a649693ec769e74382943bd54cec83f0d6327aec4336e0d:init-state": "Эта аннотация выполняет `state = seed`.",
+    "05a7f40f-5cb6-538e-b376-40df4c543d49:0107d6f68a942fd97a649693ec769e74382943bd54cec83f0d6327aec4336e0d:z-update": "Эта аннотация выполняет `z = sqr(z) + state`.",
+    "05a7f40f-5cb6-538e-b376-40df4c543d49:0107d6f68a942fd97a649693ec769e74382943bd54cec83f0d6327aec4336e0d:state-update": "Эта аннотация выполняет `state = state + drift * transform(state)`.",
+    "05a7f40f-5cb6-538e-b376-40df4c543d49:0107d6f68a942fd97a649693ec769e74382943bd54cec83f0d6327aec4336e0d:bailout": "Эта аннотация выполняет `|z| <= 4`. Она завершает последовательность итераций этой формулы."
+  },
+  "syntaxFeatures": {
+    "source-sequence": "Этот признак последовательности связывает в порядке исходного кода процитированные операции, относящиеся к `state` и `drift * transform(state)`."
+  },
+  "parameterExperiment": {
+    "steps": [
+      "С закреплённым профилем сначала отрисуйте базовый результат при `seed = 0 + 0i`, `drift = 0 + 0i`, `transform = identity`. Сохраняйте центр, масштаб, поворот, число итераций и остальные слоты; за один запуск меняйте только одно: `seed = 1 + 0i`, `drift = 1 + 0i`, `transform = sqr`. Перед новым испытанием восстанавливайте базовые значения."
+    ],
+    "expectedObservation": "В испытаниях jfnc с `seed`, `drift`, `transform` отметьте, есть ли видимое отличие от базового результата; отсутствие отличия также зафиксируйте."
+  },
+  "exercise": {
+    "prompt": "Объясните роль `state` и `drift * transform(state)` в порядке исходного кода и сравните запуски по шагам эксперимента с параметрами.",
+    "completionCheck": "Ваш ответ должен объяснить все 4 аннотированных операций, зафиксировать сравнение эксперимента и упомянуть `state` и `drift * transform(state)`."
+  },
+  "factsPresentation": {
+    "provenanceLead": "Источник: закреплённая ревизия выполнения и решение о публикации.",
+    "rightsLead": "Сведения о правах приведены в английском фактологическом разделе."
+  },
+  "contentHash": "2ff302e96ae48611a33ffe6cb7f51e08b83ba280a63c286c46303081dc13ea63"
+}

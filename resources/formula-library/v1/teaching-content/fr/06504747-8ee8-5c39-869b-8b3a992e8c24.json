@@ -1,0 +1,33 @@
+{
+  "schema": "fractalpark-teaching-locale/v1",
+  "formulaId": "06504747-8ee8-5c39-869b-8b3a992e8c24",
+  "locale": "fr",
+  "sourceRevision": "9550f75ecdb596526b8a5c980361843f70210a5bb6c19a90746736acb8f8faac",
+  "semanticHash": "8523153026068da89b9bcb85c15f28c87a878c2fd5a8c2fd113b28ddd7bf69a7",
+  "englishContentHash": "d791836700559065de375e97e6fda686abe94513179d4e0e878385896fad4df3",
+  "overview": "Cette unité repose pour toi sur les opérations exactes suivantes de FRM-like/1 :  `init: z = seed. loop: coordinate = real(z); z = firstTransform(z) + pixel; z = secondTransform(z) - pixel. bailout: |z| <= real(limit).`",
+  "sourceWalkthrough": {
+    "06504747-8ee8-5c39-869b-8b3a992e8c24:9550f75ecdb596526b8a5c980361843f70210a5bb6c19a90746736acb8f8faac:coordinate": "Cette annotation exécute `coordinate = real(z)`.",
+    "06504747-8ee8-5c39-869b-8b3a992e8c24:9550f75ecdb596526b8a5c980361843f70210a5bb6c19a90746736acb8f8faac:first-transform": "Cette annotation exécute `z = firstTransform(z) + pixel`.",
+    "06504747-8ee8-5c39-869b-8b3a992e8c24:9550f75ecdb596526b8a5c980361843f70210a5bb6c19a90746736acb8f8faac:second-transform": "Cette annotation exécute `z = secondTransform(z) - pixel`.",
+    "06504747-8ee8-5c39-869b-8b3a992e8c24:9550f75ecdb596526b8a5c980361843f70210a5bb6c19a90746736acb8f8faac:bailout": "Cette annotation exécute `|z| <= real(limit)`. Elle termine la séquence d’itération de cette formule."
+  },
+  "syntaxFeatures": {
+    "source-sequence": "Cette caractéristique de séquence relie, dans l’ordre du code source, les opérations citées liées à `real(limit)`."
+  },
+  "parameterExperiment": {
+    "steps": [
+      "Avec le profil fixé, effectue d’abord le rendu de référence avec `seed = 0 + 0i`, `limit = 0 + 0i`, `firstTransform = identity`, `secondTransform = identity`. Garde le centre, le zoom, la rotation, les itérations et les autres slots fixes ; ne fais et ne rends qu’une modification à la fois : `seed = 1 + 0i`, `limit = 4 + 0i`, `firstTransform = sqr`, `secondTransform = sqr`. Rétablis la référence avant chaque nouvel essai."
+    ],
+    "expectedObservation": "Dans les essais de flyc portant sur `real(limit)`, `firstTransform`, `secondTransform`, note s’il existe une différence visible par rapport à la référence ; note aussi l’absence de différence."
+  },
+  "exercise": {
+    "prompt": "Explique le rôle de `real(limit)` dans l’ordre du code source et compare les exécutions selon les étapes de l’expérience sur les paramètres.",
+    "completionCheck": "Ta réponse doit expliquer les 4 opérations annotées, noter la comparaison de l’expérience et mentionner `real(limit)`."
+  },
+  "factsPresentation": {
+    "provenanceLead": "Source : révision d’exécution fixée et décision de publication.",
+    "rightsLead": "Les informations de droits figurent dans l’unité factuelle anglaise."
+  },
+  "contentHash": "1696c75459878211dd994db3b2a81e677b73c471af2607e7beb90458577d6548"
+}

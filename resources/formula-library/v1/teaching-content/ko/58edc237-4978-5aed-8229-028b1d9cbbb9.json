@@ -1,0 +1,33 @@
+{
+  "schema": "fractalpark-teaching-locale/v1",
+  "formulaId": "58edc237-4978-5aed-8229-028b1d9cbbb9",
+  "locale": "ko",
+  "sourceRevision": "e59afb2646e8e04f36955f7d7798930d0e752b7b0da90c11417283da41eb398a",
+  "semanticHash": "ed9a34c1038bc242b27bc60680e5be6ecdfe84818f3acf5a7a299fa0cfe643fb",
+  "englishContentHash": "e5d1e88e5e038bbf924642857cd0cbaf23aac57f85d3475a166aa88f3960d318",
+  "overview": "이 단원은 FRM-like/1의 다음 정확한 연산을 바탕으로 해요:  `init: cclassic = c; z = pixel; cclassic = z. loop: z = z * z + cclassic; cclassic = (1 + imag(cclassic)) * real(cclassic) / 2 + z. bailout: |z| <= 4.`",
+  "sourceWalkthrough": {
+    "58edc237-4978-5aed-8229-028b1d9cbbb9:e59afb2646e8e04f36955f7d7798930d0e752b7b0da90c11417283da41eb398a:init-overwrite": "이 주석은 다음을 실행해요: `cclassic = z`.",
+    "58edc237-4978-5aed-8229-028b1d9cbbb9:e59afb2646e8e04f36955f7d7798930d0e752b7b0da90c11417283da41eb398a:z-update": "이 주석은 다음을 실행해요: `z = z * z + cclassic`.",
+    "58edc237-4978-5aed-8229-028b1d9cbbb9:e59afb2646e8e04f36955f7d7798930d0e752b7b0da90c11417283da41eb398a:carrier-update": "이 주석은 다음을 실행해요: `cclassic = (1 + imag(cclassic)) * real(cclassic) / 2 + z`.",
+    "58edc237-4978-5aed-8229-028b1d9cbbb9:e59afb2646e8e04f36955f7d7798930d0e752b7b0da90c11417283da41eb398a:bailout": "이 주석은 다음을 실행해요: `|z| <= 4`. 이 연산은 이 공식의 반복 순서를 끝내요."
+  },
+  "syntaxFeatures": {
+    "source-sequence": "이 소스 순서 특성은 `cclassic = z`및 이후 업데이트와 관련된 인용 연산을 소스 순서대로 연결해요."
+  },
+  "parameterExperiment": {
+    "steps": [
+      "먼저 `cclassic = z`, `cclassic`를 추적하며 wineglass의 고정된 96회 반복 기준을 렌더링하세요. 그런 다음 중심, 확대, 회전과 공식을 고정하고 반복 상한만 48로 바꿔 다시 렌더링하세요."
+    ],
+    "expectedObservation": "wineglass의 `cclassic = z`, `cclassic` 시험에서 기준과 비교해 보이는 차이가 있는지 기록하고, 차이가 없어도 그대로 기록하세요."
+  },
+  "exercise": {
+    "prompt": "`cclassic = z`및 이후 업데이트이 소스 순서에서 하는 역할을 설명하고 매개변수 실험 단계에 따라 실행 결과를 비교하세요.",
+    "completionCheck": "답에는 4개의 주석 연산에 대한 설명과 실험 비교 기록이 있어야 하며 `cclassic = z`및 이후 업데이트도 언급해야 해요."
+  },
+  "factsPresentation": {
+    "provenanceLead": "출처: 고정된 런타임 수정본과 게시 결정이에요.",
+    "rightsLead": "권리 정보는 영어 사실 단원에 있어요."
+  },
+  "contentHash": "0e42ddfdf33e1af380a8a08e2a5cb7a244fb09a61ec05154d8feaeafd8af3395"
+}

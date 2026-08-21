@@ -1,0 +1,6 @@
+{
+  "verdict": "APPROVE",
+  "summary": "All 10 formulas and 7 locale units were reviewed. Technical fidelity is correct: every English explanation, mathSummary, walkthrough, parameter experiment, and expected observation matches the pinned FRM-like/1 source and runtime profile, including correct bailout bounds, state updates, and parameter slots. Rights/provenance tokens are preserved exactly in each English facts object; localized factsPresentation leads are generic and do not contradict rights. Locale fidelity is strong: all six locales use the required registers (pt você, ko 해요체, ru formal вы, es tú, fr tu), protected identifiers and expressions remain exact, and no English fallback sentences appear outside code tokens. Teaching quality is concrete and observable, with no guaranteed visual predictions beyond source semantics. No contract drift or missing keys were found.",
+  "findings": [],
+  "coverageGaps": []
+}

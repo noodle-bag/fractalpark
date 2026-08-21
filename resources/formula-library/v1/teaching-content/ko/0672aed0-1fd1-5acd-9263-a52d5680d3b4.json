@@ -1,0 +1,32 @@
+{
+  "schema": "fractalpark-teaching-locale/v1",
+  "formulaId": "0672aed0-1fd1-5acd-9263-a52d5680d3b4",
+  "locale": "ko",
+  "sourceRevision": "a2e5619bb8e9528ea042184634f69711d1f7522254d8e39d6060310db4663132",
+  "semanticHash": "2f8606ed369648b2fd3327a06ade9f9f82969b5734dbc9bb78bd31cf806526ec",
+  "englishContentHash": "90c1bc0aac9aa466f6f15f310cd1dff0ef6ca19053dc6f80edbc2a07c96c2008",
+  "overview": "이 단원은 FRM-like/1의 다음 정확한 연산을 바탕으로 해요:  `init: z = pixel; f = 1 / cosh(pixel). loop: z = fn1(z) + f. bailout: |z| <= 50.`",
+  "sourceWalkthrough": {
+    "0672aed0-1fd1-5acd-9263-a52d5680d3b4:a2e5619bb8e9528ea042184634f69711d1f7522254d8e39d6060310db4663132:fixed-addend": "이 주석은 다음을 실행해요: `f = 1 / cosh(pixel)`.",
+    "0672aed0-1fd1-5acd-9263-a52d5680d3b4:a2e5619bb8e9528ea042184634f69711d1f7522254d8e39d6060310db4663132:loop-transform": "이 주석은 다음을 실행해요: `z = fn1(z) + f`.",
+    "0672aed0-1fd1-5acd-9263-a52d5680d3b4:a2e5619bb8e9528ea042184634f69711d1f7522254d8e39d6060310db4663132:bailout": "이 주석은 다음을 실행해요: `|z| <= 50`. 이 연산은 이 공식의 반복 순서를 끝내요."
+  },
+  "syntaxFeatures": {
+    "source-sequence": "이 소스 순서 특성은 `1 / cosh(pixel)`와 관련된 인용 연산을 소스 순서대로 연결해요."
+  },
+  "parameterExperiment": {
+    "steps": [
+      "고정 프로필에서 먼저 `function1 = identity`로 기준 결과를 렌더링하세요. 중심, 확대, 회전, 반복 횟수와 다른 슬롯을 고정하고 한 번에 하나만 바꿔 렌더링하세요: `function1 = sqr`. 새 시험 전에는 기준값을 복원하세요."
+    ],
+    "expectedObservation": "fzpfncoh의 `function1`, `1 / cosh(pixel)` 시험에서 기준과 비교해 보이는 차이가 있는지 기록하고, 차이가 없어도 그대로 기록하세요."
+  },
+  "exercise": {
+    "prompt": "`1 / cosh(pixel)`이 소스 순서에서 하는 역할을 설명하고 매개변수 실험 단계에 따라 실행 결과를 비교하세요.",
+    "completionCheck": "답에는 3개의 주석 연산에 대한 설명과 실험 비교 기록이 있어야 하며 `1 / cosh(pixel)`도 언급해야 해요."
+  },
+  "factsPresentation": {
+    "provenanceLead": "출처: 고정된 런타임 수정본과 게시 결정이에요.",
+    "rightsLead": "권리 정보는 영어 사실 단원에 있어요."
+  },
+  "contentHash": "52e9b12b0e357fc0f7bbb106761b0a0f050b8418758b7aead3ffb3530743e58e"
+}

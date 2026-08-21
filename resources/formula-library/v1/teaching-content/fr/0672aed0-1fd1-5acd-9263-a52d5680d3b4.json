@@ -1,0 +1,32 @@
+{
+  "schema": "fractalpark-teaching-locale/v1",
+  "formulaId": "0672aed0-1fd1-5acd-9263-a52d5680d3b4",
+  "locale": "fr",
+  "sourceRevision": "a2e5619bb8e9528ea042184634f69711d1f7522254d8e39d6060310db4663132",
+  "semanticHash": "2f8606ed369648b2fd3327a06ade9f9f82969b5734dbc9bb78bd31cf806526ec",
+  "englishContentHash": "90c1bc0aac9aa466f6f15f310cd1dff0ef6ca19053dc6f80edbc2a07c96c2008",
+  "overview": "Cette unité repose pour toi sur les opérations exactes suivantes de FRM-like/1 :  `init: z = pixel; f = 1 / cosh(pixel). loop: z = fn1(z) + f. bailout: |z| <= 50.`",
+  "sourceWalkthrough": {
+    "0672aed0-1fd1-5acd-9263-a52d5680d3b4:a2e5619bb8e9528ea042184634f69711d1f7522254d8e39d6060310db4663132:fixed-addend": "Cette annotation exécute `f = 1 / cosh(pixel)`.",
+    "0672aed0-1fd1-5acd-9263-a52d5680d3b4:a2e5619bb8e9528ea042184634f69711d1f7522254d8e39d6060310db4663132:loop-transform": "Cette annotation exécute `z = fn1(z) + f`.",
+    "0672aed0-1fd1-5acd-9263-a52d5680d3b4:a2e5619bb8e9528ea042184634f69711d1f7522254d8e39d6060310db4663132:bailout": "Cette annotation exécute `|z| <= 50`. Elle termine la séquence d’itération de cette formule."
+  },
+  "syntaxFeatures": {
+    "source-sequence": "Cette caractéristique de séquence relie, dans l’ordre du code source, les opérations citées liées à `1 / cosh(pixel)`."
+  },
+  "parameterExperiment": {
+    "steps": [
+      "Avec le profil fixé, effectue d’abord le rendu de référence avec `function1 = identity`. Garde le centre, le zoom, la rotation, les itérations et les autres slots fixes ; ne fais et ne rends qu’une modification à la fois : `function1 = sqr`. Rétablis la référence avant chaque nouvel essai."
+    ],
+    "expectedObservation": "Dans les essais de fzpfncoh portant sur `function1`, `1 / cosh(pixel)`, note s’il existe une différence visible par rapport à la référence ; note aussi l’absence de différence."
+  },
+  "exercise": {
+    "prompt": "Explique le rôle de `1 / cosh(pixel)` dans l’ordre du code source et compare les exécutions selon les étapes de l’expérience sur les paramètres.",
+    "completionCheck": "Ta réponse doit expliquer les 3 opérations annotées, noter la comparaison de l’expérience et mentionner `1 / cosh(pixel)`."
+  },
+  "factsPresentation": {
+    "provenanceLead": "Source : révision d’exécution fixée et décision de publication.",
+    "rightsLead": "Les informations de droits figurent dans l’unité factuelle anglaise."
+  },
+  "contentHash": "eac64002394ed753405ab2da5ff819a8c5d3a922de278a279cf4bab7ad12c77d"
+}

@@ -1,0 +1,33 @@
+{
+  "schema": "fractalpark-teaching-locale/v1",
+  "formulaId": "0f49d971-917e-50a5-ae83-20e11fd4854c",
+  "locale": "ko",
+  "sourceRevision": "a9fa9931913aeafac8b527f31cae7b519db79c8d54829ffcea20bcb6fc9dce4d",
+  "semanticHash": "0af8be92998a0e683977cd229a71195010327ae03c66d87a8c5b97871dce6d72",
+  "englishContentHash": "0f849ac8ba8ad41ee8943e5a36d009b53faa78e773f99c8cfa6426c0af8867c5",
+  "overview": "이 단원은 FRM-like/1의 다음 정확한 연산을 바탕으로 해요:  `init: if ismand z = 0 else z = pixel endif; previousZ = (0, 0). loop: z2 = z * z; nextZ = z2 + c + phoenixMultiP * previousZ; previousZ = z; z = nextZ. bailout: |z| <= 256.`",
+  "sourceWalkthrough": {
+    "0f49d971-917e-50a5-ae83-20e11fd4854c:a9fa9931913aeafac8b527f31cae7b519db79c8d54829ffcea20bcb6fc9dce4d:init": "이 주석은 다음을 실행해요: `if ismand: z = 0; else: z = pixel`.",
+    "0f49d971-917e-50a5-ae83-20e11fd4854c:a9fa9931913aeafac8b527f31cae7b519db79c8d54829ffcea20bcb6fc9dce4d:recurrence": "이 주석은 다음을 실행해요: `nextZ = z2 + c + phoenixMultiP * previousZ`.",
+    "0f49d971-917e-50a5-ae83-20e11fd4854c:a9fa9931913aeafac8b527f31cae7b519db79c8d54829ffcea20bcb6fc9dce4d:state-shift": "이 주석은 다음을 실행해요: `previousZ = z`.",
+    "0f49d971-917e-50a5-ae83-20e11fd4854c:a9fa9931913aeafac8b527f31cae7b519db79c8d54829ffcea20bcb6fc9dce4d:bailout": "이 주석은 다음을 실행해요: `|z| <= 256`. 이 연산은 이 공식의 반복 순서를 끝내요."
+  },
+  "syntaxFeatures": {
+    "source-sequence": "이 소스 순서 특성은 `ismand` 및 `previousZ`와 관련된 인용 연산을 소스 순서대로 연결해요."
+  },
+  "parameterExperiment": {
+    "steps": [
+      "고정 프로필에서 먼저 `phoenixMultiP = 0.5`로 기준 결과를 렌더링하세요. 중심, 확대, 회전, 반복 횟수와 다른 슬롯을 고정하고 한 번에 하나만 바꿔 렌더링하세요: `phoenixMultiP = 0.0`, `phoenixMultiP = 1.0`. 새 시험 전에는 기준값을 복원하세요."
+    ],
+    "expectedObservation": "phoenixMulti의 `phoenixMultiP`, `previousZ` 시험에서 기준과 비교해 보이는 차이가 있는지 기록하고, 차이가 없어도 그대로 기록하세요."
+  },
+  "exercise": {
+    "prompt": "`ismand` 및 `previousZ`이 소스 순서에서 하는 역할을 설명하고 매개변수 실험 단계에 따라 실행 결과를 비교하세요.",
+    "completionCheck": "답에는 4개의 주석 연산에 대한 설명과 실험 비교 기록이 있어야 하며 `ismand` 및 `previousZ`도 언급해야 해요."
+  },
+  "factsPresentation": {
+    "provenanceLead": "출처: 고정된 런타임 수정본과 게시 결정이에요.",
+    "rightsLead": "권리 정보는 영어 사실 단원에 있어요."
+  },
+  "contentHash": "60dae62d8bd931c38a1fe201bd5fffc0452c4633d0b34fb94b4083800bf4ae95"
+}

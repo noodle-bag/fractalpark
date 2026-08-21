@@ -1,0 +1,28 @@
+{
+  "id": "4bd56ed1-62c1-442f-abe9-a3c99f853993",
+  "object": "chat.completion",
+  "created": 1787319216,
+  "model": "deepseek-v4-flash",
+  "choices": [
+    {
+      "index": 0,
+      "message": {
+        "role": "assistant",
+        "content": "{\n  \"verdict\": \"APPROVE\",\n  \"summary\": \"All 10 formulas and 7 locale units were reviewed. Technical fidelity is correct: every English explanation, mathSummary, walkthrough, parameter experiment, and expected observation matches the pinned FRM-like/1 source and runtime profile, including correct bailout bounds, state updates, and parameter slots. Rights/provenance tokens are preserved exactly in each English facts object; localized factsPresentation leads are generic and do not contradict rights. Locale fidelity is strong: all six locales use the required registers (pt você, ko 해요체, ru formal вы, es tú, fr tu), protected identifiers and expressions remain exact, and no English fallback sentences appear outside code tokens. Teaching quality is concrete and observable, with no guaranteed visual predictions beyond source semantics. No contract drift or missing keys were found.\",\n  \"findings\": [],\n  \"coverageGaps\": []\n}"
+      },
+      "logprobs": null,
+      "finish_reason": "stop"
+    }
+  ],
+  "usage": {
+    "prompt_tokens": 106716,
+    "completion_tokens": 191,
+    "total_tokens": 106907,
+    "prompt_tokens_details": {
+      "cached_tokens": 512
+    },
+    "prompt_cache_hit_tokens": 512,
+    "prompt_cache_miss_tokens": 106204
+  },
+  "system_fingerprint": "a26a7955944dc5c60445bff77fac9c8e"
+}
