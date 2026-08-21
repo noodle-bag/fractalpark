@@ -1,0 +1,35 @@
+{
+  "schema": "fractalpark-teaching-locale/v1",
+  "formulaId": "37425fb2-8542-502f-94ac-94c0ccb6e508",
+  "locale": "es",
+  "sourceRevision": "69a7d072638f6981ee8e06c85d03831c9a53fb549337605eb35bb3cdf1db4e10",
+  "semanticHash": "01a25a87e2bb305345f4b72f0a9a87809258c73d5b379604dfd9625796dbb372",
+  "englishContentHash": "a08a2e14a156823109e5fc986b1746001470dd96fc6651abc89c94e02ae77859",
+  "overview": "En FRM-like/1, rationalMap1 comienza con si ismand, z = 0; si no, z = pixel, el primer nodo del bucle hace numer = z * z y |z| <= 256 limita la iteración. Lee estas operaciones en el orden real de la fuente.",
+  "sourceWalkthrough": {
+    "37425fb2-8542-502f-94ac-94c0ccb6e508:69a7d072638f6981ee8e06c85d03831c9a53fb549337605eb35bb3cdf1db4e10:initialization": "En rationalMap1, el nodo de inicialización ejecuta solo: si ismand, z = 0; si no, z = pixel.",
+    "37425fb2-8542-502f-94ac-94c0ccb6e508:69a7d072638f6981ee8e06c85d03831c9a53fb549337605eb35bb3cdf1db4e10:iteration": "En rationalMap1, este nodo del bucle ejecuta solo: numer = z * z.",
+    "37425fb2-8542-502f-94ac-94c0ccb6e508:69a7d072638f6981ee8e06c85d03831c9a53fb549337605eb35bb3cdf1db4e10:termination": "En rationalMap1, el nodo bailout prueba solo: |z| <= 256."
+  },
+  "syntaxFeatures": {
+    "initialization-flow": "En rationalMap1, la característica de inicialización se centra en la única operación inicial si ismand, z = 0; si no, z = pixel.",
+    "iteration-flow": "En rationalMap1, la característica de iteración se centra en la única asignación numer = z * z.",
+    "bailout-test": "En rationalMap1, la característica de terminación se centra en la comparación |z| <= 256."
+  },
+  "parameterExperiment": {
+    "steps": [
+      "Renderiza rationalMap1 con la base del plano de parámetros fijada: centro (0, 0), zoom 0.25, rotación 0, y 96 iteraciones.",
+      "Mantén fija la base salvo las iteraciones, renderiza una vez con 48 iteraciones y compárala con la base de 96."
+    ],
+    "expectedObservation": "En rationalMap1, anota si la comparación entre 48 y 96 iteraciones cambia algo e identifica el límite fuente |z| <= 256."
+  },
+  "exercise": {
+    "prompt": "En rationalMap1, localiza las tres anotaciones y explica si ismand, z = 0; si no, z = pixel, numer = z * z y |z| <= 256 y explica por qué ninguna instrucción vecina pertenece a la anotación del bucle.",
+    "completionCheck": "En rationalMap1, has terminado al enumerar las 3 claves de anotación y explicar con precisión numer = z * z y |z| <= 256."
+  },
+  "factsPresentation": {
+    "provenanceLead": "La procedencia está en la unidad factual inglesa.",
+    "rightsLead": "Los derechos están en la unidad factual inglesa."
+  },
+  "contentHash": "09596dd8d3a6a4914858e51f2e5bcfe21c04e8b71400dfb138646ecedfb3db7a"
+}

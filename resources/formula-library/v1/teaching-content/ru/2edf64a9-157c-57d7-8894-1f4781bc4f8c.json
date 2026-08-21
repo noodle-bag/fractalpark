@@ -1,0 +1,35 @@
+{
+  "schema": "fractalpark-teaching-locale/v1",
+  "formulaId": "2edf64a9-157c-57d7-8894-1f4781bc4f8c",
+  "locale": "ru",
+  "sourceRevision": "37344c3bc7fc90852e94c7b74ec99df5400c6332e8ca9bdad5e5c8ff3b51e688",
+  "semanticHash": "5c2a39a58bea81ef4853efa2e111c5a86f81b6e019640cc845a02d3764fe2c1a",
+  "englishContentHash": "c08555c12df774bd3e50ed0c97df132df6c41aeb3c50eab506290a9631422050",
+  "overview": "В FRM-like/1 формула reciprocalQuadratic начинается с если ismand, то z = 0; иначе z = pixel, первый узел цикла задаёт denom = z * z + c, а итерацию ограничивает |z| <= 256. Читайте эти операции в фактическом порядке исходника.",
+  "sourceWalkthrough": {
+    "2edf64a9-157c-57d7-8894-1f4781bc4f8c:37344c3bc7fc90852e94c7b74ec99df5400c6332e8ca9bdad5e5c8ff3b51e688:initialization": "В reciprocalQuadratic, узел инициализации выполняет только: если ismand, то z = 0; иначе z = pixel.",
+    "2edf64a9-157c-57d7-8894-1f4781bc4f8c:37344c3bc7fc90852e94c7b74ec99df5400c6332e8ca9bdad5e5c8ff3b51e688:iteration": "В reciprocalQuadratic, этот узел цикла выполняет только: denom = z * z + c.",
+    "2edf64a9-157c-57d7-8894-1f4781bc4f8c:37344c3bc7fc90852e94c7b74ec99df5400c6332e8ca9bdad5e5c8ff3b51e688:termination": "В reciprocalQuadratic, узел bailout проверяет только: |z| <= 256."
+  },
+  "syntaxFeatures": {
+    "initialization-flow": "В reciprocalQuadratic, признак инициализации выделяет единственную начальную операцию если ismand, то z = 0; иначе z = pixel.",
+    "iteration-flow": "В reciprocalQuadratic, признак итерации выделяет единственное присваивание denom = z * z + c.",
+    "bailout-test": "В reciprocalQuadratic, признак завершения выделяет сравнение |z| <= 256."
+  },
+  "parameterExperiment": {
+    "steps": [
+      "Выполните рендер reciprocalQuadratic с закреплённой базой плоскости параметров: центр (0, 0), масштаб 0.25, поворот 0, и 96 итераций.",
+      "Не меняя базу, кроме числа итераций, выполните один рендер с 48 итерациями и сравните его с базой в 96 итераций."
+    ],
+    "expectedObservation": "В reciprocalQuadratic, запишите, меняется ли что-либо при сравнении 48 и 96 итераций, и отметьте ограничение исходника |z| <= 256."
+  },
+  "exercise": {
+    "prompt": "В reciprocalQuadratic, найдите три аннотации и объясните если ismand, то z = 0; иначе z = pixel, denom = z * z + c и |z| <= 256 и объясните, почему соседние инструкции не относятся к аннотации цикла.",
+    "completionCheck": "В reciprocalQuadratic, вы завершили задание, если перечислили все 3 ключа аннотаций и точно объяснили denom = z * z + c и |z| <= 256."
+  },
+  "factsPresentation": {
+    "provenanceLead": "Происхождение указано в английском фактологическом блоке.",
+    "rightsLead": "Права указаны в английском фактологическом блоке."
+  },
+  "contentHash": "9b517ad6d3536eb017e6382036451c1fca494047f883be7cb8f3888b0a45e1ca"
+}

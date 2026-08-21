@@ -1,0 +1,35 @@
+{
+  "schema": "fractalpark-teaching-locale/v1",
+  "formulaId": "da95ae4b-d401-5eb0-862c-7d977c328fad",
+  "locale": "ko",
+  "sourceRevision": "c0fdb8fb46828947defe52dd82bdabd45a1a8baeb32278ae649b7231e647bf2f",
+  "semanticHash": "6ecfdd7558b795aaff0dc5bf3609c3c580e4ef18af90fbe45686a204d2dd9443",
+  "englishContentHash": "e06f064d9449516b1d9c94f02c1960cc348557decee4c593baccf30e9bb0bf78",
+  "overview": "FRM-like/1에서 jm_27은 z = pixel으로 시작하고, 반복의 첫 노드는 sqrz = fn1(z)이며, |z| <= t로 반복을 제한해요. 소스의 실제 순서대로 이 연산을 읽어 보세요.",
+  "sourceWalkthrough": {
+    "da95ae4b-d401-5eb0-862c-7d977c328fad:c0fdb8fb46828947defe52dd82bdabd45a1a8baeb32278ae649b7231e647bf2f:initialization": "jm_27에서는 초기화 노드는 다음만 실행해요: z = pixel.",
+    "da95ae4b-d401-5eb0-862c-7d977c328fad:c0fdb8fb46828947defe52dd82bdabd45a1a8baeb32278ae649b7231e647bf2f:iteration": "jm_27에서는 이 반복 노드는 다음만 실행해요: sqrz = fn1(z).",
+    "da95ae4b-d401-5eb0-862c-7d977c328fad:c0fdb8fb46828947defe52dd82bdabd45a1a8baeb32278ae649b7231e647bf2f:termination": "jm_27에서는 bailout 노드는 다음만 검사해요: |z| <= t."
+  },
+  "syntaxFeatures": {
+    "initialization-flow": "jm_27에서는 초기화 특징은 하나의 시작 연산 z = pixel에 초점을 맞춰요.",
+    "iteration-flow": "jm_27에서는 반복 특징은 하나의 대입 sqrz = fn1(z)에 초점을 맞춰요.",
+    "bailout-test": "jm_27에서는 종료 특징은 비교 |z| <= t에 초점을 맞춰요."
+  },
+  "parameterExperiment": {
+    "steps": [
+      "고정된 매개변수 평면 기준으로 jm_27을 렌더링하고 parameter1 (0, 0), function1 (identity)의 런타임 기본값을 사용하세요.",
+      "parameter1, function1 중 하나만 한 번에 바꾸고, 중심 (0, 0), 확대 0.25, 회전 0, 96회 반복과 다른 슬롯은 고정한 뒤 렌더링을 비교하세요."
+    ],
+    "expectedObservation": "parameter1 또는 function1을 하나씩 바꿀 때마다 렌더링이 기준과 다른지 기록하고 `|z| <= t`와 연결해 비교하세요."
+  },
+  "exercise": {
+    "prompt": "jm_27에서는 세 주석을 찾아 z = pixel, sqrz = fn1(z), |z| <= t을 설명하고 그리고 이웃 명령이 반복 주석에 속하지 않는 이유를 설명하세요.",
+    "completionCheck": "jm_27에서는 모든 3개 주석 키를 열거하고 sqrz = fn1(z)와 |z| <= t의 역할을 정확히 설명하면 완료예요."
+  },
+  "factsPresentation": {
+    "provenanceLead": "출처 정보는 영어 사실 단위에 있어요.",
+    "rightsLead": "권리 정보는 영어 사실 단위에 있어요."
+  },
+  "contentHash": "743f50cb1a6ed5d4fc049756e56c17e47c1507e4eb3bdb8a1679775377989632"
+}

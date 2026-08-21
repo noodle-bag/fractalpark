@@ -1,0 +1,35 @@
+{
+  "schema": "fractalpark-teaching-locale/v1",
+  "formulaId": "2dd8a5a7-052a-5539-aab9-c533f7dec857",
+  "locale": "es",
+  "sourceRevision": "6c2c19cfb9bff9d9aa0cca56cea6dc62e324e80009b931665b604726d3784e5d",
+  "semanticHash": "7f1e0790ad3270f2419b1c8db5ac3ec9d232d334c0144acf64f1f3155a2ca68e",
+  "englishContentHash": "31804c8280d33040dc47417296a01b83a4ec9dac34ba94e4477f175f74c6297f",
+  "overview": "En FRM-like/1, magnet2 comienza con si ismand, z = 0; si no, z = pixel, el primer nodo del bucle hace z2 = z * z y |z| <= 4 limita la iteración. Lee estas operaciones en el orden real de la fuente.",
+  "sourceWalkthrough": {
+    "2dd8a5a7-052a-5539-aab9-c533f7dec857:6c2c19cfb9bff9d9aa0cca56cea6dc62e324e80009b931665b604726d3784e5d:initialization": "En magnet2, el nodo de inicialización ejecuta solo: si ismand, z = 0; si no, z = pixel.",
+    "2dd8a5a7-052a-5539-aab9-c533f7dec857:6c2c19cfb9bff9d9aa0cca56cea6dc62e324e80009b931665b604726d3784e5d:iteration": "En magnet2, este nodo del bucle ejecuta solo: z2 = z * z.",
+    "2dd8a5a7-052a-5539-aab9-c533f7dec857:6c2c19cfb9bff9d9aa0cca56cea6dc62e324e80009b931665b604726d3784e5d:termination": "En magnet2, el nodo bailout prueba solo: |z| <= 4."
+  },
+  "syntaxFeatures": {
+    "initialization-flow": "En magnet2, la característica de inicialización se centra en la única operación inicial si ismand, z = 0; si no, z = pixel.",
+    "iteration-flow": "En magnet2, la característica de iteración se centra en la única asignación z2 = z * z.",
+    "bailout-test": "En magnet2, la característica de terminación se centra en la comparación |z| <= 4."
+  },
+  "parameterExperiment": {
+    "steps": [
+      "Renderiza magnet2 con la base del plano de parámetros fijada: centro (-0.5, 0), zoom 0.4, rotación 0, y 96 iteraciones.",
+      "Mantén fija la base salvo las iteraciones, renderiza una vez con 48 iteraciones y compárala con la base de 96."
+    ],
+    "expectedObservation": "En magnet2, anota si la comparación entre 48 y 96 iteraciones cambia algo e identifica el límite fuente |z| <= 4."
+  },
+  "exercise": {
+    "prompt": "En magnet2, localiza las tres anotaciones y explica si ismand, z = 0; si no, z = pixel, z2 = z * z y |z| <= 4 y explica por qué ninguna instrucción vecina pertenece a la anotación del bucle.",
+    "completionCheck": "En magnet2, has terminado al enumerar las 3 claves de anotación y explicar con precisión z2 = z * z y |z| <= 4."
+  },
+  "factsPresentation": {
+    "provenanceLead": "La procedencia está en la unidad factual inglesa.",
+    "rightsLead": "Los derechos están en la unidad factual inglesa."
+  },
+  "contentHash": "1a1e13c1f568d5ff0a9317b5d0ac528acd5dd91c7d334739f1d7a8d4087fe845"
+}

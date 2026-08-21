@@ -1,0 +1,35 @@
+{
+  "schema": "fractalpark-teaching-locale/v1",
+  "formulaId": "6c1385a9-2d23-5816-90d1-2752905fc353",
+  "locale": "zh",
+  "sourceRevision": "decba7b7f3d2b3e121f53906a98d62d32743da89d72ea79c2aa1ebd5f5aa2e37",
+  "semanticHash": "0126714b6b16415137cb09eba57dc601ff56a5efc76c754cedc84d5c0130fa82",
+  "englishContentHash": "0cb3e7092ec9d11b8accd8e839642327fb89ede59958cf352c3cb6d3cf3e97ec",
+  "overview": "在 FRM-like/1 中，circleInversion 从 ismand 分支把 z 设为 0，否则设为 pixel 开始，循环首个节点是 z2 = z * z，并以 |z| <= 256 限制迭代。请按源代码的实际顺序阅读这些操作。",
+  "sourceWalkthrough": {
+    "6c1385a9-2d23-5816-90d1-2752905fc353:decba7b7f3d2b3e121f53906a98d62d32743da89d72ea79c2aa1ebd5f5aa2e37:initialization": "在 circleInversion 中，初始化节点仅执行：ismand 分支把 z 设为 0，否则设为 pixel。",
+    "6c1385a9-2d23-5816-90d1-2752905fc353:decba7b7f3d2b3e121f53906a98d62d32743da89d72ea79c2aa1ebd5f5aa2e37:iteration": "在 circleInversion 中，此循环节点仅执行：z2 = z * z。",
+    "6c1385a9-2d23-5816-90d1-2752905fc353:decba7b7f3d2b3e121f53906a98d62d32743da89d72ea79c2aa1ebd5f5aa2e37:termination": "在 circleInversion 中，bailout 节点仅测试：|z| <= 256。"
+  },
+  "syntaxFeatures": {
+    "initialization-flow": "在 circleInversion 中，初始化特征聚焦 ismand 分支把 z 设为 0，否则设为 pixel 这一个起始操作。",
+    "iteration-flow": "在 circleInversion 中，迭代特征聚焦 z2 = z * z 这一个循环赋值。",
+    "bailout-test": "在 circleInversion 中，终止特征聚焦比较 |z| <= 256。"
+  },
+  "parameterExperiment": {
+    "steps": [
+      "以固定参数平面基线渲染 circleInversion：中心 (0, 0)、缩放 0.25、旋转 0、96 次迭代。",
+      "除迭代次数外保持基线不变，以 48 次迭代再渲染一次，并与 96 次迭代的基线比较。"
+    ],
+    "expectedObservation": "在 circleInversion 中，记录 48 次与 96 次迭代的比较是否出现差异，并标出源代码限制 |z| <= 256。"
+  },
+  "exercise": {
+    "prompt": "在 circleInversion 中，找出三个注释：分别说明 ismand 分支把 z 设为 0，否则设为 pixel、z2 = z * z 和 |z| <= 256，并解释为什么相邻语句不属于循环注释。",
+    "completionCheck": "在 circleInversion 中，完成时应列出全部 3 个注释键，并准确说明 z2 = z * z 与 |z| <= 256 的作用。"
+  },
+  "factsPresentation": {
+    "provenanceLead": "来源说明见英文事实单元。",
+    "rightsLead": "权利说明见英文事实单元。"
+  },
+  "contentHash": "629016abccd1255dbd5c66310666fec64ffe484acf937388601c9139e074ca4c"
+}

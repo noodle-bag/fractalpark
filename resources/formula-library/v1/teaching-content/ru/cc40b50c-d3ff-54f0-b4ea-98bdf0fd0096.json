@@ -1,0 +1,35 @@
+{
+  "schema": "fractalpark-teaching-locale/v1",
+  "formulaId": "cc40b50c-d3ff-54f0-b4ea-98bdf0fd0096",
+  "locale": "ru",
+  "sourceRevision": "37a6c61666fd5bf3e2bdef96849dc27a10bd58d152e6a161005ab6e565f12ce0",
+  "semanticHash": "4386e45ac1c4535868f2e3607857b8ae92a8ffbf497de4c7c572717d5db6245c",
+  "englishContentHash": "a7b71692c36b942c1fcdb8f8e21dea6b0ddc8fcc1fa832655d08c0391f0cde98",
+  "overview": "В FRM-like/1 формула mcMullen23 начинается с если ismand, то z = 0; иначе z = pixel, первый узел цикла задаёт z3 = z ^ 3, а итерацию ограничивает |z| <= 256. Читайте эти операции в фактическом порядке исходника.",
+  "sourceWalkthrough": {
+    "cc40b50c-d3ff-54f0-b4ea-98bdf0fd0096:37a6c61666fd5bf3e2bdef96849dc27a10bd58d152e6a161005ab6e565f12ce0:initialization": "В mcMullen23, узел инициализации выполняет только: если ismand, то z = 0; иначе z = pixel.",
+    "cc40b50c-d3ff-54f0-b4ea-98bdf0fd0096:37a6c61666fd5bf3e2bdef96849dc27a10bd58d152e6a161005ab6e565f12ce0:iteration": "В mcMullen23, этот узел цикла выполняет только: z3 = z ^ 3.",
+    "cc40b50c-d3ff-54f0-b4ea-98bdf0fd0096:37a6c61666fd5bf3e2bdef96849dc27a10bd58d152e6a161005ab6e565f12ce0:termination": "В mcMullen23, узел bailout проверяет только: |z| <= 256."
+  },
+  "syntaxFeatures": {
+    "initialization-flow": "В mcMullen23, признак инициализации выделяет единственную начальную операцию если ismand, то z = 0; иначе z = pixel.",
+    "iteration-flow": "В mcMullen23, признак итерации выделяет единственное присваивание z3 = z ^ 3.",
+    "bailout-test": "В mcMullen23, признак завершения выделяет сравнение |z| <= 256."
+  },
+  "parameterExperiment": {
+    "steps": [
+      "Выполните рендер mcMullen23 с закреплённой базой плоскости параметров: центр (0, 0), масштаб 0.25, поворот 0, и 96 итераций.",
+      "Не меняя базу, кроме числа итераций, выполните один рендер с 48 итерациями и сравните его с базой в 96 итераций."
+    ],
+    "expectedObservation": "В mcMullen23, запишите, меняется ли что-либо при сравнении 48 и 96 итераций, и отметьте ограничение исходника |z| <= 256."
+  },
+  "exercise": {
+    "prompt": "В mcMullen23, найдите три аннотации и объясните если ismand, то z = 0; иначе z = pixel, z3 = z ^ 3 и |z| <= 256 и объясните, почему соседние инструкции не относятся к аннотации цикла.",
+    "completionCheck": "В mcMullen23, вы завершили задание, если перечислили все 3 ключа аннотаций и точно объяснили z3 = z ^ 3 и |z| <= 256."
+  },
+  "factsPresentation": {
+    "provenanceLead": "Происхождение указано в английском фактологическом блоке.",
+    "rightsLead": "Права указаны в английском фактологическом блоке."
+  },
+  "contentHash": "39749f8cbd719474df2f41dc808c01c67a6c1b05180f65615d15b389ed55b1c0"
+}

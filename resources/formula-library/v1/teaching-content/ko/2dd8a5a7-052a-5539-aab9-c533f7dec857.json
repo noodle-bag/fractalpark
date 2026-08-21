@@ -1,0 +1,35 @@
+{
+  "schema": "fractalpark-teaching-locale/v1",
+  "formulaId": "2dd8a5a7-052a-5539-aab9-c533f7dec857",
+  "locale": "ko",
+  "sourceRevision": "6c2c19cfb9bff9d9aa0cca56cea6dc62e324e80009b931665b604726d3784e5d",
+  "semanticHash": "7f1e0790ad3270f2419b1c8db5ac3ec9d232d334c0144acf64f1f3155a2ca68e",
+  "englishContentHash": "31804c8280d33040dc47417296a01b83a4ec9dac34ba94e4477f175f74c6297f",
+  "overview": "FRM-like/1에서 magnet2은 ismand이면 z = 0, 아니면 z = pixel으로 시작하고, 반복의 첫 노드는 z2 = z * z이며, |z| <= 4로 반복을 제한해요. 소스의 실제 순서대로 이 연산을 읽어 보세요.",
+  "sourceWalkthrough": {
+    "2dd8a5a7-052a-5539-aab9-c533f7dec857:6c2c19cfb9bff9d9aa0cca56cea6dc62e324e80009b931665b604726d3784e5d:initialization": "magnet2에서는 초기화 노드는 다음만 실행해요: ismand이면 z = 0, 아니면 z = pixel.",
+    "2dd8a5a7-052a-5539-aab9-c533f7dec857:6c2c19cfb9bff9d9aa0cca56cea6dc62e324e80009b931665b604726d3784e5d:iteration": "magnet2에서는 이 반복 노드는 다음만 실행해요: z2 = z * z.",
+    "2dd8a5a7-052a-5539-aab9-c533f7dec857:6c2c19cfb9bff9d9aa0cca56cea6dc62e324e80009b931665b604726d3784e5d:termination": "magnet2에서는 bailout 노드는 다음만 검사해요: |z| <= 4."
+  },
+  "syntaxFeatures": {
+    "initialization-flow": "magnet2에서는 초기화 특징은 하나의 시작 연산 ismand이면 z = 0, 아니면 z = pixel에 초점을 맞춰요.",
+    "iteration-flow": "magnet2에서는 반복 특징은 하나의 대입 z2 = z * z에 초점을 맞춰요.",
+    "bailout-test": "magnet2에서는 종료 특징은 비교 |z| <= 4에 초점을 맞춰요."
+  },
+  "parameterExperiment": {
+    "steps": [
+      "magnet2을 고정된 매개변수 평면 기준으로 렌더링하세요: 중심 (-0.5, 0), 확대 0.4, 회전 0, 및 96회 반복. ",
+      "반복 횟수만 바꾸고 기준은 고정한 채 48회로 한 번 렌더링한 뒤 96회 기준과 비교하세요."
+    ],
+    "expectedObservation": "magnet2에서는 48회와 96회 반복의 비교에서 달라지는 점이 있는지 기록하고 소스 제한 |z| <= 4을 적으세요."
+  },
+  "exercise": {
+    "prompt": "magnet2에서는 세 주석을 찾아 ismand이면 z = 0, 아니면 z = pixel, z2 = z * z, |z| <= 4을 설명하고 그리고 이웃 명령이 반복 주석에 속하지 않는 이유를 설명하세요.",
+    "completionCheck": "magnet2에서는 모든 3개 주석 키를 열거하고 z2 = z * z와 |z| <= 4의 역할을 정확히 설명하면 완료예요."
+  },
+  "factsPresentation": {
+    "provenanceLead": "출처 정보는 영어 사실 단위에 있어요.",
+    "rightsLead": "권리 정보는 영어 사실 단위에 있어요."
+  },
+  "contentHash": "3885b40dfed2cfce0ede767ad761daf921bbeb1a98febda5220cfca5b55e66f3"
+}

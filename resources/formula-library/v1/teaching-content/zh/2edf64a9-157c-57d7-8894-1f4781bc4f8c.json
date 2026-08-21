@@ -1,0 +1,35 @@
+{
+  "schema": "fractalpark-teaching-locale/v1",
+  "formulaId": "2edf64a9-157c-57d7-8894-1f4781bc4f8c",
+  "locale": "zh",
+  "sourceRevision": "37344c3bc7fc90852e94c7b74ec99df5400c6332e8ca9bdad5e5c8ff3b51e688",
+  "semanticHash": "5c2a39a58bea81ef4853efa2e111c5a86f81b6e019640cc845a02d3764fe2c1a",
+  "englishContentHash": "c08555c12df774bd3e50ed0c97df132df6c41aeb3c50eab506290a9631422050",
+  "overview": "在 FRM-like/1 中，reciprocalQuadratic 从 ismand 分支把 z 设为 0，否则设为 pixel 开始，循环首个节点是 denom = z * z + c，并以 |z| <= 256 限制迭代。请按源代码的实际顺序阅读这些操作。",
+  "sourceWalkthrough": {
+    "2edf64a9-157c-57d7-8894-1f4781bc4f8c:37344c3bc7fc90852e94c7b74ec99df5400c6332e8ca9bdad5e5c8ff3b51e688:initialization": "在 reciprocalQuadratic 中，初始化节点仅执行：ismand 分支把 z 设为 0，否则设为 pixel。",
+    "2edf64a9-157c-57d7-8894-1f4781bc4f8c:37344c3bc7fc90852e94c7b74ec99df5400c6332e8ca9bdad5e5c8ff3b51e688:iteration": "在 reciprocalQuadratic 中，此循环节点仅执行：denom = z * z + c。",
+    "2edf64a9-157c-57d7-8894-1f4781bc4f8c:37344c3bc7fc90852e94c7b74ec99df5400c6332e8ca9bdad5e5c8ff3b51e688:termination": "在 reciprocalQuadratic 中，bailout 节点仅测试：|z| <= 256。"
+  },
+  "syntaxFeatures": {
+    "initialization-flow": "在 reciprocalQuadratic 中，初始化特征聚焦 ismand 分支把 z 设为 0，否则设为 pixel 这一个起始操作。",
+    "iteration-flow": "在 reciprocalQuadratic 中，迭代特征聚焦 denom = z * z + c 这一个循环赋值。",
+    "bailout-test": "在 reciprocalQuadratic 中，终止特征聚焦比较 |z| <= 256。"
+  },
+  "parameterExperiment": {
+    "steps": [
+      "以固定参数平面基线渲染 reciprocalQuadratic：中心 (0, 0)、缩放 0.25、旋转 0、96 次迭代。",
+      "除迭代次数外保持基线不变，以 48 次迭代再渲染一次，并与 96 次迭代的基线比较。"
+    ],
+    "expectedObservation": "在 reciprocalQuadratic 中，记录 48 次与 96 次迭代的比较是否出现差异，并标出源代码限制 |z| <= 256。"
+  },
+  "exercise": {
+    "prompt": "在 reciprocalQuadratic 中，找出三个注释：分别说明 ismand 分支把 z 设为 0，否则设为 pixel、denom = z * z + c 和 |z| <= 256，并解释为什么相邻语句不属于循环注释。",
+    "completionCheck": "在 reciprocalQuadratic 中，完成时应列出全部 3 个注释键，并准确说明 denom = z * z + c 与 |z| <= 256 的作用。"
+  },
+  "factsPresentation": {
+    "provenanceLead": "来源说明见英文事实单元。",
+    "rightsLead": "权利说明见英文事实单元。"
+  },
+  "contentHash": "bec3ab6322f590eed45676ea746a97ac08b13595124fde10aeeb9f4596fa4b73"
+}

@@ -1,0 +1,35 @@
+{
+  "schema": "fractalpark-teaching-locale/v1",
+  "formulaId": "37425fb2-8542-502f-94ac-94c0ccb6e508",
+  "locale": "ko",
+  "sourceRevision": "69a7d072638f6981ee8e06c85d03831c9a53fb549337605eb35bb3cdf1db4e10",
+  "semanticHash": "01a25a87e2bb305345f4b72f0a9a87809258c73d5b379604dfd9625796dbb372",
+  "englishContentHash": "a08a2e14a156823109e5fc986b1746001470dd96fc6651abc89c94e02ae77859",
+  "overview": "FRM-like/1에서 rationalMap1은 ismand이면 z = 0, 아니면 z = pixel으로 시작하고, 반복의 첫 노드는 numer = z * z이며, |z| <= 256로 반복을 제한해요. 소스의 실제 순서대로 이 연산을 읽어 보세요.",
+  "sourceWalkthrough": {
+    "37425fb2-8542-502f-94ac-94c0ccb6e508:69a7d072638f6981ee8e06c85d03831c9a53fb549337605eb35bb3cdf1db4e10:initialization": "rationalMap1에서는 초기화 노드는 다음만 실행해요: ismand이면 z = 0, 아니면 z = pixel.",
+    "37425fb2-8542-502f-94ac-94c0ccb6e508:69a7d072638f6981ee8e06c85d03831c9a53fb549337605eb35bb3cdf1db4e10:iteration": "rationalMap1에서는 이 반복 노드는 다음만 실행해요: numer = z * z.",
+    "37425fb2-8542-502f-94ac-94c0ccb6e508:69a7d072638f6981ee8e06c85d03831c9a53fb549337605eb35bb3cdf1db4e10:termination": "rationalMap1에서는 bailout 노드는 다음만 검사해요: |z| <= 256."
+  },
+  "syntaxFeatures": {
+    "initialization-flow": "rationalMap1에서는 초기화 특징은 하나의 시작 연산 ismand이면 z = 0, 아니면 z = pixel에 초점을 맞춰요.",
+    "iteration-flow": "rationalMap1에서는 반복 특징은 하나의 대입 numer = z * z에 초점을 맞춰요.",
+    "bailout-test": "rationalMap1에서는 종료 특징은 비교 |z| <= 256에 초점을 맞춰요."
+  },
+  "parameterExperiment": {
+    "steps": [
+      "rationalMap1을 고정된 매개변수 평면 기준으로 렌더링하세요: 중심 (0, 0), 확대 0.25, 회전 0, 및 96회 반복. ",
+      "반복 횟수만 바꾸고 기준은 고정한 채 48회로 한 번 렌더링한 뒤 96회 기준과 비교하세요."
+    ],
+    "expectedObservation": "rationalMap1에서는 48회와 96회 반복의 비교에서 달라지는 점이 있는지 기록하고 소스 제한 |z| <= 256을 적으세요."
+  },
+  "exercise": {
+    "prompt": "rationalMap1에서는 세 주석을 찾아 ismand이면 z = 0, 아니면 z = pixel, numer = z * z, |z| <= 256을 설명하고 그리고 이웃 명령이 반복 주석에 속하지 않는 이유를 설명하세요.",
+    "completionCheck": "rationalMap1에서는 모든 3개 주석 키를 열거하고 numer = z * z와 |z| <= 256의 역할을 정확히 설명하면 완료예요."
+  },
+  "factsPresentation": {
+    "provenanceLead": "출처 정보는 영어 사실 단위에 있어요.",
+    "rightsLead": "권리 정보는 영어 사실 단위에 있어요."
+  },
+  "contentHash": "65e0d1a988d89c8ae9884453d49cb240bbfc47fa099d4b9dbcfbc175fc66706a"
+}

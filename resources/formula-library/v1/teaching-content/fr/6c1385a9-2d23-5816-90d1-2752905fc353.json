@@ -1,0 +1,35 @@
+{
+  "schema": "fractalpark-teaching-locale/v1",
+  "formulaId": "6c1385a9-2d23-5816-90d1-2752905fc353",
+  "locale": "fr",
+  "sourceRevision": "decba7b7f3d2b3e121f53906a98d62d32743da89d72ea79c2aa1ebd5f5aa2e37",
+  "semanticHash": "0126714b6b16415137cb09eba57dc601ff56a5efc76c754cedc84d5c0130fa82",
+  "englishContentHash": "0cb3e7092ec9d11b8accd8e839642327fb89ede59958cf352c3cb6d3cf3e97ec",
+  "overview": "Dans FRM-like/1, circleInversion commence par si ismand : z = 0 ; sinon z = pixel, le premier nœud de boucle fait z2 = z * z, et |z| <= 256 limite l’itération. Lis ces opérations dans l’ordre réel de la source.",
+  "sourceWalkthrough": {
+    "6c1385a9-2d23-5816-90d1-2752905fc353:decba7b7f3d2b3e121f53906a98d62d32743da89d72ea79c2aa1ebd5f5aa2e37:initialization": "Dans circleInversion, le nœud d’initialisation exécute seulement : si ismand : z = 0 ; sinon z = pixel.",
+    "6c1385a9-2d23-5816-90d1-2752905fc353:decba7b7f3d2b3e121f53906a98d62d32743da89d72ea79c2aa1ebd5f5aa2e37:iteration": "Dans circleInversion, ce nœud de boucle exécute seulement : z2 = z * z.",
+    "6c1385a9-2d23-5816-90d1-2752905fc353:decba7b7f3d2b3e121f53906a98d62d32743da89d72ea79c2aa1ebd5f5aa2e37:termination": "Dans circleInversion, le nœud bailout teste seulement : |z| <= 256."
+  },
+  "syntaxFeatures": {
+    "initialization-flow": "Dans circleInversion, la caractéristique d’initialisation cible la seule opération initiale si ismand : z = 0 ; sinon z = pixel.",
+    "iteration-flow": "Dans circleInversion, la caractéristique d’itération cible la seule affectation z2 = z * z.",
+    "bailout-test": "Dans circleInversion, la caractéristique de terminaison cible la comparaison |z| <= 256."
+  },
+  "parameterExperiment": {
+    "steps": [
+      "Fais le rendu de circleInversion avec la base du plan des paramètres fixée : centre (0, 0), zoom 0.25, rotation 0, et 96 itérations.",
+      "Garde la base fixe sauf le nombre d’itérations, fais un rendu à 48 itérations et compare-le à la base de 96."
+    ],
+    "expectedObservation": "Dans circleInversion, note si la comparaison entre 48 et 96 itérations change quelque chose et repère la limite source |z| <= 256."
+  },
+  "exercise": {
+    "prompt": "Dans circleInversion, repère les trois annotations et explique si ismand : z = 0 ; sinon z = pixel, z2 = z * z et |z| <= 256 et explique pourquoi aucune instruction voisine n’appartient à l’annotation de boucle.",
+    "completionCheck": "Dans circleInversion, tu as terminé en listant les 3 clés d’annotation et en expliquant précisément z2 = z * z et |z| <= 256."
+  },
+  "factsPresentation": {
+    "provenanceLead": "La provenance est dans l’unité factuelle anglaise.",
+    "rightsLead": "Les droits sont dans l’unité factuelle anglaise."
+  },
+  "contentHash": "a211ac39ba3f7e457be67790908b6e7abbd819a686b2fe54e7cde4510a3e23ce"
+}

@@ -1,0 +1,35 @@
+{
+  "schema": "fractalpark-teaching-locale/v1",
+  "formulaId": "c6b5dcf4-cef5-5630-b3f6-a68b92ae75ee",
+  "locale": "ko",
+  "sourceRevision": "5aa4f9b2c35d3bded213756bb80da01f95fef7ee766779a7f02090a1116a0e9a",
+  "semanticHash": "76d9f98f4a32eecaab99814d1209a6d87f10a53909a6bbfca13a1ea43b6e4d9c",
+  "englishContentHash": "bd0a67aadd387e376fc7ddc0026164d80801c0cbdd55def4b8419bc0b0736de7",
+  "overview": "FRM-like/1에서 invertedLambda은 ismand이면 z = 0, 아니면 z = pixel으로 시작하고, 반복의 첫 노드는 oneMinusZ = (1, 0) - z이며, |z| <= 256로 반복을 제한해요. 소스의 실제 순서대로 이 연산을 읽어 보세요.",
+  "sourceWalkthrough": {
+    "c6b5dcf4-cef5-5630-b3f6-a68b92ae75ee:5aa4f9b2c35d3bded213756bb80da01f95fef7ee766779a7f02090a1116a0e9a:initialization": "invertedLambda에서는 초기화 노드는 다음만 실행해요: ismand이면 z = 0, 아니면 z = pixel.",
+    "c6b5dcf4-cef5-5630-b3f6-a68b92ae75ee:5aa4f9b2c35d3bded213756bb80da01f95fef7ee766779a7f02090a1116a0e9a:iteration": "invertedLambda에서는 이 반복 노드는 다음만 실행해요: oneMinusZ = (1, 0) - z.",
+    "c6b5dcf4-cef5-5630-b3f6-a68b92ae75ee:5aa4f9b2c35d3bded213756bb80da01f95fef7ee766779a7f02090a1116a0e9a:termination": "invertedLambda에서는 bailout 노드는 다음만 검사해요: |z| <= 256."
+  },
+  "syntaxFeatures": {
+    "initialization-flow": "invertedLambda에서는 초기화 특징은 하나의 시작 연산 ismand이면 z = 0, 아니면 z = pixel에 초점을 맞춰요.",
+    "iteration-flow": "invertedLambda에서는 반복 특징은 하나의 대입 oneMinusZ = (1, 0) - z에 초점을 맞춰요.",
+    "bailout-test": "invertedLambda에서는 종료 특징은 비교 |z| <= 256에 초점을 맞춰요."
+  },
+  "parameterExperiment": {
+    "steps": [
+      "invertedLambda을 고정된 매개변수 평면 기준으로 렌더링하세요: 중심 (-0.5, 0), 확대 0.4, 회전 0, 및 96회 반복. ",
+      "반복 횟수만 바꾸고 기준은 고정한 채 48회로 한 번 렌더링한 뒤 96회 기준과 비교하세요."
+    ],
+    "expectedObservation": "invertedLambda에서는 48회와 96회 반복의 비교에서 달라지는 점이 있는지 기록하고 소스 제한 |z| <= 256을 적으세요."
+  },
+  "exercise": {
+    "prompt": "invertedLambda에서는 세 주석을 찾아 ismand이면 z = 0, 아니면 z = pixel, oneMinusZ = (1, 0) - z, |z| <= 256을 설명하고 그리고 이웃 명령이 반복 주석에 속하지 않는 이유를 설명하세요.",
+    "completionCheck": "invertedLambda에서는 모든 3개 주석 키를 열거하고 oneMinusZ = (1, 0) - z와 |z| <= 256의 역할을 정확히 설명하면 완료예요."
+  },
+  "factsPresentation": {
+    "provenanceLead": "출처 정보는 영어 사실 단위에 있어요.",
+    "rightsLead": "권리 정보는 영어 사실 단위에 있어요."
+  },
+  "contentHash": "88139e07f7e0c82b49e2535d0d9b2114e85498eb3d205f2308bb017afc918ba3"
+}

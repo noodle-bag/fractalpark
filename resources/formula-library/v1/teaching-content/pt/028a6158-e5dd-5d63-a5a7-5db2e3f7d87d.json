@@ -1,0 +1,35 @@
+{
+  "schema": "fractalpark-teaching-locale/v1",
+  "formulaId": "028a6158-e5dd-5d63-a5a7-5db2e3f7d87d",
+  "locale": "pt",
+  "sourceRevision": "77c461de2d9cf0bbfb4a3257fb4e83bd1f250f6f5f1c52020ff3da0ecee366d9",
+  "semanticHash": "fd88674f04392ce72cbb6d0baf06b941def420ddc8785d0b0a67752d9fe0a7f9",
+  "englishContentHash": "675a619211706eb93d24abf7610c14d84ac5a56e0343c31e687af0433a8f77c4",
+  "overview": "Em FRM-like/1, fzppcoct começa com z = pixel, usa z = cosxx(z) + offset no primeiro nó do laço e limita a iteração com |z| <= 50. Leia essas operações na ordem real da fonte.",
+  "sourceWalkthrough": {
+    "028a6158-e5dd-5d63-a5a7-5db2e3f7d87d:77c461de2d9cf0bbfb4a3257fb4e83bd1f250f6f5f1c52020ff3da0ecee366d9:initialization": "Em fzppcoct, o nó de inicialização executa somente: z = pixel.",
+    "028a6158-e5dd-5d63-a5a7-5db2e3f7d87d:77c461de2d9cf0bbfb4a3257fb4e83bd1f250f6f5f1c52020ff3da0ecee366d9:iteration": "Em fzppcoct, este nó do laço executa somente: z = cosxx(z) + offset.",
+    "028a6158-e5dd-5d63-a5a7-5db2e3f7d87d:77c461de2d9cf0bbfb4a3257fb4e83bd1f250f6f5f1c52020ff3da0ecee366d9:termination": "Em fzppcoct, o nó bailout testa somente: |z| <= 50."
+  },
+  "syntaxFeatures": {
+    "initialization-flow": "Em fzppcoct, a característica de inicialização focaliza a única operação z = pixel.",
+    "iteration-flow": "Em fzppcoct, a característica de iteração focaliza a única atribuição z = cosxx(z) + offset.",
+    "bailout-test": "Em fzppcoct, a característica de término focaliza a comparação |z| <= 50."
+  },
+  "parameterExperiment": {
+    "steps": [
+      "Renderize fzppcoct com a base do plano de parâmetros fixada: centro (-0.5, 0), zoom 0.4, rotação 0, e 96 iterações.",
+      "Mantenha a base fixa exceto pelas iterações, renderize uma vez com 48 iterações e compare com a base de 96."
+    ],
+    "expectedObservation": "Em fzppcoct, registre se a comparação entre 48 e 96 iterações muda algo e anote o limite da fonte |z| <= 50."
+  },
+  "exercise": {
+    "prompt": "Em fzppcoct, localize as três anotações e explique z = pixel, z = cosxx(z) + offset e |z| <= 50 e explique por que nenhuma instrução vizinha pertence à anotação do laço.",
+    "completionCheck": "Em fzppcoct, você concluiu ao listar todas as 3 chaves de anotação e explicar corretamente z = cosxx(z) + offset e |z| <= 50."
+  },
+  "factsPresentation": {
+    "provenanceLead": "A proveniência está na unidade factual inglesa.",
+    "rightsLead": "Os direitos estão na unidade factual inglesa."
+  },
+  "contentHash": "5efc98ba0e452a0973d44e7ed577da18d2c42c043c32064c11ad9911e5e826c6"
+}

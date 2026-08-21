@@ -1,0 +1,32 @@
+{
+  "schema": "fractalpark-teaching-final-review-manifest/v1",
+  "batch": 3,
+  "status": "model-reviewed-maintainer-pending",
+  "candidateSha256": "a9b3b354f8edbbd74d43cc80442fa568be984e2c50f4822cc7439a3418c23758",
+  "sourcePacketSha256": "1f47ffa9db30faf83a06d76c71bcdaf9c0ce61ff650f20d49d4710483e5eafba",
+  "rubricSha256": "7248db2bb6c8622a815d064c8d4d3a2c9f6100acd26082f9548b5e9cb637166e",
+  "reviewers": [
+    {
+      "provider": "deepseek",
+      "requestedModel": "deepseek-chat",
+      "actualModel": "deepseek-v4-flash",
+      "finishReason": "stop",
+      "verdict": "APPROVE",
+      "findings": 0,
+      "coverageGaps": 0,
+      "rawSha256": "2acf127468b3382bcf630cec8cd58ee1439f80fc5fb5456b7309d0b4ceb8fd3c",
+      "reviewSha256": "fc156ede1a08173bf35ffb11807ef39eee827b989a06121ea159fca6f187152a"
+    },
+    {
+      "provider": "kimi",
+      "requestedModel": "k3",
+      "actualModel": "k3",
+      "finishReason": "stop",
+      "verdict": "APPROVE",
+      "findings": 0,
+      "coverageGaps": 0,
+      "rawSha256": "52ee33acc34154d409298f0700d1ba96835fb24f31e17b581b34e868c6230073",
+      "reviewSha256": "f11653c1cb97979430ab940301be21a0f7d97b47ea24a6b3fab53f3d51a413ea"
+    }
+  ]
+}

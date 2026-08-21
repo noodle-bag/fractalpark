@@ -1,0 +1,35 @@
+{
+  "schema": "fractalpark-teaching-locale/v1",
+  "formulaId": "cc40b50c-d3ff-54f0-b4ea-98bdf0fd0096",
+  "locale": "fr",
+  "sourceRevision": "37a6c61666fd5bf3e2bdef96849dc27a10bd58d152e6a161005ab6e565f12ce0",
+  "semanticHash": "4386e45ac1c4535868f2e3607857b8ae92a8ffbf497de4c7c572717d5db6245c",
+  "englishContentHash": "a7b71692c36b942c1fcdb8f8e21dea6b0ddc8fcc1fa832655d08c0391f0cde98",
+  "overview": "Dans FRM-like/1, mcMullen23 commence par si ismand : z = 0 ; sinon z = pixel, le premier nœud de boucle fait z3 = z ^ 3, et |z| <= 256 limite l’itération. Lis ces opérations dans l’ordre réel de la source.",
+  "sourceWalkthrough": {
+    "cc40b50c-d3ff-54f0-b4ea-98bdf0fd0096:37a6c61666fd5bf3e2bdef96849dc27a10bd58d152e6a161005ab6e565f12ce0:initialization": "Dans mcMullen23, le nœud d’initialisation exécute seulement : si ismand : z = 0 ; sinon z = pixel.",
+    "cc40b50c-d3ff-54f0-b4ea-98bdf0fd0096:37a6c61666fd5bf3e2bdef96849dc27a10bd58d152e6a161005ab6e565f12ce0:iteration": "Dans mcMullen23, ce nœud de boucle exécute seulement : z3 = z ^ 3.",
+    "cc40b50c-d3ff-54f0-b4ea-98bdf0fd0096:37a6c61666fd5bf3e2bdef96849dc27a10bd58d152e6a161005ab6e565f12ce0:termination": "Dans mcMullen23, le nœud bailout teste seulement : |z| <= 256."
+  },
+  "syntaxFeatures": {
+    "initialization-flow": "Dans mcMullen23, la caractéristique d’initialisation cible la seule opération initiale si ismand : z = 0 ; sinon z = pixel.",
+    "iteration-flow": "Dans mcMullen23, la caractéristique d’itération cible la seule affectation z3 = z ^ 3.",
+    "bailout-test": "Dans mcMullen23, la caractéristique de terminaison cible la comparaison |z| <= 256."
+  },
+  "parameterExperiment": {
+    "steps": [
+      "Fais le rendu de mcMullen23 avec la base du plan des paramètres fixée : centre (0, 0), zoom 0.25, rotation 0, et 96 itérations.",
+      "Garde la base fixe sauf le nombre d’itérations, fais un rendu à 48 itérations et compare-le à la base de 96."
+    ],
+    "expectedObservation": "Dans mcMullen23, note si la comparaison entre 48 et 96 itérations change quelque chose et repère la limite source |z| <= 256."
+  },
+  "exercise": {
+    "prompt": "Dans mcMullen23, repère les trois annotations et explique si ismand : z = 0 ; sinon z = pixel, z3 = z ^ 3 et |z| <= 256 et explique pourquoi aucune instruction voisine n’appartient à l’annotation de boucle.",
+    "completionCheck": "Dans mcMullen23, tu as terminé en listant les 3 clés d’annotation et en expliquant précisément z3 = z ^ 3 et |z| <= 256."
+  },
+  "factsPresentation": {
+    "provenanceLead": "La provenance est dans l’unité factuelle anglaise.",
+    "rightsLead": "Les droits sont dans l’unité factuelle anglaise."
+  },
+  "contentHash": "5a2ccc9858ac4ddf12edd28cd8ba78d4eb12656c4850888b42a2fa761eabe0ec"
+}

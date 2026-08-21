@@ -1,0 +1,35 @@
+{
+  "schema": "fractalpark-teaching-locale/v1",
+  "formulaId": "da95ae4b-d401-5eb0-862c-7d977c328fad",
+  "locale": "zh",
+  "sourceRevision": "c0fdb8fb46828947defe52dd82bdabd45a1a8baeb32278ae649b7231e647bf2f",
+  "semanticHash": "6ecfdd7558b795aaff0dc5bf3609c3c580e4ef18af90fbe45686a204d2dd9443",
+  "englishContentHash": "e06f064d9449516b1d9c94f02c1960cc348557decee4c593baccf30e9bb0bf78",
+  "overview": "在 FRM-like/1 中，jm_27 从 z = pixel 开始，循环首个节点是 sqrz = fn1(z)，并以 |z| <= t 限制迭代。请按源代码的实际顺序阅读这些操作。",
+  "sourceWalkthrough": {
+    "da95ae4b-d401-5eb0-862c-7d977c328fad:c0fdb8fb46828947defe52dd82bdabd45a1a8baeb32278ae649b7231e647bf2f:initialization": "在 jm_27 中，初始化节点仅执行：z = pixel。",
+    "da95ae4b-d401-5eb0-862c-7d977c328fad:c0fdb8fb46828947defe52dd82bdabd45a1a8baeb32278ae649b7231e647bf2f:iteration": "在 jm_27 中，此循环节点仅执行：sqrz = fn1(z)。",
+    "da95ae4b-d401-5eb0-862c-7d977c328fad:c0fdb8fb46828947defe52dd82bdabd45a1a8baeb32278ae649b7231e647bf2f:termination": "在 jm_27 中，bailout 节点仅测试：|z| <= t。"
+  },
+  "syntaxFeatures": {
+    "initialization-flow": "在 jm_27 中，初始化特征聚焦 z = pixel 这一个起始操作。",
+    "iteration-flow": "在 jm_27 中，迭代特征聚焦 sqrz = fn1(z) 这一个循环赋值。",
+    "bailout-test": "在 jm_27 中，终止特征聚焦比较 |z| <= t。"
+  },
+  "parameterExperiment": {
+    "steps": [
+      "以固定参数平面基线渲染 jm_27，并使用运行时默认值 parameter1 (0, 0), function1 (identity)。",
+      "每次只改变 parameter1, function1 中的一个，固定中心 (0, 0)、缩放 0.25、旋转 0、96 次迭代和其余槽位，再比较渲染结果。"
+    ],
+    "expectedObservation": "分别改变parameter1或function1时，记录渲染是否不同于基线，并把比较结果联系到`|z| <= t`。"
+  },
+  "exercise": {
+    "prompt": "在 jm_27 中，找出三个注释：分别说明 z = pixel、sqrz = fn1(z) 和 |z| <= t，并解释为什么相邻语句不属于循环注释。",
+    "completionCheck": "在 jm_27 中，完成时应列出全部 3 个注释键，并准确说明 sqrz = fn1(z) 与 |z| <= t 的作用。"
+  },
+  "factsPresentation": {
+    "provenanceLead": "来源说明见英文事实单元。",
+    "rightsLead": "权利说明见英文事实单元。"
+  },
+  "contentHash": "9c25c8bce1f1527dffc0fabc9e771fdd21386fcf0599af86a142a880138958fd"
+}

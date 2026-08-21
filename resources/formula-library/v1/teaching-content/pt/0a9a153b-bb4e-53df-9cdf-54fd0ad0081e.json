@@ -1,0 +1,35 @@
+{
+  "schema": "fractalpark-teaching-locale/v1",
+  "formulaId": "0a9a153b-bb4e-53df-9cdf-54fd0ad0081e",
+  "locale": "pt",
+  "sourceRevision": "0a9786849dd78c3643bae1f6de80fbc42d2e57e50e591090e67d681c81c0822e",
+  "semanticHash": "60f95642c01edfef967fd1d305e4c24747437321c32abbe847217193b9fe64eb",
+  "englishContentHash": "22eb63c262fd38ce1517d8325d7eabb007f7c9a4a66c3dcb726177f8c47fd45e",
+  "overview": "Em FRM-like/1, ok-35 começa com z = pixel, usa mapped = firstMap(z) no primeiro nó do laço e limita a iteração com |z| <= real(threshold). Leia essas operações na ordem real da fonte.",
+  "sourceWalkthrough": {
+    "0a9a153b-bb4e-53df-9cdf-54fd0ad0081e:0a9786849dd78c3643bae1f6de80fbc42d2e57e50e591090e67d681c81c0822e:initialization": "Em ok-35, o nó de inicialização executa somente: z = pixel.",
+    "0a9a153b-bb4e-53df-9cdf-54fd0ad0081e:0a9786849dd78c3643bae1f6de80fbc42d2e57e50e591090e67d681c81c0822e:iteration": "Em ok-35, este nó do laço executa somente: mapped = firstMap(z).",
+    "0a9a153b-bb4e-53df-9cdf-54fd0ad0081e:0a9786849dd78c3643bae1f6de80fbc42d2e57e50e591090e67d681c81c0822e:termination": "Em ok-35, o nó bailout testa somente: |z| <= real(threshold)."
+  },
+  "syntaxFeatures": {
+    "initialization-flow": "Em ok-35, a característica de inicialização focaliza a única operação z = pixel.",
+    "iteration-flow": "Em ok-35, a característica de iteração focaliza a única atribuição mapped = firstMap(z).",
+    "bailout-test": "Em ok-35, a característica de término focaliza a comparação |z| <= real(threshold)."
+  },
+  "parameterExperiment": {
+    "steps": [
+      "Renderize ok-35 na linha de base fixa do plano de parâmetros com multiplier (0, 0), thresholdOffset (0, 0), firstMap (identity), secondMap (identity) nos valores padrão de execução.",
+      "Mude apenas um entre multiplier, thresholdOffset, firstMap, secondMap de cada vez, mantenha centro (0, 0), zoom 0.25, rotação 0, e 96 iterações e os outros parâmetros fixos, e compare as renderizações."
+    ],
+    "expectedObservation": "Para cada alteração isolada de multiplier, thresholdOffset, firstMap ou secondMap, registre se a renderização difere da base e relacione a comparação a `|z| <= real(threshold)`."
+  },
+  "exercise": {
+    "prompt": "Em ok-35, localize as três anotações e explique z = pixel, mapped = firstMap(z) e |z| <= real(threshold) e explique por que nenhuma instrução vizinha pertence à anotação do laço.",
+    "completionCheck": "Em ok-35, você concluiu ao listar todas as 3 chaves de anotação e explicar corretamente mapped = firstMap(z) e |z| <= real(threshold)."
+  },
+  "factsPresentation": {
+    "provenanceLead": "A proveniência está na unidade factual inglesa.",
+    "rightsLead": "Os direitos estão na unidade factual inglesa."
+  },
+  "contentHash": "433469d7b25fd872f4c5820d7db648f6e98ac48ed7e7416905d6f0f024692570"
+}

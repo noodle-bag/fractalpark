@@ -1,0 +1,35 @@
+{
+  "schema": "fractalpark-teaching-locale/v1",
+  "formulaId": "2edf64a9-157c-57d7-8894-1f4781bc4f8c",
+  "locale": "ko",
+  "sourceRevision": "37344c3bc7fc90852e94c7b74ec99df5400c6332e8ca9bdad5e5c8ff3b51e688",
+  "semanticHash": "5c2a39a58bea81ef4853efa2e111c5a86f81b6e019640cc845a02d3764fe2c1a",
+  "englishContentHash": "c08555c12df774bd3e50ed0c97df132df6c41aeb3c50eab506290a9631422050",
+  "overview": "FRM-like/1에서 reciprocalQuadratic은 ismand이면 z = 0, 아니면 z = pixel으로 시작하고, 반복의 첫 노드는 denom = z * z + c이며, |z| <= 256로 반복을 제한해요. 소스의 실제 순서대로 이 연산을 읽어 보세요.",
+  "sourceWalkthrough": {
+    "2edf64a9-157c-57d7-8894-1f4781bc4f8c:37344c3bc7fc90852e94c7b74ec99df5400c6332e8ca9bdad5e5c8ff3b51e688:initialization": "reciprocalQuadratic에서는 초기화 노드는 다음만 실행해요: ismand이면 z = 0, 아니면 z = pixel.",
+    "2edf64a9-157c-57d7-8894-1f4781bc4f8c:37344c3bc7fc90852e94c7b74ec99df5400c6332e8ca9bdad5e5c8ff3b51e688:iteration": "reciprocalQuadratic에서는 이 반복 노드는 다음만 실행해요: denom = z * z + c.",
+    "2edf64a9-157c-57d7-8894-1f4781bc4f8c:37344c3bc7fc90852e94c7b74ec99df5400c6332e8ca9bdad5e5c8ff3b51e688:termination": "reciprocalQuadratic에서는 bailout 노드는 다음만 검사해요: |z| <= 256."
+  },
+  "syntaxFeatures": {
+    "initialization-flow": "reciprocalQuadratic에서는 초기화 특징은 하나의 시작 연산 ismand이면 z = 0, 아니면 z = pixel에 초점을 맞춰요.",
+    "iteration-flow": "reciprocalQuadratic에서는 반복 특징은 하나의 대입 denom = z * z + c에 초점을 맞춰요.",
+    "bailout-test": "reciprocalQuadratic에서는 종료 특징은 비교 |z| <= 256에 초점을 맞춰요."
+  },
+  "parameterExperiment": {
+    "steps": [
+      "reciprocalQuadratic을 고정된 매개변수 평면 기준으로 렌더링하세요: 중심 (0, 0), 확대 0.25, 회전 0, 및 96회 반복. ",
+      "반복 횟수만 바꾸고 기준은 고정한 채 48회로 한 번 렌더링한 뒤 96회 기준과 비교하세요."
+    ],
+    "expectedObservation": "reciprocalQuadratic에서는 48회와 96회 반복의 비교에서 달라지는 점이 있는지 기록하고 소스 제한 |z| <= 256을 적으세요."
+  },
+  "exercise": {
+    "prompt": "reciprocalQuadratic에서는 세 주석을 찾아 ismand이면 z = 0, 아니면 z = pixel, denom = z * z + c, |z| <= 256을 설명하고 그리고 이웃 명령이 반복 주석에 속하지 않는 이유를 설명하세요.",
+    "completionCheck": "reciprocalQuadratic에서는 모든 3개 주석 키를 열거하고 denom = z * z + c와 |z| <= 256의 역할을 정확히 설명하면 완료예요."
+  },
+  "factsPresentation": {
+    "provenanceLead": "출처 정보는 영어 사실 단위에 있어요.",
+    "rightsLead": "권리 정보는 영어 사실 단위에 있어요."
+  },
+  "contentHash": "99ed5c2d66d595b7f95749a06f66b4b32ee911fb3000c3470acda1a9cefe697f"
+}

@@ -1,0 +1,35 @@
+{
+  "schema": "fractalpark-teaching-locale/v1",
+  "formulaId": "c6b5dcf4-cef5-5630-b3f6-a68b92ae75ee",
+  "locale": "fr",
+  "sourceRevision": "5aa4f9b2c35d3bded213756bb80da01f95fef7ee766779a7f02090a1116a0e9a",
+  "semanticHash": "76d9f98f4a32eecaab99814d1209a6d87f10a53909a6bbfca13a1ea43b6e4d9c",
+  "englishContentHash": "bd0a67aadd387e376fc7ddc0026164d80801c0cbdd55def4b8419bc0b0736de7",
+  "overview": "Dans FRM-like/1, invertedLambda commence par si ismand : z = 0 ; sinon z = pixel, le premier nœud de boucle fait oneMinusZ = (1, 0) - z, et |z| <= 256 limite l’itération. Lis ces opérations dans l’ordre réel de la source.",
+  "sourceWalkthrough": {
+    "c6b5dcf4-cef5-5630-b3f6-a68b92ae75ee:5aa4f9b2c35d3bded213756bb80da01f95fef7ee766779a7f02090a1116a0e9a:initialization": "Dans invertedLambda, le nœud d’initialisation exécute seulement : si ismand : z = 0 ; sinon z = pixel.",
+    "c6b5dcf4-cef5-5630-b3f6-a68b92ae75ee:5aa4f9b2c35d3bded213756bb80da01f95fef7ee766779a7f02090a1116a0e9a:iteration": "Dans invertedLambda, ce nœud de boucle exécute seulement : oneMinusZ = (1, 0) - z.",
+    "c6b5dcf4-cef5-5630-b3f6-a68b92ae75ee:5aa4f9b2c35d3bded213756bb80da01f95fef7ee766779a7f02090a1116a0e9a:termination": "Dans invertedLambda, le nœud bailout teste seulement : |z| <= 256."
+  },
+  "syntaxFeatures": {
+    "initialization-flow": "Dans invertedLambda, la caractéristique d’initialisation cible la seule opération initiale si ismand : z = 0 ; sinon z = pixel.",
+    "iteration-flow": "Dans invertedLambda, la caractéristique d’itération cible la seule affectation oneMinusZ = (1, 0) - z.",
+    "bailout-test": "Dans invertedLambda, la caractéristique de terminaison cible la comparaison |z| <= 256."
+  },
+  "parameterExperiment": {
+    "steps": [
+      "Fais le rendu de invertedLambda avec la base du plan des paramètres fixée : centre (-0.5, 0), zoom 0.4, rotation 0, et 96 itérations.",
+      "Garde la base fixe sauf le nombre d’itérations, fais un rendu à 48 itérations et compare-le à la base de 96."
+    ],
+    "expectedObservation": "Dans invertedLambda, note si la comparaison entre 48 et 96 itérations change quelque chose et repère la limite source |z| <= 256."
+  },
+  "exercise": {
+    "prompt": "Dans invertedLambda, repère les trois annotations et explique si ismand : z = 0 ; sinon z = pixel, oneMinusZ = (1, 0) - z et |z| <= 256 et explique pourquoi aucune instruction voisine n’appartient à l’annotation de boucle.",
+    "completionCheck": "Dans invertedLambda, tu as terminé en listant les 3 clés d’annotation et en expliquant précisément oneMinusZ = (1, 0) - z et |z| <= 256."
+  },
+  "factsPresentation": {
+    "provenanceLead": "La provenance est dans l’unité factuelle anglaise.",
+    "rightsLead": "Les droits sont dans l’unité factuelle anglaise."
+  },
+  "contentHash": "7ae4a7fa816d0fb457f6682c58e56afd733571040f8ee8c9c4f933c53d258f89"
+}

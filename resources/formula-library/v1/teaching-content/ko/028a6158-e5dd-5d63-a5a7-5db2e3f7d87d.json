@@ -1,0 +1,35 @@
+{
+  "schema": "fractalpark-teaching-locale/v1",
+  "formulaId": "028a6158-e5dd-5d63-a5a7-5db2e3f7d87d",
+  "locale": "ko",
+  "sourceRevision": "77c461de2d9cf0bbfb4a3257fb4e83bd1f250f6f5f1c52020ff3da0ecee366d9",
+  "semanticHash": "fd88674f04392ce72cbb6d0baf06b941def420ddc8785d0b0a67752d9fe0a7f9",
+  "englishContentHash": "675a619211706eb93d24abf7610c14d84ac5a56e0343c31e687af0433a8f77c4",
+  "overview": "FRM-like/1에서 fzppcoct은 z = pixel으로 시작하고, 반복의 첫 노드는 z = cosxx(z) + offset이며, |z| <= 50로 반복을 제한해요. 소스의 실제 순서대로 이 연산을 읽어 보세요.",
+  "sourceWalkthrough": {
+    "028a6158-e5dd-5d63-a5a7-5db2e3f7d87d:77c461de2d9cf0bbfb4a3257fb4e83bd1f250f6f5f1c52020ff3da0ecee366d9:initialization": "fzppcoct에서는 초기화 노드는 다음만 실행해요: z = pixel.",
+    "028a6158-e5dd-5d63-a5a7-5db2e3f7d87d:77c461de2d9cf0bbfb4a3257fb4e83bd1f250f6f5f1c52020ff3da0ecee366d9:iteration": "fzppcoct에서는 이 반복 노드는 다음만 실행해요: z = cosxx(z) + offset.",
+    "028a6158-e5dd-5d63-a5a7-5db2e3f7d87d:77c461de2d9cf0bbfb4a3257fb4e83bd1f250f6f5f1c52020ff3da0ecee366d9:termination": "fzppcoct에서는 bailout 노드는 다음만 검사해요: |z| <= 50."
+  },
+  "syntaxFeatures": {
+    "initialization-flow": "fzppcoct에서는 초기화 특징은 하나의 시작 연산 z = pixel에 초점을 맞춰요.",
+    "iteration-flow": "fzppcoct에서는 반복 특징은 하나의 대입 z = cosxx(z) + offset에 초점을 맞춰요.",
+    "bailout-test": "fzppcoct에서는 종료 특징은 비교 |z| <= 50에 초점을 맞춰요."
+  },
+  "parameterExperiment": {
+    "steps": [
+      "fzppcoct을 고정된 매개변수 평면 기준으로 렌더링하세요: 중심 (-0.5, 0), 확대 0.4, 회전 0, 및 96회 반복. ",
+      "반복 횟수만 바꾸고 기준은 고정한 채 48회로 한 번 렌더링한 뒤 96회 기준과 비교하세요."
+    ],
+    "expectedObservation": "fzppcoct에서는 48회와 96회 반복의 비교에서 달라지는 점이 있는지 기록하고 소스 제한 |z| <= 50을 적으세요."
+  },
+  "exercise": {
+    "prompt": "fzppcoct에서는 세 주석을 찾아 z = pixel, z = cosxx(z) + offset, |z| <= 50을 설명하고 그리고 이웃 명령이 반복 주석에 속하지 않는 이유를 설명하세요.",
+    "completionCheck": "fzppcoct에서는 모든 3개 주석 키를 열거하고 z = cosxx(z) + offset와 |z| <= 50의 역할을 정확히 설명하면 완료예요."
+  },
+  "factsPresentation": {
+    "provenanceLead": "출처 정보는 영어 사실 단위에 있어요.",
+    "rightsLead": "권리 정보는 영어 사실 단위에 있어요."
+  },
+  "contentHash": "ad44ca5d82ff075d8e61ca6c17123448921c4375e189ed5c12385e2a7c11bba3"
+}

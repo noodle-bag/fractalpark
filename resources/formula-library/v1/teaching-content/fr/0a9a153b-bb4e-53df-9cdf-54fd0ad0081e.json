@@ -1,0 +1,35 @@
+{
+  "schema": "fractalpark-teaching-locale/v1",
+  "formulaId": "0a9a153b-bb4e-53df-9cdf-54fd0ad0081e",
+  "locale": "fr",
+  "sourceRevision": "0a9786849dd78c3643bae1f6de80fbc42d2e57e50e591090e67d681c81c0822e",
+  "semanticHash": "60f95642c01edfef967fd1d305e4c24747437321c32abbe847217193b9fe64eb",
+  "englishContentHash": "22eb63c262fd38ce1517d8325d7eabb007f7c9a4a66c3dcb726177f8c47fd45e",
+  "overview": "Dans FRM-like/1, ok-35 commence par z = pixel, le premier nœud de boucle fait mapped = firstMap(z), et |z| <= real(threshold) limite l’itération. Lis ces opérations dans l’ordre réel de la source.",
+  "sourceWalkthrough": {
+    "0a9a153b-bb4e-53df-9cdf-54fd0ad0081e:0a9786849dd78c3643bae1f6de80fbc42d2e57e50e591090e67d681c81c0822e:initialization": "Dans ok-35, le nœud d’initialisation exécute seulement : z = pixel.",
+    "0a9a153b-bb4e-53df-9cdf-54fd0ad0081e:0a9786849dd78c3643bae1f6de80fbc42d2e57e50e591090e67d681c81c0822e:iteration": "Dans ok-35, ce nœud de boucle exécute seulement : mapped = firstMap(z).",
+    "0a9a153b-bb4e-53df-9cdf-54fd0ad0081e:0a9786849dd78c3643bae1f6de80fbc42d2e57e50e591090e67d681c81c0822e:termination": "Dans ok-35, le nœud bailout teste seulement : |z| <= real(threshold)."
+  },
+  "syntaxFeatures": {
+    "initialization-flow": "Dans ok-35, la caractéristique d’initialisation cible la seule opération initiale z = pixel.",
+    "iteration-flow": "Dans ok-35, la caractéristique d’itération cible la seule affectation mapped = firstMap(z).",
+    "bailout-test": "Dans ok-35, la caractéristique de terminaison cible la comparaison |z| <= real(threshold)."
+  },
+  "parameterExperiment": {
+    "steps": [
+      "Fais le rendu de ok-35 avec la base du plan des paramètres fixée et les valeurs d’exécution par défaut multiplier (0, 0), thresholdOffset (0, 0), firstMap (identity), secondMap (identity).",
+      "Change un seul élément parmi multiplier, thresholdOffset, firstMap, secondMap à la fois, garde centre (0, 0), zoom 0.25, rotation 0, et 96 itérations et les autres emplacements fixes, puis compare les rendus."
+    ],
+    "expectedObservation": "Pour chaque modification isolée de multiplier, thresholdOffset, firstMap ou secondMap, note si le rendu diffère de la base et relie la comparaison à `|z| <= real(threshold)`."
+  },
+  "exercise": {
+    "prompt": "Dans ok-35, repère les trois annotations et explique z = pixel, mapped = firstMap(z) et |z| <= real(threshold) et explique pourquoi aucune instruction voisine n’appartient à l’annotation de boucle.",
+    "completionCheck": "Dans ok-35, tu as terminé en listant les 3 clés d’annotation et en expliquant précisément mapped = firstMap(z) et |z| <= real(threshold)."
+  },
+  "factsPresentation": {
+    "provenanceLead": "La provenance est dans l’unité factuelle anglaise.",
+    "rightsLead": "Les droits sont dans l’unité factuelle anglaise."
+  },
+  "contentHash": "d676df4babb912ae2d65ec15a87ef916ce6ebe97f55e07612763cf46820b9c8d"
+}

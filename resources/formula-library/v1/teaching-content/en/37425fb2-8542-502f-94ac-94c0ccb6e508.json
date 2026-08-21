@@ -1,0 +1,85 @@
+{
+  "schema": "fractalpark-teaching-en-fact/v1",
+  "formulaId": "37425fb2-8542-502f-94ac-94c0ccb6e508",
+  "sourceRevision": "69a7d072638f6981ee8e06c85d03831c9a53fb549337605eb35bb3cdf1db4e10",
+  "semanticHash": "01a25a87e2bb305345f4b72f0a9a87809258c73d5b379604dfd9625796dbb372",
+  "overview": "FRM-like/1 defines rationalMap1 with source initialization if ismand: z = 0; otherwise z = pixel, then a loop whose first node is numer = z * z. The pinned parameter-plane profile uses center (0, 0), zoom 0.25, rotation 0, and 96 iterations, and the source tests |z| <= 256 for bailout.",
+  "mathDisclosure": "exact-structured",
+  "mathSummary": "For rationalMap1, the cited first loop node is exactly numer = z * z; the source’s bailout comparison is |z| <= 256. The full source loop remains the authoritative sequence of subsequent operations.",
+  "sourceWalkthrough": [
+    {
+      "annotationId": "37425fb2-8542-502f-94ac-94c0ccb6e508:69a7d072638f6981ee8e06c85d03831c9a53fb549337605eb35bb3cdf1db4e10:initialization",
+      "nodeId": "frm-v1:69a7d072638f6981ee8e06c85d03831c9a53fb549337605eb35bb3cdf1db4e10:init/0",
+      "explanation": "This cited initialization node performs only: if ismand: z = 0; otherwise z = pixel."
+    },
+    {
+      "annotationId": "37425fb2-8542-502f-94ac-94c0ccb6e508:69a7d072638f6981ee8e06c85d03831c9a53fb549337605eb35bb3cdf1db4e10:iteration",
+      "nodeId": "frm-v1:69a7d072638f6981ee8e06c85d03831c9a53fb549337605eb35bb3cdf1db4e10:loop/0",
+      "explanation": "This cited first loop node performs only: numer = z * z."
+    },
+    {
+      "annotationId": "37425fb2-8542-502f-94ac-94c0ccb6e508:69a7d072638f6981ee8e06c85d03831c9a53fb549337605eb35bb3cdf1db4e10:termination",
+      "nodeId": "frm-v1:69a7d072638f6981ee8e06c85d03831c9a53fb549337605eb35bb3cdf1db4e10:bailout",
+      "explanation": "This cited bailout node tests only: |z| <= 256."
+    }
+  ],
+  "syntaxFeatures": [
+    {
+      "featureId": "initialization-flow",
+      "annotationIds": [
+        "37425fb2-8542-502f-94ac-94c0ccb6e508:69a7d072638f6981ee8e06c85d03831c9a53fb549337605eb35bb3cdf1db4e10:initialization"
+      ],
+      "explanation": "The initialization annotation isolates if ismand: z = 0; otherwise z = pixel rather than a later initialization statement. This is specific to rationalMap1."
+    },
+    {
+      "featureId": "iteration-flow",
+      "annotationIds": [
+        "37425fb2-8542-502f-94ac-94c0ccb6e508:69a7d072638f6981ee8e06c85d03831c9a53fb549337605eb35bb3cdf1db4e10:iteration"
+      ],
+      "explanation": "The iteration annotation isolates the first loop assignment numer = z * z; rationalMap1 stores the squared numerator before the denominator is guarded. This is specific to rationalMap1."
+    },
+    {
+      "featureId": "bailout-test",
+      "annotationIds": [
+        "37425fb2-8542-502f-94ac-94c0ccb6e508:69a7d072638f6981ee8e06c85d03831c9a53fb549337605eb35bb3cdf1db4e10:termination"
+      ],
+      "explanation": "The termination annotation identifies the exact continuation comparison |z| <= 256. This is specific to rationalMap1."
+    }
+  ],
+  "parameterExperiment": {
+    "parameterSymbols": [],
+    "steps": [
+      "Render rationalMap1 with the pinned parameter-plane baseline: center (0, 0), zoom 0.25, rotation 0, and 96 iterations.",
+      "Keep center (0, 0), zoom 0.25, rotation 0, and 96 iterations fixed except for iterations, render once at 48 iterations, and compare it with the 96-iteration baseline."
+    ],
+    "expectedObservation": "Record whether the 48- versus 96-iteration comparison changes anything, and note the source limit |z| <= 256. This is the rationalMap1 comparison."
+  },
+  "exercise": {
+    "prompt": "For rationalMap1, use the three annotations to distinguish the single-node operations if ismand: z = 0; otherwise z = pixel, numer = z * z, and |z| <= 256; explain why no neighboring statement belongs to the loop annotation.",
+    "completionCheck": "Name all 3 annotation IDs, then state exactly that the cited loop node is numer = z * z and the cited bailout node is |z| <= 256. This completes the rationalMap1 reading.",
+    "answerDisclosure": "hint"
+  },
+  "facts": {
+    "provenanceStatement": "Grounded in runtime source revision 69a7d072638f6981ee8e06c85d03831c9a53fb549337605eb35bb3cdf1db4e10 and the publication decision for 37425fb2-8542-502f-94ac-94c0ccb6e508.",
+    "rightsStatement": "rightsStatus is project-owned; implementationBasis is project-owned; publicationDecision is publish; decisionReason is publish-project-owned-native-recipe. These records describe this project decision only and do not assert broader rights in any third-party original.",
+    "sourceIds": [
+      "runtime:69a7d072638f6981ee8e06c85d03831c9a53fb549337605eb35bb3cdf1db4e10",
+      "decision:37425fb2-8542-502f-94ac-94c0ccb6e508"
+    ],
+    "licenseIds": [],
+    "claims": [
+      {
+        "text": "The pinned runtime profile uses parameter-plane mode and 96 iterations.",
+        "sourceIds": [
+          "runtime:69a7d072638f6981ee8e06c85d03831c9a53fb549337605eb35bb3cdf1db4e10"
+        ]
+      },
+      {
+        "text": "The recorded publication decision is publish with reason publish-project-owned-native-recipe.",
+        "sourceIds": [
+          "decision:37425fb2-8542-502f-94ac-94c0ccb6e508"
+        ]
+      }
+    ]
+  }
+}

@@ -1,0 +1,35 @@
+{
+  "schema": "fractalpark-teaching-locale/v1",
+  "formulaId": "37425fb2-8542-502f-94ac-94c0ccb6e508",
+  "locale": "pt",
+  "sourceRevision": "69a7d072638f6981ee8e06c85d03831c9a53fb549337605eb35bb3cdf1db4e10",
+  "semanticHash": "01a25a87e2bb305345f4b72f0a9a87809258c73d5b379604dfd9625796dbb372",
+  "englishContentHash": "a08a2e14a156823109e5fc986b1746001470dd96fc6651abc89c94e02ae77859",
+  "overview": "Em FRM-like/1, rationalMap1 começa com se ismand, z = 0; caso contrário, z = pixel, usa numer = z * z no primeiro nó do laço e limita a iteração com |z| <= 256. Leia essas operações na ordem real da fonte.",
+  "sourceWalkthrough": {
+    "37425fb2-8542-502f-94ac-94c0ccb6e508:69a7d072638f6981ee8e06c85d03831c9a53fb549337605eb35bb3cdf1db4e10:initialization": "Em rationalMap1, o nó de inicialização executa somente: se ismand, z = 0; caso contrário, z = pixel.",
+    "37425fb2-8542-502f-94ac-94c0ccb6e508:69a7d072638f6981ee8e06c85d03831c9a53fb549337605eb35bb3cdf1db4e10:iteration": "Em rationalMap1, este nó do laço executa somente: numer = z * z.",
+    "37425fb2-8542-502f-94ac-94c0ccb6e508:69a7d072638f6981ee8e06c85d03831c9a53fb549337605eb35bb3cdf1db4e10:termination": "Em rationalMap1, o nó bailout testa somente: |z| <= 256."
+  },
+  "syntaxFeatures": {
+    "initialization-flow": "Em rationalMap1, a característica de inicialização focaliza a única operação se ismand, z = 0; caso contrário, z = pixel.",
+    "iteration-flow": "Em rationalMap1, a característica de iteração focaliza a única atribuição numer = z * z.",
+    "bailout-test": "Em rationalMap1, a característica de término focaliza a comparação |z| <= 256."
+  },
+  "parameterExperiment": {
+    "steps": [
+      "Renderize rationalMap1 com a base do plano de parâmetros fixada: centro (0, 0), zoom 0.25, rotação 0, e 96 iterações.",
+      "Mantenha a base fixa exceto pelas iterações, renderize uma vez com 48 iterações e compare com a base de 96."
+    ],
+    "expectedObservation": "Em rationalMap1, registre se a comparação entre 48 e 96 iterações muda algo e anote o limite da fonte |z| <= 256."
+  },
+  "exercise": {
+    "prompt": "Em rationalMap1, localize as três anotações e explique se ismand, z = 0; caso contrário, z = pixel, numer = z * z e |z| <= 256 e explique por que nenhuma instrução vizinha pertence à anotação do laço.",
+    "completionCheck": "Em rationalMap1, você concluiu ao listar todas as 3 chaves de anotação e explicar corretamente numer = z * z e |z| <= 256."
+  },
+  "factsPresentation": {
+    "provenanceLead": "A proveniência está na unidade factual inglesa.",
+    "rightsLead": "Os direitos estão na unidade factual inglesa."
+  },
+  "contentHash": "2c536c2b406654e5cb1a220352355a7a2f5b0e0c1754816a1b8b864e06b371aa"
+}

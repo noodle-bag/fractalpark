@@ -1,0 +1,35 @@
+{
+  "schema": "fractalpark-teaching-locale/v1",
+  "formulaId": "a9263b21-23c1-5d94-ba30-f7bef1a66629",
+  "locale": "es",
+  "sourceRevision": "bf1462942af10c52a5adbecf8856b4e34a8a5110637c84fa613728b76a1d6b4a",
+  "semanticHash": "f170562c56a5af50f20613a53ad362101ca5c82901b219a828ce640149d25f6a",
+  "englishContentHash": "a7d280a201d8754b7f1495c21ded116d9bcba534b3095187f237a962cfe235a7",
+  "overview": "En FRM-like/1, spider comienza con si ismand, z = 0; si no, z = pixel, el primer nodo del bucle hace z2 = z * z y |z| <= 256 limita la iteración. Lee estas operaciones en el orden real de la fuente.",
+  "sourceWalkthrough": {
+    "a9263b21-23c1-5d94-ba30-f7bef1a66629:bf1462942af10c52a5adbecf8856b4e34a8a5110637c84fa613728b76a1d6b4a:initialization": "En spider, el nodo de inicialización ejecuta solo: si ismand, z = 0; si no, z = pixel.",
+    "a9263b21-23c1-5d94-ba30-f7bef1a66629:bf1462942af10c52a5adbecf8856b4e34a8a5110637c84fa613728b76a1d6b4a:iteration": "En spider, este nodo del bucle ejecuta solo: z2 = z * z.",
+    "a9263b21-23c1-5d94-ba30-f7bef1a66629:bf1462942af10c52a5adbecf8856b4e34a8a5110637c84fa613728b76a1d6b4a:termination": "En spider, el nodo bailout prueba solo: |z| <= 256."
+  },
+  "syntaxFeatures": {
+    "initialization-flow": "En spider, la característica de inicialización se centra en la única operación inicial si ismand, z = 0; si no, z = pixel.",
+    "iteration-flow": "En spider, la característica de iteración se centra en la única asignación z2 = z * z.",
+    "bailout-test": "En spider, la característica de terminación se centra en la comparación |z| <= 256."
+  },
+  "parameterExperiment": {
+    "steps": [
+      "Renderiza spider con la base del plano de parámetros fijada: centro (0, 0), zoom 0.25, rotación 0, y 96 iteraciones.",
+      "Mantén fija la base salvo las iteraciones, renderiza una vez con 48 iteraciones y compárala con la base de 96."
+    ],
+    "expectedObservation": "En spider, anota si la comparación entre 48 y 96 iteraciones cambia algo e identifica el límite fuente |z| <= 256."
+  },
+  "exercise": {
+    "prompt": "En spider, localiza las tres anotaciones y explica si ismand, z = 0; si no, z = pixel, z2 = z * z y |z| <= 256 y explica por qué ninguna instrucción vecina pertenece a la anotación del bucle.",
+    "completionCheck": "En spider, has terminado al enumerar las 3 claves de anotación y explicar con precisión z2 = z * z y |z| <= 256."
+  },
+  "factsPresentation": {
+    "provenanceLead": "La procedencia está en la unidad factual inglesa.",
+    "rightsLead": "Los derechos están en la unidad factual inglesa."
+  },
+  "contentHash": "24009937d23573a649a1f5f9964fde560609240718cdfc26fb91f95ea0bcaf0c"
+}

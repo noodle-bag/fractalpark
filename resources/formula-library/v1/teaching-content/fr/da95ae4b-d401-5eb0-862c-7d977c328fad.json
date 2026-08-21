@@ -1,0 +1,35 @@
+{
+  "schema": "fractalpark-teaching-locale/v1",
+  "formulaId": "da95ae4b-d401-5eb0-862c-7d977c328fad",
+  "locale": "fr",
+  "sourceRevision": "c0fdb8fb46828947defe52dd82bdabd45a1a8baeb32278ae649b7231e647bf2f",
+  "semanticHash": "6ecfdd7558b795aaff0dc5bf3609c3c580e4ef18af90fbe45686a204d2dd9443",
+  "englishContentHash": "e06f064d9449516b1d9c94f02c1960cc348557decee4c593baccf30e9bb0bf78",
+  "overview": "Dans FRM-like/1, jm_27 commence par z = pixel, le premier nœud de boucle fait sqrz = fn1(z), et |z| <= t limite l’itération. Lis ces opérations dans l’ordre réel de la source.",
+  "sourceWalkthrough": {
+    "da95ae4b-d401-5eb0-862c-7d977c328fad:c0fdb8fb46828947defe52dd82bdabd45a1a8baeb32278ae649b7231e647bf2f:initialization": "Dans jm_27, le nœud d’initialisation exécute seulement : z = pixel.",
+    "da95ae4b-d401-5eb0-862c-7d977c328fad:c0fdb8fb46828947defe52dd82bdabd45a1a8baeb32278ae649b7231e647bf2f:iteration": "Dans jm_27, ce nœud de boucle exécute seulement : sqrz = fn1(z).",
+    "da95ae4b-d401-5eb0-862c-7d977c328fad:c0fdb8fb46828947defe52dd82bdabd45a1a8baeb32278ae649b7231e647bf2f:termination": "Dans jm_27, le nœud bailout teste seulement : |z| <= t."
+  },
+  "syntaxFeatures": {
+    "initialization-flow": "Dans jm_27, la caractéristique d’initialisation cible la seule opération initiale z = pixel.",
+    "iteration-flow": "Dans jm_27, la caractéristique d’itération cible la seule affectation sqrz = fn1(z).",
+    "bailout-test": "Dans jm_27, la caractéristique de terminaison cible la comparaison |z| <= t."
+  },
+  "parameterExperiment": {
+    "steps": [
+      "Fais le rendu de jm_27 avec la base du plan des paramètres fixée et les valeurs d’exécution par défaut parameter1 (0, 0), function1 (identity).",
+      "Change un seul élément parmi parameter1, function1 à la fois, garde centre (0, 0), zoom 0.25, rotation 0, et 96 itérations et les autres emplacements fixes, puis compare les rendus."
+    ],
+    "expectedObservation": "Pour chaque modification isolée de parameter1 ou function1, note si le rendu diffère de la base et relie la comparaison à `|z| <= t`."
+  },
+  "exercise": {
+    "prompt": "Dans jm_27, repère les trois annotations et explique z = pixel, sqrz = fn1(z) et |z| <= t et explique pourquoi aucune instruction voisine n’appartient à l’annotation de boucle.",
+    "completionCheck": "Dans jm_27, tu as terminé en listant les 3 clés d’annotation et en expliquant précisément sqrz = fn1(z) et |z| <= t."
+  },
+  "factsPresentation": {
+    "provenanceLead": "La provenance est dans l’unité factuelle anglaise.",
+    "rightsLead": "Les droits sont dans l’unité factuelle anglaise."
+  },
+  "contentHash": "37f31a2d25bf639e729791a25cce721059d2839457cc3011107e75f6081f667b"
+}

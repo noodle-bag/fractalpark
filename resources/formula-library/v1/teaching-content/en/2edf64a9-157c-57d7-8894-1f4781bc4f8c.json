@@ -1,0 +1,85 @@
+{
+  "schema": "fractalpark-teaching-en-fact/v1",
+  "formulaId": "2edf64a9-157c-57d7-8894-1f4781bc4f8c",
+  "sourceRevision": "37344c3bc7fc90852e94c7b74ec99df5400c6332e8ca9bdad5e5c8ff3b51e688",
+  "semanticHash": "5c2a39a58bea81ef4853efa2e111c5a86f81b6e019640cc845a02d3764fe2c1a",
+  "overview": "FRM-like/1 defines reciprocalQuadratic with source initialization if ismand: z = 0; otherwise z = pixel, then a loop whose first node is denom = z * z + c. The pinned parameter-plane profile uses center (0, 0), zoom 0.25, rotation 0, and 96 iterations, and the source tests |z| <= 256 for bailout.",
+  "mathDisclosure": "exact-structured",
+  "mathSummary": "For reciprocalQuadratic, the cited first loop node is exactly denom = z * z + c; the source’s bailout comparison is |z| <= 256. The full source loop remains the authoritative sequence of subsequent operations.",
+  "sourceWalkthrough": [
+    {
+      "annotationId": "2edf64a9-157c-57d7-8894-1f4781bc4f8c:37344c3bc7fc90852e94c7b74ec99df5400c6332e8ca9bdad5e5c8ff3b51e688:initialization",
+      "nodeId": "frm-v1:37344c3bc7fc90852e94c7b74ec99df5400c6332e8ca9bdad5e5c8ff3b51e688:init/0",
+      "explanation": "This cited initialization node performs only: if ismand: z = 0; otherwise z = pixel."
+    },
+    {
+      "annotationId": "2edf64a9-157c-57d7-8894-1f4781bc4f8c:37344c3bc7fc90852e94c7b74ec99df5400c6332e8ca9bdad5e5c8ff3b51e688:iteration",
+      "nodeId": "frm-v1:37344c3bc7fc90852e94c7b74ec99df5400c6332e8ca9bdad5e5c8ff3b51e688:loop/0",
+      "explanation": "This cited first loop node performs only: denom = z * z + c."
+    },
+    {
+      "annotationId": "2edf64a9-157c-57d7-8894-1f4781bc4f8c:37344c3bc7fc90852e94c7b74ec99df5400c6332e8ca9bdad5e5c8ff3b51e688:termination",
+      "nodeId": "frm-v1:37344c3bc7fc90852e94c7b74ec99df5400c6332e8ca9bdad5e5c8ff3b51e688:bailout",
+      "explanation": "This cited bailout node tests only: |z| <= 256."
+    }
+  ],
+  "syntaxFeatures": [
+    {
+      "featureId": "initialization-flow",
+      "annotationIds": [
+        "2edf64a9-157c-57d7-8894-1f4781bc4f8c:37344c3bc7fc90852e94c7b74ec99df5400c6332e8ca9bdad5e5c8ff3b51e688:initialization"
+      ],
+      "explanation": "The initialization annotation isolates if ismand: z = 0; otherwise z = pixel rather than a later initialization statement. This is specific to reciprocalQuadratic."
+    },
+    {
+      "featureId": "iteration-flow",
+      "annotationIds": [
+        "2edf64a9-157c-57d7-8894-1f4781bc4f8c:37344c3bc7fc90852e94c7b74ec99df5400c6332e8ca9bdad5e5c8ff3b51e688:iteration"
+      ],
+      "explanation": "The iteration annotation isolates the first loop assignment denom = z * z + c; reciprocalQuadratic builds denom from z squared plus c before its guard. This is specific to reciprocalQuadratic."
+    },
+    {
+      "featureId": "bailout-test",
+      "annotationIds": [
+        "2edf64a9-157c-57d7-8894-1f4781bc4f8c:37344c3bc7fc90852e94c7b74ec99df5400c6332e8ca9bdad5e5c8ff3b51e688:termination"
+      ],
+      "explanation": "The termination annotation identifies the exact continuation comparison |z| <= 256. This is specific to reciprocalQuadratic."
+    }
+  ],
+  "parameterExperiment": {
+    "parameterSymbols": [],
+    "steps": [
+      "Render reciprocalQuadratic with the pinned parameter-plane baseline: center (0, 0), zoom 0.25, rotation 0, and 96 iterations.",
+      "Keep center (0, 0), zoom 0.25, rotation 0, and 96 iterations fixed except for iterations, render once at 48 iterations, and compare it with the 96-iteration baseline."
+    ],
+    "expectedObservation": "Record whether the 48- versus 96-iteration comparison changes anything, and note the source limit |z| <= 256. This is the reciprocalQuadratic comparison."
+  },
+  "exercise": {
+    "prompt": "For reciprocalQuadratic, use the three annotations to distinguish the single-node operations if ismand: z = 0; otherwise z = pixel, denom = z * z + c, and |z| <= 256; explain why no neighboring statement belongs to the loop annotation.",
+    "completionCheck": "Name all 3 annotation IDs, then state exactly that the cited loop node is denom = z * z + c and the cited bailout node is |z| <= 256. This completes the reciprocalQuadratic reading.",
+    "answerDisclosure": "hint"
+  },
+  "facts": {
+    "provenanceStatement": "Grounded in runtime source revision 37344c3bc7fc90852e94c7b74ec99df5400c6332e8ca9bdad5e5c8ff3b51e688 and the publication decision for 2edf64a9-157c-57d7-8894-1f4781bc4f8c.",
+    "rightsStatement": "rightsStatus is project-owned; implementationBasis is project-owned; publicationDecision is publish; decisionReason is publish-project-owned-native-recipe. These records describe this project decision only and do not assert broader rights in any third-party original.",
+    "sourceIds": [
+      "runtime:37344c3bc7fc90852e94c7b74ec99df5400c6332e8ca9bdad5e5c8ff3b51e688",
+      "decision:2edf64a9-157c-57d7-8894-1f4781bc4f8c"
+    ],
+    "licenseIds": [],
+    "claims": [
+      {
+        "text": "The pinned runtime profile uses parameter-plane mode and 96 iterations.",
+        "sourceIds": [
+          "runtime:37344c3bc7fc90852e94c7b74ec99df5400c6332e8ca9bdad5e5c8ff3b51e688"
+        ]
+      },
+      {
+        "text": "The recorded publication decision is publish with reason publish-project-owned-native-recipe.",
+        "sourceIds": [
+          "decision:2edf64a9-157c-57d7-8894-1f4781bc4f8c"
+        ]
+      }
+    ]
+  }
+}

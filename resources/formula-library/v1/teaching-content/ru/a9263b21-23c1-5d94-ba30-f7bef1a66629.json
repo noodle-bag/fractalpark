@@ -1,0 +1,35 @@
+{
+  "schema": "fractalpark-teaching-locale/v1",
+  "formulaId": "a9263b21-23c1-5d94-ba30-f7bef1a66629",
+  "locale": "ru",
+  "sourceRevision": "bf1462942af10c52a5adbecf8856b4e34a8a5110637c84fa613728b76a1d6b4a",
+  "semanticHash": "f170562c56a5af50f20613a53ad362101ca5c82901b219a828ce640149d25f6a",
+  "englishContentHash": "a7d280a201d8754b7f1495c21ded116d9bcba534b3095187f237a962cfe235a7",
+  "overview": "В FRM-like/1 формула spider начинается с если ismand, то z = 0; иначе z = pixel, первый узел цикла задаёт z2 = z * z, а итерацию ограничивает |z| <= 256. Читайте эти операции в фактическом порядке исходника.",
+  "sourceWalkthrough": {
+    "a9263b21-23c1-5d94-ba30-f7bef1a66629:bf1462942af10c52a5adbecf8856b4e34a8a5110637c84fa613728b76a1d6b4a:initialization": "В spider, узел инициализации выполняет только: если ismand, то z = 0; иначе z = pixel.",
+    "a9263b21-23c1-5d94-ba30-f7bef1a66629:bf1462942af10c52a5adbecf8856b4e34a8a5110637c84fa613728b76a1d6b4a:iteration": "В spider, этот узел цикла выполняет только: z2 = z * z.",
+    "a9263b21-23c1-5d94-ba30-f7bef1a66629:bf1462942af10c52a5adbecf8856b4e34a8a5110637c84fa613728b76a1d6b4a:termination": "В spider, узел bailout проверяет только: |z| <= 256."
+  },
+  "syntaxFeatures": {
+    "initialization-flow": "В spider, признак инициализации выделяет единственную начальную операцию если ismand, то z = 0; иначе z = pixel.",
+    "iteration-flow": "В spider, признак итерации выделяет единственное присваивание z2 = z * z.",
+    "bailout-test": "В spider, признак завершения выделяет сравнение |z| <= 256."
+  },
+  "parameterExperiment": {
+    "steps": [
+      "Выполните рендер spider с закреплённой базой плоскости параметров: центр (0, 0), масштаб 0.25, поворот 0, и 96 итераций.",
+      "Не меняя базу, кроме числа итераций, выполните один рендер с 48 итерациями и сравните его с базой в 96 итераций."
+    ],
+    "expectedObservation": "В spider, запишите, меняется ли что-либо при сравнении 48 и 96 итераций, и отметьте ограничение исходника |z| <= 256."
+  },
+  "exercise": {
+    "prompt": "В spider, найдите три аннотации и объясните если ismand, то z = 0; иначе z = pixel, z2 = z * z и |z| <= 256 и объясните, почему соседние инструкции не относятся к аннотации цикла.",
+    "completionCheck": "В spider, вы завершили задание, если перечислили все 3 ключа аннотаций и точно объяснили z2 = z * z и |z| <= 256."
+  },
+  "factsPresentation": {
+    "provenanceLead": "Происхождение указано в английском фактологическом блоке.",
+    "rightsLead": "Права указаны в английском фактологическом блоке."
+  },
+  "contentHash": "d469be69f2e1334d3059bb91be1b687b6f542b17c876f981bbe0a25ab845b1df"
+}

@@ -1,0 +1,35 @@
+{
+  "schema": "fractalpark-teaching-locale/v1",
+  "formulaId": "6c1385a9-2d23-5816-90d1-2752905fc353",
+  "locale": "ru",
+  "sourceRevision": "decba7b7f3d2b3e121f53906a98d62d32743da89d72ea79c2aa1ebd5f5aa2e37",
+  "semanticHash": "0126714b6b16415137cb09eba57dc601ff56a5efc76c754cedc84d5c0130fa82",
+  "englishContentHash": "0cb3e7092ec9d11b8accd8e839642327fb89ede59958cf352c3cb6d3cf3e97ec",
+  "overview": "В FRM-like/1 формула circleInversion начинается с если ismand, то z = 0; иначе z = pixel, первый узел цикла задаёт z2 = z * z, а итерацию ограничивает |z| <= 256. Читайте эти операции в фактическом порядке исходника.",
+  "sourceWalkthrough": {
+    "6c1385a9-2d23-5816-90d1-2752905fc353:decba7b7f3d2b3e121f53906a98d62d32743da89d72ea79c2aa1ebd5f5aa2e37:initialization": "В circleInversion, узел инициализации выполняет только: если ismand, то z = 0; иначе z = pixel.",
+    "6c1385a9-2d23-5816-90d1-2752905fc353:decba7b7f3d2b3e121f53906a98d62d32743da89d72ea79c2aa1ebd5f5aa2e37:iteration": "В circleInversion, этот узел цикла выполняет только: z2 = z * z.",
+    "6c1385a9-2d23-5816-90d1-2752905fc353:decba7b7f3d2b3e121f53906a98d62d32743da89d72ea79c2aa1ebd5f5aa2e37:termination": "В circleInversion, узел bailout проверяет только: |z| <= 256."
+  },
+  "syntaxFeatures": {
+    "initialization-flow": "В circleInversion, признак инициализации выделяет единственную начальную операцию если ismand, то z = 0; иначе z = pixel.",
+    "iteration-flow": "В circleInversion, признак итерации выделяет единственное присваивание z2 = z * z.",
+    "bailout-test": "В circleInversion, признак завершения выделяет сравнение |z| <= 256."
+  },
+  "parameterExperiment": {
+    "steps": [
+      "Выполните рендер circleInversion с закреплённой базой плоскости параметров: центр (0, 0), масштаб 0.25, поворот 0, и 96 итераций.",
+      "Не меняя базу, кроме числа итераций, выполните один рендер с 48 итерациями и сравните его с базой в 96 итераций."
+    ],
+    "expectedObservation": "В circleInversion, запишите, меняется ли что-либо при сравнении 48 и 96 итераций, и отметьте ограничение исходника |z| <= 256."
+  },
+  "exercise": {
+    "prompt": "В circleInversion, найдите три аннотации и объясните если ismand, то z = 0; иначе z = pixel, z2 = z * z и |z| <= 256 и объясните, почему соседние инструкции не относятся к аннотации цикла.",
+    "completionCheck": "В circleInversion, вы завершили задание, если перечислили все 3 ключа аннотаций и точно объяснили z2 = z * z и |z| <= 256."
+  },
+  "factsPresentation": {
+    "provenanceLead": "Происхождение указано в английском фактологическом блоке.",
+    "rightsLead": "Права указаны в английском фактологическом блоке."
+  },
+  "contentHash": "55d45f8240223dd45d49bafa208d663d21b457eeb1f6d2423b0ff0b4b19ea9f2"
+}
