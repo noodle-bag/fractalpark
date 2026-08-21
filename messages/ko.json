@@ -256,7 +256,7 @@
       "breadcrumb": "수식",
       "eyebrow": "수식 아틀라스",
       "title": "수식 아틀라스",
-      "intro": "일곱 개 패밀리에 걸친 FractalPark의 내장 수식 94개 전체 카탈로그를 둘러보세요. 표준 뷰에서 시작하거나, 심층 가이드 프로필 21개 중 하나를 따라가거나, FRM으로 나만의 수식을 작성하는 법을 배워보세요.",
+      "intro": "일곱 패밀리에 걸친 FractalPark 내장 Explorer 수식 94개를 살펴보세요. 정식 뷰에서 시작하거나 심층 가이드 Profile 21개 중 하나를 따라가거나, FRM 소스의 작동 방식을 배우고 알맞은 작성 도구를 선택하세요.",
       "stats": {
         "formulas": "수식",
         "families": "패밀리",
@@ -297,9 +297,9 @@
       },
       "frm": {
         "eyebrow": "직접 만들기",
-        "title": "FRM으로 수식 배우고 작성하기",
-        "description": "FRM은 FractalPark에서 검증한 텍스트 기반 저작 방식이에요. 호환성 가이드를 읽고 컴파일 검사를 통과한 예제를 살펴본 다음, 독립형 편집기에서 수식을 작성하고 미리 보세요.",
-        "learn": "FRM 배우기",
+        "title": "FRM과 Formula Editor 이해하기",
+        "description": "공개된 Standard Definition은 고정된 FRM-like v1 소스를 사용해요. 독립형 Editor는 Classic-compatible 소스 계약을 사용하며, Guide는 두 경로를 설명하고 컴파일 검사된 Editor 예제를 제공해요.",
+        "learn": "FRM 이해하기",
         "openEditor": "수식 에디터 열기"
       },
       "guides": {
@@ -318,8 +318,8 @@
         "guideBadge": "가이드"
       },
       "cta": {
-        "title": "수식에서 시작하거나 직접 작성하세요",
-        "description": "기본 제공 수식은 탐색기를 사용하고, 반복을 직접 정의하려면 독립형 FRM 편집기를 여세요.",
+        "title": "수식에서 시작하거나 Classic-compatible Editor 사용하기",
+        "description": "내장 수식에는 Explorer를 사용하고, 지원되는 Classic-compatible 사용자 반복 하위 집합에는 독립형 FRM Editor를 여세요.",
         "explore": "탐색기 열기",
         "editor": "수식 에디터 열기"
       },
@@ -361,9 +361,9 @@
       }
     },
     "frmGuide": {
-      "eyebrow": "FRM 수식 언어",
-      "title": "FRM으로 프랙탈 작성하기",
-      "intro": "FractalPark의 검증된 FRM 하위 집합을 배우고, 소스가 GPU 셰이더가 되는 과정을 이해하며, 에디터가 사용하는 동일한 예제로 작동하는 수식 세 개를 만들어 보세요.",
+      "eyebrow": "FRM 언어와 호환성",
+      "title": "FractalPark에서 FRM 이해하기",
+      "intro": "정식 FRM-like v1 Definition이 공개된 Standard 수식을 구동하는 방식을 배운 뒤, 두 소스 계약을 혼동하지 않고 별도의 Classic-compatible Editor 예제를 사용하세요.",
       "contentsLabel": "이 페이지에서",
       "copy": {
         "copy": "복사",
@@ -374,15 +374,15 @@
         "what-is-frm": {
           "title": "FRM이란 무엇인가요?",
           "body": [
-            "FRM은 반복 프랙탈을 설명하는 간결한 텍스트 기반 방식이에요. 수식은 시작 상태, 각 오빗마다 반복되는 계산, 그리고 반복을 계속할지 결정하는 조건을 정의해요.",
-            "이 형식은 렌더링 프로그램을 다시 빌드하지 않고도 실험을 교환할 수 있게 해준 수식 파일이 있는 Fractint 생태계에서 성장했어요. FractalPark은 완전한 호환성을 주장하는 대신 자체 검증된 하위 집합을 문서화하면서 그 저작 아이디어를 브라우저 워크플로우로 옮겨왔어요."
+            "FractalPark FRM-like v1은 공개된 Standard Definition의 기반이 되는 정식 타입 소스 언어예요. Definition은 언어, 표준 라이브러리, NumericProfile, 매개변수, 초기 상태, 반복 궤도 단계, 반복 계속 조건을 고정해요.",
+            "Classic .frm은 Fractint 생태계에서 발전했으며 Classic-compatible 독립형 Editor와 가져오기 파이프라인이 사용하는 소스 계약으로 남아 있어요. FractalPark은 그 방언을 별도로 스캔하고 진단해요. Classic 소스와 frmSemanticsVersion 1 또는 2는 정식 FRM-like v1의 다른 표기가 아니에요."
           ],
           "historyPrefix": "더 넓은 프로젝트의 기원과 역사에 대해서는 다음을 참조하세요:",
           "historyLink": "Fractint 프로젝트 사이트"
         },
         "support": {
           "title": "FractalPark의 FRM 지원",
-          "intro": "FractalPark은 의도적으로 설계된 FRM 하위 집합을 토큰화·파싱·검증·컴파일해요. 아래 표는 직접 작동하는 구성, 문서화된 FractalPark 의미론을 가진 구성, 현재 워크플로우가 보존할 수 없는 구성을 구분해요.",
+          "intro": "이 호환성 표는 Classic-compatible Editor와 가져오기 경로를 설명해요. 정식으로 공개된 Standard Definition은 별도로 버전이 지정된 FRM-like v1 파서, 타입 IR, standard32 백엔드, 고정된 Safety Envelope를 사용해요.",
           "table": {
             "level": "수준",
             "meaning": "의미",
@@ -422,10 +422,10 @@
             "preprocessor": "전처리기 기능",
             "rejected-constructs": "현재 컴파일 파이프라인이 거부하는 모든 구성"
           },
-          "disclaimer": "이것은 검증된 호환성 기준선이지, 완전한 Fractint 호환성을 주장하는 것은 아니에요. 컴파일러가 변경되면 이 매트릭스와 테스트도 함께 변경돼야 해요.",
+          "disclaimer": "이는 검증된 Classic 호환성 기준선이며, 완전한 Fractint 호환성 주장도 677개 식별자의 Standard 공개 원장도 아니에요. 현재 원장에는 공개된 Definition 513개와 보류된 Record 164개가 있어요.",
           "verified": {
             "title": "검증된 호환성",
-            "intro": "이 기능 수는 버전이 지정된 매니페스트에서 가져왔어요. 588개의 대상 항목은 579개의 strict-v2 통과와 9개의 문서화된 면제로 구성되며, 별도의 117개 항목은 안정적인 사유와 함께 제외돼요.",
+            "intro": "이 Classic 가져오기 기능 수는 버전이 지정된 호환성 매니페스트에서 왔어요. 대상 항목 588개는 strict-v2 통과 579개와 문서화된 면제 9개로 구성되고, 별도 항목 117개는 안정적인 사유로 제외돼요. 이 수에는 공개된 FRM-like v1 Definition이 포함되지 않아요.",
             "stats": {
               "builtins": "내장 함수",
               "descriptors": "bailout 디스크립터 종류",
@@ -445,7 +445,7 @@
         },
         "anatomy": {
           "title": "수식 구조",
-          "intro": "FractalPark FRM 수식은 이름 있는 선언 하나와 세 개의 명시적 섹션으로 구성돼요. 이들이 함께 모든 픽셀의 상태 전이를 정의해요.",
+          "intro": "정식 FRM-like v1과 현재 Classic Editor 예제는 이름 있는 수식 및 init, loop, bailout 개념을 공유하지만, 완전한 문법은 달라요. v1에서는 의미론 지시문과 선택적 타입 매개변수 섹션도 Definition의 일부예요.",
           "parts": {
             "init": "픽셀당 한 번 실행돼요. 초기 오빗 값과 보조 변수를 여기서 설정하세요.",
             "loop": "반복마다 한 번 실행돼요. z와 다음 반복에 필요한 상태를 업데이트하세요.",
@@ -455,7 +455,7 @@
         },
         "syntax": {
           "title": "문법 가이드",
-          "intro": "언어는 의도적으로 작게 유지돼요: 표현식은 복소수 연산을 기술하고, 문장은 오빗 상태를 업데이트하며, 제어 흐름은 업데이트 중 하나를 선택해요.",
+          "intro": "두 표면 모두 의도적으로 작게 유지돼요. 아래 요약은 공유 개념이며, 정식 지시문과 타입 매개변수는 공개된 Formula Record의 Source 동작을 사용하고 Classic 소스에는 Editor 진단을 사용하세요.",
           "topics": {
             "sections": {
               "title": "선언과 섹션",
@@ -485,7 +485,7 @@
         },
         "pipeline": {
           "title": "FRM → AST → GLSL 파이프라인",
-          "intro": "FractalPark은 FRM 텍스트를 셰이더에 그대로 붙여넣지 않아요. 소스를 단계적 컴파일러에 통과시켜 문법, 의미, 생성 코드, 진단이 연결된 상태를 유지해요.",
+          "intro": "FractalPark은 소스 텍스트를 셰이더에 그대로 붙여넣지 않아요. 정식 v1 소스는 타입 파서와 CPU/GLSL 백엔드를 거치고, Classic Editor 소스는 스캐너, 선택 항목 프런트엔드, 정식 수식 모델, 플러그인 컴파일러를 거쳐요.",
           "steps": {
             "source": {
               "title": "FRM 소스",
@@ -512,11 +512,11 @@
               "body": "컴파일이 성공하면 렌더러와 셰이더 조립 시스템이 사용하는 동일한 수식 플러그인 계약이 돼요."
             }
           },
-          "note": "공유 컴파일러 계약은 탐색기, 독립형 에디터, 저장된 커스텀 수식, 예제, 테스트가 하나의 구현 경로를 따르게 해요."
+          "note": "각 소스 계약에는 각각 하나의 구현 경로가 있어요. 공개된 Standard 런타임은 FRM-like v1을 사용하고, 독립형 Editor와 현재 사용자 수식 예제는 Classic-compatible 경로를 사용해요. 어느 쪽도 다른 쪽으로 조용히 대체되지 않아요."
         },
         "tutorials": {
           "title": "단계별 튜토리얼",
-          "intro": "이 예제들은 가장 작은 이차 수식에서 파라미터와 상태 기반 피드백까지 점진적으로 나아가요. 각 소스 블록은 공유 예제 레지스트리에서 직접 가져오며 테스트 중에 컴파일돼요.",
+          "intro": "이 예제들은 정식 FRM-like v1 Definition이 아니라 Classic-compatible Editor 예제예요. 작은 이차 수식에서 매개변수와 상태 기반 피드백으로 진행하며, 모든 소스 블록은 공유 Editor 레지스트리에서 오고 테스트 중 컴파일돼요.",
           "lesson": "레슨 {number}",
           "openInEditor": "FRM 에디터에서 열기",
           "goals": {
@@ -524,7 +524,7 @@
             "parameter-drift": "초점: p1과 p2 파라미터 슬롯, 복소수 리터럴, 명시적 크기 함수로서의 cabs(z).",
             "orbit-echo": "초점: 이전 오빗 상태로서의 zPrev. 피드백은 수동으로 관리하는 두 번째 상태 변수를 도입하지 않고 메모리를 추가해요."
           },
-          "editorNote": "FRM 편집기는 안정적인 ID로 이와 동일한 컴파일 검사 예제를 열어요. 수식 소스는 클라우드 수식 라이브러리에 저장할 때까지 현재 탭에만 남아 있고, URL에는 절대 포함되지 않아요."
+          "editorNote": "독립형 FRM Editor는 안정적인 ID로 이 Classic-compatible 컴파일 검사 예제를 열어요. 수식 소스는 클라우드 라이브러리에 저장할 때까지 현재 탭에만 남고 URL에 포함되지 않아요. 이것은 정식 v1 가져오기나 작성기를 활성화하지 않아요."
         },
         "diagnostics": {
           "title": "오류와 진단",
@@ -554,7 +554,7 @@
           "exploreTitle": "렌더러를 실제 맥락에서 보기",
           "exploreBody": "커스텀 수식을 작성하기 전에 탐색기를 열어 내장 수식의 동작, 컬러링, 변환, 애니메이션, 내보내기 컨트롤을 비교해 보세요.",
           "exploreCta": "탐색기 열기",
-          "editorNote": "전용 FRM 편집기에서 수식을 컴파일, 미리 보기, 가져오기, 다운로드할 수 있어요. 탐색기로 넘기기 전에 로그인해서 수식 하나를 내 클라우드 수식 라이브러리에 저장하세요.",
+          "editorNote": "현재 Classic-compatible 컴파일, 미리보기, 가져오기, 다운로드 워크플로에는 전용 FRM Editor를 사용하세요. 이 Editor는 정식 FRM-like v1 소스를 받지 않아요. 공개된 v1 소스는 Formula Record에서 확인하고 해당 Record의 Open 또는 Remix 동작으로 실행하세요.",
           "referencesTitle": "참고 자료",
           "referencesIntro": "역사적 맥락과 구현 세부 사항은 별도로 링크되어, 가이드가 Fractint 계보와 FractalPark의 현재 컴파일러 계약을 구분할 수 있어요.",
           "references": {
@@ -1716,13 +1716,13 @@
     "landing": {
       "heading": "FractalPark: 브라우저에서 만나는 오픈소스 프랙탈 생성기",
       "whatIsHeading": "FractalPark이란 무엇인가요?",
-      "whatIsAnswer": "FractalPark은 WebGL로 브라우저에서 완전히 렌더링되는 무료 오픈소스(MIT) 프랙탈 지식·창작 플랫폼이에요: 내장 수식 {formulaCount}개, Fractint 호환 FRM 저작, 고해상도 PNG 내보내기를 지원해요. 제작은 계정 없이 가능하고, 작품과 수식 저장은 이메일 로그인과 개인 클라우드 라이브러리를 이용해요.",
+      "whatIsAnswer": "FractalPark은 WebGL로 브라우저에서 전부 렌더링되는 무료 오픈소스(MIT) 프랙탈 지식·창작 플랫폼이에요. 내장 수식 {formulaCount}개, 공개된 FRM-like v1 소스, Classic-compatible FRM Editor 워크플로, 고해상도 PNG 내보내기를 제공해요. 제작에는 계정이 필요 없고, 작품과 수식 저장에는 이메일 로그인과 비공개 클라우드 라이브러리를 사용해요.",
       "capabilitiesHeading": "핵심 기능",
       "capabilitiesIntro": "{formulaFamilyCount}개 패밀리에 걸친 수식 {formulaCount}개 · 심층 Formula Guide {formulaGuideCount}개 · 변환 {transformCount}개 · 컬러링 모드 {coloringModeCount}개 · 공유 가능한 URL · 최대 {maxExportScale}× PNG 내보내기",
       "linksHeading": "계속 탐색하기",
       "links": {
         "formulas": "Formula Atlas — 모든 수식의 수학, 역사, 라이브 예제",
-        "frmGuide": "FRM Guide — 브라우저에서 Fractint 호환 수식 작성하기",
+        "frmGuide": "FRM Guide — 공개된 FRM-like v1과 Classic-compatible Editor 소스 이해하기",
         "drift": "Drift — 몰입형 프리셋 슬라이드쇼를 편안하게 감상하기",
         "about": "About — 프로젝트 소개, 범위, 오픈소스 상세 정보"
       },
@@ -1739,7 +1739,7 @@
   },
   "frmEditor": {
     "title": "FRM 에디터",
-    "description": "브라우저에서 FRM 수식을 작성·컴파일·미리보기하고 클라우드 라이브러리에 저장하세요.",
+    "description": "브라우저에서 FractalPark의 Classic-compatible FRM 하위 집합 수식을 작성, 컴파일, 미리보기하고 클라우드 라이브러리에 저장하세요.",
     "breadcrumb": "이동 경로",
     "crumbGuide": "FRM 가이드",
     "beta": "베타",
@@ -1809,9 +1809,9 @@
   "metadata": {
     "explore": {
       "title": "FractalPark — 오픈소스 브라우저 프랙탈 생성기",
-      "description": "브라우저에서 만나는 오픈소스·수식 중심 프랙탈 지식·창작 플랫폼: 내장 수식 94개, 실시간 WebGL 렌더링, Fractint 호환 FRM 저작, 고해상도 PNG 내보내기.",
+      "description": "브라우저에서 실행되는 오픈소스·수식 중심 프랙탈 지식·창작 플랫폼: 내장 수식 94개, 실시간 WebGL 렌더링, 공개된 FRM-like v1 소스, Classic-compatible FRM Editor, 고해상도 PNG 내보내기.",
       "ogTitle": "FractalPark — 브라우저에서 만나는 오픈소스 프랙탈 아트",
-      "ogDescription": "브라우저에서 프랙탈 아트 만들기: 수식 94개, 실시간 WebGL 렌더링, FRM 저작, 고해상도 PNG 내보내기."
+      "ogDescription": "브라우저에서 프랙탈 아트를 만드세요: 수식 94개, 실시간 WebGL 렌더링, 공개된 FRM-like v1 소스, Classic-compatible FRM Editor, 고해상도 PNG 내보내기."
     },
     "gallery": {
       "title": "내 갤러리 | 나만의 프랙탈 컬렉션 - FractalPark",
@@ -1823,17 +1823,17 @@
     },
     "formulaAtlas": {
       "title": "Formula Atlas | 프랙탈 수식 94개 - FractalPark",
-      "description": "일곱 개 패밀리에 걸친 FractalPark 수식 94개를 둘러보고, 엄선된 가이드 프로필 21개를 탐색하며, FRM을 배우고, WebGL 탐색기에서 표준 수식 상태를 열어보세요.",
+      "description": "일곱 패밀리의 FractalPark 수식 94개를 모두 살펴보고, 엄선된 Guide Profile 21개를 탐색하며, FRM 소스의 작동 방식을 배우고 WebGL Explorer에서 정식 수식 상태를 여세요.",
       "imageAlt": "내장 수식 94개가 담긴 FractalPark Formula Atlas"
     },
     "frmEditor": {
       "title": "FRM 에디터 | FractalPark",
-      "description": "브라우저에서 FRM 수식을 작성·컴파일·미리보기하고 클라우드 라이브러리에 저장하세요."
+      "description": "브라우저에서 FractalPark의 Classic-compatible FRM 하위 집합 수식을 작성, 컴파일, 미리보기하고 클라우드 라이브러리에 저장하세요."
     },
     "frmGuide": {
-      "title": "FRM 가이드 | 커스텀 프랙탈 수식 작성 - FractalPark",
-      "description": "FractalPark의 검증된 FRM 문법, 호환성 수준, AST-to-GLSL 컴파일러 파이프라인, 진단, 컴파일 검증된 커스텀 수식 예제 3개를 배워보세요.",
-      "imageAlt": "FractalPark FRM 수식 언어 가이드"
+      "title": "FRM Guide: Classic Editor와 FRM-like v1 - FractalPark",
+      "description": "FractalPark의 정식 FRM-like v1 Definition, 공개 런타임, 구별되는 Classic-compatible Editor 워크플로를 이해하세요.",
+      "imageAlt": "FractalPark FRM-like v1 및 Classic-compatible 수식 가이드"
     },
     "drift": {
       "title": "Drift — 몰입형 프랙탈 슬라이드쇼 | FractalPark",
@@ -1844,13 +1844,13 @@
   },
   "about": {
     "title": "FractalPark 소개",
-    "aiDescription": "FractalPark은 실시간 GPU 렌더링을 위해 WebGL을 사용하는 오픈소스 MIT 라이선스 브라우저 기반 프랙탈 아트 생성기예요. 내장 이탈 시간(escape-time) 프랙탈 수식 94개(만델브로, 줄리아, 뉴턴, 피닉스, 마그넷, 맥멀런, 유리, 초월 패밀리), Fractint .frm 문법을 지원하는 커스텀 수식 에디터, UV 변환 플러그인 7개, 컬러링 모드 9개, 고해상도 PNG 내보내기를 갖추고 있어요. Next.js 16, React 19, TypeScript 5, Tailwind CSS로 제작됐어요. 렌더링 엔진은 동적 GLSL 셰이더 조립과 LRU 캐싱을 사용하는 플러그인 아키텍처를 기반으로 해요.",
+    "aiDescription": "FractalPark은 실시간 GPU 렌더링에 WebGL을 사용하는 오픈소스 MIT 라이선스 브라우저 기반 프랙탈 아트 생성기예요. 내장 escape-time 수식 94개, 고정된 FRM-like v1 소스를 가진 공개된 Standard Definition 513개, 별도의 Classic-compatible 사용자 수식 Editor, UV 변환 플러그인 7개, 색칠 모드 9개, 고해상도 PNG 내보내기를 갖춰요. Next.js 16, React 19, TypeScript 5, Tailwind CSS로 제작되었고, 렌더링 엔진은 플러그인 기반 동적 GLSL 조립과 LRU 캐싱을 사용해요.",
     "techStack": {
       "title": "기술 스택",
       "description": "Next.js, WebGL, TypeScript로 제작됐어요. GPU 셰이더 기반의 실시간 프랙탈 렌더링을 제공해요.",
       "frontend": "프론트엔드: Next.js 16 (App Router), React 19, TypeScript 5, Tailwind CSS 4, shadcn/ui",
       "rendering": "렌더링: WebGL 1 (GLSL 프래그먼트 셰이더), 플러그인 기반 아키텍처, 셰이더 LRU 캐시",
-      "formula": "수식 시스템: 커스텀 Fractint .frm 파서, CodeMirror 6 에디터, AST-to-GLSL 트랜스파일러"
+      "formula": "수식 시스템: Standard Definition용 공개 FRM-like v1 파서/백엔드, 사용자 수식용 별도의 Classic-compatible CodeMirror 6 Editor 및 AST-to-GLSL 경로"
     },
     "openSource": {
       "title": "오픈소스",
@@ -1866,9 +1866,9 @@
     "next": "다음 프리셋"
   },
   "publicProject": {
-    "tagline": "FractalPark은 오픈소스·수식 중심의 프랙탈 지식·창작 플랫폼으로, Fractint의 수식 유산을 현대 브라우저로 가져오기 위해 Fractint 호환 FRM 지원을 계속 확장하고 있어요.",
-    "definition": "FractalPark은 프랙탈 아트를 탐색·학습·창작하기 위한 무료 오픈소스(MIT) WebGL 애플리케이션이에요. {formulaFamilyCount}개 패밀리에 걸친 내장 수식 {formulaCount}개, 심층 Formula Guide {formulaGuideCount}개, 가이드와 독립형 에디터를 갖춘 Fractint 호환 FRM 언어, 커뮤니티 갤러리를 제공해요. 렌더링은 브라우저에서 실행되고, 작품과 수식 저장은 이메일 로그인과 개인 클라우드 라이브러리를 이용해요.",
-    "aiDescription": "FractalPark은 실시간 GPU 렌더링을 위해 WebGL을 사용하는 오픈소스 MIT 라이선스 브라우저 프랙탈 생성기예요. {formulaFamilyCount}개 패밀리에 걸친 내장 프랙탈 수식 {formulaCount}개, Formula Guide {formulaGuideCount}개, AST-to-GLSL 트랜스파일을 지원하는 Fractint 호환 FRM 에디터, UV 변환 플러그인 {transformCount}개, 컬러링 모드 {coloringModeCount}개, 공유 가능한 URL, 작품·수식용 이메일 로그인 클라우드 라이브러리, 커뮤니티 게시, 최대 {maxExportScale}배 고해상도 PNG 내보내기를 갖추고 있어요. Next.js, React, TypeScript로 제작됐어요.",
+    "tagline": "FractalPark은 읽고 실행할 수 있는 공개 수식 소스와 구별되는 Classic-compatible 수식 Editor를 갖춘 오픈소스 수식 중심 프랙탈 지식·창작 플랫폼이에요.",
+    "definition": "FractalPark은 프랙탈 아트를 탐색, 학습, 창작하는 무료 오픈소스(MIT) WebGL 애플리케이션이에요. 내장 수식 {formulaCount}개를 {formulaFamilyCount}개 패밀리에 걸쳐 제공하고, 심층 Formula Guide {formulaGuideCount}개, 공개된 FRM-like v1 소스, Classic-compatible 독립형 FRM Editor, 커뮤니티 Gallery를 제공해요. 렌더링은 브라우저에서 실행되고 작품과 수식 저장에는 이메일 로그인과 비공개 클라우드 라이브러리를 사용해요.",
+    "aiDescription": "FractalPark은 실시간 GPU 렌더링에 WebGL을 사용하는 오픈소스 MIT 라이선스 브라우저 프랙탈 생성기예요. 내장 프랙탈 수식 {formulaCount}개를 {formulaFamilyCount}개 패밀리에 걸쳐 제공하고, Formula Guide {formulaGuideCount}개, 공개된 FRM-like v1 소스, AST-to-GLSL 트랜스파일을 갖춘 구별되는 Classic-compatible FRM Editor, UV 변환 플러그인 {transformCount}개, 색칠 모드 {coloringModeCount}개, 공유 가능한 URL, 작품과 수식용 이메일 로그인 클라우드 라이브러리, 커뮤니티 게시, 최대 {maxExportScale}x 고해상도 PNG 내보내기를 제공해요. Next.js, React, TypeScript로 제작되었어요.",
     "capabilitiesHeading": "지금 할 수 있는 것",
     "capabilities": {
       "discover": {
@@ -1880,8 +1880,8 @@
         "summary": "WebGL로 실시간 탐색과 렌더링을 즐겨보세요: 모든 수식의 만델브로·줄리아 모드, 변환 7개, 컬러링 모드 9개, 그라디언트, 조명, 키프레임 애니메이션을 지원해요."
       },
       "authorFrm": {
-        "title": "FRM 저작",
-        "summary": "가이드와 독립형 에디터로 Fractint 호환 FRM 언어를 사용해 커스텀 수식을 작성하세요: AST 검증, 실시간 GLSL 미리보기, 명확한 진단을 제공해요."
+        "title": "FRM 배우기와 사용자 수식 작성하기",
+        "summary": "Guide와 독립형 Editor로 FractalPark의 검증된 Classic-compatible FRM 하위 집합에서 사용자 수식을 작성하세요. AST 검증, 실시간 GLSL 미리보기, 명확한 진단을 제공해요."
       },
       "saveExport": {
         "title": "저장하고 공유",
@@ -1893,7 +1893,7 @@
     "futureHeading": "로드맵에 있음",
     "boundaries": {
       "current": {
-        "0": "확장 중인 Fractint 호환 FRM 지원: Fractint 수식 언어의 실용적이고 검증된 하위 집합이 현재 실행돼요 — 완전한 Fractint 재구현은 아니에요.",
+        "0": "공개된 Standard Definition은 FRM-like v1 소스를 사용해요. 독립형 Editor는 별도의 실용적인 Classic-compatible 하위 집합을 사용하며, 완전한 Fractint 재구현이 아니에요.",
         "1": "제작은 계정이 필요 없어요. 작품과 수식 저장은 이메일 일회용 코드 로그인을 사용해 개인 클라우드 라이브러리에 보관해요. 게시는 항상 명시적이며, 커스텀 수식이 포함된 작품은 그 소스를 MIT 라이선스로 게시해요.",
         "2": "인터페이스는 영어, 중국어 간체, 포르투갈어, 한국어, 러시아어, 스페인어, 프랑스어의 일곱 가지 언어로 제공돼요."
       },

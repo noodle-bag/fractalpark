@@ -1,0 +1,29 @@
+{
+  "evidenceId": "64b6434c47561a3e720e62bae76564e661ed341d2ebd7369d77bc311d593a4ae",
+  "schemaVersion": 1,
+  "locale": "pt",
+  "surface": "manual-a",
+  "provider": "deepseek",
+  "requestedModel": "deepseek-chat",
+  "actualModel": "deepseek-v4-flash",
+  "finishReason": "stop",
+  "status": "approved",
+  "reviewedAt": "2026-08-21T08:18:50.068453+00:00",
+  "sourceCommit": "37320f293839812017178bb91efe7670239edfa3",
+  "sourceManualSha256": "e5168f1a0211596659314d748fa53825892a2a6f089350e636a8c0baf3903758",
+  "sourceMessageProjectionSha256": "effb295f43ad338c80f1becab42a90cbb8afd2345a79c2e014acf031ea1faaf7",
+  "targetManualSha256": "c9bb8bba706aed238858012646c000b4d2333bb3a6915c2cbea9dab186fe9fc1",
+  "targetMessageProjectionSha256": "3a126962e9bf3d0871d10e714a31f620dcc58b8af8fce81867ae52210354185f",
+  "messagePathCount": 39,
+  "reviewText": "VERDICT: APPROVE\n\n翻译完整覆盖了英文原文的所有部分，包括标题、元数据、第1-4节内容。技术术语（如Definition、Record、Profile、Remix等）保持英文，符合规范。代码块、链接、占位符和数字值均正确保留。语言表达准确，无事实性错误或规范性偏差。",
+  "usage": {
+    "prompt_tokens": 4127,
+    "completion_tokens": 76,
+    "total_tokens": 4203,
+    "prompt_tokens_details": {
+      "cached_tokens": 0
+    },
+    "prompt_cache_hit_tokens": 0,
+    "prompt_cache_miss_tokens": 4127
+  }
+}

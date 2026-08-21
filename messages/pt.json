@@ -256,7 +256,7 @@
       "breadcrumb": "Fórmulas",
       "eyebrow": "Atlas de Fórmulas",
       "title": "Atlas de Fórmulas",
-      "intro": "Explore o catálogo completo das 94 fórmulas integradas do FractalPark em sete famílias. Comece por uma visualização canônica, siga um dos 21 perfis de guia aprofundados ou aprenda a escrever sua própria fórmula com FRM.",
+      "intro": "Explore as 94 fórmulas integradas do Explorer do FractalPark em sete famílias. Comece com uma visualização canônica, siga um dos 21 perfis de guia aprofundados ou aprenda como funciona o código-fonte FRM e escolha a superfície de autoria correspondente.",
       "stats": {
         "formulas": "Fórmulas",
         "families": "Famílias",
@@ -297,9 +297,9 @@
       },
       "frm": {
         "eyebrow": "Crie a sua",
-        "title": "Aprenda e escreva fórmulas com FRM",
-        "description": "FRM é o caminho de autoria baseado em texto e testado do FractalPark. Leia o guia de compatibilidade, estude exemplos verificados pela compilação e depois escreva e visualize uma fórmula no editor independente.",
-        "learn": "Aprenda FRM",
+        "title": "Entenda o FRM e o Editor de Fórmulas",
+        "description": "As Definitions Standard publicadas usam código-fonte FRM-like v1 fixado. O Editor independente usa o contrato de código-fonte compatível com Classic; o Guia explica os dois caminhos e oferece exemplos do Editor verificados pela compilação.",
+        "learn": "Entenda o FRM",
         "openEditor": "Abrir Editor de Fórmulas"
       },
       "guides": {
@@ -318,8 +318,8 @@
         "guideBadge": "Guia"
       },
       "cta": {
-        "title": "Comece por uma fórmula ou escreva a sua",
-        "description": "Use o Explorar para fórmulas integradas ou abra o Editor FRM independente quando quiser definir a iteração por conta própria.",
+        "title": "Comece com uma fórmula ou use o Editor compatível com Classic",
+        "description": "Use o Explorer para fórmulas integradas ou abra o Editor FRM independente para o subconjunto compatível com Classic que ele oferece para iterações personalizadas.",
         "explore": "Abrir o Explorar",
         "editor": "Abrir Editor de Fórmulas"
       },
@@ -361,9 +361,9 @@
       }
     },
     "frmGuide": {
-      "eyebrow": "Linguagem de fórmulas FRM",
-      "title": "Escreva Fractais com FRM",
-      "intro": "Aprenda o subconjunto FRM testado do FractalPark, entenda como o código-fonte vira um shader de GPU e construa três fórmulas funcionais a partir dos mesmos exemplos usados pelo editor.",
+      "eyebrow": "Linguagem FRM e compatibilidade",
+      "title": "Entenda o FRM no FractalPark",
+      "intro": "Aprenda como Definitions FRM-like v1 canônicas alimentam fórmulas Standard publicadas e depois use os exemplos separados do Editor compatível com Classic sem confundir os dois contratos de código-fonte.",
       "contentsLabel": "Nesta página",
       "copy": {
         "copy": "Copiar",
@@ -374,15 +374,15 @@
         "what-is-frm": {
           "title": "O que é FRM",
           "body": [
-            "FRM é uma forma compacta e baseada em texto de descrever um fractal iterativo. Uma fórmula define seu estado inicial, o cálculo repetido para cada órbita e a condição que decide se a iteração continua.",
-            "O formato nasceu do ecossistema Fractint, onde arquivos de fórmula permitiam trocar experimentos sem recompilar o programa de renderização. O FractalPark leva essa ideia de autoria para um fluxo de trabalho no navegador, documentando seu próprio subconjunto testado em vez de reivindicar compatibilidade completa."
+            "FRM-like v1 do FractalPark é a linguagem de código-fonte canônica e tipada por trás das Definitions Standard publicadas. Uma Definition fixa sua linguagem, biblioteca padrão, NumericProfile, parâmetros, estado inicial, passo repetido da órbita e predicado de continuação da iteração.",
+            "O .frm Classic surgiu no ecossistema Fractint e continua sendo o contrato de código-fonte usado pelo Editor independente compatível com Classic e pelo pipeline de importação. O FractalPark examina e diagnostica esse dialeto separadamente; código-fonte Classic e frmSemanticsVersion 1 ou 2 não são grafias alternativas do FRM-like v1 canônico."
           ],
           "historyPrefix": "Para as origens e a história do projeto em geral, veja o",
           "historyLink": "site do projeto Fractint"
         },
         "support": {
           "title": "Suporte a FRM no FractalPark",
-          "intro": "O FractalPark tokeniza, analisa, valida e compila um subconjunto deliberado de FRM. A tabela separa construções que funcionam diretamente, construções com semântica documentada do FractalPark e construções que o fluxo de trabalho atual não consegue preservar.",
+          "intro": "Esta tabela de compatibilidade descreve o Editor e o caminho de importação compatíveis com Classic. As Definitions Standard canônicas publicadas usam o parser FRM-like v1 versionado separadamente, IR tipado, backend standard32 e Safety Envelope fixo.",
           "table": {
             "level": "Nível",
             "meaning": "Significado",
@@ -422,10 +422,10 @@
             "preprocessor": "Recursos de pré-processador",
             "rejected-constructs": "Qualquer construção rejeitada pelo pipeline de compilação atual"
           },
-          "disclaimer": "Esta é uma linha de base de compatibilidade testada, não uma afirmação de compatibilidade total com o Fractint. Quando o compilador mudar, esta matriz e seus testes devem mudar juntos.",
+          "disclaimer": "Esta é uma referência de compatibilidade Classic testada, não uma alegação de compatibilidade completa com Fractint nem o registro de publicação Standard de 677 identidades. O registro atual contém 513 Definitions publicadas e 164 Records retidos.",
           "verified": {
             "title": "Compatibilidade verificada",
-            "intro": "Essas contagens de capacidades vêm do manifesto versionado: 588 entradas-alvo compreendem 579 aprovações strict-v2 e 9 dispensas documentadas; 117 entradas separadas são excluídas com motivos estáveis.",
+            "intro": "Estas contagens de capacidade de importação Classic vêm do manifesto de compatibilidade versionado: 588 entradas-alvo abrangem 579 aprovações strict-v2 e 9 dispensas documentadas; 117 entradas separadas são excluídas com motivos estáveis. Elas não contam Definitions FRM-like v1 publicadas.",
             "stats": {
               "builtins": "Funções integradas",
               "descriptors": "Tipos de descritor de bailout",
@@ -445,7 +445,7 @@
         },
         "anatomy": {
           "title": "Anatomia da Fórmula",
-          "intro": "Uma fórmula FRM do FractalPark tem uma declaração nomeada e três seções explícitas. Juntas, elas definem a transição de estado para cada pixel.",
+          "intro": "O FRM-like v1 canônico e os exemplos atuais do Editor Classic compartilham uma fórmula nomeada e as ideias de init, loop e bailout, mas suas gramáticas completas são diferentes. No v1, diretivas semânticas e uma seção opcional de parâmetros tipados também fazem parte da Definition.",
           "parts": {
             "init": "Executa uma vez por pixel. Defina aqui o valor inicial da órbita e as variáveis auxiliares.",
             "loop": "Executa uma vez por iteração. Atualize z e qualquer estado de que a próxima iteração precise.",
@@ -455,7 +455,7 @@
         },
         "syntax": {
           "title": "Guia de Sintaxe",
-          "intro": "A linguagem permanece intencionalmente pequena: expressões descrevem aritmética complexa, instruções atualizam o estado da órbita e o fluxo de controle seleciona entre atualizações.",
+          "intro": "As duas superfícies permanecem deliberadamente pequenas. Os resumos abaixo mostram conceitos compartilhados; use a ação Source de um Formula Record publicado para ver as diretivas canônicas e os parâmetros tipados, e use os diagnósticos do Editor para código-fonte Classic.",
           "topics": {
             "sections": {
               "title": "Declaração e seções",
@@ -485,7 +485,7 @@
         },
         "pipeline": {
           "title": "Pipeline de FRM para AST para GLSL",
-          "intro": "O FractalPark não cola texto FRM em um shader. Ele passa o código-fonte por um compilador em etapas para que sintaxe, significado, código gerado e diagnósticos permaneçam conectados.",
+          "intro": "O FractalPark nunca cola código-fonte em um shader. O código-fonte v1 canônico passa pelo parser tipado e pelo backend CPU/GLSL; o código-fonte do Editor Classic passa pelo scanner, frontend da entrada selecionada, modelo canônico de fórmula e compilador de plugins.",
           "steps": {
             "source": {
               "title": "Código-fonte FRM",
@@ -512,11 +512,11 @@
               "body": "Uma compilação bem-sucedida se torna o mesmo contrato de plugin de fórmula usado pelo renderizador e pelo sistema de montagem de shaders."
             }
           },
-          "note": "O contrato compartilhado do compilador mantém o Explorar, o Editor autônomo, as fórmulas personalizadas salvas, os exemplos e os testes em um único caminho de implementação."
+          "note": "Cada contrato de código-fonte tem seu próprio caminho de implementação. O runtime Standard publicado usa FRM-like v1; o Editor independente e os exemplos atuais de fórmulas personalizadas usam o caminho compatível com Classic. Nenhum deles recorre silenciosamente ao outro."
         },
         "tutorials": {
           "title": "Tutoriais Progressivos",
-          "intro": "Estes exemplos avançam da menor fórmula quadrática até parâmetros e realimentação com estado. Cada bloco de código-fonte vem diretamente do registro compartilhado de exemplos e é compilado durante os testes.",
+          "intro": "Estes são exemplos do Editor compatíveis com Classic, não Definitions FRM-like v1 canônicas. Eles vão de uma pequena fórmula quadrática a parâmetros e realimentação com estado; cada bloco de código-fonte vem do registro compartilhado do Editor e é compilado durante os testes.",
           "lesson": "Lição {number}",
           "openInEditor": "Abrir no Editor FRM",
           "goals": {
@@ -524,7 +524,7 @@
             "parameter-drift": "Foco: os slots de parâmetro p1 e p2, um literal complexo e cabs(z) como função explícita de magnitude.",
             "orbit-echo": "Foco: zPrev como o estado anterior da órbita. A realimentação adiciona memória sem introduzir uma segunda variável de estado gerenciada manualmente."
           },
-          "editorNote": "O Editor FRM abre esses mesmos exemplos verificados pela compilação por ID estável. O código-fonte da fórmula permanece na aba atual até você salvá-lo na sua biblioteca de fórmulas na nuvem e nunca é incorporado à URL."
+          "editorNote": "O Editor FRM independente abre esses exemplos compatíveis com Classic, verificados pela compilação, por ID estável. O código-fonte da fórmula fica na aba atual até você salvá-lo na sua biblioteca na nuvem e nunca é incorporado à URL. Isso não ativa a importação nem os writers do v1 canônico."
         },
         "diagnostics": {
           "title": "Erros e Diagnósticos",
@@ -554,7 +554,7 @@
           "exploreTitle": "Veja o renderizador em contexto",
           "exploreBody": "Abra o Explorar para comparar o comportamento das fórmulas integradas, coloração, transformações, animação e controles de exportação antes de escrever uma fórmula personalizada.",
           "exploreCta": "Abrir o Explorar",
-          "editorNote": "Use o Editor FRM dedicado para compilar, visualizar, importar e baixar fórmulas; faça login para salvar uma na sua biblioteca de fórmulas na nuvem antes de encaminhá-la ao Explorar.",
+          "editorNote": "Use o Editor FRM dedicado para o fluxo atual de compilação, prévia, importação e download compatível com Classic. Ele não aceita código-fonte FRM-like v1 canônico; inspecione o código-fonte v1 publicado em um Formula Record e use a ação Open ou Remix desse Record para executá-lo.",
           "referencesTitle": "Referências",
           "referencesIntro": "O contexto histórico e os detalhes de implementação são linkados separadamente para que o guia possa distinguir a linhagem do Fractint do contrato atual do compilador do FractalPark.",
           "references": {
@@ -1716,13 +1716,13 @@
     "landing": {
       "heading": "FractalPark: gerador de fractais open-source no seu navegador",
       "whatIsHeading": "O que é o FractalPark?",
-      "whatIsAnswer": "O FractalPark é uma plataforma gratuita e open-source (MIT) de conhecimento e criação de fractais que renderiza inteiramente no seu navegador com WebGL: {formulaCount} fórmulas integradas, autoria FRM compatível com Fractint e exportação de PNG em alta resolução. Criar não exige conta; salvar obras e fórmulas usa login por e-mail e uma biblioteca privada na nuvem.",
+      "whatIsAnswer": "FractalPark é uma plataforma gratuita, open-source (MIT), de conhecimento e criação de fractais que renderiza inteiramente no seu navegador com WebGL: {formulaCount} fórmulas integradas, código-fonte FRM-like v1 publicado, um fluxo de trabalho do Editor FRM compatível com Classic e exportação de PNG em alta resolução. Criar não exige conta; salvar obras e fórmulas usa login por e-mail e uma biblioteca privada na nuvem.",
       "capabilitiesHeading": "Principais recursos",
       "capabilitiesIntro": "{formulaCount} fórmulas em {formulaFamilyCount} famílias · {formulaGuideCount} Guias de Fórmulas aprofundados · {transformCount} transformações · {coloringModeCount} modos de coloração · URLs compartilháveis · exportação de PNG de até {maxExportScale}×",
       "linksHeading": "Continue explorando",
       "links": {
         "formulas": "Atlas de Fórmulas — todas as fórmulas com matemática, história e exemplos ao vivo",
-        "frmGuide": "Guia FRM — escreva fórmulas compatíveis com Fractint no navegador",
+        "frmGuide": "Guia FRM — entenda o FRM-like v1 publicado e o código-fonte do Editor compatível com Classic",
         "drift": "Drift — relaxe com uma apresentação imersiva de presets",
         "about": "Sobre — fatos do projeto, limites e detalhes open-source"
       },
@@ -1739,7 +1739,7 @@
   },
   "frmEditor": {
     "title": "Editor FRM",
-    "description": "Escreva, compile e pré-visualize fórmulas FRM no seu navegador; salve-as na sua biblioteca na nuvem.",
+    "description": "Escreva, compile e visualize fórmulas do subconjunto FRM compatível com Classic do FractalPark no navegador; salve-as na sua biblioteca na nuvem.",
     "breadcrumb": "Trilha de navegação",
     "crumbGuide": "Guia FRM",
     "beta": "Beta",
@@ -1809,9 +1809,9 @@
   "metadata": {
     "explore": {
       "title": "FractalPark — Gerador de fractais open-source no navegador",
-      "description": "Plataforma open-source de conhecimento e criação de fractais no seu navegador, com as fórmulas em primeiro lugar: 94 fórmulas integradas, renderização WebGL em tempo real, autoria FRM compatível com Fractint e exportação de PNG em alta resolução.",
+      "description": "Plataforma open-source de conhecimento e criação de fractais no seu navegador, com fórmulas em primeiro lugar: 94 fórmulas integradas, renderização WebGL em tempo real, código-fonte FRM-like v1 publicado, um Editor FRM compatível com Classic e exportação de PNG em alta resolução.",
       "ogTitle": "FractalPark — Arte fractal open-source no seu navegador",
-      "ogDescription": "Crie arte fractal no seu navegador: 94 fórmulas, renderização WebGL em tempo real, autoria FRM e exportação de PNG em alta resolução."
+      "ogDescription": "Crie arte fractal no seu navegador: 94 fórmulas, renderização WebGL em tempo real, código-fonte FRM-like v1 publicado, um Editor FRM compatível com Classic e exportação de PNG em alta resolução."
     },
     "gallery": {
       "title": "Minha Galeria | Coleção Pessoal de Fractais - FractalPark",
@@ -1823,17 +1823,17 @@
     },
     "formulaAtlas": {
       "title": "Atlas de Fórmulas | 94 Fórmulas de Fractais - FractalPark",
-      "description": "Navegue pelas 94 fórmulas do FractalPark em sete famílias, explore 21 perfis de guia selecionados, aprenda FRM e abra estados canônicos de fórmulas no Explorar WebGL.",
+      "description": "Navegue pelas 94 fórmulas do FractalPark em sete famílias, explore 21 perfis de guia selecionados, aprenda como funciona o código-fonte FRM e abra estados canônicos de fórmulas no Explorer WebGL.",
       "imageAlt": "Atlas de Fórmulas do FractalPark com 94 fórmulas integradas"
     },
     "frmEditor": {
       "title": "Editor FRM | FractalPark",
-      "description": "Escreva, compile e pré-visualize fórmulas FRM no seu navegador; salve-as na sua biblioteca na nuvem."
+      "description": "Escreva, compile e visualize fórmulas do subconjunto FRM compatível com Classic do FractalPark no navegador; salve-as na sua biblioteca na nuvem."
     },
     "frmGuide": {
-      "title": "Guia FRM | Escreva Fórmulas de Fractais Personalizadas - FractalPark",
-      "description": "Aprenda a sintaxe FRM testada do FractalPark, os níveis de compatibilidade, o pipeline de compilação de AST para GLSL, os diagnósticos e três exemplos de fórmulas personalizadas verificados por compilação.",
-      "imageAlt": "Guia da linguagem de fórmulas FRM do FractalPark"
+      "title": "Guia FRM: Editor Classic e FRM-like v1 - FractalPark",
+      "description": "Entenda as Definitions FRM-like v1 canônicas do FractalPark, o runtime publicado e o fluxo de trabalho distinto do Editor compatível com Classic.",
+      "imageAlt": "Guia de fórmulas FRM-like v1 e compatíveis com Classic do FractalPark"
     },
     "drift": {
       "title": "Drift — Apresentação imersiva de fractais | FractalPark",
@@ -1844,13 +1844,13 @@
   },
   "about": {
     "title": "Sobre o FractalPark",
-    "aiDescription": "O FractalPark é um gerador de arte fractal open-source licenciado sob MIT, baseado em navegador, que usa WebGL para renderização em tempo real na GPU. Ele traz 94 fórmulas integradas de fractais de tempo de escape (famílias Mandelbrot, Julia, Newton, Phoenix, Magnet, McMullen, racional e transcendental), um editor de fórmulas personalizadas com suporte à sintaxe .frm do Fractint, 7 plugins de transformação UV, 9 modos de coloração e exportação de PNG em alta resolução. Construído com Next.js 16, React 19, TypeScript 5 e Tailwind CSS. O motor de renderização usa uma arquitetura de plugins com montagem dinâmica de shaders GLSL e cache LRU.",
+    "aiDescription": "FractalPark é um gerador de arte fractal open-source, licenciado sob MIT e baseado em navegador, que usa WebGL para renderização em tempo real na GPU. Ele inclui 94 fórmulas integradas de tempo de escape, 513 Definitions Standard publicadas com código-fonte FRM-like v1 fixado, um Editor separado de fórmulas personalizadas compatível com Classic, 7 plugins de transformação UV, 9 modos de coloração e exportação de PNG em alta resolução. Construído com Next.js 16, React 19, TypeScript 5 e Tailwind CSS, seu motor de renderização usa montagem dinâmica de GLSL baseada em plugins e cache LRU.",
     "techStack": {
       "title": "Tecnologia",
       "description": "Construído com Next.js, WebGL e TypeScript. Renderização de fractais em tempo real alimentada por shaders de GPU.",
       "frontend": "Front-end: Next.js 16 (App Router), React 19, TypeScript 5, Tailwind CSS 4, shadcn/ui",
       "rendering": "Renderização: WebGL 1 (shaders de fragmento GLSL), arquitetura baseada em plugins, cache LRU de shaders",
-      "formula": "Sistema de Fórmulas: parser .frm Fractint personalizado, editor CodeMirror 6, transpilador de AST para GLSL"
+      "formula": "Sistema de Fórmulas: parser/backend FRM-like v1 publicado para Definitions Standard; Editor separado CodeMirror 6 compatível com Classic e caminho AST-para-GLSL para fórmulas personalizadas"
     },
     "openSource": {
       "title": "Open Source",
@@ -1866,9 +1866,9 @@
     "next": "Próximo preset"
   },
   "publicProject": {
-    "tagline": "O FractalPark é uma plataforma open-source de conhecimento e criação de fractais, com as fórmulas em primeiro lugar e suporte crescente a FRM compatível com Fractint, trabalhando para trazer o legado de fórmulas do Fractint para o navegador moderno.",
-    "definition": "O FractalPark é um aplicativo WebGL gratuito e open-source (MIT) para explorar, aprender e criar arte fractal. Ele traz {formulaCount} fórmulas integradas em {formulaFamilyCount} famílias, {formulaGuideCount} Guias de Fórmulas aprofundados, uma linguagem FRM compatível com Fractint com um Guia e um Editor autônomo, e uma Galeria da comunidade. A renderização roda no seu navegador; salvar obras e fórmulas usa login por e-mail e uma biblioteca privada na nuvem.",
-    "aiDescription": "O FractalPark é um gerador de fractais open-source licenciado sob MIT, baseado em navegador, que usa WebGL para renderização em tempo real na GPU. Ele traz {formulaCount} fórmulas integradas de fractais em {formulaFamilyCount} famílias, {formulaGuideCount} Guias de Fórmulas, um editor FRM compatível com Fractint com transpilação de AST para GLSL, {transformCount} plugins de transformação UV, {coloringModeCount} modos de coloração, URLs compartilháveis, uma biblioteca na nuvem com login por e-mail para obras e fórmulas, publicação na comunidade e exportação de PNG em alta resolução de até {maxExportScale}x. Construído com Next.js, React e TypeScript.",
+    "tagline": "FractalPark é uma plataforma open-source de conhecimento e criação de fractais, com fórmulas em primeiro lugar e código-fonte de fórmulas publicado que você pode ler e executar, além de um editor de fórmulas distinto compatível com Classic.",
+    "definition": "FractalPark é um aplicativo WebGL gratuito e open-source (MIT) para explorar, aprender e criar arte fractal. Ele oferece {formulaCount} fórmulas integradas em {formulaFamilyCount} famílias, {formulaGuideCount} Guias de Fórmulas aprofundados, código-fonte FRM-like v1 publicado, um Editor FRM independente compatível com Classic e uma Galeria da comunidade. A renderização é executada no seu navegador; salvar obras e fórmulas usa login por e-mail e uma biblioteca privada na nuvem.",
+    "aiDescription": "FractalPark é um gerador de fractais open-source, licenciado sob MIT e baseado em navegador, que usa WebGL para renderização em tempo real na GPU. Ele inclui {formulaCount} fórmulas de fractais integradas em {formulaFamilyCount} famílias, {formulaGuideCount} Guias de Fórmulas, código-fonte FRM-like v1 publicado, um Editor FRM distinto compatível com Classic com transpilação de AST para GLSL, {transformCount} plugins de transformação UV, {coloringModeCount} modos de coloração, URLs compartilháveis, uma biblioteca na nuvem com login por e-mail para obras e fórmulas, publicação na comunidade e exportação de PNG em alta resolução de até {maxExportScale}x. Construído com Next.js, React e TypeScript.",
     "capabilitiesHeading": "O que você pode fazer hoje",
     "capabilities": {
       "discover": {
@@ -1880,8 +1880,8 @@
         "summary": "Explore e renderize em tempo real com WebGL: modos Mandelbrot e Julia para todas as fórmulas, 7 transformações, 9 modos de coloração, gradientes, iluminação e animação por keyframes."
       },
       "authorFrm": {
-        "title": "Crie fórmulas FRM",
-        "summary": "Escreva fórmulas personalizadas na linguagem FRM compatível com Fractint usando o Guia e o Editor autônomo: validação de AST, prévia GLSL ao vivo e diagnósticos claros."
+        "title": "Aprenda FRM e escreva fórmulas personalizadas",
+        "summary": "Escreva fórmulas personalizadas no subconjunto FRM testado e compatível com Classic do FractalPark usando o Guia e o Editor independente: validação de AST, prévia GLSL ao vivo e diagnósticos claros."
       },
       "saveExport": {
         "title": "Salve e compartilhe",
@@ -1893,7 +1893,7 @@
     "futureHeading": "No roadmap",
     "boundaries": {
       "current": {
-        "0": "Suporte crescente a FRM compatível com Fractint: um subconjunto prático e testado da linguagem de fórmulas do Fractint roda hoje — não é uma reimplementação completa do Fractint.",
+        "0": "As Definitions Standard publicadas usam código-fonte FRM-like v1. O Editor independente usa um subconjunto prático e separado, compatível com Classic — não uma reimplementação completa do Fractint.",
         "1": "Criar não exige conta. Salvar obras e fórmulas usa login por código único enviado por e-mail e as armazena na sua biblioteca privada na nuvem; publicar é sempre explícito, e obras com fórmula personalizada publicam seu código-fonte sob a licença MIT.",
         "2": "A interface está disponível em sete idiomas: inglês, chinês simplificado, português, coreano, russo, espanhol e francês."
       },

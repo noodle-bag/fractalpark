@@ -1,0 +1,29 @@
+{
+  "evidenceId": "290dd7bfa0abc4dfbb16364f8bf7e5e9cdaff915b616c29dac294d575db232e6",
+  "schemaVersion": 1,
+  "locale": "pt",
+  "surface": "messages",
+  "provider": "deepseek",
+  "requestedModel": "deepseek-chat",
+  "actualModel": "deepseek-v4-flash",
+  "finishReason": "stop",
+  "status": "approved",
+  "reviewedAt": "2026-08-21T08:18:50.639812+00:00",
+  "sourceCommit": "37320f293839812017178bb91efe7670239edfa3",
+  "sourceManualSha256": "e5168f1a0211596659314d748fa53825892a2a6f089350e636a8c0baf3903758",
+  "sourceMessageProjectionSha256": "effb295f43ad338c80f1becab42a90cbb8afd2345a79c2e014acf031ea1faaf7",
+  "targetManualSha256": "c9bb8bba706aed238858012646c000b4d2333bb3a6915c2cbea9dab186fe9fc1",
+  "targetMessageProjectionSha256": "3a126962e9bf3d0871d10e714a31f620dcc58b8af8fce81867ae52210354185f",
+  "messagePathCount": 39,
+  "reviewText": "VERDICT: APPROVE\n\n所有39对消息均准确传达原文含义，无事实性错误、技术偏差、语法问题或遗漏/添加/否定/范围变化。数字、占位符、产品术语及代码相关表述处理正确，葡萄牙语表达自然流畅，覆盖完整。",
+  "usage": {
+    "prompt_tokens": 5149,
+    "completion_tokens": 61,
+    "total_tokens": 5210,
+    "prompt_tokens_details": {
+      "cached_tokens": 0
+    },
+    "prompt_cache_hit_tokens": 0,
+    "prompt_cache_miss_tokens": 5149
+  }
+}

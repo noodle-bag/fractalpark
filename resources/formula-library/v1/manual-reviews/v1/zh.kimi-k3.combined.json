@@ -1,0 +1,27 @@
+{
+  "evidenceId": "05e0462971bc6853347b551039adf0bafa400db2791d23967169434c6cf09149",
+  "schemaVersion": 1,
+  "locale": "zh",
+  "surface": "combined",
+  "provider": "kimi-coding",
+  "requestedModel": "k3",
+  "actualModel": "k3",
+  "finishReason": "stop",
+  "status": "approved",
+  "reviewedAt": "2026-08-21T08:19:29.110525+00:00",
+  "sourceCommit": "37320f293839812017178bb91efe7670239edfa3",
+  "sourceManualSha256": "e5168f1a0211596659314d748fa53825892a2a6f089350e636a8c0baf3903758",
+  "sourceMessageProjectionSha256": "effb295f43ad338c80f1becab42a90cbb8afd2345a79c2e014acf031ea1faaf7",
+  "targetManualSha256": "0e33629cfaa0e13f70150748e3ca34601fd2a1bf8c07a548637e5c6e45d43e05",
+  "targetMessageProjectionSha256": "90301979c504e8c329e0c45544823e5e8520df5c41ef79f1078fbfdc3c6c7ce5",
+  "messagePathCount": 39,
+  "reviewText": "VERDICT: APPROVE\n\n已完整覆盖手册 header + 第 1-8 节 + 39/39 条消息，与英文规范逐项核对：\n\n- **Header**：Locale 元数据、来源 SHA、AI 候选稿说明均为有意保留的区域 provenance 信息；`/zh/formulas/<formulaId>` 符合区域路由约定。\n- **正文语义**：三条语义 directive 规则（顺序可重排、规范输出恢复顺序）、`@classic-guards` 只读约束、`-z ^ 2` 读作 `(-z) ^ 2`、`|z|` 为真复数模、`LastSqr` 饱和为正无穷且读取产生 `nonFinite`、`zPrev` 与 `previous` 不可互换、参数绑定规则（`p1`-`p5` / `fn1`-`fn4`）、`sourceRevision` 与 `semanticHash` 的区别、CRLF 规范化仅限 parsing、Open/Remix 语义、C10 回归门待处理、writer 门控状态等技术要点均准确无遗漏、无反转、无范围偏移。\n- **数值**：677/513/164、94/21、588/579/9/117、65,536 字节等数值与分隔符与英文一致（分隔符为有意保留）。\n- **表格与列表**：第 6 节八条拒绝原因及应对一一对应，无增删。\n- **消息**：39 条全部存在，占位符 `{formulaCount}`、`{formulaFamilyCount}` 等完整保留，产品/代码术语按约定保留英文。\n- **语法与语域**：中文通顺，技术语域一致，无影响可用性的歧义。\n\n未发现事实性、规范性、技术性或遗漏/新增/否定类缺陷。",
+  "usage": {
+    "prompt_tokens": 11083,
+    "completion_tokens": 1358,
+    "total_tokens": 12441,
+    "completion_tokens_details": {
+      "reasoning_tokens": 961
+    }
+  }
+}

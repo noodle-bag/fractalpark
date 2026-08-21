@@ -1,0 +1,27 @@
+{
+  "evidenceId": "222f9fdd7f318bc1b4b95f7f1f75d8d83f5c7f1cf1bd6ad3dfb661bcedbcff8c",
+  "schemaVersion": 1,
+  "locale": "fr",
+  "surface": "combined",
+  "provider": "kimi-coding",
+  "requestedModel": "k3",
+  "actualModel": "k3",
+  "finishReason": "stop",
+  "status": "approved",
+  "reviewedAt": "2026-08-21T08:22:14.363433+00:00",
+  "sourceCommit": "37320f293839812017178bb91efe7670239edfa3",
+  "sourceManualSha256": "e5168f1a0211596659314d748fa53825892a2a6f089350e636a8c0baf3903758",
+  "sourceMessageProjectionSha256": "effb295f43ad338c80f1becab42a90cbb8afd2345a79c2e014acf031ea1faaf7",
+  "targetManualSha256": "e846c775ceb8945ff5b703dfb62496f8025735f5377869c608020f82d1023d67",
+  "targetMessageProjectionSha256": "d00db50962e26cb756d12e7805c31c468d9a522efd59149159332aa55a37d92d",
+  "messagePathCount": 39,
+  "reviewText": "VERDICT: APPROVE\n\n覆盖范围：手册头（含 locale 溯源元数据与 /fr/formulas/<formulaId>，属有意本地化）+ 第 1–8 节全部内容 + 39/39 条消息对，均与英文规范一致。\n\n复核要点：\n- 所有规范性强约束（MUST NOT / MUST、指令顺序、`@classic-guards` 不可手改、`zPrev`/`LastSqr` 不可覆盖、Safety Envelope、sourceRevision 与 semanticHash 语义、CRLF 规范化仅限解析、不可变性与 Remix 语义等）均准确传达，无遗漏、无新增、无否定反转、无范围偏移。\n- 数字事实一致：677/513/164、94、21、588/579/9/117、65 536（千分位为有意本地化）、{formulaCount} 等占位符与 {maxExportScale}x 均保留。\n- 术语处理正确：产品/代码术语（Definition、Record、Profile、Remix、gate、writer、stdlib、formula 名等）按规范保留英文；`#standard-library-quick-reference` 锚点通过显式 `<a id>` 保留，内部链接未失效。\n- “held Records” 的两种译法（“maintenus hors publication”/“retenus”）属可接受的替代措辞，语义不变。\n- 语法、性数配合（如 “L’activation … reste soumise à un gate”、复合主语 “non impliquées”）经核查无误；第二人称（tu）文体前后一致。\n- 表格、列表、步骤顺序、v0.4.19 偏差说明、第 7 节 C10 待决声明与第 8 节 Classic/Editor 边界说明均忠实原文。\n\n未发现事实性、规范性、技术性、语法、语域、遗漏/新增/否定/范围或影响可用性的歧义缺陷。",
+  "usage": {
+    "prompt_tokens": 13737,
+    "completion_tokens": 3635,
+    "total_tokens": 17372,
+    "completion_tokens_details": {
+      "reasoning_tokens": 3205
+    }
+  }
+}

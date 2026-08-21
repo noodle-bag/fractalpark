@@ -1306,7 +1306,7 @@ PersistentLocal {
       'writer activation remains blocked on parser rejection'
     );
     expect(regressionMatrix).toContain(
-      'six non-English projections intentionally retain pre-Commit-19 wording'
+      'six non-English manual/message projections are model-reviewed'
     );
     expect(regressionMatrix).toContain(
       'document production parser/backend behavior plus disclosed deviations'

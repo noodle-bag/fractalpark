@@ -256,7 +256,7 @@
       "breadcrumb": "公式",
       "eyebrow": "公式图鉴",
       "title": "公式图鉴",
-      "intro": "浏览 FractalPark 横跨七个族的全部 94 个内置公式。你可以从 canonical 视图开始探索，查看 21 个深度 Guide 档案，或通过 FRM 学习编写自己的公式。",
+      "intro": "探索 FractalPark 的 94 个内置 Explorer 公式，它们分属七个家族。你可以从规范视图开始，从 21 个深度 Guide Profile 中选择一个深入学习，或了解 FRM 源码如何工作并选择相应的编写界面。",
       "stats": {
         "formulas": "公式",
         "families": "公式族",
@@ -297,9 +297,9 @@
       },
       "frm": {
         "eyebrow": "创作自己的公式",
-        "title": "使用 FRM 学习并编写公式",
-        "description": "FRM 是 FractalPark 经过测试的文本创作方式。阅读兼容性指南，学习已通过编译检查的示例，然后在独立编辑器中编写并预览公式。",
-        "learn": "学习 FRM",
+        "title": "了解 FRM 和 Formula Editor",
+        "description": "已发布的 Standard Definition 使用固定的 FRM-like v1 源码。独立 Editor 使用 Classic-compatible 源码契约；Guide 会说明两种路径，并提供经过编译检查的 Editor 示例。",
+        "learn": "了解 FRM",
         "openEditor": "打开公式编辑器"
       },
       "guides": {
@@ -318,8 +318,8 @@
         "guideBadge": "Guide"
       },
       "cta": {
-        "title": "从内置公式开始，或编写自己的公式",
-        "description": "使用探索器查看内置公式；当你想自行定义迭代时，打开独立 FRM 编辑器。",
+        "title": "从公式开始，或使用 Classic-compatible Editor",
+        "description": "使用 Explorer 浏览内置公式，或打开独立 FRM Editor，使用其支持的 Classic-compatible 自定义迭代子集。",
         "explore": "打开探索器",
         "editor": "打开公式编辑器"
       },
@@ -361,9 +361,9 @@
       }
     },
     "frmGuide": {
-      "eyebrow": "FRM 公式语言",
-      "title": "用 FRM 编写分形公式",
-      "intro": "了解 FractalPark 经过测试的 FRM 语法子集，理解源码如何转为 GPU 着色器，并使用与编辑器完全共享的三个示例逐步写出可运行公式。",
+      "eyebrow": "FRM 语言与兼容性",
+      "title": "了解 FractalPark 中的 FRM",
+      "intro": "了解规范 FRM-like v1 Definition 如何驱动已发布的 Standard 公式，然后使用独立的 Classic-compatible Editor 示例，切勿混淆这两种源码契约。",
       "contentsLabel": "本页目录",
       "copy": {
         "copy": "复制",
@@ -374,15 +374,15 @@
         "what-is-frm": {
           "title": "什么是 FRM",
           "body": [
-            "FRM 是一种紧凑的文本格式，用来描述迭代分形。一个公式分别规定轨道的初始状态、每轮重复执行的计算，以及决定是否继续迭代的条件。",
-            "这种格式源自 Fractint 生态。公式文件让使用者不必重新构建渲染程序，也能交换和修改实验。FractalPark 将这种创作方式带入浏览器，但只说明自身经过测试的语法子集，不宣称完整兼容。"
+            "FractalPark FRM-like v1 是已发布 Standard Definition 背后的规范、类型化源码语言。一个 Definition 会固定其语言、标准库、NumericProfile、parameters、初始状态、重复执行的轨道步骤和继续迭代谓词。",
+            "Classic .frm 源自 Fractint 生态系统，仍是 Classic-compatible 独立 Editor 和导入管线使用的源码契约。FractalPark 会单独扫描和诊断该方言；Classic 源码以及 frmSemanticsVersion 1 或 2 并不是规范 FRM-like v1 的替代拼写。"
           ],
           "historyPrefix": "关于这一体系更广泛的起源与历史，可参阅",
           "historyLink": "Fractint 项目网站"
         },
         "support": {
           "title": "FractalPark 的 FRM 支持",
-          "intro": "FractalPark 会对明确限定的 FRM 子集进行词法分析、解析、校验和编译。下表区分可直接使用的语法、采用 FractalPark 语义的写法，以及当前工作流无法保真的内容。",
+          "intro": "此兼容性表描述 Classic-compatible Editor 和导入路径。规范的已发布 Standard Definition 使用单独版本化的 FRM-like v1 parser、类型化 IR、standard32 backend 和固定的 Safety Envelope。",
           "table": {
             "level": "级别",
             "meaning": "含义",
@@ -422,10 +422,10 @@
             "preprocessor": "预处理器功能",
             "rejected-constructs": "当前编译流水线拒绝的其他写法"
           },
-          "disclaimer": "这是经过测试的兼容性基线，不代表完整兼容 Fractint。编译器能力变化时，本表及其测试必须在同一项改动中同步更新。",
+          "disclaimer": "这是经过测试的 Classic 兼容性基线，不是完整 Fractint 兼容性的声明，也不是包含 677 个条目的 Standard 发布台账。当前台账包含 513 个已发布 Definition 和 164 个不可用的 Record。",
           "verified": {
             "title": "已验证的兼容性",
-            "intro": "这些能力统计来自版本化清单：588 个目标条目由 579 个严格 v2 通过项和 9 个有据可查的豁免项组成；另有 117 个条目按稳定原因排除。",
+            "intro": "这些 Classic 导入能力计数来自版本化兼容性清单：588 个目标条目包含 579 个 strict-v2 通过项和 9 个有文档记录的豁免；另有 117 个独立条目以固定不变的理由被排除。它们不计入已发布的 FRM-like v1 Definition。",
             "stats": {
               "target": "目标条目",
               "passed": "严格 v2 通过",
@@ -445,7 +445,7 @@
         },
         "anatomy": {
           "title": "公式结构",
-          "intro": "FractalPark FRM 由一个具名公式声明和三个明确区段组成，它们共同定义每个像素对应的状态迭代过程。",
+          "intro": "规范 FRM-like v1 与当前 Classic Editor 示例都具有命名公式以及 init、loop 和 bailout 的概念，但它们的完整语法不同。在 v1 中，语义 directive 和可选的类型化 parameters section 也是 Definition 的一部分。",
           "parts": {
             "init": "每个像素只运行一次。在这里设置轨道初值和所需的辅助变量。",
             "loop": "每轮迭代运行一次。更新 z，以及下一轮仍需使用的其他状态。",
@@ -455,7 +455,7 @@
         },
         "syntax": {
           "title": "语法指南",
-          "intro": "这门语言有意保持精简：表达式描述复数运算，语句更新轨道状态，控制流则从不同更新方式中做出选择。",
+          "intro": "两种界面都刻意保持精简。下列摘要是共享概念；请使用已发布 Formula Record 的 Source 操作查看规范 directive 和类型化 parameter，并使用 Editor diagnostics 处理 Classic 源码。",
           "topics": {
             "sections": {
               "title": "声明与区段",
@@ -485,7 +485,7 @@
         },
         "pipeline": {
           "title": "FRM → AST → GLSL 流水线",
-          "intro": "FractalPark 不会把 FRM 文本直接拼入着色器，而是让源码经过分阶段编译，从而保持语法、语义、生成代码和诊断之间的对应关系。",
+          "intro": "FractalPark 从不将源码文本直接粘贴进 shader。规范 v1 源码经由其类型化 parser 和 CPU/GLSL backend；Classic Editor 源码经由其 scanner、selected-entry frontend、canonical formula model 和 plugin compiler。",
           "steps": {
             "source": {
               "title": "FRM 源码",
@@ -512,11 +512,11 @@
               "body": "编译成功后，公式会转成渲染器和着色器组装系统共同使用的标准插件契约。"
             }
           },
-          "note": "统一的编译器契约让 Explore、独立 Editor、已保存自定义公式、示例与测试始终走同一条实现路径。"
+          "note": "每种源码契约各有一条自己的实现路径。已发布 Standard runtime 使用 FRM-like v1；独立 Editor 和当前自定义公式示例使用 Classic-compatible 路径。两者均不会悄然回退到另一方。"
         },
         "tutorials": {
           "title": "渐进式教程",
-          "intro": "三个示例从最小二次公式逐步扩展到参数和状态反馈。每段源码都直接读取共享示例注册表，并在测试中实际编译。",
+          "intro": "这些是 Classic-compatible Editor 示例，不是规范 FRM-like v1 Definition。它们从小型二次公式逐步扩展到 parameters 和有状态反馈；每个源码块均来自共享 Editor registry，并在测试期间编译。",
           "lesson": "第 {number} 课",
           "openInEditor": "在 FRM 编辑器中打开",
           "goals": {
@@ -524,7 +524,7 @@
             "parameter-drift": "重点：p1 与 p2 参数槽、复数常量，以及把 cabs(z) 作为显式模长函数。",
             "orbit-echo": "重点：用 zPrev 取得上一轮轨道状态。无需手动维护第二个状态变量，也能引入记忆反馈。"
           },
-          "editorNote": "FRM 编辑器通过稳定 ID 打开这些同样经过编译检查的示例。保存到云端公式库之前，公式源码只保留在当前标签页中，绝不会嵌入 URL。"
+          "editorNote": "独立 FRM Editor 通过稳定 ID 打开这些 Classic-compatible、经过编译检查的示例。公式源码会留在当前标签页，直到你将它保存到云库，且绝不会嵌入 URL。这不会启用规范 v1 导入或写入器。"
         },
         "diagnostics": {
           "title": "错误与诊断",
@@ -554,7 +554,7 @@
           "exploreTitle": "先在完整渲染环境中观察",
           "exploreBody": "打开 Explore，比较内置公式的行为、着色、变换、动画和导出控制，再开始编写自定义公式。",
           "exploreCta": "打开 Explore",
-          "editorNote": "使用专用 FRM 编辑器编译、预览、导入和下载公式；登录并保存到云端公式库后，再将它交给探索器。",
+          "editorNote": "使用专用 FRM Editor 完成当前的 Classic-compatible 编译、预览、导入和下载工作流。它不接受规范 FRM-like v1 源码；请从 Formula Record 检查已发布 v1 源码，并使用该 Record 的 Open 或 Remix 操作运行它。",
           "referencesTitle": "参考资料",
           "referencesIntro": "历史背景与实现细节分开链接，以明确区分 Fractint 传承和 FractalPark 当前的编译器契约。",
           "references": {
@@ -1716,13 +1716,13 @@
     "landing": {
       "heading": "FractalPark 分形公园: 浏览器里的开源分形生成器",
       "whatIsHeading": "什么是 FractalPark 分形公园?",
-      "whatIsAnswer": "FractalPark 是一个免费、开源（MIT）的分形知识与创作平台，完全在浏览器中用 WebGL 渲染：内置 {formulaCount} 个公式、兼容 Fractint 的 FRM 创作、高分辨率 PNG 导出。创作无需账号；保存作品和公式需邮箱登录，存入你的私有云端库。",
+      "whatIsAnswer": "FractalPark 是一个免费、开源（MIT）的分形知识与创作平台，完全使用浏览器中的 WebGL 渲染：{formulaCount} 个内置公式、已发布的 FRM-like v1 源码、Classic-compatible FRM Editor 工作流和高分辨率 PNG 导出。创作无需账户；保存作品和公式需要使用电子邮件登录及私有云库。",
       "capabilitiesHeading": "核心能力",
       "capabilitiesIntro": "{formulaCount} 个公式、{formulaFamilyCount} 个家族 · {formulaGuideCount} 篇深度公式指南 · {transformCount} 种变换 · {coloringModeCount} 种着色模式 · 可分享 URL · 最高 {maxExportScale}× PNG 导出",
       "linksHeading": "继续了解",
       "links": {
         "formulas": "公式图鉴——每个公式的数学解释、历史与在线示例",
-        "frmGuide": "FRM 指南——在浏览器中编写 Fractint 兼容公式",
+        "frmGuide": "FRM Guide — 了解已发布的 FRM-like v1 与 Classic-compatible Editor 源码",
         "drift": "Drift 沉浸播放——坐下来欣赏预设轮播",
         "about": "关于——项目事实、边界与开源信息"
       },
@@ -1739,7 +1739,7 @@
   },
   "frmEditor": {
     "title": "FRM 编辑器",
-    "description": "在浏览器中编写、编译、预览 FRM 公式，并保存到你的云端库。",
+    "description": "在浏览器中使用 FractalPark 的 Classic-compatible FRM 子集编写、编译和预览公式；将它们保存到你的云库。",
     "breadcrumb": "面包屑导航",
     "crumbGuide": "FRM 指南",
     "beta": "测试版",
@@ -1809,9 +1809,9 @@
   "metadata": {
     "explore": {
       "title": "分形公园 FractalPark - 开源浏览器分形生成器",
-      "description": "开源、公式优先的分形知识与创作平台, 在浏览器中实时运行: 94 个内置公式、WebGL 实时渲染、Fractint 兼容 FRM 公式编辑、高分辨率 PNG 导出, 七语言界面.",
+      "description": "以公式为核心的开源分形知识与创作平台，运行于浏览器中：94 个内置公式、实时 WebGL 渲染、已发布的 FRM-like v1 源码、Classic-compatible FRM Editor 和高分辨率 PNG 导出。",
       "ogTitle": "分形公园 FractalPark - 浏览器里的开源分形艺术工具",
-      "ogDescription": "在浏览器中创作分形艺术: 94 个公式、WebGL 实时渲染、FRM 编辑、高清 PNG 导出."
+      "ogDescription": "在浏览器中创作分形艺术：94 个公式、实时 WebGL 渲染、已发布的 FRM-like v1 源码、Classic-compatible FRM Editor 和高分辨率 PNG 导出。"
     },
     "gallery": {
       "title": "我的画廊 | 个人分形收藏 - 分形公园 FractalPark",
@@ -1823,17 +1823,17 @@
     },
     "formulaAtlas": {
       "title": "公式图鉴 | 94 个分形公式 - 分形公园 FractalPark",
-      "description": "浏览 FractalPark 横跨七个公式族的全部 94 个公式、21 个精选 Guide 档案与 FRM 创作入口，并在 WebGL 探索器中打开 canonical 公式状态。",
+      "description": "浏览 FractalPark 七个家族中的全部 94 个公式，探索 21 个精选 Guide Profile，了解 FRM 源码如何工作，并在 WebGL Explorer 中打开规范公式状态。",
       "imageAlt": "包含 94 个内置公式的 FractalPark 公式图鉴"
     },
     "frmEditor": {
       "title": "FRM 编辑器 | FractalPark",
-      "description": "在浏览器中编写、编译、预览 FRM 公式，并保存到你的云端库。"
+      "description": "在浏览器中使用 FractalPark 的 Classic-compatible FRM 子集编写、编译和预览公式；将它们保存到你的云库。"
     },
     "frmGuide": {
-      "title": "FRM 指南 | 编写自定义分形公式 - 分形公园 FractalPark",
-      "description": "学习 FractalPark 经过测试的 FRM 语法、兼容级别、AST 到 GLSL 编译流水线、错误诊断，以及三个实际通过编译测试的自定义公式示例。",
-      "imageAlt": "FractalPark FRM 公式语言指南"
+      "title": "FRM Guide：Classic Editor 和 FRM-like v1 - FractalPark",
+      "description": "了解 FractalPark 的规范 FRM-like v1 Definition、已发布 runtime 和不同的 Classic-compatible Editor 工作流。",
+      "imageAlt": "FractalPark FRM-like v1 和 Classic-compatible 公式指南"
     },
     "drift": {
       "title": "Drift 沉浸播放 - 分形公园 FractalPark",
@@ -1844,13 +1844,13 @@
   },
   "about": {
     "title": "关于分形公园 FractalPark",
-    "aiDescription": "分形公园 FractalPark 是一个基于 MIT 许可证开源的浏览器分形艺术生成器, 使用 WebGL 进行实时 GPU 渲染.它包含 94 个内置逃逸时间分形公式（Mandelbrot、Julia、Newton、Phoenix、Magnet、McMullen、有理函数、超越函数家族）、支持 Fractint .frm 语法的自定义公式编辑器、7 种 UV 变换插件、9 种着色模式, 以及高分辨率 PNG 导出功能.使用 Next.js 16、React 19、TypeScript 5 和 Tailwind CSS 构建.渲染引擎采用插件架构, 支持动态 GLSL 着色器组装和 LRU 缓存.",
+    "aiDescription": "FractalPark 是一款采用 MIT 许可的开源浏览器分形艺术生成器，使用 WebGL 进行实时 GPU 渲染。它具有 94 个内置逃逸时间公式、513 个使用固定 FRM-like v1 源码的已发布 Standard Definition、独立的 Classic-compatible 自定义公式 Editor、7 个 UV 变换插件、9 种着色模式和高分辨率 PNG 导出。采用 Next.js 16、React 19、TypeScript 5 和 Tailwind CSS 构建，其渲染引擎使用基于 plugin 的动态 GLSL assembly 和 LRU caching。",
     "techStack": {
       "title": "技术栈",
       "description": "基于 Next.js、WebGL 和 TypeScript 构建.GPU 着色器驱动的实时分形渲染.",
       "frontend": "前端: Next.js 16 (App Router)、React 19、TypeScript 5、Tailwind CSS 4、shadcn/ui",
       "rendering": "渲染: WebGL 1 (GLSL 片段着色器)、插件化架构、着色器 LRU 缓存",
-      "formula": "公式系统: 自定义 Fractint .frm 解析器、CodeMirror 6 编辑器、AST 到 GLSL 转译器"
+      "formula": "Formula System：面向 Standard Definition 的已发布 FRM-like v1 parser/backend；面向自定义公式的独立 Classic-compatible CodeMirror 6 Editor 和 AST-to-GLSL 路径"
     },
     "openSource": {
       "title": "开源项目",
@@ -1866,9 +1866,9 @@
     "next": "下一个预设"
   },
   "publicProject": {
-    "tagline": "FractalPark 分形公园是一个开源、公式优先的分形知识与创作平台, 正在不断扩展 Fractint 兼容的 FRM 支持, 致力于把 Fractint 的公式遗产带入现代浏览器.",
-    "definition": "FractalPark 是一个免费、开源（MIT）的 WebGL 应用，用于探索、学习和创作分形艺术。内置 {formulaCount} 个公式（{formulaFamilyCount} 个族）、{formulaGuideCount} 篇深度公式指南、兼容 Fractint 的 FRM 语言（含指南和独立编辑器）以及社区画廊。渲染在浏览器中进行；保存作品和公式需邮箱登录，存入私有云端库。",
-    "aiDescription": "FractalPark 分形公园是基于 MIT 许可证开源的浏览器分形生成器, 使用 WebGL 实时 GPU 渲染.内置 {formulaCount} 个分形公式、{formulaFamilyCount} 个家族、{formulaGuideCount} 篇公式指南, 提供 Fractint 兼容 FRM 编辑器（AST 到 GLSL 转译）、{transformCount} 种 UV 变换插件、{coloringModeCount} 种着色模式, 支持可分享 URL、本地作品保存与最高 {maxExportScale}x 高分辨率 PNG 导出.使用 Next.js、React 和 TypeScript 构建.",
+    "tagline": "FractalPark 是一个开源、以公式为核心的分形知识与创作平台，提供可阅读和运行的已发布公式源码，以及独立的 Classic-compatible 公式 editor。",
+    "definition": "FractalPark 是一款免费、开源（MIT）的 WebGL 应用，用于探索、学习和创作分形艺术。它提供 {formulaCount} 个内置公式，横跨 {formulaFamilyCount} 个家族；还有 {formulaGuideCount} 篇深度 Formula Guide、已发布的 FRM-like v1 源码、Classic-compatible 独立 FRM Editor 及社区 Gallery。渲染在浏览器中进行；保存作品和公式需要使用电子邮件登录及私有云库。",
+    "aiDescription": "FractalPark 是一款采用 MIT 许可的开源浏览器分形生成器，使用 WebGL 进行实时 GPU 渲染。它具有 {formulaCount} 个内置分形公式，横跨 {formulaFamilyCount} 个家族；还有 {formulaGuideCount} 篇 Formula Guide、已发布的 FRM-like v1 源码、采用 AST-to-GLSL transpilation 的独立 Classic-compatible FRM Editor、{transformCount} 个 UV 变换插件、{coloringModeCount} 种着色模式、可分享 URL、供作品和公式使用的电子邮件登录云库、社区发布，以及最高 {maxExportScale}x 的高分辨率 PNG 导出。采用 Next.js、React 和 TypeScript 构建。",
     "capabilitiesHeading": "今天就能做什么",
     "capabilities": {
       "discover": {
@@ -1880,8 +1880,8 @@
         "summary": "WebGL 实时探索与渲染: 每个公式都支持 Mandelbrot 与 Julia 模式, 7 种变换、9 种着色模式、渐变、光照与关键帧动画."
       },
       "authorFrm": {
-        "title": "编写 FRM",
-        "summary": "用 Fractint 兼容的 FRM 语言编写自定义公式, 配套指南与独立编辑器: AST 校验、GLSL 实时预览与清晰的错误诊断."
+        "title": "学习 FRM 并编写自定义公式",
+        "summary": "通过 Guide 和独立 Editor，在 FractalPark 经过测试的 Classic-compatible FRM 子集中编写自定义公式：AST 验证、实时 GLSL 预览和清晰的诊断信息。"
       },
       "saveExport": {
         "title": "保存与分享",
@@ -1893,7 +1893,7 @@
     "futureHeading": "未来方向",
     "boundaries": {
       "current": {
-        "0": "不断扩展的 Fractint 兼容 FRM 支持: 今天可用的是一个经过实测的 Fractint 公式语言子集——不是完整的 Fractint 复刻.",
+        "0": "已发布的 Standard Definition 使用 FRM-like v1 源码。独立 Editor 使用的是另一套实用的 Classic-compatible 子集——并非完整的 Fractint 重新实现。",
         "1": "创作无需账号。保存使用邮箱一次性验证码登录，作品和公式存入你的私有云端库；发布始终显式触发，携带自定义公式的作品会同时以 MIT 许可证公开公式源码。",
         "2": "界面支持七种语言：英文、简体中文、葡萄牙语、韩语、俄语、西班牙语和法语。"
       },

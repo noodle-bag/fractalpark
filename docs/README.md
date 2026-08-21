@@ -39,6 +39,12 @@ govern FractalPark development.
   Definitions, understand the gated canonical formatter contract, diagnose
   failures, and distinguish the published v1 runtime from the current
   Classic-compatible standalone Editor.
+- Localized author manuals: [简体中文](manuals/frm-like-v1.zh.md),
+  [Português](manuals/frm-like-v1.pt.md), [한국어](manuals/frm-like-v1.ko.md),
+  [Русский](manuals/frm-like-v1.ru.md), [Español](manuals/frm-like-v1.es.md),
+  and [Français](manuals/frm-like-v1.fr.md). The English manual remains the
+  authority; localized freshness, hashes, AI provenance, and review state are
+  bound by `resources/formula-library/v1/frm-like-v1-localization-review.v1.json`.
 
 ## Architecture Decision Records
 
