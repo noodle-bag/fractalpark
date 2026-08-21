@@ -1,0 +1,2416 @@
+{
+  "schema": "fractalpark-teaching-review-ledger/v1",
+  "selectionSha256": "1ea4fff7f3c0f22d3cdae99aa06f775987a35871427b79d7005be5acd344b2fa",
+  "authoritative": true,
+  "maintainerActorIds": [
+    "fractalpark-maintainer"
+  ],
+  "rules": {
+    "modelMayApprove": false,
+    "automationMayApprove": false,
+    "evidenceRequiredAfterNotStarted": true,
+    "unitReviewFieldsForbidden": true
+  },
+  "units": [
+    {
+      "formulaId": "00e14aa8-b766-54ea-a359-3f5d20d329b7",
+      "sourceRevision": "e4d2259a5dd3fe7b3af646514a4313e83efcc80e887e04c07b7469bb27a66b90",
+      "semanticHash": "26270fc7b1577aa266c7a0eb23b2664ffcb020cf5a7528ea9be23950ba10a72c",
+      "english": {
+        "stage": "not-started",
+        "contentHash": null,
+        "events": []
+      },
+      "localized": {
+        "zh": {
+          "stage": "not-started",
+          "contentHash": null,
+          "englishContentHash": null,
+          "events": []
+        },
+        "pt": {
+          "stage": "not-started",
+          "contentHash": null,
+          "englishContentHash": null,
+          "events": []
+        },
+        "ko": {
+          "stage": "not-started",
+          "contentHash": null,
+          "englishContentHash": null,
+          "events": []
+        },
+        "ru": {
+          "stage": "not-started",
+          "contentHash": null,
+          "englishContentHash": null,
+          "events": []
+        },
+        "es": {
+          "stage": "not-started",
+          "contentHash": null,
+          "englishContentHash": null,
+          "events": []
+        },
+        "fr": {
+          "stage": "not-started",
+          "contentHash": null,
+          "englishContentHash": null,
+          "events": []
+        }
+      }
+    },
+    {
+      "formulaId": "c1c898f3-c9a3-583d-9a0a-d09968ba0db3",
+      "sourceRevision": "a265807bb53747d256b0cbfee89991527a72e8bb9ceac9a41888c3ad1419448e",
+      "semanticHash": "1316ce063761dd9a4c2c2a043c2a44723021e369cd01f42ae89454251079349f",
+      "english": {
+        "stage": "not-started",
+        "contentHash": null,
+        "events": []
+      },
+      "localized": {
+        "zh": {
+          "stage": "not-started",
+          "contentHash": null,
+          "englishContentHash": null,
+          "events": []
+        },
+        "pt": {
+          "stage": "not-started",
+          "contentHash": null,
+          "englishContentHash": null,
+          "events": []
+        },
+        "ko": {
+          "stage": "not-started",
+          "contentHash": null,
+          "englishContentHash": null,
+          "events": []
+        },
+        "ru": {
+          "stage": "not-started",
+          "contentHash": null,
+          "englishContentHash": null,
+          "events": []
+        },
+        "es": {
+          "stage": "not-started",
+          "contentHash": null,
+          "englishContentHash": null,
+          "events": []
+        },
+        "fr": {
+          "stage": "not-started",
+          "contentHash": null,
+          "englishContentHash": null,
+          "events": []
+        }
+      }
+    },
+    {
+      "formulaId": "2ab193f5-4919-5e5c-a9fb-c1a0e3f5eb02",
+      "sourceRevision": "cfef49944d8f9bd8f2ee91b2d4ab4f9b30ad66475a6f783f52bb91a7a36b1617",
+      "semanticHash": "66120f8c30ea579f64ef57e054eb33b08e9c00eeed9c33c9cecc1e6bba600898",
+      "english": {
+        "stage": "not-started",
+        "contentHash": null,
+        "events": []
+      },
+      "localized": {
+        "zh": {
+          "stage": "not-started",
+          "contentHash": null,
+          "englishContentHash": null,
+          "events": []
+        },
+        "pt": {
+          "stage": "not-started",
+          "contentHash": null,
+          "englishContentHash": null,
+          "events": []
+        },
+        "ko": {
+          "stage": "not-started",
+          "contentHash": null,
+          "englishContentHash": null,
+          "events": []
+        },
+        "ru": {
+          "stage": "not-started",
+          "contentHash": null,
+          "englishContentHash": null,
+          "events": []
+        },
+        "es": {
+          "stage": "not-started",
+          "contentHash": null,
+          "englishContentHash": null,
+          "events": []
+        },
+        "fr": {
+          "stage": "not-started",
+          "contentHash": null,
+          "englishContentHash": null,
+          "events": []
+        }
+      }
+    },
+    {
+      "formulaId": "dd052c9f-868f-5516-9af0-3f4e78ac7a13",
+      "sourceRevision": "5e3522c53ca358df8d61d5a3b82aa0b90ff8009602b1952fb5022027f00fdd45",
+      "semanticHash": "d5933023730b2ec1a6c5c5cf8762478436fa9ccdf19311da910493d169bed0dd",
+      "english": {
+        "stage": "not-started",
+        "contentHash": null,
+        "events": []
+      },
+      "localized": {
+        "zh": {
+          "stage": "not-started",
+          "contentHash": null,
+          "englishContentHash": null,
+          "events": []
+        },
+        "pt": {
+          "stage": "not-started",
+          "contentHash": null,
+          "englishContentHash": null,
+          "events": []
+        },
+        "ko": {
+          "stage": "not-started",
+          "contentHash": null,
+          "englishContentHash": null,
+          "events": []
+        },
+        "ru": {
+          "stage": "not-started",
+          "contentHash": null,
+          "englishContentHash": null,
+          "events": []
+        },
+        "es": {
+          "stage": "not-started",
+          "contentHash": null,
+          "englishContentHash": null,
+          "events": []
+        },
+        "fr": {
+          "stage": "not-started",
+          "contentHash": null,
+          "englishContentHash": null,
+          "events": []
+        }
+      }
+    },
+    {
+      "formulaId": "e2456b54-ef50-5ac9-9faa-dcb576c5e774",
+      "sourceRevision": "25f923b51ea1e36408f9c48e008187e67a946fc58ef634f93bf0cba216f622aa",
+      "semanticHash": "3d14554a8a35c0e2ee8fc80436926dd493babd846a9d5294bc6b58ad7580c62f",
+      "english": {
+        "stage": "not-started",
+        "contentHash": null,
+        "events": []
+      },
+      "localized": {
+        "zh": {
+          "stage": "not-started",
+          "contentHash": null,
+          "englishContentHash": null,
+          "events": []
+        },
+        "pt": {
+          "stage": "not-started",
+          "contentHash": null,
+          "englishContentHash": null,
+          "events": []
+        },
+        "ko": {
+          "stage": "not-started",
+          "contentHash": null,
+          "englishContentHash": null,
+          "events": []
+        },
+        "ru": {
+          "stage": "not-started",
+          "contentHash": null,
+          "englishContentHash": null,
+          "events": []
+        },
+        "es": {
+          "stage": "not-started",
+          "contentHash": null,
+          "englishContentHash": null,
+          "events": []
+        },
+        "fr": {
+          "stage": "not-started",
+          "contentHash": null,
+          "englishContentHash": null,
+          "events": []
+        }
+      }
+    },
+    {
+      "formulaId": "07a0afc6-ced5-5765-9314-fdb0ef593cb9",
+      "sourceRevision": "dce84ac5a7ee55fff27d70df826af67d386f905ee65cee65f5fa8d418e68ba27",
+      "semanticHash": "7d62c7f378c70b9fbfaeb2381d3c82383ab50a76fe5ea5cbe7fd788b451af907",
+      "english": {
+        "stage": "not-started",
+        "contentHash": null,
+        "events": []
+      },
+      "localized": {
+        "zh": {
+          "stage": "not-started",
+          "contentHash": null,
+          "englishContentHash": null,
+          "events": []
+        },
+        "pt": {
+          "stage": "not-started",
+          "contentHash": null,
+          "englishContentHash": null,
+          "events": []
+        },
+        "ko": {
+          "stage": "not-started",
+          "contentHash": null,
+          "englishContentHash": null,
+          "events": []
+        },
+        "ru": {
+          "stage": "not-started",
+          "contentHash": null,
+          "englishContentHash": null,
+          "events": []
+        },
+        "es": {
+          "stage": "not-started",
+          "contentHash": null,
+          "englishContentHash": null,
+          "events": []
+        },
+        "fr": {
+          "stage": "not-started",
+          "contentHash": null,
+          "englishContentHash": null,
+          "events": []
+        }
+      }
+    },
+    {
+      "formulaId": "627c38a8-8f4d-548f-a5a6-dd9f215adf60",
+      "sourceRevision": "01058522dac48f2278d74a3e8a06b4c18e6d2589a3ccda69565dad37c325298d",
+      "semanticHash": "96e81ed9a1c4c222c0bf0ce8034a51d3291cde23ee6111f2082649d8854f6f5e",
+      "english": {
+        "stage": "not-started",
+        "contentHash": null,
+        "events": []
+      },
+      "localized": {
+        "zh": {
+          "stage": "not-started",
+          "contentHash": null,
+          "englishContentHash": null,
+          "events": []
+        },
+        "pt": {
+          "stage": "not-started",
+          "contentHash": null,
+          "englishContentHash": null,
+          "events": []
+        },
+        "ko": {
+          "stage": "not-started",
+          "contentHash": null,
+          "englishContentHash": null,
+          "events": []
+        },
+        "ru": {
+          "stage": "not-started",
+          "contentHash": null,
+          "englishContentHash": null,
+          "events": []
+        },
+        "es": {
+          "stage": "not-started",
+          "contentHash": null,
+          "englishContentHash": null,
+          "events": []
+        },
+        "fr": {
+          "stage": "not-started",
+          "contentHash": null,
+          "englishContentHash": null,
+          "events": []
+        }
+      }
+    },
+    {
+      "formulaId": "12fc34ff-196d-5924-830e-6edb72dfc172",
+      "sourceRevision": "3aec931a4991e14e53348c6d28e9fcbaf8127cad6298dafc2a8ee9e2ac8d8143",
+      "semanticHash": "a155deea383578e6e4ff5901f5c5a0adaa97b84e8c73df146732db9096cebee9",
+      "english": {
+        "stage": "not-started",
+        "contentHash": null,
+        "events": []
+      },
+      "localized": {
+        "zh": {
+          "stage": "not-started",
+          "contentHash": null,
+          "englishContentHash": null,
+          "events": []
+        },
+        "pt": {
+          "stage": "not-started",
+          "contentHash": null,
+          "englishContentHash": null,
+          "events": []
+        },
+        "ko": {
+          "stage": "not-started",
+          "contentHash": null,
+          "englishContentHash": null,
+          "events": []
+        },
+        "ru": {
+          "stage": "not-started",
+          "contentHash": null,
+          "englishContentHash": null,
+          "events": []
+        },
+        "es": {
+          "stage": "not-started",
+          "contentHash": null,
+          "englishContentHash": null,
+          "events": []
+        },
+        "fr": {
+          "stage": "not-started",
+          "contentHash": null,
+          "englishContentHash": null,
+          "events": []
+        }
+      }
+    },
+    {
+      "formulaId": "0109434e-e9cc-5d80-ad3f-d25ec62cbfda",
+      "sourceRevision": "41794347e36147808476dcb16e41d7bdbf24b94327ce2f0bf13fd67a1cf1901f",
+      "semanticHash": "d26f1d44391d40c073dbec81bde9b52fe1fbf4e6235750ea29e9de422955fcd8",
+      "english": {
+        "stage": "not-started",
+        "contentHash": null,
+        "events": []
+      },
+      "localized": {
+        "zh": {
+          "stage": "not-started",
+          "contentHash": null,
+          "englishContentHash": null,
+          "events": []
+        },
+        "pt": {
+          "stage": "not-started",
+          "contentHash": null,
+          "englishContentHash": null,
+          "events": []
+        },
+        "ko": {
+          "stage": "not-started",
+          "contentHash": null,
+          "englishContentHash": null,
+          "events": []
+        },
+        "ru": {
+          "stage": "not-started",
+          "contentHash": null,
+          "englishContentHash": null,
+          "events": []
+        },
+        "es": {
+          "stage": "not-started",
+          "contentHash": null,
+          "englishContentHash": null,
+          "events": []
+        },
+        "fr": {
+          "stage": "not-started",
+          "contentHash": null,
+          "englishContentHash": null,
+          "events": []
+        }
+      }
+    },
+    {
+      "formulaId": "059080eb-da12-5e85-a1a3-049929bdcf49",
+      "sourceRevision": "ef31384c340c3899555f3de5048b4c9863b397c767e8ed72cae190d600f3ea48",
+      "semanticHash": "45f7a65ad99eb0a0b301fa2853808a2b9fc0c81ab14a8cd8f7eaab8335c61b12",
+      "english": {
+        "stage": "not-started",
+        "contentHash": null,
+        "events": []
+      },
+      "localized": {
+        "zh": {
+          "stage": "not-started",
+          "contentHash": null,
+          "englishContentHash": null,
+          "events": []
+        },
+        "pt": {
+          "stage": "not-started",
+          "contentHash": null,
+          "englishContentHash": null,
+          "events": []
+        },
+        "ko": {
+          "stage": "not-started",
+          "contentHash": null,
+          "englishContentHash": null,
+          "events": []
+        },
+        "ru": {
+          "stage": "not-started",
+          "contentHash": null,
+          "englishContentHash": null,
+          "events": []
+        },
+        "es": {
+          "stage": "not-started",
+          "contentHash": null,
+          "englishContentHash": null,
+          "events": []
+        },
+        "fr": {
+          "stage": "not-started",
+          "contentHash": null,
+          "englishContentHash": null,
+          "events": []
+        }
+      }
+    },
+    {
+      "formulaId": "1768f194-bdc1-5881-b269-a58730967c2c",
+      "sourceRevision": "d8e2c1950f3a30b27d380c3132e6a62ebe287cd26cd24c3dbc28dfd47ad784ed",
+      "semanticHash": "0c21f93a3361be1da89f3199f91349e0980e617ded57c2347f8294faf02bd622",
+      "english": {
+        "stage": "not-started",
+        "contentHash": null,
+        "events": []
+      },
+      "localized": {
+        "zh": {
+          "stage": "not-started",
+          "contentHash": null,
+          "englishContentHash": null,
+          "events": []
+        },
+        "pt": {
+          "stage": "not-started",
+          "contentHash": null,
+          "englishContentHash": null,
+          "events": []
+        },
+        "ko": {
+          "stage": "not-started",
+          "contentHash": null,
+          "englishContentHash": null,
+          "events": []
+        },
+        "ru": {
+          "stage": "not-started",
+          "contentHash": null,
+          "englishContentHash": null,
+          "events": []
+        },
+        "es": {
+          "stage": "not-started",
+          "contentHash": null,
+          "englishContentHash": null,
+          "events": []
+        },
+        "fr": {
+          "stage": "not-started",
+          "contentHash": null,
+          "englishContentHash": null,
+          "events": []
+        }
+      }
+    },
+    {
+      "formulaId": "38c3b212-c33b-5dd3-aae5-a514fc7e37e3",
+      "sourceRevision": "824eda8dc180b39ab6c7e32f187530e1c35edeaec7db3f9d00c7a7acef78df63",
+      "semanticHash": "4d4a33c69523f26a7d553ecdc0a52d6a166aa8ea602de09bea6de0af124927cc",
+      "english": {
+        "stage": "not-started",
+        "contentHash": null,
+        "events": []
+      },
+      "localized": {
+        "zh": {
+          "stage": "not-started",
+          "contentHash": null,
+          "englishContentHash": null,
+          "events": []
+        },
+        "pt": {
+          "stage": "not-started",
+          "contentHash": null,
+          "englishContentHash": null,
+          "events": []
+        },
+        "ko": {
+          "stage": "not-started",
+          "contentHash": null,
+          "englishContentHash": null,
+          "events": []
+        },
+        "ru": {
+          "stage": "not-started",
+          "contentHash": null,
+          "englishContentHash": null,
+          "events": []
+        },
+        "es": {
+          "stage": "not-started",
+          "contentHash": null,
+          "englishContentHash": null,
+          "events": []
+        },
+        "fr": {
+          "stage": "not-started",
+          "contentHash": null,
+          "englishContentHash": null,
+          "events": []
+        }
+      }
+    },
+    {
+      "formulaId": "a569d2c4-d397-5634-9dfe-21b2ab1a386a",
+      "sourceRevision": "b7dd588e3cf8c70a1ec52801a03b6ee1b6980009c0725f8a32ecfa8fe1a6dfad",
+      "semanticHash": "89e7b983a7455e1e3f1c4179ba6894492bcee9066e57e829ba9dc42efb44e1a9",
+      "english": {
+        "stage": "not-started",
+        "contentHash": null,
+        "events": []
+      },
+      "localized": {
+        "zh": {
+          "stage": "not-started",
+          "contentHash": null,
+          "englishContentHash": null,
+          "events": []
+        },
+        "pt": {
+          "stage": "not-started",
+          "contentHash": null,
+          "englishContentHash": null,
+          "events": []
+        },
+        "ko": {
+          "stage": "not-started",
+          "contentHash": null,
+          "englishContentHash": null,
+          "events": []
+        },
+        "ru": {
+          "stage": "not-started",
+          "contentHash": null,
+          "englishContentHash": null,
+          "events": []
+        },
+        "es": {
+          "stage": "not-started",
+          "contentHash": null,
+          "englishContentHash": null,
+          "events": []
+        },
+        "fr": {
+          "stage": "not-started",
+          "contentHash": null,
+          "englishContentHash": null,
+          "events": []
+        }
+      }
+    },
+    {
+      "formulaId": "e435bbb6-d866-5876-9f16-f04fbe61ff2b",
+      "sourceRevision": "04817a2a54e195117685266ac9b569e294050cd4617bf3df518390c17ca0cf5f",
+      "semanticHash": "05fe294dadeb96fb7f8268f7fd5134f9a91882770485d3379f7c47bbe4425cb5",
+      "english": {
+        "stage": "not-started",
+        "contentHash": null,
+        "events": []
+      },
+      "localized": {
+        "zh": {
+          "stage": "not-started",
+          "contentHash": null,
+          "englishContentHash": null,
+          "events": []
+        },
+        "pt": {
+          "stage": "not-started",
+          "contentHash": null,
+          "englishContentHash": null,
+          "events": []
+        },
+        "ko": {
+          "stage": "not-started",
+          "contentHash": null,
+          "englishContentHash": null,
+          "events": []
+        },
+        "ru": {
+          "stage": "not-started",
+          "contentHash": null,
+          "englishContentHash": null,
+          "events": []
+        },
+        "es": {
+          "stage": "not-started",
+          "contentHash": null,
+          "englishContentHash": null,
+          "events": []
+        },
+        "fr": {
+          "stage": "not-started",
+          "contentHash": null,
+          "englishContentHash": null,
+          "events": []
+        }
+      }
+    },
+    {
+      "formulaId": "06223e69-6d8c-50ba-8e5d-b630d342d910",
+      "sourceRevision": "6fd1272cca8d356da5f0c49cbbb4278f0e5d727cefab5ad1daefa83fb4c1f3ce",
+      "semanticHash": "88a93741043d5f43532adda4f96b789b0e10c4bd3d31319b8c9aa7ba3af5fee9",
+      "english": {
+        "stage": "not-started",
+        "contentHash": null,
+        "events": []
+      },
+      "localized": {
+        "zh": {
+          "stage": "not-started",
+          "contentHash": null,
+          "englishContentHash": null,
+          "events": []
+        },
+        "pt": {
+          "stage": "not-started",
+          "contentHash": null,
+          "englishContentHash": null,
+          "events": []
+        },
+        "ko": {
+          "stage": "not-started",
+          "contentHash": null,
+          "englishContentHash": null,
+          "events": []
+        },
+        "ru": {
+          "stage": "not-started",
+          "contentHash": null,
+          "englishContentHash": null,
+          "events": []
+        },
+        "es": {
+          "stage": "not-started",
+          "contentHash": null,
+          "englishContentHash": null,
+          "events": []
+        },
+        "fr": {
+          "stage": "not-started",
+          "contentHash": null,
+          "englishContentHash": null,
+          "events": []
+        }
+      }
+    },
+    {
+      "formulaId": "3a83800c-4a44-5e61-9651-d3d5adb71213",
+      "sourceRevision": "12a2fd990373fc6f7467674871cbd2c82c78ec9b8354a805b442ef4c6ef58b06",
+      "semanticHash": "491ebbc691a954b85f04cbbf05afa44e877026f31cb3eaa403db6dbf61fd435e",
+      "english": {
+        "stage": "not-started",
+        "contentHash": null,
+        "events": []
+      },
+      "localized": {
+        "zh": {
+          "stage": "not-started",
+          "contentHash": null,
+          "englishContentHash": null,
+          "events": []
+        },
+        "pt": {
+          "stage": "not-started",
+          "contentHash": null,
+          "englishContentHash": null,
+          "events": []
+        },
+        "ko": {
+          "stage": "not-started",
+          "contentHash": null,
+          "englishContentHash": null,
+          "events": []
+        },
+        "ru": {
+          "stage": "not-started",
+          "contentHash": null,
+          "englishContentHash": null,
+          "events": []
+        },
+        "es": {
+          "stage": "not-started",
+          "contentHash": null,
+          "englishContentHash": null,
+          "events": []
+        },
+        "fr": {
+          "stage": "not-started",
+          "contentHash": null,
+          "englishContentHash": null,
+          "events": []
+        }
+      }
+    },
+    {
+      "formulaId": "280229ec-dd2f-5982-9954-75829a37a5f2",
+      "sourceRevision": "503739d928f438a7edc79d8d7fb1931b1435b45b0c8231950a2b11cf7104d22c",
+      "semanticHash": "98af05f90861656958d24b58d63d4b9eb08eca323b126001c38eb467e5646e5c",
+      "english": {
+        "stage": "not-started",
+        "contentHash": null,
+        "events": []
+      },
+      "localized": {
+        "zh": {
+          "stage": "not-started",
+          "contentHash": null,
+          "englishContentHash": null,
+          "events": []
+        },
+        "pt": {
+          "stage": "not-started",
+          "contentHash": null,
+          "englishContentHash": null,
+          "events": []
+        },
+        "ko": {
+          "stage": "not-started",
+          "contentHash": null,
+          "englishContentHash": null,
+          "events": []
+        },
+        "ru": {
+          "stage": "not-started",
+          "contentHash": null,
+          "englishContentHash": null,
+          "events": []
+        },
+        "es": {
+          "stage": "not-started",
+          "contentHash": null,
+          "englishContentHash": null,
+          "events": []
+        },
+        "fr": {
+          "stage": "not-started",
+          "contentHash": null,
+          "englishContentHash": null,
+          "events": []
+        }
+      }
+    },
+    {
+      "formulaId": "0e1b1705-ae4c-5685-b0fc-b82586ff144e",
+      "sourceRevision": "ae01647cb774c689e3b51db29ed4e42fee4f0a1f63716ae8a5fe10d41aa4a985",
+      "semanticHash": "0960756fc1dc1b8a80afcb65aa073a990f64c1801605934bb4a473dd102f5652",
+      "english": {
+        "stage": "not-started",
+        "contentHash": null,
+        "events": []
+      },
+      "localized": {
+        "zh": {
+          "stage": "not-started",
+          "contentHash": null,
+          "englishContentHash": null,
+          "events": []
+        },
+        "pt": {
+          "stage": "not-started",
+          "contentHash": null,
+          "englishContentHash": null,
+          "events": []
+        },
+        "ko": {
+          "stage": "not-started",
+          "contentHash": null,
+          "englishContentHash": null,
+          "events": []
+        },
+        "ru": {
+          "stage": "not-started",
+          "contentHash": null,
+          "englishContentHash": null,
+          "events": []
+        },
+        "es": {
+          "stage": "not-started",
+          "contentHash": null,
+          "englishContentHash": null,
+          "events": []
+        },
+        "fr": {
+          "stage": "not-started",
+          "contentHash": null,
+          "englishContentHash": null,
+          "events": []
+        }
+      }
+    },
+    {
+      "formulaId": "17b83663-a502-5e34-bd4c-a116e49eab5f",
+      "sourceRevision": "581fbcb6400907433c24d3061ac2585a5090574f7ee6e7288bffe177432eaafa",
+      "semanticHash": "b0539f17c0e00e498da7c745374933b658189a600327bf3ec201522a0903a8e7",
+      "english": {
+        "stage": "not-started",
+        "contentHash": null,
+        "events": []
+      },
+      "localized": {
+        "zh": {
+          "stage": "not-started",
+          "contentHash": null,
+          "englishContentHash": null,
+          "events": []
+        },
+        "pt": {
+          "stage": "not-started",
+          "contentHash": null,
+          "englishContentHash": null,
+          "events": []
+        },
+        "ko": {
+          "stage": "not-started",
+          "contentHash": null,
+          "englishContentHash": null,
+          "events": []
+        },
+        "ru": {
+          "stage": "not-started",
+          "contentHash": null,
+          "englishContentHash": null,
+          "events": []
+        },
+        "es": {
+          "stage": "not-started",
+          "contentHash": null,
+          "englishContentHash": null,
+          "events": []
+        },
+        "fr": {
+          "stage": "not-started",
+          "contentHash": null,
+          "englishContentHash": null,
+          "events": []
+        }
+      }
+    },
+    {
+      "formulaId": "09ee96d1-18a8-5dad-83e1-d05f0c59be4b",
+      "sourceRevision": "ab0bdc1929dee1daeb9486d7b1fd885a6644367232854694fa88908eb4e6c0ce",
+      "semanticHash": "061df18cf898a0a049d63cd5f6cf087a28ac7f830bb9694e954c1aaae0b29851",
+      "english": {
+        "stage": "not-started",
+        "contentHash": null,
+        "events": []
+      },
+      "localized": {
+        "zh": {
+          "stage": "not-started",
+          "contentHash": null,
+          "englishContentHash": null,
+          "events": []
+        },
+        "pt": {
+          "stage": "not-started",
+          "contentHash": null,
+          "englishContentHash": null,
+          "events": []
+        },
+        "ko": {
+          "stage": "not-started",
+          "contentHash": null,
+          "englishContentHash": null,
+          "events": []
+        },
+        "ru": {
+          "stage": "not-started",
+          "contentHash": null,
+          "englishContentHash": null,
+          "events": []
+        },
+        "es": {
+          "stage": "not-started",
+          "contentHash": null,
+          "englishContentHash": null,
+          "events": []
+        },
+        "fr": {
+          "stage": "not-started",
+          "contentHash": null,
+          "englishContentHash": null,
+          "events": []
+        }
+      }
+    },
+    {
+      "formulaId": "2dd8a5a7-052a-5539-aab9-c533f7dec857",
+      "sourceRevision": "6c2c19cfb9bff9d9aa0cca56cea6dc62e324e80009b931665b604726d3784e5d",
+      "semanticHash": "7f1e0790ad3270f2419b1c8db5ac3ec9d232d334c0144acf64f1f3155a2ca68e",
+      "english": {
+        "stage": "not-started",
+        "contentHash": null,
+        "events": []
+      },
+      "localized": {
+        "zh": {
+          "stage": "not-started",
+          "contentHash": null,
+          "englishContentHash": null,
+          "events": []
+        },
+        "pt": {
+          "stage": "not-started",
+          "contentHash": null,
+          "englishContentHash": null,
+          "events": []
+        },
+        "ko": {
+          "stage": "not-started",
+          "contentHash": null,
+          "englishContentHash": null,
+          "events": []
+        },
+        "ru": {
+          "stage": "not-started",
+          "contentHash": null,
+          "englishContentHash": null,
+          "events": []
+        },
+        "es": {
+          "stage": "not-started",
+          "contentHash": null,
+          "englishContentHash": null,
+          "events": []
+        },
+        "fr": {
+          "stage": "not-started",
+          "contentHash": null,
+          "englishContentHash": null,
+          "events": []
+        }
+      }
+    },
+    {
+      "formulaId": "6c1385a9-2d23-5816-90d1-2752905fc353",
+      "sourceRevision": "decba7b7f3d2b3e121f53906a98d62d32743da89d72ea79c2aa1ebd5f5aa2e37",
+      "semanticHash": "0126714b6b16415137cb09eba57dc601ff56a5efc76c754cedc84d5c0130fa82",
+      "english": {
+        "stage": "not-started",
+        "contentHash": null,
+        "events": []
+      },
+      "localized": {
+        "zh": {
+          "stage": "not-started",
+          "contentHash": null,
+          "englishContentHash": null,
+          "events": []
+        },
+        "pt": {
+          "stage": "not-started",
+          "contentHash": null,
+          "englishContentHash": null,
+          "events": []
+        },
+        "ko": {
+          "stage": "not-started",
+          "contentHash": null,
+          "englishContentHash": null,
+          "events": []
+        },
+        "ru": {
+          "stage": "not-started",
+          "contentHash": null,
+          "englishContentHash": null,
+          "events": []
+        },
+        "es": {
+          "stage": "not-started",
+          "contentHash": null,
+          "englishContentHash": null,
+          "events": []
+        },
+        "fr": {
+          "stage": "not-started",
+          "contentHash": null,
+          "englishContentHash": null,
+          "events": []
+        }
+      }
+    },
+    {
+      "formulaId": "c6b5dcf4-cef5-5630-b3f6-a68b92ae75ee",
+      "sourceRevision": "5aa4f9b2c35d3bded213756bb80da01f95fef7ee766779a7f02090a1116a0e9a",
+      "semanticHash": "76d9f98f4a32eecaab99814d1209a6d87f10a53909a6bbfca13a1ea43b6e4d9c",
+      "english": {
+        "stage": "not-started",
+        "contentHash": null,
+        "events": []
+      },
+      "localized": {
+        "zh": {
+          "stage": "not-started",
+          "contentHash": null,
+          "englishContentHash": null,
+          "events": []
+        },
+        "pt": {
+          "stage": "not-started",
+          "contentHash": null,
+          "englishContentHash": null,
+          "events": []
+        },
+        "ko": {
+          "stage": "not-started",
+          "contentHash": null,
+          "englishContentHash": null,
+          "events": []
+        },
+        "ru": {
+          "stage": "not-started",
+          "contentHash": null,
+          "englishContentHash": null,
+          "events": []
+        },
+        "es": {
+          "stage": "not-started",
+          "contentHash": null,
+          "englishContentHash": null,
+          "events": []
+        },
+        "fr": {
+          "stage": "not-started",
+          "contentHash": null,
+          "englishContentHash": null,
+          "events": []
+        }
+      }
+    },
+    {
+      "formulaId": "cc40b50c-d3ff-54f0-b4ea-98bdf0fd0096",
+      "sourceRevision": "37a6c61666fd5bf3e2bdef96849dc27a10bd58d152e6a161005ab6e565f12ce0",
+      "semanticHash": "4386e45ac1c4535868f2e3607857b8ae92a8ffbf497de4c7c572717d5db6245c",
+      "english": {
+        "stage": "not-started",
+        "contentHash": null,
+        "events": []
+      },
+      "localized": {
+        "zh": {
+          "stage": "not-started",
+          "contentHash": null,
+          "englishContentHash": null,
+          "events": []
+        },
+        "pt": {
+          "stage": "not-started",
+          "contentHash": null,
+          "englishContentHash": null,
+          "events": []
+        },
+        "ko": {
+          "stage": "not-started",
+          "contentHash": null,
+          "englishContentHash": null,
+          "events": []
+        },
+        "ru": {
+          "stage": "not-started",
+          "contentHash": null,
+          "englishContentHash": null,
+          "events": []
+        },
+        "es": {
+          "stage": "not-started",
+          "contentHash": null,
+          "englishContentHash": null,
+          "events": []
+        },
+        "fr": {
+          "stage": "not-started",
+          "contentHash": null,
+          "englishContentHash": null,
+          "events": []
+        }
+      }
+    },
+    {
+      "formulaId": "37425fb2-8542-502f-94ac-94c0ccb6e508",
+      "sourceRevision": "69a7d072638f6981ee8e06c85d03831c9a53fb549337605eb35bb3cdf1db4e10",
+      "semanticHash": "01a25a87e2bb305345f4b72f0a9a87809258c73d5b379604dfd9625796dbb372",
+      "english": {
+        "stage": "not-started",
+        "contentHash": null,
+        "events": []
+      },
+      "localized": {
+        "zh": {
+          "stage": "not-started",
+          "contentHash": null,
+          "englishContentHash": null,
+          "events": []
+        },
+        "pt": {
+          "stage": "not-started",
+          "contentHash": null,
+          "englishContentHash": null,
+          "events": []
+        },
+        "ko": {
+          "stage": "not-started",
+          "contentHash": null,
+          "englishContentHash": null,
+          "events": []
+        },
+        "ru": {
+          "stage": "not-started",
+          "contentHash": null,
+          "englishContentHash": null,
+          "events": []
+        },
+        "es": {
+          "stage": "not-started",
+          "contentHash": null,
+          "englishContentHash": null,
+          "events": []
+        },
+        "fr": {
+          "stage": "not-started",
+          "contentHash": null,
+          "englishContentHash": null,
+          "events": []
+        }
+      }
+    },
+    {
+      "formulaId": "a9263b21-23c1-5d94-ba30-f7bef1a66629",
+      "sourceRevision": "bf1462942af10c52a5adbecf8856b4e34a8a5110637c84fa613728b76a1d6b4a",
+      "semanticHash": "f170562c56a5af50f20613a53ad362101ca5c82901b219a828ce640149d25f6a",
+      "english": {
+        "stage": "not-started",
+        "contentHash": null,
+        "events": []
+      },
+      "localized": {
+        "zh": {
+          "stage": "not-started",
+          "contentHash": null,
+          "englishContentHash": null,
+          "events": []
+        },
+        "pt": {
+          "stage": "not-started",
+          "contentHash": null,
+          "englishContentHash": null,
+          "events": []
+        },
+        "ko": {
+          "stage": "not-started",
+          "contentHash": null,
+          "englishContentHash": null,
+          "events": []
+        },
+        "ru": {
+          "stage": "not-started",
+          "contentHash": null,
+          "englishContentHash": null,
+          "events": []
+        },
+        "es": {
+          "stage": "not-started",
+          "contentHash": null,
+          "englishContentHash": null,
+          "events": []
+        },
+        "fr": {
+          "stage": "not-started",
+          "contentHash": null,
+          "englishContentHash": null,
+          "events": []
+        }
+      }
+    },
+    {
+      "formulaId": "2edf64a9-157c-57d7-8894-1f4781bc4f8c",
+      "sourceRevision": "37344c3bc7fc90852e94c7b74ec99df5400c6332e8ca9bdad5e5c8ff3b51e688",
+      "semanticHash": "5c2a39a58bea81ef4853efa2e111c5a86f81b6e019640cc845a02d3764fe2c1a",
+      "english": {
+        "stage": "not-started",
+        "contentHash": null,
+        "events": []
+      },
+      "localized": {
+        "zh": {
+          "stage": "not-started",
+          "contentHash": null,
+          "englishContentHash": null,
+          "events": []
+        },
+        "pt": {
+          "stage": "not-started",
+          "contentHash": null,
+          "englishContentHash": null,
+          "events": []
+        },
+        "ko": {
+          "stage": "not-started",
+          "contentHash": null,
+          "englishContentHash": null,
+          "events": []
+        },
+        "ru": {
+          "stage": "not-started",
+          "contentHash": null,
+          "englishContentHash": null,
+          "events": []
+        },
+        "es": {
+          "stage": "not-started",
+          "contentHash": null,
+          "englishContentHash": null,
+          "events": []
+        },
+        "fr": {
+          "stage": "not-started",
+          "contentHash": null,
+          "englishContentHash": null,
+          "events": []
+        }
+      }
+    },
+    {
+      "formulaId": "da95ae4b-d401-5eb0-862c-7d977c328fad",
+      "sourceRevision": "c0fdb8fb46828947defe52dd82bdabd45a1a8baeb32278ae649b7231e647bf2f",
+      "semanticHash": "6ecfdd7558b795aaff0dc5bf3609c3c580e4ef18af90fbe45686a204d2dd9443",
+      "english": {
+        "stage": "not-started",
+        "contentHash": null,
+        "events": []
+      },
+      "localized": {
+        "zh": {
+          "stage": "not-started",
+          "contentHash": null,
+          "englishContentHash": null,
+          "events": []
+        },
+        "pt": {
+          "stage": "not-started",
+          "contentHash": null,
+          "englishContentHash": null,
+          "events": []
+        },
+        "ko": {
+          "stage": "not-started",
+          "contentHash": null,
+          "englishContentHash": null,
+          "events": []
+        },
+        "ru": {
+          "stage": "not-started",
+          "contentHash": null,
+          "englishContentHash": null,
+          "events": []
+        },
+        "es": {
+          "stage": "not-started",
+          "contentHash": null,
+          "englishContentHash": null,
+          "events": []
+        },
+        "fr": {
+          "stage": "not-started",
+          "contentHash": null,
+          "englishContentHash": null,
+          "events": []
+        }
+      }
+    },
+    {
+      "formulaId": "0a9a153b-bb4e-53df-9cdf-54fd0ad0081e",
+      "sourceRevision": "0a9786849dd78c3643bae1f6de80fbc42d2e57e50e591090e67d681c81c0822e",
+      "semanticHash": "60f95642c01edfef967fd1d305e4c24747437321c32abbe847217193b9fe64eb",
+      "english": {
+        "stage": "not-started",
+        "contentHash": null,
+        "events": []
+      },
+      "localized": {
+        "zh": {
+          "stage": "not-started",
+          "contentHash": null,
+          "englishContentHash": null,
+          "events": []
+        },
+        "pt": {
+          "stage": "not-started",
+          "contentHash": null,
+          "englishContentHash": null,
+          "events": []
+        },
+        "ko": {
+          "stage": "not-started",
+          "contentHash": null,
+          "englishContentHash": null,
+          "events": []
+        },
+        "ru": {
+          "stage": "not-started",
+          "contentHash": null,
+          "englishContentHash": null,
+          "events": []
+        },
+        "es": {
+          "stage": "not-started",
+          "contentHash": null,
+          "englishContentHash": null,
+          "events": []
+        },
+        "fr": {
+          "stage": "not-started",
+          "contentHash": null,
+          "englishContentHash": null,
+          "events": []
+        }
+      }
+    },
+    {
+      "formulaId": "028a6158-e5dd-5d63-a5a7-5db2e3f7d87d",
+      "sourceRevision": "77c461de2d9cf0bbfb4a3257fb4e83bd1f250f6f5f1c52020ff3da0ecee366d9",
+      "semanticHash": "fd88674f04392ce72cbb6d0baf06b941def420ddc8785d0b0a67752d9fe0a7f9",
+      "english": {
+        "stage": "not-started",
+        "contentHash": null,
+        "events": []
+      },
+      "localized": {
+        "zh": {
+          "stage": "not-started",
+          "contentHash": null,
+          "englishContentHash": null,
+          "events": []
+        },
+        "pt": {
+          "stage": "not-started",
+          "contentHash": null,
+          "englishContentHash": null,
+          "events": []
+        },
+        "ko": {
+          "stage": "not-started",
+          "contentHash": null,
+          "englishContentHash": null,
+          "events": []
+        },
+        "ru": {
+          "stage": "not-started",
+          "contentHash": null,
+          "englishContentHash": null,
+          "events": []
+        },
+        "es": {
+          "stage": "not-started",
+          "contentHash": null,
+          "englishContentHash": null,
+          "events": []
+        },
+        "fr": {
+          "stage": "not-started",
+          "contentHash": null,
+          "englishContentHash": null,
+          "events": []
+        }
+      }
+    },
+    {
+      "formulaId": "0f49d971-917e-50a5-ae83-20e11fd4854c",
+      "sourceRevision": "a9fa9931913aeafac8b527f31cae7b519db79c8d54829ffcea20bcb6fc9dce4d",
+      "semanticHash": "0af8be92998a0e683977cd229a71195010327ae03c66d87a8c5b97871dce6d72",
+      "english": {
+        "stage": "not-started",
+        "contentHash": null,
+        "events": []
+      },
+      "localized": {
+        "zh": {
+          "stage": "not-started",
+          "contentHash": null,
+          "englishContentHash": null,
+          "events": []
+        },
+        "pt": {
+          "stage": "not-started",
+          "contentHash": null,
+          "englishContentHash": null,
+          "events": []
+        },
+        "ko": {
+          "stage": "not-started",
+          "contentHash": null,
+          "englishContentHash": null,
+          "events": []
+        },
+        "ru": {
+          "stage": "not-started",
+          "contentHash": null,
+          "englishContentHash": null,
+          "events": []
+        },
+        "es": {
+          "stage": "not-started",
+          "contentHash": null,
+          "englishContentHash": null,
+          "events": []
+        },
+        "fr": {
+          "stage": "not-started",
+          "contentHash": null,
+          "englishContentHash": null,
+          "events": []
+        }
+      }
+    },
+    {
+      "formulaId": "04338d55-9f3d-574a-8fb6-58ec7d530cc5",
+      "sourceRevision": "fd21d1feee8546a286c7af891e3a671613d5b55571c0426f07c77c20d409eff6",
+      "semanticHash": "d4d06a88f0945a41992881622664918d3d41170d18777cae7554e4d2fe90f7ed",
+      "english": {
+        "stage": "not-started",
+        "contentHash": null,
+        "events": []
+      },
+      "localized": {
+        "zh": {
+          "stage": "not-started",
+          "contentHash": null,
+          "englishContentHash": null,
+          "events": []
+        },
+        "pt": {
+          "stage": "not-started",
+          "contentHash": null,
+          "englishContentHash": null,
+          "events": []
+        },
+        "ko": {
+          "stage": "not-started",
+          "contentHash": null,
+          "englishContentHash": null,
+          "events": []
+        },
+        "ru": {
+          "stage": "not-started",
+          "contentHash": null,
+          "englishContentHash": null,
+          "events": []
+        },
+        "es": {
+          "stage": "not-started",
+          "contentHash": null,
+          "englishContentHash": null,
+          "events": []
+        },
+        "fr": {
+          "stage": "not-started",
+          "contentHash": null,
+          "englishContentHash": null,
+          "events": []
+        }
+      }
+    },
+    {
+      "formulaId": "58edc237-4978-5aed-8229-028b1d9cbbb9",
+      "sourceRevision": "e59afb2646e8e04f36955f7d7798930d0e752b7b0da90c11417283da41eb398a",
+      "semanticHash": "ed9a34c1038bc242b27bc60680e5be6ecdfe84818f3acf5a7a299fa0cfe643fb",
+      "english": {
+        "stage": "not-started",
+        "contentHash": null,
+        "events": []
+      },
+      "localized": {
+        "zh": {
+          "stage": "not-started",
+          "contentHash": null,
+          "englishContentHash": null,
+          "events": []
+        },
+        "pt": {
+          "stage": "not-started",
+          "contentHash": null,
+          "englishContentHash": null,
+          "events": []
+        },
+        "ko": {
+          "stage": "not-started",
+          "contentHash": null,
+          "englishContentHash": null,
+          "events": []
+        },
+        "ru": {
+          "stage": "not-started",
+          "contentHash": null,
+          "englishContentHash": null,
+          "events": []
+        },
+        "es": {
+          "stage": "not-started",
+          "contentHash": null,
+          "englishContentHash": null,
+          "events": []
+        },
+        "fr": {
+          "stage": "not-started",
+          "contentHash": null,
+          "englishContentHash": null,
+          "events": []
+        }
+      }
+    },
+    {
+      "formulaId": "05a7f40f-5cb6-538e-b376-40df4c543d49",
+      "sourceRevision": "0107d6f68a942fd97a649693ec769e74382943bd54cec83f0d6327aec4336e0d",
+      "semanticHash": "b32fa945bfba42330ddf09bed9c93b53b14da83a922c3ced6c44d57c05c47598",
+      "english": {
+        "stage": "not-started",
+        "contentHash": null,
+        "events": []
+      },
+      "localized": {
+        "zh": {
+          "stage": "not-started",
+          "contentHash": null,
+          "englishContentHash": null,
+          "events": []
+        },
+        "pt": {
+          "stage": "not-started",
+          "contentHash": null,
+          "englishContentHash": null,
+          "events": []
+        },
+        "ko": {
+          "stage": "not-started",
+          "contentHash": null,
+          "englishContentHash": null,
+          "events": []
+        },
+        "ru": {
+          "stage": "not-started",
+          "contentHash": null,
+          "englishContentHash": null,
+          "events": []
+        },
+        "es": {
+          "stage": "not-started",
+          "contentHash": null,
+          "englishContentHash": null,
+          "events": []
+        },
+        "fr": {
+          "stage": "not-started",
+          "contentHash": null,
+          "englishContentHash": null,
+          "events": []
+        }
+      }
+    },
+    {
+      "formulaId": "0236be89-f1e9-5e23-b0a3-f4dd201ee788",
+      "sourceRevision": "373c7bfd6f8f05a21f9e9af35ea4c77fa92b6f63e3c3484f760a2ef3c03de052",
+      "semanticHash": "3028bb0a2c595da4c51aaf118c7e24c8c8036b63a5fe8b7271e4c7559243adac",
+      "english": {
+        "stage": "not-started",
+        "contentHash": null,
+        "events": []
+      },
+      "localized": {
+        "zh": {
+          "stage": "not-started",
+          "contentHash": null,
+          "englishContentHash": null,
+          "events": []
+        },
+        "pt": {
+          "stage": "not-started",
+          "contentHash": null,
+          "englishContentHash": null,
+          "events": []
+        },
+        "ko": {
+          "stage": "not-started",
+          "contentHash": null,
+          "englishContentHash": null,
+          "events": []
+        },
+        "ru": {
+          "stage": "not-started",
+          "contentHash": null,
+          "englishContentHash": null,
+          "events": []
+        },
+        "es": {
+          "stage": "not-started",
+          "contentHash": null,
+          "englishContentHash": null,
+          "events": []
+        },
+        "fr": {
+          "stage": "not-started",
+          "contentHash": null,
+          "englishContentHash": null,
+          "events": []
+        }
+      }
+    },
+    {
+      "formulaId": "0672aed0-1fd1-5acd-9263-a52d5680d3b4",
+      "sourceRevision": "a2e5619bb8e9528ea042184634f69711d1f7522254d8e39d6060310db4663132",
+      "semanticHash": "2f8606ed369648b2fd3327a06ade9f9f82969b5734dbc9bb78bd31cf806526ec",
+      "english": {
+        "stage": "not-started",
+        "contentHash": null,
+        "events": []
+      },
+      "localized": {
+        "zh": {
+          "stage": "not-started",
+          "contentHash": null,
+          "englishContentHash": null,
+          "events": []
+        },
+        "pt": {
+          "stage": "not-started",
+          "contentHash": null,
+          "englishContentHash": null,
+          "events": []
+        },
+        "ko": {
+          "stage": "not-started",
+          "contentHash": null,
+          "englishContentHash": null,
+          "events": []
+        },
+        "ru": {
+          "stage": "not-started",
+          "contentHash": null,
+          "englishContentHash": null,
+          "events": []
+        },
+        "es": {
+          "stage": "not-started",
+          "contentHash": null,
+          "englishContentHash": null,
+          "events": []
+        },
+        "fr": {
+          "stage": "not-started",
+          "contentHash": null,
+          "englishContentHash": null,
+          "events": []
+        }
+      }
+    },
+    {
+      "formulaId": "14d3cb89-d3e7-5bff-b848-af88c9a561ae",
+      "sourceRevision": "459d2a30210e9171b03fb5d7480eeeb22db0051d977a6dc000d39886924a66eb",
+      "semanticHash": "2ed2266b921e3c3ac6a495eec3da1ff79cc2dcd492e42d068ee21196337eb60f",
+      "english": {
+        "stage": "not-started",
+        "contentHash": null,
+        "events": []
+      },
+      "localized": {
+        "zh": {
+          "stage": "not-started",
+          "contentHash": null,
+          "englishContentHash": null,
+          "events": []
+        },
+        "pt": {
+          "stage": "not-started",
+          "contentHash": null,
+          "englishContentHash": null,
+          "events": []
+        },
+        "ko": {
+          "stage": "not-started",
+          "contentHash": null,
+          "englishContentHash": null,
+          "events": []
+        },
+        "ru": {
+          "stage": "not-started",
+          "contentHash": null,
+          "englishContentHash": null,
+          "events": []
+        },
+        "es": {
+          "stage": "not-started",
+          "contentHash": null,
+          "englishContentHash": null,
+          "events": []
+        },
+        "fr": {
+          "stage": "not-started",
+          "contentHash": null,
+          "englishContentHash": null,
+          "events": []
+        }
+      }
+    },
+    {
+      "formulaId": "09288426-4968-5e78-9ab0-00607cc290bd",
+      "sourceRevision": "dbb90a875ab0a6e56b3210ab8021339e7f9ea19d4bc8f26f82ed22f37ff58ede",
+      "semanticHash": "807ce46c199ce20d11753c94f74ce710ad607335764e9ad485963c840d6a0f5c",
+      "english": {
+        "stage": "not-started",
+        "contentHash": null,
+        "events": []
+      },
+      "localized": {
+        "zh": {
+          "stage": "not-started",
+          "contentHash": null,
+          "englishContentHash": null,
+          "events": []
+        },
+        "pt": {
+          "stage": "not-started",
+          "contentHash": null,
+          "englishContentHash": null,
+          "events": []
+        },
+        "ko": {
+          "stage": "not-started",
+          "contentHash": null,
+          "englishContentHash": null,
+          "events": []
+        },
+        "ru": {
+          "stage": "not-started",
+          "contentHash": null,
+          "englishContentHash": null,
+          "events": []
+        },
+        "es": {
+          "stage": "not-started",
+          "contentHash": null,
+          "englishContentHash": null,
+          "events": []
+        },
+        "fr": {
+          "stage": "not-started",
+          "contentHash": null,
+          "englishContentHash": null,
+          "events": []
+        }
+      }
+    },
+    {
+      "formulaId": "2d237187-b3fd-54e2-8bf4-ef973080f389",
+      "sourceRevision": "a77dc97ca3eff72c3edb9516440760af7d5fdc967d84a7f08bdace726898d79e",
+      "semanticHash": "ce72da6bf2224d3a7cd796098acb1a1efa8c0b14caeb56d0376f33539b9ff6ee",
+      "english": {
+        "stage": "not-started",
+        "contentHash": null,
+        "events": []
+      },
+      "localized": {
+        "zh": {
+          "stage": "not-started",
+          "contentHash": null,
+          "englishContentHash": null,
+          "events": []
+        },
+        "pt": {
+          "stage": "not-started",
+          "contentHash": null,
+          "englishContentHash": null,
+          "events": []
+        },
+        "ko": {
+          "stage": "not-started",
+          "contentHash": null,
+          "englishContentHash": null,
+          "events": []
+        },
+        "ru": {
+          "stage": "not-started",
+          "contentHash": null,
+          "englishContentHash": null,
+          "events": []
+        },
+        "es": {
+          "stage": "not-started",
+          "contentHash": null,
+          "englishContentHash": null,
+          "events": []
+        },
+        "fr": {
+          "stage": "not-started",
+          "contentHash": null,
+          "englishContentHash": null,
+          "events": []
+        }
+      }
+    },
+    {
+      "formulaId": "06504747-8ee8-5c39-869b-8b3a992e8c24",
+      "sourceRevision": "9550f75ecdb596526b8a5c980361843f70210a5bb6c19a90746736acb8f8faac",
+      "semanticHash": "8523153026068da89b9bcb85c15f28c87a878c2fd5a8c2fd113b28ddd7bf69a7",
+      "english": {
+        "stage": "not-started",
+        "contentHash": null,
+        "events": []
+      },
+      "localized": {
+        "zh": {
+          "stage": "not-started",
+          "contentHash": null,
+          "englishContentHash": null,
+          "events": []
+        },
+        "pt": {
+          "stage": "not-started",
+          "contentHash": null,
+          "englishContentHash": null,
+          "events": []
+        },
+        "ko": {
+          "stage": "not-started",
+          "contentHash": null,
+          "englishContentHash": null,
+          "events": []
+        },
+        "ru": {
+          "stage": "not-started",
+          "contentHash": null,
+          "englishContentHash": null,
+          "events": []
+        },
+        "es": {
+          "stage": "not-started",
+          "contentHash": null,
+          "englishContentHash": null,
+          "events": []
+        },
+        "fr": {
+          "stage": "not-started",
+          "contentHash": null,
+          "englishContentHash": null,
+          "events": []
+        }
+      }
+    },
+    {
+      "formulaId": "0ba0b082-c4b0-51d8-b981-7ca1ca25b9f3",
+      "sourceRevision": "46f51a27e66b8e029ee20112496383b57cc510dbfcae0bc63dd9b0a6886dcb8f",
+      "semanticHash": "374bad563fd78d9d062b53d35dc9be8498dba81eb412aea6c35e29d54ef4456a",
+      "english": {
+        "stage": "not-started",
+        "contentHash": null,
+        "events": []
+      },
+      "localized": {
+        "zh": {
+          "stage": "not-started",
+          "contentHash": null,
+          "englishContentHash": null,
+          "events": []
+        },
+        "pt": {
+          "stage": "not-started",
+          "contentHash": null,
+          "englishContentHash": null,
+          "events": []
+        },
+        "ko": {
+          "stage": "not-started",
+          "contentHash": null,
+          "englishContentHash": null,
+          "events": []
+        },
+        "ru": {
+          "stage": "not-started",
+          "contentHash": null,
+          "englishContentHash": null,
+          "events": []
+        },
+        "es": {
+          "stage": "not-started",
+          "contentHash": null,
+          "englishContentHash": null,
+          "events": []
+        },
+        "fr": {
+          "stage": "not-started",
+          "contentHash": null,
+          "englishContentHash": null,
+          "events": []
+        }
+      }
+    },
+    {
+      "formulaId": "1936e9b5-1312-593e-ab67-72e95bc514b0",
+      "sourceRevision": "2f024a184f50b87076b883408a33387a2010e89996414646d1b51844d2f181fc",
+      "semanticHash": "c1fed8de512318463b90399a68d9eca445ab7908923d0a54ce4aed3bd2f631df",
+      "english": {
+        "stage": "not-started",
+        "contentHash": null,
+        "events": []
+      },
+      "localized": {
+        "zh": {
+          "stage": "not-started",
+          "contentHash": null,
+          "englishContentHash": null,
+          "events": []
+        },
+        "pt": {
+          "stage": "not-started",
+          "contentHash": null,
+          "englishContentHash": null,
+          "events": []
+        },
+        "ko": {
+          "stage": "not-started",
+          "contentHash": null,
+          "englishContentHash": null,
+          "events": []
+        },
+        "ru": {
+          "stage": "not-started",
+          "contentHash": null,
+          "englishContentHash": null,
+          "events": []
+        },
+        "es": {
+          "stage": "not-started",
+          "contentHash": null,
+          "englishContentHash": null,
+          "events": []
+        },
+        "fr": {
+          "stage": "not-started",
+          "contentHash": null,
+          "englishContentHash": null,
+          "events": []
+        }
+      }
+    },
+    {
+      "formulaId": "20e16f12-e0e9-5f56-9364-5c2b60c05f20",
+      "sourceRevision": "cccfbd116d3760e4b3cd57e20f2cb9f5102c7326c75c5d89137be22c2352892c",
+      "semanticHash": "72efb4d2a055e760c18f96b5776a3e25000f7d57d81352136617b91d8199344c",
+      "english": {
+        "stage": "not-started",
+        "contentHash": null,
+        "events": []
+      },
+      "localized": {
+        "zh": {
+          "stage": "not-started",
+          "contentHash": null,
+          "englishContentHash": null,
+          "events": []
+        },
+        "pt": {
+          "stage": "not-started",
+          "contentHash": null,
+          "englishContentHash": null,
+          "events": []
+        },
+        "ko": {
+          "stage": "not-started",
+          "contentHash": null,
+          "englishContentHash": null,
+          "events": []
+        },
+        "ru": {
+          "stage": "not-started",
+          "contentHash": null,
+          "englishContentHash": null,
+          "events": []
+        },
+        "es": {
+          "stage": "not-started",
+          "contentHash": null,
+          "englishContentHash": null,
+          "events": []
+        },
+        "fr": {
+          "stage": "not-started",
+          "contentHash": null,
+          "englishContentHash": null,
+          "events": []
+        }
+      }
+    },
+    {
+      "formulaId": "1bb379a2-3588-53f8-a3ab-e52021c78054",
+      "sourceRevision": "d51707785f4d59fbfa309c2dbd8da93ac1a0ca152c067e6e34c4851585652768",
+      "semanticHash": "597a8cb34733ab22b5f2452fa41e5f56f5bae984c8ae2c8e6fdc43d5c45a4318",
+      "english": {
+        "stage": "not-started",
+        "contentHash": null,
+        "events": []
+      },
+      "localized": {
+        "zh": {
+          "stage": "not-started",
+          "contentHash": null,
+          "englishContentHash": null,
+          "events": []
+        },
+        "pt": {
+          "stage": "not-started",
+          "contentHash": null,
+          "englishContentHash": null,
+          "events": []
+        },
+        "ko": {
+          "stage": "not-started",
+          "contentHash": null,
+          "englishContentHash": null,
+          "events": []
+        },
+        "ru": {
+          "stage": "not-started",
+          "contentHash": null,
+          "englishContentHash": null,
+          "events": []
+        },
+        "es": {
+          "stage": "not-started",
+          "contentHash": null,
+          "englishContentHash": null,
+          "events": []
+        },
+        "fr": {
+          "stage": "not-started",
+          "contentHash": null,
+          "englishContentHash": null,
+          "events": []
+        }
+      }
+    },
+    {
+      "formulaId": "0df5ac6e-d97e-55db-b624-96c310af07dd",
+      "sourceRevision": "bb7d3fd03ddb3b27f66b28fea82cdfa4da6c88cf15a23c6da8fe27a8adf1e34e",
+      "semanticHash": "b3d93634d09622186eeef16d005021fb8bf551698b662dbdf5da191841efe1d5",
+      "english": {
+        "stage": "not-started",
+        "contentHash": null,
+        "events": []
+      },
+      "localized": {
+        "zh": {
+          "stage": "not-started",
+          "contentHash": null,
+          "englishContentHash": null,
+          "events": []
+        },
+        "pt": {
+          "stage": "not-started",
+          "contentHash": null,
+          "englishContentHash": null,
+          "events": []
+        },
+        "ko": {
+          "stage": "not-started",
+          "contentHash": null,
+          "englishContentHash": null,
+          "events": []
+        },
+        "ru": {
+          "stage": "not-started",
+          "contentHash": null,
+          "englishContentHash": null,
+          "events": []
+        },
+        "es": {
+          "stage": "not-started",
+          "contentHash": null,
+          "englishContentHash": null,
+          "events": []
+        },
+        "fr": {
+          "stage": "not-started",
+          "contentHash": null,
+          "englishContentHash": null,
+          "events": []
+        }
+      }
+    },
+    {
+      "formulaId": "6d27b5fd-462b-5561-bac2-7c5f915e3cb5",
+      "sourceRevision": "7ef2bf1f2dd573053bbe1e8af171472dff08ed6346b2e760ab2780c9244d1e85",
+      "semanticHash": "62ccdf4f274bf35079ca98a39ad59a05132b3580ef937b766945087358c454e7",
+      "english": {
+        "stage": "not-started",
+        "contentHash": null,
+        "events": []
+      },
+      "localized": {
+        "zh": {
+          "stage": "not-started",
+          "contentHash": null,
+          "englishContentHash": null,
+          "events": []
+        },
+        "pt": {
+          "stage": "not-started",
+          "contentHash": null,
+          "englishContentHash": null,
+          "events": []
+        },
+        "ko": {
+          "stage": "not-started",
+          "contentHash": null,
+          "englishContentHash": null,
+          "events": []
+        },
+        "ru": {
+          "stage": "not-started",
+          "contentHash": null,
+          "englishContentHash": null,
+          "events": []
+        },
+        "es": {
+          "stage": "not-started",
+          "contentHash": null,
+          "englishContentHash": null,
+          "events": []
+        },
+        "fr": {
+          "stage": "not-started",
+          "contentHash": null,
+          "englishContentHash": null,
+          "events": []
+        }
+      }
+    },
+    {
+      "formulaId": "75e70076-b422-5535-b3c9-c484fbf879e6",
+      "sourceRevision": "be9ade0f6d4b272ca864da504bb66a6abab234322112686e72e1624353ce11ec",
+      "semanticHash": "2d2612cf6d0532accadd7fe047298eff9503b8ff553e32c1a87dfe3ac3c2469f",
+      "english": {
+        "stage": "not-started",
+        "contentHash": null,
+        "events": []
+      },
+      "localized": {
+        "zh": {
+          "stage": "not-started",
+          "contentHash": null,
+          "englishContentHash": null,
+          "events": []
+        },
+        "pt": {
+          "stage": "not-started",
+          "contentHash": null,
+          "englishContentHash": null,
+          "events": []
+        },
+        "ko": {
+          "stage": "not-started",
+          "contentHash": null,
+          "englishContentHash": null,
+          "events": []
+        },
+        "ru": {
+          "stage": "not-started",
+          "contentHash": null,
+          "englishContentHash": null,
+          "events": []
+        },
+        "es": {
+          "stage": "not-started",
+          "contentHash": null,
+          "englishContentHash": null,
+          "events": []
+        },
+        "fr": {
+          "stage": "not-started",
+          "contentHash": null,
+          "englishContentHash": null,
+          "events": []
+        }
+      }
+    },
+    {
+      "formulaId": "599a7fda-4c0e-5489-b12e-6e4179ee11f2",
+      "sourceRevision": "6864baf1c6fb93ea8ce506200e19583fd0b7c1b361fb17764b661d6424762cfa",
+      "semanticHash": "a1fa3e6dd83f4cafacb8e242810e80e35de45513e75ec6cc7759d7a11f046193",
+      "english": {
+        "stage": "not-started",
+        "contentHash": null,
+        "events": []
+      },
+      "localized": {
+        "zh": {
+          "stage": "not-started",
+          "contentHash": null,
+          "englishContentHash": null,
+          "events": []
+        },
+        "pt": {
+          "stage": "not-started",
+          "contentHash": null,
+          "englishContentHash": null,
+          "events": []
+        },
+        "ko": {
+          "stage": "not-started",
+          "contentHash": null,
+          "englishContentHash": null,
+          "events": []
+        },
+        "ru": {
+          "stage": "not-started",
+          "contentHash": null,
+          "englishContentHash": null,
+          "events": []
+        },
+        "es": {
+          "stage": "not-started",
+          "contentHash": null,
+          "englishContentHash": null,
+          "events": []
+        },
+        "fr": {
+          "stage": "not-started",
+          "contentHash": null,
+          "englishContentHash": null,
+          "events": []
+        }
+      }
+    },
+    {
+      "formulaId": "b79313f5-2181-5013-bd21-e59a7222dce5",
+      "sourceRevision": "c9f11ef69b73ea2c6489025f83e6b53cabebc1df1e399f282b8ce44e7da4b05f",
+      "semanticHash": "d5bd7f170dde390fef7522afda11fb58b09ad9c2dabc99d47c413e79e3996a50",
+      "english": {
+        "stage": "not-started",
+        "contentHash": null,
+        "events": []
+      },
+      "localized": {
+        "zh": {
+          "stage": "not-started",
+          "contentHash": null,
+          "englishContentHash": null,
+          "events": []
+        },
+        "pt": {
+          "stage": "not-started",
+          "contentHash": null,
+          "englishContentHash": null,
+          "events": []
+        },
+        "ko": {
+          "stage": "not-started",
+          "contentHash": null,
+          "englishContentHash": null,
+          "events": []
+        },
+        "ru": {
+          "stage": "not-started",
+          "contentHash": null,
+          "englishContentHash": null,
+          "events": []
+        },
+        "es": {
+          "stage": "not-started",
+          "contentHash": null,
+          "englishContentHash": null,
+          "events": []
+        },
+        "fr": {
+          "stage": "not-started",
+          "contentHash": null,
+          "englishContentHash": null,
+          "events": []
+        }
+      }
+    },
+    {
+      "formulaId": "d0079630-8ed3-5379-9e37-52cb7f0f7379",
+      "sourceRevision": "9d5148d6443b6dd4f5f0015e415b8642a324fb222f5a7769e1d7765e432bd1bc",
+      "semanticHash": "f857f7b3cac012dbc5ef1de0d2bb586ac0c9e5c8c692f711545467fdaf58a3ec",
+      "english": {
+        "stage": "not-started",
+        "contentHash": null,
+        "events": []
+      },
+      "localized": {
+        "zh": {
+          "stage": "not-started",
+          "contentHash": null,
+          "englishContentHash": null,
+          "events": []
+        },
+        "pt": {
+          "stage": "not-started",
+          "contentHash": null,
+          "englishContentHash": null,
+          "events": []
+        },
+        "ko": {
+          "stage": "not-started",
+          "contentHash": null,
+          "englishContentHash": null,
+          "events": []
+        },
+        "ru": {
+          "stage": "not-started",
+          "contentHash": null,
+          "englishContentHash": null,
+          "events": []
+        },
+        "es": {
+          "stage": "not-started",
+          "contentHash": null,
+          "englishContentHash": null,
+          "events": []
+        },
+        "fr": {
+          "stage": "not-started",
+          "contentHash": null,
+          "englishContentHash": null,
+          "events": []
+        }
+      }
+    }
+  ]
+}

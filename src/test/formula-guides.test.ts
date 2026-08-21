@@ -3,6 +3,7 @@ import path from 'node:path';
 import { describe, expect, it, vi } from 'vitest';
 import enMessages from '../../messages/en.json';
 import zhMessages from '../../messages/zh.json';
+import heldGuideAsset from '../../resources/formula-library/v1/teaching-held-guide-appendix.v1.json';
 import {
   PUBLISHED_FORMULA_GUIDES,
   PUBLISHED_FORMULA_GUIDE_IDS,
@@ -13,6 +14,7 @@ import {
   getPublishedFormulaGuideFormulaId,
   getPublishedFormulaGuideBySlug,
 } from '@/content/formula-guides';
+import { PUBLISHED_TEACHING_GUIDES_V1 } from '@/content/teaching/guide-route-policy';
 import sitemap from '@/app/sitemap';
 
 vi.mock('@/i18n/routing', () => ({
@@ -58,7 +60,7 @@ function readJpegDimensions(image: Buffer): {
 }
 
 describe('published formula guides', () => {
-  it('publishes all 21 frozen formulas in manifest order', () => {
+  it('keeps all 21 frozen legacy Guide identities in manifest order', () => {
     expect(PUBLISHED_FORMULA_GUIDE_IDS).toEqual([
       'mandelbrot',
       'lambda',
@@ -129,8 +131,8 @@ describe('published formula guides', () => {
     expect(getPublishedFormulaGuideBySlug('frm')).toBeUndefined();
   });
 
-  it('keeps published editorial fields complete in both locales', () => {
-    for (const entry of PUBLISHED_FORMULA_GUIDES) {
+  it('keeps selected published editorial fields complete and held prose absent', () => {
+    for (const entry of PUBLISHED_TEACHING_GUIDES_V1) {
       for (const messages of [enMessages, zhMessages]) {
         const content = messages.formulas.entries[entry.slug];
 
@@ -138,6 +140,10 @@ describe('published formula guides', () => {
         expect(content.imageAlt).toBeTruthy();
         expect(content.imageCaption).toBeTruthy();
       }
+    }
+    for (const row of heldGuideAsset.rows) {
+      expect(enMessages.formulas.entries).not.toHaveProperty(row.guideSlug);
+      expect(zhMessages.formulas.entries).not.toHaveProperty(row.guideSlug);
     }
   });
 
@@ -167,14 +173,14 @@ describe('published formula guides', () => {
       /\/(?:en|zh)\/formulas\/(?!frm$|editor$)[a-z0-9-]+$/.test(url)
     );
     const expectedUrls = ['en', 'zh'].flatMap((locale) =>
-      PUBLISHED_FORMULA_GUIDES.map(
+      PUBLISHED_TEACHING_GUIDES_V1.map(
         (entry) =>
           `https://www.fractalpark.com/${locale}${formulaGuidePath(entry)}`
       )
     );
 
     expect(formulaGuideUrls).toEqual(expectedUrls);
-    expect(formulaGuideUrls).toHaveLength(42);
+    expect(formulaGuideUrls).toHaveLength(34);
     expect(urls).not.toContain(
       'https://www.fractalpark.com/en/formulas/mandelbrot'
     );

@@ -25,6 +25,8 @@
     "formula:published-runtime:webgl:reports": "tsx scripts/verify-published-formula-webgl-reports.ts",
     "formula:record-previews": "tsx scripts/generate-formula-record-previews.ts",
     "formula:record-previews:write": "tsx scripts/generate-formula-record-previews.ts --write",
+    "formula:teaching-anchors": "tsx scripts/generate-teaching-semantic-anchors.ts",
+    "formula:teaching-anchors:write": "tsx scripts/generate-teaching-semantic-anchors.ts --write",
     "formula:native-recipes:cross-check": "tsx scripts/cross-check-native-recipes.ts",
     "formula:direct-adaptation-evidence": "tsx scripts/generate-formula-direct-adaptation-evidence.ts --write",
     "formula:direct-adaptation-evidence:verify": "tsx scripts/verify-formula-direct-adaptation-evidence.ts",

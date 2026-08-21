@@ -1,0 +1,119 @@
+{
+  "schema": "fractalpark-teaching-contract-fixtures/v1",
+  "binding": {
+    "formulaId": "00e14aa8-b766-54ea-a359-3f5d20d329b7",
+    "sourceRevision": "e4d2259a5dd3fe7b3af646514a4313e83efcc80e887e04c07b7469bb27a66b90",
+    "semanticHash": "26270fc7b1577aa266c7a0eb23b2664ffcb020cf5a7528ea9be23950ba10a72c",
+    "nodeIds": [
+      "frm-v1:e4d2259a5dd3fe7b3af646514a4313e83efcc80e887e04c07b7469bb27a66b90:parameters/0"
+    ],
+    "parameterSymbols": [
+      "power"
+    ]
+  },
+  "english": {
+    "schema": "fractalpark-teaching-en-fact/v1",
+    "formulaId": "00e14aa8-b766-54ea-a359-3f5d20d329b7",
+    "sourceRevision": "e4d2259a5dd3fe7b3af646514a4313e83efcc80e887e04c07b7469bb27a66b90",
+    "semanticHash": "26270fc7b1577aa266c7a0eb23b2664ffcb020cf5a7528ea9be23950ba10a72c",
+    "overview": "The FRM-like/1 canonical quadratic iteration introduces the parameter plane.",
+    "mathDisclosure": "exact-compact",
+    "mathSummary": "z -> z^power + c",
+    "sourceWalkthrough": [
+      {
+        "annotationId": "00e14aa8-b766-54ea-a359-3f5d20d329b7:e4d2259a5dd3fe7b3af646514a4313e83efcc80e887e04c07b7469bb27a66b90:power-parameter",
+        "nodeId": "frm-v1:e4d2259a5dd3fe7b3af646514a4313e83efcc80e887e04c07b7469bb27a66b90:parameters/0",
+        "explanation": "This pinned semantic node starts the walkthrough."
+      }
+    ],
+    "syntaxFeatures": [
+      {
+        "featureId": "power-expression",
+        "annotationIds": [
+          "00e14aa8-b766-54ea-a359-3f5d20d329b7:e4d2259a5dd3fe7b3af646514a4313e83efcc80e887e04c07b7469bb27a66b90:power-parameter"
+        ],
+        "explanation": "The exponent is controlled by the runtime parameter."
+      }
+    ],
+    "parameterExperiment": {
+      "parameterSymbols": [
+        "power"
+      ],
+      "steps": [
+        "Set power to 3 and compare the boundary."
+      ],
+      "expectedObservation": "The symmetry and bulb structure change."
+    },
+    "exercise": {
+      "prompt": "Compare power 2 and power 3.",
+      "completionCheck": "Describe one stable visual difference.",
+      "answerDisclosure": "none"
+    },
+    "facts": {
+      "provenanceStatement": "This unit describes the pinned project-owned runtime definition.",
+      "rightsStatement": "The canonical implementation is project-owned and MIT licensed.",
+      "sourceIds": [
+        "runtime:e4d2259a5dd3fe7b3af646514a4313e83efcc80e887e04c07b7469bb27a66b90"
+      ],
+      "licenseIds": [
+        "MIT"
+      ],
+      "claims": [
+        {
+          "text": "The pinned runtime definition is project-owned and MIT licensed.",
+          "sourceIds": [
+            "runtime:e4d2259a5dd3fe7b3af646514a4313e83efcc80e887e04c07b7469bb27a66b90"
+          ]
+        }
+      ]
+    }
+  },
+  "locale": {
+    "schema": "fractalpark-teaching-locale/v1",
+    "formulaId": "00e14aa8-b766-54ea-a359-3f5d20d329b7",
+    "locale": "zh",
+    "sourceRevision": "e4d2259a5dd3fe7b3af646514a4313e83efcc80e887e04c07b7469bb27a66b90",
+    "semanticHash": "26270fc7b1577aa266c7a0eb23b2664ffcb020cf5a7528ea9be23950ba10a72c",
+    "englishContentHash": "80cb4c11bc0c2e399bf191c7426d68f87f59131bdbdda5905bb0ae2c142cd8f1",
+    "overview": "该 FRM-like/1 规范二次迭代用于介绍参数平面。",
+    "sourceWalkthrough": {
+      "00e14aa8-b766-54ea-a359-3f5d20d329b7:e4d2259a5dd3fe7b3af646514a4313e83efcc80e887e04c07b7469bb27a66b90:power-parameter": "这个固定语义节点是讲解起点。"
+    },
+    "syntaxFeatures": {
+      "power-expression": "指数由运行时参数控制。"
+    },
+    "parameterExperiment": {
+      "steps": [
+        "将 power 设为 3，并比较边界。"
+      ],
+      "expectedObservation": "对称性与主瓣结构会变化。"
+    },
+    "exercise": {
+      "prompt": "比较 power 2 与 power 3。",
+      "completionCheck": "描述一个稳定的视觉差异。"
+    },
+    "factsPresentation": {
+      "provenanceLead": "来源：",
+      "rightsLead": "权利边界："
+    },
+    "contentHash": "0b2f6b71cb2882e93b9be7817b47fb06f431b916d4b92f69b5f4586316b6cc6a"
+  },
+  "mutations": [
+    "revision-mismatch",
+    "unknown-node-id",
+    "duplicate-annotation-id",
+    "unresolved-parameter-symbol",
+    "missing-parameter-token",
+    "locale-keyset-drift",
+    "locale-protected-parameter-translation",
+    "locale-protected-literal-translation",
+    "unit-review-field",
+    "locale-content-hash-mismatch",
+    "english-content-hash-mismatch",
+    "unsourced-history",
+    "review-nonmonotonic",
+    "review-model-self-approval",
+    "unit-ledger-divergence",
+    "fallback-index-leak"
+  ]
+}

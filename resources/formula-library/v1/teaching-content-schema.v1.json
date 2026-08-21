@@ -1,0 +1,523 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://fractalpark.com/schemas/formula-teaching-content-v1.json",
+  "title": "FractalPark formula teaching content v1",
+  "oneOf": [
+    {
+      "$ref": "#/$defs/englishFactUnit"
+    },
+    {
+      "$ref": "#/$defs/localeEditorialUnit"
+    },
+    {
+      "$ref": "#/$defs/heldGuideEditorialUnit"
+    }
+  ],
+  "$defs": {
+    "semanticAnchor": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "nodeId",
+        "irPath",
+        "role",
+        "kind",
+        "nodeHash"
+      ],
+      "properties": {
+        "nodeId": {
+          "type": "string",
+          "minLength": 1
+        },
+        "irPath": {
+          "type": "string",
+          "minLength": 1
+        },
+        "role": {
+          "enum": [
+            "parameter-use",
+            "initialization",
+            "iteration",
+            "state",
+            "branch",
+            "termination",
+            "expression"
+          ]
+        },
+        "kind": {
+          "type": "string",
+          "minLength": 1
+        },
+        "nodeHash": {
+          "type": "string",
+          "pattern": "^[a-f0-9]{64}$"
+        }
+      }
+    },
+    "walkthrough": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "annotationId",
+        "nodeId",
+        "explanation"
+      ],
+      "properties": {
+        "annotationId": {
+          "type": "string",
+          "minLength": 1
+        },
+        "nodeId": {
+          "type": "string",
+          "minLength": 1
+        },
+        "explanation": {
+          "type": "string",
+          "minLength": 1
+        }
+      }
+    },
+    "syntaxFeature": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "featureId",
+        "annotationIds",
+        "explanation"
+      ],
+      "properties": {
+        "featureId": {
+          "type": "string",
+          "minLength": 1
+        },
+        "annotationIds": {
+          "type": "array",
+          "minItems": 1,
+          "uniqueItems": true,
+          "items": {
+            "type": "string",
+            "minLength": 1
+          }
+        },
+        "explanation": {
+          "type": "string",
+          "minLength": 1
+        }
+      }
+    },
+    "englishFactUnit": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "schema",
+        "formulaId",
+        "sourceRevision",
+        "semanticHash",
+        "overview",
+        "mathDisclosure",
+        "sourceWalkthrough",
+        "syntaxFeatures",
+        "parameterExperiment",
+        "exercise",
+        "facts"
+      ],
+      "properties": {
+        "schema": {
+          "const": "fractalpark-teaching-en-fact/v1"
+        },
+        "formulaId": {
+          "type": "string",
+          "pattern": "^[a-f0-9]{8}-[a-f0-9]{4}-[1-5][a-f0-9]{3}-[89ab][a-f0-9]{3}-[a-f0-9]{12}$"
+        },
+        "sourceRevision": {
+          "type": "string",
+          "pattern": "^[a-f0-9]{64}$"
+        },
+        "semanticHash": {
+          "type": "string",
+          "pattern": "^[a-f0-9]{64}$"
+        },
+        "overview": {
+          "type": "string",
+          "minLength": 1
+        },
+        "mathDisclosure": {
+          "enum": [
+            "exact-compact",
+            "exact-structured",
+            "omitted-complex",
+            "unavailable"
+          ]
+        },
+        "mathSummary": {
+          "type": "string",
+          "minLength": 1
+        },
+        "sourceWalkthrough": {
+          "type": "array",
+          "minItems": 1,
+          "items": {
+            "$ref": "#/$defs/walkthrough"
+          }
+        },
+        "syntaxFeatures": {
+          "type": "array",
+          "minItems": 1,
+          "items": {
+            "$ref": "#/$defs/syntaxFeature"
+          }
+        },
+        "parameterExperiment": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "parameterSymbols",
+            "steps",
+            "expectedObservation"
+          ],
+          "properties": {
+            "parameterSymbols": {
+              "type": "array",
+              "uniqueItems": true,
+              "items": {
+                "type": "string",
+                "minLength": 1
+              }
+            },
+            "steps": {
+              "type": "array",
+              "minItems": 1,
+              "items": {
+                "type": "string",
+                "minLength": 1
+              }
+            },
+            "expectedObservation": {
+              "type": "string",
+              "minLength": 1
+            },
+            "safetyNote": {
+              "type": "string",
+              "minLength": 1
+            }
+          }
+        },
+        "exercise": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "prompt",
+            "completionCheck",
+            "answerDisclosure"
+          ],
+          "properties": {
+            "prompt": {
+              "type": "string",
+              "minLength": 1
+            },
+            "completionCheck": {
+              "type": "string",
+              "minLength": 1
+            },
+            "answerDisclosure": {
+              "enum": [
+                "none",
+                "hint",
+                "reviewed-answer"
+              ]
+            }
+          }
+        },
+        "facts": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "provenanceStatement",
+            "rightsStatement",
+            "sourceIds",
+            "licenseIds",
+            "claims"
+          ],
+          "properties": {
+            "provenanceStatement": {
+              "type": "string",
+              "minLength": 1
+            },
+            "rightsStatement": {
+              "type": "string",
+              "minLength": 1
+            },
+            "sourceIds": {
+              "type": "array",
+              "minItems": 1,
+              "uniqueItems": true,
+              "items": {
+                "type": "string",
+                "minLength": 1
+              }
+            },
+            "licenseIds": {
+              "type": "array",
+              "uniqueItems": true,
+              "items": {
+                "type": "string",
+                "minLength": 1
+              }
+            },
+            "claims": {
+              "type": "array",
+              "minItems": 1,
+              "items": {
+                "type": "object",
+                "additionalProperties": false,
+                "required": [
+                  "text",
+                  "sourceIds"
+                ],
+                "properties": {
+                  "text": {
+                    "type": "string",
+                    "minLength": 1
+                  },
+                  "sourceIds": {
+                    "type": "array",
+                    "minItems": 1,
+                    "uniqueItems": true,
+                    "items": {
+                      "type": "string",
+                      "minLength": 1
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "localeEditorialUnit": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "schema",
+        "formulaId",
+        "locale",
+        "sourceRevision",
+        "semanticHash",
+        "englishContentHash",
+        "overview",
+        "sourceWalkthrough",
+        "syntaxFeatures",
+        "parameterExperiment",
+        "exercise",
+        "factsPresentation",
+        "contentHash"
+      ],
+      "properties": {
+        "schema": {
+          "const": "fractalpark-teaching-locale/v1"
+        },
+        "formulaId": {
+          "type": "string",
+          "pattern": "^[a-f0-9]{8}-[a-f0-9]{4}-[1-5][a-f0-9]{3}-[89ab][a-f0-9]{3}-[a-f0-9]{12}$"
+        },
+        "locale": {
+          "enum": [
+            "zh",
+            "pt",
+            "ko",
+            "ru",
+            "es",
+            "fr"
+          ]
+        },
+        "sourceRevision": {
+          "type": "string",
+          "pattern": "^[a-f0-9]{64}$"
+        },
+        "semanticHash": {
+          "type": "string",
+          "pattern": "^[a-f0-9]{64}$"
+        },
+        "englishContentHash": {
+          "type": "string",
+          "pattern": "^[a-f0-9]{64}$"
+        },
+        "localizedName": {
+          "type": "string",
+          "minLength": 1
+        },
+        "overview": {
+          "type": "string",
+          "minLength": 1
+        },
+        "sourceWalkthrough": {
+          "type": "object",
+          "minProperties": 1,
+          "additionalProperties": {
+            "type": "string",
+            "minLength": 1
+          }
+        },
+        "syntaxFeatures": {
+          "type": "object",
+          "minProperties": 1,
+          "additionalProperties": {
+            "type": "string",
+            "minLength": 1
+          }
+        },
+        "parameterExperiment": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "steps",
+            "expectedObservation"
+          ],
+          "properties": {
+            "steps": {
+              "type": "array",
+              "minItems": 1,
+              "items": {
+                "type": "string",
+                "minLength": 1
+              }
+            },
+            "expectedObservation": {
+              "type": "string",
+              "minLength": 1
+            },
+            "safetyNote": {
+              "type": "string",
+              "minLength": 1
+            }
+          }
+        },
+        "exercise": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "prompt",
+            "completionCheck"
+          ],
+          "properties": {
+            "prompt": {
+              "type": "string",
+              "minLength": 1
+            },
+            "completionCheck": {
+              "type": "string",
+              "minLength": 1
+            },
+            "hint": {
+              "type": "string",
+              "minLength": 1
+            }
+          }
+        },
+        "factsPresentation": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "provenanceLead",
+            "rightsLead"
+          ],
+          "properties": {
+            "provenanceLead": {
+              "type": "string",
+              "minLength": 1
+            },
+            "rightsLead": {
+              "type": "string",
+              "minLength": 1
+            }
+          }
+        },
+        "contentHash": {
+          "type": "string",
+          "pattern": "^[a-f0-9]{64}$"
+        }
+      }
+    },
+    "heldGuideEditorialUnit": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "schema",
+        "formulaId",
+        "locale",
+        "guideSlug",
+        "displayName",
+        "publicationDecision",
+        "decisionReason",
+        "provenanceSummary",
+        "rightsSummary",
+        "localizedHoldExplanation",
+        "contentHash"
+      ],
+      "properties": {
+        "schema": {
+          "const": "fractalpark-held-guide-editorial/v1"
+        },
+        "formulaId": {
+          "type": "string",
+          "pattern": "^[a-f0-9]{8}-[a-f0-9]{4}-[1-5][a-f0-9]{3}-[89ab][a-f0-9]{3}-[a-f0-9]{12}$"
+        },
+        "locale": {
+          "enum": [
+            "en",
+            "zh",
+            "pt",
+            "ko",
+            "ru",
+            "es",
+            "fr"
+          ]
+        },
+        "guideSlug": {
+          "type": "string",
+          "minLength": 1
+        },
+        "displayName": {
+          "type": "string",
+          "minLength": 1
+        },
+        "historicalName": {
+          "type": "string",
+          "minLength": 1
+        },
+        "publicationDecision": {
+          "const": "hold"
+        },
+        "decisionReason": {
+          "type": "string",
+          "minLength": 1
+        },
+        "referenceIds": {
+          "type": "array",
+          "uniqueItems": true,
+          "items": {
+            "type": "string",
+            "minLength": 1
+          }
+        },
+        "provenanceSummary": {
+          "type": "string",
+          "minLength": 1
+        },
+        "rightsSummary": {
+          "type": "string",
+          "minLength": 1
+        },
+        "localizedHoldExplanation": {
+          "type": "string",
+          "minLength": 1
+        },
+        "contentHash": {
+          "type": "string",
+          "pattern": "^[a-f0-9]{64}$"
+        }
+      }
+    }
+  }
+}

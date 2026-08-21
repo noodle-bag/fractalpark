@@ -46,6 +46,11 @@ export function getPublishedFormulaGuideFormulaId(
   return formulaId;
 }
 
+/**
+ * @deprecated Capability-level lookup. Call only through
+ * `content/teaching/guide-route-policy` so publication and frozen selection
+ * are checked before deep Guide content is returned.
+ */
 export function getPublishedFormulaGuideByFormulaId(
   formulaId: FormulaIdV1
 ): FormulaContentEntry | undefined {

@@ -637,34 +637,6 @@
         },
         "history": "The map z → λz(1 − z) began as the complex extension of the real logistic map, studied extensively in the 1970s as a simple model of population dynamics and chaotic behavior. In 1980, Benoit B. Mandelbrot took the iteration to unrestricted complex λ and z. His paper, \"Fractal Aspects of the Iteration of z → λz(1−z) for Complex λ and z,\" introduced the λ-plane parameter set—now the Lambda fractal—and placed it in the broader theory of iterated rational maps.\n\nThe groundwork was already there. Around 1917–1918, Pierre Fatou and Gaston Julia developed the general theory of iterated rational functions that later made families such as the logistic map available to explore. In 1986, Heinz-Otto Peitgen and Peter H. Richter brought the Lambda fractal to a wider audience in \"The Beauty of Fractals,\" with some of the first widely seen computer-generated images of the set."
       },
-      "mandelbox": {
-        "title": "Mandelbox",
-        "summary": "Un mapa de pliegue y escala inspirado en el Mandelbox de Tom Lowe de 2010: reflexiones de caja, pliegue radial y escala convierten una iteración en habitaciones y muros.",
-        "overview": "La mayoría de las fórmulas fractales empiezan elevando al cuadrado, como en z² + c. El Mandelbox toma otra ruta: un pliegue de caja manda las coordenadas que están fuera de un cubo fijo de regreso hacia sus caras; luego un pliegue radial, o de bola, invierte o escala un punto según su distancia al origen; y una escala uniforme estira o comprime el resultado antes de sumar c. Repite la secuencia y los pliegues —no la elevación al cuadrado— construyen la estructura.\n\nLas reflexiones y las inversiones no exigen un número particular de dimensiones, así que la construcción se puede hacer en cualquiera de ellas. FractalPark dibuja una variante bidimensional que conserva el mismo núcleo de pliegue y escala en el plano complejo.\n\nEste mapa de parámetros no se suaviza en las curvas típicas de los polinomios. Corta cámaras de bordes duros, fortificaciones anidadas y pasajes que parecen sacados de un plano. Su frontera divide las órbitas acotadas —las que se quedan al alcance— de las que escapan. Acércate y el borde dentado y autosimilar trae de vuelta el motivo de la caja a menor escala.",
-        "imageAlt": "Mapa Mandelbox bidimensional con cámaras de bordes duros y recovecos anidados tipo fortaleza en azules fríos",
-        "imageCaption": "El mapa inspirado en Mandelbox de FractalPark: muros rectos, esquinas en ángulo recto y recovecos en capas como el interior de una fortaleza cristalina.",
-        "math": {
-          "iteration": {
-            "label": "Fold-and-scale iteration",
-            "explanation": "Each round puts the orbit through four moves: box fold, radial fold, scale, then a shift by c.\n\nThe box fold handles one coordinate at a time. Take a component a of z. Above 1, it reflects as a → 2 − a; below −1, as a → −2 − a. Components in [−1, 1] stay put. The outer plane folds back into the central square.\n\nNext comes the ball fold, checking the squared magnitude r² = |z|². If r² < 0.25 (|z| < 0.5), scale the point by 4 and push it away from the origin. If 0.25 ≤ r² < 1, invert it through the unit sphere: z → z/r², so a radius of m becomes 1/m. Points with r² ≥ 1 stay put. The near points move outward; the middle band turns across the unit sphere. These moves make the unsettled interface behind the Mandelbox's boxy layers.\n\nTry z₀ = (1.5, 0) with scale s = 2. The box fold reflects x = 1.5 to x = 0.5. Since r² = 0.25 falls in the middle band, the ball fold inverts it: z = z/r² = (2, 0). Scaling by 2 gives (4, 0), and adding c completes the step. Start at the origin instead and you are in the innermost band: the ball fold multiplies it by 4—still the origin—so the first iterate lands exactly on c."
-          }
-        },
-        "visualCharacteristics": "Repeated folds produce hard-edged chambers, nested fortifications, and corridors with depth. The default parameter s = 2 gives the structure straight walls, right-angle corners, and layered recesses like the inside of a crystalline fortress.\n\nAt finer scales, the box theme returns: small copies of the overall shape appear in recesses and along boundaries, all with the same rectilinear geometry. The canonical image uses cool blues and cyans, which suit the mechanical geometry of the folds.",
-        "parameters": {
-          "scale": "Scale sets how strongly the folded orbit expands or reverses before c is added. A scale of 2 (the default) roughly doubles the folded value; negative values reverse direction and produce mirror-image variations."
-        },
-        "faq": {
-          "folds": {
-            "question": "What are box and ball folds?",
-            "answer": "A box fold reflects coordinates outside a fixed interval toward the origin—like folding a sheet’s edges inward. A ball fold (or sphere fold) makes a conditional inversion: points too close to the origin are pushed outward, points at an intermediate distance invert through a sphere, and distant points remain unchanged. Together they redirect the orbit at every step and make the Mandelbox’s layered geometry."
-          },
-          "dimension": {
-            "question": "Is this the three‑dimensional Mandelbox?",
-            "answer": "No. FractalPark renders a two-dimensional map inspired by the same fold-and-scale construction. The original Mandelbox is most often explored in 3D, where the box fold reflects across a cube’s faces; here the same logic works in the complex plane with a square boundary."
-          }
-        },
-        "history": "The Mandelbox was first presented by Tom Lowe (known online as Tglad) in early 2010 on the FractalForums community. Lowe was experimenting with iterative folding operations in three dimensions — box reflections and spherical inversions — to see whether they could produce bounded, self‑similar structures analogous to the Mandelbrot set. The results were immediately recognised as a new class of fractal, and the name \"Mandelbox\" was adopted both as an homage to the Mandelbrot set and because of the boxlike shape of the set when visualised.\n\nThe discovery followed closely on the 2009 Mandelbulb by Daniel White and Paul Nylander, which had sparked renewed hobbyist interest in finding non‑trivial 3D fractals. Within months, contributors on FractalForums — including Knighty, Jesse, and others — extended the Mandelbox idea to different symmetry planes and polyhedral folds.\n\nDespite its popularity in fractal art software (Mandelbulber, Mandelbulb3D, Fragmentarium, Ultra Fractal), the Mandelbox has received relatively little formal mathematical analysis. One of the few peer‑reviewed treatments is Gregg Helt's 2018 Bridges Conference paper, which generalises the spherical inversion step to arbitrary shape inversions."
-      },
       "perpendicular-celtic": {
         "title": "Perpendicular Celtic",
         "summary": "Un mapa cuadrático de la familia Perpendicular: pliega la parte real antes de elevar al cuadrado, vuelve a plegar el resultado real y la frontera se anuda en trenzas.",
@@ -789,30 +761,6 @@
         },
         "history": "At the heart of this image is Newton's method, discovered by Isaac Newton in 1669 and independently refined by Joseph Raphson in 1690. For real functions it is a practical root‑finding tool; for complex polynomials it reveals fractal basins no one could have foreseen at the time.\n\nThe mathematical study of those basins began in 1879 with Arthur Cayley's paper \"The Newton–Fourier imaginary problem\" (American Journal of Mathematics, vol. 2, p. 97). For a complex quadratic polynomial, Cayley showed that the basins of attraction are simply the two half-planes separated by the perpendicular bisector of the line segment joining the two roots. At cubic polynomials, though, he found the problem \"considerable difficult.\" His inability to extend the simple quadratic result to the cubic case became known as Cayley's problem.\n\nThe resolution came through complex dynamics, developed by Pierre Fatou and Gaston Julia in the years around 1918. Their theory of iterated rational functions supplied the language for the basins and their infinitely convoluted boundaries. But the first pictures of the Newton fractal for z³ − 1 had to wait for computer graphics in the early 1980s.\n\nIn 1986, Heinz-Otto Peitgen and Peter H. Richter included a chapter titled \"Newton's Method for Complex Polynomials: Cayley's Problem\" (Chapter 6, pp. 93–106) in *The Beauty of Fractals: Images of Complex Dynamical Systems*. It presents some of the earliest published computer renderings of these basins and helped introduce a wide audience to the fractal structure hidden inside Newton's method."
       },
-      "newton-cosh": {
-        "title": "Newton Cosh",
-        "summary": "El método de Newton aplicado a cosh z = 1: infinitas raíces igualmente espaciadas convierten el plano en bandas de convergencia repetidas.",
-        "overview": "El paso habitual de Newton para buscar raíces cambia de carácter cuando f(z) = cosh z − 1. Sus raíces son 2πik para todo entero k. Un polinomio solo le da a una órbita un número finito de destinos posibles; estas raíces siguen marchando por el eje imaginario a intervalos iguales. Por eso el fractal se organiza en bandas que corren hacia arriba y hacia abajo, en lugar de asentarse en unas pocas cuencas.\n\nEl mapa N(z) = z − (cosh z − 1) / sinh z es meromorfo: funciona en todo el plano complejo salvo en sus singularidades. Presta atención a dos conjuntos de puntos que se repiten: las raíces de cosh z − 1 y los ceros de su denominador sinh z en z = πik para k entero. Cerca de un cero del denominador, mover un poco el punto de partida puede cambiar la raíz a la que llega la órbita.\n\nPuedes ver la periodicidad a lo largo del eje imaginario de un vistazo —no hace falta saber matemáticas. Las bandas horizontales se repiten una encima de otra, una por cada periodo de las raíces. En sus uniones, finos hilos verticales marcan dónde una cuenca le pasa la órbita a la siguiente.",
-        "imageAlt": "Fractal de Newton para cosh z = 1, con bandas horizontales repetidas y fronteras deformadas apiladas a lo largo del eje imaginario",
-        "imageCaption": "La vista de Newton de FractalPark de cosh z = 1: bandas de convergencia repetidas a lo largo del eje imaginario, separadas por bordes plegados y filiformes.",
-        "math": {
-          "iteration": {
-            "label": "Newton’s cosh iteration",
-            "explanation": "Newton's rule is N(z) = z − f(z) / f′(z). Here f(z) = cosh z − 1 and f′(z) = sinh z. Each step finds the correction (cosh z − 1) / sinh z, then takes it away from z.\n\nThe equation cosh z = 1 has infinitely many solutions: z = 2πik for every integer k. Each is a simple root: cosh z grows linearly close by, so Newton's method converges quadratically there. Far from the real axis, cosh and sinh grow exponentially. Their quotient may be tiny or enormous, and that is where the image's sensitive seams take shape.\n\nTry z₀ = 0.2i. Since i·sinh(0.2) ≈ 0.201i and cosh(0.2) ≈ 1.020, the first correction is small; the orbit quickly reaches the root at z = 0. Now move to z₀ = (0.5 + 3.0i), farther from every root. The correction now contains large exponential terms. The orbit can cross several basin boundaries before settling, or wander chaotically between roots for many iterations before one captures it.\n\nThe function repeats with period 2πi in the imaginary direction, and the Newton map does too: N(z + 2πi) = N(z) + 2πi. That repeated rule is the source of the horizontal banding."
-          }
-        },
-        "visualCharacteristics": "Start with the horizontal bands along the imaginary axis. A period of roots makes one band, and the convergence pattern returns in the next. The borders do not run straight: they bend and fold, then pull out fine vertical filaments like taut threads.\n\nWithin each band, the basin geometry resembles its neighbours, with small distortions. Think of a ribbon folded repeatedly. The warm and cool zones come from the colouring; the sharp breaks arise where singularities of sinh z destabilise the Newton correction.",
-        "faq": {
-          "target": {
-            "question": "What equation is being solved?",
-            "answer": "It seeks the complex solutions of cosh(z) = 1: z = 2πik for every integer k. The equally spaced roots line the imaginary axis. Each draws in nearby Newton orbits, and their repeating arrangement creates the horizontal bands."
-          },
-          "singularities": {
-            "question": "Why are some regions extremely sensitive?",
-            "answer": "The correction divides by sinh(z), which vanishes at z = πik for integer k. Close to one of these points, the correction can become huge, sending an orbit across several basin boundaries before it converges. These singularities are not roots; they pull the fine vertical filaments and unsettled border zones into view."
-          }
-        }
-      },
       "magnet-type-1": {
         "title": "Magnet Type 1",
         "summary": "Un cociente de Möbius al cuadrado con un polo en z = c, que reúne el plano en cuencas agrupadas y cadenas tipo cuenta.",
@@ -890,31 +838,6 @@
           }
         },
         "history": "Shigehiro Ushiki, a mathematician in Kyoto University’s Graduate School of Human and Environmental Studies, discovered the Phoenix fractal. In 1988, he published the Phoenix iteration in IEEE Transactions on Circuits and Systems. He presented it as a complex-one-dimensional section of a Julia-like set derived from a complexified Hénon map. The paper is simply titled \"Phoenix.\" The classic parameter pair (c = 0.5667, p = −0.5) produces the named Phoenix curve, later well known in fractal-rendering communities.\n\nUshiki’s broader research covers complex dynamical systems, Julia sets with polyhedral symmetries, higher-dimensional complex Hénon maps, and the dynamics of surface automorphisms. His Kyoto University homepage lists publications from the 1980s to the present.\n\nThe Phoenix family later appeared in Ultra Fractal and other fractal software in both Julia-mode and Mandelbrot-mode variants. FractalPark’s Multi-Phoenix uses the same core recurrence and adds a multi-preview parameter interface."
-      },
-      "cosh-mandelbrot": {
-        "title": "Cosh Mandelbrot",
-        "summary": "Un mapa trascendente de tiempo de escape: el coseno hiperbólico reemplaza a la elevación al cuadrado, y en su lugar aparecen penachos que se repiten en vertical y abanicos en capas.",
-        "overview": "Cosh Mandelbrot deja atrás el paso polinomial familiar. En lugar de repetir z² + c, repite z → cosh(z) + c. La elevación al cuadrado se reemplaza por el crecimiento exponencial del coseno hiperbólico a lo largo del eje real y su repetición de 2π a lo largo del eje imaginario.\n\nEl coseno complejo y el coseno hiperbólico son parientes cercanos: cada uno se repite en una dirección y crece sin límite en otra. Para cosh(z), el periodo a lo largo del eje imaginario es 2π, así que una banda de detalle regresa por encima y por debajo de sí misma. Cuando |Re(z)| es grande, sus términos exponenciales salen disparados. La mayoría de los puntos de partida escapan rápido; solo bandas delgadas retienen una órbita —manteniendo sus valores sucesivos acotados durante muchos pasos.\n\nEl plano de parámetros ya no se parece al cardioide y los bulbos del conjunto de Mandelbrot. En su lugar apila abanicos, penachos dorados y ecos verticales. Su línea entre la fuga y la no fuga la traza la propia iteración trascendente; no hay un radio de escape algebraico simple disponible.",
-        "imageAlt": "Penachos dorados en capas y abanicos que se repiten a intervalos verticales regulares en el fractal Cosh Mandelbrot",
-        "imageCaption": "El Cosh Mandelbrot de FractalPark: penachos dorados y abanicos en capas regresan en vertical con el periodo de 2π de cosh en la dirección imaginaria.",
-        "math": {
-          "iteration": {
-            "label": "Hyperbolic cosine iteration",
-            "explanation": "Each turn evaluates complex hyperbolic cosine at the current z, then adds c. The definition cosh(z) = (eᶻ + e⁻ᶻ)/2 puts exponential growth on the real axis beside imaginary-axis repetition with period 2π.\n\nTry z = iπ/2 on the imaginary axis. Since cosh(iπ/2) = cos(π/2) = 0, starting there with c = 0 leaves the recurrence at zero. Nudge the point off that axis and the eᶻ term can drive exponential growth and rapid escape. That sharp divide—bounded behavior in a narrow strip, rapid escape elsewhere—is typical of transcendental iteration. Unlike a polynomial, this map has no universal escape radius; FractalPark uses a bailout threshold chosen to detect divergence in practice."
-          }
-        },
-        "visualCharacteristics": "First notice the vertical repetition. Because cosh(z) repeats in the imaginary direction every 2π, fine plumes, layered fans, and gilt filaments return at regular intervals. The result is striped and tiered, far from the radial branching of polynomial Mandelbrot sets.\n\nIn the canonical rendering, plumes and fans often carry warm tones. The finest detail concentrates in narrow horizontal bands, where an orbit lingers near the boundary between escape and non-escape. Above and below, escape accelerates and the image becomes smoother.",
-        "faq": {
-          "periodicity": {
-            "question": "Why do patterns repeat vertically?",
-            "answer": "Complex hyperbolic cosine repeats along the imaginary axis with period 2π. Because every step uses cosh(z), the orbit structure repeats too: bounded and escaping behavior returns at regular vertical intervals in the parameter plane."
-          },
-          "growth": {
-            "question": "Why do many points escape rapidly?",
-            "answer": "Hyperbolic cosine is built from exponentials: cosh(z) = (eᶻ + e⁻ᶻ)/2. At a point with a substantial real part, the eᶻ term takes over and the orbit can grow extremely fast. There is no simple polynomial-style escape radius, so the bailout threshold is a practical computational choice."
-          }
-        },
-        "history": "In 1988, Clifford A. Pickover, a computer scientist and author at IBM's Thomas J. Watson Research Center, published the short paper \"Chaotic behavior of the transcendental mapping (Z → cosh(Z) + μ)\" in The Visual Computer. He presented images of chaotic behavior produced by this transcendental function, alongside maps such as z → sin(z) + c and z → eᶻ + c.\n\nPickover’s work brought the cosh-based map into the fractal-rendering community, where it became a standard transcendental escape-time example. Earlier, mathematicians including Robert Devaney and Michał Krych had developed the broader study of transcendental complex dynamics—exponential, trigonometric, and hyperbolic families—and analyzed the dynamics of exp(z) in the 1980s."
       },
       "buffalo": {
         "title": "Buffalo",
@@ -1063,31 +986,6 @@
             "answer": "The legs form where quadratic expansion and reciprocal attraction are nearly balanced. There an orbit can alternate between a pull toward zero and a throw outward, drawing the boundary between bounded and escaping behaviour into long threads. The effect is strongest near the origin, where the reciprocal term is largest; farther out, z² regains control and the threads taper."
           }
         }
-      },
-      "zaslavsky-map": {
-        "title": "Zaslavsky Map",
-        "summary": "Un mapa seno complejo: el seno dobla la órbita, un giro fijo de 0.55 radianes la rota y c la desplaza —una adaptación inspirada en el mapa disipativo de rotor golpeado de George Zaslavsky de 1978.",
-        "overview": "El mapa de Zaslavsky dobla una órbita con el seno, gira el resultado por la fase compleja fija (e^{0.55i}) y luego suma c. Un mapa polinomial de fuga obtiene su carácter de potencias de z cada vez más grandes. Aquí la trama viene de dobleces periódicos que se encuentran con un giro constante.\n\nEn 1978, George M. Zaslavsky presentó el mapa original para modelar un rotor golpeado disipativo: un cuerpo en rotación que recibe golpes repetidos mientras la fricción drena energía. Ese mapa clásico es bidimensional y usa variables reales de acción-ángulo. FractalPark reformula la idea en una variable compleja: el seno aporta el golpe no lineal, el multiplicador complejo fijo aporta el giro, y c hace posibles las imágenes de tiempo de escape con barrido de parámetros.\n\nEl seno complejo puede crecer sin límite a lo largo del eje imaginario, así que esto no es una fuga polinomial simple. Una órbita puede dar vueltas un rato y luego desarmarse. Esa vacilación deja brazos arremolinados y anillos concéntricos, especialmente después de una transformación espacial caleidoscópica.",
-        "imageAlt": "El mapa de Zaslavsky: brazos arremolinados y anillos tipo mandala en naranja cálido y dorado",
-        "imageCaption": "El mapa de Zaslavsky renderizado por FractalPark: arcos concéntricos y radios que irradian forman un mandala brillante en naranjas cálidos y dorados.",
-        "math": {
-          "iteration": {
-            "label": "Sinusoidal rotation map",
-            "explanation": "Sine bends z; the fixed complex multiplier turns it; c shifts the result.\n\nStart on the real axis. For z₀ = (0, 0), sin(0) = 0, so z₁ = e^{0.55i} × 0 + c = c. After that, complex sine can grow: the magnitude of sin(a + ib) contains terms up to cosh(b). A point with a large imaginary coordinate gets a large kick from sine, and is more likely to escape.\n\nThe 0.55-radian rotation (about 31.5°) is not a parameter; it is hard-coded in the formula. Every orbit gets the same angular twist each time. Hence the swirls."
-          }
-        },
-        "visualCharacteristics": "Kaleidoscopic transforms make the swirling arms and mandala-like rings especially clear. The canonical image sets concentric arcs and radiating spokes around a central region where the sine perturbation keeps orbits bounded.\n\nWarm oranges and golds sit against deep black in the canonical rendering. Constant rotation curves the arms; sine puts fine ripples along the ring edges.",
-        "faq": {
-          "rotation": {
-            "question": "Where does the rotation come from?",
-            "answer": "The map multiplies the perturbed orbit by e^{0.55i}, the unit complex number that turns the plane about 31.5° counter-clockwise. It happens on every iteration and is fixed in the formula, not adjustable by the user. The 0.55-radian value was chosen empirically for balanced swirls."
-          },
-          "transform": {
-            "question": "Is kaleidoscope part of the formula?",
-            "answer": "No. Kaleidoscope is an optional spatial transform outside the iteration. It reflects or copies sectors of the parameter plane. The Zaslavsky Map has no built-in reflection symmetry; the kaleidoscope is a separate rendering step that can be switched independently."
-          }
-        },
-        "history": "George M. Zaslavsky (1929–2008) was a Soviet‑born mathematical physicist who made foundational contributions to the theory of dynamical chaos. He introduced the map that now bears his name in a 1978 paper titled \"The Simplest Case of a Strange Attractor,\" published in Physics Letters A. The map was derived as a stroboscopic description of a dissipative kicked rotor — a rotating system that receives periodic impulses and loses energy through friction.\n\nZaslavsky later moved to the United States, joining New York University's physics department and the Courant Institute of Mathematical Sciences. He authored several books on Hamiltonian chaos and fractional dynamics. The Scholarpedia article on the Zaslavsky map, written by Zaslavsky himself in 2007, provides an authoritative technical reference.\n\nClassical Zaslavsky maps operate on two real variables (action and angle). The complex variant used by FractalPark, with its sine perturbation and fixed complex multiplier, is a creative adaptation suitable for escape‑time rendering rather than a direct transcription of the original dissipative system."
       },
       "zubieta": {
         "title": "Zubieta",

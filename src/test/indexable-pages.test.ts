@@ -1,5 +1,6 @@
 import { SUPPORTED_LOCALES } from '@/i18n/supported-locales';
 import { describe, expect, it } from 'vitest';
+import heldGuideAsset from '../../resources/formula-library/v1/teaching-held-guide-appendix.v1.json';
 import {
   INDEXABLE_PAGE_PATHS,
   buildIndexableAlternates,
@@ -32,10 +33,13 @@ describe('indexable pages', () => {
     ]) {
       expect(INDEXABLE_PAGE_PATHS).toContain(required);
     }
-    // 21 published formula guides ride the same set.
+    // Two formula tools and exactly 17 selected published Guides ride the set.
     expect(
       INDEXABLE_PAGE_PATHS.filter((page) => page.startsWith('/formulas/')).length
-    ).toBeGreaterThanOrEqual(23);
+    ).toBe(19);
+    for (const held of heldGuideAsset.rows) {
+      expect(INDEXABLE_PAGE_PATHS).not.toContain(`/formulas/${held.formulaId}`);
+    }
   });
 
   it('builds one canonical URL per locale per page on the www host', () => {

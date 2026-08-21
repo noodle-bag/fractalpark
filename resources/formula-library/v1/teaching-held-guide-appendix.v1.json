@@ -1,0 +1,163 @@
+{
+  "schema": "fractalpark-teaching-held-guide-appendix/v1",
+  "locales": [
+    "en",
+    "zh",
+    "pt",
+    "ko",
+    "ru",
+    "es",
+    "fr"
+  ],
+  "pins": {
+    "publicationDecisionRevision": 3,
+    "publicationDecisionSha256": "497415cebc958bf322f9726485e4ccbcfb6cb7e77c16e0f091653cbf6b5714a4",
+    "legacyAliasesSha256": "0b966ca5f5e238b9f5fe523caa082a682cfe51d1e6affeb945d580dba72842e8"
+  },
+  "rows": [
+    {
+      "formulaId": "201c54f3-a77a-5be0-a0a5-6f4f1998ee6d",
+      "guideSlug": "cosh-mandelbrot",
+      "displayName": "coshMandelb",
+      "primaryFamily": "transcendental",
+      "publicationDecision": "hold",
+      "decisionReason": "held-b94-swiftshader-transcendental",
+      "allowedEditorialFields": [
+        "formulaId",
+        "guideSlug",
+        "displayName",
+        "primaryFamily",
+        "publicationDecision",
+        "decisionReason",
+        "historicalName",
+        "referenceIds",
+        "provenanceSummary",
+        "rightsSummary",
+        "localizedHoldExplanation"
+      ],
+      "forbiddenCapabilities": [
+        "runtimeBinding",
+        "sourceRevision",
+        "semanticHash",
+        "sourceWalkthrough",
+        "parameters",
+        "profile",
+        "teachingPackage",
+        "implementationGeneratedImagery",
+        "explorer",
+        "run",
+        "viewSource",
+        "edit",
+        "remix"
+      ]
+    },
+    {
+      "formulaId": "22d9a008-eb14-53de-9960-11eb5d37bb8e",
+      "guideSlug": "zaslavsky-map",
+      "displayName": "zaslavskyMap",
+      "primaryFamily": "transcendental",
+      "publicationDecision": "hold",
+      "decisionReason": "held-b94-swiftshader-transcendental",
+      "allowedEditorialFields": [
+        "formulaId",
+        "guideSlug",
+        "displayName",
+        "primaryFamily",
+        "publicationDecision",
+        "decisionReason",
+        "historicalName",
+        "referenceIds",
+        "provenanceSummary",
+        "rightsSummary",
+        "localizedHoldExplanation"
+      ],
+      "forbiddenCapabilities": [
+        "runtimeBinding",
+        "sourceRevision",
+        "semanticHash",
+        "sourceWalkthrough",
+        "parameters",
+        "profile",
+        "teachingPackage",
+        "implementationGeneratedImagery",
+        "explorer",
+        "run",
+        "viewSource",
+        "edit",
+        "remix"
+      ]
+    },
+    {
+      "formulaId": "280cd3e2-865b-5c78-90b7-39b2a36d7be0",
+      "guideSlug": "mandelbox",
+      "displayName": "mandelbox",
+      "primaryFamily": "folded-absolute",
+      "publicationDecision": "hold",
+      "decisionReason": "held-b94-chaotic-amplification",
+      "allowedEditorialFields": [
+        "formulaId",
+        "guideSlug",
+        "displayName",
+        "primaryFamily",
+        "publicationDecision",
+        "decisionReason",
+        "historicalName",
+        "referenceIds",
+        "provenanceSummary",
+        "rightsSummary",
+        "localizedHoldExplanation"
+      ],
+      "forbiddenCapabilities": [
+        "runtimeBinding",
+        "sourceRevision",
+        "semanticHash",
+        "sourceWalkthrough",
+        "parameters",
+        "profile",
+        "teachingPackage",
+        "implementationGeneratedImagery",
+        "explorer",
+        "run",
+        "viewSource",
+        "edit",
+        "remix"
+      ]
+    },
+    {
+      "formulaId": "a89891b1-8ccb-5d58-9fbb-05944b85ce3c",
+      "guideSlug": "newton-cosh",
+      "displayName": "newtonCosh",
+      "primaryFamily": "root-finding",
+      "publicationDecision": "hold",
+      "decisionReason": "held-b94-ill-conditioned-cancellation",
+      "allowedEditorialFields": [
+        "formulaId",
+        "guideSlug",
+        "displayName",
+        "primaryFamily",
+        "publicationDecision",
+        "decisionReason",
+        "historicalName",
+        "referenceIds",
+        "provenanceSummary",
+        "rightsSummary",
+        "localizedHoldExplanation"
+      ],
+      "forbiddenCapabilities": [
+        "runtimeBinding",
+        "sourceRevision",
+        "semanticHash",
+        "sourceWalkthrough",
+        "parameters",
+        "profile",
+        "teachingPackage",
+        "implementationGeneratedImagery",
+        "explorer",
+        "run",
+        "viewSource",
+        "edit",
+        "remix"
+      ]
+    }
+  ]
+}

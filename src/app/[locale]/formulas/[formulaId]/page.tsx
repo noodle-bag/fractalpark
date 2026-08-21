@@ -25,11 +25,12 @@ import {
   formulaGuideImagePath,
   formulaGuideOpenGraphImagePath,
   formulaGuidePath,
-  getPublishedFormulaGuideByFormulaId,
   getPublishedFormulaGuideFormulaId,
-  isPublishedFormulaGuideId,
 } from '@/content/formula-guides';
-import { getFormulaContentById } from '@/content/formula-manifest';
+import {
+  getLegacyGuideRecordPathV1,
+  getTeachingGuideForFormulaRecordV1,
+} from '@/content/teaching/guide-route-policy';
 import { getFormulaMetadata } from '@/engine/plugins/formula-catalog';
 import { Link } from '@/i18n/routing';
 import { buildFormulaDefaultDocument } from '@/lib/formula-documents';
@@ -105,7 +106,7 @@ export async function generateMetadata({
   );
   if (!routeRecord) notFound();
 
-  const entry = getPublishedFormulaGuideByFormulaId(formulaId);
+  const entry = getTeachingGuideForFormulaRecordV1(routeRecord.formulaRecord);
   if (!entry) {
     const t = await getTranslations({
       locale,
@@ -171,7 +172,7 @@ export default async function FormulaPage({ params }: FormulaPageProps) {
   );
   if (!routeRecord) notFound();
 
-  const entry = getPublishedFormulaGuideByFormulaId(formulaId);
+  const entry = getTeachingGuideForFormulaRecordV1(routeRecord.formulaRecord);
   if (!entry) {
     return <FormulaIdentityPage locale={locale} record={routeRecord} />;
   }
@@ -225,14 +226,13 @@ export default async function FormulaPage({ params }: FormulaPageProps) {
       throw new Error(`Missing related formula metadata: ${formulaId}`);
     }
 
-    const relatedContent = getFormulaContentById(formulaId);
-    const href =
-      relatedContent && isPublishedFormulaGuideId(formulaId)
-        ? `/${locale}${formulaGuidePath(relatedContent)}`
-        : documentToExploreHref(
-            buildFormulaDefaultDocument(formulaId),
-            locale
-          );
+    const guideRecordPath = getLegacyGuideRecordPathV1(formulaId);
+    const href = guideRecordPath
+      ? `/${locale}${guideRecordPath}`
+      : documentToExploreHref(
+          buildFormulaDefaultDocument(formulaId),
+          locale
+        );
 
     return {
       metadata: relatedMetadata,

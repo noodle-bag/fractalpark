@@ -1,7 +1,5 @@
-import {
-  PUBLISHED_FORMULA_GUIDES,
-  formulaGuidePath,
-} from '@/content/formula-guides';
+import { formulaGuidePath } from '@/content/formula-guides';
+import { PUBLISHED_TEACHING_GUIDES_V1 } from '@/content/teaching/guide-route-policy';
 import {
   PUBLISHED_ARTWORK_PAGES,
   artworkPagePath,
@@ -31,7 +29,7 @@ export const INDEXABLE_PAGE_PATHS: readonly string[] = [
   '/privacy',
   '/terms',
   '/community-rules',
-  ...PUBLISHED_FORMULA_GUIDES.map(formulaGuidePath),
+  ...PUBLISHED_TEACHING_GUIDES_V1.map(formulaGuidePath),
   ...PUBLISHED_ARTWORK_PAGES.map(artworkPagePath),
 ];
 
