@@ -19,3 +19,4 @@ jobs:
       - run: npm run test:run
       - run: npm run formula:performance:verify
       - run: npm run build
+      - run: npm run formula:performance:verify-build

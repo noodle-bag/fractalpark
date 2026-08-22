@@ -15,6 +15,8 @@ jobs:
     steps:
       - name: Check out release tag
         uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
 
       - name: Set up Node.js
         uses: actions/setup-node@v4
@@ -25,7 +27,16 @@ jobs:
       - name: Install locked dependencies
         run: npm ci
 
+      - name: Build release candidate
+        run: npm run build
+
+      - name: Reject eager formula definitions in build output
+        run: npm run formula:performance:verify-build
+
       - name: Enforce standard-library release evidence
+        env:
+          FORMULA_PERFORMANCE_CANDIDATE_SHA: ${{ github.sha }}
+          FORMULA_PERFORMANCE_TARGET_URL: ${{ vars.FORMULA_PERFORMANCE_TARGET_URL }}
         run: npm run formula:performance:release
 
       - name: Create GitHub Release

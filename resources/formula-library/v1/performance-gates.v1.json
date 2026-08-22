@@ -16,8 +16,15 @@
     "coldSelectionSamples": 20,
     "hotSelectionSamples": 30,
     "facetPaintSamples": 50,
-    "percentile": 95,
+    "selectedLoadingSamples": 50,
+    "facetPercentile": 75,
+    "framePercentile": 95,
+    "responsiveWidths": [320, 390],
+    "coldCacheMode": "isolated-browser-context-per-sample",
+    "hotCacheMode": "preloaded-definition-and-compiled-program",
     "requiredTuple": [
+      "gitCommit",
+      "targetUrl",
       "sourceBindings",
       "environment",
       "samples"
@@ -31,17 +38,23 @@
       "definitionMaxBytes": 1024,
       "previewManifestBytes": 300000,
       "previewsTotalBytes": 1800000,
-      "previewMaxBytes": 10000
+      "previewMaxBytes": 10000,
+      "nativeDefinitionOverlapCount": 68,
+      "nativeDefinitionOverlapSha256": "4f6e82e6d879022665fb7b1c72c8040e4eb902508c76b9d862d713ea8ea7128b"
     },
     "browser": {
       "libraryOpenP95Ms": 1000,
       "libraryDialogDescendants": 256,
       "libraryHeapDeltaP95Bytes": 4194304,
       "publishedIndexTransferBytes": 100000,
-      "facetPaintP95Ms": 250,
+      "facetPaintP75Ms": 100,
+      "selectedLoadingMaxMs": 100,
       "previewDecodeP95Ms": 250,
-      "coldSelectionToCorrectFrameP95Ms": 2000,
-      "hotSelectionToCorrectFrameP95Ms": 750
+      "initialFormulaAssetRequests": 0,
+      "hotFormulaAssetRequests": 0,
+      "coldSelectionToCorrectFrameDesktopP95Ms": 2000,
+      "coldSelectionToCorrectFrameMobileP95Ms": 3000,
+      "hotSelectionToCorrectFrameP95Ms": 300
     },
     "build": {
       "wallMs": 240000,
@@ -56,5 +69,38 @@
     "ipad-safari-touch",
     "android-chrome-touch",
     "screen-reader-keyboard"
-  ]
+  ],
+  "rollbackContract": {
+    "requiredDeployedSteps": [
+      "backup-current",
+      "disable-writer",
+      "disable-feature",
+      "activate-lkg-runtime",
+      "verify-reader-floor",
+      "verify-alias-resolver",
+      "restore-current"
+    ]
+  },
+  "accessibilityContract": {
+    "requiredScreenReaderTasks": [
+      "open-close-focus",
+      "loading-announcement",
+      "selection-busy",
+      "failure-alert-lkg",
+      "keyboard-pagination-facets"
+    ]
+  },
+  "deviceTaskContract": {
+    "desktopPerformanceTasks": [
+      "library-walking-skeleton",
+      "responsive-320",
+      "responsive-390",
+      "gpu-recovery"
+    ],
+    "touchPerformanceTasks": [
+      "library-walking-skeleton",
+      "touch-facet-selection",
+      "gpu-recovery"
+    ]
+  }
 }

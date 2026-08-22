@@ -201,6 +201,7 @@ describe("PublishedFormulaLibrary", () => {
     fireEvent.click(row);
     expect(row).toHaveAttribute("aria-busy", "true");
     expect(dialog).toHaveAttribute("aria-busy", "true");
+    await waitFor(() => expect(onSelect).toHaveBeenCalledTimes(1));
     finishSelection({ ok: false, code: "definition-compile-failed" });
 
     expect(await screen.findByRole("alert")).toHaveTextContent(
@@ -262,6 +263,7 @@ describe("PublishedFormulaLibrary", () => {
 
     fireEvent.click(screen.getByRole("button", { name: "formula.library.open" }));
     fireEvent.click(await screen.findByRole("button", { name: "Formula 1" }));
+    await waitFor(() => expect(onSelect).toHaveBeenCalledTimes(1));
     fireEvent.click(screen.getByRole("button", { name: "Close" }));
 
     expect(onCancel).toHaveBeenCalledTimes(1);

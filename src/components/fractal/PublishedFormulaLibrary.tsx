@@ -142,6 +142,10 @@ export function PublishedFormulaLibrary({
     setSelectionError(false);
     setActionPending(null);
     setActionError(false);
+    await new Promise<void>((resolve) => {
+      requestAnimationFrame(() => requestAnimationFrame(() => resolve()));
+    });
+    if (generation !== selectionGeneration.current) return;
     const result = await onSelect(formulaId, async () => {
       commitClose.current = true;
       setOpen(false);

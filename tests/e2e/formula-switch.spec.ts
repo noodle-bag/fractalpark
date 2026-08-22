@@ -414,28 +414,30 @@ test.describe('Published Formula Library', () => {
     expect(definitionRequests).toHaveLength(1);
   });
 
-  test('is a full-width keyboard-operable layer at 390px', async ({ page }) => {
-    await page.setViewportSize({ width: 390, height: 844 });
-    await page.goto('/en/explore');
-    await waitForFractalCanvasReady(page);
+  for (const width of [320, 390] as const) {
+    test(`is a full-width keyboard-operable layer at ${width}px`, async ({ page }) => {
+      await page.setViewportSize({ width, height: width === 320 ? 720 : 844 });
+      await page.goto('/en/explore');
+      await waitForFractalCanvasReady(page);
 
-    const trigger = page.getByRole('button', { name: 'Open Library' });
-    await trigger.focus();
-    await page.keyboard.press('Enter');
-    const dialog = page.getByRole('dialog', { name: 'Standard Formula Library' });
-    await expect(dialog).toBeVisible();
-    await dialog.evaluate(async (element) => {
-      await Promise.all(
-        element.getAnimations().map((animation) => animation.finished.catch(() => undefined)),
-      );
+      const trigger = page.getByRole('button', { name: 'Open Library' });
+      await trigger.focus();
+      await page.keyboard.press('Enter');
+      const dialog = page.getByRole('dialog', { name: 'Standard Formula Library' });
+      await expect(dialog).toBeVisible();
+      await dialog.evaluate(async (element) => {
+        await Promise.all(
+          element.getAnimations().map((animation) => animation.finished.catch(() => undefined)),
+        );
+      });
+      const box = await dialog.boundingBox();
+      expect(box).not.toBeNull();
+      expect(box?.x).toBe(0);
+      expect(box?.width).toBe(width);
+
+      await page.keyboard.press('Escape');
+      await expect(dialog).toHaveCount(0);
+      await expect(trigger).toBeFocused();
     });
-    const box = await dialog.boundingBox();
-    expect(box).not.toBeNull();
-    expect(box?.x).toBe(0);
-    expect(box?.width).toBe(390);
-
-    await page.keyboard.press('Escape');
-    await expect(dialog).toHaveCount(0);
-    await expect(trigger).toBeFocused();
-  });
+  }
 });
