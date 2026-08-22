@@ -35,8 +35,8 @@ export function useFractalRenderer(
     }
   }, [glRef]);
 
-  const render = useCallback((params: FractalParams) => {
-    void rendererRef.current?.render(params);
+  const render = useCallback((params: FractalParams): Promise<boolean> => {
+    return rendererRef.current?.render(params) ?? Promise.resolve(false);
   }, []);
 
   const updateParams = useCallback(() => {

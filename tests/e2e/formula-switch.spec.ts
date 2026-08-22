@@ -38,6 +38,12 @@ const LUCKY_REPRESENTATIVE = {
     'definitions/e4d2259a5dd3fe7b3af646514a4313e83efcc80e887e04c07b7469bb27a66b90.frm',
 } as const;
 
+const ROLLBACK_REPRESENTATIVE = {
+  displayName: 'jm_18',
+  definitionPath:
+    'definitions/41794347e36147808476dcb16e41d7bdbf24b94327ce2f0bf13fd67a1cf1901f.frm',
+} as const;
+
 async function waitForFractalCanvasReady(page: Page) {
   await expect(page.locator('[data-testid="fractal-canvas"]')).toBeVisible({
     timeout: 20_000,
@@ -69,6 +75,69 @@ async function selectDirectoryRow(page: Page, displayName: string) {
 
 test.describe('Published Formula Library', () => {
   test.describe.configure({ timeout: 420_000 });
+
+  test('keeps the last-known-good canvas when a published definition is unavailable', async ({
+    page,
+  }) => {
+    await page.route(`**/${ROLLBACK_REPRESENTATIVE.definitionPath}`, async (route) => {
+      await route.fulfill({ status: 503, contentType: 'text/plain', body: 'unavailable' });
+    });
+    await page.goto('/en/explore');
+    await waitForFractalCanvasReady(page);
+    const canvas = page.locator('[data-testid="fractal-canvas"]');
+    await expect(canvas).toHaveAttribute('data-render-status', 'ready', {
+      timeout: 45_000,
+    });
+    await expect(canvas).toHaveAttribute('data-rendered-formula-id', 'mandelbrot');
+
+    await openLibrary(page);
+    await selectDirectoryRow(page, ROLLBACK_REPRESENTATIVE.displayName);
+
+    await expect(page.getByRole('alert')).toContainText(
+      'This formula could not be loaded. Your current formula was kept.',
+    );
+    await expect(
+      page.getByRole('dialog', { name: 'Standard Formula Library' }),
+    ).toBeVisible();
+    await expect(page.locator('[data-testid="explore-root"]')).toHaveAttribute(
+      'data-formula-id',
+      'mandelbrot',
+    );
+    await expect(canvas).toHaveAttribute('data-render-status', 'ready');
+    await expect(canvas).toHaveAttribute('data-rendered-formula-id', 'mandelbrot');
+    await expect(page).not.toHaveURL(/[?&]fm=/);
+  });
+
+  test('keeps built-in formulas usable when the published runtime is removed', async ({
+    page,
+  }) => {
+    await page.route('**/formula-library/v1/runtime/published/index.json', async (route) => {
+      await route.fulfill({ status: 404, contentType: 'text/plain', body: 'removed' });
+    });
+    await page.goto('/en/explore?fm=bs');
+    await waitForFractalCanvasReady(page);
+    await expect(page.locator('[data-testid="explore-root"]')).toHaveAttribute(
+      'data-formula-id',
+      'burningShip',
+    );
+    await expect(page.locator('[data-testid="fractal-canvas"]')).toHaveAttribute(
+      'data-rendered-formula-id',
+      'burningShip',
+    );
+
+    await page.getByRole('button', { name: 'Open Library' }).click();
+    const dialog = page.getByRole('dialog');
+    await expect(dialog).toBeVisible();
+    await expect(dialog.getByRole('alert')).toBeVisible();
+    await dialog.getByRole('button', { name: 'Close' }).click();
+
+    await expect(page).toHaveURL(/[?&]fm=bs(?:[&#]|$)/);
+    await expect(page.locator('[data-testid="fractal-canvas"]')).toHaveAttribute(
+      'data-rendered-formula-id',
+      'burningShip',
+    );
+  });
+
   test('lazily loads and renders all three implementation bases', async ({ page }) => {
     test.setTimeout(420_000);
     const definitionRequests: string[] = [];

@@ -85,6 +85,9 @@ govern FractalPark development.
 - [v0.4.19 Slice 0 Baseline and Formula Route Probe](testing/v0.4.19-slice0-baseline.md)
   records the released build/Atlas baseline, selective pre-generation decision,
   comparison contract, and still-unmeasured browser/device work.
+- [v0.4.19 Standard Library Performance Gate](testing/v0.4.19-standard-library-performance-gate.md)
+  freezes static/browser/build budgets, the source-environment-samples tuple,
+  real-device evidence requirements, accessibility checks, and rollback drills.
 
 ## Maintenance
 

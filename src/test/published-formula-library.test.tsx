@@ -165,6 +165,52 @@ describe("PublishedFormulaLibrary", () => {
     ).toBeInTheDocument();
   });
 
+  it("announces loading, exposes busy state, and rolls back a failed selection", async () => {
+    let finishLoad!: (result: PublishedFormulaLibraryClientResult) => void;
+    let finishSelection!: (result: PublishedFormulaSelectionResult) => void;
+    const loadClient = vi.fn(
+      () =>
+        new Promise<PublishedFormulaLibraryClientResult>((resolve) => {
+          finishLoad = resolve;
+        }),
+    );
+    const onSelect = vi.fn(
+      () =>
+        new Promise<PublishedFormulaSelectionResult>((resolve) => {
+          finishSelection = resolve;
+        }),
+    );
+
+    render(
+      <PublishedFormulaLibrary
+        currentFormula="mandelbrot"
+        loadClient={loadClient}
+        onSelect={onSelect}
+      />,
+    );
+
+    fireEvent.click(screen.getByRole("button", { name: "formula.library.open" }));
+    const dialog = await screen.findByRole("dialog");
+    expect(dialog).toHaveAttribute("aria-busy", "true");
+    expect(screen.getByRole("status")).toHaveTextContent("formula.library.loading");
+
+    finishLoad({ ok: true, value: client(1) });
+    const row = await screen.findByRole("button", { name: "Formula 1" });
+    await waitFor(() => expect(dialog).toHaveAttribute("aria-busy", "false"));
+
+    fireEvent.click(row);
+    expect(row).toHaveAttribute("aria-busy", "true");
+    expect(dialog).toHaveAttribute("aria-busy", "true");
+    finishSelection({ ok: false, code: "definition-compile-failed" });
+
+    expect(await screen.findByRole("alert")).toHaveTextContent(
+      "formula.library.selectionFailed",
+    );
+    expect(dialog).toBeInTheDocument();
+    expect(row).toHaveAttribute("aria-busy", "false");
+    expect(dialog).toHaveAttribute("aria-busy", "false");
+  });
+
   it("closes only after a successful selection and keeps failures visible", async () => {
     const onCancel = vi.fn();
     const onSelect = vi

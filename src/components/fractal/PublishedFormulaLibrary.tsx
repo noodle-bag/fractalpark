@@ -17,6 +17,7 @@ import { pluginRegistry } from '@/engine/plugins/registry';
 import type { PublishedFormulaRuntimeIndexRowV1 } from '@/engine/formulas/v1';
 import {
   getPublishedFormulaLibraryClient,
+  PUBLISHED_FORMULA_LIBRARY_PAGE_SIZE,
   type PublishedFormulaLibraryClientResult,
 } from '@/lib/published-formula-library';
 import type {
@@ -25,7 +26,6 @@ import type {
 } from '@/lib/published-formula-selection';
 import { cn } from '@/lib/utils';
 
-const PAGE_SIZE = 48;
 const FAMILY_ORDER = [
   'algebraic-power',
   'folded-absolute',
@@ -77,7 +77,7 @@ export function PublishedFormulaLibrary({
   const [libraryError, setLibraryError] = useState(false);
   const [selectionError, setSelectionError] = useState(false);
   const [selectedFamily, setSelectedFamily] = useState('all');
-  const [visibleCount, setVisibleCount] = useState(PAGE_SIZE);
+  const [visibleCount, setVisibleCount] = useState(PUBLISHED_FORMULA_LIBRARY_PAGE_SIZE);
   const [selectingId, setSelectingId] = useState<string | null>(null);
   const [actionPending, setActionPending] = useState<'lucky' | 'reset' | null>(null);
   const [actionError, setActionError] = useState(false);
@@ -101,7 +101,7 @@ export function PublishedFormulaLibrary({
 
   const changeFamily = (family: string) => {
     setSelectedFamily(family);
-    setVisibleCount(PAGE_SIZE);
+    setVisibleCount(PUBLISHED_FORMULA_LIBRARY_PAGE_SIZE);
   };
 
   const handleOpenChange = (next: boolean) => {
@@ -114,7 +114,7 @@ export function PublishedFormulaLibrary({
     setActionError(false);
     if (next) {
       setSelectedFamily('all');
-      setVisibleCount(PAGE_SIZE);
+      setVisibleCount(PUBLISHED_FORMULA_LIBRARY_PAGE_SIZE);
       if (rows.length === 0) {
         const generation = ++libraryGeneration.current;
         setLoading(true);
@@ -259,7 +259,10 @@ export function PublishedFormulaLibrary({
             {t('formula.library.open')}
           </Button>
         </SheetTrigger>
-        <SheetContent className="w-full max-w-none gap-0 p-0 data-[state=closed]:animate-none! data-[state=closed]:transition-none! sm:w-[min(90vw,48rem)] sm:max-w-3xl">
+        <SheetContent
+          aria-busy={loading || selectingId !== null}
+          className="w-full max-w-none gap-0 p-0 data-[state=closed]:animate-none! data-[state=closed]:transition-none! sm:w-[min(90vw,48rem)] sm:max-w-3xl"
+        >
           <SheetHeader className="border-b pr-12">
             <SheetTitle>{t('formula.library.title')}</SheetTitle>
             <SheetDescription>
@@ -269,8 +272,12 @@ export function PublishedFormulaLibrary({
 
           <div className="flex min-h-0 flex-1 flex-col p-4">
             {loading ? (
-              <div className="flex flex-1 items-center justify-center gap-2 text-sm text-muted-foreground">
-                <Loader2 className="h-4 w-4 animate-spin" />
+              <div
+                role="status"
+                aria-live="polite"
+                className="flex flex-1 items-center justify-center gap-2 text-sm text-muted-foreground"
+              >
+                <Loader2 className="h-4 w-4 animate-spin" aria-hidden="true" />
                 {t('formula.library.loading')}
               </div>
             ) : libraryError ? (
@@ -315,8 +322,10 @@ export function PublishedFormulaLibrary({
                       <button
                         type="button"
                         key={row.formulaId}
+                        data-formula-id={row.formulaId}
                         aria-label={row.displayName}
                         aria-current={row.formulaId === currentFormula ? 'true' : undefined}
+                        aria-busy={selectingId === row.formulaId}
                         onClick={() => void handleSelect(row.formulaId)}
                         className={cn(
                           'rounded-md border p-3 text-left transition-colors hover:bg-accent focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring',
@@ -343,7 +352,7 @@ export function PublishedFormulaLibrary({
                       type="button"
                       variant="ghost"
                       className="mt-3 w-full"
-                      onClick={() => setVisibleCount((count) => count + PAGE_SIZE)}
+                      onClick={() => setVisibleCount((count) => count + PUBLISHED_FORMULA_LIBRARY_PAGE_SIZE)}
                     >
                       {t('formula.library.loadMore')}
                     </Button>

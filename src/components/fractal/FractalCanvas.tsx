@@ -1,6 +1,6 @@
 'use client';
 
-import { useRef, useEffect } from 'react';
+import { useCallback, useRef, useEffect } from 'react';
 import { useWebGL } from '@/hooks/useWebGL';
 import { useFractalRenderer } from '@/hooks/useFractalRenderer';
 import { useCanvasInteraction } from '@/hooks/useCanvasInteraction';
@@ -66,6 +66,7 @@ export default function FractalCanvas({
   const { glRef, isContextLost, error, resize } = useWebGL(canvasRef);
   const { render, rendererRef } = useFractalRenderer(glRef);
   const paramsRef = useRef<FractalParams | null>(null);
+  const renderGenerationRef = useRef(0);
 
   useCanvasInteraction(canvasRef, {
     onBoundsChange: onBoundsChange ?? (() => {}),
@@ -78,6 +79,33 @@ export default function FractalCanvas({
       onCanvasReady?.(canvasRef.current);
     }
   }, [onCanvasReady]);
+
+  const renderLatest = useCallback(
+    (params: FractalParams) => {
+      const canvas = canvasRef.current;
+      const generation = ++renderGenerationRef.current;
+      if (canvas) {
+        canvas.dataset.renderStatus = 'pending';
+        delete canvas.dataset.renderedFormulaId;
+      }
+      void render(params)
+        .then((didRender) => {
+          if (
+            !didRender ||
+            generation !== renderGenerationRef.current ||
+            !canvas
+          )
+            return;
+          canvas.dataset.renderStatus = 'ready';
+          canvas.dataset.renderedFormulaId = String(params.formula);
+        })
+        .catch(() => {
+          if (generation !== renderGenerationRef.current || !canvas) return;
+          canvas.dataset.renderStatus = 'error';
+        });
+    },
+    [render],
+  );
 
   useEffect(() => {
     if (!rendererRef.current) return;
@@ -104,7 +132,7 @@ export default function FractalCanvas({
 
     paramsRef.current = params;
     resize();
-    render(params);
+    renderLatest(params);
   }, [
     bounds,
     paletteIndex,
@@ -124,7 +152,7 @@ export default function FractalCanvas({
     lighting,
     customGradient,
     resize,
-    render,
+    renderLatest,
     rendererRef,
   ]);
 
@@ -133,7 +161,7 @@ export default function FractalCanvas({
       resize();
       const params = paramsRef.current;
       if (rendererRef.current && params) {
-        render(params);
+        renderLatest(params);
       }
     });
 
@@ -142,7 +170,7 @@ export default function FractalCanvas({
     }
 
     return () => observer.disconnect();
-  }, [resize, render, rendererRef]);
+  }, [resize, renderLatest, rendererRef]);
 
   if (error) {
     return (

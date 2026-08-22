@@ -10,6 +10,7 @@ export const PUBLISHED_FORMULA_LIBRARY_ROOT_URL =
   "/formula-library/v1/runtime/published" as const;
 export const PUBLISHED_FORMULA_LIBRARY_INDEX_URL =
   `${PUBLISHED_FORMULA_LIBRARY_ROOT_URL}/index.json` as const;
+export const PUBLISHED_FORMULA_LIBRARY_PAGE_SIZE = 48;
 
 export type PublishedFormulaLibraryFetch = (
   input: RequestInfo | URL,

@@ -1,0 +1,40 @@
+{
+  "schema": "fractalpark-standard-library-rollback-run/v1",
+  "scenarioId": "supersession",
+  "sourceBindings": {
+    ".github/workflows/ci.yml": "fff66a7036f32510e8d1499a41f1cd5c14bb02ae964f3227274f48ef1165bd2e",
+    ".github/workflows/release.yml": "ff51e04ef7e0815da853d99c1e20834993bf7d1e15447a74ec75c238561c5c47",
+    "resources/formula-library/v1/performance-gates.v1.json": "374aceeeeb1749d9aef8f4ce292823bfb2d627234bf772b652a7d6f1e0faf32b",
+    "resources/formula-library/v1/publication-decisions.json": "497415cebc958bf322f9726485e4ccbcfb6cb7e77c16e0f091653cbf6b5714a4",
+    "public/formula-library/v1/runtime/published/index.json": "1b27e129a102c0d64774bce7112be41de102028743cbcf440ba12bb45d906ff8",
+    "public/formula-library/v1/runtime/published/manifest.json": "61193773e0d68190ed5ceb817196afa046945c5b1cd2d740b1519246bb13f7ee",
+    "public/formula-library/v1/previews/manifest.json": "087c17099d6767811c4998cc9813a1da2ac5c92ea68229eb3e01869ef5ab2e10",
+    "src/components/fractal/FractalCanvas.tsx": "2b5058d3c034fad287a5d54c1c68c732608b599e75be678b001b79145be7a644",
+    "src/components/fractal/PublishedFormulaLibrary.tsx": "e06b9b96209710107ed1f1292112ad254d43e226387830d9dfd8e466997e2637",
+    "src/components/gallery/PresetThumbnail.tsx": "58978b33ad02deadc66694e076cafa8c07d057853ddf2e556c639e28f337d8e5",
+    "src/hooks/useFractalRenderer.ts": "c986ad0177d44dc87f2785c8415edfbceac9854f3eb54a87fce904f5a8f74521",
+    "src/lib/published-formula-library.ts": "fc76f5bf53280497383fd5f94197052f088fe98e22658edd29e6974be62cdbc1",
+    "src/lib/published-formula-selection.ts": "17fa926564bd5cb741fd33a840cf07d7667ebc12b7889c9e475327e6f456007a",
+    "src/engine/formulas/v1/published-runtime.ts": "498a90e5d62efcbfddc33ccb40e63d79ef157e20ab9f8817275b4ebd6a22ea66",
+    "src/engine/fractals/renderer.ts": "cc419eecbf72122af367b439a7313b17d9838620993a04c153203d9553a7b0ee",
+    "src/test/document-v3-envelope-v2.test.ts": "77be797a89110605cb8beb903990b495bbb3ffb4938d1c32e4b1853d76cd9908",
+    "src/test/published-formula-library.test.tsx": "55818ec69aa1bddc76b1a0487d41e51d89220c532603bc3eec97415f98f9e8e3",
+    "src/test/published-formula-runtime.test.ts": "9a73e8475c08b6a3456087603b24c56a3a638f0925eafc4a32b795b5aaec3a35",
+    "src/test/published-formula-selection.test.ts": "58ed4f43dfcee1e21804c83fce259877c3f5b68515279c58dae0b82a24a9d2da",
+    "src/test/fractal-renderer-race.test.ts": "4a5ec916fc3f064e9112f13594201b1a8e1bc2e19133a6c7cddb600e4263f6fe",
+    "scripts/measure-standard-library-performance.ts": "fd6f461d2ae4ddf549e42044a0465005b3cc413178c54e9be3de9703786dae14",
+    "scripts/verify-standard-library-performance.ts": "3296d06423a98204801d348cacd60cd24bf679fe629ca18e5700abce502136e5",
+    "tests/e2e/formula-switch.spec.ts": "dd7aae81a8c694361efa333dc5a2a07107e0df528a4e3f6a34128742ed2b7491",
+    "package.json": "7c3120d7cc25b1b13dd78738493629a930a23bf6fe33c37430b8b92c5bf7cac8",
+    "package-lock.json": "e0b2fc48bafca283ed7a9c76dc821859d448632681d83af4882bdcf280ea1045"
+  },
+  "command": "npx vitest run src/test/published-formula-selection.test.ts",
+  "result": {
+    "status": "pass",
+    "exitCode": 0,
+    "testFiles": [
+      "src/test/published-formula-selection.test.ts"
+    ],
+    "tests": 6
+  }
+}

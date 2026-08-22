@@ -36,6 +36,7 @@ export class FractalRenderer {
   private vbo: WebGLBuffer | null = null;
   private unsubscribeFromFormulaEvents: (() => void) | null = null;
   private formulaPlugin: FormulaPlugin | undefined;
+  private renderGeneration = 0;
 
   constructor(gl: WebGLRenderingContext, options: FractalRendererOptions = {}) {
     this.gl = gl;
@@ -120,7 +121,8 @@ export class FractalRenderer {
     }
   }
 
-  async render(params: FractalParams): Promise<void> {
+  async render(params: FractalParams): Promise<boolean> {
+    const generation = ++this.renderGeneration;
     const combo: PluginCombination = {
       formulaId: params.formula,
       outsideColoringId: params.outsideColoring,
@@ -136,6 +138,8 @@ export class FractalRenderer {
       const source = assembleShader(combo, this.formulaPlugin);
       compiled = await this.cache.compileWithMetrics(key, source, combo.formulaId);
     }
+
+    if (generation !== this.renderGeneration) return false;
 
     this.currentProgram = compiled.program;
     this.currentUniforms = compiled.uniforms;
@@ -217,6 +221,7 @@ export class FractalRenderer {
 
     gl.viewport(0, 0, gl.canvas.width, gl.canvas.height);
     gl.drawArrays(gl.TRIANGLES, 0, 6);
+    return true;
   }
 
   updateParams(): void {
@@ -226,6 +231,7 @@ export class FractalRenderer {
   }
 
   dispose(): void {
+    this.renderGeneration += 1;
     this.unsubscribeFromFormulaEvents?.();
     this.unsubscribeFromFormulaEvents = null;
     this.cache.dispose();

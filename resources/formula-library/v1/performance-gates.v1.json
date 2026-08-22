@@ -1,0 +1,60 @@
+{
+  "schema": "fractalpark-standard-library-performance-gates/v1",
+  "decisionRevision": 3,
+  "publicationDecisionsContentHash": "7106736785e8bbb7cc310056f93f550413b6a0b76ad21e648b50e55480a2a52c",
+  "counts": {
+    "decisions": 677,
+    "published": 513,
+    "held": 164,
+    "excluded": 0,
+    "initialLibraryRows": 48
+  },
+  "measurementContract": {
+    "libraryOpenSamples": 20,
+    "libraryHeapDeltaSamples": 20,
+    "previewDecodeSamples": 20,
+    "coldSelectionSamples": 20,
+    "hotSelectionSamples": 30,
+    "facetPaintSamples": 50,
+    "percentile": 95,
+    "requiredTuple": [
+      "sourceBindings",
+      "environment",
+      "samples"
+    ]
+  },
+  "budgets": {
+    "staticAssets": {
+      "publishedIndexBytes": 850000,
+      "publishedManifestBytes": 1024,
+      "definitionsTotalBytes": 200000,
+      "definitionMaxBytes": 1024,
+      "previewManifestBytes": 300000,
+      "previewsTotalBytes": 1800000,
+      "previewMaxBytes": 10000
+    },
+    "browser": {
+      "libraryOpenP95Ms": 1000,
+      "libraryDialogDescendants": 256,
+      "libraryHeapDeltaP95Bytes": 4194304,
+      "publishedIndexTransferBytes": 100000,
+      "facetPaintP95Ms": 250,
+      "previewDecodeP95Ms": 250,
+      "coldSelectionToCorrectFrameP95Ms": 2000,
+      "hotSelectionToCorrectFrameP95Ms": 750
+    },
+    "build": {
+      "wallMs": 240000,
+      "maxRssBytes": 3221225472,
+      "generatedPages": 804
+    }
+  },
+  "releaseDevices": [
+    "desktop-chromium-real-gpu",
+    "desktop-firefox-real-gpu",
+    "iphone-safari-touch",
+    "ipad-safari-touch",
+    "android-chrome-touch",
+    "screen-reader-keyboard"
+  ]
+}

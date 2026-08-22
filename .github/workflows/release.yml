@@ -13,6 +13,21 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
+      - name: Check out release tag
+        uses: actions/checkout@v4
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+
+      - name: Install locked dependencies
+        run: npm ci
+
+      - name: Enforce standard-library release evidence
+        run: npm run formula:performance:release
+
       - name: Create GitHub Release
         env:
           GH_TOKEN: ${{ github.token }}

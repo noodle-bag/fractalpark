@@ -1,0 +1,385 @@
+{
+  "schema": "fractalpark-standard-library-performance-evidence/v1",
+  "sourceBindings": {
+    ".github/workflows/ci.yml": "fff66a7036f32510e8d1499a41f1cd5c14bb02ae964f3227274f48ef1165bd2e",
+    ".github/workflows/release.yml": "ff51e04ef7e0815da853d99c1e20834993bf7d1e15447a74ec75c238561c5c47",
+    "resources/formula-library/v1/performance-gates.v1.json": "374aceeeeb1749d9aef8f4ce292823bfb2d627234bf772b652a7d6f1e0faf32b",
+    "resources/formula-library/v1/publication-decisions.json": "497415cebc958bf322f9726485e4ccbcfb6cb7e77c16e0f091653cbf6b5714a4",
+    "public/formula-library/v1/runtime/published/index.json": "1b27e129a102c0d64774bce7112be41de102028743cbcf440ba12bb45d906ff8",
+    "public/formula-library/v1/runtime/published/manifest.json": "61193773e0d68190ed5ceb817196afa046945c5b1cd2d740b1519246bb13f7ee",
+    "public/formula-library/v1/previews/manifest.json": "087c17099d6767811c4998cc9813a1da2ac5c92ea68229eb3e01869ef5ab2e10",
+    "src/components/fractal/FractalCanvas.tsx": "2b5058d3c034fad287a5d54c1c68c732608b599e75be678b001b79145be7a644",
+    "src/components/fractal/PublishedFormulaLibrary.tsx": "e06b9b96209710107ed1f1292112ad254d43e226387830d9dfd8e466997e2637",
+    "src/components/gallery/PresetThumbnail.tsx": "58978b33ad02deadc66694e076cafa8c07d057853ddf2e556c639e28f337d8e5",
+    "src/hooks/useFractalRenderer.ts": "c986ad0177d44dc87f2785c8415edfbceac9854f3eb54a87fce904f5a8f74521",
+    "src/lib/published-formula-library.ts": "fc76f5bf53280497383fd5f94197052f088fe98e22658edd29e6974be62cdbc1",
+    "src/lib/published-formula-selection.ts": "17fa926564bd5cb741fd33a840cf07d7667ebc12b7889c9e475327e6f456007a",
+    "src/engine/formulas/v1/published-runtime.ts": "498a90e5d62efcbfddc33ccb40e63d79ef157e20ab9f8817275b4ebd6a22ea66",
+    "src/engine/fractals/renderer.ts": "cc419eecbf72122af367b439a7313b17d9838620993a04c153203d9553a7b0ee",
+    "src/test/document-v3-envelope-v2.test.ts": "77be797a89110605cb8beb903990b495bbb3ffb4938d1c32e4b1853d76cd9908",
+    "src/test/published-formula-library.test.tsx": "55818ec69aa1bddc76b1a0487d41e51d89220c532603bc3eec97415f98f9e8e3",
+    "src/test/published-formula-runtime.test.ts": "9a73e8475c08b6a3456087603b24c56a3a638f0925eafc4a32b795b5aaec3a35",
+    "src/test/published-formula-selection.test.ts": "58ed4f43dfcee1e21804c83fce259877c3f5b68515279c58dae0b82a24a9d2da",
+    "src/test/fractal-renderer-race.test.ts": "4a5ec916fc3f064e9112f13594201b1a8e1bc2e19133a6c7cddb600e4263f6fe",
+    "scripts/measure-standard-library-performance.ts": "fd6f461d2ae4ddf549e42044a0465005b3cc413178c54e9be3de9703786dae14",
+    "scripts/verify-standard-library-performance.ts": "3296d06423a98204801d348cacd60cd24bf679fe629ca18e5700abce502136e5",
+    "tests/e2e/formula-switch.spec.ts": "dd7aae81a8c694361efa333dc5a2a07107e0df528a4e3f6a34128742ed2b7491",
+    "package.json": "7c3120d7cc25b1b13dd78738493629a930a23bf6fe33c37430b8b92c5bf7cac8",
+    "package-lock.json": "e0b2fc48bafca283ed7a9c76dc821859d448632681d83af4882bdcf280ea1045"
+  },
+  "browser": {
+    "environment": {
+      "browser": "chromium",
+      "browserVersion": "145.0.7632.6",
+      "deviceModel": "unattested",
+      "osVersion": "linux 6.8.0-63-generic",
+      "viewport": "1280x720",
+      "inputMethod": "mouse-keyboard",
+      "gpuVendor": "Google Inc. (Google)",
+      "renderer": "ANGLE (Google, Vulkan 1.3.0 (SwiftShader Device (Subzero) (0x0000C0DE)), SwiftShader driver)",
+      "physicalDevice": false,
+      "emulator": true,
+      "artifact": {
+        "path": "",
+        "sha256": ""
+      }
+    },
+    "coldSelectionSamples": [],
+    "hotSelectionSamples": [],
+    "facetPaintSamples": [],
+    "libraryOpenSamples": [],
+    "libraryHeapDeltaSamples": [],
+    "previewDecodeSamples": [],
+    "libraryDialogDescendants": 213,
+    "publishedIndexTransferBytes": 76758
+  },
+  "build": {
+    "wallMs": 120950,
+    "maxRssBytes": 1268031488,
+    "generatedPages": 804
+  },
+  "devices": [
+    {
+      "id": "desktop-chromium-real-gpu",
+      "status": "pending",
+      "environment": {
+        "deviceModel": "",
+        "osVersion": "",
+        "browserVersion": "",
+        "viewport": "",
+        "inputMethod": "mouse-keyboard",
+        "gpuVendor": "",
+        "renderer": "",
+        "physicalDevice": false,
+        "emulator": true,
+        "artifact": {
+          "path": "",
+          "sha256": ""
+        }
+      }
+    },
+    {
+      "id": "desktop-firefox-real-gpu",
+      "status": "pending",
+      "environment": {
+        "deviceModel": "",
+        "osVersion": "",
+        "browserVersion": "",
+        "viewport": "",
+        "inputMethod": "mouse-keyboard",
+        "gpuVendor": "",
+        "renderer": "",
+        "physicalDevice": false,
+        "emulator": true,
+        "artifact": {
+          "path": "",
+          "sha256": ""
+        }
+      }
+    },
+    {
+      "id": "iphone-safari-touch",
+      "status": "pending",
+      "environment": {
+        "deviceModel": "",
+        "osVersion": "",
+        "browserVersion": "",
+        "viewport": "",
+        "inputMethod": "touch",
+        "gpuVendor": "",
+        "renderer": "",
+        "physicalDevice": false,
+        "emulator": true,
+        "artifact": {
+          "path": "",
+          "sha256": ""
+        }
+      }
+    },
+    {
+      "id": "ipad-safari-touch",
+      "status": "pending",
+      "environment": {
+        "deviceModel": "",
+        "osVersion": "",
+        "browserVersion": "",
+        "viewport": "",
+        "inputMethod": "touch",
+        "gpuVendor": "",
+        "renderer": "",
+        "physicalDevice": false,
+        "emulator": true,
+        "artifact": {
+          "path": "",
+          "sha256": ""
+        }
+      }
+    },
+    {
+      "id": "android-chrome-touch",
+      "status": "pending",
+      "environment": {
+        "deviceModel": "",
+        "osVersion": "",
+        "browserVersion": "",
+        "viewport": "",
+        "inputMethod": "touch",
+        "gpuVendor": "",
+        "renderer": "",
+        "physicalDevice": false,
+        "emulator": true,
+        "artifact": {
+          "path": "",
+          "sha256": ""
+        }
+      }
+    },
+    {
+      "id": "screen-reader-keyboard",
+      "status": "pending",
+      "environment": {
+        "deviceModel": "",
+        "osVersion": "",
+        "browserVersion": "",
+        "viewport": "",
+        "inputMethod": "screen-reader-keyboard",
+        "gpuVendor": "",
+        "renderer": "",
+        "physicalDevice": false,
+        "emulator": true,
+        "artifact": {
+          "path": "",
+          "sha256": ""
+        }
+      }
+    }
+  ],
+  "accessibility": {
+    "status": "pending",
+    "evidence": "Automated component checks pass; manual screen-reader/device evidence is still required."
+  },
+  "rollbackDrill": {
+    "indexFailure": {
+      "status": "pass",
+      "artifact": {
+        "path": "resources/formula-library/v1/rollback-evidence/indexFailure.json",
+        "sha256": "85b212a28c81cb28496b65e92e468112360fa02524c31072666400f157cec920"
+      }
+    },
+    "definitionFailure": {
+      "status": "pass",
+      "artifact": {
+        "path": "resources/formula-library/v1/rollback-evidence/definitionFailure.json",
+        "sha256": "8487b8180f76a1d7c21cd1ae28be11e2b67f844599a8ed59bb279c40be426977"
+      }
+    },
+    "supersession": {
+      "status": "pass",
+      "artifact": {
+        "path": "resources/formula-library/v1/rollback-evidence/supersession.json",
+        "sha256": "bb031683f23907ce11c55a2911259366bd8a3c27a16232489e4d05dfed564304"
+      }
+    },
+    "hostileUrl": {
+      "status": "pass",
+      "artifact": {
+        "path": "resources/formula-library/v1/rollback-evidence/hostileUrl.json",
+        "sha256": "a28bb7b89a593f30b4d5e2985a83df199c8e54366601c21bdd7db29d9fc27d18"
+      }
+    },
+    "readerFeatureRollback": {
+      "status": "pass",
+      "artifact": {
+        "path": "resources/formula-library/v1/rollback-evidence/readerFeatureRollback.json",
+        "sha256": "2edac483784f37f3061331029675ae697ab2459fb6c8d3d072f58c4c4c461720"
+      }
+    }
+  },
+  "diagnostic": {
+    "schema": "fractalpark-standard-library-browser-measurement/v1",
+    "releaseQualifying": false,
+    "sourceBindings": {
+      "resources/formula-library/v1/performance-gates.v1.json": "49566690957e1073ec9d82e8af49d4403c02745d536f1360374a7f463e6615c5",
+      "resources/formula-library/v1/publication-decisions.json": "497415cebc958bf322f9726485e4ccbcfb6cb7e77c16e0f091653cbf6b5714a4",
+      "public/formula-library/v1/runtime/published/index.json": "1b27e129a102c0d64774bce7112be41de102028743cbcf440ba12bb45d906ff8",
+      "public/formula-library/v1/runtime/published/manifest.json": "61193773e0d68190ed5ceb817196afa046945c5b1cd2d740b1519246bb13f7ee",
+      "public/formula-library/v1/previews/manifest.json": "087c17099d6767811c4998cc9813a1da2ac5c92ea68229eb3e01869ef5ab2e10",
+      "src/components/fractal/FractalCanvas.tsx": "3b5947149a27b732fde1123310c0116b5da9fe21e807883abfe9a5e914ed5c38",
+      "src/components/fractal/PublishedFormulaLibrary.tsx": "e06b9b96209710107ed1f1292112ad254d43e226387830d9dfd8e466997e2637",
+      "src/hooks/useFractalRenderer.ts": "abd166c64e81cc3aed76320e8b8f508212237574a6cdd98dcd43b67ac8786307",
+      "src/lib/published-formula-library.ts": "fc76f5bf53280497383fd5f94197052f088fe98e22658edd29e6974be62cdbc1",
+      "src/lib/published-formula-selection.ts": "17fa926564bd5cb741fd33a840cf07d7667ebc12b7889c9e475327e6f456007a",
+      "src/engine/formulas/v1/published-runtime.ts": "498a90e5d62efcbfddc33ccb40e63d79ef157e20ab9f8817275b4ebd6a22ea66",
+      "src/engine/fractals/renderer.ts": "d70410761a53a01495da5bd43975fdf0282e6fad899b0058ce3dda9e7a09e498",
+      "scripts/measure-standard-library-performance.ts": "a81312fcab3f068817e62a3634a92e06df78c43df6833c8cde66ddc7a0a497d1",
+      "scripts/verify-standard-library-performance.ts": "55f36d68a729dcff5ce23b328cfd9814be1a1e5da6da6ac3d076dca030d643ea",
+      "tests/e2e/formula-switch.spec.ts": "76c7e423fc3791d3aeeb1116a59c0d1762f05d0e86e8fb5c6437ecf0357b5927",
+      "package.json": "7c3120d7cc25b1b13dd78738493629a930a23bf6fe33c37430b8b92c5bf7cac8",
+      "package-lock.json": "e0b2fc48bafca283ed7a9c76dc821859d448632681d83af4882bdcf280ea1045"
+    },
+    "environment": {
+      "browser": "145.0.7632.6",
+      "os": "linux 6.8.0-63-generic",
+      "cpu": "Intel(R) Xeon(R) Platinum",
+      "viewport": "1280x720@1",
+      "cacheMode": "normal browser cache; unique formulas for cold samples",
+      "webgl": {
+        "vendor": "Google Inc. (Google)",
+        "renderer": "ANGLE (Google, Vulkan 1.3.0 (SwiftShader Device (Subzero) (0x0000C0DE)), SwiftShader driver)"
+      },
+      "realGpu": false
+    },
+    "samples": {
+      "libraryOpenSamples": [
+        470.7000000476837,
+        227.19999980926514,
+        285.2000000476837,
+        236.39999985694885,
+        4863.200000047684,
+        209.59999990463257,
+        225.20000004768372,
+        288.90000009536743,
+        4371.400000095367,
+        252.70000004768372,
+        223.5,
+        276,
+        253.5,
+        295.39999985694885,
+        240.20000004768372,
+        209.90000009536743,
+        209.89999985694885,
+        322.2000000476837,
+        253.79999995231628,
+        225.79999995231628
+      ],
+      "libraryHeapDeltaSamples": [
+        1668084,
+        380830,
+        331411,
+        280886,
+        278339,
+        217137,
+        285947,
+        291778,
+        309641,
+        257130,
+        357963,
+        226077,
+        220929,
+        253501,
+        217105,
+        289454,
+        286194,
+        211257,
+        235685,
+        319403
+      ],
+      "facetPaintSamples": [
+        158.79999995231628,
+        138.20000004768372,
+        168.79999995231628,
+        110.20000004768372,
+        128.70000004768372,
+        75.69999980926514,
+        82.19999980926514,
+        89.20000004768372,
+        109.10000014305115,
+        82.19999980926514,
+        118.40000009536743,
+        80.09999990463257,
+        85.29999995231628,
+        86.09999990463257,
+        80.79999995231628,
+        85,
+        81.59999990463257,
+        86.5,
+        119.09999990463257,
+        103.59999990463257,
+        86.29999995231628,
+        84.10000014305115,
+        77.5,
+        85,
+        80.90000009536743,
+        80.60000014305115,
+        122.70000004768372,
+        82.40000009536743,
+        116.79999995231628,
+        99.20000004768372,
+        83.5,
+        87.40000009536743,
+        111.09999990463257,
+        88.09999990463257,
+        118.59999990463257,
+        83.29999995231628,
+        87.5,
+        87.70000004768372,
+        121.40000009536743,
+        91.29999995231628,
+        83,
+        84.5,
+        90.20000004768372,
+        86.20000004768372,
+        85,
+        77.60000014305115,
+        109.09999990463257,
+        138.39999985694885,
+        111.89999985694885,
+        100.90000009536743
+      ],
+      "coldSelectionSamples": [],
+      "hotSelectionSamples": [],
+      "previewDecodeSamples": [
+        1.6999998092651367,
+        0.5,
+        0.2999999523162842,
+        0.39999985694885254,
+        0.5999999046325684,
+        0.3000001907348633,
+        0.39999985694885254,
+        0.5999999046325684,
+        2.700000047683716,
+        0.3000001907348633,
+        0.2999999523162842,
+        0.5,
+        0.39999985694885254,
+        0.2999999523162842,
+        0.40000009536743164,
+        0.5,
+        0.19999980926513672,
+        0.2999999523162842,
+        0.2999999523162842,
+        0.39999985694885254
+      ],
+      "libraryDialogDescendants": 213,
+      "publishedIndexTransferBytes": 76758
+    },
+    "p95": {
+      "libraryOpenMs": 4371.400000095367,
+      "libraryHeapDeltaBytes": 380830,
+      "facetPaintMs": 138.39999985694885,
+      "coldSelectionToCorrectFrameMs": null,
+      "hotSelectionToCorrectFrameMs": null,
+      "previewDecodeMs": 1.6999998092651367
+    }
+  }
+}
