@@ -19,6 +19,7 @@ import {
 import { hashFrmLikeV1, parseFrmLikeV1 } from "@/engine/frm/v1";
 import {
   hashProfileRevisionV1,
+  PUBLICATION_DECISION_LEDGER_V1,
   type FormulaDefinitionV1,
   type FormulaIdV1,
   type FormulaProfileV1,
@@ -51,6 +52,40 @@ async function definition(): Promise<FormulaDefinitionV1> {
     formulaId: SOURCE_ID,
     scope: "mine",
     source: SOURCE,
+    sourceRevision: hashes.sourceRevision as FormulaRevisionV1,
+    semanticHash: hashes.semanticHash as FormulaRevisionV1,
+    languageVersion: "frm-like/1",
+    stdlibVersion: 1,
+    supportedNumericProfiles: ["standard32"],
+    parameters: parsed.ir.parameters,
+    programModel: "orbit",
+    termination: {
+      predicateMeaning: "continue-iteration",
+      nonFinite: "terminate-with-event",
+      maximumIterations: "profile-resolved",
+    },
+    channels: [],
+    capabilities: [],
+  };
+}
+
+async function heldStandardDefinition(): Promise<FormulaDefinitionV1> {
+  const held = PUBLICATION_DECISION_LEDGER_V1.rows.find(
+    (row) => row.rightsStatus === "gpl-3.0-only",
+  );
+  if (!held) throw new Error("missing-gpl-held-fixture");
+  const source = SOURCE.replace(
+    "Portable",
+    `Formula_${held.formulaId.replaceAll("-", "_")}`,
+  );
+  const parsed = parseFrmLikeV1(source);
+  if (!parsed.ok) throw new Error(parsed.reason);
+  const hashes = await hashFrmLikeV1(source, parsed.ir);
+  return {
+    schemaVersion: 1,
+    formulaId: held.formulaId,
+    scope: "standard",
+    source,
     sourceRevision: hashes.sourceRevision as FormulaRevisionV1,
     semanticHash: hashes.semanticHash as FormulaRevisionV1,
     languageVersion: "frm-like/1",
@@ -139,6 +174,59 @@ describe("formula portable writer, Import, Remix, and draft lifecycle v1", () =>
         assets: [],
       }),
     ).toEqual({ ok: false, code: "writer-disabled" });
+  });
+
+  it("rejects every enabled portable writer for a held Standard formula", async () => {
+    const held = await heldStandardDefinition();
+    const heldProfile = await profile(held);
+    const work = {
+      ...documentV2Fixture,
+      schemaVersion: 3,
+      formula: {
+        ...documentV2Fixture.formula,
+        formulaId: held.formulaId,
+        juliaC: documentV2Fixture.formula.juliaC as [number, number],
+      },
+      formulaSnapshot: {
+        schemaVersion: 1,
+        formulaId: held.formulaId,
+        scope: "standard",
+        source: held.source,
+        sourceRevision: held.sourceRevision,
+        semanticHash: held.semanticHash,
+        languageVersion: "frm-like/1",
+        stdlibVersion: 1,
+        numericProfile: "standard32",
+        parameterSchema: held.parameters,
+        resolvedParameters: heldProfile.parameters,
+        mode: "parameter-plane",
+        iterations: documentV2Fixture.render.maxIterations,
+        termination: held.termination,
+        channels: [],
+        profileRevision: heldProfile.profileRevision,
+      },
+    } as unknown as FractalDocumentV3;
+
+    await expect(writeFrmFormulaV1(held, { enabled: true })).resolves.toEqual({
+      ok: false,
+      code: "formula-not-published",
+    });
+    await expect(
+      writeFractalFormulaV1(
+        { definition: held, profile: heldProfile },
+        { enabled: true },
+      ),
+    ).resolves.toEqual({ ok: false, code: "formula-not-published" });
+    await expect(writeFractalWorkV3(work, { enabled: true })).resolves.toEqual({
+      ok: false,
+      code: "formula-not-published",
+    });
+    await expect(
+      writeFractalWorkEnvelopeV2(
+        { envelopeVersion: 2, document: work, assets: [] },
+        { enabled: true },
+      ),
+    ).resolves.toEqual({ ok: false, code: "formula-not-published" });
   });
 
   it("writes deterministic canonical .frm and .fractal-formula.json only behind an explicit gate", async () => {

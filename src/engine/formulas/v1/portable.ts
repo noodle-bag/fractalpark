@@ -29,6 +29,7 @@ import {
   validateFormulaProfileAssetV1,
 } from "./assets";
 import { STANDARD_MANIFEST_INDEX_V1 } from "./standard-manifest";
+import { PUBLICATION_DECISION_LEDGER_V1 } from "./publication-decisions";
 import type {
   FormulaDefinitionV1,
   FormulaIdV1,
@@ -93,6 +94,7 @@ export type PortableV1Result<T> =
       ok: false;
       code:
         | "writer-disabled"
+        | "formula-not-published"
         | "invalid-format"
         | "definition-invalid"
         | "profile-invalid"
@@ -268,6 +270,16 @@ function writerEnabled(options?: Readonly<{ enabled?: boolean }>): boolean {
   return options?.enabled === true;
 }
 
+function formulaCanBePublishedPortableV1(
+  value: Readonly<{ scope: unknown; formulaId: unknown }>,
+): boolean {
+  if (value.scope !== "standard") return true;
+  return (
+    PUBLICATION_DECISION_LEDGER_V1.decisionFor(value.formulaId)
+      ?.publicationDecision === "publish"
+  );
+}
+
 function utf8Bytes(value: string): number {
   return new TextEncoder().encode(value).byteLength;
 }
@@ -278,6 +290,9 @@ export async function writeFrmFormulaV1(
 ): Promise<PortableV1Result<string>> {
   if (!writerEnabled(options)) return { ok: false, code: "writer-disabled" };
   const validated = await validatedDefinition(definition);
+  if (validated && !formulaCanBePublishedPortableV1(validated)) {
+    return { ok: false, code: "formula-not-published" };
+  }
   return validated
     ? { ok: true, value: validated.source }
     : { ok: false, code: "definition-invalid" };
@@ -294,6 +309,9 @@ export async function writeFractalFormulaV1(
   if (!writerEnabled(options)) return { ok: false, code: "writer-disabled" };
   const definition = await validatedDefinition(input.definition);
   if (!definition) return { ok: false, code: "definition-invalid" };
+  if (!formulaCanBePublishedPortableV1(definition)) {
+    return { ok: false, code: "formula-not-published" };
+  }
   const profile = await validatedProfile(input.profile, definition);
   if (input.profile !== undefined && !profile)
     return { ok: false, code: "profile-invalid" };
@@ -605,6 +623,12 @@ export async function writeFractalWorkV3(
 ): Promise<PortableV1Result<string>> {
   if (!writerEnabled(options)) return { ok: false, code: "writer-disabled" };
   const result = await readFractalDocumentV3(document);
+  if (
+    result.mode === "readable-v3" &&
+    !formulaCanBePublishedPortableV1(result.snapshot)
+  ) {
+    return { ok: false, code: "formula-not-published" };
+  }
   return result.mode === "readable-v3"
     ? { ok: true, value: canonicalJsonV1(result.document) }
     : { ok: false, code: "document-invalid" };
@@ -616,6 +640,12 @@ export async function writeFractalWorkEnvelopeV2(
 ): Promise<PortableV1Result<string>> {
   if (!writerEnabled(options)) return { ok: false, code: "writer-disabled" };
   const result = await readPortableFractalDocumentEnvelope(envelope);
+  if (
+    result.mode === "readable-v2" &&
+    !formulaCanBePublishedPortableV1(result.snapshot)
+  ) {
+    return { ok: false, code: "formula-not-published" };
+  }
   return result.mode === "readable-v2"
     ? { ok: true, value: canonicalJsonV1(result.envelope) }
     : { ok: false, code: "document-invalid" };

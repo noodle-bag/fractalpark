@@ -11,6 +11,7 @@ import {
   TEACHING_ANCHORS_RAW_V1,
   TEACHING_APPROVAL_PACKET_RAW_V1,
   TEACHING_APPROVAL_RAW_V1,
+  TEACHING_AUTHORITY_REBIND_RAW_V1,
   TEACHING_CONTENT_LOCALES_V1,
   TEACHING_CONTENT_REGISTRY_V1,
   TEACHING_LEDGER_RAW_V1,
@@ -27,7 +28,10 @@ import {
   filterTeachingAlternatesAtCommit20dV1,
   isTeachingPageIndexableAtCommit20dV1,
 } from '@/content/teaching/guide-route-policy';
-import { sha256HexSyncV1 } from '@/engine/formulas/v1/revisions';
+import {
+  canonicalJsonV1,
+  sha256HexSyncV1,
+} from '@/engine/formulas/v1/revisions';
 
 const assets: TeachingContentAssetsV1 = {
   selection: selectionAsset,
@@ -42,6 +46,8 @@ const assets: TeachingContentAssetsV1 = {
   approvalRaw: TEACHING_APPROVAL_RAW_V1,
   approvalPacket: JSON.parse(TEACHING_APPROVAL_PACKET_RAW_V1) as unknown,
   approvalPacketRaw: TEACHING_APPROVAL_PACKET_RAW_V1,
+  authorityRebind: JSON.parse(TEACHING_AUTHORITY_REBIND_RAW_V1) as unknown,
+  authorityRebindRaw: TEACHING_AUTHORITY_REBIND_RAW_V1,
   registry: TEACHING_CONTENT_REGISTRY_V1,
 };
 const formulaId = selectionAsset.rows[0].formulaId;
@@ -58,6 +64,7 @@ function resolve(
     ['ledger', 'ledgerRaw'],
     ['approval', 'approvalRaw'],
     ['approvalPacket', 'approvalPacketRaw'],
+    ['authorityRebind', 'authorityRebindRaw'],
   ] as const;
   for (const [parsedKey, rawKey] of pairs) {
     if (parsedKey in overrides && !(rawKey in overrides)) {
@@ -349,6 +356,18 @@ describe('teaching content loader v1', () => {
       ...TEACHING_CONTENT_REGISTRY_V1,
     } as Record<string, unknown>;
     delete missingLocaleRegistry.zh;
+    const tamperedRebind = JSON.parse(
+      TEACHING_AUTHORITY_REBIND_RAW_V1,
+    ) as { invariants: { selectionRowsChanged: boolean } };
+    tamperedRebind.invariants.selectionRowsChanged = true;
+    const coordinatedSelection = structuredClone(selectionAsset);
+    coordinatedSelection.rows[0].selectionRationale += ' coordinated tamper';
+    const coordinatedRebind = JSON.parse(
+      TEACHING_AUTHORITY_REBIND_RAW_V1,
+    ) as { selectionRowsCanonicalSha256: string };
+    coordinatedRebind.selectionRowsCanonicalSha256 = sha256HexSyncV1(
+      canonicalJsonV1(coordinatedSelection.rows, 131_072),
+    );
     const cases: Partial<TeachingContentAssetsV1>[] = [
       { selection: duplicatedSelection },
       { selectionRaw: `${TEACHING_SELECTION_RAW_V1}\n` },
@@ -363,6 +382,11 @@ describe('teaching content loader v1', () => {
       { runtimeIndex: duplicateParameters },
       { anchors: mutatedAnchor },
       { runtimeIndex: mutatedRuntime },
+      { authorityRebind: tamperedRebind },
+      {
+        selection: coordinatedSelection,
+        authorityRebind: coordinatedRebind,
+      },
       {
         registry:
           missingLocaleRegistry as unknown as TeachingContentAssetsV1['registry'],

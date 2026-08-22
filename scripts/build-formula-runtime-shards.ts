@@ -22,7 +22,7 @@ import { writePublicAsset } from "./generate-formula-publication-decisions";
  */
 
 const EXPECTED_RELEASE_MANIFEST_HASH: string =
-  "0dc2a95de29e939987db5cedc84685c6b5a027d2ae24db780c95a3f3d5ea849f";
+  "3c484949cb290a214ece2e6845812b2dc00f496888c4c43025b41598dec13205";
 const DECISION_REVISION = 3;
 const SHARD_SIZE = 64;
 const SCHEMA = "fractalpark-formula-library-runtime-shard/v1";

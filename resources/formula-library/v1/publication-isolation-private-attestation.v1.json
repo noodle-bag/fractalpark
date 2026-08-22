@@ -1,0 +1,47 @@
+{
+  "schema": "fractalpark-formula-publication-isolation-private-attestation/v1",
+  "version": 1,
+  "decisionRevision": 3,
+  "contractContentHash": "0c3022542a592eb00107aa3f8bf8884213c9fbe1f9b749359922f72340ba622d",
+  "publicAuthority": {
+    "decisionContentHash": "7106736785e8bbb7cc310056f93f550413b6a0b76ad21e648b50e55480a2a52c",
+    "publishedIndexCanonicalSha256": "c10faceaa52356d2e48042f64010cd0f3f170c0087b5d609a01ede360a7c874c",
+    "identitySetSha256": "77f396783c66d4efd32d27f0dc85d646b9d3ef263490b007e7ab44d602dece7d",
+    "publishedSetSha256": "71b99b01e955a80cc41f04f04ac146ecee762a8e5561b84a67ac1de38cedc710",
+    "heldSetSha256": "968e87141f7b7f76b0a149e8a5cd53e625db57abb4b30c0a4ad17a2bdf8ecf46",
+    "gplHeldSetSha256": "f40564220d587e15de24fad8c98db22b26eb93aa76e6e2181e78fec058b01db8",
+    "cleanRoomSetSha256": "4563a59e95c00a6b86fddfb0c06fc04ba5133d49ff0391250f38c87c9ebaf558",
+    "cleanRoomPublishedSetSha256": "2bb00ca182e7ae05c609c9da1341c6ecb34092a1118587fae556b2a4c048b5fb",
+    "cleanRoomHeldSetSha256": "72776e6c7d5e34e9d29c3cf23fe5f577d4b958ac63f8b8e0de8abbdbdcd0f3b8"
+  },
+  "counts": {
+    "formulaIdentities": 677,
+    "published": 513,
+    "held": 164,
+    "excluded": 0,
+    "gplHeld": 73,
+    "cleanRoomPublished": 339,
+    "cleanRoomHeld": 39
+  },
+  "privateEvidence": {
+    "status": "verified",
+    "verificationMode": "fixed-authority+archived-inputs+transcripts+outputs",
+    "handoffSha256": "eab565d342febbea6f3d6a7ad8dff7f359ed726a5b9abe7f4bb892f3ebf92d2c",
+    "privateSourceSetSha256": "1aa691c7338c99bc5d80af7d4a0d09a73acabb46eb23c26de73547aa524ed9ef",
+    "privateLocatorSetSha256": "b3d0c9c40e020d1a5730c45e30f2a6013ec93f50333ab5e14478e08b83a3ca1b",
+    "evidenceArtifactSha256": "74882a9334ee3b8f11f9d64302dc4f772d7d3610a662297cf69954f9f2165959",
+    "cleanRoomReceipts": 339,
+    "bulkReceipts": 331,
+    "bulkInputSpecDrift": 26,
+    "pilotReceipts": 8,
+    "privateSources": 369,
+    "privateLocators": 16,
+    "inputSpecDriftPolicy": "archived-implementer-input-and-final-acceptance-byte-verification-required"
+  },
+  "releasePolicy": {
+    "attestationRequired": true,
+    "privateEvidenceOnPublicRunner": false,
+    "buildOutputScanRequired": true
+  },
+  "contentHash": "031a257fc83078e3b3a182c8ef246cbd4864e65f07077ed574e19537ec05458f"
+}

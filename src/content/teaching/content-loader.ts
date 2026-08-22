@@ -2,6 +2,7 @@ import {
   TEACHING_ANCHORS_RAW_V1,
   TEACHING_APPROVAL_PACKET_RAW_V1,
   TEACHING_APPROVAL_RAW_V1,
+  TEACHING_AUTHORITY_REBIND_RAW_V1,
   TEACHING_CONTENT_LOCALES_V1,
   TEACHING_CONTENT_REGISTRY_V1,
   TEACHING_LEDGER_RAW_V1,
@@ -27,6 +28,11 @@ import {
 } from '@/engine/formulas/v1/revisions';
 
 type JsonRecord = Record<string, unknown>;
+
+const APPROVED_TEACHING_SELECTION_ROWS_SHA256 =
+  '36b4e813c39362651f21794273ef40c2c85dd5c697f05f594690859ebcb1fca9';
+const APPROVED_TEACHING_SEMANTIC_ANCHOR_ROWS_SHA256 =
+  '67d9b351024c2e70adca7293348315fc0b1514a3e3dfde36ac904fd4d3da32d2';
 
 export interface EnglishTeachingContentV1 extends JsonRecord {
   readonly schema: 'fractalpark-teaching-en-fact/v1';
@@ -103,6 +109,8 @@ export interface TeachingContentAssetsV1 {
   readonly approvalRaw: string;
   readonly approvalPacket: unknown;
   readonly approvalPacketRaw: string;
+  readonly authorityRebind: unknown;
+  readonly authorityRebindRaw: string;
   readonly registry: TeachingContentRegistryV1;
 }
 
@@ -198,9 +206,155 @@ interface ApprovalAuthorityV1 {
   readonly approvedAt: string;
 }
 
+function validateAuthorityRebind(
+  rebindValue: unknown,
+  selectionValue: unknown,
+  anchorsValue: unknown,
+  selectionSha256: string,
+  anchorsSha256: string,
+  approvalSha256: string,
+  packetSha256: string,
+): Readonly<{
+  priorSelectionSha256: string;
+  priorAnchorsSha256: string;
+}> | undefined {
+  if (!record(rebindValue) || !record(selectionValue) || !record(anchorsValue)) {
+    return undefined;
+  }
+  const pins = record(selectionValue.pins) ? selectionValue.pins : undefined;
+  const changedPins = record(rebindValue.changedPins)
+    ? rebindValue.changedPins
+    : undefined;
+  const bytePin = changedPins && record(changedPins.runtimeIndexSha256)
+    ? changedPins.runtimeIndexSha256
+    : undefined;
+  const canonicalPin =
+    changedPins && record(changedPins.runtimeIndexCanonicalSha256)
+      ? changedPins.runtimeIndexCanonicalSha256
+      : undefined;
+  const invariants = record(rebindValue.invariants)
+    ? rebindValue.invariants
+    : undefined;
+  const scope = record(rebindValue.scope) ? rebindValue.scope : undefined;
+  const selectionRows = Array.isArray(selectionValue.rows)
+    ? selectionValue.rows
+    : undefined;
+  const anchorRows = Array.isArray(anchorsValue.rows)
+    ? anchorsValue.rows
+    : undefined;
+  const selectionRowsSha256 = selectionRows
+    ? sha256HexSyncV1(canonicalJsonV1(selectionRows, 131_072))
+    : undefined;
+  const anchorRowsSha256 = anchorRows
+    ? sha256HexSyncV1(canonicalJsonV1(anchorRows, 2_000_000))
+    : undefined;
+  if (
+    !exactKeys(rebindValue, [
+      'schema',
+      'status',
+      'approvedAt',
+      'actorId',
+      'actorKind',
+      'actorRole',
+      'maintainerResponse',
+      'approvalStatement',
+      'priorApprovalSha256',
+      'priorApprovalPacketSha256',
+      'priorSelectionSha256',
+      'reboundSelectionSha256',
+      'selectionRowsCanonicalSha256',
+      'priorSemanticAnchorsSha256',
+      'reboundSemanticAnchorsSha256',
+      'semanticAnchorRowsCanonicalSha256',
+      'changedPins',
+      'invariants',
+      'scope',
+    ]) ||
+    rebindValue.schema !==
+      'fractalpark-teaching-maintainer-authority-rebind/v1' ||
+    rebindValue.status !== 'maintainer-approved' ||
+    typeof rebindValue.approvedAt !== 'string' ||
+    !Number.isFinite(Date.parse(rebindValue.approvedAt)) ||
+    rebindValue.actorId !== 'fractalpark-maintainer' ||
+    rebindValue.actorKind !== 'human-maintainer' ||
+    rebindValue.actorRole !== 'maintainer' ||
+    rebindValue.maintainerResponse !==
+      '批准这次仅限派生哈希的 authority rebind（建议）' ||
+    rebindValue.priorApprovalSha256 !== approvalSha256 ||
+    rebindValue.priorApprovalPacketSha256 !== packetSha256 ||
+    rebindValue.reboundSelectionSha256 !== selectionSha256 ||
+    typeof rebindValue.priorSelectionSha256 !== 'string' ||
+    !/^[a-f0-9]{64}$/.test(rebindValue.priorSelectionSha256) ||
+    !selectionRows ||
+    rebindValue.selectionRowsCanonicalSha256 !==
+      APPROVED_TEACHING_SELECTION_ROWS_SHA256 ||
+    selectionRowsSha256 !== APPROVED_TEACHING_SELECTION_ROWS_SHA256 ||
+    typeof rebindValue.priorSemanticAnchorsSha256 !== 'string' ||
+    !/^[a-f0-9]{64}$/.test(rebindValue.priorSemanticAnchorsSha256) ||
+    rebindValue.reboundSemanticAnchorsSha256 !== anchorsSha256 ||
+    !anchorRows ||
+    rebindValue.semanticAnchorRowsCanonicalSha256 !==
+      APPROVED_TEACHING_SEMANTIC_ANCHOR_ROWS_SHA256 ||
+    anchorRowsSha256 !== APPROVED_TEACHING_SEMANTIC_ANCHOR_ROWS_SHA256 ||
+    !pins ||
+    !bytePin ||
+    !canonicalPin ||
+    !exactKeys(bytePin, ['before', 'after']) ||
+    !exactKeys(canonicalPin, ['before', 'after']) ||
+    bytePin.before !==
+      '1b27e129a102c0d64774bce7112be41de102028743cbcf440ba12bb45d906ff8' ||
+    bytePin.after !== pins.runtimeIndexSha256 ||
+    canonicalPin.before !==
+      '1c543581ce6569d9c43e1e9505020dc51088f51e54cb3f2fa9e814b020bb710f' ||
+    canonicalPin.after !== pins.runtimeIndexCanonicalSha256 ||
+    !invariants ||
+    !exactKeys(invariants, [
+      'formulaCount',
+      'contentUnitCount',
+      'localeCount',
+      'selectionRowsChanged',
+      'semanticAnchorRowsChanged',
+      'teachingContentChanged',
+      'publicationCountsChanged',
+      'publishedCount',
+      'heldCount',
+    ]) ||
+    invariants.formulaCount !== 50 ||
+    invariants.contentUnitCount !== 350 ||
+    invariants.localeCount !== 7 ||
+    invariants.selectionRowsChanged !== false ||
+    invariants.semanticAnchorRowsChanged !== false ||
+    invariants.teachingContentChanged !== false ||
+    invariants.publicationCountsChanged !== false ||
+    invariants.publishedCount !== 513 ||
+    invariants.heldCount !== 164 ||
+    !scope ||
+    !Array.isArray(scope.allows) ||
+    !scope.allows.includes(
+      'rebind the unchanged 50-row teaching selection and semantic-anchor rows to the recorded runtime index hashes',
+    ) ||
+    !Array.isArray(scope.doesNotAllow) ||
+    !scope.doesNotAllow.includes(
+      'modify teaching content, selection rows, or semantic-anchor rows',
+    ) ||
+    !scope.doesNotAllow.includes('change formula publication decisions') ||
+    !scope.doesNotAllow.includes('merge or auto-merge') ||
+    !scope.doesNotAllow.includes('deploy or promote Production')
+  ) {
+    return undefined;
+  }
+  return {
+    priorSelectionSha256: rebindValue.priorSelectionSha256,
+    priorAnchorsSha256: rebindValue.priorSemanticAnchorsSha256,
+  };
+}
+
 function validateApprovalAuthority(
   approvalValue: unknown,
   packetValue: unknown,
+  rebindValue: unknown,
+  selectionValue: unknown,
+  anchorsValue: unknown,
   expectedFormulaIds: readonly string[],
   selectionSha256: string,
   anchorsSha256: string,
@@ -208,6 +362,16 @@ function validateApprovalAuthority(
   approvalSha256: string,
 ): ApprovalAuthorityV1 | undefined {
   if (!record(approvalValue) || !record(packetValue)) return undefined;
+  const rebind = validateAuthorityRebind(
+    rebindValue,
+    selectionValue,
+    anchorsValue,
+    selectionSha256,
+    anchorsSha256,
+    approvalSha256,
+    packetSha256,
+  );
+  if (!rebind) return undefined;
   const scope = record(approvalValue.scope) ? approvalValue.scope : undefined;
   const packetScope = record(packetValue.approvalScope)
     ? packetValue.approvalScope
@@ -240,8 +404,8 @@ function validateApprovalAuthority(
     approvalValue.actorRole !== 'maintainer' ||
     approvalValue.maintainerResponse !== '同意' ||
     approvalValue.approvalPacketSha256 !== packetSha256 ||
-    approvalValue.selectionSha256 !== selectionSha256 ||
-    approvalValue.semanticAnchorsSha256 !== anchorsSha256 ||
+    approvalValue.selectionSha256 !== rebind.priorSelectionSha256 ||
+    approvalValue.semanticAnchorsSha256 !== rebind.priorAnchorsSha256 ||
     !scope ||
     !Array.isArray(scope.allows) ||
     !scope.allows.includes(
@@ -253,8 +417,8 @@ function validateApprovalAuthority(
     packetValue.schema !==
       'fractalpark-teaching-maintainer-approval-packet/v1' ||
     packetValue.status !== 'maintainer-pending' ||
-    packetValue.selectionSha256 !== selectionSha256 ||
-    packetValue.semanticAnchorsSha256 !== anchorsSha256 ||
+    packetValue.selectionSha256 !== rebind.priorSelectionSha256 ||
+    packetValue.semanticAnchorsSha256 !== rebind.priorAnchorsSha256 ||
     packetValue.formulaCount !== 50 ||
     packetValue.localeCount !== 7 ||
     packetValue.contentUnitCount !== 350 ||
@@ -376,7 +540,8 @@ function buildGlobalContextUnchecked(
     !rawAuthorityMatches(assets.runtimeIndexRaw, assets.runtimeIndex) ||
     !rawAuthorityMatches(assets.ledgerRaw, assets.ledger) ||
     !rawAuthorityMatches(assets.approvalRaw, assets.approval) ||
-    !rawAuthorityMatches(assets.approvalPacketRaw, assets.approvalPacket)
+    !rawAuthorityMatches(assets.approvalPacketRaw, assets.approvalPacket) ||
+    !rawAuthorityMatches(assets.authorityRebindRaw, assets.authorityRebind)
   ) {
     return undefined;
   }
@@ -405,6 +570,9 @@ function buildGlobalContextUnchecked(
   const approval = validateApprovalAuthority(
     assets.approval,
     assets.approvalPacket,
+    assets.authorityRebind,
+    assets.selection,
+    assets.anchors,
     expectedIds,
     selectionSha256,
     anchorsSha256,
@@ -825,6 +993,8 @@ const PRODUCTION_ASSETS_V1: TeachingContentAssetsV1 = deepFreeze({
   approvalRaw: TEACHING_APPROVAL_RAW_V1,
   approvalPacket: JSON.parse(TEACHING_APPROVAL_PACKET_RAW_V1) as unknown,
   approvalPacketRaw: TEACHING_APPROVAL_PACKET_RAW_V1,
+  authorityRebind: JSON.parse(TEACHING_AUTHORITY_REBIND_RAW_V1) as unknown,
+  authorityRebindRaw: TEACHING_AUTHORITY_REBIND_RAW_V1,
   registry: TEACHING_CONTENT_REGISTRY_V1,
 });
 

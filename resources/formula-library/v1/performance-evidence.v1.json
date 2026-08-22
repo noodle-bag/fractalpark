@@ -1,20 +1,20 @@
 {
   "schema": "fractalpark-standard-library-performance-evidence/v1",
   "sourceBindings": {
-    ".github/workflows/ci.yml": "5bd10a906ad160983c5d98509f97864c172d83a3ebf63ba8405dadf3e89356c6",
-    ".github/workflows/release.yml": "3283b3fc2250f6e04fb4ceff5a022c09dbddcb45b270dbe80dc043f9173074b4",
+    ".github/workflows/ci.yml": "bcd3e351958be384caa3e0794a5d051bd81dc82e310c0939355460585b439d98",
+    ".github/workflows/release.yml": "6354abab49c801abc88589f61d02d90f794ba267513dfee30e39e7722aa17114",
     "resources/formula-library/v1/performance-gates.v1.json": "18a14e8d5cf9b63e8dd5be9d045fdad81ddd030761a19a001dcd99dfb1f278b8",
     "resources/formula-library/v1/publication-decisions.json": "497415cebc958bf322f9726485e4ccbcfb6cb7e77c16e0f091653cbf6b5714a4",
-    "public/formula-library/v1/runtime/published/index.json": "1b27e129a102c0d64774bce7112be41de102028743cbcf440ba12bb45d906ff8",
-    "public/formula-library/v1/runtime/published/manifest.json": "61193773e0d68190ed5ceb817196afa046945c5b1cd2d740b1519246bb13f7ee",
-    "public/formula-library/v1/previews/manifest.json": "087c17099d6767811c4998cc9813a1da2ac5c92ea68229eb3e01869ef5ab2e10",
+    "public/formula-library/v1/runtime/published/index.json": "9a4774f2dfb8ebb31e80abf3a0efe7b330d1a4627fb38317bdcf069560fa9ddf",
+    "public/formula-library/v1/runtime/published/manifest.json": "1364f17696055b75ab05efccebaa12a30d462965d30523244ff842ce340f869e",
+    "public/formula-library/v1/previews/manifest.json": "56051141beaf14fff6a4059d5e690e2db57e24d7651adc63d4e0afb417d00f69",
     "src/components/fractal/FractalCanvas.tsx": "2b5058d3c034fad287a5d54c1c68c732608b599e75be678b001b79145be7a644",
     "src/components/fractal/PublishedFormulaLibrary.tsx": "0987f264c7b57b42cf9fb0e1b9e2130706b8dba1276e7a673c92c036b5053c7d",
     "src/components/gallery/PresetThumbnail.tsx": "58978b33ad02deadc66694e076cafa8c07d057853ddf2e556c639e28f337d8e5",
     "src/hooks/useFractalRenderer.ts": "c986ad0177d44dc87f2785c8415edfbceac9854f3eb54a87fce904f5a8f74521",
     "src/lib/published-formula-library.ts": "fc76f5bf53280497383fd5f94197052f088fe98e22658edd29e6974be62cdbc1",
     "src/lib/published-formula-selection.ts": "17fa926564bd5cb741fd33a840cf07d7667ebc12b7889c9e475327e6f456007a",
-    "src/engine/formulas/v1/published-runtime.ts": "498a90e5d62efcbfddc33ccb40e63d79ef157e20ab9f8817275b4ebd6a22ea66",
+    "src/engine/formulas/v1/published-runtime.ts": "100c2d5c841ea59919af8e4b569abe0d10d5b47e1839bcf41708129ff3879583",
     "src/engine/formulas/v1/native-recipes.ts": "efedd3f0704d1ac780344414eb4d84d69f984d51d994dafc3af6deca221939e1",
     "src/engine/formulas/v1/native-recipes-b94-classic.ts": "75d23141106a86d27a57019e1ef8a79a13cd43c91b8306ba15ccbd803495c77e",
     "src/engine/formulas/v1/native-recipes-b94-clamps.ts": "b88f9e45cbd37c7bb88ba825544ba12d6a5b4f35bc143d7057ab2609fb806033",
@@ -23,7 +23,7 @@
     "src/engine/formulas/v1/native-recipes-b94-transcendental.ts": "1404989c7e4f703873015876288b0d64ff306ba1144edc8e9c62a1fa19ecdcb5",
     "src/engine/fractals/renderer.ts": "cc419eecbf72122af367b439a7313b17d9838620993a04c153203d9553a7b0ee",
     "src/test/document-v3-envelope-v2.test.ts": "77be797a89110605cb8beb903990b495bbb3ffb4938d1c32e4b1853d76cd9908",
-    "src/test/formula-portable-lifecycle-v1.test.ts": "e40b6d57eb687b51ebd93bb6feceef258835c897b21496139a3d163732d5a70a",
+    "src/test/formula-portable-lifecycle-v1.test.ts": "6ec2cea16d0fafc30afe327d80de91f5840b40bfe123019645b2495c3728f379",
     "src/test/formula-publication-decisions.test.ts": "750e4603cf8aac29f05b011f0e85d5d3c598500668ebbf2e4e71de2dd260cdf8",
     "src/test/formula-resolver.test.ts": "9ebc1a5151f64ebed38974d234389f075e11d272f3d991e7cee29ce9a9e3a39c",
     "src/test/published-formula-library.test.tsx": "77b6ade59c9d3927e7dfee383be9662dee60ddc957a0bfeaa2417739f689adca",
@@ -33,7 +33,7 @@
     "scripts/measure-standard-library-performance.ts": "64fbbba1ce2c87560690e697d8b8e26446f56d3f85a96ac115405c38795f787d",
     "scripts/verify-standard-library-performance.ts": "f2e5b39df04dbafa85d5f8721f9b942180ba7cdab68a7029d81db4ef85c88630",
     "tests/e2e/formula-switch.spec.ts": "b6583f101d88e9e85371b4fafa583e07667e4090b09161088fd5f7c5cebd78a0",
-    "package.json": "b54de89254861fa609ff944f565df93527d7493f952112f413d089f9ae819553",
+    "package.json": "ed10de287f5e9e3a864e6016e73b655d55b2573e5bc8d94c3fabf0cd2ecd1b70",
     "package-lock.json": "e0b2fc48bafca283ed7a9c76dc821859d448632681d83af4882bdcf280ea1045"
   },
   "browser": {
@@ -69,8 +69,8 @@
     "hotFormulaAssetRequests": 0
   },
   "build": {
-    "wallMs": 123700,
-    "maxRssBytes": 1403346944,
+    "wallMs": 120550,
+    "maxRssBytes": 1421393920,
     "generatedPages": 804
   },
   "devices": [
@@ -89,7 +89,10 @@
         "renderer": "",
         "physicalDevice": false,
         "emulator": true,
-        "artifact": { "path": "", "sha256": "" }
+        "artifact": {
+          "path": "",
+          "sha256": ""
+        }
       }
     },
     {
@@ -107,7 +110,10 @@
         "renderer": "",
         "physicalDevice": false,
         "emulator": true,
-        "artifact": { "path": "", "sha256": "" }
+        "artifact": {
+          "path": "",
+          "sha256": ""
+        }
       }
     },
     {
@@ -125,7 +131,10 @@
         "renderer": "",
         "physicalDevice": false,
         "emulator": true,
-        "artifact": { "path": "", "sha256": "" }
+        "artifact": {
+          "path": "",
+          "sha256": ""
+        }
       }
     },
     {
@@ -143,7 +152,10 @@
         "renderer": "",
         "physicalDevice": false,
         "emulator": true,
-        "artifact": { "path": "", "sha256": "" }
+        "artifact": {
+          "path": "",
+          "sha256": ""
+        }
       }
     },
     {
@@ -161,7 +173,10 @@
         "renderer": "",
         "physicalDevice": false,
         "emulator": true,
-        "artifact": { "path": "", "sha256": "" }
+        "artifact": {
+          "path": "",
+          "sha256": ""
+        }
       }
     },
     {
@@ -179,53 +194,62 @@
         "renderer": "",
         "physicalDevice": false,
         "emulator": true,
-        "artifact": { "path": "", "sha256": "" }
+        "artifact": {
+          "path": "",
+          "sha256": ""
+        }
       }
     }
   ],
   "accessibility": {
     "status": "pending",
-    "artifact": { "path": "", "sha256": "" }
+    "artifact": {
+      "path": "",
+      "sha256": ""
+    }
   },
   "rollbackDrill": {
     "writerOff": {
       "status": "pass",
       "artifact": {
         "path": "resources/formula-library/v1/rollback-evidence/writerOff.json",
-        "sha256": "ff1f1c63c8a62291b28d6e22b406a3014cbf9d43db4a03ad8be01e587dcaa81e"
+        "sha256": "560aaa79a90335ad1d8c62df800235c821e6282efcf543acf8e20d060be2179e"
       }
     },
     "featureOff": {
       "status": "pass",
       "artifact": {
         "path": "resources/formula-library/v1/rollback-evidence/featureOff.json",
-        "sha256": "b9115ac46ebf93102bd2a929efc89977f21463ce5262ff7b8cc94ac36f475d77"
+        "sha256": "1c00c4bdd7cd991379bced8a0ecf34fd792c2ef7f89a173fea37cdfa61981c73"
       }
     },
     "lkgRuntime": {
       "status": "pass",
       "artifact": {
         "path": "resources/formula-library/v1/rollback-evidence/lkgRuntime.json",
-        "sha256": "5f834c5e99a47aa03b35651f0658f88305f01803516eab47e070c818ca3ba368"
+        "sha256": "8e0e692061a43617de7e34a174062baa0664aa0ce8ac4cfdbff4e44a9df1f804"
       }
     },
     "readerFloor": {
       "status": "pass",
       "artifact": {
         "path": "resources/formula-library/v1/rollback-evidence/readerFloor.json",
-        "sha256": "b6a82b14b55399e1ad3fcb451ffb79be84bb9a2f52db603ec3cc13292ca63717"
+        "sha256": "f1fe479e9379727d90021ec1c8d46b53727ae3cbe6a33fbbf1a5f69feed63f7a"
       }
     },
     "aliasResolver": {
       "status": "pass",
       "artifact": {
         "path": "resources/formula-library/v1/rollback-evidence/aliasResolver.json",
-        "sha256": "dcf234bdf535dce5413e18c34eadb19219e34fa5b54877262973ea0fd4445c28"
+        "sha256": "6b89a839593f5e239279334561fbf6bfad801927aeddd5e953c759a0ea447b4b"
       }
     },
     "deployedPreview": {
       "status": "pending",
-      "artifact": { "path": "", "sha256": "" }
+      "artifact": {
+        "path": "",
+        "sha256": ""
+      }
     }
   }
 }

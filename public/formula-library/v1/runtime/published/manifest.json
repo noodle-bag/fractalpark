@@ -5,12 +5,12 @@
   "rowCount": 513,
   "definitionCount": 513,
   "indexFile": "index.json",
-  "indexSha256": "1b27e129a102c0d64774bce7112be41de102028743cbcf440ba12bb45d906ff8",
-  "indexCanonicalSha256": "1c543581ce6569d9c43e1e9505020dc51088f51e54cb3f2fa9e814b020bb710f",
+  "indexSha256": "9a4774f2dfb8ebb31e80abf3a0efe7b330d1a4627fb38317bdcf069560fa9ddf",
+  "indexCanonicalSha256": "c10faceaa52356d2e48042f64010cd0f3f170c0087b5d609a01ede360a7c874c",
   "sourceManifests": [
     {
       "runtimeRevision": 3,
-      "sha256": "f30e655504c14edb63582cbdb08d715771feddb9a4e911db84f8847bd99cde5b",
+      "sha256": "4dfc5627a18fe11fc2b6227caf0b3034d279d67c97d10a622629f8e718eafafe",
       "rowCount": 339,
       "shardCount": 6
     },

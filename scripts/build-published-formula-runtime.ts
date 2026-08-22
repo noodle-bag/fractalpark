@@ -42,7 +42,7 @@ const WRITE = process.argv.includes("--write");
 const EXPECTED_DECISION_CONTENT_HASH =
   "7106736785e8bbb7cc310056f93f550413b6a0b76ad21e648b50e55480a2a52c";
 const EXPECTED_RUNTIME_MANIFEST_HASHES = Object.freeze({
-  rev3: "f30e655504c14edb63582cbdb08d715771feddb9a4e911db84f8847bd99cde5b",
+  rev3: "4dfc5627a18fe11fc2b6227caf0b3034d279d67c97d10a622629f8e718eafafe",
   rev4: "9b79915127e9704cf7da5256c5012ac307a5979b9fcfd9d07a661db791f78ebe",
 });
 

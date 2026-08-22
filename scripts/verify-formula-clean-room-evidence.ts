@@ -17,9 +17,11 @@ import { pathToFileURL } from "node:url";
 const EXPECTED_WORK_PACKAGE_HASH =
   "29d4501d05f712f154d11809414876f9625c5efa202885579080d61fa88633bd";
 const EXPECTED_LEDGER_HASH =
-  "0c494e773a918051e1efc398999de6b5ab684ac96af8cad7be0c0c2156aea545";
+  "fa7f6b35cd7e9d5afa77754755d3439ea949c7be2964024a4163a3874e9a5a37";
 const EXPECTED_PROVISIONAL_HASH =
   "66fb2b3ed825e8036c6d78c8b0ff0f008ca0a533046275ccff2e5c1524ad230f";
+const EXPECTED_PROVISIONAL_RUNNABLE_LEDGER_HASH =
+  "0c494e773a918051e1efc398999de6b5ab684ac96af8cad7be0c0c2156aea545";
 const WORK_PACKAGE_START =
   "<!-- BEGIN STANDARD_MIGRATION_WORK_PACKAGES_JSON -->";
 const CONTROLLER_VERSION = "formula-library-clean-room-evidence/1";
@@ -553,8 +555,8 @@ function assertLedgerRows(
       ledger.deterministic === true &&
       isRecord(ledger.summary) &&
       ledger.summary.total === 677 &&
-      ledger.summary.passed === 20 &&
-      ledger.summary.failed === 657 &&
+      ledger.summary.passed === 106 &&
+      ledger.summary.failed === 571 &&
       isDenseArray(ledger.rows) &&
       ledger.rows.length === 677,
   );
@@ -602,7 +604,8 @@ function assertNoProvisionalOverlap(
       manifest.deterministic === true &&
       manifest.publicationEligible === false &&
       manifest.verifiedDefaultProfiles === 0 &&
-      manifest.runnableLedgerContentHash === EXPECTED_LEDGER_HASH &&
+      manifest.runnableLedgerContentHash ===
+        EXPECTED_PROVISIONAL_RUNNABLE_LEDGER_HASH &&
       isRecord(manifest.summary) &&
       manifest.summary.accounted === 677 &&
       manifest.summary.presentableCandidates === 20 &&

@@ -1,0 +1,62 @@
+{
+  "schema": "fractalpark-formula-publication-isolation/v1",
+  "version": 1,
+  "decisionRevision": 3,
+  "counts": {
+    "formulaIdentities": 677,
+    "published": 513,
+    "held": 164,
+    "excluded": 0,
+    "gplHeld": 73,
+    "cleanRoomPublished": 339,
+    "cleanRoomHeld": 39,
+    "privateSourceRows": 369,
+    "sourceGapWaivers": 9
+  },
+  "publicBindings": {
+    "publicationDecisionsContentHash": "7106736785e8bbb7cc310056f93f550413b6a0b76ad21e648b50e55480a2a52c",
+    "publishedIndexCanonicalSha256": "c10faceaa52356d2e48042f64010cd0f3f170c0087b5d609a01ede360a7c874c"
+  },
+  "privateBindings": {
+    "releaseManifestSha256": "3c484949cb290a214ece2e6845812b2dc00f496888c4c43025b41598dec13205",
+    "finalCensusSha256": "518d2e5fbc7e47c08896dce90e852d416046ec663bdc19db4e14689dae98ccbf",
+    "privateSourceSetSha256": "1aa691c7338c99bc5d80af7d4a0d09a73acabb46eb23c26de73547aa524ed9ef",
+    "handoffSha256": "eab565d342febbea6f3d6a7ad8dff7f359ed726a5b9abe7f4bb892f3ebf92d2c",
+    "pilotReportSha256": "21f5c68fa2a10742b1ade81ac00e5871007eb93d2aa0d5be0857baef98412e25",
+    "aCensusContentHash": "fa7f6b35cd7e9d5afa77754755d3439ea949c7be2964024a4163a3874e9a5a37",
+    "b94HeldModuleSha256": "c997759a09303ac476fc876ab1b83360e6fc56c8e862b6f1a6ac87416b75260e",
+    "pilotMutationGateSha256": "fe6ad20612d7633c19a01280a803b2e4018e7c368e6251926ce03e67edb7d8ff",
+    "pilotOutputGateSha256": "eed915f3ec8550a8cf359f1cdf39772e17a6f77a4c75ab4f11e6f392d7581b5a",
+    "pilotSpecManifestSha256": "543bd8518d990be65b200b297ecb0cbbca9095c68a28460680934f2573ec072b",
+    "pilotInputManifestV1Sha256": "7b9a0f5ed7f5c3c4f412f3cdce6db51536b19280661f43c240c16e602c30c0d1",
+    "pilotInputManifestV2Sha256": "d0f6594166c748f095ad2f3b0f879b6d12f933c914511c5e71b145e43240f98c"
+  },
+  "forbiddenPublicKeys": [
+    "behaviorPayload",
+    "canonicalSource",
+    "credentialBinding",
+    "handoffEvidence",
+    "oraclePayload",
+    "originalSource",
+    "privateProvenanceEvidence",
+    "privateResolvedPath",
+    "rawPayload",
+    "safeSourceLocator",
+    "sourceLocator",
+    "transcriptRefs"
+  ],
+  "forbiddenPublicPathMarkers": [
+    ".formula-library-private",
+    "/obsidian/",
+    "/.hermes/data/",
+    "canonical-source migration work packages.md",
+    "clean-room-bulk-v1/private-sources"
+  ],
+  "buildRoots": [
+    ".next/server",
+    ".next/static",
+    ".next/standalone",
+    "out"
+  ],
+  "contentHash": "0c3022542a592eb00107aa3f8bf8884213c9fbe1f9b749359922f72340ba622d"
+}

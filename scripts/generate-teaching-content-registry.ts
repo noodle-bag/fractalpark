@@ -47,6 +47,10 @@ function buildRegistrySource(repositoryRoot: string): string {
       repositoryRoot,
       'resources/formula-library/v1/teaching-review-evidence/maintainer-approval-packet.v1.json',
     ),
+    authorityRebind: join(
+      repositoryRoot,
+      'resources/formula-library/v1/teaching-review-evidence/maintainer-authority-rebind.v1.json',
+    ),
   } as const;
   const authorityBytes = Object.fromEntries(
     Object.entries(authorityFiles).map(([key, path]) => [key, readFileSync(path)]),
@@ -86,6 +90,7 @@ function buildRegistrySource(repositoryRoot: string): string {
       ['LEDGER', 'ledger'],
       ['APPROVAL', 'approval'],
       ['APPROVAL_PACKET', 'approvalPacket'],
+      ['AUTHORITY_REBIND', 'authorityRebind'],
     ] as const
   ).flatMap(([constant, key]) => {
     const bytes = authorityBytes[key];

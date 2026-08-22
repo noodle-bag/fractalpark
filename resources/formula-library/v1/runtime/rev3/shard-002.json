@@ -9,8 +9,8 @@
       "displayName": "phoenix_j",
       "family": "orbit-memory",
       "implementationBasis": "separated-independent-rewrite",
-      "semanticHash": "e5ee054dc1c778ad070f1193353379b6e96542bc2132a125d9637a406a3d7d07",
-      "definition": "; @language: frm-like/1\n; @stdlib: 1\n; @numeric-profile: standard32\nFormula_5c699919_a5f7_5995_8673_53b7088d5b39 {\n  parameters:\n    feedback: complex = (0, 0) classic p1\n  init:\n    z = pixel\n    currentReal = real(pixel)\n    currentImaginary = imag(pixel)\n    priorReal = 0\n    priorImaginary = 0\n  loop:\n    realSquare = currentReal * currentReal\n    imaginarySquare = currentImaginary * currentImaginary\n    nextReal = realSquare - imaginarySquare + real(feedback) + imag(feedback) * priorReal\n    nextImaginary = 2 * currentReal * currentImaginary + imag(feedback) * priorImaginary\n    priorReal = currentReal\n    priorImaginary = currentImaginary\n    currentReal = nextReal\n    currentImaginary = nextImaginary\n    z = priorReal + priorImaginary\n  bailout:\n    LastSqr <= 16\n}\n"
+      "semanticHash": "8fef2360870878560354288ebcae403138d6d0b202d77fe46ee931c83b16daf8",
+      "definition": "; @language: frm-like/1\n; @stdlib: 1\n; @numeric-profile: standard32\nFormula_5c699919_a5f7_5995_8673_53b7088d5b39 {\n  parameters:\n    feedback: complex = (0, 0) classic p1\n  init:\n    horizontal = real(pixel)\n    vertical = imag(pixel)\n    previousHorizontal = 0\n    previousVertical = 0\n  loop:\n    horizontalSquare = horizontal * horizontal\n    verticalSquare = vertical * vertical\n    nextHorizontal = horizontalSquare - verticalSquare + real(feedback) + imag(feedback) * previousHorizontal\n    nextVertical = 2 * horizontal * vertical + imag(feedback) * previousVertical\n    previousHorizontal = horizontal\n    previousVertical = vertical\n    horizontal = nextHorizontal\n    vertical = nextVertical\n    z = previousHorizontal + previousVertical\n  bailout:\n    |z| <= 4\n}\n"
     },
     {
       "formulaId": "5e9ec92f-0bb6-5534-adf5-d7ddc7ff60c3",

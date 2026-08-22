@@ -2504,7 +2504,7 @@
     },
     {
       "formulaId": "5c699919-a5f7-5995-8673-53b7088d5b39",
-      "sourceRevision": "af5723a2ab7f5c1500a4631142f560195843e43d9d96198eea0ae242daa05800",
+      "sourceRevision": "e2fe774de10e244dfa92b94c980fee84dbec0ee5ff5305898c23e63f3b555443",
       "profileQuality": "mechanical",
       "file": "5c699919-a5f7-5995-8673-53b7088d5b39.png",
       "pngSha256": "0ad06bfd4dae4aba77a55c3a7190fbd31d13c6a4208a31da90712295d8a75663",
@@ -6599,5 +6599,5 @@
       "anomalies": []
     }
   ],
-  "manifestContentHash": "b702377d0e52af541820a4fb7cbed73dc854355d04415a0a3d00c53d7cfd0025"
+  "manifestContentHash": "34c1a73b820a7c48a6c710c12c911e597d9b881794df56b5100b3a66999c5bdb"
 }

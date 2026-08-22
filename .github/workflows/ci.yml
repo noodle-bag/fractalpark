@@ -18,5 +18,9 @@ jobs:
       - run: npm run lint
       - run: npm run test:run
       - run: npm run formula:performance:verify
+      - name: Verify formula publication isolation
+        run: npm run formula:rights:verify
       - run: npm run build
+      - name: Verify built formula publication isolation
+        run: npm run formula:rights:verify-build
       - run: npm run formula:performance:verify-build
