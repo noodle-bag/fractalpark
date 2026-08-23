@@ -6,7 +6,6 @@ import { beforeAll, describe, expect, it } from "vitest";
 
 import { hashFrmLikeV1, parseFrmLikeV1 } from "@/engine/frm/v1";
 import { NATIVE_RECIPE_HOLDS_V1 } from "@/engine/formulas/v1/native-recipes-b94-held";
-import { RECIPES as RECOVERED_TRANSCENDENTAL_RECIPES } from "@/engine/formulas/v1/native-recipes-b94-recovered-transcendental";
 import {
   NATIVE_FORMULA_RECIPES_V1,
   validateNativeRecipeV1,
@@ -143,7 +142,7 @@ describe("formula runtime revision 4 public assets", () => {
     expect(seen.size).toBe(174);
   });
 
-  it("keeps 68 public project-owned rows while 12 recovered recipes remain decision-held", async () => {
+  it("keeps 68 public project-owned rows while all 21 recovered recipes remain decision-held", async () => {
     const manifest = readJson(join(RUNTIME_DIR, "manifest.json"));
     if (!Array.isArray(manifest.shards)) throw new Error("test-manifest-invalid");
     const publicById = new Map<string, JsonRecord>();
@@ -174,16 +173,14 @@ describe("formula runtime revision 4 public assets", () => {
     const recipeById = new Map(
       NATIVE_FORMULA_RECIPES_V1.map((recipe) => [recipe.formulaId as string, recipe]),
     );
-    expect(recipeById.size).toBe(80);
+    expect(recipeById.size).toBe(89);
     const publicationHoldIds = new Set(
       NATIVE_RECIPE_HOLDS_V1.map((entry) => entry.recipe.formulaId as string),
     );
     expect(publicationHoldIds.size).toBe(21);
     expect(publicationHoldIds).toEqual(projectHeldIds);
-    const recoveredHeldIds = RECOVERED_TRANSCENDENTAL_RECIPES.map(
-      (recipe) => recipe.formulaId as string,
-    );
-    expect(recoveredHeldIds).toHaveLength(12);
+    const recoveredHeldIds = [...publicationHoldIds];
+    expect(recoveredHeldIds).toHaveLength(21);
     for (const formulaId of recoveredHeldIds) {
       expect(publicationHoldIds.has(formulaId)).toBe(true);
       expect(recipeById.has(formulaId)).toBe(true);

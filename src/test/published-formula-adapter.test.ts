@@ -5,9 +5,11 @@ import { join } from "node:path";
 import { beforeAll, describe, expect, it } from "vitest";
 
 import { compileClassicFrmEntry } from "@/engine/frm/compile";
+import { RECOVERED_AMPLIFIED_RECIPES_V1 } from "@/engine/formulas/v1/native-recipes-b94-held";
 import { compilePublishedFormulaPluginV1 } from "@/engine/formulas/v1/published-adapter";
 import { RECIPES as RECOVERED_TRANSCENDENTAL_RECIPES } from "@/engine/formulas/v1/native-recipes-b94-recovered-transcendental";
 import { registerBuiltins } from "@/engine/plugins/builtins";
+import { RECOVERED_AMPLIFIED_MATH_GLSL_V1 } from "@/engine/plugins/builtins/formulas/recoveredAmplifiedMath";
 import { RECOVERED_TRANSCENDENTAL_MATH_GLSL_V1 } from "@/engine/plugins/builtins/formulas/recoveredTranscendentalMath";
 import { pluginRegistry } from "@/engine/plugins/registry";
 import { assembleShader, makeCacheKey } from "@/engine/shaders/assembler";
@@ -122,12 +124,15 @@ describe("published formula candidate-C adapter", () => {
     );
   });
 
-  it("keeps 82 untouched builtins byte-identical and scopes recovery bytes to exact 12", () => {
+  it("keeps 73 untouched builtins byte-identical and scopes recovery bytes to exact 21", () => {
     const formulas = pluginRegistry
       .listFormulas()
       .sort((left, right) => left.id.localeCompare(right.id));
-    const recoveredIds = new Set(
+    const transcendentalIds = new Set(
       RECOVERED_TRANSCENDENTAL_RECIPES.map((recipe) => recipe.runtimeId),
+    );
+    const amplifiedIds = new Set(
+      RECOVERED_AMPLIFIED_RECIPES_V1.map((recipe) => recipe.runtimeId),
     );
     const summaries = formulas.map((formula) => {
         const source = assembleShader({
@@ -141,23 +146,37 @@ describe("published formula candidate-C adapter", () => {
       });
     expect(summaries).toHaveLength(94);
     const untouched = summaries.filter(
-      (summary) => !recoveredIds.has(summary.slice(0, summary.indexOf(":"))),
+      (summary) => {
+        const id = summary.slice(0, summary.indexOf(":"));
+        return !transcendentalIds.has(id) && !amplifiedIds.has(id);
+      },
     );
-    const recovered = summaries.filter((summary) =>
-      recoveredIds.has(summary.slice(0, summary.indexOf(":"))),
+    const transcendental = summaries.filter((summary) =>
+      transcendentalIds.has(summary.slice(0, summary.indexOf(":"))),
     );
-    expect(untouched).toHaveLength(82);
-    expect(recovered).toHaveLength(12);
+    const amplified = summaries.filter((summary) =>
+      amplifiedIds.has(summary.slice(0, summary.indexOf(":"))),
+    );
+    expect(untouched).toHaveLength(73);
+    expect(transcendental).toHaveLength(12);
+    expect(amplified).toHaveLength(9);
     expect(sha256(untouched.join("\n"))).toBe(
-      "b44c18b53146858bfaf7221008e1fe8a868afe961885cf154d103b8ae23f3e4c",
+      "17697b5caeb6ba9860dca3fc05b0b98f287f245722b4bba46bdcda17b76f53b0",
     );
-    expect(sha256(recovered.join("\n"))).toBe(
+    expect(sha256(transcendental.join("\n"))).toBe(
       "81f9175c0e23d5a67ca181b39a526d78fd9478797d2ccdcbe62bedb45792cb6a",
     );
-    for (const formula of formulas)
+    expect(sha256(amplified.join("\n"))).toBe(
+      "17f7029cb911a219712477ac79276a743465fa48ce664348983dcbd48bb25e1a",
+    );
+    for (const formula of formulas) {
       expect(formula.glsl.includes(RECOVERED_TRANSCENDENTAL_MATH_GLSL_V1)).toBe(
-        recoveredIds.has(formula.id),
+        transcendentalIds.has(formula.id),
       );
+      expect(formula.glsl.includes(RECOVERED_AMPLIFIED_MATH_GLSL_V1)).toBe(
+        amplifiedIds.has(formula.id),
+      );
+    }
 
     const classic = compileClassicFrmEntry(
       "FrozenClassic {\n\tz=0:\n\tz=z^2+c\n\t|z|<4\n}",

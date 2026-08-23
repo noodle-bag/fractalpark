@@ -37,7 +37,7 @@ describe("native recipe layer v1", () => {
   });
 
   it("validates every registered pilot recipe through the full v1 chain", async () => {
-    expect(NATIVE_FORMULA_RECIPES_V1.length).toBe(80);
+    expect(NATIVE_FORMULA_RECIPES_V1.length).toBe(89);
     for (const recipe of NATIVE_FORMULA_RECIPES_V1) {
       const result = await validateNativeRecipeV1(recipe);
       if (!result.ok) throw new Error(`${recipe.runtimeId}: ${result.reasonCode}`);
@@ -195,21 +195,53 @@ describe("native recipe holds", () => {
     expect(tinyRun.escapedAt).toBe(2);
   });
 
-  it("keeps publication holds canonical and overlaps only the exact recovery set", async () => {
+  it("recovers the exact 9-row amplified set without changing publication state", async () => {
+    const { RECOVERED_AMPLIFIED_RECIPES_V1 } = await import(
+      "@/engine/formulas/v1/native-recipes-b94-held"
+    );
+    expect(RECOVERED_AMPLIFIED_RECIPES_V1.map((recipe) => recipe.formulaId).sort()).toEqual([
+      "280cd3e2-865b-5c78-90b7-39b2a36d7be0",
+      "42b369a5-2873-50e9-8684-cad5e60630ff",
+      "465a5b03-469d-59b3-8564-45af7564e37a",
+      "46acfdeb-2dac-59c9-a94a-fd4809420dc2",
+      "a89891b1-8ccb-5d58-9fbb-05944b85ce3c",
+      "bb186688-4571-5725-a8ed-a17e0100dbc8",
+      "d747aff8-e49f-5875-a85f-89d4a1d25846",
+      "e375f423-dfa4-54bf-9d56-c41215f4f72a",
+      "ed671b4c-a04c-5545-ad0c-a73727761ce8",
+    ]);
+    expect(RECOVERED_AMPLIFIED_RECIPES_V1.map((recipe) => recipe.runtimeId).sort()).toEqual([
+      "airshipCubic",
+      "burningShipCubic",
+      "burningShipQuartic",
+      "cubicPerpendicularMandelbrot",
+      "mandelbox",
+      "multicorn5",
+      "newtonCosh",
+      "newtonExp",
+      "quarticPerpendicularMandelbrot",
+    ]);
+    expect(
+      RECOVERED_AMPLIFIED_RECIPES_V1.find((recipe) => recipe.runtimeId === "mandelbox")?.source,
+    ).toContain("round((mandelboxScale * z + c) * 16) / 16");
+    expect(
+      RECOVERED_AMPLIFIED_RECIPES_V1.find((recipe) => recipe.runtimeId === "newtonExp")?.source,
+    ).toContain("if real(z) > 20");
+    for (const recipe of RECOVERED_AMPLIFIED_RECIPES_V1) {
+      const result = await validateNativeRecipeV1(recipe);
+      if (!result.ok) throw new Error(`${recipe.runtimeId}: ${result.reasonCode}`);
+    }
+  });
+
+  it("keeps all 21 recovered recipes publication-held until the atomic gate", async () => {
     const { NATIVE_RECIPE_HOLDS_V1 } = await import(
       "@/engine/formulas/v1/native-recipes-b94-held"
     );
-    const { RECIPES: recovered } = await import(
-      "@/engine/formulas/v1/native-recipes-b94-recovered-transcendental"
-    );
     expect(NATIVE_RECIPE_HOLDS_V1.length).toBe(21);
     const accepted = new Set(NATIVE_FORMULA_RECIPES_V1.map((r) => r.runtimeId));
-    const recoveredIds = new Set(recovered.map((recipe) => recipe.formulaId));
     const classes = new Set<string>();
     for (const hold of NATIVE_RECIPE_HOLDS_V1) {
-      expect(accepted.has(hold.recipe.runtimeId)).toBe(
-        recoveredIds.has(hold.recipe.formulaId),
-      );
+      expect(accepted.has(hold.recipe.runtimeId)).toBe(true);
       classes.add(hold.holdClass);
       expect(hold.evidence.length).toBeGreaterThan(0);
       const result = await validateNativeRecipeV1(hold.recipe);

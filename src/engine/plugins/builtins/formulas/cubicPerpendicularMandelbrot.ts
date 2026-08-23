@@ -1,4 +1,5 @@
 import type { FormulaPlugin } from '../../types';
+import { RECOVERED_AMPLIFIED_MATH_GLSL_V1 } from './recoveredAmplifiedMath';
 
 export const cubicPerpendicularMandelbrotPlugin: FormulaPlugin = {
   id: 'cubicPerpendicularMandelbrot',
@@ -10,10 +11,11 @@ export const cubicPerpendicularMandelbrotPlugin: FormulaPlugin = {
   bailout: 65536.0,
   family: 'classic',
   uniforms: [],
-  glsl: `
+  glsl: `${RECOVERED_AMPLIFIED_MATH_GLSL_V1}
+
 vec2 iterateStep(vec2 z, vec2 c, vec2 zPrev, vec2 point) {
   vec2 p = vec2(abs(z.x), z.y);
-  return complexPow(p, 3.0) + c;
+  return recoveredAmplifiedIntegerPower(p, 3.0) + c;
 }
 `,
 };

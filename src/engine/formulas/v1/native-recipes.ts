@@ -23,6 +23,7 @@ import { resolveStandardAliasV1 } from "@/engine/formulas/v1/standard-manifest";
 import { RECIPES as B94_CLASSIC_RECIPES } from "./native-recipes-b94-classic";
 import { RECIPES as B94_TRANSCENDENTAL_RECIPES } from "./native-recipes-b94-transcendental";
 import { RECIPES as B94_RECOVERED_TRANSCENDENTAL_RECIPES } from "./native-recipes-b94-recovered-transcendental";
+import { RECOVERED_AMPLIFIED_RECIPES_V1 as B94_RECOVERED_AMPLIFIED_RECIPES } from "./native-recipes-b94-held";
 import { RECIPES as B94_CLAMP_RECIPES } from "./native-recipes-b94-clamps";
 import { RECIPES as B94_NEWTON_RECIPES } from "./native-recipes-b94-newton";
 
@@ -487,8 +488,9 @@ Formula_dd052c9f_868f_5516_9af0_3f4e78ac7a13 {
  * consistency, parse, canonical round-trip, Safety Envelope, backend compile,
  * fidelity audit, v1 CPU oracle, v1 WebGL parity, and the native WebGL
  * cross-check under the frozen shared contract. Rows whose translations are
- * structurally faithful but whose conformance evidence cannot close live in
- * native-recipes-b94-held.ts with their diagnosed hold class (12d scope).
+ * structurally faithful but remain publication-held live in
+ * native-recipes-b94-held.ts with their diagnosed hold class. Recovered rows
+ * can overlap this technical registry without changing publication state.
  */
 export const NATIVE_FORMULA_RECIPES_V1: readonly NativeFormulaRecipeV1[] =
   Object.freeze([
@@ -519,6 +521,7 @@ export const NATIVE_FORMULA_RECIPES_V1: readonly NativeFormulaRecipeV1[] =
     ...B94_CLASSIC_RECIPES,
     ...B94_TRANSCENDENTAL_RECIPES,
     ...B94_RECOVERED_TRANSCENDENTAL_RECIPES,
+    ...B94_RECOVERED_AMPLIFIED_RECIPES,
     ...B94_CLAMP_RECIPES,
     ...B94_NEWTON_RECIPES,
   ]);

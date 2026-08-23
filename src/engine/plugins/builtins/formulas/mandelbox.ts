@@ -1,4 +1,5 @@
 import type { FormulaPlugin } from '../../types';
+import { RECOVERED_AMPLIFIED_MATH_GLSL_V1 } from './recoveredAmplifiedMath';
 
 export const mandelboxPlugin: FormulaPlugin = {
   id: 'mandelbox',
@@ -20,14 +21,15 @@ export const mandelboxPlugin: FormulaPlugin = {
       label: 'explore.controls.mandelboxScale',
     },
   ],
-  glsl: `
+  glsl: `${RECOVERED_AMPLIFIED_MATH_GLSL_V1}
+
 vec2 iterateStep(vec2 z, vec2 c, vec2 zPrev, vec2 point) {
   // Mandelbox: box fold + ball fold + scale
   // Box fold
   z = clamp(z, -1.0, 1.0) * 2.0 - z;
   
   // Ball fold
-  float r2 = dot(z, z);
+  float r2 = z.x * z.x + z.y * z.y;
   if (r2 < 0.25) {
     z = z * 4.0;
   } else if (r2 < 1.0) {
@@ -35,7 +37,7 @@ vec2 iterateStep(vec2 z, vec2 c, vec2 zPrev, vec2 point) {
   }
   
   // Scale and add c
-  return u_mandelboxScale * z + c;
+  return recoveredAmplifiedQuantize(u_mandelboxScale * z + c, 16.0);
 }
 `,
 };

@@ -4,7 +4,7 @@
   "publicationEligible": false,
   "publicationDecisionMutation": false,
   "sourceBindings": {
-    "scripts/generate-transcendental-recovery-evidence.ts": "976e2e14fdb37c83a3d587c6cd59289bd193d128d14ba1bc10d059ddace0fdcd",
+    "scripts/generate-transcendental-recovery-evidence.ts": "8961406f10b783de7f629932092a7abe7d730fbb0ce5464753c3119a5f9ba871",
     "src/engine/formulas/v1/native-recipes-b94-recovered-transcendental.ts": "61fc575963d4ffce71c38f921e1d2e16272a1fd689dba1201275f31f14ebe51e",
     "src/engine/formulas/v1/provisional-profile.ts": "9ccfccfb24b5abe991d95f9ad6561e0d01499bdd95955b7a3e9a07d7c31abfe4",
     "src/engine/formulas/v1/provisional-preview.ts": "6f018547e3d111aea53f72fa66bdf15a995c9490649237a4aee7fbadc5d648ee",
@@ -15,7 +15,7 @@
     "src/engine/plugins/builtins/formulas/recoveredTranscendentalMath.ts": "46ee77aa60652c81b6a379ce423dac9a8d7a5d8d2771cae307e60fe34d3c96e4",
     "src/engine/plugins/formula-catalog.ts": "14570ae82c6f1e659f7a4cfcc2318997df5080f981070c409e808cbd57bd58c2",
     "scripts/formula-library-bulk-migration.ts": "b625fdeae5a1778f279478be9317406a89655af381edd97f4ee8ccef415c5d1d",
-    "resources/formula-library/v1/recovery-evidence/transcendental-v1/cross-check.json": "f6d8a404b26cd5f0cc5c3b3f7000e58c89cc3d08f936e7b061711422ab53cc28"
+    "resources/formula-library/v1/recovery-evidence/transcendental-v1/cross-check.json": "534218c7710be0ffb83ac2ce3a1d8eb0524e87d7e3c1f57186c0edaf1d24027f"
   },
   "row": {
     "formulaId": "3edbea29-956a-5900-9aa7-02ccc2183016",
@@ -98,5 +98,5 @@
       "anomalies": []
     }
   },
-  "contentHash": "70c2686b1e32d0ff0d25136d25cf1f013438b6e6d2b3149fdc2e09583b12d9a4"
+  "contentHash": "1d48ce338839c9be7181f364d4a020d5cfea657e51feb794d763304096b2b3d9"
 }

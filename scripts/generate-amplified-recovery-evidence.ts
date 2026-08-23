@@ -7,7 +7,8 @@ import { promisify } from "node:util";
 import { canonicalizeFrmLikeV1, parseFrmLikeV1 } from "../src/engine/frm/v1";
 import { compileFrmLikeV1Backend } from "../src/engine/frm/v1-backend";
 import { validateFormulaProfileAssetV1 } from "../src/engine/formulas/v1/assets";
-import { RECIPES } from "../src/engine/formulas/v1/native-recipes-b94-recovered-transcendental";
+import { NATIVE_RECIPE_HOLDS_V1 } from "../src/engine/formulas/v1/native-recipes-b94-held";
+import { RECIPES } from "../src/engine/formulas/v1/native-recipes-b94-recovered-amplified";
 import { validateNativeRecipeV1 } from "../src/engine/formulas/v1/native-recipes";
 import { renderProvisionalPreviewV1 } from "../src/engine/formulas/v1/provisional-preview";
 import { projectProvisionalProfileV1 } from "../src/engine/formulas/v1/provisional-profile";
@@ -20,56 +21,57 @@ import { encodeDeterministicPng } from "./formula-library-bulk-migration";
 type JsonRecord = Record<string, unknown>;
 
 const root = process.cwd();
-const outputRelative = "resources/formula-library/v1/recovery-evidence/transcendental-v1";
+const outputRelative = "resources/formula-library/v1/recovery-evidence/amplified-v1";
 const outputDirectory = join(root, outputRelative);
 const crossCheckRelative = `${outputRelative}/cross-check.json`;
 const manifestRelative = `${outputRelative}/manifest.json`;
+const priorBatchManifestRelative =
+  "resources/formula-library/v1/recovery-evidence/transcendental-v1/manifest.json";
 const WIDTH = 96;
 const HEIGHT = 60;
 const execFileAsync = promisify(execFile);
 const PROFILE_VIEW_OVERRIDES: Readonly<
   Record<string, { centerX: number; centerY: number; zoom: number; rotation: number }>
 > = Object.freeze({
-  cosJulia: Object.freeze({ centerX: 0, centerY: 0.5, zoom: 0.25, rotation: 0 }),
-  coshJulia: Object.freeze({ centerX: 0, centerY: 0.5, zoom: 0.35, rotation: 0 }),
-  collatz: Object.freeze({ centerX: 1, centerY: 0, zoom: 10, rotation: 0 }),
-  newton6: Object.freeze({ centerX: 0.5, centerY: 0.866, zoom: 1, rotation: 0 }),
+  newtonExp: Object.freeze({ centerX: 0, centerY: Math.PI, zoom: 2, rotation: 0 }),
 });
+const RECOVERED_RUNTIME_PATHS = Object.freeze([
+  "src/engine/plugins/builtins/formulas/airshipCubic.ts",
+  "src/engine/plugins/builtins/formulas/burningShipCubic.ts",
+  "src/engine/plugins/builtins/formulas/burningShipQuartic.ts",
+  "src/engine/plugins/builtins/formulas/cubicPerpendicularMandelbrot.ts",
+  "src/engine/plugins/builtins/formulas/mandelbox.ts",
+  "src/engine/plugins/builtins/formulas/multicorn5.ts",
+  "src/engine/plugins/builtins/formulas/newtonCosh.ts",
+  "src/engine/plugins/builtins/formulas/newtonExp.ts",
+  "src/engine/plugins/builtins/formulas/quarticPerpendicularMandelbrot.ts",
+]);
 const CROSS_CHECK_SOURCE_PATHS = Object.freeze([
   "resources/formula-library/v1/publication-decisions.json",
   "scripts/cross-check-native-recipes.ts",
   "scripts/formula-library-bulk-migration.ts",
   "src/engine/formulas/v1/native-recipes-b94-held.ts",
-  "src/engine/formulas/v1/native-recipes-b94-recovered-transcendental.ts",
+  "src/engine/formulas/v1/native-recipes-b94-recovered-amplified.ts",
   "src/engine/formulas/v1/native-recipes.ts",
   "src/engine/frm/frm-v1-glsl-prelude.ts",
   "src/engine/frm/frm-v1-stdlib.ts",
   "src/engine/frm/v1-backend.ts",
-  "src/engine/plugins/builtins/formulas/collatz.ts",
-  "src/engine/plugins/builtins/formulas/cosJulia.ts",
-  "src/engine/plugins/builtins/formulas/cosMandelb.ts",
-  "src/engine/plugins/builtins/formulas/coshJulia.ts",
-  "src/engine/plugins/builtins/formulas/coshMandelb.ts",
-  "src/engine/plugins/builtins/formulas/coshSinh.ts",
-  "src/engine/plugins/builtins/formulas/expMandelbrot.ts",
-  "src/engine/plugins/builtins/formulas/newton6.ts",
-  "src/engine/plugins/builtins/formulas/recoveredTranscendentalMath.ts",
-  "src/engine/plugins/builtins/formulas/sineMandelb.ts",
-  "src/engine/plugins/builtins/formulas/sinhMandelb.ts",
-  "src/engine/plugins/builtins/formulas/tetration.ts",
-  "src/engine/plugins/builtins/formulas/zaslavskyMap.ts",
+  "src/engine/plugins/builtins/formulas/recoveredAmplifiedMath.ts",
+  ...RECOVERED_RUNTIME_PATHS,
   "src/engine/shaders/complex-math.glsl",
 ]);
 const RECEIPT_SOURCE_PATHS = Object.freeze([
-  "scripts/generate-transcendental-recovery-evidence.ts",
-  "src/engine/formulas/v1/native-recipes-b94-recovered-transcendental.ts",
+  "scripts/generate-amplified-recovery-evidence.ts",
+  "src/engine/formulas/v1/native-recipes-b94-recovered-amplified.ts",
+  "src/engine/formulas/v1/native-recipes-b94-held.ts",
   "src/engine/formulas/v1/provisional-profile.ts",
   "src/engine/formulas/v1/provisional-preview.ts",
   "src/engine/frm/frm-v1-stdlib.ts",
   "src/engine/frm/v1-backend.ts",
   "src/engine/frm/frm-v1-glsl-prelude.ts",
   "src/engine/shaders/complex-math.glsl",
-  "src/engine/plugins/builtins/formulas/recoveredTranscendentalMath.ts",
+  "src/engine/plugins/builtins/formulas/recoveredAmplifiedMath.ts",
+  ...RECOVERED_RUNTIME_PATHS,
   "src/engine/plugins/formula-catalog.ts",
   "scripts/formula-library-bulk-migration.ts",
   crossCheckRelative,
@@ -92,7 +94,7 @@ function canonicalJson(value: unknown): string {
   )
     return JSON.stringify(value);
   if (Array.isArray(value)) return `[${value.map(canonicalJson).join(",")}]`;
-  invariant(isRecord(value), "transcendental-evidence-canonical-json-invalid");
+  invariant(isRecord(value), "amplified-evidence-canonical-json-invalid");
   return `{${Object.keys(value)
     .sort()
     .map((key) => `${JSON.stringify(key)}:${canonicalJson(value[key])}`)
@@ -105,7 +107,7 @@ function sha256(value: string | Buffer | Uint8Array): string {
 
 function readJson(relativePath: string): JsonRecord {
   const value = JSON.parse(readFileSync(join(root, relativePath), "utf8")) as unknown;
-  invariant(isRecord(value), "transcendental-evidence-json-invalid");
+  invariant(isRecord(value), "amplified-evidence-json-invalid");
   return value;
 }
 
@@ -127,25 +129,25 @@ function verifyBindings(bindings: unknown, code: string): void {
 function verifyCrossCheckReceipt(): JsonRecord {
   const receipt = readJson(crossCheckRelative);
   invariant(
-    receipt.schema === "fractalpark-b94-transcendental-cross-check/v1" &&
+    receipt.schema === "fractalpark-b94-amplified-cross-check/v1" &&
       receipt.publicationEligible === false &&
       receipt.publicationDecisionMutation === false &&
       isRecord(receipt.result),
-    "transcendental-evidence-cross-check-invalid",
+    "amplified-evidence-cross-check-invalid",
   );
   verifyBindings(
     receipt.sourceBindings,
-    "transcendental-evidence-cross-check-binding-invalid",
+    "amplified-evidence-cross-check-binding-invalid",
   );
   const result = receipt.result;
   invariant(
     result.ok === true &&
-      result.recipes === 12 &&
-      result.passed === 12 &&
+      result.recipes === 9 &&
+      result.passed === 9 &&
       result.failed === 0 &&
       Array.isArray(result.rows) &&
-      result.rows.length === 12,
-    "transcendental-evidence-cross-check-not-green",
+      result.rows.length === 9,
+    "amplified-evidence-cross-check-not-green",
   );
   return receipt;
 }
@@ -155,7 +157,7 @@ function crossCheckRows(receipt: JsonRecord): Map<string, JsonRecord> {
   for (const row of (receipt.result as JsonRecord).rows as unknown[]) {
     invariant(
       isRecord(row) && typeof row.formulaId === "string",
-      "transcendental-evidence-cross-check-row-invalid",
+      "amplified-evidence-cross-check-row-invalid",
     );
     rows.set(row.formulaId, row);
   }
@@ -164,7 +166,7 @@ function crossCheckRows(receipt: JsonRecord): Map<string, JsonRecord> {
 
 function verifyPublicationIsolation(): void {
   const decisions = readJson("resources/formula-library/v1/publication-decisions.json");
-  invariant(Array.isArray(decisions.rows), "transcendental-evidence-decisions-invalid");
+  invariant(Array.isArray(decisions.rows), "amplified-evidence-decisions-invalid");
   const held = new Set(
     decisions.rows
       .filter(
@@ -172,17 +174,72 @@ function verifyPublicationIsolation(): void {
           isRecord(row) &&
           row.rightsStatus === "project-owned" &&
           row.publicationDecision === "hold" &&
-          row.decisionReason === "held-b94-swiftshader-transcendental",
+          (row.decisionReason === "held-b94-chaotic-amplification" ||
+            row.decisionReason === "held-b94-ill-conditioned-cancellation"),
       )
       .map((row) => String(row.formulaId)),
   );
   const formulaIds = new Set(RECIPES.map((recipe) => recipe.formulaId as string));
   invariant(
-    held.size === 12 &&
-      formulaIds.size === 12 &&
+    held.size === 9 &&
+      formulaIds.size === 9 &&
       [...formulaIds].every((formulaId) => held.has(formulaId)),
-    "transcendental-evidence-publication-isolation-invalid",
+    "amplified-evidence-publication-isolation-invalid",
   );
+}
+
+function verifyPriorBatchManifest(): JsonRecord {
+  const manifest = readJson(priorBatchManifestRelative);
+  invariant(
+    manifest.schema === "fractalpark-b94-transcendental-recovery-evidence/v1" &&
+      manifest.publicationEligible === false &&
+      manifest.publicationDecisionMutation === false &&
+      isRecord(manifest.gateProgress) &&
+      manifest.gateProgress.passed === 12 &&
+      manifest.gateProgress.required === 21 &&
+      Array.isArray(manifest.rows) &&
+      manifest.rows.length === 12 &&
+      manifest.rows.every(
+        (row) =>
+          isRecord(row) &&
+          row.technicalStatus === "passed" &&
+          row.publicationDecision === "hold",
+      ),
+    "amplified-evidence-prior-batch-invalid",
+  );
+  verifyBindings(
+    manifest.sourceBindings,
+    "amplified-evidence-prior-batch-binding-invalid",
+  );
+  const withoutHash = { ...manifest };
+  delete withoutHash.contentHash;
+  invariant(
+    manifest.contentHash === sha256(canonicalJson(withoutHash)),
+    "amplified-evidence-prior-batch-hash-invalid",
+  );
+  return manifest;
+}
+
+function numericRemedy(runtimeId: string): JsonRecord {
+  if (runtimeId === "mandelbox")
+    return {
+      explicitRadiusSquaredOrder: "x*x-plus-y*y",
+      orbitOutputGrid: 16,
+    };
+  if (runtimeId === "newtonCosh")
+    return {
+      stableExp: "binary32-taylor8-x-over-256-square8",
+      stableSinCos: "binary32-taylor-range-reduced-double-angle",
+      realClamp: 80,
+    };
+  if (runtimeId === "newtonExp")
+    return {
+      stableExp: "binary32-taylor8-x-over-256-square8",
+      stableSinCos: "binary32-taylor-range-reduced-double-angle",
+      realClamp: 20,
+      squaredDenominatorRangeSafe: true,
+    };
+  return { integerPower: "binary32-left-associated-complex-multiply" };
 }
 
 async function projectRecoveryProfile(
@@ -216,7 +273,7 @@ async function projectRecoveryProfile(
     definition,
     profileRevision,
   );
-  invariant(validation.ok, `transcendental-evidence-julia-profile-invalid:${runtimeId}`);
+  invariant(validation.ok, `amplified-evidence-julia-profile-invalid:${runtimeId}`);
   return { ...projected, profile: validation.value };
 }
 
@@ -237,19 +294,19 @@ async function buildFormulaReceipt(runtimeId: string): Promise<{
   verifyPublicationIsolation();
   const crossCheck = crossCheckRows(verifyCrossCheckReceipt());
   const recipe = RECIPES.find((candidate) => candidate.runtimeId === runtimeId);
-  invariant(recipe, `transcendental-evidence-runtime-invalid:${runtimeId}`);
+  invariant(recipe, `amplified-evidence-runtime-invalid:${runtimeId}`);
   const validated = await validateNativeRecipeV1(recipe);
-  invariant(validated.ok, `transcendental-evidence-recipe-invalid:${runtimeId}`);
+  invariant(validated.ok, `amplified-evidence-recipe-invalid:${runtimeId}`);
   const parsed = parseFrmLikeV1(recipe.source);
-  invariant(parsed.ok, `transcendental-evidence-parse-invalid:${runtimeId}`);
+  invariant(parsed.ok, `amplified-evidence-parse-invalid:${runtimeId}`);
   invariant(
     canonicalizeFrmLikeV1(parsed.ir) === recipe.source,
-    `transcendental-evidence-source-noncanonical:${runtimeId}`,
+    `amplified-evidence-source-noncanonical:${runtimeId}`,
   );
   const compiled = compileFrmLikeV1Backend(parsed.ir);
-  invariant(compiled.ok, `transcendental-evidence-backend-invalid:${runtimeId}`);
+  invariant(compiled.ok, `amplified-evidence-backend-invalid:${runtimeId}`);
   const metadata = getFormulaMetadata(runtimeId);
-  invariant(metadata, `transcendental-evidence-metadata-missing:${runtimeId}`);
+  invariant(metadata, `amplified-evidence-metadata-missing:${runtimeId}`);
   const catalogView = {
     centerX: metadata.defaultBounds.centerX,
     centerY: metadata.defaultBounds.centerY,
@@ -267,14 +324,16 @@ async function buildFormulaReceipt(runtimeId: string): Promise<{
   const second = renderProvisionalPreviewV1(compiled.backend, profile.profile, WIDTH, HEIGHT);
   invariant(
     Buffer.from(first.rgba).equals(Buffer.from(second.rgba)),
-    `transcendental-evidence-preview-nondeterministic:${runtimeId}`,
+    `amplified-evidence-preview-nondeterministic:${runtimeId}`,
   );
   invariant(
     first.uniqueColors >= 2 &&
+      first.escapedPixels > 0 &&
+      first.interiorPixels > 0 &&
       first.nonFinitePixels <= Math.floor((WIDTH * HEIGHT) / 50) &&
       !first.anomalies.includes("flat-preview") &&
       first.escapedPixels + first.interiorPixels + first.nonFinitePixels === WIDTH * HEIGHT,
-    `transcendental-evidence-preview-vacuous:${runtimeId}`,
+    `amplified-evidence-preview-vacuous:${runtimeId}`,
   );
   const png = encodeDeterministicPng(WIDTH, HEIGHT, first.rgba);
   const crossCheckRow = crossCheck.get(recipe.formulaId as string);
@@ -284,23 +343,25 @@ async function buildFormulaReceipt(runtimeId: string): Promise<{
       isRecord(crossCheckRow.nativeCrossCheck) &&
       crossCheckRow.nativeCrossCheck.ok === true &&
       crossCheckRow.sourceRevision === validated.sourceRevision,
-    `transcendental-evidence-cross-check-row-invalid:${runtimeId}`,
+    `amplified-evidence-cross-check-row-invalid:${runtimeId}`,
+  );
+  const hold = NATIVE_RECIPE_HOLDS_V1.find(
+    (candidate) => candidate.recipe.formulaId === recipe.formulaId,
+  );
+  invariant(
+    hold && hold.holdClass !== "swiftshader-transcendental",
+    `amplified-evidence-hold-class-invalid:${runtimeId}`,
   );
   const row: JsonRecord = {
     formulaId: recipe.formulaId,
     runtimeId,
     family: recipe.family,
-    failureClass: "swiftshader-transcendental",
+    failureClass: hold.holdClass,
     technicalStatus: "passed",
     publicationDecision: "hold",
     sourceRevision: validated.sourceRevision,
     semanticHash: validated.semanticHash,
-    numericRemedy: {
-      stableExp: "binary32-taylor8-x-over-256-square8",
-      stableSinCos: "binary32-taylor-range-reduced-double-angle",
-      stableHypot: "binary32-scaled-hypot",
-      orbitOutputGrid: 16,
-    },
+    numericRemedy: numericRemedy(runtimeId),
     crossCheck: crossCheckRow,
     profile: { boundsSource: profile.boundsSource, value: profile.profile },
     preview: {
@@ -317,7 +378,7 @@ async function buildFormulaReceipt(runtimeId: string): Promise<{
     },
   };
   const withoutHash: JsonRecord = {
-    schema: "fractalpark-b94-transcendental-recovery-receipt/v1",
+    schema: "fractalpark-b94-amplified-recovery-receipt/v1",
     deterministicDoubleRender: true,
     publicationEligible: false,
     publicationDecisionMutation: false,
@@ -339,21 +400,21 @@ function verifyReceipt(recipe: (typeof RECIPES)[number]): JsonRecord {
   const relativePath = `${outputRelative}/${receiptFilename(recipe.formulaId)}`;
   const receipt = readJson(relativePath);
   invariant(
-    receipt.schema === "fractalpark-b94-transcendental-recovery-receipt/v1" &&
+    receipt.schema === "fractalpark-b94-amplified-recovery-receipt/v1" &&
       receipt.deterministicDoubleRender === true &&
       receipt.publicationEligible === false &&
       receipt.publicationDecisionMutation === false &&
       isRecord(receipt.row) &&
       receipt.row.formulaId === recipe.formulaId &&
       receipt.row.runtimeId === recipe.runtimeId,
-    `transcendental-evidence-receipt-invalid:${recipe.runtimeId}`,
+    `amplified-evidence-receipt-invalid:${recipe.runtimeId}`,
   );
-  verifyBindings(receipt.sourceBindings, "transcendental-evidence-receipt-binding-invalid");
+  verifyBindings(receipt.sourceBindings, "amplified-evidence-receipt-binding-invalid");
   const withoutHash = { ...receipt };
   delete withoutHash.contentHash;
   invariant(
     receipt.contentHash === sha256(canonicalJson(withoutHash)),
-    `transcendental-evidence-receipt-hash-invalid:${recipe.runtimeId}`,
+    `amplified-evidence-receipt-hash-invalid:${recipe.runtimeId}`,
   );
   const preview = receipt.row.preview;
   invariant(
@@ -361,13 +422,14 @@ function verifyReceipt(recipe: (typeof RECIPES)[number]): JsonRecord {
       typeof preview.file === "string" &&
       typeof preview.pngSha256 === "string" &&
       preview.pngSha256 === sha256(readFileSync(join(outputDirectory, preview.file))),
-    `transcendental-evidence-preview-binding-invalid:${recipe.runtimeId}`,
+    `amplified-evidence-preview-binding-invalid:${recipe.runtimeId}`,
   );
   return receipt;
 }
 
 function buildManifest(): { manifest: JsonRecord; bytes: Buffer } {
   verifyPublicationIsolation();
+  const priorBatchManifest = verifyPriorBatchManifest();
   const crossCheck = verifyCrossCheckReceipt();
   const recipes = [...RECIPES].sort((left, right) =>
     left.formulaId < right.formulaId ? -1 : left.formulaId > right.formulaId ? 1 : 0,
@@ -384,21 +446,34 @@ function buildManifest(): { manifest: JsonRecord; bytes: Buffer } {
     };
   });
   const withoutHash: JsonRecord = {
-    schema: "fractalpark-b94-transcendental-recovery-evidence/v1",
+    schema: "fractalpark-b94-amplified-recovery-evidence/v1",
     deterministic: true,
     publicationEligible: false,
     publicationDecisionMutation: false,
-    gateProgress: { passed: 12, required: 21 },
+    gateProgress: {
+      batchPassed: 9,
+      aggregatePassed: 21,
+      required: 21,
+      publicationGateReleased: false,
+    },
     dimensions: { width: WIDTH, height: HEIGHT },
     previewContract: {
       minimumUniqueColors: 2,
+      requireEscapedAndInterior: true,
       maximumNonFiniteFraction: 0.02,
       nonFiniteMarkersRecordedNotHidden: true,
     },
     sourceBindings: sourceBindings([
-      "scripts/generate-transcendental-recovery-evidence.ts",
+      "scripts/generate-amplified-recovery-evidence.ts",
+      priorBatchManifestRelative,
       crossCheckRelative,
     ]),
+    priorBatchArtifact: {
+      path: priorBatchManifestRelative,
+      sha256: sha256(readFileSync(join(root, priorBatchManifestRelative))),
+      contentHash: priorBatchManifest.contentHash,
+      passed: 12,
+    },
     crossCheckArtifact: {
       path: crossCheckRelative,
       sha256: sha256(readFileSync(join(root, crossCheckRelative))),
@@ -437,7 +512,7 @@ async function writeAllFormulaReceipts(): Promise<void> {
           "npx",
           [
             "tsx",
-            "scripts/generate-transcendental-recovery-evidence.ts",
+            "scripts/generate-amplified-recovery-evidence.ts",
             `--runtime=${runtimeId}`,
             "--write",
           ],
@@ -446,7 +521,7 @@ async function writeAllFormulaReceipts(): Promise<void> {
         const result = JSON.parse(stdout) as unknown;
         invariant(
           isRecord(result) && result.ok === true && result.runtimeId === runtimeId,
-          `transcendental-evidence-worker-invalid:${runtimeId}`,
+          `amplified-evidence-worker-invalid:${runtimeId}`,
         );
       }
     }),
@@ -455,8 +530,8 @@ async function writeAllFormulaReceipts(): Promise<void> {
 
 async function writeCrossCheckReceipt(): Promise<void> {
   const command =
-    "FRACTALPARK_RECIPE_EXTRA_PROBE=0,0 " +
-    "FRACTALPARK_RECIPE_BATCH_FILE=src/engine/formulas/v1/native-recipes-b94-recovered-transcendental.ts " +
+    "FRACTALPARK_RECIPE_EXTRA_PROBE=0,3.14159265 " +
+    "FRACTALPARK_RECIPE_BATCH_FILE=src/engine/formulas/v1/native-recipes-b94-recovered-amplified.ts " +
     "npx tsx scripts/cross-check-native-recipes.ts";
   const { stdout } = await execFileAsync(
     "npx",
@@ -465,9 +540,9 @@ async function writeCrossCheckReceipt(): Promise<void> {
       cwd: root,
       env: {
         ...process.env,
-        FRACTALPARK_RECIPE_EXTRA_PROBE: "0,0",
+        FRACTALPARK_RECIPE_EXTRA_PROBE: "0,3.14159265",
         FRACTALPARK_RECIPE_BATCH_FILE:
-          "src/engine/formulas/v1/native-recipes-b94-recovered-transcendental.ts",
+          "src/engine/formulas/v1/native-recipes-b94-recovered-amplified.ts",
       },
       maxBuffer: 4 * 1024 * 1024,
     },
@@ -476,13 +551,13 @@ async function writeCrossCheckReceipt(): Promise<void> {
   invariant(
     isRecord(result) &&
       result.ok === true &&
-      result.recipes === 12 &&
-      result.passed === 12 &&
+      result.recipes === 9 &&
+      result.passed === 9 &&
       result.failed === 0,
-    "transcendental-evidence-cross-check-generation-invalid",
+    "amplified-evidence-cross-check-generation-invalid",
   );
   const receipt = {
-    schema: "fractalpark-b94-transcendental-cross-check/v1",
+    schema: "fractalpark-b94-amplified-cross-check/v1",
     command,
     environment: {
       webglApi: "WebGL 1",
@@ -514,7 +589,7 @@ async function main(): Promise<void> {
     invariant(
       JSON.stringify(readdirSync(outputDirectory).sort()) ===
         JSON.stringify(expectedOutputSet()),
-      "transcendental-evidence-output-set-invalid",
+      "amplified-evidence-output-set-invalid",
     );
     process.stdout.write(
       `${JSON.stringify({
@@ -531,7 +606,7 @@ async function main(): Promise<void> {
 
   if (runtimeId) {
     const recipe = RECIPES.find((candidate) => candidate.runtimeId === runtimeId);
-    invariant(recipe, `transcendental-evidence-runtime-invalid:${runtimeId}`);
+    invariant(recipe, `amplified-evidence-runtime-invalid:${runtimeId}`);
     const built = await buildFormulaReceipt(runtimeId);
     const receiptPath = join(outputDirectory, receiptFilename(recipe.formulaId));
     const previewPath = join(outputDirectory, previewFilename(recipe.formulaId));
@@ -542,7 +617,7 @@ async function main(): Promise<void> {
       invariant(
         readFileSync(receiptPath).equals(built.receiptBytes) &&
           readFileSync(previewPath).equals(built.png),
-        `transcendental-evidence-runtime-drift:${runtimeId}`,
+        `amplified-evidence-runtime-drift:${runtimeId}`,
       );
     }
     process.stdout.write(
@@ -562,11 +637,11 @@ async function main(): Promise<void> {
   else
     invariant(
       readFileSync(join(root, manifestRelative)).equals(built.bytes),
-      "transcendental-evidence-manifest-drift",
+      "amplified-evidence-manifest-drift",
     );
   invariant(
     JSON.stringify(readdirSync(outputDirectory).sort()) === JSON.stringify(expectedOutputSet()),
-    "transcendental-evidence-output-set-invalid",
+    "amplified-evidence-output-set-invalid",
   );
   process.stdout.write(
     `${JSON.stringify({
