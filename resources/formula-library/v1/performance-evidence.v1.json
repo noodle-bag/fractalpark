@@ -9,7 +9,7 @@
     "public/formula-library/v1/runtime/published/manifest.json": "1364f17696055b75ab05efccebaa12a30d462965d30523244ff842ce340f869e",
     "public/formula-library/v1/previews/manifest.json": "56051141beaf14fff6a4059d5e690e2db57e24d7651adc63d4e0afb417d00f69",
     "src/components/fractal/FractalCanvas.tsx": "2b5058d3c034fad287a5d54c1c68c732608b599e75be678b001b79145be7a644",
-    "src/components/fractal/PublishedFormulaLibrary.tsx": "0987f264c7b57b42cf9fb0e1b9e2130706b8dba1276e7a673c92c036b5053c7d",
+    "src/components/fractal/PublishedFormulaLibrary.tsx": "1ac8b298f76daa3fd285a0337c8df944c84b6ee2953d34405a4b9d9be13eb7aa",
     "src/components/gallery/PresetThumbnail.tsx": "58978b33ad02deadc66694e076cafa8c07d057853ddf2e556c639e28f337d8e5",
     "src/hooks/useFractalRenderer.ts": "c986ad0177d44dc87f2785c8415edfbceac9854f3eb54a87fce904f5a8f74521",
     "src/lib/published-formula-library.ts": "fc76f5bf53280497383fd5f94197052f088fe98e22658edd29e6974be62cdbc1",
@@ -26,13 +26,13 @@
     "src/test/formula-portable-lifecycle-v1.test.ts": "6ec2cea16d0fafc30afe327d80de91f5840b40bfe123019645b2495c3728f379",
     "src/test/formula-publication-decisions.test.ts": "750e4603cf8aac29f05b011f0e85d5d3c598500668ebbf2e4e71de2dd260cdf8",
     "src/test/formula-resolver.test.ts": "9ebc1a5151f64ebed38974d234389f075e11d272f3d991e7cee29ce9a9e3a39c",
-    "src/test/published-formula-library.test.tsx": "77b6ade59c9d3927e7dfee383be9662dee60ddc957a0bfeaa2417739f689adca",
+    "src/test/published-formula-library.test.tsx": "528a26e3e6f5f3cd3ee4199a6dc90863005402656f24999ae2aa8670f5d1a489",
     "src/test/published-formula-runtime.test.ts": "9a73e8475c08b6a3456087603b24c56a3a638f0925eafc4a32b795b5aaec3a35",
     "src/test/published-formula-selection.test.ts": "58ed4f43dfcee1e21804c83fce259877c3f5b68515279c58dae0b82a24a9d2da",
     "src/test/fractal-renderer-race.test.ts": "4a5ec916fc3f064e9112f13594201b1a8e1bc2e19133a6c7cddb600e4263f6fe",
     "scripts/measure-standard-library-performance.ts": "64fbbba1ce2c87560690e697d8b8e26446f56d3f85a96ac115405c38795f787d",
     "scripts/verify-standard-library-performance.ts": "f2e5b39df04dbafa85d5f8721f9b942180ba7cdab68a7029d81db4ef85c88630",
-    "tests/e2e/formula-switch.spec.ts": "b6583f101d88e9e85371b4fafa583e07667e4090b09161088fd5f7c5cebd78a0",
+    "tests/e2e/formula-switch.spec.ts": "1c9d7d46bb821b2d6b67fa94f1bdb25605b1fb61fa59c4790f453831b7c1598a",
     "package.json": "ed10de287f5e9e3a864e6016e73b655d55b2573e5bc8d94c3fabf0cd2ecd1b70",
     "package-lock.json": "e0b2fc48bafca283ed7a9c76dc821859d448632681d83af4882bdcf280ea1045"
   },
@@ -213,35 +213,35 @@
       "status": "pass",
       "artifact": {
         "path": "resources/formula-library/v1/rollback-evidence/writerOff.json",
-        "sha256": "560aaa79a90335ad1d8c62df800235c821e6282efcf543acf8e20d060be2179e"
+        "sha256": "a7fe77808be08c5edbc5c0c060aba2c5e9c0d754bd6e5e6c7100025bb2546146"
       }
     },
     "featureOff": {
       "status": "pass",
       "artifact": {
         "path": "resources/formula-library/v1/rollback-evidence/featureOff.json",
-        "sha256": "1c00c4bdd7cd991379bced8a0ecf34fd792c2ef7f89a173fea37cdfa61981c73"
+        "sha256": "591aaf37743a5e113c78d29158d111af3a81bd1abf53a2426a04c9c88f5232a3"
       }
     },
     "lkgRuntime": {
       "status": "pass",
       "artifact": {
         "path": "resources/formula-library/v1/rollback-evidence/lkgRuntime.json",
-        "sha256": "8e0e692061a43617de7e34a174062baa0664aa0ce8ac4cfdbff4e44a9df1f804"
+        "sha256": "395e667a3d0ec64577f1dabd88eb33d7530a7a6379b38c4d9c205e84ac39ff96"
       }
     },
     "readerFloor": {
       "status": "pass",
       "artifact": {
         "path": "resources/formula-library/v1/rollback-evidence/readerFloor.json",
-        "sha256": "f1fe479e9379727d90021ec1c8d46b53727ae3cbe6a33fbbf1a5f69feed63f7a"
+        "sha256": "59e2bd7f3de18f845c4f67317963739f341bfa2edb4ae14c337f9289ad3231be"
       }
     },
     "aliasResolver": {
       "status": "pass",
       "artifact": {
         "path": "resources/formula-library/v1/rollback-evidence/aliasResolver.json",
-        "sha256": "6b89a839593f5e239279334561fbf6bfad801927aeddd5e953c759a0ea447b4b"
+        "sha256": "5ed8ed85ed01396ae4b480cddcf207dac568df00d9b9a86ede95c50d0e55ecbe"
       }
     },
     "deployedPreview": {
