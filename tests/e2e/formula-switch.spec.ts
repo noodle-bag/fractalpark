@@ -306,7 +306,7 @@ test.describe('Published Formula Library', () => {
     ).toBe(true);
   });
 
-  test('applies a verified Lucky profile atomically and restores it in one Undo', async ({ page }) => {
+  test('applies a verified Lucky profile atomically while keeping Reset and Undo out of the UI', async ({ page }) => {
     const definitionRequests: string[] = [];
     page.on('request', (request) => {
       if (request.url().includes('/formula-library/v1/runtime/published/definitions/')) {
@@ -379,40 +379,72 @@ test.describe('Published Formula Library', () => {
     expect(definitionRequests).toEqual([
       expect.stringContaining(LUCKY_REPRESENTATIVE.definitionPath),
     ]);
-
-    const undo = page.getByRole('button', { name: 'Undo Formula Change' });
-    await expect(undo).toBeEnabled();
-    await undo.click();
-    await waitForFractalCanvasReady(page);
-    await expect.poll(
-      () => {
-        const params = new URL(page.url()).searchParams;
-        return {
-          formula: params.get('fm'),
-          centerX: Number(params.get('cx')),
-          centerY: Number(params.get('cy')),
-          zoom: Number(params.get('z')),
-          iterations: Number(params.get('iter')),
-          julia: params.get('julia'),
-          pluginParams: (params.get('pp') ?? '').split(',').filter(Boolean).sort(),
-        };
-      },
-      { timeout: 60_000 },
-    ).toEqual({
-      formula: 'ph',
-      centerX: 1,
-      centerY: -2,
-      zoom: 8,
-      iterations: 640,
-      julia: '1',
-      pluginParams: [
-        'u_phoenixP:-0.2',
-        'u_polarAngleScale:1.5',
-      ],
-    });
-    await expect(undo).toBeDisabled();
+    await expect(page.getByRole('button', { name: 'Reset Formula Profile' })).toHaveCount(0);
+    await expect(page.getByRole('button', { name: 'Undo Formula Change' })).toHaveCount(0);
     expect(definitionRequests).toHaveLength(1);
   });
+
+  for (const width of [320, 390] as const) {
+    test(`keeps compact Formula and Position controls within ${width}px in all locales`, async ({ page }) => {
+      await page.setViewportSize({ width, height: width === 320 ? 720 : 844 });
+
+      for (const locale of ['en', 'zh', 'es', 'fr', 'pt', 'ru', 'ko'] as const) {
+        await page.goto(`/${locale}/explore`);
+        await waitForFractalCanvasReady(page);
+
+        const position = page.getByTestId('position-summary');
+        const actions = page.getByTestId('published-formula-discovery-actions');
+        await expect(position).toBeVisible();
+        await expect(actions).toBeVisible();
+
+        const actionButtons = actions.getByRole('button');
+        await expect(actionButtons).toHaveCount(2);
+        const actionBoxes = await actionButtons.evaluateAll((buttons) =>
+          buttons.map((button) => {
+            const rect = button.getBoundingClientRect();
+            return {
+              top: rect.top,
+              left: rect.left,
+              right: rect.right,
+              scrollFits: button.scrollWidth <= button.clientWidth,
+            };
+          }),
+        );
+        expect(Math.abs(actionBoxes[0].top - actionBoxes[1].top)).toBeLessThanOrEqual(1);
+        expect(actionBoxes.every((box) => box.scrollFits)).toBe(true);
+        expect(
+          actionBoxes.every((box) => box.left >= -1 && box.right <= width + 1),
+          `${locale}@${width} discovery actions`,
+        ).toBe(true);
+
+        const layout = await position.evaluate((element) => {
+          const bounds = element.getBoundingClientRect();
+          const children = Array.from(element.children).map((child) => {
+            const htmlChild = child as HTMLElement;
+            const rect = htmlChild.getBoundingClientRect();
+            return {
+              left: rect.left,
+              right: rect.right,
+              scrollFits: htmlChild.scrollWidth <= htmlChild.clientWidth,
+            };
+          });
+          return {
+            viewportFits: bounds.left >= -1 && bounds.right <= window.innerWidth + 1,
+            childrenFit: children.every(
+              (child) => child.left >= bounds.left - 1 && child.right <= bounds.right + 1,
+            ),
+            textFits: children.every((child) => child.scrollFits),
+          };
+        });
+        expect(
+          layout.viewportFits,
+          `${locale}@${width} position container`,
+        ).toBe(true);
+        expect(layout.childrenFit, `${locale}@${width} position children`).toBe(true);
+        expect(layout.textFits, `${locale}@${width} position text`).toBe(true);
+      }
+    });
+  }
 
   for (const width of [320, 390] as const) {
     test(`is a full-width keyboard-operable layer at ${width}px`, async ({ page }) => {

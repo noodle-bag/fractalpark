@@ -77,7 +77,7 @@ describe("PublishedFormulaLibrary", () => {
     expect(await screen.findByRole("button", { name: "Formula 60" })).toBeInTheDocument();
   });
 
-  it("offers Lucky, Profile Reset, and one-step Undo as keyboard-accessible actions", async () => {
+  it("keeps Lucky and Library in one compact row while hiding Profile Reset and Undo", async () => {
     const onFeelingLucky = vi.fn(async (): Promise<PublishedFormulaSelectionResult> => ({
       ok: true,
     }));
@@ -99,20 +99,21 @@ describe("PublishedFormulaLibrary", () => {
       />,
     );
 
-    fireEvent.click(
+    const actions = screen.getByTestId("published-formula-discovery-actions");
+    expect(actions).toHaveClass("grid-cols-2");
+    expect(actions).toContainElement(
       screen.getByRole("button", { name: "formula.library.lucky" }),
     );
+    expect(actions).toContainElement(
+      screen.getByRole("button", { name: "formula.library.open" }),
+    );
+
+    fireEvent.click(screen.getByRole("button", { name: "formula.library.lucky" }));
     await waitFor(() => expect(onFeelingLucky).toHaveBeenCalledTimes(1));
-
-    fireEvent.click(
-      screen.getByRole("button", { name: "formula.library.resetProfile" }),
-    );
-    await waitFor(() => expect(onResetProfile).toHaveBeenCalledTimes(1));
-
-    fireEvent.click(
-      screen.getByRole("button", { name: "formula.library.undoFormulaChange" }),
-    );
-    expect(onUndo).toHaveBeenCalledTimes(1);
+    expect(screen.queryByRole("button", { name: "formula.library.resetProfile" })).not.toBeInTheDocument();
+    expect(screen.queryByRole("button", { name: "formula.library.undoFormulaChange" })).not.toBeInTheDocument();
+    expect(onResetProfile).not.toHaveBeenCalled();
+    expect(onUndo).not.toHaveBeenCalled();
   });
 
   it("keeps only the latest rapid Lucky result visible and preserves failures", async () => {
