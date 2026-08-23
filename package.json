@@ -16,6 +16,8 @@
     "formula:publication-decisions": "tsx scripts/generate-formula-publication-decisions.ts",
     "formula:publication-decisions:write": "tsx scripts/generate-formula-publication-decisions.ts --write",
     "formula:publication-decisions:verify": "tsx scripts/verify-formula-publication-decisions.ts",
+    "formula:recovery:transcendental": "tsx scripts/generate-transcendental-recovery-evidence.ts",
+    "formula:recovery:transcendental:write": "tsx scripts/generate-transcendental-recovery-evidence.ts --write-all",
     "formula:runtime-rev4": "tsx scripts/build-formula-runtime-rev4.ts",
     "formula:runtime-rev4:write": "tsx scripts/build-formula-runtime-rev4.ts --write",
     "formula:runtime-rev4:verify": "tsx scripts/verify-formula-runtime-rev4.ts",

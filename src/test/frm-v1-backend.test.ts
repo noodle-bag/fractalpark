@@ -77,7 +77,7 @@ describe("isolated FRM-like v1 backend candidate", () => {
     expect(one.glsl.loop).toMatch(
       /if \([^\n]*frmV1Real\(z\)[^\n]*>[^\n]*vec2\(1\.0, 0\.0\)/,
     );
-    expect(one.glsl.continuePredicate).toContain("length(z)");
+    expect(one.glsl.continuePredicate).toContain("frmV1Radius(z)");
     expect(one.glsl.eventFlag).toBe("frmV1NonFiniteEvent");
     expect(one.glsl.declarations).toContain("frmV1NonFiniteEvent = true");
     expect(one.glsl.declarations).not.toMatch(

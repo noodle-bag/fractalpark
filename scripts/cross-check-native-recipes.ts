@@ -292,7 +292,19 @@ async function main(): Promise<void> {
         )).RECIPES
       : NATIVE_FORMULA_RECIPES_V1;
   const contract = NATIVE_RECIPE_CROSS_CHECK_CONTRACT_V1;
-  const pixels = contract.probePixels.map((pixel) => [pixel[0], pixel[1]] as const);
+  const extraProbeRaw = process.env.FRACTALPARK_RECIPE_EXTRA_PROBE;
+  const extraProbe = extraProbeRaw
+    ? extraProbeRaw.split(",").map(Number)
+    : undefined;
+  if (
+    extraProbe !== undefined &&
+    (extraProbe.length !== 2 || !extraProbe.every(Number.isFinite))
+  )
+    throw new Error("recipe-extra-probe-invalid");
+  const pixels: Array<readonly [number, number]> = contract.probePixels.map(
+    (pixel) => [pixel[0], pixel[1]] as const,
+  );
+  if (extraProbe) pixels.push([extraProbe[0]!, extraProbe[1]!]);
   const rows: unknown[] = [];
   let failed = 0;
 
@@ -341,6 +353,8 @@ async function main(): Promise<void> {
       maxIterations: contract.maxIterations,
       runs: cpuOracle.map((run) => ({
         pixel: run.pixel,
+        expectedEvent: run.event !== null,
+        expectedEscapedAt: run.escapedAt,
         expectedOrbit: run.orbit.map((point) => {
           if (point[0] === "non-finite" || point[1] === "non-finite")
             throw new Error("gpu-orbit-non-finite");
@@ -398,6 +412,7 @@ async function main(): Promise<void> {
     ok: failed === 0,
     contract: {
       probePixels: pixels.length,
+      extraProbe: extraProbe ?? null,
       maxIterations: contract.maxIterations,
       relativeTolerance: contract.relativeTolerance,
     },

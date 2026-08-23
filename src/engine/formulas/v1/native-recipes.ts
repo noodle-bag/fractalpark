@@ -22,6 +22,7 @@ import {
 import { resolveStandardAliasV1 } from "@/engine/formulas/v1/standard-manifest";
 import { RECIPES as B94_CLASSIC_RECIPES } from "./native-recipes-b94-classic";
 import { RECIPES as B94_TRANSCENDENTAL_RECIPES } from "./native-recipes-b94-transcendental";
+import { RECIPES as B94_RECOVERED_TRANSCENDENTAL_RECIPES } from "./native-recipes-b94-recovered-transcendental";
 import { RECIPES as B94_CLAMP_RECIPES } from "./native-recipes-b94-clamps";
 import { RECIPES as B94_NEWTON_RECIPES } from "./native-recipes-b94-newton";
 
@@ -517,6 +518,7 @@ export const NATIVE_FORMULA_RECIPES_V1: readonly NativeFormulaRecipeV1[] =
     }),
     ...B94_CLASSIC_RECIPES,
     ...B94_TRANSCENDENTAL_RECIPES,
+    ...B94_RECOVERED_TRANSCENDENTAL_RECIPES,
     ...B94_CLAMP_RECIPES,
     ...B94_NEWTON_RECIPES,
   ]);

@@ -18,6 +18,9 @@ import {
   frmV1Round,
   frmV1Sin,
   frmV1Sqrt,
+  frmV1StableExpReal,
+  frmV1StableHypot,
+  frmV1StableSinCos,
   frmV1Standard32Close,
   frmV1Tanh,
   resolveFrmV1FunctionSlot,
@@ -216,6 +219,31 @@ describe("isolated FRM-like stdlib v1 CPU reference", () => {
   });
 });
 
+describe("standard32 deterministic transcendental primitives", () => {
+  it("approximates exp across the finite float32 orbit range", () => {
+    for (const value of [-80, -10, -1, 0, 1, 10, 80]) {
+      const expected = Math.exp(value);
+      const relativeError =
+        Math.abs(frmV1StableExpReal(value) - expected) / expected;
+      expect(relativeError, `exp(${value})`).toBeLessThan(2e-5);
+    }
+  });
+
+  it("keeps range-reduced sin and cos within a shared absolute error bound", () => {
+    for (const value of [-80, -3.14, -1, 0, 0.55, 1, 3.14, 80]) {
+      const [sine, cosine] = frmV1StableSinCos(value);
+      expect(Math.abs(sine - Math.sin(value)), `sin(${value})`).toBeLessThan(3e-6);
+      expect(Math.abs(cosine - Math.cos(value)), `cos(${value})`).toBeLessThan(3e-6);
+    }
+  });
+
+  it("keeps huge finite magnitudes finite without squared-component overflow", () => {
+    const value = 2.770270885493099e34;
+    expect(frmV1StableHypot(value, 0)).toBe(Math.fround(value));
+    expect(Number.isFinite(frmV1StableHypot(value, value))).toBe(true);
+  });
+});
+
 describe("isolated FRM-like stdlib v1 GLSL source-shape contract", () => {
   it("contains the same unintegrated principal inverse formulas and no legacy log call", () => {
     expect(FRM_V1_GLSL_PRELUDE).toContain("vec2 frmV1Log(vec2 z) {");
@@ -236,7 +264,13 @@ describe("isolated FRM-like stdlib v1 GLSL source-shape contract", () => {
       "frmV1Sub(frmV1Log(frmV1Add(vec2(1.0, 0.0), z)), frmV1Log(frmV1Sub(vec2(1.0, 0.0), z))) * 0.5",
     );
     expect(FRM_V1_GLSL_PRELUDE).toContain(
-      "float frmV1SinhReal(float value) { return (exp(value) - exp(-value)) * 0.5; }",
+      "float frmV1StableExpReal(float value)",
+    );
+    expect(FRM_V1_GLSL_PRELUDE).toContain(
+      "frmV1StableExpReal(value) - frmV1StableExpReal(-value)",
+    );
+    expect(FRM_V1_GLSL_PRELUDE).toContain(
+      "frmV1StableExpReal(value) + frmV1StableExpReal(-value)",
     );
     expect(FRM_V1_GLSL_PRELUDE).not.toContain("complexLog");
     expect(FRM_V1_GLSL_PRELUDE).not.toMatch(/max\s*\(\s*length\s*\(/);

@@ -6,6 +6,7 @@ import { beforeAll, describe, expect, it } from "vitest";
 
 import { hashFrmLikeV1, parseFrmLikeV1 } from "@/engine/frm/v1";
 import { NATIVE_RECIPE_HOLDS_V1 } from "@/engine/formulas/v1/native-recipes-b94-held";
+import { RECIPES as RECOVERED_TRANSCENDENTAL_RECIPES } from "@/engine/formulas/v1/native-recipes-b94-recovered-transcendental";
 import {
   NATIVE_FORMULA_RECIPES_V1,
   validateNativeRecipeV1,
@@ -142,7 +143,7 @@ describe("formula runtime revision 4 public assets", () => {
     expect(seen.size).toBe(174);
   });
 
-  it("matches all 68 project-owned rows to accepted native recipes and excludes diagnosis holds", async () => {
+  it("keeps 68 public project-owned rows while 12 recovered recipes remain decision-held", async () => {
     const manifest = readJson(join(RUNTIME_DIR, "manifest.json"));
     if (!Array.isArray(manifest.shards)) throw new Error("test-manifest-invalid");
     const publicById = new Map<string, JsonRecord>();
@@ -155,21 +156,57 @@ describe("formula runtime revision 4 public assets", () => {
         publicById.set(String(rawRow.formulaId), rawRow);
       }
     }
-    const heldIds = new Set(
+
+    const decisions = readJson(DECISIONS_PATH);
+    if (!Array.isArray(decisions.rows)) throw new Error("test-decisions-invalid");
+    const projectHeldIds = new Set(
+      decisions.rows
+        .filter(
+          (row): row is JsonRecord =>
+            isRecord(row) &&
+            row.rightsStatus === "project-owned" &&
+            row.publicationDecision === "hold",
+        )
+        .map((row) => String(row.formulaId)),
+    );
+    expect(projectHeldIds.size).toBe(21);
+
+    const recipeById = new Map(
+      NATIVE_FORMULA_RECIPES_V1.map((recipe) => [recipe.formulaId as string, recipe]),
+    );
+    expect(recipeById.size).toBe(80);
+    const publicationHoldIds = new Set(
       NATIVE_RECIPE_HOLDS_V1.map((entry) => entry.recipe.formulaId as string),
     );
-    expect(heldIds.size).toBe(21);
-    expect(NATIVE_FORMULA_RECIPES_V1).toHaveLength(68);
-    for (const recipe of NATIVE_FORMULA_RECIPES_V1) {
-      expect(heldIds.has(recipe.formulaId)).toBe(false);
-      const row = publicById.get(recipe.formulaId);
-      expect(row?.implementationBasis).toBe("project-owned");
+    expect(publicationHoldIds.size).toBe(21);
+    expect(publicationHoldIds).toEqual(projectHeldIds);
+    const recoveredHeldIds = RECOVERED_TRANSCENDENTAL_RECIPES.map(
+      (recipe) => recipe.formulaId as string,
+    );
+    expect(recoveredHeldIds).toHaveLength(12);
+    for (const formulaId of recoveredHeldIds) {
+      expect(publicationHoldIds.has(formulaId)).toBe(true);
+      expect(recipeById.has(formulaId)).toBe(true);
+      expect(publicById.has(formulaId)).toBe(false);
+    }
+
+    const publicProjectRows = [...publicById.values()].filter(
+      (row) => row.implementationBasis === "project-owned",
+    );
+    expect(publicProjectRows).toHaveLength(68);
+    for (const row of publicProjectRows) {
+      const formulaId = String(row.formulaId);
+      expect(projectHeldIds.has(formulaId)).toBe(false);
+      const recipe = recipeById.get(formulaId);
+      expect(recipe).toBeDefined();
+      if (!recipe) continue;
       const validated = await validateNativeRecipeV1(recipe);
       expect(validated.ok).toBe(true);
-      if (!validated.ok || !row) continue;
+      if (!validated.ok) continue;
       expect(row.definition).toBe(validated.definition.source);
       expect(row.sourceRevision).toBe(validated.sourceRevision);
       expect(row.semanticHash).toBe(validated.semanticHash);
     }
+
   });
 });

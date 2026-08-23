@@ -196,6 +196,85 @@ export function frmV1Round(z: FrmV1Complex): FrmV1Complex {
   return { re: frmV1RoundComponent(z.re), im: frmV1RoundComponent(z.im) };
 }
 
+/**
+ * Deterministic binary32 exp used by both standard32 CPU and GLSL surfaces.
+ * Range reduction to x/256 keeps the eighth-order Taylor polynomial inside
+ * [-0.35, 0.35] for the finite float32 exp range; eight squarings restore x.
+ */
+export function frmV1StableExpReal(value: number): number {
+  const f32 = (input: number) => {
+    const rounded = Math.fround(input);
+    return rounded === 0 ? 0 : rounded;
+  };
+  const reduced = f32(f32(value) / 256);
+  let term = f32(1);
+  let sum = f32(1);
+  for (let divisor = 1; divisor <= 8; divisor++) {
+    term = f32(term * reduced);
+    term = f32(term / divisor);
+    sum = f32(sum + term);
+  }
+  for (let squaring = 0; squaring < 8; squaring++) sum = f32(sum * sum);
+  return sum;
+}
+
+/** Deterministic binary32 [sin, cos] pair for CPU/GLSL parity. */
+export function frmV1StableSinCos(value: number): readonly [number, number] {
+  const f32 = (input: number) => {
+    const rounded = Math.fround(input);
+    return rounded === 0 ? 0 : rounded;
+  };
+  const tau = f32(6.283185307179586);
+  const quotient = f32(f32(value) / tau);
+  const turns = quotient < 0 ? Math.ceil(quotient - 0.5) : Math.floor(quotient + 0.5);
+  const reduced = f32(f32(value) - f32(f32(turns) * tau));
+  const x = f32(reduced / 4);
+  const x2 = f32(x * x);
+
+  let sineTerm = x;
+  let sine = x;
+  for (const divisor of [6, 20, 42, 72, 110, 156]) {
+    sineTerm = f32(sineTerm * f32(-x2));
+    sineTerm = f32(sineTerm / divisor);
+    sine = f32(sine + sineTerm);
+  }
+
+  let cosineTerm = f32(1);
+  let cosine = f32(1);
+  for (const divisor of [2, 12, 30, 56, 90, 132]) {
+    cosineTerm = f32(cosineTerm * f32(-x2));
+    cosineTerm = f32(cosineTerm / divisor);
+    cosine = f32(cosine + cosineTerm);
+  }
+
+  for (let doubling = 0; doubling < 2; doubling++) {
+    const doubledSine = f32(f32(2 * sine) * cosine);
+    const doubledCosine = f32(f32(cosine * cosine) - f32(sine * sine));
+    sine = doubledSine;
+    cosine = doubledCosine;
+  }
+  return [sine, cosine];
+}
+
+/** Overflow-safe binary32 hypot shared by the CPU and GLSL profiles. */
+export function frmV1StableHypot(real: number, imaginary: number): number {
+  const f32 = (input: number) => {
+    const rounded = Math.fround(input);
+    return rounded === 0 ? 0 : rounded;
+  };
+  const x = f32(Math.abs(f32(real)));
+  const y = f32(Math.abs(f32(imaginary)));
+  const scale = Math.max(x, y);
+  if (scale === 0) return 0;
+  const normalizedReal = f32(x / scale);
+  const normalizedImaginary = f32(y / scale);
+  const sum = f32(
+    f32(normalizedReal * normalizedReal) +
+      f32(normalizedImaginary * normalizedImaginary),
+  );
+  return f32(scale * f32(Math.sqrt(sum)));
+}
+
 export function frmV1Atan2(y: FrmV1Complex, x: FrmV1Complex): FrmV1Complex {
   return { re: Math.atan2(y.re, x.re), im: 0 };
 }

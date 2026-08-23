@@ -1343,7 +1343,11 @@ export async function runWebgl(cases: readonly GpuCase[]): Promise<ReadonlyMap<s
       "globalThis.__name = globalThis.__name || function(target){ return target; };",
     );
     const evaluated = await page.evaluate((payloads) => {
-      const outputs: Array<{ formulaId: string; status: GpuStatus }> = [];
+      const outputs: Array<{
+        formulaId: string;
+        status: GpuStatus;
+        diagnostic?: string;
+      }> = [];
       for (const payload of payloads) {
         try {
           if (!Number.isInteger(payload.maxIterations) || payload.maxIterations < 1)
@@ -1487,7 +1491,8 @@ void main(){
           const stepsLocation = gl.getUniformLocation(program, "u_bulk_steps");
           if (stepsLocation === null) throw new Error("gpu-step-uniform-missing");
           let status: GpuStatus = "passed";
-          for (const run of payload.runs) {
+          let diagnostic: string | undefined;
+          for (const [runIndex, run] of payload.runs.entries()) {
             vec2("pixel", run.pixel[0], run.pixel[1]);
             vec2("c", run.pixel[0], run.pixel[1]);
             vec2("maxit", payload.maxIterations, 0);
@@ -1587,26 +1592,42 @@ void main(){
                 status = "nondeterministic";
                 break;
               }
+              const expectedEvent =
+                run.expectedEvent === true && pointIndex === run.expectedOrbit.length - 1;
               const parity =
-                first[3] < 0.5 &&
+                (first[3] >= 0.5) === expectedEvent &&
                 Math.abs(first[2] - expectedIterations) <= 0.25 &&
                 close(first[0], expectedZ[0]) &&
                 close(first[1], expectedZ[1]);
               if (!parity) {
                 status = "semantic-mismatch";
+                diagnostic = JSON.stringify({
+                  runIndex,
+                  pointIndex,
+                  actual: Array.from(first),
+                  expected: expectedZ,
+                });
                 break;
               }
             }
             if (status !== "passed") break;
           }
-          outputs.push({ formulaId: payload.formulaId, status });
-        } catch {
-          outputs.push({ formulaId: payload.formulaId, status: "failed" });
+          outputs.push({ formulaId: payload.formulaId, status, diagnostic });
+        } catch (error) {
+          outputs.push({
+            formulaId: payload.formulaId,
+            status: "failed",
+            diagnostic: error instanceof Error ? error.message : "unknown",
+          });
         }
       }
       return outputs;
     }, cases);
-    for (const result of evaluated) results.set(result.formulaId, result.status);
+    for (const result of evaluated) {
+      results.set(result.formulaId, result.status);
+      if (process.env.FRACTALPARK_WEBGL_DEBUG === "1" && result.diagnostic)
+        console.error(`webgl-debug:${result.formulaId}:${result.diagnostic}`);
+    }
   } finally {
     await browser.close();
   }

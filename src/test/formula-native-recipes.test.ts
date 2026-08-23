@@ -37,7 +37,7 @@ describe("native recipe layer v1", () => {
   });
 
   it("validates every registered pilot recipe through the full v1 chain", async () => {
-    expect(NATIVE_FORMULA_RECIPES_V1.length).toBe(68);
+    expect(NATIVE_FORMULA_RECIPES_V1.length).toBe(80);
     for (const recipe of NATIVE_FORMULA_RECIPES_V1) {
       const result = await validateNativeRecipeV1(recipe);
       if (!result.ok) throw new Error(`${recipe.runtimeId}: ${result.reasonCode}`);
@@ -160,15 +160,56 @@ describe("native recipe layer v1", () => {
 });
 
 describe("native recipe holds", () => {
-  it("keeps every held row canonical, valid, and disjoint from the registry", async () => {
+  it("recovers the exact 12-row transcendental set through one shared numeric remedy", async () => {
+    const { RECIPES } = await import(
+      "@/engine/formulas/v1/native-recipes-b94-recovered-transcendental"
+    );
+    expect(RECIPES.map((recipe) => recipe.formulaId).sort()).toEqual([
+      "17d88272-6dbf-5622-996a-b116ea3a3fab",
+      "190fa538-89c9-590f-8170-34b3c570fc5d",
+      "201c54f3-a77a-5be0-a0a5-6f4f1998ee6d",
+      "22d9a008-eb14-53de-9960-11eb5d37bb8e",
+      "3edbea29-956a-5900-9aa7-02ccc2183016",
+      "62098934-def3-527a-ac43-2c80449c9848",
+      "78e550c6-d58d-57b7-92ff-82e9ed0728f0",
+      "8eb342fe-8a05-524e-8b98-35cdc8af5be3",
+      "9f301c01-13fa-57b4-a3b2-99add821bfb0",
+      "af500910-46ce-5a43-b430-c0154cc05959",
+      "beeb4aec-91cd-5d01-83bb-0b98ca851e79",
+      "d89f722f-35fe-587a-bee9-efdf05885728",
+    ]);
+    for (const recipe of RECIPES) {
+      expect(recipe.source).toContain("round(");
+      expect(recipe.source).toContain("* 16");
+    }
+
+    const newton6 = RECIPES.find((recipe) => recipe.runtimeId === "newton6");
+    if (!newton6) throw new Error("newton6-recovery-missing");
+    const parsed = parseFrmLikeV1(newton6.source);
+    if (!parsed.ok) throw new Error("newton6-recovery-parse-failed");
+    const compiled = compileFrmLikeV1Backend(parsed.ir);
+    if (!compiled.ok) throw new Error("newton6-recovery-compile-failed");
+    const [tinyRun] = runFormulaLibraryOracle(compiled.backend, [[0, 0]], 2);
+    expect(tinyRun.orbit[0]).toEqual([0, 0]);
+    expect(tinyRun.event).toBeNull();
+    expect(tinyRun.escapedAt).toBe(2);
+  });
+
+  it("keeps publication holds canonical and overlaps only the exact recovery set", async () => {
     const { NATIVE_RECIPE_HOLDS_V1 } = await import(
       "@/engine/formulas/v1/native-recipes-b94-held"
     );
+    const { RECIPES: recovered } = await import(
+      "@/engine/formulas/v1/native-recipes-b94-recovered-transcendental"
+    );
     expect(NATIVE_RECIPE_HOLDS_V1.length).toBe(21);
     const accepted = new Set(NATIVE_FORMULA_RECIPES_V1.map((r) => r.runtimeId));
+    const recoveredIds = new Set(recovered.map((recipe) => recipe.formulaId));
     const classes = new Set<string>();
     for (const hold of NATIVE_RECIPE_HOLDS_V1) {
-      expect(accepted.has(hold.recipe.runtimeId)).toBe(false);
+      expect(accepted.has(hold.recipe.runtimeId)).toBe(
+        recoveredIds.has(hold.recipe.formulaId),
+      );
       classes.add(hold.holdClass);
       expect(hold.evidence.length).toBeGreaterThan(0);
       const result = await validateNativeRecipeV1(hold.recipe);
@@ -180,8 +221,13 @@ describe("native recipe holds", () => {
       "ill-conditioned-cancellation",
       "swiftshader-transcendental",
     ]);
-    // held + accepted = the full B94 canonical identity set
-    expect(NATIVE_RECIPE_HOLDS_V1.length + NATIVE_FORMULA_RECIPES_V1.length).toBe(89);
+    // Recovered technical recipes intentionally overlap publication holds.
+    expect(
+      new Set([
+        ...NATIVE_FORMULA_RECIPES_V1.map((recipe) => recipe.formulaId),
+        ...NATIVE_RECIPE_HOLDS_V1.map((hold) => hold.recipe.formulaId),
+      ]).size,
+    ).toBe(89);
   });
 });
 

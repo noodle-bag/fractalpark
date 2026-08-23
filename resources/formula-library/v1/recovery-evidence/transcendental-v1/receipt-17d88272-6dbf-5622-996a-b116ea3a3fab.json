@@ -1,0 +1,100 @@
+{
+  "schema": "fractalpark-b94-transcendental-recovery-receipt/v1",
+  "deterministicDoubleRender": true,
+  "publicationEligible": false,
+  "publicationDecisionMutation": false,
+  "sourceBindings": {
+    "scripts/generate-transcendental-recovery-evidence.ts": "976e2e14fdb37c83a3d587c6cd59289bd193d128d14ba1bc10d059ddace0fdcd",
+    "src/engine/formulas/v1/native-recipes-b94-recovered-transcendental.ts": "61fc575963d4ffce71c38f921e1d2e16272a1fd689dba1201275f31f14ebe51e",
+    "src/engine/formulas/v1/provisional-profile.ts": "9ccfccfb24b5abe991d95f9ad6561e0d01499bdd95955b7a3e9a07d7c31abfe4",
+    "src/engine/formulas/v1/provisional-preview.ts": "6f018547e3d111aea53f72fa66bdf15a995c9490649237a4aee7fbadc5d648ee",
+    "src/engine/frm/frm-v1-stdlib.ts": "e7b48941d8b6307133a1718a99f7a933cdc75f8ea7a68d99449a1ad7e5e31b6c",
+    "src/engine/frm/v1-backend.ts": "076273190738b02622091bb31d0c30ef2a3fdd3edc82e573a1cebf5c541d1f67",
+    "src/engine/frm/frm-v1-glsl-prelude.ts": "c50480ff75af9e3f1dd49866ca2156e9c566a9297b448012533c9835ef66b09a",
+    "src/engine/shaders/complex-math.glsl": "0e45ee640e2c62de66c616b9cf53ee12ce0b78a59d168de0f8fadbb3335aea89",
+    "src/engine/plugins/builtins/formulas/recoveredTranscendentalMath.ts": "46ee77aa60652c81b6a379ce423dac9a8d7a5d8d2771cae307e60fe34d3c96e4",
+    "src/engine/plugins/formula-catalog.ts": "14570ae82c6f1e659f7a4cfcc2318997df5080f981070c409e808cbd57bd58c2",
+    "scripts/formula-library-bulk-migration.ts": "b625fdeae5a1778f279478be9317406a89655af381edd97f4ee8ccef415c5d1d",
+    "resources/formula-library/v1/recovery-evidence/transcendental-v1/cross-check.json": "f6d8a404b26cd5f0cc5c3b3f7000e58c89cc3d08f936e7b061711422ab53cc28"
+  },
+  "row": {
+    "formulaId": "17d88272-6dbf-5622-996a-b116ea3a3fab",
+    "runtimeId": "tetration",
+    "family": "exotic",
+    "failureClass": "swiftshader-transcendental",
+    "technicalStatus": "passed",
+    "publicationDecision": "hold",
+    "sourceRevision": "32437882a899d589e7ff8fa968c7248e5c9436fa6a87a48fa2072ff09e3c6540",
+    "semanticHash": "834623aa2e4578e5c976d7d769d4ca9d49beaf484c27da4943546e23ef555e7e",
+    "numericRemedy": {
+      "stableExp": "binary32-taylor8-x-over-256-square8",
+      "stableSinCos": "binary32-taylor-range-reduced-double-angle",
+      "stableHypot": "binary32-scaled-hypot",
+      "orbitOutputGrid": 16
+    },
+    "crossCheck": {
+      "formulaId": "17d88272-6dbf-5622-996a-b116ea3a3fab",
+      "runtimeId": "tetration",
+      "family": "exotic",
+      "ok": true,
+      "v1WebglParity": "passed",
+      "nativeCrossCheck": {
+        "ok": true,
+        "maxRelativeDelta": 0
+      },
+      "orbitPoints": 80,
+      "sourceRevision": "32437882a899d589e7ff8fa968c7248e5c9436fa6a87a48fa2072ff09e3c6540"
+    },
+    "profile": {
+      "boundsSource": "b94-catalog",
+      "value": {
+        "schemaVersion": 1,
+        "formulaId": "17d88272-6dbf-5622-996a-b116ea3a3fab",
+        "sourceRevision": "32437882a899d589e7ff8fa968c7248e5c9436fa6a87a48fa2072ff09e3c6540",
+        "profileRevision": "a53b8a8ef7ac849c15bdcf59490329bbb28eff900009dfe2ac58139ed0e1e445",
+        "parameters": {},
+        "mode": "parameter-plane",
+        "view": {
+          "centerX": 0.18,
+          "centerY": 0,
+          "zoom": 1.15,
+          "rotation": 0
+        },
+        "iterations": 200,
+        "coloring": {
+          "pipelineVersion": 1,
+          "outsideColoringId": "smooth",
+          "insideColoringId": "black",
+          "smooth": true
+        },
+        "palette": {
+          "paletteId": "inferno"
+        },
+        "transform": {
+          "rotation": 0,
+          "scaleX": 1,
+          "scaleY": 1,
+          "skewX": 0,
+          "skewY": 0,
+          "offsetX": 0,
+          "offsetY": 0
+        }
+      }
+    },
+    "preview": {
+      "file": "preview-17d88272-6dbf-5622-996a-b116ea3a3fab.png",
+      "width": 96,
+      "height": 60,
+      "rawRgbaSha256": "bbcc4c8011642aa935599fbde64ef3329c6f1099026e8ea7c229bdf6e60eb8c2",
+      "pngSha256": "ff3fa72791a7bda8670d07fd36c3a4e11cfa82d1177c8350677c02fe9535c4f1",
+      "escapedPixels": 330,
+      "interiorPixels": 5380,
+      "nonFinitePixels": 50,
+      "uniqueColors": 119,
+      "anomalies": [
+        "non-finite-pixels"
+      ]
+    }
+  },
+  "contentHash": "6300bd971046be3d78637635a3153692d9fe2e36629bee0ee1afcc6b089079c1"
+}

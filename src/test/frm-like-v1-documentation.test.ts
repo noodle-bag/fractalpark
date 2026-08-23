@@ -1331,7 +1331,10 @@ PersistentLocal {
     );
     expect(publishedAdapter).toContain('glslName("c")} = orbitC');
     expect(stdlibPrelude).toContain(
-      'vec2(cos(z.x) * frmV1CoshReal(z.y), sin(z.x) * frmV1SinhReal(z.y))'
+      'vec2 sinCos = frmV1StableSinCos(z.x);'
+    );
+    expect(stdlibPrelude).toContain(
+      'vec2(sinCos.y * frmV1CoshReal(z.y), sinCos.x * frmV1SinhReal(z.y))'
     );
 
     const docsIndex = repoFile('docs/README.md');

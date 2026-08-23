@@ -5,6 +5,9 @@ import {
   FRM_V1_UNARY_FUNCTION_NAMES,
   frmV1Classify,
   frmV1QuantizeStandard32,
+  frmV1StableExpReal,
+  frmV1StableHypot,
+  frmV1StableSinCos,
   type FrmV1Complex,
   type FrmV1StdlibName,
   type FrmV1UnaryFunctionName,
@@ -243,21 +246,19 @@ function standard32Stdlib(
   const sinhReal = (value: number) => {
     const clamped = clampHyperbolic(value);
     return f32Mul(
-      f32Sub(f32(Math.exp(f32(clamped))), f32(Math.exp(f32(-clamped)))),
+      f32Sub(frmV1StableExpReal(clamped), frmV1StableExpReal(-clamped)),
       0.5,
     );
   };
   const coshReal = (value: number) => {
     const clamped = clampHyperbolic(value);
     return f32Mul(
-      f32Add(f32(Math.exp(f32(clamped))), f32(Math.exp(f32(-clamped)))),
+      f32Add(frmV1StableExpReal(clamped), frmV1StableExpReal(-clamped)),
       0.5,
     );
   };
   const radiusOf = (value: FrmV1Complex) =>
-    f32(
-      Math.sqrt(f32Add(f32Mul(value.re, value.re), f32Mul(value.im, value.im))),
-    );
+    frmV1StableHypot(value.re, value.im);
   const logarithm = (value: FrmV1Complex) => {
     let radius = radiusOf(value);
     if (!Number.isFinite(radius))
@@ -298,10 +299,11 @@ function standard32Stdlib(
     case "sqrt":
       return squareRoot(first);
     case "exp": {
-      const magnitude = f32(Math.exp(first.re));
+      const magnitude = frmV1StableExpReal(first.re);
+      const [sine, cosine] = frmV1StableSinCos(first.im);
       return tracked({
-        re: f32Mul(magnitude, f32(Math.cos(first.im))),
-        im: f32Mul(magnitude, f32(Math.sin(first.im))),
+        re: f32Mul(magnitude, cosine),
+        im: f32Mul(magnitude, sine),
       });
     }
     case "log":
@@ -340,33 +342,43 @@ function standard32Stdlib(
       if (yy === 0 && xx < 0) return tracked({ re: f32(Math.PI), im: 0 });
       return tracked({ re: f32(Math.atan2(yy, xx)), im: 0 });
     }
-    case "sin":
+    case "sin": {
+      const [sine, cosine] = frmV1StableSinCos(first.re);
       return tracked({
-        re: f32Mul(f32(Math.sin(first.re)), coshReal(first.im)),
-        im: f32Mul(f32(Math.cos(first.re)), sinhReal(first.im)),
+        re: f32Mul(sine, coshReal(first.im)),
+        im: f32Mul(cosine, sinhReal(first.im)),
       });
-    case "cos":
+    }
+    case "cos": {
+      const [sine, cosine] = frmV1StableSinCos(first.re);
       return tracked({
-        re: f32Mul(f32(Math.cos(first.re)), coshReal(first.im)),
-        im: f32(-f32Mul(f32(Math.sin(first.re)), sinhReal(first.im))),
+        re: f32Mul(cosine, coshReal(first.im)),
+        im: f32(-f32Mul(sine, sinhReal(first.im))),
       });
-    case "cosxx":
+    }
+    case "cosxx": {
+      const [sine, cosine] = frmV1StableSinCos(first.re);
       return tracked({
-        re: f32Mul(f32(Math.cos(first.re)), coshReal(first.im)),
-        im: f32Mul(f32(Math.sin(first.re)), sinhReal(first.im)),
+        re: f32Mul(cosine, coshReal(first.im)),
+        im: f32Mul(sine, sinhReal(first.im)),
       });
+    }
     case "tan":
       return tracked(guardedDiv(call("sin", [first]), call("cos", [first])));
-    case "sinh":
+    case "sinh": {
+      const [sine, cosine] = frmV1StableSinCos(first.im);
       return tracked({
-        re: f32Mul(sinhReal(first.re), f32(Math.cos(first.im))),
-        im: f32Mul(coshReal(first.re), f32(Math.sin(first.im))),
+        re: f32Mul(sinhReal(first.re), cosine),
+        im: f32Mul(coshReal(first.re), sine),
       });
-    case "cosh":
+    }
+    case "cosh": {
+      const [sine, cosine] = frmV1StableSinCos(first.im);
       return tracked({
-        re: f32Mul(coshReal(first.re), f32(Math.cos(first.im))),
-        im: f32Mul(sinhReal(first.re), f32(Math.sin(first.im))),
+        re: f32Mul(coshReal(first.re), cosine),
+        im: f32Mul(sinhReal(first.re), sine),
       });
+    }
     case "tanh":
       return tracked(guardedDiv(call("sinh", [first]), call("cosh", [first])));
     case "cotanh":
@@ -800,7 +812,7 @@ function compileExpression(
     );
     return {
       type,
-      code: flatten(`frmV1Checked(vec2(length(${glslComplex(operand)}), 0.0))`),
+      code: flatten(`frmV1Checked(vec2(frmV1Radius(${glslComplex(operand)}), 0.0))`),
     };
   }
   if (expression.kind === "unary") {
@@ -1102,7 +1114,7 @@ function cpuExpression(
   if (expression.kind === "magnitude") {
     const operand = asComplex(cpuExpression(expression.operand, state, types));
     return value(
-      { re: f32(Math.hypot(operand.re, operand.im)), im: 0 },
+      { re: frmV1StableHypot(operand.re, operand.im), im: 0 },
       "real",
     );
   }
@@ -1214,6 +1226,16 @@ function cpuExpression(
   }
   if (leftComplex.re === 0 && leftComplex.im === 0)
     return value({ re: 0, im: 0 });
+  if (
+    Number.isInteger(rightComplex.re) &&
+    rightComplex.re >= 0 &&
+    rightComplex.re <= 16
+  ) {
+    let integerPower = { re: 1, im: 0 };
+    for (let index = 0; index < rightComplex.re; index++)
+      integerPower = s32Mul(integerPower, leftComplex);
+    return value(integerPower);
+  }
   const logarithm = checkedComplex(
     state,
     standard32Stdlib("log", [leftComplex], state),
@@ -1342,7 +1364,7 @@ export function compileFrmLikeV1Backend(
       "// FRM-like v1 backend candidate.",
       FRM_V1_GLSL_PRELUDE,
       "bool frmV1Truthy(vec2 value) { return value.x != 0.0; }",
-      "vec2 frmV1Pow(vec2 base, float exponent) { if (base.x == 0.0 && base.y == 0.0) return vec2(0.0); return frmV1Checked(frmV1Exp(frmV1Mul(vec2(exponent, 0.0), frmV1Log(base)))); }",
+      "vec2 frmV1Pow(vec2 base, float exponent) { if (base.x == 0.0 && base.y == 0.0) return vec2(0.0); if (exponent >= 0.0 && exponent <= 16.0 && floor(exponent) == exponent) { vec2 result = vec2(1.0, 0.0); for (int index = 0; index < 16; index++) { if (float(index) >= exponent) break; result = frmV1Mul(result, base); } return result; } return frmV1Checked(frmV1Exp(frmV1Mul(vec2(exponent, 0.0), frmV1Log(base)))); }",
       ...guardedPreludeLines(guardSet),
       ...(orbitPlugin
         ? []

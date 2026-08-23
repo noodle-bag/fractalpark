@@ -6,7 +6,9 @@ import { beforeAll, describe, expect, it } from "vitest";
 
 import { compileClassicFrmEntry } from "@/engine/frm/compile";
 import { compilePublishedFormulaPluginV1 } from "@/engine/formulas/v1/published-adapter";
+import { RECIPES as RECOVERED_TRANSCENDENTAL_RECIPES } from "@/engine/formulas/v1/native-recipes-b94-recovered-transcendental";
 import { registerBuiltins } from "@/engine/plugins/builtins";
+import { RECOVERED_TRANSCENDENTAL_MATH_GLSL_V1 } from "@/engine/plugins/builtins/formulas/recoveredTranscendentalMath";
 import { pluginRegistry } from "@/engine/plugins/registry";
 import { assembleShader, makeCacheKey } from "@/engine/shaders/assembler";
 
@@ -120,11 +122,14 @@ describe("published formula candidate-C adapter", () => {
     );
   });
 
-  it("keeps all 94 builtins and a strict classic shader byte-identical", () => {
-    const summaries = pluginRegistry
+  it("keeps 82 untouched builtins byte-identical and scopes recovery bytes to exact 12", () => {
+    const formulas = pluginRegistry
       .listFormulas()
-      .sort((left, right) => left.id.localeCompare(right.id))
-      .map((formula) => {
+      .sort((left, right) => left.id.localeCompare(right.id));
+    const recoveredIds = new Set(
+      RECOVERED_TRANSCENDENTAL_RECIPES.map((recipe) => recipe.runtimeId),
+    );
+    const summaries = formulas.map((formula) => {
         const source = assembleShader({
           formulaId: formula.id,
           outsideColoringId: "smooth",
@@ -135,9 +140,24 @@ describe("published formula candidate-C adapter", () => {
         return `${formula.id}:${sha256(source)}`;
       });
     expect(summaries).toHaveLength(94);
-    expect(sha256(summaries.join("\n"))).toBe(
-      "7eb974f1cf386184ae5c3122f195de2e3a103fbafe5eed898981973c69889908",
+    const untouched = summaries.filter(
+      (summary) => !recoveredIds.has(summary.slice(0, summary.indexOf(":"))),
     );
+    const recovered = summaries.filter((summary) =>
+      recoveredIds.has(summary.slice(0, summary.indexOf(":"))),
+    );
+    expect(untouched).toHaveLength(82);
+    expect(recovered).toHaveLength(12);
+    expect(sha256(untouched.join("\n"))).toBe(
+      "b44c18b53146858bfaf7221008e1fe8a868afe961885cf154d103b8ae23f3e4c",
+    );
+    expect(sha256(recovered.join("\n"))).toBe(
+      "81f9175c0e23d5a67ca181b39a526d78fd9478797d2ccdcbe62bedb45792cb6a",
+    );
+    for (const formula of formulas)
+      expect(formula.glsl.includes(RECOVERED_TRANSCENDENTAL_MATH_GLSL_V1)).toBe(
+        recoveredIds.has(formula.id),
+      );
 
     const classic = compileClassicFrmEntry(
       "FrozenClassic {\n\tz=0:\n\tz=z^2+c\n\t|z|<4\n}",
