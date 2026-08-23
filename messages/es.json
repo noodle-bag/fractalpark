@@ -1467,6 +1467,9 @@
       "position": "Posición",
       "center": "Centro",
       "zoom": "Zoom",
+      "invalidNumber": "Introduce un número finito válido.",
+      "increase": "Aumentar",
+      "decrease": "Disminuir",
       "mode": {
         "label": "Modo de fractal",
         "mandelbrot": "Mandelbrot",

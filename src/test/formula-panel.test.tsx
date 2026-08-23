@@ -138,7 +138,7 @@ bailout:
 
   it('renders and edits published parameters from their versioned descriptor types', async () => {
     const onFormulaParamChange = vi.fn();
-    render(
+    const renderPanel = (offset: [number, number] = [0.1, -0.2]) => (
       <FormulaPanel
         isJulia={false}
         juliaC={[-0.7, 0.27]}
@@ -146,7 +146,7 @@ bailout:
         currentBounds={{ centerX: 0, centerY: 0, zoom: 1, rotation: 0 }}
         pluginParams={{
           frmV1_scale: [0.25, 0],
-          frmV1_offset: [0.1, -0.2],
+          frmV1_offset: offset,
           u_frm_fn1: 1,
         }}
         publishedDescriptor={{
@@ -183,19 +183,51 @@ bailout:
         onFormulaParamChange={onFormulaParamChange}
       />
     );
+    const { rerender } = render(renderPanel());
 
-    expect(screen.getByLabelText('scale')).toHaveValue(0.25);
-    expect(screen.getByLabelText('offset controls.complexReal')).toHaveValue(0.1);
-    expect(screen.getByLabelText('offset controls.complexImaginary')).toHaveValue(-0.2);
+    const scale = screen.getByLabelText('scale');
+    const offsetReal = screen.getByLabelText('offset controls.complexReal');
+    const offsetImaginary = screen.getByLabelText('offset controls.complexImaginary');
+    expect(scale).toHaveValue('0.25');
+    expect(offsetReal).toHaveValue('0.1');
+    expect(offsetImaginary).toHaveValue('-0.2');
+    expect(scale).toHaveAttribute('role', 'spinbutton');
+    expect(scale).toHaveAttribute('step', '0.1');
     expect(screen.getByRole('combobox', { name: 'fn1' })).toHaveTextContent('sin');
 
-    fireEvent.change(screen.getByLabelText('scale'), { target: { value: '2' } });
+    fireEvent.change(scale, { target: { value: '2' } });
+    expect(scale).toHaveValue('2');
+    expect(onFormulaParamChange).not.toHaveBeenCalled();
+    fireEvent.blur(scale);
     expect(onFormulaParamChange).toHaveBeenCalledWith('frmV1_scale', [1, 0]);
 
-    fireEvent.change(screen.getByLabelText('offset controls.complexReal'), {
-      target: { value: '0.4' },
+    fireEvent.change(offsetReal, {
+      target: { value: '0.' },
     });
+    expect(offsetReal).toHaveValue('0.');
+    expect(onFormulaParamChange).toHaveBeenCalledTimes(1);
+    fireEvent.change(offsetReal, {
+      target: { value: '4e-1' },
+    });
+    fireEvent.keyDown(offsetReal, { key: 'Enter' });
     expect(onFormulaParamChange).toHaveBeenCalledWith('frmV1_offset', [0.4, -0.2]);
+
+    rerender(renderPanel());
+    fireEvent.change(offsetImaginary, { target: { value: '6e-1' } });
+    fireEvent.keyDown(offsetImaginary, { key: 'Enter' });
+    expect(onFormulaParamChange).toHaveBeenCalledWith('frmV1_offset', [0.4, 0.6]);
+
+    rerender(renderPanel([0.4, -0.2]));
+    const rerenderedReal = screen.getByLabelText('offset controls.complexReal');
+    fireEvent.change(rerenderedReal, { target: { value: '0.5' } });
+    fireEvent.keyDown(rerenderedReal, { key: 'Enter' });
+    expect(onFormulaParamChange).toHaveBeenCalledWith('frmV1_offset', [0.5, 0.6]);
+
+    rerender(renderPanel([0.4, 0.6]));
+    const pendingReal = screen.getByLabelText('offset controls.complexReal');
+    expect(pendingReal).toHaveValue('0.5');
+    fireEvent.click(screen.getByRole('button', { name: 'offset controls.complexReal controls.increase' }));
+    expect(onFormulaParamChange).toHaveBeenCalledWith('frmV1_offset', [0.6, 0.6]);
 
     fireEvent.click(screen.getByRole('combobox', { name: 'fn1' }));
     fireEvent.click(await screen.findByRole('option', { name: 'identity' }));

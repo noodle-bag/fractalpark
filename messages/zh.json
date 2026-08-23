@@ -1467,6 +1467,9 @@
       "position": "位置信息",
       "center": "中心",
       "zoom": "缩放",
+      "invalidNumber": "请输入有效的有限数值。",
+      "increase": "增加",
+      "decrease": "减少",
       "mode": {
         "label": "分形模式",
         "mandelbrot": "Mandelbrot 集",

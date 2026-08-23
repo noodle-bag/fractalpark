@@ -1467,6 +1467,9 @@
       "position": "위치",
       "center": "중심",
       "zoom": "줌",
+      "invalidNumber": "유효한 유한 숫자를 입력하세요.",
+      "increase": "증가",
+      "decrease": "감소",
       "mode": {
         "label": "프랙탈 모드",
         "mandelbrot": "만델브로",

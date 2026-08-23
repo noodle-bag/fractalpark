@@ -1,5 +1,6 @@
 'use client';
 
+import { useEffect, useRef, useState } from 'react';
 import { useTranslations } from 'next-intl';
 import { pluginRegistry } from '@/engine/plugins/registry';
 import { FN_SLOT_OPTIONS, isFnSlotName } from '@/engine/frm/builtins';
@@ -10,6 +11,7 @@ import { Input } from '@/components/ui/input';
 import { Slider } from '@/components/ui/slider';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { FormulaTab } from './FormulaTab';
+import { FormulaNumberDraftInput } from './FormulaNumberDraftInput';
 import { JuliaPicker } from './JuliaPicker';
 import type { FormulaSelectionRequest } from '@/engine/frm/authoring';
 import type {
@@ -230,6 +232,154 @@ export function FormulaPanel({
   );
 }
 
+interface FormulaComplexDraftInputsProps {
+  value: [number, number];
+  slotName: string;
+  realId?: string;
+  imaginaryId?: string;
+  min?: number;
+  max?: number;
+  showCoordinateLabels?: boolean;
+  onCommit: (value: [number, number]) => void;
+  t: ReturnType<typeof useTranslations>;
+}
+
+function formulaComplexValuesEqual(
+  left: readonly [number, number],
+  right: readonly [number, number],
+): boolean {
+  return Object.is(left[0], right[0]) && Object.is(left[1], right[1]);
+}
+
+interface FormulaComplexDraftState {
+  externalValue: [number, number];
+  acknowledgedValue: [number, number];
+  pendingValues: Array<[number, number]>;
+  displayValue: [number, number];
+}
+
+function reconcileFormulaComplexDraftState(
+  state: FormulaComplexDraftState,
+  incoming: [number, number],
+): FormulaComplexDraftState {
+  const pendingIndex = state.pendingValues.findIndex((pending) =>
+    formulaComplexValuesEqual(pending, incoming),
+  );
+
+  if (pendingIndex >= 0) {
+    const pendingValues = state.pendingValues.slice(pendingIndex + 1);
+    return {
+      externalValue: incoming,
+      acknowledgedValue: incoming,
+      pendingValues,
+      displayValue: pendingValues.at(-1) ?? incoming,
+    };
+  }
+
+  if (formulaComplexValuesEqual(state.acknowledgedValue, incoming)) {
+    return { ...state, externalValue: incoming };
+  }
+
+  return {
+    externalValue: incoming,
+    acknowledgedValue: incoming,
+    pendingValues: [],
+    displayValue: incoming,
+  };
+}
+
+function FormulaComplexDraftInputs({
+  value,
+  slotName,
+  realId,
+  imaginaryId,
+  min,
+  max,
+  showCoordinateLabels = false,
+  onCommit,
+  t,
+}: FormulaComplexDraftInputsProps) {
+  const externalReal = value[0];
+  const externalImaginary = value[1];
+  const incoming: [number, number] = [externalReal, externalImaginary];
+  const [draftState, setDraftState] = useState<FormulaComplexDraftState>(() => ({
+    externalValue: incoming,
+    acknowledgedValue: incoming,
+    pendingValues: [],
+    displayValue: incoming,
+  }));
+  const latestValue = useRef<[number, number]>(draftState.displayValue);
+
+  if (!formulaComplexValuesEqual(draftState.externalValue, incoming)) {
+    setDraftState(reconcileFormulaComplexDraftState(draftState, incoming));
+  }
+
+  useEffect(() => {
+    latestValue.current = draftState.displayValue;
+  }, [draftState.displayValue]);
+
+  const commitCoordinate = (index: 0 | 1, next: number) => {
+    const current = latestValue.current;
+    const committed: [number, number] =
+      index === 0 ? [next, current[1]] : [current[0], next];
+    latestValue.current = committed;
+    setDraftState((currentState) => ({
+      ...currentState,
+      pendingValues: [...currentState.pendingValues, committed],
+      displayValue: committed,
+    }));
+    onCommit(committed);
+  };
+
+  const realInput = (
+    <FormulaNumberDraftInput
+      id={realId}
+      ariaLabel={`${slotName} ${t('controls.complexReal')}`}
+      value={draftState.displayValue[0]}
+      min={min}
+      max={max}
+      onCommit={(next) => commitCoordinate(0, next)}
+      invalidMessage={t('controls.invalidNumber')}
+      increaseLabel={t('controls.increase')}
+      decreaseLabel={t('controls.decrease')}
+      className="h-8"
+    />
+  );
+  const imaginaryInput = (
+    <FormulaNumberDraftInput
+      id={imaginaryId}
+      ariaLabel={`${slotName} ${t('controls.complexImaginary')}`}
+      value={draftState.displayValue[1]}
+      min={min}
+      max={max}
+      onCommit={(next) => commitCoordinate(1, next)}
+      invalidMessage={t('controls.invalidNumber')}
+      increaseLabel={t('controls.increase')}
+      decreaseLabel={t('controls.decrease')}
+      className="h-8"
+    />
+  );
+
+  if (!showCoordinateLabels) return <>{realInput}{imaginaryInput}</>;
+
+  return (
+    <>
+      <div className="space-y-1">
+        <Label htmlFor={realId} className="text-xs text-muted-foreground">
+          {t('controls.complexReal')}
+        </Label>
+        {realInput}
+      </div>
+      <div className="space-y-1">
+        <Label htmlFor={imaginaryId} className="text-xs text-muted-foreground">
+          {t('controls.complexImaginary')}
+        </Label>
+        {imaginaryInput}
+      </div>
+    </>
+  );
+}
+
 interface PublishedFormulaParameterControlProps {
   parameter: PublishedFormulaParameterDescriptorV1;
   value?: PluginParamValue;
@@ -286,27 +436,15 @@ function PublishedFormulaParameterControl({
       <div className="space-y-2">
         <span className="text-sm font-medium leading-none">{parameter.slotName}</span>
         <div className="grid grid-cols-2 gap-2">
-          <Input
-            aria-label={`${parameter.slotName} ${t('controls.complexReal')}`}
-            type="number"
-            step="any"
-            value={resolved[0]}
-            onChange={(event) => {
-              const next = parseFloat(event.target.value);
-              if (Number.isFinite(next)) onChange(parameter.uniformName, [next, resolved[1]]);
-            }}
-            className="h-8 font-mono text-sm"
-          />
-          <Input
-            aria-label={`${parameter.slotName} ${t('controls.complexImaginary')}`}
-            type="number"
-            step="any"
-            value={resolved[1]}
-            onChange={(event) => {
-              const next = parseFloat(event.target.value);
-              if (Number.isFinite(next)) onChange(parameter.uniformName, [resolved[0], next]);
-            }}
-            className="h-8 font-mono text-sm"
+          <FormulaComplexDraftInputs
+            value={resolved}
+            slotName={parameter.slotName}
+            realId={`published-${parameter.uniformName}-re`}
+            imaginaryId={`published-${parameter.uniformName}-im`}
+            min={parameter.hardDomain?.[0]}
+            max={parameter.hardDomain?.[1]}
+            onCommit={(next) => onChange(parameter.uniformName, next)}
+            t={t}
           />
         </div>
       </div>
@@ -324,22 +462,17 @@ function PublishedFormulaParameterControl({
       <Label htmlFor={`published-${parameter.uniformName}`} className="text-sm font-medium leading-none">
         {parameter.slotName}
       </Label>
-      <Input
+      <FormulaNumberDraftInput
         id={`published-${parameter.uniformName}`}
-        type="number"
-        step="any"
         min={parameter.hardDomain?.[0]}
         max={parameter.hardDomain?.[1]}
         value={resolved}
-        onChange={(event) => {
-          const next = parseFloat(event.target.value);
-          if (!Number.isFinite(next)) return;
-          const bounded = parameter.hardDomain
-            ? Math.min(parameter.hardDomain[1], Math.max(parameter.hardDomain[0], next))
-            : next;
-          onChange(parameter.uniformName, [bounded, 0]);
-        }}
-        className="h-8 font-mono text-sm"
+        ariaLabel={parameter.slotName}
+        onCommit={(next) => onChange(parameter.uniformName, [next, 0])}
+        invalidMessage={t('controls.invalidNumber')}
+        increaseLabel={t('controls.increase')}
+        decreaseLabel={t('controls.decrease')}
+        className="h-8"
       />
     </div>
   );
@@ -447,42 +580,17 @@ function FormulaComplexInput({
         {getFormulaUniformLabel(descriptor, t)}
       </label>
       <div className="grid grid-cols-2 gap-2">
-        <div className="space-y-1">
-          <Label htmlFor={`${descriptor.name}-re`} className="text-xs text-muted-foreground">
-            {t('controls.complexReal')}
-          </Label>
-          <Input
-            id={`${descriptor.name}-re`}
-            type="number"
-            step="0.01"
-            value={resolvedValue[0]}
-            onChange={(event) => {
-              const next = parseFloat(event.target.value);
-              if (!Number.isNaN(next)) {
-                onChange(descriptor.name, [next, resolvedValue[1]]);
-              }
-            }}
-            className="h-8 font-mono text-sm"
-          />
-        </div>
-        <div className="space-y-1">
-          <Label htmlFor={`${descriptor.name}-im`} className="text-xs text-muted-foreground">
-            {t('controls.complexImaginary')}
-          </Label>
-          <Input
-            id={`${descriptor.name}-im`}
-            type="number"
-            step="0.01"
-            value={resolvedValue[1]}
-            onChange={(event) => {
-              const next = parseFloat(event.target.value);
-              if (!Number.isNaN(next)) {
-                onChange(descriptor.name, [resolvedValue[0], next]);
-              }
-            }}
-            className="h-8 font-mono text-sm"
-          />
-        </div>
+        <FormulaComplexDraftInputs
+          value={resolvedValue}
+          slotName={getFormulaUniformLabel(descriptor, t)}
+          realId={`${descriptor.name}-re`}
+          imaginaryId={`${descriptor.name}-im`}
+          min={descriptor.min}
+          max={descriptor.max}
+          showCoordinateLabels
+          onCommit={(next) => onChange(descriptor.name, next)}
+          t={t}
+        />
       </div>
     </div>
   );

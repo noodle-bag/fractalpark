@@ -44,6 +44,11 @@ const ROLLBACK_REPRESENTATIVE = {
     'definitions/41794347e36147808476dcb16e41d7bdbf24b94327ce2f0bf13fd67a1cf1901f.frm',
 } as const;
 
+const DECIMAL_DRAFT_REPRESENTATIVE = {
+  formulaId: '0ba0b082-c4b0-51d8-b981-7ca1ca25b9f3',
+  displayName: 'islandofchaos',
+} as const;
+
 async function waitForFractalCanvasReady(page: Page) {
   await expect(page.locator('[data-testid="fractal-canvas"]')).toBeVisible({
     timeout: 20_000,
@@ -177,11 +182,12 @@ test.describe('Published Formula Library', () => {
       if (representative.displayName !== 'juliaconj') await openLibrary(page);
     }
 
-    const realPart = page.getByLabel('offset Re');
-    const imaginaryPart = page.getByLabel('offset Im');
+    const realPart = page.getByRole('spinbutton', { name: 'offset Re' });
+    const imaginaryPart = page.getByRole('spinbutton', { name: 'offset Im' });
     await expect(realPart).toHaveValue('0', { timeout: 45_000 });
     await expect(imaginaryPart).toHaveValue('0');
     await realPart.fill('0.25');
+    await realPart.press('Enter');
     await expect(realPart).toHaveValue('0.25');
 
     expect(definitionRequests).toHaveLength(REPRESENTATIVES.length);
@@ -212,8 +218,8 @@ test.describe('Published Formula Library', () => {
     await expect(
       page.getByText(REPRESENTATIVES[2].displayName, { exact: true }),
     ).toBeVisible({ timeout: 60_000 });
-    await expect(page.getByLabel('offset Re')).toHaveValue('0.25');
-    await expect(page.getByLabel('offset Im')).toHaveValue('0');
+    await expect(page.getByRole('spinbutton', { name: 'offset Re' })).toHaveValue('0.25');
+    await expect(page.getByRole('spinbutton', { name: 'offset Im' })).toHaveValue('0');
     expect(definitionRequests).toHaveLength(REPRESENTATIVES.length + 1);
     expect(definitionRequests.at(-1)).toContain(REPRESENTATIVES[2].definitionPath);
 
@@ -222,11 +228,71 @@ test.describe('Published Formula Library', () => {
     await expect(
       page.getByText(REPRESENTATIVES[2].displayName, { exact: true }),
     ).toBeVisible({ timeout: 60_000 });
-    await expect(page.getByLabel('offset Re')).toHaveValue('0.25');
-    await expect(page.getByLabel('offset Im')).toHaveValue('0');
+    await expect(page.getByRole('spinbutton', { name: 'offset Re' })).toHaveValue('0.25');
+    await expect(page.getByRole('spinbutton', { name: 'offset Im' })).toHaveValue('0');
     expect(definitionRequests).toHaveLength(REPRESENTATIVES.length + 2);
     expect(definitionRequests.at(-1)).toContain(REPRESENTATIVES[2].definitionPath);
     expect(shaderErrors).toEqual([]);
+  });
+
+  test('preserves and explicitly commits islandofchaos decimal parameter drafts', async ({
+    page,
+  }) => {
+    test.setTimeout(180_000);
+    await page.context().grantPermissions(['clipboard-read', 'clipboard-write']);
+    await page.goto(
+      `/en/explore?open=standard-formula&formula=${DECIMAL_DRAFT_REPRESENTATIVE.formulaId}`,
+    );
+    await waitForFractalCanvasReady(page);
+    await expect(page.getByTestId('explore-root')).toHaveAttribute(
+      'data-formula-id',
+      DECIMAL_DRAFT_REPRESENTATIVE.formulaId,
+      { timeout: 60_000 },
+    );
+    await expect(
+      page.getByText(DECIMAL_DRAFT_REPRESENTATIVE.displayName, { exact: true }),
+    ).toBeVisible();
+
+    const seedReal = page.getByRole('spinbutton', { name: 'seed Re' });
+    const escapeLimitImaginary = page.getByRole('spinbutton', {
+      name: 'escapeLimit Im',
+    });
+    await expect(seedReal).toHaveValue('0');
+    await expect(seedReal).toHaveAttribute('step', '0.1');
+
+    await seedReal.fill('');
+    await seedReal.pressSequentially('0.');
+    await expect(seedReal).toHaveValue('0.');
+    expect(new URL(page.url()).searchParams.get('pp')).toBeNull();
+    await seedReal.pressSequentially('25');
+    await seedReal.press('Enter');
+    await expect(seedReal).toHaveValue('0.25');
+    await expect
+      .poll(() => new URL(page.url()).searchParams.get('pp'))
+      .toContain('frmV1_seed:0.25|0');
+
+    await escapeLimitImaginary.click();
+    await page.evaluate(async () => navigator.clipboard.writeText('-1e-1'));
+    await escapeLimitImaginary.press('ControlOrMeta+A');
+    await escapeLimitImaginary.press('ControlOrMeta+V');
+    await expect(escapeLimitImaginary).toHaveValue('-1e-1');
+    await escapeLimitImaginary.press('Enter');
+    await expect(escapeLimitImaginary).toHaveValue('-0.1');
+    await expect
+      .poll(() => new URL(page.url()).searchParams.get('pp'))
+      .toContain('frmV1_escapeLimit:0|-0.1');
+
+    await page.getByRole('button', { name: 'escapeLimit Im Increase' }).click();
+    await expect(escapeLimitImaginary).toHaveValue('0');
+    await page.getByRole('button', { name: 'escapeLimit Im Decrease' }).click();
+    await expect(escapeLimitImaginary).toHaveValue('-0.1');
+
+    await escapeLimitImaginary.fill('not-a-number');
+    await escapeLimitImaginary.press('Tab');
+    await expect(escapeLimitImaginary).toHaveValue('-0.1');
+    await expect(
+      page.getByText('Enter a valid finite number.', { exact: true }),
+    ).toBeVisible();
   });
 
   test('fails crafted Standard URL parameters closed in cold and warm sessions', async ({ page }) => {
@@ -256,7 +322,7 @@ test.describe('Published Formula Library', () => {
     await expect(
       page.getByText(HARD_DOMAIN_REPRESENTATIVE.displayName, { exact: true }),
     ).toBeVisible({ timeout: 60_000 });
-    await expect(page.getByLabel('phoenixMultiP')).toHaveValue('0.5');
+    await expect(page.getByRole('spinbutton', { name: 'phoenixMultiP' })).toHaveValue('0.5');
     await expect.poll(
       () => {
         const url = new URL(page.url());
@@ -293,7 +359,7 @@ test.describe('Published Formula Library', () => {
     await expect(
       page.getByText(HARD_DOMAIN_REPRESENTATIVE.displayName, { exact: true }),
     ).toBeVisible({ timeout: 60_000 });
-    await expect(page.getByLabel('phoenixMultiP')).toHaveValue('0.5');
+    await expect(page.getByRole('spinbutton', { name: 'phoenixMultiP' })).toHaveValue('0.5');
     await expect.poll(
       () => new URL(page.url()).searchParams.get('pp'),
       { timeout: 60_000 },
