@@ -135,6 +135,7 @@ export const STANDARD_LIBRARY_PERFORMANCE_SOURCE_PATHS_V1 = [
   "supabase/migrations/20260816090000_mine_formula_lifecycle.sql",
   "supabase/migrations/20260824120000_mine_formula_lifecycle_projection.sql",
   "supabase/migrations/20260824235800_mine_formula_lifecycle_reader.sql",
+  "supabase/migrations/20260825013000_mine_formula_lifecycle_runnable_projection.sql",
   "package.json",
   "package-lock.json",
 ] as const;

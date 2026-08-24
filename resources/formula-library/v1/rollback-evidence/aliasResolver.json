@@ -42,9 +42,9 @@
     "src/app/api/creation/custom-formulas/lifecycle/route.ts": "c2dc60d2ef408eab7f14bd3be937f48e0cf064727f3d3eff3f3498b21727b8c0",
     "src/app/sitemap.ts": "85cb9dee6f561c9ff8c78d4d9a61df2d5f49dfce52d0c3978c4b978a36bda9c9",
     "src/components/fractal/FractalCanvas.tsx": "2b5058d3c034fad287a5d54c1c68c732608b599e75be678b001b79145be7a644",
-    "src/components/fractal/CustomFormulaList.tsx": "695527d21ece0f3b65f2a6159ca260117e5f3dfab09f8538772f1c3928e03810",
+    "src/components/fractal/CustomFormulaList.tsx": "420ea16c472ef59adc38e8a642ce20e9f29ed94be400fd41bee769998feda4bb",
     "src/components/fractal/FormulaEditor.tsx": "fae592c3a7f37046db3328953784b123241560098f90d227883a8f86e0b6dfb4",
-    "src/components/fractal/FrmEditorWorkspace.tsx": "1665c25cac37cee1cd3d434b34e656819187524249a3522b6876c6b35b2135f7",
+    "src/components/fractal/FrmEditorWorkspace.tsx": "dc1456a9ea507cbf7418a17161cae12ad19610a358ffe7e6a71fcf8d831943fc",
     "src/components/fractal/PublishedFormulaLibrary.tsx": "ab5838ed500cfd68f80ae041283a0cc2fd2413d62351c1073aa4a7fda01ddaa1",
     "src/components/formulas/CanonicalSourceEditor.tsx": "5f5aa16cfffefedfe759ae7a6b53e988b26af3c303ca10486a605eadccc3e86c",
     "src/components/formulas/CanonicalSourceWorkspace.tsx": "a2af0623149babe3b9fe7e1f60d69d3b41a127dc316117061fdc52f71a48b27d",
@@ -56,7 +56,7 @@
     "src/engine/frm/codemirror-lint.ts": "b5e89c4491936b6d97a3afae1aa6f41b869342f9169deca42d65a8c63c44e2ce",
     "src/lib/cloud/client.ts": "b3485edaad5ce278cda2d091bdebcfcf9acc851ce77a00ddef6bbb6fede928ec",
     "src/lib/cloud/custom-formulas.ts": "e847f583d05ffbc073b08359e175f81820fbe8416613cceadf18be4b3e886b70",
-    "src/lib/cloud/mine-formula-lifecycle.ts": "95f800329b17245646f6f86d017464d622a02142688e24ca120eb1c657e533bc",
+    "src/lib/cloud/mine-formula-lifecycle.ts": "48428d6acf3bbe00687393c6749d0e8715a70a3e33bf4ce7e064653d016f1193",
     "src/lib/published-formula-library.ts": "adb660185c6c7f6297737ac7ff925f346cfeddd5d5818348b382356c9a880355",
     "src/lib/published-formula-selection.ts": "9183092370ba8191937fe182ae8a7b5613a152547d83bde5ce205629dcc62013",
     "src/lib/published-formula-source.ts": "53beed7a85ceeeb1713468eb5c65423e0fa77c65063feee4ee1d9be86fc00f10",
@@ -111,9 +111,9 @@
     "src/test/published-formula-source.test.ts": "a9fb46e28f9ac95fc9be31a40b379418d3ff9c241f97e7441ef22968f387cc78",
     "src/test/canonical-source-workspace.test.tsx": "98cce73c13ed89511565d356f053fff1cf418c2c40be86bcdbabed3b43cb82b6",
     "src/test/cloud-custom-formulas-routes.test.ts": "9322c979f3a5d636074e61ed4fcebbd1e183156149d208d47255ab878980e97b",
-    "src/test/mine-formula-lifecycle-migration.test.ts": "26f259a4fa65851e3ba05acf5a1af64cb8bea054f3aa71095cc111ffcd719570",
+    "src/test/mine-formula-lifecycle-migration.test.ts": "dc40ba568205f88df846a475ccd9822e5cbf5ff912bde0ac2838712887c16e3f",
     "src/test/mine-formula-lifecycle-route.test.ts": "d1fced8fc52a5008fdb8222d2230b266fea2f7d744e8bef2b8faa24fe406485a",
-    "src/test/mine-formula-lifecycle.test.ts": "d64feeea6d86d13f53aeee4f4e72da1b366d087ea9ffe4147e7d7b3a53be6b83",
+    "src/test/mine-formula-lifecycle.test.ts": "c5d251d5dafc795c736fc7b0184406944690f4a7f2919a8c062981e7e25c1c83",
     "src/test/published-formula-remix.test.ts": "d54a8e74088fb6ca7b9484a27311b4170e1f4e745128ab56fbaca8c9ee4069b0",
     "src/test/use-cloud-formula-library.test.tsx": "0dc91b3fbbd45fc2ca0a7fa874c0b43c7f57aa4614a1134696a47b28587d1d56",
     "src/test/formula-records.test.ts": "fac8a4bec5e674316504ae576f666940927c20e5b01782a4190c7c054ede380e",
@@ -124,7 +124,7 @@
     "src/test/teaching-held-route-guard.test.ts": "45aaa04310b90013e75a8ad4bf72118f71bcca0beef2b199090ea773d01ad477",
     "src/test/teaching-content-loader.test.ts": "68a59269870f0fadf5a83696d4b10e18768b1a85d155bef2f56ce753f3b2fba0",
     "src/test/fractal-renderer-race.test.ts": "4a5ec916fc3f064e9112f13594201b1a8e1bc2e19133a6c7cddb600e4263f6fe",
-    "scripts/standard-library-performance-source-paths.ts": "e7c0020bf84464fb6f2de7def80338f05a45971ff22734389144acbcb154cd85",
+    "scripts/standard-library-performance-source-paths.ts": "cf9b579342c10fd4236a8c44512f7600d1af26bfefb8c1eba5cb773d496e5cc8",
     "scripts/measure-standard-library-performance.ts": "844614a39dc4622c8649b4babcdf4f6e76bdee40c9912447a5197f3071917f9b",
     "scripts/generate-published-formula-directory.ts": "4eb763e82d93d3538dec7fa1c2a951036178f77ecafea99d472d1166cec90bc2",
     "scripts/cross-check-native-recipes.ts": "eeb98e641a3119c9a56edcf6b110e2436e37f72d71f53b723c318c4ad479f7cb",
@@ -138,6 +138,7 @@
     "supabase/migrations/20260816090000_mine_formula_lifecycle.sql": "70e2ad84857a5cf2306386e10252b07de28a5216e657dfc376ece0c0ccdba97f",
     "supabase/migrations/20260824120000_mine_formula_lifecycle_projection.sql": "bb5c6494463e84821fce67752de01e67ced98491e1be41701847021e49b6909d",
     "supabase/migrations/20260824235800_mine_formula_lifecycle_reader.sql": "7f42e6752a8ec0a1c79706ab93141df52bc89177b19ff12b6ed58ffef83349f6",
+    "supabase/migrations/20260825013000_mine_formula_lifecycle_runnable_projection.sql": "1d52f85e03a118e9d52ef9838d7a29e191961b2092f86e12906099198fe61dfe",
     "package.json": "f9206c00be858ea71f0af922668869f65813dc71571716fc7600c0d1f871bb38",
     "package-lock.json": "e0b2fc48bafca283ed7a9c76dc821859d448632681d83af4882bdcf280ea1045"
   },
@@ -152,5 +153,5 @@
     "passed": 7,
     "failed": 0
   },
-  "generatedAt": "2026-08-25T00:54:38+08:00"
+  "generatedAt": "2026-08-25T01:57:55+08:00"
 }

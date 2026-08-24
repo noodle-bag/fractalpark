@@ -128,6 +128,7 @@ export function CustomFormulaList({
   const [semanticsCompareStatus, setSemanticsCompareStatus] =
     useState<'idle' | 'loading' | 'ready' | 'failed'>('idle');
   const semanticsRequestRef = useRef(0);
+  const editorRequestRef = useRef(0);
 
   const authenticated = session.status === 'authenticated';
   const activeCloudStorageId = parseCloudCustomFormulaReference(
@@ -152,6 +153,8 @@ export function CustomFormulaList({
   };
 
   const openBlankEditor = () => {
+    editorRequestRef.current += 1;
+    setBusyId(null);
     setActionError('');
     setEditingFormulaId(undefined);
     setEditorSource(undefined);
@@ -161,9 +164,11 @@ export function CustomFormulaList({
   };
 
   const openFormulaEditor = async (formula: CloudCustomFormulaSummary) => {
+    const request = ++editorRequestRef.current;
     setActionError('');
     setBusyId(formula.id);
     const detail = await getDetail(formula.id);
+    if (request !== editorRequestRef.current) return;
     setBusyId(null);
     if (!detail) {
       setActionError(customT('unavailable'));

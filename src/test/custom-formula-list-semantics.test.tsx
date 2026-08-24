@@ -38,6 +38,9 @@ const changeSemanticsMock = vi.fn(async () => ({
 const inspectDetailMock = vi.fn<
   (formulaId: string) => Promise<CloudCustomFormulaDetail | null>
 >();
+const getDetailMock = vi.fn<
+  (formulaId: string) => Promise<CloudCustomFormulaDetail | null>
+>();
 
 let formulasFixture: CloudCustomFormulaSummary[] = [];
 
@@ -47,7 +50,7 @@ vi.mock('@/hooks/useCloudFormulaLibrary', () => ({
     isLoading: false,
     refresh: vi.fn(),
     ensureRegistered: vi.fn(),
-    getDetail: vi.fn(),
+    getDetail: getDetailMock,
     inspectDetail: inspectDetailMock,
     saveFormula: vi.fn(),
     deleteFormula: vi.fn(),
@@ -68,7 +71,9 @@ vi.mock('@/lib/formula-resolver', async () => {
 });
 
 vi.mock('@/components/fractal/FormulaEditor', () => ({
-  FormulaEditor: () => null,
+  FormulaEditor: ({ initialSource }: { initialSource?: string }) => (
+    <div data-testid="mock-formula-editor">{initialSource}</div>
+  ),
 }));
 
 const COMPATIBLE_SOURCE = `CompareCompatible {
@@ -122,6 +127,7 @@ beforeEach(() => {
   formulasFixture = [];
   changeSemanticsMock.mockClear();
   inspectDetailMock.mockReset();
+  getDetailMock.mockReset();
 });
 
 describe('CustomFormulaList semantics UI (Upgrade & Compare)', () => {
@@ -180,6 +186,37 @@ describe('CustomFormulaList semantics UI (Upgrade & Compare)', () => {
     render(<CustomFormulaList currentBounds={bounds} />);
     expect(screen.getByText('badgeV1')).toBeTruthy();
     expect(screen.getByText('upgradeButton')).toBeTruthy();
+  });
+
+  it('keeps the latest editor detail when an older request resolves last', async () => {
+    const first = summary(2, 'f-first');
+    const second = summary(2, 'f-second');
+    formulasFixture = [first, second];
+    let resolveFirst!: (value: CloudCustomFormulaDetail | null) => void;
+    let resolveSecond!: (value: CloudCustomFormulaDetail | null) => void;
+    getDetailMock.mockImplementation(
+      (formulaId) =>
+        new Promise((resolve) => {
+          if (formulaId === first.id) resolveFirst = resolve;
+          else resolveSecond = resolve;
+        }),
+    );
+    render(<CustomFormulaList currentBounds={bounds} />);
+
+    const editButtons = screen.getAllByRole('button', { name: 'editAction' });
+    fireEvent.click(editButtons[0]);
+    fireEvent.click(editButtons[1]);
+    resolveSecond(detail(second, 'SECOND SOURCE'));
+
+    expect(await screen.findByTestId('mock-formula-editor')).toHaveTextContent(
+      'SECOND SOURCE',
+    );
+    resolveFirst(detail(first, 'FIRST SOURCE'));
+    await waitFor(() =>
+      expect(screen.getByTestId('mock-formula-editor')).toHaveTextContent(
+        'SECOND SOURCE',
+      ),
+    );
   });
 
   it('loads exact source read-only, renders both results, and writes only after final confirmation', async () => {

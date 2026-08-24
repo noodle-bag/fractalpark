@@ -23,6 +23,13 @@ const readerMigration = readFileSync(
   ),
   "utf8",
 );
+const runnableProjectionMigration = readFileSync(
+  join(
+    process.cwd(),
+    "supabase/migrations/20260825013000_mine_formula_lifecycle_runnable_projection.sql",
+  ),
+  "utf8",
+);
 
 describe("Mine formula lifecycle migration contract", () => {
   it("adds forward-only revision storage and private ACLs", () => {
@@ -107,5 +114,31 @@ describe("Mine formula lifecycle migration contract", () => {
     );
     expect(readerMigration).not.toMatch(/grant\s+select/i);
     expect(readerMigration).not.toMatch(/grant\s+.*custom_formula_revisions/i);
+  });
+
+  it("keeps the legacy projection pinned to the last runnable source for writer-off rollback", () => {
+    expect(runnableProjectionMigration).toContain(
+      "when new.runnable then new.definition ->> 'source'",
+    );
+    expect(runnableProjectionMigration).toContain("else custom_formulas.source");
+    expect(runnableProjectionMigration).toContain(
+      "and custom_formulas.source = new.definition ->> 'source' then ' '",
+    );
+    expect(runnableProjectionMigration).toContain(
+      "and custom_formulas.source = new.definition ->> 'source' then 1",
+    );
+    expect(runnableProjectionMigration).toContain(
+      "and custom_formulas.source = new.definition ->> 'source' then null",
+    );
+    expect(runnableProjectionMigration.match(/active_runnable_revision_id is null/g)).toHaveLength(3);
+    expect(runnableProjectionMigration).toContain(
+      "else custom_formulas.source_bytes",
+    );
+    expect(runnableProjectionMigration).toContain(
+      "else custom_formulas.experience_hint",
+    );
+    expect(runnableProjectionMigration).toContain("security invoker");
+    expect(runnableProjectionMigration).toContain("set search_path = ''");
+    expect(runnableProjectionMigration).not.toContain("security definer");
   });
 });

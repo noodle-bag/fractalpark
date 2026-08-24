@@ -162,6 +162,37 @@ describe("Mine formula lifecycle service boundary", () => {
     await expect(
       assertMineFormulaLifecycleInput({ ...invalid, diagnostics: [] }),
     ).rejects.toBeInstanceOf(CustomFormulaServiceError);
+
+    const profile = invalid.profile as unknown as FormulaProfileV1;
+    const malformedProfileBase = Object.fromEntries(
+      Object.entries({ ...profile, parameters: { power: 999 } }).filter(
+        ([key]) => key !== "profileRevision",
+      ),
+    ) as unknown as Omit<FormulaProfileV1, "profileRevision">;
+    const malformedProfileRevision = await hashProfileRevisionV1(
+      malformedProfileBase,
+    );
+    await expect(
+      assertMineFormulaLifecycleInput({
+        ...invalid,
+        profile: {
+          ...malformedProfileBase,
+          profileRevision: malformedProfileRevision,
+        },
+        profileRevision: malformedProfileRevision,
+      }),
+    ).rejects.toBeInstanceOf(CustomFormulaServiceError);
+  });
+
+  it("never trusts a client runnable flag for source that does not parse", async () => {
+    const forged = await invalidCandidate();
+    await expect(
+      assertMineFormulaLifecycleInput({
+        ...forged,
+        runnable: true,
+        diagnostics: [],
+      }),
+    ).rejects.toBeInstanceOf(CustomFormulaServiceError);
   });
 
   it("rejects originalSource and ambiguous lineage but accepts Standard parent identity with revisions", async () => {

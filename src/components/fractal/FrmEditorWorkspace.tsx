@@ -925,11 +925,9 @@ export function FrmEditorWorkspace() {
                     onClick={() => {
                       const generation = ++remixLoadGenerationRef.current;
                       void getDetail(formula.id).then(async (detail) => {
-                        if (
-                          generation !== remixLoadGenerationRef.current ||
-                          !detail
-                        ) {
-                          if (!detail) setNotice(t('saveError'));
+                        if (generation !== remixLoadGenerationRef.current) return;
+                        if (!detail) {
+                          setNotice(t('saveError'));
                           return;
                         }
                         const detailHint = (detail.experienceHint ?? undefined) as
@@ -1011,7 +1009,9 @@ export function FrmEditorWorkspace() {
                           setCompiledPreview(activePreview);
                           if (activeHint?.bounds) setBounds(activeHint.bounds);
                         } catch {
-                          setNotice(t('saveError'));
+                          if (generation === remixLoadGenerationRef.current) {
+                            setNotice(t('saveError'));
+                          }
                         }
                       });
                     }}

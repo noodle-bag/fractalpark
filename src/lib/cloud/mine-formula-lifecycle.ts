@@ -9,6 +9,7 @@ import {
   validateFormulaSafetyEnvelopeV1,
 } from "@/engine/formulas/v1/safety-envelope";
 import { validateFormulaProfileAssetV1 } from "@/engine/formulas/v1/assets";
+import { compilePublishedFormulaPluginV1 } from "@/engine/formulas/v1/published-adapter";
 import type {
   FormulaDefinitionV1,
   FormulaProfileV1,
@@ -165,19 +166,56 @@ async function validatedMineLifecycleInput(
     );
   }
   validateLineage(value);
+  const definition = value.definition as unknown as FormulaDefinitionV1;
+  const profile = await validateFormulaProfileAssetV1(
+    value.profile,
+    definition,
+    value.profileRevision as FormulaRevisionV1,
+  );
+  if (!profile.ok) return validationFailed("Profile is invalid");
   if (value.runnable) {
-    const definition = value.definition as unknown as FormulaDefinitionV1;
     const safety = await validateFormulaSafetyEnvelopeV1(
       projectExecutableFormulaDefinitionV1(definition),
     );
     if (!safety.ok)
       return validationFailed("runnable Definition failed Safety Envelope");
-    const profile = await validateFormulaProfileAssetV1(
-      value.profile,
-      definition,
-      value.profileRevision as FormulaRevisionV1,
+    const compiled = await compilePublishedFormulaPluginV1({
+      formulaId: definition.formulaId,
+      displayName:
+        typeof value.definition.name === "string"
+          ? value.definition.name
+          : "Mine Formula",
+      family:
+        typeof value.definition.family === "string"
+          ? value.definition.family
+          : "mine",
+      sourceRevision: value.sourceRevision,
+      semanticHash:
+        typeof value.definition.semanticHash === "string"
+          ? value.definition.semanticHash
+          : "",
+      source: value.definition.source,
+    });
+    if (!compiled.ok) {
+      return validationFailed("runnable source did not parse and compile exactly");
+    }
+    const sourceParameters = compiled.value.descriptor.parameters.map(
+      ({ slotName, type, default: defaultValue, hardDomain, classicBinding }) => ({
+        name: slotName,
+        type,
+        default: defaultValue,
+        ...(hardDomain ? { hardDomain } : {}),
+        ...(classicBinding ? { classicBinding } : {}),
+      }),
     );
-    if (!profile.ok) return validationFailed("runnable Profile is invalid");
+    if (
+      canonicalJsonV1(definition.parameters) !==
+      canonicalJsonV1(sourceParameters)
+    ) {
+      return validationFailed(
+        "runnable Definition parameters do not match source bytes",
+      );
+    }
   }
   return value;
 }
