@@ -113,7 +113,7 @@ describe('public Formula Record v1', () => {
         `/en/explore?open=standard-formula&formula=${record.formulaId}`
       );
       expect(record.actions.remixHref).toBe(
-        `${record.actions.openExploreHref}&intent=remix`
+        `/en/formulas/editor?open=standard-formula&formula=${record.formulaId}&intent=remix`
       );
     }
   });

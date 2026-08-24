@@ -67,6 +67,7 @@ import {
   compareFrmSemantics,
   type FrmSemanticsComparison,
 } from '@/lib/frm-semantics-comparison';
+import { buildMineFormulaEditorHref } from '@/lib/published-formula-remix';
 
 function runtimeIdForStorageId(formulaId: string): string | undefined {
   const storageId = parseCloudCustomFormulaStorageId(formulaId);
@@ -166,6 +167,10 @@ export function CustomFormulaList({
     setBusyId(null);
     if (!detail) {
       setActionError(customT('unavailable'));
+      return;
+    }
+    if (detail.lifecycle) {
+      window.location.assign(buildMineFormulaEditorHref(locale, detail.id));
       return;
     }
     setEditingFormulaId(detail.id);

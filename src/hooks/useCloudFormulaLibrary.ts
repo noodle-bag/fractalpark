@@ -87,10 +87,25 @@ function resolveCloudDetail(detail: CloudCustomFormulaDetail) {
   const normalizedDetail = normalizeDetail(detail);
   const storageId = requireStorageId(normalizedDetail.id);
   const runtimeId = toCloudCustomFormulaRuntimeId(storageId);
+  const runnableSource = detail.lifecycle
+    ? detail.lifecycle.activeRunnableSource
+    : normalizedDetail.source;
+  if (!runnableSource) {
+    return {
+      normalizedDetail,
+      storageId,
+      runtimeId,
+      resolution: { success: false as const, error: 'not-runnable' },
+    };
+  }
   const resolution = resolveCustomFormula({
     id: runtimeId,
-    source: normalizedDetail.source,
-    experienceHint: (normalizedDetail.experienceHint ?? undefined) as
+    source: runnableSource,
+    experienceHint: (
+      detail.lifecycle?.activeRunnableExperienceHint ??
+      normalizedDetail.experienceHint ??
+      undefined
+    ) as
       | FormulaExperienceHint
       | undefined,
     frmSemanticsVersion: resolveFrmSemanticsVersion(

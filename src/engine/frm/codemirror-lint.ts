@@ -22,6 +22,10 @@ export interface EditorError {
 }
 
 export type OnErrorsChanged = (errors: EditorError[]) => void;
+export type EditorErrorCollector = (
+  doc: string,
+  semanticsVersion: FrmSemanticsVersion,
+) => EditorError[];
 export type FrmSemanticsVersionSource =
   | FrmSemanticsVersion
   | (() => FrmSemanticsVersion);
@@ -83,10 +87,11 @@ export function collectEditorErrors(
 export function createFRMLinter(
   onErrorsChanged?: OnErrorsChanged,
   semanticsVersion: FrmSemanticsVersionSource = 2,
+  collectErrors: EditorErrorCollector = collectEditorErrors,
 ): Extension {
   const lint = linter(view => {
     const doc = view.state.doc.toString();
-    const editorErrors = collectEditorErrors(doc, semanticsVersion);
+    const editorErrors = collectErrors(doc, readSemanticsVersion(semanticsVersion));
 
     onErrorsChanged?.(editorErrors);
 

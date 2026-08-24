@@ -22,6 +22,7 @@ import {
 } from '@/engine/formulas/v1';
 import type { FormulaIdV1 } from '@/engine/formulas/v1/types';
 import type { ProvisionalPreviewAnomalyV1 } from '@/engine/formulas/v1/provisional-preview';
+import { buildPublishedFormulaRemixHref } from '@/lib/published-formula-remix';
 import {
   SUPPORTED_LOCALES,
   type SupportedLocale,
@@ -287,7 +288,7 @@ export function buildFormulaRecordV1(
     }),
     actions: Object.freeze({
       openExploreHref,
-      remixHref: `${openExploreHref}&intent=remix`,
+      remixHref: buildPublishedFormulaRemixHref(locale, formulaId),
     }),
   });
 }

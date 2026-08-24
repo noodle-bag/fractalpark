@@ -435,6 +435,18 @@ export interface CloudCustomFormulaSummary {
 export interface CloudCustomFormulaDetail extends CloudCustomFormulaSummary {
   source: string;
   experienceHint: unknown | null;
+  lifecycle?: {
+    editableHeadRevisionId: string;
+    activeRunnableRevisionId: string | null;
+    editableDefinition: unknown;
+    editableProfile: unknown;
+    remixedFromFormulaId: string | null;
+    lineageSourceRevision: string | null;
+    lineageProfileRevision: string | null;
+    diagnostics: unknown;
+    activeRunnableSource: string | null;
+    activeRunnableExperienceHint: unknown | null;
+  };
 }
 
 export async function listCustomFormulas(): Promise<CloudCustomFormulaSummary[]> {
@@ -466,6 +478,33 @@ export async function createCustomFormula(input: {
       source: input.source,
       ...(input.experienceHint !== undefined ? { experienceHint: input.experienceHint } : {}),
     }),
+  });
+}
+
+export interface MineFormulaLifecycleClientInput {
+  readonly formulaId: string;
+  readonly lifecycle: Readonly<Record<string, unknown>>;
+}
+
+export interface MineFormulaLifecycleClientResult {
+  readonly replayed: boolean;
+  readonly formulaId: string;
+  readonly revision: number;
+  readonly editableHeadRevisionId: string;
+  readonly activeRunnableRevisionId: string | null;
+}
+
+/**
+ * Gated v0.4.19 dual-head writer. Production remains fail-closed until the
+ * server-only lifecycle flag is enabled after migration/Preview evidence.
+ */
+export async function saveMineFormulaLifecycleRevision(
+  input: MineFormulaLifecycleClientInput,
+): Promise<MineFormulaLifecycleClientResult> {
+  return call('/api/creation/custom-formulas/lifecycle', {
+    method: 'POST',
+    headers: { 'idempotency-key': crypto.randomUUID() },
+    body: JSON.stringify(input),
   });
 }
 

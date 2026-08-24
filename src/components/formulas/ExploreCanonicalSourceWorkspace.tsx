@@ -13,6 +13,7 @@ import {
   buildPublishedFormulaSourceReferenceV1,
   type PublishedFormulaSourceReferenceV1,
 } from '@/lib/published-formula-source';
+import { buildPublishedFormulaRemixHref } from '@/lib/published-formula-remix';
 
 const UUID_V5 =
   /^[0-9a-f]{8}-[0-9a-f]{4}-5[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/;
@@ -62,9 +63,7 @@ export function ExploreCanonicalSourceWorkspace({
 
   if (!resolved || resolved.formulaKey !== currentFormula) return null;
   const { reference } = resolved;
-  const remixHref = `/${locale}/explore?open=standard-formula&formula=${encodeURIComponent(
-    reference.formulaId,
-  )}&intent=remix`;
+  const remixHref = buildPublishedFormulaRemixHref(locale, reference.formulaId);
 
   return (
     <CanonicalSourceWorkspace

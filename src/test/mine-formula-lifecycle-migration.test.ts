@@ -9,6 +9,13 @@ const migration = readFileSync(
   ),
   "utf8",
 );
+const projectionMigration = readFileSync(
+  join(
+    process.cwd(),
+    "supabase/migrations/20260824120000_mine_formula_lifecycle_projection.sql",
+  ),
+  "utf8",
+);
 
 describe("Mine formula lifecycle migration contract", () => {
   it("adds forward-only revision storage and private ACLs", () => {
@@ -62,5 +69,21 @@ describe("Mine formula lifecycle migration contract", () => {
     expect(migration).not.toContain(
       "grant select, insert, update, delete on table public.custom_formula_revisions",
     );
+  });
+
+  it("projects only the editable head into legacy owner fields without widening privileges", () => {
+    expect(projectionMigration).toContain(
+      "create trigger trg_custom_formula_lifecycle_projection",
+    );
+    expect(projectionMigration).toContain("new.definition ->> 'source'");
+    expect(projectionMigration).not.toContain("new.source");
+    expect(projectionMigration).toContain("new.profile");
+    expect(projectionMigration).toContain("security invoker");
+    expect(projectionMigration).toContain("set search_path = ''");
+    expect(projectionMigration).toContain(
+      "revoke all on function public.fractalpark_sync_custom_formula_lifecycle_projection()",
+    );
+    expect(projectionMigration).not.toContain("security definer");
+    expect(projectionMigration).not.toContain("active_runnable_revision_id =");
   });
 });

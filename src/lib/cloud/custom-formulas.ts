@@ -147,6 +147,18 @@ export interface CustomFormulaSummaryDto {
 export interface CustomFormulaDetailDto extends CustomFormulaSummaryDto {
   source: string;
   experienceHint: unknown | null;
+  lifecycle?: {
+    editableHeadRevisionId: string;
+    activeRunnableRevisionId: string | null;
+    editableDefinition: unknown;
+    editableProfile: unknown;
+    remixedFromFormulaId: string | null;
+    lineageSourceRevision: string | null;
+    lineageProfileRevision: string | null;
+    diagnostics: unknown;
+    activeRunnableSource: string | null;
+    activeRunnableExperienceHint: unknown | null;
+  };
 }
 
 interface CustomFormulaRow {
@@ -159,12 +171,26 @@ interface CustomFormulaRow {
   created_at: string;
   updated_at: string;
   source?: string;
+  editable_head_revision_id?: string | null;
+  active_runnable_revision_id?: string | null;
+}
+
+interface CustomFormulaRevisionRow {
+  id: string;
+  definition: unknown;
+  profile: unknown;
+  diagnostics: unknown;
+  runnable: boolean;
+  remixed_from_formula_id: string | null;
+  lineage_source_revision: string | null;
+  lineage_profile_revision: string | null;
 }
 
 const SUMMARY_SELECT = 'id,name,revision,source_bytes,experience_hint,created_at,updated_at,frm_semantics_version';
 /** Pre-migration summary select: identical minus the additive column. */
 const SUMMARY_SELECT_LEGACY = 'id,name,revision,source_bytes,experience_hint,created_at,updated_at';
 const DETAIL_SELECT = `${SUMMARY_SELECT},source`;
+const LIFECYCLE_DETAIL_SELECT = `${DETAIL_SELECT},editable_head_revision_id,active_runnable_revision_id`;
 /** Pre-migration detail select: identical minus the additive column. */
 const DETAIL_SELECT_LEGACY = `${SUMMARY_SELECT_LEGACY},source`;
 
@@ -192,6 +218,42 @@ function toDetailDto(row: CustomFormulaRow): CustomFormulaDetailDto {
   };
 }
 
+function lifecycleReaderEnabled(): boolean {
+  return process.env.FRACTALPARK_MINE_FORMULA_LIFECYCLE_WRITER_ENABLED === 'true';
+}
+
+function profileExperienceHint(profile: unknown): unknown | null {
+  if (!profile || typeof profile !== 'object' || Array.isArray(profile)) return null;
+  const value = profile as Record<string, unknown>;
+  const view = value.view;
+  if (!view || typeof view !== 'object' || Array.isArray(view)) return null;
+  const typedView = view as Record<string, unknown>;
+  if (
+    typeof typedView.centerX !== 'number' ||
+    typeof typedView.centerY !== 'number' ||
+    typeof typedView.zoom !== 'number' ||
+    typeof typedView.rotation !== 'number'
+  ) {
+    return null;
+  }
+  return {
+    bounds: {
+      centerX: typedView.centerX,
+      centerY: typedView.centerY,
+      zoom: typedView.zoom,
+      rotation: typedView.rotation,
+    },
+  };
+}
+
+function revisionSource(definition: unknown): string | null {
+  if (!definition || typeof definition !== 'object' || Array.isArray(definition)) {
+    return null;
+  }
+  const source = (definition as Record<string, unknown>).source;
+  return typeof source === 'string' ? source : null;
+}
+
 export async function listCustomFormulas(ownerId: string): Promise<CustomFormulaSummaryDto[]> {
   const listUrl = (select: string) =>
     `custom_formulas?select=${select}&owner_id=eq.${ownerId}` + '&order=updated_at.desc,id.desc';
@@ -209,13 +271,16 @@ export async function listCustomFormulas(ownerId: string): Promise<CustomFormula
 }
 
 export async function getCustomFormula(ownerId: string, formulaId: string): Promise<CustomFormulaDetailDto> {
+  const lifecycleEnabled = lifecycleReaderEnabled();
   const detailUrl = (select: string) =>
     `custom_formulas?select=${select}&id=eq.${formulaId}&owner_id=eq.${ownerId}&limit=1`;
   let rows: CustomFormulaRow[];
   try {
-    rows = await postgrestJson<CustomFormulaRow[]>(detailUrl(DETAIL_SELECT));
+    rows = await postgrestJson<CustomFormulaRow[]>(
+      detailUrl(lifecycleEnabled ? LIFECYCLE_DETAIL_SELECT : DETAIL_SELECT),
+    );
   } catch (error) {
-    if (!isMissingSemanticsColumn(error)) throw error;
+    if (lifecycleEnabled || !isMissingSemanticsColumn(error)) throw error;
     // Pre-migration fallback: frm_semantics_version is an additive column
     // applied under hosted-ops review. Retry only when PostgREST identifies
     // that exact missing column; the DTO then reports undefined/read-as-v1.
@@ -224,7 +289,50 @@ export async function getCustomFormula(ownerId: string, formulaId: string): Prom
   if (rows.length === 0) {
     throw new CustomFormulaServiceError('not_found');
   }
-  return toDetailDto(rows[0]);
+  const row = rows[0];
+  if (!lifecycleEnabled || !row.editable_head_revision_id) {
+    return toDetailDto(row);
+  }
+  const revisionIds = [
+    row.editable_head_revision_id,
+    row.active_runnable_revision_id,
+  ].filter((value): value is string => Boolean(value));
+  const revisions = await postgrestJson<CustomFormulaRevisionRow[]>(
+    `custom_formula_revisions?select=id,definition,profile,diagnostics,runnable,remixed_from_formula_id,lineage_source_revision,lineage_profile_revision` +
+      `&formula_id=eq.${formulaId}&id=in.(${revisionIds.join(',')})`,
+  );
+  const byId = new Map(revisions.map((revision) => [revision.id, revision]));
+  const editable = byId.get(row.editable_head_revision_id);
+  const active = row.active_runnable_revision_id
+    ? byId.get(row.active_runnable_revision_id)
+    : undefined;
+  if (!editable || (row.active_runnable_revision_id && !active)) {
+    throw new CustomFormulaServiceError('unavailable', 'lifecycle head missing');
+  }
+  const editableSource = revisionSource(editable.definition);
+  const activeSource = active ? revisionSource(active.definition) : null;
+  if (editableSource === null || (active && activeSource === null)) {
+    throw new CustomFormulaServiceError('unavailable', 'lifecycle source missing');
+  }
+  return {
+    ...toDetailDto({ ...row, source: editableSource }),
+    experienceHint: profileExperienceHint(editable.profile),
+    frmSemanticsVersion: 2,
+    lifecycle: {
+      editableHeadRevisionId: editable.id,
+      activeRunnableRevisionId: active?.id ?? null,
+      editableDefinition: editable.definition,
+      editableProfile: editable.profile,
+      remixedFromFormulaId: editable.remixed_from_formula_id,
+      lineageSourceRevision: editable.lineage_source_revision,
+      lineageProfileRevision: editable.lineage_profile_revision,
+      diagnostics: editable.diagnostics,
+      activeRunnableSource: activeSource,
+      activeRunnableExperienceHint: active
+        ? profileExperienceHint(active.profile)
+        : null,
+    },
+  };
 }
 
 export interface CustomFormulaSaveResult {

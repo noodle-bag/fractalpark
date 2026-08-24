@@ -28,6 +28,7 @@ const ENV_VARS = [
   'SUPABASE_SERVICE_ROLE_KEY',
   'FRACTALPARK_SESSION_ENCRYPTION_KEY',
   'FRACTALPARK_RATE_LIMIT_HMAC_KEY',
+  'FRACTALPARK_MINE_FORMULA_LIFECYCLE_WRITER_ENABLED',
 ] as const;
 
 const savedEnv = new Map<string, string | undefined>();
@@ -230,6 +231,98 @@ describe('custom formula routes', () => {
     expect(res.status).toBe(200);
     const body = (await res.json()) as { formula: { source: string } };
     expect(body.formula.source).toBe(VALID_SOURCE);
+  });
+
+  it('projects the editable lifecycle head separately from the active runnable source', async () => {
+    process.env.FRACTALPARK_MINE_FORMULA_LIFECYCLE_WRITER_ENABLED = 'true';
+    const editableId = '10000000-0000-4000-8000-000000000001';
+    const activeId = '10000000-0000-4000-8000-000000000002';
+    const profile = {
+      formulaId: FORMULA_ID,
+      view: { centerX: -0.5, centerY: 0, zoom: 0.4, rotation: 0 },
+    };
+    stubFetch((call) => {
+      if (call.url.includes('custom_formula_revisions')) {
+        return new Response(
+          JSON.stringify([
+            {
+              id: editableId,
+              definition: {
+                formulaId: FORMULA_ID,
+                source: INVALID_SOURCE,
+                family: 'quadratic',
+                lineage: {
+                  parentFormulaId: 'bbbbbbbb-bbbb-5bbb-8bbb-bbbbbbbbbbbb',
+                  sourceRevision: 'a'.repeat(64),
+                  profileRevision: 'b'.repeat(64),
+                },
+              },
+              profile,
+              diagnostics: [{ code: 'parse-failed' }],
+              runnable: false,
+              remixed_from_formula_id: 'bbbbbbbb-bbbb-5bbb-8bbb-bbbbbbbbbbbb',
+              lineage_source_revision: 'a'.repeat(64),
+              lineage_profile_revision: 'b'.repeat(64),
+            },
+            {
+              id: activeId,
+              definition: { formulaId: FORMULA_ID, source: VALID_SOURCE },
+              profile,
+              diagnostics: [],
+              runnable: true,
+              remixed_from_formula_id: 'bbbbbbbb-bbbb-5bbb-8bbb-bbbbbbbbbbbb',
+              lineage_source_revision: 'a'.repeat(64),
+              lineage_profile_revision: 'b'.repeat(64),
+            },
+          ]),
+          { status: 200 },
+        );
+      }
+      if (call.url.includes('custom_formulas')) {
+        return new Response(
+          JSON.stringify([
+            {
+              id: FORMULA_ID,
+              name: 'Lifecycle formula',
+              revision: 1,
+              source_bytes: INVALID_SOURCE.length,
+              experience_hint: null,
+              frm_semantics_version: 2,
+              editable_head_revision_id: editableId,
+              active_runnable_revision_id: activeId,
+              created_at: '2026-08-03T00:00:00Z',
+              updated_at: '2026-08-24T00:00:00Z',
+              source: VALID_SOURCE,
+            },
+          ]),
+          { status: 200 },
+        );
+      }
+      return defaultRespond(call);
+    });
+
+    const res = await formulaGET(
+      authedRequest(`https://fractalpark.test/api/creation/custom-formulas/${FORMULA_ID}`),
+      detailContext(),
+    );
+    expect(res.status).toBe(200);
+    const body = (await res.json()) as {
+      formula: {
+        source: string;
+        lifecycle: {
+          activeRunnableSource: string;
+          editableHeadRevisionId: string;
+        };
+      };
+    };
+    expect(body.formula.source).toBe(INVALID_SOURCE);
+    expect(body.formula.lifecycle.activeRunnableSource).toBe(VALID_SOURCE);
+    expect(body.formula.lifecycle.editableHeadRevisionId).toBe(editableId);
+    const revisionCall = fetchCalls.find((call) =>
+      call.url.includes('custom_formula_revisions'),
+    );
+    expect(revisionCall?.url).toContain('select=id,definition,profile');
+    expect(revisionCall?.url).not.toContain('select=id,source');
   });
 
   it('GET detail maps a missing owner record to not_found', async () => {
