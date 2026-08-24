@@ -42,7 +42,7 @@
     "src/app/api/creation/custom-formulas/lifecycle/route.ts": "c2dc60d2ef408eab7f14bd3be937f48e0cf064727f3d3eff3f3498b21727b8c0",
     "src/app/sitemap.ts": "85cb9dee6f561c9ff8c78d4d9a61df2d5f49dfce52d0c3978c4b978a36bda9c9",
     "src/components/fractal/FractalCanvas.tsx": "2b5058d3c034fad287a5d54c1c68c732608b599e75be678b001b79145be7a644",
-    "src/components/fractal/CustomFormulaList.tsx": "420ea16c472ef59adc38e8a642ce20e9f29ed94be400fd41bee769998feda4bb",
+    "src/components/fractal/CustomFormulaList.tsx": "827bd8fe8156c402c0166d01a8a805455ef05086104d18042b9512d098602890",
     "src/components/fractal/FormulaEditor.tsx": "fae592c3a7f37046db3328953784b123241560098f90d227883a8f86e0b6dfb4",
     "src/components/fractal/FrmEditorWorkspace.tsx": "dc1456a9ea507cbf7418a17161cae12ad19610a358ffe7e6a71fcf8d831943fc",
     "src/components/fractal/PublishedFormulaLibrary.tsx": "ab5838ed500cfd68f80ae041283a0cc2fd2413d62351c1073aa4a7fda01ddaa1",

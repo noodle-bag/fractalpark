@@ -41,7 +41,7 @@
     "src/app/api/creation/custom-formulas/lifecycle/route.ts": "c2dc60d2ef408eab7f14bd3be937f48e0cf064727f3d3eff3f3498b21727b8c0",
     "src/app/sitemap.ts": "85cb9dee6f561c9ff8c78d4d9a61df2d5f49dfce52d0c3978c4b978a36bda9c9",
     "src/components/fractal/FractalCanvas.tsx": "2b5058d3c034fad287a5d54c1c68c732608b599e75be678b001b79145be7a644",
-    "src/components/fractal/CustomFormulaList.tsx": "420ea16c472ef59adc38e8a642ce20e9f29ed94be400fd41bee769998feda4bb",
+    "src/components/fractal/CustomFormulaList.tsx": "827bd8fe8156c402c0166d01a8a805455ef05086104d18042b9512d098602890",
     "src/components/fractal/FormulaEditor.tsx": "fae592c3a7f37046db3328953784b123241560098f90d227883a8f86e0b6dfb4",
     "src/components/fractal/FrmEditorWorkspace.tsx": "dc1456a9ea507cbf7418a17161cae12ad19610a358ffe7e6a71fcf8d831943fc",
     "src/components/fractal/PublishedFormulaLibrary.tsx": "ab5838ed500cfd68f80ae041283a0cc2fd2413d62351c1073aa4a7fda01ddaa1",
@@ -174,8 +174,8 @@
     "hotFormulaAssetRequests": 0
   },
   "build": {
-    "wallMs": 113940,
-    "maxRssBytes": 1179754496,
+    "wallMs": 115160,
+    "maxRssBytes": 1225596928,
     "generatedPages": 832
   },
   "devices": [
@@ -318,35 +318,35 @@
       "status": "pass",
       "artifact": {
         "path": "resources/formula-library/v1/rollback-evidence/writerOff.json",
-        "sha256": "23bfa6a8e80cc1b258ca7366d9291476fa2ee1fac3492f02d401effb5f2d57fa"
+        "sha256": "a12b871e6f531a776f82f83074233f6b3c0a7d4548453e00e1c038fd5204d918"
       }
     },
     "featureOff": {
       "status": "pass",
       "artifact": {
         "path": "resources/formula-library/v1/rollback-evidence/featureOff.json",
-        "sha256": "988cffaafa0a43f15ab889960b04c95f5b881b0a2821a681818816c064fa3e66"
+        "sha256": "18605ab7a6a76bd0498232fcee8f0e8c0ce3f3df9779f0e6aab2ec9a9792c2f8"
       }
     },
     "lkgRuntime": {
       "status": "pass",
       "artifact": {
         "path": "resources/formula-library/v1/rollback-evidence/lkgRuntime.json",
-        "sha256": "44d54e4ccbbceefccfed8bb451222ad441d220a252f40a83ff155ab17a1b745c"
+        "sha256": "65bf16e4db26eb5ce58702bf1744932c65bd685ad7bdf74738a0cbe6718e008b"
       }
     },
     "readerFloor": {
       "status": "pass",
       "artifact": {
         "path": "resources/formula-library/v1/rollback-evidence/readerFloor.json",
-        "sha256": "27f85481b700c22c3351eeb553094b58a52933e6e29ae5d8f54ff492bad58f24"
+        "sha256": "1d161b776ab8a8670f76d23a74e92864988fd908c39a3bcb6a87dc84d2b6c37b"
       }
     },
     "aliasResolver": {
       "status": "pass",
       "artifact": {
         "path": "resources/formula-library/v1/rollback-evidence/aliasResolver.json",
-        "sha256": "77f2e2c0e07d4b07df133aaea62a85b2a88479270145e8000ddad670caf440f5"
+        "sha256": "2be0bde9c9ebaaddc29d847685717dbb73d0adfc9d388341673b25a17a5309c6"
       }
     },
     "deployedPreview": {
@@ -357,5 +357,5 @@
       }
     }
   },
-  "generatedAt": "2026-08-25T02:09:57+08:00"
+  "generatedAt": "2026-08-25T05:06:05+08:00"
 }

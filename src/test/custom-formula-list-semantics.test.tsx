@@ -5,6 +5,7 @@
 import { beforeEach, describe, expect, it, vi } from 'vitest';
 import { fireEvent, render, screen, waitFor } from '@testing-library/react';
 import { CustomFormulaList } from '@/components/fractal/CustomFormulaList';
+import { CUSTOM_FORMULA_EXAMPLES } from '@/engine/frm/example-library';
 import type {
   CloudCustomFormulaDetail,
   CloudCustomFormulaSummary,
@@ -41,6 +42,7 @@ const inspectDetailMock = vi.fn<
 const getDetailMock = vi.fn<
   (formulaId: string) => Promise<CloudCustomFormulaDetail | null>
 >();
+const saveFormulaMock = vi.fn();
 
 let formulasFixture: CloudCustomFormulaSummary[] = [];
 
@@ -52,7 +54,7 @@ vi.mock('@/hooks/useCloudFormulaLibrary', () => ({
     ensureRegistered: vi.fn(),
     getDetail: getDetailMock,
     inspectDetail: inspectDetailMock,
-    saveFormula: vi.fn(),
+    saveFormula: saveFormulaMock,
     deleteFormula: vi.fn(),
     renameFormula: vi.fn(),
     changeSemantics: changeSemanticsMock,
@@ -71,8 +73,19 @@ vi.mock('@/lib/formula-resolver', async () => {
 });
 
 vi.mock('@/components/fractal/FormulaEditor', () => ({
-  FormulaEditor: ({ initialSource }: { initialSource?: string }) => (
-    <div data-testid="mock-formula-editor">{initialSource}</div>
+  FormulaEditor: ({
+    initialSource,
+    onSave,
+  }: {
+    initialSource?: string;
+    onSave: (name: string, source: string) => Promise<unknown>;
+  }) => (
+    <div data-source={initialSource} data-testid="mock-formula-editor">
+      {initialSource}
+      <button onClick={() => void onSave('Example', initialSource ?? '')}>
+        mock-save
+      </button>
+    </div>
   ),
 }));
 
@@ -128,6 +141,7 @@ beforeEach(() => {
   changeSemanticsMock.mockClear();
   inspectDetailMock.mockReset();
   getDetailMock.mockReset();
+  saveFormulaMock.mockReset();
 });
 
 describe('CustomFormulaList semantics UI (Upgrade & Compare)', () => {
@@ -217,6 +231,41 @@ describe('CustomFormulaList semantics UI (Upgrade & Compare)', () => {
         'SECOND SOURCE',
       ),
     );
+  });
+
+  it('keeps a bundled example detached from an older pending formula detail', async () => {
+    const formula = summary(2, 'f-pending');
+    formulasFixture = [formula];
+    let resolveDetail!: (value: CloudCustomFormulaDetail | null) => void;
+    getDetailMock.mockReturnValue(
+      new Promise((resolve) => {
+        resolveDetail = resolve;
+      }),
+    );
+    saveFormulaMock.mockResolvedValue({
+      success: false,
+      code: 'unavailable',
+    });
+    render(<CustomFormulaList currentBounds={bounds} />);
+
+    fireEvent.click(screen.getByRole('button', { name: 'editAction' }));
+    fireEvent.click(
+      screen.getByText(CUSTOM_FORMULA_EXAMPLES[0].nameKey).closest('button')!,
+    );
+    resolveDetail(detail(formula, 'FORMULA A SOURCE'));
+
+    const editor = await screen.findByTestId('mock-formula-editor');
+    expect(editor).toHaveAttribute(
+      'data-source',
+      CUSTOM_FORMULA_EXAMPLES[0].source,
+    );
+    expect(editor).not.toHaveTextContent('FORMULA A SOURCE');
+    fireEvent.click(screen.getByText('mock-save'));
+    await waitFor(() => expect(saveFormulaMock).toHaveBeenCalledTimes(1));
+    expect(saveFormulaMock.mock.calls[0][0]).toMatchObject({
+      source: CUSTOM_FORMULA_EXAMPLES[0].source,
+      formulaId: undefined,
+    });
   });
 
   it('loads exact source read-only, renders both results, and writes only after final confirmation', async () => {

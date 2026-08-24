@@ -152,16 +152,21 @@ export function CustomFormulaList({
     }
   };
 
-  const openBlankEditor = () => {
+  const openNewEditor = (
+    initialSource?: string,
+    initialExperienceHint?: FormulaExperienceHint,
+  ) => {
     editorRequestRef.current += 1;
     setBusyId(null);
     setActionError('');
     setEditingFormulaId(undefined);
-    setEditorSource(undefined);
-    setEditorExperienceHint(undefined);
+    setEditorSource(initialSource);
+    setEditorExperienceHint(initialExperienceHint);
     setEditorSemanticsVersion(2);
     setShowEditor(true);
   };
+
+  const openBlankEditor = () => openNewEditor();
 
   const openFormulaEditor = async (formula: CloudCustomFormulaSummary) => {
     const request = ++editorRequestRef.current;
@@ -431,13 +436,9 @@ export function CustomFormulaList({
                 key={example.id}
                 type="button"
                 className="rounded-md border bg-background px-3 py-2 text-left transition-colors hover:bg-muted/60"
-                onClick={() => {
-                  setEditingFormulaId(undefined);
-                  setEditorSource(example.source);
-                  setEditorExperienceHint(example.experienceHint);
-                  setEditorSemanticsVersion(2);
-                  setShowEditor(true);
-                }}
+                onClick={() =>
+                  openNewEditor(example.source, example.experienceHint)
+                }
               >
                 <div className="font-medium">{t(example.nameKey)}</div>
                 <div className="text-xs text-muted-foreground mt-1">{t(example.descriptionKey)}</div>
