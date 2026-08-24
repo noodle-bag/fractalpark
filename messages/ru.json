@@ -1180,6 +1180,8 @@
     "record": {
       "eyebrow": "Карточка формулы",
       "identity": "Идентичность и происхождение",
+      "formulaId": "ID формулы",
+      "rightsAttribution": "Права и атрибуция",
       "canonicalName": "Каноническое имя",
       "originalName": "Исходное имя",
       "author": "Автор",

@@ -1180,6 +1180,8 @@
     "record": {
       "eyebrow": "수식 레코드",
       "identity": "식별 정보와 출처",
+      "formulaId": "수식 ID",
+      "rightsAttribution": "권리 및 저작자 표시",
       "canonicalName": "표준 이름",
       "originalName": "원래 이름",
       "author": "작성자",

@@ -149,13 +149,19 @@ export async function generateMetadata({
       locale,
       namespace: 'formulas.directory',
     });
+    const recordT = await getTranslations({
+      locale,
+      namespace: 'formulas.record',
+    });
     const path = buildFormulaCanonicalPathV1(formulaId);
     const localized =
       teaching.delivery === 'delivered' ? teaching.localized : null;
     const description =
-      teaching.delivery === 'not-delivered'
-        ? t('description')
-        : localized?.overview ?? teaching.english.overview;
+      routeRecord.formulaRecord.availability !== 'published'
+        ? recordT('unavailableSummary')
+        : teaching.delivery === 'not-delivered'
+          ? t('description')
+          : localized?.overview ?? teaching.english.overview;
     const title = localized?.localizedName ?? routeRecord.displayName;
     const languages = indexable
       ? filterTeachingAlternatesV1(
@@ -711,6 +717,29 @@ async function FormulaIdentityPage({
   });
   const localized = teaching.delivery === 'delivered' ? teaching.localized : null;
   const name = localized?.localizedName ?? record.displayName;
+  if (record.formulaRecord.availability !== 'published') {
+    const recordT = await getTranslations({
+      locale,
+      namespace: 'formulas.record',
+    });
+    return (
+      <main
+        className="mx-auto max-w-3xl px-5 py-20 sm:px-8"
+        data-formula-id={record.formulaId}
+        data-testid="held-formula-record"
+      >
+        <h1 className="text-balance text-4xl font-semibold tracking-tight sm:text-5xl">
+          {name}
+        </h1>
+        <p className="mt-6 break-all font-mono text-sm text-muted-foreground">
+          {record.formulaId}
+        </p>
+        <p className="mt-6 leading-7 text-muted-foreground">
+          {recordT('unavailableSummary')}
+        </p>
+      </main>
+    );
+  }
   const description =
     teaching.delivery === 'not-delivered'
       ? t('description')

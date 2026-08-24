@@ -1180,6 +1180,8 @@
     "record": {
       "eyebrow": "公式档案",
       "identity": "身份与来源",
+      "formulaId": "公式 ID",
+      "rightsAttribution": "权利与署名",
       "canonicalName": "规范名称",
       "originalName": "原始名称",
       "author": "作者",

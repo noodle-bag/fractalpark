@@ -1180,6 +1180,8 @@
     "record": {
       "eyebrow": "Formula Record",
       "identity": "Identity and provenance",
+      "formulaId": "Formula ID",
+      "rightsAttribution": "Rights and attribution",
       "canonicalName": "Canonical name",
       "originalName": "Original name",
       "author": "Author",

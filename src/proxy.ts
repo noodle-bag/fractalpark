@@ -5,6 +5,7 @@ import {
   renderLegacyFormulaDirectoryGoneHtmlV1,
   resolveLegacyFormulaDirectoryStatusV1,
 } from './lib/formula-directory-status';
+import { isHeldFormulaRecordPathV1 } from './lib/held-formula-record-route';
 
 // Disable the middleware's HTTP `Link` alternate headers: their x-default
 // targets the unprefixed path (/explore, /drift), which is intentionally a
@@ -77,7 +78,11 @@ export default function proxy(request: NextRequest) {
     return NextResponse.redirect(target, 301);
   }
 
-  return intlMiddleware(request);
+  const response = intlMiddleware(request);
+  if (isHeldFormulaRecordPathV1(request.nextUrl.pathname)) {
+    response.headers.set('X-Robots-Tag', 'noindex, follow');
+  }
+  return response;
 }
 
 export const config = {

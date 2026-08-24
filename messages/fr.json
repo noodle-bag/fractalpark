@@ -1180,6 +1180,8 @@
     "record": {
       "eyebrow": "Fiche de formule",
       "identity": "Identité et provenance",
+      "formulaId": "ID de formule",
+      "rightsAttribution": "Droits et attribution",
       "canonicalName": "Nom canonique",
       "originalName": "Nom d'origine",
       "author": "Auteur",

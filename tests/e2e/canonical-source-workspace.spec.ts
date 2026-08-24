@@ -125,14 +125,43 @@ test.describe('shared canonical source workspace', () => {
       'contenteditable',
       'false',
     );
+    const record = page.getByTestId('formula-record');
+    await expect(record.getByTestId('formula-record-rights-attribution')).toBeVisible();
+    await expect(record.getByRole('link', { name: 'Remix', exact: true })).toHaveCount(1);
+    for (const hidden of [
+      'Source revision',
+      'Semantic hash',
+      'Publication decision',
+      'Decision reason',
+      'Reviewed at',
+      'Leakage scan',
+    ]) {
+      await expect(record.getByText(hidden, { exact: true })).toHaveCount(0);
+    }
     expect(definitionRequests).toHaveLength(1);
     await expect(page.locator(`a[href*="${DEFINITION_PATH}"]`)).toHaveCount(0);
 
     definitionRequests.length = 0;
-    await page.goto(`/en/formulas/${HELD_FORMULA_ID}`);
+    const heldResponse = await page.goto(`/en/formulas/${HELD_FORMULA_ID}`);
+    expect(heldResponse?.status()).toBe(200);
+    expect(heldResponse?.headers()['x-robots-tag']).toContain('noindex');
+    const held = page.getByTestId('held-formula-record');
+    await expect(held).toBeVisible();
+    await expect(page.getByText(HELD_FORMULA_ID, { exact: true })).toBeVisible();
+    await expect(page.locator('meta[name="robots"]')).toHaveAttribute(
+      'content',
+      /noindex, follow/i,
+    );
+    await expect(page.locator('link[rel="canonical"]')).toHaveAttribute(
+      'href',
+      new RegExp(`/en/formulas/${HELD_FORMULA_ID}$`),
+    );
+    await expect(page.locator('link[rel="alternate"][hreflang]')).toHaveCount(0);
+    await expect(page.getByTestId('formula-record')).toHaveCount(0);
     await expect(page.getByTestId('canonical-source-workspace')).toHaveCount(0);
     await expect(page.locator(`a[href*="${DEFINITION_PATH}"]`)).toHaveCount(0);
     await expect(page.locator('a[href*="intent=remix"]')).toHaveCount(0);
+    await expect(held.locator('a[href^="mailto:"]')).toHaveCount(0);
     await page.waitForTimeout(500);
     expect(definitionRequests).toEqual([]);
   });
