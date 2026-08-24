@@ -14,9 +14,14 @@ import {
   SheetTrigger,
 } from '@/components/ui/sheet';
 import { pluginRegistry } from '@/engine/plugins/registry';
-import type { PublishedFormulaRuntimeIndexRowV1 } from '@/engine/formulas/v1';
+import {
+  PUBLISHED_FORMULA_DIRECTORY_CATEGORIES_V1,
+  type PublishedFormulaDirectoryCategoryV1,
+} from '@/content/formula-directory-categories';
+import type { PublishedFormulaDirectoryRowV1 } from '@/content/published-formula-directory';
 import {
   getPublishedFormulaLibraryClient,
+  PUBLISHED_FORMULA_LIBRARY_DEFAULT_CATEGORY,
   PUBLISHED_FORMULA_LIBRARY_PAGE_SIZE,
   type PublishedFormulaLibraryClientResult,
 } from '@/lib/published-formula-library';
@@ -25,16 +30,6 @@ import type {
   PublishedFormulaSelectionResult,
 } from '@/lib/published-formula-selection';
 import { cn } from '@/lib/utils';
-
-const FAMILY_ORDER = [
-  'algebraic-power',
-  'folded-absolute',
-  'function-composition',
-  'orbit-memory',
-  'rational-reciprocal',
-  'root-finding',
-  'transcendental',
-] as const;
 
 interface PublishedFormulaLibraryProps {
   currentFormula: string;
@@ -68,11 +63,13 @@ export function PublishedFormulaLibrary({
 }: PublishedFormulaLibraryProps) {
   const t = useTranslations('explore');
   const [open, setOpen] = useState(false);
-  const [rows, setRows] = useState<readonly PublishedFormulaRuntimeIndexRowV1[]>([]);
+  const [rows, setRows] = useState<readonly PublishedFormulaDirectoryRowV1[]>([]);
   const [loading, setLoading] = useState(false);
   const [libraryError, setLibraryError] = useState(false);
   const [selectionError, setSelectionError] = useState(false);
-  const [selectedFamily, setSelectedFamily] = useState('all');
+  const [selectedCategory, setSelectedCategory] = useState<
+    PublishedFormulaDirectoryCategoryV1 | 'all'
+  >(PUBLISHED_FORMULA_LIBRARY_DEFAULT_CATEGORY);
   const [visibleCount, setVisibleCount] = useState(PUBLISHED_FORMULA_LIBRARY_PAGE_SIZE);
   const [selectingId, setSelectingId] = useState<string | null>(null);
   const [actionPending, setActionPending] = useState<'lucky' | null>(null);
@@ -81,22 +78,19 @@ export function PublishedFormulaLibrary({
   const libraryGeneration = useRef(0);
   const commitClose = useRef(false);
 
-  const families = useMemo(() => {
-    const present = new Set(rows.map((row) => row.family));
-    return FAMILY_ORDER.filter((family) => present.has(family));
-  }, [rows]);
-
   const filteredRows = useMemo(
     () =>
-      selectedFamily === 'all'
+      selectedCategory === 'all'
         ? rows
-        : rows.filter((row) => row.family === selectedFamily),
-    [rows, selectedFamily],
+        : rows.filter((row) => row.categories.includes(selectedCategory)),
+    [rows, selectedCategory],
   );
   const visibleRows = filteredRows.slice(0, visibleCount);
 
-  const changeFamily = (family: string) => {
-    setSelectedFamily(family);
+  const changeCategory = (
+    category: PublishedFormulaDirectoryCategoryV1 | 'all',
+  ) => {
+    setSelectedCategory(category);
     setVisibleCount(PUBLISHED_FORMULA_LIBRARY_PAGE_SIZE);
   };
 
@@ -109,7 +103,7 @@ export function PublishedFormulaLibrary({
     setActionPending(null);
     setActionError(false);
     if (next) {
-      setSelectedFamily('all');
+      setSelectedCategory(PUBLISHED_FORMULA_LIBRARY_DEFAULT_CATEGORY);
       setVisibleCount(PUBLISHED_FORMULA_LIBRARY_PAGE_SIZE);
       if (rows.length === 0) {
         const generation = ++libraryGeneration.current;
@@ -122,7 +116,7 @@ export function PublishedFormulaLibrary({
             setLibraryError(true);
             return;
           }
-          setRows(result.value.index.rows);
+          setRows(result.value.directory.rows);
         });
       }
     } else {
@@ -252,26 +246,30 @@ export function PublishedFormulaLibrary({
               </p>
             ) : (
               <>
-                <div className="mb-3 flex flex-wrap gap-1" aria-label={t('formula.library.familyFilter')}>
+                <div
+                  role="group"
+                  className="mb-3 flex flex-wrap gap-1"
+                  aria-label={t('formula.library.categoryFilter')}
+                >
                   <Button
                     type="button"
                     size="sm"
-                    variant={selectedFamily === 'all' ? 'default' : 'ghost'}
-                    aria-pressed={selectedFamily === 'all'}
-                    onClick={() => changeFamily('all')}
+                    variant={selectedCategory === 'all' ? 'default' : 'ghost'}
+                    aria-pressed={selectedCategory === 'all'}
+                    onClick={() => changeCategory('all')}
                   >
                     {t('formula.family.all')}
                   </Button>
-                  {families.map((family) => (
+                  {PUBLISHED_FORMULA_DIRECTORY_CATEGORIES_V1.map((category) => (
                     <Button
                       type="button"
-                      key={family}
+                      key={category}
                       size="sm"
-                      variant={selectedFamily === family ? 'default' : 'ghost'}
-                      aria-pressed={selectedFamily === family}
-                      onClick={() => changeFamily(family)}
+                      variant={selectedCategory === category ? 'default' : 'ghost'}
+                      aria-pressed={selectedCategory === category}
+                      onClick={() => changeCategory(category)}
                     >
-                      {t(`formula.family.${family}`)}
+                      {t(`formula.family.${category}`)}
                     </Button>
                   ))}
                 </div>
@@ -307,7 +305,7 @@ export function PublishedFormulaLibrary({
                           )}
                         </span>
                         <span className="mt-1 block text-xs text-muted-foreground">
-                          {t(`formula.family.${row.family}`)}
+                          {t(`formula.family.${row.primaryFamily}`)}
                         </span>
                       </button>
                     ))}

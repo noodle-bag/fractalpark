@@ -65,14 +65,16 @@ async function openLibrary(page: Page) {
 }
 
 async function selectDirectoryRow(page: Page, displayName: string) {
+  const all = page.getByRole('button', { name: 'All', exact: true });
+  if ((await all.getAttribute('aria-pressed')) !== 'true') await all.click();
   const row = page.getByRole('button', { name: displayName, exact: true }).first();
-  for (let pageNumber = 0; pageNumber < 11; pageNumber += 1) {
+  while (true) {
     if (await row.isVisible().catch(() => false)) {
       await row.click();
       return;
     }
     const loadMore = page.getByRole('button', { name: 'Load more' });
-    await expect(loadMore).toBeVisible();
+    if (!(await loadMore.isVisible().catch(() => false))) break;
     await loadMore.click();
   }
   throw new Error(`Published formula row not reachable: ${displayName}`);
@@ -80,6 +82,91 @@ async function selectDirectoryRow(page: Page, displayName: string) {
 
 test.describe('Published Formula Library', () => {
   test.describe.configure({ timeout: 420_000 });
+
+  test('opens Classic-first, exposes the exact discovery categories, and requests no list images', async ({
+    page,
+  }) => {
+    const libraryRequests: string[] = [];
+    const libraryImageRequests: string[] = [];
+    let observeLibraryOpen = false;
+    page.on('request', (request) => {
+      if (!observeLibraryOpen) return;
+      if (request.url().includes('/formula-library/v1/')) {
+        libraryRequests.push(request.url());
+      }
+      if (
+        request.resourceType() === 'image' &&
+        request.url().includes('/formula-library/v1/')
+      ) {
+        libraryImageRequests.push(request.url());
+      }
+    });
+
+    await page.goto('/en/explore');
+    await waitForFractalCanvasReady(page);
+    observeLibraryOpen = true;
+    await openLibrary(page);
+
+    const dialog = page.getByRole('dialog', { name: 'Standard Formula Library' });
+    await expect(dialog).toContainText('Browse all 534 published formulas.');
+    await expect(dialog.getByRole('button', { name: 'Classic', exact: true })).toHaveAttribute(
+      'aria-pressed',
+      'true',
+    );
+    await expect(dialog.getByRole('button', { name: 'All', exact: true })).toHaveAttribute(
+      'aria-pressed',
+      'false',
+    );
+    for (const category of [
+      'Algebraic Power',
+      'Transcendental',
+      'Function Composition',
+      'Rational & Reciprocal',
+      'Orbit Memory',
+      'Folded Absolute',
+      'Root Finding',
+    ]) {
+      await expect(dialog.getByRole('button', { name: category, exact: true })).toBeVisible();
+    }
+
+    const rows = dialog.locator('button[data-formula-id]');
+    await expect(rows).toHaveCount(48);
+    await dialog.getByRole('button', { name: 'Load more', exact: true }).click();
+    await expect(rows).toHaveCount(94);
+    await expect(dialog.getByRole('button', { name: 'Load more', exact: true })).toHaveCount(0);
+
+    await dialog.getByRole('button', { name: 'All', exact: true }).click();
+    await expect(rows).toHaveCount(48);
+    const allLoadMore = dialog.getByRole('button', { name: 'Load more', exact: true });
+    await expect(allLoadMore).toBeVisible();
+    while (await allLoadMore.isVisible().catch(() => false)) {
+      await allLoadMore.click();
+    }
+    await expect(rows).toHaveCount(534);
+
+    expect(
+      libraryRequests.some((url) =>
+        url.endsWith('/formula-library/v1/runtime/published/index.json'),
+      ),
+    ).toBe(true);
+    expect(
+      libraryRequests.some((url) =>
+        url.endsWith('/formula-library/v1/directory/index.json'),
+      ),
+    ).toBe(true);
+    expect(
+      libraryRequests.some((url) => url.includes('/runtime/published/definitions/')),
+    ).toBe(false);
+    await expect(dialog.locator('img, picture, [style*="background-image"]')).toHaveCount(0);
+    expect(libraryImageRequests).toEqual([]);
+
+    await rows.nth(533).click();
+    await expect(dialog).not.toBeVisible();
+    await expect(page.locator('[data-testid="explore-root"]')).toHaveAttribute(
+      'data-formula-id',
+      'e435bbb6-d866-5876-9f16-f04fbe61ff2b',
+    );
+  });
 
   test('keeps the last-known-good canvas when a published definition is unavailable', async ({
     page,

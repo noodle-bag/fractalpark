@@ -6,6 +6,7 @@ import {
 import type { FormulaIdV1 } from '@/engine/formulas/v1/types';
 import {
   PUBLISHED_FORMULA_DIRECTORY_CATEGORIES_V1,
+  PUBLISHED_FORMULA_DIRECTORY_CONTENT_HASH_V1,
   PUBLISHED_FORMULA_DIRECTORY_FAMILIES_V1,
   type PublishedFormulaDirectoryCategoryV1,
   type PublishedFormulaDirectoryFamilyV1,
@@ -156,6 +157,7 @@ function loadDirectory(): PublishedFormulaDirectoryV1 {
     raw.revision !== 1 ||
     typeof raw.contentHash !== 'string' ||
     !SHA256.test(raw.contentHash) ||
+    raw.contentHash !== PUBLISHED_FORMULA_DIRECTORY_CONTENT_HASH_V1 ||
     sha256HexSyncV1(canonicalJsonV1(unsigned, 262_144)) !== raw.contentHash ||
     !record(raw.counts) ||
     raw.counts.published !== PUBLISHED_FORMULA_DIRECTORY_COUNT_V1 ||

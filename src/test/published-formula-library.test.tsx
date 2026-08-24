@@ -9,6 +9,9 @@ import type {
   PublishedFormulaLibraryClientResult,
 } from "@/lib/published-formula-library";
 import type { PublishedFormulaSelectionResult } from "@/lib/published-formula-selection";
+import type { FormulaIdV1 } from "@/engine/formulas/v1";
+import type { PublishedFormulaDirectoryRowV1 } from "@/content/published-formula-directory";
+import type { PublishedFormulaDirectoryFamilyV1 } from "@/content/formula-directory-categories";
 
 vi.mock("next-intl", () => ({
   useTranslations: () => (key: string, values?: Record<string, unknown>) =>
@@ -36,6 +39,22 @@ function client(rowCount = 60): PublishedFormulaLibraryClient {
       iterations: 100,
     },
   }));
+  const directoryRows = rows.map((row, index): PublishedFormulaDirectoryRowV1 => {
+    const primaryFamily = row.family as PublishedFormulaDirectoryFamilyV1;
+    const formulaId = row.formulaId as FormulaIdV1;
+    return {
+      formulaId,
+      displayName: row.displayName,
+      primaryFamily,
+      categories: Object.freeze(
+        index < Math.min(rowCount, 50)
+          ? (["classic", primaryFamily] as const)
+          : ([primaryFamily] as const),
+      ),
+      canonicalPath: `/formulas/${formulaId}`,
+      guideSlug: null,
+    };
+  });
   return {
     index: {
       schema: "fractalpark-published-formula-runtime-index/v1",
@@ -43,6 +62,19 @@ function client(rowCount = 60): PublishedFormulaLibraryClient {
       publicationDecisionsContentHash: "a".repeat(64),
       rowCount,
       rows,
+    },
+    directory: {
+      rows: directoryRows,
+      categoryCounts: {
+        classic: Math.min(rowCount, 50),
+        "algebraic-power": Math.ceil(rowCount / 2),
+        transcendental: 1,
+        "function-composition": 1,
+        "rational-reciprocal": 1,
+        "orbit-memory": 1,
+        "folded-absolute": 1,
+        "root-finding": Math.floor(rowCount / 2),
+      },
     },
     get: (formulaId) => rows.find((row) => row.formulaId === formulaId),
     load: vi.fn(),
@@ -56,7 +88,7 @@ function successfulClient(value = client()): () => Promise<PublishedFormulaLibra
 afterEach(cleanup);
 
 describe("PublishedFormulaLibrary", () => {
-  it("opens a bounded published-only directory without text search", async () => {
+  it("opens on Classic 94 and exposes All plus the seven structure categories", async () => {
     render(
       <PublishedFormulaLibrary
         currentFormula="mandelbrot"
@@ -68,14 +100,37 @@ describe("PublishedFormulaLibrary", () => {
     fireEvent.click(screen.getByRole("button", { name: "formula.library.open" }));
     expect(await screen.findByRole("dialog")).toBeInTheDocument();
     expect(screen.queryByRole("searchbox")).not.toBeInTheDocument();
+    expect(
+      screen.getByRole("group", { name: "formula.library.categoryFilter" }),
+    ).toBeInTheDocument();
+    expect(screen.getByRole("button", { name: "formula.family.classic" })).toHaveAttribute(
+      "aria-pressed",
+      "true",
+    );
+    expect(screen.getByRole("button", { name: "formula.family.all" })).toHaveAttribute(
+      "aria-pressed",
+      "false",
+    );
     expect(screen.getByRole("button", { name: "formula.family.algebraic-power" })).toBeInTheDocument();
+    expect(screen.getByRole("button", { name: "formula.family.transcendental" })).toBeInTheDocument();
+    expect(screen.getByRole("button", { name: "formula.family.function-composition" })).toBeInTheDocument();
+    expect(screen.getByRole("button", { name: "formula.family.rational-reciprocal" })).toBeInTheDocument();
+    expect(screen.getByRole("button", { name: "formula.family.orbit-memory" })).toBeInTheDocument();
+    expect(screen.getByRole("button", { name: "formula.family.folded-absolute" })).toBeInTheDocument();
     expect(screen.getByRole("button", { name: "formula.family.root-finding" })).toBeInTheDocument();
+    expect(document.querySelectorAll("img")).toHaveLength(0);
     expect(await screen.findByRole("button", { name: "Formula 48" })).toBeInTheDocument();
     expect(screen.queryByRole("button", { name: "Formula 49" })).not.toBeInTheDocument();
 
     fireEvent.click(screen.getByRole("button", { name: "formula.library.loadMore" }));
+    expect(await screen.findByRole("button", { name: "Formula 50" })).toBeInTheDocument();
+    expect(screen.queryByRole("button", { name: "Formula 51" })).not.toBeInTheDocument();
+
+    fireEvent.click(screen.getByRole("button", { name: "formula.family.all" }));
+    expect(screen.queryByRole("button", { name: "Formula 49" })).not.toBeInTheDocument();
+    fireEvent.click(screen.getByRole("button", { name: "formula.library.loadMore" }));
     expect(await screen.findByRole("button", { name: "Formula 60" })).toBeInTheDocument();
-  });
+  }, 10_000);
 
   it("keeps Lucky and Library in one compact row while hiding Profile Reset and Undo", async () => {
     const onFeelingLucky = vi.fn(async (): Promise<PublishedFormulaSelectionResult> => ({

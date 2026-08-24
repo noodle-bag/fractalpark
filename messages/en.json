@@ -1501,6 +1501,7 @@
         "unavailable": "The standard formula library is unavailable right now.",
         "selectionFailed": "This formula could not be loaded. Your current formula was kept.",
         "familyFilter": "Filter formulas by family",
+        "categoryFilter": "Filter formulas by category",
         "loadMore": "Load more",
         "lucky": "Feeling Lucky?",
         "resetProfile": "Reset Formula Profile",

@@ -13,6 +13,7 @@ import { join } from "node:path";
 
 import type { PublishedFormulaRuntimeIndexV1 } from "../src/engine/formulas/v1/published-runtime";
 import { PUBLISHED_FORMULA_LIBRARY_PAGE_SIZE } from "../src/lib/published-formula-library";
+import { STANDARD_LIBRARY_PERFORMANCE_SOURCE_PATHS_V1 } from "./standard-library-performance-source-paths";
 
 type JsonRecord = Record<string, unknown>;
 
@@ -252,113 +253,6 @@ const paths = {
   evidence: "resources/formula-library/v1/performance-evidence.v1.json",
 } as const;
 
-const releaseSourcePaths = [
-  ".github/workflows/ci.yml",
-  ".github/workflows/release.yml",
-  paths.config,
-  paths.decisions,
-  "resources/formula-library/v1/classic-formula-exact-set.v1.json",
-  "resources/formula-library/v1/held-formula-record-seo-projection.v1.json",
-  "resources/formula-library/v1/teaching-restored-guide-projection.v1.json",
-  "resources/formula-library/v1/teaching-review-evidence/guide-restoration-v1/review-manifest.v1.json",
-  "resources/formula-library/v1/teaching-review-evidence/guide-restoration-v1/final-candidate.v1.json",
-  "resources/formula-library/v1/teaching-review-evidence/guide-restoration-v1/deepseek-review-r1.json",
-  "resources/formula-library/v1/teaching-review-evidence/guide-restoration-v1/kimi-review-r1.json",
-  "resources/formula-library/v1/teaching-review-evidence/guide-restoration-v1/deepseek-review-r2.json",
-  "resources/formula-library/v1/teaching-review-evidence/guide-restoration-v1/kimi-review-r2.json",
-  "resources/formula-library/v1/teaching-review-evidence/guide-restoration-v1/deepseek-review-r3.json",
-  "resources/formula-library/v1/teaching-review-evidence/guide-restoration-v1/kimi-review-r3.json",
-  "resources/formula-library/v1/teaching-review-evidence/guide-restoration-v1/deepseek-review-r4.json",
-  "resources/formula-library/v1/teaching-review-evidence/guide-restoration-v1/kimi-review-r4.json",
-  "resources/formula-library/v1/teaching-review-evidence/guide-restoration-v1/deepseek-review-r5.json",
-  "resources/formula-library/v1/teaching-review-evidence/guide-restoration-v1/kimi-review-r5.json",
-  paths.index,
-  paths.manifest,
-  paths.previewManifest,
-  "public/formula-library/v1/directory/index.json",
-  "resources/formula-library/v1/recovery-evidence/transcendental-v1/cross-check.json",
-  "resources/formula-library/v1/recovery-evidence/transcendental-v1/manifest.json",
-  "resources/formula-library/v1/recovery-evidence/amplified-v1/cross-check.json",
-  "resources/formula-library/v1/recovery-evidence/amplified-v1/manifest.json",
-  "messages/en.json",
-  "messages/zh.json",
-  "messages/pt.json",
-  "messages/ko.json",
-  "messages/ru.json",
-  "messages/es.json",
-  "messages/fr.json",
-  "src/app/[locale]/formulas/[formulaId]/page.tsx",
-  "src/app/[locale]/formulas/directory/page.tsx",
-  "src/app/[locale]/formulas/page.tsx",
-  "src/app/sitemap.ts",
-  "src/components/fractal/FractalCanvas.tsx",
-  "src/components/fractal/PublishedFormulaLibrary.tsx",
-  "src/components/gallery/PresetThumbnail.tsx",
-  "src/hooks/useFractalRenderer.ts",
-  "src/lib/published-formula-library.ts",
-  "src/lib/published-formula-selection.ts",
-  "src/lib/formula-records.ts",
-  "src/lib/formula-directory-status.ts",
-  "src/lib/indexable-pages.ts",
-  "src/lib/json-ld.ts",
-  "src/proxy.ts",
-  "src/content/formula-directory-categories.ts",
-  "src/content/formula-record-seo-policy.ts",
-  "src/content/held-formula-record-seo-projection.ts",
-  "src/content/published-formula-directory.ts",
-  "src/content/teaching/content-loader.ts",
-  "src/content/teaching/formula-seo-policy.ts",
-  "src/content/teaching/generated-content-registry.ts",
-  "src/content/teaching/guide-route-policy.ts",
-  "src/content/teaching/restored-guide-projection.ts",
-  "src/engine/formulas/v1/published-runtime.ts",
-  "src/engine/formulas/v1/native-recipes.ts",
-  "src/engine/formulas/v1/native-recipes-b94-classic.ts",
-  "src/engine/formulas/v1/native-recipes-b94-clamps.ts",
-  "src/engine/formulas/v1/native-recipes-b94-held.ts",
-  "src/engine/formulas/v1/native-recipes-b94-recovered-transcendental.ts",
-  "src/engine/formulas/v1/native-recipes-b94-recovered-amplified.ts",
-  "src/engine/formulas/v1/native-recipes-b94-newton.ts",
-  "src/engine/formulas/v1/native-recipes-b94-transcendental.ts",
-  "src/engine/fractals/renderer.ts",
-  "src/engine/frm/frm-v1-glsl-prelude.ts",
-  "src/engine/frm/frm-v1-stdlib.ts",
-  "src/engine/frm/v1-backend.ts",
-  "src/engine/shaders/complex-math.glsl",
-  "src/engine/plugins/builtins/formulas/recoveredTranscendentalMath.ts",
-  "src/engine/plugins/builtins/formulas/recoveredAmplifiedMath.ts",
-  "src/test/document-v3-envelope-v2.test.ts",
-  "src/test/formula-portable-lifecycle-v1.test.ts",
-  "src/test/formula-publication-decisions.test.ts",
-  "src/test/formula-native-recipes.test.ts",
-  "src/test/formula-resolver.test.ts",
-  "src/test/formula-runtime-rev4.test.ts",
-  "src/test/formula-transcendental-recovery-evidence.test.ts",
-  "src/test/formula-amplified-recovery-evidence.test.ts",
-  "src/test/frm-v1-backend.test.ts",
-  "src/test/frm-v1-stdlib.test.ts",
-  "src/test/published-formula-adapter.test.ts",
-  "src/test/published-formula-library.test.tsx",
-  "src/test/published-formula-runtime.test.ts",
-  "src/test/published-formula-selection.test.ts",
-  "src/test/formula-records.test.ts",
-  "src/test/formula-seo-policy.test.ts",
-  "src/test/restored-guide-projection.test.ts",
-  "src/test/teaching-held-route-guard.test.ts",
-  "src/test/teaching-content-loader.test.ts",
-  "src/test/fractal-renderer-race.test.ts",
-  "scripts/measure-standard-library-performance.ts",
-  "scripts/generate-published-formula-directory.ts",
-  "scripts/cross-check-native-recipes.ts",
-  "scripts/formula-library-bulk-migration.ts",
-  "scripts/generate-transcendental-recovery-evidence.ts",
-  "scripts/generate-amplified-recovery-evidence.ts",
-  "scripts/generate-formula-record-previews.ts",
-  "scripts/verify-standard-library-performance.ts",
-  "tests/e2e/formula-switch.spec.ts",
-  "package.json",
-  "package-lock.json",
-] as const;
 
 const localRollbackScenarioIds = [
   "writerOff",
@@ -473,7 +367,7 @@ function verifyGitCommitSourceBindings(
   bindings: Readonly<Record<string, string>>,
 ): void {
   invariant(isGitCommit(gitCommit), "performance-evidence-git-commit-invalid");
-  for (const relativePath of releaseSourcePaths) {
+  for (const relativePath of STANDARD_LIBRARY_PERFORMANCE_SOURCE_PATHS_V1) {
     let blob: Buffer | null = null;
     try {
       blob = execFileSync("git", ["show", `${gitCommit}:${relativePath}`], {
@@ -600,8 +494,8 @@ function verifyArtifactSourceBindings(
   artifactId: string,
 ): void {
   invariant(
-    exactSet(Object.keys(artifactBindings), releaseSourcePaths) &&
-      releaseSourcePaths.every(
+    exactSet(Object.keys(artifactBindings), STANDARD_LIBRARY_PERFORMANCE_SOURCE_PATHS_V1) &&
+      STANDARD_LIBRARY_PERFORMANCE_SOURCE_PATHS_V1.every(
         (relativePath) =>
           artifactBindings[relativePath] === evidenceBindings[relativePath] &&
           artifactBindings[relativePath] === sha256(relativePath),
@@ -1033,7 +927,7 @@ function verifyBuildOutput(config: PerformanceGateConfig): JsonRecord {
       name,
       body: readFileSync(join(root, paths.definitions, name), "utf8"),
     }));
-  const nativeRecipeSource = releaseSourcePaths
+  const nativeRecipeSource = STANDARD_LIBRARY_PERFORMANCE_SOURCE_PATHS_V1
     .filter((file) => /\/native-recipes(?:-b94(?:-[a-z]+)+)?\.ts$/.test(file))
     .map((file) => readFileSync(join(root, file), "utf8"))
     .join("\n");
@@ -1087,7 +981,7 @@ function verifyEvidenceFreshness(config: PerformanceGateConfig): ReleaseEvidence
     evidence.schema === "fractalpark-standard-library-performance-evidence/v1",
     "performance-evidence-schema-invalid",
   );
-  for (const relativePath of releaseSourcePaths) {
+  for (const relativePath of STANDARD_LIBRARY_PERFORMANCE_SOURCE_PATHS_V1) {
     invariant(
       evidence.sourceBindings[relativePath] === sha256(relativePath),
       `performance-evidence-source-binding-invalid:${relativePath}`,

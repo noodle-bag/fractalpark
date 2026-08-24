@@ -7,6 +7,7 @@ import { dirname, join } from "node:path";
 import { chromium, type Page } from "playwright";
 
 import type { PublishedFormulaRuntimeIndexV1 } from "../src/engine/formulas/v1/published-runtime";
+import { STANDARD_LIBRARY_PERFORMANCE_SOURCE_PATHS_V1 } from "./standard-library-performance-source-paths";
 
 type JsonRecord = Record<string, unknown>;
 
@@ -25,42 +26,6 @@ interface GateConfig {
 }
 
 const root = process.cwd();
-const sourcePaths = [
-  ".github/workflows/ci.yml",
-  ".github/workflows/release.yml",
-  "resources/formula-library/v1/performance-gates.v1.json",
-  "resources/formula-library/v1/publication-decisions.json",
-  "public/formula-library/v1/runtime/published/index.json",
-  "public/formula-library/v1/runtime/published/manifest.json",
-  "public/formula-library/v1/previews/manifest.json",
-  "src/components/fractal/FractalCanvas.tsx",
-  "src/components/fractal/PublishedFormulaLibrary.tsx",
-  "src/components/gallery/PresetThumbnail.tsx",
-  "src/hooks/useFractalRenderer.ts",
-  "src/lib/published-formula-library.ts",
-  "src/lib/published-formula-selection.ts",
-  "src/engine/formulas/v1/published-runtime.ts",
-  "src/engine/formulas/v1/native-recipes.ts",
-  "src/engine/formulas/v1/native-recipes-b94-classic.ts",
-  "src/engine/formulas/v1/native-recipes-b94-clamps.ts",
-  "src/engine/formulas/v1/native-recipes-b94-held.ts",
-  "src/engine/formulas/v1/native-recipes-b94-newton.ts",
-  "src/engine/formulas/v1/native-recipes-b94-transcendental.ts",
-  "src/engine/fractals/renderer.ts",
-  "src/test/document-v3-envelope-v2.test.ts",
-  "src/test/formula-portable-lifecycle-v1.test.ts",
-  "src/test/formula-publication-decisions.test.ts",
-  "src/test/formula-resolver.test.ts",
-  "src/test/published-formula-library.test.tsx",
-  "src/test/published-formula-runtime.test.ts",
-  "src/test/published-formula-selection.test.ts",
-  "src/test/fractal-renderer-race.test.ts",
-  "scripts/measure-standard-library-performance.ts",
-  "scripts/verify-standard-library-performance.ts",
-  "tests/e2e/formula-switch.spec.ts",
-  "package.json",
-  "package-lock.json",
-] as const;
 const softwareRendererPattern =
   /swiftshader|llvmpipe|softpipe|lavapipe|software rasterizer|microsoft basic render|virgl|virtualbox|vmware|paravirtual/i;
 const hardwareRendererPattern =
@@ -207,14 +172,18 @@ async function closeLibrary(page: Page): Promise<void> {
 }
 
 async function exposeRow(page: Page, formulaId: string): Promise<string> {
-  const selector = `[role="dialog"] button[data-formula-id="${formulaId}"]`;
-  for (let pageNumber = 0; pageNumber < 11; pageNumber += 1) {
-    if (await page.locator(selector).isVisible().catch(() => false)) return selector;
-    const loadMore = page.getByRole("button", { name: "Load more" });
-    invariant(await loadMore.isVisible().catch(() => false), "performance-row-unreachable");
-    await loadMore.evaluate((element) => (element as HTMLElement).click());
+  const all = page.getByRole("button", { name: "All", exact: true });
+  if ((await all.getAttribute("aria-pressed")) !== "true") {
+    await all.evaluate((element) => (element as HTMLElement).click());
   }
-  throw new Error(`performance-row-unreachable:${formulaId}`);
+  const selector = `[role="dialog"] button[data-formula-id="${formulaId}"]`;
+  while (true) {
+    if (await page.locator(selector).isVisible()) return selector;
+    const loadMore = page.getByRole("button", { name: "Load more" });
+    if (!(await loadMore.isVisible())) break;
+    await loadMore.click();
+  }
+  throw new Error(`formula-row-not-reachable:${formulaId}`);
 }
 
 async function waitForCorrectFrame(page: Page, formulaId: string): Promise<void> {
@@ -557,7 +526,10 @@ async function main(): Promise<void> {
       gitCommit,
       targetUrl: baseURL,
       sourceBindings: Object.fromEntries(
-        sourcePaths.map((relativePath) => [relativePath, sha256(relativePath)]),
+        STANDARD_LIBRARY_PERFORMANCE_SOURCE_PATHS_V1.map((relativePath) => [
+          relativePath,
+          sha256(relativePath),
+        ]),
       ),
       environment: {
         browser: "chromium",

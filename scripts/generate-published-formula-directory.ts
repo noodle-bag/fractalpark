@@ -5,6 +5,7 @@ import { pathToFileURL } from 'node:url';
 
 import { FORMULA_CATALOG } from '../src/engine/plugins/formula-catalog';
 import { buildFormulaDefaultDocument } from '../src/lib/formula-documents';
+import { PUBLISHED_FORMULA_DIRECTORY_CONTENT_HASH_V1 } from '../src/content/formula-directory-categories';
 
 const FAMILY_ORDER = [
   'algebraic-power',
@@ -384,6 +385,10 @@ export function generatePublishedFormulaDirectoryV1(
   write: boolean,
 ): Readonly<{ directoryBytes: number; heldSeoBytes: number }> {
   const built = buildPublishedFormulaDirectoryV1(repositoryRoot);
+  invariant(
+    built.directory.contentHash === PUBLISHED_FORMULA_DIRECTORY_CONTENT_HASH_V1,
+    'published-directory-content-hash-anchor-stale',
+  );
   const outputs = [
     [DIRECTORY_OUTPUT, serialized(built.directory)],
     [HELD_SEO_OUTPUT, serialized(built.heldSeo)],

@@ -1501,6 +1501,7 @@
         "unavailable": "A biblioteca de fórmulas padrão está indisponível no momento.",
         "selectionFailed": "Não foi possível carregar esta fórmula. A fórmula atual foi mantida.",
         "familyFilter": "Filtrar fórmulas por família",
+        "categoryFilter": "Filtrar fórmulas por categoria",
         "loadMore": "Carregar mais",
         "lucky": "Estou com sorte?",
         "resetProfile": "Redefinir perfil da fórmula",

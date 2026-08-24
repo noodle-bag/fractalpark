@@ -1501,6 +1501,7 @@
         "unavailable": "标准公式库暂时不可用。",
         "selectionFailed": "无法加载该公式，当前公式已保留。",
         "familyFilter": "按家族筛选公式",
+        "categoryFilter": "按分类筛选公式",
         "loadMore": "加载更多",
         "lucky": "手气不错？",
         "resetProfile": "重置公式配置",

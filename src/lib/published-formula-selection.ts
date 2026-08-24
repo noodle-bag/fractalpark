@@ -44,6 +44,7 @@ export type PublishedFormulaSelectionResult =
       readonly ok: false;
       readonly code:
         | PublishedFormulaSelectionFailureCode
+        | "directory-invalid"
         | "library-unavailable"
         | "selection-superseded";
     };
