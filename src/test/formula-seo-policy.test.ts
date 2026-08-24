@@ -132,7 +132,7 @@ describe('formula SEO exact sets v1', () => {
     expect(sets.indexSet).not.toContain(formulaLocaleKeyV1('de', target));
   });
 
-  it('wires static params, metadata, hreflang, and JSON-LD to the SEO set', () => {
+  it('keeps teaching static params while Record metadata uses the public projection', () => {
     const source = readFileSync(
       join(process.cwd(), 'src/app/[locale]/formulas/[formulaId]/page.tsx'),
       'utf8',
@@ -140,9 +140,14 @@ describe('formula SEO exact sets v1', () => {
     expect(source).toContain(
       'loadIndexableTeachingFormulaIdsForLocaleV1(params.locale).map',
     );
+    expect(
+      source.match(/isPublishedFormulaRecordIndexableV1\(formulaId, locale\)/g),
+    ).toHaveLength(2);
     expect(source.match(/isFormulaLocaleIndexableV1\(formulaId, locale\)/g)).toHaveLength(2);
+    expect(source).toContain('loadIndexableFormulaRecordLocalesV1');
     expect(source).toContain('loadIndexableTeachingLocalesV1');
-    expect(source.match(/buildFormulaTeachingJsonLdV1\(/g)).toHaveLength(2);
+    expect(source.match(/buildFormulaTeachingJsonLdV1\(/g)).toHaveLength(1);
+    expect(source.match(/buildFormulaRecordJsonLdV1\(/g)).toHaveLength(1);
     expect(source).not.toContain('isTeachingPageIndexableAtCommit20dV1');
   });
 });

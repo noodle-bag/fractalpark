@@ -87,6 +87,48 @@ export function buildFormulaTeachingJsonLdV1(
   } as const;
 }
 
+export interface FormulaRecordJsonLdOptionsV1 {
+  readonly url: string;
+  readonly directoryUrl: string;
+  readonly locale: string;
+  readonly formulaId: string;
+  readonly canonicalName: string;
+  readonly name: string;
+  readonly description: string;
+}
+
+export function buildFormulaRecordJsonLdV1(
+  options: FormulaRecordJsonLdOptionsV1,
+) {
+  const formulaEntityId = `${options.url}#formula`;
+  return {
+    '@context': 'https://schema.org',
+    '@graph': [
+      {
+        '@type': 'WebPage',
+        '@id': `${options.url}#webpage`,
+        url: options.url,
+        name: options.name,
+        description: options.description,
+        inLanguage: JSON_LD_LANGUAGE_BY_LOCALE[options.locale] ?? options.locale,
+        isPartOf: { '@id': `${baseUrl}/#website` },
+        mainEntity: { '@id': formulaEntityId },
+      },
+      {
+        '@type': 'DefinedTerm',
+        '@id': formulaEntityId,
+        name: options.canonicalName,
+        termCode: options.formulaId,
+        inDefinedTermSet: {
+          '@type': 'DefinedTermSet',
+          '@id': `${options.directoryUrl}#formula-directory`,
+          url: options.directoryUrl,
+        },
+      },
+    ],
+  } as const;
+}
+
 /**
  * WebSite schema — emitted on every page via [locale]/layout.tsx.
  * Establishes the site entity and points at the SoftwareApplication it hosts.

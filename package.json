@@ -42,6 +42,8 @@
     "formula:teaching-anchors:write": "tsx scripts/generate-teaching-semantic-anchors.ts --write",
     "formula:teaching-registry": "tsx scripts/generate-teaching-content-registry.ts",
     "formula:teaching-registry:write": "tsx scripts/generate-teaching-content-registry.ts --write",
+    "formula:directory": "tsx scripts/generate-published-formula-directory.ts",
+    "formula:directory:write": "tsx scripts/generate-published-formula-directory.ts --write",
     "formula:native-recipes:cross-check": "tsx scripts/cross-check-native-recipes.ts",
     "formula:direct-adaptation-evidence": "tsx scripts/generate-formula-direct-adaptation-evidence.ts --write",
     "formula:direct-adaptation-evidence:verify": "tsx scripts/verify-formula-direct-adaptation-evidence.ts",

@@ -106,7 +106,7 @@ describe("standard formula directory v1", () => {
       "utf8",
     );
     expect(pageSource).toContain(
-      "filterFormulaDirectoryV1({ decision: 'publish' })",
+      'filterPublishedFormulaDirectoryV1(category)',
     );
     expect(pageSource).not.toContain("parseStatus");
     expect(pageSource).not.toContain("facets.status");

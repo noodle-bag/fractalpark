@@ -14,6 +14,10 @@ import {
   buildFormulaAtlas,
   type FormulaAtlasGuideEntry,
 } from '@/content/formula-atlas';
+import {
+  PUBLISHED_FORMULA_DIRECTORY_COUNT_V1,
+  PUBLISHED_FORMULA_GUIDE_COUNT_V1,
+} from '@/content/published-formula-directory';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { Link } from '@/i18n/routing';
@@ -158,9 +162,15 @@ export default async function FormulaAtlasPage({
           </div>
 
           <dl className="mt-10 grid max-w-3xl grid-cols-3 gap-4">
-            <Stat value={atlas.formulas.length} label={t('stats.formulas')} />
+            <Stat
+              value={PUBLISHED_FORMULA_DIRECTORY_COUNT_V1}
+              label={t('stats.formulas')}
+            />
             <Stat value={atlas.families.length} label={t('stats.families')} />
-            <Stat value={atlas.guides.length} label={t('stats.guides')} />
+            <Stat
+              value={PUBLISHED_FORMULA_GUIDE_COUNT_V1}
+              label={t('stats.guides')}
+            />
           </dl>
 
           <div className="mt-8">

@@ -6,9 +6,9 @@ import {
   getPublishedFormulaGuideFormulaId,
 } from '@/content/formula-guides';
 import { PUBLISHED_TEACHING_GUIDES_V1 } from '@/content/teaching/guide-route-policy';
+import { loadFormulaRecordSeoSetsV1 } from '@/content/formula-record-seo-policy';
 import {
   formulaLocaleKeyV1,
-  loadFormulaSeoSetsV1,
 } from '@/content/teaching/formula-seo-policy';
 import {
   INDEXABLE_PAGE_PATHS,
@@ -42,11 +42,10 @@ describe('indexable pages', () => {
     ]) {
       expect(INDEXABLE_PAGE_PATHS).toContain(required);
     }
-    // Two formula tools, 50 reviewed teaching formulas, and four separately
-    // authorized restored Guides ride the set.
+    // Two formula tools and all 534 published Formula Records ride the set.
     expect(
       INDEXABLE_PAGE_PATHS.filter((page) => page.startsWith('/formulas/')).length
-    ).toBe(56);
+    ).toBe(536);
     for (const restored of restoredGuideAsset.rows) {
       expect(INDEXABLE_PAGE_PATHS).toContain(
         `/formulas/${restored.formulaId}`,
@@ -91,11 +90,11 @@ describe('sitemap', () => {
     }
   });
 
-  it('removes fallback Guide locales from both URLs and alternates', () => {
+  it('removes an unavailable Record locale from both URLs and alternates', () => {
     const guide = PUBLISHED_TEACHING_GUIDES_V1[0];
     const formulaId = getPublishedFormulaGuideFormulaId(guide);
     const page = formulaGuidePath(guide);
-    const production = loadFormulaSeoSetsV1();
+    const production = loadFormulaRecordSeoSetsV1();
     const fallbackKey = formulaLocaleKeyV1('zh', formulaId);
     const withoutZh = production.indexSet.filter((key) => key !== fallbackKey);
     const entries = buildSitemapV1({

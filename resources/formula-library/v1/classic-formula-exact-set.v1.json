@@ -1,0 +1,576 @@
+{
+  "schema": "fractalpark-classic-formula-exact-set/v1",
+  "revision": 1,
+  "counts": {
+    "legacyCanonical": 89,
+    "curatedAdditions": 5,
+    "total": 94
+  },
+  "rows": [
+    {
+      "formulaId": "00e14aa8-b766-54ea-a359-3f5d20d329b7",
+      "displayName": "mandelbrot",
+      "membershipBasis": "legacy-b94-canonical",
+      "legacyCanonicalAlias": "b94:mandelbrot"
+    },
+    {
+      "formulaId": "06223e69-6d8c-50ba-8e5d-b630d342d910",
+      "displayName": "celticMandelbar",
+      "membershipBasis": "legacy-b94-canonical",
+      "legacyCanonicalAlias": "b94:celticMandelbar"
+    },
+    {
+      "formulaId": "07a0afc6-ced5-5765-9314-fdb0ef593cb9",
+      "displayName": "asinhMandelbrot",
+      "membershipBasis": "legacy-b94-canonical",
+      "legacyCanonicalAlias": "b94:asinhMandelbrot"
+    },
+    {
+      "formulaId": "09288426-4968-5e78-9ab0-00607cc290bd",
+      "displayName": "birdofprey",
+      "membershipBasis": "maintainer-curated-addition",
+      "legacyCanonicalAlias": null
+    },
+    {
+      "formulaId": "09ee96d1-18a8-5dad-83e1-d05f0c59be4b",
+      "displayName": "chebyshev2",
+      "membershipBasis": "legacy-b94-canonical",
+      "legacyCanonicalAlias": "b94:chebyshev2"
+    },
+    {
+      "formulaId": "0df5ac6e-d97e-55db-b624-96c310af07dd",
+      "displayName": "novaSine",
+      "membershipBasis": "legacy-b94-canonical",
+      "legacyCanonicalAlias": "b94:novaSine"
+    },
+    {
+      "formulaId": "0f49d971-917e-50a5-ae83-20e11fd4854c",
+      "displayName": "phoenixMulti",
+      "membershipBasis": "legacy-b94-canonical",
+      "legacyCanonicalAlias": "b94:phoenixMulti"
+    },
+    {
+      "formulaId": "12fc34ff-196d-5924-830e-6edb72dfc172",
+      "displayName": "magnet1",
+      "membershipBasis": "legacy-b94-canonical",
+      "legacyCanonicalAlias": "b94:magnet1"
+    },
+    {
+      "formulaId": "14d3cb89-d3e7-5bff-b848-af88c9a561ae",
+      "displayName": "bali",
+      "membershipBasis": "maintainer-curated-addition",
+      "legacyCanonicalAlias": null
+    },
+    {
+      "formulaId": "1768f194-bdc1-5881-b269-a58730967c2c",
+      "displayName": "quarticMandelbrot",
+      "membershipBasis": "legacy-b94-canonical",
+      "legacyCanonicalAlias": "b94:quarticMandelbrot"
+    },
+    {
+      "formulaId": "17d88272-6dbf-5622-996a-b116ea3a3fab",
+      "displayName": "tetration",
+      "membershipBasis": "legacy-b94-canonical",
+      "legacyCanonicalAlias": "b94:tetration"
+    },
+    {
+      "formulaId": "18d30091-ce1c-5b10-b214-37eb4337df83",
+      "displayName": "chebyshev4",
+      "membershipBasis": "legacy-b94-canonical",
+      "legacyCanonicalAlias": "b94:chebyshev4"
+    },
+    {
+      "formulaId": "190fa538-89c9-590f-8170-34b3c570fc5d",
+      "displayName": "sinhMandelb",
+      "membershipBasis": "legacy-b94-canonical",
+      "legacyCanonicalAlias": "b94:sinhMandelb"
+    },
+    {
+      "formulaId": "201c54f3-a77a-5be0-a0a5-6f4f1998ee6d",
+      "displayName": "coshMandelb",
+      "membershipBasis": "legacy-b94-canonical",
+      "legacyCanonicalAlias": "b94:coshMandelb"
+    },
+    {
+      "formulaId": "22d9a008-eb14-53de-9960-11eb5d37bb8e",
+      "displayName": "zaslavskyMap",
+      "membershipBasis": "legacy-b94-canonical",
+      "legacyCanonicalAlias": "b94:zaslavskyMap"
+    },
+    {
+      "formulaId": "27a3da95-a9e6-5fc2-81af-d5e9076fc8fa",
+      "displayName": "tricorn",
+      "membershipBasis": "legacy-b94-canonical",
+      "legacyCanonicalAlias": "b94:tricorn"
+    },
+    {
+      "formulaId": "280cd3e2-865b-5c78-90b7-39b2a36d7be0",
+      "displayName": "mandelbox",
+      "membershipBasis": "legacy-b94-canonical",
+      "legacyCanonicalAlias": "b94:mandelbox"
+    },
+    {
+      "formulaId": "2ab193f5-4919-5e5c-a9fb-c1a0e3f5eb02",
+      "displayName": "burningShip",
+      "membershipBasis": "legacy-b94-canonical",
+      "legacyCanonicalAlias": "b94:burningShip"
+    },
+    {
+      "formulaId": "2d237187-b3fd-54e2-8bf4-ef973080f389",
+      "displayName": "quadrants",
+      "membershipBasis": "maintainer-curated-addition",
+      "legacyCanonicalAlias": null
+    },
+    {
+      "formulaId": "2daea798-a058-5b4c-ada8-1712c475fadf",
+      "displayName": "logistic",
+      "membershipBasis": "legacy-b94-canonical",
+      "legacyCanonicalAlias": "b94:logistic"
+    },
+    {
+      "formulaId": "2dd8a5a7-052a-5539-aab9-c533f7dec857",
+      "displayName": "magnet2",
+      "membershipBasis": "legacy-b94-canonical",
+      "legacyCanonicalAlias": "b94:magnet2"
+    },
+    {
+      "formulaId": "2edf64a9-157c-57d7-8894-1f4781bc4f8c",
+      "displayName": "reciprocalQuadratic",
+      "membershipBasis": "legacy-b94-canonical",
+      "legacyCanonicalAlias": "b94:reciprocalQuadratic"
+    },
+    {
+      "formulaId": "33236fd9-4bd1-539b-961a-7b95ab92a1e0",
+      "displayName": "burningShipImag",
+      "membershipBasis": "legacy-b94-canonical",
+      "legacyCanonicalAlias": "b94:burningShipImag"
+    },
+    {
+      "formulaId": "34f41a82-3ede-5eda-8c1c-67962c37366b",
+      "displayName": "chebyshev5",
+      "membershipBasis": "legacy-b94-canonical",
+      "legacyCanonicalAlias": "b94:chebyshev5"
+    },
+    {
+      "formulaId": "34fcff23-f75a-539c-9102-181945abee60",
+      "displayName": "cubicMandelbrot",
+      "membershipBasis": "legacy-b94-canonical",
+      "legacyCanonicalAlias": "b94:cubicMandelbrot"
+    },
+    {
+      "formulaId": "35a7e33c-fcba-5a81-ba80-8eab6d59925c",
+      "displayName": "reciprocalCubic",
+      "membershipBasis": "legacy-b94-canonical",
+      "legacyCanonicalAlias": "b94:reciprocalCubic"
+    },
+    {
+      "formulaId": "37425fb2-8542-502f-94ac-94c0ccb6e508",
+      "displayName": "rationalMap1",
+      "membershipBasis": "legacy-b94-canonical",
+      "legacyCanonicalAlias": "b94:rationalMap1"
+    },
+    {
+      "formulaId": "38c3b212-c33b-5dd3-aae5-a514fc7e37e3",
+      "displayName": "airship",
+      "membershipBasis": "legacy-b94-canonical",
+      "legacyCanonicalAlias": "b94:airship"
+    },
+    {
+      "formulaId": "3a83800c-4a44-5e61-9651-d3d5adb71213",
+      "displayName": "perpendicularTricorn",
+      "membershipBasis": "legacy-b94-canonical",
+      "legacyCanonicalAlias": "b94:perpendicularTricorn"
+    },
+    {
+      "formulaId": "3edbea29-956a-5900-9aa7-02ccc2183016",
+      "displayName": "cosJulia",
+      "membershipBasis": "legacy-b94-canonical",
+      "legacyCanonicalAlias": "b94:cosJulia"
+    },
+    {
+      "formulaId": "42b369a5-2873-50e9-8684-cad5e60630ff",
+      "displayName": "airshipCubic",
+      "membershipBasis": "legacy-b94-canonical",
+      "legacyCanonicalAlias": "b94:airshipCubic"
+    },
+    {
+      "formulaId": "42d4c442-040b-59be-892f-1f10c8e47cb6",
+      "displayName": "perpendicularBurningShip",
+      "membershipBasis": "legacy-b94-canonical",
+      "legacyCanonicalAlias": "b94:perpendicularBurningShip"
+    },
+    {
+      "formulaId": "4514ac15-fecc-5b92-9e79-0b95b5158d3f",
+      "displayName": "novaCos",
+      "membershipBasis": "legacy-b94-canonical",
+      "legacyCanonicalAlias": "b94:novaCos"
+    },
+    {
+      "formulaId": "4536f1e3-1f15-5b7e-8e58-68ea3b63d4fb",
+      "displayName": "heart",
+      "membershipBasis": "legacy-b94-canonical",
+      "legacyCanonicalAlias": "b94:heart"
+    },
+    {
+      "formulaId": "465a5b03-469d-59b3-8564-45af7564e37a",
+      "displayName": "burningShipCubic",
+      "membershipBasis": "legacy-b94-canonical",
+      "legacyCanonicalAlias": "b94:burningShipCubic"
+    },
+    {
+      "formulaId": "46acfdeb-2dac-59c9-a94a-fd4809420dc2",
+      "displayName": "burningShipQuartic",
+      "membershipBasis": "legacy-b94-canonical",
+      "legacyCanonicalAlias": "b94:burningShipQuartic"
+    },
+    {
+      "formulaId": "48a9aa85-f5d4-5f9a-b640-89e93890a8ad",
+      "displayName": "mcMullen34",
+      "membershipBasis": "legacy-b94-canonical",
+      "legacyCanonicalAlias": "b94:mcMullen34"
+    },
+    {
+      "formulaId": "54cc5b4b-9710-5995-a216-8f4c61ff1c02",
+      "displayName": "dragon",
+      "membershipBasis": "maintainer-curated-addition",
+      "legacyCanonicalAlias": null
+    },
+    {
+      "formulaId": "56935004-bdb8-5682-974f-3821cd422965",
+      "displayName": "frothyBasin",
+      "membershipBasis": "legacy-b94-canonical",
+      "legacyCanonicalAlias": "b94:frothyBasin"
+    },
+    {
+      "formulaId": "599a7fda-4c0e-5489-b12e-6e4179ee11f2",
+      "displayName": "novaBasin",
+      "membershipBasis": "legacy-b94-canonical",
+      "legacyCanonicalAlias": "b94:novaBasin"
+    },
+    {
+      "formulaId": "62098934-def3-527a-ac43-2c80449c9848",
+      "displayName": "coshJulia",
+      "membershipBasis": "legacy-b94-canonical",
+      "legacyCanonicalAlias": "b94:coshJulia"
+    },
+    {
+      "formulaId": "627c38a8-8f4d-548f-a5a6-dd9f215adf60",
+      "displayName": "perpendicularCeltic",
+      "membershipBasis": "legacy-b94-canonical",
+      "legacyCanonicalAlias": "b94:perpendicularCeltic"
+    },
+    {
+      "formulaId": "6b633456-4a1d-580e-9a61-6824ca303486",
+      "displayName": "rabbitJulia",
+      "membershipBasis": "legacy-b94-canonical",
+      "legacyCanonicalAlias": "b94:rabbitJulia"
+    },
+    {
+      "formulaId": "6c1385a9-2d23-5816-90d1-2752905fc353",
+      "displayName": "circleInversion",
+      "membershipBasis": "legacy-b94-canonical",
+      "legacyCanonicalAlias": "b94:circleInversion"
+    },
+    {
+      "formulaId": "6d27b5fd-462b-5561-bac2-7c5f915e3cb5",
+      "displayName": "newtonSinh",
+      "membershipBasis": "legacy-b94-canonical",
+      "legacyCanonicalAlias": "b94:newtonSinh"
+    },
+    {
+      "formulaId": "75e70076-b422-5535-b3c9-c484fbf879e6",
+      "displayName": "newton4",
+      "membershipBasis": "legacy-b94-canonical",
+      "legacyCanonicalAlias": "b94:newton4"
+    },
+    {
+      "formulaId": "78e550c6-d58d-57b7-92ff-82e9ed0728f0",
+      "displayName": "newton6",
+      "membershipBasis": "legacy-b94-canonical",
+      "legacyCanonicalAlias": "b94:newton6"
+    },
+    {
+      "formulaId": "848e8cdc-d391-5098-9fdc-1de2f83be3f0",
+      "displayName": "newtonSin",
+      "membershipBasis": "legacy-b94-canonical",
+      "legacyCanonicalAlias": "b94:newtonSin"
+    },
+    {
+      "formulaId": "88dd57cd-a348-55e8-983a-74c0acba57ae",
+      "displayName": "atanhJulia",
+      "membershipBasis": "legacy-b94-canonical",
+      "legacyCanonicalAlias": "b94:atanhJulia"
+    },
+    {
+      "formulaId": "8eb342fe-8a05-524e-8b98-35cdc8af5be3",
+      "displayName": "collatz",
+      "membershipBasis": "legacy-b94-canonical",
+      "legacyCanonicalAlias": "b94:collatz"
+    },
+    {
+      "formulaId": "8f661407-f2c9-57e5-8c01-9b63a3cd0493",
+      "displayName": "celticBurningShip",
+      "membershipBasis": "legacy-b94-canonical",
+      "legacyCanonicalAlias": "b94:celticBurningShip"
+    },
+    {
+      "formulaId": "8f9eb07a-b405-5d9c-8b6a-9447ad7165b0",
+      "displayName": "cothJulia",
+      "membershipBasis": "legacy-b94-canonical",
+      "legacyCanonicalAlias": "b94:cothJulia"
+    },
+    {
+      "formulaId": "9577c6c0-3a56-5a17-bea5-0ad2d6ea7e08",
+      "displayName": "mcMullen32",
+      "membershipBasis": "legacy-b94-canonical",
+      "legacyCanonicalAlias": "b94:mcMullen32"
+    },
+    {
+      "formulaId": "9693612f-d5c2-5d77-9058-58ee16e14b4b",
+      "displayName": "sineJulia",
+      "membershipBasis": "legacy-b94-canonical",
+      "legacyCanonicalAlias": "b94:sineJulia"
+    },
+    {
+      "formulaId": "9b437c43-72bc-51a3-8b61-227f916d724c",
+      "displayName": "sinhJulia",
+      "membershipBasis": "legacy-b94-canonical",
+      "legacyCanonicalAlias": "b94:sinhJulia"
+    },
+    {
+      "formulaId": "9f301c01-13fa-57b4-a3b2-99add821bfb0",
+      "displayName": "cosMandelb",
+      "membershipBasis": "legacy-b94-canonical",
+      "legacyCanonicalAlias": "b94:cosMandelb"
+    },
+    {
+      "formulaId": "a3ab1c2f-5940-51d3-8c13-58f7feeb084b",
+      "displayName": "cactus",
+      "membershipBasis": "legacy-b94-canonical",
+      "legacyCanonicalAlias": "b94:cactus"
+    },
+    {
+      "formulaId": "a569d2c4-d397-5634-9dfe-21b2ab1a386a",
+      "displayName": "buffalo",
+      "membershipBasis": "legacy-b94-canonical",
+      "legacyCanonicalAlias": "b94:buffalo"
+    },
+    {
+      "formulaId": "a63c7852-626f-5659-a556-b0193030f25b",
+      "displayName": "novaClassic",
+      "membershipBasis": "legacy-b94-canonical",
+      "legacyCanonicalAlias": "b94:novaClassic"
+    },
+    {
+      "formulaId": "a69bc250-315d-5a74-9109-d23a820974e5",
+      "displayName": "multicorn6",
+      "membershipBasis": "legacy-b94-canonical",
+      "legacyCanonicalAlias": "b94:multicorn6"
+    },
+    {
+      "formulaId": "a89891b1-8ccb-5d58-9fbb-05944b85ce3c",
+      "displayName": "newtonCosh",
+      "membershipBasis": "legacy-b94-canonical",
+      "legacyCanonicalAlias": "b94:newtonCosh"
+    },
+    {
+      "formulaId": "a9263b21-23c1-5d94-ba30-f7bef1a66629",
+      "displayName": "spider",
+      "membershipBasis": "legacy-b94-canonical",
+      "legacyCanonicalAlias": "b94:spider"
+    },
+    {
+      "formulaId": "af500910-46ce-5a43-b430-c0154cc05959",
+      "displayName": "expMandelbrot",
+      "membershipBasis": "legacy-b94-canonical",
+      "legacyCanonicalAlias": "b94:expMandelbrot"
+    },
+    {
+      "formulaId": "b0bf5217-893a-5a0f-9a46-5e5ce89223c3",
+      "displayName": "rationalMap2",
+      "membershipBasis": "legacy-b94-canonical",
+      "legacyCanonicalAlias": "b94:rationalMap2"
+    },
+    {
+      "formulaId": "b6ccba60-aba6-5136-9c92-679ae55ba5ce",
+      "displayName": "asinhJulia",
+      "membershipBasis": "legacy-b94-canonical",
+      "legacyCanonicalAlias": "b94:asinhJulia"
+    },
+    {
+      "formulaId": "b79313f5-2181-5013-bd21-e59a7222dce5",
+      "displayName": "halleyCubic",
+      "membershipBasis": "legacy-b94-canonical",
+      "legacyCanonicalAlias": "b94:halleyCubic"
+    },
+    {
+      "formulaId": "b9a54802-21b4-5cb9-8b8f-e4afc3c99f3b",
+      "displayName": "multicorn4",
+      "membershipBasis": "legacy-b94-canonical",
+      "legacyCanonicalAlias": "b94:multicorn4"
+    },
+    {
+      "formulaId": "bb186688-4571-5725-a8ed-a17e0100dbc8",
+      "displayName": "newtonExp",
+      "membershipBasis": "legacy-b94-canonical",
+      "legacyCanonicalAlias": "b94:newtonExp"
+    },
+    {
+      "formulaId": "beeb4aec-91cd-5d01-83bb-0b98ca851e79",
+      "displayName": "sineMandelb",
+      "membershipBasis": "legacy-b94-canonical",
+      "legacyCanonicalAlias": "b94:sineMandelb"
+    },
+    {
+      "formulaId": "c09b9dec-60a6-5a26-8f03-d5ea40f0d49b",
+      "displayName": "acoshJulia",
+      "membershipBasis": "legacy-b94-canonical",
+      "legacyCanonicalAlias": "b94:acoshJulia"
+    },
+    {
+      "formulaId": "c122edfc-bdf6-5f5d-a988-6564c73d6a14",
+      "displayName": "oldmanowar",
+      "membershipBasis": "maintainer-curated-addition",
+      "legacyCanonicalAlias": null
+    },
+    {
+      "formulaId": "c1c898f3-c9a3-583d-9a0a-d09968ba0db3",
+      "displayName": "lambda",
+      "membershipBasis": "legacy-b94-canonical",
+      "legacyCanonicalAlias": "b94:lambda"
+    },
+    {
+      "formulaId": "c6b5dcf4-cef5-5630-b3f6-a68b92ae75ee",
+      "displayName": "invertedLambda",
+      "membershipBasis": "legacy-b94-canonical",
+      "legacyCanonicalAlias": "b94:invertedLambda"
+    },
+    {
+      "formulaId": "ca206908-8323-5ef9-979b-c80575765e63",
+      "displayName": "manowar",
+      "membershipBasis": "legacy-b94-canonical",
+      "legacyCanonicalAlias": "b94:manowar"
+    },
+    {
+      "formulaId": "cb9f75de-2acb-563b-9090-f58f17e65f92",
+      "displayName": "acoshMandelbrot",
+      "membershipBasis": "legacy-b94-canonical",
+      "legacyCanonicalAlias": "b94:acoshMandelbrot"
+    },
+    {
+      "formulaId": "cc40b50c-d3ff-54f0-b4ea-98bdf0fd0096",
+      "displayName": "mcMullen23",
+      "membershipBasis": "legacy-b94-canonical",
+      "legacyCanonicalAlias": "b94:mcMullen23"
+    },
+    {
+      "formulaId": "d0079630-8ed3-5379-9e37-52cb7f0f7379",
+      "displayName": "newtonCos",
+      "membershipBasis": "legacy-b94-canonical",
+      "legacyCanonicalAlias": "b94:newtonCos"
+    },
+    {
+      "formulaId": "d01f1a01-6e77-5a24-8593-a7009e1c3ea3",
+      "displayName": "perpendicularMandelbrot",
+      "membershipBasis": "legacy-b94-canonical",
+      "legacyCanonicalAlias": "b94:perpendicularMandelbrot"
+    },
+    {
+      "formulaId": "d09224e0-8712-5ec3-bc1a-e951b3d42ca9",
+      "displayName": "simonBrot",
+      "membershipBasis": "legacy-b94-canonical",
+      "legacyCanonicalAlias": "b94:simonBrot"
+    },
+    {
+      "formulaId": "d541fbeb-4dcc-5fc9-9b88-116bb28bf327",
+      "displayName": "tanJulia",
+      "membershipBasis": "legacy-b94-canonical",
+      "legacyCanonicalAlias": "b94:tanJulia"
+    },
+    {
+      "formulaId": "d747aff8-e49f-5875-a85f-89d4a1d25846",
+      "displayName": "quarticPerpendicularMandelbrot",
+      "membershipBasis": "legacy-b94-canonical",
+      "legacyCanonicalAlias": "b94:quarticPerpendicularMandelbrot"
+    },
+    {
+      "formulaId": "d848b143-1bb8-524e-b716-f0dd41a836df",
+      "displayName": "rings",
+      "membershipBasis": "legacy-b94-canonical",
+      "legacyCanonicalAlias": "b94:rings"
+    },
+    {
+      "formulaId": "d89f722f-35fe-587a-bee9-efdf05885728",
+      "displayName": "coshSinh",
+      "membershipBasis": "legacy-b94-canonical",
+      "legacyCanonicalAlias": "b94:coshSinh"
+    },
+    {
+      "formulaId": "d93a2f0f-7208-5019-ad82-7a1d319a4412",
+      "displayName": "logJulia",
+      "membershipBasis": "legacy-b94-canonical",
+      "legacyCanonicalAlias": "b94:logJulia"
+    },
+    {
+      "formulaId": "dd052c9f-868f-5516-9af0-3f4e78ac7a13",
+      "displayName": "newton3",
+      "membershipBasis": "legacy-b94-canonical",
+      "legacyCanonicalAlias": "b94:newton3"
+    },
+    {
+      "formulaId": "e1220621-19f8-54ef-ad36-4220b5d7fedc",
+      "displayName": "chebyshev3",
+      "membershipBasis": "legacy-b94-canonical",
+      "legacyCanonicalAlias": "b94:chebyshev3"
+    },
+    {
+      "formulaId": "e2456b54-ef50-5ac9-9faa-dcb576c5e774",
+      "displayName": "phoenix",
+      "membershipBasis": "legacy-b94-canonical",
+      "legacyCanonicalAlias": "b94:phoenix"
+    },
+    {
+      "formulaId": "e375f423-dfa4-54bf-9d56-c41215f4f72a",
+      "displayName": "cubicPerpendicularMandelbrot",
+      "membershipBasis": "legacy-b94-canonical",
+      "legacyCanonicalAlias": "b94:cubicPerpendicularMandelbrot"
+    },
+    {
+      "formulaId": "e435bbb6-d866-5876-9f16-f04fbe61ff2b",
+      "displayName": "zubieta",
+      "membershipBasis": "legacy-b94-canonical",
+      "legacyCanonicalAlias": "b94:zubieta"
+    },
+    {
+      "formulaId": "e44d5dec-2cee-53a9-a21d-541c929792f6",
+      "displayName": "newton5",
+      "membershipBasis": "legacy-b94-canonical",
+      "legacyCanonicalAlias": "b94:newton5"
+    },
+    {
+      "formulaId": "ebe7d5f6-7f65-50cc-b03b-f208d78c955a",
+      "displayName": "cothMandelbrot",
+      "membershipBasis": "legacy-b94-canonical",
+      "legacyCanonicalAlias": "b94:cothMandelbrot"
+    },
+    {
+      "formulaId": "ecee6e9d-a5c9-5b29-be39-edbe00e73c50",
+      "displayName": "atanhMandelbrot",
+      "membershipBasis": "legacy-b94-canonical",
+      "legacyCanonicalAlias": "b94:atanhMandelbrot"
+    },
+    {
+      "formulaId": "ed671b4c-a04c-5545-ad0c-a73727761ce8",
+      "displayName": "multicorn5",
+      "membershipBasis": "legacy-b94-canonical",
+      "legacyCanonicalAlias": "b94:multicorn5"
+    },
+    {
+      "formulaId": "f58059ef-67f2-58a4-bac0-bdb1d8608cc0",
+      "displayName": "multicorn7",
+      "membershipBasis": "legacy-b94-canonical",
+      "legacyCanonicalAlias": "b94:multicorn7"
+    }
+  ],
+  "contentHash": "be917e9d25d9fa082099747e2b6c35579fc004afde1ea27d38713d3054544320"
+}

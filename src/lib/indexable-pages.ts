@@ -1,7 +1,9 @@
 import { PUBLISHED_ARTWORK_PAGES, artworkPagePath } from '@/content/artwork-pages';
 import {
-  loadFormulaSeoSetsV1,
-  loadIndexableTeachingFormulaIdsV1,
+  loadFormulaRecordSeoSetsV1,
+  loadIndexableFormulaRecordIdsV1,
+} from '@/content/formula-record-seo-policy';
+import {
   parseFormulaLocaleKeyV1,
 } from '@/content/teaching/formula-seo-policy';
 import { routing } from '@/i18n/routing';
@@ -9,8 +11,8 @@ import { SITE } from '@/lib/site';
 
 /**
  * Canonical non-formula indexable page paths. Formula pages are projected from
- * the reviewed teaching index set below so fallback locales never leak into
- * sitemap or IndexNow inputs.
+ * published Record projection below so held formulas never leak into sitemap
+ * or IndexNow inputs.
  */
 export const BASE_INDEXABLE_PAGE_PATHS: readonly string[] = Object.freeze([
   '/explore',
@@ -26,7 +28,7 @@ export const BASE_INDEXABLE_PAGE_PATHS: readonly string[] = Object.freeze([
 ]);
 
 export const INDEXABLE_FORMULA_PATHS_V1: readonly string[] = Object.freeze(
-  loadIndexableTeachingFormulaIdsV1().map(
+  loadIndexableFormulaRecordIdsV1().map(
     (formulaId) => `/formulas/${formulaId}`,
   ),
 );
@@ -43,7 +45,7 @@ export function buildIndexableUrls(baseUrl: string = SITE.url): string[] {
   const baseUrls = routing.locales.flatMap((locale) =>
     BASE_INDEXABLE_PAGE_PATHS.map((page) => `${origin}/${locale}${page}`),
   );
-  const formulaUrls = loadFormulaSeoSetsV1().indexSet.flatMap((key) => {
+  const formulaUrls = loadFormulaRecordSeoSetsV1().indexSet.flatMap((key) => {
     const parsed = parseFormulaLocaleKeyV1(key);
     return parsed
       ? [`${origin}/${parsed.locale}/formulas/${parsed.formulaId}`]

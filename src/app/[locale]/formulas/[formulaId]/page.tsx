@@ -40,6 +40,10 @@ import {
   loadIndexableTeachingFormulaIdsForLocaleV1,
   loadIndexableTeachingLocalesV1,
 } from '@/content/teaching/formula-seo-policy';
+import {
+  isPublishedFormulaRecordIndexableV1,
+  loadIndexableFormulaRecordLocalesV1,
+} from '@/content/formula-record-seo-policy';
 import { getFormulaMetadata } from '@/engine/plugins/formula-catalog';
 import { Link } from '@/i18n/routing';
 import { buildFormulaDefaultDocument } from '@/lib/formula-documents';
@@ -48,7 +52,11 @@ import {
   findBuiltinPresetConfigById,
   parseGalleryPresetsFile,
 } from '@/lib/gallery-presets';
-import { buildFormulaTeachingJsonLdV1, renderJsonLd } from '@/lib/json-ld';
+import {
+  buildFormulaRecordJsonLdV1,
+  buildFormulaTeachingJsonLdV1,
+  renderJsonLd,
+} from '@/lib/json-ld';
 import { SITE, buildLocaleAlternates } from '@/lib/site';
 import { splitProseParagraphs } from '@/lib/content-text';
 import { appendRemixSource } from '@/lib/remix-source';
@@ -93,6 +101,9 @@ async function loadFormulaRouteRecord(
 /** generateMetadata and the page share one route projection per render. */
 const loadFormulaRouteRecordCached = cache(loadFormulaRouteRecord);
 const loadTeachingContentCached = cache(loadTeachingContentV1);
+const loadIndexableFormulaRecordLocalesCached = cache(
+  loadIndexableFormulaRecordLocalesV1,
+);
 const loadIndexableTeachingLocalesCached = cache(
   loadIndexableTeachingLocalesV1,
 );
@@ -124,11 +135,15 @@ export async function generateMetadata({
   if (!routeRecord) notFound();
 
   const teaching = loadTeachingContentCached(formulaId, locale);
-  const indexable = isFormulaLocaleIndexableV1(formulaId, locale);
-  const indexedLocales = indexable
-    ? loadIndexableTeachingLocalesCached(formulaId)
-    : [];
   const entry = getTeachingGuideForFormulaRecordV1(routeRecord.formulaRecord);
+  const indexable = entry
+    ? isFormulaLocaleIndexableV1(formulaId, locale)
+    : isPublishedFormulaRecordIndexableV1(formulaId, locale);
+  const indexedLocales = indexable
+    ? entry
+      ? loadIndexableTeachingLocalesCached(formulaId)
+      : loadIndexableFormulaRecordLocalesCached(formulaId)
+    : [];
   if (!entry) {
     const t = await getTranslations({
       locale,
@@ -238,8 +253,10 @@ export default async function FormulaPage({ params }: FormulaPageProps) {
   if (!routeRecord) notFound();
 
   const teaching = loadTeachingContentCached(formulaId, locale);
-  const indexable = isFormulaLocaleIndexableV1(formulaId, locale);
   const entry = getTeachingGuideForFormulaRecordV1(routeRecord.formulaRecord);
+  const indexable = entry
+    ? isFormulaLocaleIndexableV1(formulaId, locale)
+    : isPublishedFormulaRecordIndexableV1(formulaId, locale);
   if (!entry) {
     return (
       <FormulaIdentityPage
@@ -701,8 +718,9 @@ async function FormulaIdentityPage({
   const pageUrl = `${SITE.url}/${locale}${buildFormulaCanonicalPathV1(record.formulaId)}`;
   const jsonLd =
     indexable
-      ? buildFormulaTeachingJsonLdV1({
+      ? buildFormulaRecordJsonLdV1({
           url: pageUrl,
+          directoryUrl: `${SITE.url}/${locale}/formulas/directory`,
           locale,
           formulaId: record.formulaId,
           canonicalName: record.displayName,

@@ -1145,7 +1145,9 @@
         "title": "Navegar por família",
         "family": "Família",
         "status": "Status de publicação",
-        "all": "Todas"
+        "all": "Todas",
+        "categoryTitle": "Navegar por categoria",
+        "category": "Categoria"
       },
       "family": {
         "algebraic-power": "Potência algébrica",
@@ -1161,7 +1163,19 @@
         "hold": "Retida",
         "exclude": "Excluída"
       },
-      "resultCount": "{count} definições publicadas"
+      "resultCount": "{count} definições publicadas",
+      "category": {
+        "classic": "Clássicas"
+      },
+      "guideBadge": "Guia",
+      "searchLabel": "Pesquisar fórmulas",
+      "searchPlaceholder": "Pesquisar pelo nome da fórmula",
+      "sortLabel": "Ordenar",
+      "apply": "Aplicar",
+      "sort": {
+        "nameAsc": "Nome A–Z",
+        "nameDesc": "Nome Z–A"
+      }
     },
     "record": {
       "eyebrow": "Registro da fórmula",

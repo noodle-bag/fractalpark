@@ -1,8 +1,10 @@
 import type { MetadataRoute } from 'next';
 import {
-  loadFormulaSeoSetsV1,
+  loadFormulaRecordSeoSetsV1,
+  type FormulaRecordSeoSetsV1,
+} from '@/content/formula-record-seo-policy';
+import {
   parseFormulaLocaleKeyV1,
-  type FormulaSeoSetsV1,
 } from '@/content/teaching/formula-seo-policy';
 import { filterTeachingAlternatesV1 } from '@/content/teaching/guide-route-policy';
 import {
@@ -14,7 +16,7 @@ import { SITE } from '@/lib/site';
 
 /** Canonical sitemap: static product pages plus exact formula indexSet. */
 export function buildSitemapV1(
-  formulaSets: FormulaSeoSetsV1 = loadFormulaSeoSetsV1(),
+  formulaSets: FormulaRecordSeoSetsV1 = loadFormulaRecordSeoSetsV1(),
 ): MetadataRoute.Sitemap {
   const entries: MetadataRoute.Sitemap = [];
   for (const locale of routing.locales) {

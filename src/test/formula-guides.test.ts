@@ -20,8 +20,8 @@ import {
   getPublishedFormulaGuideBySlug,
 } from '@/content/formula-guides';
 import { PUBLISHED_TEACHING_GUIDES_V1 } from '@/content/teaching/guide-route-policy';
+import { loadFormulaRecordSeoSetsV1 } from '@/content/formula-record-seo-policy';
 import {
-  loadFormulaSeoSetsV1,
   parseFormulaLocaleKeyV1,
 } from '@/content/teaching/formula-seo-policy';
 import sitemap from '@/app/sitemap';
@@ -187,12 +187,12 @@ describe('published formula guides', () => {
     );
   });
 
-  it('adds exactly the reviewed formula-locale index set to the sitemap', () => {
+  it('includes all published Formula Records in the sitemap', () => {
     const urls = sitemap().map(({ url }) => url);
     const formulaGuideUrls = urls.filter((url) =>
       /\/(?:en|zh)\/formulas\/(?!frm$|editor$)[a-z0-9-]+$/.test(url)
     );
-    const expectedUrls = loadFormulaSeoSetsV1().sitemapSet
+    const expectedUrls = loadFormulaRecordSeoSetsV1().sitemapSet
       .map(parseFormulaLocaleKeyV1)
       .filter(
         (value): value is Readonly<{ locale: string; formulaId: string }> =>
@@ -205,7 +205,7 @@ describe('published formula guides', () => {
       );
 
     expect(formulaGuideUrls).toEqual(expectedUrls);
-    expect(formulaGuideUrls).toHaveLength(108);
+    expect(formulaGuideUrls).toHaveLength(1068);
     expect(urls).not.toContain(
       'https://www.fractalpark.com/en/formulas/mandelbrot'
     );

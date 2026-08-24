@@ -2,12 +2,16 @@ import type { Metadata } from 'next';
 import { getTranslations, setRequestLocale } from 'next-intl/server';
 import { Badge } from '@/components/ui/badge';
 import {
-  FORMULA_DIRECTORY_FAMILIES_V1,
-  filterFormulaDirectoryV1,
-  type FormulaDirectoryEntryV1,
-  type FormulaDirectoryFamilyV1,
-} from '@/engine/formulas/v1/directory';
-import { PUBLISHED_FORMULA_ROW_COUNT_V1 } from '@/engine/formulas/v1/published-runtime';
+  PUBLISHED_FORMULA_DIRECTORY_CATEGORIES_V1,
+  PUBLISHED_FORMULA_DIRECTORY_COUNT_V1,
+  PUBLISHED_FORMULA_DIRECTORY_FAMILIES_V1,
+  PUBLISHED_FORMULA_DIRECTORY_V1,
+  filterPublishedFormulaDirectoryV1,
+  parsePublishedFormulaDirectoryCategoryV1,
+  type PublishedFormulaDirectoryCategoryV1,
+  type PublishedFormulaDirectoryFamilyV1,
+  type PublishedFormulaDirectoryRowV1,
+} from '@/content/published-formula-directory';
 import { Link } from '@/i18n/routing';
 import { OG_LOCALE, type SupportedLocale } from '@/i18n/supported-locales';
 import { renderJsonLd } from '@/lib/json-ld';
@@ -16,17 +20,32 @@ import { buildFormulaCanonicalPathV1 } from '@/lib/formula-routes';
 
 const DIRECTORY_PATH = '/formulas/directory';
 
-type DirectorySearchParams = { family?: string };
+type DirectorySortV1 = 'name-asc' | 'name-desc';
+type DirectorySearchParams = { category?: string; q?: string; sort?: string };
 
-function parseFamily(value: string | undefined): FormulaDirectoryFamilyV1 | undefined {
-  return (FORMULA_DIRECTORY_FAMILIES_V1 as readonly string[]).includes(value ?? '')
-    ? (value as FormulaDirectoryFamilyV1)
-    : undefined;
+function parseCategory(
+  value: string | undefined,
+): PublishedFormulaDirectoryCategoryV1 | undefined {
+  return parsePublishedFormulaDirectoryCategoryV1(value);
 }
 
-function directoryHref(family: FormulaDirectoryFamilyV1 | undefined): string {
+function parseQuery(value: string | undefined): string | undefined {
+  const query = value?.trim();
+  return query && query.length <= 100 ? query : undefined;
+}
+
+function parseSort(value: string | undefined): DirectorySortV1 {
+  return value === 'name-desc' ? value : 'name-asc';
+}
+
+function directoryHref(
+  category: PublishedFormulaDirectoryCategoryV1 | undefined,
+  options: Readonly<{ query?: string; sort: DirectorySortV1 }>,
+): string {
   const params = new URLSearchParams();
-  if (family) params.set('family', family);
+  if (options.query) params.set('q', options.query);
+  if (category) params.set('category', category);
+  if (options.sort !== 'name-asc') params.set('sort', options.sort);
   const query = params.toString();
   return query ? `${DIRECTORY_PATH}?${query}` : DIRECTORY_PATH;
 }
@@ -41,14 +60,14 @@ export async function generateMetadata({
 
   return {
     title: t('title'),
-    description: t('description', { count: PUBLISHED_FORMULA_ROW_COUNT_V1 }),
+    description: t('description', { count: PUBLISHED_FORMULA_DIRECTORY_COUNT_V1 }),
     alternates: {
       canonical: `/${locale}${DIRECTORY_PATH}`,
       languages: buildLocaleAlternates(DIRECTORY_PATH),
     },
     openGraph: {
       title: t('title'),
-      description: t('description', { count: PUBLISHED_FORMULA_ROW_COUNT_V1 }),
+      description: t('description', { count: PUBLISHED_FORMULA_DIRECTORY_COUNT_V1 }),
       url: `${SITE.url}/${locale}${DIRECTORY_PATH}`,
       siteName: SITE.name,
       locale: OG_LOCALE[locale as SupportedLocale] ?? OG_LOCALE.en,
@@ -58,10 +77,13 @@ export async function generateMetadata({
 }
 
 function groupByFamily(
-  entries: readonly FormulaDirectoryEntryV1[],
-): ReadonlyMap<FormulaDirectoryFamilyV1, FormulaDirectoryEntryV1[]> {
-  const groups = new Map<FormulaDirectoryFamilyV1, FormulaDirectoryEntryV1[]>();
-  for (const family of FORMULA_DIRECTORY_FAMILIES_V1) groups.set(family, []);
+  entries: readonly PublishedFormulaDirectoryRowV1[],
+): ReadonlyMap<PublishedFormulaDirectoryFamilyV1, PublishedFormulaDirectoryRowV1[]> {
+  const groups = new Map<
+    PublishedFormulaDirectoryFamilyV1,
+    PublishedFormulaDirectoryRowV1[]
+  >();
+  for (const family of PUBLISHED_FORMULA_DIRECTORY_FAMILIES_V1) groups.set(family, []);
   for (const entry of entries) groups.get(entry.primaryFamily)?.push(entry);
   return groups;
 }
@@ -78,14 +100,24 @@ export default async function FormulaDirectoryPage({
   setRequestLocale(locale);
 
   const t = await getTranslations({ locale, namespace: 'formulas.directory' });
-  const family = parseFamily(raw.family);
-  const publishedEntries = filterFormulaDirectoryV1({ decision: 'publish' });
-  const entries = family
-    ? publishedEntries.filter((entry) => entry.primaryFamily === family)
-    : publishedEntries;
-  const familyFacets = FORMULA_DIRECTORY_FAMILIES_V1.map((value) => ({
+  const category = parseCategory(raw.category);
+  const query = parseQuery(raw.q);
+  const sort = parseSort(raw.sort);
+  const categoryEntries = filterPublishedFormulaDirectoryV1(category);
+  const entries = [...categoryEntries]
+    .filter((entry) =>
+      query
+        ? entry.displayName.toLocaleLowerCase('en').includes(query.toLocaleLowerCase('en'))
+        : true,
+    )
+    .sort((left, right) =>
+      sort === 'name-desc'
+        ? right.displayName.localeCompare(left.displayName, 'en')
+        : left.displayName.localeCompare(right.displayName, 'en'),
+    );
+  const categoryFacets = PUBLISHED_FORMULA_DIRECTORY_CATEGORIES_V1.map((value) => ({
     value,
-    count: publishedEntries.filter((entry) => entry.primaryFamily === value).length,
+    count: PUBLISHED_FORMULA_DIRECTORY_V1.categoryCounts[value],
   }));
   const groups = groupByFamily(entries);
   const directoryUrl = `${SITE.url}/${locale}${DIRECTORY_PATH}`;
@@ -94,7 +126,7 @@ export default async function FormulaDirectoryPage({
     '@context': 'https://schema.org',
     '@type': 'CollectionPage',
     name: t('title'),
-    description: t('description', { count: PUBLISHED_FORMULA_ROW_COUNT_V1 }),
+    description: t('description', { count: PUBLISHED_FORMULA_DIRECTORY_COUNT_V1 }),
     url: directoryUrl,
     breadcrumb: {
       '@type': 'BreadcrumbList',
@@ -143,7 +175,7 @@ export default async function FormulaDirectoryPage({
             {t('title')}
           </h1>
           <p className="mt-6 max-w-3xl text-pretty text-lg leading-8 text-muted-foreground">
-            {t('intro', { count: PUBLISHED_FORMULA_ROW_COUNT_V1 })}
+            {t('intro', { count: PUBLISHED_FORMULA_DIRECTORY_COUNT_V1 })}
           </p>
         </div>
       </header>
@@ -151,29 +183,68 @@ export default async function FormulaDirectoryPage({
       <div className="mx-auto max-w-7xl px-5 pt-12 sm:px-8">
         <section aria-labelledby="facets-heading">
           <h2 className="text-lg font-semibold" id="facets-heading">
-            {t('facets.title')}
+            {t('facets.categoryTitle')}
           </h2>
 
           <div className="mt-6 space-y-6">
+            <form
+              action={`/${locale}${DIRECTORY_PATH}`}
+              className="grid gap-3 sm:grid-cols-[minmax(0,1fr)_minmax(12rem,auto)_auto]"
+              method="get"
+            >
+              {category ? <input name="category" type="hidden" value={category} /> : null}
+              <label className="grid gap-2 text-sm font-medium">
+                {t('searchLabel')}
+                <input
+                  className="h-10 rounded-md border bg-background px-3 font-normal"
+                  defaultValue={query}
+                  maxLength={100}
+                  name="q"
+                  placeholder={t('searchPlaceholder')}
+                  type="search"
+                />
+              </label>
+              <label className="grid gap-2 text-sm font-medium">
+                {t('sortLabel')}
+                <select
+                  className="h-10 rounded-md border bg-background px-3 font-normal"
+                  defaultValue={sort}
+                  name="sort"
+                >
+                  <option value="name-asc">{t('sort.nameAsc')}</option>
+                  <option value="name-desc">{t('sort.nameDesc')}</option>
+                </select>
+              </label>
+              <button
+                className="self-end rounded-md bg-primary px-4 py-2 text-sm font-medium text-primary-foreground"
+                type="submit"
+              >
+                {t('apply')}
+              </button>
+            </form>
             <div>
               <h3 className="text-sm font-medium text-muted-foreground">
-                {t('facets.family')}
+                {t('facets.category')}
               </h3>
               <ul className="mt-3 flex flex-wrap gap-2">
                 <li>
                   <FacetLink
-                    active={family === undefined}
-                    href={directoryHref(undefined)}
+                    active={category === undefined}
+                    href={directoryHref(undefined, { query, sort })}
                     label={t('facets.all')}
                   />
                 </li>
-                {familyFacets.map((facet) => (
+                {categoryFacets.map((facet) => (
                   <li key={facet.value}>
                     <FacetLink
-                      active={family === facet.value}
+                      active={category === facet.value}
                       count={facet.count}
-                      href={directoryHref(facet.value)}
-                      label={t(`family.${facet.value}`)}
+                      href={directoryHref(facet.value, { query, sort })}
+                      label={
+                        facet.value === 'classic'
+                          ? t('category.classic')
+                          : t(`family.${facet.value}`)
+                      }
                     />
                   </li>
                 ))}
@@ -206,16 +277,21 @@ export default async function FormulaDirectoryPage({
               <ul className="mt-5 grid gap-2 sm:grid-cols-2 lg:grid-cols-3">
                 {rows.map((entry) => (
                   <li
-                    className="rounded-lg border bg-card px-4 py-3"
+                    className="flex items-center justify-between gap-3 rounded-lg border bg-card px-4 py-3"
                     data-formula-id={entry.formulaId}
                     key={entry.formulaId}
                   >
                     <Link
-                      className="truncate font-medium hover:underline"
+                      className="min-w-0 truncate font-medium hover:underline"
                       href={buildFormulaCanonicalPathV1(entry.formulaId)}
                     >
                       {entry.displayName}
                     </Link>
+                    {entry.guideSlug ? (
+                      <Badge className="shrink-0" variant="secondary">
+                        {t('guideBadge')}
+                      </Badge>
+                    ) : null}
                   </li>
                 ))}
               </ul>

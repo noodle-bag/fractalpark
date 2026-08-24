@@ -1145,7 +1145,9 @@
         "title": "계열별로 탐색",
         "family": "계열",
         "status": "게시 상태",
-        "all": "전체"
+        "all": "전체",
+        "categoryTitle": "카테고리별로 탐색",
+        "category": "카테고리"
       },
       "family": {
         "algebraic-power": "대수적 거듭제곱",
@@ -1161,7 +1163,19 @@
         "hold": "보류",
         "exclude": "제외"
       },
-      "resultCount": "공개된 정의 {count}개"
+      "resultCount": "공개된 정의 {count}개",
+      "category": {
+        "classic": "클래식"
+      },
+      "guideBadge": "가이드",
+      "searchLabel": "수식 검색",
+      "searchPlaceholder": "수식 이름으로 검색",
+      "sortLabel": "정렬",
+      "apply": "적용",
+      "sort": {
+        "nameAsc": "이름 A–Z",
+        "nameDesc": "이름 Z–A"
+      }
     },
     "record": {
       "eyebrow": "수식 레코드",

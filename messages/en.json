@@ -1145,7 +1145,9 @@
         "title": "Browse by family",
         "family": "Family",
         "status": "Publication status",
-        "all": "All"
+        "all": "All",
+        "categoryTitle": "Browse by category",
+        "category": "Category"
       },
       "family": {
         "algebraic-power": "Algebraic power",
@@ -1161,7 +1163,19 @@
         "hold": "Held",
         "exclude": "Excluded"
       },
-      "resultCount": "{count} published Definitions"
+      "resultCount": "{count} published Definitions",
+      "category": {
+        "classic": "Classic"
+      },
+      "guideBadge": "Guide",
+      "searchLabel": "Search formulas",
+      "searchPlaceholder": "Search by formula name",
+      "sortLabel": "Sort",
+      "apply": "Apply",
+      "sort": {
+        "nameAsc": "Name A–Z",
+        "nameDesc": "Name Z–A"
+      }
     },
     "record": {
       "eyebrow": "Formula Record",

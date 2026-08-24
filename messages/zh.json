@@ -1145,7 +1145,9 @@
         "title": "按公式族浏览",
         "family": "族",
         "status": "发布状态",
-        "all": "全部"
+        "all": "全部",
+        "categoryTitle": "按类别浏览",
+        "category": "类别"
       },
       "family": {
         "algebraic-power": "代数幂",
@@ -1161,7 +1163,19 @@
         "hold": "暂缓",
         "exclude": "排除"
       },
-      "resultCount": "{count} 个已发布定义"
+      "resultCount": "{count} 个已发布定义",
+      "category": {
+        "classic": "经典"
+      },
+      "guideBadge": "指南",
+      "searchLabel": "搜索公式",
+      "searchPlaceholder": "按公式名称搜索",
+      "sortLabel": "排序",
+      "apply": "应用",
+      "sort": {
+        "nameAsc": "名称 A–Z",
+        "nameDesc": "名称 Z–A"
+      }
     },
     "record": {
       "eyebrow": "公式档案",

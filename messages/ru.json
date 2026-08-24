@@ -1145,7 +1145,9 @@
         "title": "Обзор по семействам",
         "family": "Семейство",
         "status": "Статус публикации",
-        "all": "Все"
+        "all": "Все",
+        "categoryTitle": "Обзор по категориям",
+        "category": "Категория"
       },
       "family": {
         "algebraic-power": "Алгебраическая степень",
@@ -1161,7 +1163,19 @@
         "hold": "Отложена",
         "exclude": "Исключена"
       },
-      "resultCount": "Опубликовано определений: {count}"
+      "resultCount": "Опубликовано определений: {count}",
+      "category": {
+        "classic": "Классические"
+      },
+      "guideBadge": "Руководство",
+      "searchLabel": "Поиск формул",
+      "searchPlaceholder": "Поиск по названию формулы",
+      "sortLabel": "Сортировка",
+      "apply": "Применить",
+      "sort": {
+        "nameAsc": "Название А–Я",
+        "nameDesc": "Название Я–А"
+      }
     },
     "record": {
       "eyebrow": "Карточка формулы",
