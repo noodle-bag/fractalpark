@@ -1,0 +1,17 @@
+{
+  "provider": "kimi",
+  "requestedModel": "k3-256k",
+  "actualModel": "k3-256k",
+  "finishReason": "stop",
+  "candidateSha256": "89f45d192fa6afa67c4bd08f0c8009478bce7788e7842d207b9be9dfaf47594d",
+  "reviewPackageSha256": "652afd1e6392722341242eb980a65274edf69a13a2d2bee1abff7c0f91035f89",
+  "usage": {
+    "prompt_tokens": 1039,
+    "completion_tokens": 837,
+    "total_tokens": 1876,
+    "completion_tokens_details": {
+      "reasoning_tokens": 605
+    }
+  },
+  "review": "VERDICT: APPROVE\n\nNO_FINDINGS\n\nReview confined to `review-delta-r5.json`: the single content-path change fixes the residual French agreement error. `exploré` is correct masculine singular agreement with `Le Mandelbox original` in the `est ... exploré` construction; the prior `explorée` was inconsistent after Mandelbox normalization to masculine. The remaining `inspirée` forms cited by the parent attach to feminine nouns (`application`, `carte`, e.g. `une carte bidimensionnelle inspirée`) and do not modify `Mandelbox`. The delta otherwise contains only schema/revision metadata, with parent assertions that all other R4 paths are unchanged and the Cosh one-step/fixed-point correction is unchanged; no contrary evidence is present.\n\nApproved candidate SHA-256 for repository integration, subject to maintainer authorization: `89f45d192fa6afa67c4bd08f0c8009478bce7788e7842d207b9be9dfaf47594d`"
+}

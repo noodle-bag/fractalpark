@@ -1,0 +1,190 @@
+{
+  "schema": "fractalpark-guide-restoration-review-evidence/v1",
+  "status": "approved",
+  "generatedAt": "2026-08-24T10:31:04+08:00",
+  "scope": {
+    "expectedCommit": "26d",
+    "guideSlugs": [
+      "cosh-mandelbrot",
+      "zaslavsky-map",
+      "mandelbox",
+      "newton-cosh"
+    ],
+    "localeSet": [
+      "en",
+      "zh",
+      "pt",
+      "ko",
+      "ru",
+      "es",
+      "fr"
+    ],
+    "teachingPackageMutation": false,
+    "reviewedTeachingPackageCount": 50
+  },
+  "maintainerAuthorization": {
+    "status": "authorized",
+    "authorizedAt": "2026-08-24",
+    "actorId": "fractalpark-maintainer",
+    "actorKind": "human-maintainer",
+    "maintainerResponse": "好的，继续，需要复审",
+    "authorizationBasis": "Maintainer instructed the approved v0.4.19 plan to continue and required review before integration.",
+    "scope": "Expected Commit 26d only",
+    "doesNotAllow": [
+      "mark-pull-request-ready",
+      "merge",
+      "production-deploy",
+      "tag-or-release"
+    ]
+  },
+  "aiAssistanceDisclosure": {
+    "status": "disclosed",
+    "drafting": "Codex CLI produced isolated locale candidates; the maintainer agent applied bounded factual and grammatical adjudication.",
+    "independentReviewers": [
+      "DeepSeek API",
+      "Kimi Coding API"
+    ],
+    "publicationClaim": "AI-assisted restoration and correction of previously held Guide copy; no new teaching package or source-rights claim."
+  },
+  "finalCandidateSha256": "89f45d192fa6afa67c4bd08f0c8009478bce7788e7842d207b9be9dfaf47594d",
+  "finalCandidatePath": "final-candidate.v1.json",
+  "evidenceIntegrity": {
+    "reviewFileCount": 10,
+    "candidateFileCount": 1,
+    "verification": "CI verifies raw SHA-256, round/candidate/package/model/finish/verdict cross-consistency, and exact equality between final candidate entries and the seven locale message projections.",
+    "normalizationCorrections": [
+      {
+        "round": 1,
+        "field": "reviewPackageSha256",
+        "incorrectWrapperValue": "3655813cff3d30c1117a94c3ff3d9ce53b2c22951b733397bb57d447a04af578",
+        "correctedValue": "3655813bfc0ed64b00f4fbd62395550337113f8994c3feaf30ae036422f756a1",
+        "reason": "The parent wrapper metadata contained a transcription error; both reviewers received the package whose measured raw SHA-256 is the corrected value.",
+        "reviewContentUnchanged": true
+      }
+    ]
+  },
+  "rounds": [
+    {
+      "revision": 1,
+      "candidateSha256": "aebdca6368ceecff498643751cf5dd407fa1773bfdaa015f2d43edc30aa5e622",
+      "reviewPackageSha256": "3655813bfc0ed64b00f4fbd62395550337113f8994c3feaf30ae036422f756a1",
+      "status": "rejected",
+      "deepseek": {
+        "requestedModel": "deepseek-chat",
+        "actualModel": "deepseek-v4-flash",
+        "finishReason": "stop",
+        "verdict": "CHANGES_REQUESTED",
+        "path": "deepseek-review-r1.json",
+        "sha256": "6f942f848aea713c98d791988190925e378bfba725285cd633fa316fdda47fc9"
+      },
+      "kimi": {
+        "requestedModel": "k3-256k",
+        "actualModel": "k3-256k",
+        "finishReason": "stop",
+        "verdict": "CHANGES_REQUESTED",
+        "path": "kimi-review-r1.json",
+        "sha256": "d5e952bd252f5cd86b223bc2de79eb9aba150afa41af3ac228a00c75e468b12e"
+      }
+    },
+    {
+      "revision": 2,
+      "candidateSha256": "def2f61f3ea79460de5362ecce579e3995aeb88781308afaf143d19ccb15fe5f",
+      "reviewPackageSha256": "3d7a4add59636983bf237950bd1554e1569ab4c57d5ddfc66c4ef4db2d49c2b8",
+      "status": "rejected",
+      "deepseek": {
+        "requestedModel": "deepseek-chat",
+        "actualModel": "deepseek-v4-flash",
+        "finishReason": "stop",
+        "verdict": "CHANGES_REQUESTED",
+        "path": "deepseek-review-r2.json",
+        "sha256": "56e85177ac25507863adcc6ae97d557453da1934792faa7e49daec879ed0b36a"
+      },
+      "kimi": {
+        "requestedModel": "k3-256k",
+        "actualModel": "k3-256k",
+        "finishReason": "stop",
+        "verdict": "CHANGES_REQUESTED",
+        "path": "kimi-review-r2.json",
+        "sha256": "088cd894d9f857dd5755f3869fe11fe8d658bf64ec385065111aa580aaf14932"
+      }
+    },
+    {
+      "revision": 3,
+      "candidateSha256": "e0f6818728c8dbf8510bf1ffcea6f7db93dd59658171a05b0e3c261df1981bfb",
+      "reviewPackageSha256": "cdd11559ff041ac09dabf826001209fef72f8897205c156cc00dc9fc7c5fae81",
+      "status": "rejected",
+      "deepseek": {
+        "requestedModel": "deepseek-chat",
+        "actualModel": "deepseek-v4-flash",
+        "finishReason": "stop",
+        "verdict": "CHANGES_REQUESTED",
+        "path": "deepseek-review-r3.json",
+        "sha256": "0715ae31a04510322a86d824f5139e003e91c33426177776839bf4b70c323fb6"
+      },
+      "kimi": {
+        "requestedModel": "k3-256k",
+        "actualModel": "k3-256k",
+        "finishReason": "stop",
+        "verdict": "CHANGES_REQUESTED",
+        "path": "kimi-review-r3.json",
+        "sha256": "0849c747ce59b2c741b382ceeb9c4c13a48f4cd6faa161d6025ce96935ad9332"
+      }
+    },
+    {
+      "revision": 4,
+      "candidateSha256": "3dc094f38b6c1a7c36d3fbcd35d21ac711c0d903a834c32a4de87754967674e5",
+      "reviewPackageSha256": "e11df590375cdcda7a96ef42d862f0caadf3b86197794a3cadc94718ef61e53f",
+      "status": "rejected",
+      "deepseek": {
+        "requestedModel": "deepseek-chat",
+        "actualModel": "deepseek-v4-flash",
+        "finishReason": "stop",
+        "verdict": "APPROVE",
+        "path": "deepseek-review-r4.json",
+        "sha256": "3f46c9f5d118fd5e0dc0633a7ee1b750384e0c4b3ca8668015e63aa1cf393e1e"
+      },
+      "kimi": {
+        "requestedModel": "k3-256k",
+        "actualModel": "k3-256k",
+        "finishReason": "stop",
+        "verdict": "CHANGES_REQUESTED",
+        "path": "kimi-review-r4.json",
+        "sha256": "ee980f29acd4298e4a00a458df672bca7b64f6b2b7e4a702bd3400fffdc81149"
+      }
+    },
+    {
+      "revision": 5,
+      "candidateSha256": "89f45d192fa6afa67c4bd08f0c8009478bce7788e7842d207b9be9dfaf47594d",
+      "reviewPackageSha256": "652afd1e6392722341242eb980a65274edf69a13a2d2bee1abff7c0f91035f89",
+      "status": "approved",
+      "deepseek": {
+        "requestedModel": "deepseek-chat",
+        "actualModel": "deepseek-v4-flash",
+        "finishReason": "stop",
+        "verdict": "APPROVE",
+        "path": "deepseek-review-r5.json",
+        "sha256": "a4d14837b4f87b7ee3c886d5905b7461f5eec988fd90e8fd9a8b56f003d295ea"
+      },
+      "kimi": {
+        "requestedModel": "k3-256k",
+        "actualModel": "k3-256k",
+        "finishReason": "stop",
+        "verdict": "APPROVE",
+        "path": "kimi-review-r5.json",
+        "sha256": "f57c5d75166fb379fc579ca07b95bac115c07e0383f73190f7e24a8a2a420a46"
+      }
+    }
+  ],
+  "finalVerdict": {
+    "status": "approved",
+    "deepseek": "APPROVE / NO_FINDINGS",
+    "kimi": "APPROVE / NO_FINDINGS",
+    "parentDeterministicGates": [
+      "7 locales × 4 exact Guide slugs",
+      "no cross-locale long-text duplicates",
+      "Korean and Russian script-ratio checks",
+      "no false Cosh fixed-point residue",
+      "no unapproved teaching-package mutation"
+    ]
+  }
+}

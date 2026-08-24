@@ -8,6 +8,7 @@ import {
 import type { FormulaContentEntry } from '@/content/formula-manifest';
 import type { FormulaIdV1 } from '@/engine/formulas/v1/types';
 import type { PublicFormulaRecordV1 } from '@/lib/formula-records';
+import { isRestoredGuideFormulaV1 } from './restored-guide-projection';
 
 const selectedFormulaIds = new Set(
   selectionAsset.rows.map((row) => row.formulaId),
@@ -18,12 +19,19 @@ const guideRecordPathByLegacyFormulaId = new Map(
 
 export const PUBLISHED_TEACHING_GUIDES_V1 = Object.freeze(
   PUBLISHED_FORMULA_GUIDES.filter((entry) =>
-    selectedFormulaIds.has(getPublishedFormulaGuideFormulaId(entry)),
+    isPublishedGuideFormulaV1(getPublishedFormulaGuideFormulaId(entry)),
   ),
 );
 
 export function isSelectedTeachingFormulaV1(formulaId: string): boolean {
   return selectedFormulaIds.has(formulaId);
+}
+
+export function isPublishedGuideFormulaV1(formulaId: string): boolean {
+  return (
+    isSelectedTeachingFormulaV1(formulaId) ||
+    isRestoredGuideFormulaV1(formulaId)
+  );
 }
 
 export function getLegacyGuideRecordPathV1(
@@ -60,14 +68,14 @@ export const filterTeachingAlternatesAtCommit20dV1 = filterTeachingAlternatesV1;
 /**
  * Fail closed before the legacy Guide branch can expose teaching/runtime UI.
  * Publication alone is insufficient: a formula must also be in the frozen
- * teaching selection, so a future hold -> publish decision cannot silently
- * enable teaching content.
+ * teaching selection or the separately reviewed restored-Guide projection,
+ * so a future hold -> publish decision cannot silently enable deep content.
  */
 export function getTeachingGuideForFormulaRecordV1(
   formulaRecord: Pick<PublicFormulaRecordV1, 'formulaId' | 'availability'>,
 ): FormulaContentEntry | undefined {
   if (formulaRecord.availability !== 'published') return undefined;
-  if (!isSelectedTeachingFormulaV1(formulaRecord.formulaId)) return undefined;
+  if (!isPublishedGuideFormulaV1(formulaRecord.formulaId)) return undefined;
   return getPublishedFormulaGuideByFormulaId(
     formulaRecord.formulaId as FormulaIdV1,
   );

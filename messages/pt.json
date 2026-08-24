@@ -655,6 +655,34 @@
         },
         "history": "The map z → λz(1 − z) began as the complex extension of the real logistic map, studied extensively in the 1970s as a simple model of population dynamics and chaotic behavior. In 1980, Benoit B. Mandelbrot took the iteration to unrestricted complex λ and z. His paper, \"Fractal Aspects of the Iteration of z → λz(1−z) for Complex λ and z,\" introduced the λ-plane parameter set—now the Lambda fractal—and placed it in the broader theory of iterated rational maps.\n\nThe groundwork was already there. Around 1917–1918, Pierre Fatou and Gaston Julia developed the general theory of iterated rational functions that later made families such as the logistic map available to explore. In 1986, Heinz-Otto Peitgen and Peter H. Richter brought the Lambda fractal to a wider audience in \"The Beauty of Fractals,\" with some of the first widely seen computer-generated images of the set."
       },
+      "mandelbox": {
+        "title": "Mandelbox",
+        "summary": "Um mapa de dobra e escala inspirado no Mandelbox de 2010 de Tom Lowe: reflexões de caixa, dobra radial e escala fazem a órbita formar câmaras e paredes.",
+        "overview": "A maioria das fórmulas fractais começa elevando ao quadrado, como em z² + c. O Mandelbox escolhe outro caminho: uma dobra de caixa envia as coordenadas fora de um cubo fixo de volta em direção às suas faces; uma dobra radial, ou esférica, então inverte ou escala um ponto conforme sua distância da origem; uma escala uniforme estica ou comprime o resultado antes de somar c. Repita a sequência, e são as dobras — não a quadratura — que constroem a estrutura.\n\nReflexões e inversões não exigem um número específico de dimensões, então a construção pode ser feita em qualquer uma delas. O FractalPark desenha uma variante bidimensional que mantém o mesmo núcleo de dobra e escala no plano complexo.\n\nEste mapa de parâmetros não se suaviza nas curvas familiares dos polinômios. Ele recorta câmaras de bordas duras, fortificações aninhadas e passagens que parecem saídas de uma planta. Sua borda divide as órbitas limitadas — as que permanecem ao alcance — das que escapam. Aproxime-se e a borda irregular e autossimilar traz de volta o motivo da caixa em escala menor.",
+        "imageAlt": "Mapa Mandelbox bidimensional com câmaras de bordas duras e recuos aninhados semelhantes a fortalezas, em azuis frios",
+        "imageCaption": "O mapa inspirado no Mandelbox do FractalPark: paredes retas, cantos em ângulo reto e recuos em camadas como o interior de uma fortaleza cristalina.",
+        "math": {
+          "iteration": {
+            "label": "Iteração de dobrar e escalar",
+            "explanation": "Cada rodada leva a órbita por quatro movimentos: dobra de caixa, dobra radial, escala e depois um deslocamento por c.\n\nA dobra de caixa trata uma coordenada por vez. Tome uma componente a de z. Acima de 1, ela se reflete como a → 2 − a; abaixo de −1, como a → −2 − a. Componentes em [−1, 1] não mudam. O plano exterior é dobrado de volta para o quadrado central.\n\nEm seguida vem a dobra de esfera, que verifica o módulo ao quadrado r² = |z|². Se r² < 0.25 (|z| < 0.5), multiplique o ponto por 4 e afaste-o da origem. Se 0.25 ≤ r² < 1, inverta-o pela esfera unitária: z → z/r²; assim, um raio m se torna 1/m. Pontos com r² ≥ 1 não mudam. Os pontos próximos vão para fora; a faixa intermediária se vira através da esfera unitária. Esses movimentos criam a interface agitada por trás das camadas quadradas do Mandelbox.\n\nExperimente z₀ = (1.5, 0) com escala s = 2. A dobra de caixa reflete x = 1.5 em x = 0.5. Como r² = 0.25 está na faixa intermediária, a dobra de esfera o inverte: z = z/r² = (2, 0). Multiplicar por 2 dá (4, 0), e somar c completa o passo. Comece na origem e estará na faixa mais interna: a dobra de esfera multiplica por 4 — ainda a origem —, então o primeiro iterado cai exatamente em c."
+          }
+        },
+        "visualCharacteristics": "Dobras repetidas produzem câmaras de arestas duras, fortificações aninhadas e corredores profundos. O parâmetro padrão s = 2 dá à estrutura paredes retas, cantos retos e reentrâncias em camadas, como o interior de uma fortaleza cristalina.\n\nEm escalas menores, o tema da caixa retorna: cópias pequenas da forma geral aparecem nas reentrâncias e nas bordas, todas com a mesma geometria retilínea. A imagem canônica usa azuis frios e cianos, adequados à geometria mecânica das dobras.",
+        "parameters": {
+          "scale": "A escala define com que força a órbita dobrada se expande ou se inverte antes de c ser somado. Uma escala de 2 (o padrão) aproximadamente dobra o valor dobrado; valores negativos invertem a direção e produzem variações espelhadas."
+        },
+        "faq": {
+          "folds": {
+            "question": "O que são dobras de caixa e de esfera?",
+            "answer": "Uma dobra de caixa reflete coordenadas fora de um intervalo fixo em direção à origem — como dobrar as bordas de uma folha para dentro. Uma dobra de esfera (ou dobra esférica) faz uma inversão condicional: pontos próximos demais da origem são empurrados para fora, pontos a uma distância intermediária são invertidos através de uma esfera e pontos distantes permanecem inalterados. Juntas, elas redirecionam a órbita em cada passo e formam a geometria em camadas do Mandelbox."
+          },
+          "dimension": {
+            "question": "Este é o Mandelbox tridimensional?",
+            "answer": "Não. FractalPark renderiza um mapa bidimensional inspirado na mesma construção de dobrar e escalar. O Mandelbox original é explorado sobretudo em 3D, onde a dobra de caixa reflete nas faces de um cubo; aqui a mesma lógica funciona no plano complexo, com um limite quadrado."
+          }
+        },
+        "history": "O Mandelbox foi apresentado pela primeira vez por Tom Lowe (conhecido on-line como Tglad) no início de 2010, na comunidade FractalForums. Lowe experimentava operações iterativas de dobra em três dimensões — reflexões de caixa e inversões esféricas — para ver se poderiam produzir estruturas limitadas e auto-semelhantes análogas ao conjunto de Mandelbrot. Os resultados foram logo reconhecidos como uma nova classe de fractal, e o nome “Mandelbox” foi adotado tanto em homenagem ao conjunto de Mandelbrot quanto pela forma de caixa do conjunto quando visualizado.\n\nA descoberta veio pouco depois do Mandelbulb de 2009, de Daniel White e Paul Nylander, que renovara o interesse de amadores em encontrar fractais 3D não triviais. Em poucos meses, colaboradores do FractalForums — incluindo Knighty, Jesse e outros — estenderam a ideia do Mandelbox a diferentes planos de simetria e dobras poliédricas.\n\nApesar da popularidade em programas de arte fractal (Mandelbulber, Mandelbulb3D, Fragmentarium, Ultra Fractal), o Mandelbox recebeu relativamente pouca análise matemática formal. Um dos poucos estudos revisados por pares é o artigo de Gregg Helt para a Bridges Conference de 2018, que generaliza a etapa de inversão esférica para inversões de formas arbitrárias."
+      },
       "perpendicular-celtic": {
         "title": "Perpendicular Celtic",
         "summary": "Um mapa quadrático da família Perpendicular: dobre a parte real antes de elevar ao quadrado, dobre novamente o resultado real, e a borda se entrelaça em tranças.",
@@ -779,6 +807,30 @@
         },
         "history": "At the heart of this image is Newton's method, discovered by Isaac Newton in 1669 and independently refined by Joseph Raphson in 1690. For real functions it is a practical root‑finding tool; for complex polynomials it reveals fractal basins no one could have foreseen at the time.\n\nThe mathematical study of those basins began in 1879 with Arthur Cayley's paper \"The Newton–Fourier imaginary problem\" (American Journal of Mathematics, vol. 2, p. 97). For a complex quadratic polynomial, Cayley showed that the basins of attraction are simply the two half-planes separated by the perpendicular bisector of the line segment joining the two roots. At cubic polynomials, though, he found the problem \"considerable difficult.\" His inability to extend the simple quadratic result to the cubic case became known as Cayley's problem.\n\nThe resolution came through complex dynamics, developed by Pierre Fatou and Gaston Julia in the years around 1918. Their theory of iterated rational functions supplied the language for the basins and their infinitely convoluted boundaries. But the first pictures of the Newton fractal for z³ − 1 had to wait for computer graphics in the early 1980s.\n\nIn 1986, Heinz-Otto Peitgen and Peter H. Richter included a chapter titled \"Newton's Method for Complex Polynomials: Cayley's Problem\" (Chapter 6, pp. 93–106) in *The Beauty of Fractals: Images of Complex Dynamical Systems*. It presents some of the earliest published computer renderings of these basins and helped introduce a wide audience to the fractal structure hidden inside Newton's method."
       },
+      "newton-cosh": {
+        "title": "Newton Cosh",
+        "summary": "O método de Newton aplicado a cosh z = 1: infinitas raízes duplas igualmente espaçadas transformam o plano em faixas de convergência que se repetem.",
+        "overview": "O passo usual de busca de raízes de Newton muda de caráter quando f(z) = cosh z − 1. Suas raízes são 2πik para cada inteiro k, e cada uma é uma raiz dupla. Um polinômio dá a uma órbita apenas um número finito de destinos possíveis; essas raízes continuam pelo eixo imaginário em intervalos iguais. O fractal, portanto, se organiza em faixas que sobem e descem, em vez de se assentar em algumas bacias.\n\nA correção (cosh z − 1) / sinh z se simplifica, longe dos zeros, para tanh(z/2). O denominador sinh z zera em todo πik: os múltiplos pares são as raízes e são removíveis no quociente simplificado; os polos genuínos e as singularidades sensíveis são os múltiplos ímpares (2k+1)πi. Perto deles, uma pequena mudança no ponto inicial pode alterar muito o passo.\n\nA periodicidade ao longo do eixo imaginário é visível num relance. As faixas horizontais se repetem umas sobre as outras, uma por cada período das raízes. Nas junções, finos fios verticais registram onde uma bacia entrega uma órbita à seguinte.",
+        "imageAlt": "Fractal de Newton para cosh z = 1, com faixas horizontais que se repetem e bordas deformadas empilhadas ao longo do eixo imaginário",
+        "imageCaption": "A visão de Newton do FractalPark para cosh z = 1: faixas de convergência que se repetem ao longo do eixo imaginário, separadas por bordas dobradas e filiformes.",
+        "math": {
+          "iteration": {
+            "label": "Iteração de Newton para cosh",
+            "explanation": "A regra de Newton é N(z) = z − f(z) / f′(z). Aqui f(z) = cosh z − 1 e f′(z) = sinh z. Cada passo subtrai a correção (cosh z − 1) / sinh z, que é tanh(z/2) longe dos zeros de sinh z.\n\nA equação cosh z = 1 tem infinitas soluções: z = 2πik para cada inteiro k. Todas são raízes duplas; perto delas, o erro de Newton é aproximadamente reduzido à metade a cada passo: a convergência é linear, não quadrática. O denominador zera em todo πik. Nos múltiplos pares o quociente é removível, pois são raízes; os polos genuínos são os múltiplos ímpares (2k+1)πi.\n\nExperimente z₀ = 0.2i. A correção é tanh(0.1i) = i tan(0.1) ≈ 0.1003i, então z₁ ≈ 0.0997i: o erro fica visivelmente pela metade. Perto de um múltiplo ímpar como πi, a correção pode ficar muito grande. Na implementação, a componente real é limitada para estabilidade numérica, e o passo não muda quando |sinh(z)|² < 1e-10; são proteções, não afirmações sobre o mapa sem proteção.\n\nA função se repete com período 2πi na direção imaginária, e o mapa de Newton também: N(z + 2πi) = N(z) + 2πi. Essa regra repetida cria as faixas horizontais."
+          }
+        },
+        "visualCharacteristics": "Comece pelas faixas horizontais ao longo do eixo imaginário. Um período de raízes forma uma faixa, e o padrão de convergência retorna na seguinte. As bordas dobram e se curvam, puxando filamentos verticais finos como fios esticados.\n\nEm cada faixa, a geometria das bacias lembra a das vizinhas, com pequenas distorções. As zonas quentes e frias vêm da cor; as quebras nítidas se concentram perto dos múltiplos ímpares de πi, onde a correção de Newton tem polos genuínos.",
+        "faq": {
+          "target": {
+            "question": "Que equação está sendo resolvida?",
+            "answer": "Ela busca as soluções complexas de cosh(z) = 1: z = 2πik para cada inteiro k. Essas raízes duplas igualmente espaçadas alinham-se no eixo imaginário, e sua repetição cria as faixas horizontais."
+          },
+          "singularities": {
+            "question": "Por que algumas regiões são extremamente sensíveis?",
+            "answer": "A correção divide por sinh(z), que zera em z = πik para k inteiro. Os múltiplos pares são raízes e são removíveis no quociente simplificado; os polos genuínos são os múltiplos ímpares (2k+1)πi. Perto de um múltiplo ímpar, a correção pode ficar enorme, levando uma órbita através de várias fronteiras de bacias e revelando filamentos verticais finos."
+          }
+        }
+      },
       "magnet-type-1": {
         "title": "Magnet Type 1",
         "summary": "Um quociente de Möbius elevado ao quadrado com um polo em z = c, reunindo o plano em bacias agrupadas e cadeias semelhantes a contas.",
@@ -856,6 +908,31 @@
           }
         },
         "history": "Shigehiro Ushiki, a mathematician in Kyoto University’s Graduate School of Human and Environmental Studies, discovered the Phoenix fractal. In 1988, he published the Phoenix iteration in IEEE Transactions on Circuits and Systems. He presented it as a complex-one-dimensional section of a Julia-like set derived from a complexified Hénon map. The paper is simply titled \"Phoenix.\" The classic parameter pair (c = 0.5667, p = −0.5) produces the named Phoenix curve, later well known in fractal-rendering communities.\n\nUshiki’s broader research covers complex dynamical systems, Julia sets with polyhedral symmetries, higher-dimensional complex Hénon maps, and the dynamics of surface automorphisms. His Kyoto University homepage lists publications from the 1980s to the present.\n\nThe Phoenix family later appeared in Ultra Fractal and other fractal software in both Julia-mode and Mandelbrot-mode variants. FractalPark’s Multi-Phoenix uses the same core recurrence and adds a multi-preview parameter interface."
+      },
+      "cosh-mandelbrot": {
+        "title": "Cosh Mandelbrot",
+        "summary": "Um mapa transcendental de tempo de escape: o cosseno hiperbólico substitui a quadratura, e plumas que se repetem verticalmente e leques em camadas ocupam seu lugar.",
+        "overview": "O Cosh Mandelbrot deixa para trás o passo polinomial familiar. Em vez de repetir z² + c, ele repete z → cosh(z) + c. A quadratura é substituída pelo crescimento exponencial do cosseno hiperbólico ao longo do eixo real e pela repetição de 2π ao longo do eixo imaginário.\n\nO cosseno complexo e o cosseno hiperbólico são parentes próximos: cada um se repete em uma direção e cresce sem limite em outra. Para cosh(z), o período no eixo imaginário é 2π, então uma faixa de detalhes retorna acima e abaixo de si mesma. Quando |Re(z)| é grande, seus termos exponenciais disparam para fora. A maioria dos pontos iniciais escapa rapidamente; apenas faixas finas seguram uma órbita — mantendo seus valores sucessivos limitados por muitos passos.\n\nO plano de parâmetros não se assemelha mais à cardioide e aos bulbos do conjunto de Mandelbrot. Ele empilha leques, plumas douradas e ecos verticais. Sua linha entre escapar e não escapar é traçada pela própria iteração transcendental; não há um raio de escape algébrico simples disponível.",
+        "imageAlt": "Plumas douradas em camadas e leques se repetindo em intervalos verticais regulares no fractal Cosh Mandelbrot",
+        "imageCaption": "O Cosh Mandelbrot do FractalPark: plumas douradas e leques em camadas retornam verticalmente com o período de 2π de cosh na direção imaginária.",
+        "math": {
+          "iteration": {
+            "label": "Iteração de cosseno hiperbólico",
+            "explanation": "Cada passo avalia o cosseno hiperbólico complexo no z atual e depois soma c. A definição cosh(z) = (eᶻ + e⁻ᶻ)/2 coloca crescimento exponencial no eixo real ao lado da repetição no eixo imaginário, de período 2π.\n\nExperimente z = iπ/2 no eixo imaginário. Como cosh(iπ/2) = cos(π/2) = 0, começar ali com c = 0 produz z₁ = 0 após um passo. Zero não é um ponto fixo aqui: no passo seguinte, z₂ = cosh(0) = 1. Desloque o ponto para fora desse eixo e o termo eᶻ pode causar crescimento exponencial e escape rápido. Essa divisão nítida — comportamento limitado numa faixa estreita e escape rápido em outro lugar — é típica da iteração transcendental. Ao contrário de um polinômio, este mapa não tem raio de escape universal; FractalPark usa um limiar de bailout escolhido para detectar divergência na prática."
+          }
+        },
+        "visualCharacteristics": "Observe primeiro a repetição vertical. Como cosh(z) se repete na direção imaginária a cada 2π, plumas finas, leques em camadas e filamentos dourados retornam em intervalos regulares. O resultado é listrado e escalonado, muito diferente da ramificação radial dos conjuntos de Mandelbrot polinomiais.\n\nNa renderização canônica, plumas e leques costumam ter tons quentes. O detalhe mais fino se concentra em faixas horizontais estreitas, onde uma órbita demora perto da fronteira entre escape e não escape. Acima e abaixo, o escape acelera e a imagem fica mais suave.",
+        "faq": {
+          "periodicity": {
+            "question": "Por que os padrões se repetem verticalmente?",
+            "answer": "O cosseno hiperbólico complexo se repete ao longo do eixo imaginário com período 2π. Como cada passo usa cosh(z), a estrutura da órbita também se repete: comportamentos limitados e de escape retornam em intervalos verticais regulares no plano de parâmetros."
+          },
+          "growth": {
+            "question": "Por que muitos pontos escapam rapidamente?",
+            "answer": "O cosseno hiperbólico é construído de exponenciais: cosh(z) = (eᶻ + e⁻ᶻ)/2. Num ponto com parte real substancial, o termo eᶻ domina e a órbita pode crescer extremamente rápido. Não há raio de escape simples como o de polinômios, portanto o limiar de bailout é uma escolha computacional prática."
+          }
+        },
+        "history": "Em 1988, Clifford A. Pickover, cientista da computação e autor no Thomas J. Watson Research Center da IBM, publicou o artigo curto “Chaotic behavior of the transcendental mapping (Z → cosh(Z) + μ)” em The Visual Computer. Ele apresentou imagens de comportamento caótico produzido por essa função transcendental, ao lado de mapas como z → sin(z) + c e z → eᶻ + c.\n\nO trabalho de Pickover levou o mapa baseado em cosh à comunidade de renderização de fractais, onde se tornou um exemplo padrão de tempo de escape transcendental. Antes disso, matemáticos como Robert Devaney e Michał Krych haviam desenvolvido o estudo mais amplo da dinâmica complexa transcendental — famílias exponenciais, trigonométricas e hiperbólicas — e analisado a dinâmica de exp(z) nos anos 1980."
       },
       "buffalo": {
         "title": "Buffalo",
@@ -1004,6 +1081,31 @@
             "answer": "The legs form where quadratic expansion and reciprocal attraction are nearly balanced. There an orbit can alternate between a pull toward zero and a throw outward, drawing the boundary between bounded and escaping behaviour into long threads. The effect is strongest near the origin, where the reciprocal term is largest; farther out, z² regains control and the threads taper."
           }
         }
+      },
+      "zaslavsky-map": {
+        "title": "Zaslavsky Map",
+        "summary": "Um mapa seno complexo: uma perturbação de seno com peso 0.28 curva a órbita, uma rotação fixa de 0.55 radiano a gira e c a desloca — uma adaptação inspirada no mapa dissipativo de rotor chutado de George Zaslavsky, de 1978.",
+        "overview": "FractalPark implementa z(n+1) = exp(0.55 i) * (z(n) + 0.28 sin(z(n))) + c. O seno é uma perturbação de peso 0.28 da órbita existente; a fase complexa fixa gira toda a órbita perturbada em 0.55 radiano (cerca de 31.5°), e então c a desloca.\n\nEm 1978, George M. Zaslavsky introduziu o mapa original para modelar um rotor chutado dissipativo. Esse mapa clássico usa duas variáveis reais. FractalPark adapta a ideia a uma variável complexa para imagens de tempo de escape; não é a recorrência exata do artigo de 1978.\n\nO seno complexo pode crescer sem limite ao longo do eixo imaginário. Uma órbita pode circular por um tempo e depois se afastar, deixando braços giratórios e anéis concêntricos.",
+        "imageAlt": "O mapa de Zaslavsky: braços giratórios e anéis semelhantes a mandalas em laranja e dourado quentes",
+        "imageCaption": "O mapa de Zaslavsky renderizado pelo FractalPark: arcos concêntricos e raios radiantes formam uma mandala brilhante em laranjas e dourados quentes.",
+        "math": {
+          "iteration": {
+            "label": "Mapa de rotação sinusoidal",
+            "explanation": "FractalPark usa z(n+1) = exp(0.55 i) * (z(n) + 0.28 sin(z(n))) + c. O seno é uma perturbação de peso 0.28 de z, não sua substituição. O multiplicador fixo gira toda a órbita perturbada em 0.55 radiano no sentido anti-horário (cerca de 31.5°), e então c desloca o resultado.\n\nPara z₀ = 0, sin(0)=0; portanto o termo perturbado entre parênteses é zero. Rotacionar zero ainda dá zero, e só resta c: z₁ = c. Depois disso, o seno complexo pode crescer; a magnitude de sin(a + ib) contém termos até cosh(b).\n\nA rotação de 0.55 radiano é fixa na fórmula, não ajustável pelo usuário. Como detalhe de implementação, e não parte da recorrência idealizada, FractalPark limita a componente imaginária de entrada a ±80 e arredonda cada componente de saída a uma grade de 1/16."
+          }
+        },
+        "visualCharacteristics": "Transformações caleidoscópicas deixam claros os braços giratórios e os anéis semelhantes a mandalas. A imagem canônica reúne arcos concêntricos e raios em torno de uma região central onde a órbita perturbada pode permanecer limitada.\n\nLaranjas e dourados quentes aparecem sobre preto profundo. A rotação constante curva os braços; a perturbação de seno cria ondulações finas nas bordas dos anéis.",
+        "faq": {
+          "rotation": {
+            "question": "De onde vem a rotação?",
+            "answer": "O mapa multiplica toda a órbita perturbada z + 0.28 sin(z) por exp(0.55 i), girando-a cerca de 31.5° no sentido anti-horário, e então soma c. Isso ocorre a cada iteração e é fixo na fórmula, não ajustável pelo usuário."
+          },
+          "transform": {
+            "question": "O caleidoscópio faz parte da fórmula?",
+            "answer": "Não. O caleidoscópio é uma transformação espacial opcional fora da iteração. Ele reflete ou copia setores do plano de parâmetros. O Mapa de Zaslavsky não tem simetria de reflexão incorporada; o caleidoscópio é uma etapa de renderização separada que pode ser ativada independentemente."
+          }
+        },
+        "history": "George M. Zaslavsky (1929–2008) foi um físico matemático nascido na União Soviética que fez contribuições fundamentais para a teoria do caos dinâmico. Ele introduziu o mapa que hoje leva seu nome em um artigo de 1978 intitulado \"The Simplest Case of a Strange Attractor\", publicado em Physics Letters A. O mapa foi derivado como uma descrição estroboscópica de um rotor impulsionado dissipativo — um sistema rotativo que recebe impulsos periódicos e perde energia por atrito.\n\nZaslavsky mais tarde se mudou para os Estados Unidos, integrando o departamento de física da Universidade de Nova York e o Courant Institute of Mathematical Sciences. Foi autor de vários livros sobre caos hamiltoniano e dinâmica fracionária. O artigo da Scholarpedia sobre o mapa de Zaslavsky, escrito pelo próprio Zaslavsky em 2007, fornece uma referência técnica autorizada.\n\nOs mapas clássicos de Zaslavsky operam em duas variáveis reais (ação e ângulo). A variante complexa de tempo de escape do FractalPark usa z(n+1) = exp(0.55 i) * (z(n) + 0.28 sin(z(n))) + c; é uma adaptação criativa, e não uma transcrição direta do sistema dissipativo original."
       },
       "zubieta": {
         "title": "Zubieta",

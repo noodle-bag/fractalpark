@@ -343,7 +343,7 @@ export default async function FormulaPage({ params }: FormulaPageProps) {
     ],
   };
   const jsonLd =
-    indexable && teaching.delivery === 'delivered'
+    indexable
       ? buildFormulaTeachingJsonLdV1({
           url: pageUrl,
           locale,
@@ -700,7 +700,7 @@ async function FormulaIdentityPage({
       : localized?.overview ?? teaching.english.overview;
   const pageUrl = `${SITE.url}/${locale}${buildFormulaCanonicalPathV1(record.formulaId)}`;
   const jsonLd =
-    indexable && teaching.delivery === 'delivered'
+    indexable
       ? buildFormulaTeachingJsonLdV1({
           url: pageUrl,
           locale,

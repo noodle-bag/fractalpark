@@ -655,6 +655,34 @@
         },
         "history": "The map z → λz(1 − z) began as the complex extension of the real logistic map, studied extensively in the 1970s as a simple model of population dynamics and chaotic behavior. In 1980, Benoit B. Mandelbrot took the iteration to unrestricted complex λ and z. His paper, \"Fractal Aspects of the Iteration of z → λz(1−z) for Complex λ and z,\" introduced the λ-plane parameter set—now the Lambda fractal—and placed it in the broader theory of iterated rational maps.\n\nThe groundwork was already there. Around 1917–1918, Pierre Fatou and Gaston Julia developed the general theory of iterated rational functions that later made families such as the logistic map available to explore. In 1986, Heinz-Otto Peitgen and Peter H. Richter brought the Lambda fractal to a wider audience in \"The Beauty of Fractals,\" with some of the first widely seen computer-generated images of the set."
       },
+      "mandelbox": {
+        "title": "Mandelbox",
+        "summary": "Tom Lowe가 2010년에 선보인 Mandelbox에서 영감을 얻은 접기와 스케일 사상이다. 상자 반사, 방사형 접기, 스케일링이 반복 하나로 방과 벽을 만들어 낸다.",
+        "overview": "대부분의 프랙탈 공식은 z² + c처럼 제곱으로 시작한다. Mandelbox는 다른 경로를 택한다. 상자 접기는 고정된 정육면체 밖의 좌표를 그 면 쪽으로 되돌려 보내고, 방사형 또는 공 접기는 원점에서의 거리에 따라 점을 반전하거나 스케일한다. 균일 스케일은 c를 더하기 전에 결과를 늘리거나 압축한다. 이 순서를 반복하면 제곱이 아니라 접기가 구조를 만든다.\n\n반사와 반전은 특정 차원 수를 요구하지 않으므로 어떤 차원에서든 이 구성을 만들 수 있다. FractalPark는 복소평면에서 같은 접기와 스케일의 핵심을 유지하는 2차원 변형을 그린다.\n\n이 매개변수 사상은 다항식에서 익숙한 곡선으로 부드러워지지 않는다. 날카로운 모서리의 방, 중첩된 요새, 설계도에서 옮겨온 듯한 통로를 만들어 낸다. 그 경계는 가까이에 머무는 유계 궤도와 탈출하는 궤도를 가른다. 확대하면 들쭉날쭉한 자기유사 가장자리에 더 작은 규모의 상자 모티프가 다시 나타난다.",
+        "imageAlt": "차가운 청색 톤의 Mandelbox 2차원 지도, 날카로운 모서리의 방들과 겹겹이 쌓인 요새 같은 움푹한 공간",
+        "imageCaption": "FractalPark의 Mandelbox 영감 지도: 곧은 벽, 직각 모서리, 수정 요새 내부 같은 층층의 움푹한 공간.",
+        "math": {
+          "iteration": {
+            "label": "접기와 스케일 반복",
+            "explanation": "각 반복에서 궤도는 상자 접기, 방사형 접기, 스케일, c만큼의 이동이라는 네 단계를 거친다.\n\n상자 접기는 한 번에 좌표 하나를 처리한다. z의 성분 a를 생각한다. 1보다 크면 a → 2 − a로 반사하고, −1보다 작으면 a → −2 − a로 반사한다. [−1, 1] 안의 성분은 그대로 둔다. 바깥 평면이 중앙 정사각형 쪽으로 다시 접힌다.\n\n다음은 제곱 크기 r² = |z|²를 확인하는 공 접기이다. r² < 0.25 (|z| < 0.5)이면 점을 4배로 스케일해 원점에서 멀어지게 한다. 0.25 ≤ r² < 1이면 단위구를 통해 반전한다: z → z/r². 따라서 반지름 m은 1/m이 된다. r² ≥ 1인 점은 그대로 둔다. 가까운 점은 바깥쪽으로 이동하고, 중간 띠는 단위구를 가로질러 반전한다. 이러한 움직임이 Mandelbox의 상자형 층 뒤에 있는 불안정한 경계를 만든다.\n\nz₀ = (1.5, 0), 스케일 s = 2를 예로 든다. 상자 접기는 x = 1.5를 x = 0.5로 반사한다. r² = 0.25는 중간 띠에 속하므로 공 접기는 이를 반전한다: z = z/r² = (2, 0). 2배로 스케일하면 (4, 0)이 되고, c를 더하면 단계가 완료된다. 대신 원점에서 시작하면 가장 안쪽 띠에 있게 된다. 공 접기는 이를 4배로 곱하지만 여전히 원점이므로 첫 번째 반복값은 정확히 c에 도달한다."
+          }
+        },
+        "visualCharacteristics": "반복된 접기는 날카로운 모서리의 방, 중첩된 요새, 깊이가 있는 복도를 만들어 낸다. 기본 매개변수 s = 2는 구조에 곧은 벽, 직각 모서리, 수정 요새 내부와 같은 층층의 움푹한 공간을 부여한다.\n\n더 미세한 규모에서는 상자 주제가 되돌아온다. 전체 형태의 작은 복사본이 움푹한 공간과 경계를 따라 나타나며, 모두 같은 직선적 기하를 지닌다. 표준 이미지는 차가운 파랑과 시안을 사용하며, 이는 접기의 기계적인 기하와 어울린다.",
+        "parameters": {
+          "scale": "스케일은 c를 더하기 전에 접힌 궤도가 얼마나 강하게 팽창하거나 반전하는지를 정한다. 기본값인 2의 스케일은 접힌 값을 대략 두 배로 만들며, 음수 값은 방향을 반전해 거울상 변형을 만든다."
+        },
+        "faq": {
+          "folds": {
+            "question": "상자 접기와 공 접기란 무엇인가?",
+            "answer": "상자 접기는 고정된 구간 밖의 좌표를 원점 쪽으로 반사한다. 종이의 가장자리를 안쪽으로 접는 것과 같다. 공 접기 또는 구 접기는 조건부 반전을 수행한다. 원점에 너무 가까운 점은 바깥쪽으로 밀어내고, 중간 거리에 있는 점은 구를 통해 반전하며, 먼 점은 바꾸지 않는다. 두 접기는 매 단계에서 궤도의 방향을 바꾸어 Mandelbox의 층진 기하를 만든다."
+          },
+          "dimension": {
+            "question": "이것이 3차원 Mandelbox인가?",
+            "answer": "아니다. FractalPark는 같은 접기와 스케일 구성에서 영감을 받은 2차원 사상을 렌더링한다. 원래 Mandelbox는 상자 접기가 정육면체의 면을 가로질러 반사하는 3D에서 가장 자주 탐구된다. 여기서는 같은 논리가 정사각형 경계를 가진 복소평면에서 작동한다."
+          }
+        },
+        "history": "Mandelbox는 Tom Lowe(온라인에서는 Tglad로 알려짐)가 2010년 초 FractalForums 커뮤니티에서 처음 선보였다. Lowe는 3차원에서 상자 반사와 구면 반전이라는 반복 접기 연산을 실험하며 Mandelbrot 집합과 유사한 유계 자기유사 구조를 만들 수 있는지 살폈다. 결과는 곧 새로운 프랙탈 부류로 인정받았고, Mandelbrot 집합에 대한 경의와 시각화했을 때 나타나는 상자 같은 형태 때문에 \"Mandelbox\"라는 이름이 채택되었다.\n\n이 발견은 Daniel White와 Paul Nylander의 2009년 Mandelbulb 직후에 나왔으며, 이는 자명하지 않은 3D 프랙탈을 찾으려는 취미가들의 관심을 다시 불러일으켰다. 몇 달 안에 Knighty, Jesse 등을 포함한 FractalForums 기여자들이 Mandelbox 개념을 여러 대칭 평면과 다면체 접기로 확장했다.\n\nMandelbulber, Mandelbulb3D, Fragmentarium, Ultra Fractal 같은 프랙탈 아트 소프트웨어에서 인기가 높았지만, Mandelbox는 정식 수학 분석을 비교적 적게 받았다. 동료 심사를 거친 몇 안 되는 연구 중 하나는 구면 반전 단계를 임의의 형태 반전으로 일반화한 Gregg Helt의 2018년 Bridges Conference 논문이다."
+      },
       "perpendicular-celtic": {
         "title": "Perpendicular Celtic",
         "summary": "Perpendicular 계열의 이차 사상이에요. 제곱 전에 실수부를 접고, 결과의 실수부를 다시 접으면 경계가 땋은 머리처럼 매듭져요.",
@@ -779,6 +807,30 @@
         },
         "history": "At the heart of this image is Newton's method, discovered by Isaac Newton in 1669 and independently refined by Joseph Raphson in 1690. For real functions it is a practical root‑finding tool; for complex polynomials it reveals fractal basins no one could have foreseen at the time.\n\nThe mathematical study of those basins began in 1879 with Arthur Cayley's paper \"The Newton–Fourier imaginary problem\" (American Journal of Mathematics, vol. 2, p. 97). For a complex quadratic polynomial, Cayley showed that the basins of attraction are simply the two half-planes separated by the perpendicular bisector of the line segment joining the two roots. At cubic polynomials, though, he found the problem \"considerable difficult.\" His inability to extend the simple quadratic result to the cubic case became known as Cayley's problem.\n\nThe resolution came through complex dynamics, developed by Pierre Fatou and Gaston Julia in the years around 1918. Their theory of iterated rational functions supplied the language for the basins and their infinitely convoluted boundaries. But the first pictures of the Newton fractal for z³ − 1 had to wait for computer graphics in the early 1980s.\n\nIn 1986, Heinz-Otto Peitgen and Peter H. Richter included a chapter titled \"Newton's Method for Complex Polynomials: Cayley's Problem\" (Chapter 6, pp. 93–106) in *The Beauty of Fractals: Images of Complex Dynamical Systems*. It presents some of the earliest published computer renderings of these basins and helped introduce a wide audience to the fractal structure hidden inside Newton's method."
       },
+      "newton-cosh": {
+        "title": "Newton Cosh",
+        "summary": "cosh z = 1에 적용한 뉴턴 방법: 무한히 많은 등간격의 중근이 평면을 반복되는 수렴 띠로 만든다.",
+        "overview": "f(z) = cosh z − 1일 때 뉴턴의 일반적인 근 찾기 단계는 성격이 달라진다. 그 근은 모든 정수 k에 대해 2πik이고 각각 중근이다. 다항식에서는 궤도가 도달할 수 있는 목적지가 유한하지만, 이 근들은 허수축을 따라 같은 간격으로 끝없이 이어진다. 따라서 프랙탈은 몇 개의 분지에 머무르지 않고 위아래로 이어지는 띠를 이룬다.\n\n영점에서 벗어나면 보정량 (cosh z − 1) / sinh z는 tanh(z/2)로 간단해진다. 분모 sinh z는 모든 πik에서 0이 된다. 짝수배는 근이므로 간단해진 몫에서 제거 가능하지만, 진짜 극점과 민감한 특이점은 홀수배 (2k+1)πi이다. 이 홀수배 근처에서는 시작점의 작은 변화가 단계를 크게 바꿀 수 있다.\n\n허수축을 따른 주기성은 수학 배경 없이도 한눈에 볼 수 있다. 수평 띠는 근의 각 주기마다 위아래로 반복된다. 띠가 만나는 곳에서는 한 분지가 궤도를 다음 분지로 넘기는 위치를 가는 수직 실이 기록한다.",
+        "imageAlt": "cosh z = 1에 대한 뉴턴 프랙탈로, 허수축을 따라 반복되는 수평 띠와 휘어진 경계가 쌓여 있다",
+        "imageCaption": "FractalPark의 cosh z = 1 뉴턴 뷰: 허수축을 따라 반복되는 수렴 띠가 접힌 실 모양 경계로 나뉜다.",
+        "math": {
+          "iteration": {
+            "label": "cosh의 뉴턴 반복",
+            "explanation": "뉴턴 규칙은 N(z) = z − f(z) / f′(z)이다. 여기서 f(z) = cosh z − 1, f′(z) = sinh z이며, 보정량 (cosh z − 1) / sinh z를 뺀다. 이는 sinh z의 영점 밖에서 tanh(z/2)이다.\n\ncosh z = 1의 해는 모든 정수 k에 대해 z = 2πik이고 모두 중근이다. 따라서 근 근처의 오차는 매 단계 약 절반이 된다. 수렴은 이차가 아니라 선형이다. 분모는 모든 πik에서 0이지만 짝수배에서는 제거 가능하고, 진짜 극점은 홀수배 (2k+1)πi이다.\n\nz₀ = 0.2i이면 보정량은 tanh(0.1i) = i tan(0.1) ≈ 0.1003i이므로 z₁ ≈ 0.0997i이다. 오차가 약 절반이 된다. πi 같은 홀수배 근처에서는 보정량이 매우 커질 수 있다. 구현은 수치 안정성을 위해 실수 성분을 제한하고 |sinh(z)|² < 1e-10이면 단계를 그대로 둔다. 이는 수치 보호 장치일 뿐, 보호되지 않은 사상에 대한 수학적 주장이 아니다.\n\n함수와 뉴턴 사상은 허수 방향에서 2πi 주기로 반복된다: N(z + 2πi) = N(z) + 2πi."
+          }
+        },
+        "visualCharacteristics": "허수축을 따라 수평 띠가 겹친다. 한 주기의 근이 한 띠를 만들고 다음 띠에서 수렴 무늬가 반복된다. 경계는 굽고 접히며 가는 수직 실을 만든다.\n\n각 띠의 분지 기하는 이웃과 닮아 있다. 뚜렷한 끊김은 뉴턴 보정에 진짜 극점이 있는 πi의 홀수배 근처에 모인다.",
+        "faq": {
+          "target": {
+            "question": "어떤 방정식을 푸는가?",
+            "answer": "cosh(z) = 1의 복소해, 즉 모든 정수 k에 대한 z = 2πik를 찾는다. 이 등간격의 중근이 허수축에 놓여 수평 띠를 만든다."
+          },
+          "singularities": {
+            "question": "일부 영역이 매우 민감한 이유는 무엇인가?",
+            "answer": "보정량은 sinh(z)로 나누며 이는 z = πik에서 0이다. 짝수배는 근이고 간단해진 몫에서 제거 가능하지만, 진짜 극점은 홀수배 (2k+1)πi이다. 홀수배 근처에서는 보정량이 커져 궤도가 여러 분지 경계를 건너고 가는 수직 무늬가 나타날 수 있다."
+          }
+        }
+      },
       "magnet-type-1": {
         "title": "Magnet Type 1",
         "summary": "z = c에 극 하나를 가진 제곱 뫼비우스 몫이에요. 평면을 뭉친 분지와 구슬 같은 사슬로 모아요.",
@@ -856,6 +908,31 @@
           }
         },
         "history": "Shigehiro Ushiki, a mathematician in Kyoto University’s Graduate School of Human and Environmental Studies, discovered the Phoenix fractal. In 1988, he published the Phoenix iteration in IEEE Transactions on Circuits and Systems. He presented it as a complex-one-dimensional section of a Julia-like set derived from a complexified Hénon map. The paper is simply titled \"Phoenix.\" The classic parameter pair (c = 0.5667, p = −0.5) produces the named Phoenix curve, later well known in fractal-rendering communities.\n\nUshiki’s broader research covers complex dynamical systems, Julia sets with polyhedral symmetries, higher-dimensional complex Hénon maps, and the dynamics of surface automorphisms. His Kyoto University homepage lists publications from the 1980s to the present.\n\nThe Phoenix family later appeared in Ultra Fractal and other fractal software in both Julia-mode and Mandelbrot-mode variants. FractalPark’s Multi-Phoenix uses the same core recurrence and adds a multi-preview parameter interface."
+      },
+      "cosh-mandelbrot": {
+        "title": "Cosh Mandelbrot",
+        "summary": "초월적 탈출 시간 사상이다. 쌍곡코사인이 제곱을 대신하며, 세로로 반복되는 깃털과 층진 부채가 그 자리를 차지한다.",
+        "overview": "Cosh Mandelbrot는 익숙한 다항식 단계를 뒤로한다. z² + c를 반복하는 대신 z → cosh(z) + c를 반복한다. 제곱은 실수축을 따른 쌍곡코사인의 지수적 성장과 허수축을 따른 2π 반복으로 대체된다.\n\n복소 코사인과 쌍곡코사인은 가까운 친척이다. 각각 한 방향으로 반복되고 다른 방향으로 무한히 성장한다. cosh(z)의 허수축 주기는 2π이므로 세부 띠가 자기 위와 아래에서 되돌아온다. |Re(z)|가 크면 지수 항이 바깥으로 빠르게 뻗는다. 대부분의 시작점은 빠르게 탈출하며, 가느다란 띠만이 궤도를 붙잡아 연속된 값이 여러 단계 동안 유계로 남게 한다.\n\n매개변수 평면은 더 이상 Mandelbrot 집합의 심장형과 구근을 닮지 않는다. 대신 부채, 금빛 깃털, 세로 메아리를 쌓아 올린다. 탈출과 비탈출의 경계는 초월 반복 자체가 그리며, 단순한 대수적 탈출 반지름은 없다.",
+        "imageAlt": "Cosh Mandelbrot 프랙탈에서 일정한 세로 간격으로 반복되는 층층의 금빛 깃털과 부채",
+        "imageCaption": "FractalPark의 Cosh Mandelbrot: 금빛 깃털과 층진 부채가 cosh의 허수 방향 2π 주기에 따라 세로로 되돌아온다.",
+        "math": {
+          "iteration": {
+            "label": "쌍곡코사인 반복",
+            "explanation": "각 단계에서 현재 z에 복소 쌍곡코사인을 계산한 뒤 c를 더한다. 정의 cosh(z) = (eᶻ + e⁻ᶻ)/2는 실수축을 따른 지수적 성장과 2π 주기의 허수축 반복을 함께 만든다.\n\n허수축 위의 z = iπ/2를 살펴본다. cosh(iπ/2) = cos(π/2) = 0이므로 c = 0에서 그곳에서 시작하면 한 단계 뒤 z₁ = 0이 된다. 그렇다고 0이 고정점인 것은 아니다. 그다음 단계에서는 z₂ = cosh(0) = 1이 된다. 점을 그 축에서 조금 벗어나게 하면 eᶻ 항이 지수적 성장과 빠른 탈출을 유발할 수 있다. 좁은 띠 안의 유계 거동과 그 밖의 빠른 탈출이라는 이 뚜렷한 구분은 초월 반복의 전형이다. 다항식과 달리 이 사상에는 보편적인 탈출 반지름이 없으며, FractalPark는 실제로 발산을 감지하도록 선택한 탈출 임곗값을 사용한다."
+          }
+        },
+        "visualCharacteristics": "먼저 세로 반복에 주목한다. cosh(z)는 허수 방향에서 2π마다 반복되므로 가는 깃털, 층진 부채, 금빛 필라멘트가 일정한 간격으로 되돌아온다. 결과는 줄무늬와 층을 이루며, 다항식 Mandelbrot 집합의 방사형 가지치기와 크게 다르다.\n\n표준 렌더링에서 깃털과 부채는 흔히 따뜻한 색조를 띤다. 가장 미세한 세부는 궤도가 탈출과 비탈출의 경계 근처에 오래 머무는 좁은 수평 띠에 집중된다. 그 위와 아래에서는 탈출이 빨라지고 영상이 더 매끄러워진다.",
+        "faq": {
+          "periodicity": {
+            "question": "무늬가 왜 세로로 반복되는가?",
+            "answer": "복소 쌍곡코사인은 허수축을 따라 2π 주기로 반복된다. 매 단계에서 cosh(z)를 사용하므로 궤도 구조도 반복된다. 유계 거동과 탈출 거동은 매개변수 평면에서 일정한 세로 간격으로 되돌아온다."
+          },
+          "growth": {
+            "question": "많은 점이 왜 빠르게 탈출하는가?",
+            "answer": "쌍곡코사인은 지수함수로 이루어진다: cosh(z) = (eᶻ + e⁻ᶻ)/2. 실수부가 충분히 큰 점에서는 eᶻ 항이 우세해져 궤도가 매우 빠르게 성장할 수 있다. 다항식처럼 단순한 탈출 반지름은 없으므로 탈출 임곗값은 실용적인 계산 선택이다."
+          }
+        },
+        "history": "1988년 IBM Thomas J. Watson Research Center의 컴퓨터 과학자이자 저술가인 Clifford A. Pickover는 The Visual Computer에 \"Chaotic behavior of the transcendental mapping (Z → cosh(Z) + μ)\"라는 짧은 논문을 발표했다. 그는 z → sin(z) + c와 z → eᶻ + c 같은 사상과 함께 이 초월 함수가 만든 혼돈 거동의 이미지를 제시했다.\n\nPickover의 작업은 cosh 기반 사상을 프랙탈 렌더링 커뮤니티에 알렸고, 그곳에서 표준적인 초월 탈출 시간 예제가 되었다. 그보다 앞서 Robert Devaney와 Michał Krych 등을 포함한 수학자들은 초월 복소 동역학의 더 넓은 연구, 즉 지수·삼각·쌍곡 함수족을 발전시키고 1980년대에 exp(z)의 동역학을 분석했다."
       },
       "buffalo": {
         "title": "Buffalo",
@@ -1004,6 +1081,31 @@
             "answer": "The legs form where quadratic expansion and reciprocal attraction are nearly balanced. There an orbit can alternate between a pull toward zero and a throw outward, drawing the boundary between bounded and escaping behaviour into long threads. The effect is strongest near the origin, where the reciprocal term is largest; farther out, z² regains control and the threads taper."
           }
         }
+      },
+      "zaslavsky-map": {
+        "title": "Zaslavsky Map",
+        "summary": "복소 사인 사상: 0.28 가중치의 사인 섭동이 궤도를 굽히고, 고정된 0.55라디안 회전이 이를 돌리며, c가 이동시킨다 — George Zaslavsky의 1978년 소산성 킥 로터 사상에서 영감을 받은 변형이다.",
+        "overview": "FractalPark는 z(n+1) = exp(0.55 i) * (z(n) + 0.28 sin(z(n))) + c를 구현한다. 사인은 기존 궤도에 대한 0.28 가중치 섭동이고, 고정 복소 위상은 섭동된 전체 결과를 0.55라디안(약 31.5°) 회전시킨 뒤 c가 이를 이동시킨다.\n\n1978년 George M. Zaslavsky는 마찰로 에너지를 잃으면서 반복적으로 충격을 받는 회전체인 소산성 킥 로터를 모델링하기 위해 원래 사상을 도입했다. 이 고전 사상은 실수 작용-각 변수를 사용하는 2차원 사상이다. FractalPark는 이 아이디어를 탈출 시간 영상을 위한 하나의 복소 변수로 재구성했으며, 1978년 논문의 정확한 점화식은 아니다.\n\n복소 사인은 허수축을 따라 무한히 커질 수 있으므로 이는 단순한 다항식 탈출이 아니다. 궤도는 잠시 원을 그리다가 흩어질 수 있다. 이 지연은 특히 만화경 공간 변환 뒤에 소용돌이치는 팔과 동심 고리를 남긴다.",
+        "imageAlt": "Zaslavsky Map: 따뜻한 주황과 금빛의 소용돌이치는 팔과 만다라 같은 고리",
+        "imageCaption": "FractalPark이 렌더링한 Zaslavsky Map: 동심원 호와 방사형 살이 따뜻한 주황과 금빛으로 빛나는 만다라를 이룬다.",
+        "math": {
+          "iteration": {
+            "label": "사인파 회전 사상",
+            "explanation": "FractalPark는 z(n+1) = exp(0.55 i) * (z(n) + 0.28 sin(z(n))) + c를 사용한다. 사인 항은 z를 대신하는 것이 아니라 z에 더해지는 0.28 가중치의 섭동이다. 고정 승수는 섭동된 전체 궤도를 반시계 방향으로 0.55라디안(약 31.5°) 회전시키고 c가 결과를 이동시킨다.\n\nz₀ = 0에서는 sin(0)=0이므로 괄호 안의 섭동 항은 0이다. 0을 회전해도 0이므로 c만 남아 z₁ = c이다. 그 뒤 복소 사인은 커질 수 있고 sin(a + ib)의 크기에는 cosh(b) 항이 들어 있다.\n\n0.55라디안 회전은 공식에 고정되어 있어 사용자가 조절할 수 없다. 이상화된 점화식의 일부가 아닌 구현 세부 사항으로서 FractalPark는 입력 허수 성분을 ±80으로 제한하고 각 출력 성분을 1/16 격자로 반올림한다."
+          }
+        },
+        "visualCharacteristics": "만화경 변환은 소용돌이 팔과 만다라 같은 고리를 또렷하게 한다. 표준 이미지는 섭동된 궤도가 유계로 남을 수 있는 중심 영역 주위에 동심호와 방사형 살을 놓는다.\n\n따뜻한 주황과 금색이 깊은 검정 위에 놓인다. 일정한 회전은 팔을 굽히고 사인 섭동은 고리 가장자리에 잔물결을 만든다.",
+        "faq": {
+          "rotation": {
+            "question": "회전은 어디에서 오는가?",
+            "answer": "사상은 섭동된 전체 궤도 z + 0.28 sin(z)에 exp(0.55 i)를 곱해 약 31.5° 반시계 방향으로 회전시킨 뒤 c를 더한다. 이는 매 반복마다 일어나며 공식에 고정되어 있고 사용자가 조절할 수 없다."
+          },
+          "transform": {
+            "question": "만화경은 공식의 일부인가?",
+            "answer": "아니다. 만화경은 반복식 밖의 선택적 공간 변환이다. 매개변수 평면의 부채꼴 영역을 반사하거나 복사한다. Zaslavsky 사상에는 내장된 반사 대칭이 없으며, 만화경은 독립적으로 켤 수 있는 별도의 렌더링 단계이다."
+          }
+        },
+        "history": "George M. Zaslavsky(1929–2008)는 소련 태생의 수리물리학자로, 동역학적 혼돈 이론에 기초적인 기여를 했다. 그는 1978년 Physics Letters A에 발표한 \"The Simplest Case of a Strange Attractor\"라는 논문에서 오늘날 자신의 이름을 딴 사상을 소개했다. 이 사상은 주기적인 충격을 받고 마찰로 에너지를 잃는 회전계인 소산성 킥 로터의 스트로보스코프 기술로부터 유도되었다.\n\nZaslavsky는 훗날 미국으로 이주하여 뉴욕대학교 물리학과와 Courant Institute of Mathematical Sciences에 합류했다. 그는 해밀토니안 혼돈과 분수 동역학에 관한 여러 책을 저술했다. Zaslavsky가 2007년에 직접 쓴 Scholarpedia의 Zaslavsky 사상 항목은 권위 있는 기술 참고 자료다.\n\n고전 Zaslavsky 사상은 두 실수 변수(작용과 각도)에서 작동한다. FractalPark의 복소 탈출 시간 변형은 z(n+1) = exp(0.55 i) * (z(n) + 0.28 sin(z(n))) + c를 사용하며, 원래 소산계의 직접 전사가 아닌 창의적 적응이다."
       },
       "zubieta": {
         "title": "Zubieta",

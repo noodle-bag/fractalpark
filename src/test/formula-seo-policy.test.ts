@@ -13,26 +13,32 @@ import {
   loadPublishedRuntimeFormulaIdsV1,
   loadSelectedTeachingFormulaIdsV1,
 } from '@/content/teaching/content-loader';
+import {
+  loadRestoredGuideFormulaIdsV1,
+  loadRestoredGuideLocalesV1,
+} from '@/content/teaching/restored-guide-projection';
 
 function dependencies() {
   return {
     catalogFormulaIds: STANDARD_MANIFEST_INDEX_V1.formulaIds,
     implementationFormulaIds: loadPublishedRuntimeFormulaIdsV1(),
     teachingFormulaIds: loadSelectedTeachingFormulaIdsV1(),
+    restoredGuideFormulaIds: loadRestoredGuideFormulaIdsV1(),
     loadDeliveredLocales: () => SUPPORTED_LOCALES,
+    loadRestoredGuideLocales: loadRestoredGuideLocalesV1,
   };
 }
 
 describe('formula SEO exact sets v1', () => {
-  it('closes 677 catalog, 534 implementation, and 50×7 index sets', () => {
+  it('closes 677 catalog, 534 implementation, and (50+4)×7 index sets', () => {
     const sets = loadFormulaSeoSetsV1();
     expect(sets.valid).toBe(true);
     expect(sets.catalogAccessibleSet).toHaveLength(677);
     expect(sets.implementationAccessibleSet).toHaveLength(534);
-    expect(sets.indexSet).toHaveLength(350);
+    expect(sets.indexSet).toHaveLength(378);
     expect(sets.sitemapSet).toEqual(sets.indexSet);
     expect(sets.hreflangSet).toEqual(sets.indexSet);
-    expect(new Set(sets.indexSet)).toHaveLength(350);
+    expect(new Set(sets.indexSet)).toHaveLength(378);
   });
 
   it('removes a fallback locale from index, sitemap, and hreflang together', () => {
@@ -47,13 +53,31 @@ describe('formula SEO exact sets v1', () => {
     });
     const key = formulaLocaleKeyV1('zh', target);
     expect(sets.valid).toBe(true);
-    expect(sets.indexSet).toHaveLength(349);
+    expect(sets.indexSet).toHaveLength(377);
     expect(sets.indexSet).not.toContain(key);
     expect(sets.sitemapSet).not.toContain(key);
     expect(sets.hreflangSet).not.toContain(key);
-    expect(indexableFormulaIdsForLocaleV1(sets, 'en')).toHaveLength(50);
-    expect(indexableFormulaIdsForLocaleV1(sets, 'zh')).toHaveLength(49);
+    expect(indexableFormulaIdsForLocaleV1(sets, 'en')).toHaveLength(54);
+    expect(indexableFormulaIdsForLocaleV1(sets, 'zh')).toHaveLength(53);
     expect(indexableFormulaIdsForLocaleV1(sets, 'zh')).not.toContain(target);
+  });
+
+  it('removes a restored Guide locale from every SEO projection together', () => {
+    const base = dependencies();
+    const target = base.restoredGuideFormulaIds[0];
+    const sets = buildFormulaSeoSetsV1({
+      ...base,
+      loadRestoredGuideLocales: (formulaId) =>
+        formulaId === target
+          ? SUPPORTED_LOCALES.filter((locale) => locale !== 'fr')
+          : SUPPORTED_LOCALES,
+    });
+    const key = formulaLocaleKeyV1('fr', target);
+    expect(sets.valid).toBe(true);
+    expect(sets.indexSet).toHaveLength(377);
+    expect(sets.indexSet).not.toContain(key);
+    expect(sets.sitemapSet).not.toContain(key);
+    expect(sets.hreflangSet).not.toContain(key);
   });
 
   it('fails formula indexing closed when any authority set drifts', () => {
@@ -74,6 +98,17 @@ describe('formula SEO exact sets v1', () => {
         ...base,
         teachingFormulaIds: base.teachingFormulaIds.slice(1),
       },
+      {
+        ...base,
+        restoredGuideFormulaIds: base.restoredGuideFormulaIds.slice(1),
+      },
+      {
+        ...base,
+        restoredGuideFormulaIds: [
+          base.teachingFormulaIds[0],
+          ...base.restoredGuideFormulaIds.slice(1),
+        ],
+      },
     ];
     for (const candidate of invalidCases) {
       const sets = buildFormulaSeoSetsV1(candidate);
@@ -92,7 +127,7 @@ describe('formula SEO exact sets v1', () => {
       loadDeliveredLocales: (formulaId) =>
         formulaId === target ? ['en', 'en', 'de'] : SUPPORTED_LOCALES,
     });
-    expect(sets.indexSet).toHaveLength(344);
+    expect(sets.indexSet).toHaveLength(372);
     expect(sets.indexSet).toContain(formulaLocaleKeyV1('en', target));
     expect(sets.indexSet).not.toContain(formulaLocaleKeyV1('de', target));
   });

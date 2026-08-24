@@ -59,7 +59,7 @@
     "build": {
       "wallMs": 240000,
       "maxRssBytes": 3221225472,
-      "generatedPages": 804
+      "generatedPages": 832
     }
   },
   "releaseDevices": [

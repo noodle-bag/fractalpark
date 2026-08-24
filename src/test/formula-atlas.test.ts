@@ -6,11 +6,11 @@ import {
 import { PUBLISHED_TEACHING_GUIDES_V1 } from '@/content/teaching/guide-route-policy';
 import aliasesAsset from '../../resources/formula-library/v1/legacy-formula-aliases.json';
 import decisionsAsset from '../../resources/formula-library/v1/publication-decisions.json';
-import heldGuideAsset from '../../resources/formula-library/v1/teaching-held-guide-appendix.v1.json';
+import restoredGuideAsset from '../../resources/formula-library/v1/teaching-restored-guide-projection.v1.json';
 import { decodeParams } from '@/lib/url-params';
 
 describe('Formula Atlas projection', () => {
-  it('projects 94 published identities, seven families, and 17 Guides', () => {
+  it('projects 94 published identities, seven families, and 21 Guides', () => {
     const atlas = buildFormulaAtlas('en');
 
     expect(atlas.formulas).toHaveLength(94);
@@ -21,12 +21,12 @@ describe('Formula Atlas projection', () => {
     expect(atlas.families.every(({ formulas }) => formulas.length > 0)).toBe(
       true
     );
-    expect(atlas.guides).toHaveLength(17);
+    expect(atlas.guides).toHaveLength(21);
     expect(atlas.formulas.filter(({ recordHref }) => recordHref)).toHaveLength(0);
     expect(atlas.formulas.filter(({ exploreHref }) => exploreHref)).toHaveLength(94);
   });
 
-  it('routes every published runtime identity to Explore while Guide restoration remains gated', () => {
+  it('routes every published runtime identity to Explore with restored Guides separately authorized', () => {
     const atlas = buildFormulaAtlas('zh');
     const runtimeIds = new Map(
       aliasesAsset.aliases
@@ -53,22 +53,22 @@ describe('Formula Atlas projection', () => {
         `formula:${entry.metadata.id}`
       );
     }
-    const heldRecordIds = new Set(
+    const recordIds = new Set(
       atlas.formulas.flatMap((entry) =>
         entry.recordHref ? [entry.recordHref.slice('/formulas/'.length)] : [],
       ),
     );
-    expect(heldRecordIds.size).toBe(0);
+    expect(recordIds.size).toBe(0);
     expect(
-      heldGuideAsset.rows.every(
+      restoredGuideAsset.rows.every(
         (row) =>
           decisions.get(row.formulaId) === 'publish' &&
-          row.guideAvailability === 'hold',
+          row.guideAvailability === 'published',
       ),
     ).toBe(true);
   });
 
-  it('routes only the 17 selected published Guides to editorial pages', () => {
+  it('routes all 21 selected or restored published Guides to editorial pages', () => {
     const atlas = buildFormulaAtlas('en');
     const publishedGuides = atlas.guides.filter(({ guideHref }) => guideHref);
 
@@ -77,7 +77,7 @@ describe('Formula Atlas projection', () => {
         PUBLISHED_TEACHING_GUIDES_V1.map((guide) => guide.formulaId),
       ),
     );
-    expect(publishedGuides).toHaveLength(17);
+    expect(publishedGuides).toHaveLength(21);
 
     for (const entry of atlas.formulas) {
       expect(entry.destinationHref).toBe(
@@ -99,6 +99,6 @@ describe('Formula Atlas projection', () => {
     expect(new Set(groupedGuideIds)).toEqual(
       new Set(atlas.guides.map(({ metadata }) => metadata.id))
     );
-    expect(new Set(groupedGuideIds).size).toBe(17);
+    expect(new Set(groupedGuideIds).size).toBe(21);
   });
 });

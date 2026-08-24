@@ -5,6 +5,10 @@ import {
   loadPublishedRuntimeFormulaIdsV1,
   loadSelectedTeachingFormulaIdsV1,
 } from '@/content/teaching/content-loader';
+import {
+  loadRestoredGuideFormulaIdsV1,
+  loadRestoredGuideLocalesV1,
+} from '@/content/teaching/restored-guide-projection';
 
 export interface FormulaSeoSetsV1 {
   readonly valid: boolean;
@@ -19,7 +23,9 @@ export interface FormulaSeoDependenciesV1 {
   readonly catalogFormulaIds: readonly string[];
   readonly implementationFormulaIds: readonly string[];
   readonly teachingFormulaIds: readonly string[];
+  readonly restoredGuideFormulaIds: readonly string[];
   readonly loadDeliveredLocales: (formulaId: string) => readonly string[];
+  readonly loadRestoredGuideLocales: (formulaId: string) => readonly string[];
 }
 
 const FORMULA_ID = /^[0-9a-f]{8}-[0-9a-f]{4}-5[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/;
@@ -54,26 +60,46 @@ export function buildFormulaSeoSetsV1(
   const catalog = [...dependencies.catalogFormulaIds];
   const implementation = [...dependencies.implementationFormulaIds];
   const teaching = [...dependencies.teachingFormulaIds];
+  const restoredGuides = [...dependencies.restoredGuideFormulaIds];
   const catalogIds = new Set(catalog);
   const implementationIds = new Set(implementation);
+  const teachingIds = new Set(teaching);
   const authorityValid =
     exactUniqueIds(catalog, 677) &&
     exactUniqueIds(implementation, 534) &&
     exactUniqueIds(teaching, 50) &&
+    exactUniqueIds(restoredGuides, 4) &&
     implementation.every((formulaId) => catalogIds.has(formulaId)) &&
-    teaching.every((formulaId) => implementationIds.has(formulaId));
+    teaching.every((formulaId) => implementationIds.has(formulaId)) &&
+    restoredGuides.every(
+      (formulaId) =>
+        implementationIds.has(formulaId) && !teachingIds.has(formulaId),
+    );
 
   const index: string[] = [];
+  const appendLocales = (
+    formulaId: string,
+    loader: (id: string) => readonly string[],
+  ) => {
+    let delivered: readonly string[] = [];
+    try {
+      delivered = loader(formulaId);
+    } catch {
+      delivered = [];
+    }
+    const locales = [...new Set(delivered)].filter((locale) =>
+      LOCALES.has(locale),
+    );
+    for (const locale of locales) {
+      index.push(formulaLocaleKeyV1(locale, formulaId));
+    }
+  };
   if (authorityValid) {
     for (const formulaId of teaching) {
-      let delivered: readonly string[] = [];
-      try {
-        delivered = dependencies.loadDeliveredLocales(formulaId);
-      } catch {
-        delivered = [];
-      }
-      const locales = [...new Set(delivered)].filter((locale) => LOCALES.has(locale));
-      for (const locale of locales) index.push(formulaLocaleKeyV1(locale, formulaId));
+      appendLocales(formulaId, dependencies.loadDeliveredLocales);
+    }
+    for (const formulaId of restoredGuides) {
+      appendLocales(formulaId, dependencies.loadRestoredGuideLocales);
     }
   }
   index.sort();
@@ -93,7 +119,9 @@ const PRODUCTION_FORMULA_SEO_SETS_V1 = buildFormulaSeoSetsV1({
   catalogFormulaIds: STANDARD_MANIFEST_INDEX_V1.formulaIds,
   implementationFormulaIds: loadPublishedRuntimeFormulaIdsV1(),
   teachingFormulaIds: loadSelectedTeachingFormulaIdsV1(),
+  restoredGuideFormulaIds: loadRestoredGuideFormulaIdsV1(),
   loadDeliveredLocales: loadDeliveredTeachingLocalesV1,
+  loadRestoredGuideLocales: loadRestoredGuideLocalesV1,
 });
 
 const PRODUCTION_INDEX_KEYS_V1 = new Set(PRODUCTION_FORMULA_SEO_SETS_V1.indexSet);

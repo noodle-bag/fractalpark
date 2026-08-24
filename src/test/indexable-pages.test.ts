@@ -1,6 +1,6 @@
 import { SUPPORTED_LOCALES } from '@/i18n/supported-locales';
 import { describe, expect, it } from 'vitest';
-import heldGuideAsset from '../../resources/formula-library/v1/teaching-held-guide-appendix.v1.json';
+import restoredGuideAsset from '../../resources/formula-library/v1/teaching-restored-guide-projection.v1.json';
 import {
   formulaGuidePath,
   getPublishedFormulaGuideFormulaId,
@@ -42,12 +42,15 @@ describe('indexable pages', () => {
     ]) {
       expect(INDEXABLE_PAGE_PATHS).toContain(required);
     }
-    // Two formula tools and exactly 50 reviewed teaching formulas ride the set.
+    // Two formula tools, 50 reviewed teaching formulas, and four separately
+    // authorized restored Guides ride the set.
     expect(
       INDEXABLE_PAGE_PATHS.filter((page) => page.startsWith('/formulas/')).length
-    ).toBe(52);
-    for (const held of heldGuideAsset.rows) {
-      expect(INDEXABLE_PAGE_PATHS).not.toContain(`/formulas/${held.formulaId}`);
+    ).toBe(56);
+    for (const restored of restoredGuideAsset.rows) {
+      expect(INDEXABLE_PAGE_PATHS).toContain(
+        `/formulas/${restored.formulaId}`,
+      );
     }
   });
 

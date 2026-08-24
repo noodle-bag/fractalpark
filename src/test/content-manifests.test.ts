@@ -62,10 +62,10 @@ describe('formula and artwork content manifests', () => {
     registerBuiltins({ quiet: true });
   });
 
-  it('validates 21 identities, 17 locale projections, and 26 artworks', () => {
+  it('validates 21 identities, 21 locale projections, and 26 artworks', () => {
     expect(() => validateContentManifests(buildValidationInput())).not.toThrow();
     expect(FORMULA_CONTENT_MANIFEST).toHaveLength(21);
-    expect(RENDERABLE_FORMULA_SLUGS.size).toBe(17);
+    expect(RENDERABLE_FORMULA_SLUGS.size).toBe(21);
     expect(ARTWORK_CONTENT_MANIFEST).toHaveLength(26);
   });
 

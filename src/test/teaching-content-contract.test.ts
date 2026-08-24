@@ -7,6 +7,7 @@ import decisionsAsset from '../../resources/formula-library/v1/publication-decis
 import identityAsset from '../../resources/formula-library/v1/standard-formula-ids.json';
 import runtimeIndexAsset from '../../public/formula-library/v1/runtime/published/index.json';
 import heldAsset from '../../resources/formula-library/v1/teaching-held-guide-appendix.v1.json';
+import restoredAsset from '../../resources/formula-library/v1/teaching-restored-guide-projection.v1.json';
 import ledgerAsset from '../../resources/formula-library/v1/teaching-review-ledger.v1.json';
 import selectionAsset from '../../resources/formula-library/v1/teaching-selection.v1.json';
 import schemaAsset from '../../resources/formula-library/v1/teaching-content-schema.v1.json';
@@ -284,7 +285,7 @@ describe('teaching selection and review contract', () => {
     }
   });
 
-  it('accounts for 17 selected Guides and four fail-closed held Guide aliases', () => {
+  it('accounts for 17 selected Guides plus four separately restored Guide aliases', () => {
     const guideAliases = aliasesAsset.aliases.filter(
       (alias) => alias.kind === 'guide-slug',
     );
@@ -295,6 +296,10 @@ describe('teaching selection and review contract', () => {
     );
     expect(selectedGuideIds.size).toBe(17);
     expect(heldAsset.rows).toHaveLength(4);
+    expect(restoredAsset.rows).toHaveLength(4);
+    expect(new Set(restoredAsset.rows.map((row) => row.formulaId))).toEqual(
+      new Set(heldAsset.rows.map((row) => row.formulaId)),
+    );
     expect(
       new Set(guideAliases.map((alias) => alias.formulaId)),
     ).toEqual(
@@ -320,6 +325,11 @@ describe('teaching selection and review contract', () => {
       );
     }
     expect(validatesHeldAppendix(heldAsset)).toBe(true);
+    for (const row of restoredAsset.rows) {
+      expect(row.guideAvailability).toBe('published');
+      expect(row.sourceRevision).toMatch(/^[a-f0-9]{64}$/);
+      expect(row.semanticHash).toMatch(/^[a-f0-9]{64}$/);
+    }
   });
 
   it('rejects held appendix field, UUID, slug, and reason drift', () => {
@@ -344,14 +354,14 @@ describe('teaching selection and review contract', () => {
     }
   });
 
-  it('keeps held Guide depth prose out of every global locale message payload', () => {
+  it('ships the four restored Guide projections in every global locale payload', () => {
     for (const locale of selectionAsset.locales) {
       const messages = JSON.parse(
         readFileSync(join(process.cwd(), 'messages', `${locale}.json`), 'utf8'),
       ) as { formulas: { entries: Record<string, unknown> } };
-      expect(Object.keys(messages.formulas.entries)).toHaveLength(17);
-      for (const row of heldAsset.rows) {
-        expect(messages.formulas.entries).not.toHaveProperty(row.guideSlug);
+      expect(Object.keys(messages.formulas.entries)).toHaveLength(21);
+      for (const row of restoredAsset.rows) {
+        expect(messages.formulas.entries).toHaveProperty(row.guideSlug);
       }
     }
   });

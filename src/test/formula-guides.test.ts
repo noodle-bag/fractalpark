@@ -2,8 +2,13 @@ import { readFileSync } from 'node:fs';
 import path from 'node:path';
 import { describe, expect, it, vi } from 'vitest';
 import enMessages from '../../messages/en.json';
+import esMessages from '../../messages/es.json';
+import frMessages from '../../messages/fr.json';
+import koMessages from '../../messages/ko.json';
+import ptMessages from '../../messages/pt.json';
+import ruMessages from '../../messages/ru.json';
 import zhMessages from '../../messages/zh.json';
-import heldGuideAsset from '../../resources/formula-library/v1/teaching-held-guide-appendix.v1.json';
+import restoredGuideAsset from '../../resources/formula-library/v1/teaching-restored-guide-projection.v1.json';
 import {
   PUBLISHED_FORMULA_GUIDES,
   PUBLISHED_FORMULA_GUIDE_IDS,
@@ -135,9 +140,19 @@ describe('published formula guides', () => {
     expect(getPublishedFormulaGuideBySlug('frm')).toBeUndefined();
   });
 
-  it('keeps selected published editorial fields complete and held prose absent', () => {
+  it('keeps all selected and restored Guide editorial fields complete in seven locales', () => {
+    const localeMessages = [
+      enMessages,
+      zhMessages,
+      ptMessages,
+      koMessages,
+      ruMessages,
+      esMessages,
+      frMessages,
+    ];
+    expect(PUBLISHED_TEACHING_GUIDES_V1).toHaveLength(21);
     for (const entry of PUBLISHED_TEACHING_GUIDES_V1) {
-      for (const messages of [enMessages, zhMessages]) {
+      for (const messages of localeMessages) {
         const content = messages.formulas.entries[entry.slug];
 
         expect(content.overview).toBeTruthy();
@@ -145,9 +160,10 @@ describe('published formula guides', () => {
         expect(content.imageCaption).toBeTruthy();
       }
     }
-    for (const row of heldGuideAsset.rows) {
-      expect(enMessages.formulas.entries).not.toHaveProperty(row.guideSlug);
-      expect(zhMessages.formulas.entries).not.toHaveProperty(row.guideSlug);
+    for (const row of restoredGuideAsset.rows) {
+      for (const messages of localeMessages) {
+        expect(messages.formulas.entries).toHaveProperty(row.guideSlug);
+      }
     }
   });
 
@@ -189,7 +205,7 @@ describe('published formula guides', () => {
       );
 
     expect(formulaGuideUrls).toEqual(expectedUrls);
-    expect(formulaGuideUrls).toHaveLength(100);
+    expect(formulaGuideUrls).toHaveLength(108);
     expect(urls).not.toContain(
       'https://www.fractalpark.com/en/formulas/mandelbrot'
     );

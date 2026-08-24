@@ -655,6 +655,34 @@
         },
         "history": "The map z → λz(1 − z) began as the complex extension of the real logistic map, studied extensively in the 1970s as a simple model of population dynamics and chaotic behavior. In 1980, Benoit B. Mandelbrot took the iteration to unrestricted complex λ and z. His paper, \"Fractal Aspects of the Iteration of z → λz(1−z) for Complex λ and z,\" introduced the λ-plane parameter set—now the Lambda fractal—and placed it in the broader theory of iterated rational maps.\n\nThe groundwork was already there. Around 1917–1918, Pierre Fatou and Gaston Julia developed the general theory of iterated rational functions that later made families such as the logistic map available to explore. In 1986, Heinz-Otto Peitgen and Peter H. Richter brought the Lambda fractal to a wider audience in \"The Beauty of Fractals,\" with some of the first widely seen computer-generated images of the set."
       },
+      "mandelbox": {
+        "title": "Mandelbox",
+        "summary": "Une application pli-et-échelle inspirée du Mandelbox de Tom Lowe (2010) : réflexions en boîte, pliage radial et mise à l'échelle transforment une itération en pièces et en murs.",
+        "overview": "La plupart des formules fractales commencent par une mise au carré, comme z² + c. Le Mandelbox choisit une autre voie : un pli en boîte renvoie les coordonnées situées hors d'un cube fixe vers ses faces ; un pli radial, ou pli en boule, inverse ensuite ou met à l'échelle un point selon sa distance à l'origine ; une échelle uniforme étire ou compresse le résultat avant d'ajouter c. Répétez la séquence et ce sont les plis — pas la mise au carré — qui construisent la structure.\n\nLes réflexions et les inversions n'exigent pas un nombre particulier de dimensions, la construction fonctionne donc dans n'importe laquelle. FractalPark dessine une variante bidimensionnelle qui conserve le même cœur pli-et-échelle dans le plan complexe.\n\nCette carte de paramètres ne s'adoucit pas en courbes familières de polynômes. Elle découpe des chambres aux arêtes franches, des fortifications imbriquées et des passages qui semblent tirés d'un plan d'architecte. Sa frontière sépare les orbites bornées — celles qui restent à portée — des orbites en fuite. Zoomez et le bord dentelé, auto-similaire, ramène le motif de la boîte à plus petite échelle.",
+        "imageAlt": "Carte Mandelbox bidimensionnelle avec des chambres aux arêtes franches et des renfoncements imbriqués façon forteresse, dans des bleus froids",
+        "imageCaption": "La carte inspirée du Mandelbox de FractalPark : murs droits, angles droits et renfoncements en couches comme l'intérieur d'une forteresse cristalline.",
+        "math": {
+          "iteration": {
+            "label": "Itération par pliage et mise à l’échelle",
+            "explanation": "Chaque étape fait passer l’orbite par quatre opérations : pliage en boîte, pliage radial, mise à l’échelle, puis décalage de c.\n\nLe pliage en boîte traite une coordonnée à la fois. Prenez une composante a de z. Au-dessus de 1, elle est réfléchie selon a → 2 − a ; au-dessous de −1, selon a → −2 − a. Les composantes dans [−1, 1] ne changent pas. Le plan extérieur se replie vers le carré central.\n\nVient ensuite le pliage en boule, qui examine le module au carré r² = |z|². Si r² < 0.25 (|z| < 0.5), multipliez le point par 4 et éloignez-le de l’origine. Si 0.25 ≤ r² < 1, inversez-le par rapport à la sphère unité : z → z/r² ; ainsi, un rayon m devient 1/m. Les points pour lesquels r² ≥ 1 ne changent pas. Les points proches sont déplacés vers l’extérieur ; la bande intermédiaire s’inverse par rapport à la sphère unité. Ces opérations créent l’interface instable derrière les couches anguleuses du Mandelbox.\n\nEssayez z₀ = (1.5, 0) avec l’échelle s = 2. Le pliage en boîte réfléchit x = 1.5 en x = 0.5. Puisque r² = 0.25 appartient à la bande intermédiaire, le pliage en boule l’inverse : z = z/r² = (2, 0). La mise à l’échelle par 2 donne (4, 0), et l’ajout de c achève l’étape. En partant plutôt de l’origine, vous êtes dans la bande la plus interne : le pliage en boule la multiplie par 4 — elle reste l’origine —, donc le premier itéré arrive exactement sur c."
+          }
+        },
+        "visualCharacteristics": "Les pliages répétés produisent des chambres aux arêtes vives, des fortifications imbriquées et des corridors profonds. Le paramètre par défaut s = 2 donne à la structure des murs droits, des angles droits et des renfoncements en couches, comme l’intérieur d’une forteresse cristalline.\n\nÀ des échelles plus fines, le thème de la boîte réapparaît : de petites copies de la forme d’ensemble se montrent dans les renfoncements et le long des frontières, toutes dotées de la même géométrie rectiligne. L’image canonique emploie des bleus et des cyans froids, bien accordés à la géométrie mécanique des pliages.",
+        "parameters": {
+          "scale": "L’échelle détermine à quel point l’orbite pliée s’étend ou s’inverse avant l’ajout de c. Une échelle de 2 (la valeur par défaut) double approximativement la valeur pliée ; les valeurs négatives inversent la direction et produisent des variations en miroir."
+        },
+        "faq": {
+          "folds": {
+            "question": "Que sont les pliages en boîte et en boule ?",
+            "answer": "Un pliage en boîte réfléchit vers l’origine les coordonnées situées hors d’un intervalle fixe — comme si l’on repliait vers l’intérieur les bords d’une feuille. Un pliage en boule (ou en sphère) effectue une inversion conditionnelle : les points trop proches de l’origine sont repoussés vers l’extérieur, les points à une distance intermédiaire s’inversent par rapport à une sphère, et les points éloignés restent inchangés. Ensemble, ils redirigent l’orbite à chaque étape et produisent la géométrie en couches du Mandelbox."
+          },
+          "dimension": {
+            "question": "S’agit-il du Mandelbox en trois dimensions ?",
+            "answer": "Non. FractalPark affiche une carte bidimensionnelle inspirée de la même construction par pliage et mise à l’échelle. Le Mandelbox original est le plus souvent exploré en 3D, où le pliage en boîte réfléchit par rapport aux faces d’un cube ; ici, la même logique fonctionne dans le plan complexe avec une frontière carrée."
+          }
+        },
+        "history": "Le Mandelbox a été présenté pour la première fois par Tom Lowe (connu en ligne sous le nom de Tglad) au début de 2010, sur la communauté FractalForums. Lowe expérimentait des opérations de pliage itératives dans trois dimensions — réflexions en boîte et inversions sphériques — afin de voir si elles pouvaient produire des structures bornées et auto-similaires analogues à l’ensemble de Mandelbrot. Les résultats ont aussitôt été reconnus comme une nouvelle classe de fractales, et le nom « Mandelbox » a été adopté à la fois en hommage à l’ensemble de Mandelbrot et en raison de la forme de boîte de l’ensemble lorsqu’il est visualisé.\n\nLa découverte a suivi de près le Mandelbulb de 2009 de Daniel White et Paul Nylander, qui avait ravivé l’intérêt des amateurs pour la recherche de fractales 3D non triviales. En quelques mois, des contributeurs de FractalForums — notamment Knighty, Jesse et d’autres — ont étendu l’idée du Mandelbox à différents plans de symétrie et à des pliages polyédriques.\n\nMalgré sa popularité dans les logiciels d’art fractal (Mandelbulber, Mandelbulb3D, Fragmentarium, Ultra Fractal), le Mandelbox a fait l’objet de relativement peu d’analyses mathématiques formelles. L’un des rares travaux évalués par les pairs est l’article de Gregg Helt, présenté à la Bridges Conference en 2018, qui généralise l’étape d’inversion sphérique à des inversions de formes arbitraires."
+      },
       "perpendicular-celtic": {
         "title": "Perpendicular Celtic",
         "summary": "Une application quadratique de la famille Perpendicular : plie la partie réelle avant de mettre au carré, plie encore le résultat réel, et la frontière se noue en tresses.",
@@ -779,6 +807,30 @@
         },
         "history": "At the heart of this image is Newton's method, discovered by Isaac Newton in 1669 and independently refined by Joseph Raphson in 1690. For real functions it is a practical root‑finding tool; for complex polynomials it reveals fractal basins no one could have foreseen at the time.\n\nThe mathematical study of those basins began in 1879 with Arthur Cayley's paper \"The Newton–Fourier imaginary problem\" (American Journal of Mathematics, vol. 2, p. 97). For a complex quadratic polynomial, Cayley showed that the basins of attraction are simply the two half-planes separated by the perpendicular bisector of the line segment joining the two roots. At cubic polynomials, though, he found the problem \"considerable difficult.\" His inability to extend the simple quadratic result to the cubic case became known as Cayley's problem.\n\nThe resolution came through complex dynamics, developed by Pierre Fatou and Gaston Julia in the years around 1918. Their theory of iterated rational functions supplied the language for the basins and their infinitely convoluted boundaries. But the first pictures of the Newton fractal for z³ − 1 had to wait for computer graphics in the early 1980s.\n\nIn 1986, Heinz-Otto Peitgen and Peter H. Richter included a chapter titled \"Newton's Method for Complex Polynomials: Cayley's Problem\" (Chapter 6, pp. 93–106) in *The Beauty of Fractals: Images of Complex Dynamical Systems*. It presents some of the earliest published computer renderings of these basins and helped introduce a wide audience to the fractal structure hidden inside Newton's method."
       },
+      "newton-cosh": {
+        "title": "Newton Cosh",
+        "summary": "La méthode de Newton appliquée à cosh z = 1 : une infinité de racines doubles régulièrement espacées forme des bandes de convergence répétées.",
+        "overview": "Avec f(z) = cosh z − 1, les racines sont 2πik pour tout entier k, et chacune est double. Elles se répètent à intervalles réguliers sur l’axe imaginaire et forment des bandes répétées.\n\nLa correction (cosh z − 1) / sinh z se simplifie hors des zéros en tanh(z/2). sinh z s’annule à chaque πik : les multiples pairs sont des racines et des points supprimables du quotient simplifié ; les vrais pôles sont les multiples impairs (2k+1)πi.\n\nLa périodicité de l’axe imaginaire apparaît dans les bandes horizontales et les fins bords.",
+        "imageAlt": "Fractale de Newton pour cosh z = 1, avec des bandes horizontales répétées et des frontières déformées empilées le long de l'axe imaginaire",
+        "imageCaption": "La vue Newton de cosh z = 1 par FractalPark : bandes de convergence répétées le long de l'axe imaginaire, séparées par des bordures pliées et filiformes.",
+        "math": {
+          "iteration": {
+            "label": "Itération de Newton pour cosh",
+            "explanation": "La règle de Newton est N(z) = z − f(z) / f′(z), avec f(z) = cosh z − 1 et f′(z) = sinh z. On soustrait la correction (cosh z − 1) / sinh z, égale à tanh(z/2) hors des zéros de sinh z.\n\nLes solutions de cosh z = 1 sont z = 2πik et toutes sont des racines doubles. Près d’elles, l’erreur est environ divisée par deux à chaque pas : la convergence est linéaire, et non quadratique. Le dénominateur s’annule à chaque πik, mais les vrais pôles sont les multiples impairs (2k+1)πi.\n\nPour z₀ = 0.2i, la correction est tanh(0.1i) = i tan(0.1) ≈ 0.1003i, donc z₁ ≈ 0.0997i. Près de πi elle peut devenir très grande. L’implémentation borne la composante réelle et laisse le pas inchangé lorsque |sinh(z)|² < 1e-10 : ce sont des protections numériques, et non des affirmations sur l’application dépourvue de ces protections.\n\nLa période est 2πi : N(z + 2πi) = N(z) + 2πi."
+          }
+        },
+        "visualCharacteristics": "Les bandes horizontales se répètent le long de l’axe imaginaire. Les frontières se courbent et forment de fins filaments verticaux.\n\nLes ruptures nettes se rassemblent près des multiples impairs de πi, où la correction de Newton a de vrais pôles.",
+        "faq": {
+          "target": {
+            "question": "Quelle équation résout-on ?",
+            "answer": "Il cherche les solutions complexes de cosh(z) = 1 : z = 2πik pour tout entier k. Ce sont des racines doubles régulièrement espacées sur l’axe imaginaire."
+          },
+          "singularities": {
+            "question": "Pourquoi certaines régions sont-elles extrêmement sensibles ?",
+            "answer": "sinh(z) s’annule en z = πik. Les multiples pairs sont des racines et des points supprimables du quotient simplifié ; les vrais pôles sont les multiples impairs (2k+1)πi. Près d’eux, la correction peut être énorme."
+          }
+        }
+      },
       "magnet-type-1": {
         "title": "Magnet Type 1",
         "summary": "Un quotient de Möbius au carré avec un pôle en z = c, rassemblant le plan en bassins groupés et en chaînes de perles.",
@@ -856,6 +908,31 @@
           }
         },
         "history": "Shigehiro Ushiki, a mathematician in Kyoto University’s Graduate School of Human and Environmental Studies, discovered the Phoenix fractal. In 1988, he published the Phoenix iteration in IEEE Transactions on Circuits and Systems. He presented it as a complex-one-dimensional section of a Julia-like set derived from a complexified Hénon map. The paper is simply titled \"Phoenix.\" The classic parameter pair (c = 0.5667, p = −0.5) produces the named Phoenix curve, later well known in fractal-rendering communities.\n\nUshiki’s broader research covers complex dynamical systems, Julia sets with polyhedral symmetries, higher-dimensional complex Hénon maps, and the dynamics of surface automorphisms. His Kyoto University homepage lists publications from the 1980s to the present.\n\nThe Phoenix family later appeared in Ultra Fractal and other fractal software in both Julia-mode and Mandelbrot-mode variants. FractalPark’s Multi-Phoenix uses the same core recurrence and adds a multi-preview parameter interface."
+      },
+      "cosh-mandelbrot": {
+        "title": "Cosh Mandelbrot",
+        "summary": "Une application transcendante à temps de fuite : le cosinus hyperbolique remplace la mise au carré, et des panaches répétés verticalement et des éventails en couches prennent sa place.",
+        "overview": "Cosh Mandelbrot laisse derrière lui l'étape polynomiale familière. Au lieu de répéter z² + c, il répète z → cosh(z) + c. La mise au carré est remplacée par la croissance exponentielle du cosinus hyperbolique le long de l'axe réel et sa répétition de période 2π le long de l'axe imaginaire.\n\nLe cosinus complexe et le cosinus hyperbolique sont proches parents : chacun se répète dans une direction et croît sans limite dans une autre. Pour cosh(z), la période sur l'axe imaginaire est 2π, si bien qu'une bande de détail revient au-dessus et en dessous d'elle-même. Quand |Re(z)| est grand, ses termes exponentiels filent vers l'extérieur. La plupart des points de départ s'échappent vite ; seules de minces bandes retiennent une orbite — gardant ses valeurs successives bornées pendant de nombreuses étapes.\n\nLe plan des paramètres ne ressemble plus à la cardioïde et aux bulbes de l'ensemble de Mandelbrot. Il empile des éventails, des panaches dorés et des échos verticaux. Sa ligne entre fuite et non-fuite est tracée par l'itération transcendante elle-même ; aucun rayon de fuite algébrique simple n'est disponible.",
+        "imageAlt": "Panaches dorés et éventails en couches se répétant à intervalles verticaux réguliers dans la fractale Cosh Mandelbrot",
+        "imageCaption": "Le Cosh Mandelbrot de FractalPark : panaches dorés et éventails en couches reviennent verticalement avec la période 2π de cosh dans la direction imaginaire.",
+        "math": {
+          "iteration": {
+            "label": "Itération du cosinus hyperbolique",
+            "explanation": "À chaque étape, on évalue le cosinus hyperbolique complexe au z courant, puis on ajoute c. La définition cosh(z) = (eᶻ + e⁻ᶻ)/2 place la croissance exponentielle sur l’axe réel, à côté de la répétition sur l’axe imaginaire, de période 2π.\n\nEssayez z = iπ/2 sur l’axe imaginaire. Comme cosh(iπ/2) = cos(π/2) = 0, partir de là avec c = 0 donne z₁ = 0 après une étape. Zéro n’est pas un point fixe ici : à l’étape suivante, z₂ = cosh(0) = 1. Écartez le point de cet axe et le terme eᶻ peut entraîner une croissance exponentielle et une fuite rapide. Cette séparation nette — comportement borné dans une bande étroite, fuite rapide ailleurs — est typique de l’itération transcendante. Contrairement à un polynôme, cette carte ne possède pas de rayon de fuite universel ; FractalPark utilise un seuil d’échappement choisi pour détecter la divergence en pratique."
+          }
+        },
+        "visualCharacteristics": "Remarquez d’abord la répétition verticale. Comme cosh(z) se répète dans la direction imaginaire tous les 2π, de fins panaches, des éventails en couches et des filaments dorés reviennent à intervalles réguliers. Le résultat est strié et étagé, très différent de la ramification radiale des ensembles de Mandelbrot polynomiaux.\n\nDans le rendu canonique, les panaches et les éventails prennent souvent des tons chauds. Les détails les plus fins se concentrent dans d’étroites bandes horizontales, où une orbite s’attarde près de la frontière entre fuite et non-fuite. Au-dessus et au-dessous, la fuite s’accélère et l’image devient plus lisse.",
+        "faq": {
+          "periodicity": {
+            "question": "Pourquoi les motifs se répètent-ils verticalement ?",
+            "answer": "Le cosinus hyperbolique complexe se répète le long de l’axe imaginaire avec une période de 2π. Comme chaque étape emploie cosh(z), la structure de l’orbite se répète aussi : les comportements bornés et les fuites reviennent à intervalles verticaux réguliers dans le plan des paramètres."
+          },
+          "growth": {
+            "question": "Pourquoi de nombreux points s’échappent-ils rapidement ?",
+            "answer": "Le cosinus hyperbolique est construit à partir d’exponentielles : cosh(z) = (eᶻ + e⁻ᶻ)/2. Pour un point dont la partie réelle est importante, le terme eᶻ domine et l’orbite peut croître extrêmement vite. Il n’existe pas de rayon de fuite simple, comme pour les polynômes ; le seuil d’échappement est donc un choix de calcul pratique."
+          }
+        },
+        "history": "En 1988, Clifford A. Pickover, informaticien et auteur au Thomas J. Watson Research Center d’IBM, a publié le court article « Chaotic behavior of the transcendental mapping (Z → cosh(Z) + μ) » dans The Visual Computer. Il y présentait des images de comportement chaotique produit par cette fonction transcendante, aux côtés de cartes telles que z → sin(z) + c et z → eᶻ + c.\n\nLes travaux de Pickover ont fait connaître la carte fondée sur cosh dans la communauté du rendu fractal, où elle est devenue un exemple classique de temps de fuite transcendant. Auparavant, des mathématiciens tels que Robert Devaney et Michał Krych avaient développé l’étude plus générale de la dynamique complexe transcendante — familles exponentielles, trigonométriques et hyperboliques — et analysé la dynamique de exp(z) dans les années 1980."
       },
       "buffalo": {
         "title": "Buffalo",
@@ -1004,6 +1081,31 @@
             "answer": "The legs form where quadratic expansion and reciprocal attraction are nearly balanced. There an orbit can alternate between a pull toward zero and a throw outward, drawing the boundary between bounded and escaping behaviour into long threads. The effect is strongest near the origin, where the reciprocal term is largest; farther out, z² regains control and the threads taper."
           }
         }
+      },
+      "zaslavsky-map": {
+        "title": "Zaslavsky Map",
+        "summary": "Une application à sinus complexe : une perturbation sinusoïdale pondérée à 0.28 courbe l’orbite, une rotation fixe de 0.55 radian la fait tourner et c la décale — une adaptation inspirée de l’application de rotor frappé dissipatif de George Zaslavsky (1978).",
+        "overview": "FractalPark met en œuvre z(n+1) = exp(0.55 i) * (z(n) + 0.28 sin(z(n))) + c. Le sinus perturbe l’orbite existante avec un poids de 0.28 ; le multiplicateur fixe fait tourner toute l’orbite perturbée de 0.55 radian, puis c la décale.\n\nL’application originale de George Zaslavsky en 1978 décrivait un rotor frappé dissipatif avec deux variables réelles. L’adaptation complexe de FractalPark pour le temps de fuite n’est pas la récurrence exacte de cet article.\n\nLe sinus complexe peut croître sans borne le long de l’axe imaginaire et laisse des bras tourbillonnants et des anneaux.",
+        "imageAlt": "L'application de Zaslavsky : bras tourbillonnants et anneaux façon mandala dans des tons chauds d'orange et d'or",
+        "imageCaption": "L'application de Zaslavsky rendue par FractalPark : des arcs concentriques et des rayons rayonnants forment un mandala lumineux dans des oranges et des ors chauds.",
+        "math": {
+          "iteration": {
+            "label": "Application de rotation sinusoïdale",
+            "explanation": "FractalPark utilise z(n+1) = exp(0.55 i) * (z(n) + 0.28 sin(z(n))) + c. Le sinus est une perturbation de z de poids 0.28, non un remplacement. Le multiplicateur fixe fait tourner toute l’orbite perturbée de 0.55 radian dans le sens inverse des aiguilles d’une montre (environ 31.5°), puis c décale le résultat.\n\nPour z₀ = 0, sin(0)=0 ; le terme perturbé entre parenthèses est donc nul. La rotation de zéro reste nulle, et il ne reste que c : z₁ = c. Ensuite le sinus complexe peut croître ; le module de sin(a + ib) contient des termes jusqu’à cosh(b).\n\nLa rotation de 0.55 radian est fixée dans la formule et n’est pas réglable par l’utilisateur. Comme détail d’implémentation, et non comme partie de la récurrence idéalisée, FractalPark borne la composante imaginaire d’entrée à ±80 et arrondit chaque composante de sortie sur une grille de 1/16."
+          }
+        },
+        "visualCharacteristics": "Les transformations kaléidoscopiques rendent nets les bras tourbillonnants et les anneaux. L’image canonique place des arcs autour d’une région centrale où l’orbite perturbée peut rester bornée.\n\nDes oranges et des ors chauds se détachent sur un fond noir profond. La rotation constante courbe les bras, tandis que la perturbation sinusoïdale ajoute de fines ondulations au bord des anneaux.",
+        "faq": {
+          "rotation": {
+            "question": "D’où vient la rotation ?",
+            "answer": "L’application multiplie toute l’orbite perturbée z + 0.28 sin(z) par exp(0.55 i), la faisant tourner d’environ 31.5° dans le sens inverse des aiguilles d’une montre, puis ajoute c. Cela arrive à chaque itération et est fixe, non réglable."
+          },
+          "transform": {
+            "question": "Le kaléidoscope fait-il partie de la formule ?",
+            "answer": "Non. Le kaléidoscope est une transformation spatiale facultative extérieure à l’itération. Il réfléchit ou copie des secteurs du plan des paramètres. L’application de Zaslavsky n’a pas de symétrie de réflexion intégrée ; le kaléidoscope est une étape de rendu distincte qui peut être activée indépendamment."
+          }
+        },
+        "history": "George M. Zaslavsky (1929–2008) était un physicien mathématicien né en Union soviétique, qui a apporté des contributions fondamentales à la théorie du chaos dynamique. Il a présenté l’application qui porte aujourd’hui son nom dans un article de 1978 intitulé «The Simplest Case of a Strange Attractor», publié dans Physics Letters A. Cette application a été dérivée comme description stroboscopique d’un rotor frappé dissipatif — un système tournant qui reçoit des impulsions périodiques et perd de l’énergie par frottement.\n\nZaslavsky a ensuite émigré aux États-Unis, rejoignant le département de physique de l’université de New York et le Courant Institute of Mathematical Sciences. Il a rédigé plusieurs ouvrages sur le chaos hamiltonien et la dynamique fractionnaire. L’article Scholarpedia sur l’application de Zaslavsky, écrit par Zaslavsky lui-même en 2007, fournit une référence technique faisant autorité.\n\nLes applications classiques de Zaslavsky opèrent sur deux variables réelles (action et angle). La variante complexe de temps de fuite de FractalPark utilise z(n+1) = exp(0.55 i) * (z(n) + 0.28 sin(z(n))) + c ; c’est une adaptation créative, et non une transcription directe du système dissipatif d’origine."
       },
       "zubieta": {
         "title": "Zubieta",

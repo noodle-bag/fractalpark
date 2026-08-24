@@ -1,0 +1,19 @@
+{
+  "provider": "deepseek",
+  "requestedModel": "deepseek-chat",
+  "actualModel": "deepseek-v4-flash",
+  "finishReason": "stop",
+  "candidateSha256": "3dc094f38b6c1a7c36d3fbcd35d21ac711c0d903a834c32a4de87754967674e5",
+  "reviewPackageSha256": "e11df590375cdcda7a96ef42d862f0caadf3b86197794a3cadc94718ef61e53f",
+  "usage": {
+    "prompt_tokens": 19799,
+    "completion_tokens": 884,
+    "total_tokens": 20683,
+    "prompt_tokens_details": {
+      "cached_tokens": 0
+    },
+    "prompt_cache_hit_tokens": 0,
+    "prompt_cache_miss_tokens": 19799
+  },
+  "review": "VERDICT: APPROVE\n\n# Closure Matrix\n\n| R3 Finding | Source | Status | Locale(s) Fixed | Evidence |\n|---|---|---|---|---|\n| Zaslavsky rotation direction | DeepSeek, Severe | ✅ Closed | en, es, fr, ko, pt, ru, zh | `exp(0.55 i)` rotation now explicit as counter-clockwise in all 7 locales (`counter-clockwise`, `sentido antihorario`, `sens inverse des aiguilles d’une montre`, `반시계 방향`, `anti-horário`, `против часовой стрелки`, `逆时针`) in `math.iteration.explanation` |\n| French Zaslavsky summary incomplete | DeepSeek, Medium + Kimi, Minor | ✅ Closed | fr | Summary now: `Une application à sinus complexe : une perturbation sinusoïdale pondérée à 0.28 courbe l’orbite, une rotation fixe de 0.55 radian la fait tourner et c la décale — une adaptation inspirée de l’application de rotor frappé dissipatif de George Zaslavsky (1978)` |\n| Newton-Cosh safeguard distinction | DeepSeek, Minor | ✅ Closed | es, fr, ru | Added `no afirmaciones sobre el mapa sin esas protecciones` / `et non des affirmations sur l’application dépourvue de ces protections` / `а не утверждения о математике отображения без этих защит` |\n| Zaslavsky visual palette/parity | DeepSeek, Minor | ✅ Closed | es, fr, ru | Warm oranges/golds on deep black background added (`Naranjas y dorados cálidos des tacan…`, `Des oranges et des ors chauds se détachent…`, `Тёплые оранжевые и золотые тона лежат…`) |\n| Spanish/French formal imperative consistency | Kimi, Minor | ✅ Closed | es, fr | es: `Repita`/`Acérquese`; fr: `Répétez`/`Zoomez` — now consistent with math section |\n| French cardioïde agreement | Kimi, Minor | ✅ Closed | fr | Fixed `à la cardioïde` (feminine) |\n| Mandelbox gender consistency | Kimi, Minor | ✅ Closed | es, fr, pt | Uniformly masculine (`El/Le/O Mandelbox`) across overview, history, FAQ, math explanation, fold answer |\n| Portuguese Mandelbox summary wording | Kimi, Minor | ✅ Closed | pt | Revised to `fazem a órbita formar câmaras e paredes` for clarity |\n\n# Rejected Prescriptions Evaluation\n\n| Rejected Item | Parent Rationale | Delta Contains Contrary Evidence? | Reopen? |\n|---|---|---|---|\n| Russian почки→бульбы | No evidence existing term is wrong; transliteration less natural | No | No |\n| French parameters.scale label | JSON path is description text, not missing label | No | No |\n\n# Finding 1 — Cosh One-Step Correction Integrity\n\nThe Cosh one-step fixed-point correction (`iπ/2` maps to zero for one step; zero maps to one) was **not modified** in this delta. The `revisionNotes` entry retains the R3 statement verbatim and only appends R4 adjudication notes. No text in the changed paths revives the false fixed-point claim.\n\nVerified against parent gate: `coshFalseFixedPointResidues: 0`.\n\n# Conclusion\n\nAll eight accepted R3 findings are properly resolved in the affected locales. Fixes preserve mathematical meaning, grammar, register, and provenance. The rejected prescriptions show no contrary evidence in this package. The Cosh correction remains intact. All 35 delta paths accounted for (28 content entries, 1 provenance addition, schema bump, 5 revisionNotes locale edits).\n\n**NO_FINDINGS**\n\nCandidate SHA `3dc094f38b6c1a7c36d3fbcd35d21ac711c0d903a834c32a4de87754967674e5` approved for repository integration subject to maintainer authorization."
+}
