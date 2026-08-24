@@ -15,9 +15,9 @@
     "src/lib/published-formula-library.ts": "fc76f5bf53280497383fd5f94197052f088fe98e22658edd29e6974be62cdbc1",
     "src/lib/published-formula-selection.ts": "17fa926564bd5cb741fd33a840cf07d7667ebc12b7889c9e475327e6f456007a",
     "src/lib/formula-records.ts": "737a30b89c3472151e9e68401c06e13f5d9483414266edc553250a315fd2f5c1",
-    "src/content/teaching/content-loader.ts": "c940497150d1c79bfff0b16a5001534be3852ec1572439e4807468f0d519d563",
+    "src/content/teaching/content-loader.ts": "9727ad490c3886328c087dc452f7f2c32bc826ac390fb464ce50dadf776c05e3",
     "src/content/teaching/formula-seo-policy.ts": "9fc2ef94d7015f5fc060e7af3eb9d24d24e751122a148f2646662962f9d400ec",
-    "src/content/teaching/generated-content-registry.ts": "cab08170738a562b71a556747f8a25fb5d52c2fdee378fc6dbed93f68dd1004a",
+    "src/content/teaching/generated-content-registry.ts": "d7304594fee2f3ab3e72b63533acf1842748490abdf779f6f68cd236038b65ff",
     "src/engine/formulas/v1/published-runtime.ts": "d8f44478d655344b1270a564d984193e15d5250a618fff133154de41a600d9ae",
     "src/engine/formulas/v1/native-recipes.ts": "80c179eba7e7a2b4208741b69d64562d3a1944ac928450b7c9d4f85ec6cf3055",
     "src/engine/formulas/v1/native-recipes-b94-classic.ts": "75d23141106a86d27a57019e1ef8a79a13cd43c91b8306ba15ccbd803495c77e",
@@ -50,7 +50,7 @@
     "src/test/published-formula-selection.test.ts": "58ed4f43dfcee1e21804c83fce259877c3f5b68515279c58dae0b82a24a9d2da",
     "src/test/formula-records.test.ts": "f1e9b84a586738feec07d5a036b1f257eb23cd7ccf1a5e9c8e347710331ab720",
     "src/test/formula-seo-policy.test.ts": "3be793990e34b497cd33452032f70ac151405db1ea364a4e013df3535d4d9eba",
-    "src/test/teaching-content-loader.test.ts": "b3b06ddcbe51b46e8e351a3bbde797fa9bc3524f909c9f748d365e60ea24a987",
+    "src/test/teaching-content-loader.test.ts": "5e892159cd724299bc9b98a32163cc259b66146a613cac37654e310d6ac3e56d",
     "src/test/fractal-renderer-race.test.ts": "4a5ec916fc3f064e9112f13594201b1a8e1bc2e19133a6c7cddb600e4263f6fe",
     "scripts/measure-standard-library-performance.ts": "64fbbba1ce2c87560690e697d8b8e26446f56d3f85a96ac115405c38795f787d",
     "scripts/cross-check-native-recipes.ts": "eeb98e641a3119c9a56edcf6b110e2436e37f72d71f53b723c318c4ad479f7cb",
@@ -79,5 +79,5 @@
     "passed": 1,
     "failed": 0
   },
-  "generatedAt": "2026-08-23T19:09:33.440984Z"
+  "generatedAt": "2026-08-24T01:47:35Z"
 }
