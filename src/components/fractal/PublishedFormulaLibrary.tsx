@@ -5,6 +5,7 @@ import { Dices, Library, Loader2 } from 'lucide-react';
 import { useTranslations } from 'next-intl';
 
 import { Button } from '@/components/ui/button';
+import { ExploreCanonicalSourceWorkspace } from '@/components/formulas/ExploreCanonicalSourceWorkspace';
 import {
   Sheet,
   SheetContent,
@@ -86,6 +87,7 @@ export function PublishedFormulaLibrary({
     [rows, selectedCategory],
   );
   const visibleRows = filteredRows.slice(0, visibleCount);
+  const activeFormulaName = currentFormulaName(currentFormula, t);
 
   const changeCategory = (
     category: PublishedFormulaDirectoryCategoryV1 | 'all',
@@ -178,9 +180,15 @@ export function PublishedFormulaLibrary({
           data-formula-id={currentFormula}
           data-testid="published-formula-current"
         >
-          {currentFormulaName(currentFormula, t)}
+          {activeFormulaName}
         </p>
       </div>
+
+      <ExploreCanonicalSourceWorkspace
+        currentFormula={currentFormula}
+        displayName={activeFormulaName}
+        loadClient={loadClient}
+      />
 
       {actionError && (
         <p role="alert" className="rounded-md border border-destructive/30 p-3 text-sm text-destructive">

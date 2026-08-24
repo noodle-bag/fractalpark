@@ -308,6 +308,13 @@ async function main(): Promise<void> {
       undefined,
       { polling: 100 },
     );
+    await page
+      .locator('[data-testid="canonical-source-preview"]')
+      .waitFor({ state: "visible" });
+    // Commit 28a intentionally fetches the current formula once for its source
+    // preview. The frozen Library gate measures additional eager Definition
+    // requests after that workspace baseline, not the explicit preview itself.
+    const pageFormulaAssetBaseline = await formulaAssetRequestCount(page);
     const graphics = await page.evaluate(() => {
       const canvas = document.querySelector<HTMLCanvasElement>(
         '[data-testid="fractal-canvas"]',
@@ -419,7 +426,8 @@ async function main(): Promise<void> {
     const coldSelectionSamples: number[] = [];
     const hotSelectionSamples: number[] = [];
     const selectedLoadingSamples: number[] = [];
-    let initialFormulaAssetRequests = await formulaAssetRequestCount(page);
+    let initialFormulaAssetRequests =
+      (await formulaAssetRequestCount(page)) - pageFormulaAssetBaseline;
     let hotFormulaAssetRequests = 0;
     if (hardwareAttested) {
       for (let sample = 0; sample < coldRows.length; sample += 1) {
@@ -442,9 +450,16 @@ async function main(): Promise<void> {
             undefined,
             { polling: "raf" },
           );
+          await coldPage
+            .locator('[data-testid="canonical-source-preview"]')
+            .waitFor({ state: "visible" });
+          const coldFormulaAssetBaseline =
+            await formulaAssetRequestCount(coldPage);
           await openLibrary(coldPage);
           const selector = await exposeRow(coldPage, row.formulaId);
-          initialFormulaAssetRequests += await formulaAssetRequestCount(coldPage);
+          initialFormulaAssetRequests +=
+            (await formulaAssetRequestCount(coldPage)) -
+            coldFormulaAssetBaseline;
           const timing = await measureSelection(
             coldPage,
             selector,

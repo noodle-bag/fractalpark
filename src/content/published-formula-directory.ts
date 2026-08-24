@@ -61,10 +61,16 @@ export interface ClassicAliasDeepLinkV1 {
   readonly alternateProfile: ClassicAlternateProfileV1;
 }
 
+export interface ClassicRuntimeAliasV1 {
+  readonly runtimeId: string;
+  readonly canonicalFormulaId: FormulaIdV1;
+}
+
 export interface PublishedFormulaDirectoryV1 {
   readonly revision: 1;
   readonly contentHash: string;
   readonly rows: readonly PublishedFormulaDirectoryRowV1[];
+  readonly runtimeAliases: readonly ClassicRuntimeAliasV1[];
   readonly aliasDeepLinks: readonly ClassicAliasDeepLinkV1[];
   readonly categoryCounts: Readonly<
     Record<PublishedFormulaDirectoryCategoryV1, number>
@@ -165,12 +171,15 @@ function loadDirectory(): PublishedFormulaDirectoryV1 {
     raw.counts.guides !== PUBLISHED_FORMULA_GUIDE_COUNT_V1 ||
     raw.counts.categoryMemberships !==
       FORMULA_DIRECTORY_CATEGORY_MEMBERSHIP_COUNT_V1 ||
+    raw.counts.runtimeAliases !== CLASSIC_FORMULA_COUNT_V1 ||
     !Array.isArray(raw.categoryOrder) ||
     JSON.stringify(raw.categoryOrder) !==
       JSON.stringify(PUBLISHED_FORMULA_DIRECTORY_CATEGORIES_V1) ||
     !record(raw.categoryCounts) ||
     !Array.isArray(raw.rows) ||
     raw.rows.length !== PUBLISHED_FORMULA_DIRECTORY_COUNT_V1 ||
+    !Array.isArray(raw.runtimeAliases) ||
+    raw.runtimeAliases.length !== CLASSIC_FORMULA_COUNT_V1 ||
     !Array.isArray(raw.aliasDeepLinks) ||
     raw.aliasDeepLinks.length !== 5
   ) {
@@ -246,6 +255,33 @@ function loadDirectory(): PublishedFormulaDirectoryV1 {
     throw new Error('published-formula-directory-invalid');
   }
 
+  const runtimeIds = new Set<string>();
+  const runtimeAliasTargetIds = new Set<string>();
+  const runtimeAliases = raw.runtimeAliases.map((value): ClassicRuntimeAliasV1 => {
+    if (
+      !record(value) ||
+      typeof value.runtimeId !== 'string' ||
+      value.runtimeId.length === 0 ||
+      runtimeIds.has(value.runtimeId) ||
+      typeof value.canonicalFormulaId !== 'string' ||
+      !formulaIds.has(value.canonicalFormulaId)
+    ) {
+      throw new Error('published-formula-directory-invalid');
+    }
+    runtimeIds.add(value.runtimeId);
+    runtimeAliasTargetIds.add(value.canonicalFormulaId);
+    return Object.freeze({
+      runtimeId: value.runtimeId,
+      canonicalFormulaId: value.canonicalFormulaId as FormulaIdV1,
+    });
+  });
+  if (runtimeAliasTargetIds.size !== 89) {
+    throw new Error('published-formula-directory-invalid');
+  }
+  const runtimeAliasById = new Map(
+    runtimeAliases.map((alias) => [alias.runtimeId, alias.canonicalFormulaId]),
+  );
+
   const legacyIds = new Set<string>();
   const aliasDeepLinks = raw.aliasDeepLinks.map((value): ClassicAliasDeepLinkV1 => {
     if (
@@ -255,6 +291,7 @@ function loadDirectory(): PublishedFormulaDirectoryV1 {
       legacyIds.has(value.legacyRuntimeId) ||
       typeof value.canonicalFormulaId !== 'string' ||
       !formulaIds.has(value.canonicalFormulaId) ||
+      runtimeAliasById.get(value.legacyRuntimeId) !== value.canonicalFormulaId ||
       value.canonicalPath !== `/formulas/${value.canonicalFormulaId}`
     ) {
       throw new Error('published-formula-directory-invalid');
@@ -274,6 +311,7 @@ function loadDirectory(): PublishedFormulaDirectoryV1 {
     revision: 1,
     contentHash: raw.contentHash,
     rows: Object.freeze(rows),
+    runtimeAliases: Object.freeze(runtimeAliases),
     aliasDeepLinks: Object.freeze(aliasDeepLinks),
     categoryCounts: Object.freeze(categoryCounts),
   });

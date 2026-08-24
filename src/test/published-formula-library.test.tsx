@@ -14,6 +14,7 @@ import type { PublishedFormulaDirectoryRowV1 } from "@/content/published-formula
 import type { PublishedFormulaDirectoryFamilyV1 } from "@/content/formula-directory-categories";
 
 vi.mock("next-intl", () => ({
+  useLocale: () => "en",
   useTranslations: () => (key: string, values?: Record<string, unknown>) =>
     values?.count === undefined ? key : `${key}:${String(values.count)}`,
 }));
@@ -75,9 +76,12 @@ function client(rowCount = 60): PublishedFormulaLibraryClient {
         "folded-absolute": 1,
         "root-finding": Math.floor(rowCount / 2),
       },
+      runtimeAliasFormulaIds: {},
     },
     get: (formulaId) => rows.find((row) => row.formulaId === formulaId),
+    resolveRuntimeAlias: () => undefined,
     load: vi.fn(),
+    loadSource: vi.fn(),
   };
 }
 

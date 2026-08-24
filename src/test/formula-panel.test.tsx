@@ -6,6 +6,7 @@ import { pluginRegistry } from '@/engine/plugins/registry';
 import { FormulaPanel } from '@/components/fractal/FormulaPanel';
 
 vi.mock('next-intl', () => ({
+  useLocale: () => 'en',
   useTranslations: () => ((key: string) => key),
 }));
 

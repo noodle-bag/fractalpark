@@ -85,7 +85,6 @@ describe('public Formula Record v1', () => {
       expect(record.source.href).toMatch(
         /^\/formula-library\/v1\/runtime\/published\/definitions\/[a-f0-9]{64}\.frm$/
       );
-      expect(record.source.downloadHref).toBe(record.source.href);
       expect(record.source.sourceRevision).toMatch(/^[a-f0-9]{64}$/);
       expect(record.source.semanticHash).toMatch(/^[a-f0-9]{64}$/);
       expect(record.source.languageVersion).toBe('frm-like/1');
@@ -116,8 +115,6 @@ describe('public Formula Record v1', () => {
       expect(record.actions.remixHref).toBe(
         `${record.actions.openExploreHref}&intent=remix`
       );
-      expect(record.actions.viewSourceHref).toBe(record.source.href);
-      expect(record.actions.downloadSourceHref).toBe(record.source.downloadHref);
     }
   });
 

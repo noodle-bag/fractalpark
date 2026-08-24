@@ -1245,6 +1245,20 @@
         "passed": "已通过",
         "failed": "未通过"
       }
+    },
+    "sourceWorkspace": {
+      "title": "规范源码",
+      "readOnlyDescription": "这是经过验证的只读规范版本。Remix 会创建一份独立的可编辑分支。",
+      "previewLabel": "{name} 的规范源码预览",
+      "editorLabel": "{name} 的只读规范源码",
+      "loading": "正在加载规范源码…",
+      "unavailable": "无法加载并验证规范源码。",
+      "retry": "重试",
+      "open": "打开完整源码",
+      "workspaceDescription": "{name} 的只读规范源码。Remix 会创建独立分支。",
+      "readOnly": "只读规范版本",
+      "remix": "Remix",
+      "download": "下载 .frm"
     }
   },
   "artworks": {

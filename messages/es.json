@@ -1245,6 +1245,20 @@
         "passed": "Superada",
         "failed": "Fallida"
       }
+    },
+    "sourceWorkspace": {
+      "title": "Código fuente canónico",
+      "readOnlyDescription": "Esta revisión canónica verificada es de solo lectura. Remix crea una bifurcación editable independiente.",
+      "previewLabel": "Vista previa del código canónico de {name}",
+      "editorLabel": "Código canónico de solo lectura de {name}",
+      "loading": "Cargando código canónico…",
+      "unavailable": "No se pudo cargar y verificar el código canónico.",
+      "retry": "Reintentar",
+      "open": "Abrir código completo",
+      "workspaceDescription": "Código canónico de solo lectura de {name}. Remix crea una bifurcación independiente.",
+      "readOnly": "Revisión canónica de solo lectura",
+      "remix": "Remix",
+      "download": "Descargar .frm"
     }
   },
   "artworks": {

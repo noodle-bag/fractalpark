@@ -155,6 +155,7 @@ export function buildPublishedFormulaDirectoryV1(repositoryRoot: string) {
   const b94Canonical = new Map<string, string>();
   const guideSlugById = new Map<string, string>();
   const mergedRuntimeAliases: JsonRecord[] = [];
+  const runtimeAliasRows: JsonRecord[] = [];
   for (const alias of aliasRows) {
     invariant(
       typeof alias.kind === 'string' &&
@@ -173,11 +174,15 @@ export function buildPublishedFormulaDirectoryV1(repositoryRoot: string) {
       guideSlugById.set(alias.formulaId, alias.value);
     }
     if (alias.kind === 'b94-runtime-alias') mergedRuntimeAliases.push(alias);
+    if (alias.kind === 'runtime-id') runtimeAliasRows.push(alias);
   }
   invariant(
     b94Canonical.size === 89 &&
       guideSlugById.size === 21 &&
-      mergedRuntimeAliases.length === 5,
+      mergedRuntimeAliases.length === 5 &&
+      runtimeAliasRows.length === 94 &&
+      new Set(runtimeAliasRows.map((alias) => alias.value)).size === 94 &&
+      new Set(runtimeAliasRows.map((alias) => alias.formulaId)).size === 89,
     'published-directory-aliases-invalid',
   );
 
@@ -313,6 +318,20 @@ export function buildPublishedFormulaDirectoryV1(repositoryRoot: string) {
     })
     .sort((left, right) => left.legacyRuntimeId.localeCompare(right.legacyRuntimeId, 'en'));
   invariant(aliasDeepLinks.length === 5, 'published-directory-alternate-profile-invalid');
+  const runtimeAliases = runtimeAliasRows
+    .map((alias) => {
+      invariant(
+        typeof alias.value === 'string' &&
+          typeof alias.formulaId === 'string' &&
+          runtimeIds.has(alias.formulaId),
+        'published-directory-runtime-aliases-invalid',
+      );
+      return {
+        runtimeId: alias.value,
+        canonicalFormulaId: alias.formulaId,
+      };
+    })
+    .sort((left, right) => left.runtimeId.localeCompare(right.runtimeId, 'en'));
 
   const sourceBindings = Object.fromEntries(
     Object.entries(inputPaths).map(([name, path]) => [
@@ -334,10 +353,12 @@ export function buildPublishedFormulaDirectoryV1(repositoryRoot: string) {
       classic: 94,
       guides: 21,
       categoryMemberships: 628,
+      runtimeAliases: 94,
     },
     categoryOrder: ['classic', ...FAMILY_ORDER],
     categoryCounts,
     rows,
+    runtimeAliases,
     aliasDeepLinks,
   });
 

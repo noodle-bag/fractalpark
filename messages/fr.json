@@ -1245,6 +1245,20 @@
         "passed": "Réussie",
         "failed": "Échouée"
       }
+    },
+    "sourceWorkspace": {
+      "title": "Source canonique",
+      "readOnlyDescription": "Cette révision canonique vérifiée est en lecture seule. Remix crée une copie modifiable distincte.",
+      "previewLabel": "Aperçu de la source canonique de {name}",
+      "editorLabel": "Source canonique de {name} en lecture seule",
+      "loading": "Chargement de la source canonique…",
+      "unavailable": "Impossible de charger et de vérifier la source canonique.",
+      "retry": "Réessayer",
+      "open": "Ouvrir la source complète",
+      "workspaceDescription": "Source canonique de {name} en lecture seule. Remix crée une copie distincte.",
+      "readOnly": "Révision canonique en lecture seule",
+      "remix": "Remix",
+      "download": "Télécharger .frm"
     }
   },
   "artworks": {

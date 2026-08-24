@@ -1245,6 +1245,20 @@
         "passed": "통과",
         "failed": "실패"
       }
+    },
+    "sourceWorkspace": {
+      "title": "표준 소스",
+      "readOnlyDescription": "검증된 표준 리비전은 읽기 전용입니다. Remix는 별도의 편집 가능한 포크를 만듭니다.",
+      "previewLabel": "{name}의 표준 소스 미리보기",
+      "editorLabel": "{name}의 읽기 전용 표준 소스",
+      "loading": "표준 소스를 불러오는 중…",
+      "unavailable": "표준 소스를 불러와 검증하지 못했습니다.",
+      "retry": "다시 시도",
+      "open": "전체 소스 열기",
+      "workspaceDescription": "{name}의 읽기 전용 표준 소스입니다. Remix는 별도의 포크를 만듭니다.",
+      "readOnly": "읽기 전용 표준 리비전",
+      "remix": "Remix",
+      "download": ".frm 다운로드"
     }
   },
   "artworks": {

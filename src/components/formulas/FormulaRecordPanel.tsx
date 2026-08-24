@@ -1,8 +1,6 @@
 import Image from 'next/image';
 import {
   ArrowRight,
-  Download,
-  FileCode2,
   GitFork,
   ShieldCheck,
   TriangleAlert,
@@ -11,6 +9,8 @@ import { getTranslations } from 'next-intl/server';
 
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
+import { CanonicalSourceWorkspace } from '@/components/formulas/CanonicalSourceWorkspace';
+import { buildPublishedFormulaSourceReferenceV1 } from '@/lib/published-formula-source';
 import type { PublicFormulaRecordV1 } from '@/lib/formula-records';
 
 interface FormulaRecordPanelProps {
@@ -36,6 +36,15 @@ export async function FormulaRecordPanel({
     namespace: 'formulas.directory',
   });
   const basis = record.implementationBasis ?? 'none';
+  const sourceReference =
+    record.availability === 'published'
+      ? buildPublishedFormulaSourceReferenceV1({
+          formulaId: record.formulaId,
+          sourceRevision: record.source.sourceRevision,
+          semanticHash: record.source.semanticHash,
+          href: record.source.href,
+        })
+      : undefined;
   const mailto = `mailto:${record.takedown.email}?subject=${encodeURIComponent(
     record.takedown.subject,
   )}`;
@@ -71,6 +80,7 @@ export async function FormulaRecordPanel({
       </p>
 
       {record.availability === 'published' ? (
+        <>
         <div className="mt-10 grid gap-8 lg:grid-cols-[minmax(0,0.9fr)_minmax(0,1.1fr)]">
           {record.preview.status === 'ready' ? (
             <figure className="relative aspect-[8/5] self-start overflow-hidden rounded-2xl border bg-black shadow-sm">
@@ -169,21 +179,18 @@ export async function FormulaRecordPanel({
                   <GitFork aria-hidden />
                 </a>
               </Button>
-              <Button asChild variant="outline">
-                <a href={record.actions.viewSourceHref}>
-                  {t('viewSource')}
-                  <FileCode2 aria-hidden />
-                </a>
-              </Button>
-              <Button asChild variant="outline">
-                <a download href={record.actions.downloadSourceHref}>
-                  {t('downloadSource')}
-                  <Download aria-hidden />
-                </a>
-              </Button>
             </div>
           </div>
         </div>
+        {sourceReference ? (
+          <CanonicalSourceWorkspace
+            displayName={record.canonicalName}
+            reference={sourceReference}
+            remixHref={record.actions.remixHref}
+            variant="record"
+          />
+        ) : null}
+        </>
       ) : null}
 
       <div className="mt-10 grid gap-6 lg:grid-cols-3">

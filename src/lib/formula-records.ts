@@ -150,7 +150,6 @@ export interface PublishedFormulaRecordV1 extends FormulaRecordCommonV1 {
   readonly availability: 'published';
   readonly source: Readonly<{
     href: string;
-    downloadHref: string;
     sourceRevision: string;
     semanticHash: string;
     languageVersion: 'frm-like/1';
@@ -170,8 +169,6 @@ export interface PublishedFormulaRecordV1 extends FormulaRecordCommonV1 {
   readonly actions: Readonly<{
     openExploreHref: string;
     remixHref: string;
-    viewSourceHref: string;
-    downloadSourceHref: string;
   }>;
 }
 
@@ -208,7 +205,6 @@ function sourceFacts(row: PublishedFormulaRuntimeIndexRowV1) {
   const href = `/formula-library/v1/runtime/published/${row.definitionPath}`;
   return Object.freeze({
     href,
-    downloadHref: href,
     sourceRevision: row.sourceRevision,
     semanticHash: row.semanticHash,
     languageVersion: 'frm-like/1' as const,
@@ -292,8 +288,6 @@ export function buildFormulaRecordV1(
     actions: Object.freeze({
       openExploreHref,
       remixHref: `${openExploreHref}&intent=remix`,
-      viewSourceHref: source.href,
-      downloadSourceHref: source.downloadHref,
     }),
   });
 }

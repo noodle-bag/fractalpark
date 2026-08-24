@@ -18,6 +18,13 @@ import {
   type PublishedFormulaDirectoryFamilyV1,
 } from "@/content/formula-directory-categories";
 import type { PublishedFormulaDirectoryRowV1 } from "@/content/published-formula-directory";
+import {
+  buildPublishedFormulaSourceReferenceV1,
+  createPublishedFormulaSourceLoaderV1,
+  type PublishedFormulaSourceLoadResultV1,
+  type PublishedFormulaSourceReferenceV1,
+  type PublishedFormulaSourceLoaderV1,
+} from "@/lib/published-formula-source";
 
 export const PUBLISHED_FORMULA_LIBRARY_ROOT_URL =
   "/formula-library/v1/runtime/published" as const;
@@ -48,16 +55,24 @@ export interface PublishedFormulaLibraryDirectoryV1 {
   readonly categoryCounts: Readonly<
     Record<PublishedFormulaDirectoryCategoryV1, number>
   >;
+  readonly runtimeAliasFormulaIds: Readonly<Record<string, string>>;
 }
 
 export interface PublishedFormulaLibraryClient {
   readonly index: PublishedFormulaRuntimeIndexV1;
   readonly directory: PublishedFormulaLibraryDirectoryV1;
   get(formulaId: string): PublishedFormulaRuntimeIndexV1["rows"][number] | undefined;
+  resolveRuntimeAlias(
+    runtimeId: string,
+  ): PublishedFormulaRuntimeIndexV1["rows"][number] | undefined;
   load(
     formulaId: string,
     signal?: AbortSignal,
   ): Promise<PublishedFormulaRuntimeResultV1<PublishedFormulaPluginArtifactV1>>;
+  loadSource(
+    reference: PublishedFormulaSourceReferenceV1,
+    signal?: AbortSignal,
+  ): Promise<PublishedFormulaSourceLoadResultV1>;
 }
 
 export type PublishedFormulaLibraryClientResult =
@@ -122,12 +137,15 @@ function parseDirectory(
       value.counts.classic !== DIRECTORY_CLASSIC_COUNT ||
       value.counts.guides !== DIRECTORY_GUIDE_COUNT ||
       value.counts.categoryMemberships !== DIRECTORY_MEMBERSHIP_COUNT ||
+      value.counts.runtimeAliases !== DIRECTORY_CLASSIC_COUNT ||
       !Array.isArray(value.categoryOrder) ||
       JSON.stringify(value.categoryOrder) !==
         JSON.stringify(PUBLISHED_FORMULA_DIRECTORY_CATEGORIES_V1) ||
       !isRecord(value.categoryCounts) ||
       !Array.isArray(value.rows) ||
       value.rows.length !== PUBLISHED_FORMULA_ROW_COUNT_V1 ||
+      !Array.isArray(value.runtimeAliases) ||
+      value.runtimeAliases.length !== DIRECTORY_CLASSIC_COUNT ||
       !Array.isArray(value.aliasDeepLinks) ||
       value.aliasDeepLinks.length !== DIRECTORY_ALIAS_COUNT
     ) {
@@ -224,9 +242,54 @@ function parseDirectory(
     return undefined;
   }
 
+  const runtimeAliasFormulaIds: Record<string, string> = Object.create(null);
+  const runtimeAliasTargetIds = new Set<string>();
+  for (const candidate of value.runtimeAliases) {
+    if (
+      !isRecord(candidate) ||
+      typeof candidate.runtimeId !== "string" ||
+      candidate.runtimeId.length === 0 ||
+      Object.hasOwn(runtimeAliasFormulaIds, candidate.runtimeId) ||
+      typeof candidate.canonicalFormulaId !== "string" ||
+      !runtimeById.has(candidate.canonicalFormulaId)
+    ) {
+      return undefined;
+    }
+    runtimeAliasFormulaIds[candidate.runtimeId] = candidate.canonicalFormulaId;
+    runtimeAliasTargetIds.add(candidate.canonicalFormulaId);
+  }
+  if (
+    Object.keys(runtimeAliasFormulaIds).length !== DIRECTORY_CLASSIC_COUNT ||
+    runtimeAliasTargetIds.size !== 89
+  ) {
+    return undefined;
+  }
+
+  const deepAliasNames = new Set<string>();
+  const deepAliasTargetIds = new Set<string>();
+  for (const candidate of value.aliasDeepLinks) {
+    if (
+      !isRecord(candidate) ||
+      typeof candidate.legacyRuntimeId !== "string" ||
+      candidate.legacyRuntimeId.length === 0 ||
+      typeof candidate.canonicalFormulaId !== "string" ||
+      !UUID_V5.test(candidate.canonicalFormulaId) ||
+      candidate.canonicalPath !== `/formulas/${candidate.canonicalFormulaId}` ||
+      runtimeAliasFormulaIds[candidate.legacyRuntimeId] !==
+        candidate.canonicalFormulaId ||
+      deepAliasNames.has(candidate.legacyRuntimeId) ||
+      deepAliasTargetIds.has(candidate.canonicalFormulaId)
+    ) {
+      return undefined;
+    }
+    deepAliasNames.add(candidate.legacyRuntimeId);
+    deepAliasTargetIds.add(candidate.canonicalFormulaId);
+  }
+
   return Object.freeze({
     rows: Object.freeze(rows),
     categoryCounts: Object.freeze(categoryCounts),
+    runtimeAliasFormulaIds: Object.freeze(runtimeAliasFormulaIds),
   });
 }
 
@@ -266,18 +329,30 @@ export async function createPublishedFormulaLibraryClient(
   } catch {
     return { ok: false, code: "index-invalid" };
   }
+  const sourceLoader: PublishedFormulaSourceLoaderV1 =
+    createPublishedFormulaSourceLoaderV1(fetcher);
+  let sourceReferenceByPath = new Map<string, PublishedFormulaSourceReferenceV1>();
   const loaderResult = createPublishedFormulaRuntimeLoaderV1(
     indexValue,
     async (path, signal) => {
-      const response = await fetcher(
-        `${PUBLISHED_FORMULA_LIBRARY_ROOT_URL}/${path}`,
-        { credentials: "same-origin", signal },
-      );
-      if (!response.ok) throw new Error("definition-fetch-failed");
-      return response.text();
+      const reference = sourceReferenceByPath.get(path);
+      if (!reference) throw new Error("definition-fetch-failed");
+      const result = await sourceLoader.load(reference, signal);
+      if (!result.ok) throw new Error(result.code);
+      return result.value.source;
     },
   );
   if (!loaderResult.ok) return { ok: false, code: "index-invalid" };
+
+  sourceReferenceByPath = new Map(
+    loaderResult.value.index.rows.flatMap((row) => {
+      const reference = buildPublishedFormulaSourceReferenceV1(row);
+      return reference ? [[row.definitionPath, reference] as const] : [];
+    }),
+  );
+  if (sourceReferenceByPath.size !== loaderResult.value.index.rows.length) {
+    return { ok: false, code: "index-invalid" };
+  }
 
   const directory = parseDirectory(
     directoryValue,
@@ -295,8 +370,30 @@ export async function createPublishedFormulaLibraryClient(
       get(formulaId: string) {
         return loader.get(formulaId);
       },
+      resolveRuntimeAlias(runtimeId: string) {
+        const formulaId = directory.runtimeAliasFormulaIds[runtimeId];
+        return formulaId ? loader.get(formulaId) : undefined;
+      },
       load(formulaId: string, signal?: AbortSignal) {
         return loader.load(formulaId, signal);
+      },
+      loadSource(reference: PublishedFormulaSourceReferenceV1, signal?: AbortSignal) {
+        const row = loader.get(reference.formulaId);
+        const authoritative = row
+          ? buildPublishedFormulaSourceReferenceV1(row)
+          : undefined;
+        if (
+          !authoritative ||
+          authoritative.href !== reference.href ||
+          authoritative.sourceRevision !== reference.sourceRevision ||
+          authoritative.semanticHash !== reference.semanticHash
+        ) {
+          return Promise.resolve({
+            ok: false as const,
+            code: 'source-authority-mismatch' as const,
+          });
+        }
+        return sourceLoader.load(authoritative, signal);
       },
     }),
   };

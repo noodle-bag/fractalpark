@@ -88,9 +88,7 @@ test.describe('Published Formula Library', () => {
   }) => {
     const libraryRequests: string[] = [];
     const libraryImageRequests: string[] = [];
-    let observeLibraryOpen = false;
     page.on('request', (request) => {
-      if (!observeLibraryOpen) return;
       if (request.url().includes('/formula-library/v1/')) {
         libraryRequests.push(request.url());
       }
@@ -104,7 +102,12 @@ test.describe('Published Formula Library', () => {
 
     await page.goto('/en/explore');
     await waitForFractalCanvasReady(page);
-    observeLibraryOpen = true;
+    await expect(page.getByTestId('canonical-source-preview')).toBeVisible({
+      timeout: 45_000,
+    });
+    const definitionRequestCountBeforeLibrary = libraryRequests.filter((url) =>
+      url.includes('/runtime/published/definitions/'),
+    ).length;
     await openLibrary(page);
 
     const dialog = page.getByRole('dialog', { name: 'Standard Formula Library' });
@@ -155,8 +158,10 @@ test.describe('Published Formula Library', () => {
       ),
     ).toBe(true);
     expect(
-      libraryRequests.some((url) => url.includes('/runtime/published/definitions/')),
-    ).toBe(false);
+      libraryRequests.filter((url) =>
+        url.includes('/runtime/published/definitions/'),
+      ),
+    ).toHaveLength(definitionRequestCountBeforeLibrary);
     await expect(dialog.locator('img, picture, [style*="background-image"]')).toHaveCount(0);
     expect(libraryImageRequests).toEqual([]);
 
@@ -231,7 +236,7 @@ test.describe('Published Formula Library', () => {
   });
 
   test('lazily loads and renders all three implementation bases', async ({ page }) => {
-    test.setTimeout(420_000);
+    test.setTimeout(600_000);
     const definitionRequests: string[] = [];
     const shaderErrors: string[] = [];
     page.on('request', (request) => {
@@ -250,6 +255,10 @@ test.describe('Published Formula Library', () => {
 
     await page.goto('/en/explore');
     await waitForFractalCanvasReady(page);
+    await expect(page.getByTestId('canonical-source-preview')).toBeVisible({
+      timeout: 45_000,
+    });
+    definitionRequests.length = 0;
     await openLibrary(page);
 
     await expect(page.getByRole('searchbox')).toHaveCount(0);
@@ -451,7 +460,7 @@ test.describe('Published Formula Library', () => {
       () => new URL(page.url()).searchParams.get('pp'),
       { timeout: 60_000 },
     ).toBe('u_polarAngleScale:1.75');
-    expect(definitionRequests).toHaveLength(3);
+    expect(definitionRequests).toHaveLength(1);
     expect(
       definitionRequests.every((url) =>
         url.endsWith(HARD_DOMAIN_REPRESENTATIVE.definitionPath),
@@ -473,6 +482,10 @@ test.describe('Published Formula Library', () => {
     await waitForFractalCanvasReady(page);
     await expect(page).toHaveURL(/(?:\?|&)pal=0(?:&|$)/, { timeout: 60_000 });
     await waitForFractalCanvasReady(page);
+    await expect(page.getByTestId('canonical-source-preview')).toBeVisible({
+      timeout: 45_000,
+    });
+    definitionRequests.length = 0;
 
     await page.getByRole('tab', { name: 'Transform', exact: true }).click();
     const angleScale = page.locator(

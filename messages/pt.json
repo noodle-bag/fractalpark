@@ -1245,6 +1245,20 @@
         "passed": "Aprovada",
         "failed": "Reprovada"
       }
+    },
+    "sourceWorkspace": {
+      "title": "Código-fonte canônico",
+      "readOnlyDescription": "Esta revisão canônica verificada é somente leitura. Remix cria uma bifurcação editável separada.",
+      "previewLabel": "Prévia do código-fonte canônico de {name}",
+      "editorLabel": "Código-fonte canônico somente leitura de {name}",
+      "loading": "Carregando código-fonte canônico…",
+      "unavailable": "Não foi possível carregar e verificar o código-fonte canônico.",
+      "retry": "Tentar novamente",
+      "open": "Abrir código-fonte completo",
+      "workspaceDescription": "Código-fonte canônico somente leitura de {name}. Remix cria uma bifurcação separada.",
+      "readOnly": "Revisão canônica somente leitura",
+      "remix": "Remix",
+      "download": "Baixar .frm"
     }
   },
   "artworks": {

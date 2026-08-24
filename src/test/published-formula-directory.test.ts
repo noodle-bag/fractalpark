@@ -48,11 +48,12 @@ describe('published Formula Directory projection', () => {
       sorted(published),
     );
     expect(Object.keys(directoryAsset.counts).sort()).toEqual(
-      ['categoryMemberships', 'classic', 'guides', 'published'].sort(),
+      ['categoryMemberships', 'classic', 'guides', 'published', 'runtimeAliases'].sort(),
     );
     const serialized = JSON.stringify({
       counts: directoryAsset.counts,
       rows: directoryAsset.rows,
+      runtimeAliases: directoryAsset.runtimeAliases,
       aliasDeepLinks: directoryAsset.aliasDeepLinks,
     });
     for (const forbidden of [
@@ -101,6 +102,17 @@ describe('published Formula Directory projection', () => {
     ).toEqual(
       sorted(filterPublishedFormulaDirectoryV1('classic').map((row) => row.formulaId)),
     );
+    expect(PUBLISHED_FORMULA_DIRECTORY_V1.runtimeAliases).toHaveLength(94);
+    expect(
+      new Set(PUBLISHED_FORMULA_DIRECTORY_V1.runtimeAliases.map((row) => row.runtimeId)).size,
+    ).toBe(94);
+    expect(
+      new Set(
+        PUBLISHED_FORMULA_DIRECTORY_V1.runtimeAliases.map(
+          (row) => row.canonicalFormulaId,
+        ),
+      ).size,
+    ).toBe(89);
   });
 
   it('binds Guide badges to the exact 21 public Guide routes', () => {

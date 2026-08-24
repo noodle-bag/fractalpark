@@ -10,6 +10,7 @@ import {
   PUBLISHED_FORMULA_LIBRARY_ROOT_URL,
 } from "@/lib/published-formula-library";
 import { pickPublishedFormulaLuckyRow } from "@/lib/published-formula-selection";
+import { buildPublishedFormulaSourceReferenceV1 } from "@/lib/published-formula-source";
 import {
   canonicalJsonV1,
   sha256HexSyncV1,
@@ -23,6 +24,10 @@ const DIRECTORY_PATH = join(
   process.cwd(),
   "public/formula-library/v1/directory/index.json",
 );
+const ALIASES_PATH = join(
+  process.cwd(),
+  "resources/formula-library/v1/legacy-formula-aliases.json",
+);
 
 function readIndexText(): string {
   return readFileSync(join(ROOT, "index.json"), "utf8");
@@ -35,7 +40,12 @@ function readIndex(): unknown {
 describe("published formula library client", () => {
   it("loads the compact index first and fetches only the selected Definition", async () => {
     const index = readIndex() as {
-      rows: Array<{ formulaId: string; definitionPath: string }>;
+      rows: Array<{
+        formulaId: string;
+        definitionPath: string;
+        sourceRevision: string;
+        semanticHash: string;
+      }>;
     };
     const selected = index.rows.find((row) => row.definitionPath.endsWith(".frm"));
     expect(selected).toBeDefined();
@@ -71,6 +81,18 @@ describe("published formula library client", () => {
     expect(created.value.directory.rows).toHaveLength(534);
     expect(created.value.directory.categoryCounts.classic).toBe(94);
     expect(created.value.directory.categoryCounts["root-finding"]).toBe(14);
+    const runtimeAliases = (
+      JSON.parse(readFileSync(ALIASES_PATH, "utf8")) as {
+        aliases: Array<{ kind: string; value: string; formulaId: string }>;
+      }
+    ).aliases.filter((alias) => alias.kind === "runtime-id");
+    expect(runtimeAliases).toHaveLength(94);
+    expect(Object.keys(created.value.directory.runtimeAliasFormulaIds)).toHaveLength(94);
+    for (const alias of runtimeAliases) {
+      expect(created.value.resolveRuntimeAlias(alias.value)?.formulaId).toBe(
+        alias.formulaId,
+      );
+    }
     expect(fetcher).toHaveBeenCalledTimes(2);
 
     const classicIds = new Set<string>(
@@ -96,6 +118,28 @@ describe("published formula library client", () => {
     expect(fetcher.mock.calls[2]?.[0]).toBe(
       `${PUBLISHED_FORMULA_LIBRARY_ROOT_URL}/${selected.definitionPath}`,
     );
+
+    const sourceReference = buildPublishedFormulaSourceReferenceV1(selected);
+    expect(sourceReference).toBeDefined();
+    if (!sourceReference) return;
+    const source = await created.value.loadSource(sourceReference);
+    expect(source.ok).toBe(true);
+    // Runtime compile and both source workspaces share one verified cache.
+    expect(fetcher).toHaveBeenCalledTimes(3);
+
+    const other = index.rows.find((row) => row.formulaId !== selected.formulaId);
+    const otherReference = other
+      ? buildPublishedFormulaSourceReferenceV1(other)
+      : undefined;
+    expect(otherReference).toBeDefined();
+    if (!otherReference) return;
+    await expect(
+      created.value.loadSource({
+        ...otherReference,
+        formulaId: selected.formulaId,
+      }),
+    ).resolves.toEqual({ ok: false, code: "source-authority-mismatch" });
+    expect(fetcher).toHaveBeenCalledTimes(3);
 
     const missing = await created.value.load(
       "00000000-0000-4000-8000-000000000000",

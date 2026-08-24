@@ -1245,6 +1245,20 @@
         "passed": "Passed",
         "failed": "Failed"
       }
+    },
+    "sourceWorkspace": {
+      "title": "Canonical source",
+      "readOnlyDescription": "This verified canonical revision is read-only. Remix creates a separate editable fork.",
+      "previewLabel": "Canonical source preview for {name}",
+      "editorLabel": "Read-only canonical source for {name}",
+      "loading": "Loading canonical source…",
+      "unavailable": "The canonical source could not be loaded and verified.",
+      "retry": "Retry",
+      "open": "Open full source",
+      "workspaceDescription": "Read-only canonical source for {name}. Remix creates a separate fork.",
+      "readOnly": "Read-only canonical revision",
+      "remix": "Remix",
+      "download": "Download .frm"
     }
   },
   "artworks": {
