@@ -16,6 +16,13 @@ const projectionMigration = readFileSync(
   ),
   "utf8",
 );
+const readerMigration = readFileSync(
+  join(
+    process.cwd(),
+    "supabase/migrations/20260824235800_mine_formula_lifecycle_reader.sql",
+  ),
+  "utf8",
+);
 
 describe("Mine formula lifecycle migration contract", () => {
   it("adds forward-only revision storage and private ACLs", () => {
@@ -85,5 +92,20 @@ describe("Mine formula lifecycle migration contract", () => {
     );
     expect(projectionMigration).not.toContain("security definer");
     expect(projectionMigration).not.toContain("active_runnable_revision_id =");
+  });
+
+  it("reads lifecycle heads through one owner-scoped service RPC without table grants", () => {
+    expect(readerMigration).toContain(
+      "create function public.fractalpark_custom_formula_lifecycle_heads",
+    );
+    expect(readerMigration).toContain("security definer");
+    expect(readerMigration).toContain("set search_path = ''");
+    expect(readerMigration).toContain("owner_id = p_owner_id");
+    expect(readerMigration).toContain("revision.owner_id = p_owner_id");
+    expect(readerMigration).toContain(
+      "grant execute on function public.fractalpark_custom_formula_lifecycle_heads(uuid, uuid)",
+    );
+    expect(readerMigration).not.toMatch(/grant\s+select/i);
+    expect(readerMigration).not.toMatch(/grant\s+.*custom_formula_revisions/i);
   });
 });

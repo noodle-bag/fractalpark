@@ -186,6 +186,11 @@ interface CustomFormulaRevisionRow {
   lineage_profile_revision: string | null;
 }
 
+interface CustomFormulaLifecycleHeads {
+  editable: CustomFormulaRevisionRow;
+  active: CustomFormulaRevisionRow | null;
+}
+
 const SUMMARY_SELECT = 'id,name,revision,source_bytes,experience_hint,created_at,updated_at,frm_semantics_version';
 /** Pre-migration summary select: identical minus the additive column. */
 const SUMMARY_SELECT_LEGACY = 'id,name,revision,source_bytes,experience_hint,created_at,updated_at';
@@ -293,20 +298,18 @@ export async function getCustomFormula(ownerId: string, formulaId: string): Prom
   if (!lifecycleEnabled || !row.editable_head_revision_id) {
     return toDetailDto(row);
   }
-  const revisionIds = [
-    row.editable_head_revision_id,
-    row.active_runnable_revision_id,
-  ].filter((value): value is string => Boolean(value));
-  const revisions = await postgrestJson<CustomFormulaRevisionRow[]>(
-    `custom_formula_revisions?select=id,definition,profile,diagnostics,runnable,remixed_from_formula_id,lineage_source_revision,lineage_profile_revision` +
-      `&formula_id=eq.${formulaId}&id=in.(${revisionIds.join(',')})`,
+  const heads = await callFormulaRpc<CustomFormulaLifecycleHeads | null>(
+    'fractalpark_custom_formula_lifecycle_heads',
+    { p_owner_id: ownerId, p_formula_id: formulaId },
   );
-  const byId = new Map(revisions.map((revision) => [revision.id, revision]));
-  const editable = byId.get(row.editable_head_revision_id);
-  const active = row.active_runnable_revision_id
-    ? byId.get(row.active_runnable_revision_id)
-    : undefined;
-  if (!editable || (row.active_runnable_revision_id && !active)) {
+  const editable = heads?.editable;
+  const active = heads?.active ?? null;
+  if (
+    !editable ||
+    editable.id !== row.editable_head_revision_id ||
+    (row.active_runnable_revision_id !== null &&
+      active?.id !== row.active_runnable_revision_id)
+  ) {
     throw new CustomFormulaServiceError('unavailable', 'lifecycle head missing');
   }
   const editableSource = revisionSource(editable.definition);

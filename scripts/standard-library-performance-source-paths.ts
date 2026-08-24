@@ -131,6 +131,7 @@ export const STANDARD_LIBRARY_PERFORMANCE_SOURCE_PATHS_V1 = [
   "tests/e2e/canonical-source-workspace.spec.ts",
   "supabase/migrations/20260816090000_mine_formula_lifecycle.sql",
   "supabase/migrations/20260824120000_mine_formula_lifecycle_projection.sql",
+  "supabase/migrations/20260824235800_mine_formula_lifecycle_reader.sql",
   "package.json",
   "package-lock.json",
 ] as const;

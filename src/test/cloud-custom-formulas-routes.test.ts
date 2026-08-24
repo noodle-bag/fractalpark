@@ -242,10 +242,10 @@ describe('custom formula routes', () => {
       view: { centerX: -0.5, centerY: 0, zoom: 0.4, rotation: 0 },
     };
     stubFetch((call) => {
-      if (call.url.includes('custom_formula_revisions')) {
+      if (call.url.includes('rpc/fractalpark_custom_formula_lifecycle_heads')) {
         return new Response(
-          JSON.stringify([
-            {
+          JSON.stringify({
+            editable: {
               id: editableId,
               definition: {
                 formulaId: FORMULA_ID,
@@ -264,7 +264,7 @@ describe('custom formula routes', () => {
               lineage_source_revision: 'a'.repeat(64),
               lineage_profile_revision: 'b'.repeat(64),
             },
-            {
+            active: {
               id: activeId,
               definition: { formulaId: FORMULA_ID, source: VALID_SOURCE },
               profile,
@@ -274,7 +274,7 @@ describe('custom formula routes', () => {
               lineage_source_revision: 'a'.repeat(64),
               lineage_profile_revision: 'b'.repeat(64),
             },
-          ]),
+          }),
           { status: 200 },
         );
       }
@@ -319,10 +319,16 @@ describe('custom formula routes', () => {
     expect(body.formula.lifecycle.activeRunnableSource).toBe(VALID_SOURCE);
     expect(body.formula.lifecycle.editableHeadRevisionId).toBe(editableId);
     const revisionCall = fetchCalls.find((call) =>
-      call.url.includes('custom_formula_revisions'),
+      call.url.includes('rpc/fractalpark_custom_formula_lifecycle_heads'),
     );
-    expect(revisionCall?.url).toContain('select=id,definition,profile');
-    expect(revisionCall?.url).not.toContain('select=id,source');
+    expect(revisionCall?.method).toBe('POST');
+    expect(JSON.parse(revisionCall?.body ?? '{}')).toEqual({
+      p_owner_id: USER_ID,
+      p_formula_id: FORMULA_ID,
+    });
+    expect(
+      fetchCalls.some((call) => call.url.includes('custom_formula_revisions?')),
+    ).toBe(false);
   });
 
   it('GET detail maps a missing owner record to not_found', async () => {

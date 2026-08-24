@@ -55,7 +55,7 @@
     "src/hooks/useCloudFormulaLibrary.ts": "3236493e81380b159419c1e1c17b30102b89a0a620f93712a20300f1d4d1d23b",
     "src/engine/frm/codemirror-lint.ts": "b5e89c4491936b6d97a3afae1aa6f41b869342f9169deca42d65a8c63c44e2ce",
     "src/lib/cloud/client.ts": "b3485edaad5ce278cda2d091bdebcfcf9acc851ce77a00ddef6bbb6fede928ec",
-    "src/lib/cloud/custom-formulas.ts": "ffc0c5a79b33641d213cca0c9f1d537f5919ca818bbdaa6574d8898d51ca6601",
+    "src/lib/cloud/custom-formulas.ts": "e847f583d05ffbc073b08359e175f81820fbe8416613cceadf18be4b3e886b70",
     "src/lib/cloud/mine-formula-lifecycle.ts": "95f800329b17245646f6f86d017464d622a02142688e24ca120eb1c657e533bc",
     "src/lib/published-formula-library.ts": "adb660185c6c7f6297737ac7ff925f346cfeddd5d5818348b382356c9a880355",
     "src/lib/published-formula-selection.ts": "9183092370ba8191937fe182ae8a7b5613a152547d83bde5ce205629dcc62013",
@@ -109,8 +109,8 @@
     "src/test/published-formula-selection.test.ts": "58ed4f43dfcee1e21804c83fce259877c3f5b68515279c58dae0b82a24a9d2da",
     "src/test/published-formula-source.test.ts": "a9fb46e28f9ac95fc9be31a40b379418d3ff9c241f97e7441ef22968f387cc78",
     "src/test/canonical-source-workspace.test.tsx": "98cce73c13ed89511565d356f053fff1cf418c2c40be86bcdbabed3b43cb82b6",
-    "src/test/cloud-custom-formulas-routes.test.ts": "4a59cf750ea4d8c2724c1c890ee4bee2b96e889311b5bbdf4d75481541ba937b",
-    "src/test/mine-formula-lifecycle-migration.test.ts": "ddff7e708b74ead9e481611322d7b695a9f73eebe2f5529c05feed4a54f88887",
+    "src/test/cloud-custom-formulas-routes.test.ts": "9322c979f3a5d636074e61ed4fcebbd1e183156149d208d47255ab878980e97b",
+    "src/test/mine-formula-lifecycle-migration.test.ts": "26f259a4fa65851e3ba05acf5a1af64cb8bea054f3aa71095cc111ffcd719570",
     "src/test/mine-formula-lifecycle-route.test.ts": "d1fced8fc52a5008fdb8222d2230b266fea2f7d744e8bef2b8faa24fe406485a",
     "src/test/mine-formula-lifecycle.test.ts": "d64feeea6d86d13f53aeee4f4e72da1b366d087ea9ffe4147e7d7b3a53be6b83",
     "src/test/published-formula-remix.test.ts": "d54a8e74088fb6ca7b9484a27311b4170e1f4e745128ab56fbaca8c9ee4069b0",
@@ -121,7 +121,7 @@
     "src/test/teaching-held-route-guard.test.ts": "45aaa04310b90013e75a8ad4bf72118f71bcca0beef2b199090ea773d01ad477",
     "src/test/teaching-content-loader.test.ts": "68a59269870f0fadf5a83696d4b10e18768b1a85d155bef2f56ce753f3b2fba0",
     "src/test/fractal-renderer-race.test.ts": "4a5ec916fc3f064e9112f13594201b1a8e1bc2e19133a6c7cddb600e4263f6fe",
-    "scripts/standard-library-performance-source-paths.ts": "ab3ba0a3518ec5ab14d0c6c931c7385bcb395ab4deb72d7ddc92e693b6473e39",
+    "scripts/standard-library-performance-source-paths.ts": "1f4a4cc30ead94daa775e61dd923e32fc2519fb38ec82d388db4291052bd5cc0",
     "scripts/measure-standard-library-performance.ts": "844614a39dc4622c8649b4babcdf4f6e76bdee40c9912447a5197f3071917f9b",
     "scripts/generate-published-formula-directory.ts": "4eb763e82d93d3538dec7fa1c2a951036178f77ecafea99d472d1166cec90bc2",
     "scripts/cross-check-native-recipes.ts": "eeb98e641a3119c9a56edcf6b110e2436e37f72d71f53b723c318c4ad479f7cb",
@@ -134,6 +134,7 @@
     "tests/e2e/canonical-source-workspace.spec.ts": "33940a345908bd1f6aee0357534517f156e2013252c9f91a619c056bd4955e5e",
     "supabase/migrations/20260816090000_mine_formula_lifecycle.sql": "70e2ad84857a5cf2306386e10252b07de28a5216e657dfc376ece0c0ccdba97f",
     "supabase/migrations/20260824120000_mine_formula_lifecycle_projection.sql": "bb5c6494463e84821fce67752de01e67ced98491e1be41701847021e49b6909d",
+    "supabase/migrations/20260824235800_mine_formula_lifecycle_reader.sql": "7f42e6752a8ec0a1c79706ab93141df52bc89177b19ff12b6ed58ffef83349f6",
     "package.json": "f9206c00be858ea71f0af922668869f65813dc71571716fc7600c0d1f871bb38",
     "package-lock.json": "e0b2fc48bafca283ed7a9c76dc821859d448632681d83af4882bdcf280ea1045"
   },
@@ -148,5 +149,5 @@
     "passed": 1,
     "failed": 0
   },
-  "generatedAt": "2026-08-24T23:42:38+08:00"
+  "generatedAt": "2026-08-25T00:08:08+08:00"
 }
