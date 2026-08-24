@@ -3,12 +3,11 @@ import { getTranslations, setRequestLocale } from 'next-intl/server';
 import { Badge } from '@/components/ui/badge';
 import {
   FORMULA_DIRECTORY_FAMILIES_V1,
-  buildFormulaDirectoryFacetsV1,
   filterFormulaDirectoryV1,
   type FormulaDirectoryEntryV1,
   type FormulaDirectoryFamilyV1,
 } from '@/engine/formulas/v1/directory';
-import type { FormulaPublicationDecisionV1 } from '@/engine/formulas/v1/publication-decisions';
+import { PUBLISHED_FORMULA_ROW_COUNT_V1 } from '@/engine/formulas/v1/published-runtime';
 import { Link } from '@/i18n/routing';
 import { OG_LOCALE, type SupportedLocale } from '@/i18n/supported-locales';
 import { renderJsonLd } from '@/lib/json-ld';
@@ -17,7 +16,7 @@ import { buildFormulaCanonicalPathV1 } from '@/lib/formula-routes';
 
 const DIRECTORY_PATH = '/formulas/directory';
 
-type DirectorySearchParams = { family?: string; status?: string };
+type DirectorySearchParams = { family?: string };
 
 function parseFamily(value: string | undefined): FormulaDirectoryFamilyV1 | undefined {
   return (FORMULA_DIRECTORY_FAMILIES_V1 as readonly string[]).includes(value ?? '')
@@ -25,19 +24,9 @@ function parseFamily(value: string | undefined): FormulaDirectoryFamilyV1 | unde
     : undefined;
 }
 
-function parseStatus(value: string | undefined): FormulaPublicationDecisionV1 | undefined {
-  return value === 'publish' || value === 'hold' || value === 'exclude'
-    ? value
-    : undefined;
-}
-
-function directoryHref(
-  family: FormulaDirectoryFamilyV1 | undefined,
-  status: FormulaPublicationDecisionV1 | undefined,
-): string {
+function directoryHref(family: FormulaDirectoryFamilyV1 | undefined): string {
   const params = new URLSearchParams();
   if (family) params.set('family', family);
-  if (status) params.set('status', status);
   const query = params.toString();
   return query ? `${DIRECTORY_PATH}?${query}` : DIRECTORY_PATH;
 }
@@ -52,14 +41,14 @@ export async function generateMetadata({
 
   return {
     title: t('title'),
-    description: t('description'),
+    description: t('description', { count: PUBLISHED_FORMULA_ROW_COUNT_V1 }),
     alternates: {
       canonical: `/${locale}${DIRECTORY_PATH}`,
       languages: buildLocaleAlternates(DIRECTORY_PATH),
     },
     openGraph: {
       title: t('title'),
-      description: t('description'),
+      description: t('description', { count: PUBLISHED_FORMULA_ROW_COUNT_V1 }),
       url: `${SITE.url}/${locale}${DIRECTORY_PATH}`,
       siteName: SITE.name,
       locale: OG_LOCALE[locale as SupportedLocale] ?? OG_LOCALE.en,
@@ -90,9 +79,14 @@ export default async function FormulaDirectoryPage({
 
   const t = await getTranslations({ locale, namespace: 'formulas.directory' });
   const family = parseFamily(raw.family);
-  const status = parseStatus(raw.status);
-  const entries = filterFormulaDirectoryV1({ family, decision: status });
-  const facets = buildFormulaDirectoryFacetsV1();
+  const publishedEntries = filterFormulaDirectoryV1({ decision: 'publish' });
+  const entries = family
+    ? publishedEntries.filter((entry) => entry.primaryFamily === family)
+    : publishedEntries;
+  const familyFacets = FORMULA_DIRECTORY_FAMILIES_V1.map((value) => ({
+    value,
+    count: publishedEntries.filter((entry) => entry.primaryFamily === value).length,
+  }));
   const groups = groupByFamily(entries);
   const directoryUrl = `${SITE.url}/${locale}${DIRECTORY_PATH}`;
 
@@ -100,7 +94,7 @@ export default async function FormulaDirectoryPage({
     '@context': 'https://schema.org',
     '@type': 'CollectionPage',
     name: t('title'),
-    description: t('description'),
+    description: t('description', { count: PUBLISHED_FORMULA_ROW_COUNT_V1 }),
     url: directoryUrl,
     breadcrumb: {
       '@type': 'BreadcrumbList',
@@ -149,7 +143,7 @@ export default async function FormulaDirectoryPage({
             {t('title')}
           </h1>
           <p className="mt-6 max-w-3xl text-pretty text-lg leading-8 text-muted-foreground">
-            {t('intro')}
+            {t('intro', { count: PUBLISHED_FORMULA_ROW_COUNT_V1 })}
           </p>
         </div>
       </header>
@@ -169,19 +163,16 @@ export default async function FormulaDirectoryPage({
                 <li>
                   <FacetLink
                     active={family === undefined}
-                    href={directoryHref(undefined, status)}
+                    href={directoryHref(undefined)}
                     label={t('facets.all')}
                   />
                 </li>
-                {facets.families.map((facet) => (
+                {familyFacets.map((facet) => (
                   <li key={facet.value}>
                     <FacetLink
                       active={family === facet.value}
                       count={facet.count}
-                      href={directoryHref(
-                        facet.value as FormulaDirectoryFamilyV1,
-                        status,
-                      )}
+                      href={directoryHref(facet.value)}
                       label={t(`family.${facet.value}`)}
                     />
                   </li>
@@ -189,33 +180,6 @@ export default async function FormulaDirectoryPage({
               </ul>
             </div>
 
-            <div>
-              <h3 className="text-sm font-medium text-muted-foreground">
-                {t('facets.status')}
-              </h3>
-              <ul className="mt-3 flex flex-wrap gap-2">
-                <li>
-                  <FacetLink
-                    active={status === undefined}
-                    href={directoryHref(family, undefined)}
-                    label={t('facets.all')}
-                  />
-                </li>
-                {facets.decisions.map((facet) => (
-                  <li key={facet.value}>
-                    <FacetLink
-                      active={status === facet.value}
-                      count={facet.count}
-                      href={directoryHref(
-                        family,
-                        facet.value as FormulaPublicationDecisionV1,
-                      )}
-                      label={t(`status.${facet.value}`)}
-                    />
-                  </li>
-                ))}
-              </ul>
-            </div>
           </div>
 
           <p className="mt-8 text-sm text-muted-foreground">
@@ -242,7 +206,7 @@ export default async function FormulaDirectoryPage({
               <ul className="mt-5 grid gap-2 sm:grid-cols-2 lg:grid-cols-3">
                 {rows.map((entry) => (
                   <li
-                    className="flex items-center justify-between gap-3 rounded-lg border bg-card px-4 py-3"
+                    className="rounded-lg border bg-card px-4 py-3"
                     data-formula-id={entry.formulaId}
                     key={entry.formulaId}
                   >
@@ -252,10 +216,6 @@ export default async function FormulaDirectoryPage({
                     >
                       {entry.displayName}
                     </Link>
-                    <StatusBadge
-                      decision={entry.publicationDecision}
-                      label={t(`status.${entry.publicationDecision}`)}
-                    />
                   </li>
                 ))}
               </ul>
@@ -293,25 +253,5 @@ function FacetLink({
         <span className="tabular-nums opacity-70">{count}</span>
       ) : null}
     </Link>
-  );
-}
-
-function StatusBadge({
-  decision,
-  label,
-}: {
-  decision: FormulaPublicationDecisionV1;
-  label: string;
-}) {
-  const className =
-    decision === 'publish'
-      ? 'border-emerald-500/30 bg-emerald-500/10 text-emerald-700 dark:text-emerald-300'
-      : 'border-muted-foreground/30 bg-muted/40 text-muted-foreground';
-  return (
-    <span
-      className={`shrink-0 rounded-full border px-2.5 py-0.5 text-xs ${className}`}
-    >
-      {label}
-    </span>
   );
 }

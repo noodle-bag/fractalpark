@@ -14,12 +14,12 @@ export const PUBLISHED_FORMULA_RUNTIME_INDEX_SCHEMA_V1 =
   "fractalpark-published-formula-runtime-index/v1" as const;
 export const PUBLISHED_FORMULA_PROFILE_SCHEMA_V1 =
   "fractalpark-published-formula-profile/v1" as const;
-export const PUBLISHED_FORMULA_DECISION_REVISION_V1 = 3 as const;
+export const PUBLISHED_FORMULA_DECISION_REVISION_V1 = 4 as const;
 export const PUBLISHED_FORMULA_DECISION_CONTENT_HASH_V1 =
-  "7106736785e8bbb7cc310056f93f550413b6a0b76ad21e648b50e55480a2a52c" as const;
-export const PUBLISHED_FORMULA_ROW_COUNT_V1 = 513 as const;
+  "cac35a05d2d0c219b4f5ac00f3dea5b5fbb2b9c6b2fc15ea3383ef0f62d6031d" as const;
+export const PUBLISHED_FORMULA_ROW_COUNT_V1 = 534 as const;
 export const PUBLISHED_FORMULA_INDEX_CANONICAL_SHA256_V1 =
-  "c10faceaa52356d2e48042f64010cd0f3f170c0087b5d609a01ede360a7c874c" as const;
+  "362f327b260f38ceb1d9afd7dc619d4ef010f8365ee84a8673ba1df6285fc3f5" as const;
 
 const PUBLISHED_FORMULA_INDEX_CANONICAL_NODE_BUDGET_V1 = 131_072;
 
@@ -239,7 +239,7 @@ export function parsePublishedFormulaRuntimeIndexV1(
   if (
     basisCounts.get("separated-independent-rewrite") !== 339 ||
     basisCounts.get("direct-adaptation") !== 106 ||
-    basisCounts.get("project-owned") !== 68 ||
+    basisCounts.get("project-owned") !== 89 ||
     value.rows.some(
       (row) => (row as PublishedFormulaRuntimeIndexRowV1).profile.quality === "none",
     )

@@ -257,9 +257,13 @@ function validateAuthorityRebind(
       'actorKind',
       'actorRole',
       'maintainerResponse',
+      'aiAssistanceDisclosure',
       'approvalStatement',
+      'priorAuthorityRebindSha256',
       'priorApprovalSha256',
       'priorApprovalPacketSha256',
+      'approvalSelectionSha256',
+      'approvalSemanticAnchorsSha256',
       'priorSelectionSha256',
       'reboundSelectionSha256',
       'selectionRowsCanonicalSha256',
@@ -271,7 +275,7 @@ function validateAuthorityRebind(
       'scope',
     ]) ||
     rebindValue.schema !==
-      'fractalpark-teaching-maintainer-authority-rebind/v1' ||
+      'fractalpark-teaching-maintainer-authority-rebind/v2' ||
     rebindValue.status !== 'maintainer-approved' ||
     typeof rebindValue.approvedAt !== 'string' ||
     !Number.isFinite(Date.parse(rebindValue.approvedAt)) ||
@@ -279,18 +283,28 @@ function validateAuthorityRebind(
     rebindValue.actorKind !== 'human-maintainer' ||
     rebindValue.actorRole !== 'maintainer' ||
     rebindValue.maintainerResponse !==
-      '批准这次仅限派生哈希的 authority rebind（建议）' ||
+      '批准仅限 revision 4 runtime 派生哈希的 authority rebind，继续修复和复审' ||
+    typeof rebindValue.aiAssistanceDisclosure !== 'string' ||
+    !rebindValue.aiAssistanceDisclosure.includes('AI assistance') ||
+    typeof rebindValue.approvalStatement !== 'string' ||
+    rebindValue.approvalStatement.length === 0 ||
+    rebindValue.priorAuthorityRebindSha256 !==
+      'd9ffb79078f4a67241ba1e6bcf223063e0f1eb56788eb13ee666a35b4ebf4e2f' ||
     rebindValue.priorApprovalSha256 !== approvalSha256 ||
     rebindValue.priorApprovalPacketSha256 !== packetSha256 ||
+    rebindValue.approvalSelectionSha256 !==
+      '1ea4fff7f3c0f22d3cdae99aa06f775987a35871427b79d7005be5acd344b2fa' ||
+    rebindValue.approvalSemanticAnchorsSha256 !==
+      '9bd8ddbbbe16055eab215bd245c576e9268928980bb2e2759a77af4725f34241' ||
+    rebindValue.priorSelectionSha256 !==
+      '08460aba150a7dcab418cdda06ec21a56b2a113b641cb155d9dced22d037760a' ||
     rebindValue.reboundSelectionSha256 !== selectionSha256 ||
-    typeof rebindValue.priorSelectionSha256 !== 'string' ||
-    !/^[a-f0-9]{64}$/.test(rebindValue.priorSelectionSha256) ||
     !selectionRows ||
     rebindValue.selectionRowsCanonicalSha256 !==
       APPROVED_TEACHING_SELECTION_ROWS_SHA256 ||
     selectionRowsSha256 !== APPROVED_TEACHING_SELECTION_ROWS_SHA256 ||
-    typeof rebindValue.priorSemanticAnchorsSha256 !== 'string' ||
-    !/^[a-f0-9]{64}$/.test(rebindValue.priorSemanticAnchorsSha256) ||
+    rebindValue.priorSemanticAnchorsSha256 !==
+      'f130128dab9274b4c8ea2bfa43108d5daa65a578c973faf9696791e68fd15262' ||
     rebindValue.reboundSemanticAnchorsSha256 !== anchorsSha256 ||
     !anchorRows ||
     rebindValue.semanticAnchorRowsCanonicalSha256 !==
@@ -302,10 +316,10 @@ function validateAuthorityRebind(
     !exactKeys(bytePin, ['before', 'after']) ||
     !exactKeys(canonicalPin, ['before', 'after']) ||
     bytePin.before !==
-      '1b27e129a102c0d64774bce7112be41de102028743cbcf440ba12bb45d906ff8' ||
+      '9a4774f2dfb8ebb31e80abf3a0efe7b330d1a4627fb38317bdcf069560fa9ddf' ||
     bytePin.after !== pins.runtimeIndexSha256 ||
     canonicalPin.before !==
-      '1c543581ce6569d9c43e1e9505020dc51088f51e54cb3f2fa9e814b020bb710f' ||
+      'c10faceaa52356d2e48042f64010cd0f3f170c0087b5d609a01ede360a7c874c' ||
     canonicalPin.after !== pins.runtimeIndexCanonicalSha256 ||
     !invariants ||
     !exactKeys(invariants, [
@@ -315,9 +329,14 @@ function validateAuthorityRebind(
       'selectionRowsChanged',
       'semanticAnchorRowsChanged',
       'teachingContentChanged',
-      'publicationCountsChanged',
+      'selectedRuntimeSourceRevisionChanged',
+      'selectedRuntimeSemanticHashChanged',
+      'selectedRuntimeParametersChanged',
+      'selectedRuntimeProfileRowsChanged',
+      'publicationDecisionRevision',
       'publishedCount',
       'heldCount',
+      'guideContentRestoredCount',
     ]) ||
     invariants.formulaCount !== 50 ||
     invariants.contentUnitCount !== 350 ||
@@ -325,27 +344,34 @@ function validateAuthorityRebind(
     invariants.selectionRowsChanged !== false ||
     invariants.semanticAnchorRowsChanged !== false ||
     invariants.teachingContentChanged !== false ||
-    invariants.publicationCountsChanged !== false ||
-    invariants.publishedCount !== 513 ||
-    invariants.heldCount !== 164 ||
+    invariants.selectedRuntimeSourceRevisionChanged !== false ||
+    invariants.selectedRuntimeSemanticHashChanged !== false ||
+    invariants.selectedRuntimeParametersChanged !== false ||
+    invariants.selectedRuntimeProfileRowsChanged !== 2 ||
+    invariants.publicationDecisionRevision !== 4 ||
+    invariants.publishedCount !== 534 ||
+    invariants.heldCount !== 143 ||
+    invariants.guideContentRestoredCount !== 0 ||
     !scope ||
     !Array.isArray(scope.allows) ||
     !scope.allows.includes(
-      'rebind the unchanged 50-row teaching selection and semantic-anchor rows to the recorded runtime index hashes',
+      'rebind the unchanged 50-row teaching selection and semantic-anchor rows to the Expected Commit 26c revision 4 runtime index hashes',
     ) ||
     !Array.isArray(scope.doesNotAllow) ||
     !scope.doesNotAllow.includes(
       'modify teaching content, selection rows, or semantic-anchor rows',
     ) ||
-    !scope.doesNotAllow.includes('change formula publication decisions') ||
+    !scope.doesNotAllow.includes(
+      'restore the four editorially held Guides before Expected Commit 26d',
+    ) ||
     !scope.doesNotAllow.includes('merge or auto-merge') ||
     !scope.doesNotAllow.includes('deploy or promote Production')
   ) {
     return undefined;
   }
   return {
-    priorSelectionSha256: rebindValue.priorSelectionSha256,
-    priorAnchorsSha256: rebindValue.priorSemanticAnchorsSha256,
+    priorSelectionSha256: rebindValue.approvalSelectionSha256,
+    priorAnchorsSha256: rebindValue.approvalSemanticAnchorsSha256,
   };
 }
 
@@ -599,9 +625,9 @@ function buildGlobalContextUnchecked(
     !anchorRows ||
     anchorRows.length !== 50 ||
     runtimeIndex?.schema !== 'fractalpark-published-formula-runtime-index/v1' ||
-    runtimeIndex.rowCount !== 513 ||
+    runtimeIndex.rowCount !== 534 ||
     !runtimeRows ||
-    runtimeRows.length !== 513 ||
+    runtimeRows.length !== 534 ||
     !runtimeFormulaIds ||
     runtimeFormulaIds.some(
       (value) =>

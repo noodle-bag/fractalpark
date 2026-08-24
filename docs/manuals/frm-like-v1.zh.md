@@ -14,8 +14,8 @@
 
 ## 1. 你现在可以做什么
 
-FractalPark 当前展示 677 个 Standard identity：513 个已发布的 Definition
-和 164 个保留的 Record。
+FractalPark 当前展示 677 个 Standard identity：534 个已发布的 Definition
+和 143 个保留的 Record。
 
 对于已发布的 Record，你可以：
 

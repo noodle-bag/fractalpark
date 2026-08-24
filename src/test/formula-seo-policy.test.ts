@@ -24,11 +24,11 @@ function dependencies() {
 }
 
 describe('formula SEO exact sets v1', () => {
-  it('closes 677 catalog, 513 implementation, and 50×7 index sets', () => {
+  it('closes 677 catalog, 534 implementation, and 50×7 index sets', () => {
     const sets = loadFormulaSeoSetsV1();
     expect(sets.valid).toBe(true);
     expect(sets.catalogAccessibleSet).toHaveLength(677);
-    expect(sets.implementationAccessibleSet).toHaveLength(513);
+    expect(sets.implementationAccessibleSet).toHaveLength(534);
     expect(sets.indexSet).toHaveLength(350);
     expect(sets.sitemapSet).toEqual(sets.indexSet);
     expect(sets.hreflangSet).toEqual(sets.indexSet);

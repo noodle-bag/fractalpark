@@ -1,9 +1,9 @@
 {
   "schema": "fractalpark-formula-library-runtime-shard/v1",
-  "decisionRevision": 3,
+  "decisionRevision": 4,
   "runtimeRevision": 4,
   "shardIndex": 0,
-  "shardCount": 3,
+  "shardCount": 4,
   "rows": [
     {
       "formulaId": "00e14aa8-b766-54ea-a359-3f5d20d329b7",
@@ -236,6 +236,16 @@
       "definition": "; @language: frm-like/1\n; @stdlib: 1\n; @numeric-profile: standard32\nFormula_17b83663_a502_5e34_bd4c_a116e49eab5f {\n  parameters:\n    parameter1: complex = (0, 0) classic p1\n  init:\n    p = pixel\n    test = p1 + 3\n    t3 = 3 * p\n    t2 = p * p\n    a = (t2 + 1) / t3\n    b = 2 * a * a * a + (t2 - 2) / t3\n    aa3 = a * a * 3\n    z = 0 - a\n  loop:\n    z = z * z * z - aa3 * z + b\n  bailout:\n    |z| < test\n}"
     },
     {
+      "formulaId": "17d88272-6dbf-5622-996a-b116ea3a3fab",
+      "displayName": "tetration",
+      "family": "transcendental",
+      "implementationBasis": "project-owned",
+      "sourceRevision": "32437882a899d589e7ff8fa968c7248e5c9436fa6a87a48fa2072ff09e3c6540",
+      "semanticHash": "834623aa2e4578e5c976d7d769d4ca9d49beaf484c27da4943546e23ef555e7e",
+      "definitionSha256": "32437882a899d589e7ff8fa968c7248e5c9436fa6a87a48fa2072ff09e3c6540",
+      "definition": "; @language: frm-like/1\n; @stdlib: 1\n; @numeric-profile: standard32\nFormula_17d88272_6dbf_5622_996a_b116ea3a3fab {\n  init:\n    if ismand\n      z = 0\n    else\n      z = pixel\n    endif\n  loop:\n    if |c| < 1e-20\n      logC = (-46.051701859880914, 0)\n      imag(logC) = atan2(imag(c), real(c))\n    else\n      logC = log(c)\n    endif\n    z = round(exp(z * logC) * 16) / 16\n  bailout:\n    |z| <= 256\n}"
+    },
+    {
       "formulaId": "18aa30c7-6c32-505f-be32-5c0bf438d151",
       "displayName": "reb005g",
       "family": "rational-reciprocal",
@@ -256,6 +266,16 @@
       "definition": "; @language: frm-like/1\n; @stdlib: 1\n; @numeric-profile: standard32\nFormula_18d30091_ce1c_5b10_b214_37eb4337df83 {\n  init:\n    if ismand\n      z = 0\n    else\n      z = pixel\n    endif\n  loop:\n    z2 = z * z\n    z4 = z2 * z2\n    z = 8 * z4 - 8 * z2 + c\n  bailout:\n    |z| <= 256\n}"
     },
     {
+      "formulaId": "190fa538-89c9-590f-8170-34b3c570fc5d",
+      "displayName": "sinhMandelb",
+      "family": "transcendental",
+      "implementationBasis": "project-owned",
+      "sourceRevision": "4070d643142a8bac0a93df5f50b3bd47671076d603cf06e041aaa67035e806ce",
+      "semanticHash": "f5e5b1dbe941381eadddcd3e71d7e007cb00b342c89f4721ef89f24309396dc7",
+      "definitionSha256": "4070d643142a8bac0a93df5f50b3bd47671076d603cf06e041aaa67035e806ce",
+      "definition": "; @language: frm-like/1\n; @stdlib: 1\n; @numeric-profile: standard32\nFormula_190fa538_89c9_590f_8170_34b3c570fc5d {\n  init:\n    if ismand\n      z = 0\n    else\n      z = pixel\n    endif\n  loop:\n    clampedZ = z\n    if real(z) > 80\n      real(clampedZ) = 80\n    elseif real(z) < -80\n      real(clampedZ) = -80\n    endif\n    z = round((sinh(clampedZ) + c) * 16) / 16\n  bailout:\n    |z| <= 256\n}"
+    },
+    {
       "formulaId": "1936e9b5-1312-593e-ab67-72e95bc514b0",
       "displayName": "richard8",
       "family": "transcendental",
@@ -274,6 +294,26 @@
       "semanticHash": "7b6eba790ee8070d32c9d221a481b2e70fb030896cdae7910c990a5ad8e53f5a",
       "definitionSha256": "808341c74db4c061de079676b921e2c6a79e344ab1f66b314c0365802b9aedc9",
       "definition": "; @language: frm-like/1\n; @stdlib: 1\n; @numeric-profile: standard32\nFormula_1cd7a16f_0474_5b8f_a974_e122ea893769 {\n  parameters:\n    parameter1: complex = (0, 0) classic p1\n    parameter2: complex = (0, 0) classic p2\n  init:\n    cclassic = c\n    z = real(pixel) + flip(imag(pixel) * p1)\n    cclassic = p2 + p1 * real(pixel) + imag(pixel)\n  loop:\n    z = z ^ 2.71828182845905 + cclassic\n  bailout:\n    |z| <= 100\n}"
+    },
+    {
+      "formulaId": "201c54f3-a77a-5be0-a0a5-6f4f1998ee6d",
+      "displayName": "coshMandelb",
+      "family": "transcendental",
+      "implementationBasis": "project-owned",
+      "sourceRevision": "90d43b9c2bc9a7eda5ca6f997a1ae2dc6640f0cc12cdcc34e8c82ca0765eff12",
+      "semanticHash": "0726adb6bfb5eba7bbcbef971478685027a6336bf4a9296f668187c39daab4a3",
+      "definitionSha256": "90d43b9c2bc9a7eda5ca6f997a1ae2dc6640f0cc12cdcc34e8c82ca0765eff12",
+      "definition": "; @language: frm-like/1\n; @stdlib: 1\n; @numeric-profile: standard32\nFormula_201c54f3_a77a_5be0_a0a5_6f4f1998ee6d {\n  init:\n    if ismand\n      z = 0\n    else\n      z = pixel\n    endif\n  loop:\n    clampedZ = z\n    if real(z) > 80\n      real(clampedZ) = 80\n    elseif real(z) < -80\n      real(clampedZ) = -80\n    endif\n    stableCosh = round(cosh(clampedZ) * 16) / 16\n    z = round((stableCosh + c) * 16) / 16\n  bailout:\n    |z| <= 256\n}"
+    },
+    {
+      "formulaId": "22d9a008-eb14-53de-9960-11eb5d37bb8e",
+      "displayName": "zaslavskyMap",
+      "family": "transcendental",
+      "implementationBasis": "project-owned",
+      "sourceRevision": "fb9db2dede500db19463ee53c8d059c2e7a92651d7de472a4bedd6e7ee58a831",
+      "semanticHash": "dabc6e573e13fc60004c12150faa4bfada8b5db90b340c1b1db153927c46e21c",
+      "definitionSha256": "fb9db2dede500db19463ee53c8d059c2e7a92651d7de472a4bedd6e7ee58a831",
+      "definition": "; @language: frm-like/1\n; @stdlib: 1\n; @numeric-profile: standard32\nFormula_22d9a008_eb14_53de_9960_11eb5d37bb8e {\n  init:\n    if ismand\n      z = 0\n    else\n      z = pixel\n    endif\n  loop:\n    clampedZ = z\n    if imag(z) > 80\n      imag(clampedZ) = 80\n    elseif imag(z) < -80\n      imag(clampedZ) = -80\n    endif\n    swirl = z + 0.28 * sin(clampedZ)\n    rotCos = cos((0.55, 0))\n    rotSin = sin((0.55, 0))\n    rot = rotCos\n    imag(rot) = real(rotSin)\n    z = round((swirl * rot + c) * 16) / 16\n  bailout:\n    |z| <= 256\n}"
     },
     {
       "formulaId": "2380f8fa-cae0-56b1-baab-63bd8e2ccf85",
@@ -334,6 +374,16 @@
       "semanticHash": "98af05f90861656958d24b58d63d4b9eb08eca323b126001c38eb467e5646e5c",
       "definitionSha256": "503739d928f438a7edc79d8d7fb1931b1435b45b0c8231950a2b11cf7104d22c",
       "definition": "; @language: frm-like/1\n; @stdlib: 1\n; @numeric-profile: standard32\nFormula_280229ec_dd2f_5982_9954_75829a37a5f2 {\n  parameters:\n    parameter1: complex = (0, 0) classic p1\n  init:\n    z = pixel\n    p = p1 + 1\n  loop:\n    z = 1 - abs(imag(z) * p - real(z)) + (1 - abs(1 - real(z) - imag(z)))\n  bailout:\n    |z| <= 1\n}"
+    },
+    {
+      "formulaId": "280cd3e2-865b-5c78-90b7-39b2a36d7be0",
+      "displayName": "mandelbox",
+      "family": "folded-absolute",
+      "implementationBasis": "project-owned",
+      "sourceRevision": "b4677349cc60d66a5b7ad87655a89585d2bf83c7284ef949afe081e8eb294aac",
+      "semanticHash": "fff469604a4d169b4319e7cceab70ec599cdaeecdaa7d1cac4011e13d914db94",
+      "definitionSha256": "b4677349cc60d66a5b7ad87655a89585d2bf83c7284ef949afe081e8eb294aac",
+      "definition": "; @language: frm-like/1\n; @stdlib: 1\n; @numeric-profile: standard32\nFormula_280cd3e2_865b_5c78_90b7_39b2a36d7be0 {\n  parameters:\n    mandelboxScale: real = 2 domain [-3, 3]\n  init:\n    if ismand\n      z = 0\n    else\n      z = pixel\n    endif\n  loop:\n    if real(z) < -1\n      boxX = -1\n    elseif real(z) > 1\n      boxX = 1\n    else\n      boxX = real(z)\n    endif\n    if imag(z) < -1\n      boxY = -1\n    elseif imag(z) > 1\n      boxY = 1\n    else\n      boxY = imag(z)\n    endif\n    box = (0, 0)\n    real(box) = boxX\n    imag(box) = boxY\n    z = box * 2 - z\n    r2 = real(z) * real(z) + imag(z) * imag(z)\n    if r2 < 0.25\n      z = z * 4\n    elseif r2 < 1\n      z = z / r2\n    endif\n    z = round((mandelboxScale * z + c) * 16) / 16\n  bailout:\n    |z| <= 256\n}"
     },
     {
       "formulaId": "2ab193f5-4919-5e5c-a9fb-c1a0e3f5eb02",
@@ -516,6 +566,16 @@
       "definition": "; @language: frm-like/1\n; @stdlib: 1\n; @numeric-profile: standard32\nFormula_3de9b6ff_2b9b_5187_93ea_dd1161a70d92 {\n  parameters:\n    parameter1: complex = (0, 0) classic p1\n    function1: function = identity classic fn1\n    function2: function = identity classic fn2\n    function3: function = identity classic fn3\n    function4: function = identity classic fn4\n  init:\n    z = pixel\n    t = p1 + 4\n  loop:\n    z = fn1(fn2(fn3(fn4(z)))) + pixel\n  bailout:\n    |z| <= t\n}"
     },
     {
+      "formulaId": "3edbea29-956a-5900-9aa7-02ccc2183016",
+      "displayName": "cosJulia",
+      "family": "transcendental",
+      "implementationBasis": "project-owned",
+      "sourceRevision": "75cc7f04fc69d74294c3ed9dcd5271585a6d186311dd10a906e781958cb46870",
+      "semanticHash": "a3978790b2aba850f4f6765da8820e3792696877b2c5005c1128b9d18f1bbceb",
+      "definitionSha256": "75cc7f04fc69d74294c3ed9dcd5271585a6d186311dd10a906e781958cb46870",
+      "definition": "; @language: frm-like/1\n; @stdlib: 1\n; @numeric-profile: standard32\nFormula_3edbea29_956a_5900_9aa7_02ccc2183016 {\n  init:\n    if ismand\n      z = 0\n    else\n      z = pixel\n    endif\n  loop:\n    clampedZ = z\n    if imag(z) > 80\n      imag(clampedZ) = 80\n    elseif imag(z) < -80\n      imag(clampedZ) = -80\n    endif\n    z = round(c * cos(clampedZ) * 16) / 16\n  bailout:\n    |z| <= 256\n}"
+    },
+    {
       "formulaId": "411ac01c-ba08-5200-add7-b60b3f98795c",
       "displayName": "fzppfnpo",
       "family": "function-composition",
@@ -534,6 +594,16 @@
       "semanticHash": "ec3938521a7ec4a7ab6b49fc04e98974160ffae5a0be4145f185ec936b302615",
       "definitionSha256": "a934331cff48cce727ce143844f08f51f14b5c803bb68ddb42d9825f4ef2fab2",
       "definition": "; @language: frm-like/1\n; @stdlib: 1\n; @numeric-profile: standard32\nFormula_423bcb75_4e45_58fb_97f2_999f51947bd3 {\n  parameters:\n    parameter1: complex = (0, 0) classic p1\n    function1: function = identity classic fn1\n    function2: function = identity classic fn2\n    function3: function = identity classic fn3\n    function4: function = identity classic fn4\n  init:\n    z = pixel\n    t = p1 + 4\n  loop:\n    z = fn1(fn2(z) * pixel * fn3(fn4(z) * pixel)) + pixel\n  bailout:\n    |z| <= t\n}"
+    },
+    {
+      "formulaId": "42b369a5-2873-50e9-8684-cad5e60630ff",
+      "displayName": "airshipCubic",
+      "family": "folded-absolute",
+      "implementationBasis": "project-owned",
+      "sourceRevision": "67d0d96182f217e37faab85d6b7e3cf28bd9e959348589957ff49a4f5436f049",
+      "semanticHash": "565c412f9a5d97805f1afc5022fa80cda2f92156207f31bb00d50fc8379fd7e2",
+      "definitionSha256": "67d0d96182f217e37faab85d6b7e3cf28bd9e959348589957ff49a4f5436f049",
+      "definition": "; @language: frm-like/1\n; @stdlib: 1\n; @numeric-profile: standard32\nFormula_42b369a5_2873_50e9_8684_cad5e60630ff {\n  init:\n    if ismand\n      z = 0\n    else\n      z = pixel\n    endif\n  loop:\n    safeY = (1, 0)\n    if abs(imag(z)) >= 1e-10\n      real(safeY) = imag(z) / abs(imag(z))\n    endif\n    folded = (0, 0)\n    real(folded) = abs(real(z))\n    imag(folded) = real(z) * imag(z) / real(safeY)\n    z = folded ^ 3 + c\n  bailout:\n    |z| <= 256\n}"
     },
     {
       "formulaId": "42d4c442-040b-59be-892f-1f10c8e47cb6",
@@ -574,76 +644,6 @@
       "semanticHash": "d30d20f8bdcab36bf50589b8230925491216e9120c65f8bc11f22dd9f7b01e85",
       "definitionSha256": "1a87c3eee8cbfdee863e521522cdbcfb559773070af04a317bcc6ebe6fcb3f3e",
       "definition": "; @language: frm-like/1\n; @stdlib: 1\n; @numeric-profile: standard32\nFormula_4514ac15_fecc_5b92_9e79_0b95b5158d3f {\n  init:\n    z = pixel\n  loop:\n    denom = sin(z) + (1, 0)\n    if real(denom) * real(denom) + imag(denom) * imag(denom) < 1e-10\n      z = z\n    else\n      z = z + (cos(z) - z) / denom + 0.15 * c\n    endif\n  bailout:\n    |z - zPrev| >= 0.000001\n}"
-    },
-    {
-      "formulaId": "4536f1e3-1f15-5b7e-8e58-68ea3b63d4fb",
-      "displayName": "heart",
-      "family": "folded-absolute",
-      "implementationBasis": "project-owned",
-      "sourceRevision": "18a51ec5ab4c5e47bdd687cf36595663437d8341dedda7e3965751f5e8001d82",
-      "semanticHash": "744d4174359b4c0caba50174da004fe4f8e97ee88b7943ba1345518cc3f6e7e2",
-      "definitionSha256": "18a51ec5ab4c5e47bdd687cf36595663437d8341dedda7e3965751f5e8001d82",
-      "definition": "; @language: frm-like/1\n; @stdlib: 1\n; @numeric-profile: standard32\nFormula_4536f1e3_1f15_5b7e_8e58_68ea3b63d4fb {\n  init:\n    if ismand\n      z = 0\n    else\n      z = pixel\n    endif\n  loop:\n    real(z) = abs(real(z))\n    z = z * z + c\n  bailout:\n    |z| <= 256\n}"
-    },
-    {
-      "formulaId": "48a9aa85-f5d4-5f9a-b640-89e93890a8ad",
-      "displayName": "mcMullen34",
-      "family": "rational-reciprocal",
-      "implementationBasis": "project-owned",
-      "sourceRevision": "ef6a9ee325473be1beadbbc91f6aa28773271649a751e12044d03d1faa0c41b3",
-      "semanticHash": "5a8625c2eefbf12273bae39f845492801498d1fff52076c601ab71f4dee7dbdc",
-      "definitionSha256": "ef6a9ee325473be1beadbbc91f6aa28773271649a751e12044d03d1faa0c41b3",
-      "definition": "; @language: frm-like/1\n; @stdlib: 1\n; @numeric-profile: standard32\nFormula_48a9aa85_f5d4_5f9a_b640_89e93890a8ad {\n  init:\n    if ismand\n      z = 0\n    else\n      z = pixel\n    endif\n    if |z| < 0.00001\n      z = (0.00001, 0)\n    endif\n  loop:\n    z4 = z ^ 4\n    denom = z4\n    if real(denom) * real(denom) + imag(denom) * imag(denom) < 1e-10\n      denom = denom + (0.00001, 0)\n    endif\n    z = z ^ 3 + c / denom\n  bailout:\n    |z| <= 256\n}"
-    },
-    {
-      "formulaId": "4c0559f7-9f60-51f4-b100-2ea5f1d330e8",
-      "displayName": "fzppfnth",
-      "family": "function-composition",
-      "implementationBasis": "direct-adaptation",
-      "sourceRevision": "57c36d01c864399e41a86b8a34df7decd184f17bc4867980919f4f63ab6427b0",
-      "semanticHash": "fe29c0b36a6488de2ab25c6686463cc163c64b0c9764a78471dd2d0019ec042a",
-      "definitionSha256": "57c36d01c864399e41a86b8a34df7decd184f17bc4867980919f4f63ab6427b0",
-      "definition": "; @language: frm-like/1\n; @stdlib: 1\n; @numeric-profile: standard32\nFormula_4c0559f7_9f60_51f4_b100_2ea5f1d330e8 {\n  parameters:\n    function1: function = identity classic fn1\n  init:\n    z = pixel\n    f = tanh(pixel)\n  loop:\n    z = fn1(z) + f\n  bailout:\n    |z| <= 50\n}"
-    },
-    {
-      "formulaId": "4c8382ac-ee39-5f57-87e7-7314d1dca9d2",
-      "displayName": "uli_4",
-      "family": "rational-reciprocal",
-      "implementationBasis": "direct-adaptation",
-      "sourceRevision": "4ecd7098b1c409afa0e96979ae7d76b7e127ec21b569919bb42b19a29c0a5081",
-      "semanticHash": "7d9b0d5fc1153e1bf59f1957abb788823d23061aac80dd428a2e109b03eecd09",
-      "definitionSha256": "4ecd7098b1c409afa0e96979ae7d76b7e127ec21b569919bb42b19a29c0a5081",
-      "definition": "; @language: frm-like/1\n; @stdlib: 1\n; @numeric-profile: standard32\nFormula_4c8382ac_ee39_5f57_87e7_7314d1dca9d2 {\n  parameters:\n    parameter1: complex = (0, 0) classic p1\n    parameter2: complex = (0, 0) classic p2\n    function1: function = identity classic fn1\n    function2: function = identity classic fn2\n  init:\n    z = pixel\n  loop:\n    z = fn1(1 / (z + p1)) * fn2(z + p1)\n  bailout:\n    |z| <= p2\n}"
-    },
-    {
-      "formulaId": "4d80463c-a4d2-539d-957c-40340039c419",
-      "displayName": "jm_11a",
-      "family": "function-composition",
-      "implementationBasis": "direct-adaptation",
-      "sourceRevision": "9819a9c1a66d4afd1daadaffc94186974a43fbfcfc49784295ce33c971d75494",
-      "semanticHash": "2bac596ede04399925fe59d02629714a68a6cd7788b0dd81009f8e82a53a726d",
-      "definitionSha256": "9819a9c1a66d4afd1daadaffc94186974a43fbfcfc49784295ce33c971d75494",
-      "definition": "; @language: frm-like/1\n; @stdlib: 1\n; @numeric-profile: standard32\nFormula_4d80463c_a4d2_539d_957c_40340039c419 {\n  parameters:\n    parameter1: complex = (0, 0) classic p1\n    function1: function = identity classic fn1\n    function2: function = identity classic fn2\n    function3: function = identity classic fn3\n    function4: function = identity classic fn4\n  init:\n    z = pixel\n    t = p1 + 4\n  loop:\n    z = fn1(fn2(fn3(fn4(z) * pixel))) + pixel\n  bailout:\n    |z| <= t\n}"
-    },
-    {
-      "formulaId": "54cc5b4b-9710-5995-a216-8f4c61ff1c02",
-      "displayName": "dragon",
-      "family": "algebraic-power",
-      "implementationBasis": "direct-adaptation",
-      "sourceRevision": "ec2b4031f0e486501b56c38970401329000f552006dd0a36cecdf2d4d2694414",
-      "semanticHash": "a192085f4acb5819ad67613343961154193338fbd9d6bf3accdc7bfefedb0f25",
-      "definitionSha256": "ec2b4031f0e486501b56c38970401329000f552006dd0a36cecdf2d4d2694414",
-      "definition": "; @language: frm-like/1\n; @stdlib: 1\n; @numeric-profile: standard32\nFormula_54cc5b4b_9710_5995_a216_8f4c61ff1c02 {\n  init:\n    z = pixel\n  loop:\n    z = sqr(z) + (-0.74543, 0.2)\n  bailout:\n    |z| <= 4\n}"
-    },
-    {
-      "formulaId": "56935004-bdb8-5682-974f-3821cd422965",
-      "displayName": "frothyBasin",
-      "family": "algebraic-power",
-      "implementationBasis": "project-owned",
-      "sourceRevision": "5e913f2f48004cf2e75a308428500639b2d50a3c12ed001e9c9cbc83f92f42d2",
-      "semanticHash": "9f8ee3f44892d46874a57a804d1021dc18338be1b05cd5177677c7309866e950",
-      "definitionSha256": "5e913f2f48004cf2e75a308428500639b2d50a3c12ed001e9c9cbc83f92f42d2",
-      "definition": "; @language: frm-like/1\n; @stdlib: 1\n; @numeric-profile: standard32\nFormula_56935004_bdb8_5682_974f_3821cd422965 {\n  init:\n    if ismand\n      z = 0\n    else\n      z = pixel\n    endif\n  loop:\n    z = z * z - conj(z) * c + c\n  bailout:\n    |z| <= 256\n}"
     }
   ]
 }

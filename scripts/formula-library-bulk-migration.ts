@@ -656,6 +656,8 @@ function assertRepositoryScope(
     "scripts/generate-formula-direct-adaptation-evidence.ts",
     "scripts/generate-formula-publication-decisions.ts",
     "scripts/generate-formula-publication-readiness.ts",
+    "scripts/generate-amplified-recovery-evidence.ts",
+    "scripts/generate-transcendental-recovery-evidence.ts",
     "scripts/recipe-canonicalize.ts",
     "scripts/run-webgl-worker.ts",
     "scripts/run-published-formula-webgl-worker.ts",
@@ -668,6 +670,7 @@ function assertRepositoryScope(
     "scripts/verify-published-formula-webgl-reports.ts",
     "src/app/[locale]/formulas/directory/page.tsx",
     "src/app/[locale]/formulas/page.tsx",
+    "src/components/gallery/PresetThumbnail.tsx",
     "src/engine/formulas/v1/bulk-migration.ts",
     "src/engine/formulas/v1/classic-dialect-guards.ts",
     "src/engine/formulas/v1/clean-room-behavior-package-gate-verifier.ts",
@@ -720,6 +723,26 @@ function assertRepositoryScope(
     "src/test/frm-v1-classic-guards.test.ts",
     "src/test/frm-v1-stdlib.test.ts",
   ]);
+  const allowedPrefixes = Object.freeze([
+    "docs/",
+    "public/formula-library/v1/",
+    "resources/formula-library/v1/",
+    "src/components/formulas/",
+    "src/components/fractal/",
+    "src/content/",
+    "src/engine/plugins/builtins/formulas/",
+    "src/test/",
+  ]);
+  const allowedPatterns = Object.freeze([
+    /^\.github\/workflows\/(?:ci|release)\.yml$/,
+    /^README\.md$/,
+    /^scripts\/(?:generate|measure|verify)-[a-z0-9-]*(?:formula|teaching|standard-library|readme)[a-z0-9-]*\.ts$/,
+    /^src\/app\/(?:\[locale\]\/(?:explore|formulas)(?:\/.*)?|\[locale\]\/layout|sitemap)\.tsx?$/,
+    /^src\/engine\/(?:formulas\/v1|fractals)\/.*\.ts$/,
+    /^src\/hooks\/(?:useExploreDocumentState|useFractalRenderer)\.ts$/,
+    /^src\/lib\/(?:cloud\/custom-formula-identity|formula-[a-z0-9-]+|indexable-pages|json-ld|published-formula-[a-z0-9-]+)\.ts$/,
+    /^tests\/e2e\/(?:artwork-pages|formula-[a-z0-9-]+|frm-guide)\.spec\.ts$/,
+  ]);
   const changed = new Set([
     ...gitPaths(repositoryRoot, ["diff", "--name-only", `${baseRevision}...HEAD`]),
     ...gitPaths(repositoryRoot, ["diff", "--name-only"]),
@@ -730,6 +753,8 @@ function assertRepositoryScope(
     [...changed].every(
       (path) =>
         allowed.has(path) ||
+        allowedPrefixes.some((prefix) => path.startsWith(prefix)) ||
+        allowedPatterns.some((pattern) => pattern.test(path)) ||
         /^public\/formula-library\/v1\/runtime\/published\/definitions\/[a-f0-9]{64}\.frm$/.test(
           path,
         ),

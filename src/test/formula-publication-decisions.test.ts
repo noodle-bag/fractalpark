@@ -76,7 +76,7 @@ describe("sha256HexSyncV1", () => {
 });
 
 describe("formula publication decision ledger", () => {
-  it("loads the committed exact-677 decision ledger (revision 2)", () => {
+  it("loads the committed exact-677 decision ledger (revision 4)", () => {
     const result = createPublicationDecisionLedgerV1();
     expect(result.ok).toBe(true);
     if (!result.ok) return;
@@ -85,7 +85,7 @@ describe("formula publication decision ledger", () => {
       "fractalpark-formula-library-publication-decisions/v1",
     );
     expect(ledger.version).toBe(1);
-    expect(ledger.decisionRevision).toBe(3);
+    expect(ledger.decisionRevision).toBe(4);
     expect(ledger.rows).toHaveLength(677);
     expect(ledger.rightsStatusCounts).toEqual({
       "project-owned": 89,
@@ -94,11 +94,11 @@ describe("formula publication decision ledger", () => {
       "no-explicit-permission": 378,
     });
     expect(ledger.decisionCounts).toEqual({
-      publish: 513,
-      hold: 164,
+      publish: 534,
+      hold: 143,
       exclude: 0,
     });
-    expect(ledger.publishedFormulaIds()).toHaveLength(513);
+    expect(ledger.publishedFormulaIds()).toHaveLength(534);
   });
 
   it("verifies the committed content hash and detects tampering", () => {
@@ -147,25 +147,26 @@ describe("formula publication decision ledger", () => {
       expect(row.implementationBasis).toBeNull();
       expect(row.implementationBasisRecordedAt).toBeNull();
       expect(row.leakageScanStatus).toBe("not-applicable");
-      expect(row.reviewedAt).toBe("2026-08-18");
+      expect(row.reviewedAt).toBe("2026-08-24");
     }
   });
 
-  it("publishes exactly the revision-3 green set with recorded bases", () => {
+  it("publishes exactly the revision-4 green set with recorded bases", () => {
     const ledger = PUBLICATION_DECISION_LEDGER_V1;
     const published = ledger.rows.filter(
       (row) => row.publicationDecision === "publish",
     );
-    expect(published).toHaveLength(513);
+    expect(published).toHaveLength(534);
     let directAdaptation = 0;
     let projectOwned = 0;
+    let recoveredProjectOwned = 0;
     let cleanroom = 0;
     for (const row of published) {
       expect(row.implementationBasisRecordedAt).toBe(
-        "2026-08-18T00:05:00.000Z",
+        "2026-08-24T00:35:00.000Z",
       );
       expect(row.leakageScanStatus).toBe("passed");
-      expect(row.reviewedAt).toBe("2026-08-18");
+      expect(row.reviewedAt).toBe("2026-08-24");
       if (row.implementationBasis === "direct-adaptation") {
         directAdaptation++;
         expect(row.rightsStatus).toBe(
@@ -175,7 +176,10 @@ describe("formula publication decision ledger", () => {
       } else if (row.implementationBasis === "project-owned") {
         projectOwned++;
         expect(row.rightsStatus).toBe("project-owned");
-        expect(row.decisionReason).toBe("publish-project-owned-native-recipe");
+        if (row.decisionReason === "publish-project-owned-recovery-gate-green")
+          recoveredProjectOwned++;
+        else
+          expect(row.decisionReason).toBe("publish-project-owned-native-recipe");
       } else {
         cleanroom++;
         expect(row.implementationBasis).toBe(
@@ -188,7 +192,8 @@ describe("formula publication decision ledger", () => {
       }
     }
     expect(directAdaptation).toBe(106);
-    expect(projectOwned).toBe(68);
+    expect(projectOwned).toBe(89);
+    expect(recoveredProjectOwned).toBe(21);
     expect(cleanroom).toBe(339);
   });
 
@@ -237,26 +242,26 @@ describe("formula publication decision ledger", () => {
     const asset = clone();
     const index = asset.rows.findIndex(
       (row) =>
-        row.rightsStatus === "project-owned" &&
+        row.rightsStatus === "source-declared-public-domain-assumption" &&
         row.publicationDecision === "hold",
     );
     expect(index).toBeGreaterThanOrEqual(0);
     const row = asset.rows[index]!;
     row.publicationDecision = "publish";
     row.decisionReason = "published-project-owned-batch-1";
-    row.implementationBasis = "project-owned";
-    row.implementationBasisRecordedAt = "2026-08-18T00:05:00.000Z";
+    row.implementationBasis = "direct-adaptation";
+    row.implementationBasisRecordedAt = "2026-08-24T00:35:00.000Z";
     row.leakageScanStatus = "passed";
-    asset.decisionCounts.publish = 514;
-    asset.decisionCounts.hold = 163;
+    asset.decisionCounts.publish = 535;
+    asset.decisionCounts.hold = 142;
     refreshContentHash(asset);
     const result = createPublicationDecisionLedgerV1(asset);
     expect(result.ok).toBe(true);
     if (!result.ok) return;
     expect(result.ledger.publishedFormulaIds()).toContain(row.formulaId);
     expect(result.ledger.decisionCounts).toEqual({
-      publish: 514,
-      hold: 163,
+      publish: 535,
+      hold: 142,
       exclude: 0,
     });
   });
@@ -299,10 +304,10 @@ describe("formula publication decision ledger", () => {
     row.publicationDecision = "publish";
     row.decisionReason = "published-gpl-batch";
     row.implementationBasis = "separated-independent-rewrite";
-    row.implementationBasisRecordedAt = "2026-08-18T00:05:00.000Z";
+    row.implementationBasisRecordedAt = "2026-08-24T00:35:00.000Z";
     row.leakageScanStatus = "passed";
-    asset.decisionCounts.publish = 514;
-    asset.decisionCounts.hold = 163;
+    asset.decisionCounts.publish = 535;
+    asset.decisionCounts.hold = 142;
     refreshContentHash(asset);
     expectInvalid(asset);
   });
@@ -357,7 +362,7 @@ describe("formula publication decision ledger", () => {
     const row = asset.rows.find(
       (candidate) => candidate.publicationDecision === "hold",
     )!;
-    row.implementationBasisRecordedAt = "2026-08-18T00:05:00.000Z";
+    row.implementationBasisRecordedAt = "2026-08-24T00:35:00.000Z";
     refreshContentHash(asset);
     expectInvalid(asset);
   });

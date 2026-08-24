@@ -45,15 +45,15 @@ function sorted(values: readonly string[]): string[] {
 describe("formula runtime revision 4 public assets", () => {
   beforeAll(() => registerBuiltins({ quiet: true }));
 
-  it("contains exactly the 106 direct-adaptation and 68 project-owned published rows", () => {
+  it("contains exactly the 106 direct-adaptation and 89 project-owned published rows", () => {
     const decisions = readJson(DECISIONS_PATH);
-    expect(decisions.decisionRevision).toBe(3);
+    expect(decisions.decisionRevision).toBe(4);
     expect(decisions.contentHash).toBe(
-      "7106736785e8bbb7cc310056f93f550413b6a0b76ad21e648b50e55480a2a52c",
+      "cac35a05d2d0c219b4f5ac00f3dea5b5fbb2b9c6b2fc15ea3383ef0f62d6031d",
     );
     expect(decisions.decisionCounts).toEqual({
-      publish: 513,
-      hold: 164,
+      publish: 534,
+      hold: 143,
       exclude: 0,
     });
     expect(Array.isArray(decisions.rows)).toBe(true);
@@ -69,10 +69,10 @@ describe("formula runtime revision 4 public assets", () => {
     const manifest = readJson(join(RUNTIME_DIR, "manifest.json"));
     expect(manifest).toMatchObject({
       schema: "fractalpark-formula-library-runtime-manifest/v1",
-      decisionRevision: 3,
+      decisionRevision: 4,
       runtimeRevision: 4,
-      rowCount: 174,
-      shardCount: 3,
+      rowCount: 195,
+      shardCount: 4,
       publicationDecisionsContentHash: decisions.contentHash,
     });
     expect(manifest.releaseManifestSha256).toMatch(SHA256);
@@ -93,16 +93,16 @@ describe("formula runtime revision 4 public assets", () => {
       if (!isRecord(shard)) throw new Error("test-shard-invalid");
       expect(shard).toMatchObject({
         schema: "fractalpark-formula-library-runtime-shard/v1",
-        decisionRevision: 3,
+        decisionRevision: 4,
         runtimeRevision: 4,
         shardIndex: index,
-        shardCount: 3,
+        shardCount: 4,
       });
       expect(Array.isArray(shard.rows)).toBe(true);
       publicRows.push(...(shard.rows as JsonRecord[]));
     }
     expect(sorted(readdirSync(RUNTIME_DIR))).toEqual(sorted(expectedFiles));
-    expect(publicRows).toHaveLength(174);
+    expect(publicRows).toHaveLength(195);
     expect(
       sorted(publicRows.map((row) => String(row.formulaId))),
     ).toEqual(sorted(expected));
@@ -113,7 +113,7 @@ describe("formula runtime revision 4 public assets", () => {
     ).toHaveLength(106);
     expect(
       publicRows.filter((row) => row.implementationBasis === "project-owned"),
-    ).toHaveLength(68);
+    ).toHaveLength(89);
   });
 
   it("pins every source byte string to sourceRevision and semanticHash", async () => {
@@ -139,10 +139,10 @@ describe("formula runtime revision 4 public assets", () => {
         expect(revisions.semanticHash).toBe(rawRow.semanticHash);
       }
     }
-    expect(seen.size).toBe(174);
+    expect(seen.size).toBe(195);
   });
 
-  it("keeps 68 public project-owned rows while all 21 recovered recipes remain decision-held", async () => {
+  it("publishes all 89 project-owned rows while retaining the 21-row technical diagnosis ledger", async () => {
     const manifest = readJson(join(RUNTIME_DIR, "manifest.json"));
     if (!Array.isArray(manifest.shards)) throw new Error("test-manifest-invalid");
     const publicById = new Map<string, JsonRecord>();
@@ -158,17 +158,18 @@ describe("formula runtime revision 4 public assets", () => {
 
     const decisions = readJson(DECISIONS_PATH);
     if (!Array.isArray(decisions.rows)) throw new Error("test-decisions-invalid");
-    const projectHeldIds = new Set(
+    const publishedRecoveryIds = new Set(
       decisions.rows
         .filter(
           (row): row is JsonRecord =>
             isRecord(row) &&
             row.rightsStatus === "project-owned" &&
-            row.publicationDecision === "hold",
+            row.publicationDecision === "publish" &&
+            row.decisionReason === "publish-project-owned-recovery-gate-green",
         )
         .map((row) => String(row.formulaId)),
     );
-    expect(projectHeldIds.size).toBe(21);
+    expect(publishedRecoveryIds.size).toBe(21);
 
     const recipeById = new Map(
       NATIVE_FORMULA_RECIPES_V1.map((recipe) => [recipe.formulaId as string, recipe]),
@@ -178,22 +179,22 @@ describe("formula runtime revision 4 public assets", () => {
       NATIVE_RECIPE_HOLDS_V1.map((entry) => entry.recipe.formulaId as string),
     );
     expect(publicationHoldIds.size).toBe(21);
-    expect(publicationHoldIds).toEqual(projectHeldIds);
+    expect(publicationHoldIds).toEqual(publishedRecoveryIds);
     const recoveredHeldIds = [...publicationHoldIds];
     expect(recoveredHeldIds).toHaveLength(21);
     for (const formulaId of recoveredHeldIds) {
       expect(publicationHoldIds.has(formulaId)).toBe(true);
       expect(recipeById.has(formulaId)).toBe(true);
-      expect(publicById.has(formulaId)).toBe(false);
+      expect(publicById.has(formulaId)).toBe(true);
     }
 
     const publicProjectRows = [...publicById.values()].filter(
       (row) => row.implementationBasis === "project-owned",
     );
-    expect(publicProjectRows).toHaveLength(68);
+    expect(publicProjectRows).toHaveLength(89);
     for (const row of publicProjectRows) {
       const formulaId = String(row.formulaId);
-      expect(projectHeldIds.has(formulaId)).toBe(false);
+      expect(recipeById.has(formulaId)).toBe(true);
       const recipe = recipeById.get(formulaId);
       expect(recipe).toBeDefined();
       if (!recipe) continue;

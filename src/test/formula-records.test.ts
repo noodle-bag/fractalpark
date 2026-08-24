@@ -25,16 +25,16 @@ describe('public Formula Record v1', () => {
 
   it('accounts for every Standard identity and the frozen decision set', () => {
     expect(FORMULA_RECORD_COUNT_V1).toBe(677);
-    expect(PUBLISHED_FORMULA_RECORD_COUNT_V1).toBe(513);
+    expect(PUBLISHED_FORMULA_RECORD_COUNT_V1).toBe(534);
     expect(records).toHaveLength(677);
     expect(new Set(records.map((record) => record.formulaId))).toHaveLength(677);
 
     expect(
       records.filter((record) => record.publicationDecision === 'publish')
-    ).toHaveLength(513);
+    ).toHaveLength(534);
     expect(
       records.filter((record) => record.publicationDecision === 'hold')
-    ).toHaveLength(164);
+    ).toHaveLength(143);
     expect(
       records.filter((record) => record.publicationDecision === 'exclude')
     ).toHaveLength(0);
@@ -142,13 +142,13 @@ describe('public Formula Record v1', () => {
         (record) =>
           record.availability === 'published' && record.preview.status === 'ready'
       )
-    ).toHaveLength(340);
+    ).toHaveLength(357);
     expect(
       records.filter(
         (record) =>
           record.availability === 'published' && record.preview.status === 'diagnostic'
       )
-    ).toHaveLength(173);
+    ).toHaveLength(177);
     expect(new Set(manifest.rows.map((row) => row.formulaId))).toEqual(
       new Set(
         records

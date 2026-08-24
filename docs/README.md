@@ -87,7 +87,7 @@ govern FractalPark development.
   comparison contract, and still-unmeasured browser/device work.
 - [Formula Library Rights and Publication Testing](FORMULA_LIBRARY_TESTING.md)
   defines the independent public, build-output, portable-file, and controlled
-  private-evidence isolation gates for the frozen 677/513/164 projection.
+  private-evidence isolation gates for decision revision 4 and its exact 534-row published projection.
 - [v0.4.19 Standard Library Performance Gate](testing/v0.4.19-standard-library-performance-gate.md)
   freezes static/browser/build budgets, the source-environment-samples tuple,
   real-device evidence requirements, accessibility checks, and rollback drills.

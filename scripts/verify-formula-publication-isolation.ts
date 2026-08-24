@@ -50,15 +50,15 @@ const PRIVATE_ATTESTATION_PATH = join(
 
 const FROZEN_PUBLICATION_AUTHORITY_V1 = {
   decisionContentHash:
-    "7106736785e8bbb7cc310056f93f550413b6a0b76ad21e648b50e55480a2a52c",
+    "cac35a05d2d0c219b4f5ac00f3dea5b5fbb2b9c6b2fc15ea3383ef0f62d6031d",
   publishedIndexCanonicalSha256:
-    "c10faceaa52356d2e48042f64010cd0f3f170c0087b5d609a01ede360a7c874c",
+    "362f327b260f38ceb1d9afd7dc619d4ef010f8365ee84a8673ba1df6285fc3f5",
   identitySetSha256:
     "77f396783c66d4efd32d27f0dc85d646b9d3ef263490b007e7ab44d602dece7d",
   publishedSetSha256:
-    "71b99b01e955a80cc41f04f04ac146ecee762a8e5561b84a67ac1de38cedc710",
+    "751f7cdec829a548dfac84b08c3e6441acd528347343522c0748385729cf3d39",
   heldSetSha256:
-    "968e87141f7b7f76b0a149e8a5cd53e625db57abb4b30c0a4ad17a2bdf8ecf46",
+    "aafe40f5b36da3e0ef577bca7b18017089097a6606422ad5492ca5121074864d",
   gplHeldSetSha256:
     "f40564220d587e15de24fad8c98db22b26eb93aa76e6e2181e78fec058b01db8",
   cleanRoomSetSha256:
@@ -71,7 +71,7 @@ const FROZEN_PUBLICATION_AUTHORITY_V1 = {
 
 // Replaced only after a controlled private-evidence pass creates the attestation.
 const FROZEN_PRIVATE_ATTESTATION_SHA256 =
-  "018f81d7ef74e324e896c27dc8c17171ab472d313c6e9e80dd7fadaa8a2a4d16";
+  "c6cd4f55de57b79e61b9ea3608e79bc2263b1e504c469fc6cc583fc9e3aa55c7";
 
 interface JsonRecord {
   [key: string]: unknown;
@@ -205,7 +205,7 @@ function readContract(): IsolationContract {
   invariant(
     contract.schema === "fractalpark-formula-publication-isolation/v1" &&
       contract.version === 1 &&
-      contract.decisionRevision === 3 &&
+      contract.decisionRevision === 4 &&
       isRecord(contract.counts) &&
       isRecord(contract.publicBindings) &&
       isRecord(contract.privateBindings) &&
@@ -1581,7 +1581,9 @@ function verifyPrivateEvidence(
   );
   invariant(
     releaseManifest.schema === "fractalpark-bulk-release-manifest/1" &&
-      releaseManifest.decisionRevision === contract.decisionRevision &&
+      // The clean-room release is immutable revision-3 evidence even when the
+      // public decision ledger advances additively.
+      releaseManifest.decisionRevision === 3 &&
       releaseManifest.finalCensusLedgerSha256 ===
         contract.privateBindings.finalCensusSha256 &&
       isDenseArray(releaseManifest.rows) &&
@@ -1630,6 +1632,17 @@ function verifyPrivateEvidence(
           isRecord(row) &&
           row.rightsStatus === "project-owned" &&
           row.publicationDecision === "hold",
+      )
+      .map((row) => (row as JsonRecord).formulaId as string),
+  );
+  const pRecoveredPublishDecisionIds = new Set(
+    decisions.rows
+      .filter(
+        (row) =>
+          isRecord(row) &&
+          row.rightsStatus === "project-owned" &&
+          row.publicationDecision === "publish" &&
+          row.decisionReason === "publish-project-owned-recovery-gate-green",
       )
       .map((row) => (row as JsonRecord).formulaId as string),
   );
@@ -1822,6 +1835,35 @@ function verifyPrivateEvidence(
       .toString("utf8")
       .match(/[0-9a-f]{8}-[0-9a-f]{4}-5[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}/g) ?? [],
   );
+  const transcendentalRecovery = readJson(
+    join(
+      ROOT,
+      "resources/formula-library/v1/recovery-evidence/transcendental-v1/manifest.json",
+    ),
+  );
+  const amplifiedRecovery = readJson(
+    join(
+      ROOT,
+      "resources/formula-library/v1/recovery-evidence/amplified-v1/manifest.json",
+    ),
+  );
+  invariant(
+    isDenseArray(transcendentalRecovery.rows) &&
+      transcendentalRecovery.rows.length === 12 &&
+      isDenseArray(amplifiedRecovery.rows) &&
+      amplifiedRecovery.rows.length === 9,
+    "publication-isolation-recovery-evidence-invalid",
+  );
+  const transcendentalRecoveryIds = new Set(
+    transcendentalRecovery.rows.map((row) => (row as JsonRecord).formulaId as string),
+  );
+  const amplifiedRecoveryIds = new Set(
+    amplifiedRecovery.rows.map((row) => (row as JsonRecord).formulaId as string),
+  );
+  const recoveryAuthorityIds = new Set([
+    ...transcendentalRecoveryIds,
+    ...amplifiedRecoveryIds,
+  ]);
   invariant(
     aIds.size === 137 &&
       equalSets(aIds, aAllDecisionIds) &&
@@ -1829,8 +1871,11 @@ function verifyPrivateEvidence(
       equalSets(aCensusPublishIds, aPublishDecisionIds) &&
       pIds.size === 89 &&
       equalSets(pIds, pAllDecisionIds) &&
-      pHeldAuthorityIds.size === 21 &&
-      equalSets(pHeldAuthorityIds, pHeldDecisionIds) &&
+      pHeldAuthorityIds.size === 9 &&
+      equalSets(pHeldAuthorityIds, amplifiedRecoveryIds) &&
+      recoveryAuthorityIds.size === 21 &&
+      pHeldDecisionIds.size === 0 &&
+      equalSets(recoveryAuthorityIds, pRecoveredPublishDecisionIds) &&
       bIds.size === contract.counts.gplHeld &&
       equalSets(bIds, gplDecisionIds) &&
       cIds.size === 378 &&

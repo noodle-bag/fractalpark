@@ -4,7 +4,7 @@
   "publicationEligible": false,
   "publicationDecisionMutation": false,
   "sourceBindings": {
-    "scripts/generate-transcendental-recovery-evidence.ts": "8961406f10b783de7f629932092a7abe7d730fbb0ce5464753c3119a5f9ba871",
+    "scripts/generate-transcendental-recovery-evidence.ts": "e2ca417e5d6715bc644c7a50521a1cd8e8fc5cbc6b4f64a13b2110c8291276d4",
     "src/engine/formulas/v1/native-recipes-b94-recovered-transcendental.ts": "61fc575963d4ffce71c38f921e1d2e16272a1fd689dba1201275f31f14ebe51e",
     "src/engine/formulas/v1/provisional-profile.ts": "9ccfccfb24b5abe991d95f9ad6561e0d01499bdd95955b7a3e9a07d7c31abfe4",
     "src/engine/formulas/v1/provisional-preview.ts": "6f018547e3d111aea53f72fa66bdf15a995c9490649237a4aee7fbadc5d648ee",
@@ -14,8 +14,8 @@
     "src/engine/shaders/complex-math.glsl": "0e45ee640e2c62de66c616b9cf53ee12ce0b78a59d168de0f8fadbb3335aea89",
     "src/engine/plugins/builtins/formulas/recoveredTranscendentalMath.ts": "46ee77aa60652c81b6a379ce423dac9a8d7a5d8d2771cae307e60fe34d3c96e4",
     "src/engine/plugins/formula-catalog.ts": "14570ae82c6f1e659f7a4cfcc2318997df5080f981070c409e808cbd57bd58c2",
-    "scripts/formula-library-bulk-migration.ts": "b625fdeae5a1778f279478be9317406a89655af381edd97f4ee8ccef415c5d1d",
-    "resources/formula-library/v1/recovery-evidence/transcendental-v1/cross-check.json": "534218c7710be0ffb83ac2ce3a1d8eb0524e87d7e3c1f57186c0edaf1d24027f"
+    "scripts/formula-library-bulk-migration.ts": "d5f0a90e0b7a96eadfbe9c442b54216bb851b743e7ca16da4b5a6f6f9b8f01e2",
+    "resources/formula-library/v1/recovery-evidence/transcendental-v1/cross-check.json": "765ec8e150f641d54a76195366f1fc0b3d96c63e320291a58dda30982ce797b9"
   },
   "row": {
     "formulaId": "22d9a008-eb14-53de-9960-11eb5d37bb8e",
@@ -23,7 +23,7 @@
     "family": "exotic",
     "failureClass": "swiftshader-transcendental",
     "technicalStatus": "passed",
-    "publicationDecision": "hold",
+    "publicationDecision": "publish",
     "sourceRevision": "fb9db2dede500db19463ee53c8d059c2e7a92651d7de472a4bedd6e7ee58a831",
     "semanticHash": "dabc6e573e13fc60004c12150faa4bfada8b5db90b340c1b1db153927c46e21c",
     "numericRemedy": {
@@ -94,5 +94,5 @@
       "anomalies": []
     }
   },
-  "contentHash": "bc38ac81982ac7d38615051725ad7ae038dba9821dc24f36d46b4ab8858d4a97"
+  "contentHash": "4045563d11e7fd62c57619504ad0024f6174fbe060ac99963419ba4839d46b94"
 }

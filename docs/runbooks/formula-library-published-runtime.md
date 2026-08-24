@@ -1,8 +1,8 @@
 # Published Formula runtime loader runbook
 
 This runbook covers the v0.4.19 engine-only runtime projection that joins the
-immutable rev3 C339 and rev4 A106/P68 assets into the exact 513 published
-Definitions authorized by publication decision revision 3.
+immutable rev3 C339 and rev4 A106/P89 assets into the exact 534 published
+Definitions authorized by publication decision revision 4.
 
 It does **not** activate a selector, parameter UI, Lucky/Profile ranking,
 portable writer, deployment, Release, or Production behavior.
@@ -27,7 +27,7 @@ hash.
 ## Deterministic regeneration and drift check
 
 No private path or environment variable is required. Inputs are only the public,
-hash-pinned rev3/rev4 manifests and decision revision 3.
+hash-pinned rev3/rev4 manifests and decision revision 4.
 
 ```bash
 npm run formula:runtime-rev4:verify
@@ -41,11 +41,11 @@ npx vitest run \
 Expected accounting:
 
 ```text
-rows = 513
+rows = 534
 separated-independent-rewrite = 339
 direct-adaptation = 106
-project-owned = 68
-definition bodies = 513
+project-owned = 89
+definition bodies = 534
 profileQuality none = 0
 ```
 
@@ -76,7 +76,7 @@ must remain byte-identical.
 ## WebGL gate
 
 The exhaustive gate links the complete framework shader and runs two bounded,
-single-step CPU/GPU candidate-orbit probe pairs for every one of the 513 rows
+single-step CPU/GPU candidate-orbit probe pairs for every published row
 under headless SwiftShader. Event and continue channels match exactly; bounded
 complex components use the frozen relative tolerance so the gate measures
 binding/lifecycle parity rather than deep-orbit double/float chaos:
@@ -92,7 +92,7 @@ npm run formula:published-runtime:webgl -- \
   --start=0 --limit=129 --chunk-size=3 --report=/tmp/shard-0.json
 ```
 
-All reports must be merged by Formula ID and prove exact equality with the 513
+All reports must be merged by Formula ID and prove exact equality with the published
 index IDs: no gap, duplicate, or extra row. A partial shard is evidence for that
 range only and must not be described as the full gate.
 

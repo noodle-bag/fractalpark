@@ -325,7 +325,7 @@
       },
       "standardDirectory": {
         "cta": "Explorar o diretório padrão",
-        "hint": "Todas as 677 identidades de fórmulas padrão com status de publicação — incluindo as 513 atualmente publicadas."
+        "hint": "Há atualmente 534 definições padrão publicadas."
       }
     },
     "guide": {
@@ -440,7 +440,7 @@
             "preprocessor": "Recursos de pré-processador",
             "rejected-constructs": "Qualquer construção rejeitada pelo pipeline de compilação atual"
           },
-          "disclaimer": "Esta é uma referência de compatibilidade Classic testada, não uma alegação de compatibilidade completa com Fractint nem o registro de publicação Standard de 677 identidades. O registro atual contém 513 Definitions publicadas e 164 Records retidos.",
+          "disclaimer": "Esta é uma referência de compatibilidade Classic testada, não uma alegação de compatibilidade completa com Fractint. Ela é distinta do registro de publicação Standard.",
           "verified": {
             "title": "Compatibilidade verificada",
             "intro": "Estas contagens de capacidade de importação Classic vêm do manifesto de compatibilidade versionado: 588 entradas-alvo abrangem 579 aprovações strict-v2 e 9 dispensas documentadas; 117 entradas separadas são excluídas com motivos estáveis. Elas não contam Definitions FRM-like v1 publicadas.",
@@ -1037,10 +1037,10 @@
       "breadcrumb": "Diretório",
       "eyebrow": "Diretório de fórmulas padrão",
       "title": "Diretório de fórmulas padrão",
-      "description": "O diretório completo das 677 identidades de fórmulas padrão do FractalPark com seu status de publicação atual, navegável por família e status.",
-      "intro": "Todas as 677 identidades de fórmulas padrão em um único diretório. Filtre por família e status de publicação; as fórmulas publicadas estão totalmente implementadas e prontas para executar, as retidas estão documentadas mas ainda não disponíveis.",
+      "description": "Explore as {count} definições padrão publicadas do FractalPark por família.",
+      "intro": "Este diretório reúne todas as {count} definições padrão publicadas. Cada fórmula listada tem uma implementação completa e executável.",
       "facets": {
-        "title": "Navegar por faceta",
+        "title": "Navegar por família",
         "family": "Família",
         "status": "Status de publicação",
         "all": "Todas"
@@ -1059,7 +1059,7 @@
         "hold": "Retida",
         "exclude": "Excluída"
       },
-      "resultCount": "{count} identidades"
+      "resultCount": "{count} definições publicadas"
     },
     "record": {
       "eyebrow": "Registro da fórmula",
@@ -1865,7 +1865,7 @@
   },
   "about": {
     "title": "Sobre o FractalPark",
-    "aiDescription": "FractalPark é um gerador de arte fractal open-source, licenciado sob MIT e baseado em navegador, que usa WebGL para renderização em tempo real na GPU. Ele inclui 94 fórmulas integradas de tempo de escape, 513 Definitions Standard publicadas com código-fonte FRM-like v1 fixado, um Editor separado de fórmulas personalizadas compatível com Classic, 7 plugins de transformação UV, 9 modos de coloração e exportação de PNG em alta resolução. Construído com Next.js 16, React 19, TypeScript 5 e Tailwind CSS, seu motor de renderização usa montagem dinâmica de GLSL baseada em plugins e cache LRU.",
+    "aiDescription": "FractalPark é um gerador de arte fractal open-source, licenciado sob MIT e baseado em navegador, que usa WebGL para renderização em tempo real na GPU. Ele inclui 94 fórmulas integradas de tempo de escape, 534 Standard Definition publicadas com código-fonte FRM-like v1 fixado, um Editor separado de fórmulas personalizadas compatível com Classic, 7 plugins de transformação UV, 9 modos de coloração e exportação de PNG em alta resolução. Construído com Next.js 16, React 19, TypeScript 5 e Tailwind CSS, seu mecanismo de renderização usa montagem GLSL dinâmica baseada em plugins e cache LRU.",
     "techStack": {
       "title": "Tecnologia",
       "description": "Construído com Next.js, WebGL e TypeScript. Renderização de fractais em tempo real alimentada por shaders de GPU.",

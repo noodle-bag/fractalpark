@@ -10,7 +10,7 @@ import heldGuideAsset from '../../resources/formula-library/v1/teaching-held-gui
 import { decodeParams } from '@/lib/url-params';
 
 describe('Formula Atlas projection', () => {
-  it('projects 94 identities, seven families, 17 Guides, and 22 held Records', () => {
+  it('projects 94 published identities, seven families, and 17 Guides', () => {
     const atlas = buildFormulaAtlas('en');
 
     expect(atlas.formulas).toHaveLength(94);
@@ -22,11 +22,11 @@ describe('Formula Atlas projection', () => {
       true
     );
     expect(atlas.guides).toHaveLength(17);
-    expect(atlas.formulas.filter(({ recordHref }) => recordHref)).toHaveLength(22);
-    expect(atlas.formulas.filter(({ exploreHref }) => exploreHref)).toHaveLength(72);
+    expect(atlas.formulas.filter(({ recordHref }) => recordHref)).toHaveLength(0);
+    expect(atlas.formulas.filter(({ exploreHref }) => exploreHref)).toHaveLength(94);
   });
 
-  it('withholds Explore destinations from every held runtime identity', () => {
+  it('routes every published runtime identity to Explore while Guide restoration remains gated', () => {
     const atlas = buildFormulaAtlas('zh');
     const runtimeIds = new Map(
       aliasesAsset.aliases
@@ -40,13 +40,10 @@ describe('Formula Atlas projection', () => {
     for (const entry of atlas.formulas) {
       const formulaId = runtimeIds.get(entry.metadata.id);
       if (!formulaId) throw new Error(`Missing runtime alias for ${entry.metadata.id}`);
-      if (entry.recordHref) {
-        expect(decisions.get(formulaId)).toBe('hold');
-        expect(entry.exploreHref).toBeUndefined();
-        expect(entry.destinationHref).toBe(`/zh${entry.recordHref}`);
-        continue;
-      }
+      expect(entry.recordHref).toBeUndefined();
       expect(decisions.get(formulaId)).toBe('publish');
+      expect(entry.exploreHref).toBeDefined();
+      if (!entry.exploreHref) continue;
       const url = new URL(entry.exploreHref, 'https://www.fractalpark.com');
       const decoded = decodeParams(url.searchParams);
 
@@ -61,15 +58,13 @@ describe('Formula Atlas projection', () => {
         entry.recordHref ? [entry.recordHref.slice('/formulas/'.length)] : [],
       ),
     );
-    expect(heldRecordIds).toEqual(
-      new Set(
-        [...runtimeIds.values()].filter(
-          (formulaId) => decisions.get(formulaId) === 'hold',
-        ),
-      ),
-    );
+    expect(heldRecordIds.size).toBe(0);
     expect(
-      heldGuideAsset.rows.every((row) => heldRecordIds.has(row.formulaId)),
+      heldGuideAsset.rows.every(
+        (row) =>
+          decisions.get(row.formulaId) === 'publish' &&
+          row.guideAvailability === 'hold',
+      ),
     ).toBe(true);
   });
 

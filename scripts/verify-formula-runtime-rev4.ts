@@ -29,14 +29,14 @@ import { registerBuiltins } from "../src/engine/plugins/builtins";
  */
 
 const RUNTIME_REVISION = 4;
-const DECISION_REVISION = 3;
+const DECISION_REVISION = 4;
 const EXPECTED_DIRECT_COUNT = 106;
-const EXPECTED_PROJECT_OWNED_COUNT = 68;
-const EXPECTED_ROW_COUNT = 174;
+const EXPECTED_PROJECT_OWNED_COUNT = 89;
+const EXPECTED_ROW_COUNT = 195;
 const EXPECTED_CENSUS_LEDGER_HASH =
   "fa7f6b35cd7e9d5afa77754755d3439ea949c7be2964024a4163a3874e9a5a37";
 const EXPECTED_DECISIONS_CONTENT_HASH =
-  "7106736785e8bbb7cc310056f93f550413b6a0b76ad21e648b50e55480a2a52c";
+  "cac35a05d2d0c219b4f5ac00f3dea5b5fbb2b9c6b2fc15ea3383ef0f62d6031d";
 const RELEASE_SCHEMA =
   "fractalpark-formula-library-runtime-release-manifest/v1";
 const SHARD_SCHEMA = "fractalpark-formula-library-runtime-shard/v1";
@@ -238,8 +238,8 @@ export async function verifyRuntimeRev4(repositoryRoot: string): Promise<{
       decisions.contentHash === release.publicationDecisionsContentHash &&
       sha256Bytes(decisionsBytes) === release.publicationDecisionsSha256 &&
       isRecord(decisions.decisionCounts) &&
-      decisions.decisionCounts.publish === 513 &&
-      decisions.decisionCounts.hold === 164 &&
+      decisions.decisionCounts.publish === 534 &&
+      decisions.decisionCounts.hold === 143 &&
       decisions.decisionCounts.exclude === 0 &&
       Array.isArray(decisions.rows) &&
       decisions.rows.length === 677,
@@ -411,10 +411,7 @@ export async function verifyRuntimeRev4(repositoryRoot: string): Promise<{
       );
     } else {
       const recipe = nativeById.get(row.formulaId);
-      invariant(
-        recipe && !nativeHolds.has(row.formulaId),
-        "runtime-rev4-verify-native-set-invalid",
-      );
+      invariant(recipe, "runtime-rev4-verify-native-set-invalid");
       const validated = await validateNativeRecipeV1(recipe);
       invariant(
         validated.ok &&

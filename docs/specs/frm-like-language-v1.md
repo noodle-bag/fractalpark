@@ -687,7 +687,7 @@ A conforming implementation MUST pass, at minimum:
 
 FractalPark v0.4.19 has 677 Standard Formula identities. The current publication
 decision binds pinned executable Definition source, a Profile, runtime artifacts, and
-Record actions to 513 published Definitions. The remaining 164 Records are held
+Record actions to 534 published Definitions. The remaining 143 Records are held
 and do not expose runnable source or actions. These numbers are release facts,
 not language privileges: every executable Definition uses this same contract.
 

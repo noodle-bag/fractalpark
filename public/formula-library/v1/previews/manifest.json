@@ -1,11 +1,11 @@
 {
   "schema": "fractalpark-formula-record-previews/v1",
-  "decisionRevision": 3,
-  "publicationDecisionsContentHash": "7106736785e8bbb7cc310056f93f550413b6a0b76ad21e648b50e55480a2a52c",
+  "decisionRevision": 4,
+  "publicationDecisionsContentHash": "cac35a05d2d0c219b4f5ac00f3dea5b5fbb2b9c6b2fc15ea3383ef0f62d6031d",
   "deterministic": true,
   "width": 96,
   "height": 60,
-  "rowCount": 513,
+  "rowCount": 534,
   "rows": [
     {
       "formulaId": "00e14aa8-b766-54ea-a359-3f5d20d329b7",
@@ -64,11 +64,11 @@
       "sourceRevision": "77c461de2d9cf0bbfb4a3257fb4e83bd1f250f6f5f1c52020ff3da0ecee366d9",
       "profileQuality": "mechanical",
       "file": "028a6158-e5dd-5d63-a5a7-5db2e3f7d87d.png",
-      "pngSha256": "f7cfe43ce0cff5f7a58a0c08bf66677613b03802ee1d90facbcb12a0f9490f02",
-      "escapedPixels": 3478,
-      "interiorPixels": 2282,
+      "pngSha256": "92a762fc50a969d6b1a295385ebc58c561c7d41d8c23bc938e5ee432437ea8eb",
+      "escapedPixels": 3494,
+      "interiorPixels": 2266,
       "nonFinitePixels": 0,
-      "uniqueColors": 814,
+      "uniqueColors": 812,
       "anomalies": []
     },
     {
@@ -76,11 +76,11 @@
       "sourceRevision": "fd21d1feee8546a286c7af891e3a671613d5b55571c0426f07c77c20d409eff6",
       "profileQuality": "mechanical",
       "file": "04338d55-9f3d-574a-8fb6-58ec7d530cc5.png",
-      "pngSha256": "bd363086852604120d8c63ee18b1f68281b95cfd8808744a4522585875bb73b1",
+      "pngSha256": "8c78f0cd987431b31a2e07ae08a78f8c65d4a7f1cd85fae4cbe857317e84e367",
       "escapedPixels": 5189,
       "interiorPixels": 571,
       "nonFinitePixels": 0,
-      "uniqueColors": 530,
+      "uniqueColors": 531,
       "anomalies": []
     },
     {
@@ -148,11 +148,11 @@
       "sourceRevision": "3bea67a3a2a3985a6a62fd5fa57a5d71b9c5c64b5867da32732ef51b7883766e",
       "profileQuality": "mechanical",
       "file": "063f210d-e292-53a5-aab5-15150eb12ce2.png",
-      "pngSha256": "e59010e2be8caa0f0ab360e8fc051dea207de6b5a9f34ab2e01131c2680de415",
+      "pngSha256": "3d7670cc8600ac3745ad3bd472e9cd73dada4c053aba900202ee4f7a02e2780f",
       "escapedPixels": 4546,
       "interiorPixels": 1214,
       "nonFinitePixels": 0,
-      "uniqueColors": 592,
+      "uniqueColors": 587,
       "anomalies": []
     },
     {
@@ -175,11 +175,11 @@
       "sourceRevision": "13f3a844715c98db9cf57be8c094e0e61a5cf834e6781c5bca20c644bcb8bbba",
       "profileQuality": "mechanical",
       "file": "066c7fbe-88ed-5421-b2f9-e5870f649a39.png",
-      "pngSha256": "f2f99a0286a82f082c5fa36db69a60a196ef29565dffdeb1800309818cd7123c",
+      "pngSha256": "a7313cbd644f7a7092d30d9c60c75a5706451ded32c2b7b45e64ebb0b7692878",
       "escapedPixels": 5060,
       "interiorPixels": 700,
       "nonFinitePixels": 0,
-      "uniqueColors": 408,
+      "uniqueColors": 410,
       "anomalies": []
     },
     {
@@ -199,11 +199,11 @@
       "sourceRevision": "216c3ac9f8b6bf39241e970f5a65d53d9c52dc7998d251ee0b4eabd5c3ffc713",
       "profileQuality": "mechanical",
       "file": "070664be-6b62-5383-938f-4f89e73df367.png",
-      "pngSha256": "591e7905c259de27580413e863d01ec67cc907791787add6221213cc21540de9",
+      "pngSha256": "50bedb16aa8867d54e291732d6b5fbcd9189b329747d61247ef476f3bb10f410",
       "escapedPixels": 5171,
       "interiorPixels": 589,
       "nonFinitePixels": 0,
-      "uniqueColors": 532,
+      "uniqueColors": 533,
       "anomalies": []
     },
     {
@@ -226,11 +226,11 @@
       "sourceRevision": "f92e1dcfc7587805afe03dce4fd661667bb99294ecc188761cd2ad2735bd878b",
       "profileQuality": "family",
       "file": "07c3a5ae-0504-57d9-b033-95debcce6d5c.png",
-      "pngSha256": "145b893fa9d0d4aff04d8e598303119bcec926326d84702623ca899a6fdd1982",
+      "pngSha256": "7bf192f41e9e816077be7c01d123bcdf688de61690b5b1dc7ed5166d9feb4966",
       "escapedPixels": 5760,
       "interiorPixels": 0,
       "nonFinitePixels": 0,
-      "uniqueColors": 387,
+      "uniqueColors": 385,
       "anomalies": [
         "no-interior-pixels"
       ]
@@ -252,11 +252,11 @@
       "sourceRevision": "dbb90a875ab0a6e56b3210ab8021339e7f9ea19d4bc8f26f82ed22f37ff58ede",
       "profileQuality": "mechanical",
       "file": "09288426-4968-5e78-9ab0-00607cc290bd.png",
-      "pngSha256": "586447f0f6379085fc46bc5619e28eb4823a83567b44c6e818a591987ac43c03",
+      "pngSha256": "ff6f78050c640319a0c173b71cdbbbf051c9c02c079b18d167fd6d0594b909b1",
       "escapedPixels": 4968,
       "interiorPixels": 792,
       "nonFinitePixels": 0,
-      "uniqueColors": 603,
+      "uniqueColors": 602,
       "anomalies": []
     },
     {
@@ -279,11 +279,11 @@
       "sourceRevision": "d320432e8d7d72fdd0b800b867d6dc74c2772a07e961c9c56b1b19e9f55b3f96",
       "profileQuality": "mechanical",
       "file": "09d9b20b-7e97-5d87-a883-e1c4435effa3.png",
-      "pngSha256": "fab6cc379de10674bc21436edd4b64fa639daea565a9b8324712c3f0402f2077",
-      "escapedPixels": 3944,
-      "interiorPixels": 1816,
+      "pngSha256": "86c2b79ff4aece91788b636bbd8de1f6bb793485bef29a7a2a50da78f46bcf1e",
+      "escapedPixels": 3940,
+      "interiorPixels": 1820,
       "nonFinitePixels": 0,
-      "uniqueColors": 746,
+      "uniqueColors": 758,
       "anomalies": []
     },
     {
@@ -303,7 +303,7 @@
       "sourceRevision": "0a9786849dd78c3643bae1f6de80fbc42d2e57e50e591090e67d681c81c0822e",
       "profileQuality": "family",
       "file": "0a9a153b-bb4e-53df-9cdf-54fd0ad0081e.png",
-      "pngSha256": "0f1bad08fa80bea831083140a8f25729b292339229afa5f93af0f6facc14e0e8",
+      "pngSha256": "6cecd4c94d6a99b3896e10e7e9f038652c31702738489cee345cb079837312f1",
       "escapedPixels": 5750,
       "interiorPixels": 10,
       "nonFinitePixels": 0,
@@ -342,11 +342,11 @@
       "sourceRevision": "c462c98acee13c502a27d533c464c13e985e83da9d548f5d0b3501dc06dc0bd2",
       "profileQuality": "mechanical",
       "file": "0b6fa82f-3b3a-584f-acaf-d51fe7f0f6aa.png",
-      "pngSha256": "f31f22666c52af180768d4ea5decaa4e135b52e4439408364f85d4d94e09b4d1",
-      "escapedPixels": 3152,
-      "interiorPixels": 2608,
+      "pngSha256": "7f2d3e37b3c0f010f953e540fa4bd8d869bf6bab28abf501305d4e994426aaac",
+      "escapedPixels": 3150,
+      "interiorPixels": 2610,
       "nonFinitePixels": 0,
-      "uniqueColors": 736,
+      "uniqueColors": 735,
       "anomalies": []
     },
     {
@@ -432,11 +432,11 @@
       "sourceRevision": "5af9f421ee69a675a27a80e5a06975d5b20fe033ed5499b392474afff509c0c7",
       "profileQuality": "mechanical",
       "file": "0c89c8ab-1cd9-58fc-bc1a-e19dfe5fef7e.png",
-      "pngSha256": "0da91e83db99d3b39f2a9d71dbaf99a6afd5bb27150bcac5a69618b8051ff63b",
+      "pngSha256": "4ea9a249a5dab409ccccff4060965a1aade489cf10ca18dfa29edecf9065c5af",
       "escapedPixels": 3358,
       "interiorPixels": 2402,
       "nonFinitePixels": 0,
-      "uniqueColors": 271,
+      "uniqueColors": 270,
       "anomalies": []
     },
     {
@@ -468,15 +468,14 @@
     {
       "formulaId": "0df5ac6e-d97e-55db-b624-96c310af07dd",
       "sourceRevision": "bb7d3fd03ddb3b27f66b28fea82cdfa4da6c88cf15a23c6da8fe27a8adf1e34e",
-      "profileQuality": "family",
+      "profileQuality": "mechanical",
       "file": "0df5ac6e-d97e-55db-b624-96c310af07dd.png",
-      "pngSha256": "8b6a676dc3b353f41e94888d556ad3b83aa6ebe781c1e2b5ee37fcf13a1e8bef",
-      "escapedPixels": 5756,
-      "interiorPixels": 0,
-      "nonFinitePixels": 4,
-      "uniqueColors": 45,
+      "pngSha256": "ecd6063555e29ca692bee7a942cd0c031bf58f44d009dea46c39098788d5c71e",
+      "escapedPixels": 1038,
+      "interiorPixels": 4720,
+      "nonFinitePixels": 2,
+      "uniqueColors": 83,
       "anomalies": [
-        "no-interior-pixels",
         "non-finite-pixels"
       ]
     },
@@ -511,11 +510,11 @@
       "sourceRevision": "55146871c7a0de6963c38c1c40feac48deef3681b95fd86b91411343d4592edd",
       "profileQuality": "mechanical",
       "file": "0e58167e-79e1-56f9-86f7-149737fcfaea.png",
-      "pngSha256": "2b750247533d0bfa30098ca8f13815076fdc98182192dac657c58c460a078fcd",
-      "escapedPixels": 2694,
-      "interiorPixels": 3064,
+      "pngSha256": "ab43a4e66d35e40888de8beedcd1dada38469da5b1cef36e173119e7f3e9d8e8",
+      "escapedPixels": 2702,
+      "interiorPixels": 3056,
       "nonFinitePixels": 2,
-      "uniqueColors": 463,
+      "uniqueColors": 462,
       "anomalies": [
         "non-finite-pixels"
       ]
@@ -618,11 +617,11 @@
       "sourceRevision": "a2e3af106c7c62f3aea1b7c433f02a5f2c5e4002aacaaae7bb2175a3aa7f26c2",
       "profileQuality": "mechanical",
       "file": "14cf0fba-341d-5332-b3f0-2648304429e1.png",
-      "pngSha256": "6abe5de370a38baf6f90eb5e994fa8d66e09faabd2d19e0eb1c9b2b8efcc915e",
-      "escapedPixels": 4412,
-      "interiorPixels": 1348,
+      "pngSha256": "6460c7dd2bc186d75da893b21da6b3c8c4b3baeaa19a907a5a0d582397b8a0a7",
+      "escapedPixels": 4410,
+      "interiorPixels": 1350,
       "nonFinitePixels": 0,
-      "uniqueColors": 522,
+      "uniqueColors": 521,
       "anomalies": []
     },
     {
@@ -654,11 +653,11 @@
       "sourceRevision": "cc6b41e6a26c481a99f50d2b45e46b892bd52feb05631c0e9ffba133cb4b3681",
       "profileQuality": "mechanical",
       "file": "1586a75a-acb4-533b-a3e5-a92eca3acbc9.png",
-      "pngSha256": "17e20a118007e0fcbeb911a864f41179272cfa0ff29b8a27b9e3fdfc9e33ffea",
-      "escapedPixels": 2688,
-      "interiorPixels": 3072,
+      "pngSha256": "d659b43a3d715b62bf2a880ac8d0fe645dccac0242cabe5389f8705ad0b9b8be",
+      "escapedPixels": 2676,
+      "interiorPixels": 3084,
       "nonFinitePixels": 0,
-      "uniqueColors": 703,
+      "uniqueColors": 697,
       "anomalies": []
     },
     {
@@ -724,6 +723,20 @@
       "anomalies": []
     },
     {
+      "formulaId": "17d88272-6dbf-5622-996a-b116ea3a3fab",
+      "sourceRevision": "32437882a899d589e7ff8fa968c7248e5c9436fa6a87a48fa2072ff09e3c6540",
+      "profileQuality": "mechanical",
+      "file": "17d88272-6dbf-5622-996a-b116ea3a3fab.png",
+      "pngSha256": "f9f9dee745ae385c09290ddde470a6da7c17e53e1bdbab59d925a0de87df70e9",
+      "escapedPixels": 452,
+      "interiorPixels": 5238,
+      "nonFinitePixels": 70,
+      "uniqueColors": 188,
+      "anomalies": [
+        "non-finite-pixels"
+      ]
+    },
+    {
       "formulaId": "17eea2ca-49cc-5b0b-9608-28694fcde4eb",
       "sourceRevision": "efe127de0071dcb98ec36a2d5ff887dc7dfee1bf5c417a55d5d086ef32ac2fab",
       "profileQuality": "mechanical",
@@ -778,15 +791,27 @@
       "anomalies": []
     },
     {
+      "formulaId": "190fa538-89c9-590f-8170-34b3c570fc5d",
+      "sourceRevision": "4070d643142a8bac0a93df5f50b3bd47671076d603cf06e041aaa67035e806ce",
+      "profileQuality": "mechanical",
+      "file": "190fa538-89c9-590f-8170-34b3c570fc5d.png",
+      "pngSha256": "c0d9390a3df01fe1199155f92f1d92bb9ce28c7bd9ac0a8a8baccdca915230f3",
+      "escapedPixels": 3742,
+      "interiorPixels": 2018,
+      "nonFinitePixels": 0,
+      "uniqueColors": 512,
+      "anomalies": []
+    },
+    {
       "formulaId": "1936e9b5-1312-593e-ab67-72e95bc514b0",
       "sourceRevision": "2f024a184f50b87076b883408a33387a2010e89996414646d1b51844d2f181fc",
       "profileQuality": "mechanical",
       "file": "1936e9b5-1312-593e-ab67-72e95bc514b0.png",
-      "pngSha256": "8031c0a657f0e05bd26d79e83782b6af951452d2ec368f53529b1c4b261a4c34",
-      "escapedPixels": 1666,
-      "interiorPixels": 4094,
+      "pngSha256": "7666a5672459146f8ceffe7287762970d77168ba67f6452abc9fbd8926373d74",
+      "escapedPixels": 1668,
+      "interiorPixels": 4092,
       "nonFinitePixels": 0,
-      "uniqueColors": 428,
+      "uniqueColors": 419,
       "anomalies": []
     },
     {
@@ -835,11 +860,11 @@
       "sourceRevision": "d51707785f4d59fbfa309c2dbd8da93ac1a0ca152c067e6e34c4851585652768",
       "profileQuality": "mechanical",
       "file": "1bb379a2-3588-53f8-a3ab-e52021c78054.png",
-      "pngSha256": "bde52de537305a28cbedd68309ddcaea1d6149cc2226048f3fe6dbfcdd1922c5",
+      "pngSha256": "0669d002483c16e89c383ece81bd528186601cf0c415e948475f9b293a682d3c",
       "escapedPixels": 5484,
       "interiorPixels": 276,
       "nonFinitePixels": 0,
-      "uniqueColors": 412,
+      "uniqueColors": 411,
       "anomalies": []
     },
     {
@@ -871,11 +896,11 @@
       "sourceRevision": "808341c74db4c061de079676b921e2c6a79e344ab1f66b314c0365802b9aedc9",
       "profileQuality": "mechanical",
       "file": "1cd7a16f-0474-5b8f-a974-e122ea893769.png",
-      "pngSha256": "2d4dc74a9f0c4ade836257e69d7456f7b501c60e77233a32b4e1c07aa5877a6a",
+      "pngSha256": "11858273aaf8fc9f039a241f31bd3ba3d3928f5d6bea66e565586743dd74b43d",
       "escapedPixels": 4994,
       "interiorPixels": 766,
       "nonFinitePixels": 0,
-      "uniqueColors": 491,
+      "uniqueColors": 492,
       "anomalies": []
     },
     {
@@ -895,11 +920,11 @@
       "sourceRevision": "d42008151396eb867021ca228dea37e003d3033307ccf0c353b44b270b965d65",
       "profileQuality": "mechanical",
       "file": "1ecff9ef-b771-589a-a804-9eb223f43f60.png",
-      "pngSha256": "ddce839c3b3f70a70972e9fbb3b32ef9b578007200050e0c108ebef3524685db",
-      "escapedPixels": 3978,
-      "interiorPixels": 1782,
+      "pngSha256": "03bf41cfff6f23ff58f72fa473920694ce36dabb26ab530954e7d5bbffd0cd91",
+      "escapedPixels": 3986,
+      "interiorPixels": 1774,
       "nonFinitePixels": 0,
-      "uniqueColors": 738,
+      "uniqueColors": 751,
       "anomalies": []
     },
     {
@@ -907,11 +932,11 @@
       "sourceRevision": "3d523dc88b633860678f40bfb0095626612f7b2eb5058163d162b7b4d0fc4a6d",
       "profileQuality": "mechanical",
       "file": "1f56b41c-720e-5a42-9772-dd3a64ce8391.png",
-      "pngSha256": "872b370d3a33679aff6f4a809a6d97e89334149d183913b88ad0b3c1f22041ff",
+      "pngSha256": "a00660851670ed930e21993c35ba9cf5d1d91b59a7ddc6f715151ea118bf0489",
       "escapedPixels": 5176,
       "interiorPixels": 584,
       "nonFinitePixels": 0,
-      "uniqueColors": 425,
+      "uniqueColors": 424,
       "anomalies": []
     },
     {
@@ -933,11 +958,23 @@
       "sourceRevision": "82a05cff917a2ee381c098b3fad09db4e43a48e06c2da9b77339a8ab7feb4b0f",
       "profileQuality": "mechanical",
       "file": "1faac719-6536-5496-a61c-f7c739b78f12.png",
-      "pngSha256": "eb1eb0b853fb003282e207935acc3b4dfa2e06d8ab5e5d227ea0896bc6545bae",
-      "escapedPixels": 3420,
-      "interiorPixels": 2340,
+      "pngSha256": "d5f54b4b44fb3eedf12db57c1427fd3d01de39b96756c01e5a386c9b4913bbbe",
+      "escapedPixels": 3432,
+      "interiorPixels": 2328,
       "nonFinitePixels": 0,
-      "uniqueColors": 716,
+      "uniqueColors": 721,
+      "anomalies": []
+    },
+    {
+      "formulaId": "201c54f3-a77a-5be0-a0a5-6f4f1998ee6d",
+      "sourceRevision": "90d43b9c2bc9a7eda5ca6f997a1ae2dc6640f0cc12cdcc34e8c82ca0765eff12",
+      "profileQuality": "mechanical",
+      "file": "201c54f3-a77a-5be0-a0a5-6f4f1998ee6d.png",
+      "pngSha256": "ccff72e203a0720436d70c85f10c67e6ac7308b3ebdb67b7426865ba39f9029c",
+      "escapedPixels": 3134,
+      "interiorPixels": 2626,
+      "nonFinitePixels": 0,
+      "uniqueColors": 537,
       "anomalies": []
     },
     {
@@ -991,15 +1028,27 @@
       "anomalies": []
     },
     {
+      "formulaId": "22d9a008-eb14-53de-9960-11eb5d37bb8e",
+      "sourceRevision": "fb9db2dede500db19463ee53c8d059c2e7a92651d7de472a4bedd6e7ee58a831",
+      "profileQuality": "mechanical",
+      "file": "22d9a008-eb14-53de-9960-11eb5d37bb8e.png",
+      "pngSha256": "9fdf6d608f3f5625b4cb026ebd0d69825b6e653eefd57dfe6b02cda856031c1a",
+      "escapedPixels": 3607,
+      "interiorPixels": 2153,
+      "nonFinitePixels": 0,
+      "uniqueColors": 766,
+      "anomalies": []
+    },
+    {
       "formulaId": "23808fdd-db5b-5dc8-87bd-19c42d2a5065",
       "sourceRevision": "0142e2d8a30cf2d6ea178a090f6287f6cdaa919b3eec6a2739d3a9661f711b9c",
       "profileQuality": "mechanical",
       "file": "23808fdd-db5b-5dc8-87bd-19c42d2a5065.png",
-      "pngSha256": "dbc88ffb81f2b1b490a1cdca2ccdf4150aef39ac23fbd8863b9afaf13a2963f3",
-      "escapedPixels": 3234,
-      "interiorPixels": 2526,
+      "pngSha256": "ed15ae18e086cbce249dfc96c2986d1360cc8c65a44aa950ea8dbcf61a926650",
+      "escapedPixels": 3224,
+      "interiorPixels": 2536,
       "nonFinitePixels": 0,
-      "uniqueColors": 745,
+      "uniqueColors": 738,
       "anomalies": []
     },
     {
@@ -1019,11 +1068,11 @@
       "sourceRevision": "0b6838959ef763f45fa2bd0c78863f26284f09465c8afd3925a077c685af161a",
       "profileQuality": "mechanical",
       "file": "23d2bc83-a564-5890-b438-307333cbcf68.png",
-      "pngSha256": "133feb071682f24e4e11cbfdfcdd6912bb532629bf977e81c77667dcb35ff70d",
-      "escapedPixels": 5164,
-      "interiorPixels": 596,
+      "pngSha256": "817d9d4abb8f2652f4b92bd5244772174bcb91e38e0358f36c9a20c1132cd8a1",
+      "escapedPixels": 5166,
+      "interiorPixels": 594,
       "nonFinitePixels": 0,
-      "uniqueColors": 721,
+      "uniqueColors": 727,
       "anomalies": []
     },
     {
@@ -1083,11 +1132,11 @@
       "sourceRevision": "5beff9460cca491f92ef29ebb89a0fa61d1b506e3d9a4b5a9694bf49458769ec",
       "profileQuality": "mechanical",
       "file": "2515834d-dd11-5f8a-afb7-0ac9908a3c0a.png",
-      "pngSha256": "d55746af0c98faab066d2f22f26be569d034aeb64c9f07e7c57297d6f044cdbf",
-      "escapedPixels": 4988,
-      "interiorPixels": 772,
+      "pngSha256": "15ce10601955220a4caabe3894c276e3512744b22541d7cb81342bcaa2b7f12e",
+      "escapedPixels": 4990,
+      "interiorPixels": 770,
       "nonFinitePixels": 0,
-      "uniqueColors": 785,
+      "uniqueColors": 788,
       "anomalies": []
     },
     {
@@ -1225,15 +1274,27 @@
       "anomalies": []
     },
     {
+      "formulaId": "280cd3e2-865b-5c78-90b7-39b2a36d7be0",
+      "sourceRevision": "b4677349cc60d66a5b7ad87655a89585d2bf83c7284ef949afe081e8eb294aac",
+      "profileQuality": "mechanical",
+      "file": "280cd3e2-865b-5c78-90b7-39b2a36d7be0.png",
+      "pngSha256": "eecbd71a80d115e7c9ac712adada45ffa7a4aa15b4d3ba1ba25de01c2b20cdc5",
+      "escapedPixels": 2108,
+      "interiorPixels": 3652,
+      "nonFinitePixels": 0,
+      "uniqueColors": 199,
+      "anomalies": []
+    },
+    {
       "formulaId": "2826b57e-ae1a-564b-a17d-6ae3beedd30b",
       "sourceRevision": "652b809a6e33657a6192706c6607786b586410ab5beb6928cfc3f35ac99dccfc",
       "profileQuality": "mechanical",
       "file": "2826b57e-ae1a-564b-a17d-6ae3beedd30b.png",
-      "pngSha256": "1c178bef4ad0fdaa9614cefc02cb0ec9c4b4f38903f89b49cf2fd8a72efc0690",
-      "escapedPixels": 2864,
-      "interiorPixels": 2896,
+      "pngSha256": "fcabafd12262ade0329d2564acee5dbb25de83f34b2fd1034c921b222900ba08",
+      "escapedPixels": 2872,
+      "interiorPixels": 2888,
       "nonFinitePixels": 0,
-      "uniqueColors": 756,
+      "uniqueColors": 738,
       "anomalies": []
     },
     {
@@ -1241,11 +1302,11 @@
       "sourceRevision": "e8b724a1275b5a3a465055f48f8cb8074ac371d2c7d13fb3e77c6b116115700f",
       "profileQuality": "mechanical",
       "file": "2827125f-9ac7-585e-9f38-d8067abb8474.png",
-      "pngSha256": "5773f8af8a5f33fdf1e30bebc9ee5d0f653422b26ca9ba19815e5f4bc137d6de",
-      "escapedPixels": 3292,
-      "interiorPixels": 2468,
+      "pngSha256": "d841fafd0683a8188c2a8ec87dddaea3803c84f6f3c42984d9b7b1ce9ad20f94",
+      "escapedPixels": 3288,
+      "interiorPixels": 2472,
       "nonFinitePixels": 0,
-      "uniqueColors": 771,
+      "uniqueColors": 786,
       "anomalies": []
     },
     {
@@ -1253,11 +1314,11 @@
       "sourceRevision": "a744e912475c8b107645f6454bf76436bab3ecdd5e569fec6d36990841e9105d",
       "profileQuality": "mechanical",
       "file": "28c77140-c5f9-557a-93d7-cac12cf08e63.png",
-      "pngSha256": "65098143cf930c0542f0101c377cddf9e96ff2d7c49a2445a1e02d443a57a472",
-      "escapedPixels": 4398,
-      "interiorPixels": 1362,
+      "pngSha256": "371d8443f5090c3b6c0355ca9da95abf839571ad298ae931cc368522769e27bd",
+      "escapedPixels": 4400,
+      "interiorPixels": 1360,
       "nonFinitePixels": 0,
-      "uniqueColors": 505,
+      "uniqueColors": 501,
       "anomalies": []
     },
     {
@@ -1289,11 +1350,11 @@
       "sourceRevision": "dc54418a41afcc4d737eae0805cb0b6582db0ec3e9f18bbbcdcea0431ca7c622",
       "profileQuality": "mechanical",
       "file": "2b3b3de9-9e48-5b8e-9f65-97eefdf642fb.png",
-      "pngSha256": "872b370d3a33679aff6f4a809a6d97e89334149d183913b88ad0b3c1f22041ff",
+      "pngSha256": "a00660851670ed930e21993c35ba9cf5d1d91b59a7ddc6f715151ea118bf0489",
       "escapedPixels": 5176,
       "interiorPixels": 584,
       "nonFinitePixels": 0,
-      "uniqueColors": 425,
+      "uniqueColors": 424,
       "anomalies": []
     },
     {
@@ -1375,11 +1436,11 @@
       "sourceRevision": "b200f47488d627600454134dbbe19bef37d2e2e564470930e0d39dcde80412d0",
       "profileQuality": "mechanical",
       "file": "2e810d90-19b3-5434-ab66-248c7675913f.png",
-      "pngSha256": "872b370d3a33679aff6f4a809a6d97e89334149d183913b88ad0b3c1f22041ff",
+      "pngSha256": "a00660851670ed930e21993c35ba9cf5d1d91b59a7ddc6f715151ea118bf0489",
       "escapedPixels": 5176,
       "interiorPixels": 584,
       "nonFinitePixels": 0,
-      "uniqueColors": 425,
+      "uniqueColors": 424,
       "anomalies": []
     },
     {
@@ -1659,11 +1720,11 @@
       "sourceRevision": "9838d50deb9ccf998c5b4348d8be7b7de62b97b09392bb0e820877d7ffae9f17",
       "profileQuality": "mechanical",
       "file": "363cdbd3-c78f-5187-9ab1-74c2020b504e.png",
-      "pngSha256": "4196b2b3192955dcb2da82d3cd4c59b0f164d3d3849fbf71900fd2f0ad2226ba",
-      "escapedPixels": 3958,
-      "interiorPixels": 1802,
+      "pngSha256": "65de3f323c602c303a8f6dbc8c6f258181c92d8a0803958304619a10652d2f3b",
+      "escapedPixels": 3954,
+      "interiorPixels": 1806,
       "nonFinitePixels": 0,
-      "uniqueColors": 630,
+      "uniqueColors": 645,
       "anomalies": []
     },
     {
@@ -1737,11 +1798,11 @@
       "sourceRevision": "f0209ff3cc254e7612661ec84ab44460b4bb74cfefba94b3a4a743d1c01627f6",
       "profileQuality": "family",
       "file": "3a1b7843-3ead-534e-9fac-d05890211020.png",
-      "pngSha256": "6e791a5edbd276c4a11331278db13b839a2c5774169d94f87aa87604c741ac54",
+      "pngSha256": "200fa6ffdbfc4ade6d048d317d7109f9f96993c4f23c1aecd623165ed944dcca",
       "escapedPixels": 5760,
       "interiorPixels": 0,
       "nonFinitePixels": 0,
-      "uniqueColors": 560,
+      "uniqueColors": 558,
       "anomalies": [
         "no-interior-pixels"
       ]
@@ -1751,11 +1812,11 @@
       "sourceRevision": "149dee795ccdded232064ea1c5fabdd0216354c53a998d087440ad6ed6749799",
       "profileQuality": "mechanical",
       "file": "3a6e9b04-e85d-54ad-8de9-7e7fc980bf42.png",
-      "pngSha256": "cadea1bd8f5879d964b8a196fd361a6cb3f38bf5781a4cadb4300d28615e8f3b",
-      "escapedPixels": 5056,
-      "interiorPixels": 704,
+      "pngSha256": "3fec51929143ea424ad4d0902c2b9cfa873231f0121738db18759e258f99a188",
+      "escapedPixels": 5054,
+      "interiorPixels": 706,
       "nonFinitePixels": 0,
-      "uniqueColors": 444,
+      "uniqueColors": 441,
       "anomalies": []
     },
     {
@@ -1775,11 +1836,11 @@
       "sourceRevision": "a845991bdcce50ae29032531779356e473db6e51c45ad00146c47c09d0178ce4",
       "profileQuality": "family",
       "file": "3aa12569-e267-56b6-b582-bf95b73fd1a4.png",
-      "pngSha256": "332955e8a355b5b1e6b27e97f877a446af6aa42178447d8dd218882956be0d16",
+      "pngSha256": "8e2d5b74ad9247ad703902196d76380af845ea895a7ddbfa6bcedfb58d949c8b",
       "escapedPixels": 5760,
       "interiorPixels": 0,
       "nonFinitePixels": 0,
-      "uniqueColors": 437,
+      "uniqueColors": 439,
       "anomalies": [
         "no-interior-pixels"
       ]
@@ -1804,7 +1865,7 @@
       "sourceRevision": "799e5e51763c75e5edb2c92a0adfb09f31c0f443b822b79f66399c58cb630d5a",
       "profileQuality": "family",
       "file": "3c71e05b-12c2-5eae-b4c7-b4bc36f52dc2.png",
-      "pngSha256": "ba6fe6d6fa31e1ca4658878f7c2d5faecb2888a85ddb2169828bed2ddfb0a7da",
+      "pngSha256": "d0995523a883727c543268e62b30f036d146ff636e04f4591461f7f2fbb86e84",
       "escapedPixels": 5760,
       "interiorPixels": 0,
       "nonFinitePixels": 0,
@@ -1830,11 +1891,11 @@
       "sourceRevision": "4fd9902ae517d39ade5f57a75069cc7034875d84438eeb6f23f86a508c9804a2",
       "profileQuality": "mechanical",
       "file": "3d70a4c8-af83-58ad-9985-326f1412ef5d.png",
-      "pngSha256": "0b5a8ea05ae29d9e94b20245437bd0a150968ba928b3c91202c77417ea1c2f20",
+      "pngSha256": "26fc83652ccb6e7471757b7e27b4592d4712e5c00c65f91a4a48ffa57b8524ef",
       "escapedPixels": 3414,
       "interiorPixels": 2346,
       "nonFinitePixels": 0,
-      "uniqueColors": 507,
+      "uniqueColors": 506,
       "anomalies": []
     },
     {
@@ -1864,15 +1925,27 @@
       "anomalies": []
     },
     {
+      "formulaId": "3edbea29-956a-5900-9aa7-02ccc2183016",
+      "sourceRevision": "75cc7f04fc69d74294c3ed9dcd5271585a6d186311dd10a906e781958cb46870",
+      "profileQuality": "mechanical",
+      "file": "3edbea29-956a-5900-9aa7-02ccc2183016.png",
+      "pngSha256": "08e53475371dabb1cb6a47c2918faf1f056ae4ef36a364e21bce6bd5c3ee350a",
+      "escapedPixels": 3658,
+      "interiorPixels": 2102,
+      "nonFinitePixels": 0,
+      "uniqueColors": 677,
+      "anomalies": []
+    },
+    {
       "formulaId": "3f1835a4-0bd3-54ec-8d3b-dad2c6d3bfd3",
       "sourceRevision": "179fa674dbb22a0c110994d28957018c69952cd9134c4187baea74c15b0c444e",
       "profileQuality": "mechanical",
       "file": "3f1835a4-0bd3-54ec-8d3b-dad2c6d3bfd3.png",
-      "pngSha256": "e4b056004438f04575fa1557ceebbc774045e8ccb0a97dc70eead29d2d981535",
-      "escapedPixels": 3006,
-      "interiorPixels": 2754,
+      "pngSha256": "3e0b09cd6ea6f54b186f9afa2067b62cc842e425c3b9f9ac299a15b0f06ad9db",
+      "escapedPixels": 3004,
+      "interiorPixels": 2756,
       "nonFinitePixels": 0,
-      "uniqueColors": 592,
+      "uniqueColors": 577,
       "anomalies": []
     },
     {
@@ -1895,11 +1968,11 @@
       "sourceRevision": "5b47559bd11219bbbb9b4d6198584109da8cd6b9002a26eb551a2383f310e13c",
       "profileQuality": "mechanical",
       "file": "3fc4005b-e6d4-5cda-a9b1-de96a0d6a458.png",
-      "pngSha256": "beffce23483f16db50a3b432f31763d702840d1f0889bde61ffa5fbd213794d9",
+      "pngSha256": "3ec7b7802a408aed940f3134e13b813b2128c457f13cce278e5f3d59a4b79c6c",
       "escapedPixels": 1926,
       "interiorPixels": 3834,
       "nonFinitePixels": 0,
-      "uniqueColors": 392,
+      "uniqueColors": 394,
       "anomalies": []
     },
     {
@@ -1934,7 +2007,7 @@
       "sourceRevision": "dd1b55e5517c9087cef5ae46ab39ec2d29bc2b38122d6bced4a81ba097d090da",
       "profileQuality": "mechanical",
       "file": "411ac01c-ba08-5200-add7-b60b3f98795c.png",
-      "pngSha256": "fc4064ffa6db6a02cdc62f9cddcc5752ee15c3de597771452a347eb9776c51db",
+      "pngSha256": "87c3fbde80341c779f158bd3dda1f0295e90f90b664d9233bf34e2df9492f287",
       "escapedPixels": 3882,
       "interiorPixels": 1878,
       "nonFinitePixels": 0,
@@ -1977,6 +2050,18 @@
       "interiorPixels": 874,
       "nonFinitePixels": 0,
       "uniqueColors": 398,
+      "anomalies": []
+    },
+    {
+      "formulaId": "42b369a5-2873-50e9-8684-cad5e60630ff",
+      "sourceRevision": "67d0d96182f217e37faab85d6b7e3cf28bd9e959348589957ff49a4f5436f049",
+      "profileQuality": "mechanical",
+      "file": "42b369a5-2873-50e9-8684-cad5e60630ff.png",
+      "pngSha256": "57473dca91d15e8e16f8598092d5d81a681ed0ee6368ed139ab24ca0bb487f03",
+      "escapedPixels": 4287,
+      "interiorPixels": 1473,
+      "nonFinitePixels": 0,
+      "uniqueColors": 505,
       "anomalies": []
     },
     {
@@ -2032,25 +2117,24 @@
       "sourceRevision": "066f848034c55683474fe0df8276b3c0a3045cabbd0c1a75adcec0a46027a9de",
       "profileQuality": "mechanical",
       "file": "44d9b35c-ed7c-51d6-8ee1-14e56f5ade7d.png",
-      "pngSha256": "872b370d3a33679aff6f4a809a6d97e89334149d183913b88ad0b3c1f22041ff",
+      "pngSha256": "a00660851670ed930e21993c35ba9cf5d1d91b59a7ddc6f715151ea118bf0489",
       "escapedPixels": 5176,
       "interiorPixels": 584,
       "nonFinitePixels": 0,
-      "uniqueColors": 425,
+      "uniqueColors": 424,
       "anomalies": []
     },
     {
       "formulaId": "4514ac15-fecc-5b92-9e79-0b95b5158d3f",
       "sourceRevision": "1a87c3eee8cbfdee863e521522cdbcfb559773070af04a317bcc6ebe6fcb3f3e",
-      "profileQuality": "family",
+      "profileQuality": "mechanical",
       "file": "4514ac15-fecc-5b92-9e79-0b95b5158d3f.png",
-      "pngSha256": "75c54f47414edbd815dde8e5ed2b202057a8d30ae2914c78318bab2bda4ba409",
-      "escapedPixels": 5678,
-      "interiorPixels": 0,
-      "nonFinitePixels": 82,
-      "uniqueColors": 168,
+      "pngSha256": "d148f1c42ac66db6a109633c65ddfe7e29e875caf0eb147be96c4ac88f0847aa",
+      "escapedPixels": 2966,
+      "interiorPixels": 2694,
+      "nonFinitePixels": 100,
+      "uniqueColors": 236,
       "anomalies": [
-        "no-interior-pixels",
         "non-finite-pixels"
       ]
     },
@@ -2079,6 +2163,30 @@
       "anomalies": [
         "no-interior-pixels"
       ]
+    },
+    {
+      "formulaId": "465a5b03-469d-59b3-8564-45af7564e37a",
+      "sourceRevision": "590db3453ca43c558e7b8c955e661b5ec68951b6afbb7feb3a07d0aa474a5910",
+      "profileQuality": "mechanical",
+      "file": "465a5b03-469d-59b3-8564-45af7564e37a.png",
+      "pngSha256": "208ae099889b32bfe6138d9b8d4a56fbf7f22bd2b41796f33e18d210dc1b0b3a",
+      "escapedPixels": 5177,
+      "interiorPixels": 583,
+      "nonFinitePixels": 0,
+      "uniqueColors": 477,
+      "anomalies": []
+    },
+    {
+      "formulaId": "46acfdeb-2dac-59c9-a94a-fd4809420dc2",
+      "sourceRevision": "c0c320f05c5531b4e17bf96b47e87114374914b52151576ed9854fa35e60c8d4",
+      "profileQuality": "mechanical",
+      "file": "46acfdeb-2dac-59c9-a94a-fd4809420dc2.png",
+      "pngSha256": "d970b19d8be9e40a301232552857552ae9f6cea2e21e78cef066df41b4cc24dd",
+      "escapedPixels": 5137,
+      "interiorPixels": 623,
+      "nonFinitePixels": 0,
+      "uniqueColors": 489,
+      "anomalies": []
     },
     {
       "formulaId": "47c9fe8a-3476-5f65-a063-62638c2e6069",
@@ -2346,11 +2454,11 @@
       "sourceRevision": "7890b985fdee00cd0bdebfb97aad24e5b969d06808971e837155e1ba8324d8b9",
       "profileQuality": "mechanical",
       "file": "564827f6-4abd-5360-aec3-75e800b499ab.png",
-      "pngSha256": "78ee6aac2061402947b3820314b1b72d4efff446f2044884c34b53184e8c2f29",
-      "escapedPixels": 2960,
-      "interiorPixels": 2800,
+      "pngSha256": "7ae97260c5508c5fb82ad672d0b2c21284a658f731d6b2cf2f6417e6bbc48902",
+      "escapedPixels": 2970,
+      "interiorPixels": 2790,
       "nonFinitePixels": 0,
-      "uniqueColors": 479,
+      "uniqueColors": 491,
       "anomalies": []
     },
     {
@@ -2382,11 +2490,11 @@
       "sourceRevision": "c405c00cabc5ab669dfe95486f00500ffa44dced73fd6e66b52b7208c7d406e3",
       "profileQuality": "mechanical",
       "file": "573d8cb0-13e5-51e6-880d-a7c4fb4f5321.png",
-      "pngSha256": "de6fda2df1ca5fa7faec1b24b7ec483ce335d53fc51c0be17964e4eb71c7c4a4",
+      "pngSha256": "c96427896dd66db454f6db4d5d806c66590e82b83dee88c172abf0b41584cfa2",
       "escapedPixels": 5484,
       "interiorPixels": 276,
       "nonFinitePixels": 0,
-      "uniqueColors": 380,
+      "uniqueColors": 382,
       "anomalies": []
     },
     {
@@ -2406,7 +2514,7 @@
       "sourceRevision": "a85f2fc2d4bfb34f05c9e18d02d17ce77df48d92ee6b1ddbbe6b0f9793aea709",
       "profileQuality": "family",
       "file": "57e13d8d-2db6-59c5-baeb-549c22034c7f.png",
-      "pngSha256": "06aa8abf4de330adfebb33c025016d132561b7091a629e2a2812920b481bfe3c",
+      "pngSha256": "f0d3a43292f48be55e4233f79cb8256e93ec26b194d290fa627e38e1affc40e0",
       "escapedPixels": 5760,
       "interiorPixels": 0,
       "nonFinitePixels": 0,
@@ -2483,11 +2591,11 @@
       "sourceRevision": "605ab85934f5e080a3dad2b883c34ba961bdab2552a642c459e50770fcb6e927",
       "profileQuality": "mechanical",
       "file": "59dd9fd1-38d1-5887-a9f6-b6941f532cad.png",
-      "pngSha256": "dd834cecd5e7cfb5699e103fb56528a02ec4e0394bbaf20b9e5e5e94b939ae88",
-      "escapedPixels": 3920,
-      "interiorPixels": 1840,
+      "pngSha256": "bb96d42103f2e92c86e0ed7f09d06d450cf26b60cffcf4a894ccf3bd4e8d566c",
+      "escapedPixels": 3912,
+      "interiorPixels": 1848,
       "nonFinitePixels": 0,
-      "uniqueColors": 510,
+      "uniqueColors": 496,
       "anomalies": []
     },
     {
@@ -2555,11 +2663,11 @@
       "sourceRevision": "5c9881f3cc0e87024b63e95481d222accb90745a9f81785262757b7df446edaf",
       "profileQuality": "family",
       "file": "5ebf37c7-2ce9-53ef-a6ec-fdbfa5c8742c.png",
-      "pngSha256": "1dfb982750963198b734f4c51b319fee423d015d456cf9aeada8c066bd0822f2",
-      "escapedPixels": 428,
-      "interiorPixels": 5332,
+      "pngSha256": "067ac17915064b423ae30efe5c803c812102b965a7526a1f332d3f5cfdf08ed1",
+      "escapedPixels": 430,
+      "interiorPixels": 5330,
       "nonFinitePixels": 0,
-      "uniqueColors": 28,
+      "uniqueColors": 29,
       "anomalies": []
     },
     {
@@ -2567,11 +2675,11 @@
       "sourceRevision": "550de83423912190fbdeda40c23f4aa950cdf8695c815694754c165e35353f8a",
       "profileQuality": "mechanical",
       "file": "5f0a5361-4138-5a1a-9097-0765a5b77e40.png",
-      "pngSha256": "0a2f22363f0c363a3a260b46992c28813308c14e5e3e2801b50cb4e31092583b",
-      "escapedPixels": 3830,
-      "interiorPixels": 1930,
+      "pngSha256": "da8a018853339428cb514028de4d2a7628e507740a40139baf28e0910e1d9e44",
+      "escapedPixels": 3826,
+      "interiorPixels": 1934,
       "nonFinitePixels": 0,
-      "uniqueColors": 609,
+      "uniqueColors": 626,
       "anomalies": []
     },
     {
@@ -2603,11 +2711,23 @@
       "sourceRevision": "70575fc408e7a9a9c3062522f5217cc17a3e5c1efccb2b5ea3d5afa990e91ce2",
       "profileQuality": "mechanical",
       "file": "5fba3d0c-c66e-5ad2-9415-584034543625.png",
-      "pngSha256": "872b370d3a33679aff6f4a809a6d97e89334149d183913b88ad0b3c1f22041ff",
+      "pngSha256": "a00660851670ed930e21993c35ba9cf5d1d91b59a7ddc6f715151ea118bf0489",
       "escapedPixels": 5176,
       "interiorPixels": 584,
       "nonFinitePixels": 0,
-      "uniqueColors": 425,
+      "uniqueColors": 424,
+      "anomalies": []
+    },
+    {
+      "formulaId": "62098934-def3-527a-ac43-2c80449c9848",
+      "sourceRevision": "826c473c5cdf710c5273c29a219eaf17ffc9117c74eb03282a51f9501eb9342c",
+      "profileQuality": "mechanical",
+      "file": "62098934-def3-527a-ac43-2c80449c9848.png",
+      "pngSha256": "53c77f1a0870e22679e287e2915f09eebd8ede1ae6d7a4b4066254ad1e82415e",
+      "escapedPixels": 3846,
+      "interiorPixels": 1914,
+      "nonFinitePixels": 0,
+      "uniqueColors": 631,
       "anomalies": []
     },
     {
@@ -2615,11 +2735,11 @@
       "sourceRevision": "df70af297aba5c31f5b2dd7822fe6e5af95707bca799ea6efebbad8ea1d2bbcd",
       "profileQuality": "mechanical",
       "file": "623fec59-86d1-5702-88ee-4a638079c6b0.png",
-      "pngSha256": "cadea1bd8f5879d964b8a196fd361a6cb3f38bf5781a4cadb4300d28615e8f3b",
-      "escapedPixels": 5056,
-      "interiorPixels": 704,
+      "pngSha256": "3fec51929143ea424ad4d0902c2b9cfa873231f0121738db18759e258f99a188",
+      "escapedPixels": 5054,
+      "interiorPixels": 706,
       "nonFinitePixels": 0,
-      "uniqueColors": 444,
+      "uniqueColors": 441,
       "anomalies": []
     },
     {
@@ -2702,11 +2822,11 @@
       "sourceRevision": "bc693f047f92adc6e30fa648caacd7e0136a6720cb10cabfa4df4d8fe4b7d617",
       "profileQuality": "mechanical",
       "file": "68753107-933c-565b-8833-052a2886fa86.png",
-      "pngSha256": "3bd5f08624ccc6c2659f7464963d5f26b648f426ea16e615928b4ef77d3a2cca",
-      "escapedPixels": 5164,
-      "interiorPixels": 596,
+      "pngSha256": "f2b0920dc05c5e078db2deec939e91032bdcff9fb355d66756cb0e9a913b6af5",
+      "escapedPixels": 4918,
+      "interiorPixels": 842,
       "nonFinitePixels": 0,
-      "uniqueColors": 501,
+      "uniqueColors": 698,
       "anomalies": []
     },
     {
@@ -2729,7 +2849,7 @@
       "sourceRevision": "5a7ced555b3e345ee899274641b102c87363998d12dec5d26d9cc01fd781a89c",
       "profileQuality": "family",
       "file": "6a292c82-ac95-5d4c-98d7-963e2f7c5755.png",
-      "pngSha256": "de2427b8539f9c39e50cc1f8c04fc82267557a67322272e047efdb74ee4e3677",
+      "pngSha256": "e7e9a01f6d92c4d16f4af52a7c17ae01014866d6eac5b41da3128140529a31c7",
       "escapedPixels": 5702,
       "interiorPixels": 58,
       "nonFinitePixels": 0,
@@ -2845,11 +2965,11 @@
       "sourceRevision": "7ef2bf1f2dd573053bbe1e8af171472dff08ed6346b2e760ab2780c9244d1e85",
       "profileQuality": "family",
       "file": "6d27b5fd-462b-5561-bac2-7c5f915e3cb5.png",
-      "pngSha256": "e3d8ea1ad75fb4ed65c2dc812d2a41003101834f24b2367ac176605ae7348dfe",
+      "pngSha256": "bbfd6c74ddcce0891863fdba7f4214bee900a9a5022ea5018a41aad0914c51c1",
       "escapedPixels": 5752,
       "interiorPixels": 0,
       "nonFinitePixels": 8,
-      "uniqueColors": 51,
+      "uniqueColors": 50,
       "anomalies": [
         "no-interior-pixels",
         "non-finite-pixels"
@@ -2872,11 +2992,11 @@
       "sourceRevision": "baa58d57684a4e85137496b8406db1ef9297546b782b5027bf051f1204134b08",
       "profileQuality": "mechanical",
       "file": "6d4aca24-66e6-5bcc-9cc6-e4e7c94d0a96.png",
-      "pngSha256": "872b370d3a33679aff6f4a809a6d97e89334149d183913b88ad0b3c1f22041ff",
+      "pngSha256": "a00660851670ed930e21993c35ba9cf5d1d91b59a7ddc6f715151ea118bf0489",
       "escapedPixels": 5176,
       "interiorPixels": 584,
       "nonFinitePixels": 0,
-      "uniqueColors": 425,
+      "uniqueColors": 424,
       "anomalies": []
     },
     {
@@ -3030,11 +3150,11 @@
       "sourceRevision": "fb676bf49b52b2c80a161a93ce9eca6fcce872411604163cad2bad25bb142033",
       "profileQuality": "mechanical",
       "file": "74406ccc-7611-5893-b076-733e7c288c61.png",
-      "pngSha256": "107326614fde3d3ec5c84dafbadc4e25a978765e6af92b0f65990a561b90e471",
-      "escapedPixels": 4644,
-      "interiorPixels": 1116,
+      "pngSha256": "9d588aa69832fef76c2de2b910b9571f834c5ba30a1ed7aff0c809b14babd679",
+      "escapedPixels": 4640,
+      "interiorPixels": 1120,
       "nonFinitePixels": 0,
-      "uniqueColors": 731,
+      "uniqueColors": 724,
       "anomalies": []
     },
     {
@@ -3080,11 +3200,11 @@
       "sourceRevision": "71b604f3db762dcdd74fe557cebb71801fe157066c10eed9974bd14831637ff1",
       "profileQuality": "mechanical",
       "file": "769fa5c9-0c91-5628-8971-eff383502158.png",
-      "pngSha256": "7e7df2d7ee47d58cf8537e6c0313ff3ff9660d842e07f614c6e62dd91d4b53ca",
+      "pngSha256": "3220b2969850e1901797e70645d8f0feebe7987ef4d49666800ef5770cf9e3df",
       "escapedPixels": 4984,
       "interiorPixels": 776,
       "nonFinitePixels": 0,
-      "uniqueColors": 502,
+      "uniqueColors": 499,
       "anomalies": []
     },
     {
@@ -3092,7 +3212,7 @@
       "sourceRevision": "7eba5eae6f4fe63973938a89cfe3e5ec3769484b0dd1eab76f54788853cf891a",
       "profileQuality": "family",
       "file": "76cb0ae7-7f3e-5bba-bb20-5bec91f9f3a6.png",
-      "pngSha256": "9a9014cd893e424b1c9cddc8ac6b27cd1d80e99bba9d416eff331a06e833993b",
+      "pngSha256": "1cc8a4ed3ee8d252702d009abfe405b76dddfcd52ad73a37f176318f09ff79fd",
       "escapedPixels": 5760,
       "interiorPixels": 0,
       "nonFinitePixels": 0,
@@ -3126,6 +3246,20 @@
       "anomalies": [
         "flat-preview",
         "no-escaped-pixels"
+      ]
+    },
+    {
+      "formulaId": "78e550c6-d58d-57b7-92ff-82e9ed0728f0",
+      "sourceRevision": "9372d322b21755b6e9e529e348ceead65a526ca3243e976845c39144ce8b38df",
+      "profileQuality": "mechanical",
+      "file": "78e550c6-d58d-57b7-92ff-82e9ed0728f0.png",
+      "pngSha256": "6fb95b2ceace324e803d6e8b5892762da912d6c6a134a23e4aee2ceff1c0c8c9",
+      "escapedPixels": 5476,
+      "interiorPixels": 268,
+      "nonFinitePixels": 16,
+      "uniqueColors": 48,
+      "anomalies": [
+        "non-finite-pixels"
       ]
     },
     {
@@ -3172,7 +3306,7 @@
       "sourceRevision": "a8c3aa9c396e48ab5a9c5148772fe674584a0090046a2bdbbc65566a4b011f33",
       "profileQuality": "family",
       "file": "7c45552a-cb92-5510-a7bb-25dbd60a8ff3.png",
-      "pngSha256": "fdc5a5becce34a38bfca57251cc67f3c87c1dff4b7e2c65a6bde7365214cf29e",
+      "pngSha256": "c47f4b71909e5e01cbbe2d4fcf3617c2e636d941a9895f38b243fa404266978c",
       "escapedPixels": 5760,
       "interiorPixels": 0,
       "nonFinitePixels": 0,
@@ -3186,11 +3320,11 @@
       "sourceRevision": "04d39a568e672297ffa2e06685e2d1107c164c7ac448e9152a01f47562d82bf8",
       "profileQuality": "mechanical",
       "file": "7c9a2273-28b9-5850-b521-9689a84a3700.png",
-      "pngSha256": "f80ed05b1227ff625a4cea99bf4a336e9ed06928c6f8e95de734c3439ed5f3cf",
-      "escapedPixels": 1922,
-      "interiorPixels": 3838,
+      "pngSha256": "09fb67d2d64196e6183a390a5e2256d39fbcf94ea9e282e2bbe0a30bd681db59",
+      "escapedPixels": 1924,
+      "interiorPixels": 3836,
       "nonFinitePixels": 0,
-      "uniqueColors": 502,
+      "uniqueColors": 511,
       "anomalies": []
     },
     {
@@ -3210,11 +3344,11 @@
       "sourceRevision": "db7e5bfefac621964fc0011fed20629a905d299301a381d2fb4bc0c4e121b4c4",
       "profileQuality": "family",
       "file": "7d41553d-885e-5f7a-810e-3be60046c9f9.png",
-      "pngSha256": "56f340c7c280a5643316a142967110a87c15ef16426ffb14f8da7b8dc5528c7f",
+      "pngSha256": "0195d7677197c5839ad405fc4cf4f18c1f4182697878f7329788991bd6cd6233",
       "escapedPixels": 564,
       "interiorPixels": 5196,
       "nonFinitePixels": 0,
-      "uniqueColors": 176,
+      "uniqueColors": 174,
       "anomalies": []
     },
     {
@@ -3263,11 +3397,11 @@
       "sourceRevision": "f3b4f11eddf9ded1b4bc5621e582192f28cd2871064f084cffb0847a16e1ee25",
       "profileQuality": "mechanical",
       "file": "7f899f9c-1f66-5864-8fb1-48135bb269ed.png",
-      "pngSha256": "c92f1f6013a8d26860463286546fd543f904dcf3be5ebf64d9c3e3178c924741",
-      "escapedPixels": 3262,
-      "interiorPixels": 2042,
+      "pngSha256": "551533799b71dc023b0bc2ba865b30aa17b795c5a1e0bca91e24752c4693df77",
+      "escapedPixels": 3244,
+      "interiorPixels": 2060,
       "nonFinitePixels": 456,
-      "uniqueColors": 513,
+      "uniqueColors": 521,
       "anomalies": [
         "non-finite-pixels"
       ]
@@ -3398,7 +3532,7 @@
       "sourceRevision": "4606e604470ad231c1e7680e6f44c4df1132057316fe5edf666edc1fb48b2803",
       "profileQuality": "family",
       "file": "848e8cdc-d391-5098-9fdc-1de2f83be3f0.png",
-      "pngSha256": "8b6a676dc3b353f41e94888d556ad3b83aa6ebe781c1e2b5ee37fcf13a1e8bef",
+      "pngSha256": "100a38a270157a7c826fa61d82c53750bd31e8559cdf8b1d58f79cb20e0699b9",
       "escapedPixels": 5756,
       "interiorPixels": 0,
       "nonFinitePixels": 4,
@@ -3425,11 +3559,11 @@
       "sourceRevision": "15e47d28f69c43b227229bee40d3966982a498473344456374e5a6ff91262bc1",
       "profileQuality": "mechanical",
       "file": "861ec40f-56db-530f-b5fd-918c038ea6d3.png",
-      "pngSha256": "ef839e8a8bb81aa3587e01e130feb27986b8b681a2ddee09b561e5de1e60646e",
+      "pngSha256": "3d52a7d722c2cbc3c794babd2248dddf6666d0c3b413cb341e8c19b43abb1890",
       "escapedPixels": 1308,
       "interiorPixels": 4452,
       "nonFinitePixels": 0,
-      "uniqueColors": 302,
+      "uniqueColors": 299,
       "anomalies": []
     },
     {
@@ -3461,11 +3595,11 @@
       "sourceRevision": "c0d865ceb0e47a3107ee853ebd551bf11324b6cedfa9b942f874c49d5f76adcb",
       "profileQuality": "mechanical",
       "file": "87b4ebc7-ba9d-527b-ab3b-aaa45967b255.png",
-      "pngSha256": "a1bfd150539c1be96cdf8a86afdcd17968ed5531ff830b4a91902b158c28dc15",
+      "pngSha256": "5203d00a587da0648699e03311cd43cb9346ad118d0e684f81b9d51be9a61fad",
       "escapedPixels": 5190,
       "interiorPixels": 570,
       "nonFinitePixels": 0,
-      "uniqueColors": 438,
+      "uniqueColors": 435,
       "anomalies": []
     },
     {
@@ -3473,11 +3607,11 @@
       "sourceRevision": "12d8cb7264defbc9d99fb2426f45f9a71d2625ed0493865f9ef62caace3a000a",
       "profileQuality": "mechanical",
       "file": "88887758-7d89-5be3-b0ef-6cdbdc9f5825.png",
-      "pngSha256": "1ed044813ad83b8375a96c19f6e52d85f4adc0307b96776fcdbe9846d101e161",
-      "escapedPixels": 3936,
-      "interiorPixels": 1824,
+      "pngSha256": "7e6dc5140ddf05f3d7a995ff6379b04129da712ccfcb70da7791f48c1c386ff2",
+      "escapedPixels": 3946,
+      "interiorPixels": 1814,
       "nonFinitePixels": 0,
-      "uniqueColors": 829,
+      "uniqueColors": 833,
       "anomalies": []
     },
     {
@@ -3553,9 +3687,9 @@
       "sourceRevision": "50dde58ce1a36842593b5732047b291c46089528f2a1640bbf989c9701b7c07e",
       "profileQuality": "mechanical",
       "file": "8a01fc8e-1b68-5db5-85dd-6eebb78dacf5.png",
-      "pngSha256": "da2d08f4dfe3c8bf02bf1a7d3ac4168566bcf989f83afb6914a87b5ff18380c7",
-      "escapedPixels": 4222,
-      "interiorPixels": 1538,
+      "pngSha256": "5f6ae67320a8b568535786c5d612cd7570e5f455c751f8c15d80e933fa4ebbd2",
+      "escapedPixels": 4218,
+      "interiorPixels": 1542,
       "nonFinitePixels": 0,
       "uniqueColors": 601,
       "anomalies": []
@@ -3606,11 +3740,11 @@
       "sourceRevision": "fe34a0d02f2dd9bb44a662ae81932aef98ffa0863baaf048f89ec49482bfda7d",
       "profileQuality": "mechanical",
       "file": "8cde6ebb-f5cc-577e-8abc-9e4d20c1d994.png",
-      "pngSha256": "49b7db68d3539e60b3d755b0f34ac619afaf751615d475f1fc625c00c435ca89",
-      "escapedPixels": 1618,
-      "interiorPixels": 4142,
+      "pngSha256": "20d630e00a8a6e62fdce4fab35bb8585e82e6cc5f069beabd961d1886e8a4c19",
+      "escapedPixels": 1624,
+      "interiorPixels": 4136,
       "nonFinitePixels": 0,
-      "uniqueColors": 547,
+      "uniqueColors": 537,
       "anomalies": []
     },
     {
@@ -3626,6 +3760,20 @@
       "anomalies": [
         "flat-preview",
         "no-escaped-pixels"
+      ]
+    },
+    {
+      "formulaId": "8eb342fe-8a05-524e-8b98-35cdc8af5be3",
+      "sourceRevision": "9f102aa122c2f49ca1ec0ad883ddcb51dd58a92e86501ba081f22fab82fe0410",
+      "profileQuality": "mechanical",
+      "file": "8eb342fe-8a05-524e-8b98-35cdc8af5be3.png",
+      "pngSha256": "cd62f6c39ae17a995d1377f8d6bcbca0f82f945b9859ea6c6689cd1dcbcacfe2",
+      "escapedPixels": 5188,
+      "interiorPixels": 334,
+      "nonFinitePixels": 238,
+      "uniqueColors": 467,
+      "anomalies": [
+        "non-finite-pixels"
       ]
     },
     {
@@ -3695,11 +3843,11 @@
       "sourceRevision": "f17e44f67c1316e09e1ec477cd3e82491d71b70608efe0d0dfb8ba239c6440e2",
       "profileQuality": "family",
       "file": "90b86064-929f-5dc8-b671-0284b76ee3fb.png",
-      "pngSha256": "1e48d8d77589d16dee51741433a9a0ce6915015474ffa415982deb5674ccc87a",
+      "pngSha256": "f6f3247901eb5ca6ef4c2091723f3e23b72082e46ba07b3ddf5b4ae43fb21278",
       "escapedPixels": 5760,
       "interiorPixels": 0,
       "nonFinitePixels": 0,
-      "uniqueColors": 397,
+      "uniqueColors": 398,
       "anomalies": [
         "no-interior-pixels"
       ]
@@ -3709,11 +3857,11 @@
       "sourceRevision": "5485bc7a27946085b1d872948d4783cf6cf026bfd676cbdfc3a87da71949d27e",
       "profileQuality": "mechanical",
       "file": "91653f7a-de43-5f1e-ab4d-c98f815b879b.png",
-      "pngSha256": "14db57cce9761a202a877ae3920ffecc1d8677750440bf1cc0a4d49ca083d595",
-      "escapedPixels": 3420,
-      "interiorPixels": 2340,
+      "pngSha256": "b6498c351e21af1cb6b8840c5f7a4b980789ee48c8197ff0eb05c7df00fce521",
+      "escapedPixels": 3416,
+      "interiorPixels": 2344,
       "nonFinitePixels": 0,
-      "uniqueColors": 773,
+      "uniqueColors": 771,
       "anomalies": []
     },
     {
@@ -3721,11 +3869,11 @@
       "sourceRevision": "af9c31115aeb15a5826151b4837aa3ae282f5b81d591d204afbd3ae9d0bd306d",
       "profileQuality": "mechanical",
       "file": "92287c3c-4301-5481-9397-092a089de3af.png",
-      "pngSha256": "872b370d3a33679aff6f4a809a6d97e89334149d183913b88ad0b3c1f22041ff",
+      "pngSha256": "a00660851670ed930e21993c35ba9cf5d1d91b59a7ddc6f715151ea118bf0489",
       "escapedPixels": 5176,
       "interiorPixels": 584,
       "nonFinitePixels": 0,
-      "uniqueColors": 425,
+      "uniqueColors": 424,
       "anomalies": []
     },
     {
@@ -3745,11 +3893,11 @@
       "sourceRevision": "ea95756b1fee1799cfdcd89204a9d97180b4d078e0ada279d946b7d5872b8729",
       "profileQuality": "mechanical",
       "file": "93102e86-d35b-53f2-8569-47a4a20a656d.png",
-      "pngSha256": "2fe3eaec8e8a162666e5599457aab6d977f71feeef12cc56c636ca39ef0dac64",
-      "escapedPixels": 2594,
-      "interiorPixels": 3166,
+      "pngSha256": "bfe5d1f6d987f5b2f282539db42abd372f4f79af6004c56bb7d87b9f056e42e8",
+      "escapedPixels": 2582,
+      "interiorPixels": 3178,
       "nonFinitePixels": 0,
-      "uniqueColors": 659,
+      "uniqueColors": 665,
       "anomalies": []
     },
     {
@@ -3769,11 +3917,11 @@
       "sourceRevision": "a3a1ff002175090b9b49c45466a42423eb5beac4913cbfbad5dfd20c6ad4c0cd",
       "profileQuality": "family",
       "file": "948e00da-175d-5863-8c9c-6038df9a402a.png",
-      "pngSha256": "90c915f24525b062e4b2c5f7470284d411a413e48c31af16dd9a799ac6ff83ca",
-      "escapedPixels": 214,
-      "interiorPixels": 5546,
+      "pngSha256": "4f7efa30612e26ceb0d579cb85a34be66bbaca5ec20446abad4d7c77872875b4",
+      "escapedPixels": 224,
+      "interiorPixels": 5536,
       "nonFinitePixels": 0,
-      "uniqueColors": 74,
+      "uniqueColors": 82,
       "anomalies": []
     },
     {
@@ -3861,11 +4009,11 @@
       "sourceRevision": "4a3b6f3091428a308b0369c158f8af16019f5c414395e5db619c5dc6ca6a91f6",
       "profileQuality": "mechanical",
       "file": "9915da24-f5e1-539c-84b2-4924d52efbb7.png",
-      "pngSha256": "f8748b49d6914cc0810bd21391e916e56bede572a8db2067b53565df3ae2dd1b",
-      "escapedPixels": 1664,
-      "interiorPixels": 4096,
+      "pngSha256": "5bf2910f3cd53f5521c5cde5a603d7746c0206bfc3d16702a11a92a549d6a2dc",
+      "escapedPixels": 1660,
+      "interiorPixels": 4100,
       "nonFinitePixels": 0,
-      "uniqueColors": 243,
+      "uniqueColors": 240,
       "anomalies": []
     },
     {
@@ -3911,9 +4059,9 @@
       "sourceRevision": "feb96948077dd253e8f9cd2b34495db6c4636a7fd5552996c966f69875ccc372",
       "profileQuality": "mechanical",
       "file": "9b116c1f-4bb9-5788-83db-7aecb0b03404.png",
-      "pngSha256": "2f0031c0053d4ed9e662e162fd3c6cb0bc0f72854e74ed8a9dc5583f40875944",
-      "escapedPixels": 2928,
-      "interiorPixels": 2832,
+      "pngSha256": "3e87cf19cc51f9eef1162c076d9ba1062df699ff3cd1b704a87a59ccc3a80b98",
+      "escapedPixels": 2926,
+      "interiorPixels": 2834,
       "nonFinitePixels": 0,
       "uniqueColors": 673,
       "anomalies": []
@@ -3938,11 +4086,11 @@
       "sourceRevision": "959cc33874cb078602cd148179596d5aad620e8c2fa46075851b8786919b75d0",
       "profileQuality": "mechanical",
       "file": "9b51d265-8603-5613-9b2a-938430309021.png",
-      "pngSha256": "a50783117ecea9e5f64fe6ab046988490489efb2def5ace5d6e7f937aff44d4f",
-      "escapedPixels": 4848,
-      "interiorPixels": 912,
+      "pngSha256": "b306aba1561d22e04820c893456497803339011d86497cfa174b7dbd6a585bfe",
+      "escapedPixels": 4849,
+      "interiorPixels": 911,
       "nonFinitePixels": 0,
-      "uniqueColors": 521,
+      "uniqueColors": 520,
       "anomalies": []
     },
     {
@@ -3965,9 +4113,9 @@
       "sourceRevision": "efd0f565bedd20f759202052cafd05bb0a6607b575555dba1de0c22afce87619",
       "profileQuality": "mechanical",
       "file": "9c4b2d9f-48ce-5b9c-a71e-e6843a71501f.png",
-      "pngSha256": "c0067b60463b442bcf1966adffd4f3f02ed4459ac639ac068f88f09601761ff4",
-      "escapedPixels": 4552,
-      "interiorPixels": 1208,
+      "pngSha256": "098f55e601738dd5b163dcd4fbd85a93bdbbea016f1aad33ac727301eed40cb9",
+      "escapedPixels": 4550,
+      "interiorPixels": 1210,
       "nonFinitePixels": 0,
       "uniqueColors": 617,
       "anomalies": []
@@ -3977,11 +4125,11 @@
       "sourceRevision": "46c7954064fe58936fac1de0c894b688a3966a906e562c5bdcc3ae9687f50643",
       "profileQuality": "mechanical",
       "file": "9c60877e-d554-5578-b7ba-90405b44d604.png",
-      "pngSha256": "b48c44b2ba887ad2aefa493d1fed9de5195827dbdb50c052c547abf232dba67d",
+      "pngSha256": "fa8c611ccdf0ee6bedbdbc1159c26737b372fd5c2fe0d93c782af0cb4e0c3130",
       "escapedPixels": 3508,
       "interiorPixels": 2252,
       "nonFinitePixels": 0,
-      "uniqueColors": 220,
+      "uniqueColors": 219,
       "anomalies": []
     },
     {
@@ -4031,7 +4179,7 @@
       "sourceRevision": "1b0b14687924da6992eab65345f8001be531c19ee25425962401664c86894924",
       "profileQuality": "mechanical",
       "file": "9e4246cb-bc41-57ba-9903-5c3dcc366cac.png",
-      "pngSha256": "de792d728118f2812792a5b3c05a62fe474ec67ecaa01bdd37a5f248d85e4d74",
+      "pngSha256": "f30ce21d47e1efeddfa4db5a4819fa63c0dd7a5ba5eddae98132b68b562a7738",
       "escapedPixels": 5178,
       "interiorPixels": 582,
       "nonFinitePixels": 0,
@@ -4078,6 +4226,18 @@
       "anomalies": []
     },
     {
+      "formulaId": "9f301c01-13fa-57b4-a3b2-99add821bfb0",
+      "sourceRevision": "df2d4387d714cd91b67a6c019af286fad376b27ee36e6ec038ba44c301f64c25",
+      "profileQuality": "mechanical",
+      "file": "9f301c01-13fa-57b4-a3b2-99add821bfb0.png",
+      "pngSha256": "0f0ce85ffe4650a2617284985e0b6095cd99d218a2737942dafb3f45348a7677",
+      "escapedPixels": 1730,
+      "interiorPixels": 4030,
+      "nonFinitePixels": 0,
+      "uniqueColors": 472,
+      "anomalies": []
+    },
+    {
       "formulaId": "a0295fbb-2275-53db-b59d-c969cd722c8c",
       "sourceRevision": "38571afb9605395a3f2a36903b7863848ea5500810442f1dcb065fb816ec1e06",
       "profileQuality": "family",
@@ -4108,11 +4268,11 @@
       "sourceRevision": "b155eb8b28cae7bcfeda828c9eb238546809ee4d44f5a59130ab883a859096a7",
       "profileQuality": "mechanical",
       "file": "a1d276ef-65af-501c-b787-f98365f8a6d5.png",
-      "pngSha256": "024e96a8363d2fd002ed6376dd281c1f9936da23f216405e67bb2cf3b151d41c",
-      "escapedPixels": 3260,
-      "interiorPixels": 2500,
+      "pngSha256": "480e46f72b05e94a5bee76490f930c2e51d1685ef2b3d948678c462e729d6c54",
+      "escapedPixels": 3256,
+      "interiorPixels": 2504,
       "nonFinitePixels": 0,
-      "uniqueColors": 422,
+      "uniqueColors": 421,
       "anomalies": []
     },
     {
@@ -4120,11 +4280,11 @@
       "sourceRevision": "91368999d10cc81bc030d676ff0bbbd0c5e4145cc9a12e25baa826f4babfbee4",
       "profileQuality": "mechanical",
       "file": "a2b483f2-1066-54e6-8e28-c22f6983975a.png",
-      "pngSha256": "15b428797eb5527033fbe258b6bd667687aa280e2ca4a258f22c744194dd982f",
-      "escapedPixels": 3244,
-      "interiorPixels": 2308,
-      "nonFinitePixels": 208,
-      "uniqueColors": 493,
+      "pngSha256": "e9da53ba75dc82b3769904fe9073cc87f4cf4b5900f2307ceeccf9230d145e9f",
+      "escapedPixels": 3254,
+      "interiorPixels": 2302,
+      "nonFinitePixels": 204,
+      "uniqueColors": 506,
       "anomalies": [
         "non-finite-pixels"
       ]
@@ -4252,7 +4412,7 @@
       "sourceRevision": "99df8d1a5ac5a7dda5b7744a6776a4fac8a05e769351b8f4b351163c0f4e8dae",
       "profileQuality": "mechanical",
       "file": "a69bc250-315d-5a74-9109-d23a820974e5.png",
-      "pngSha256": "233668d49dd72cb69eb279b6e185f5d05c10888b054b89ae923a47f7cc6b7165",
+      "pngSha256": "9b6967cf80865f60a4bf7887320c700c02bab5759159334e96f6b003859bb968",
       "escapedPixels": 5094,
       "interiorPixels": 666,
       "nonFinitePixels": 0,
@@ -4264,11 +4424,11 @@
       "sourceRevision": "8b518e0eeec33735742b3f05592265c161ddaba75549b9ce3f467a5f9e36891b",
       "profileQuality": "mechanical",
       "file": "a7a97d42-4e18-5048-b5d9-65eb80cbdc60.png",
-      "pngSha256": "9e4a85f41941dfe67ff3134e4608467e61f46a528b5988a97463e47db0727732",
-      "escapedPixels": 3050,
-      "interiorPixels": 2344,
+      "pngSha256": "096cae99c2ea97ecfe1207517aadfdac7849d9c4690e6f8f5666bbfeb9851479",
+      "escapedPixels": 3058,
+      "interiorPixels": 2336,
       "nonFinitePixels": 366,
-      "uniqueColors": 411,
+      "uniqueColors": 417,
       "anomalies": [
         "non-finite-pixels"
       ]
@@ -4307,6 +4467,18 @@
       "interiorPixels": 1490,
       "nonFinitePixels": 0,
       "uniqueColors": 307,
+      "anomalies": []
+    },
+    {
+      "formulaId": "a89891b1-8ccb-5d58-9fbb-05944b85ce3c",
+      "sourceRevision": "ede967e2b65d1f547af3504bab1d91071ad5f9cda0969189c5b50f3102d18dbb",
+      "profileQuality": "mechanical",
+      "file": "a89891b1-8ccb-5d58-9fbb-05944b85ce3c.png",
+      "pngSha256": "8b69435ee7073f804f28e959b2d93088059d13ffe9a27cc13d09dc9a92c79819",
+      "escapedPixels": 5528,
+      "interiorPixels": 232,
+      "nonFinitePixels": 0,
+      "uniqueColors": 25,
       "anomalies": []
     },
     {
@@ -4350,11 +4522,11 @@
       "sourceRevision": "1acbe32566ddd6c69a0f3fac1762e28bdca0d526e23585199abc1276ca3c0d47",
       "profileQuality": "family",
       "file": "a903b5ad-0378-5e5f-ab42-f1bfe15b919c.png",
-      "pngSha256": "13437a0cafe0ab603c59fd233669d8195c6c0381473fe716402049ddc07cc103",
+      "pngSha256": "d3312a3687956dfe875d89edd05a3b7dbe605cf4bc5d66abf906eff762669fac",
       "escapedPixels": 5760,
       "interiorPixels": 0,
       "nonFinitePixels": 0,
-      "uniqueColors": 340,
+      "uniqueColors": 341,
       "anomalies": [
         "no-interior-pixels"
       ]
@@ -4376,11 +4548,11 @@
       "sourceRevision": "f8b3589d184128bfd5919ee61f2fadb354d1de2976ab3e2c20ac6c2fee8891be",
       "profileQuality": "mechanical",
       "file": "aa007826-291a-5969-8563-5b4c97cec10b.png",
-      "pngSha256": "93e66eb9d24a1bb82091c25abac3e9cec930c632793526c90cec44de073ac5f6",
+      "pngSha256": "9aaf9d60ecec4a5c34be505d5f8bae998fc48dbf609974dc45555baae6f3edbc",
       "escapedPixels": 3136,
       "interiorPixels": 2624,
       "nonFinitePixels": 0,
-      "uniqueColors": 715,
+      "uniqueColors": 717,
       "anomalies": []
     },
     {
@@ -4445,11 +4617,11 @@
       "sourceRevision": "03cbb9624b08bcfb1aa4272b81e54a4d89008c34b8e8d95dea5f92a980ee413a",
       "profileQuality": "mechanical",
       "file": "ae1a8559-552c-52be-973b-7b9d8d8e3cdc.png",
-      "pngSha256": "ddbae980f01872663d0033be23d74341c9a1b801ffbe61b0f19341042eafdd66",
+      "pngSha256": "93687ddc58d80ccbe07c66ee983b6a384ac292f30f7e8eb9580d9d7ea80cfbc1",
       "escapedPixels": 2330,
       "interiorPixels": 3430,
       "nonFinitePixels": 0,
-      "uniqueColors": 281,
+      "uniqueColors": 284,
       "anomalies": []
     },
     {
@@ -4463,6 +4635,20 @@
       "nonFinitePixels": 0,
       "uniqueColors": 424,
       "anomalies": []
+    },
+    {
+      "formulaId": "af500910-46ce-5a43-b430-c0154cc05959",
+      "sourceRevision": "305c68341d9d4be9e65092c899f7cfbdd83919af59b69a633b0a53d251a5f99b",
+      "profileQuality": "mechanical",
+      "file": "af500910-46ce-5a43-b430-c0154cc05959.png",
+      "pngSha256": "f02b0c10fb87a12373c8493efcd8792b333995773fa255f7ca60dda7c61d1eff",
+      "escapedPixels": 1770,
+      "interiorPixels": 3884,
+      "nonFinitePixels": 106,
+      "uniqueColors": 273,
+      "anomalies": [
+        "non-finite-pixels"
+      ]
     },
     {
       "formulaId": "b0bf5217-893a-5a0f-9a46-5e5ce89223c3",
@@ -4614,11 +4800,11 @@
       "sourceRevision": "e70ee991126cb169214ef00dbe661ca8d154ce22f3bd4504f0c5a3dc7bbc5109",
       "profileQuality": "mechanical",
       "file": "b926b11a-815d-535c-b91c-facfb9399b21.png",
-      "pngSha256": "18714a601d4351b02b6de4fc675da8f360951f6faaa384b634c95533a9055ba5",
-      "escapedPixels": 4734,
-      "interiorPixels": 1026,
+      "pngSha256": "30f627b5ae16a3282d0331de02c067300f346dea9e3e2190396405c752990233",
+      "escapedPixels": 4732,
+      "interiorPixels": 1028,
       "nonFinitePixels": 0,
-      "uniqueColors": 655,
+      "uniqueColors": 646,
       "anomalies": []
     },
     {
@@ -4638,11 +4824,23 @@
       "sourceRevision": "0e51681b41a2e4e4b371f93d6ad463d4afb0c0481e0c3774b6ea07cc16eba8ff",
       "profileQuality": "mechanical",
       "file": "bb048a8c-0c83-59b9-97e7-c5ed2fc39524.png",
-      "pngSha256": "0b5a8ea05ae29d9e94b20245437bd0a150968ba928b3c91202c77417ea1c2f20",
+      "pngSha256": "26fc83652ccb6e7471757b7e27b4592d4712e5c00c65f91a4a48ffa57b8524ef",
       "escapedPixels": 3414,
       "interiorPixels": 2346,
       "nonFinitePixels": 0,
-      "uniqueColors": 507,
+      "uniqueColors": 506,
+      "anomalies": []
+    },
+    {
+      "formulaId": "bb186688-4571-5725-a8ed-a17e0100dbc8",
+      "sourceRevision": "f4a3b0126993d678f9cb6759f6d2e078741ec0cd9b749ab31b043f4f1ce2428a",
+      "profileQuality": "mechanical",
+      "file": "bb186688-4571-5725-a8ed-a17e0100dbc8.png",
+      "pngSha256": "3d24cf926b35699ee9e66eb42a0f6e8357a798f2ed30e69878368ebc76d1cd08",
+      "escapedPixels": 5478,
+      "interiorPixels": 282,
+      "nonFinitePixels": 0,
+      "uniqueColors": 166,
       "anomalies": []
     },
     {
@@ -4665,11 +4863,11 @@
       "sourceRevision": "c7eac9f7c6f0a589eaef94dd09df96b992d2f9c9e84b8dc9505e17e4fcb56942",
       "profileQuality": "mechanical",
       "file": "bcde4dcc-ca1c-52cb-b5b2-b917aca39761.png",
-      "pngSha256": "7704e44a5aa6ab4ea58efeb413e0b115a68a40d7ac242442ba352f3046d952cc",
+      "pngSha256": "c6cb4b80649394f8af146062701cb63c4d51847d7517ab45d8755f3b59d0b667",
       "escapedPixels": 3746,
       "interiorPixels": 2014,
       "nonFinitePixels": 0,
-      "uniqueColors": 830,
+      "uniqueColors": 832,
       "anomalies": []
     },
     {
@@ -4689,11 +4887,11 @@
       "sourceRevision": "9afd68a4b9bf8b63e7add0d493edc1fd7d754eac48d1db69d204b4a94f8d8a00",
       "profileQuality": "mechanical",
       "file": "bd3cabb7-66ad-5b86-a8d9-547d8eaeffc4.png",
-      "pngSha256": "bb2575c770a74b062870528089c996e42b6a9e44244bc58eab4f6319430d375c",
-      "escapedPixels": 4064,
-      "interiorPixels": 1696,
+      "pngSha256": "8e68ea219ae9dfe61afb985faf1c6abf545bb56a622de65b31835b4c97a8779c",
+      "escapedPixels": 4062,
+      "interiorPixels": 1698,
       "nonFinitePixels": 0,
-      "uniqueColors": 582,
+      "uniqueColors": 577,
       "anomalies": []
     },
     {
@@ -4715,11 +4913,11 @@
       "sourceRevision": "93984e32af396621eb19b63225d526d085e6d51a98cacf64b45264876b874ea5",
       "profileQuality": "mechanical",
       "file": "be109980-7f5d-537e-8197-c3392a3ac0cb.png",
-      "pngSha256": "65098143cf930c0542f0101c377cddf9e96ff2d7c49a2445a1e02d443a57a472",
-      "escapedPixels": 4398,
-      "interiorPixels": 1362,
+      "pngSha256": "371d8443f5090c3b6c0355ca9da95abf839571ad298ae931cc368522769e27bd",
+      "escapedPixels": 4400,
+      "interiorPixels": 1360,
       "nonFinitePixels": 0,
-      "uniqueColors": 505,
+      "uniqueColors": 501,
       "anomalies": []
     },
     {
@@ -4732,6 +4930,18 @@
       "interiorPixels": 3850,
       "nonFinitePixels": 0,
       "uniqueColors": 155,
+      "anomalies": []
+    },
+    {
+      "formulaId": "beeb4aec-91cd-5d01-83bb-0b98ca851e79",
+      "sourceRevision": "082b4f74a9e2798f67c8d2a61cb29cdc92e6e9f67f6b46c80bcf7af415a61a0b",
+      "profileQuality": "mechanical",
+      "file": "beeb4aec-91cd-5d01-83bb-0b98ca851e79.png",
+      "pngSha256": "2608471410f4233dd9b3f902ed377138384a8ff4a9c163d8ffc537bbd3d54084",
+      "escapedPixels": 2130,
+      "interiorPixels": 3630,
+      "nonFinitePixels": 0,
+      "uniqueColors": 485,
       "anomalies": []
     },
     {
@@ -4751,11 +4961,11 @@
       "sourceRevision": "ed71a3a29db90c1c2a58ce27b3aa8d02e7b7cc7e304413644fae022f480de94c",
       "profileQuality": "mechanical",
       "file": "bfb1ea12-9b8e-512b-830e-06ef19a94198.png",
-      "pngSha256": "9feae8372c20fa33fd1312236b0c23b6ad43353ba54bc55efa289d023105c7f2",
-      "escapedPixels": 2924,
-      "interiorPixels": 2836,
+      "pngSha256": "f6bd7cd2d4edbd49a03350fdff51ad8067aad68beca7322aa39942edb2c8dd81",
+      "escapedPixels": 2920,
+      "interiorPixels": 2840,
       "nonFinitePixels": 0,
-      "uniqueColors": 669,
+      "uniqueColors": 679,
       "anomalies": []
     },
     {
@@ -4831,11 +5041,11 @@
       "sourceRevision": "424e5ae32ebae72d25df95993cac55396387bfd6e0694426b1a5629f8b54a2e7",
       "profileQuality": "mechanical",
       "file": "c122edfc-bdf6-5f5d-a988-6564c73d6a14.png",
-      "pngSha256": "ceb4049dec61677d93844f8b659b5bbe5a981cc54a1dc91dc2fc75924b5d4f31",
+      "pngSha256": "17f31c10b40a74a9d37b9bc47dcfa386dc9f973c2e95ddb0b1782799e37d6a79",
       "escapedPixels": 5522,
       "interiorPixels": 238,
       "nonFinitePixels": 0,
-      "uniqueColors": 433,
+      "uniqueColors": 434,
       "anomalies": []
     },
     {
@@ -4843,11 +5053,11 @@
       "sourceRevision": "476ca846ada838a8cddb63bcf5278a548468369a3abdbb8b37451ddf3f409ac4",
       "profileQuality": "mechanical",
       "file": "c1668bd9-76d4-5e34-813e-a5bb8898008c.png",
-      "pngSha256": "dbc83a629a96eb34fa0f411ba419e7049762c621891ca91e9e21572c360224e4",
-      "escapedPixels": 3580,
-      "interiorPixels": 2180,
+      "pngSha256": "f42480ce8ea8e23ba0864e3cf59c026252f62d00b2f5ceae653865c8f9c3e6af",
+      "escapedPixels": 3578,
+      "interiorPixels": 2182,
       "nonFinitePixels": 0,
-      "uniqueColors": 369,
+      "uniqueColors": 367,
       "anomalies": []
     },
     {
@@ -4855,11 +5065,11 @@
       "sourceRevision": "4c7a3e10ec705f86ded70b4c699f4479e0ecd4a7587857412fff9648201585fa",
       "profileQuality": "mechanical",
       "file": "c18f4721-75e2-5ea4-81a0-95b8c49dfc86.png",
-      "pngSha256": "0d8c0bd8d2dc5454f764d7d7ca597880e2075b095c8fffd3b5788bd6d2ac25d8",
-      "escapedPixels": 3880,
-      "interiorPixels": 1880,
+      "pngSha256": "2b63d2861907b422367ac8db4ce8348583daf900b18f76b2d2057b334459043f",
+      "escapedPixels": 3874,
+      "interiorPixels": 1886,
       "nonFinitePixels": 0,
-      "uniqueColors": 802,
+      "uniqueColors": 794,
       "anomalies": []
     },
     {
@@ -4867,11 +5077,11 @@
       "sourceRevision": "eb3e0640c33cbbcf95fc6377d86fa313fa04824fedb57f4b35d3c96f50f32056",
       "profileQuality": "mechanical",
       "file": "c1a0a2a9-d5d5-5f53-8d0b-64c49ce9162f.png",
-      "pngSha256": "59c8fd56016b69eff80e873f569885b393ee97804d1257ab2f61633e822a060b",
+      "pngSha256": "e524e9eb9d22163ee5803b8b6ba326007053d80fa4c65e391914e38685d722a2",
       "escapedPixels": 3242,
       "interiorPixels": 2518,
       "nonFinitePixels": 0,
-      "uniqueColors": 464,
+      "uniqueColors": 459,
       "anomalies": []
     },
     {
@@ -4943,11 +5153,11 @@
       "sourceRevision": "45fd3bc7a76473b36beed85fc37856ab1d4cf7ad7c63bd7380cfb4ddf3627ed8",
       "profileQuality": "mechanical",
       "file": "c4431abf-9d47-5537-ae91-9bd5cfdaa567.png",
-      "pngSha256": "6b4225e2c9e21e469f75e435c9ac194ce12dea552e2340a0c1f8748c0fddc48a",
-      "escapedPixels": 792,
-      "interiorPixels": 4968,
+      "pngSha256": "69940477e7738402eb8342dcebd3e121316d3c8b1ad17251e3b7db486d3b0df1",
+      "escapedPixels": 794,
+      "interiorPixels": 4966,
       "nonFinitePixels": 0,
-      "uniqueColors": 212,
+      "uniqueColors": 210,
       "anomalies": []
     },
     {
@@ -5017,9 +5227,9 @@
       "sourceRevision": "80200f86c2242cef09f5e17798756b1438cf4c50f4a4fa81ba9e0f7c5210e2de",
       "profileQuality": "mechanical",
       "file": "c5c8d6cd-3d5a-565d-90c4-f1b7572f9b71.png",
-      "pngSha256": "aa06d8dfb41f21f4bc83d1eb98b66c58250778df94e6874823ecea171fe7d038",
-      "escapedPixels": 3834,
-      "interiorPixels": 1926,
+      "pngSha256": "d969eb42fb85d33a1bbaa8e7db608315ff35e836a4c44cbbd11883b9a9def166",
+      "escapedPixels": 3830,
+      "interiorPixels": 1930,
       "nonFinitePixels": 0,
       "uniqueColors": 612,
       "anomalies": []
@@ -5029,11 +5239,11 @@
       "sourceRevision": "c038ee3fae4e28ef73b8ebba0bb8b2d936056cf8454f4e0eef6ab605c015f4c0",
       "profileQuality": "mechanical",
       "file": "c5d5dfae-9f15-5529-8f10-042938047b7f.png",
-      "pngSha256": "f8748b49d6914cc0810bd21391e916e56bede572a8db2067b53565df3ae2dd1b",
-      "escapedPixels": 1664,
-      "interiorPixels": 4096,
+      "pngSha256": "5bf2910f3cd53f5521c5cde5a603d7746c0206bfc3d16702a11a92a549d6a2dc",
+      "escapedPixels": 1660,
+      "interiorPixels": 4100,
       "nonFinitePixels": 0,
-      "uniqueColors": 243,
+      "uniqueColors": 240,
       "anomalies": []
     },
     {
@@ -5065,11 +5275,11 @@
       "sourceRevision": "cb9dfcb19ca0680222cd6aa6fc98983dc22365b37b6a240901b637dac4cb89c1",
       "profileQuality": "family",
       "file": "c6a188ae-ec58-5a57-bfe2-caf85a83d2f8.png",
-      "pngSha256": "ec6bbb0f583308368392e1db0b99ba03d87e4504b3a71d94ea55ef139bf48e77",
-      "escapedPixels": 518,
-      "interiorPixels": 5242,
+      "pngSha256": "f6ef07f75a2f36b26267cf86e7930560e41c07a15769be14ba1e77d701546992",
+      "escapedPixels": 522,
+      "interiorPixels": 5238,
       "nonFinitePixels": 0,
-      "uniqueColors": 24,
+      "uniqueColors": 26,
       "anomalies": []
     },
     {
@@ -5113,11 +5323,11 @@
       "sourceRevision": "574fbebae2ffcc2bf54d443b989e242f93c692bd4863dfe45282f269daa9039a",
       "profileQuality": "mechanical",
       "file": "c76de166-3e77-5fcd-89e3-92561b33f0b8.png",
-      "pngSha256": "d447c558e4ffa8fda5ac6eca0298c642cd5404c7fc9338d3d054cf0ecff455e4",
+      "pngSha256": "eb86e5ad4cf9d753890aa1cbc560d2698ba3acc55f8538b673334b8005f3b115",
       "escapedPixels": 568,
       "interiorPixels": 5192,
       "nonFinitePixels": 0,
-      "uniqueColors": 186,
+      "uniqueColors": 188,
       "anomalies": []
     },
     {
@@ -5125,11 +5335,11 @@
       "sourceRevision": "41b5ddff9607502c0c73a8d5affb1e9e890a2f308f5839e2e583699e66085358",
       "profileQuality": "mechanical",
       "file": "c871e135-86d3-59c2-a879-69eaca0a8c22.png",
-      "pngSha256": "79ebe52e49fc0df217e24bdad85bd558aac79d8e392798e474c67663e261d58d",
+      "pngSha256": "2e7a414e90f0bfde73bf216d8e4c3c398153ef66a80dfa50063bba14a6865b97",
       "escapedPixels": 2284,
       "interiorPixels": 3476,
       "nonFinitePixels": 0,
-      "uniqueColors": 667,
+      "uniqueColors": 672,
       "anomalies": []
     },
     {
@@ -5175,11 +5385,11 @@
       "sourceRevision": "696da93ccf9d0665ad7339be5a562513f961a6624b54cae599e0a0748dbc3a89",
       "profileQuality": "family",
       "file": "ca15991c-ebe9-5bd1-b6f6-04b6067ab90f.png",
-      "pngSha256": "f525983a40ccdd2a01338c52197bbc3e1f61da9ad1d80cb8416257005454ccca",
+      "pngSha256": "fd5a0b763253405bcf6a3238fe53c0685cacb709a3661aa9beb1f4a9eed04bdb",
       "escapedPixels": 5760,
       "interiorPixels": 0,
       "nonFinitePixels": 0,
-      "uniqueColors": 404,
+      "uniqueColors": 405,
       "anomalies": [
         "no-interior-pixels"
       ]
@@ -5203,11 +5413,11 @@
       "sourceRevision": "3dd8d9e54ec911cfc24d59f9d09850bafadfea8c8ffcc0132c94f7dac2b66bfd",
       "profileQuality": "mechanical",
       "file": "ca6f9430-10c2-5d79-92dc-852c97c2feb9.png",
-      "pngSha256": "e4337489f33e69b44dd61fda216030cdd4dcd0a482c80e56b926013110be966a",
-      "escapedPixels": 4242,
-      "interiorPixels": 1518,
+      "pngSha256": "057e987479d312d42b5727d03b8397c6259dcb2c0530981bbb9ce258d46033b9",
+      "escapedPixels": 4252,
+      "interiorPixels": 1508,
       "nonFinitePixels": 0,
-      "uniqueColors": 511,
+      "uniqueColors": 510,
       "anomalies": []
     },
     {
@@ -5324,11 +5534,11 @@
       "sourceRevision": "333716fc1f53d70f19b68d5cfb078db30efa534ebe26e87f1848d540f9527ca6",
       "profileQuality": "mechanical",
       "file": "cddc90de-e9bd-51ce-909b-b9b956bf419b.png",
-      "pngSha256": "872b370d3a33679aff6f4a809a6d97e89334149d183913b88ad0b3c1f22041ff",
+      "pngSha256": "a00660851670ed930e21993c35ba9cf5d1d91b59a7ddc6f715151ea118bf0489",
       "escapedPixels": 5176,
       "interiorPixels": 584,
       "nonFinitePixels": 0,
-      "uniqueColors": 425,
+      "uniqueColors": 424,
       "anomalies": []
     },
     {
@@ -5336,11 +5546,11 @@
       "sourceRevision": "dc981ddb5900dd8061e802fdcced142d19a79032d9b5d28c028ba89b90f2acd0",
       "profileQuality": "family",
       "file": "ce1388b4-8994-5948-beaf-e9b54a80a350.png",
-      "pngSha256": "7360d9d2356d4ab218c0cbf9c94db9a5b9e59e0d67fa9975ec915e68a177a404",
+      "pngSha256": "5be1e4d381759069652e5ec03d377cd10a5df9fdaf334406368c640931a02455",
       "escapedPixels": 5760,
       "interiorPixels": 0,
       "nonFinitePixels": 0,
-      "uniqueColors": 588,
+      "uniqueColors": 582,
       "anomalies": [
         "no-interior-pixels"
       ]
@@ -5386,15 +5596,14 @@
     {
       "formulaId": "d0079630-8ed3-5379-9e37-52cb7f0f7379",
       "sourceRevision": "9d5148d6443b6dd4f5f0015e415b8642a324fb222f5a7769e1d7765e432bd1bc",
-      "profileQuality": "family",
+      "profileQuality": "mechanical",
       "file": "d0079630-8ed3-5379-9e37-52cb7f0f7379.png",
-      "pngSha256": "75c54f47414edbd815dde8e5ed2b202057a8d30ae2914c78318bab2bda4ba409",
-      "escapedPixels": 5678,
-      "interiorPixels": 0,
-      "nonFinitePixels": 82,
-      "uniqueColors": 168,
+      "pngSha256": "e3c97e40228b6d2f75a736dd506eb506fa75a2a361a1d9715eec33c5a888dfad",
+      "escapedPixels": 3606,
+      "interiorPixels": 2026,
+      "nonFinitePixels": 128,
+      "uniqueColors": 25,
       "anomalies": [
-        "no-interior-pixels",
         "non-finite-pixels"
       ]
     },
@@ -5467,11 +5676,11 @@
       "sourceRevision": "90c3991ce964a82172de2c6663661fa6ec3f897fd3c6cfcdd6203afc21511963",
       "profileQuality": "mechanical",
       "file": "d37c76aa-101e-5911-abd2-37ded44be307.png",
-      "pngSha256": "ad808127adf91e608664d41e3fbee28835856b94c8a5a80831dbcaf2d277579d",
+      "pngSha256": "4b5c9be05e0d06232ece35f07f8004a10a0a2dc538b9eab60d408f62c5e636df",
       "escapedPixels": 5064,
       "interiorPixels": 696,
       "nonFinitePixels": 0,
-      "uniqueColors": 447,
+      "uniqueColors": 450,
       "anomalies": []
     },
     {
@@ -5503,11 +5712,11 @@
       "sourceRevision": "73655eedd16a39d506b68c276dcee5b7e92d3d008259895213d65c858af73654",
       "profileQuality": "family",
       "file": "d48b109c-4368-53b6-b7bf-c7da60c9c2eb.png",
-      "pngSha256": "50be9b998d1ca65deaae578f92d41196e585862362b2b8c6eb56650925650476",
+      "pngSha256": "526e1567b5f83d0ab3d12c12980d9dcd1cfeb9799fbcefc49669526a0012a21a",
       "escapedPixels": 5760,
       "interiorPixels": 0,
       "nonFinitePixels": 0,
-      "uniqueColors": 358,
+      "uniqueColors": 359,
       "anomalies": [
         "no-interior-pixels"
       ]
@@ -5584,15 +5793,27 @@
       "anomalies": []
     },
     {
+      "formulaId": "d747aff8-e49f-5875-a85f-89d4a1d25846",
+      "sourceRevision": "e9aa563e5c1ab3def817a357ba4d8ef52b7085cbd1ff9ffd9fb239eece7241a1",
+      "profileQuality": "mechanical",
+      "file": "d747aff8-e49f-5875-a85f-89d4a1d25846.png",
+      "pngSha256": "a448087d3abc31bcc5c640077deb17f3f239c951d8a41131c54c291c54502cae",
+      "escapedPixels": 5052,
+      "interiorPixels": 708,
+      "nonFinitePixels": 0,
+      "uniqueColors": 398,
+      "anomalies": []
+    },
+    {
       "formulaId": "d808ce74-e717-5d98-af4c-dab9d713f01e",
       "sourceRevision": "01817bc8d5958c272fd9fd95a0c9d3a3586bed4aee5a50cd6f3c53279745fd2c",
       "profileQuality": "mechanical",
       "file": "d808ce74-e717-5d98-af4c-dab9d713f01e.png",
-      "pngSha256": "872b370d3a33679aff6f4a809a6d97e89334149d183913b88ad0b3c1f22041ff",
+      "pngSha256": "a00660851670ed930e21993c35ba9cf5d1d91b59a7ddc6f715151ea118bf0489",
       "escapedPixels": 5176,
       "interiorPixels": 584,
       "nonFinitePixels": 0,
-      "uniqueColors": 425,
+      "uniqueColors": 424,
       "anomalies": []
     },
     {
@@ -5620,6 +5841,18 @@
       "anomalies": [
         "no-interior-pixels"
       ]
+    },
+    {
+      "formulaId": "d89f722f-35fe-587a-bee9-efdf05885728",
+      "sourceRevision": "f05366105906d0524885fafa45e4b11808d37b0c7de3ef287da876b972df653a",
+      "profileQuality": "mechanical",
+      "file": "d89f722f-35fe-587a-bee9-efdf05885728.png",
+      "pngSha256": "a93cfcd89f6025eacc3c5a1a0a506a803aa598fd11c1a159c207ef8fc9620de3",
+      "escapedPixels": 4544,
+      "interiorPixels": 1216,
+      "nonFinitePixels": 0,
+      "uniqueColors": 274,
+      "anomalies": []
     },
     {
       "formulaId": "d8ed1025-8ccf-5424-b161-df178a36a0fa",
@@ -5665,11 +5898,11 @@
       "sourceRevision": "7d1a66a11c4b3c11b77897784b85f1c4e79b2fc0d44fbbda5b1a2e1d66420408",
       "profileQuality": "mechanical",
       "file": "d9bc4e37-3fc6-5fa1-b334-e136b94b1e8c.png",
-      "pngSha256": "04fa6b5f7dcb722e3d1f200b8c4161ac5bea5182fdb04a1e9e56184efd8d1c49",
-      "escapedPixels": 4170,
-      "interiorPixels": 1590,
+      "pngSha256": "fb344ee231cf63c4aae5f1b15a105ddc59e4f94a4463b774b70fb1c434cdcd52",
+      "escapedPixels": 4180,
+      "interiorPixels": 1580,
       "nonFinitePixels": 0,
-      "uniqueColors": 858,
+      "uniqueColors": 842,
       "anomalies": []
     },
     {
@@ -5739,11 +5972,11 @@
       "sourceRevision": "6bb1d2b9b70543232cfc23afff4ebc478f78b941b1d5e3da14fdc3f0ec1b3218",
       "profileQuality": "mechanical",
       "file": "dc949eb5-0f2b-576b-a102-d2015d463a7b.png",
-      "pngSha256": "2d8d1ad4dd1567cf5de41773adebe41c84c52b811ebe5146c9fc43460d24e664",
-      "escapedPixels": 3396,
-      "interiorPixels": 2364,
+      "pngSha256": "c74cb89e351929ccb0771f76c8741ead2db119893caf46f960f7c2f2c3a3d5e8",
+      "escapedPixels": 3386,
+      "interiorPixels": 2374,
       "nonFinitePixels": 0,
-      "uniqueColors": 770,
+      "uniqueColors": 755,
       "anomalies": []
     },
     {
@@ -5777,11 +6010,11 @@
       "sourceRevision": "939e894074bd903b0ff18a51797d4e752a67ca6a51c4544f424398c5488b72c4",
       "profileQuality": "mechanical",
       "file": "dd5a6937-3b00-5bc9-8c18-5d048471126e.png",
-      "pngSha256": "d31829e5e7fc788802552f6b1edea15d4c5d7e00d9cf69ed2e51ea86240bdd1f",
-      "escapedPixels": 3618,
-      "interiorPixels": 2142,
+      "pngSha256": "06743933d28c66dc137cb160626440dc39980f630d5f190d804e089340023884",
+      "escapedPixels": 3616,
+      "interiorPixels": 2144,
       "nonFinitePixels": 0,
-      "uniqueColors": 557,
+      "uniqueColors": 554,
       "anomalies": []
     },
     {
@@ -5789,11 +6022,11 @@
       "sourceRevision": "614fda77a318b2b7814c1ad1ee1986c0e428fde08feb1590339381daf37320cb",
       "profileQuality": "mechanical",
       "file": "de7a2025-caeb-58ac-b3ea-cf26c70c5e24.png",
-      "pngSha256": "3c0ca95f161c76d78dcf838c9670f4d7644e261c4a7da32268889c1d07a76ddf",
-      "escapedPixels": 4062,
-      "interiorPixels": 1698,
+      "pngSha256": "3e4be4a89e552ddacd7d5b27dad72ebadea9ecd4f2703026a915827e2133e4e7",
+      "escapedPixels": 4060,
+      "interiorPixels": 1700,
       "nonFinitePixels": 0,
-      "uniqueColors": 590,
+      "uniqueColors": 587,
       "anomalies": []
     },
     {
@@ -5827,11 +6060,11 @@
       "sourceRevision": "28bbc6f5aa49126e3751d8ef4fe2947cc89030171a61ac382eb9f24ec2e624e3",
       "profileQuality": "mechanical",
       "file": "defaf6f8-db0a-52c8-9ca0-0d5d3bdac49f.png",
-      "pngSha256": "8b9de05f39e3ac323124401d117890e824018a9ba483f4f683ead4b071fb4ad8",
-      "escapedPixels": 3088,
-      "interiorPixels": 2672,
+      "pngSha256": "c57a91419c201082e25fcde0a4908a07edb9088e9d4f5865d3ee8adb8b1e8227",
+      "escapedPixels": 3090,
+      "interiorPixels": 2670,
       "nonFinitePixels": 0,
-      "uniqueColors": 477,
+      "uniqueColors": 475,
       "anomalies": []
     },
     {
@@ -5854,11 +6087,11 @@
       "sourceRevision": "fb615c94d48e6866fd1509363b1faa0282471dd2855b19f88999f96936819ab0",
       "profileQuality": "mechanical",
       "file": "df5e06a1-1983-5ce5-90df-9b545d112551.png",
-      "pngSha256": "f70a1e6c51288804d8f5840f92dbf5429abded8d01a4edf6e9ca23dc4347ea9f",
+      "pngSha256": "40c327fd4d97df864ca0db8e8bae693e8188e3327772906a59f35f52433d0ae3",
       "escapedPixels": 4606,
       "interiorPixels": 1154,
       "nonFinitePixels": 0,
-      "uniqueColors": 817,
+      "uniqueColors": 809,
       "anomalies": []
     },
     {
@@ -5878,11 +6111,11 @@
       "sourceRevision": "c98e5875f38b002f7168a9e56601904c028e455ec787dce9d1380d8a974f2ace",
       "profileQuality": "mechanical",
       "file": "e03055ad-b642-5ada-b4ce-7819d9282cbe.png",
-      "pngSha256": "f3dd678620e031257620a8c2dfc5ad3612cf99f5c284fc09a303400fdb7b730b",
-      "escapedPixels": 4624,
-      "interiorPixels": 1136,
+      "pngSha256": "55d77ac4bb95b8dcf3a45a5cd7a5cf52f2ed89584b708fd8ca17de49f5deb8a6",
+      "escapedPixels": 4626,
+      "interiorPixels": 1134,
       "nonFinitePixels": 0,
-      "uniqueColors": 192,
+      "uniqueColors": 196,
       "anomalies": []
     },
     {
@@ -5938,6 +6171,18 @@
       ]
     },
     {
+      "formulaId": "e375f423-dfa4-54bf-9d56-c41215f4f72a",
+      "sourceRevision": "10f7accf02bbb79e4e7df8120ed2d02ea8b5a922fe780006c693da9a4ebe013d",
+      "profileQuality": "mechanical",
+      "file": "e375f423-dfa4-54bf-9d56-c41215f4f72a.png",
+      "pngSha256": "119af7e1d68633f627b2487b27b6da1bf47dfebebf9628286106c855d28ff359",
+      "escapedPixels": 5178,
+      "interiorPixels": 582,
+      "nonFinitePixels": 0,
+      "uniqueColors": 375,
+      "anomalies": []
+    },
+    {
       "formulaId": "e39472e4-6152-5f8e-be96-a9566c891dc8",
       "sourceRevision": "942f4ebd01938347435963902e1062b2f972470e3a711836f20a313e6135314e",
       "profileQuality": "mechanical",
@@ -5978,7 +6223,7 @@
       "sourceRevision": "0274103ace47417acb87bec42ef1b4dbe07d30e226d35a837f302fb3a2966405",
       "profileQuality": "family",
       "file": "e44d5dec-2cee-53a9-a21d-541c929792f6.png",
-      "pngSha256": "89c1eaeeb47f71fc99744cbc4b7b744057049151f7d92bc15d2546095f794803",
+      "pngSha256": "125880e6cb5fbfa7d7006e162dcb3ac1fcd248018df017c9d3c1b0b3be1ed41d",
       "escapedPixels": 5750,
       "interiorPixels": 0,
       "nonFinitePixels": 10,
@@ -6077,11 +6322,11 @@
       "sourceRevision": "0e4c0ea02e2e4aebaeb13d03609932f97b7f647bb929bde77d39befa9c706daa",
       "profileQuality": "mechanical",
       "file": "e89afab6-33b1-5cd2-bfc0-98b2dfca400e.png",
-      "pngSha256": "492423c278153df6afb252b4531263cf2caf64344c220023bdabc0411edea9c0",
-      "escapedPixels": 2164,
-      "interiorPixels": 3596,
+      "pngSha256": "48a0e1b76e27333af9e0af5be7724152a54f435f1cb6aa4414276ba38aeb6ed6",
+      "escapedPixels": 2166,
+      "interiorPixels": 3594,
       "nonFinitePixels": 0,
-      "uniqueColors": 501,
+      "uniqueColors": 498,
       "anomalies": []
     },
     {
@@ -6089,11 +6334,11 @@
       "sourceRevision": "49e8b0f1f00b62bb2aa99b4ca8a7af68871dee319b4a541a39cef16bce081fc7",
       "profileQuality": "mechanical",
       "file": "e8e735b4-3eb6-53b6-979e-7f70268ceb6b.png",
-      "pngSha256": "0ce6cd0542cf0cfd566fb5a7b87ae8a08986bb3b8e2c2df1c1d54fc375929fa1",
+      "pngSha256": "191488c7f4aa4ad4840d3d687f5f1cc6736657243063d43ef1966c842031de63",
       "escapedPixels": 5242,
       "interiorPixels": 518,
       "nonFinitePixels": 0,
-      "uniqueColors": 470,
+      "uniqueColors": 471,
       "anomalies": []
     },
     {
@@ -6146,11 +6391,11 @@
       "sourceRevision": "c53978bf1111e909b2ade05e8504926ed987f2ad400dae5a7702c0e492a948d9",
       "profileQuality": "mechanical",
       "file": "ec9ca8e4-66ef-5b97-a706-9164d2b03622.png",
-      "pngSha256": "735e94f210672beea2e8e83f3993947679e195c0b39f47726adb05f02d35435a",
-      "escapedPixels": 3134,
-      "interiorPixels": 2626,
+      "pngSha256": "3ec4af88c67d1bf68ee547c8eb8a515d07c2a634a8f3f789fe6dfd6867e2fbdb",
+      "escapedPixels": 3142,
+      "interiorPixels": 2618,
       "nonFinitePixels": 0,
-      "uniqueColors": 772,
+      "uniqueColors": 768,
       "anomalies": []
     },
     {
@@ -6179,6 +6424,18 @@
         "flat-preview",
         "no-escaped-pixels"
       ]
+    },
+    {
+      "formulaId": "ed671b4c-a04c-5545-ad0c-a73727761ce8",
+      "sourceRevision": "46472f355f4ed06661a7e8cc666c73d3037e394e4be8fe56abe43e9b9c7c303a",
+      "profileQuality": "mechanical",
+      "file": "ed671b4c-a04c-5545-ad0c-a73727761ce8.png",
+      "pngSha256": "0862e96a9c055e24b0c50d7e199bf82c62433a84e89e2f557d212b8d7339afaf",
+      "escapedPixels": 5152,
+      "interiorPixels": 608,
+      "nonFinitePixels": 0,
+      "uniqueColors": 391,
+      "anomalies": []
     },
     {
       "formulaId": "ed7e4ea5-2118-5ade-8fbc-19b5c2a6c8fc",
@@ -6287,11 +6544,11 @@
       "sourceRevision": "adf6b7194fa0d04ffc5959247e4b8485022cdac245af83b9e5f256af9c48b086",
       "profileQuality": "family",
       "file": "f2305da6-5fc0-59e4-8204-9b0adb61bc74.png",
-      "pngSha256": "99abcae13089f316ea62bb4ad7bcc0c1aa207fcbc3b583a7d3f623d9cbca78ba",
+      "pngSha256": "647fda150d9f56b219b0f5029babb04ce399d82532abfad6804ce0b2d0e7cd1c",
       "escapedPixels": 5760,
       "interiorPixels": 0,
       "nonFinitePixels": 0,
-      "uniqueColors": 362,
+      "uniqueColors": 364,
       "anomalies": [
         "no-interior-pixels"
       ]
@@ -6337,11 +6594,11 @@
       "sourceRevision": "b8815b043a29a214934ca2b5622082dfd3b48d2f5c192adb4f36fe39b8f4885d",
       "profileQuality": "mechanical",
       "file": "f4216f6d-c8ed-5837-8417-8ae719f186a8.png",
-      "pngSha256": "e33925ffb7167e346e6c0fa2a37c26a8f777180ea2401b5ff755634d75635ca5",
+      "pngSha256": "085a362c448cbf494d4b79db235de3f76bc714d30a5d6117493cad7d351cb9f8",
       "escapedPixels": 4736,
       "interiorPixels": 1024,
       "nonFinitePixels": 0,
-      "uniqueColors": 477,
+      "uniqueColors": 483,
       "anomalies": []
     },
     {
@@ -6363,7 +6620,7 @@
       "sourceRevision": "fcf3406ffb7f4abe696c7d98c1fe2673a32420ed31698337404376096bf28b96",
       "profileQuality": "mechanical",
       "file": "f58059ef-67f2-58a4-bac0-bdb1d8608cc0.png",
-      "pngSha256": "247fd79b5dbb77c9b5113f380107eaeee57116882ed2921757abf1fda4fd0496",
+      "pngSha256": "f7b08ea33b42db880c7a2dea6b87cee0a5e7e00f90241c5226ada49d4fc9c3ba",
       "escapedPixels": 5048,
       "interiorPixels": 712,
       "nonFinitePixels": 0,
@@ -6375,11 +6632,11 @@
       "sourceRevision": "d1d1118177ce1adfb1fefba6c70be4af940c472534ad00017f353c50c2688550",
       "profileQuality": "mechanical",
       "file": "f6126a12-f689-5eac-8917-71580950caba.png",
-      "pngSha256": "50f1790c63049aadbb9f01541b4358116f969807f2d2272ee26482af662fa986",
+      "pngSha256": "dfd75947b99c3f30555d9372c952a81edc8b7af3630662d30f03dc1c7db90d11",
       "escapedPixels": 2660,
       "interiorPixels": 3100,
       "nonFinitePixels": 0,
-      "uniqueColors": 625,
+      "uniqueColors": 620,
       "anomalies": []
     },
     {
@@ -6399,11 +6656,11 @@
       "sourceRevision": "368fdb7d4f0dd84fd7d9fe370cf2f02c987db06e83032ae516eec8d7fed3d639",
       "profileQuality": "mechanical",
       "file": "f876a613-3cb0-58ac-b124-f2985773809f.png",
-      "pngSha256": "96bc451b77129d4c389b7750cf9d0b3b6510587f27b7f6526ee6a500fed87f37",
-      "escapedPixels": 1446,
-      "interiorPixels": 4314,
+      "pngSha256": "1d71a5cf033808aa1747848409445799e4c6c82b39fa2a9dd16b18e8372cf92b",
+      "escapedPixels": 1384,
+      "interiorPixels": 4376,
       "nonFinitePixels": 0,
-      "uniqueColors": 343,
+      "uniqueColors": 338,
       "anomalies": []
     },
     {
@@ -6519,11 +6776,11 @@
       "sourceRevision": "71bf9ee5b1d55770b8512b12debeab6c3bedffa203494745ce95a295bd2fa8c2",
       "profileQuality": "mechanical",
       "file": "fd4db987-1bd3-5ab0-983f-9a9bb01d0304.png",
-      "pngSha256": "936089adb1c2bfec7a6b8ef7477f425c89c48068218c3a7288199a819d7a4a11",
-      "escapedPixels": 1470,
-      "interiorPixels": 4290,
+      "pngSha256": "dc716c8e91f8237add7550ac63dce677ba15963a22b66fc375f6932269d52dd8",
+      "escapedPixels": 1468,
+      "interiorPixels": 4292,
       "nonFinitePixels": 0,
-      "uniqueColors": 340,
+      "uniqueColors": 339,
       "anomalies": []
     },
     {
@@ -6543,11 +6800,11 @@
       "sourceRevision": "da1f561fb7db0d001bc9018b144cf4bf2aaef4f2d7b5cff7516699177895d559",
       "profileQuality": "mechanical",
       "file": "fd6c2fac-31db-55f1-9d93-726bd261671d.png",
-      "pngSha256": "f87d815ba90745753ff7a5b749bf529d4554f67843779b32b493b7b8015bb7ab",
-      "escapedPixels": 4796,
-      "interiorPixels": 964,
+      "pngSha256": "2d058cdee54501f49ac7479376b84be79fdeed8eff14d57b16dbaa111dfd6d2a",
+      "escapedPixels": 4804,
+      "interiorPixels": 956,
       "nonFinitePixels": 0,
-      "uniqueColors": 559,
+      "uniqueColors": 557,
       "anomalies": []
     },
     {
@@ -6555,11 +6812,11 @@
       "sourceRevision": "99e84da9eee8f7780890e9cce6008eea3dfbd8324f827aaca70f82f1d4170daf",
       "profileQuality": "mechanical",
       "file": "fdbbc343-f4c3-5eb4-94de-f5a1d9ef2525.png",
-      "pngSha256": "a3979d76e052030f7e78d5ff57790d98086007f8a49c5533810ab0db2056be76",
-      "escapedPixels": 2648,
-      "interiorPixels": 3112,
+      "pngSha256": "0d574a9a05cd5b02e3a66511a9a44d26cdbe061d4d3bd74dbd9a1a6c35c451d2",
+      "escapedPixels": 2652,
+      "interiorPixels": 3108,
       "nonFinitePixels": 0,
-      "uniqueColors": 589,
+      "uniqueColors": 588,
       "anomalies": []
     },
     {
@@ -6579,11 +6836,11 @@
       "sourceRevision": "3505c4afb1b97a13e96b524253d13fc53ffdf3aae37aa51db00cf30cf8dbe600",
       "profileQuality": "mechanical",
       "file": "fedcfb68-071a-5b21-9552-ac641af3ecce.png",
-      "pngSha256": "3e8bc979d6da1b254fad45669ea15e1e76e0b22cf89b55ae7d599ec7e0f278ae",
+      "pngSha256": "237b494ec7006ff895656f4cc327bb493fba716763b9d71ff7cd8e5987f0319c",
       "escapedPixels": 5444,
       "interiorPixels": 316,
       "nonFinitePixels": 0,
-      "uniqueColors": 414,
+      "uniqueColors": 413,
       "anomalies": []
     },
     {
@@ -6599,5 +6856,5 @@
       "anomalies": []
     }
   ],
-  "manifestContentHash": "34c1a73b820a7c48a6c710c12c911e597d9b881794df56b5100b3a66999c5bdb"
+  "manifestContentHash": "a4396ae743cd981de8a55ad22b65125fe07804cc25a0947002a453ff5ef31caa"
 }

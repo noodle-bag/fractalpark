@@ -325,7 +325,7 @@
       },
       "standardDirectory": {
         "cta": "Browse the standard directory",
-        "hint": "All 677 Standard Formula identities with publication status — including the 513 currently published."
+        "hint": "534 Standard Definitions are currently published."
       }
     },
     "guide": {
@@ -440,7 +440,7 @@
             "preprocessor": "Preprocessor features",
             "rejected-constructs": "Any construct rejected by the current compile pipeline"
           },
-          "disclaimer": "This is a tested Classic compatibility baseline, not a claim of full Fractint compatibility and not the 677-identity Standard publication ledger. The current ledger contains 513 published Definitions and 164 held Records.",
+          "disclaimer": "This is a tested Classic compatibility baseline, not a claim of full Fractint compatibility. It is separate from the Standard publication ledger.",
           "verified": {
             "title": "Verified compatibility",
             "intro": "These Classic-import capability counts come from the versioned compatibility manifest: 588 target entries comprise 579 strict-v2 passes and 9 documented waivers; 117 separate entries are excluded with stable reasons. They do not count published FRM-like v1 Definitions.",
@@ -1037,10 +1037,10 @@
       "breadcrumb": "Directory",
       "eyebrow": "Standard Formula Directory",
       "title": "Standard Formula Directory",
-      "description": "The complete directory of FractalPark's 677 Standard Formula identities with their current publication status, browsable by family and status.",
-      "intro": "All 677 Standard Formula identities in one directory. Filter by family and publication status; published formulas are fully implemented and runnable, held formulas are documented but not yet available.",
+      "description": "Browse FractalPark's {count} published Standard Definitions by family.",
+      "intro": "All {count} published Standard Definitions are collected here. Every listed formula has a complete runnable implementation.",
       "facets": {
-        "title": "Browse by facet",
+        "title": "Browse by family",
         "family": "Family",
         "status": "Publication status",
         "all": "All"
@@ -1059,7 +1059,7 @@
         "hold": "Held",
         "exclude": "Excluded"
       },
-      "resultCount": "{count} identities"
+      "resultCount": "{count} published Definitions"
     },
     "record": {
       "eyebrow": "Formula Record",
@@ -1865,7 +1865,7 @@
   },
   "about": {
     "title": "About FractalPark",
-    "aiDescription": "FractalPark is an open-source MIT-licensed browser-based fractal art generator using WebGL for real-time GPU rendering. It features 94 built-in escape-time formulas, 513 published Standard Definitions with pinned FRM-like v1 source, a separate Classic-compatible custom formula Editor, 7 UV transform plugins, 9 coloring modes, and high-resolution PNG export. Built with Next.js 16, React 19, TypeScript 5, and Tailwind CSS, its rendering engine uses plugin-based dynamic GLSL assembly and LRU caching.",
+    "aiDescription": "FractalPark is an open-source MIT-licensed browser-based fractal art generator using WebGL for real-time GPU rendering. It features 94 built-in escape-time formulas, 534 published Standard Definitions with pinned FRM-like v1 source, a separate Classic-compatible custom formula Editor, 7 UV transform plugins, 9 coloring modes, and high-resolution PNG export. Built with Next.js 16, React 19, TypeScript 5, and Tailwind CSS, its rendering engine uses plugin-based dynamic GLSL assembly and LRU caching.",
     "techStack": {
       "title": "Technology",
       "description": "Built with Next.js, WebGL, and TypeScript. Real-time fractal rendering powered by GPU shaders.",

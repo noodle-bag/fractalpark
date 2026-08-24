@@ -53,19 +53,19 @@ describe('teaching held-Guide route guard', () => {
     expect(new Set(blocked)).toEqual(heldIds);
   });
 
-  it('keeps every held Guide metadata-only and strips runtime capabilities', () => {
+  it('keeps every editorially held Guide unavailable while its Record is published', () => {
     for (const row of heldAsset.rows) {
       const record = buildFormulaRecordV1(row.formulaId as FormulaIdV1, 'en');
       expect(record).toMatchObject({
         formulaId: row.formulaId,
-        availability: 'hold',
-        publicationDecision: 'hold',
+        availability: 'published',
+        publicationDecision: 'publish',
         decisionReason: row.decisionReason,
       });
-      expect(record).not.toHaveProperty('source');
-      expect(record).not.toHaveProperty('defaultProfile');
-      expect(record).not.toHaveProperty('preview');
-      expect(record).not.toHaveProperty('actions');
+      expect(record).toHaveProperty('source');
+      expect(record).toHaveProperty('defaultProfile');
+      expect(record).toHaveProperty('preview');
+      expect(record).toHaveProperty('actions');
       expect(record && getTeachingGuideForFormulaRecordV1(record)).toBeUndefined();
       expect(isSelectedTeachingFormulaV1(row.formulaId)).toBe(false);
     }

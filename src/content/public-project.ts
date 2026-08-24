@@ -58,7 +58,7 @@ export const PUBLIC_PROJECT = {
     labelEn: 'Open the Standard Formula directory',
     href: '/formulas/directory',
     summaryEn:
-      'Read pinned source on the 513 published Definitions; the directory also lists 164 held Records without runnable source.',
+      'Read pinned source for 534 published Standard Definitions.',
   },
 
   /** The four things a user can do today, in canonical order. */

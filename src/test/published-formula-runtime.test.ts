@@ -36,7 +36,7 @@ function readJson(path: string): JsonRecord {
 describe("published formula runtime loader", () => {
   beforeAll(() => registerBuiltins({ quiet: true }));
 
-  it("builds an exact publish-only 513-row index with content-addressed bodies", () => {
+  it("builds an exact publish-only 534-row index with content-addressed bodies", () => {
     const decisions = readJson(DECISIONS_PATH);
     const expected = new Set(
       (decisions.rows as JsonRecord[])
@@ -63,7 +63,7 @@ describe("published formula runtime loader", () => {
     if (!parsed.ok) return;
 
     expect(parsed.value.rowCount).toBe(expected.size);
-    expect(parsed.value.rowCount).toBe(513);
+    expect(parsed.value.rowCount).toBe(534);
     expect(new Set(parsed.value.rows.map((row) => row.formulaId))).toEqual(
       expected,
     );
@@ -75,10 +75,10 @@ describe("published formula runtime loader", () => {
     ).toHaveLength(0);
     expect(
       parsed.value.rows.filter((row) => row.profile.quality === "mechanical"),
-    ).toHaveLength(308);
+    ).toHaveLength(332);
     expect(
       parsed.value.rows.filter((row) => row.profile.quality === "family"),
-    ).toHaveLength(205);
+    ).toHaveLength(202);
 
     const bodyFiles = readdirSync(join(ROOT, "definitions"));
     expect(bodyFiles).toHaveLength(expected.size);
@@ -183,7 +183,7 @@ describe("published formula runtime loader", () => {
     const changed = structuredClone(index);
     const rows = changed.rows as JsonRecord[];
     rows[0] = { ...rows[0], formulaId: held.formulaId };
-    expect(changed.rowCount).toBe(513);
+    expect(changed.rowCount).toBe(534);
     expect(
       rows.filter(
         (row) => row.implementationBasis === "separated-independent-rewrite",

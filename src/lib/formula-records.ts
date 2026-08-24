@@ -28,7 +28,7 @@ import {
 } from '@/i18n/supported-locales';
 
 export const FORMULA_RECORD_COUNT_V1 = 677 as const;
-export const PUBLISHED_FORMULA_RECORD_COUNT_V1 = 513 as const;
+export const PUBLISHED_FORMULA_RECORD_COUNT_V1 = 534 as const;
 export const FORMULA_RECORD_PREVIEW_WIDTH_V1 = 96 as const;
 export const FORMULA_RECORD_PREVIEW_HEIGHT_V1 = 60 as const;
 export const FORMULA_RECORD_TAKEDOWN_EMAIL_V1 = 'contact@fractalpark.com' as const;

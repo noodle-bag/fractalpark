@@ -68,6 +68,27 @@ interface ReviewLedger {
     aiMayApproveAsMaintainer: boolean;
   };
   locales: Record<Locale, LocaleReview>;
+  publicationRevision4Rebind: {
+    authorization: string;
+    scope: string;
+    aiAssistanceDisclosure: string;
+    changes: {
+      manualNumericSubstitutions: string[];
+      reviewedMessagePaths: string[];
+      additionalMessagePaths: string[];
+    };
+    priorSnapshot: Record<Locale | "en", {
+      manualSha256: string;
+      messageProjectionSha256: string;
+    }>;
+    currentProjection: Record<Locale | "en", {
+      manualSha256: string;
+      messageProjectionSha256: string;
+    }>;
+    contentRowsChanged: boolean;
+    modelReviewEvidenceReusedForCurrentBytes: boolean;
+    reviewStatus: string;
+  };
 }
 
 const ledger = JSON.parse(
@@ -276,8 +297,23 @@ describe("FRM-like v1 localized manual review ledger", () => {
     expect(ledger.source.commit).toBe(expectedSourceCommit);
     expect(ledger.source.manualSha256).toBe(expectedSourceManualSha256);
     expect(ledger.source.messageProjectionSha256).toBe(expectedSourceProjectionSha256);
-    expect(sha256(sourceManual)).toBe(ledger.source.manualSha256);
-    expect(projectionSha256(sourceMessages)).toBe(ledger.source.messageProjectionSha256);
+    expect(sha256(sourceManual)).toBe(
+      ledger.publicationRevision4Rebind.currentProjection.en.manualSha256,
+    );
+    expect(projectionSha256(sourceMessages)).toBe(
+      ledger.publicationRevision4Rebind.currentProjection.en.messageProjectionSha256,
+    );
+    expect(ledger.publicationRevision4Rebind).toMatchObject({
+      authorization: "approved-v0.4.19-plan-v1.5-expected-commit-26c",
+      scope: "mechanical-release-fact-and-public-boundary-copy-only",
+      contentRowsChanged: false,
+      modelReviewEvidenceReusedForCurrentBytes: false,
+      reviewStatus: "ellie-main-agent-reviewed",
+    });
+    expect(ledger.publicationRevision4Rebind.priorSnapshot.en).toEqual({
+      manualSha256: ledger.source.manualSha256,
+      messageProjectionSha256: ledger.source.messageProjectionSha256,
+    });
     expect(ledger.reviewPolicy).toMatchObject({
       aiGenerated: true,
       maintainerApprovalRequired: true,
@@ -290,8 +326,17 @@ describe("FRM-like v1 localized manual review ledger", () => {
       const review = ledger.locales[locale];
       const manual = repoFile(review.manualPath);
       const messages = JSON.parse(repoFile(review.messageFile)) as JsonValue;
-      expect(sha256(manual)).toBe(review.manualSha256);
-      expect(projectionSha256(messages)).toBe(review.messageProjectionSha256);
+      expect(sha256(manual)).toBe(
+        ledger.publicationRevision4Rebind.currentProjection[locale].manualSha256,
+      );
+      expect(projectionSha256(messages)).toBe(
+        ledger.publicationRevision4Rebind.currentProjection[locale]
+          .messageProjectionSha256,
+      );
+      expect(ledger.publicationRevision4Rebind.priorSnapshot[locale]).toEqual({
+        manualSha256: review.manualSha256,
+        messageProjectionSha256: review.messageProjectionSha256,
+      });
       const deepseek = review.modelReviews.deepseek;
       const kimi = review.modelReviews["kimi-k3"];
       expect(deepseek).toMatchObject({

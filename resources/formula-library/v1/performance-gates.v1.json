@@ -1,11 +1,11 @@
 {
   "schema": "fractalpark-standard-library-performance-gates/v1",
-  "decisionRevision": 3,
-  "publicationDecisionsContentHash": "7106736785e8bbb7cc310056f93f550413b6a0b76ad21e648b50e55480a2a52c",
+  "decisionRevision": 4,
+  "publicationDecisionsContentHash": "cac35a05d2d0c219b4f5ac00f3dea5b5fbb2b9c6b2fc15ea3383ef0f62d6031d",
   "counts": {
     "decisions": 677,
-    "published": 513,
-    "held": 164,
+    "published": 534,
+    "held": 143,
     "excluded": 0,
     "initialLibraryRows": 48
   },
@@ -39,8 +39,8 @@
       "previewManifestBytes": 300000,
       "previewsTotalBytes": 1800000,
       "previewMaxBytes": 10000,
-      "nativeDefinitionOverlapCount": 68,
-      "nativeDefinitionOverlapSha256": "4f6e82e6d879022665fb7b1c72c8040e4eb902508c76b9d862d713ea8ea7128b"
+      "nativeDefinitionOverlapCount": 89,
+      "nativeDefinitionOverlapSha256": "5f53f89a1a34767cafaff8111da18f5ccc19693f6f98d5a465dc7ec0bd7550c7"
     },
     "browser": {
       "libraryOpenP95Ms": 1000,

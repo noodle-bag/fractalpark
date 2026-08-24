@@ -14,8 +14,8 @@ writer/importateur v1 canonique reste soumise à un gate.
 
 ## 1. Ce que tu peux faire aujourd’hui
 
-FractalPark expose actuellement 677 identités Standard : 513 Definitions publiées
-et 164 Records maintenus hors publication.
+FractalPark expose actuellement 677 identités Standard : 534 Definitions publiées
+et 143 Records maintenus hors publication.
 
 Pour un Record publié, tu peux :
 

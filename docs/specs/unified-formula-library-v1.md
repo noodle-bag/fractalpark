@@ -4,7 +4,7 @@
 - Date: 2026-08-15
 - Amended: 2026-08-17 (677 identities; implementation publication is per-row; publication decision ledger asset frozen)
 - Amended: 2026-08-17 (stdlib v1 adds `identity`; Classic fn-slot defaults without an explicit `function=` mapping resolve to `identity`)
-- Amended: 2026-08-20 (language semantics delegated to the normative English reference; 513 published Definitions active)
+- Amended: 2026-08-24 (decision revision 4; 534 published Definitions active after the exact 21/21 recovery gate)
 - Target release: FractalPark v0.4.19
 - Normative language: [FractalPark FRM-like Language v1](frm-like-language-v1.md)
 - Related: [FRM Compatibility and Migration Contracts v1](frm-compatibility-v1.md)
@@ -21,7 +21,7 @@ inputs only; they are not public product tiers or runtime trust signals.
 This document freezes the v1 asset, identity, rights, safety, and migration
 contracts. The executable language semantics now live in the dedicated
 [normative English reference](frm-like-language-v1.md), which governs whenever
-older design-history wording differs. The v1 parser/backend is active on the 513
+older design-history wording differs. The v1 parser/backend is active on the 534
 published Standard Record runtime path, including pinned source/Profile artifacts
 and one-shot Open/Remix handoff (the E5/A19 evidence scope). C1 remains partial
 and C10 remains pending. Canonical writer/import, unified selector, full
@@ -317,19 +317,19 @@ The active public v1 projection is exact-set and decision-ledger-backed:
   takedown contact;
 - unknown author, original resource, and original version are rendered as
   `unconfirmed`, never filled from private evidence or guessed;
-- each of the 513 `publish` rows exposes its content-addressed pinned `.frm`
+- each of the 534 `publish` rows exposes its content-addressed pinned `.frm`
   Definition source,
   source/semantic revisions, parameter schema, pinned default Profile facts, a
   deterministic 96 x 60 static PNG generated from the pinned source and Profile,
   and locale-preserving Explore/Remix plus view/download-source actions;
-- 340 generated previews are anomaly-free and shown by default; 173 report one
+- 357 generated previews are anomaly-free and shown by default; 177 report one
   or more deterministic visual diagnostics and are preserved behind an explicit
   diagnostic link instead of being presented as verified imagery;
-- each of the 164 `hold` rows, and any future `exclude` row, exposes the factual
+- each of the 143 `hold` rows, and any future `exclude` row, exposes the factual
   decision and rights projection but has no source, preview, or runnable CTA.
 
 `scripts/generate-formula-record-previews.ts` regenerates or byte-verifies the
-exact 513-file preview set in four deterministic worker shards. Its content-hash
+exact 534-file preview set in four deterministic worker shards. Its content-hash
 manifest is public evidence for static preview reproducibility only; it does not
 close the representative GPU/device image-difference gate C9.
 
@@ -502,8 +502,8 @@ The decision layer is frozen as the public asset
 `fractalpark-formula-library-publication-decisions/v1`): exactly 677 rows in
 Standard-manifest order, one per neutral Formula ID, with rights status,
 decision, reason, basis fields, scan status, and review date. Decision revision
-3 records `publish = 513`, `hold = 164`, and `exclude = 0`: 106
-`direct-adaptation`, 68 `project-owned`, and 339
+4 records `publish = 534`, `hold = 143`, and `exclude = 0`: 106
+`direct-adaptation`, 89 `project-owned`, and 339
 `separated-independent-rewrite` rows publish; every other row remains held.
 The engine validator `src/engine/formulas/v1/publication-decisions.ts` enforces
 the exact-677 set, the P89/A137/B73/C378 rights accounting, the
@@ -514,8 +514,7 @@ recomputes the same accounting from raw bytes and frozen private evidence.
 
 Published Definition bytes are additive, immutable runtime projections rather
 than a second source of truth. `runtime/rev3` contains the 339 accepted
-clean-room Definitions. `runtime/rev4` contains only the missing revision-2
-published set (A106 + P68), split into hash-pinned shards. Its controlled build
+clean-room Definitions. `runtime/rev4` contains the low-risk A/P published set (A106 + P89), split into hash-pinned shards. Its controlled build
 reconstructs Definitions from the frozen F588 work package/census and accepted
 native Recipes, writes 0600 private staging, rereads and rehashes that staging,
 and only then emits public shards. The private release-manifest hash, decision
@@ -525,8 +524,8 @@ shard byte hash are independently verified by
 appear in either runtime projection.
 
 The engine-facing published runtime is generated at
-`public/formula-library/v1/runtime/published/`. It derives its exact 513-ID set
-from decision revision 3, joins the 339 rev3 and 174 rev4 rows by Formula ID,
+`public/formula-library/v1/runtime/published/`. It derives its exact 534-ID set
+from decision revision 4, joins the 339 rev3 and 195 rev4 rows by Formula ID,
 and emits a light `index.json` plus one immutable
 `definitions/<sourceRevision>.frm` body per row. The index freezes metadata,
 implementation basis, source/semantic revisions, versioned parameter binding
@@ -547,7 +546,7 @@ Definition's own continue predicate after every step. The adapter does not alter
 legacy B94 or classic-FRM assembly bytes. The engine capability originally landed
 in isolation. The current application now activates Record-scoped published
 Definition/Profile resolution, descriptor parameter UI,
-and one-shot Record Open/Remix handoff for the 513 published rows. The unified
+and one-shot Record Open/Remix handoff for the 534 published rows. The unified
 discovery selector and Lucky eligibility/ranking remain A19/E1/E3/E4-pending.
 Canonical writer/import activation, hosted migration, and release remain separate
 gates.

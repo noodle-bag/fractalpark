@@ -61,17 +61,17 @@ function data(): PublicationIsolationDataV1 {
 const contract = contractAsset as unknown as IsolationContract;
 
 describe("formula publication isolation v1", () => {
-  it("recomputes the exact 677/513/164 projection and all public records", () => {
+  it("recomputes the exact 677/534/143 projection and all public records", () => {
     expect(verifyPublicationIsolationDataV1(data(), contract)).toEqual({
       formulaIdentities: 677,
-      published: 513,
-      held: 164,
+      published: 534,
+      held: 143,
       excluded: 0,
       gplHeld: 73,
       cleanRoomPublished: 339,
       cleanRoomHeld: 39,
-      runtimeRows: 513,
-      previewRows: 513,
+      runtimeRows: 534,
+      previewRows: 534,
     });
   });
 

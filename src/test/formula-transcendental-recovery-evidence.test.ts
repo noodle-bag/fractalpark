@@ -51,7 +51,7 @@ describe("B94 transcendental recovery evidence", () => {
     for (const row of rows) {
       expect(row).toMatchObject({
         technicalStatus: "passed",
-        publicationDecision: "hold",
+        publicationDecision: "publish",
       });
       const preview = row.preview as Record<string, unknown>;
       expect(preview).toMatchObject({ width: 96, height: 60 });
@@ -69,22 +69,24 @@ describe("B94 transcendental recovery evidence", () => {
     expect(files.filter((file) => file.startsWith("preview-"))).toHaveLength(12);
   }, 30_000);
 
-  it("keeps the recovered exact set held and absent from the current public runtime", () => {
+  it("keeps the 12-row batch non-eligible while the aggregate set is public", () => {
     const decisions = readJson(
       join(ROOT, "resources/formula-library/v1/publication-decisions.json"),
     );
     const decisionRows = decisions.rows as Array<Record<string, unknown>>;
-    const heldIds = new Set(
+    const exactFormulaIds = new Set<string>(RECIPES.map((recipe) => recipe.formulaId));
+    const publishedRecoveryIds = new Set(
       decisionRows
         .filter(
           (row) =>
             row.rightsStatus === "project-owned" &&
-            row.publicationDecision === "hold" &&
-            row.decisionReason === "held-b94-swiftshader-transcendental",
+            exactFormulaIds.has(String(row.formulaId)) &&
+            row.publicationDecision === "publish" &&
+            row.decisionReason === "publish-project-owned-recovery-gate-green",
         )
         .map((row) => String(row.formulaId)),
     );
-    expect(heldIds.size).toBe(12);
+    expect(publishedRecoveryIds.size).toBe(12);
 
     const runtime = readJson(
       join(ROOT, "public/formula-library/v1/runtime/published/index.json"),
@@ -93,9 +95,9 @@ describe("B94 transcendental recovery evidence", () => {
       (runtime.rows as Array<Record<string, unknown>>).map((row) => String(row.formulaId)),
     );
     for (const recipe of RECIPES) {
-      expect(heldIds.has(recipe.formulaId)).toBe(true);
-      expect(publicIds.has(recipe.formulaId)).toBe(false);
+      expect(publishedRecoveryIds.has(recipe.formulaId)).toBe(true);
+      expect(publicIds.has(recipe.formulaId)).toBe(true);
     }
-    expect(runtime.rowCount).toBe(513);
+    expect(runtime.rowCount).toBe(534);
   });
 });

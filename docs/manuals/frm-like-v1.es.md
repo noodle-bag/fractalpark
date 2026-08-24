@@ -14,8 +14,8 @@ escritura/importación v1 sigue estando restringida.
 
 ## 1. Lo que puedes hacer hoy
 
-FractalPark expone actualmente 677 identidades Standard: 513 Definitions publicadas
-y 164 Records retenidas.
+FractalPark expone actualmente 677 identidades Standard: 534 Definitions publicadas
+y 143 Records retenidas.
 
 Para una Record publicada puedes:
 

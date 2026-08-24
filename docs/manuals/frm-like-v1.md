@@ -11,8 +11,8 @@ activation is still gated.
 
 ## 1. What you can do today
 
-FractalPark currently exposes 677 Standard identities: 513 published Definitions
-and 164 held Records.
+FractalPark currently exposes 677 Standard identities: 534 published Definitions
+and 143 held Records.
 
 For a published Record you can:
 

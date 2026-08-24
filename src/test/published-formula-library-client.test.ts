@@ -47,7 +47,7 @@ describe("published formula library client", () => {
     expect(created.ok).toBe(true);
     if (!created.ok || !selected) return;
 
-    expect(created.value.index.rows).toHaveLength(513);
+    expect(created.value.index.rows).toHaveLength(534);
     expect(fetcher).toHaveBeenCalledTimes(1);
 
     const loaded = await created.value.load(selected.formulaId);

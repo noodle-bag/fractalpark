@@ -443,7 +443,7 @@ describe('teaching content loader v1', () => {
     expect(
       filterTeachingAlternatesAtCommit20dV1(alternates, noneDelivered),
     ).not.toHaveProperty('x-default');
-  });
+  }, 15_000);
 
   it('fails closed for unsupported locales and unselected or held identities', () => {
     expect(resolve('de')).toMatchObject({

@@ -1,6 +1,6 @@
 # Formula library rights and publication testing
 
-This document describes the independent publication-isolation gate for the v1 Standard formula library. It is a test contract, not a publication-decision mechanism: the frozen population remains **677 identities = 513 published + 164 held**, with all **73 B-source GPL rows held**.
+This document describes the independent publication-isolation gate for the v1 Standard formula library. It is a test contract, not a publication-decision mechanism: decision revision 4 authorizes **534 published Definitions**, with all **73 B-source GPL rows held**.
 
 ## Gates
 

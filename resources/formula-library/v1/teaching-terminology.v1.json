@@ -32,7 +32,9 @@
     "languageVersion",
     "numericProfile",
     "publicationDecision",
-    "decisionReason"
+    "decisionReason",
+    "guideAvailability",
+    "guideHoldReason"
   ],
   "protectedLiteralTokens": [
     "Formula ID",
@@ -43,9 +45,6 @@
   ],
   "protectedDecisionReasonCodes": [
     "held-awaiting-independent-rewrite",
-    "held-b94-chaotic-amplification",
-    "held-b94-ill-conditioned-cancellation",
-    "held-b94-swiftshader-transcendental",
     "held-census-release-oracle-mismatch",
     "held-census-webgl-compile-link-draw-failed",
     "held-census-webgl-cpu-mismatch",
@@ -53,7 +52,9 @@
     "held-missing-input",
     "publish-census-full-chain-green",
     "publish-cleanroom-independent-rewrite-full-chain-green",
-    "publish-project-owned-native-recipe"
+    "publish-project-owned-native-recipe",
+    "publish-project-owned-recovery-gate-green",
+    "held-guide-content-restoration-pending-26d"
   ],
   "rules": {
     "canonicalNames": "preserve-byte-for-byte",

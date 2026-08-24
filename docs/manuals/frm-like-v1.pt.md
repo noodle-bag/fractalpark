@@ -13,8 +13,8 @@ Fórmulas Standard publicadas usam a linguagem hoje. A ativação do escritor/im
 
 ## 1. O que você pode fazer hoje
 
-O FractalPark expõe atualmente 677 identidades Standard: 513 Definitions publicadas
-e 164 Records retidos.
+O FractalPark expõe atualmente 677 identidades Standard: 534 Definitions publicadas
+e 143 Records retidos.
 
 Para um Record publicado, você pode:
 

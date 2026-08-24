@@ -50,15 +50,15 @@ import { writePublicAsset } from "./generate-formula-publication-decisions";
  */
 
 const RUNTIME_REVISION = 4;
-const DECISION_REVISION = 3;
+const DECISION_REVISION = 4;
 const SHARD_SIZE = 64;
 const EXPECTED_DIRECT_COUNT = 106;
-const EXPECTED_PROJECT_OWNED_COUNT = 68;
-const EXPECTED_ROW_COUNT = 174;
+const EXPECTED_PROJECT_OWNED_COUNT = 89;
+const EXPECTED_ROW_COUNT = 195;
 const EXPECTED_CENSUS_LEDGER_HASH =
   "fa7f6b35cd7e9d5afa77754755d3439ea949c7be2964024a4163a3874e9a5a37";
 const EXPECTED_DECISIONS_CONTENT_HASH =
-  "7106736785e8bbb7cc310056f93f550413b6a0b76ad21e648b50e55480a2a52c";
+  "cac35a05d2d0c219b4f5ac00f3dea5b5fbb2b9c6b2fc15ea3383ef0f62d6031d";
 const RELEASE_SCHEMA =
   "fractalpark-formula-library-runtime-release-manifest/v1";
 const SHARD_SCHEMA = "fractalpark-formula-library-runtime-shard/v1";
@@ -294,8 +294,8 @@ function loadPublicInputs(repositoryRoot: string): {
       Array.isArray(decisionsAsset.rows) &&
       decisionsAsset.rows.length === 677 &&
       isRecord(decisionsAsset.decisionCounts) &&
-      decisionsAsset.decisionCounts.publish === 513 &&
-      decisionsAsset.decisionCounts.hold === 164 &&
+      decisionsAsset.decisionCounts.publish === 534 &&
+      decisionsAsset.decisionCounts.hold === 143 &&
       decisionsAsset.decisionCounts.exclude === 0 &&
       isRecord(decisionsAsset.identityBinding) &&
       decisionsAsset.identityBinding.standardFormulaIdsSha256 ===
@@ -461,7 +461,7 @@ async function buildProjectOwnedRows(
     const recipe = recipes.get(formulaId);
     const identity = identities.get(formulaId);
     invariant(
-      recipe && identity && !held.has(formulaId),
+      recipe && identity,
       "runtime-rev4-native-set-invalid",
     );
     const validated = await validateNativeRecipeV1(recipe);

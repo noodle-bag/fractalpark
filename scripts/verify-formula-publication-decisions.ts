@@ -34,7 +34,7 @@ const EXPECTED_WORK_PACKAGE_HASH =
  */
 const EXPECTED_CENSUS_LEDGER_HASH =
   "fa7f6b35cd7e9d5afa77754755d3439ea949c7be2964024a4163a3874e9a5a37";
-const EXPECTED_REV2_PUBLISH_COUNT = 174;
+const EXPECTED_LOW_RISK_PUBLISH_COUNT = 195;
 const EXPECTED_B94_HELD_COUNT = 21;
 /**
  * Decision revision 3 pins (2026-08-19): the final census over all 378
@@ -45,13 +45,14 @@ const EXPECTED_B94_HELD_COUNT = 21;
  * these 339 class-C clean-room rows.
  */
 const EXPECTED_FINAL_CENSUS_HASH =
-  "6de7caa2c1921db8f4e9a851fce6cd281dd77dd2c1fc1d44ba20f63132ef2e95";
+  "518d2e5fbc7e47c08896dce90e852d416046ec663bdc19db4e14689dae98ccbf";
 const EXPECTED_RELEASE_MANIFEST_HASH =
-  "0dc2a95de29e939987db5cedc84685c6b5a027d2ae24db780c95a3f3d5ea849f";
+  "3c484949cb290a214ece2e6845812b2dc00f496888c4c43025b41598dec13205";
 const EXPECTED_CLEANROOM_PUBLISH_COUNT = 339;
 const EXPECTED_REV3_PUBLISH_COUNT = 513;
-const BASIS_RECORDED_AT = "2026-08-18T00:05:00.000Z";
-const REVIEWED_AT = "2026-08-18";
+const EXPECTED_REV4_PUBLISH_COUNT = 534;
+const BASIS_RECORDED_AT = "2026-08-24T00:35:00.000Z";
+const REVIEWED_AT = "2026-08-24";
 const CENSUS_LEDGER_RELATIVE_PATH = join(
   ".formula-library-private",
   "formula-library-v1",
@@ -68,6 +69,22 @@ const RELEASE_MANIFEST_RELATIVE_PATH = join(
   "formula-library-v1",
   "clean-room-bulk-v1",
   "release-manifest-rev3.json",
+);
+const TRANSCENDENTAL_RECOVERY_MANIFEST_RELATIVE_PATH = join(
+  "resources",
+  "formula-library",
+  "v1",
+  "recovery-evidence",
+  "transcendental-v1",
+  "manifest.json",
+);
+const AMPLIFIED_RECOVERY_MANIFEST_RELATIVE_PATH = join(
+  "resources",
+  "formula-library",
+  "v1",
+  "recovery-evidence",
+  "amplified-v1",
+  "manifest.json",
 );
 const RUNTIME_REV3_RELATIVE_DIR = join(
   "resources",
@@ -266,6 +283,76 @@ function extractWorkPackage(): JsonRecord {
   }
 }
 
+function verifiedRecoveryFormulaIds(repositoryRoot: string): Set<string> {
+  const specs = [
+    {
+      path: TRANSCENDENTAL_RECOVERY_MANIFEST_RELATIVE_PATH,
+      schema: "fractalpark-b94-transcendental-recovery-evidence/v1",
+      rows: 12,
+    },
+    {
+      path: AMPLIFIED_RECOVERY_MANIFEST_RELATIVE_PATH,
+      schema: "fractalpark-b94-amplified-recovery-evidence/v1",
+      rows: 9,
+    },
+  ] as const;
+  const recovered = new Set<string>();
+  let priorContentHash = "";
+  for (const spec of specs) {
+    const manifest = JSON.parse(
+      readStableFile(join(repositoryRoot, spec.path), false).toString("utf8"),
+    ) as unknown;
+    invariant(
+      isRecord(manifest) &&
+        manifest.schema === spec.schema &&
+        manifest.publicationDecisionMutation === false &&
+        isDenseArray(manifest.rows) &&
+        manifest.rows.length === spec.rows &&
+        typeof manifest.contentHash === "string" &&
+        isRecord(manifest.sourceBindings),
+    );
+    const unsigned = { ...manifest };
+    delete unsigned.contentHash;
+    invariant(sha256Bytes(canonicalJson(unsigned)) === manifest.contentHash);
+    for (const [relativePath, digest] of Object.entries(manifest.sourceBindings))
+      invariant(
+        typeof digest === "string" &&
+          sha256Bytes(readStableFile(join(repositoryRoot, relativePath), false)) === digest,
+      );
+    for (const row of manifest.rows) {
+      invariant(
+        isRecord(row) &&
+          typeof row.formulaId === "string" &&
+          row.technicalStatus === "passed" &&
+          !recovered.has(row.formulaId),
+      );
+      recovered.add(row.formulaId);
+    }
+    if (spec.rows === 12) priorContentHash = manifest.contentHash;
+    else
+      invariant(
+        isRecord(manifest.gateProgress) &&
+          manifest.gateProgress.aggregatePassed === 21 &&
+          manifest.gateProgress.required === 21 &&
+          isRecord(manifest.priorBatchArtifact) &&
+          manifest.priorBatchArtifact.contentHash === priorContentHash &&
+          manifest.priorBatchArtifact.passed === 12,
+      );
+  }
+  const held = new Set(
+    NATIVE_RECIPE_HOLDS_V1.map((entry) => entry.recipe.formulaId as string),
+  );
+  const accepted = new Set(
+    NATIVE_FORMULA_RECIPES_V1.map((recipe) => recipe.formulaId as string),
+  );
+  invariant(
+    recovered.size === EXPECTED_B94_HELD_COUNT &&
+      held.size === EXPECTED_B94_HELD_COUNT &&
+      [...recovered].every((formulaId) => held.has(formulaId) && accepted.has(formulaId)),
+  );
+  return recovered;
+}
+
 function verifyPublicationDecisions(repositoryRoot: string): {
   published: number;
   held: number;
@@ -297,12 +384,14 @@ function verifyPublicationDecisions(repositoryRoot: string): {
       exactKeys(asset, TOP_LEVEL_KEYS) &&
       asset.schema === SCHEMA &&
       asset.version === 1 &&
-      (asset.decisionRevision === 2 || asset.decisionRevision === 3) &&
+      (asset.decisionRevision === 2 ||
+        asset.decisionRevision === 3 ||
+        asset.decisionRevision === 4) &&
       asset.formulaCount === 677 &&
       typeof asset.contentHash === "string" &&
       SHA256.test(asset.contentHash),
   );
-  const decisionRevision = asset.decisionRevision as 2 | 3;
+  const decisionRevision = asset.decisionRevision as 2 | 3 | 4;
   invariant(
     isRecord(asset.identityBinding) &&
       exactKeys(asset.identityBinding, ["standardFormulaIdsSha256"]) &&
@@ -502,6 +591,7 @@ function verifyPublicationDecisions(repositoryRoot: string): {
   const recipeIds = new Set(
     NATIVE_FORMULA_RECIPES_V1.map((recipe) => recipe.formulaId as string),
   );
+  const recoveredIds = verifiedRecoveryFormulaIds(repositoryRoot);
   const b94HoldClassById = new Map<string, string>();
   for (const hold of NATIVE_RECIPE_HOLDS_V1) {
     const formulaId = hold.recipe.formulaId as string;
@@ -526,12 +616,13 @@ function verifyPublicationDecisions(repositoryRoot: string): {
       expectedPublish.add(formulaId);
     if (
       rightsClass === "P" &&
-      !b94HoldClassById.has(formulaId) &&
+      (!b94HoldClassById.has(formulaId) ||
+        (decisionRevision === 4 && recoveredIds.has(formulaId))) &&
       recipeIds.has(formulaId)
     )
       expectedPublish.add(formulaId);
   }
-  invariant(expectedPublish.size === EXPECTED_REV2_PUBLISH_COUNT);
+  invariant(expectedPublish.size === EXPECTED_LOW_RISK_PUBLISH_COUNT);
 
   // Revision 3: independently re-derive the clean-room admitted set from the
   // pinned final census ledger + release manifest (never from the asset).
@@ -540,7 +631,7 @@ function verifyPublicationDecisions(repositoryRoot: string): {
     string,
     { semanticHash: string | null; pilotCarryover: boolean }
   >();
-  if (decisionRevision === 3) {
+  if (decisionRevision >= 3) {
     const finalCensusBytes = readStableFile(
       join(repositoryRoot, FINAL_CENSUS_RELATIVE_PATH),
       true,
@@ -594,7 +685,10 @@ function verifyPublicationDecisions(repositoryRoot: string): {
     invariant(cleanroomPublish.size === EXPECTED_CLEANROOM_PUBLISH_COUNT);
     for (const formulaId of cleanroomPublish) expectedPublish.add(formulaId);
     invariant(
-      (expectedPublish.size as number) === EXPECTED_REV3_PUBLISH_COUNT,
+      (expectedPublish.size as number) ===
+        (decisionRevision === 4
+          ? EXPECTED_REV4_PUBLISH_COUNT
+          : EXPECTED_REV3_PUBLISH_COUNT),
     );
   }
 
@@ -619,11 +713,14 @@ function verifyPublicationDecisions(repositoryRoot: string): {
       else if (rightsClass === "P")
         invariant(
           row.implementationBasis === "project-owned" &&
-            row.decisionReason === "publish-project-owned-native-recipe",
+            row.decisionReason ===
+              (recoveredIds.has(row.formulaId)
+                ? "publish-project-owned-recovery-gate-green"
+                : "publish-project-owned-native-recipe"),
         );
       else if (rightsClass === "C")
         invariant(
-          decisionRevision === 3 &&
+          decisionRevision >= 3 &&
             cleanroomPublish.has(row.formulaId) &&
             row.implementationBasis === "separated-independent-rewrite" &&
             row.decisionReason ===
@@ -675,7 +772,7 @@ function verifyPublicationDecisions(repositoryRoot: string): {
   // manifest hash, every shard file matches its pinned sha256, the shard row
   // union equals the clean-room publish set exactly, and per-row
   // semanticHash agrees with the release manifest.
-  if (decisionRevision === 3) {
+  if (decisionRevision >= 3) {
     const runtimeManifestBytes = readStableFile(
       join(repositoryRoot, RUNTIME_REV3_RELATIVE_DIR, "manifest.json"),
       false,

@@ -8,7 +8,7 @@ FractalPark is an open-source, formula-first fractal knowledge and creation plat
 
 **[Open Explore](https://www.fractalpark.com/en/explore) · [Browse the Formula Atlas](https://www.fractalpark.com/en/formulas) · [Read the FRM Guide](https://www.fractalpark.com/en/formulas/frm) · [Visit the Gallery](https://www.fractalpark.com/en/gallery)**
 
-Read pinned source on the 513 published Definitions; the directory also lists 164 held Records without runnable source. [Open the Standard Formula directory](https://www.fractalpark.com/en/formulas/directory).
+Read pinned source for 534 published Standard Definitions. [Open the Standard Formula directory](https://www.fractalpark.com/en/formulas/directory).
 
 ## Available today
 

@@ -1,11 +1,11 @@
 {
   "schema": "fractalpark-formula-publication-isolation/v1",
   "version": 1,
-  "decisionRevision": 3,
+  "decisionRevision": 4,
   "counts": {
     "formulaIdentities": 677,
-    "published": 513,
-    "held": 164,
+    "published": 534,
+    "held": 143,
     "excluded": 0,
     "gplHeld": 73,
     "cleanRoomPublished": 339,
@@ -14,8 +14,8 @@
     "sourceGapWaivers": 9
   },
   "publicBindings": {
-    "publicationDecisionsContentHash": "7106736785e8bbb7cc310056f93f550413b6a0b76ad21e648b50e55480a2a52c",
-    "publishedIndexCanonicalSha256": "c10faceaa52356d2e48042f64010cd0f3f170c0087b5d609a01ede360a7c874c"
+    "publicationDecisionsContentHash": "cac35a05d2d0c219b4f5ac00f3dea5b5fbb2b9c6b2fc15ea3383ef0f62d6031d",
+    "publishedIndexCanonicalSha256": "362f327b260f38ceb1d9afd7dc619d4ef010f8365ee84a8673ba1df6285fc3f5"
   },
   "privateBindings": {
     "releaseManifestSha256": "3c484949cb290a214ece2e6845812b2dc00f496888c4c43025b41598dec13205",
@@ -24,7 +24,7 @@
     "handoffSha256": "eab565d342febbea6f3d6a7ad8dff7f359ed726a5b9abe7f4bb892f3ebf92d2c",
     "pilotReportSha256": "21f5c68fa2a10742b1ade81ac00e5871007eb93d2aa0d5be0857baef98412e25",
     "aCensusContentHash": "fa7f6b35cd7e9d5afa77754755d3439ea949c7be2964024a4163a3874e9a5a37",
-    "b94HeldModuleSha256": "c997759a09303ac476fc876ab1b83360e6fc56c8e862b6f1a6ac87416b75260e",
+    "b94HeldModuleSha256": "8f4097b5dbf14d48f0066b755ab63c180d1f87daf609c64011cb849d06e6b300",
     "pilotMutationGateSha256": "fe6ad20612d7633c19a01280a803b2e4018e7c368e6251926ce03e67edb7d8ff",
     "pilotOutputGateSha256": "eed915f3ec8550a8cf359f1cdf39772e17a6f77a4c75ab4f11e6f392d7581b5a",
     "pilotSpecManifestSha256": "543bd8518d990be65b200b297ecb0cbbca9095c68a28460680934f2573ec072b",
@@ -58,5 +58,5 @@
     ".next/standalone",
     "out"
   ],
-  "contentHash": "0c3022542a592eb00107aa3f8bf8884213c9fbe1f9b749359922f72340ba622d"
+  "contentHash": "fb9ca67ec4544f823168bb0bfed34f58b4ebf04c820ab21361d51641f6ed13dd"
 }

@@ -199,13 +199,8 @@ describe('FRM-like v1 English documentation contract', () => {
       );
     }
     const disclaimer = enMessages.formulas.frmGuide.sections.support.disclaimer;
-    expect(disclaimer).toContain(`${FORMULA_RECORD_COUNT_V1}-identity`);
-    expect(disclaimer).toContain(
-      `${PUBLISHED_FORMULA_RECORD_COUNT_V1} published Definitions`
-    );
-    expect(disclaimer).toContain(
-      `${FORMULA_RECORD_COUNT_V1 - PUBLISHED_FORMULA_RECORD_COUNT_V1} held Records`
-    );
+    expect(disclaimer).toContain('separate from the Standard publication ledger');
+    expect(disclaimer).not.toMatch(/\b(?:677|143)\b/);
     expect(manual).toContain('The standalone FRM Editor remains a Classic-compatible authoring surface.');
     expect(manual).toContain('Canonical FRM-like v1 writer and import activation remains gated.');
     expect(manual).not.toMatch(/(?:all|every) 677[^\n]*(?:runnable|published)/i);
@@ -1154,7 +1149,7 @@ PersistentLocal {
       'Classic-compatible Editor and import path'
     );
     expect(guide.sections.support.disclaimer).toContain(
-      'not the 677-identity Standard publication ledger'
+      'separate from the Standard publication ledger'
     );
     expect(guide.sections.syntax.intro).toContain(
       "published Formula Record's Source action"
@@ -1198,7 +1193,7 @@ PersistentLocal {
       'Classic-compatible FRM subset'
     );
     expect(enMessages.about.aiDescription).toContain(
-      '513 published Standard Definitions with pinned FRM-like v1 source'
+      '534 published Standard Definitions with pinned FRM-like v1 source'
     );
     expect(enMessages.about.aiDescription).toContain(
       'separate Classic-compatible custom formula Editor'
@@ -1233,11 +1228,10 @@ PersistentLocal {
 
     const readme = repoFile('README.md');
     expect(readme).toContain(
-      `${PUBLISHED_FORMULA_RECORD_COUNT_V1} published Definitions`
+      `${PUBLISHED_FORMULA_RECORD_COUNT_V1} published Standard Definitions`
     );
-    expect(readme).toContain(
-      `${FORMULA_RECORD_COUNT_V1 - PUBLISHED_FORMULA_RECORD_COUNT_V1} held Records without runnable source`
-    );
+    expect(readme).not.toContain('held Records without runnable source');
+    expect(readme).not.toMatch(/\b143\b/);
   });
 
   it('binds limits, vocabulary, and document navigation to implementation facts', () => {

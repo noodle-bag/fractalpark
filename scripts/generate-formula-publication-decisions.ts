@@ -68,7 +68,7 @@ const EXPECTED_IDENTITY_SHA256 =
  */
 const EXPECTED_CENSUS_LEDGER_HASH =
   "fa7f6b35cd7e9d5afa77754755d3439ea949c7be2964024a4163a3874e9a5a37";
-const EXPECTED_PUBLISH_COUNT = 513;
+const EXPECTED_PUBLISH_COUNT = 534;
 const EXPECTED_B94_HELD_COUNT = 21;
 /**
  * Commit 14 clean-room evidence pins — RE-PINNED 2026-08-19 at the final
@@ -82,18 +82,18 @@ const EXPECTED_FINAL_CENSUS_HASH: string =
 const EXPECTED_RELEASE_MANIFEST_HASH: string =
   "3c484949cb290a214ece2e6845812b2dc00f496888c4c43025b41598dec13205";
 const EXPECTED_CLEANROOM_PUBLISH_COUNT = 339;
-const EXPECTED_REV2_PUBLISH_COUNT = 174;
+const EXPECTED_LOW_RISK_PUBLISH_COUNT = 195;
 const WORK_PACKAGE_START =
   "<!-- BEGIN STANDARD_MIGRATION_WORK_PACKAGES_JSON -->";
 const SCHEMA = "fractalpark-formula-library-publication-decisions/v1";
-const DECISION_REVISION = 3;
-const REVIEWED_AT = "2026-08-18";
+const DECISION_REVISION = 4;
+const REVIEWED_AT = "2026-08-24";
 /**
  * Recording timestamp of the revision-2 evidence bases: the census ledger
  * above and the 12c B94 three-leg cross-check were both recorded on
  * 2026-08-18 (UTC). Pinned for deterministic regeneration.
  */
-const BASIS_RECORDED_AT = "2026-08-18T00:05:00.000Z";
+const BASIS_RECORDED_AT = "2026-08-24T00:35:00.000Z";
 const ASSET_RELATIVE_PATH = join(
   "resources",
   "formula-library",
@@ -116,6 +116,22 @@ const RELEASE_MANIFEST_RELATIVE_PATH = join(
   "formula-library-v1",
   "clean-room-bulk-v1",
   "release-manifest-rev3.json",
+);
+const TRANSCENDENTAL_RECOVERY_MANIFEST_RELATIVE_PATH = join(
+  "resources",
+  "formula-library",
+  "v1",
+  "recovery-evidence",
+  "transcendental-v1",
+  "manifest.json",
+);
+const AMPLIFIED_RECOVERY_MANIFEST_RELATIVE_PATH = join(
+  "resources",
+  "formula-library",
+  "v1",
+  "recovery-evidence",
+  "amplified-v1",
+  "manifest.json",
 );
 
 const CLASS_TO_RIGHTS_STATUS = Object.freeze({
@@ -141,6 +157,7 @@ const PUBLIC_ERROR_CODES = new Set([
   "decisions-handoff-invalid",
   "decisions-identity-binding-invalid",
   "decisions-output-invalid",
+  "decisions-recovery-gate-invalid",
 ]);
 
 function invariant(condition: unknown, code: string): asserts condition {
@@ -572,6 +589,84 @@ function heldRow(
   };
 }
 
+function verifiedRecoveryFormulaIds(repositoryRoot: string): Set<string> {
+  const specs = [
+    {
+      path: TRANSCENDENTAL_RECOVERY_MANIFEST_RELATIVE_PATH,
+      schema: "fractalpark-b94-transcendental-recovery-evidence/v1",
+      rows: 12,
+    },
+    {
+      path: AMPLIFIED_RECOVERY_MANIFEST_RELATIVE_PATH,
+      schema: "fractalpark-b94-amplified-recovery-evidence/v1",
+      rows: 9,
+    },
+  ] as const;
+  const recovered = new Set<string>();
+  let priorContentHash = "";
+  for (const spec of specs) {
+    const manifestBytes = readStableFile(join(repositoryRoot, spec.path), false);
+    const manifest = JSON.parse(manifestBytes.toString("utf8")) as unknown;
+    invariant(
+      isRecord(manifest) &&
+        manifest.schema === spec.schema &&
+        manifest.publicationDecisionMutation === false &&
+        isDenseArray(manifest.rows) &&
+        manifest.rows.length === spec.rows &&
+        typeof manifest.contentHash === "string" &&
+        isRecord(manifest.sourceBindings),
+      "decisions-recovery-gate-invalid",
+    );
+    const unsigned = { ...manifest };
+    delete unsigned.contentHash;
+    invariant(
+      sha256Bytes(canonicalJson(unsigned)) === manifest.contentHash,
+      "decisions-recovery-gate-invalid",
+    );
+    for (const [relativePath, digest] of Object.entries(manifest.sourceBindings))
+      invariant(
+        typeof digest === "string" &&
+          sha256Bytes(readStableFile(join(repositoryRoot, relativePath), false)) === digest,
+        "decisions-recovery-gate-invalid",
+      );
+    for (const row of manifest.rows) {
+      invariant(
+        isRecord(row) &&
+          typeof row.formulaId === "string" &&
+          row.technicalStatus === "passed" &&
+          !recovered.has(row.formulaId),
+        "decisions-recovery-gate-invalid",
+      );
+      recovered.add(row.formulaId);
+    }
+    if (spec.rows === 12) priorContentHash = manifest.contentHash;
+    else {
+      invariant(
+        isRecord(manifest.gateProgress) &&
+          manifest.gateProgress.aggregatePassed === 21 &&
+          manifest.gateProgress.required === 21 &&
+          isRecord(manifest.priorBatchArtifact) &&
+          manifest.priorBatchArtifact.contentHash === priorContentHash &&
+          manifest.priorBatchArtifact.passed === 12,
+        "decisions-recovery-gate-invalid",
+      );
+    }
+  }
+  const held = new Set(
+    NATIVE_RECIPE_HOLDS_V1.map((entry) => entry.recipe.formulaId as string),
+  );
+  const accepted = new Set(
+    NATIVE_FORMULA_RECIPES_V1.map((recipe) => recipe.formulaId as string),
+  );
+  invariant(
+    recovered.size === EXPECTED_B94_HELD_COUNT &&
+      held.size === EXPECTED_B94_HELD_COUNT &&
+      [...recovered].every((formulaId) => held.has(formulaId) && accepted.has(formulaId)),
+    "decisions-recovery-gate-invalid",
+  );
+  return recovered;
+}
+
 export function buildPublicationDecisionAsset(
   repositoryRoot: string,
   workPackage: JsonRecord,
@@ -579,6 +674,7 @@ export function buildPublicationDecisionAsset(
   const classes = projectRightsClasses(repositoryRoot, workPackage);
   const census = extractCensusOutcomes(repositoryRoot);
   const releaseManifest = extractReleaseManifest(repositoryRoot);
+  const recoveredIds = verifiedRecoveryFormulaIds(repositoryRoot);
 
   // B94 acceptance evidence: a project-owned row publishes exactly when it
   // has a public native recipe and is not diagnosis-held (12c three-leg
@@ -630,14 +726,16 @@ export function buildPublicationDecisionAsset(
     }
     if (rightsClass === "P") {
       const holdClass = b94Holds.get(formulaId);
-      if (holdClass === undefined) {
+      if (holdClass === undefined || recoveredIds.has(formulaId)) {
         invariant(recipeIds.has(formulaId), "decisions-handoff-invalid");
         publishCount++;
         rows.push(
           publishRow(
             formulaId,
             rightsClass,
-            "publish-project-owned-native-recipe",
+            holdClass === undefined
+              ? "publish-project-owned-native-recipe"
+              : "publish-project-owned-recovery-gate-green",
             "project-owned",
           ),
         );
@@ -676,11 +774,10 @@ export function buildPublicationDecisionAsset(
       publishCount === EXPECTED_PUBLISH_COUNT,
     "decisions-output-invalid",
   );
-  // Regression invariant: revision 2's exact publish set (106 census-green
-  // A rows + 68 recipe-green P rows) is unchanged; revision 3 only adds
-  // clean-room C rows.
+  // Revision 4 low-risk set: 106 census-green A rows plus all 89
+  // project-owned native recipes after the exact 21/21 recovery gate.
   invariant(
-    publishCount - cleanroomPublishCount === EXPECTED_REV2_PUBLISH_COUNT,
+    publishCount - cleanroomPublishCount === EXPECTED_LOW_RISK_PUBLISH_COUNT,
     "decisions-output-invalid",
   );
   // No census-passed row may sit outside class A.

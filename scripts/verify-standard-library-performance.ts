@@ -270,6 +270,10 @@ const releaseSourcePaths = [
   "src/hooks/useFractalRenderer.ts",
   "src/lib/published-formula-library.ts",
   "src/lib/published-formula-selection.ts",
+  "src/lib/formula-records.ts",
+  "src/content/teaching/content-loader.ts",
+  "src/content/teaching/formula-seo-policy.ts",
+  "src/content/teaching/generated-content-registry.ts",
   "src/engine/formulas/v1/published-runtime.ts",
   "src/engine/formulas/v1/native-recipes.ts",
   "src/engine/formulas/v1/native-recipes-b94-classic.ts",
@@ -300,12 +304,16 @@ const releaseSourcePaths = [
   "src/test/published-formula-library.test.tsx",
   "src/test/published-formula-runtime.test.ts",
   "src/test/published-formula-selection.test.ts",
+  "src/test/formula-records.test.ts",
+  "src/test/formula-seo-policy.test.ts",
+  "src/test/teaching-content-loader.test.ts",
   "src/test/fractal-renderer-race.test.ts",
   "scripts/measure-standard-library-performance.ts",
   "scripts/cross-check-native-recipes.ts",
   "scripts/formula-library-bulk-migration.ts",
   "scripts/generate-transcendental-recovery-evidence.ts",
   "scripts/generate-amplified-recovery-evidence.ts",
+  "scripts/generate-formula-record-previews.ts",
   "scripts/verify-standard-library-performance.ts",
   "tests/e2e/formula-switch.spec.ts",
   "package.json",
@@ -823,9 +831,9 @@ function verifyStaticAssets(config: PerformanceGateConfig): JsonRecord {
     "performance-gates-approved-browser-budget-drift",
   );
   invariant(
-    config.budgets.staticAssets.nativeDefinitionOverlapCount === 68 &&
+    config.budgets.staticAssets.nativeDefinitionOverlapCount === 89 &&
       config.budgets.staticAssets.nativeDefinitionOverlapSha256 ===
-        "4f6e82e6d879022665fb7b1c72c8040e4eb902508c76b9d862d713ea8ea7128b",
+        "5f53f89a1a34767cafaff8111da18f5ccc19693f6f98d5a465dc7ec0bd7550c7",
     "performance-gates-native-overlap-contract-drift",
   );
   invariant(
@@ -986,7 +994,7 @@ function verifyBuildOutput(config: PerformanceGateConfig): JsonRecord {
       body: readFileSync(join(root, paths.definitions, name), "utf8"),
     }));
   const nativeRecipeSource = releaseSourcePaths
-    .filter((file) => /\/native-recipes(?:-b94-[a-z]+)?\.ts$/.test(file))
+    .filter((file) => /\/native-recipes(?:-b94(?:-[a-z]+)+)?\.ts$/.test(file))
     .map((file) => readFileSync(join(root, file), "utf8"))
     .join("\n");
   const nativeDefinitionMatches = new Set<string>();

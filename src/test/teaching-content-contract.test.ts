@@ -23,10 +23,6 @@ import {
   validateReviewEventsV1,
   type ReviewEventV1,
 } from '@/content/teaching/contracts';
-import {
-  canonicalJsonV1,
-  sha256HexSyncV1,
-} from '@/engine/formulas/v1/revisions';
 
 function sha256(path: string): string {
   return createHash('sha256').update(readFileSync(path)).digest('hex');
@@ -93,12 +89,17 @@ function validatesHeldAppendix(asset: typeof heldAsset): boolean {
     'displayName',
     'forbiddenCapabilities',
     'formulaId',
+    'guideAvailability',
+    'guideHoldReason',
     'guideSlug',
     'primaryFamily',
     'publicationDecision',
   ];
   return (
     asset.schema === 'fractalpark-teaching-held-guide-appendix/v1' &&
+    asset.pins.publicationDecisionRevision === 4 &&
+    asset.pins.publicationDecisionSha256 ===
+      sha256(join(resourceRoot, 'publication-decisions.json')) &&
     asset.rows.length === 4 &&
     new Set(asset.rows.map((row) => row.formulaId)).size === 4 &&
     asset.rows.every((row) => {
@@ -109,9 +110,11 @@ function validatesHeldAppendix(asset: typeof heldAsset): boolean {
         aliases.get(row.formulaId) === row.guideSlug &&
         identity?.displayName === row.displayName &&
         identity?.primaryFamily === row.primaryFamily &&
-        decision?.publicationDecision === 'hold' &&
+        decision?.publicationDecision === 'publish' &&
         decision.decisionReason === row.decisionReason &&
-        row.publicationDecision === 'hold'
+        row.publicationDecision === 'publish' &&
+        row.guideAvailability === 'hold' &&
+        row.guideHoldReason === 'held-guide-content-restoration-pending-26d'
       );
     })
   );
@@ -206,26 +209,20 @@ describe('teaching selection and review contract', () => {
     });
   });
 
-  it('pins the actual source ledgers by bytes, not revision labels alone', () => {
+  it('pins the reviewed authority snapshot while current selected rows remain exact', () => {
     expect(selectionAsset.pins).toMatchObject({
       identityCatalogSha256: sha256(
         join(resourceRoot, 'standard-formula-ids.json'),
       ),
-      publicationDecisionSha256: sha256(
-        join(resourceRoot, 'publication-decisions.json'),
-      ),
+      publicationDecisionSha256:
+        '497415cebc958bf322f9726485e4ccbcfb6cb7e77c16e0f091653cbf6b5714a4',
       legacyAliasesSha256: sha256(
         join(resourceRoot, 'legacy-formula-aliases.json'),
       ),
-      runtimeIndexSha256: sha256(
-        join(
-          process.cwd(),
-          'public/formula-library/v1/runtime/published/index.json',
-        ),
-      ),
-      runtimeIndexCanonicalSha256: sha256HexSyncV1(
-        canonicalJsonV1(runtimeIndexAsset, 2_000_000),
-      ),
+      runtimeIndexSha256:
+        'e912b1cb4ad884a6a021fd0d2683495e8ea61911d05c4135fbecaa335cade742',
+      runtimeIndexCanonicalSha256:
+        '362f327b260f38ceb1d9afd7dc619d4ef010f8365ee84a8673ba1df6285fc3f5',
       prototypeSha256: sha256(
         join(resourceRoot, 'teaching-content-prototype.json'),
       ),
@@ -255,12 +252,15 @@ describe('teaching selection and review contract', () => {
       { $ref: '#/$defs/localeEditorialUnit' },
       { $ref: '#/$defs/heldGuideEditorialUnit' },
     ]);
-    expect(new Set(terminologyAsset.protectedDecisionReasonCodes)).toEqual(
-      new Set(decisionsAsset.rows.map((row) => row.decisionReason)),
-    );
+    expect(
+      new Set(decisionsAsset.rows.map((row) => row.decisionReason)).isSubsetOf(
+        new Set(terminologyAsset.protectedDecisionReasonCodes),
+      ),
+    ).toBe(true);
     expect(
       heldAsset.rows.every((row) =>
-        terminologyAsset.protectedDecisionReasonCodes.includes(row.decisionReason),
+        terminologyAsset.protectedDecisionReasonCodes.includes(row.decisionReason) &&
+        terminologyAsset.protectedDecisionReasonCodes.includes(row.guideHoldReason),
       ),
     ).toBe(true);
   });

@@ -325,7 +325,7 @@
       },
       "standardDirectory": {
         "cta": "Explorar el directorio estándar",
-        "hint": "Las 677 identidades de fórmulas estándar con su estado de publicación, incluidas las 513 actualmente publicadas."
+        "hint": "Actualmente hay 534 definiciones estándar publicadas."
       }
     },
     "guide": {
@@ -440,7 +440,7 @@
             "preprocessor": "Funciones del preprocesador",
             "rejected-constructs": "Cualquier construcción rechazada por el pipeline de compilación actual"
           },
-          "disclaimer": "Esta es una base de compatibilidad Classic probada, no una afirmación de compatibilidad completa con Fractint ni el registro de publicación Standard de 677 identidades. El registro actual contiene 513 Definitions publicadas y 164 Records retenidos.",
+          "disclaimer": "Esta es una base de compatibilidad Classic probada, no una afirmación de compatibilidad completa con Fractint. Es distinta del registro de publicación Standard.",
           "verified": {
             "title": "Compatibilidad verificada",
             "intro": "Estos recuentos de capacidad de importación Classic provienen del manifiesto de compatibilidad versionado: 588 entradas objetivo comprenden 579 aprobaciones strict-v2 y 9 exenciones documentadas; 117 entradas separadas se excluyen con motivos estables. No cuentan las Definitions FRM-like v1 publicadas.",
@@ -1037,10 +1037,10 @@
       "breadcrumb": "Directorio",
       "eyebrow": "Directorio de fórmulas estándar",
       "title": "Directorio de fórmulas estándar",
-      "description": "El directorio completo de las 677 identidades de fórmulas estándar de FractalPark con su estado de publicación actual, navegable por familia y estado.",
-      "intro": "Las 677 identidades de fórmulas estándar en un solo directorio. Filtra por familia y estado de publicación; las fórmulas publicadas están completamente implementadas y listas para ejecutarse, las retenidas están documentadas pero aún no disponibles.",
+      "description": "Explora por familia las {count} definiciones estándar publicadas de FractalPark.",
+      "intro": "Este directorio reúne las {count} definiciones estándar publicadas. Cada fórmula cuenta con una implementación completa y ejecutable.",
       "facets": {
-        "title": "Explorar por faceta",
+        "title": "Explorar por familia",
         "family": "Familia",
         "status": "Estado de publicación",
         "all": "Todas"
@@ -1059,7 +1059,7 @@
         "hold": "Retenida",
         "exclude": "Excluida"
       },
-      "resultCount": "{count} identidades"
+      "resultCount": "{count} definiciones publicadas"
     },
     "record": {
       "eyebrow": "Registro de la fórmula",
@@ -1865,7 +1865,7 @@
   },
   "about": {
     "title": "Acerca de FractalPark",
-    "aiDescription": "FractalPark es un generador de arte fractal de código abierto con licencia MIT basado en navegador que usa WebGL para renderizado GPU en tiempo real. Incluye 94 fórmulas integradas de tiempo de escape, 513 Definitions Standard publicadas con fuente FRM-like v1 fijada, un Editor separado de fórmulas personalizadas compatible con Classic, 7 complementos de transformación UV, 9 modos de coloreado y exportación PNG de alta resolución. Creado con Next.js 16, React 19, TypeScript 5 y Tailwind CSS, su motor de renderizado usa ensamblaje GLSL dinámico basado en complementos y caché LRU.",
+    "aiDescription": "FractalPark es un generador de arte fractal de código abierto con licencia MIT basado en navegador que usa WebGL para renderizado GPU en tiempo real. Incluye 94 fórmulas integradas de tiempo de escape, 534 Standard Definition publicadas con fuente FRM-like v1 fijada, un Editor separado de fórmulas personalizadas compatible con Classic, 7 complementos de transformación UV, 9 modos de coloreado y exportación PNG de alta resolución. Creado con Next.js 16, React 19, TypeScript 5 y Tailwind CSS, su motor de renderizado utiliza ensamblaje GLSL dinámico basado en complementos y caché LRU.",
     "techStack": {
       "title": "Tecnología",
       "description": "Construido con Next.js, WebGL y TypeScript. Renderizado de fractales en tiempo real impulsado por shaders de GPU.",

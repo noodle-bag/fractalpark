@@ -49,7 +49,7 @@ function buildRegistrySource(repositoryRoot: string): string {
     ),
     authorityRebind: join(
       repositoryRoot,
-      'resources/formula-library/v1/teaching-review-evidence/maintainer-authority-rebind.v1.json',
+      'resources/formula-library/v1/teaching-review-evidence/maintainer-authority-rebind.rev4.v1.json',
     ),
   } as const;
   const authorityBytes = Object.fromEntries(

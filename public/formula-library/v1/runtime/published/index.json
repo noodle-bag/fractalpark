@@ -1,8 +1,8 @@
 {
   "schema": "fractalpark-published-formula-runtime-index/v1",
-  "decisionRevision": 3,
-  "publicationDecisionsContentHash": "7106736785e8bbb7cc310056f93f550413b6a0b76ad21e648b50e55480a2a52c",
-  "rowCount": 513,
+  "decisionRevision": 4,
+  "publicationDecisionsContentHash": "cac35a05d2d0c219b4f5ac00f3dea5b5fbb2b9c6b2fc15ea3383ef0f62d6031d",
+  "rowCount": 534,
   "rows": [
     {
       "formulaId": "00e14aa8-b766-54ea-a359-3f5d20d329b7",
@@ -1568,7 +1568,7 @@
         "iterations": 96,
         "probe": {
           "escapeRatio": 0.673469,
-          "iterationVariance": 1677.795918
+          "iterationVariance": 1671.755102
         }
       }
     },
@@ -1914,7 +1914,7 @@
         "iterations": 96,
         "probe": {
           "escapeRatio": 0.408163,
-          "iterationVariance": 1623.346106
+          "iterationVariance": 1625.716785
         }
       }
     },
@@ -2450,19 +2450,19 @@
       "parameters": [],
       "profile": {
         "schema": "fractalpark-published-formula-profile/v1",
-        "quality": "family",
-        "mode": "julia",
+        "quality": "mechanical",
+        "mode": "parameter-plane",
         "center": [
-          0,
+          -0.5,
           0
         ],
-        "zoom": 0.35,
+        "zoom": 0.4,
         "rotation": 0,
         "iterations": 96,
-        "juliaC": [
-          0,
-          0
-        ]
+        "probe": {
+          "escapeRatio": 0.306122,
+          "iterationVariance": 1689.183673
+        }
       }
     },
     {
@@ -2671,8 +2671,8 @@
         "rotation": 0,
         "iterations": 96,
         "probe": {
-          "escapeRatio": 0.102041,
-          "iterationVariance": 692.218242
+          "escapeRatio": 0.122449,
+          "iterationVariance": 762.174094
         }
       }
     },
@@ -3106,7 +3106,7 @@
         "iterations": 96,
         "probe": {
           "escapeRatio": 0.530612,
-          "iterationVariance": 1461.591004
+          "iterationVariance": 1496.733861
         }
       }
     },
@@ -3312,6 +3312,33 @@
         "probe": {
           "escapeRatio": 0.591837,
           "iterationVariance": 2069.501041
+        }
+      }
+    },
+    {
+      "formulaId": "17d88272-6dbf-5622-996a-b116ea3a3fab",
+      "displayName": "tetration",
+      "family": "transcendental",
+      "implementationBasis": "project-owned",
+      "sourceRevision": "32437882a899d589e7ff8fa968c7248e5c9436fa6a87a48fa2072ff09e3c6540",
+      "semanticHash": "834623aa2e4578e5c976d7d769d4ca9d49beaf484c27da4943546e23ef555e7e",
+      "definitionPath": "definitions/32437882a899d589e7ff8fa968c7248e5c9436fa6a87a48fa2072ff09e3c6540.frm",
+      "descriptorSchema": "fractalpark-published-formula-descriptor/v1",
+      "parameters": [],
+      "profile": {
+        "schema": "fractalpark-published-formula-profile/v1",
+        "quality": "mechanical",
+        "mode": "parameter-plane",
+        "center": [
+          0,
+          0
+        ],
+        "zoom": 0.5,
+        "rotation": 0,
+        "iterations": 128,
+        "probe": {
+          "escapeRatio": 0.122449,
+          "iterationVariance": 1599.445231
         }
       }
     },
@@ -3596,6 +3623,33 @@
         "zoom": 0.4,
         "rotation": 0,
         "iterations": 96
+      }
+    },
+    {
+      "formulaId": "190fa538-89c9-590f-8170-34b3c570fc5d",
+      "displayName": "sinhMandelb",
+      "family": "transcendental",
+      "implementationBasis": "project-owned",
+      "sourceRevision": "4070d643142a8bac0a93df5f50b3bd47671076d603cf06e041aaa67035e806ce",
+      "semanticHash": "f5e5b1dbe941381eadddcd3e71d7e007cb00b342c89f4721ef89f24309396dc7",
+      "definitionPath": "definitions/4070d643142a8bac0a93df5f50b3bd47671076d603cf06e041aaa67035e806ce.frm",
+      "descriptorSchema": "fractalpark-published-formula-descriptor/v1",
+      "parameters": [],
+      "profile": {
+        "schema": "fractalpark-published-formula-profile/v1",
+        "quality": "mechanical",
+        "mode": "parameter-plane",
+        "center": [
+          -0.5,
+          0
+        ],
+        "zoom": 0.4,
+        "rotation": 0,
+        "iterations": 96,
+        "probe": {
+          "escapeRatio": 0.469388,
+          "iterationVariance": 1974.897959
+        }
       }
     },
     {
@@ -3887,8 +3941,8 @@
         "rotation": 0,
         "iterations": 96,
         "probe": {
-          "escapeRatio": 0.877551,
-          "iterationVariance": 894.952936
+          "escapeRatio": 0.816327,
+          "iterationVariance": 1249.042899
         }
       }
     },
@@ -4124,6 +4178,33 @@
         "probe": {
           "escapeRatio": 0.673469,
           "iterationVariance": 1627.102041
+        }
+      }
+    },
+    {
+      "formulaId": "201c54f3-a77a-5be0-a0a5-6f4f1998ee6d",
+      "displayName": "coshMandelb",
+      "family": "transcendental",
+      "implementationBasis": "project-owned",
+      "sourceRevision": "90d43b9c2bc9a7eda5ca6f997a1ae2dc6640f0cc12cdcc34e8c82ca0765eff12",
+      "semanticHash": "0726adb6bfb5eba7bbcbef971478685027a6336bf4a9296f668187c39daab4a3",
+      "definitionPath": "definitions/90d43b9c2bc9a7eda5ca6f997a1ae2dc6640f0cc12cdcc34e8c82ca0765eff12.frm",
+      "descriptorSchema": "fractalpark-published-formula-descriptor/v1",
+      "parameters": [],
+      "profile": {
+        "schema": "fractalpark-published-formula-profile/v1",
+        "quality": "mechanical",
+        "mode": "parameter-plane",
+        "center": [
+          -0.5,
+          0
+        ],
+        "zoom": 0.4,
+        "rotation": 0,
+        "iterations": 96,
+        "probe": {
+          "escapeRatio": 0.408163,
+          "iterationVariance": 1686.044981
         }
       }
     },
@@ -4394,6 +4475,33 @@
       }
     },
     {
+      "formulaId": "22d9a008-eb14-53de-9960-11eb5d37bb8e",
+      "displayName": "zaslavskyMap",
+      "family": "transcendental",
+      "implementationBasis": "project-owned",
+      "sourceRevision": "fb9db2dede500db19463ee53c8d059c2e7a92651d7de472a4bedd6e7ee58a831",
+      "semanticHash": "dabc6e573e13fc60004c12150faa4bfada8b5db90b340c1b1db153927c46e21c",
+      "definitionPath": "definitions/fb9db2dede500db19463ee53c8d059c2e7a92651d7de472a4bedd6e7ee58a831.frm",
+      "descriptorSchema": "fractalpark-published-formula-descriptor/v1",
+      "parameters": [],
+      "profile": {
+        "schema": "fractalpark-published-formula-profile/v1",
+        "quality": "mechanical",
+        "mode": "parameter-plane",
+        "center": [
+          -0.5,
+          0
+        ],
+        "zoom": 0.4,
+        "rotation": 0,
+        "iterations": 96,
+        "probe": {
+          "escapeRatio": 0.530612,
+          "iterationVariance": 1869.29696
+        }
+      }
+    },
+    {
       "formulaId": "23808fdd-db5b-5dc8-87bd-19c42d2a5065",
       "displayName": "fzppcos",
       "family": "transcendental",
@@ -4491,7 +4599,7 @@
         "iterations": 96,
         "probe": {
           "escapeRatio": 0.877551,
-          "iterationVariance": 968.375677
+          "iterationVariance": 977.13536
         }
       }
     },
@@ -5623,6 +5731,44 @@
       }
     },
     {
+      "formulaId": "280cd3e2-865b-5c78-90b7-39b2a36d7be0",
+      "displayName": "mandelbox",
+      "family": "folded-absolute",
+      "implementationBasis": "project-owned",
+      "sourceRevision": "b4677349cc60d66a5b7ad87655a89585d2bf83c7284ef949afe081e8eb294aac",
+      "semanticHash": "fff469604a4d169b4319e7cceab70ec599cdaeecdaa7d1cac4011e13d914db94",
+      "definitionPath": "definitions/b4677349cc60d66a5b7ad87655a89585d2bf83c7284ef949afe081e8eb294aac.frm",
+      "descriptorSchema": "fractalpark-published-formula-descriptor/v1",
+      "parameters": [
+        {
+          "slotName": "mandelboxScale",
+          "type": "real",
+          "default": 2,
+          "hardDomain": [
+            -3,
+            3
+          ],
+          "uniformName": "frmV1_mandelboxScale"
+        }
+      ],
+      "profile": {
+        "schema": "fractalpark-published-formula-profile/v1",
+        "quality": "mechanical",
+        "mode": "parameter-plane",
+        "center": [
+          -0.5,
+          0
+        ],
+        "zoom": 0.4,
+        "rotation": 0,
+        "iterations": 96,
+        "probe": {
+          "escapeRatio": 0.244898,
+          "iterationVariance": 942.189088
+        }
+      }
+    },
+    {
       "formulaId": "2826b57e-ae1a-564b-a17d-6ae3beedd30b",
       "displayName": "fzppcose",
       "family": "transcendental",
@@ -5645,7 +5791,7 @@
         "iterations": 96,
         "probe": {
           "escapeRatio": 0.571429,
-          "iterationVariance": 1735.087047
+          "iterationVariance": 1732.448147
         }
       }
     },
@@ -5671,8 +5817,8 @@
         "rotation": 0,
         "iterations": 96,
         "probe": {
-          "escapeRatio": 0.612245,
-          "iterationVariance": 1632.979592
+          "escapeRatio": 0.571429,
+          "iterationVariance": 1643.932528
         }
       }
     },
@@ -5699,7 +5845,7 @@
         "iterations": 96,
         "probe": {
           "escapeRatio": 0.734694,
-          "iterationVariance": 1564.646397
+          "iterationVariance": 1564.692212
         }
       }
     },
@@ -8455,6 +8601,33 @@
       }
     },
     {
+      "formulaId": "3edbea29-956a-5900-9aa7-02ccc2183016",
+      "displayName": "cosJulia",
+      "family": "transcendental",
+      "implementationBasis": "project-owned",
+      "sourceRevision": "75cc7f04fc69d74294c3ed9dcd5271585a6d186311dd10a906e781958cb46870",
+      "semanticHash": "a3978790b2aba850f4f6765da8820e3792696877b2c5005c1128b9d18f1bbceb",
+      "definitionPath": "definitions/75cc7f04fc69d74294c3ed9dcd5271585a6d186311dd10a906e781958cb46870.frm",
+      "descriptorSchema": "fractalpark-published-formula-descriptor/v1",
+      "parameters": [],
+      "profile": {
+        "schema": "fractalpark-published-formula-profile/v1",
+        "quality": "mechanical",
+        "mode": "parameter-plane",
+        "center": [
+          -0.5,
+          0
+        ],
+        "zoom": 0.4,
+        "rotation": 0,
+        "iterations": 96,
+        "probe": {
+          "escapeRatio": 0.44898,
+          "iterationVariance": 1887.928363
+        }
+      }
+    },
+    {
       "formulaId": "3f1835a4-0bd3-54ec-8d3b-dad2c6d3bfd3",
       "displayName": "fzppsich",
       "family": "transcendental",
@@ -9061,6 +9234,33 @@
       }
     },
     {
+      "formulaId": "42b369a5-2873-50e9-8684-cad5e60630ff",
+      "displayName": "airshipCubic",
+      "family": "folded-absolute",
+      "implementationBasis": "project-owned",
+      "sourceRevision": "67d0d96182f217e37faab85d6b7e3cf28bd9e959348589957ff49a4f5436f049",
+      "semanticHash": "565c412f9a5d97805f1afc5022fa80cda2f92156207f31bb00d50fc8379fd7e2",
+      "definitionPath": "definitions/67d0d96182f217e37faab85d6b7e3cf28bd9e959348589957ff49a4f5436f049.frm",
+      "descriptorSchema": "fractalpark-published-formula-descriptor/v1",
+      "parameters": [],
+      "profile": {
+        "schema": "fractalpark-published-formula-profile/v1",
+        "quality": "mechanical",
+        "mode": "parameter-plane",
+        "center": [
+          -0.5,
+          0
+        ],
+        "zoom": 0.4,
+        "rotation": 0,
+        "iterations": 96,
+        "probe": {
+          "escapeRatio": 0.55102,
+          "iterationVariance": 2069.287797
+        }
+      }
+    },
+    {
       "formulaId": "42b54420-5e0a-5f09-9dcd-0c262fd41d04",
       "displayName": "j_laguerre2",
       "family": "algebraic-power",
@@ -9441,19 +9641,19 @@
       "parameters": [],
       "profile": {
         "schema": "fractalpark-published-formula-profile/v1",
-        "quality": "family",
-        "mode": "julia",
+        "quality": "mechanical",
+        "mode": "parameter-plane",
         "center": [
-          0,
+          -0.5,
           0
         ],
-        "zoom": 0.35,
+        "zoom": 0.4,
         "rotation": 0,
         "iterations": 96,
-        "juliaC": [
-          0,
-          0
-        ]
+        "probe": {
+          "escapeRatio": 0.591837,
+          "iterationVariance": 1814.667222
+        }
       }
     },
     {
@@ -9561,6 +9761,60 @@
         "zoom": 0.42,
         "rotation": 0,
         "iterations": 128
+      }
+    },
+    {
+      "formulaId": "465a5b03-469d-59b3-8564-45af7564e37a",
+      "displayName": "burningShipCubic",
+      "family": "folded-absolute",
+      "implementationBasis": "project-owned",
+      "sourceRevision": "590db3453ca43c558e7b8c955e661b5ec68951b6afbb7feb3a07d0aa474a5910",
+      "semanticHash": "251d31784c00f05de51a357db62a33a374371d616304f6c07fb3a90bf3b432f1",
+      "definitionPath": "definitions/590db3453ca43c558e7b8c955e661b5ec68951b6afbb7feb3a07d0aa474a5910.frm",
+      "descriptorSchema": "fractalpark-published-formula-descriptor/v1",
+      "parameters": [],
+      "profile": {
+        "schema": "fractalpark-published-formula-profile/v1",
+        "quality": "mechanical",
+        "mode": "parameter-plane",
+        "center": [
+          -0.5,
+          0
+        ],
+        "zoom": 0.4,
+        "rotation": 0,
+        "iterations": 96,
+        "probe": {
+          "escapeRatio": 0.734694,
+          "iterationVariance": 1626.367347
+        }
+      }
+    },
+    {
+      "formulaId": "46acfdeb-2dac-59c9-a94a-fd4809420dc2",
+      "displayName": "burningShipQuartic",
+      "family": "folded-absolute",
+      "implementationBasis": "project-owned",
+      "sourceRevision": "c0c320f05c5531b4e17bf96b47e87114374914b52151576ed9854fa35e60c8d4",
+      "semanticHash": "d7ad03652c7e8c728041e2036c119b2ddc66c764e21bfa51358e55f1e23ee827",
+      "definitionPath": "definitions/c0c320f05c5531b4e17bf96b47e87114374914b52151576ed9854fa35e60c8d4.frm",
+      "descriptorSchema": "fractalpark-published-formula-descriptor/v1",
+      "parameters": [],
+      "profile": {
+        "schema": "fractalpark-published-formula-profile/v1",
+        "quality": "mechanical",
+        "mode": "parameter-plane",
+        "center": [
+          -0.5,
+          0
+        ],
+        "zoom": 0.4,
+        "rotation": 0,
+        "iterations": 96,
+        "probe": {
+          "escapeRatio": 0.795918,
+          "iterationVariance": 1369.328613
+        }
       }
     },
     {
@@ -12116,6 +12370,33 @@
       }
     },
     {
+      "formulaId": "62098934-def3-527a-ac43-2c80449c9848",
+      "displayName": "coshJulia",
+      "family": "transcendental",
+      "implementationBasis": "project-owned",
+      "sourceRevision": "826c473c5cdf710c5273c29a219eaf17ffc9117c74eb03282a51f9501eb9342c",
+      "semanticHash": "1ea3de8d94b9a00c937cfffc932f8af19d00defd4eb950516417f0db268dbc44",
+      "definitionPath": "definitions/826c473c5cdf710c5273c29a219eaf17ffc9117c74eb03282a51f9501eb9342c.frm",
+      "descriptorSchema": "fractalpark-published-formula-descriptor/v1",
+      "parameters": [],
+      "profile": {
+        "schema": "fractalpark-published-formula-profile/v1",
+        "quality": "mechanical",
+        "mode": "parameter-plane",
+        "center": [
+          -0.5,
+          0
+        ],
+        "zoom": 0.4,
+        "rotation": 0,
+        "iterations": 96,
+        "probe": {
+          "escapeRatio": 0.44898,
+          "iterationVariance": 1936.628072
+        }
+      }
+    },
+    {
       "formulaId": "623fec59-86d1-5702-88ee-4a638079c6b0",
       "displayName": "sym-b",
       "family": "algebraic-power",
@@ -12519,15 +12800,15 @@
         "quality": "mechanical",
         "mode": "parameter-plane",
         "center": [
-          0,
+          -0.5,
           0
         ],
-        "zoom": 0.25,
+        "zoom": 0.4,
         "rotation": 0,
         "iterations": 96,
         "probe": {
-          "escapeRatio": 0.836735,
-          "iterationVariance": 1549.061224
+          "escapeRatio": 0.877551,
+          "iterationVariance": 894.422324
         }
       }
     },
@@ -14115,6 +14396,33 @@
       }
     },
     {
+      "formulaId": "78e550c6-d58d-57b7-92ff-82e9ed0728f0",
+      "displayName": "newton6",
+      "family": "root-finding",
+      "implementationBasis": "project-owned",
+      "sourceRevision": "9372d322b21755b6e9e529e348ceead65a526ca3243e976845c39144ce8b38df",
+      "semanticHash": "0144f3a6cdf7bef74e1f5c5b6f2acb773158013bbbc7d3a66948a8e973a7f5ab",
+      "definitionPath": "definitions/9372d322b21755b6e9e529e348ceead65a526ca3243e976845c39144ce8b38df.frm",
+      "descriptorSchema": "fractalpark-published-formula-descriptor/v1",
+      "parameters": [],
+      "profile": {
+        "schema": "fractalpark-published-formula-profile/v1",
+        "quality": "mechanical",
+        "mode": "parameter-plane",
+        "center": [
+          0,
+          0
+        ],
+        "zoom": 0.25,
+        "rotation": 0,
+        "iterations": 96,
+        "probe": {
+          "escapeRatio": 0.755102,
+          "iterationVariance": 1498.238234
+        }
+      }
+    },
+    {
       "formulaId": "79260cb1-fa26-5139-a3dc-8ecdc29a2afd",
       "displayName": "m_lagandre4",
       "family": "algebraic-power",
@@ -14627,7 +14935,7 @@
         "iterations": 96,
         "probe": {
           "escapeRatio": 0.714286,
-          "iterationVariance": 1518.538942
+          "iterationVariance": 1526.708038
         }
       }
     },
@@ -15490,7 +15798,7 @@
         "iterations": 96,
         "probe": {
           "escapeRatio": 0.693878,
-          "iterationVariance": 1534.196585
+          "iterationVariance": 1531.43107
         }
       }
     },
@@ -15812,7 +16120,7 @@
         "iterations": 96,
         "probe": {
           "escapeRatio": 0.591837,
-          "iterationVariance": 1943.469388
+          "iterationVariance": 1927.102041
         }
       }
     },
@@ -16073,6 +16381,33 @@
         "zoom": 0.4,
         "rotation": 0,
         "iterations": 96
+      }
+    },
+    {
+      "formulaId": "8eb342fe-8a05-524e-8b98-35cdc8af5be3",
+      "displayName": "collatz",
+      "family": "transcendental",
+      "implementationBasis": "project-owned",
+      "sourceRevision": "9f102aa122c2f49ca1ec0ad883ddcb51dd58a92e86501ba081f22fab82fe0410",
+      "semanticHash": "6d56d30875bbcf8280116f57f7ae925115708f9832dbf8c14e85a7ec943b6fe8",
+      "definitionPath": "definitions/9f102aa122c2f49ca1ec0ad883ddcb51dd58a92e86501ba081f22fab82fe0410.frm",
+      "descriptorSchema": "fractalpark-published-formula-descriptor/v1",
+      "parameters": [],
+      "profile": {
+        "schema": "fractalpark-published-formula-profile/v1",
+        "quality": "mechanical",
+        "mode": "parameter-plane",
+        "center": [
+          -0.5,
+          0
+        ],
+        "zoom": 0.4,
+        "rotation": 0,
+        "iterations": 96,
+        "probe": {
+          "escapeRatio": 0.816327,
+          "iterationVariance": 1281.963349
+        }
       }
     },
     {
@@ -16439,7 +16774,7 @@
         "iterations": 96,
         "probe": {
           "escapeRatio": 0.489796,
-          "iterationVariance": 1666.750521
+          "iterationVariance": 1682.040816
         }
       }
     },
@@ -16542,7 +16877,7 @@
         "iterations": 96,
         "probe": {
           "escapeRatio": 0.571429,
-          "iterationVariance": 1682.576426
+          "iterationVariance": 1694.184923
         }
       }
     },
@@ -17210,7 +17545,7 @@
         "iterations": 96,
         "probe": {
           "escapeRatio": 0.530612,
-          "iterationVariance": 1805.747605
+          "iterationVariance": 1806.553103
         }
       }
     },
@@ -17280,8 +17615,8 @@
         "rotation": 0,
         "iterations": 96,
         "probe": {
-          "escapeRatio": 0.795918,
-          "iterationVariance": 1347.130362
+          "escapeRatio": 0.714286,
+          "iterationVariance": 1697.200333
         }
       }
     },
@@ -17882,6 +18217,33 @@
         "probe": {
           "escapeRatio": 0.857143,
           "iterationVariance": 1026.786339
+        }
+      }
+    },
+    {
+      "formulaId": "9f301c01-13fa-57b4-a3b2-99add821bfb0",
+      "displayName": "cosMandelb",
+      "family": "transcendental",
+      "implementationBasis": "project-owned",
+      "sourceRevision": "df2d4387d714cd91b67a6c019af286fad376b27ee36e6ec038ba44c301f64c25",
+      "semanticHash": "6aad95ff04b5fe8f3072b1704aca784a2c78755e17134e2d4032216b2b9924ad",
+      "definitionPath": "definitions/df2d4387d714cd91b67a6c019af286fad376b27ee36e6ec038ba44c301f64c25.frm",
+      "descriptorSchema": "fractalpark-published-formula-descriptor/v1",
+      "parameters": [],
+      "profile": {
+        "schema": "fractalpark-published-formula-profile/v1",
+        "quality": "mechanical",
+        "mode": "parameter-plane",
+        "center": [
+          -0.5,
+          0
+        ],
+        "zoom": 0.4,
+        "rotation": 0,
+        "iterations": 96,
+        "probe": {
+          "escapeRatio": 0.204082,
+          "iterationVariance": 1118.622241
         }
       }
     },
@@ -18724,6 +19086,33 @@
       }
     },
     {
+      "formulaId": "a89891b1-8ccb-5d58-9fbb-05944b85ce3c",
+      "displayName": "newtonCosh",
+      "family": "root-finding",
+      "implementationBasis": "project-owned",
+      "sourceRevision": "ede967e2b65d1f547af3504bab1d91071ad5f9cda0969189c5b50f3102d18dbb",
+      "semanticHash": "02f16cb98f92604f81ba4a800d05669b21dd3baf3927c78a421ead6bac908374",
+      "definitionPath": "definitions/ede967e2b65d1f547af3504bab1d91071ad5f9cda0969189c5b50f3102d18dbb.frm",
+      "descriptorSchema": "fractalpark-published-formula-descriptor/v1",
+      "parameters": [],
+      "profile": {
+        "schema": "fractalpark-published-formula-profile/v1",
+        "quality": "mechanical",
+        "mode": "parameter-plane",
+        "center": [
+          0,
+          0
+        ],
+        "zoom": 0.25,
+        "rotation": 0,
+        "iterations": 96,
+        "probe": {
+          "escapeRatio": 0.836735,
+          "iterationVariance": 738.896293
+        }
+      }
+    },
+    {
       "formulaId": "a89c54bd-2f5c-5aac-95d2-450a07212850",
       "displayName": "fndog",
       "family": "function-composition",
@@ -19117,7 +19506,7 @@
         "iterations": 96,
         "probe": {
           "escapeRatio": 0.530612,
-          "iterationVariance": 1733.693461
+          "iterationVariance": 1740.057476
         }
       }
     },
@@ -19323,6 +19712,33 @@
         "probe": {
           "escapeRatio": 0.734694,
           "iterationVariance": 1643.55102
+        }
+      }
+    },
+    {
+      "formulaId": "af500910-46ce-5a43-b430-c0154cc05959",
+      "displayName": "expMandelbrot",
+      "family": "transcendental",
+      "implementationBasis": "project-owned",
+      "sourceRevision": "305c68341d9d4be9e65092c899f7cfbdd83919af59b69a633b0a53d251a5f99b",
+      "semanticHash": "310b37da0dfa6d8541b699b6819cb9b623046a0b6c434e9d1d1b96414a5065aa",
+      "definitionPath": "definitions/305c68341d9d4be9e65092c899f7cfbdd83919af59b69a633b0a53d251a5f99b.frm",
+      "descriptorSchema": "fractalpark-published-formula-descriptor/v1",
+      "parameters": [],
+      "profile": {
+        "schema": "fractalpark-published-formula-profile/v1",
+        "quality": "mechanical",
+        "mode": "parameter-plane",
+        "center": [
+          -0.5,
+          0
+        ],
+        "zoom": 0.4,
+        "rotation": 0,
+        "iterations": 96,
+        "probe": {
+          "escapeRatio": 0.22449,
+          "iterationVariance": 1460.043315
         }
       }
     },
@@ -19858,7 +20274,7 @@
         "iterations": 96,
         "probe": {
           "escapeRatio": 0.734694,
-          "iterationVariance": 1606.604748
+          "iterationVariance": 1608.408163
         }
       }
     },
@@ -19964,6 +20380,33 @@
       }
     },
     {
+      "formulaId": "bb186688-4571-5725-a8ed-a17e0100dbc8",
+      "displayName": "newtonExp",
+      "family": "root-finding",
+      "implementationBasis": "project-owned",
+      "sourceRevision": "f4a3b0126993d678f9cb6759f6d2e078741ec0cd9b749ab31b043f4f1ce2428a",
+      "semanticHash": "92792bf33c108fdf900dbc433202d12e0d38408ca83e8a011caf3d775506e335",
+      "definitionPath": "definitions/f4a3b0126993d678f9cb6759f6d2e078741ec0cd9b749ab31b043f4f1ce2428a.frm",
+      "descriptorSchema": "fractalpark-published-formula-descriptor/v1",
+      "parameters": [],
+      "profile": {
+        "schema": "fractalpark-published-formula-profile/v1",
+        "quality": "mechanical",
+        "mode": "parameter-plane",
+        "center": [
+          -0.5,
+          0
+        ],
+        "zoom": 0.4,
+        "rotation": 0,
+        "iterations": 96,
+        "probe": {
+          "escapeRatio": 0.877551,
+          "iterationVariance": 915.701791
+        }
+      }
+    },
+    {
       "formulaId": "bb1b85d1-ea8d-5439-a808-be19afcabb30",
       "displayName": "j_tchebychevc7",
       "family": "algebraic-power",
@@ -20020,7 +20463,7 @@
         "iterations": 96,
         "probe": {
           "escapeRatio": 0.77551,
-          "iterationVariance": 1364.204082
+          "iterationVariance": 1356.708038
         }
       }
     },
@@ -20145,7 +20588,7 @@
         "iterations": 96,
         "probe": {
           "escapeRatio": 0.734694,
-          "iterationVariance": 1564.646397
+          "iterationVariance": 1564.692212
         }
       }
     },
@@ -20234,6 +20677,33 @@
       }
     },
     {
+      "formulaId": "beeb4aec-91cd-5d01-83bb-0b98ca851e79",
+      "displayName": "sineMandelb",
+      "family": "transcendental",
+      "implementationBasis": "project-owned",
+      "sourceRevision": "082b4f74a9e2798f67c8d2a61cb29cdc92e6e9f67f6b46c80bcf7af415a61a0b",
+      "semanticHash": "463443e20ecad73b9d695bfbdca187d465aeaf5f9ffe907e7d0b3c176b72b534",
+      "definitionPath": "definitions/082b4f74a9e2798f67c8d2a61cb29cdc92e6e9f67f6b46c80bcf7af415a61a0b.frm",
+      "descriptorSchema": "fractalpark-published-formula-descriptor/v1",
+      "parameters": [],
+      "profile": {
+        "schema": "fractalpark-published-formula-profile/v1",
+        "quality": "mechanical",
+        "mode": "parameter-plane",
+        "center": [
+          -0.5,
+          0
+        ],
+        "zoom": 0.4,
+        "rotation": 0,
+        "iterations": 96,
+        "probe": {
+          "escapeRatio": 0.44898,
+          "iterationVariance": 1903.640983
+        }
+      }
+    },
+    {
       "formulaId": "bf323001-5e0b-51a6-8d04-f0102ef740a9",
       "displayName": "j_tchebychevc4",
       "family": "algebraic-power",
@@ -20294,7 +20764,7 @@
         "iterations": 96,
         "probe": {
           "escapeRatio": 0.55102,
-          "iterationVariance": 1663.596002
+          "iterationVariance": 1664.323199
         }
       }
     },
@@ -23059,19 +23529,19 @@
       "parameters": [],
       "profile": {
         "schema": "fractalpark-published-formula-profile/v1",
-        "quality": "family",
-        "mode": "julia",
+        "quality": "mechanical",
+        "mode": "parameter-plane",
         "center": [
-          0,
+          -0.5,
           0
         ],
-        "zoom": 0.35,
+        "zoom": 0.4,
         "rotation": 0,
         "iterations": 96,
-        "juliaC": [
-          0,
-          0
-        ]
+        "probe": {
+          "escapeRatio": 0.836735,
+          "iterationVariance": 1129.100375
+        }
       }
     },
     {
@@ -23761,6 +24231,33 @@
       }
     },
     {
+      "formulaId": "d747aff8-e49f-5875-a85f-89d4a1d25846",
+      "displayName": "quarticPerpendicularMandelbrot",
+      "family": "folded-absolute",
+      "implementationBasis": "project-owned",
+      "sourceRevision": "e9aa563e5c1ab3def817a357ba4d8ef52b7085cbd1ff9ffd9fb239eece7241a1",
+      "semanticHash": "b9e68bdd0377e04b7ddd311885a54475e679dea9b87ef7573fb297f9091e0556",
+      "definitionPath": "definitions/e9aa563e5c1ab3def817a357ba4d8ef52b7085cbd1ff9ffd9fb239eece7241a1.frm",
+      "descriptorSchema": "fractalpark-published-formula-descriptor/v1",
+      "parameters": [],
+      "profile": {
+        "schema": "fractalpark-published-formula-profile/v1",
+        "quality": "mechanical",
+        "mode": "parameter-plane",
+        "center": [
+          -0.5,
+          0
+        ],
+        "zoom": 0.4,
+        "rotation": 0,
+        "iterations": 96,
+        "probe": {
+          "escapeRatio": 0.755102,
+          "iterationVariance": 1560.961266
+        }
+      }
+    },
+    {
       "formulaId": "d808ce74-e717-5d98-af4c-dab9d713f01e",
       "displayName": "mfnc",
       "family": "orbit-memory",
@@ -23907,6 +24404,33 @@
       }
     },
     {
+      "formulaId": "d89f722f-35fe-587a-bee9-efdf05885728",
+      "displayName": "coshSinh",
+      "family": "transcendental",
+      "implementationBasis": "project-owned",
+      "sourceRevision": "f05366105906d0524885fafa45e4b11808d37b0c7de3ef287da876b972df653a",
+      "semanticHash": "3a8c07a844f512a55fe2b83a664529994f4bdd00f0a80b145593f9fda0481788",
+      "definitionPath": "definitions/f05366105906d0524885fafa45e4b11808d37b0c7de3ef287da876b972df653a.frm",
+      "descriptorSchema": "fractalpark-published-formula-descriptor/v1",
+      "parameters": [],
+      "profile": {
+        "schema": "fractalpark-published-formula-profile/v1",
+        "quality": "mechanical",
+        "mode": "parameter-plane",
+        "center": [
+          -0.5,
+          0
+        ],
+        "zoom": 0.4,
+        "rotation": 0,
+        "iterations": 96,
+        "probe": {
+          "escapeRatio": 0.673469,
+          "iterationVariance": 1806.305706
+        }
+      }
+    },
+    {
       "formulaId": "d8ed1025-8ccf-5424-b161-df178a36a0fa",
       "displayName": "mandelbrot",
       "family": "algebraic-power",
@@ -24017,7 +24541,7 @@
         "iterations": 96,
         "probe": {
           "escapeRatio": 0.673469,
-          "iterationVariance": 1590.780508
+          "iterationVariance": 1590.44898
         }
       }
     },
@@ -24487,8 +25011,8 @@
         "rotation": 0,
         "iterations": 96,
         "probe": {
-          "escapeRatio": 0.77551,
-          "iterationVariance": 1375.404415
+          "escapeRatio": 0.734694,
+          "iterationVariance": 1479.340275
         }
       }
     },
@@ -24580,7 +25104,7 @@
         "iterations": 96,
         "probe": {
           "escapeRatio": 0.55102,
-          "iterationVariance": 1819.308621
+          "iterationVariance": 1823.714286
         }
       }
     },
@@ -24947,7 +25471,7 @@
         "iterations": 96,
         "probe": {
           "escapeRatio": 0.77551,
-          "iterationVariance": 1344.802999
+          "iterationVariance": 1343.765931
         }
       }
     },
@@ -25081,7 +25605,7 @@
         "iterations": 96,
         "probe": {
           "escapeRatio": 0.653061,
-          "iterationVariance": 2008.891295
+          "iterationVariance": 1976.709704
         }
       }
     },
@@ -25277,6 +25801,33 @@
         "zoom": 0.25,
         "rotation": 0,
         "iterations": 96
+      }
+    },
+    {
+      "formulaId": "e375f423-dfa4-54bf-9d56-c41215f4f72a",
+      "displayName": "cubicPerpendicularMandelbrot",
+      "family": "folded-absolute",
+      "implementationBasis": "project-owned",
+      "sourceRevision": "10f7accf02bbb79e4e7df8120ed2d02ea8b5a922fe780006c693da9a4ebe013d",
+      "semanticHash": "0ea7fae18fa0aaf0dfdcedb1f39260fdac05fc3ead1b61afd719fd62a0ce1389",
+      "definitionPath": "definitions/10f7accf02bbb79e4e7df8120ed2d02ea8b5a922fe780006c693da9a4ebe013d.frm",
+      "descriptorSchema": "fractalpark-published-formula-descriptor/v1",
+      "parameters": [],
+      "profile": {
+        "schema": "fractalpark-published-formula-profile/v1",
+        "quality": "mechanical",
+        "mode": "parameter-plane",
+        "center": [
+          -0.5,
+          0
+        ],
+        "zoom": 0.4,
+        "rotation": 0,
+        "iterations": 96,
+        "probe": {
+          "escapeRatio": 0.734694,
+          "iterationVariance": 1633.654311
+        }
       }
     },
     {
@@ -25995,6 +26546,33 @@
         "zoom": 0.25,
         "rotation": 0,
         "iterations": 96
+      }
+    },
+    {
+      "formulaId": "ed671b4c-a04c-5545-ad0c-a73727761ce8",
+      "displayName": "multicorn5",
+      "family": "algebraic-power",
+      "implementationBasis": "project-owned",
+      "sourceRevision": "46472f355f4ed06661a7e8cc666c73d3037e394e4be8fe56abe43e9b9c7c303a",
+      "semanticHash": "db5860d280c16cb8850866b13075fb29a5d7b43bd24aebb318deac78dfa366d8",
+      "definitionPath": "definitions/46472f355f4ed06661a7e8cc666c73d3037e394e4be8fe56abe43e9b9c7c303a.frm",
+      "descriptorSchema": "fractalpark-published-formula-descriptor/v1",
+      "parameters": [],
+      "profile": {
+        "schema": "fractalpark-published-formula-profile/v1",
+        "quality": "mechanical",
+        "mode": "parameter-plane",
+        "center": [
+          -0.5,
+          0
+        ],
+        "zoom": 0.4,
+        "rotation": 0,
+        "iterations": 96,
+        "probe": {
+          "escapeRatio": 0.77551,
+          "iterationVariance": 1471.157018
+        }
       }
     },
     {
@@ -26941,7 +27519,7 @@
         "iterations": 96,
         "probe": {
           "escapeRatio": 0.122449,
-          "iterationVariance": 445.701791
+          "iterationVariance": 356.932112
         }
       }
     },
@@ -27694,7 +28272,7 @@
         "iterations": 96,
         "probe": {
           "escapeRatio": 0.653061,
-          "iterationVariance": 1830.489796
+          "iterationVariance": 1819.304456
         }
       }
     },
@@ -27721,7 +28299,7 @@
         "iterations": 96,
         "probe": {
           "escapeRatio": 0.489796,
-          "iterationVariance": 1586.643898
+          "iterationVariance": 1591.246147
         }
       }
     },

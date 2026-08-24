@@ -40,10 +40,10 @@ const OUTPUT_ROOT = join(
 const SHA256 = /^[a-f0-9]{64}$/;
 const WRITE = process.argv.includes("--write");
 const EXPECTED_DECISION_CONTENT_HASH =
-  "7106736785e8bbb7cc310056f93f550413b6a0b76ad21e648b50e55480a2a52c";
+  "cac35a05d2d0c219b4f5ac00f3dea5b5fbb2b9c6b2fc15ea3383ef0f62d6031d";
 const EXPECTED_RUNTIME_MANIFEST_HASHES = Object.freeze({
   rev3: "4dfc5627a18fe11fc2b6227caf0b3034d279d67c97d10a622629f8e718eafafe",
-  rev4: "9b79915127e9704cf7da5256c5012ac307a5979b9fcfd9d07a661db791f78ebe",
+  rev4: "61719ce5a63a5320c863061b4cee6388cb449d13a6c9b1e434fa9ae97c1f370a",
 });
 
 type JsonRecord = Record<string, unknown>;
@@ -166,7 +166,7 @@ function runtimeRows(
   invariant(isRecord(manifest), "published-runtime-manifest-invalid");
   invariant(
     manifest.schema === "fractalpark-formula-library-runtime-manifest/v1" &&
-      manifest.decisionRevision === 3 &&
+      manifest.decisionRevision === (revision === "rev3" ? 3 : 4) &&
       Array.isArray(manifest.shards) &&
       Number.isInteger(manifest.rowCount) &&
       Number.isInteger(manifest.shardCount) &&
@@ -192,7 +192,7 @@ function runtimeRows(
     invariant(isRecord(shard), "published-runtime-shard-invalid");
     invariant(
       shard.schema === "fractalpark-formula-library-runtime-shard/v1" &&
-        shard.decisionRevision === 3 &&
+        shard.decisionRevision === (revision === "rev3" ? 3 : 4) &&
         shard.shardIndex === index &&
         shard.shardCount === manifest.shardCount &&
         Array.isArray(shard.rows) &&
@@ -380,7 +380,7 @@ async function main(): Promise<void> {
   const decisions = readJson(DECISIONS_PATH);
   invariant(
     decisions.schema === "fractalpark-formula-library-publication-decisions/v1" &&
-      decisions.decisionRevision === 3 &&
+      decisions.decisionRevision === 4 &&
       typeof decisions.contentHash === "string" &&
       decisions.contentHash === EXPECTED_DECISION_CONTENT_HASH &&
       Array.isArray(decisions.rows),
@@ -475,7 +475,7 @@ async function main(): Promise<void> {
     });
   }
   invariant(ids.size === expected.size, "published-runtime-id-set-mismatch");
-  invariant(indexRows.length === 513, "published-runtime-row-count-mismatch");
+  invariant(indexRows.length === 534, "published-runtime-row-count-mismatch");
   invariant(noneProfiles === 0, "published-runtime-profile-none");
   for (const formulaId of expected.keys())
     invariant(ids.has(formulaId), "published-runtime-id-set-mismatch");

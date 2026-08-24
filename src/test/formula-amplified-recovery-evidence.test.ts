@@ -17,7 +17,7 @@ function readJson(path: string) {
 }
 
 describe("B94 amplified recovery evidence", () => {
-  it("verifies exact per-formula receipts without releasing the 21/21 publication gate", () => {
+  it("verifies exact per-formula receipts and releases the 21/21 publication gate", () => {
     const verifier = spawnSync(
       join(ROOT, "node_modules/.bin/tsx"),
       ["scripts/generate-amplified-recovery-evidence.ts"],
@@ -33,13 +33,13 @@ describe("B94 amplified recovery evidence", () => {
     const manifest = readJson(join(EVIDENCE_DIR, "manifest.json"));
     expect(manifest).toMatchObject({
       schema: "fractalpark-b94-amplified-recovery-evidence/v1",
-      publicationEligible: false,
+      publicationEligible: true,
       publicationDecisionMutation: false,
       gateProgress: {
         batchPassed: 9,
         aggregatePassed: 21,
         required: 21,
-        publicationGateReleased: false,
+        publicationGateReleased: true,
       },
       priorBatchArtifact: {
         path: "resources/formula-library/v1/recovery-evidence/transcendental-v1/manifest.json",
@@ -63,7 +63,7 @@ describe("B94 amplified recovery evidence", () => {
     for (const row of rows) {
       expect(row).toMatchObject({
         technicalStatus: "passed",
-        publicationDecision: "hold",
+        publicationDecision: "publish",
       });
       const preview = row.preview as Record<string, unknown>;
       expect(preview).toMatchObject({ width: 96, height: 60 });
@@ -83,23 +83,24 @@ describe("B94 amplified recovery evidence", () => {
     expect(files.filter((file) => file.startsWith("preview-"))).toHaveLength(9);
   }, 30_000);
 
-  it("keeps the exact 9-row recovery set held and absent from the public runtime", () => {
+  it("publishes the exact 9-row recovery set in the public runtime", () => {
     const decisions = readJson(
       join(ROOT, "resources/formula-library/v1/publication-decisions.json"),
     );
     const decisionRows = decisions.rows as Array<Record<string, unknown>>;
-    const heldIds = new Set(
+    const exactFormulaIds = new Set<string>(RECIPES.map((recipe) => recipe.formulaId));
+    const publishedRecoveryIds = new Set(
       decisionRows
         .filter(
           (row) =>
             row.rightsStatus === "project-owned" &&
-            row.publicationDecision === "hold" &&
-            (row.decisionReason === "held-b94-chaotic-amplification" ||
-              row.decisionReason === "held-b94-ill-conditioned-cancellation"),
+            exactFormulaIds.has(String(row.formulaId)) &&
+            row.publicationDecision === "publish" &&
+            row.decisionReason === "publish-project-owned-recovery-gate-green",
         )
         .map((row) => String(row.formulaId)),
     );
-    expect(heldIds.size).toBe(9);
+    expect(publishedRecoveryIds.size).toBe(9);
 
     const runtime = readJson(
       join(ROOT, "public/formula-library/v1/runtime/published/index.json"),
@@ -108,9 +109,9 @@ describe("B94 amplified recovery evidence", () => {
       (runtime.rows as Array<Record<string, unknown>>).map((row) => String(row.formulaId)),
     );
     for (const recipe of RECIPES) {
-      expect(heldIds.has(recipe.formulaId)).toBe(true);
-      expect(publicIds.has(recipe.formulaId)).toBe(false);
+      expect(publishedRecoveryIds.has(recipe.formulaId)).toBe(true);
+      expect(publicIds.has(recipe.formulaId)).toBe(true);
     }
-    expect(runtime.rowCount).toBe(513);
+    expect(runtime.rowCount).toBe(534);
   });
 });

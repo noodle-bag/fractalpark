@@ -1,12 +1,12 @@
 {
   "schema": "fractalpark-published-formula-runtime-manifest/v1",
-  "decisionRevision": 3,
-  "publicationDecisionsContentHash": "7106736785e8bbb7cc310056f93f550413b6a0b76ad21e648b50e55480a2a52c",
-  "rowCount": 513,
-  "definitionCount": 513,
+  "decisionRevision": 4,
+  "publicationDecisionsContentHash": "cac35a05d2d0c219b4f5ac00f3dea5b5fbb2b9c6b2fc15ea3383ef0f62d6031d",
+  "rowCount": 534,
+  "definitionCount": 534,
   "indexFile": "index.json",
-  "indexSha256": "9a4774f2dfb8ebb31e80abf3a0efe7b330d1a4627fb38317bdcf069560fa9ddf",
-  "indexCanonicalSha256": "c10faceaa52356d2e48042f64010cd0f3f170c0087b5d609a01ede360a7c874c",
+  "indexSha256": "e912b1cb4ad884a6a021fd0d2683495e8ea61911d05c4135fbecaa335cade742",
+  "indexCanonicalSha256": "362f327b260f38ceb1d9afd7dc619d4ef010f8365ee84a8673ba1df6285fc3f5",
   "sourceManifests": [
     {
       "runtimeRevision": 3,
@@ -16,14 +16,14 @@
     },
     {
       "runtimeRevision": 4,
-      "sha256": "9b79915127e9704cf7da5256c5012ac307a5979b9fcfd9d07a661db791f78ebe",
-      "rowCount": 174,
-      "shardCount": 3
+      "sha256": "61719ce5a63a5320c863061b4cee6388cb449d13a6c9b1e434fa9ae97c1f370a",
+      "rowCount": 195,
+      "shardCount": 4
     }
   ],
   "profileCounts": {
-    "mechanical": 308,
-    "family": 205,
+    "mechanical": 332,
+    "family": 202,
     "none": 0
   }
 }

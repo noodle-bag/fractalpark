@@ -325,7 +325,7 @@
       },
       "standardDirectory": {
         "cta": "Parcourir le répertoire standard",
-        "hint": "Les 677 identités de formules standard avec leur statut de publication, dont les 513 actuellement publiées."
+        "hint": "534 définitions standard sont actuellement publiées."
       }
     },
     "guide": {
@@ -440,7 +440,7 @@
             "preprocessor": "les fonctionnalités de préprocesseur",
             "rejected-constructs": "toute construction rejetée par le pipeline de compilation actuel"
           },
-          "disclaimer": "Il s’agit d’une base de compatibilité Classic testée, non d’une revendication de compatibilité Fractint complète ni du registre de publication Standard à 677 identités. Le registre actuel contient 513 Definitions publiées et 164 Records retenus.",
+          "disclaimer": "Il s’agit d’une base de compatibilité Classic testée, et non d’une revendication de compatibilité complète avec Fractint. Elle est distincte du registre de publication Standard.",
           "verified": {
             "title": "Compatibilité vérifiée",
             "intro": "Ces décomptes de capacités d’importation Classic proviennent du manifeste de compatibilité versionné : 588 entrées cibles comprennent 579 réussites strict-v2 et 9 dérogations documentées ; 117 entrées distinctes sont exclues avec des raisons stables. Ils ne comptent pas les Definitions FRM-like v1 publiées.",
@@ -1037,10 +1037,10 @@
       "breadcrumb": "Répertoire",
       "eyebrow": "Répertoire des formules standard",
       "title": "Répertoire des formules standard",
-      "description": "Le répertoire complet des 677 identités de formules standard de FractalPark avec leur statut de publication actuel, navigable par famille et par statut.",
-      "intro": "Les 677 identités de formules standard dans un seul répertoire. Filtrez par famille et statut de publication ; les formules publiées sont entièrement implémentées et exécutables, les formules retenues sont documentées mais pas encore disponibles.",
+      "description": "Parcourez par famille les {count} définitions standard publiées de FractalPark.",
+      "intro": "Ce répertoire rassemble les {count} définitions standard publiées. Chaque formule dispose d’une implémentation complète et exécutable.",
       "facets": {
-        "title": "Parcourir par facette",
+        "title": "Parcourir par famille",
         "family": "Famille",
         "status": "Statut de publication",
         "all": "Toutes"
@@ -1059,7 +1059,7 @@
         "hold": "Retenue",
         "exclude": "Exclue"
       },
-      "resultCount": "{count} identités"
+      "resultCount": "{count} définitions publiées"
     },
     "record": {
       "eyebrow": "Fiche de formule",
@@ -1865,7 +1865,7 @@
   },
   "about": {
     "title": "À propos de FractalPark",
-    "aiDescription": "FractalPark est un générateur d’art fractal open source sous licence MIT, basé sur le navigateur, qui utilise WebGL pour le rendu GPU en temps réel. Il propose 94 formules intégrées de temps d’échappement, 513 Definitions Standard publiées avec une source FRM-like v1 épinglée, un Éditeur distinct de formules personnalisées compatible Classic, 7 plugins de transformation UV, 9 modes de coloration et l’export PNG haute résolution. Construit avec Next.js 16, React 19, TypeScript 5 et Tailwind CSS, son moteur de rendu utilise l’assemblage GLSL dynamique fondé sur des plugins et la mise en cache LRU.",
+    "aiDescription": "FractalPark est un générateur d’art fractal open source sous licence MIT, basé sur le navigateur, qui utilise WebGL pour le rendu GPU en temps réel. Il propose 94 formules intégrées de temps d’échappement, 534 Standard Definition publiées avec une source FRM-like v1 épinglée, un Éditeur distinct de formules personnalisées compatible Classic, 7 plugins de transformation UV, 9 modes de coloration et l’export PNG haute résolution. Construit avec Next.js 16, React 19, TypeScript 5 et Tailwind CSS, son moteur de rendu utilise un assemblage GLSL dynamique basé sur des plugins et un cache LRU.",
     "techStack": {
       "title": "Technologie",
       "description": "Construit avec Next.js, WebGL et TypeScript. Rendu fractal en temps réel propulsé par des shaders GPU.",

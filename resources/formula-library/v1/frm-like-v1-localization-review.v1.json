@@ -387,5 +387,91 @@
       },
       "state": "maintainer-approved"
     }
+  },
+  "publicationRevision4Rebind": {
+    "recordedAt": "2026-08-24T02:47:19+08:00",
+    "authorization": "approved-v0.4.19-plan-v1.5-expected-commit-26c",
+    "scope": "mechanical-release-fact-and-public-boundary-copy-only",
+    "aiAssistanceDisclosure": "Ellie generated the mechanical count and boundary-copy update; final correctness review remains with Ellie. Prior DeepSeek/Kimi and human-maintainer approvals apply only to the preserved prior snapshot hashes below.",
+    "changes": {
+      "manualNumericSubstitutions": [
+        "513 -> 534",
+        "164 -> 143"
+      ],
+      "reviewedMessagePaths": [
+        "formulas.frmGuide.sections.support.disclaimer",
+        "about.aiDescription"
+      ],
+      "additionalMessagePaths": [
+        "formulas.index.standardDirectory.hint"
+      ],
+      "forbiddenPublicNumbersRemoved": [
+        "677 catalog count from promotional copy",
+        "held count from promotional copy"
+      ]
+    },
+    "priorSnapshot": {
+      "en": {
+        "manualSha256": "e5168f1a0211596659314d748fa53825892a2a6f089350e636a8c0baf3903758",
+        "messageProjectionSha256": "effb295f43ad338c80f1becab42a90cbb8afd2345a79c2e014acf031ea1faaf7"
+      },
+      "zh": {
+        "manualSha256": "0e33629cfaa0e13f70150748e3ca34601fd2a1bf8c07a548637e5c6e45d43e05",
+        "messageProjectionSha256": "90301979c504e8c329e0c45544823e5e8520df5c41ef79f1078fbfdc3c6c7ce5"
+      },
+      "pt": {
+        "manualSha256": "c9bb8bba706aed238858012646c000b4d2333bb3a6915c2cbea9dab186fe9fc1",
+        "messageProjectionSha256": "3a126962e9bf3d0871d10e714a31f620dcc58b8af8fce81867ae52210354185f"
+      },
+      "ko": {
+        "manualSha256": "07d348173685cd0835a745be0ddda9cc9dc5acf605758a5ba5f909be9e57db55",
+        "messageProjectionSha256": "be95160f1092fe2542631f278ac996f91418b03e9f9e1fe64d14726fb65b7ba1"
+      },
+      "ru": {
+        "manualSha256": "459abd4157459803b60ed683220d4d371739aad477fa01138a92c3d15db17bf6",
+        "messageProjectionSha256": "0dc299cbef03208a4d140ab3c556e318529af9f8ab258a1606f419c2accf5f24"
+      },
+      "es": {
+        "manualSha256": "de79e8576d3516e8169eb9057478792e1b086ef19f3a7c471ba6bb3e704bed75",
+        "messageProjectionSha256": "c4797689e9537fb797a129b58ad03805326b0e2798464060fb81e15a9fc74024"
+      },
+      "fr": {
+        "manualSha256": "e846c775ceb8945ff5b703dfb62496f8025735f5377869c608020f82d1023d67",
+        "messageProjectionSha256": "d00db50962e26cb756d12e7805c31c468d9a522efd59149159332aa55a37d92d"
+      }
+    },
+    "currentProjection": {
+      "en": {
+        "manualSha256": "fd5e22761fef599ee113e803b59aa9f157f3e39e591c0a86aeeb804713139921",
+        "messageProjectionSha256": "0bbaeecdcf82e4241d93818f41ee75ceb3f37f04bbc96e9eb2994738d3c18804"
+      },
+      "zh": {
+        "manualSha256": "8182f36d116d228cec65deb056ca53dbcecd1207d3e2c6fda75b6de78047d84d",
+        "messageProjectionSha256": "c0f06d7e7fb6834ac63192c73e919149cfcc5c3639fdc58434094101ae9f99ea"
+      },
+      "pt": {
+        "manualSha256": "d4d8c6adf4e6792300e2008dd70927966c1800c83c41a2b6d5d3d72aabb2484f",
+        "messageProjectionSha256": "d63ffff114892f0b5d99d4a13dab1ed55e54139cd92405f5f90e63b5eef6eeb3"
+      },
+      "ko": {
+        "manualSha256": "3f6890a7b90ae987831e4cfebe12443e25f87048fdd186f34251f9f80215af3c",
+        "messageProjectionSha256": "2b6db58785bbbfb2e8db62342c47effe7120b03e82e06576fe4a89e33b2d073b"
+      },
+      "ru": {
+        "manualSha256": "31ba0f76d64223cb018194d5472d0112f3163475fec6594f3c755cd822b33864",
+        "messageProjectionSha256": "113bb22edd884825daf9d87777b1cfd1603977bb8f6f9538a40e6774edd951db"
+      },
+      "es": {
+        "manualSha256": "f7ee2d056bdf4983637bf18f92ecbd670a3b05f57cd3c69964bf9c964dfc63a3",
+        "messageProjectionSha256": "3182fefa5c0b906c0ae46640fcc27223a238fe18363c12aad8df50a787f9a20f"
+      },
+      "fr": {
+        "manualSha256": "24bc7db00ae39628004905a73c933da824c021eee9d1de3e3a8578ec92305627",
+        "messageProjectionSha256": "eb4c85bbcc48d0cc6c865d859417c9e765ed480598d4f973c2dceee528cfb551"
+      }
+    },
+    "contentRowsChanged": false,
+    "modelReviewEvidenceReusedForCurrentBytes": false,
+    "reviewStatus": "ellie-main-agent-reviewed"
   }
 }

@@ -58,7 +58,7 @@ export function buildFormulaSeoSetsV1(
   const implementationIds = new Set(implementation);
   const authorityValid =
     exactUniqueIds(catalog, 677) &&
-    exactUniqueIds(implementation, 513) &&
+    exactUniqueIds(implementation, 534) &&
     exactUniqueIds(teaching, 50) &&
     implementation.every((formulaId) => catalogIds.has(formulaId)) &&
     teaching.every((formulaId) => implementationIds.has(formulaId));

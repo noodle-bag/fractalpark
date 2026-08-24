@@ -232,7 +232,7 @@ export function PublishedFormulaLibrary({
           <SheetHeader className="border-b pr-12">
             <SheetTitle>{t('formula.library.title')}</SheetTitle>
             <SheetDescription>
-              {t('formula.library.description', { count: rows.length || 513 })}
+              {t('formula.library.description', { count: rows.length || 534 })}
             </SheetDescription>
           </SheetHeader>
 

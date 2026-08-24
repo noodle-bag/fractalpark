@@ -164,31 +164,35 @@ function crossCheckRows(receipt: JsonRecord): Map<string, JsonRecord> {
   return rows;
 }
 
-function verifyPublicationIsolation(): void {
+function verifyPublicationIsolation(): "hold" | "publish" {
   const decisions = readJson("resources/formula-library/v1/publication-decisions.json");
   invariant(Array.isArray(decisions.rows), "amplified-evidence-decisions-invalid");
-  const held = new Set(
-    decisions.rows
-      .filter(
-        (row): row is JsonRecord =>
-          isRecord(row) &&
-          row.rightsStatus === "project-owned" &&
-          row.publicationDecision === "hold" &&
-          (row.decisionReason === "held-b94-chaotic-amplification" ||
-            row.decisionReason === "held-b94-ill-conditioned-cancellation"),
-      )
-      .map((row) => String(row.formulaId)),
-  );
   const formulaIds = new Set(RECIPES.map((recipe) => recipe.formulaId as string));
+  const matched = decisions.rows.filter(
+    (row): row is JsonRecord =>
+      isRecord(row) &&
+      formulaIds.has(String(row.formulaId)) &&
+      row.rightsStatus === "project-owned" &&
+      ((row.publicationDecision === "hold" &&
+        (row.decisionReason === "held-b94-chaotic-amplification" ||
+          row.decisionReason === "held-b94-ill-conditioned-cancellation")) ||
+        (row.publicationDecision === "publish" &&
+          row.decisionReason === "publish-project-owned-recovery-gate-green")),
+  );
+  const states = new Set(matched.map((row) => String(row.publicationDecision)));
   invariant(
-    held.size === 9 &&
-      formulaIds.size === 9 &&
-      [...formulaIds].every((formulaId) => held.has(formulaId)),
+    formulaIds.size === 9 &&
+      matched.length === 9 &&
+      new Set(matched.map((row) => row.formulaId)).size === 9 &&
+      states.size === 1,
     "amplified-evidence-publication-isolation-invalid",
   );
+  return [...states][0] as "hold" | "publish";
 }
 
-function verifyPriorBatchManifest(): JsonRecord {
+function verifyPriorBatchManifest(
+  publicationDecision: "hold" | "publish",
+): JsonRecord {
   const manifest = readJson(priorBatchManifestRelative);
   invariant(
     manifest.schema === "fractalpark-b94-transcendental-recovery-evidence/v1" &&
@@ -203,7 +207,7 @@ function verifyPriorBatchManifest(): JsonRecord {
         (row) =>
           isRecord(row) &&
           row.technicalStatus === "passed" &&
-          row.publicationDecision === "hold",
+          row.publicationDecision === publicationDecision,
       ),
     "amplified-evidence-prior-batch-invalid",
   );
@@ -291,7 +295,7 @@ async function buildFormulaReceipt(runtimeId: string): Promise<{
   png: Buffer;
 }> {
   registerBuiltins({ quiet: true });
-  verifyPublicationIsolation();
+  const publicationDecision = verifyPublicationIsolation();
   const crossCheck = crossCheckRows(verifyCrossCheckReceipt());
   const recipe = RECIPES.find((candidate) => candidate.runtimeId === runtimeId);
   invariant(recipe, `amplified-evidence-runtime-invalid:${runtimeId}`);
@@ -358,7 +362,7 @@ async function buildFormulaReceipt(runtimeId: string): Promise<{
     family: recipe.family,
     failureClass: hold.holdClass,
     technicalStatus: "passed",
-    publicationDecision: "hold",
+    publicationDecision,
     sourceRevision: validated.sourceRevision,
     semanticHash: validated.semanticHash,
     numericRemedy: numericRemedy(runtimeId),
@@ -428,8 +432,8 @@ function verifyReceipt(recipe: (typeof RECIPES)[number]): JsonRecord {
 }
 
 function buildManifest(): { manifest: JsonRecord; bytes: Buffer } {
-  verifyPublicationIsolation();
-  const priorBatchManifest = verifyPriorBatchManifest();
+  const publicationDecision = verifyPublicationIsolation();
+  const priorBatchManifest = verifyPriorBatchManifest(publicationDecision);
   const crossCheck = verifyCrossCheckReceipt();
   const recipes = [...RECIPES].sort((left, right) =>
     left.formulaId < right.formulaId ? -1 : left.formulaId > right.formulaId ? 1 : 0,
@@ -448,13 +452,13 @@ function buildManifest(): { manifest: JsonRecord; bytes: Buffer } {
   const withoutHash: JsonRecord = {
     schema: "fractalpark-b94-amplified-recovery-evidence/v1",
     deterministic: true,
-    publicationEligible: false,
+    publicationEligible: publicationDecision === "publish",
     publicationDecisionMutation: false,
     gateProgress: {
       batchPassed: 9,
       aggregatePassed: 21,
       required: 21,
-      publicationGateReleased: false,
+      publicationGateReleased: publicationDecision === "publish",
     },
     dimensions: { width: WIDTH, height: HEIGHT },
     previewContract: {

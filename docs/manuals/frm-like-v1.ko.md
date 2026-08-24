@@ -14,8 +14,8 @@
 
 ## 1. 지금 할 수 있는 일
 
-FractalPark은 현재 677개의 Standard 식별자를 제공해요. 공개된 Definition은 513개,
-보류된 Record는 164개예요.
+FractalPark은 현재 677개의 Standard 식별자를 제공해요. 공개된 Definition은 534개,
+보류된 Record는 143개예요.
 
 공개된 Record에서는 다음을 할 수 있어요.
 

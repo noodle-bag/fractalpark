@@ -48,6 +48,7 @@ jobs:
           - { start: 321, count: 64 }
           - { start: 385, count: 64 }
           - { start: 449, count: 64 }
+          - { start: 513, count: 21 }
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-node@v4

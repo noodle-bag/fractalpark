@@ -162,27 +162,29 @@ function crossCheckRows(receipt: JsonRecord): Map<string, JsonRecord> {
   return rows;
 }
 
-function verifyPublicationIsolation(): void {
+function verifyPublicationIsolation(): "hold" | "publish" {
   const decisions = readJson("resources/formula-library/v1/publication-decisions.json");
   invariant(Array.isArray(decisions.rows), "transcendental-evidence-decisions-invalid");
-  const held = new Set(
-    decisions.rows
-      .filter(
-        (row): row is JsonRecord =>
-          isRecord(row) &&
-          row.rightsStatus === "project-owned" &&
-          row.publicationDecision === "hold" &&
-          row.decisionReason === "held-b94-swiftshader-transcendental",
-      )
-      .map((row) => String(row.formulaId)),
-  );
   const formulaIds = new Set(RECIPES.map((recipe) => recipe.formulaId as string));
+  const matched = decisions.rows.filter(
+    (row): row is JsonRecord =>
+      isRecord(row) &&
+      formulaIds.has(String(row.formulaId)) &&
+      row.rightsStatus === "project-owned" &&
+      ((row.publicationDecision === "hold" &&
+        row.decisionReason === "held-b94-swiftshader-transcendental") ||
+        (row.publicationDecision === "publish" &&
+          row.decisionReason === "publish-project-owned-recovery-gate-green")),
+  );
+  const states = new Set(matched.map((row) => String(row.publicationDecision)));
   invariant(
-    held.size === 12 &&
-      formulaIds.size === 12 &&
-      [...formulaIds].every((formulaId) => held.has(formulaId)),
+    formulaIds.size === 12 &&
+      matched.length === 12 &&
+      new Set(matched.map((row) => row.formulaId)).size === 12 &&
+      states.size === 1,
     "transcendental-evidence-publication-isolation-invalid",
   );
+  return [...states][0] as "hold" | "publish";
 }
 
 async function projectRecoveryProfile(
@@ -234,7 +236,7 @@ async function buildFormulaReceipt(runtimeId: string): Promise<{
   png: Buffer;
 }> {
   registerBuiltins({ quiet: true });
-  verifyPublicationIsolation();
+  const publicationDecision = verifyPublicationIsolation();
   const crossCheck = crossCheckRows(verifyCrossCheckReceipt());
   const recipe = RECIPES.find((candidate) => candidate.runtimeId === runtimeId);
   invariant(recipe, `transcendental-evidence-runtime-invalid:${runtimeId}`);
@@ -292,7 +294,7 @@ async function buildFormulaReceipt(runtimeId: string): Promise<{
     family: recipe.family,
     failureClass: "swiftshader-transcendental",
     technicalStatus: "passed",
-    publicationDecision: "hold",
+    publicationDecision,
     sourceRevision: validated.sourceRevision,
     semanticHash: validated.semanticHash,
     numericRemedy: {

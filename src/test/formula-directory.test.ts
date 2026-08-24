@@ -1,3 +1,5 @@
+import { readFileSync, readdirSync } from "node:fs";
+import { join } from "node:path";
 import { describe, expect, it } from "vitest";
 
 import identityAsset from "../../resources/formula-library/v1/standard-formula-ids.json";
@@ -57,10 +59,10 @@ describe("standard formula directory v1", () => {
     expect(sum(facets.rights)).toBe(677);
     expect(
       facets.decisions.find((facet) => facet.value === "publish")?.count,
-    ).toBe(513);
+    ).toBe(534);
     expect(
       facets.decisions.find((facet) => facet.value === "hold")?.count,
-    ).toBe(164);
+    ).toBe(143);
     expect(
       facets.rights.find((facet) => facet.value === "gpl-3.0-only")?.count,
     ).toBe(73);
@@ -72,7 +74,7 @@ describe("standard formula directory v1", () => {
 
   it("filters by family and decision with exact partition semantics", () => {
     const published = filterFormulaDirectoryV1({ decision: "publish" });
-    expect(published).toHaveLength(513);
+    expect(published).toHaveLength(534);
     const heldAlgebraic = filterFormulaDirectoryV1({
       family: "algebraic-power",
       decision: "hold",
@@ -95,6 +97,27 @@ describe("standard formula directory v1", () => {
       } else {
         expect(entry.implementationBasis).toBeNull();
       }
+    }
+  });
+
+  it("keeps the public directory on the published projection only", () => {
+    const pageSource = readFileSync(
+      join(process.cwd(), "src/app/[locale]/formulas/directory/page.tsx"),
+      "utf8",
+    );
+    expect(pageSource).toContain(
+      "filterFormulaDirectoryV1({ decision: 'publish' })",
+    );
+    expect(pageSource).not.toContain("parseStatus");
+    expect(pageSource).not.toContain("facets.status");
+
+    const messagesRoot = join(process.cwd(), "messages");
+    for (const file of readdirSync(messagesRoot).filter((name) => name.endsWith(".json"))) {
+      const messages = JSON.parse(readFileSync(join(messagesRoot, file), "utf8"));
+      const publicCopy = JSON.stringify(messages.formulas.directory);
+      expect(publicCopy).not.toMatch(/\b(?:677|143)\b/);
+      expect(messages.formulas.directory.description).toContain("{count}");
+      expect(messages.formulas.directory.intro).toContain("{count}");
     }
   });
 });

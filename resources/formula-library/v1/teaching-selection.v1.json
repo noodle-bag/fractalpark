@@ -26,8 +26,8 @@
     "publicationDecisionRevision": 3,
     "publicationDecisionSha256": "497415cebc958bf322f9726485e4ccbcfb6cb7e77c16e0f091653cbf6b5714a4",
     "legacyAliasesSha256": "0b966ca5f5e238b9f5fe523caa082a682cfe51d1e6affeb945d580dba72842e8",
-    "runtimeIndexSha256": "9a4774f2dfb8ebb31e80abf3a0efe7b330d1a4627fb38317bdcf069560fa9ddf",
-    "runtimeIndexCanonicalSha256": "c10faceaa52356d2e48042f64010cd0f3f170c0087b5d609a01ede360a7c874c",
+    "runtimeIndexSha256": "e912b1cb4ad884a6a021fd0d2683495e8ea61911d05c4135fbecaa335cade742",
+    "runtimeIndexCanonicalSha256": "362f327b260f38ceb1d9afd7dc619d4ef010f8365ee84a8673ba1df6285fc3f5",
     "prototypeSha256": "3ddc4ee7d4a8fbf47474c58bfd62d72cc29d192620fa80e1b1ff950654793023"
   },
   "rows": [

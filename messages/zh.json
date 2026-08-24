@@ -325,7 +325,7 @@
       },
       "standardDirectory": {
         "cta": "浏览标准公式目录",
-        "hint": "全部 677 个标准公式身份及发布状态——其中 513 个现已发布。"
+        "hint": "当前已发布 534 个标准定义。"
       }
     },
     "guide": {
@@ -440,7 +440,7 @@
             "preprocessor": "预处理器功能",
             "rejected-constructs": "当前编译流水线拒绝的其他写法"
           },
-          "disclaimer": "这是经过测试的 Classic 兼容性基线，不是完整 Fractint 兼容性的声明，也不是包含 677 个条目的 Standard 发布台账。当前台账包含 513 个已发布 Definition 和 164 个不可用的 Record。",
+          "disclaimer": "这是经过测试的 Classic 兼容性基线，并不声明完整的 Fractint 兼容性；它与 Standard 发布台账是两套彼此分离的口径。",
           "verified": {
             "title": "已验证的兼容性",
             "intro": "这些 Classic 导入能力计数来自版本化兼容性清单：588 个目标条目包含 579 个 strict-v2 通过项和 9 个有文档记录的豁免；另有 117 个独立条目以固定不变的理由被排除。它们不计入已发布的 FRM-like v1 Definition。",
@@ -1037,10 +1037,10 @@
       "breadcrumb": "目录",
       "eyebrow": "标准公式目录",
       "title": "标准公式目录",
-      "description": "FractalPark 677 个标准公式身份的完整目录，含当前发布状态，可按族与状态浏览。",
-      "intro": "全部 677 个标准公式身份尽在此目录。按族与发布状态筛选；已发布的公式已完整实现并可直接运行，暂缓发布的公式记录在案但暂不可用。",
+      "description": "按公式族浏览 FractalPark 的 {count} 个已发布标准定义。",
+      "intro": "此目录收录全部 {count} 个已发布标准定义；每个条目都具有完整、可运行的实现。",
       "facets": {
-        "title": "按维度浏览",
+        "title": "按公式族浏览",
         "family": "族",
         "status": "发布状态",
         "all": "全部"
@@ -1059,7 +1059,7 @@
         "hold": "暂缓",
         "exclude": "排除"
       },
-      "resultCount": "{count} 个身份"
+      "resultCount": "{count} 个已发布定义"
     },
     "record": {
       "eyebrow": "公式档案",
@@ -1865,7 +1865,7 @@
   },
   "about": {
     "title": "关于分形公园 FractalPark",
-    "aiDescription": "FractalPark 是一款采用 MIT 许可的开源浏览器分形艺术生成器，使用 WebGL 进行实时 GPU 渲染。它具有 94 个内置逃逸时间公式、513 个使用固定 FRM-like v1 源码的已发布 Standard Definition、独立的 Classic-compatible 自定义公式 Editor、7 个 UV 变换插件、9 种着色模式和高分辨率 PNG 导出。采用 Next.js 16、React 19、TypeScript 5 和 Tailwind CSS 构建，其渲染引擎使用基于 plugin 的动态 GLSL assembly 和 LRU caching。",
+    "aiDescription": "FractalPark 是一款采用 MIT 许可的开源浏览器分形艺术生成器，使用 WebGL 进行实时 GPU 渲染。它具有 94 个内置逃逸时间公式、534 个使用固定 FRM-like v1 源码的已发布 Standard Definition、独立的 Classic-compatible 自定义公式 Editor、7 个 UV 变换插件、9 种着色模式和高分辨率 PNG 导出。采用 Next.js 16、React 19、TypeScript 5 和 Tailwind CSS 构建，其渲染引擎使用基于 plugin 的动态 GLSL assembly 和 LRU caching。",
     "techStack": {
       "title": "技术栈",
       "description": "基于 Next.js、WebGL 和 TypeScript 构建.GPU 着色器驱动的实时分形渲染.",

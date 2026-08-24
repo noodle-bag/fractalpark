@@ -1,16 +1,16 @@
 # Formula library runtime revision 4 runbook
 
-Runtime revision 4 is the additive public Definition projection for the 174
-revision-2 published rows:
+Runtime revision 4 is the additive public Definition projection for the 195
+low-risk published rows:
 
 - 106 `direct-adaptation` rows reconstructed from the frozen F588 work package
   and the pinned census ledger;
-- 68 `project-owned` rows reconstructed from accepted native Recipes;
-- no `separated-independent-rewrite`, held, excluded, or GPL row.
+- 89 `project-owned` rows reconstructed from accepted native Recipes;
+- no `separated-independent-rewrite`, decision-held, excluded, or GPL row.
 
 Runtime revision 3 remains the immutable 339-row clean-room projection. The
 published runtime builder combines rev3 + rev4 by Formula ID into a light
-513-row engine index plus content-addressed Definition bodies. This runbook does
+534-row engine index plus content-addressed Definition bodies. This runbook does
 not authorize selector/UI activation, deployment, merge, or Production changes.
 
 ## Preconditions
@@ -34,7 +34,7 @@ npm run formula:runtime-rev4:verify
 npx vitest run src/test/formula-runtime-rev4.test.ts
 ```
 
-The write command first reconstructs and validates all 174 Definitions, writes
+The write command first reconstructs and validates all 195 Definitions, writes
 0600 files to
 `.formula-library-private/formula-library-v1/runtime-rev4-staging/`, rereads
 those bytes, and only then writes `resources/formula-library/v1/runtime/rev4/`.
@@ -45,11 +45,11 @@ Expected accounting:
 
 ```text
 runtimeRevision = 4
-decisionRevision = 3
-rows = 174
+decisionRevision = 4
+rows = 195
 directAdaptation = 106
-projectOwned = 68
-shards = 3 (64 + 64 + 46)
+projectOwned = 89
+shards = 4 (64 + 64 + 64 + 3)
 ```
 
 ## Failure handling
