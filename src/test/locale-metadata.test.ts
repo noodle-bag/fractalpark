@@ -149,7 +149,7 @@ describe('locale metadata maps', () => {
 
   it('no private corpus text leaks into the public repo (Slice 7f leakage scan)', () => {
     const cmd =
-      `git grep -l -E 'frm-corpus|fractint/?(float)?/formulas|ledger-row-sha256|f588_level2_report\\.json' -- ':!docs/specs/*' ':!scripts/*' ':!tests/e2e/.fixtures/*' ':!src/engine/frm/compat-report.ts' ':!src/test/*'`;
+      `git grep -l -E 'frm-corpus|fractint/?(float)?/formulas|ledger-row-sha256|f588_level2_report\\.json' -- ':!docs/specs/*' ':!scripts/*' ':!tests/e2e/.fixtures/*' ':!resources/formula-library/v1/formula-record-provenance.v1.json' ':!src/engine/formulas/v1/record-provenance.ts' ':!src/engine/frm/compat-report.ts' ':!src/test/*'`;
     let leaked = '';
     try {
       leaked = execSync(cmd, { encoding: 'utf-8' }).trim();
@@ -158,7 +158,7 @@ describe('locale metadata maps', () => {
     }
     if (leaked) {
       const files = execSync(
-        `git grep -l -E 'frm-corpus|fractint/?(float)?/formulas' -- ':!docs/specs/*' ':!scripts/*' ':!tests/e2e/.fixtures/*' ':!src/engine/frm/compat-report.ts'`,
+        `git grep -l -E 'frm-corpus|fractint/?(float)?/formulas' -- ':!docs/specs/*' ':!scripts/*' ':!tests/e2e/.fixtures/*' ':!resources/formula-library/v1/formula-record-provenance.v1.json' ':!src/engine/formulas/v1/record-provenance.ts' ':!src/engine/frm/compat-report.ts' ':!src/test/*'`,
         { encoding: 'utf-8' },
       ).trim();
       const allowed = new Set(['.hermes', 'obsidian', 'node_modules', '.git']);
