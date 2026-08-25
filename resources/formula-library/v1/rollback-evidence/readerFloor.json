@@ -61,8 +61,8 @@
     "src/lib/published-formula-library.ts": "adb660185c6c7f6297737ac7ff925f346cfeddd5d5818348b382356c9a880355",
     "src/lib/published-formula-selection.ts": "9183092370ba8191937fe182ae8a7b5613a152547d83bde5ce205629dcc62013",
     "src/lib/published-formula-source.ts": "53beed7a85ceeeb1713468eb5c65423e0fa77c65063feee4ee1d9be86fc00f10",
-    "src/lib/published-formula-remix.ts": "973c55ffd303e7cc9a365d8600694b294f762161e9278c33bb67fc16502832c3",
-    "src/lib/formula-records.ts": "aa740d7b5b76fdf3555a6a3e88349bbd4b09ed2d7ab97b097bd13178f6021229",
+    "src/lib/published-formula-remix.ts": "a91cd0cf7949d978130efa6d17e3e1d911edfd126a10d89c51c4aa20197be820",
+    "src/lib/formula-records.ts": "c40787770fe5c6914c781a22f3b5db012bce1a2b9b1b74ed8be7a98f7e455e47",
     "src/lib/held-formula-record-route.ts": "32eecbd18e8a7db37e95e0d90846d904502bd6e68ed84e813c60948e6b638572",
     "src/lib/formula-directory-status.ts": "c6f5c350dd8c4811a0f05358b9a0b233d71d931740dddf2fa5cc12a68e93881d",
     "src/lib/indexable-pages.ts": "b7aeb8b07955c2048b8f3e350eb8648836ece6e1171fec861161b9603db202b4",
@@ -77,7 +77,7 @@
     "src/content/teaching/generated-content-registry.ts": "d7304594fee2f3ab3e72b63533acf1842748490abdf779f6f68cd236038b65ff",
     "src/content/teaching/guide-route-policy.ts": "4df753db3463cbe012263f2b5016b70db8a3a3491d251142c280d54ed471c0ab",
     "src/content/teaching/restored-guide-projection.ts": "994c74c59bb584b4460574a06d62412e3213000cdf126320ef7338aab6c6d6ff",
-    "src/engine/formulas/v1/published-runtime.ts": "d8f44478d655344b1270a564d984193e15d5250a618fff133154de41a600d9ae",
+    "src/engine/formulas/v1/published-runtime.ts": "ab87434d19df080aa38661492fc92fc32033408ca363a0754379cc8ff1de8f16",
     "src/engine/formulas/v1/record-provenance.ts": "bf98a8fbcc755379abea81ab3258eddef8b7d258baa5efe0a226b18bd3040c73",
     "src/engine/formulas/v1/native-recipes.ts": "80c179eba7e7a2b4208741b69d64562d3a1944ac928450b7c9d4f85ec6cf3055",
     "src/engine/formulas/v1/native-recipes-b94-classic.ts": "75d23141106a86d27a57019e1ef8a79a13cd43c91b8306ba15ccbd803495c77e",
@@ -105,7 +105,7 @@
     "src/test/formula-amplified-recovery-evidence.test.ts": "cf51187b5992e3f7cffeba3229a059a4a638da7448fb1f0ae5b3026bf601b46d",
     "src/test/frm-v1-backend.test.ts": "3f1e72a625c190762172d263d40443892f48a4a149805e0ce0d7e38cc9b4d764",
     "src/test/frm-v1-stdlib.test.ts": "1e2a4471ed719eab1f4017bab8cbf79594808df537d3b2b19cf3e02becb59ea2",
-    "src/test/published-formula-adapter.test.ts": "64e05dd81fa3b8ddebaa21fea8cd8b4c26f4468edf77e86900e248b47417dad7",
+    "src/test/published-formula-adapter.test.ts": "4c4b4423780a76c651ae7516e1d83d9158e12b55d419eb8ac88ea2939a9b2230",
     "src/test/published-formula-library-client.test.ts": "107e7446146e061e220f06b6582abd531510fc3d7fb99d8d781d840c2dc8bd5e",
     "src/test/published-formula-library.test.tsx": "96950b520f4f77b67c44d62abbc5adb045cff747a34253e1199bd0a933d46d41",
     "src/test/published-formula-runtime.test.ts": "7084868a7a3c6e4b7fb9317e1ec0fa7c5bdfce7429660aea52556acdb7b71af0",
@@ -142,7 +142,7 @@
     "supabase/migrations/20260824120000_mine_formula_lifecycle_projection.sql": "bb5c6494463e84821fce67752de01e67ced98491e1be41701847021e49b6909d",
     "supabase/migrations/20260824235800_mine_formula_lifecycle_reader.sql": "7f42e6752a8ec0a1c79706ab93141df52bc89177b19ff12b6ed58ffef83349f6",
     "supabase/migrations/20260825013000_mine_formula_lifecycle_runnable_projection.sql": "1d52f85e03a118e9d52ef9838d7a29e191961b2092f86e12906099198fe61dfe",
-    "package.json": "f9206c00be858ea71f0af922668869f65813dc71571716fc7600c0d1f871bb38",
+    "package.json": "ab0b71b7bc5fdb863cf7dc8bc961b35ea9f3ddc84ab3bdc8bbd459e88afaf1b8",
     "package-lock.json": "e0b2fc48bafca283ed7a9c76dc821859d448632681d83af4882bdcf280ea1045"
   },
   "command": "npx vitest run src/test/document-v3-envelope-v2.test.ts src/test/formula-portable-lifecycle-v1.test.ts",
@@ -157,5 +157,5 @@
     "passed": 17,
     "failed": 0
   },
-  "generatedAt": "2026-08-25T01:57:55+08:00"
+  "generatedAt": "2026-08-26T00:27:32+08:00"
 }
