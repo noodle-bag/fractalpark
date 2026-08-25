@@ -28,16 +28,16 @@
     "resources/formula-library/v1/recovery-evidence/transcendental-v1/manifest.json": "46e283af44639f076e9dfad3538b5b22973927c9b80e572afee680cd3129c84b",
     "resources/formula-library/v1/recovery-evidence/amplified-v1/cross-check.json": "fdee1f03d1b5112c2475711fd241a8d79dca8e086dab2600e8d577bec91419c0",
     "resources/formula-library/v1/recovery-evidence/amplified-v1/manifest.json": "84059cab4c1c4ababa8479b58b9cabbe3e21e42e23fc391b225e9b6af1598c64",
-    "messages/en.json": "6a47d90a930fedcfd9ca65900c798e9c0e2a8610709ccdf24f1ea747f7348232",
-    "messages/zh.json": "8388742f54812c226f17a5a06126dbec3452840eda6f8274af99bfa7f19f12f1",
-    "messages/pt.json": "bb510d86727d42161bd8acbf40564588b7dce608655b7c40cd5542c220449766",
-    "messages/ko.json": "633fea7c2e81746f56aebc404a755499cd0e6ba8b84c5a30d828cbd77bfc91d0",
-    "messages/ru.json": "0b11ed42c5e9f6c1dd8df4daae6a2241f4b2e8e851e73fe37c219fbf1e73cc66",
-    "messages/es.json": "11e89da99c987f6aa79caecd29aa6116d70009b2df66b2bb379947c2fc7a8ec6",
-    "messages/fr.json": "0c714400416bc1932b991b59c628cdac5a037860b4fe38f13d8e16517733398d",
+    "messages/en.json": "4457483168a629a979e1b75eee8fc3cef3aa204c3220b91f2199b4a6fa8fd22e",
+    "messages/zh.json": "d8c87a7332e8c6c186480c42ed47ea1bb442727efd70940d6b919b6fc3a04c1f",
+    "messages/pt.json": "831d8f2141d9f0ceee258eac2812a3bdda72c3574856a160504ae9e31ef2d491",
+    "messages/ko.json": "6254b1228f6365ccdd61b21592c490df7e2381dbc3e49006b6006294e0c4efbc",
+    "messages/ru.json": "a288a08938e0dfe1de921d195d60039f55684df49da254f72a996f8350020b7e",
+    "messages/es.json": "858a4b2f0a2e3995bd405e1debe06898a7f2bb072ce92d96eb9bcd7a8022e417",
+    "messages/fr.json": "5b2182a5d9fcb5369bc4c57f3ab3d73b02ec79f722415d57ab17a611d50c2ce9",
     "src/app/[locale]/formulas/[formulaId]/page.tsx": "2da39b473bd9f23998ff691f3d380685642e91c9d7a02dd23148b492d8bf7741",
     "src/app/[locale]/formulas/directory/page.tsx": "71a5a8ebc150402ac6e2ebb33d948cbf97400f06e947a58034c9bff11b3d9934",
-    "src/app/[locale]/formulas/page.tsx": "ce1e45487e91ff0a6cdbc5cbec8b00445aa209b0ccb2d7b1004bbdfb977fcbfc",
+    "src/app/[locale]/formulas/page.tsx": "6e50a8d3d055b31d11556e088aacf2980d7f3d8fc91e2dd700715255995aaf53",
     "src/app/api/creation/custom-formulas/lifecycle/route.ts": "c2dc60d2ef408eab7f14bd3be937f48e0cf064727f3d3eff3f3498b21727b8c0",
     "src/app/sitemap.ts": "85cb9dee6f561c9ff8c78d4d9a61df2d5f49dfce52d0c3978c4b978a36bda9c9",
     "src/components/fractal/FractalCanvas.tsx": "2b5058d3c034fad287a5d54c1c68c732608b599e75be678b001b79145be7a644",
@@ -318,35 +318,35 @@
       "status": "pass",
       "artifact": {
         "path": "resources/formula-library/v1/rollback-evidence/writerOff.json",
-        "sha256": "a12b871e6f531a776f82f83074233f6b3c0a7d4548453e00e1c038fd5204d918"
+        "sha256": "e40b48e334bbc370236d45720c2b9fbfc9ac7cdb84ac6a790c16611f774bcd43"
       }
     },
     "featureOff": {
       "status": "pass",
       "artifact": {
         "path": "resources/formula-library/v1/rollback-evidence/featureOff.json",
-        "sha256": "18605ab7a6a76bd0498232fcee8f0e8c0ce3f3df9779f0e6aab2ec9a9792c2f8"
+        "sha256": "804516cc61952b7efae232d951e13c8d28c7faaaba855a9fb78615a1cfe228cf"
       }
     },
     "lkgRuntime": {
       "status": "pass",
       "artifact": {
         "path": "resources/formula-library/v1/rollback-evidence/lkgRuntime.json",
-        "sha256": "65bf16e4db26eb5ce58702bf1744932c65bd685ad7bdf74738a0cbe6718e008b"
+        "sha256": "738391fe2fbf8bdcbd54fde07cfac5c95fa24fb2fdade508b479031eb6907265"
       }
     },
     "readerFloor": {
       "status": "pass",
       "artifact": {
         "path": "resources/formula-library/v1/rollback-evidence/readerFloor.json",
-        "sha256": "1d161b776ab8a8670f76d23a74e92864988fd908c39a3bcb6a87dc84d2b6c37b"
+        "sha256": "421f1a8c149c09760c65e132b4dcf63aa56d996d92f5cc70d547e3751fe56e3c"
       }
     },
     "aliasResolver": {
       "status": "pass",
       "artifact": {
         "path": "resources/formula-library/v1/rollback-evidence/aliasResolver.json",
-        "sha256": "2be0bde9c9ebaaddc29d847685717dbb73d0adfc9d388341673b25a17a5309c6"
+        "sha256": "cdf3e1149f5264e478846e99b0476ce3a95e7f205453af60ecb65053a7d9c3a2"
       }
     },
     "deployedPreview": {
