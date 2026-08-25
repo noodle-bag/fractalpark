@@ -256,6 +256,7 @@
       "breadcrumb": "수식",
       "eyebrow": "수식 아틀라스",
       "title": "수식 아틀라스",
+      "publishedIntro": "일곱 구조 패밀리에 속한 공개 Standard Definition 534개를 살펴보세요. Classic은 이들과 겹치는 수식 94개의 컬렉션이에요. 정식 Formula Record를 열거나 심층 가이드 Profile 21개 중 하나를 따라가거나, FRM 소스의 작동 방식을 배우고 알맞은 작성 도구를 선택하세요.",
       "intro": "일곱 패밀리에 걸친 FractalPark 내장 Explorer 수식 94개를 살펴보세요. 정식 뷰에서 시작하거나 심층 가이드 Profile 21개 중 하나를 따라가거나, FRM 소스의 작동 방식을 배우고 알맞은 작성 도구를 선택하세요.",
       "stats": {
         "formulas": "수식",
@@ -265,7 +266,7 @@
       "capabilities": {
         "eyebrow": "탐색을 위해 설계됨",
         "title": "하나의 카탈로그, 다양한 창작 방법",
-        "intro": "모든 항목은 인터랙티브 탐색기가 사용하는 동일한 수식 카탈로그와 승인된 기본 상태에서 파생돼요.",
+        "intro": "모든 공개 항목은 Standard Library가 사용하는 동일한 버전 관리 Formula Record 디렉터리에서 제공돼요.",
         "items": {
           "realtime": {
             "title": "실시간 WebGL",
@@ -277,14 +278,15 @@
           },
           "server": {
             "title": "서버에서 읽을 수 있는 디렉터리",
-            "description": "일곱 개 패밀리와 94개 목적지 모두가 클라이언트 측 검색이나 필터링 없이 초기 HTML에 그대로 제공돼요."
+            "description": "공개 Formula Record 534개와 그 분류를 서버 렌더링 HTML에서 모두 찾을 수 있어요."
           }
         }
       },
       "families": {
-        "eyebrow": "일곱 개 패밀리",
-        "title": "수학적 특성을 선택하세요",
-        "intro": "패밀리는 반복 구조와 시각적 특성에 따라 수식을 분류해요. 개수는 현재 내장 카탈로그에서 직접 가져와요.",
+        "eyebrow": "일곱 구조 패밀리",
+        "title": "수학적 구조로 탐색하세요",
+        "intro": "일곱 구조 패밀리는 모든 공개 수식을 정확히 한 번씩 포함해요. Classic은 별도의 중첩 컬렉션이므로 해당 수식 94개도 쉽게 찾을 수 있어요.",
+        "browse": "분류 탐색",
         "descriptions": {
           "classic": "이차, 다항식, 줄리아, 멀티콘 등 관련 이탈 시간(escape-time) 기초 수식들.",
           "burning-ship": "날카로운 선체, 능선, 불꽃 같은 경계를 가진 접힌 절댓값 맵.",
@@ -311,8 +313,8 @@
       },
       "directory": {
         "eyebrow": "전체 카탈로그",
-        "title": "모든 수식 94개",
-        "intro": "전체 디렉터리는 패밀리별로 그룹화되어 서버에서 렌더링돼요. 모든 링크는 표준 지역화된 탐색기 상태로 수식을 열어요.",
+        "title": "공개 수식 534개 전체",
+        "intro": "공개 디렉터리는 구조 패밀리별로 그룹화되어 서버에서 렌더링돼요. 모든 링크는 수식의 정식 Formula Record를 열어요.",
         "familyCount": "{count, plural, one {수식 #개} other {수식 #개}}",
         "backToFamilies": "패밀리 개요",
         "guideBadge": "가이드"
@@ -1982,9 +1984,10 @@
       "description": "WebGL, 94개 수식, 커스텀 팔레트, PNG 내보내기를 갖춘 오픈소스 MIT 라이선스 브라우저 프랙탈 생성기 FractalPark을 알아보세요."
     },
     "formulaAtlas": {
-      "title": "Formula Atlas | 프랙탈 수식 94개 - FractalPark",
+      "title": "Formula Atlas | 공개 수식 534개 - FractalPark",
+      "publishedDescription": "일곱 구조 패밀리의 공개 Standard Definition 534개와 중첩된 Classic 컬렉션을 살펴보고, Guide Profile 21개를 탐색하며, FRM 소스의 작동 방식을 배우고 정식 Formula Record를 여세요.",
       "description": "일곱 패밀리의 FractalPark 수식 94개를 모두 살펴보고, 엄선된 Guide Profile 21개를 탐색하며, FRM 소스의 작동 방식을 배우고 WebGL Explorer에서 정식 수식 상태를 여세요.",
-      "imageAlt": "내장 수식 94개가 담긴 FractalPark Formula Atlas"
+      "imageAlt": "공개 수식 534개가 담긴 FractalPark Formula Atlas"
     },
     "frmEditor": {
       "title": "FRM 에디터 | FractalPark",

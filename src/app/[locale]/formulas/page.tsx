@@ -15,8 +15,11 @@ import {
   type FormulaAtlasGuideEntry,
 } from '@/content/formula-atlas';
 import {
+  PUBLISHED_FORMULA_DIRECTORY_CATEGORIES_V1,
   PUBLISHED_FORMULA_DIRECTORY_COUNT_V1,
+  PUBLISHED_FORMULA_DIRECTORY_FAMILIES_V1,
   PUBLISHED_FORMULA_GUIDE_COUNT_V1,
+  PUBLISHED_FORMULA_DIRECTORY_V1,
 } from '@/content/published-formula-directory';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
@@ -43,14 +46,14 @@ export async function generateMetadata({
 
   return {
     title: t('title'),
-    description: t('description'),
+    description: t('publishedDescription'),
     alternates: {
       canonical: `/${locale}${ATLAS_PATH}`,
       languages: buildLocaleAlternates(ATLAS_PATH),
     },
     openGraph: {
       title: t('title'),
-      description: t('description'),
+      description: t('publishedDescription'),
       url: `${SITE.url}/${locale}${ATLAS_PATH}`,
       siteName: SITE.name,
       locale: OG_LOCALE[locale as SupportedLocale] ?? OG_LOCALE.en,
@@ -67,7 +70,7 @@ export async function generateMetadata({
     twitter: {
       card: 'summary_large_image',
       title: t('title'),
-      description: t('description'),
+      description: t('publishedDescription'),
       images: [image],
     },
   };
@@ -81,8 +84,12 @@ export default async function FormulaAtlasPage({
   const { locale } = await params;
   setRequestLocale(locale);
 
-  const atlas = buildFormulaAtlas(locale);
+  const guideEntries = buildFormulaAtlas(locale).guides;
   const t = await getTranslations({ locale, namespace: 'formulas.index' });
+  const directoryT = await getTranslations({
+    locale,
+    namespace: 'formulas.directory',
+  });
   const formulaT = await getTranslations({
     locale,
     namespace: 'explore.controls.formula',
@@ -91,16 +98,12 @@ export default async function FormulaAtlasPage({
     locale,
     namespace: 'formulas.entries',
   });
-  const familyT = await getTranslations({
-    locale,
-    namespace: 'explore.formula.family',
-  });
   const atlasUrl = `${SITE.url}/${locale}${ATLAS_PATH}`;
   const jsonLd = {
     '@context': 'https://schema.org',
     '@type': 'CollectionPage',
     name: t('title'),
-    description: t('intro'),
+    description: t('publishedIntro'),
     url: atlasUrl,
     breadcrumb: {
       '@type': 'BreadcrumbList',
@@ -121,13 +124,8 @@ export default async function FormulaAtlasPage({
     },
     mainEntity: {
       '@type': 'ItemList',
-      numberOfItems: atlas.formulas.length,
-      itemListElement: atlas.formulas.map((entry, index) => ({
-        '@type': 'ListItem',
-        position: index + 1,
-        name: formulaT(entry.metadata.id),
-        url: `${SITE.url}${entry.destinationHref}`,
-      })),
+      numberOfItems: PUBLISHED_FORMULA_DIRECTORY_COUNT_V1,
+      url: `${SITE.url}/${locale}/formulas/directory`,
     },
   };
 
@@ -157,7 +155,7 @@ export default async function FormulaAtlasPage({
               {t('title')}
             </h1>
             <p className="mt-6 max-w-3xl text-pretty text-lg leading-8 text-muted-foreground sm:text-xl">
-              {t('intro')}
+              {t('publishedIntro')}
             </p>
           </div>
 
@@ -166,7 +164,10 @@ export default async function FormulaAtlasPage({
               value={PUBLISHED_FORMULA_DIRECTORY_COUNT_V1}
               label={t('stats.formulas')}
             />
-            <Stat value={atlas.families.length} label={t('stats.families')} />
+            <Stat
+              value={PUBLISHED_FORMULA_DIRECTORY_FAMILIES_V1.length}
+              label={t('stats.families')}
+            />
             <Stat
               value={PUBLISHED_FORMULA_GUIDE_COUNT_V1}
               label={t('stats.guides')}
@@ -222,22 +223,28 @@ export default async function FormulaAtlasPage({
             title={t('families.title')}
           />
           <div className="mt-8 grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
-            {atlas.families.map((family) => (
-              <a
+            {PUBLISHED_FORMULA_DIRECTORY_CATEGORIES_V1.map((category) => (
+              <Link
                 className="group rounded-xl border bg-card p-5 transition-colors hover:border-foreground/30 hover:bg-muted/20"
-                href={`#family-${family.id}`}
-                key={family.id}
+                data-formula-category={category}
+                href={`/formulas/directory?category=${category}`}
+                key={category}
               >
                 <div className="flex items-start justify-between gap-4">
-                  <h3 className="font-semibold">{familyT(family.id)}</h3>
+                  <h3 className="font-semibold">
+                    {category === 'classic'
+                      ? directoryT('category.classic')
+                      : directoryT(`family.${category}`)}
+                  </h3>
                   <span className="rounded-full bg-muted px-2.5 py-1 text-xs tabular-nums text-muted-foreground">
-                    {family.formulas.length}
+                    {PUBLISHED_FORMULA_DIRECTORY_V1.categoryCounts[category]}
                   </span>
                 </div>
-                <p className="mt-3 text-sm leading-6 text-muted-foreground">
-                  {t(`families.descriptions.${family.id}`)}
-                </p>
-              </a>
+                <span className="mt-4 inline-flex items-center gap-1 text-sm text-muted-foreground group-hover:text-foreground">
+                  {t('families.browse')}
+                  <ArrowRight aria-hidden className="size-4" />
+                </span>
+              </Link>
             ))}
           </div>
         </section>
@@ -293,96 +300,17 @@ export default async function FormulaAtlasPage({
             intro={t('guides.intro')}
             title={t('guides.title')}
           />
-          <div className="mt-8 space-y-10">
-            {atlas.families
-              .filter((family) => family.guides.length > 0)
-              .map((family) => (
-                <div key={family.id}>
-                  <h3 className="mb-4 text-lg font-semibold">
-                    {familyT(family.id)}
-                  </h3>
-                  <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
-                    {family.guides.map((entry) => (
-                      <GuideCard
-                        entry={entry}
-                        key={entry.metadata.id}
-                        name={formulaT(entry.metadata.id)}
-                        openLabel={
-                          entry.guideHref
-                            ? t('guides.read')
-                            : t('guides.explore')
-                        }
-                        summary={entryT(`${entry.guide.slug}.summary`)}
-                      />
-                    ))}
-                  </div>
-                </div>
-              ))}
-          </div>
-        </section>
-
-        <section aria-labelledby="directory-heading">
-          <SectionHeading
-            eyebrow={t('directory.eyebrow')}
-            id="directory-heading"
-            intro={t('directory.intro')}
-            title={t('directory.title')}
-          />
-          <div className="mt-10 space-y-12">
-            {atlas.families.map((family) => (
-              <section
-                aria-labelledby={`family-${family.id}-heading`}
-                id={`family-${family.id}`}
-                key={family.id}
-                className="scroll-mt-24"
-              >
-                <div className="mb-4 flex items-end justify-between gap-4 border-b pb-3">
-                  <div>
-                    <h3
-                      className="text-xl font-semibold"
-                      id={`family-${family.id}-heading`}
-                    >
-                      {familyT(family.id)}
-                    </h3>
-                    <p className="mt-1 text-sm text-muted-foreground">
-                      {t('directory.familyCount', {
-                        count: family.formulas.length,
-                      })}
-                    </p>
-                  </div>
-                  <a
-                    className="text-sm text-muted-foreground hover:text-foreground"
-                    href="#families-heading"
-                  >
-                    {t('directory.backToFamilies')}
-                  </a>
-                </div>
-                <ul className="grid gap-2 sm:grid-cols-2 lg:grid-cols-3">
-                  {family.formulas.map((entry) => (
-                    <li data-formula-id={entry.metadata.id} key={entry.metadata.id}>
-                      <a
-                        className="group flex min-h-12 items-center justify-between gap-3 rounded-lg border px-4 py-3 text-sm transition-colors hover:border-foreground/30 hover:bg-muted/30"
-                        href={entry.destinationHref}
-                      >
-                        <span className="font-medium">
-                          {formulaT(entry.metadata.id)}
-                        </span>
-                        <span className="flex items-center gap-2 text-xs text-muted-foreground">
-                          {entry.guideHref ? (
-                            <Badge variant="secondary">
-                              {t('directory.guideBadge')}
-                            </Badge>
-                          ) : null}
-                          <ArrowRight
-                            aria-hidden
-                            className="size-4 transition-transform group-hover:translate-x-0.5"
-                          />
-                        </span>
-                      </a>
-                    </li>
-                  ))}
-                </ul>
-              </section>
+          <div className="mt-8 grid gap-4 md:grid-cols-2 lg:grid-cols-3">
+            {guideEntries.map((entry) => (
+              <GuideCard
+                entry={entry}
+                key={entry.metadata.id}
+                name={formulaT(entry.metadata.id)}
+                openLabel={
+                  entry.guideHref ? t('guides.read') : t('guides.explore')
+                }
+                summary={entryT(`${entry.guide.slug}.summary`)}
+              />
             ))}
           </div>
         </section>

@@ -1,7 +1,7 @@
 import { expect, test } from '@playwright/test';
 
 test.describe('Formula Atlas', () => {
-  test('renders the complete English SSR directory and discovery links', async ({
+  test('renders the published English Atlas overview and discovery links', async ({
     browser,
   }) => {
     const context = await browser.newContext({ javaScriptEnabled: false });
@@ -13,9 +13,11 @@ test.describe('Formula Atlas', () => {
       page.getByRole('heading', { level: 1, name: 'Formula Atlas' })
     ).toBeVisible();
     await expect(
-      page.getByText(/learn how FRM source works and choose the matching authoring surface/)
+      page.getByText(/534 published Standard Definitions/)
     ).toBeVisible();
-    await expect(page.locator('[data-formula-id]')).toHaveCount(94);
+    await expect(page.locator('header dl dd')).toHaveText(['534', '7', '21']);
+    await expect(page.locator('[data-formula-id]')).toHaveCount(0);
+    await expect(page.locator('[data-formula-category]')).toHaveCount(8);
     await expect(page.locator('[data-guide-formula-id]')).toHaveCount(21);
     await expect(
       page.locator(
@@ -28,9 +30,14 @@ test.describe('Formula Atlas', () => {
       )
     ).toHaveCount(1);
     await expect(
-      page.locator('[data-formula-id="tricorn"] a[href^="/en/explore?"]')
-    ).toHaveCount(1);
-    await expect(page.locator('section[id^="family-"]')).toHaveCount(7);
+      page.locator('[data-formula-category="classic"]')
+    ).toContainText('94');
+    await expect(
+      page.locator('[data-formula-category="root-finding"]')
+    ).toContainText('14');
+    await expect(
+      page.locator('[data-formula-category="root-finding"]')
+    ).toHaveAttribute('href', '/en/formulas/directory?category=root-finding');
     await expect(
       page.getByRole('link', { name: 'Understand FRM', exact: true })
     ).toHaveAttribute('href', '/en/formulas/frm');
@@ -54,7 +61,7 @@ test.describe('Formula Atlas', () => {
     await page.goto('/en/formulas/directory');
 
     const rows = page.locator('[data-formula-id]');
-    await expect(rows).toHaveCount(677);
+    await expect(rows).toHaveCount(534);
     await expect(
       rows
         .filter({ has: page.getByText('3damand01', { exact: true }) })
@@ -63,6 +70,9 @@ test.describe('Formula Atlas', () => {
       'href',
       '/en/formulas/1cd7a16f-0474-5b8f-a974-e122ea893769'
     );
+
+    await page.goto('/en/formulas/directory?category=root-finding');
+    await expect(page.locator('[data-formula-id]')).toHaveCount(14);
 
     await context.close();
   });

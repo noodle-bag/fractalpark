@@ -256,6 +256,7 @@
       "breadcrumb": "Formulas",
       "eyebrow": "Formula Atlas",
       "title": "Formula Atlas",
+      "publishedIntro": "Explore 534 published Standard Definitions across seven structural families, with Classic as an overlapping 94-formula collection. Open canonical Formula Records, follow one of 21 in-depth guide profiles, or learn how FRM source works and choose the matching authoring surface.",
       "intro": "Explore FractalPark's 94 built-in Explorer formulas across seven families. Start with a canonical view, follow one of 21 in-depth guide profiles, or learn how FRM source works and choose the matching authoring surface.",
       "stats": {
         "formulas": "Formulas",
@@ -265,7 +266,7 @@
       "capabilities": {
         "eyebrow": "Built for exploration",
         "title": "One catalog, many ways to create",
-        "intro": "Every entry is derived from the same formula catalog and approved default state used by the interactive Explorer.",
+        "intro": "Every published entry comes from the same versioned Formula Record directory used by the Standard Library.",
         "items": {
           "realtime": {
             "title": "Real-time WebGL",
@@ -277,14 +278,15 @@
           },
           "server": {
             "title": "Server-readable directory",
-            "description": "All seven families and 94 destinations remain available in the initial HTML without client-side search or filtering."
+            "description": "All 534 published Formula Records and their categories remain discoverable in server-rendered HTML."
           }
         }
       },
       "families": {
-        "eyebrow": "Seven families",
-        "title": "Choose a mathematical character",
-        "intro": "Families organize formulas by their iteration structure and visual behavior. Counts come directly from the current built-in catalog.",
+        "eyebrow": "Seven structural families",
+        "title": "Browse by mathematical structure",
+        "intro": "Seven structural families cover every published formula exactly once. Classic is a separate overlapping collection, so its 94 formulas also remain easy to find.",
+        "browse": "Browse category",
         "descriptions": {
           "classic": "Quadratic, polynomial, Julia, multicorn, and related escape-time foundations.",
           "burning-ship": "Folded absolute-value maps with sharp hulls, ridges, and flame-like boundaries.",
@@ -311,8 +313,8 @@
       },
       "directory": {
         "eyebrow": "Complete catalog",
-        "title": "All 94 formulas",
-        "intro": "The full directory is grouped by family and rendered on the server. Every link opens the formula with its canonical localized Explorer state.",
+        "title": "All 534 published formulas",
+        "intro": "The published directory is grouped by structural family and rendered on the server. Every link opens the formula's canonical Formula Record.",
         "familyCount": "{count, plural, one {# formula} other {# formulas}}",
         "backToFamilies": "Family overview",
         "guideBadge": "Guide"
@@ -1982,9 +1984,10 @@
       "description": "Learn about FractalPark, an open-source MIT-licensed fractal generator that runs in the browser with WebGL, 94 formulas, custom palettes, and PNG export."
     },
     "formulaAtlas": {
-      "title": "Formula Atlas | 94 Fractal Formulas - FractalPark",
+      "title": "Formula Atlas | 534 Published Formulas - FractalPark",
+      "publishedDescription": "Browse 534 published Standard Definitions across seven structural families and the overlapping Classic collection, explore 21 guide profiles, learn how FRM source works, and open canonical Formula Records.",
       "description": "Browse all 94 FractalPark formulas across seven families, explore 21 selected guide profiles, learn how FRM source works, and open canonical formula states in the WebGL Explorer.",
-      "imageAlt": "FractalPark Formula Atlas with 94 built-in formulas"
+      "imageAlt": "FractalPark Formula Atlas with 534 published formulas"
     },
     "frmEditor": {
       "title": "FRM Editor | FractalPark",

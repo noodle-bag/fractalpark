@@ -256,6 +256,7 @@
       "breadcrumb": "公式",
       "eyebrow": "公式图鉴",
       "title": "公式图鉴",
+      "publishedIntro": "探索 FractalPark 的 534 个已发布 Standard Definition，它们分属七个结构族，Classic 则是其中相互重叠的 94 个公式集合。你可以打开 canonical Formula Record，从 21 个深度 Guide Profile 中选择一个深入学习，或了解 FRM 源码如何工作并选择相应的编写界面。",
       "intro": "探索 FractalPark 的 94 个内置 Explorer 公式，它们分属七个家族。你可以从规范视图开始，从 21 个深度 Guide Profile 中选择一个深入学习，或了解 FRM 源码如何工作并选择相应的编写界面。",
       "stats": {
         "formulas": "公式",
@@ -265,7 +266,7 @@
       "capabilities": {
         "eyebrow": "为探索而建",
         "title": "一份目录，多种创作路径",
-        "intro": "每个条目都来自交互式探索器共用的公式目录与已确认默认状态。",
+        "intro": "每个已发布条目都来自 Standard Library 共用的版本化 Formula Record 目录。",
         "items": {
           "realtime": {
             "title": "实时 WebGL",
@@ -277,14 +278,15 @@
           },
           "server": {
             "title": "服务端可读目录",
-            "description": "七个公式族与 94 个目标链接全部存在于初始 HTML 中，不依赖客户端搜索或筛选。"
+            "description": "534 个已发布 Formula Record 及其分类都可在服务端渲染的 HTML 中发现。"
           }
         }
       },
       "families": {
-        "eyebrow": "七个公式族",
-        "title": "选择一种数学性格",
-        "intro": "公式族按照迭代结构与视觉行为组织。各族数量直接来自当前内置公式目录。",
+        "eyebrow": "七个结构族",
+        "title": "按数学结构浏览",
+        "intro": "七个结构族恰好覆盖每个已发布公式一次。Classic 是单独的重叠集合，因此其中 94 个公式也能被快速找到。",
+        "browse": "浏览分类",
         "descriptions": {
           "classic": "二次、多项式、Julia、Multicorn 及相关逃逸时间基础公式。",
           "burning-ship": "使用绝对值折叠产生锐利船体、脊线与火焰状边界的映射。",
@@ -311,8 +313,8 @@
       },
       "directory": {
         "eyebrow": "完整目录",
-        "title": "全部 94 个公式",
-        "intro": "完整目录按公式族分组并由服务端输出。每个链接都以当前语言打开公式的 canonical 探索器状态。",
+        "title": "全部 534 个已发布公式",
+        "intro": "已发布目录按结构族分组并由服务端输出。每个链接都会打开公式的 canonical Formula Record。",
         "familyCount": "{count} 个公式",
         "backToFamilies": "返回公式族概览",
         "guideBadge": "Guide"
@@ -1982,9 +1984,10 @@
       "description": "了解分形公园 FractalPark: 一个基于 MIT 许可证开源、可在浏览器中直接使用的 WebGL 分形生成器, 支持 94 个公式、自定义调色板和 PNG 导出.核心技术: Fractint .frm 公式编辑器, AST 到 GLSL 转译流水线, 插件化着色器架构, 完全免费开源无需安装, 支持七种语言界面."
     },
     "formulaAtlas": {
-      "title": "公式图鉴 | 94 个分形公式 - 分形公园 FractalPark",
+      "title": "公式图鉴 | 534 个已发布公式 - 分形公园 FractalPark",
+      "publishedDescription": "浏览七个结构族中的 534 个已发布 Standard Definition 与重叠的 Classic 集合，探索 21 个 Guide Profile，了解 FRM 源码如何工作，并打开 canonical Formula Record。",
       "description": "浏览 FractalPark 七个家族中的全部 94 个公式，探索 21 个精选 Guide Profile，了解 FRM 源码如何工作，并在 WebGL Explorer 中打开规范公式状态。",
-      "imageAlt": "包含 94 个内置公式的 FractalPark 公式图鉴"
+      "imageAlt": "包含 534 个已发布公式的 FractalPark 公式图鉴"
     },
     "frmEditor": {
       "title": "FRM 编辑器 | FractalPark",

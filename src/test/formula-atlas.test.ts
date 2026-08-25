@@ -9,8 +9,8 @@ import decisionsAsset from '../../resources/formula-library/v1/publication-decis
 import restoredGuideAsset from '../../resources/formula-library/v1/teaching-restored-guide-projection.v1.json';
 import { decodeParams } from '@/lib/url-params';
 
-describe('Formula Atlas projection', () => {
-  it('projects 94 published identities, seven families, and 21 Guides', () => {
+describe('legacy Explorer formula projection', () => {
+  it('projects 94 runtime identities, seven legacy families, and 21 Guides', () => {
     const atlas = buildFormulaAtlas('en');
 
     expect(atlas.formulas).toHaveLength(94);

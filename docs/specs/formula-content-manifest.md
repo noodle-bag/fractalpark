@@ -2,6 +2,7 @@
 
 - Status: Accepted
 - Date: 2026-07-26
+- Amended: 2026-08-25 (v0.4.19 published Formula Directory projection)
 - Target release: FractalPark v0.4.13
 - Scope: Formula Atlas, formula guides, FRM Guide, and FRM Editor
 
@@ -120,14 +121,16 @@ validation until this contract and its manifest are intentionally updated.
 
 | Route | Responsibility |
 |---|---|
-| `/[locale]/formulas` | SSR Formula Atlas with 7 families, all 94 catalog formulas, 21 guide links, and the FRM creation path |
+| `/[locale]/formulas` | SSR Formula Atlas overview for the exact 534 published Standard Definitions, the overlapping Classic collection, 7 structural families, 21 guide links, and the FRM creation path |
+| `/[locale]/formulas/directory` | SSR published directory with all 534 canonical Formula Record destinations plus Classic and structural-family facets |
 | `/[locale]/formulas/frm` | SSR FRM language guide; not a family, catalog formula, or formula guide entry |
 | `/[locale]/formulas/editor` | Standalone FRM authoring workspace within the Formulas information architecture |
-| `/[locale]/formulas/[slug]` | SSR page for one of the 21 frozen guide slugs |
+| `/[locale]/formulas/[formulaId]` | Canonical Formula Record route; the 21 frozen guide slugs redirect to their record identities |
 
-The Atlas directory links guide formulas to their guide pages. Other catalog
-formulas link directly to Explore using their canonical formula Documents.
-No thin page is generated for the other formulas.
+The Atlas landing page and the full directory derive their public counts,
+categories, and destinations from the same published-only projection. Held
+Records are not exposed as directory rows. The 21 Guide cards retain their
+editorial content and resolve to canonical Formula Record routes.
 
 The Editor is not a top-level Navbar item. Formula Atlas, the FRM Guide,
 formula pages with FRM examples, About, and the Explore custom-formula area
@@ -138,21 +141,22 @@ surface.
 
 The Atlas landing page renders these server-readable sections:
 
-1. Hero that states 7 families, 94 catalog formulas, 21 in-depth guides, and
-   a separate FRM learning and creation path.
-2. Capability summary derived from stable catalog and renderer facts.
-3. Seven family summaries with catalog-derived counts and anchor links.
+1. Hero that states 534 published formulas, 7 structural families, 21 in-depth
+   guides, and a separate FRM learning and creation path.
+2. Capability summary derived from the published Formula Record projection.
+3. Eight directory facets with projection-derived counts: overlapping Classic
+   plus seven structural families whose union is the exact 534 published set.
 4. A distinct Create Your Own Formula section with Learn FRM and Open Formula
    Editor actions. It is not an eighth family.
-5. The 21 guide cards grouped by family.
-6. The complete 94-formula directory. Guide entries link to content pages;
-   all other entries link to Explore with their canonical formula state.
-7. Parallel learning-to-creation calls to action for built-in formulas and
+5. The 21 Guide cards as a separate editorial set.
+6. Parallel learning-to-creation calls to action for published formulas and
    FRM authoring.
 
-Search, filtering, and sorting are optional progressive enhancements. With
-JavaScript disabled, the complete directory and every destination remain
-available.
+The complete 534-row list belongs only to `/[locale]/formulas/directory` to
+avoid duplicating a large directory on the landing page. Search, filtering,
+and sorting are progressive enhancements there. With JavaScript disabled, the
+complete published directory, category facets, and every canonical destination
+remain available.
 
 ### Formula guide page order
 

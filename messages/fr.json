@@ -256,6 +256,7 @@
       "breadcrumb": "Formules",
       "eyebrow": "Atlas des formules",
       "title": "Atlas des formules",
+      "publishedIntro": "Explore 534 Standard Definitions publiées dans sept familles structurelles, avec Classic comme collection superposée de 94 formules. Ouvre des Formula Records canoniques, suis l’un des 21 profils de guide approfondis, ou apprends le fonctionnement de la source FRM et choisis la surface d’auteur correspondante.",
       "intro": "Explore les 94 formules Explorer intégrées de FractalPark réparties en sept familles. Commence par une vue canonique, suis l’un des 21 profils de guide approfondis, ou apprends le fonctionnement de la source FRM et choisis la surface d’auteur correspondante.",
       "stats": {
         "formulas": "Formules",
@@ -265,7 +266,7 @@
       "capabilities": {
         "eyebrow": "Conçu pour l'exploration",
         "title": "Un seul catalogue, de nombreuses façons de créer",
-        "intro": "Chaque entrée est dérivée du même catalogue de formules et de l'état par défaut approuvé utilisé par l'Explorateur interactif.",
+        "intro": "Chaque entrée publiée provient du même annuaire versionné de Formula Records que celui de la Standard Library.",
         "items": {
           "realtime": {
             "title": "WebGL en temps réel",
@@ -277,14 +278,15 @@
           },
           "server": {
             "title": "Annuaire lisible par le serveur",
-            "description": "Les sept familles et les 94 destinations restent disponibles dans le HTML initial, sans recherche ni filtrage côté client."
+            "description": "Les 534 Formula Records publiés et leurs catégories restent découvrables dans le HTML rendu par le serveur."
           }
         }
       },
       "families": {
-        "eyebrow": "Sept familles",
-        "title": "Choisis un caractère mathématique",
-        "intro": "Les familles organisent les formules selon leur structure d'itération et leur comportement visuel. Les comptes proviennent directement du catalogue intégré actuel.",
+        "eyebrow": "Sept familles structurelles",
+        "title": "Parcourir par structure mathématique",
+        "intro": "Sept familles structurelles couvrent chaque formule publiée une seule fois. Classic est une collection superposée distincte, ce qui permet aussi de retrouver facilement ses 94 formules.",
+        "browse": "Parcourir la catégorie",
         "descriptions": {
           "classic": "Les fondations à temps d'échappement quadratiques, polynomiales, Julia, multicorn et apparentées.",
           "burning-ship": "Des cartes à valeur absolue repliée avec des coques nettes, des crêtes et des frontières semblables à des flammes.",
@@ -311,8 +313,8 @@
       },
       "directory": {
         "eyebrow": "Catalogue complet",
-        "title": "Les 94 formules",
-        "intro": "L'annuaire complet est regroupé par famille et rendu sur le serveur. Chaque lien ouvre la formule avec son état d'Explorateur canonique localisé.",
+        "title": "Les 534 formules publiées",
+        "intro": "L'annuaire publié est regroupé par famille structurelle et rendu sur le serveur. Chaque lien ouvre le Formula Record canonique de la formule.",
         "familyCount": "{count, plural, one {# formule} other {# formules}}",
         "backToFamilies": "Vue d'ensemble des familles",
         "guideBadge": "Guide"
@@ -1982,9 +1984,10 @@
       "description": "Découvre FractalPark, un générateur de fractales open source sous licence MIT qui fonctionne dans le navigateur avec WebGL, 94 formules, des palettes personnalisées et l'export PNG."
     },
     "formulaAtlas": {
-      "title": "Atlas des formules | 94 formules de fractales - FractalPark",
+      "title": "Atlas des formules | 534 formules publiées - FractalPark",
+      "publishedDescription": "Parcours 534 Standard Definitions publiées dans sept familles structurelles et la collection Classic superposée, explore 21 profils de guide, découvre le fonctionnement de la source FRM et ouvre des Formula Records canoniques.",
       "description": "Parcours les 94 formules FractalPark réparties en sept familles, explore 21 profils de guide sélectionnés, découvre le fonctionnement de la source FRM et ouvre des états de formule canoniques dans Explorer WebGL.",
-      "imageAlt": "Atlas des formules FractalPark avec 94 formules intégrées"
+      "imageAlt": "Atlas des formules FractalPark avec 534 formules publiées"
     },
     "frmEditor": {
       "title": "Éditeur FRM | FractalPark",

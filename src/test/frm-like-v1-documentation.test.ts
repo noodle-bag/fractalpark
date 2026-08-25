@@ -1170,6 +1170,9 @@ PersistentLocal {
     expect(enMessages.formulas.index.intro).toContain(
       "FractalPark's 94 built-in Explorer formulas"
     );
+    expect(enMessages.formulas.index.publishedIntro).toContain(
+      '534 published Standard Definitions'
+    );
     expect(enMessages.formulas.index.intro).toContain(
       'learn how FRM source works and choose the matching authoring surface'
     );
@@ -1182,6 +1185,9 @@ PersistentLocal {
     );
     expect(enMessages.metadata.formulaAtlas.description).toContain(
       'learn how FRM source works'
+    );
+    expect(enMessages.metadata.formulaAtlas.publishedDescription).toContain(
+      '534 published Standard Definitions'
     );
     expect(enMessages.formulas.index.cta.description).toContain(
       'Classic-compatible custom-iteration subset'
