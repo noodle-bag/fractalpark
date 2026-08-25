@@ -1,6 +1,7 @@
 import { expect, test } from '@playwright/test';
 
 const PUBLISHED_FORMULA_ID = '00e14aa8-b766-54ea-a359-3f5d20d329b7';
+const FRACTINT_FORMULA_ID = '0109434e-e9cc-5d80-ad3f-d25ec62cbfda';
 const HELD_FORMULA_ID = '00cb5763-13e1-5c93-a283-d99905acccee';
 const DEFINITION_PATH = '/formula-library/v1/runtime/published/definitions/';
 
@@ -135,11 +136,18 @@ test.describe('shared canonical source workspace', () => {
       'Decision reason',
       'Reviewed at',
       'Leakage scan',
+      'Author',
+      'Original version',
+      'Provenance collection',
+      'Rights status',
+      'Public scope',
+      'Canonical implementation license',
+      'Legacy aliases',
     ]) {
       await expect(record.getByText(hidden, { exact: true })).toHaveCount(0);
     }
     expect(definitionRequests).toHaveLength(1);
-    await expect(page.locator(`a[href*="${DEFINITION_PATH}"]`)).toHaveCount(0);
+    await expect(page.locator(`a[href^="${DEFINITION_PATH}"]`)).toHaveCount(0);
 
     definitionRequests.length = 0;
     const heldResponse = await page.goto(`/en/formulas/${HELD_FORMULA_ID}`);
@@ -159,10 +167,27 @@ test.describe('shared canonical source workspace', () => {
     await expect(page.locator('link[rel="alternate"][hreflang]')).toHaveCount(0);
     await expect(page.getByTestId('formula-record')).toHaveCount(0);
     await expect(page.getByTestId('canonical-source-workspace')).toHaveCount(0);
-    await expect(page.locator(`a[href*="${DEFINITION_PATH}"]`)).toHaveCount(0);
+    await expect(page.locator(`a[href^="${DEFINITION_PATH}"]`)).toHaveCount(0);
     await expect(page.locator('a[href*="intent=remix"]')).toHaveCount(0);
     await expect(held.locator('a[href^="mailto:"]')).toHaveCount(0);
     await page.waitForTimeout(500);
     expect(definitionRequests).toEqual([]);
+  });
+
+  test('identifies Fractint and links its immutable formula file', async ({
+    page,
+  }) => {
+    await page.goto(`/en/formulas/${FRACTINT_FORMULA_ID}`);
+    const record = page.getByTestId('formula-record');
+    await expect(record.getByText('Fractint', { exact: true })).toBeVisible();
+    await expect(
+      record.getByRole('link', {
+        name: 'fractint-float/formulas/fractint.frm',
+      }),
+    ).toHaveAttribute(
+      'href',
+      'https://github.com/LegalizeAdulthood/fractint/blob/b846dc501526d1726d8fe88817e53cdfc46e6768/fractint-float/formulas/fractint.frm',
+    );
+    await expect(record.getByText(/follows the verified semantics/i)).toBeVisible();
   });
 });

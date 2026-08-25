@@ -1184,8 +1184,12 @@
       "identity": "식별 정보와 출처",
       "formulaId": "수식 ID",
       "rightsAttribution": "권리 및 저작자 표시",
+      "sourceAndImplementation": "출처 및 현재 구현",
       "canonicalName": "표준 이름",
       "originalName": "원래 이름",
+      "historicalSource": "역사적 출처",
+      "repository": "저장소",
+      "currentImplementation": "현재 구현",
       "author": "작성자",
       "originalResource": "원본 리소스",
       "originalVersion": "원본 버전",
@@ -1236,6 +1240,12 @@
         "original-source-public-domain-assumption-and-project-canonical-implementation": "원 출처는 퍼블릭 도메인 가정, FractalPark 표준 구현은 MIT",
         "project-independent-rewrite-only": "FractalPark 독립 재작성만",
         "identity-and-provenance-metadata-only": "식별 정보와 출처 메타데이터만"
+      },
+      "sourceNotes": {
+        "fractalparkProjectOwned": "FractalPark 프로젝트 소유 구현입니다. 연결된 파일은 고정된 정식 Definition입니다.",
+        "fractintDirectAdaptation": "현재 FractalPark 구현은 연결된 Fractint 공식의 검증된 의미를 따릅니다. 원본 파일의 권리 조건은 그대로 유지됩니다.",
+        "fractintIndependentRewrite": "역사적 출처는 Fractint입니다. 현재 FractalPark 구현은 격리된 독립 재작성본이며 원본 FRM 텍스트를 재배포하지 않습니다.",
+        "iteratedDynamicsIndependentRewrite": "역사적 출처는 Fractint의 후속 프로젝트인 Iterated Dynamics입니다. 현재 FractalPark 구현은 격리된 독립 재작성본이며 원본 FRM 텍스트를 재배포하지 않습니다."
       },
       "basisValues": {
         "project-owned": "프로젝트 소유",

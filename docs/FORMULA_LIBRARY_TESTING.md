@@ -35,3 +35,9 @@ All enabled `.frm`, `.fractal-formula.json`, `.fractal` and document-envelope wr
 The ordinary CI workflow runs the public gate before the production build and the build-output gate after it. The Published Formula WebGL workflow is also triggered by decisions, isolation contracts, the private attestation, preview assets, runtime sources and verifier/generator changes. The release workflow verifies the pinned attestation and scans its own build output; refreshing the attestation requires a separate controlled-evidence run and code review.
 
 A passing rights gate does **not** waive performance, accessibility, real-device, Preview rollback or deployment evidence. Those release gates remain independent.
+
+The checked-in Formula Record provenance projection is public metadata, not an
+`originalSource` payload. It may contain a project name, repository URL, fixed
+commit and `.frm` file path, but never third-party formula text, comments,
+reversible syntax/IR, private evidence paths or source locators. External links
+support provenance review and do not grant rights to the linked file.

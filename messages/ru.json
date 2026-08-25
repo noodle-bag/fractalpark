@@ -1184,8 +1184,12 @@
       "identity": "Идентичность и происхождение",
       "formulaId": "ID формулы",
       "rightsAttribution": "Права и атрибуция",
+      "sourceAndImplementation": "Источник и текущая реализация",
       "canonicalName": "Каноническое имя",
       "originalName": "Исходное имя",
+      "historicalSource": "Исторический источник",
+      "repository": "Репозиторий",
+      "currentImplementation": "Текущая реализация",
       "author": "Автор",
       "originalResource": "Исходный ресурс",
       "originalVersion": "Исходная версия",
@@ -1236,6 +1240,12 @@
         "original-source-public-domain-assumption-and-project-canonical-implementation": "Для источника предполагается общественное достояние; каноническая реализация FractalPark — MIT",
         "project-independent-rewrite-only": "Только независимая реализация FractalPark",
         "identity-and-provenance-metadata-only": "Только метаданные идентичности и происхождения"
+      },
+      "sourceNotes": {
+        "fractalparkProjectOwned": "Это собственная реализация проекта FractalPark. Ссылка ведёт на зафиксированный канонический файл Definition.",
+        "fractintDirectAdaptation": "Текущая реализация FractalPark следует проверенной семантике связанной формулы Fractint. Для исходного файла сохраняются его собственные условия прав.",
+        "fractintIndependentRewrite": "Исторический источник — Fractint. Текущая реализация FractalPark является изолированной независимой переработкой; исходный текст FRM не распространяется.",
+        "iteratedDynamicsIndependentRewrite": "Исторический источник — Iterated Dynamics, преемник Fractint. Текущая реализация FractalPark является изолированной независимой переработкой; исходный текст FRM не распространяется."
       },
       "basisValues": {
         "project-owned": "Собственность проекта",

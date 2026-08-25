@@ -34,6 +34,10 @@ const PREVIEW_MANIFEST_PATH = join(
   ROOT,
   "public/formula-library/v1/previews/manifest.json",
 );
+const RECORD_PROVENANCE_PATH = join(
+  ROOT,
+  "resources/formula-library/v1/formula-record-provenance.v1.json",
+);
 const DEFINITIONS_ROOT = join(
   ROOT,
   "public/formula-library/v1/runtime/published/definitions",
@@ -529,6 +533,7 @@ export function verifyPublicationIsolationDataV1(
       invariant(
         record.availability === "published" &&
           isRecord(record.source) &&
+          isRecord(record.historicalSource) &&
           isRecord(record.defaultProfile) &&
           isRecord(record.preview) &&
           isRecord(record.actions),
@@ -538,6 +543,7 @@ export function verifyPublicationIsolationDataV1(
       invariant(
         record.availability === decision.publicationDecision &&
           !("source" in record) &&
+          !("historicalSource" in record) &&
           !("defaultProfile" in record) &&
           !("preview" in record) &&
           !("actions" in record),
@@ -666,7 +672,7 @@ function publicJsonPaths(): string[] {
     join(ROOT, "resources/formula-library/v1/runtime"),
   ];
   const paths = roots.flatMap(recursiveFiles).filter((path) => path.endsWith(".json"));
-  paths.push(DECISIONS_PATH, PRIVATE_ATTESTATION_PATH);
+  paths.push(DECISIONS_PATH, PRIVATE_ATTESTATION_PATH, RECORD_PROVENANCE_PATH);
   return [...new Set(paths)].sort();
 }
 

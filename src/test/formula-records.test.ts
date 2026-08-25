@@ -189,8 +189,12 @@ describe('public Formula Record v1', () => {
       expect(record.canonicalName).toBeTruthy();
       expect(record.originalName).toBeTruthy();
       expect(record.authorStatus).toBe('unconfirmed');
-      expect(record.originalResourceStatus).toBe('unconfirmed');
-      expect(record.originalVersionStatus).toBe('unconfirmed');
+      expect(record.originalResourceStatus).toBe(
+        record.availability === 'published' ? 'confirmed' : 'unconfirmed'
+      );
+      expect(record.originalVersionStatus).toBe(
+        record.availability === 'published' ? 'confirmed' : 'unconfirmed'
+      );
       expect(record.aliases.length).toBeGreaterThan(0);
       expect(record.provenanceCollection).toMatch(/^(F588|B94)$/);
       expect(record.rightsStatus).toMatch(
@@ -206,6 +210,36 @@ describe('public Formula Record v1', () => {
       expect(serialized).not.toContain('private');
       expect(serialized).not.toContain('credential');
     }
+  });
+
+  it('binds every published Record to a safe immutable historical resource', () => {
+    const published = records.filter(
+      (record) => record.availability === 'published'
+    );
+    const sourceCounts = {
+      fractalpark: 0,
+      fractint: 0,
+      'iterated-dynamics': 0,
+    };
+
+    for (const record of published) {
+      sourceCounts[record.historicalSource.sourceProject]++;
+      expect(record.historicalSource.repositoryRevision).toMatch(/^[a-f0-9]{40}$/);
+      expect(record.historicalSource.resourceUrl).toBe(
+        `${record.historicalSource.repositoryUrl}/blob/${record.historicalSource.repositoryRevision}/${record.historicalSource.filePath}`
+      );
+      expect(record.historicalSource.observedAt).toBe('2026-08-25');
+    }
+    expect(sourceCounts).toEqual({
+      fractalpark: 89,
+      fractint: 415,
+      'iterated-dynamics': 30,
+    });
+    expect(
+      records
+        .filter((record) => record.availability !== 'published')
+        .every((record) => !('historicalSource' in record))
+    ).toBe(true);
   });
 
   it('keeps all localized Record message keys compatible with next-intl namespaces', () => {

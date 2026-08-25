@@ -6,20 +6,15 @@ import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { CanonicalSourceWorkspace } from '@/components/formulas/CanonicalSourceWorkspace';
 import { buildPublishedFormulaSourceReferenceV1 } from '@/lib/published-formula-source';
-import type { PublicFormulaRecordV1 } from '@/lib/formula-records';
+import type {
+  PublicFormulaRecordV1,
+  PublishedFormulaRecordV1,
+} from '@/lib/formula-records';
 
 interface FormulaRecordPanelProps {
   readonly locale: string;
   readonly record: PublicFormulaRecordV1;
 }
-
-const RIGHTS_MESSAGE_KEY = {
-  'project-owned': 'project-owned',
-  'source-declared-public-domain-assumption':
-    'source-declared-public-domain-assumption',
-  'gpl-3.0-only': 'gpl3Only',
-  'no-explicit-permission': 'no-explicit-permission',
-} as const;
 
 export async function FormulaRecordPanel({
   locale,
@@ -184,7 +179,9 @@ export async function FormulaRecordPanel({
             className="mt-10 rounded-2xl border bg-card p-5 sm:p-6"
             data-testid="formula-record-rights-attribution"
           >
-            <h3 className="text-lg font-semibold">{t('rightsAttribution')}</h3>
+            <h3 className="text-lg font-semibold">
+              {t('sourceAndImplementation')}
+            </h3>
             <dl className="mt-5 grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
               <RecordFact
                 breakAll
@@ -199,51 +196,27 @@ export async function FormulaRecordPanel({
                 label={t('originalName')}
                 value={record.originalName}
               />
-              <RecordFact label={t('author')} value={t('unconfirmed')} />
               <RecordFact
+                label={t('historicalSource')}
+                value={record.historicalSource.sourceProjectName}
+              />
+              <RecordLinkFact
+                filePath={record.historicalSource.filePath}
                 label={t('originalResource')}
-                value={t('unconfirmed')}
+                repositoryLabel={t('repository')}
+                repositoryUrl={record.historicalSource.repositoryUrl}
+                resourceUrl={record.historicalSource.resourceUrl}
               />
               <RecordFact
-                label={t('originalVersion')}
-                value={t('unconfirmed')}
+                label={t('currentImplementation')}
+                value={t(
+                  `basisValues.${record.implementationBasis ?? 'none'}`,
+                )}
               />
-              <RecordFact
-                label={t('provenance')}
-                value={record.provenanceCollection}
-              />
-              <RecordFact
-                label={t('rightsStatus')}
-                value={t(`rightsValues.${RIGHTS_MESSAGE_KEY[record.rightsStatus]}`)}
-              />
-              <RecordFact
-                label={t('rightsScope')}
-                value={t(`scopeValues.${record.rightsScope}`)}
-              />
-              <RecordFact
-                label={t('canonicalLicense')}
-                value={
-                  record.canonicalImplementationLicense ?? t('basisValues.none')
-                }
-              />
-              <div className="sm:col-span-2 lg:col-span-3">
-                <dt className="text-xs font-semibold uppercase tracking-wide text-muted-foreground">
-                  {t('aliases')}
-                </dt>
-                <dd className="mt-2 flex flex-wrap gap-2">
-                  {record.aliases.map((alias) => (
-                    <Badge
-                      className="max-w-full whitespace-normal break-all"
-                      key={`${alias.kind}:${alias.value}`}
-                      title={alias.kind}
-                      variant="outline"
-                    >
-                      {alias.value}
-                    </Badge>
-                  ))}
-                </dd>
-              </div>
             </dl>
+            <p className="mt-6 max-w-4xl border-t pt-5 text-sm leading-6 text-muted-foreground">
+              {t(`sourceNotes.${sourceNoteKey(record)}`)}
+            </p>
             <div className="mt-6 border-t pt-5 sm:flex sm:items-start sm:gap-4">
               <ShieldCheck
                 aria-hidden
@@ -263,6 +236,67 @@ export async function FormulaRecordPanel({
         </>
       )}
     </section>
+  );
+}
+
+function sourceNoteKey(
+  record: PublishedFormulaRecordV1,
+):
+  | 'fractalparkProjectOwned'
+  | 'fractintDirectAdaptation'
+  | 'fractintIndependentRewrite'
+  | 'iteratedDynamicsIndependentRewrite' {
+  if (record.historicalSource.sourceProject === 'fractalpark') {
+    return 'fractalparkProjectOwned';
+  }
+  if (record.historicalSource.sourceProject === 'iterated-dynamics') {
+    return 'iteratedDynamicsIndependentRewrite';
+  }
+  return record.implementationBasis === 'direct-adaptation'
+    ? 'fractintDirectAdaptation'
+    : 'fractintIndependentRewrite';
+}
+
+function RecordLinkFact({
+  filePath,
+  label,
+  repositoryLabel,
+  repositoryUrl,
+  resourceUrl,
+}: {
+  readonly filePath: string;
+  readonly label: string;
+  readonly repositoryLabel: string;
+  readonly repositoryUrl: string;
+  readonly resourceUrl: string;
+}) {
+  return (
+    <div>
+      <dt className="text-xs font-semibold uppercase tracking-wide text-muted-foreground">
+        {label}
+      </dt>
+      <dd className="mt-1 text-sm leading-6">
+        <a
+          className="break-all font-medium text-primary underline underline-offset-4"
+          href={resourceUrl}
+          rel="noreferrer"
+          target="_blank"
+        >
+          {filePath}
+        </a>
+        <span aria-hidden className="mx-2 text-muted-foreground">
+          ·
+        </span>
+        <a
+          className="font-medium text-primary underline underline-offset-4"
+          href={repositoryUrl}
+          rel="noreferrer"
+          target="_blank"
+        >
+          {repositoryLabel}
+        </a>
+      </dd>
+    </div>
   );
 }
 

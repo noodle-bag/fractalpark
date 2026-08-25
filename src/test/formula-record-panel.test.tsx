@@ -39,6 +39,7 @@ vi.mock('@/components/formulas/CanonicalSourceWorkspace', () => ({
 }));
 
 const PUBLISHED_FORMULA_ID = '00e14aa8-b766-54ea-a359-3f5d20d329b7';
+const FRACTINT_FORMULA_ID = '0109434e-e9cc-5d80-ad3f-d25ec62cbfda';
 const HELD_FORMULA_ID = '00cb5763-13e1-5c93-a283-d99905acccee';
 
 async function record(formulaId: string) {
@@ -59,9 +60,9 @@ describe('streamlined Formula Record panel', () => {
     expect(screen.getByTestId('canonical-source-workspace')).toBeInTheDocument();
     expect(screen.getAllByRole('link', { name: 'remix' })).toHaveLength(1);
     expect(screen.getByRole('link', { name: 'openExplore' })).toBeInTheDocument();
-    expect(screen.getByTestId('formula-record-rights-attribution')).toHaveTextContent(
-      'rightsAttribution',
-    );
+    expect(
+      screen.getByTestId('formula-record-rights-attribution'),
+    ).toHaveTextContent('sourceAndImplementation');
     expect(screen.getByText('formulaId')).toBeInTheDocument();
 
     for (const hidden of [
@@ -74,6 +75,39 @@ describe('streamlined Formula Record panel', () => {
     ]) {
       expect(screen.queryByText(hidden)).not.toBeInTheDocument();
     }
+    for (const removed of [
+      'author',
+      'originalVersion',
+      'provenance',
+      'rightsStatus',
+      'rightsScope',
+      'canonicalLicense',
+      'aliases',
+    ]) {
+      expect(screen.queryByText(removed)).not.toBeInTheDocument();
+    }
+  });
+
+  it('identifies Fractint and links the immutable original formula file', async () => {
+    const published = await record(FRACTINT_FORMULA_ID);
+    render(await FormulaRecordPanel({ locale: 'en', record: published }));
+
+    expect(screen.getByText('Fractint')).toBeInTheDocument();
+    expect(
+      screen.getByText('sourceNotes.fractintDirectAdaptation'),
+    ).toBeInTheDocument();
+    expect(
+      screen.getByRole('link', {
+        name: 'fractint-float/formulas/fractint.frm',
+      }),
+    ).toHaveAttribute(
+      'href',
+      'https://github.com/LegalizeAdulthood/fractint/blob/b846dc501526d1726d8fe88817e53cdfc46e6768/fractint-float/formulas/fractint.frm',
+    );
+    expect(screen.getByRole('link', { name: 'repository' })).toHaveAttribute(
+      'href',
+      'https://github.com/LegalizeAdulthood/fractint',
+    );
   });
 
   it('renders a known held UUID as the minimal N1 page', async () => {

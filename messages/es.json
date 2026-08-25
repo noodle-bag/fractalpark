@@ -1184,8 +1184,12 @@
       "identity": "Identidad y procedencia",
       "formulaId": "ID de fórmula",
       "rightsAttribution": "Derechos y atribución",
+      "sourceAndImplementation": "Fuente e implementación",
       "canonicalName": "Nombre canónico",
       "originalName": "Nombre original",
+      "historicalSource": "Fuente histórica",
+      "repository": "Repositorio",
+      "currentImplementation": "Implementación actual",
       "author": "Autor",
       "originalResource": "Recurso original",
       "originalVersion": "Versión original",
@@ -1236,6 +1240,12 @@
         "original-source-public-domain-assumption-and-project-canonical-implementation": "Suposición de dominio público para la fuente; MIT para la implementación canónica de FractalPark",
         "project-independent-rewrite-only": "Solo reescritura independiente de FractalPark",
         "identity-and-provenance-metadata-only": "Solo metadatos de identidad y procedencia"
+      },
+      "sourceNotes": {
+        "fractalparkProjectOwned": "Esta es una implementación propia del proyecto FractalPark. El archivo enlazado es la Definition canónica fijada.",
+        "fractintDirectAdaptation": "La implementación actual de FractalPark sigue la semántica verificada de la fórmula de Fractint enlazada. El archivo original conserva sus propias condiciones de derechos.",
+        "fractintIndependentRewrite": "Fuente histórica: Fractint. La implementación actual de FractalPark es una reescritura independiente y aislada; el texto FRM original no se redistribuye.",
+        "iteratedDynamicsIndependentRewrite": "Fuente histórica: Iterated Dynamics, sucesor de Fractint. La implementación actual de FractalPark es una reescritura independiente y aislada; el texto FRM original no se redistribuye."
       },
       "basisValues": {
         "project-owned": "Propiedad del proyecto",

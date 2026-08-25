@@ -1,0 +1,2706 @@
+{
+  "schema": "fractalpark-formula-record-provenance/v1",
+  "version": 1,
+  "observedAt": "2026-08-25",
+  "formulaCount": 534,
+  "inputBindings": {
+    "standardFormulaIdsSha256": "b98bbc2b954871b227acfd7c882443cbeb44870931ddb4714c9aed3ffcf33729",
+    "publicationDecisionsSha256": "ed63d7fab46530ac61a2dfb562644b9d36c1d8f4a73128cc51c0c7fbcb625de6",
+    "publishedRuntimeIndexSha256": "e912b1cb4ad884a6a021fd0d2683495e8ea61911d05c4135fbecaa335cade742"
+  },
+  "sourceCounts": {
+    "fractalpark": 89,
+    "fractint": 415,
+    "iterated-dynamics": 30
+  },
+  "repositories": {
+    "fractalpark": {
+      "displayName": "FractalPark",
+      "repositoryUrl": "https://github.com/noodle-bag/fractalpark",
+      "revision": "e235a9c4fc584c28517102f1a5ed75eeced4df3d"
+    },
+    "fractint": {
+      "displayName": "Fractint",
+      "repositoryUrl": "https://github.com/LegalizeAdulthood/fractint",
+      "revision": "b846dc501526d1726d8fe88817e53cdfc46e6768"
+    },
+    "iterated-dynamics": {
+      "displayName": "Iterated Dynamics",
+      "repositoryUrl": "https://github.com/LegalizeAdulthood/iterated-dynamics",
+      "revision": "1874ec377bdb8a62119aaf9975b1444bf087d478"
+    }
+  },
+  "rows": [
+    {
+      "formulaId": "00e14aa8-b766-54ea-a359-3f5d20d329b7",
+      "sourceProject": "fractalpark",
+      "filePath": "public/formula-library/v1/runtime/published/definitions/e4d2259a5dd3fe7b3af646514a4313e83efcc80e887e04c07b7469bb27a66b90.frm"
+    },
+    {
+      "formulaId": "0109434e-e9cc-5d80-ad3f-d25ec62cbfda",
+      "sourceProject": "fractint",
+      "filePath": "fractint-float/formulas/fractint.frm"
+    },
+    {
+      "formulaId": "015c5d9d-b9b1-5155-afa7-10a3f48c194a",
+      "sourceProject": "fractint",
+      "filePath": "fractint/formulas/fractint.frm"
+    },
+    {
+      "formulaId": "0236be89-f1e9-5e23-b0a3-f4dd201ee788",
+      "sourceProject": "iterated-dynamics",
+      "filePath": "home/extra/frmtutor.frm"
+    },
+    {
+      "formulaId": "028a6158-e5dd-5d63-a5a7-5db2e3f7d87d",
+      "sourceProject": "fractint",
+      "filePath": "fractint-float/formulas/fract001.frm"
+    },
+    {
+      "formulaId": "04338d55-9f3d-574a-8fb6-58ec7d530cc5",
+      "sourceProject": "fractint",
+      "filePath": "fractint-float/formulas/fract001.frm"
+    },
+    {
+      "formulaId": "044d9b5f-6ead-5aa6-93c9-19d60c2e97eb",
+      "sourceProject": "fractint",
+      "filePath": "fractint-float/formulas/fractint.frm"
+    },
+    {
+      "formulaId": "059080eb-da12-5e85-a1a3-049929bdcf49",
+      "sourceProject": "fractint",
+      "filePath": "fractint-float/formulas/fract003.frm"
+    },
+    {
+      "formulaId": "05a7f40f-5cb6-538e-b376-40df4c543d49",
+      "sourceProject": "fractint",
+      "filePath": "fractint-float/formulas/fract002.frm"
+    },
+    {
+      "formulaId": "05f97a66-bed1-5a90-9477-2c1c0679015a",
+      "sourceProject": "fractint",
+      "filePath": "fractint-float/formulas/fractint.frm"
+    },
+    {
+      "formulaId": "06223e69-6d8c-50ba-8e5d-b630d342d910",
+      "sourceProject": "fractalpark",
+      "filePath": "public/formula-library/v1/runtime/published/definitions/6fd1272cca8d356da5f0c49cbbb4278f0e5d727cefab5ad1daefa83fb4c1f3ce.frm"
+    },
+    {
+      "formulaId": "063f210d-e292-53a5-aab5-15150eb12ce2",
+      "sourceProject": "fractint",
+      "filePath": "fractint-float/formulas/fract001.frm"
+    },
+    {
+      "formulaId": "06504747-8ee8-5c39-869b-8b3a992e8c24",
+      "sourceProject": "fractint",
+      "filePath": "fractint-float/formulas/fract001.frm"
+    },
+    {
+      "formulaId": "066c7fbe-88ed-5421-b2f9-e5870f649a39",
+      "sourceProject": "fractint",
+      "filePath": "fractint-float/formulas/fract196.frm"
+    },
+    {
+      "formulaId": "0672aed0-1fd1-5acd-9263-a52d5680d3b4",
+      "sourceProject": "fractint",
+      "filePath": "fractint-float/formulas/fractint.frm"
+    },
+    {
+      "formulaId": "070664be-6b62-5383-938f-4f89e73df367",
+      "sourceProject": "fractint",
+      "filePath": "fractint-float/formulas/fract001.frm"
+    },
+    {
+      "formulaId": "07a0afc6-ced5-5765-9314-fdb0ef593cb9",
+      "sourceProject": "fractalpark",
+      "filePath": "public/formula-library/v1/runtime/published/definitions/dce84ac5a7ee55fff27d70df826af67d386f905ee65cee65f5fa8d418e68ba27.frm"
+    },
+    {
+      "formulaId": "07c3a5ae-0504-57d9-b033-95debcce6d5c",
+      "sourceProject": "fractint",
+      "filePath": "fractint-float/formulas/fract003.frm"
+    },
+    {
+      "formulaId": "08604031-781f-5563-a07d-ba4ee2ba5521",
+      "sourceProject": "fractint",
+      "filePath": "fractint-float/formulas/fractint.frm"
+    },
+    {
+      "formulaId": "09288426-4968-5e78-9ab0-00607cc290bd",
+      "sourceProject": "fractint",
+      "filePath": "fractint-float/formulas/fract001.frm"
+    },
+    {
+      "formulaId": "09cecc65-3da9-543a-a1dd-7963f5e2f830",
+      "sourceProject": "fractint",
+      "filePath": "fractint/formulas/fractint.frm"
+    },
+    {
+      "formulaId": "09d9b20b-7e97-5d87-a883-e1c4435effa3",
+      "sourceProject": "fractint",
+      "filePath": "fractint-float/formulas/fract001.frm"
+    },
+    {
+      "formulaId": "09ee96d1-18a8-5dad-83e1-d05f0c59be4b",
+      "sourceProject": "fractalpark",
+      "filePath": "public/formula-library/v1/runtime/published/definitions/ab0bdc1929dee1daeb9486d7b1fd885a6644367232854694fa88908eb4e6c0ce.frm"
+    },
+    {
+      "formulaId": "0a9a153b-bb4e-53df-9cdf-54fd0ad0081e",
+      "sourceProject": "fractint",
+      "filePath": "fractint-float/formulas/fract196.frm"
+    },
+    {
+      "formulaId": "0ab98320-d82b-5b61-b491-7dc2d2b1fe03",
+      "sourceProject": "fractint",
+      "filePath": "fractint-float/formulas/fractint.frm"
+    },
+    {
+      "formulaId": "0b667736-2930-56c9-ba2b-f5c1f4f76d58",
+      "sourceProject": "fractint",
+      "filePath": "fractint-float/formulas/fractint.frm"
+    },
+    {
+      "formulaId": "0b6fa82f-3b3a-584f-acaf-d51fe7f0f6aa",
+      "sourceProject": "fractint",
+      "filePath": "fractint-float/formulas/fract001.frm"
+    },
+    {
+      "formulaId": "0ba0b082-c4b0-51d8-b981-7ca1ca25b9f3",
+      "sourceProject": "fractint",
+      "filePath": "fractint-float/formulas/fract002.frm"
+    },
+    {
+      "formulaId": "0bcc248f-6ef2-5162-afd1-9a748a8104a8",
+      "sourceProject": "fractint",
+      "filePath": "fractint-float/formulas/fractint.frm"
+    },
+    {
+      "formulaId": "0bdb9874-8e03-5804-b215-af22cc413c41",
+      "sourceProject": "fractint",
+      "filePath": "fractint-float/formulas/fract001.frm"
+    },
+    {
+      "formulaId": "0be09ed0-d506-51d9-aadf-2d06d7316aeb",
+      "sourceProject": "fractint",
+      "filePath": "fractint-float/formulas/fractint.frm"
+    },
+    {
+      "formulaId": "0beb26b1-80e9-5902-9c1c-99eeba6a9465",
+      "sourceProject": "fractint",
+      "filePath": "fractint-float/formulas/fract003.frm"
+    },
+    {
+      "formulaId": "0c8029ff-30be-5596-8cc6-e9ae0fa9c635",
+      "sourceProject": "fractint",
+      "filePath": "fractint-float/formulas/fract002.frm"
+    },
+    {
+      "formulaId": "0c89c8ab-1cd9-58fc-bc1a-e19dfe5fef7e",
+      "sourceProject": "fractint",
+      "filePath": "fractint-float/formulas/fract003.frm"
+    },
+    {
+      "formulaId": "0cfbe9a6-cad4-51c5-a85c-345978b19bfe",
+      "sourceProject": "fractint",
+      "filePath": "fractint-float/formulas/fract002.frm"
+    },
+    {
+      "formulaId": "0d5e8e2e-45bd-5a45-beab-2f989d765db4",
+      "sourceProject": "fractint",
+      "filePath": "fractint-float/formulas/fract002.frm"
+    },
+    {
+      "formulaId": "0df5ac6e-d97e-55db-b624-96c310af07dd",
+      "sourceProject": "fractalpark",
+      "filePath": "public/formula-library/v1/runtime/published/definitions/bb7d3fd03ddb3b27f66b28fea82cdfa4da6c88cf15a23c6da8fe27a8adf1e34e.frm"
+    },
+    {
+      "formulaId": "0e01b854-3b21-56f8-8310-3fa32ec2af99",
+      "sourceProject": "fractint",
+      "filePath": "fractint-float/formulas/fractint.frm"
+    },
+    {
+      "formulaId": "0e1b1705-ae4c-5685-b0fc-b82586ff144e",
+      "sourceProject": "fractint",
+      "filePath": "fractint-float/formulas/fract196.frm"
+    },
+    {
+      "formulaId": "0e58167e-79e1-56f9-86f7-149737fcfaea",
+      "sourceProject": "fractint",
+      "filePath": "fractint-float/formulas/fract002.frm"
+    },
+    {
+      "formulaId": "0f49d971-917e-50a5-ae83-20e11fd4854c",
+      "sourceProject": "fractalpark",
+      "filePath": "public/formula-library/v1/runtime/published/definitions/a9fa9931913aeafac8b527f31cae7b519db79c8d54829ffcea20bcb6fc9dce4d.frm"
+    },
+    {
+      "formulaId": "0f6c423d-2d1f-5b44-ad96-b4798b2a5fc5",
+      "sourceProject": "fractint",
+      "filePath": "fractint-float/formulas/fract002.frm"
+    },
+    {
+      "formulaId": "11915b30-2b96-51dc-8d0d-b998c34c5fc0",
+      "sourceProject": "fractint",
+      "filePath": "fractint-float/formulas/fract002.frm"
+    },
+    {
+      "formulaId": "11c43e72-94aa-5b99-a899-f9de9ec1fb66",
+      "sourceProject": "fractint",
+      "filePath": "fractint-float/formulas/fract002.frm"
+    },
+    {
+      "formulaId": "126b0255-8e0b-535c-b752-36473c926fe9",
+      "sourceProject": "fractint",
+      "filePath": "fractint-float/formulas/fract002.frm"
+    },
+    {
+      "formulaId": "12fc34ff-196d-5924-830e-6edb72dfc172",
+      "sourceProject": "fractalpark",
+      "filePath": "public/formula-library/v1/runtime/published/definitions/3aec931a4991e14e53348c6d28e9fcbaf8127cad6298dafc2a8ee9e2ac8d8143.frm"
+    },
+    {
+      "formulaId": "138723af-2481-5634-9a31-2cfabdc0094a",
+      "sourceProject": "fractint",
+      "filePath": "fractint-float/formulas/fract001.frm"
+    },
+    {
+      "formulaId": "14cf0fba-341d-5332-b3f0-2648304429e1",
+      "sourceProject": "fractint",
+      "filePath": "fractint-float/formulas/fract002.frm"
+    },
+    {
+      "formulaId": "14d3cb89-d3e7-5bff-b848-af88c9a561ae",
+      "sourceProject": "fractint",
+      "filePath": "fractint-float/formulas/fractint.frm"
+    },
+    {
+      "formulaId": "15396678-55fc-50e8-a51d-77bb277a5a50",
+      "sourceProject": "fractint",
+      "filePath": "fractint-float/formulas/ikenaga.frm"
+    },
+    {
+      "formulaId": "1586a75a-acb4-533b-a3e5-a92eca3acbc9",
+      "sourceProject": "fractint",
+      "filePath": "fractint-float/formulas/fract001.frm"
+    },
+    {
+      "formulaId": "165d6b06-a4b2-53fe-bac1-07a6fc2ab142",
+      "sourceProject": "fractint",
+      "filePath": "fractint-float/formulas/fract002.frm"
+    },
+    {
+      "formulaId": "16add0c8-8818-5127-9e53-c429c673e127",
+      "sourceProject": "fractint",
+      "filePath": "fractint-float/formulas/fract002.frm"
+    },
+    {
+      "formulaId": "16e44954-d897-5037-9c2e-2ad203c4207f",
+      "sourceProject": "fractint",
+      "filePath": "fractint-float/formulas/fractint.frm"
+    },
+    {
+      "formulaId": "1768f194-bdc1-5881-b269-a58730967c2c",
+      "sourceProject": "fractalpark",
+      "filePath": "public/formula-library/v1/runtime/published/definitions/d8e2c1950f3a30b27d380c3132e6a62ebe287cd26cd24c3dbc28dfd47ad784ed.frm"
+    },
+    {
+      "formulaId": "17b83663-a502-5e34-bd4c-a116e49eab5f",
+      "sourceProject": "fractint",
+      "filePath": "fractint-float/formulas/fractint.frm"
+    },
+    {
+      "formulaId": "17d88272-6dbf-5622-996a-b116ea3a3fab",
+      "sourceProject": "fractalpark",
+      "filePath": "public/formula-library/v1/runtime/published/definitions/32437882a899d589e7ff8fa968c7248e5c9436fa6a87a48fa2072ff09e3c6540.frm"
+    },
+    {
+      "formulaId": "17eea2ca-49cc-5b0b-9608-28694fcde4eb",
+      "sourceProject": "fractint",
+      "filePath": "fractint-float/formulas/fract003.frm"
+    },
+    {
+      "formulaId": "189a3551-e768-55db-b9f5-a3c4e35f9927",
+      "sourceProject": "fractint",
+      "filePath": "fractint-float/formulas/fract002.frm"
+    },
+    {
+      "formulaId": "18aa30c7-6c32-505f-be32-5c0bf438d151",
+      "sourceProject": "fractint",
+      "filePath": "fractint-float/formulas/fractint.frm"
+    },
+    {
+      "formulaId": "18d30091-ce1c-5b10-b214-37eb4337df83",
+      "sourceProject": "fractalpark",
+      "filePath": "public/formula-library/v1/runtime/published/definitions/5fc275e31b93767b2ba03c07ee856b9f362233f80497d4fbf275a9424c880ef0.frm"
+    },
+    {
+      "formulaId": "190fa538-89c9-590f-8170-34b3c570fc5d",
+      "sourceProject": "fractalpark",
+      "filePath": "public/formula-library/v1/runtime/published/definitions/4070d643142a8bac0a93df5f50b3bd47671076d603cf06e041aaa67035e806ce.frm"
+    },
+    {
+      "formulaId": "1936e9b5-1312-593e-ab67-72e95bc514b0",
+      "sourceProject": "fractint",
+      "filePath": "fractint-float/formulas/fractint.frm"
+    },
+    {
+      "formulaId": "1a6253b6-de0e-5a0b-9028-f6db40da8fa7",
+      "sourceProject": "fractint",
+      "filePath": "fractint-float/formulas/fract002.frm"
+    },
+    {
+      "formulaId": "1ac85fe0-8fcb-557d-abf4-5a71bfcea5e5",
+      "sourceProject": "fractint",
+      "filePath": "fractint-float/formulas/fract002.frm"
+    },
+    {
+      "formulaId": "1b93e201-bdba-5bb4-8605-562d2548e100",
+      "sourceProject": "fractint",
+      "filePath": "fractint-float/formulas/fract002.frm"
+    },
+    {
+      "formulaId": "1bb379a2-3588-53f8-a3ab-e52021c78054",
+      "sourceProject": "iterated-dynamics",
+      "filePath": "home/extra/frmtutor.frm"
+    },
+    {
+      "formulaId": "1be7d921-6d6e-5141-9387-d7a6c5493eac",
+      "sourceProject": "fractint",
+      "filePath": "fractint-float/formulas/fract002.frm"
+    },
+    {
+      "formulaId": "1c33f476-635f-5845-8f0a-56ab2315e051",
+      "sourceProject": "fractint",
+      "filePath": "fractint-float/formulas/fract002.frm"
+    },
+    {
+      "formulaId": "1cd7a16f-0474-5b8f-a974-e122ea893769",
+      "sourceProject": "fractint",
+      "filePath": "fractint-float/formulas/fractint.frm"
+    },
+    {
+      "formulaId": "1cf46735-3e73-51f5-b752-48040233a417",
+      "sourceProject": "iterated-dynamics",
+      "filePath": "home/extra/frmtutor.frm"
+    },
+    {
+      "formulaId": "1ecff9ef-b771-589a-a804-9eb223f43f60",
+      "sourceProject": "fractint",
+      "filePath": "fractint-float/formulas/fract001.frm"
+    },
+    {
+      "formulaId": "1f56b41c-720e-5a42-9772-dd3a64ce8391",
+      "sourceProject": "fractint",
+      "filePath": "fractint-float/formulas/fract002.frm"
+    },
+    {
+      "formulaId": "1f5b5a3a-0b63-527a-a408-e7b45d377cb2",
+      "sourceProject": "fractint",
+      "filePath": "fractint-float/formulas/fract001.frm"
+    },
+    {
+      "formulaId": "1faac719-6536-5496-a61c-f7c739b78f12",
+      "sourceProject": "fractint",
+      "filePath": "fractint-float/formulas/fract001.frm"
+    },
+    {
+      "formulaId": "201c54f3-a77a-5be0-a0a5-6f4f1998ee6d",
+      "sourceProject": "fractalpark",
+      "filePath": "public/formula-library/v1/runtime/published/definitions/90d43b9c2bc9a7eda5ca6f997a1ae2dc6640f0cc12cdcc34e8c82ca0765eff12.frm"
+    },
+    {
+      "formulaId": "2037d212-b1c4-59f4-a773-90b627b1d7df",
+      "sourceProject": "fractint",
+      "filePath": "fractint-float/formulas/fract003.frm"
+    },
+    {
+      "formulaId": "20e16f12-e0e9-5f56-9364-5c2b60c05f20",
+      "sourceProject": "fractint",
+      "filePath": "fractint-float/formulas/fract001.frm"
+    },
+    {
+      "formulaId": "212174eb-5344-57a9-95d4-24882df4b972",
+      "sourceProject": "iterated-dynamics",
+      "filePath": "home/extra/frmtutor.frm"
+    },
+    {
+      "formulaId": "220b121f-2a09-5c0a-a90e-b81044f0206b",
+      "sourceProject": "fractint",
+      "filePath": "fractint-float/formulas/fract002.frm"
+    },
+    {
+      "formulaId": "22d9a008-eb14-53de-9960-11eb5d37bb8e",
+      "sourceProject": "fractalpark",
+      "filePath": "public/formula-library/v1/runtime/published/definitions/fb9db2dede500db19463ee53c8d059c2e7a92651d7de472a4bedd6e7ee58a831.frm"
+    },
+    {
+      "formulaId": "23808fdd-db5b-5dc8-87bd-19c42d2a5065",
+      "sourceProject": "fractint",
+      "filePath": "fractint-float/formulas/fract001.frm"
+    },
+    {
+      "formulaId": "2380f8fa-cae0-56b1-baab-63bd8e2ccf85",
+      "sourceProject": "fractint",
+      "filePath": "fractint-float/formulas/fractint.frm"
+    },
+    {
+      "formulaId": "23d2bc83-a564-5890-b438-307333cbcf68",
+      "sourceProject": "fractint",
+      "filePath": "fractint-float/formulas/fract001.frm"
+    },
+    {
+      "formulaId": "242e6b7b-932d-5d58-b095-278dc7506144",
+      "sourceProject": "fractint",
+      "filePath": "fractint-float/formulas/fract001.frm"
+    },
+    {
+      "formulaId": "24477311-d938-5e87-9900-bc3dfd384274",
+      "sourceProject": "fractint",
+      "filePath": "fractint-float/formulas/ikenaga.frm"
+    },
+    {
+      "formulaId": "247a0490-dacf-5df2-8a6f-67514402e4d2",
+      "sourceProject": "fractint",
+      "filePath": "fractint-float/formulas/fract003.frm"
+    },
+    {
+      "formulaId": "24c09b96-95f6-5bff-bc76-8113f4eb51a0",
+      "sourceProject": "fractint",
+      "filePath": "fractint-float/formulas/fract196.frm"
+    },
+    {
+      "formulaId": "2515834d-dd11-5f8a-afb7-0ac9908a3c0a",
+      "sourceProject": "fractint",
+      "filePath": "fractint-float/formulas/fract001.frm"
+    },
+    {
+      "formulaId": "2525eb15-1ca6-560c-9aa3-09bc8c9aef58",
+      "sourceProject": "fractint",
+      "filePath": "fractint-float/formulas/fract002.frm"
+    },
+    {
+      "formulaId": "25a44643-404e-5254-8cba-a1b639779fbb",
+      "sourceProject": "fractint",
+      "filePath": "fractint-float/formulas/fractint.frm"
+    },
+    {
+      "formulaId": "267869db-2e96-5d61-80ed-fab704e61585",
+      "sourceProject": "fractint",
+      "filePath": "fractint-float/formulas/fractint.frm"
+    },
+    {
+      "formulaId": "26834584-a1da-54a6-a98d-3a680ea6b259",
+      "sourceProject": "fractint",
+      "filePath": "fractint-float/formulas/ikenaga.frm"
+    },
+    {
+      "formulaId": "269daa88-48be-5078-96f9-1b700bacddec",
+      "sourceProject": "fractint",
+      "filePath": "fractint-float/formulas/fract002.frm"
+    },
+    {
+      "formulaId": "26d168e6-cb44-5e94-a3f2-e5fd65528034",
+      "sourceProject": "fractint",
+      "filePath": "fractint-float/formulas/fract001.frm"
+    },
+    {
+      "formulaId": "274e03a7-1442-5d59-a18f-72f5f23b5e1a",
+      "sourceProject": "fractint",
+      "filePath": "fractint-float/formulas/fractint.frm"
+    },
+    {
+      "formulaId": "27a3da95-a9e6-5fc2-81af-d5e9076fc8fa",
+      "sourceProject": "fractalpark",
+      "filePath": "public/formula-library/v1/runtime/published/definitions/a5b8caea9b95b304fdd8e805ed00e480d9d9e69ce17f72f554835ffde095b228.frm"
+    },
+    {
+      "formulaId": "27ff838d-9331-5fd6-89d7-6afa24341f44",
+      "sourceProject": "fractint",
+      "filePath": "fractint-float/formulas/fract002.frm"
+    },
+    {
+      "formulaId": "280229ec-dd2f-5982-9954-75829a37a5f2",
+      "sourceProject": "fractint",
+      "filePath": "fractint-float/formulas/fractint.frm"
+    },
+    {
+      "formulaId": "280cd3e2-865b-5c78-90b7-39b2a36d7be0",
+      "sourceProject": "fractalpark",
+      "filePath": "public/formula-library/v1/runtime/published/definitions/b4677349cc60d66a5b7ad87655a89585d2bf83c7284ef949afe081e8eb294aac.frm"
+    },
+    {
+      "formulaId": "2826b57e-ae1a-564b-a17d-6ae3beedd30b",
+      "sourceProject": "fractint",
+      "filePath": "fractint-float/formulas/fract001.frm"
+    },
+    {
+      "formulaId": "2827125f-9ac7-585e-9f38-d8067abb8474",
+      "sourceProject": "fractint",
+      "filePath": "fractint-float/formulas/fract001.frm"
+    },
+    {
+      "formulaId": "28c77140-c5f9-557a-93d7-cac12cf08e63",
+      "sourceProject": "iterated-dynamics",
+      "filePath": "home/extra/frmtutor.frm"
+    },
+    {
+      "formulaId": "28fe8474-fcfd-5fca-88ed-008e976c5707",
+      "sourceProject": "fractint",
+      "filePath": "fractint-float/formulas/fract003.frm"
+    },
+    {
+      "formulaId": "2ab193f5-4919-5e5c-a9fb-c1a0e3f5eb02",
+      "sourceProject": "fractalpark",
+      "filePath": "public/formula-library/v1/runtime/published/definitions/cfef49944d8f9bd8f2ee91b2d4ab4f9b30ad66475a6f783f52bb91a7a36b1617.frm"
+    },
+    {
+      "formulaId": "2b3b3de9-9e48-5b8e-9f65-97eefdf642fb",
+      "sourceProject": "fractint",
+      "filePath": "fractint-float/formulas/fract003.frm"
+    },
+    {
+      "formulaId": "2b86fa34-dd83-542e-9718-6e8ee2f8b5d2",
+      "sourceProject": "fractint",
+      "filePath": "fractint-float/formulas/fract002.frm"
+    },
+    {
+      "formulaId": "2d237187-b3fd-54e2-8bf4-ef973080f389",
+      "sourceProject": "fractint",
+      "filePath": "fractint-float/formulas/fract003.frm"
+    },
+    {
+      "formulaId": "2daea798-a058-5b4c-ada8-1712c475fadf",
+      "sourceProject": "fractalpark",
+      "filePath": "public/formula-library/v1/runtime/published/definitions/0ec0a7f7fc2d2433aec56bf952eb9a89bea48f2bd5c4776c472f7548eb422f83.frm"
+    },
+    {
+      "formulaId": "2dd8a5a7-052a-5539-aab9-c533f7dec857",
+      "sourceProject": "fractalpark",
+      "filePath": "public/formula-library/v1/runtime/published/definitions/6c2c19cfb9bff9d9aa0cca56cea6dc62e324e80009b931665b604726d3784e5d.frm"
+    },
+    {
+      "formulaId": "2e504dd9-c973-5867-98ff-ed809a862428",
+      "sourceProject": "fractint",
+      "filePath": "fractint-float/formulas/fract002.frm"
+    },
+    {
+      "formulaId": "2e7a0672-e737-52fc-b2b3-14f577546eea",
+      "sourceProject": "iterated-dynamics",
+      "filePath": "home/extra/frmtutor.frm"
+    },
+    {
+      "formulaId": "2e810d90-19b3-5434-ab66-248c7675913f",
+      "sourceProject": "fractint",
+      "filePath": "fractint-float/formulas/fract002.frm"
+    },
+    {
+      "formulaId": "2edf64a9-157c-57d7-8894-1f4781bc4f8c",
+      "sourceProject": "fractalpark",
+      "filePath": "public/formula-library/v1/runtime/published/definitions/37344c3bc7fc90852e94c7b74ec99df5400c6332e8ca9bdad5e5c8ff3b51e688.frm"
+    },
+    {
+      "formulaId": "2eec1b15-ca6a-5817-bba6-8766396b3d18",
+      "sourceProject": "fractint",
+      "filePath": "fractint-float/formulas/fract001.frm"
+    },
+    {
+      "formulaId": "2f0a0f01-53ee-585e-b2bd-6179a0413df1",
+      "sourceProject": "fractint",
+      "filePath": "fractint-float/formulas/ikenaga.frm"
+    },
+    {
+      "formulaId": "300db23f-8a8a-59d7-b4f1-bc77757286c6",
+      "sourceProject": "fractint",
+      "filePath": "fractint-float/formulas/fractint.frm"
+    },
+    {
+      "formulaId": "31680a23-4d7e-5844-a598-9682609d0ade",
+      "sourceProject": "fractint",
+      "filePath": "fractint-float/formulas/fract001.frm"
+    },
+    {
+      "formulaId": "32152c27-d299-585c-9ff9-bf236b575486",
+      "sourceProject": "fractint",
+      "filePath": "fractint-float/formulas/fract001.frm"
+    },
+    {
+      "formulaId": "32542eeb-e9fe-5c0f-9414-b00f98c03709",
+      "sourceProject": "fractint",
+      "filePath": "fractint-float/formulas/fractint.frm"
+    },
+    {
+      "formulaId": "32af09e8-c0e1-59de-9193-43021db7fcdc",
+      "sourceProject": "fractint",
+      "filePath": "fractint-float/formulas/fract002.frm"
+    },
+    {
+      "formulaId": "32bccc7f-91c2-533c-9f14-46c1943358fe",
+      "sourceProject": "fractint",
+      "filePath": "fractint-float/formulas/fract196.frm"
+    },
+    {
+      "formulaId": "32d004cc-c75b-5242-b08a-202a8f378a8d",
+      "sourceProject": "fractint",
+      "filePath": "fractint-float/formulas/fractint.frm"
+    },
+    {
+      "formulaId": "33236fd9-4bd1-539b-961a-7b95ab92a1e0",
+      "sourceProject": "fractalpark",
+      "filePath": "public/formula-library/v1/runtime/published/definitions/8b784f29c0e46b55e45eb6406c4fae4e01ef3cd876844c2749eeea4acdf1bd0a.frm"
+    },
+    {
+      "formulaId": "338c7feb-1b14-556e-bc71-4383529f4f20",
+      "sourceProject": "fractint",
+      "filePath": "fractint-float/formulas/fract003.frm"
+    },
+    {
+      "formulaId": "33afbae3-7ccb-54ca-8f50-771b34de7326",
+      "sourceProject": "fractint",
+      "filePath": "fractint-float/formulas/fract002.frm"
+    },
+    {
+      "formulaId": "34246d25-1aa2-5f1e-b37e-fc442b3ad9a6",
+      "sourceProject": "fractint",
+      "filePath": "fractint-float/formulas/fractint.frm"
+    },
+    {
+      "formulaId": "34325634-553e-5841-9ae0-bcb17954060c",
+      "sourceProject": "iterated-dynamics",
+      "filePath": "home/extra/frmtutor.frm"
+    },
+    {
+      "formulaId": "34678277-c72d-5f9e-a192-f3bdfea6907d",
+      "sourceProject": "fractint",
+      "filePath": "fractint-float/formulas/fractint.frm"
+    },
+    {
+      "formulaId": "34f41a82-3ede-5eda-8c1c-67962c37366b",
+      "sourceProject": "fractalpark",
+      "filePath": "public/formula-library/v1/runtime/published/definitions/3659c6747e09ecf73bf1ed558c9c7592250b0ef82fde8a8915bccb35a443436b.frm"
+    },
+    {
+      "formulaId": "34fcff23-f75a-539c-9102-181945abee60",
+      "sourceProject": "fractalpark",
+      "filePath": "public/formula-library/v1/runtime/published/definitions/3a9b6d2563e6a85164ff6070013ad037a61764451d644340116ed47d3e1b5381.frm"
+    },
+    {
+      "formulaId": "35750620-a4a0-5454-b03b-18df45ddd0f4",
+      "sourceProject": "fractint",
+      "filePath": "fractint-float/formulas/fract002.frm"
+    },
+    {
+      "formulaId": "3582fcef-3d34-5acf-a701-4d5a9165ebc7",
+      "sourceProject": "fractint",
+      "filePath": "fractint-float/formulas/fract001.frm"
+    },
+    {
+      "formulaId": "35a7e33c-fcba-5a81-ba80-8eab6d59925c",
+      "sourceProject": "fractalpark",
+      "filePath": "public/formula-library/v1/runtime/published/definitions/69272fec1fe79de794f32c7d677f215e956beb2926b63adfc2a5b069f5621cfe.frm"
+    },
+    {
+      "formulaId": "363cdbd3-c78f-5187-9ab1-74c2020b504e",
+      "sourceProject": "fractint",
+      "filePath": "fractint-float/formulas/fract001.frm"
+    },
+    {
+      "formulaId": "3705eb33-b86f-5ef4-9ad5-022ab076390f",
+      "sourceProject": "fractint",
+      "filePath": "fractint-float/formulas/fract001.frm"
+    },
+    {
+      "formulaId": "37425fb2-8542-502f-94ac-94c0ccb6e508",
+      "sourceProject": "fractalpark",
+      "filePath": "public/formula-library/v1/runtime/published/definitions/69a7d072638f6981ee8e06c85d03831c9a53fb549337605eb35bb3cdf1db4e10.frm"
+    },
+    {
+      "formulaId": "3773f101-06b1-5e58-bdb7-708853997f30",
+      "sourceProject": "fractint",
+      "filePath": "fractint-float/formulas/fract002.frm"
+    },
+    {
+      "formulaId": "3832742e-41f6-5d14-8749-a4955ab123fb",
+      "sourceProject": "fractint",
+      "filePath": "fractint-float/formulas/fract003.frm"
+    },
+    {
+      "formulaId": "38c3b212-c33b-5dd3-aae5-a514fc7e37e3",
+      "sourceProject": "fractalpark",
+      "filePath": "public/formula-library/v1/runtime/published/definitions/824eda8dc180b39ab6c7e32f187530e1c35edeaec7db3f9d00c7a7acef78df63.frm"
+    },
+    {
+      "formulaId": "3a1b7843-3ead-534e-9fac-d05890211020",
+      "sourceProject": "fractint",
+      "filePath": "fractint-float/formulas/fract003.frm"
+    },
+    {
+      "formulaId": "3a6e9b04-e85d-54ad-8de9-7e7fc980bf42",
+      "sourceProject": "iterated-dynamics",
+      "filePath": "home/extra/frmtutor.frm"
+    },
+    {
+      "formulaId": "3a83800c-4a44-5e61-9651-d3d5adb71213",
+      "sourceProject": "fractalpark",
+      "filePath": "public/formula-library/v1/runtime/published/definitions/12a2fd990373fc6f7467674871cbd2c82c78ec9b8354a805b442ef4c6ef58b06.frm"
+    },
+    {
+      "formulaId": "3aa12569-e267-56b6-b582-bf95b73fd1a4",
+      "sourceProject": "fractint",
+      "filePath": "fractint-float/formulas/fract001.frm"
+    },
+    {
+      "formulaId": "3aaa6cca-c480-5359-a2f3-547f3a955eb1",
+      "sourceProject": "fractint",
+      "filePath": "fractint-float/formulas/fract002.frm"
+    },
+    {
+      "formulaId": "3c71e05b-12c2-5eae-b4c7-b4bc36f52dc2",
+      "sourceProject": "fractint",
+      "filePath": "fractint-float/formulas/fract003.frm"
+    },
+    {
+      "formulaId": "3d5c83f1-a31b-55d3-b0a9-c17cb5737d5e",
+      "sourceProject": "fractint",
+      "filePath": "fractint-float/formulas/ikenaga.frm"
+    },
+    {
+      "formulaId": "3d70a4c8-af83-58ad-9985-326f1412ef5d",
+      "sourceProject": "fractint",
+      "filePath": "fractint-float/formulas/fractint.frm"
+    },
+    {
+      "formulaId": "3de9b6ff-2b9b-5187-93ea-dd1161a70d92",
+      "sourceProject": "fractint",
+      "filePath": "fractint-float/formulas/fractint.frm"
+    },
+    {
+      "formulaId": "3e73820f-a131-5b85-ae43-4bbc5ff697d2",
+      "sourceProject": "fractint",
+      "filePath": "fractint-float/formulas/fract002.frm"
+    },
+    {
+      "formulaId": "3edbea29-956a-5900-9aa7-02ccc2183016",
+      "sourceProject": "fractalpark",
+      "filePath": "public/formula-library/v1/runtime/published/definitions/75cc7f04fc69d74294c3ed9dcd5271585a6d186311dd10a906e781958cb46870.frm"
+    },
+    {
+      "formulaId": "3f1835a4-0bd3-54ec-8d3b-dad2c6d3bfd3",
+      "sourceProject": "fractint",
+      "filePath": "fractint-float/formulas/fract001.frm"
+    },
+    {
+      "formulaId": "3f5a2b00-8250-5df6-b48f-0c79749cf4a5",
+      "sourceProject": "fractint",
+      "filePath": "fractint-float/formulas/fract002.frm"
+    },
+    {
+      "formulaId": "3fc4005b-e6d4-5cda-a9b1-de96a0d6a458",
+      "sourceProject": "fractint",
+      "filePath": "fractint-float/formulas/fract001.frm"
+    },
+    {
+      "formulaId": "4082549c-cbbd-55ad-bb38-61e4eb3d46dd",
+      "sourceProject": "fractint",
+      "filePath": "fractint-float/formulas/fract002.frm"
+    },
+    {
+      "formulaId": "40e5fff7-6c0b-58da-a044-12489e500bef",
+      "sourceProject": "fractint",
+      "filePath": "fractint-float/formulas/fract002.frm"
+    },
+    {
+      "formulaId": "411ac01c-ba08-5200-add7-b60b3f98795c",
+      "sourceProject": "fractint",
+      "filePath": "fractint-float/formulas/fractint.frm"
+    },
+    {
+      "formulaId": "415b068e-0261-50ca-ac77-4f6ade3916f1",
+      "sourceProject": "fractint",
+      "filePath": "fractint-float/formulas/fract001.frm"
+    },
+    {
+      "formulaId": "41a527d4-3c75-5d8d-905d-95381c9f7c6c",
+      "sourceProject": "fractint",
+      "filePath": "fractint-float/formulas/fract002.frm"
+    },
+    {
+      "formulaId": "423bcb75-4e45-58fb-97f2-999f51947bd3",
+      "sourceProject": "fractint",
+      "filePath": "fractint-float/formulas/fractint.frm"
+    },
+    {
+      "formulaId": "42b369a5-2873-50e9-8684-cad5e60630ff",
+      "sourceProject": "fractalpark",
+      "filePath": "public/formula-library/v1/runtime/published/definitions/67d0d96182f217e37faab85d6b7e3cf28bd9e959348589957ff49a4f5436f049.frm"
+    },
+    {
+      "formulaId": "42b54420-5e0a-5f09-9dcd-0c262fd41d04",
+      "sourceProject": "fractint",
+      "filePath": "fractint-float/formulas/fract002.frm"
+    },
+    {
+      "formulaId": "42d4c442-040b-59be-892f-1f10c8e47cb6",
+      "sourceProject": "fractalpark",
+      "filePath": "public/formula-library/v1/runtime/published/definitions/a5276054252d440fc11576d9500641d4eb4139bf9e4ca4233dee774813568b85.frm"
+    },
+    {
+      "formulaId": "4424528d-f0a1-58e5-938e-560b39d58fff",
+      "sourceProject": "fractint",
+      "filePath": "fractint-float/formulas/fractint.frm"
+    },
+    {
+      "formulaId": "445e20a5-2d78-56e2-9741-8429545ecb5e",
+      "sourceProject": "fractint",
+      "filePath": "fractint-float/formulas/fractint.frm"
+    },
+    {
+      "formulaId": "44d9b35c-ed7c-51d6-8ee1-14e56f5ade7d",
+      "sourceProject": "fractint",
+      "filePath": "fractint-float/formulas/fract002.frm"
+    },
+    {
+      "formulaId": "4514ac15-fecc-5b92-9e79-0b95b5158d3f",
+      "sourceProject": "fractalpark",
+      "filePath": "public/formula-library/v1/runtime/published/definitions/1a87c3eee8cbfdee863e521522cdbcfb559773070af04a317bcc6ebe6fcb3f3e.frm"
+    },
+    {
+      "formulaId": "4536f1e3-1f15-5b7e-8e58-68ea3b63d4fb",
+      "sourceProject": "fractalpark",
+      "filePath": "public/formula-library/v1/runtime/published/definitions/18a51ec5ab4c5e47bdd687cf36595663437d8341dedda7e3965751f5e8001d82.frm"
+    },
+    {
+      "formulaId": "4648b165-1bb6-5b33-a7ff-3f3518e2a984",
+      "sourceProject": "fractint",
+      "filePath": "fractint-float/formulas/fract001.frm"
+    },
+    {
+      "formulaId": "465a5b03-469d-59b3-8564-45af7564e37a",
+      "sourceProject": "fractalpark",
+      "filePath": "public/formula-library/v1/runtime/published/definitions/590db3453ca43c558e7b8c955e661b5ec68951b6afbb7feb3a07d0aa474a5910.frm"
+    },
+    {
+      "formulaId": "46acfdeb-2dac-59c9-a94a-fd4809420dc2",
+      "sourceProject": "fractalpark",
+      "filePath": "public/formula-library/v1/runtime/published/definitions/c0c320f05c5531b4e17bf96b47e87114374914b52151576ed9854fa35e60c8d4.frm"
+    },
+    {
+      "formulaId": "47c9fe8a-3476-5f65-a063-62638c2e6069",
+      "sourceProject": "fractint",
+      "filePath": "fractint-float/formulas/fract002.frm"
+    },
+    {
+      "formulaId": "4827faca-8ea6-5d14-8a05-a2cbef5c8971",
+      "sourceProject": "fractint",
+      "filePath": "fractint-float/formulas/fract003.frm"
+    },
+    {
+      "formulaId": "48a9aa85-f5d4-5f9a-b640-89e93890a8ad",
+      "sourceProject": "fractalpark",
+      "filePath": "public/formula-library/v1/runtime/published/definitions/ef6a9ee325473be1beadbbc91f6aa28773271649a751e12044d03d1faa0c41b3.frm"
+    },
+    {
+      "formulaId": "4c0559f7-9f60-51f4-b100-2ea5f1d330e8",
+      "sourceProject": "fractint",
+      "filePath": "fractint-float/formulas/fractint.frm"
+    },
+    {
+      "formulaId": "4c8382ac-ee39-5f57-87e7-7314d1dca9d2",
+      "sourceProject": "fractint",
+      "filePath": "fractint-float/formulas/fractint.frm"
+    },
+    {
+      "formulaId": "4d80463c-a4d2-539d-957c-40340039c419",
+      "sourceProject": "fractint",
+      "filePath": "fractint-float/formulas/fractint.frm"
+    },
+    {
+      "formulaId": "4d839da6-3dad-5698-80eb-603fc91db5f4",
+      "sourceProject": "fractint",
+      "filePath": "fractint-float/formulas/fract002.frm"
+    },
+    {
+      "formulaId": "4f32e099-69b0-5b43-8d37-c547cee8f4f5",
+      "sourceProject": "iterated-dynamics",
+      "filePath": "home/extra/frmtutor.frm"
+    },
+    {
+      "formulaId": "4f44ec51-258e-5ac2-a579-9273cfe99080",
+      "sourceProject": "fractint",
+      "filePath": "fractint-float/formulas/fract001.frm"
+    },
+    {
+      "formulaId": "4fa3c747-6705-5d4c-9d3f-bfa9e3eb463a",
+      "sourceProject": "fractint",
+      "filePath": "fractint-float/formulas/fract002.frm"
+    },
+    {
+      "formulaId": "51daceff-89f2-5567-bfe0-ca2933f2402c",
+      "sourceProject": "fractint",
+      "filePath": "fractint-float/formulas/ikenaga.frm"
+    },
+    {
+      "formulaId": "526aa565-87eb-5edd-b059-8f4e44876f0f",
+      "sourceProject": "fractint",
+      "filePath": "fractint-float/formulas/fract002.frm"
+    },
+    {
+      "formulaId": "540fc5ba-6b3a-5e55-8718-be55789231bf",
+      "sourceProject": "fractint",
+      "filePath": "fractint-float/formulas/fract002.frm"
+    },
+    {
+      "formulaId": "54319a01-cd74-5064-aaa0-9e3a57fd201c",
+      "sourceProject": "iterated-dynamics",
+      "filePath": "home/extra/frmtutor.frm"
+    },
+    {
+      "formulaId": "54cc5b4b-9710-5995-a216-8f4c61ff1c02",
+      "sourceProject": "fractint",
+      "filePath": "fractint-float/formulas/fractint.frm"
+    },
+    {
+      "formulaId": "54fa972b-b4c3-5ec2-a47f-e00141e22dfc",
+      "sourceProject": "fractint",
+      "filePath": "fractint-float/formulas/fract002.frm"
+    },
+    {
+      "formulaId": "550b2811-b28e-552d-af2c-07deea1f019f",
+      "sourceProject": "fractint",
+      "filePath": "fractint-float/formulas/ikenaga.frm"
+    },
+    {
+      "formulaId": "554eef03-e757-5146-87f5-f03e5f75225e",
+      "sourceProject": "fractint",
+      "filePath": "fractint-float/formulas/fract002.frm"
+    },
+    {
+      "formulaId": "559966c9-b838-56af-9591-5cb42e8955ee",
+      "sourceProject": "fractint",
+      "filePath": "fractint-float/formulas/fract002.frm"
+    },
+    {
+      "formulaId": "563693bd-ba1d-5628-b402-98a98a5b4043",
+      "sourceProject": "fractint",
+      "filePath": "fractint-float/formulas/fract002.frm"
+    },
+    {
+      "formulaId": "564827f6-4abd-5360-aec3-75e800b499ab",
+      "sourceProject": "fractint",
+      "filePath": "fractint-float/formulas/fract001.frm"
+    },
+    {
+      "formulaId": "56935004-bdb8-5682-974f-3821cd422965",
+      "sourceProject": "fractalpark",
+      "filePath": "public/formula-library/v1/runtime/published/definitions/5e913f2f48004cf2e75a308428500639b2d50a3c12ed001e9c9cbc83f92f42d2.frm"
+    },
+    {
+      "formulaId": "56fb67d7-2474-5076-8d59-ac9dbfb7c0b1",
+      "sourceProject": "fractint",
+      "filePath": "fractint-float/formulas/fract003.frm"
+    },
+    {
+      "formulaId": "573d8cb0-13e5-51e6-880d-a7c4fb4f5321",
+      "sourceProject": "iterated-dynamics",
+      "filePath": "home/extra/frmtutor.frm"
+    },
+    {
+      "formulaId": "579c54b7-c055-53fa-86a9-104f8f69752d",
+      "sourceProject": "fractint",
+      "filePath": "fractint-float/formulas/fract002.frm"
+    },
+    {
+      "formulaId": "57e13d8d-2db6-59c5-baeb-549c22034c7f",
+      "sourceProject": "fractint",
+      "filePath": "fractint-float/formulas/fract003.frm"
+    },
+    {
+      "formulaId": "58edc237-4978-5aed-8229-028b1d9cbbb9",
+      "sourceProject": "fractint",
+      "filePath": "fractint-float/formulas/fractint.frm"
+    },
+    {
+      "formulaId": "596924fd-c7dd-51c5-891a-42406ee23fb6",
+      "sourceProject": "fractint",
+      "filePath": "fractint-float/formulas/fractint.frm"
+    },
+    {
+      "formulaId": "5982efd3-160d-5a50-9eaf-2629efd87ed6",
+      "sourceProject": "fractint",
+      "filePath": "fractint-float/formulas/fract001.frm"
+    },
+    {
+      "formulaId": "599a7fda-4c0e-5489-b12e-6e4179ee11f2",
+      "sourceProject": "fractalpark",
+      "filePath": "public/formula-library/v1/runtime/published/definitions/6864baf1c6fb93ea8ce506200e19583fd0b7c1b361fb17764b661d6424762cfa.frm"
+    },
+    {
+      "formulaId": "59a0bf0a-ddf3-5f3e-ad94-984d10cdc42a",
+      "sourceProject": "fractint",
+      "filePath": "fractint-float/formulas/ikenaga.frm"
+    },
+    {
+      "formulaId": "59dd9fd1-38d1-5887-a9f6-b6941f532cad",
+      "sourceProject": "fractint",
+      "filePath": "fractint-float/formulas/fract002.frm"
+    },
+    {
+      "formulaId": "5a5062e4-635e-5569-8be7-bed7c3a05365",
+      "sourceProject": "iterated-dynamics",
+      "filePath": "home/extra/frmtutor.frm"
+    },
+    {
+      "formulaId": "5c699919-a5f7-5995-8673-53b7088d5b39",
+      "sourceProject": "fractint",
+      "filePath": "fractint-float/formulas/fract002.frm"
+    },
+    {
+      "formulaId": "5d0877c0-5f84-5c3b-9466-b9f9b417cb6a",
+      "sourceProject": "fractint",
+      "filePath": "fractint-float/formulas/fractint.frm"
+    },
+    {
+      "formulaId": "5e77d815-2c11-519d-a7fb-edcddb504d54",
+      "sourceProject": "fractint",
+      "filePath": "fractint-float/formulas/fractint.frm"
+    },
+    {
+      "formulaId": "5e9ec92f-0bb6-5534-adf5-d7ddc7ff60c3",
+      "sourceProject": "fractint",
+      "filePath": "fractint-float/formulas/fract002.frm"
+    },
+    {
+      "formulaId": "5ebf37c7-2ce9-53ef-a6ec-fdbfa5c8742c",
+      "sourceProject": "fractint",
+      "filePath": "fractint-float/formulas/fractint.frm"
+    },
+    {
+      "formulaId": "5f0a5361-4138-5a1a-9097-0765a5b77e40",
+      "sourceProject": "fractint",
+      "filePath": "fractint-float/formulas/fract001.frm"
+    },
+    {
+      "formulaId": "5f191f8d-ec65-52c1-8e86-c747a919f3cf",
+      "sourceProject": "fractint",
+      "filePath": "fractint-float/formulas/fractint.frm"
+    },
+    {
+      "formulaId": "5f788658-714f-5153-923c-4dcf2f551b12",
+      "sourceProject": "fractint",
+      "filePath": "fractint-float/formulas/fractint.frm"
+    },
+    {
+      "formulaId": "5fba3d0c-c66e-5ad2-9415-584034543625",
+      "sourceProject": "fractint",
+      "filePath": "fractint-float/formulas/fract002.frm"
+    },
+    {
+      "formulaId": "62098934-def3-527a-ac43-2c80449c9848",
+      "sourceProject": "fractalpark",
+      "filePath": "public/formula-library/v1/runtime/published/definitions/826c473c5cdf710c5273c29a219eaf17ffc9117c74eb03282a51f9501eb9342c.frm"
+    },
+    {
+      "formulaId": "623fec59-86d1-5702-88ee-4a638079c6b0",
+      "sourceProject": "iterated-dynamics",
+      "filePath": "home/extra/frmtutor.frm"
+    },
+    {
+      "formulaId": "62423e7c-842d-5b59-b73d-03a40ec11da1",
+      "sourceProject": "fractint",
+      "filePath": "fractint-float/formulas/julitile.frm"
+    },
+    {
+      "formulaId": "627c38a8-8f4d-548f-a5a6-dd9f215adf60",
+      "sourceProject": "fractalpark",
+      "filePath": "public/formula-library/v1/runtime/published/definitions/01058522dac48f2278d74a3e8a06b4c18e6d2589a3ccda69565dad37c325298d.frm"
+    },
+    {
+      "formulaId": "6409d7e7-7652-5222-865c-5367ff372d7d",
+      "sourceProject": "iterated-dynamics",
+      "filePath": "home/extra/frmtutor.frm"
+    },
+    {
+      "formulaId": "641e81e3-1e4a-5539-bdce-1ee07521b421",
+      "sourceProject": "fractint",
+      "filePath": "fractint-float/formulas/fract001.frm"
+    },
+    {
+      "formulaId": "665c8e11-c7d0-5fa2-8b80-ac4027e9ba89",
+      "sourceProject": "fractint",
+      "filePath": "fractint-float/formulas/fract002.frm"
+    },
+    {
+      "formulaId": "670ca9f2-5188-595e-86ea-6a44b7cb73e3",
+      "sourceProject": "fractint",
+      "filePath": "fractint-float/formulas/fract002.frm"
+    },
+    {
+      "formulaId": "68753107-933c-565b-8833-052a2886fa86",
+      "sourceProject": "fractint",
+      "filePath": "fractint-float/formulas/fract001.frm"
+    },
+    {
+      "formulaId": "68dbf03a-d943-55ae-ba14-8a597d4c8477",
+      "sourceProject": "fractint",
+      "filePath": "fractint-float/formulas/fract003.frm"
+    },
+    {
+      "formulaId": "6a292c82-ac95-5d4c-98d7-963e2f7c5755",
+      "sourceProject": "fractint",
+      "filePath": "fractint-float/formulas/fract002.frm"
+    },
+    {
+      "formulaId": "6a9f2e31-71d3-5074-b552-9aa2e704ff94",
+      "sourceProject": "fractint",
+      "filePath": "fractint-float/formulas/fract002.frm"
+    },
+    {
+      "formulaId": "6b0c0c41-adc5-54d4-9c59-1a738099b5ec",
+      "sourceProject": "fractint",
+      "filePath": "fractint-float/formulas/fract002.frm"
+    },
+    {
+      "formulaId": "6b633456-4a1d-580e-9a61-6824ca303486",
+      "sourceProject": "fractalpark",
+      "filePath": "public/formula-library/v1/runtime/published/definitions/b1e8539c0c7fac763cf97f88748a45f0ac2ae09d89ceb4ed07fc49025d2b7b57.frm"
+    },
+    {
+      "formulaId": "6bcf077e-6f30-5f3f-9ae8-4cf5d3fb4020",
+      "sourceProject": "fractint",
+      "filePath": "fractint/formulas/fractint.frm"
+    },
+    {
+      "formulaId": "6bd676b3-4d37-597d-b780-b6028c91e3dc",
+      "sourceProject": "fractint",
+      "filePath": "fractint-float/formulas/fractint.frm"
+    },
+    {
+      "formulaId": "6bf0fce4-9f20-5cb0-aa49-bd0202c16a1f",
+      "sourceProject": "iterated-dynamics",
+      "filePath": "home/extra/frmtutor.frm"
+    },
+    {
+      "formulaId": "6c1385a9-2d23-5816-90d1-2752905fc353",
+      "sourceProject": "fractalpark",
+      "filePath": "public/formula-library/v1/runtime/published/definitions/decba7b7f3d2b3e121f53906a98d62d32743da89d72ea79c2aa1ebd5f5aa2e37.frm"
+    },
+    {
+      "formulaId": "6ca66e2b-035b-594a-8169-553bf1e51d99",
+      "sourceProject": "fractint",
+      "filePath": "fractint-float/formulas/fract002.frm"
+    },
+    {
+      "formulaId": "6d27b5fd-462b-5561-bac2-7c5f915e3cb5",
+      "sourceProject": "fractalpark",
+      "filePath": "public/formula-library/v1/runtime/published/definitions/7ef2bf1f2dd573053bbe1e8af171472dff08ed6346b2e760ab2780c9244d1e85.frm"
+    },
+    {
+      "formulaId": "6d413a47-cca9-5cb0-8c0e-60e3887a6138",
+      "sourceProject": "fractint",
+      "filePath": "fractint-float/formulas/fract002.frm"
+    },
+    {
+      "formulaId": "6d4aca24-66e6-5bcc-9cc6-e4e7c94d0a96",
+      "sourceProject": "fractint",
+      "filePath": "fractint-float/formulas/fract002.frm"
+    },
+    {
+      "formulaId": "6df24dea-4668-5590-b251-c9bf208aa45d",
+      "sourceProject": "fractint",
+      "filePath": "fractint-float/formulas/fract001.frm"
+    },
+    {
+      "formulaId": "6e972810-83ea-5557-be77-084f730ee87b",
+      "sourceProject": "fractint",
+      "filePath": "fractint-float/formulas/fract002.frm"
+    },
+    {
+      "formulaId": "6e987df6-9931-5242-9f83-80ebb0c922be",
+      "sourceProject": "fractint",
+      "filePath": "fractint-float/formulas/fract003.frm"
+    },
+    {
+      "formulaId": "6ed1543a-f382-5daf-9bec-4f26f7ffed04",
+      "sourceProject": "fractint",
+      "filePath": "fractint-float/formulas/fract002.frm"
+    },
+    {
+      "formulaId": "6f69b9f4-cea0-5ee1-bea1-468f7a268b9c",
+      "sourceProject": "fractint",
+      "filePath": "fractint-float/formulas/fractint.frm"
+    },
+    {
+      "formulaId": "6fd03e0d-2427-5967-b53d-5540ebc4be56",
+      "sourceProject": "fractint",
+      "filePath": "fractint-float/formulas/fract002.frm"
+    },
+    {
+      "formulaId": "70b6af5a-8da1-5403-8039-d5b475f48248",
+      "sourceProject": "fractint",
+      "filePath": "fractint-float/formulas/fractint.frm"
+    },
+    {
+      "formulaId": "71ab3539-56d9-5792-9c33-2cc7a67b73ac",
+      "sourceProject": "fractint",
+      "filePath": "fractint-float/formulas/fract002.frm"
+    },
+    {
+      "formulaId": "725485b6-49a7-5063-a603-d0f92783d276",
+      "sourceProject": "fractint",
+      "filePath": "fractint-float/formulas/fract002.frm"
+    },
+    {
+      "formulaId": "73a3c993-2317-53e1-9cfa-836aaf906859",
+      "sourceProject": "fractint",
+      "filePath": "fractint-float/formulas/fractint.frm"
+    },
+    {
+      "formulaId": "743f6bbf-4cc1-5df7-8f3e-2e654ddc81ba",
+      "sourceProject": "fractint",
+      "filePath": "fractint-float/formulas/fract196.frm"
+    },
+    {
+      "formulaId": "74406ccc-7611-5893-b076-733e7c288c61",
+      "sourceProject": "fractint",
+      "filePath": "fractint-float/formulas/fract003.frm"
+    },
+    {
+      "formulaId": "74874658-3c47-5813-869a-70e642dc0038",
+      "sourceProject": "fractint",
+      "filePath": "fractint-float/formulas/ikenaga.frm"
+    },
+    {
+      "formulaId": "74a7ad74-f5bd-5e11-8c33-5887487d5180",
+      "sourceProject": "fractint",
+      "filePath": "fractint-float/formulas/fract001.frm"
+    },
+    {
+      "formulaId": "75e70076-b422-5535-b3c9-c484fbf879e6",
+      "sourceProject": "fractalpark",
+      "filePath": "public/formula-library/v1/runtime/published/definitions/be9ade0f6d4b272ca864da504bb66a6abab234322112686e72e1624353ce11ec.frm"
+    },
+    {
+      "formulaId": "769fa5c9-0c91-5628-8971-eff383502158",
+      "sourceProject": "fractint",
+      "filePath": "fractint-float/formulas/fract001.frm"
+    },
+    {
+      "formulaId": "76cb0ae7-7f3e-5bba-bb20-5bec91f9f3a6",
+      "sourceProject": "fractint",
+      "filePath": "fractint-float/formulas/fract003.frm"
+    },
+    {
+      "formulaId": "77ca142c-a2c6-568d-acbd-2b4dde8c7e89",
+      "sourceProject": "fractint",
+      "filePath": "fractint-float/formulas/fractint.frm"
+    },
+    {
+      "formulaId": "77fb9270-e9aa-5e7d-af63-d3c28af6d9ad",
+      "sourceProject": "fractint",
+      "filePath": "fractint-float/formulas/fract002.frm"
+    },
+    {
+      "formulaId": "78e550c6-d58d-57b7-92ff-82e9ed0728f0",
+      "sourceProject": "fractalpark",
+      "filePath": "public/formula-library/v1/runtime/published/definitions/9372d322b21755b6e9e529e348ceead65a526ca3243e976845c39144ce8b38df.frm"
+    },
+    {
+      "formulaId": "79260cb1-fa26-5139-a3dc-8ecdc29a2afd",
+      "sourceProject": "fractint",
+      "filePath": "fractint-float/formulas/fract002.frm"
+    },
+    {
+      "formulaId": "7953b392-8bc6-5913-be0a-d458c854647f",
+      "sourceProject": "fractint",
+      "filePath": "fractint-float/formulas/fract002.frm"
+    },
+    {
+      "formulaId": "79a1e37c-169d-5603-84ae-ebf291c3ff97",
+      "sourceProject": "fractint",
+      "filePath": "fractint-float/formulas/fract002.frm"
+    },
+    {
+      "formulaId": "7c45552a-cb92-5510-a7bb-25dbd60a8ff3",
+      "sourceProject": "fractint",
+      "filePath": "fractint-float/formulas/fractint.frm"
+    },
+    {
+      "formulaId": "7c9a2273-28b9-5850-b521-9689a84a3700",
+      "sourceProject": "fractint",
+      "filePath": "fractint-float/formulas/fract003.frm"
+    },
+    {
+      "formulaId": "7ce8c07c-0ba6-560c-9316-9aa2439997b3",
+      "sourceProject": "fractint",
+      "filePath": "fractint-float/formulas/fractint.frm"
+    },
+    {
+      "formulaId": "7d41553d-885e-5f7a-810e-3be60046c9f9",
+      "sourceProject": "fractint",
+      "filePath": "fractint-float/formulas/fract001.frm"
+    },
+    {
+      "formulaId": "7d7ac95b-e1aa-53d0-a306-a2be1aa2b095",
+      "sourceProject": "fractint",
+      "filePath": "fractint-float/formulas/fractint.frm"
+    },
+    {
+      "formulaId": "7e6e1c30-7b53-587c-827e-cdacba48a024",
+      "sourceProject": "fractint",
+      "filePath": "fractint-float/formulas/fractint.frm"
+    },
+    {
+      "formulaId": "7ead9a6a-0c66-5aa8-a448-d8594876e727",
+      "sourceProject": "fractint",
+      "filePath": "fractint-float/formulas/fract002.frm"
+    },
+    {
+      "formulaId": "7f899f9c-1f66-5864-8fb1-48135bb269ed",
+      "sourceProject": "fractint",
+      "filePath": "fractint-float/formulas/fractint.frm"
+    },
+    {
+      "formulaId": "805b4a5b-0ac9-5a3e-b589-1cdd1df06075",
+      "sourceProject": "fractint",
+      "filePath": "fractint-float/formulas/fract002.frm"
+    },
+    {
+      "formulaId": "81701548-4c1a-5038-a7e2-27ee265b0abc",
+      "sourceProject": "iterated-dynamics",
+      "filePath": "home/extra/frmtutor.frm"
+    },
+    {
+      "formulaId": "81bf246a-0822-57e7-b659-cce3fbd8d818",
+      "sourceProject": "fractint",
+      "filePath": "fractint-float/formulas/fract002.frm"
+    },
+    {
+      "formulaId": "8216cd19-79d0-56e3-88ac-5c58a28bce85",
+      "sourceProject": "fractint",
+      "filePath": "fractint-float/formulas/fract002.frm"
+    },
+    {
+      "formulaId": "82d5f7e0-77f9-5115-a6a4-3222eb0df696",
+      "sourceProject": "fractint",
+      "filePath": "fractint-float/formulas/fract002.frm"
+    },
+    {
+      "formulaId": "82df8478-c0f0-5b64-86fe-5bc56b4a462b",
+      "sourceProject": "fractint",
+      "filePath": "fractint-float/formulas/fract003.frm"
+    },
+    {
+      "formulaId": "82fb9306-8444-58a1-a86e-c4794093d7ed",
+      "sourceProject": "fractint",
+      "filePath": "fractint-float/formulas/fract002.frm"
+    },
+    {
+      "formulaId": "834e2e45-7622-5f87-b825-b0bcfc15cfe2",
+      "sourceProject": "fractint",
+      "filePath": "fractint-float/formulas/fractint.frm"
+    },
+    {
+      "formulaId": "83d9e65a-3f99-58a5-8fca-1f0312ee7b35",
+      "sourceProject": "fractint",
+      "filePath": "fractint-float/formulas/fract003.frm"
+    },
+    {
+      "formulaId": "848e8cdc-d391-5098-9fdc-1de2f83be3f0",
+      "sourceProject": "fractalpark",
+      "filePath": "public/formula-library/v1/runtime/published/definitions/4606e604470ad231c1e7680e6f44c4df1132057316fe5edf666edc1fb48b2803.frm"
+    },
+    {
+      "formulaId": "85f4fcd2-42ed-5608-83a9-896ffa2e0129",
+      "sourceProject": "fractint",
+      "filePath": "fractint-float/formulas/fract002.frm"
+    },
+    {
+      "formulaId": "861ec40f-56db-530f-b5fd-918c038ea6d3",
+      "sourceProject": "fractint",
+      "filePath": "fractint-float/formulas/fract001.frm"
+    },
+    {
+      "formulaId": "8683972b-c782-5583-80a7-b1df1631e7ac",
+      "sourceProject": "iterated-dynamics",
+      "filePath": "home/extra/frmtutor.frm"
+    },
+    {
+      "formulaId": "87580e5e-bb87-5b05-87f6-45bc8b4e03fb",
+      "sourceProject": "fractint",
+      "filePath": "fractint-float/formulas/fractint.frm"
+    },
+    {
+      "formulaId": "87b4ebc7-ba9d-527b-ab3b-aaa45967b255",
+      "sourceProject": "fractint",
+      "filePath": "fractint-float/formulas/fract001.frm"
+    },
+    {
+      "formulaId": "88887758-7d89-5be3-b0ef-6cdbdc9f5825",
+      "sourceProject": "fractint",
+      "filePath": "fractint-float/formulas/fract001.frm"
+    },
+    {
+      "formulaId": "88dd57cd-a348-55e8-983a-74c0acba57ae",
+      "sourceProject": "fractalpark",
+      "filePath": "public/formula-library/v1/runtime/published/definitions/1afe2c3b50115c812e5adefc0a74020b2fd1eef286fcbe7d3a724944bfe04240.frm"
+    },
+    {
+      "formulaId": "890ef186-8e18-5b9b-a928-b2b3f0b20e92",
+      "sourceProject": "fractint",
+      "filePath": "fractint-float/formulas/fract001.frm"
+    },
+    {
+      "formulaId": "8966ff50-0c66-5b18-a73e-6275e6ee5d88",
+      "sourceProject": "fractint",
+      "filePath": "fractint-float/formulas/fract002.frm"
+    },
+    {
+      "formulaId": "89e6c1c2-5105-50b7-b7e2-e1f03e4fe8e1",
+      "sourceProject": "fractint",
+      "filePath": "fractint-float/formulas/fractint.frm"
+    },
+    {
+      "formulaId": "89eea36e-372e-5530-90f9-69879253080a",
+      "sourceProject": "fractint",
+      "filePath": "fractint-float/formulas/fract002.frm"
+    },
+    {
+      "formulaId": "8a01fc8e-1b68-5db5-85dd-6eebb78dacf5",
+      "sourceProject": "fractint",
+      "filePath": "fractint-float/formulas/fract001.frm"
+    },
+    {
+      "formulaId": "8a2b9778-56df-5da9-a9fc-f47f4ec5820a",
+      "sourceProject": "fractint",
+      "filePath": "fractint-float/formulas/fract001.frm"
+    },
+    {
+      "formulaId": "8b4578e2-5ecf-5500-9dc9-57a1e51e627e",
+      "sourceProject": "fractint",
+      "filePath": "fractint-float/formulas/fract002.frm"
+    },
+    {
+      "formulaId": "8c95abba-5037-5019-899b-12492010ce3a",
+      "sourceProject": "fractint",
+      "filePath": "fractint-float/formulas/fract196.frm"
+    },
+    {
+      "formulaId": "8cde6ebb-f5cc-577e-8abc-9e4d20c1d994",
+      "sourceProject": "fractint",
+      "filePath": "fractint-float/formulas/fract001.frm"
+    },
+    {
+      "formulaId": "8ddf2423-d8ff-5d3d-967c-5374c52925cb",
+      "sourceProject": "fractint",
+      "filePath": "fractint-float/formulas/fract002.frm"
+    },
+    {
+      "formulaId": "8eb342fe-8a05-524e-8b98-35cdc8af5be3",
+      "sourceProject": "fractalpark",
+      "filePath": "public/formula-library/v1/runtime/published/definitions/9f102aa122c2f49ca1ec0ad883ddcb51dd58a92e86501ba081f22fab82fe0410.frm"
+    },
+    {
+      "formulaId": "8f661407-f2c9-57e5-8c01-9b63a3cd0493",
+      "sourceProject": "fractalpark",
+      "filePath": "public/formula-library/v1/runtime/published/definitions/ccf0789e752a08f4dcc10feba172e7132287c4716c55a2ac86cb5df98015e014.frm"
+    },
+    {
+      "formulaId": "8f8f2d09-9907-5cde-b1e2-93aa88caaa24",
+      "sourceProject": "fractint",
+      "filePath": "fractint-float/formulas/fractint.frm"
+    },
+    {
+      "formulaId": "8f9eb07a-b405-5d9c-8b6a-9447ad7165b0",
+      "sourceProject": "fractalpark",
+      "filePath": "public/formula-library/v1/runtime/published/definitions/62dbe6e2d3a50b62da0ac3e58b7f0d86a36f196cc593d21dac783a04426d6194.frm"
+    },
+    {
+      "formulaId": "9068c579-4fc9-57bb-99a7-4e86d15dc55b",
+      "sourceProject": "fractint",
+      "filePath": "fractint-float/formulas/fractint.frm"
+    },
+    {
+      "formulaId": "909f3ac5-9bc2-5e0a-835f-f4f73b1da23f",
+      "sourceProject": "fractint",
+      "filePath": "fractint-float/formulas/fractint.frm"
+    },
+    {
+      "formulaId": "90b86064-929f-5dc8-b671-0284b76ee3fb",
+      "sourceProject": "fractint",
+      "filePath": "fractint-float/formulas/fract003.frm"
+    },
+    {
+      "formulaId": "91653f7a-de43-5f1e-ab4d-c98f815b879b",
+      "sourceProject": "fractint",
+      "filePath": "fractint-float/formulas/fract001.frm"
+    },
+    {
+      "formulaId": "92287c3c-4301-5481-9397-092a089de3af",
+      "sourceProject": "fractint",
+      "filePath": "fractint-float/formulas/fract001.frm"
+    },
+    {
+      "formulaId": "926cfb41-c7f8-5c51-b036-18a8428121bb",
+      "sourceProject": "fractint",
+      "filePath": "fractint-float/formulas/fract002.frm"
+    },
+    {
+      "formulaId": "93102e86-d35b-53f2-8569-47a4a20a656d",
+      "sourceProject": "fractint",
+      "filePath": "fractint-float/formulas/fract001.frm"
+    },
+    {
+      "formulaId": "93e5f276-7b4a-56fa-9e2e-9989ca19c710",
+      "sourceProject": "fractint",
+      "filePath": "fractint-float/formulas/fract001.frm"
+    },
+    {
+      "formulaId": "948e00da-175d-5863-8c9c-6038df9a402a",
+      "sourceProject": "fractint",
+      "filePath": "fractint-float/formulas/fract002.frm"
+    },
+    {
+      "formulaId": "9523e03d-c417-590e-8d03-ebaabe392327",
+      "sourceProject": "fractint",
+      "filePath": "fractint-float/formulas/fractint.frm"
+    },
+    {
+      "formulaId": "9577c6c0-3a56-5a17-bea5-0ad2d6ea7e08",
+      "sourceProject": "fractalpark",
+      "filePath": "public/formula-library/v1/runtime/published/definitions/fb8c0f2d92c13fa06f201a8d72caf26cf4371f4e951fc2c5719d2a598d170566.frm"
+    },
+    {
+      "formulaId": "962d33f0-f95b-58db-9450-47088ecc26ac",
+      "sourceProject": "fractint",
+      "filePath": "fractint-float/formulas/ikenaga.frm"
+    },
+    {
+      "formulaId": "9693612f-d5c2-5d77-9058-58ee16e14b4b",
+      "sourceProject": "fractalpark",
+      "filePath": "public/formula-library/v1/runtime/published/definitions/7cff43d492398231de0ad3df0d14557c9ec8b13683c1d091b18213978afd74af.frm"
+    },
+    {
+      "formulaId": "97e2fc76-3590-5119-8b38-d8cc43f18d74",
+      "sourceProject": "fractint",
+      "filePath": "fractint-float/formulas/fractint.frm"
+    },
+    {
+      "formulaId": "9851c160-cf6c-5e04-b0bc-ce59657c4478",
+      "sourceProject": "fractint",
+      "filePath": "fractint-float/formulas/fract003.frm"
+    },
+    {
+      "formulaId": "9915da24-f5e1-539c-84b2-4924d52efbb7",
+      "sourceProject": "fractint",
+      "filePath": "fractint-float/formulas/fract001.frm"
+    },
+    {
+      "formulaId": "9923991c-19b5-5559-8250-5eb04726f4bd",
+      "sourceProject": "fractint",
+      "filePath": "fractint-float/formulas/fractint.frm"
+    },
+    {
+      "formulaId": "999adf4a-6019-56f0-89a4-c09250e9a0a2",
+      "sourceProject": "fractint",
+      "filePath": "fractint-float/formulas/fract002.frm"
+    },
+    {
+      "formulaId": "99e9f931-2711-51ae-ae06-28e9345277ba",
+      "sourceProject": "fractint",
+      "filePath": "fractint-float/formulas/fractint.frm"
+    },
+    {
+      "formulaId": "9b116c1f-4bb9-5788-83db-7aecb0b03404",
+      "sourceProject": "fractint",
+      "filePath": "fractint-float/formulas/fract001.frm"
+    },
+    {
+      "formulaId": "9b437c43-72bc-51a3-8b61-227f916d724c",
+      "sourceProject": "fractalpark",
+      "filePath": "public/formula-library/v1/runtime/published/definitions/03da48b632c5d4144486ea1c56255bf4c908cd5e5f20ef4fbec1806d4bac6964.frm"
+    },
+    {
+      "formulaId": "9b51d265-8603-5613-9b2a-938430309021",
+      "sourceProject": "fractint",
+      "filePath": "fractint-float/formulas/fractint.frm"
+    },
+    {
+      "formulaId": "9c0fb578-8cb6-5793-9c94-af3f02e3a85b",
+      "sourceProject": "fractint",
+      "filePath": "fractint-float/formulas/ikenaga.frm"
+    },
+    {
+      "formulaId": "9c4b2d9f-48ce-5b9c-a71e-e6843a71501f",
+      "sourceProject": "fractint",
+      "filePath": "fractint-float/formulas/fract001.frm"
+    },
+    {
+      "formulaId": "9c60877e-d554-5578-b7ba-90405b44d604",
+      "sourceProject": "fractint",
+      "filePath": "fractint-float/formulas/fract003.frm"
+    },
+    {
+      "formulaId": "9c92a2b0-a3a8-55ca-b89c-941099319d6e",
+      "sourceProject": "fractint",
+      "filePath": "fractint-float/formulas/fract003.frm"
+    },
+    {
+      "formulaId": "9cc91fab-f386-5ebc-9a71-722c4a8c7c75",
+      "sourceProject": "fractint",
+      "filePath": "fractint-float/formulas/fract002.frm"
+    },
+    {
+      "formulaId": "9cd1e5fd-0d01-5371-ae9a-37d6ec85d93b",
+      "sourceProject": "fractint",
+      "filePath": "fractint-float/formulas/fractint.frm"
+    },
+    {
+      "formulaId": "9e4246cb-bc41-57ba-9903-5c3dcc366cac",
+      "sourceProject": "iterated-dynamics",
+      "filePath": "home/extra/frmtutor.frm"
+    },
+    {
+      "formulaId": "9e7250d0-f815-521a-9cf6-6c4d68598b2c",
+      "sourceProject": "fractint",
+      "filePath": "fractint-float/formulas/fract002.frm"
+    },
+    {
+      "formulaId": "9e88fbd0-1e8e-5257-8294-8a872d9e4aab",
+      "sourceProject": "iterated-dynamics",
+      "filePath": "home/extra/frmtutor.frm"
+    },
+    {
+      "formulaId": "9eca49f4-3219-5791-99fb-395ce7646f7c",
+      "sourceProject": "fractint",
+      "filePath": "fractint-float/formulas/fractint.frm"
+    },
+    {
+      "formulaId": "9f301c01-13fa-57b4-a3b2-99add821bfb0",
+      "sourceProject": "fractalpark",
+      "filePath": "public/formula-library/v1/runtime/published/definitions/df2d4387d714cd91b67a6c019af286fad376b27ee36e6ec038ba44c301f64c25.frm"
+    },
+    {
+      "formulaId": "a0295fbb-2275-53db-b59d-c969cd722c8c",
+      "sourceProject": "fractint",
+      "filePath": "fractint-float/formulas/fract001.frm"
+    },
+    {
+      "formulaId": "a0780d2d-a2e9-5139-92fe-b9d0f7edada2",
+      "sourceProject": "fractint",
+      "filePath": "fractint-float/formulas/fractint.frm"
+    },
+    {
+      "formulaId": "a1d276ef-65af-501c-b787-f98365f8a6d5",
+      "sourceProject": "fractint",
+      "filePath": "fractint-float/formulas/fract001.frm"
+    },
+    {
+      "formulaId": "a2b483f2-1066-54e6-8e28-c22f6983975a",
+      "sourceProject": "fractint",
+      "filePath": "fractint-float/formulas/fract001.frm"
+    },
+    {
+      "formulaId": "a2f48cb8-1aa3-5b80-bf04-e10ddc033ed0",
+      "sourceProject": "fractint",
+      "filePath": "fractint-float/formulas/ikenaga.frm"
+    },
+    {
+      "formulaId": "a3ab1c2f-5940-51d3-8c13-58f7feeb084b",
+      "sourceProject": "fractalpark",
+      "filePath": "public/formula-library/v1/runtime/published/definitions/a40c549ceff1450e3827f366d47cb83b7c531c20469f3c9a8c88082639f0b7d1.frm"
+    },
+    {
+      "formulaId": "a3ac54dd-5172-5239-b7fd-8540636ff4eb",
+      "sourceProject": "fractint",
+      "filePath": "fractint-float/formulas/fract002.frm"
+    },
+    {
+      "formulaId": "a3c91590-898f-55f7-92b0-ca549477edd3",
+      "sourceProject": "fractint",
+      "filePath": "fractint-float/formulas/fract002.frm"
+    },
+    {
+      "formulaId": "a3f8a298-ed79-5826-8652-74589c595e06",
+      "sourceProject": "fractint",
+      "filePath": "fractint-float/formulas/fract002.frm"
+    },
+    {
+      "formulaId": "a51d0f1c-29d5-5dbf-a83f-5d9da282f6c5",
+      "sourceProject": "fractint",
+      "filePath": "fractint/formulas/fractint.frm"
+    },
+    {
+      "formulaId": "a52047b7-4e94-55ef-9b8a-9033bcf17a09",
+      "sourceProject": "fractint",
+      "filePath": "fractint-float/formulas/fract001.frm"
+    },
+    {
+      "formulaId": "a569d2c4-d397-5634-9dfe-21b2ab1a386a",
+      "sourceProject": "fractalpark",
+      "filePath": "public/formula-library/v1/runtime/published/definitions/b7dd588e3cf8c70a1ec52801a03b6ee1b6980009c0725f8a32ecfa8fe1a6dfad.frm"
+    },
+    {
+      "formulaId": "a63c7852-626f-5659-a556-b0193030f25b",
+      "sourceProject": "fractalpark",
+      "filePath": "public/formula-library/v1/runtime/published/definitions/2752d0a668b09b44c77541c443f32744145800ed32a0929485af63c9a60ed8ae.frm"
+    },
+    {
+      "formulaId": "a69bc250-315d-5a74-9109-d23a820974e5",
+      "sourceProject": "fractalpark",
+      "filePath": "public/formula-library/v1/runtime/published/definitions/99df8d1a5ac5a7dda5b7744a6776a4fac8a05e769351b8f4b351163c0f4e8dae.frm"
+    },
+    {
+      "formulaId": "a7a97d42-4e18-5048-b5d9-65eb80cbdc60",
+      "sourceProject": "fractint",
+      "filePath": "fractint-float/formulas/fract001.frm"
+    },
+    {
+      "formulaId": "a7beb1e7-dc8b-5411-acdf-6781eafd8b29",
+      "sourceProject": "fractint",
+      "filePath": "fractint-float/formulas/fract002.frm"
+    },
+    {
+      "formulaId": "a866079c-332f-5e5d-aba0-ae0512627582",
+      "sourceProject": "fractint",
+      "filePath": "fractint-float/formulas/fractint.frm"
+    },
+    {
+      "formulaId": "a86f88ad-cfed-59dc-a83b-93e77917e842",
+      "sourceProject": "fractint",
+      "filePath": "fractint-float/formulas/fract001.frm"
+    },
+    {
+      "formulaId": "a89891b1-8ccb-5d58-9fbb-05944b85ce3c",
+      "sourceProject": "fractalpark",
+      "filePath": "public/formula-library/v1/runtime/published/definitions/ede967e2b65d1f547af3504bab1d91071ad5f9cda0969189c5b50f3102d18dbb.frm"
+    },
+    {
+      "formulaId": "a89c54bd-2f5c-5aac-95d2-450a07212850",
+      "sourceProject": "fractint",
+      "filePath": "fractint-float/formulas/fractint.frm"
+    },
+    {
+      "formulaId": "a8becf49-83d1-5692-b087-e520652013d2",
+      "sourceProject": "fractint",
+      "filePath": "fractint-float/formulas/fract196.frm"
+    },
+    {
+      "formulaId": "a8ec7595-53a9-52cc-994c-e4a09fe63d83",
+      "sourceProject": "iterated-dynamics",
+      "filePath": "home/extra/frmtutor.frm"
+    },
+    {
+      "formulaId": "a903b5ad-0378-5e5f-ab42-f1bfe15b919c",
+      "sourceProject": "fractint",
+      "filePath": "fractint-float/formulas/fract001.frm"
+    },
+    {
+      "formulaId": "a9263b21-23c1-5d94-ba30-f7bef1a66629",
+      "sourceProject": "fractalpark",
+      "filePath": "public/formula-library/v1/runtime/published/definitions/bf1462942af10c52a5adbecf8856b4e34a8a5110637c84fa613728b76a1d6b4a.frm"
+    },
+    {
+      "formulaId": "aa007826-291a-5969-8563-5b4c97cec10b",
+      "sourceProject": "fractint",
+      "filePath": "fractint-float/formulas/fract001.frm"
+    },
+    {
+      "formulaId": "abc996b8-b004-5ec2-8ea8-661615271efc",
+      "sourceProject": "fractint",
+      "filePath": "fractint-float/formulas/fract002.frm"
+    },
+    {
+      "formulaId": "aca5a897-d01b-5a45-85e9-d1be3d137293",
+      "sourceProject": "fractint",
+      "filePath": "fractint-float/formulas/fract001.frm"
+    },
+    {
+      "formulaId": "ad38dcc4-1079-5638-a35c-b16f53ce6e62",
+      "sourceProject": "fractint",
+      "filePath": "fractint-float/formulas/fract002.frm"
+    },
+    {
+      "formulaId": "ad3fb2d1-4157-51aa-8576-2fb203e4747a",
+      "sourceProject": "fractint",
+      "filePath": "fractint-float/formulas/fract002.frm"
+    },
+    {
+      "formulaId": "ae1a8559-552c-52be-973b-7b9d8d8e3cdc",
+      "sourceProject": "fractint",
+      "filePath": "fractint-float/formulas/fract002.frm"
+    },
+    {
+      "formulaId": "ae504daa-09cc-5a59-8052-c91b9535ff24",
+      "sourceProject": "iterated-dynamics",
+      "filePath": "home/extra/frmtutor.frm"
+    },
+    {
+      "formulaId": "af500910-46ce-5a43-b430-c0154cc05959",
+      "sourceProject": "fractalpark",
+      "filePath": "public/formula-library/v1/runtime/published/definitions/305c68341d9d4be9e65092c899f7cfbdd83919af59b69a633b0a53d251a5f99b.frm"
+    },
+    {
+      "formulaId": "b0bf5217-893a-5a0f-9a46-5e5ce89223c3",
+      "sourceProject": "fractalpark",
+      "filePath": "public/formula-library/v1/runtime/published/definitions/422c91b1c26c90c5e193b72e416ea4f8ddb2849b72301512727135a745a6d69a.frm"
+    },
+    {
+      "formulaId": "b0c3cd60-22b6-56cc-8e4e-2fd6cf9224d9",
+      "sourceProject": "fractint",
+      "filePath": "fractint-float/formulas/ikenaga.frm"
+    },
+    {
+      "formulaId": "b1cee702-e3f6-557f-a277-365a5097016f",
+      "sourceProject": "iterated-dynamics",
+      "filePath": "home/extra/frmtutor.frm"
+    },
+    {
+      "formulaId": "b2c06ce2-e976-571a-af8b-c20203c91bc2",
+      "sourceProject": "fractint",
+      "filePath": "fractint-float/formulas/ikenaga.frm"
+    },
+    {
+      "formulaId": "b2e4941a-18d3-5551-a140-525de1f0d1df",
+      "sourceProject": "fractint",
+      "filePath": "fractint-float/formulas/fract002.frm"
+    },
+    {
+      "formulaId": "b37a8ffb-b751-5527-a517-2d36afc9e426",
+      "sourceProject": "fractint",
+      "filePath": "fractint-float/formulas/fractint.frm"
+    },
+    {
+      "formulaId": "b5010cf1-03f9-5127-9d05-01e7e947dcec",
+      "sourceProject": "fractint",
+      "filePath": "fractint-float/formulas/fract002.frm"
+    },
+    {
+      "formulaId": "b6ccba60-aba6-5136-9c92-679ae55ba5ce",
+      "sourceProject": "fractalpark",
+      "filePath": "public/formula-library/v1/runtime/published/definitions/3857ea8d4ca78064e6f19198f16e21954bd654f63f1d12ee923836709196d3a5.frm"
+    },
+    {
+      "formulaId": "b79313f5-2181-5013-bd21-e59a7222dce5",
+      "sourceProject": "fractalpark",
+      "filePath": "public/formula-library/v1/runtime/published/definitions/c9f11ef69b73ea2c6489025f83e6b53cabebc1df1e399f282b8ce44e7da4b05f.frm"
+    },
+    {
+      "formulaId": "b88a02e9-0ef5-5a1a-932a-d2edc968a7ca",
+      "sourceProject": "fractint",
+      "filePath": "fractint-float/formulas/fract001.frm"
+    },
+    {
+      "formulaId": "b8b69fda-a887-58b0-995a-8343f768477e",
+      "sourceProject": "fractint",
+      "filePath": "fractint-float/formulas/fract002.frm"
+    },
+    {
+      "formulaId": "b926b11a-815d-535c-b91c-facfb9399b21",
+      "sourceProject": "fractint",
+      "filePath": "fractint-float/formulas/fract001.frm"
+    },
+    {
+      "formulaId": "b9a54802-21b4-5cb9-8b8f-e4afc3c99f3b",
+      "sourceProject": "fractalpark",
+      "filePath": "public/formula-library/v1/runtime/published/definitions/d6aed2ec300e8c2a94dd291096ddc56d357c4271c225c8e266ef6256cd2b4fcb.frm"
+    },
+    {
+      "formulaId": "bb048a8c-0c83-59b9-97e7-c5ed2fc39524",
+      "sourceProject": "fractint",
+      "filePath": "fractint-float/formulas/fractint.frm"
+    },
+    {
+      "formulaId": "bb186688-4571-5725-a8ed-a17e0100dbc8",
+      "sourceProject": "fractalpark",
+      "filePath": "public/formula-library/v1/runtime/published/definitions/f4a3b0126993d678f9cb6759f6d2e078741ec0cd9b749ab31b043f4f1ce2428a.frm"
+    },
+    {
+      "formulaId": "bb1b85d1-ea8d-5439-a808-be19afcabb30",
+      "sourceProject": "fractint",
+      "filePath": "fractint-float/formulas/fract002.frm"
+    },
+    {
+      "formulaId": "bcde4dcc-ca1c-52cb-b5b2-b917aca39761",
+      "sourceProject": "fractint",
+      "filePath": "fractint-float/formulas/fract001.frm"
+    },
+    {
+      "formulaId": "bcfe3aa5-28c4-5b45-b5db-44b29ef8055d",
+      "sourceProject": "fractint",
+      "filePath": "fractint-float/formulas/fract003.frm"
+    },
+    {
+      "formulaId": "bd3cabb7-66ad-5b86-a8d9-547d8eaeffc4",
+      "sourceProject": "fractint",
+      "filePath": "fractint-float/formulas/fract001.frm"
+    },
+    {
+      "formulaId": "bdd74323-97f3-5fe8-a9b7-951f7a72dc9e",
+      "sourceProject": "fractint",
+      "filePath": "fractint-float/formulas/fractint.frm"
+    },
+    {
+      "formulaId": "be109980-7f5d-537e-8197-c3392a3ac0cb",
+      "sourceProject": "iterated-dynamics",
+      "filePath": "home/extra/frmtutor.frm"
+    },
+    {
+      "formulaId": "bebc8626-5930-5034-a8d3-38c0e134fb1b",
+      "sourceProject": "fractint",
+      "filePath": "fractint-float/formulas/fractint.frm"
+    },
+    {
+      "formulaId": "beeb4aec-91cd-5d01-83bb-0b98ca851e79",
+      "sourceProject": "fractalpark",
+      "filePath": "public/formula-library/v1/runtime/published/definitions/082b4f74a9e2798f67c8d2a61cb29cdc92e6e9f67f6b46c80bcf7af415a61a0b.frm"
+    },
+    {
+      "formulaId": "bf323001-5e0b-51a6-8d04-f0102ef740a9",
+      "sourceProject": "fractint",
+      "filePath": "fractint-float/formulas/fract002.frm"
+    },
+    {
+      "formulaId": "bfb1ea12-9b8e-512b-830e-06ef19a94198",
+      "sourceProject": "fractint",
+      "filePath": "fractint-float/formulas/fract001.frm"
+    },
+    {
+      "formulaId": "c02008d3-60b8-5494-99eb-bdec331227ca",
+      "sourceProject": "fractint",
+      "filePath": "fractint-float/formulas/fract001.frm"
+    },
+    {
+      "formulaId": "c04cedf4-32ec-5b61-b2da-f8bf988e05e0",
+      "sourceProject": "fractint",
+      "filePath": "fractint-float/formulas/ikenaga.frm"
+    },
+    {
+      "formulaId": "c09b9dec-60a6-5a26-8f03-d5ea40f0d49b",
+      "sourceProject": "fractalpark",
+      "filePath": "public/formula-library/v1/runtime/published/definitions/4788720325f40f284ca8126f3bffda0f3c3abad0702b49bbebf81ce2a4f2f68d.frm"
+    },
+    {
+      "formulaId": "c0d25070-a434-5c38-aafc-caf0ee114f67",
+      "sourceProject": "iterated-dynamics",
+      "filePath": "home/extra/frmtutor.frm"
+    },
+    {
+      "formulaId": "c0dec4b4-5412-5c02-966a-612c56880508",
+      "sourceProject": "fractint",
+      "filePath": "fractint-float/formulas/fract002.frm"
+    },
+    {
+      "formulaId": "c122edfc-bdf6-5f5d-a988-6564c73d6a14",
+      "sourceProject": "fractint",
+      "filePath": "fractint-float/formulas/fract002.frm"
+    },
+    {
+      "formulaId": "c1668bd9-76d4-5e34-813e-a5bb8898008c",
+      "sourceProject": "fractint",
+      "filePath": "fractint-float/formulas/fract002.frm"
+    },
+    {
+      "formulaId": "c18f4721-75e2-5ea4-81a0-95b8c49dfc86",
+      "sourceProject": "fractint",
+      "filePath": "fractint-float/formulas/fract001.frm"
+    },
+    {
+      "formulaId": "c1a0a2a9-d5d5-5f53-8d0b-64c49ce9162f",
+      "sourceProject": "fractint",
+      "filePath": "fractint-float/formulas/fract001.frm"
+    },
+    {
+      "formulaId": "c1c898f3-c9a3-583d-9a0a-d09968ba0db3",
+      "sourceProject": "fractalpark",
+      "filePath": "public/formula-library/v1/runtime/published/definitions/a265807bb53747d256b0cbfee89991527a72e8bb9ceac9a41888c3ad1419448e.frm"
+    },
+    {
+      "formulaId": "c224d80c-fccb-50cc-90ef-c2a6d0731999",
+      "sourceProject": "fractint",
+      "filePath": "fractint-float/formulas/fractint.frm"
+    },
+    {
+      "formulaId": "c2a51dc4-1d42-5d4e-ad5b-5ffe960c5f50",
+      "sourceProject": "fractint",
+      "filePath": "fractint-float/formulas/fract002.frm"
+    },
+    {
+      "formulaId": "c2bcb574-f9c9-56c7-bc74-86c3818b2a6e",
+      "sourceProject": "fractint",
+      "filePath": "fractint-float/formulas/fract002.frm"
+    },
+    {
+      "formulaId": "c3ce9a18-7a6d-5043-b8bb-7bde0f95096b",
+      "sourceProject": "fractint",
+      "filePath": "fractint-float/formulas/fract002.frm"
+    },
+    {
+      "formulaId": "c4431abf-9d47-5537-ae91-9bd5cfdaa567",
+      "sourceProject": "fractint",
+      "filePath": "fractint-float/formulas/fract196.frm"
+    },
+    {
+      "formulaId": "c45604cb-3319-59e7-b1a4-aca549ee25c2",
+      "sourceProject": "iterated-dynamics",
+      "filePath": "home/extra/frmtutor.frm"
+    },
+    {
+      "formulaId": "c47127de-9359-5548-b99f-f9c69b21b79b",
+      "sourceProject": "fractint",
+      "filePath": "fractint/formulas/fractint.frm"
+    },
+    {
+      "formulaId": "c523ec02-e1a2-52b5-a8a9-bada5fccae6f",
+      "sourceProject": "fractint",
+      "filePath": "fractint-float/formulas/fract002.frm"
+    },
+    {
+      "formulaId": "c57b91ae-e899-5fef-99b4-dc2ae3e0d9cd",
+      "sourceProject": "fractint",
+      "filePath": "fractint-float/formulas/fract001.frm"
+    },
+    {
+      "formulaId": "c582ae06-6d94-5aef-b8d2-2735b7c34f11",
+      "sourceProject": "fractint",
+      "filePath": "fractint-float/formulas/fract196.frm"
+    },
+    {
+      "formulaId": "c5c8d6cd-3d5a-565d-90c4-f1b7572f9b71",
+      "sourceProject": "fractint",
+      "filePath": "fractint-float/formulas/fract001.frm"
+    },
+    {
+      "formulaId": "c5d5dfae-9f15-5529-8f10-042938047b7f",
+      "sourceProject": "fractint",
+      "filePath": "fractint-float/formulas/fract001.frm"
+    },
+    {
+      "formulaId": "c64fd5e1-77f7-5b37-bafa-e5da99a5e22d",
+      "sourceProject": "fractint",
+      "filePath": "fractint-float/formulas/fractint.frm"
+    },
+    {
+      "formulaId": "c698d9dd-78c0-5478-8aa2-0230a9728ca8",
+      "sourceProject": "fractint",
+      "filePath": "fractint-float/formulas/fract003.frm"
+    },
+    {
+      "formulaId": "c6a188ae-ec58-5a57-bfe2-caf85a83d2f8",
+      "sourceProject": "fractint",
+      "filePath": "fractint-float/formulas/fract003.frm"
+    },
+    {
+      "formulaId": "c6b5dcf4-cef5-5630-b3f6-a68b92ae75ee",
+      "sourceProject": "fractalpark",
+      "filePath": "public/formula-library/v1/runtime/published/definitions/5aa4f9b2c35d3bded213756bb80da01f95fef7ee766779a7f02090a1116a0e9a.frm"
+    },
+    {
+      "formulaId": "c6c4669e-c6f6-5867-990e-8d650b34bc53",
+      "sourceProject": "fractint",
+      "filePath": "fractint/formulas/fractint.frm"
+    },
+    {
+      "formulaId": "c724efce-f10b-5d8c-848a-4c00698210a7",
+      "sourceProject": "fractint",
+      "filePath": "fractint-float/formulas/fractint.frm"
+    },
+    {
+      "formulaId": "c76de166-3e77-5fcd-89e3-92561b33f0b8",
+      "sourceProject": "fractint",
+      "filePath": "fractint-float/formulas/fract003.frm"
+    },
+    {
+      "formulaId": "c871e135-86d3-59c2-a879-69eaca0a8c22",
+      "sourceProject": "fractint",
+      "filePath": "fractint-float/formulas/fract002.frm"
+    },
+    {
+      "formulaId": "c91835ba-9dcc-559c-85fb-0e456ca9987d",
+      "sourceProject": "fractint",
+      "filePath": "fractint-float/formulas/fract001.frm"
+    },
+    {
+      "formulaId": "c95aeaaa-10f4-5e83-ad16-169018862669",
+      "sourceProject": "iterated-dynamics",
+      "filePath": "home/extra/frmtutor.frm"
+    },
+    {
+      "formulaId": "c9c7f540-acdd-5092-8132-02ddf980daa7",
+      "sourceProject": "fractint",
+      "filePath": "fractint-float/formulas/fract002.frm"
+    },
+    {
+      "formulaId": "ca15991c-ebe9-5bd1-b6f6-04b6067ab90f",
+      "sourceProject": "fractint",
+      "filePath": "fractint-float/formulas/fract003.frm"
+    },
+    {
+      "formulaId": "ca206908-8323-5ef9-979b-c80575765e63",
+      "sourceProject": "fractalpark",
+      "filePath": "public/formula-library/v1/runtime/published/definitions/8e7b7ec8823dd032017038ead294ae8e204dc43cc1a24b5709402af1ef075d2b.frm"
+    },
+    {
+      "formulaId": "ca6f9430-10c2-5d79-92dc-852c97c2feb9",
+      "sourceProject": "fractint",
+      "filePath": "fractint-float/formulas/fract001.frm"
+    },
+    {
+      "formulaId": "cb9f75de-2acb-563b-9090-f58f17e65f92",
+      "sourceProject": "fractalpark",
+      "filePath": "public/formula-library/v1/runtime/published/definitions/15e9e1fe969445d456a619767b333ee3d664f1ed11db98d853d89cd1c674beca.frm"
+    },
+    {
+      "formulaId": "cc100ec7-53ba-58c3-9471-03c3188bbaef",
+      "sourceProject": "fractint",
+      "filePath": "fractint-float/formulas/fractint.frm"
+    },
+    {
+      "formulaId": "cc40b50c-d3ff-54f0-b4ea-98bdf0fd0096",
+      "sourceProject": "fractalpark",
+      "filePath": "public/formula-library/v1/runtime/published/definitions/37a6c61666fd5bf3e2bdef96849dc27a10bd58d152e6a161005ab6e565f12ce0.frm"
+    },
+    {
+      "formulaId": "cc4886bd-bff6-5563-b798-677da9a92dab",
+      "sourceProject": "fractint",
+      "filePath": "fractint-float/formulas/fract002.frm"
+    },
+    {
+      "formulaId": "cc489215-c7d7-5f2c-b11a-1be049b167bd",
+      "sourceProject": "fractint",
+      "filePath": "fractint-float/formulas/fractint.frm"
+    },
+    {
+      "formulaId": "cca1c833-de83-5b34-9aa8-cd1750b28354",
+      "sourceProject": "iterated-dynamics",
+      "filePath": "home/extra/frmtutor.frm"
+    },
+    {
+      "formulaId": "cce36994-9654-5214-b931-b865d4f4bb90",
+      "sourceProject": "fractint",
+      "filePath": "fractint-float/formulas/fract002.frm"
+    },
+    {
+      "formulaId": "ccfe0283-df10-5b17-bd2a-5f3cdfd69b4a",
+      "sourceProject": "fractint",
+      "filePath": "fractint-float/formulas/fract003.frm"
+    },
+    {
+      "formulaId": "cddc90de-e9bd-51ce-909b-b9b956bf419b",
+      "sourceProject": "fractint",
+      "filePath": "fractint-float/formulas/fract002.frm"
+    },
+    {
+      "formulaId": "ce1388b4-8994-5948-beaf-e9b54a80a350",
+      "sourceProject": "fractint",
+      "filePath": "fractint-float/formulas/fract002.frm"
+    },
+    {
+      "formulaId": "ce4febcc-cac4-5319-a46e-389a76e08d6f",
+      "sourceProject": "fractint",
+      "filePath": "fractint-float/formulas/fract002.frm"
+    },
+    {
+      "formulaId": "cefe7738-0e8a-547f-ac85-ac3db2529907",
+      "sourceProject": "fractint",
+      "filePath": "fractint-float/formulas/fract002.frm"
+    },
+    {
+      "formulaId": "cf335fbe-f1d3-5335-a68b-738197760a06",
+      "sourceProject": "fractint",
+      "filePath": "fractint-float/formulas/fract200.frm"
+    },
+    {
+      "formulaId": "d0079630-8ed3-5379-9e37-52cb7f0f7379",
+      "sourceProject": "fractalpark",
+      "filePath": "public/formula-library/v1/runtime/published/definitions/9d5148d6443b6dd4f5f0015e415b8642a324fb222f5a7769e1d7765e432bd1bc.frm"
+    },
+    {
+      "formulaId": "d01f1a01-6e77-5a24-8593-a7009e1c3ea3",
+      "sourceProject": "fractalpark",
+      "filePath": "public/formula-library/v1/runtime/published/definitions/c4f8d250a6b7cf0925639e5cc6232b7518ae83dc70a6791cdb8e279b75b2f881.frm"
+    },
+    {
+      "formulaId": "d0716513-4af5-5183-a963-e9fb6c4f9323",
+      "sourceProject": "iterated-dynamics",
+      "filePath": "home/extra/frmtutor.frm"
+    },
+    {
+      "formulaId": "d090c254-4d6e-5d89-b8b6-3345c59b2a89",
+      "sourceProject": "fractint",
+      "filePath": "fractint-float/formulas/fract002.frm"
+    },
+    {
+      "formulaId": "d09224e0-8712-5ec3-bc1a-e951b3d42ca9",
+      "sourceProject": "fractalpark",
+      "filePath": "public/formula-library/v1/runtime/published/definitions/4df8ff51b736f17773ebb3767c9e73e9414bc69d3e00779f2aa3547586e4c23f.frm"
+    },
+    {
+      "formulaId": "d170fae4-0295-5149-84e8-acf7254c7162",
+      "sourceProject": "iterated-dynamics",
+      "filePath": "home/extra/frmtutor.frm"
+    },
+    {
+      "formulaId": "d37c76aa-101e-5911-abd2-37ded44be307",
+      "sourceProject": "fractint",
+      "filePath": "fractint-float/formulas/fract002.frm"
+    },
+    {
+      "formulaId": "d3aba0c4-e0db-57c9-a0e0-78894ad0b2e6",
+      "sourceProject": "fractint",
+      "filePath": "fractint-float/formulas/fract002.frm"
+    },
+    {
+      "formulaId": "d3e27379-6323-5764-8a1e-17d88e5ea696",
+      "sourceProject": "fractint",
+      "filePath": "fractint-float/formulas/fract001.frm"
+    },
+    {
+      "formulaId": "d48b109c-4368-53b6-b7bf-c7da60c9c2eb",
+      "sourceProject": "fractint",
+      "filePath": "fractint-float/formulas/fract003.frm"
+    },
+    {
+      "formulaId": "d50c004c-3394-5858-aecb-51aaa76ea0a5",
+      "sourceProject": "fractint",
+      "filePath": "fractint-float/formulas/fract001.frm"
+    },
+    {
+      "formulaId": "d524bd96-37d0-5a16-b38e-7a8e6bd30c09",
+      "sourceProject": "fractint",
+      "filePath": "fractint-float/formulas/fract002.frm"
+    },
+    {
+      "formulaId": "d541fbeb-4dcc-5fc9-9b88-116bb28bf327",
+      "sourceProject": "fractalpark",
+      "filePath": "public/formula-library/v1/runtime/published/definitions/f892ebc14d4ae2437f5858f1c79d466b2c320024c6318e53dff1baabbfbd78d4.frm"
+    },
+    {
+      "formulaId": "d55f924e-86a7-540d-afb4-e678f640a66b",
+      "sourceProject": "fractint",
+      "filePath": "fractint-float/formulas/fract002.frm"
+    },
+    {
+      "formulaId": "d68394df-e4bf-5004-9605-89f14ff00e93",
+      "sourceProject": "fractint",
+      "filePath": "fractint-float/formulas/fractint.frm"
+    },
+    {
+      "formulaId": "d747aff8-e49f-5875-a85f-89d4a1d25846",
+      "sourceProject": "fractalpark",
+      "filePath": "public/formula-library/v1/runtime/published/definitions/e9aa563e5c1ab3def817a357ba4d8ef52b7085cbd1ff9ffd9fb239eece7241a1.frm"
+    },
+    {
+      "formulaId": "d808ce74-e717-5d98-af4c-dab9d713f01e",
+      "sourceProject": "fractint",
+      "filePath": "fractint-float/formulas/fract002.frm"
+    },
+    {
+      "formulaId": "d81aaac8-9440-5241-95ab-5791f8fbb141",
+      "sourceProject": "fractint",
+      "filePath": "fractint-float/formulas/ikenaga.frm"
+    },
+    {
+      "formulaId": "d848b143-1bb8-524e-b716-f0dd41a836df",
+      "sourceProject": "fractalpark",
+      "filePath": "public/formula-library/v1/runtime/published/definitions/5ce01ae7c092860aabda2683065abad88ca3d319b5a1c7427e7e3218860acd7f.frm"
+    },
+    {
+      "formulaId": "d89f722f-35fe-587a-bee9-efdf05885728",
+      "sourceProject": "fractalpark",
+      "filePath": "public/formula-library/v1/runtime/published/definitions/f05366105906d0524885fafa45e4b11808d37b0c7de3ef287da876b972df653a.frm"
+    },
+    {
+      "formulaId": "d8ed1025-8ccf-5424-b161-df178a36a0fa",
+      "sourceProject": "fractint",
+      "filePath": "fractint-float/formulas/fractint.frm"
+    },
+    {
+      "formulaId": "d90c3a37-4a7a-5939-af78-67d0a8724e58",
+      "sourceProject": "fractint",
+      "filePath": "fractint-float/formulas/fract003.frm"
+    },
+    {
+      "formulaId": "d93a2f0f-7208-5019-ad82-7a1d319a4412",
+      "sourceProject": "fractalpark",
+      "filePath": "public/formula-library/v1/runtime/published/definitions/8c3c844e1684a8cde9d26c89688595ee9c85e63fb540ca5752b2e2de49eedf91.frm"
+    },
+    {
+      "formulaId": "d9bc4e37-3fc6-5fa1-b334-e136b94b1e8c",
+      "sourceProject": "fractint",
+      "filePath": "fractint-float/formulas/fract001.frm"
+    },
+    {
+      "formulaId": "d9e5247a-f929-5751-9368-e5a291e62176",
+      "sourceProject": "fractint",
+      "filePath": "fractint-float/formulas/fractint.frm"
+    },
+    {
+      "formulaId": "da1b12b4-9d7d-5d69-b744-385ae5e4b577",
+      "sourceProject": "fractint",
+      "filePath": "fractint-float/formulas/fract003.frm"
+    },
+    {
+      "formulaId": "da95ae4b-d401-5eb0-862c-7d977c328fad",
+      "sourceProject": "fractint",
+      "filePath": "fractint-float/formulas/fractint.frm"
+    },
+    {
+      "formulaId": "dbdc62ab-2298-5f9a-9479-47f2b6d920d5",
+      "sourceProject": "fractint",
+      "filePath": "fractint-float/formulas/fractint.frm"
+    },
+    {
+      "formulaId": "dbf387b3-2c00-5e84-a781-01742fcf893b",
+      "sourceProject": "fractint",
+      "filePath": "fractint-float/formulas/fractint.frm"
+    },
+    {
+      "formulaId": "dc949eb5-0f2b-576b-a102-d2015d463a7b",
+      "sourceProject": "fractint",
+      "filePath": "fractint-float/formulas/fract001.frm"
+    },
+    {
+      "formulaId": "dd0517c2-73c1-55c6-aee7-5cd72c2cdc4e",
+      "sourceProject": "fractint",
+      "filePath": "fractint-float/formulas/fract002.frm"
+    },
+    {
+      "formulaId": "dd052c9f-868f-5516-9af0-3f4e78ac7a13",
+      "sourceProject": "fractalpark",
+      "filePath": "public/formula-library/v1/runtime/published/definitions/5e3522c53ca358df8d61d5a3b82aa0b90ff8009602b1952fb5022027f00fdd45.frm"
+    },
+    {
+      "formulaId": "dd5a6937-3b00-5bc9-8c18-5d048471126e",
+      "sourceProject": "fractint",
+      "filePath": "fractint-float/formulas/fract001.frm"
+    },
+    {
+      "formulaId": "de7a2025-caeb-58ac-b3ea-cf26c70c5e24",
+      "sourceProject": "fractint",
+      "filePath": "fractint-float/formulas/fract001.frm"
+    },
+    {
+      "formulaId": "de8106f4-22ce-567c-a1c7-e299a8d4a878",
+      "sourceProject": "fractint",
+      "filePath": "fractint-float/formulas/fractint.frm"
+    },
+    {
+      "formulaId": "ded18937-1f80-5248-a6f2-be82db2b676e",
+      "sourceProject": "fractint",
+      "filePath": "fractint-float/formulas/fract002.frm"
+    },
+    {
+      "formulaId": "defaf6f8-db0a-52c8-9ca0-0d5d3bdac49f",
+      "sourceProject": "fractint",
+      "filePath": "fractint-float/formulas/fract001.frm"
+    },
+    {
+      "formulaId": "df1c8979-3e38-5868-87ee-4f2e2a460b72",
+      "sourceProject": "fractint",
+      "filePath": "fractint-float/formulas/fract002.frm"
+    },
+    {
+      "formulaId": "df5e06a1-1983-5ce5-90df-9b545d112551",
+      "sourceProject": "fractint",
+      "filePath": "fractint-float/formulas/fract001.frm"
+    },
+    {
+      "formulaId": "dff2d794-c48f-5555-af0d-e7fe77a80099",
+      "sourceProject": "fractint",
+      "filePath": "fractint-float/formulas/fract003.frm"
+    },
+    {
+      "formulaId": "e03055ad-b642-5ada-b4ce-7819d9282cbe",
+      "sourceProject": "fractint",
+      "filePath": "fractint-float/formulas/fract003.frm"
+    },
+    {
+      "formulaId": "e1220621-19f8-54ef-ad36-4220b5d7fedc",
+      "sourceProject": "fractalpark",
+      "filePath": "public/formula-library/v1/runtime/published/definitions/4f4c9c6798374a9eb0ef22bf6997229a1c44de9ed2770d544014b916f6c836d8.frm"
+    },
+    {
+      "formulaId": "e2456b54-ef50-5ac9-9faa-dcb576c5e774",
+      "sourceProject": "fractalpark",
+      "filePath": "public/formula-library/v1/runtime/published/definitions/25f923b51ea1e36408f9c48e008187e67a946fc58ef634f93bf0cba216f622aa.frm"
+    },
+    {
+      "formulaId": "e25a768a-a075-5ecb-bb65-9271354a94e2",
+      "sourceProject": "fractint",
+      "filePath": "fractint-float/formulas/ikenaga.frm"
+    },
+    {
+      "formulaId": "e2ced79d-211e-55e0-89c1-558d261133e6",
+      "sourceProject": "fractint",
+      "filePath": "fractint/formulas/fractint.frm"
+    },
+    {
+      "formulaId": "e375f423-dfa4-54bf-9d56-c41215f4f72a",
+      "sourceProject": "fractalpark",
+      "filePath": "public/formula-library/v1/runtime/published/definitions/10f7accf02bbb79e4e7df8120ed2d02ea8b5a922fe780006c693da9a4ebe013d.frm"
+    },
+    {
+      "formulaId": "e39472e4-6152-5f8e-be96-a9566c891dc8",
+      "sourceProject": "fractint",
+      "filePath": "fractint-float/formulas/fract003.frm"
+    },
+    {
+      "formulaId": "e435bbb6-d866-5876-9f16-f04fbe61ff2b",
+      "sourceProject": "fractalpark",
+      "filePath": "public/formula-library/v1/runtime/published/definitions/04817a2a54e195117685266ac9b569e294050cd4617bf3df518390c17ca0cf5f.frm"
+    },
+    {
+      "formulaId": "e44558f3-a2cf-5a16-a6cb-6ac4452a6832",
+      "sourceProject": "fractint",
+      "filePath": "fractint-float/formulas/fract196.frm"
+    },
+    {
+      "formulaId": "e44d5dec-2cee-53a9-a21d-541c929792f6",
+      "sourceProject": "fractalpark",
+      "filePath": "public/formula-library/v1/runtime/published/definitions/0274103ace47417acb87bec42ef1b4dbe07d30e226d35a837f302fb3a2966405.frm"
+    },
+    {
+      "formulaId": "e528748d-efea-5745-99f5-a2ed96f7d86b",
+      "sourceProject": "fractint",
+      "filePath": "fractint-float/formulas/ikenaga.frm"
+    },
+    {
+      "formulaId": "e5659975-2319-56c3-ab28-edf6f6981635",
+      "sourceProject": "fractint",
+      "filePath": "fractint-float/formulas/fract002.frm"
+    },
+    {
+      "formulaId": "e6716e4b-be44-52a2-befd-77354070e972",
+      "sourceProject": "fractint",
+      "filePath": "fractint-float/formulas/ikenaga.frm"
+    },
+    {
+      "formulaId": "e7a86d4b-06bf-575d-9eaf-c0ab7f21841e",
+      "sourceProject": "fractint",
+      "filePath": "fractint-float/formulas/fract002.frm"
+    },
+    {
+      "formulaId": "e7ce5bb7-7fcf-527e-92ef-95d6d1233d2a",
+      "sourceProject": "fractint",
+      "filePath": "fractint/formulas/fractint.frm"
+    },
+    {
+      "formulaId": "e84e8cee-b68f-5494-b098-a7b7a7237705",
+      "sourceProject": "fractint",
+      "filePath": "fractint-float/formulas/fract002.frm"
+    },
+    {
+      "formulaId": "e89afab6-33b1-5cd2-bfc0-98b2dfca400e",
+      "sourceProject": "fractint",
+      "filePath": "fractint-float/formulas/fract001.frm"
+    },
+    {
+      "formulaId": "e8e735b4-3eb6-53b6-979e-7f70268ceb6b",
+      "sourceProject": "fractint",
+      "filePath": "fractint-float/formulas/fract001.frm"
+    },
+    {
+      "formulaId": "e92b4390-cc41-5e7d-9b25-53ac3ba3908d",
+      "sourceProject": "fractint",
+      "filePath": "fractint-float/formulas/fract002.frm"
+    },
+    {
+      "formulaId": "ea4eaa45-ff53-5a7d-af21-690a58118510",
+      "sourceProject": "fractint",
+      "filePath": "fractint-float/formulas/fract002.frm"
+    },
+    {
+      "formulaId": "ebe7d5f6-7f65-50cc-b03b-f208d78c955a",
+      "sourceProject": "fractalpark",
+      "filePath": "public/formula-library/v1/runtime/published/definitions/2df46891cf4701d035aad8979ee2dfbcb991f6c66802bdfdb27c0cc79c9af9dc.frm"
+    },
+    {
+      "formulaId": "ec9ca8e4-66ef-5b97-a706-9164d2b03622",
+      "sourceProject": "fractint",
+      "filePath": "fractint-float/formulas/fract001.frm"
+    },
+    {
+      "formulaId": "ecabbf7e-6f47-5335-9dea-4584fef5607c",
+      "sourceProject": "iterated-dynamics",
+      "filePath": "home/extra/frmtutor.frm"
+    },
+    {
+      "formulaId": "ecee6e9d-a5c9-5b29-be39-edbe00e73c50",
+      "sourceProject": "fractalpark",
+      "filePath": "public/formula-library/v1/runtime/published/definitions/4d5153905d6fb7405991db7488ce8b225586f8bfb7c012a3c07b528cb28ba5b6.frm"
+    },
+    {
+      "formulaId": "ed671b4c-a04c-5545-ad0c-a73727761ce8",
+      "sourceProject": "fractalpark",
+      "filePath": "public/formula-library/v1/runtime/published/definitions/46472f355f4ed06661a7e8cc666c73d3037e394e4be8fe56abe43e9b9c7c303a.frm"
+    },
+    {
+      "formulaId": "ed7e4ea5-2118-5ade-8fbc-19b5c2a6c8fc",
+      "sourceProject": "fractint",
+      "filePath": "fractint-float/formulas/fract002.frm"
+    },
+    {
+      "formulaId": "ed92fb8b-18a9-5e2b-acd7-ee933bf7df93",
+      "sourceProject": "fractint",
+      "filePath": "fractint-float/formulas/fract003.frm"
+    },
+    {
+      "formulaId": "ee3be07b-bfde-53bf-bea2-db01f18ab0f2",
+      "sourceProject": "fractint",
+      "filePath": "fractint-float/formulas/fract002.frm"
+    },
+    {
+      "formulaId": "ef6d6019-b21e-59df-99ca-dea6b70c0f63",
+      "sourceProject": "fractint",
+      "filePath": "fractint-float/formulas/fract002.frm"
+    },
+    {
+      "formulaId": "f02ad930-de3d-5aac-b19c-8a904a8ca72a",
+      "sourceProject": "fractint",
+      "filePath": "fractint-float/formulas/fractint.frm"
+    },
+    {
+      "formulaId": "f031c5ee-cb45-5389-80ed-1c5365a12e02",
+      "sourceProject": "fractint",
+      "filePath": "fractint-float/formulas/fractint.frm"
+    },
+    {
+      "formulaId": "f03e39ad-e077-5e01-8085-f25d653b506e",
+      "sourceProject": "fractint",
+      "filePath": "fractint-float/formulas/fract002.frm"
+    },
+    {
+      "formulaId": "f0680a59-42e8-52e4-8444-a1b4026d87b6",
+      "sourceProject": "fractint",
+      "filePath": "fractint-float/formulas/fract002.frm"
+    },
+    {
+      "formulaId": "f2305da6-5fc0-59e4-8204-9b0adb61bc74",
+      "sourceProject": "fractint",
+      "filePath": "fractint-float/formulas/fract001.frm"
+    },
+    {
+      "formulaId": "f2ef0d24-8eff-5bf2-b896-aa111350aa5b",
+      "sourceProject": "fractint",
+      "filePath": "fractint-float/formulas/fract196.frm"
+    },
+    {
+      "formulaId": "f36b3c6f-8676-55c3-8d21-6413d7db848f",
+      "sourceProject": "fractint",
+      "filePath": "fractint-float/formulas/fractint.frm"
+    },
+    {
+      "formulaId": "f3cd0dda-37c9-5d2e-8103-9b2a7ee25c53",
+      "sourceProject": "fractint",
+      "filePath": "fractint/formulas/fractint.frm"
+    },
+    {
+      "formulaId": "f4216f6d-c8ed-5837-8417-8ae719f186a8",
+      "sourceProject": "fractint",
+      "filePath": "fractint-float/formulas/fract002.frm"
+    },
+    {
+      "formulaId": "f50a14b0-7031-5d9a-a9b8-f7bdee1b69a2",
+      "sourceProject": "fractint",
+      "filePath": "fractint-float/formulas/fract001.frm"
+    },
+    {
+      "formulaId": "f58059ef-67f2-58a4-bac0-bdb1d8608cc0",
+      "sourceProject": "fractalpark",
+      "filePath": "public/formula-library/v1/runtime/published/definitions/fcf3406ffb7f4abe696c7d98c1fe2673a32420ed31698337404376096bf28b96.frm"
+    },
+    {
+      "formulaId": "f6126a12-f689-5eac-8917-71580950caba",
+      "sourceProject": "fractint",
+      "filePath": "fractint-float/formulas/fract001.frm"
+    },
+    {
+      "formulaId": "f7a06a52-361c-598f-bf99-5e55a0047f1f",
+      "sourceProject": "fractint",
+      "filePath": "fractint-float/formulas/fractint.frm"
+    },
+    {
+      "formulaId": "f876a613-3cb0-58ac-b124-f2985773809f",
+      "sourceProject": "fractint",
+      "filePath": "fractint-float/formulas/fractint.frm"
+    },
+    {
+      "formulaId": "f978281a-4cea-5545-a9c6-7ca68ca084f0",
+      "sourceProject": "fractint",
+      "filePath": "fractint-float/formulas/fractint.frm"
+    },
+    {
+      "formulaId": "f9a6409b-130b-5dd5-be4f-789927e47ad2",
+      "sourceProject": "fractint",
+      "filePath": "fractint-float/formulas/fract002.frm"
+    },
+    {
+      "formulaId": "f9cfda9b-5757-5fa2-bd63-ca10c88a7295",
+      "sourceProject": "fractint",
+      "filePath": "fractint-float/formulas/fract001.frm"
+    },
+    {
+      "formulaId": "f9fd2a6b-2734-50d3-9431-5ccf33887682",
+      "sourceProject": "fractint",
+      "filePath": "fractint-float/formulas/fract002.frm"
+    },
+    {
+      "formulaId": "fa8afc22-abfd-5101-be65-cd4d0b1919cc",
+      "sourceProject": "fractint",
+      "filePath": "fractint-float/formulas/fractint.frm"
+    },
+    {
+      "formulaId": "fb27a5ed-2865-5fca-ad62-76118c39414f",
+      "sourceProject": "fractint",
+      "filePath": "fractint-float/formulas/fract002.frm"
+    },
+    {
+      "formulaId": "fbde208b-8c88-5d55-8e5a-ecac4245add1",
+      "sourceProject": "fractint",
+      "filePath": "fractint-float/formulas/fract003.frm"
+    },
+    {
+      "formulaId": "fc36a6e1-9778-511c-8f5d-0bdddc463b62",
+      "sourceProject": "fractint",
+      "filePath": "fractint-float/formulas/fractint.frm"
+    },
+    {
+      "formulaId": "fd4db987-1bd3-5ab0-983f-9a9bb01d0304",
+      "sourceProject": "fractint",
+      "filePath": "fractint-float/formulas/fractint.frm"
+    },
+    {
+      "formulaId": "fd6040b2-2f96-5fa8-81db-6b7c996c764f",
+      "sourceProject": "fractint",
+      "filePath": "fractint-float/formulas/fractint.frm"
+    },
+    {
+      "formulaId": "fd6c2fac-31db-55f1-9d93-726bd261671d",
+      "sourceProject": "fractint",
+      "filePath": "fractint-float/formulas/fractint.frm"
+    },
+    {
+      "formulaId": "fdbbc343-f4c3-5eb4-94de-f5a1d9ef2525",
+      "sourceProject": "fractint",
+      "filePath": "fractint-float/formulas/fract001.frm"
+    },
+    {
+      "formulaId": "fe092eb1-5e44-5b5b-b028-f1298671a038",
+      "sourceProject": "fractint",
+      "filePath": "fractint-float/formulas/fractint.frm"
+    },
+    {
+      "formulaId": "fedcfb68-071a-5b21-9552-ac641af3ecce",
+      "sourceProject": "fractint",
+      "filePath": "fractint-float/formulas/ikenaga.frm"
+    },
+    {
+      "formulaId": "ff90e8db-2d3f-5cef-a493-489752eed57b",
+      "sourceProject": "fractint",
+      "filePath": "fractint-float/formulas/fract002.frm"
+    }
+  ],
+  "contentHash": "d409c6f6ee755125d925be5a4f8cbbafeba020692431fb456b4ad2ca6aa740c8"
+}

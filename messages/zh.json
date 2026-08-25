@@ -1184,8 +1184,12 @@
       "identity": "身份与来源",
       "formulaId": "公式 ID",
       "rightsAttribution": "权利与署名",
+      "sourceAndImplementation": "来源与当前实现",
       "canonicalName": "规范名称",
       "originalName": "原始名称",
+      "historicalSource": "历史来源",
+      "repository": "代码仓库",
+      "currentImplementation": "当前实现",
       "author": "作者",
       "originalResource": "原始资源",
       "originalVersion": "原始版本",
@@ -1236,6 +1240,12 @@
         "original-source-public-domain-assumption-and-project-canonical-implementation": "原始来源按公有领域假设处理；FractalPark 规范实现采用 MIT",
         "project-independent-rewrite-only": "仅 FractalPark 独立重写实现",
         "identity-and-provenance-metadata-only": "仅身份与来源元数据"
+      },
+      "sourceNotes": {
+        "fractalparkProjectOwned": "这是 FractalPark 项目自有实现。所链接文件是固定版本的规范 Definition。",
+        "fractintDirectAdaptation": "当前 FractalPark 实现遵循所链接 Fractint 公式的已验证语义；原始文件保留其自身的权利条件。",
+        "fractintIndependentRewrite": "历史来源为 Fractint。当前 FractalPark 实现是隔离式独立重写，不分发原始 FRM 文本。",
+        "iteratedDynamicsIndependentRewrite": "历史来源为 Fractint 后继项目 Iterated Dynamics。当前 FractalPark 实现是隔离式独立重写，不分发原始 FRM 文本。"
       },
       "basisValues": {
         "project-owned": "项目自有",

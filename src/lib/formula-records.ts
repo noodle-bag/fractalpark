@@ -13,8 +13,11 @@ import {
   type LegacyAliasV1,
 } from '@/engine/formulas/v1/standard-manifest';
 import {
+  FORMULA_RECORD_PROVENANCE_CONTENT_HASH_V1,
+  FORMULA_RECORD_PROVENANCE_INDEX_V1,
   PUBLISHED_FORMULA_INDEX_CANONICAL_SHA256_V1,
   parsePublishedFormulaRuntimeIndexV1,
+  type FormulaHistoricalSourceV1,
   type PublishedFormulaParameterDescriptorV1,
   type PublishedFormulaProfileQualityV1,
   type PublishedFormulaProfileV1,
@@ -34,7 +37,7 @@ export const FORMULA_RECORD_PREVIEW_WIDTH_V1 = 96 as const;
 export const FORMULA_RECORD_PREVIEW_HEIGHT_V1 = 60 as const;
 export const FORMULA_RECORD_TAKEDOWN_EMAIL_V1 = 'contact@fractalpark.com' as const;
 export const FORMULA_RECORD_REVISION_V1 =
-  `decision-${PUBLICATION_DECISION_LEDGER_V1.decisionRevision}-runtime-${PUBLISHED_FORMULA_INDEX_CANONICAL_SHA256_V1}-preview-v1` as const;
+  `decision-${PUBLICATION_DECISION_LEDGER_V1.decisionRevision}-runtime-${PUBLISHED_FORMULA_INDEX_CANONICAL_SHA256_V1}-provenance-${FORMULA_RECORD_PROVENANCE_CONTENT_HASH_V1}-preview-v1` as const;
 
 const runtimeResult = parsePublishedFormulaRuntimeIndexV1(runtimeIndexAsset);
 if (!runtimeResult.ok) throw new Error('formula-record-runtime-index-invalid');
@@ -127,8 +130,8 @@ interface FormulaRecordCommonV1 {
   readonly canonicalName: string;
   readonly originalName: string;
   readonly authorStatus: 'unconfirmed';
-  readonly originalResourceStatus: 'unconfirmed';
-  readonly originalVersionStatus: 'unconfirmed';
+  readonly originalResourceStatus: 'confirmed' | 'unconfirmed';
+  readonly originalVersionStatus: 'confirmed' | 'unconfirmed';
   readonly aliases: readonly FormulaRecordAliasV1[];
   readonly provenanceCollection: 'F588' | 'B94';
   readonly primaryFamily: string;
@@ -149,6 +152,7 @@ interface FormulaRecordCommonV1 {
 
 export interface PublishedFormulaRecordV1 extends FormulaRecordCommonV1 {
   readonly availability: 'published';
+  readonly historicalSource: FormulaHistoricalSourceV1;
   readonly source: Readonly<{
     href: string;
     sourceRevision: string;
@@ -223,6 +227,10 @@ export function buildFormulaRecordV1(
   const decision = PUBLICATION_DECISION_LEDGER_V1.decisionFor(formulaId);
   const provenanceCollection = PROVENANCE_COLLECTION_BY_ID.get(formulaId);
   if (!directory || !decision || !provenanceCollection) return undefined;
+  const historicalSource =
+    decision.publicationDecision === 'publish'
+      ? FORMULA_RECORD_PROVENANCE_INDEX_V1.provenanceFor(formulaId)
+      : undefined;
 
   const common = {
     schema: 'fractalpark-formula-record/v1' as const,
@@ -232,8 +240,12 @@ export function buildFormulaRecordV1(
     canonicalName: directory.displayName,
     originalName: directory.displayName,
     authorStatus: 'unconfirmed' as const,
-    originalResourceStatus: 'unconfirmed' as const,
-    originalVersionStatus: 'unconfirmed' as const,
+    originalResourceStatus: historicalSource
+      ? ('confirmed' as const)
+      : ('unconfirmed' as const),
+    originalVersionStatus: historicalSource
+      ? ('confirmed' as const)
+      : ('unconfirmed' as const),
     aliases: Object.freeze(
       STANDARD_MANIFEST_INDEX_V1.aliasesFor(formulaId).map((alias) =>
         Object.freeze({ kind: alias.kind, value: alias.value }),
@@ -266,6 +278,7 @@ export function buildFormulaRecordV1(
       availability: decision.publicationDecision,
     });
   }
+  if (!historicalSource) return undefined;
 
   const runtime = RUNTIME_BY_ID.get(formulaId);
   const previewEvidence = PREVIEW_BY_ID.get(formulaId);
@@ -275,6 +288,7 @@ export function buildFormulaRecordV1(
   return Object.freeze({
     ...common,
     availability: 'published' as const,
+    historicalSource,
     source,
     defaultProfile: runtime.profile,
     preview: Object.freeze({

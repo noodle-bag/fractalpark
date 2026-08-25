@@ -314,9 +314,22 @@ The active public v1 projection is exact-set and decision-ledger-backed:
 - all 677 Standard identities expose canonical/original names, typed legacy
   aliases, Formula ID, F588/B94 provenance collection, rights status/scope,
   decision/reason, implementation basis, leakage status, review date, and a
-  takedown contact;
-- unknown author, original resource, and original version are rendered as
-  `unconfirmed`, never filled from private evidence or guessed;
+  takedown contact in the decision-backed read model;
+- the 534 published rows additionally bind a public-safe historical-source
+  projection: 89 FractalPark project-owned Definition files, 415 Fractint
+  formula-file references, and 30 Iterated Dynamics references. Every resource
+  URL pins a repository commit; the projection contains no third-party source
+  text, comments, AST/IR, reversible crosswalk, or private evidence locator;
+- the streamlined published UI shows Formula ID, canonical/original name,
+  historical source, immutable original-resource link, current implementation
+  basis, and a source/implementation note. It does not render Author, Original
+  version, Provenance collection, Rights status, Public scope, Canonical
+  implementation license, or Legacy aliases. Unknown author remains
+  `unconfirmed` in the read model and is never guessed;
+- a Fractint direct-adaptation note may state that the current implementation
+  follows verified formula semantics, but must not claim that FractalPark's
+  license terms are identical to Fractint's. Independent rewrites identify the
+  historical source and state that original FRM text is not redistributed;
 - each of the 534 `publish` rows exposes its content-addressed pinned `.frm`
   Definition source,
   source/semantic revisions, parameter schema, pinned default Profile facts, a
@@ -326,7 +339,9 @@ The active public v1 projection is exact-set and decision-ledger-backed:
   or more deterministic visual diagnostics and are preserved behind an explicit
   diagnostic link instead of being presented as verified imagery;
 - each of the 143 `hold` rows, and any future `exclude` row, exposes the factual
-  decision and rights projection but has no source, preview, or runnable CTA.
+  decision and rights projection in the read model but renders only the N1
+  minimal page, with no historical-resource link, source, preview, or runnable
+  CTA.
 
 `scripts/generate-formula-record-previews.ts` regenerates or byte-verifies the
 exact 534-file preview set in four deterministic worker shards. Its content-hash

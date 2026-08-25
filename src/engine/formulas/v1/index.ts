@@ -4,6 +4,7 @@ export * from "./revisions";
 export * from "./safety-envelope";
 export * from "./standard-manifest";
 export * from "./publication-decisions";
+export * from "./record-provenance";
 export * from "./directory";
 export * from "./native-recipes";
 export * from "./assets";

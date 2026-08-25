@@ -5,6 +5,7 @@
     ".github/workflows/release.yml": "6354abab49c801abc88589f61d02d90f794ba267513dfee30e39e7722aa17114",
     "resources/formula-library/v1/performance-gates.v1.json": "e31539cd08cba545f888b9888c958692b735442776300aaf5d949c3f81235714",
     "resources/formula-library/v1/publication-decisions.json": "ed63d7fab46530ac61a2dfb562644b9d36c1d8f4a73128cc51c0c7fbcb625de6",
+    "resources/formula-library/v1/formula-record-provenance.v1.json": "faf42436db80901a9e563369130be9915bd4a2e0248c8d9ed6dcc9927c40b634",
     "resources/formula-library/v1/classic-formula-exact-set.v1.json": "d0ee66d5422cfd38fd1264b13b4673a627e29e3faf34799593ace46ccc10e4d5",
     "resources/formula-library/v1/held-formula-record-seo-projection.v1.json": "a05da02fb1c5d5460ad21be61dd05ae25e85201cb06ebbc5325ca85494bd838e",
     "resources/formula-library/v1/teaching-restored-guide-projection.v1.json": "3e61a215b700d05eb28ecbc60a21823873bd0c569baa06cdd05d0867921d9c14",
@@ -28,13 +29,13 @@
     "resources/formula-library/v1/recovery-evidence/transcendental-v1/manifest.json": "46e283af44639f076e9dfad3538b5b22973927c9b80e572afee680cd3129c84b",
     "resources/formula-library/v1/recovery-evidence/amplified-v1/cross-check.json": "fdee1f03d1b5112c2475711fd241a8d79dca8e086dab2600e8d577bec91419c0",
     "resources/formula-library/v1/recovery-evidence/amplified-v1/manifest.json": "84059cab4c1c4ababa8479b58b9cabbe3e21e42e23fc391b225e9b6af1598c64",
-    "messages/en.json": "4457483168a629a979e1b75eee8fc3cef3aa204c3220b91f2199b4a6fa8fd22e",
-    "messages/zh.json": "d8c87a7332e8c6c186480c42ed47ea1bb442727efd70940d6b919b6fc3a04c1f",
-    "messages/pt.json": "831d8f2141d9f0ceee258eac2812a3bdda72c3574856a160504ae9e31ef2d491",
-    "messages/ko.json": "6254b1228f6365ccdd61b21592c490df7e2381dbc3e49006b6006294e0c4efbc",
-    "messages/ru.json": "a288a08938e0dfe1de921d195d60039f55684df49da254f72a996f8350020b7e",
-    "messages/es.json": "858a4b2f0a2e3995bd405e1debe06898a7f2bb072ce92d96eb9bcd7a8022e417",
-    "messages/fr.json": "5b2182a5d9fcb5369bc4c57f3ab3d73b02ec79f722415d57ab17a611d50c2ce9",
+    "messages/en.json": "a4e9b395dbb55cadf6391ab709cedf4c5e50760185157702966aa1ac002e2b11",
+    "messages/zh.json": "75233154cae9b91bf3b726e0699815921a68709861b0dad11a71136bbb9740bd",
+    "messages/pt.json": "dc1962f406f0c2e809365dfcbdc6b69e7a773958d91a80faa0fd2a1bced3363b",
+    "messages/ko.json": "ac3462d9c0fdad91052782e7b7f8babd29bcd389f45b1737a77d822bc00c7633",
+    "messages/ru.json": "ef62e3d7267e68152b6882ac9f5bd67dea2cb6d33c9ae2b635a74ccc07da509a",
+    "messages/es.json": "0cfa84a5d3ebe3faea40486ad40367c1573928f119f2a9d7790e90dc14c52d31",
+    "messages/fr.json": "08021fba3ca4282f82e3c4bcb3412848d966b57f19deb0baddc036aa1805e39a",
     "src/app/[locale]/formulas/[formulaId]/page.tsx": "2da39b473bd9f23998ff691f3d380685642e91c9d7a02dd23148b492d8bf7741",
     "src/app/[locale]/formulas/directory/page.tsx": "71a5a8ebc150402ac6e2ebb33d948cbf97400f06e947a58034c9bff11b3d9934",
     "src/app/[locale]/formulas/page.tsx": "6e50a8d3d055b31d11556e088aacf2980d7f3d8fc91e2dd700715255995aaf53",
@@ -48,7 +49,7 @@
     "src/components/formulas/CanonicalSourceEditor.tsx": "5f5aa16cfffefedfe759ae7a6b53e988b26af3c303ca10486a605eadccc3e86c",
     "src/components/formulas/CanonicalSourceWorkspace.tsx": "a2af0623149babe3b9fe7e1f60d69d3b41a127dc316117061fdc52f71a48b27d",
     "src/components/formulas/ExploreCanonicalSourceWorkspace.tsx": "c628cc3a2849c3cee5bbb4a19c45047ad1a9f1c45776bc8b8c587d687de00a60",
-    "src/components/formulas/FormulaRecordPanel.tsx": "8d784312b625e827bff3f8429ccf2d9ba1321ebdade2964628a3769d1f426205",
+    "src/components/formulas/FormulaRecordPanel.tsx": "9699ce694ee52f53bc8c4e84c653079670c2313ad589a809b46766a24a99399e",
     "src/components/gallery/PresetThumbnail.tsx": "58978b33ad02deadc66694e076cafa8c07d057853ddf2e556c639e28f337d8e5",
     "src/hooks/useFractalRenderer.ts": "c986ad0177d44dc87f2785c8415edfbceac9854f3eb54a87fce904f5a8f74521",
     "src/hooks/useCloudFormulaLibrary.ts": "3236493e81380b159419c1e1c17b30102b89a0a620f93712a20300f1d4d1d23b",
@@ -60,7 +61,7 @@
     "src/lib/published-formula-selection.ts": "9183092370ba8191937fe182ae8a7b5613a152547d83bde5ce205629dcc62013",
     "src/lib/published-formula-source.ts": "53beed7a85ceeeb1713468eb5c65423e0fa77c65063feee4ee1d9be86fc00f10",
     "src/lib/published-formula-remix.ts": "973c55ffd303e7cc9a365d8600694b294f762161e9278c33bb67fc16502832c3",
-    "src/lib/formula-records.ts": "736c5589987c2a696ad26e1f0d128bb17ab21c94334c44612bf5bbbe99b04087",
+    "src/lib/formula-records.ts": "aa740d7b5b76fdf3555a6a3e88349bbd4b09ed2d7ab97b097bd13178f6021229",
     "src/lib/held-formula-record-route.ts": "32eecbd18e8a7db37e95e0d90846d904502bd6e68ed84e813c60948e6b638572",
     "src/lib/formula-directory-status.ts": "c6f5c350dd8c4811a0f05358b9a0b233d71d931740dddf2fa5cc12a68e93881d",
     "src/lib/indexable-pages.ts": "b7aeb8b07955c2048b8f3e350eb8648836ece6e1171fec861161b9603db202b4",
@@ -76,6 +77,7 @@
     "src/content/teaching/guide-route-policy.ts": "4df753db3463cbe012263f2b5016b70db8a3a3491d251142c280d54ed471c0ab",
     "src/content/teaching/restored-guide-projection.ts": "994c74c59bb584b4460574a06d62412e3213000cdf126320ef7338aab6c6d6ff",
     "src/engine/formulas/v1/published-runtime.ts": "d8f44478d655344b1270a564d984193e15d5250a618fff133154de41a600d9ae",
+    "src/engine/formulas/v1/record-provenance.ts": "bf98a8fbcc755379abea81ab3258eddef8b7d258baa5efe0a226b18bd3040c73",
     "src/engine/formulas/v1/native-recipes.ts": "80c179eba7e7a2b4208741b69d64562d3a1944ac928450b7c9d4f85ec6cf3055",
     "src/engine/formulas/v1/native-recipes-b94-classic.ts": "75d23141106a86d27a57019e1ef8a79a13cd43c91b8306ba15ccbd803495c77e",
     "src/engine/formulas/v1/native-recipes-b94-clamps.ts": "b88f9e45cbd37c7bb88ba825544ba12d6a5b4f35bc143d7057ab2609fb806033",
@@ -115,15 +117,16 @@
     "src/test/mine-formula-lifecycle.test.ts": "c5d251d5dafc795c736fc7b0184406944690f4a7f2919a8c062981e7e25c1c83",
     "src/test/published-formula-remix.test.ts": "d54a8e74088fb6ca7b9484a27311b4170e1f4e745128ab56fbaca8c9ee4069b0",
     "src/test/use-cloud-formula-library.test.tsx": "0dc91b3fbbd45fc2ca0a7fa874c0b43c7f57aa4614a1134696a47b28587d1d56",
-    "src/test/formula-records.test.ts": "fac8a4bec5e674316504ae576f666940927c20e5b01782a4190c7c054ede380e",
-    "src/test/formula-record-panel.test.tsx": "f8b3f810b5deab7c6331521fe7dc1413bf520f1f44b654417fa86220b4b4e230",
+    "src/test/formula-records.test.ts": "867504204a2916385a2332ff5975897d1c73b630257df41e56ccc23285919322",
+    "src/test/formula-record-panel.test.tsx": "f30996744f7b0ef8e55884732659e284fb63ffd69f6e233de6625bd622e32008",
+    "src/test/formula-record-provenance.test.ts": "7e6322fe2a5d5717b5bdabff8ed3983d8cc038c4a30db67da1fd7d643dc0f2b6",
     "src/test/proxy.test.ts": "9b692faef3b6e56c6a245aea81aa0dea2dba4f94cf3aec4495d9b304d14918db",
     "src/test/formula-seo-policy.test.ts": "c0c5311002fe05394fe102d447aeef037348e668cb07b9870968d48c59bcb2da",
     "src/test/restored-guide-projection.test.ts": "933c75396363bc52af843eeb63eddbbb8e0801b6c09fe1dcd0559863c8cf6792",
     "src/test/teaching-held-route-guard.test.ts": "45aaa04310b90013e75a8ad4bf72118f71bcca0beef2b199090ea773d01ad477",
     "src/test/teaching-content-loader.test.ts": "68a59269870f0fadf5a83696d4b10e18768b1a85d155bef2f56ce753f3b2fba0",
     "src/test/fractal-renderer-race.test.ts": "4a5ec916fc3f064e9112f13594201b1a8e1bc2e19133a6c7cddb600e4263f6fe",
-    "scripts/standard-library-performance-source-paths.ts": "cf9b579342c10fd4236a8c44512f7600d1af26bfefb8c1eba5cb773d496e5cc8",
+    "scripts/standard-library-performance-source-paths.ts": "56f69cdd6f83dfe83d0adedab97156fe11b44985a3f7e20d444ba1586be9db09",
     "scripts/measure-standard-library-performance.ts": "844614a39dc4622c8649b4babcdf4f6e76bdee40c9912447a5197f3071917f9b",
     "scripts/generate-published-formula-directory.ts": "4eb763e82d93d3538dec7fa1c2a951036178f77ecafea99d472d1166cec90bc2",
     "scripts/cross-check-native-recipes.ts": "eeb98e641a3119c9a56edcf6b110e2436e37f72d71f53b723c318c4ad479f7cb",
@@ -133,7 +136,7 @@
     "scripts/generate-formula-record-previews.ts": "ad031089544a9f235273217bac27cc5f368427d8b2f327a0ef62be1d68b86092",
     "scripts/verify-standard-library-performance.ts": "a45589e48696c62270dd0a29132910e4ddcb62f743d947bfe4dcaa4e3e36b9ad",
     "tests/e2e/formula-switch.spec.ts": "ec9a0cac56fcefd30d52ab876cd72c388028b9058ba7c3a75f97d0783a44a813",
-    "tests/e2e/canonical-source-workspace.spec.ts": "bd4344cb4c7d9a850daa7ecb754c7b5cd019082e7697d6460cafecb843e10ec9",
+    "tests/e2e/canonical-source-workspace.spec.ts": "83f8d48573715e23df0d288a1d28c1dafebaeb50d5f65b022ae64bf89a7ebbe2",
     "supabase/migrations/20260816090000_mine_formula_lifecycle.sql": "70e2ad84857a5cf2306386e10252b07de28a5216e657dfc376ece0c0ccdba97f",
     "supabase/migrations/20260824120000_mine_formula_lifecycle_projection.sql": "bb5c6494463e84821fce67752de01e67ced98491e1be41701847021e49b6909d",
     "supabase/migrations/20260824235800_mine_formula_lifecycle_reader.sql": "7f42e6752a8ec0a1c79706ab93141df52bc89177b19ff12b6ed58ffef83349f6",
@@ -318,35 +321,35 @@
       "status": "pass",
       "artifact": {
         "path": "resources/formula-library/v1/rollback-evidence/writerOff.json",
-        "sha256": "e40b48e334bbc370236d45720c2b9fbfc9ac7cdb84ac6a790c16611f774bcd43"
+        "sha256": "87ab524301f2f7815ecc8cc79f62b8925f7cd9ac78c83830b33a325b58a7bfb7"
       }
     },
     "featureOff": {
       "status": "pass",
       "artifact": {
         "path": "resources/formula-library/v1/rollback-evidence/featureOff.json",
-        "sha256": "804516cc61952b7efae232d951e13c8d28c7faaaba855a9fb78615a1cfe228cf"
+        "sha256": "94996ad57f51eeaf1b97b2969f770868317ae7851aca7c2aeeb2269343d57cf1"
       }
     },
     "lkgRuntime": {
       "status": "pass",
       "artifact": {
         "path": "resources/formula-library/v1/rollback-evidence/lkgRuntime.json",
-        "sha256": "738391fe2fbf8bdcbd54fde07cfac5c95fa24fb2fdade508b479031eb6907265"
+        "sha256": "3610a69cbba7e46d1c166dbf6accefb5c7d88c8977319f48d5bc719bf7d66209"
       }
     },
     "readerFloor": {
       "status": "pass",
       "artifact": {
         "path": "resources/formula-library/v1/rollback-evidence/readerFloor.json",
-        "sha256": "421f1a8c149c09760c65e132b4dcf63aa56d996d92f5cc70d547e3751fe56e3c"
+        "sha256": "3478188644f31ba8a0622041a72763b43f234d4bdd6af2188bf1eb1f76e7266d"
       }
     },
     "aliasResolver": {
       "status": "pass",
       "artifact": {
         "path": "resources/formula-library/v1/rollback-evidence/aliasResolver.json",
-        "sha256": "cdf3e1149f5264e478846e99b0476ce3a95e7f205453af60ecb65053a7d9c3a2"
+        "sha256": "81636610d5dd3339d3960553ff9c8117da786b2e7d803e3592bb1ef16c9e8407"
       }
     },
     "deployedPreview": {
