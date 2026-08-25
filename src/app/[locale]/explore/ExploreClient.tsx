@@ -47,6 +47,7 @@ import {
   type FormulaResolution,
 } from '@/lib/formula-resolver';
 import { pluginRegistry } from '@/engine/plugins/registry';
+import { resolvePublishedFormulaDefaultProfileV1 } from '@/engine/formulas/v1/published-runtime';
 import { registerBuiltins } from '@/engine/plugins/builtins';
 import { resolveEffectiveSmoothMethod } from '@/engine/frm/smooth-capability';
 import { resolveRendererPipelineVersion } from '@/engine/frm/semantics-version';
@@ -143,6 +144,8 @@ function ExploreClient({ posterImage }: { posterImage?: string }) {
     lighting,
     customGradient,
   } = runtimeParams;
+  const canEditJulia =
+    pluginRegistry.getFormula(formula)?.supportsJulia === true;
   const [pickToast, setPickToast] = useState<string | null>(null);
   const keyframes = useMemo(
     () => document.animation?.viewKeyframes ?? [],
@@ -692,6 +695,7 @@ function ExploreClient({ posterImage }: { posterImage?: string }) {
   });
 
   const handleJuliaModeChange = useCallback((julia: boolean) => {
+    if (julia && !canEditJulia) return;
     updateFormula({ isJulia: julia });
     trackEvent('julia_mode_toggle', { mode: julia ? 'julia' : 'mandelbrot' });
     if (julia) {
@@ -699,13 +703,14 @@ function ExploreClient({ posterImage }: { posterImage?: string }) {
     } else {
       updateBounds(DEFAULT_FRACTAL_DOCUMENT.scene.bounds);
     }
-  }, [bounds.rotation, updateBounds, updateFormula]);
+  }, [bounds.rotation, canEditJulia, updateBounds, updateFormula]);
 
   const handleRotationChange = useCallback((rotation: number) => {
     updateBounds({ ...bounds, rotation });
   }, [bounds, updateBounds]);
 
   const handleCanvasPointSelect = useCallback((point: [number, number]) => {
+    if (!canEditJulia) return;
     updateFormula({ juliaC: point, isJulia: true });
     if (pickToastTimerRef.current) clearTimeout(pickToastTimerRef.current);
     setPickToast(
@@ -717,7 +722,7 @@ function ExploreClient({ posterImage }: { posterImage?: string }) {
     pickToastTimerRef.current = setTimeout(() => {
       setPickToast(null);
     }, 2200);
-  }, [t, updateFormula]);
+  }, [canEditJulia, t, updateFormula]);
 
   useEffect(() => {
     isExploreMountedRef.current = true;
@@ -800,7 +805,7 @@ function ExploreClient({ posterImage }: { posterImage?: string }) {
         applyPublishedFormulaSelection({
           formulaId,
           formulaParams: getFormulaUniformDefaults(artifact.plugin),
-          profile: row.profile,
+          profile: resolvePublishedFormulaDefaultProfileV1(row),
         });
         trackEvent('change_formula', {
           formula: formulaId,
@@ -1110,7 +1115,9 @@ function ExploreClient({ posterImage }: { posterImage?: string }) {
             lighting={lighting}
             customGradient={customGradient}
             onBoundsChange={updateBounds}
-            onPointSelect={isJulia ? undefined : handleCanvasPointSelect}
+            onPointSelect={
+              isJulia || !canEditJulia ? undefined : handleCanvasPointSelect
+            }
             onCanvasReady={handleCanvasReady}
           />
         )}

@@ -69,6 +69,7 @@ describe("published formula candidate-C adapter", () => {
       eventFunction: "frmV1HasEvent",
     });
     expect(plugin.cacheFingerprint).toBe(row.sourceRevision);
+    expect(plugin.supportsJulia).toBe(false);
     expect(plugin.glsl).toContain("vec2 frmV1_z = vec2(0.0);");
     expect(plugin.glsl).toContain("void frmV1ResetState(");
     expect(plugin.glsl).toContain("bool frmV1ShouldContinue()");

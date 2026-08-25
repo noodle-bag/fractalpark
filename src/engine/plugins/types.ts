@@ -103,7 +103,7 @@ export interface FormulaPlugin extends FractalPlugin {
    */
   fnDefaults?: Record<string, string>;
   supportsPower?: boolean;  // DEPRECATED: not consumed by any current consumer; Smooth capability resolves from AST/dataflow per ADR-0007. Retired in the coloring-capability slice.
-  supportsJulia?: boolean;  // default true
+  supportsJulia?: boolean;  // default false; only a current capability census row may enable editing
   family?: string;          // grouping: 'classic' | 'newton' | 'magnet' | 'phoenix' | 'exotic'
   escapeType?: 'diverge' | 'converge';  // NEW: for Newton-type formulas
   initGlsl?: string;        // GLSL for initFormula(z, c, point) — runs once before iteration loop

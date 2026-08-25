@@ -4,6 +4,11 @@ import {
   type PublishedFormulaParameterDescriptorV1,
   type PublishedFormulaPluginArtifactV1,
 } from "./published-adapter";
+import {
+  JULIA_CAPABILITY_CENSUS_V1,
+  resolveJuliaCapabilityV1,
+  verifyJuliaCapabilityCensusSetV1,
+} from "./julia-capability";
 import { canonicalJsonV1, sha256HexSyncV1 } from "./revisions";
 
 const SHA256 = /^[a-f0-9]{64}$/;
@@ -70,6 +75,7 @@ export type PublishedFormulaRuntimeResultV1<T> =
       readonly ok: false;
       readonly code:
         | "index-invalid"
+        | "capability-census-invalid"
         | "formula-not-published"
         | "definition-fetch-failed"
         | "definition-compile-failed"
@@ -261,6 +267,27 @@ export function parsePublishedFormulaRuntimeIndexV1(
   };
 }
 
+export function resolvePublishedFormulaDefaultProfileV1(
+  row: PublishedFormulaRuntimeIndexRowV1,
+): PublishedFormulaProfileV1 {
+  const capability = resolveJuliaCapabilityV1(
+    row.formulaId,
+    row.sourceRevision,
+  );
+  if (row.profile.mode !== "julia" || capability.supportsEditing)
+    return row.profile;
+  return Object.freeze({
+    schema: row.profile.schema,
+    quality: row.profile.quality,
+    mode: "parameter-plane" as const,
+    center: row.profile.center,
+    zoom: row.profile.zoom,
+    rotation: row.profile.rotation,
+    iterations: row.profile.iterations,
+    ...(row.profile.probe ? { probe: row.profile.probe } : {}),
+  });
+}
+
 export interface PublishedFormulaRuntimeLoaderV1 {
   readonly index: PublishedFormulaRuntimeIndexV1;
   get(formulaId: string): PublishedFormulaRuntimeIndexRowV1 | undefined;
@@ -276,6 +303,11 @@ export function createPublishedFormulaRuntimeLoaderV1(
 ): PublishedFormulaRuntimeResultV1<PublishedFormulaRuntimeLoaderV1> {
   const parsed = parsePublishedFormulaRuntimeIndexV1(indexValue);
   if (!parsed.ok) return parsed;
+  if (
+    !verifyJuliaCapabilityCensusSetV1(parsed.value) ||
+    JULIA_CAPABILITY_CENSUS_V1.rowCount !== parsed.value.rowCount
+  )
+    return { ok: false, code: "capability-census-invalid" };
   const byId = new Map(parsed.value.rows.map((row) => [row.formulaId, row]));
   return {
     ok: true,

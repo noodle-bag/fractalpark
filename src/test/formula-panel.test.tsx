@@ -3,6 +3,7 @@ import { fireEvent, render, screen } from '@testing-library/react';
 import { registerBuiltins } from '@/engine/plugins/builtins/index';
 import { compileClassicFrmEntry, compileFrm } from '@/engine/frm/compile';
 import { pluginRegistry } from '@/engine/plugins/registry';
+import type { FormulaPlugin } from '@/engine/plugins/types';
 import { FormulaPanel } from '@/components/fractal/FormulaPanel';
 
 vi.mock('next-intl', () => ({
@@ -22,6 +23,16 @@ describe('FormulaPanel', () => {
     HTMLElement.prototype.scrollIntoView = vi.fn();
 
     registerBuiltins();
+    const legacyMandelbrot = pluginRegistry.getFormula('mandelbrot');
+    if (legacyMandelbrot) {
+      const supportedJuliaPlugin: FormulaPlugin = {
+        ...legacyMandelbrot,
+        id: 'test-supported-julia',
+        name: 'Test Supported Julia',
+        supportsJulia: true,
+      };
+      pluginRegistry.register(supportedJuliaPlugin);
+    }
     const compiled = compileFrm(`FnSlotWeave {
 init:
   z = pixel
@@ -48,7 +59,7 @@ bailout:
   it('highlights both formula modes without changing the switch semantics', () => {
     const props = {
       juliaC: [-0.7, 0.27] as [number, number],
-      currentFormula: 'mandelbrot',
+      currentFormula: 'test-supported-julia',
       currentBounds: { centerX: -0.5, centerY: 0, zoom: 0.4, rotation: 0 },
       onJuliaModeChange: () => {},
       onJuliaCChange: () => {},
@@ -70,6 +81,26 @@ bailout:
       'font-semibold'
     );
     expect(screen.getByRole('switch')).toHaveAccessibleName('controls.mode.label');
+  });
+
+  it('hides Julia editing for a missing census row without mutating legacy props', () => {
+    const onJuliaModeChange = vi.fn();
+    render(
+      <FormulaPanel
+        isJulia
+        juliaC={[-0.62, 0.41]}
+        currentFormula="mandelbrot"
+        currentBounds={{ centerX: 0, centerY: 0, zoom: 0.4, rotation: 0 }}
+        onJuliaModeChange={onJuliaModeChange}
+        onJuliaCChange={() => {}}
+        onFormulaChange={() => {}}
+        onFormulaParamChange={() => {}}
+      />
+    );
+
+    expect(screen.queryByRole('switch')).not.toBeInTheDocument();
+    expect(screen.queryByText('controls.juliaC.label')).not.toBeInTheDocument();
+    expect(onJuliaModeChange).not.toHaveBeenCalled();
   });
 
   it('renders builtin formula sliders from plugin descriptors', () => {

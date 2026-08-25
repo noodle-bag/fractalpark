@@ -25,6 +25,8 @@
     "formula:runtime-rev4:verify": "tsx scripts/verify-formula-runtime-rev4.ts",
     "formula:published-runtime": "tsx scripts/build-published-formula-runtime.ts",
     "formula:published-runtime:write": "tsx scripts/build-published-formula-runtime.ts --write",
+    "formula:julia-census": "tsx scripts/build-julia-capability-census.ts",
+    "formula:julia-census:write": "tsx scripts/build-julia-capability-census.ts --write",
     "formula:published-runtime:webgl": "tsx scripts/verify-published-formula-runtime-webgl.ts",
     "formula:published-runtime:webgl:reports": "tsx scripts/verify-published-formula-webgl-reports.ts",
     "formula:performance:verify": "tsx scripts/verify-standard-library-performance.ts",

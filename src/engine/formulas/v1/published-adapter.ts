@@ -13,6 +13,7 @@ import type {
   FormulaPlugin,
   PluginUniformDescriptor,
 } from "@/engine/plugins/types";
+import { resolveJuliaCapabilityV1 } from "./julia-capability";
 
 const SHA256 = /^[a-f0-9]{64}$/;
 const GLSL_PREFIX = "frmV1_";
@@ -237,7 +238,10 @@ export async function compilePublishedFormulaPluginV1(
     uniforms: frozenParameters.map(pluginUniform),
     bailout: 4,
     supportsPower: false,
-    supportsJulia: true,
+    supportsJulia: resolveJuliaCapabilityV1(
+      input.formulaId,
+      input.sourceRevision,
+    ).supportsEditing,
     afterStepTiming: true,
     smoothCapability: "unavailable",
     cacheFingerprint: input.sourceRevision,

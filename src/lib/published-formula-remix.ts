@@ -18,7 +18,10 @@ import type {
   FormulaProfileV1,
   FormulaRevisionV1,
 } from '@/engine/formulas/v1/types';
-import type { PublishedFormulaRuntimeIndexRowV1 } from '@/engine/formulas/v1/published-runtime';
+import {
+  resolvePublishedFormulaDefaultProfileV1,
+  type PublishedFormulaRuntimeIndexRowV1,
+} from '@/engine/formulas/v1/published-runtime';
 import type { MineFormulaLifecycleRevisionInput } from '@/lib/cloud/mine-formula-lifecycle';
 import type { PublishedFormulaCanonicalSourceV1 } from '@/lib/published-formula-source';
 
@@ -227,11 +230,12 @@ export async function createFrozenPublishedFormulaRemixV1(input: {
   }
   const parentFormulaId = input.row.formulaId as FormulaIdV1;
   const parentSourceRevision = input.row.sourceRevision as FormulaRevisionV1;
+  const defaultProfile = resolvePublishedFormulaDefaultProfileV1(input.row);
   const parentBase = profileBase({
     formulaId: parentFormulaId,
     sourceRevision: parentSourceRevision,
     parameters: parameterDefaults(input.row),
-    profile: input.row.profile,
+    profile: defaultProfile,
   });
   const parentProfile: FormulaProfileV1 = Object.freeze({
     ...parentBase,
@@ -247,10 +251,10 @@ export async function createFrozenPublishedFormulaRemixV1(input: {
     source: input.source.source,
     experienceHint: Object.freeze({
       bounds: Object.freeze({
-        centerX: input.row.profile.center[0],
-        centerY: input.row.profile.center[1],
-        zoom: input.row.profile.zoom,
-        rotation: input.row.profile.rotation,
+        centerX: defaultProfile.center[0],
+        centerY: defaultProfile.center[1],
+        zoom: defaultProfile.zoom,
+        rotation: defaultProfile.rotation,
       }),
     }),
     parentProfile,

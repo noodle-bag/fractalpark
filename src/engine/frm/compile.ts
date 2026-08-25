@@ -9,6 +9,7 @@ import type { ASTNode, CanonicalFormula, FormulaDialect, FrmAST } from './ast';
 import { createCanonicalFormula } from './ast';
 import { sequenceAssignmentExpressions } from './assign-expr';
 import type { FormulaPlugin } from '../plugins/types';
+import { resolveJuliaCapabilityV1 } from '../formulas/v1/julia-capability';
 import { tokenize, formatLexerErrors, type LexerError } from './lexer';
 import { parse, formatParseErrors, type ParseError } from './parser';
 import { validate } from './validator';
@@ -442,7 +443,10 @@ function compileFrmUncached(
       source: 'frm',
       frmSemanticsVersion: semanticsVersion,
       supportsPower: false, // DEPRECATED per ADR-0007: capability resolves from AST/dataflow, not this flag.
-      supportsJulia: true,
+      supportsJulia: resolveJuliaCapabilityV1(
+        id,
+        undefined,
+      ).supportsEditing,
       bailout,
       ...(bailoutDescriptor ? { bailoutDescriptor } : {}),
       // Classic dialect + strict v2 → after-step bailout timing (Fractint

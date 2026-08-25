@@ -70,6 +70,7 @@ export function FormulaPanel({
 }: FormulaPanelProps) {
   const t = useTranslations('explore');
   const formulaPlugin = pluginRegistry.getFormula(currentFormula);
+  const canEditJulia = formulaPlugin?.supportsJulia === true;
   const editableUniforms = (formulaPlugin?.uniforms ?? []).filter(
     (descriptor) => descriptor.type === 'float' || descriptor.type === 'int' || descriptor.type === 'vec2'
   );
@@ -79,8 +80,9 @@ export function FormulaPanel({
 
   return (
     <div className="space-y-4">
-      <div className="space-y-3 rounded-lg border p-3 bg-muted/30">
-        <div className="flex items-center justify-between">
+      {canEditJulia && (
+        <div className="space-y-3 rounded-lg border p-3 bg-muted/30">
+          <div className="flex items-center justify-between">
           <Label htmlFor="julia-mode" className="text-sm font-medium leading-none">
             {t('controls.mode.label')}
           </Label>
@@ -98,8 +100,8 @@ export function FormulaPanel({
           </p>
         )}
 
-        {isJulia && (
-          <div className="space-y-3 pt-2">
+          {isJulia && (
+            <div className="space-y-3 pt-2">
             <span className="text-xs font-medium uppercase tracking-wider opacity-70">
               {t('controls.juliaC.label')}
             </span>
@@ -140,9 +142,10 @@ export function FormulaPanel({
                 />
               </div>
             </div>
-          </div>
-        )}
-      </div>
+            </div>
+          )}
+        </div>
+      )}
 
       <FormulaTab
         currentFormula={currentFormula}

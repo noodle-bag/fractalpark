@@ -17,6 +17,7 @@ import {
   FORMULA_RECORD_PROVENANCE_INDEX_V1,
   PUBLISHED_FORMULA_INDEX_CANONICAL_SHA256_V1,
   parsePublishedFormulaRuntimeIndexV1,
+  resolvePublishedFormulaDefaultProfileV1,
   type FormulaHistoricalSourceV1,
   type PublishedFormulaParameterDescriptorV1,
   type PublishedFormulaProfileQualityV1,
@@ -290,7 +291,7 @@ export function buildFormulaRecordV1(
     availability: 'published' as const,
     historicalSource,
     source,
-    defaultProfile: runtime.profile,
+    defaultProfile: resolvePublishedFormulaDefaultProfileV1(runtime),
     preview: Object.freeze({
       src: `/formula-library/v1/previews/${formulaId}.png`,
       width: FORMULA_RECORD_PREVIEW_WIDTH_V1,

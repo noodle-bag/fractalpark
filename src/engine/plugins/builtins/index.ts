@@ -1,4 +1,6 @@
+import { resolveJuliaCapabilityV1 } from '../../formulas/v1/julia-capability';
 import { pluginRegistry } from '../registry';
+import type { FormulaPlugin } from '../types';
 
 // Classic (28)
 import { mandelbrotPlugin } from './formulas/mandelbrot';
@@ -268,8 +270,19 @@ export function registerBuiltins(options?: { quiet?: boolean }): void {
     sphericalTransform,
   ];
 
-  // Register all plugins
-  for (const plugin of [...formulas, ...coloring, ...transforms]) {
+  // Legacy built-in flags remain rendering metadata only. Missing census rows
+  // cannot authorize a new Julia edit path.
+  for (const plugin of formulas) {
+    const censusBoundPlugin: FormulaPlugin = {
+      ...plugin,
+      supportsJulia: resolveJuliaCapabilityV1(
+        plugin.id,
+        plugin.cacheFingerprint,
+      ).supportsEditing,
+    };
+    pluginRegistry.register(censusBoundPlugin);
+  }
+  for (const plugin of [...coloring, ...transforms]) {
     pluginRegistry.register(plugin);
   }
 
