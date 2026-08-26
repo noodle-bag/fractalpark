@@ -142,7 +142,7 @@
     "supabase/migrations/20260824120000_mine_formula_lifecycle_projection.sql": "bb5c6494463e84821fce67752de01e67ced98491e1be41701847021e49b6909d",
     "supabase/migrations/20260824235800_mine_formula_lifecycle_reader.sql": "7f42e6752a8ec0a1c79706ab93141df52bc89177b19ff12b6ed58ffef83349f6",
     "supabase/migrations/20260825013000_mine_formula_lifecycle_runnable_projection.sql": "1d52f85e03a118e9d52ef9838d7a29e191961b2092f86e12906099198fe61dfe",
-    "package.json": "1779ef99f7564bfe32ecfae08d62fc9ee143e3039fdddfd921d2ebe6a443b113",
+    "package.json": "2c70ea6b29609393f890b27a59a0c0ea66b2e7a64304c71735a5be1b91fdcaf2",
     "package-lock.json": "e0b2fc48bafca283ed7a9c76dc821859d448632681d83af4882bdcf280ea1045"
   },
   "command": "SKIP_WEB_SERVER=1 BASE_URL=http://127.0.0.1:3102 npx playwright test tests/e2e/formula-switch.spec.ts --grep 'keeps built-in formulas usable when the published runtime is removed' --workers=1",

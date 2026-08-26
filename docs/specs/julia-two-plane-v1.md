@@ -1,6 +1,6 @@
 # Julia two-plane capability contract v1
 
-Status: **29b infrastructure contract with 29c–29e Tier 0–1 evidence**. This specification defines typed candidates, the CPU evidence harness, and the first three versioned pre-GPU decision surfaces. It does not mutate the published 534-row capability census, activate Julia editing, or establish final capability.
+Status: **29b infrastructure contract with 29c–29f pre-GPU evidence and closure**. This specification defines typed candidates, the CPU evidence harness, three versioned Tier 0–1 decision surfaces, and their inactive pre-GPU closure. It does not mutate the published 534-row capability census, activate Julia editing, or establish final capability.
 
 ## 1. Two-plane semantics
 
@@ -109,3 +109,11 @@ The frozen decision surface records 117 source-split proposals: 82 direct-pixel 
 Tier 1 admits 111 `candidate-only` rows (78 direct-pixel and 33 immutable pixel-alias) and blocks six. Across the blocked rows, five include `pixel-insensitive` and two include `constant-insensitive`; one row has both reasons. Only the 111 passing revisions are written to the isolated content-addressed candidate directory. Blocked attempts retain their revisions and CPU summaries in evidence but receive no candidate definition path. No identity-changing rewrite is attempted or serialized (`identityChangeCandidateCount=0`).
 
 These 111 rows are pre-GPU source-split candidates, not supported formulas, a whitelist, a product quota, or a UI exposure promise. They are not imported by the public runtime index and do not change the 534-row published membership or the live 534/534 `unknown` census. Later closure must still adjudicate unresolved rows, clear every candidate state, and pass Tier 2, final census, Profile, URL, Document, renderer, and UI gates before any product activation.
+
+## 10. Pre-GPU capability closure
+
+29f freezes `resources/formula-library/v1/julia-pre-gpu-capability-census.v1.json` as an inactive, exact-534 successor evidence surface. It is derived from the ordered existing-system-c, parameter-binding, and source-split lanes and independently binds their content hashes. It does not replace or feed the live capability census. Every row records its baseline and evaluated source/semantic revisions, selected lane when one is proven, binding revision and closed contract when available, attempted stages, minimum unresolved evidence, and the exact upstream evidence revision.
+
+The closure contains no `supported` or `candidate` status. The 74 existing-system-c and 111 source-split rows that passed Tier 0–1 become 185 `unknown / tier2-pending` rows; their contracts no longer carry `candidateKind`, but they remain inactive until Tier 2 and final-census binding. Another 200 rows are `blocked`: 2 existing-system-c Tier 1 failures, all 175 parameter-binding rows blocked by exact-source Tier 0, 6 source-split Tier 1 failures, and 17 mutable pixel-alias rejections. The remaining 149 rows are `unknown / not-applicable-review-inconclusive` because the three mechanical lanes do not exhaust fixed-literal lifting or identity-changing alternatives. They are deliberately not labeled `not-applicable` without the required technical-author and independent-reviewer decisions.
+
+The exact closure is therefore `534 = 334 unknown + 200 blocked`, with `supported=0`, `candidate=0`, and `not-applicable=0`. Its 185 Tier 2 queues are evidence sets, not a supported-formula count, whitelist, quota, or UI promise. The 111 isolated source-split Definitions remain content-addressed evidence assets; 29f verifies their exact file set and hashes but does not publish or activate them. The published membership and live census remain 534/534 `unknown`. Tier 2 GPU parity, fixed candidate Profile digests, final verified census binding, and all runtime/product surfaces remain later gates.

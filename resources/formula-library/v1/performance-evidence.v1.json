@@ -141,7 +141,7 @@
     "supabase/migrations/20260824120000_mine_formula_lifecycle_projection.sql": "bb5c6494463e84821fce67752de01e67ced98491e1be41701847021e49b6909d",
     "supabase/migrations/20260824235800_mine_formula_lifecycle_reader.sql": "7f42e6752a8ec0a1c79706ab93141df52bc89177b19ff12b6ed58ffef83349f6",
     "supabase/migrations/20260825013000_mine_formula_lifecycle_runnable_projection.sql": "1d52f85e03a118e9d52ef9838d7a29e191961b2092f86e12906099198fe61dfe",
-    "package.json": "1779ef99f7564bfe32ecfae08d62fc9ee143e3039fdddfd921d2ebe6a443b113",
+    "package.json": "2c70ea6b29609393f890b27a59a0c0ea66b2e7a64304c71735a5be1b91fdcaf2",
     "package-lock.json": "e0b2fc48bafca283ed7a9c76dc821859d448632681d83af4882bdcf280ea1045"
   },
   "browser": {
@@ -321,35 +321,35 @@
       "status": "pass",
       "artifact": {
         "path": "resources/formula-library/v1/rollback-evidence/writerOff.json",
-        "sha256": "89847d3ed2f24693a9bdc5072416a3511e8ae49539c9ac93ec97b558b765dd37"
+        "sha256": "ce74241b4008948d2607d6c0931d1057c2596d38157c455144086dcb0cb73e2f"
       }
     },
     "featureOff": {
       "status": "pass",
       "artifact": {
         "path": "resources/formula-library/v1/rollback-evidence/featureOff.json",
-        "sha256": "fd0d29a7243ebcf3103efb903e477dc072521061a4cefb9fd5c2293e214dbf8b"
+        "sha256": "ba10855c60822421fd48497edea2f5102a69fdaf4aaf1cb3a007e7dd9abf27e7"
       }
     },
     "lkgRuntime": {
       "status": "pass",
       "artifact": {
         "path": "resources/formula-library/v1/rollback-evidence/lkgRuntime.json",
-        "sha256": "0cb96aaee01694b98a8ebaefdb9e4cb4b6ec986c8a920e2edad70dfd7be0d1c8"
+        "sha256": "a8d4c5d37c7608982dd901c163662924736ff6ad5f22c28207331e8882d930c1"
       }
     },
     "readerFloor": {
       "status": "pass",
       "artifact": {
         "path": "resources/formula-library/v1/rollback-evidence/readerFloor.json",
-        "sha256": "129de546a12bc92ea5c144d66be4dd116d440a88beb201da5555475c586d69e2"
+        "sha256": "29b258a0d26dd2662b9d2f7ff94935a1f05aeb270a6599b31739ce162af3f74e"
       }
     },
     "aliasResolver": {
       "status": "pass",
       "artifact": {
         "path": "resources/formula-library/v1/rollback-evidence/aliasResolver.json",
-        "sha256": "fc7194f6efdbb761490ab360c19a23d2462926e0bb7d390c55b6c73da6e612e4"
+        "sha256": "069c78e4474c856a270a870b3093f0eb8522d7a85c4db634650cea4f285ff04a"
       }
     },
     "deployedPreview": {

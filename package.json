@@ -33,6 +33,8 @@
     "formula:julia-parameter-binding:write": "tsx scripts/build-julia-parameter-binding-evidence.ts --write",
     "formula:julia-source-split": "tsx scripts/build-julia-source-split-evidence.ts",
     "formula:julia-source-split:write": "tsx scripts/build-julia-source-split-evidence.ts --write",
+    "formula:julia-pre-gpu": "tsx scripts/build-julia-pre-gpu-capability-census.ts",
+    "formula:julia-pre-gpu:write": "tsx scripts/build-julia-pre-gpu-capability-census.ts --write",
     "formula:published-runtime:webgl": "tsx scripts/verify-published-formula-runtime-webgl.ts",
     "formula:published-runtime:webgl:reports": "tsx scripts/verify-published-formula-webgl-reports.ts",
     "formula:performance:verify": "tsx scripts/verify-standard-library-performance.ts",
