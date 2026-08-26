@@ -29,6 +29,8 @@
     "formula:julia-census:write": "tsx scripts/build-julia-capability-census.ts --write",
     "formula:julia-system-c": "tsx scripts/build-julia-existing-system-c-evidence.ts",
     "formula:julia-system-c:write": "tsx scripts/build-julia-existing-system-c-evidence.ts --write",
+    "formula:julia-parameter-binding": "tsx scripts/build-julia-parameter-binding-evidence.ts",
+    "formula:julia-parameter-binding:write": "tsx scripts/build-julia-parameter-binding-evidence.ts --write",
     "formula:published-runtime:webgl": "tsx scripts/verify-published-formula-runtime-webgl.ts",
     "formula:published-runtime:webgl:reports": "tsx scripts/verify-published-formula-webgl-reports.ts",
     "formula:performance:verify": "tsx scripts/verify-standard-library-performance.ts",

@@ -1,6 +1,6 @@
 # Julia two-plane capability contract v1
 
-Status: **29b infrastructure contract with 29c existing-system-c evidence**. This specification defines typed candidates, the CPU evidence harness, and the first versioned Tier 0–1 queue. It does not mutate the published 534-row capability census, activate Julia editing, or establish final capability.
+Status: **29b infrastructure contract with 29c–29d Tier 0–1 evidence**. This specification defines typed candidates, the CPU evidence harness, and the first two versioned pre-GPU decision surfaces. It does not mutate the published 534-row capability census, activate Julia editing, or establish final capability.
 
 ## 1. Two-plane semantics
 
@@ -91,3 +91,11 @@ Only a final census row with matching source, binding, Profile, backend, toleran
 29c freezes `resources/formula-library/v1/julia-existing-system-c-evidence.v1.json`. Its queue is derived by running the static classifier over all exact 534 published definitions with the explicit `{ kind: "system-c" }` proposal; it is not selected by formula name, family, or an old `supportsJulia` flag. Every queued row binds the exact published source and semantic revisions, the current publication/rights decision, a successful Safety Envelope replay, an immutable binding revision, and the full eight-depth CPU summary. The artifact additionally binds the exact tracked parser, classifier, standard32 CPU backend, stdlib, Safety Envelope, publication, and generator closure by source hash so any evidence implementation drift invalidates the checked-in bytes.
 
 The fixture records 76 structural candidates, of which 74 pass Tier 1 and 2 remain blocked by non-finite evidence on the frozen probe grid. These counts describe this exact evidence revision only. The number 76 is neither a whitelist nor a quota, and the 74 passing rows remain `tier1-candidate-only`: no row becomes `supported`, no live capability census row changes from `unknown`, and Tier 2 GPU evidence plus the later final-census binding are still required before activation.
+
+## 8. Parameter-binding Tier 0–1 evidence
+
+29d freezes `resources/formula-library/v1/julia-parameter-binding-evidence.v1.json`. It evaluates all exact 534 published definitions and every declared complex parameter slot without using formula names, families, or old capability flags. The decision surface contains 293 formulas with 371 complex slots: 185 slots fail the static role classifier, while 186 slots across 175 formulas reach the CPU harness. The frozen CPU grid records 170 passing slots and 16 blocked slots. At formula level, 162 rows have exactly one passing slot (107 classic and 55 generalized), four have multiple passing slots and therefore remain ambiguous, and nine static-candidate rows have no passing slot.
+
+Tier 0 then fails closed for all 175 static-candidate formulas because their exact published source bytes are rejected as `source-not-canonical` by the current Safety Envelope. A separate byte diagnostic found that 163 differ from the canonical serializer only by one terminal newline; the remaining 12 have other canonical byte differences. 29d does not strip or rewrite those bytes: doing so would create a new source revision and belongs to a later source-revision lane. The artifact therefore preserves the CPU slot results and immutable binding revisions for replay, but its formula-level adjudication has zero eligible parameter-binding candidates.
+
+Zero eligible candidates is the result of this exact Tier 0 contract, not a claim that parameter binding is mathematically impossible and not a final Julia support count. The live capability census remains 534/534 `unknown`; no adapter, renderer, Profile, URL, Document, or UI path consumes the 29d asset. Any later normalization or source enhancement must produce new source revisions, rerun rights/Safety evidence and Tier 1, resolve multi-slot ambiguity explicitly, and still pass Tier 2 plus final-census binding before activation.

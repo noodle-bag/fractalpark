@@ -7,7 +7,7 @@
   "numericProfile": "standard32",
   "sourceBindings": {
     "package-lock.json": "e0b2fc48bafca283ed7a9c76dc821859d448632681d83af4882bdcf280ea1045",
-    "package.json": "2ecec22ba3283b841d1b37fb9127c1160e63e7f69d412067abf316a3dcb5bc52",
+    "package.json": "9376c56407db6f84514c870a99b4fff6b65f57df7367e72c57e43edffdfef797",
     "resources/formula-library/v1/julia-capability-census.v1.json": "93a57236600f9738dc854f53c6ee59e180d327d87b0995482c609355d70ab8f6",
     "resources/formula-library/v1/legacy-formula-aliases.json": "0b966ca5f5e238b9f5fe523caa082a682cfe51d1e6affeb945d580dba72842e8",
     "resources/formula-library/v1/publication-decisions.json": "ed63d7fab46530ac61a2dfb562644b9d36c1d8f4a73128cc51c0c7fbcb625de6",
@@ -2816,5 +2816,5 @@
       }
     }
   ],
-  "contentHash": "3b78def66390dc51804a15e0f61bb60e2fca60b69f9fc519de6890777044ba0e"
+  "contentHash": "6ae64848df1040f543f2cee9be1b51a4e9954cf9ff8829ca28d42290d3dd45f3"
 }
