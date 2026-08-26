@@ -142,7 +142,7 @@
     "supabase/migrations/20260824120000_mine_formula_lifecycle_projection.sql": "bb5c6494463e84821fce67752de01e67ced98491e1be41701847021e49b6909d",
     "supabase/migrations/20260824235800_mine_formula_lifecycle_reader.sql": "7f42e6752a8ec0a1c79706ab93141df52bc89177b19ff12b6ed58ffef83349f6",
     "supabase/migrations/20260825013000_mine_formula_lifecycle_runnable_projection.sql": "1d52f85e03a118e9d52ef9838d7a29e191961b2092f86e12906099198fe61dfe",
-    "package.json": "ab0b71b7bc5fdb863cf7dc8bc961b35ea9f3ddc84ab3bdc8bbd459e88afaf1b8",
+    "package.json": "2ecec22ba3283b841d1b37fb9127c1160e63e7f69d412067abf316a3dcb5bc52",
     "package-lock.json": "e0b2fc48bafca283ed7a9c76dc821859d448632681d83af4882bdcf280ea1045"
   },
   "command": "npx vitest run src/test/formula-portable-lifecycle-v1.test.ts",
