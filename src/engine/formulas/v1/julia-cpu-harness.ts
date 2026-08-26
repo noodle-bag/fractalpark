@@ -23,7 +23,9 @@ export const JULIA_CPU_HARNESS_CONSTANTS_V1 = Object.freeze([
   Object.freeze([0.285, 0.01] as const),
   Object.freeze([-0.1542022, 0.6137691] as const),
 ]);
-export const JULIA_CPU_HARNESS_DEPTHS_V1 = Object.freeze([1, 2, 4, 8] as const);
+export const JULIA_CPU_HARNESS_DEPTHS_V1 = Object.freeze([
+  1, 2, 4, 8, 16, 32, 64, 128,
+] as const);
 
 export type JuliaCpuComplexV1 = readonly [number, number];
 export type JuliaCpuTerminalEventV1 = "bounded" | "escaped" | "nonFinite";

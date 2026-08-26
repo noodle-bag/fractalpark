@@ -260,10 +260,12 @@ describe("typed Julia binding contracts", () => {
 });
 
 describe("Julia two-plane CPU candidate harness", () => {
-  it("freezes a 3 x 3 x 4 deterministic probe grid", () => {
+  it("freezes the contracted 3 x 3 x 8 deterministic probe grid", () => {
     expect(JULIA_CPU_HARNESS_POINTS_V1).toHaveLength(3);
     expect(JULIA_CPU_HARNESS_CONSTANTS_V1).toHaveLength(3);
-    expect(JULIA_CPU_HARNESS_DEPTHS_V1).toEqual([1, 2, 4, 8]);
+    expect(JULIA_CPU_HARNESS_DEPTHS_V1).toEqual([
+      1, 2, 4, 8, 16, 32, 64, 128,
+    ]);
   });
 
   it("passes ismand_demo only as Tier-1 candidate evidence", () => {
@@ -278,8 +280,8 @@ describe("Julia two-plane CPU candidate harness", () => {
     expect(result.value.contract.invariant).toBe(
       "parameter-plane-bit-identical",
     );
-    expect(result.value.parameterPlaneBaselineTraces).toHaveLength(36);
-    expect(result.value.traces).toHaveLength(72);
+    expect(result.value.parameterPlaneBaselineTraces).toHaveLength(72);
+    expect(result.value.traces).toHaveLength(144);
     expect(result.value.checks).toEqual({
       parameterPlaneBitIdentical: true,
       deterministic: true,

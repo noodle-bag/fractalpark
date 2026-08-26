@@ -1,6 +1,6 @@
 # Julia two-plane capability contract v1
 
-Status: **29b infrastructure contract**. This specification defines typed candidates and a CPU evidence harness. It does not classify the published 534-row census, activate Julia editing, or establish final capability.
+Status: **29b infrastructure contract with 29c existing-system-c evidence**. This specification defines typed candidates, the CPU evidence harness, and the first versioned Tier 0–1 queue. It does not mutate the published 534-row capability census, activate Julia editing, or establish final capability.
 
 ## 1. Two-plane semantics
 
@@ -56,7 +56,7 @@ Its output is always `static-candidate-only` and requires CPU evidence. It never
 
 ## 4. CPU candidate harness
 
-The v1 reference grid is 3 distinct points × 3 distinct Julia constants × depths 1, 2, 4, and 8 under the production `standard32` CPU backend. A candidate pass requires all of:
+The v1 reference grid is 3 distinct points × 3 distinct Julia constants × eight distinct depths (1, 2, 4, 8, 16, 32, 64, and 128) under the production `standard32` CPU backend. A candidate pass requires all of:
 
 - parameter-plane traces are byte-identical with and without the proposed Julia binding;
 - repeated fixed-map runs are deterministic;
@@ -85,3 +85,9 @@ The published `ismand_demo` separated independent rewrite is the parameter-bindi
 A binding change creates a new immutable binding revision in later commits and invalidates semantic/runtime/Profile/evidence bindings even if source bytes do not change. A source split additionally changes source revision and the full source-derived asset chain.
 
 Only a final census row with matching source, binding, Profile, backend, tolerance, evidence revisions, and final census digest may activate product editing. Missing, stale, unknown, blocked, not-applicable, or candidate rows remain fail closed. Legacy URL/Document/Profile `mode` and `juliaC` continue to read, render, and round-trip without being overwritten.
+
+## 7. Existing-system-c Tier 0–1 evidence
+
+29c freezes `resources/formula-library/v1/julia-existing-system-c-evidence.v1.json`. Its queue is derived by running the static classifier over all exact 534 published definitions with the explicit `{ kind: "system-c" }` proposal; it is not selected by formula name, family, or an old `supportsJulia` flag. Every queued row binds the exact published source and semantic revisions, the current publication/rights decision, a successful Safety Envelope replay, an immutable binding revision, and the full eight-depth CPU summary. The artifact additionally binds the exact tracked parser, classifier, standard32 CPU backend, stdlib, Safety Envelope, publication, and generator closure by source hash so any evidence implementation drift invalidates the checked-in bytes.
+
+The fixture records 76 structural candidates, of which 74 pass Tier 1 and 2 remain blocked by non-finite evidence on the frozen probe grid. These counts describe this exact evidence revision only. The number 76 is neither a whitelist nor a quota, and the 74 passing rows remain `tier1-candidate-only`: no row becomes `supported`, no live capability census row changes from `unknown`, and Tier 2 GPU evidence plus the later final-census binding are still required before activation.
