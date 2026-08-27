@@ -1,0 +1,81 @@
+name: Julia Renderer Evidence
+
+on:
+  pull_request:
+    paths:
+      - "resources/formula-library/v1/julia-*.json"
+      - "resources/formula-library/v1/julia-source-split-candidates/**"
+      - "public/formula-library/v1/runtime/published/**"
+      - "src/engine/formulas/v1/julia-*.ts"
+      - "src/engine/formulas/v1/published-adapter.ts"
+      - "src/engine/formulas/v1/published-runtime.ts"
+      - "src/engine/formulas/v1/revisions.ts"
+      - "src/engine/formulas/v1/safety-envelope.ts"
+      - "src/engine/formulas/v1/types.ts"
+      - "src/engine/frm/**"
+      - "src/engine/plugins/**"
+      - "src/engine/shaders/**"
+      - "src/test/julia-*.test.ts"
+      - "scripts/build-julia-*.ts"
+      - "scripts/run-julia-tier2-webgl-worker.ts"
+      - "scripts/verify-julia-tier2-webgl.ts"
+      - "package.json"
+      - "package-lock.json"
+      - "tsconfig.json"
+      - ".github/workflows/julia-renderer-evidence.yml"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  julia-renderer-evidence:
+    runs-on: ubuntu-latest
+    timeout-minutes: 120
+    strategy:
+      fail-fast: false
+      matrix:
+        shard:
+          - { start: 0, count: 47 }
+          - { start: 47, count: 46 }
+          - { start: 93, count: 46 }
+          - { start: 139, count: 46 }
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+      - run: npm ci
+      - run: npx playwright install --with-deps chromium
+      - run: npm run formula:julia-pre-gpu
+      - name: Run Julia Tier 2 renderer shard
+        run: >-
+          npx tsx scripts/verify-julia-tier2-webgl.ts
+          --start=${{ matrix.shard.start }}
+          --limit=${{ matrix.shard.count }}
+          --chunk-size=2
+          --report=/tmp/julia-renderer-${{ matrix.shard.start }}.json
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: julia-renderer-${{ matrix.shard.start }}
+          path: /tmp/julia-renderer-${{ matrix.shard.start }}.json
+          if-no-files-found: error
+
+  julia-renderer-coverage:
+    needs: julia-renderer-evidence
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+      - run: npm ci
+      - uses: actions/download-artifact@v4
+        with:
+          pattern: julia-renderer-*
+          path: /tmp/julia-renderer-reports
+      - run: npx tsx scripts/build-julia-renderer-evidence.ts /tmp/julia-renderer-reports
+      - run: npx tsx scripts/build-julia-final-capability-census.ts
