@@ -1,0 +1,21 @@
+{
+  "schema": "fractalpark-julia-pixel-final-authority-manifest/v1",
+  "revision": 1,
+  "authority": {
+    "authorityState": "sealed",
+    "supersededBy": null,
+    "withdrawnBy": null
+  },
+  "finalCensusContentHash": "519d773de0246c7581252bc82e9fa3d92034212141b66e198284bbffb6988437",
+  "inputAuthorityContentHashes": [
+    "168d590fbb15a5c0553c04db19256e8ec9a2f552aa767a195fb6a247552ab12d",
+    "173a13fc29f0e6d43d4ab8a026a5d296e3fdb8275bcccb5affa1c91cece138f4",
+    "1de7daa2195d9737e72135f7f4251c5d08e800060e459b4170825294427f36a0",
+    "4b60e659e9fc621f80525e0b2c7e6b9d2b3432acd0d64cdba898939a8ee1d91e",
+    "56a42815c4f088460d72b55dfeb565d24498ae66b9c58deb5d775b0a25b0327d",
+    "a9726166bf3b34bf0044dc02ae7fada16155cd5d3ee0771aa495c112fbace16d",
+    "cc649f8358788866f45fc3d1c2538e5716f18b17e1203e89d3bf6d8303a71610",
+    "d14ca25b487a491b11b34ef30f15073198fabe1bc6e80fc76d1f2042443924bc"
+  ],
+  "contentHash": "562e403f862d9dc7fc4d26ee9285b6b9c522c5dc33b406b8afd0ac8707179ac2"
+}
