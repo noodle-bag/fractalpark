@@ -1,0 +1,18 @@
+{
+  "schema": "fractalpark-julia-pixel-activation-handoff/v2",
+  "revision": 2,
+  "authority": {
+    "authorityState": "sealed",
+    "supersededBy": null,
+    "withdrawnBy": null
+  },
+  "handoffState": "review-pending",
+  "finalCensusContentHash": "696debfa2e37af1197002e9189a86269e5c90e50c349667042be69042bdbe6b0",
+  "authorityManifestContentHash": "e139f81adf302c80c2411925da84205c02795681337e3c31d3c3aef0f34bb874",
+  "supportedClassicRowSetDigest": "97c97f627b1109b3ef0d01464ff513232f534a01954d0b5f7f9873ca608e570d",
+  "supportedClassicRowCount": 186,
+  "regressionSetDigest": "e370910d3fd0a60929094cc4a2bff421bb6161fd342b7d389efb283db076503e",
+  "regressionCount": 20,
+  "maintainerAcknowledgmentReceiptDigest": null,
+  "contentHash": "cc2533a962257575dd2281fde666ec6a4fa739361b10f47672a2fa94c9f6d87d"
+}

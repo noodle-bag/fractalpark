@@ -1,0 +1,36 @@
+{
+  "schema": "fractalpark-julia-pixel-final-authority-manifest/v2",
+  "revision": 2,
+  "authority": {
+    "authorityState": "sealed",
+    "supersededBy": null,
+    "withdrawnBy": null
+  },
+  "finalCensusContentHash": "696debfa2e37af1197002e9189a86269e5c90e50c349667042be69042bdbe6b0",
+  "inputAuthorityContentHashes": [
+    "1de7daa2195d9737e72135f7f4251c5d08e800060e459b4170825294427f36a0",
+    "4b60e659e9fc621f80525e0b2c7e6b9d2b3432acd0d64cdba898939a8ee1d91e",
+    "519d773de0246c7581252bc82e9fa3d92034212141b66e198284bbffb6988437",
+    "8bdd917618e0c541d68016b67fb407d8532c6bc4cf2de95a18749d3c4a435d93",
+    "a76a99484cd1921ce60b782b8da1d78ddf76894d3ce9189df235786b9e19df2c"
+  ],
+  "sourceBindings": {
+    "resources/formula-library/v1/julia-final-capability-census.v1.json": "743804158706e995fba37a2661771deb12662d3aa47a63e4334d952c5f12cb2b",
+    "resources/formula-library/v1/julia-pixel-final-capability-census.v2.json": "2684b6c6de63bbcb88780e13d1cbc9e0ae016823e4188224925439cac0a909ff",
+    "resources/formula-library/v1/julia-pixel-final-recovery-audit.v1.json": "183a2bc2a9fa12914ae453d84f8612510f359ab333e27bb8537ee8daef1051ad",
+    "resources/formula-library/v1/julia-pixel-recovery-contract.v1.json": "fda21751a9cc1158e11e646e575824fb8d49f88556dbddb42fab137816979d14",
+    "resources/formula-library/v1/julia-classic-regression-corrective.v1.json": "370aed52f52a9b732c79a04a061b469c9fb7e74a18c3de101f2332b3c9533cc4",
+    "resources/formula-library/v1/julia-classic-regression-renderer-evidence.v1.json": "236e7ff48f1dccacdb2c5d149eb47a10f2929434748184ba02c6a33e41d3bdc6",
+    "scripts/build-julia-final-recovery-v3.ts": "609d801cd649d62bfc6a85dc25e7e2bea14a02f8a82c0aac3655d97b9ccf31a6",
+    "scripts/verify-julia-final-recovery-v3.ts": "c9e991d6cd05beffc1255a163cf5324130b8d00cf2fb1182dbed9762b2546196",
+    "src/engine/formulas/v1/julia-final-recovery-v3.ts": "ca6f359e7977a9570d36cfc055d85fb676c6ecb51b715a7c4b16f72ae56bdd4e",
+    "src/test/julia-final-recovery-v3.test.ts": "6181ba632942aa4398787c3dc9700fc313448023814c8cfc35c3ed3776728c2a",
+    "src/engine/formulas/v1/revisions.ts": "7a457e21bc6c5d539b23ef1dc6581fc05d3578434b1c47c1a0061518abab4397",
+    "src/engine/formulas/v1/julia-final-capability.ts": "d61201326636ad2ad74e60c26ccd5dc7102a6db3434426dcc1047e551269b3eb",
+    "src/engine/formulas/v1/julia-pixel-recovery-contract.ts": "918dfb3807889ff2acfeb07ba782ca045758e4faf23ca40c70f30197b382df66",
+    "src/engine/formulas/v1/julia-final-recovery-v2.ts": "dbeab48d0139469f68efc7759b37533df0d4e056f41b6f625eb8440b18cbe0b1",
+    "src/engine/formulas/v1/julia-classic-regression-corrective-v1.ts": "c669fdb78c7a603f610cb1e945facd775f3aa937a485c4f72605d3eea266d287",
+    "src/engine/formulas/v1/julia-classic-regression-renderer-closure-v1.ts": "da9b78935165c186e7dfacd90f23779f9b9c355bd5848617602610c70ac37e0a"
+  },
+  "contentHash": "e139f81adf302c80c2411925da84205c02795681337e3c31d3c3aef0f34bb874"
+}
