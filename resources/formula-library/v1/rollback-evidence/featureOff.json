@@ -2,7 +2,7 @@
   "schema": "fractalpark-standard-library-rollback-run/v1",
   "scenarioId": "featureOff",
   "sourceBindings": {
-    ".github/workflows/ci.yml": "bcd3e351958be384caa3e0794a5d051bd81dc82e310c0939355460585b439d98",
+    ".github/workflows/ci.yml": "ba71739d337e74d7b6ab04fc048339696910af793c8e1231ecfb02d6bacf2b77",
     ".github/workflows/release.yml": "6354abab49c801abc88589f61d02d90f794ba267513dfee30e39e7722aa17114",
     "resources/formula-library/v1/performance-gates.v1.json": "e31539cd08cba545f888b9888c958692b735442776300aaf5d949c3f81235714",
     "resources/formula-library/v1/publication-decisions.json": "ed63d7fab46530ac61a2dfb562644b9d36c1d8f4a73128cc51c0c7fbcb625de6",
