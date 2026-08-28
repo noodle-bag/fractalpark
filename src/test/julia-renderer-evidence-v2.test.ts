@@ -229,44 +229,53 @@ describe("Julia renderer evidence v2", () => {
       expect(execution).toContain(path);
       expect(full).toContain(path);
     }
-    const audit = auditJuliaWorkerBundleV2(
-      ROOT,
-      join(ROOT, "scripts/run-julia-tier2-webgl-worker-v2.ts"),
-      join(ROOT, "node_modules/.cache/julia-tier2-webgl-worker-v2.mjs"),
-      execution,
-      false,
-    );
-    expect(audit.repoInputPaths).toContain(
-      "resources/formula-library/v1/julia-capability-census.v1.json",
-    );
-    expect(audit.repoInputPaths).toContain(
-      "src/engine/formulas/v1/julia-capability.ts",
-    );
-    expect(audit.repoInputPaths).toContain(
-      "src/engine/formulas/v1/julia-pixel-recovery-candidate.ts",
-    );
-    expect(audit.repoInputPaths.every((path) => execution.includes(path))).toBe(
-      true,
-    );
-    expect(Object.keys(audit.runtimeDependencyBindings).sort()).toEqual([
-      "@playwright/test",
-      "chromium-runtime",
-      "playwright",
-      "playwright-core",
-    ]);
-    const pinnedRuntime = mkdtempSync(join(tmpdir(), "julia-pinned-runtime-"));
+    const isolatedRuntime = mkdtempSync(join(tmpdir(), "julia-pinned-runtime-"));
     try {
+      const isolatedBundle = join(isolatedRuntime, "worker.mjs");
+      const audit = auditJuliaWorkerBundleV2(
+        ROOT,
+        join(ROOT, "scripts/run-julia-tier2-webgl-worker-v2.ts"),
+        isolatedBundle,
+        execution,
+        true,
+      );
+      const replayedAudit = auditJuliaWorkerBundleV2(
+        ROOT,
+        join(ROOT, "scripts/run-julia-tier2-webgl-worker-v2.ts"),
+        isolatedBundle,
+        execution,
+        false,
+      );
+      expect(replayedAudit.bundleSha256).toBe(audit.bundleSha256);
+      expect(audit.repoInputPaths).toContain(
+        "resources/formula-library/v1/julia-capability-census.v1.json",
+      );
+      expect(audit.repoInputPaths).toContain(
+        "src/engine/formulas/v1/julia-capability.ts",
+      );
+      expect(audit.repoInputPaths).toContain(
+        "src/engine/formulas/v1/julia-pixel-recovery-candidate.ts",
+      );
+      expect(audit.repoInputPaths.every((path) => execution.includes(path))).toBe(
+        true,
+      );
+      expect(Object.keys(audit.runtimeDependencyBindings).sort()).toEqual([
+        "@playwright/test",
+        "chromium-runtime",
+        "playwright",
+        "playwright-core",
+      ]);
       const pinnedExecutable = pinJuliaRuntimeDependenciesV2(
         ROOT,
         audit.browserExecutablePath,
-        pinnedRuntime,
+        isolatedRuntime,
         audit.runtimeDependencyBindings,
       );
       expect(
-        auditJuliaRuntimeDependenciesV2(pinnedRuntime, pinnedExecutable),
+        auditJuliaRuntimeDependenciesV2(isolatedRuntime, pinnedExecutable),
       ).toEqual(audit.runtimeDependencyBindings);
     } finally {
-      rmSync(pinnedRuntime, { recursive: true, force: true });
+      rmSync(isolatedRuntime, { recursive: true, force: true });
     }
     const readCurrent = (path: string): string =>
       readFileSync(join(ROOT, path), "utf8");
