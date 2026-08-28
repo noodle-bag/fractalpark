@@ -38,6 +38,11 @@ const LUCKY_REPRESENTATIVE = {
     'definitions/e4d2259a5dd3fe7b3af646514a4313e83efcc80e887e04c07b7469bb27a66b90.frm',
 } as const;
 
+const JULIA_ACTIVATION_REPRESENTATIVE = {
+  formulaId: '5d0877c0-5f84-5c3b-9466-b9f9b417cb6a',
+  displayName: 'fzppfnht',
+} as const;
+
 const ROLLBACK_REPRESENTATIVE = {
   displayName: 'jm_18',
   definitionPath:
@@ -548,6 +553,57 @@ test.describe('Published Formula Library', () => {
     await expect(page.getByRole('button', { name: 'Reset Formula Profile' })).toHaveCount(0);
     await expect(page.getByRole('button', { name: 'Undo Formula Change' })).toHaveCount(0);
     expect(definitionRequests).toHaveLength(1);
+  });
+
+  test('activates Julia for the source-bound canonical Profile', async ({ page }) => {
+    test.setTimeout(120_000);
+    await page.goto('/en/explore');
+    await waitForFractalCanvasReady(page);
+    await openLibrary(page);
+    await selectDirectoryRow(page, JULIA_ACTIVATION_REPRESENTATIVE.displayName);
+
+    const root = page.getByTestId('explore-root');
+    const canvas = page.getByTestId('fractal-canvas');
+    const mode = page.getByRole('switch', { name: 'Fractal Mode' });
+    await expect(root).toHaveAttribute(
+      'data-formula-id',
+      JULIA_ACTIVATION_REPRESENTATIVE.formulaId,
+    );
+    await expect(canvas).toHaveAttribute(
+      'data-rendered-formula-id',
+      JULIA_ACTIVATION_REPRESENTATIVE.formulaId,
+      { timeout: 45_000 },
+    );
+    await expect(mode).toBeVisible();
+    await expect(mode).toHaveAttribute('aria-checked', 'true');
+    await expect(page.getByText('Julia Parameter (c)')).toBeVisible();
+    await expect(page).toHaveURL(/[?&]julia=1(?:[&#]|$)/);
+
+    await mode.click();
+    await expect(mode).toHaveAttribute('aria-checked', 'false');
+    await expect(page).not.toHaveURL(/[?&]julia=1(?:[&#]|$)/);
+    await expect(canvas).toHaveAttribute(
+      'data-rendered-formula-id',
+      JULIA_ACTIVATION_REPRESENTATIVE.formulaId,
+    );
+  });
+
+  test('preserves legacy Julia intent while keeping the alias fail closed', async ({ page }) => {
+    await page.goto('/en/explore?fm=m&julia=1&jre=-0.8&jim=0.156', {
+      waitUntil: 'domcontentloaded',
+      timeout: 45_000,
+    });
+    await waitForFractalCanvasReady(page);
+    await expect(page.getByTestId('explore-root')).toHaveAttribute(
+      'data-formula-id',
+      'mandelbrot',
+    );
+    await expect(page.getByTestId('fractal-canvas')).toHaveAttribute(
+      'data-rendered-formula-id',
+      'mandelbrot',
+    );
+    await expect(page.getByRole('switch', { name: 'Fractal Mode' })).toHaveCount(0);
+    await expect(page).toHaveURL(/[?&]julia=1(?:[&#]|$)/);
   });
 
   for (const width of [320, 390] as const) {

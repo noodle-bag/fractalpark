@@ -3,6 +3,7 @@ import path from 'node:path';
 import sharp from 'sharp';
 import { createSuccess, CliCommandError, docFromPreset } from '@/cli/doc-commands';
 import type { FractalDocument } from '@/engine/document';
+import { documentToRuntimeParams } from '@/engine/document-adapter';
 import { FORMULA_CATALOG } from '@/engine/plugins/formula-catalog';
 import { documentToExploreHref } from '@/lib/url-params';
 import { parseGalleryPresetsFile } from '@/lib/gallery-presets';
@@ -174,10 +175,14 @@ function slugify(input: string): string {
     .replace(/-{2,}/g, '-');
 }
 
+function isEffectiveJulia(document: FractalDocument): boolean {
+  return documentToRuntimeParams(document).isJulia;
+}
+
 function signatureForDocument(document: FractalDocument): string {
   return [
     document.formula.formulaId,
-    document.formula.isJulia ? 'j' : 'm',
+    isEffectiveJulia(document) ? 'j' : 'm',
     document.transform.transformId,
     document.coloring.outsideColoringId,
     document.coloring.insideColoringId,
@@ -505,7 +510,7 @@ export function loadPortfolioSignatures(presetsPath?: string): PortfolioSignatur
       transformId: document.transform.transformId,
       outsideColoringId: document.coloring.outsideColoringId,
       insideColoringId: document.coloring.insideColoringId,
-      isJulia: document.formula.isJulia,
+      isJulia: isEffectiveJulia(document),
     };
   });
 }
@@ -812,7 +817,7 @@ export function reportRun(args: {
     markdown.push(`- adjusted score: ${item.adjustedScore}`);
     markdown.push(`- raw score: ${item.scoring.total}`);
     markdown.push(`- gate: ${item.scoring.qualityGate}`);
-    markdown.push(`- formula: \`${item.document.formula.formulaId}\`${item.document.formula.isJulia ? ' (Julia)' : ''}`);
+    markdown.push(`- formula: \`${item.document.formula.formulaId}\`${isEffectiveJulia(item.document) ? ' (Julia)' : ''}`);
     markdown.push(`- family: \`${item.portfolio.family ?? 'unknown'}\``);
     markdown.push(`- url: \`${deriveExploreUrl(item.render, item.document)}\``);
     markdown.push(`- structural labels: ${item.scoring.labels.join(' / ') || 'none'}`);
@@ -837,7 +842,7 @@ export function reportRun(args: {
       '<article class="card">',
       `<img src="${item.relImage}" alt="${item.id}">`,
       `<h2>#${item.rank} ${item.id}</h2>`,
-      `<div class="meta"><div>Adjusted: ${item.adjustedScore}</div><div>Score: ${item.scoring.total}</div><div>Formula: ${item.document.formula.formulaId}${item.document.formula.isJulia ? ' (Julia)' : ''}</div><div>Role: ${item.targetTags.portfolioRole.join(', ') || 'none'}</div><div><a href="${deriveExploreUrl(item.render, item.document)}">${deriveExploreUrl(item.render, item.document)}</a></div></div>`,
+      `<div class="meta"><div>Adjusted: ${item.adjustedScore}</div><div>Score: ${item.scoring.total}</div><div>Formula: ${item.document.formula.formulaId}${isEffectiveJulia(item.document) ? ' (Julia)' : ''}</div><div>Role: ${item.targetTags.portfolioRole.join(', ') || 'none'}</div><div><a href="${deriveExploreUrl(item.render, item.document)}">${deriveExploreUrl(item.render, item.document)}</a></div></div>`,
       `<div class="labels">${item.scoring.labels.map((label) => `<span class="tag">${label}</span>`).join('')}</div>`,
       '</article>',
     ].join('')),

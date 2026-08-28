@@ -3,6 +3,7 @@ import path from 'node:path';
 import { spawn } from 'node:child_process';
 import { chromium, type Browser, type BrowserContext, type Page } from 'playwright';
 import type { FractalDocument } from '@/engine/document';
+import { documentToRuntimeParams } from '@/engine/document-adapter';
 import { documentToExploreHref, documentToUrlState, encodeParams } from '@/lib/url-params';
 import { CliCommandError, createSuccess, docFromPreset } from '@/cli/doc-commands';
 
@@ -254,7 +255,7 @@ export function normalizeBatchEntries(input: unknown): BatchEntry[] {
 export function summarizeDocument(document: FractalDocument): ArtifactSummary {
   return {
     formulaId: document.formula.formulaId,
-    isJulia: document.formula.isJulia,
+    isJulia: documentToRuntimeParams(document).isJulia,
     paletteIndex: document.coloring.paletteIndex,
     outsideColoringId: document.coloring.outsideColoringId,
     insideColoringId: document.coloring.insideColoringId,

@@ -1,4 +1,8 @@
+import { readFileSync } from 'node:fs';
+import { join } from 'node:path';
+
 import { describe, expect, it } from 'vitest';
+import runtimeIndexAsset from '../../public/formula-library/v1/runtime/published/index.json';
 
 import { hashFrmLikeV1, parseFrmLikeV1 } from '@/engine/frm/v1';
 import type { PublishedFormulaRuntimeIndexRowV1 } from '@/engine/formulas/v1';
@@ -17,6 +21,7 @@ import {
   validateMineRemixApplyV1,
 } from '@/lib/published-formula-remix';
 
+const SUPPORTED_JULIA_PROFILE_ID = '5d0877c0-5f84-5c3b-9466-b9f9b417cb6a';
 const PARENT_ID = '1cd7a16f-4745-5b8f-a974-e122ea893769';
 const MINE_ID = 'aaaaaaaa-bbbb-4ccc-8ddd-eeeeeeeeeeee';
 const SOURCE = `; @language: frm-like/1
@@ -76,6 +81,33 @@ async function fixture() {
     byteLength: new TextEncoder().encode(SOURCE).byteLength,
   };
   return { row, source };
+}
+
+function supportedJuliaFixture() {
+  const row = runtimeIndexAsset.rows.find(
+    (candidate) => candidate.formulaId === SUPPORTED_JULIA_PROFILE_ID,
+  ) as unknown as PublishedFormulaRuntimeIndexRowV1 | undefined;
+  if (!row) throw new Error('supported-julia-remix-row-missing');
+  const sourceText = readFileSync(
+    join(
+      process.cwd(),
+      'public/formula-library/v1/runtime/published',
+      row.definitionPath,
+    ),
+    'utf8',
+  );
+  return {
+    row,
+    source: {
+      formulaId: row.formulaId,
+      sourceRevision: row.sourceRevision,
+      semanticHash: row.semanticHash,
+      href: `/formula-library/v1/runtime/published/${row.definitionPath}`,
+      source: sourceText,
+      lineCount: sourceText.split('\n').length,
+      byteLength: new TextEncoder().encode(sourceText).byteLength,
+    },
+  };
 }
 
 describe('published Formula Remix handoff', () => {
@@ -159,6 +191,18 @@ describe('frozen published Formula Remix lifecycle', () => {
         source: { ...source, semanticHash: 'b'.repeat(64) },
       }),
     ).rejects.toThrow(/authority/i);
+  });
+
+  it('keeps the exact supported canonical Julia Profile in Remix lineage', async () => {
+    const { row, source } = supportedJuliaFixture();
+    const fork = await createFrozenPublishedFormulaRemixV1({
+      formulaId: MINE_ID,
+      row,
+      source,
+    });
+    expect(fork.parentFormulaId).toBe(SUPPORTED_JULIA_PROFILE_ID);
+    expect(fork.parentProfile.mode).toBe('julia');
+    expect(fork.parentProfile.juliaC).toHaveLength(2);
   });
 
   it('runs the Safety Envelope on Apply and preserves invalid source as a non-runnable editable head', async () => {

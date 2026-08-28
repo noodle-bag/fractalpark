@@ -1,4 +1,3 @@
-import { resolveJuliaCapabilityV1 } from '../../formulas/v1/julia-capability';
 import { pluginRegistry } from '../registry';
 import type { FormulaPlugin } from '../types';
 
@@ -270,17 +269,14 @@ export function registerBuiltins(options?: { quiet?: boolean }): void {
     sphericalTransform,
   ];
 
-  // Legacy built-in flags remain rendering metadata only. Missing census rows
-  // cannot authorize a new Julia edit path.
+  // Legacy built-ins are not canonical published identities. Historical source
+  // flags remain metadata only and can never authorize Julia activation.
   for (const plugin of formulas) {
-    const censusBoundPlugin: FormulaPlugin = {
+    const failClosedPlugin: FormulaPlugin = {
       ...plugin,
-      supportsJulia: resolveJuliaCapabilityV1(
-        plugin.id,
-        plugin.cacheFingerprint,
-      ).supportsEditing,
+      supportsJulia: false,
     };
-    pluginRegistry.register(censusBoundPlugin);
+    pluginRegistry.register(failClosedPlugin);
   }
   for (const plugin of [...coloring, ...transforms]) {
     pluginRegistry.register(plugin);

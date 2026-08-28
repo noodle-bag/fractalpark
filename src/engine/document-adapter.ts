@@ -1,4 +1,8 @@
 import { pluginRegistry } from './plugins/registry';
+import {
+  resolveJuliaRuntimeCapabilityV1,
+  type JuliaRuntimeCapabilityResolutionV1,
+} from './formulas/v1/julia-runtime-activation-v1';
 import type { FractalParams, KeyframeAnimation, PluginParamRecord, PluginParamValue } from './types';
 import type { FractalUrlState } from '@/lib/url-params';
 import {
@@ -159,7 +163,52 @@ export function runtimeParamsToDocument(
   };
 }
 
-export function documentToRuntimeParams(doc: FractalDocument): FractalParams {
+export type EffectiveJuliaReasonV1 =
+  | 'active'
+  | 'not-requested'
+  | JuliaRuntimeCapabilityResolutionV1['reason'];
+
+export interface EffectiveJuliaStateV1 {
+  readonly persistedIntent: boolean;
+  readonly effective: boolean;
+  readonly reason: EffectiveJuliaReasonV1;
+}
+
+export function resolveEffectiveJuliaStateV1(
+  doc: FractalDocument,
+): EffectiveJuliaStateV1 {
+  if (!doc.formula.isJulia) {
+    return Object.freeze({
+      persistedIntent: false,
+      effective: false,
+      reason: 'not-requested' as const,
+    });
+  }
+  const plugin = pluginRegistry.getFormula(doc.formula.formulaId);
+  if (!plugin) {
+    return Object.freeze({
+      persistedIntent: true,
+      effective: false,
+      reason: 'missing' as const,
+    });
+  }
+  const capability = resolveJuliaRuntimeCapabilityV1(
+    doc.formula.formulaId,
+    plugin.cacheFingerprint,
+  );
+  return Object.freeze({
+    persistedIntent: true,
+    effective: capability.supportsRuntime,
+    reason: capability.reason,
+  });
+}
+
+/**
+ * Lossless pre-gate projection used by URL/persistence paths. This function
+ * deliberately preserves Julia intent; it must never be passed directly to a
+ * renderer without the effective capability gate below.
+ */
+export function projectDocumentToRuntimeParams(doc: FractalDocument): FractalParams {
   return {
     maxIterations: doc.render.maxIterations,
     paletteIndex: doc.coloring.paletteIndex,
@@ -184,6 +233,19 @@ export function documentToRuntimeParams(doc: FractalDocument): FractalParams {
     pipelineVersion: doc.coloring.pipelineVersion ?? 1,
     lighting: doc.coloring.lighting,
   };
+}
+
+/**
+ * Renderer-safe projection. Persisted Julia intent is preserved in the source
+ * Document, while unsupported, stale, missing, or non-canonical identities are
+ * forced to parameter-plane execution.
+ */
+export function documentToRuntimeParams(doc: FractalDocument): FractalParams {
+  const projected = projectDocumentToRuntimeParams(doc);
+  const julia = resolveEffectiveJuliaStateV1(doc);
+  return julia.effective === projected.isJulia
+    ? projected
+    : { ...projected, isJulia: julia.effective };
 }
 
 export function urlStateToDocument(

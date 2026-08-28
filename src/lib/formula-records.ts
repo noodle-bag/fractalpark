@@ -17,13 +17,13 @@ import {
   FORMULA_RECORD_PROVENANCE_INDEX_V1,
   PUBLISHED_FORMULA_INDEX_CANONICAL_SHA256_V1,
   parsePublishedFormulaRuntimeIndexV1,
-  resolvePublishedFormulaDefaultProfileV1,
   type FormulaHistoricalSourceV1,
   type PublishedFormulaParameterDescriptorV1,
   type PublishedFormulaProfileQualityV1,
   type PublishedFormulaProfileV1,
   type PublishedFormulaRuntimeIndexRowV1,
 } from '@/engine/formulas/v1';
+import { resolveActivatedPublishedFormulaDefaultProfileV1 } from '@/engine/formulas/v1/julia-runtime-activation-v1';
 import type { FormulaIdV1 } from '@/engine/formulas/v1/types';
 import type { ProvisionalPreviewAnomalyV1 } from '@/engine/formulas/v1/provisional-preview';
 import { buildPublishedFormulaRemixHref } from '@/lib/published-formula-remix';
@@ -291,7 +291,7 @@ export function buildFormulaRecordV1(
     availability: 'published' as const,
     historicalSource,
     source,
-    defaultProfile: resolvePublishedFormulaDefaultProfileV1(runtime),
+    defaultProfile: resolveActivatedPublishedFormulaDefaultProfileV1(runtime),
     preview: Object.freeze({
       src: `/formula-library/v1/previews/${formulaId}.png`,
       width: FORMULA_RECORD_PREVIEW_WIDTH_V1,

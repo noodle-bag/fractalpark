@@ -1,3 +1,4 @@
+import activationAsset from '../../resources/formula-library/v1/julia-runtime-activation.v1.json';
 import { beforeAll, describe, expect, it, vi } from 'vitest';
 import { fireEvent, render, screen } from '@testing-library/react';
 import { registerBuiltins } from '@/engine/plugins/builtins/index';
@@ -5,6 +6,8 @@ import { compileClassicFrmEntry, compileFrm } from '@/engine/frm/compile';
 import { pluginRegistry } from '@/engine/plugins/registry';
 import type { FormulaPlugin } from '@/engine/plugins/types';
 import { FormulaPanel } from '@/components/fractal/FormulaPanel';
+
+const SUPPORTED_JULIA_ROW = activationAsset.rows[0]!;
 
 vi.mock('next-intl', () => ({
   useLocale: () => 'en',
@@ -27,8 +30,9 @@ describe('FormulaPanel', () => {
     if (legacyMandelbrot) {
       const supportedJuliaPlugin: FormulaPlugin = {
         ...legacyMandelbrot,
-        id: 'test-supported-julia',
+        id: SUPPORTED_JULIA_ROW.formulaId,
         name: 'Test Supported Julia',
+        cacheFingerprint: SUPPORTED_JULIA_ROW.sourceRevision,
         supportsJulia: true,
       };
       pluginRegistry.register(supportedJuliaPlugin);
@@ -59,7 +63,7 @@ bailout:
   it('highlights both formula modes without changing the switch semantics', () => {
     const props = {
       juliaC: [-0.7, 0.27] as [number, number],
-      currentFormula: 'test-supported-julia',
+      currentFormula: SUPPORTED_JULIA_ROW.formulaId,
       currentBounds: { centerX: -0.5, centerY: 0, zoom: 0.4, rotation: 0 },
       onJuliaModeChange: () => {},
       onJuliaCChange: () => {},

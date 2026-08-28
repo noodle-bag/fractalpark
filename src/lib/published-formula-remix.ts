@@ -19,9 +19,9 @@ import type {
   FormulaRevisionV1,
 } from '@/engine/formulas/v1/types';
 import {
-  resolvePublishedFormulaDefaultProfileV1,
   type PublishedFormulaRuntimeIndexRowV1,
 } from '@/engine/formulas/v1/published-runtime';
+import { resolveActivatedPublishedFormulaDefaultProfileV1 } from '@/engine/formulas/v1/julia-runtime-activation-v1';
 import type { MineFormulaLifecycleRevisionInput } from '@/lib/cloud/mine-formula-lifecycle';
 import type { PublishedFormulaCanonicalSourceV1 } from '@/lib/published-formula-source';
 
@@ -230,7 +230,7 @@ export async function createFrozenPublishedFormulaRemixV1(input: {
   }
   const parentFormulaId = input.row.formulaId as FormulaIdV1;
   const parentSourceRevision = input.row.sourceRevision as FormulaRevisionV1;
-  const defaultProfile = resolvePublishedFormulaDefaultProfileV1(input.row);
+  const defaultProfile = resolveActivatedPublishedFormulaDefaultProfileV1(input.row);
   const parentBase = profileBase({
     formulaId: parentFormulaId,
     sourceRevision: parentSourceRevision,

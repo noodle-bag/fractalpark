@@ -15,6 +15,7 @@ import {
 
 const PUBLIC_ROOT = join(process.cwd(), 'public');
 const PREVIEW_ROOT = join(PUBLIC_ROOT, 'formula-library/v1/previews');
+const SUPPORTED_JULIA_PROFILE_ID = '5d0877c0-5f84-5c3b-9466-b9f9b417cb6a';
 
 describe('public Formula Record v1', () => {
   const records = STANDARD_MANIFEST_INDEX_V1.formulaIds.map((formulaId) => {
@@ -77,6 +78,15 @@ describe('public Formula Record v1', () => {
     const published = records.filter(
       (record) => record.publicationDecision === 'publish'
     );
+    expect(
+      published
+        .filter(
+          (record) =>
+            record.availability === 'published' &&
+            record.defaultProfile.mode === 'julia'
+        )
+        .map((record) => record.formulaId)
+    ).toEqual([SUPPORTED_JULIA_PROFILE_ID]);
 
     for (const record of published) {
       expect(record.availability).toBe('published');

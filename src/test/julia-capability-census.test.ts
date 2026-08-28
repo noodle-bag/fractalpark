@@ -3,19 +3,24 @@ import { join } from "node:path";
 
 import { describe, expect, it } from "vitest";
 
+import activationAsset from "../../resources/formula-library/v1/julia-runtime-activation.v1.json";
 import censusAsset from "../../resources/formula-library/v1/julia-capability-census.v1.json";
 import {
   JULIA_CAPABILITY_CENSUS_CONTENT_HASH_V1,
   JULIA_CAPABILITY_CENSUS_ROW_COUNT_V1,
   JULIA_CAPABILITY_CENSUS_V1,
   parseJuliaCapabilityCensusV1,
-  resolveJuliaCapabilityV1,
   verifyJuliaCapabilityCensusSetV1,
 } from "@/engine/formulas/v1/julia-capability";
 import {
-  parsePublishedFormulaRuntimeIndexV1,
-  resolvePublishedFormulaDefaultProfileV1,
-} from "@/engine/formulas/v1/published-runtime";
+  JULIA_RUNTIME_ACTIVATION_SUPPORTED_COUNT_V1,
+  JULIA_RUNTIME_ACTIVATION_V1,
+  parseJuliaRuntimeActivationV1,
+  resolveActivatedPublishedFormulaDefaultProfileV1,
+  resolveJuliaRuntimeCapabilityV1,
+  verifyJuliaRuntimeActivationSetV1,
+} from "@/engine/formulas/v1/julia-runtime-activation-v1";
+import { parsePublishedFormulaRuntimeIndexV1 } from "@/engine/formulas/v1/published-runtime";
 
 const RUNTIME_INDEX_PATH = join(
   process.cwd(),
@@ -45,49 +50,77 @@ describe("Julia capability census v1 skeleton", () => {
     expect(verifyJuliaCapabilityCensusSetV1(runtimeIndex())).toBe(true);
   });
 
-  it("fails closed on tampering, missing rows, and stale source revisions", () => {
-    const tampered = structuredClone(censusAsset);
-    tampered.rows[0]!.status = "supported" as "unknown";
-    expect(parseJuliaCapabilityCensusV1(tampered)).toEqual({
-      ok: false,
-      code: "julia-capability-census-invalid",
-    });
+  it("activates only the exact source-bound supported projection", () => {
+    const parsed = parseJuliaRuntimeActivationV1(activationAsset);
+    expect(parsed.ok).toBe(true);
+    expect(JULIA_RUNTIME_ACTIVATION_V1?.rows).toHaveLength(
+      JULIA_RUNTIME_ACTIVATION_SUPPORTED_COUNT_V1,
+    );
+    expect(verifyJuliaRuntimeActivationSetV1(runtimeIndex())).toBe(true);
 
-    const first = JULIA_CAPABILITY_CENSUS_V1.rows[0]!;
-    expect(resolveJuliaCapabilityV1(first.formulaId, first.sourceRevision)).toEqual({
-      status: "unknown",
-      supportsEditing: false,
+    const supported = JULIA_RUNTIME_ACTIVATION_V1!.rows[0]!;
+    expect(
+      resolveJuliaRuntimeCapabilityV1(supported.formulaId, supported.sourceRevision),
+    ).toEqual({
+      status: "supported",
+      reason: "active",
+      supportsEditing: true,
+      supportsRuntime: true,
     });
-    expect(resolveJuliaCapabilityV1(first.formulaId, "0".repeat(64))).toEqual({
+    expect(resolveJuliaRuntimeCapabilityV1(supported.formulaId, "0".repeat(64))).toEqual({
       status: "stale",
+      reason: "stale",
       supportsEditing: false,
+      supportsRuntime: false,
     });
-    expect(resolveJuliaCapabilityV1("mandelbrot", undefined)).toEqual({
-      status: "missing",
+    const unsupported = JULIA_CAPABILITY_CENSUS_V1.rows.find(
+      (row) =>
+        !JULIA_RUNTIME_ACTIVATION_V1!.rows.some(
+          (candidate) => candidate.formulaId === row.formulaId,
+        ),
+    )!;
+    expect(
+      resolveJuliaRuntimeCapabilityV1(unsupported.formulaId, unsupported.sourceRevision),
+    ).toEqual({
+      status: "unsupported",
+      reason: "unsupported",
       supportsEditing: false,
+      supportsRuntime: false,
+    });
+    expect(resolveJuliaRuntimeCapabilityV1("mandelbrot", undefined)).toEqual({
+      status: "missing",
+      reason: "non-canonical",
+      supportsEditing: false,
+      supportsRuntime: false,
     });
   });
 
-  it("projects all ten legacy Julia defaults to parameter-plane without mutating legacy data", () => {
+  it("restores exactly the authority-approved Julia default Profile", () => {
     const parsed = parsePublishedFormulaRuntimeIndexV1(runtimeIndex());
     expect(parsed.ok).toBe(true);
     if (!parsed.ok) return;
-    const legacyJuliaRows = parsed.value.rows.filter(
+    const persistedJuliaRows = parsed.value.rows.filter(
       (row) => row.profile.mode === "julia",
     );
-    expect(legacyJuliaRows).toHaveLength(10);
-    for (const row of legacyJuliaRows) {
-      const legacyJuliaC = row.profile.juliaC;
-      const effective = resolvePublishedFormulaDefaultProfileV1(row);
-      expect(effective.mode).toBe("parameter-plane");
-      expect(effective).not.toHaveProperty("juliaC");
-      expect(row.profile.mode).toBe("julia");
-      expect(row.profile.juliaC).toEqual(legacyJuliaC);
-    }
+    expect(persistedJuliaRows).toHaveLength(10);
+    const effectiveJuliaRows = persistedJuliaRows.filter(
+      (row) => resolveActivatedPublishedFormulaDefaultProfileV1(row).mode === "julia",
+    );
+    expect(effectiveJuliaRows).toHaveLength(1);
     expect(
-      parsed.value.rows.filter(
-        (row) => resolvePublishedFormulaDefaultProfileV1(row).mode === "julia",
+      resolveJuliaRuntimeCapabilityV1(
+        effectiveJuliaRows[0]!.formulaId,
+        effectiveJuliaRows[0]!.sourceRevision,
+      ).supportsRuntime,
+    ).toBe(true);
+    expect(
+      persistedJuliaRows.filter(
+        (row) => resolveActivatedPublishedFormulaDefaultProfileV1(row).mode === "parameter-plane",
       ),
-    ).toHaveLength(0);
+    ).toHaveLength(9);
+    for (const row of persistedJuliaRows) {
+      expect(row.profile.mode).toBe("julia");
+      expect(row.profile.juliaC).toBeDefined();
+    }
   });
 });

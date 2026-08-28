@@ -1,5 +1,8 @@
 import type { FractalDocument } from '@/engine/document';
-import { documentToRuntimeParams, runtimeParamsToDocument } from '@/engine/document-adapter';
+import {
+  projectDocumentToRuntimeParams,
+  runtimeParamsToDocument,
+} from '@/engine/document-adapter';
 import type {
   FractalFormula,
   FractalParams,
@@ -460,7 +463,7 @@ export function decodeParams(searchParams: URLSearchParams): FractalUrlState {
 }
 
 export function documentToUrlState(doc: FractalDocument): FractalUrlState {
-  const runtime = documentToRuntimeParams(doc);
+  const runtime = projectDocumentToRuntimeParams(doc);
 
   return {
     centerX: runtime.bounds.centerX,

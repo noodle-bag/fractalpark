@@ -5,6 +5,7 @@ import { registerBuiltins } from '@/engine/plugins/builtins';
 import { FORMULA_CATALOG, type FormulaMetadata } from '@/engine/plugins/formula-catalog';
 import type { FractalDocument } from '@/engine/document';
 import { migrateFractalDocument } from '@/engine/document-migrate';
+import { resolveJuliaRuntimeCapabilityV1 } from '@/engine/formulas/v1/julia-runtime-activation-v1';
 import { pluginRegistry } from '@/engine/plugins/registry';
 import { PALETTES } from '@/engine/palettes';
 import { SITE } from '@/lib/site';
@@ -544,6 +545,14 @@ function applyPluginParamPerturb(document: FractalDocument, rng: () => number, s
   });
 }
 
+function formulaSupportsJulia(formulaId: string): boolean {
+  const plugin = pluginRegistry.getFormula(formulaId);
+  return resolveJuliaRuntimeCapabilityV1(
+    formulaId,
+    plugin?.cacheFingerprint,
+  ).supportsRuntime;
+}
+
 function candidateFormulaPool(seed: FractalDocument, config: NormalizedCampaignConfig): FormulaMetadata[] {
   const allowedFamilies = config.targetFamilies.length > 0
     ? new Set(config.targetFamilies)
@@ -555,7 +564,7 @@ function candidateFormulaPool(seed: FractalDocument, config: NormalizedCampaignC
   return FORMULA_CATALOG.filter((item) => {
     if (allowedIds && !allowedIds.has(item.id)) return false;
     if (allowedFamilies && !allowedFamilies.has(item.family)) return false;
-    if (config.constraints.requireJulia && !pluginRegistry.getFormula(item.id)?.supportsJulia) return false;
+    if (config.constraints.requireJulia && !formulaSupportsJulia(item.id)) return false;
     return true;
   }).filter((item) => item.id !== seed.formula.formulaId);
 }
@@ -571,7 +580,7 @@ function applyFormulaFamilySwap(document: FractalDocument, config: NormalizedCam
     zoom: nextFormula.defaultBounds.zoom,
     rotation: nextFormula.defaultBounds.rotation ?? 0,
   };
-  if (!pluginRegistry.getFormula(nextFormula.id)?.supportsJulia) {
+  if (!formulaSupportsJulia(nextFormula.id)) {
     document.formula.isJulia = false;
   }
   trace.push({
@@ -669,6 +678,17 @@ function generateCandidateForOrdinal(
   }
 
   const normalized = normalizeCandidateDocument(candidate);
+  if (
+    config.constraints.requireJulia &&
+    !formulaSupportsJulia(normalized.formula.formulaId)
+  ) {
+    throw new CliCommandError(
+      'CONSTRAINT_UNSATISFIED',
+      2,
+      'No authority-eligible canonical Julia formula is available for this candidate.',
+      { constraint: 'requireJulia', reason: 'authority-ineligible' },
+    );
+  }
   return {
     id: candidateId(seed.id, ordinal),
     runId,

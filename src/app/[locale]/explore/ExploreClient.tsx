@@ -47,7 +47,10 @@ import {
   type FormulaResolution,
 } from '@/lib/formula-resolver';
 import { pluginRegistry } from '@/engine/plugins/registry';
-import { resolvePublishedFormulaDefaultProfileV1 } from '@/engine/formulas/v1/published-runtime';
+import {
+  resolveActivatedPublishedFormulaDefaultProfileV1,
+  resolveJuliaRuntimeCapabilityV1,
+} from '@/engine/formulas/v1/julia-runtime-activation-v1';
 import { registerBuiltins } from '@/engine/plugins/builtins';
 import { resolveEffectiveSmoothMethod } from '@/engine/frm/smooth-capability';
 import { resolveRendererPipelineVersion } from '@/engine/frm/semantics-version';
@@ -144,8 +147,11 @@ function ExploreClient({ posterImage }: { posterImage?: string }) {
     lighting,
     customGradient,
   } = runtimeParams;
-  const canEditJulia =
-    pluginRegistry.getFormula(formula)?.supportsJulia === true;
+  const currentFormulaPlugin = pluginRegistry.getFormula(formula);
+  const canEditJulia = resolveJuliaRuntimeCapabilityV1(
+    formula,
+    currentFormulaPlugin?.cacheFingerprint,
+  ).supportsEditing;
   const [pickToast, setPickToast] = useState<string | null>(null);
   const keyframes = useMemo(
     () => document.animation?.viewKeyframes ?? [],
@@ -805,7 +811,7 @@ function ExploreClient({ posterImage }: { posterImage?: string }) {
         applyPublishedFormulaSelection({
           formulaId,
           formulaParams: getFormulaUniformDefaults(artifact.plugin),
-          profile: resolvePublishedFormulaDefaultProfileV1(row),
+          profile: resolveActivatedPublishedFormulaDefaultProfileV1(row),
         });
         trackEvent('change_formula', {
           formula: formulaId,
