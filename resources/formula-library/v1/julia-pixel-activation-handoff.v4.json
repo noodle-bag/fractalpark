@@ -1,0 +1,21 @@
+{
+  "schema": "fractalpark-julia-pixel-activation-handoff/v4",
+  "revision": 4,
+  "authority": {
+    "authorityState": "sealed",
+    "supersededBy": null,
+    "withdrawnBy": null
+  },
+  "handoffState": "activation-eligible",
+  "finalCensusContentHash": "609f8067ebaa1b263dd8c65ce9ad0b366b8724c54ee2755212eb4b7f03d022d1",
+  "finalCensusAuthorityState": "sealed",
+  "authorityManifestContentHash": "ad10971c9733bc9ca8c5306e34b7a11503dcb6d5300f406141c562160b4b4076",
+  "predecessorHandoffContentHash": "b9f83c8d4036015155ad62552de0843efa823b89ed6da7c2c1e6c76d2c407af9",
+  "supportedClassicRowSetDigest": "e6b3eb7576cd9d752492b6e4f6e1017744d560ff1b3de1709c2ca3d29b669b96",
+  "supportedClassicRowCount": 195,
+  "regressionSetDigest": "edabd82d9fdc83d1173a01666fc1ed2a13a8039a193bfefe376a0ee96f8b236e",
+  "regressionCount": 11,
+  "maintainerAcknowledgmentReceiptDigest": "c7a44bb126fa9d06e32b5ed03f57fdc23131fddb30185a5faa5aad120a87c0a8",
+  "consumerRowPredicate": "modeClass=classic-julia AND finalStatus=supported AND requiredReceipts=pass",
+  "contentHash": "c4c8f509fa8b43dc04c5fe59634fba906eae895e3f50abe2f18efb39166fe07f"
+}
