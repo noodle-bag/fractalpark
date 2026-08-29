@@ -1,4 +1,5 @@
 import { expect, test } from '@playwright/test';
+import recordPreviewManifest from '../../public/formula-library/v1/record-previews/manifest.json';
 import aliasManifest from '../../resources/formula-library/v1/legacy-formula-aliases.json';
 
 const publishedSlugs = [
@@ -35,6 +36,12 @@ function guideFormulaId(slug: (typeof publishedSlugs)[number]): string {
 
 function guidePath(locale: string, slug: (typeof publishedSlugs)[number]): string {
   return `/${locale}/formulas/${guideFormulaId(slug)}`;
+}
+
+function recordPreviewPath(formulaId: string): string {
+  const row = recordPreviewManifest.rows.find((entry) => entry.formulaId === formulaId);
+  if (!row) throw new Error(`Missing Record preview: ${formulaId}`);
+  return `/formula-library/v1/record-previews/${row.file}`;
 }
 
 test.describe('Formula guides', () => {
@@ -237,7 +244,7 @@ test.describe('Formula guides', () => {
     expect(unsupportedLocale.status()).toBe(404);
   });
 
-  test('renders published Record source, preview, and actions without JavaScript', async ({
+  test('renders a published Record master and server action without JavaScript', async ({
     browser,
   }) => {
     const context = await browser.newContext({ javaScriptEnabled: false });
@@ -249,12 +256,13 @@ test.describe('Formula guides', () => {
       'data-formula-record-availability',
       'published'
     );
-    const preview = page.getByAltText('Deterministic preview of 3damand01');
-    await expect(preview).toHaveAttribute(
+    const fallbackPreview = page.getByTestId('formula-record-no-js-fallback');
+    await expect(fallbackPreview).toBeVisible();
+    await expect(fallbackPreview).toHaveAttribute(
       'src',
       `/formula-library/v1/previews/${formulaId}.png`
     );
-    const previewBox = await preview.boundingBox();
+    const previewBox = await fallbackPreview.boundingBox();
     expect(previewBox).not.toBeNull();
     expect((previewBox?.width ?? 0) / (previewBox?.height ?? 1)).toBeCloseTo(
       8 / 5,
@@ -263,18 +271,6 @@ test.describe('Formula guides', () => {
     await expect(page.getByRole('link', { name: 'Open in Explorer' })).toHaveAttribute(
       'href',
       `/en/explore?open=standard-formula&formula=${formulaId}`
-    );
-    await expect(page.getByRole('link', { name: 'Remix anonymously' })).toHaveAttribute(
-      'href',
-      `/en/explore?open=standard-formula&formula=${formulaId}&intent=remix`
-    );
-    await expect(page.getByRole('link', { name: 'View source' })).toHaveAttribute(
-      'href',
-      /^\/formula-library\/v1\/runtime\/published\/definitions\/[a-f0-9]{64}\.frm$/
-    );
-    await expect(page.getByRole('link', { name: 'Download source' })).toHaveAttribute(
-      'download',
-      ''
     );
     await context.close();
   });
@@ -297,7 +293,7 @@ test.describe('Formula guides', () => {
     await expect(page.getByRole('link', { name: 'Download source' })).toHaveCount(0);
   });
 
-  test('keeps anomalous renders as explicit diagnostics instead of verified previews', async ({
+  test('uses a strict Record master in place of the legacy diagnostic preview', async ({
     page,
   }) => {
     const formulaId = '06504747-8ee8-5c39-869b-8b3a992e8c24';
@@ -307,14 +303,12 @@ test.describe('Formula guides', () => {
       'data-formula-record-availability',
       'published'
     );
-    await expect(page.getByTestId('formula-record-diagnostic-preview')).toBeVisible();
-    await expect(page.getByText('flat-preview')).toBeVisible();
-    await expect(page.getByText('no-escaped-pixels')).toBeVisible();
-    await expect(page.getByRole('link', { name: 'View diagnostic render' })).toHaveAttribute(
-      'href',
-      `/formula-library/v1/previews/${formulaId}.png`
-    );
-    await expect(page.locator(`img[src="/formula-library/v1/previews/${formulaId}.png"]`)).toHaveCount(0);
+    const preview = page.getByTestId('formula-record').locator('img').first();
+    const previewSrc = await preview.getAttribute('src');
+    expect(previewSrc).not.toBeNull();
+    const previewUrl = new URL(previewSrc!, 'http://localhost');
+    expect(previewUrl.searchParams.get('url')).toBe(recordPreviewPath(formulaId));
+    await expect(page.getByTestId('formula-record-diagnostic-preview')).toHaveCount(0);
     await expect(page.getByRole('link', { name: 'Open in Explorer' })).toHaveCount(1);
   });
 

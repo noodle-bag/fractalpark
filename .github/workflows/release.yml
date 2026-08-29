@@ -27,6 +27,15 @@ jobs:
       - name: Install locked dependencies
         run: npm ci
 
+      - name: Install Chromium for Record image verification
+        run: npx playwright install chromium
+
+      - name: Verify Record preview profiles
+        run: npx tsx scripts/verify-formula-record-preview-profiles.ts
+
+      - name: Verify Record image masters from source
+        run: npx tsx scripts/verify-formula-record-masters.ts
+
       - name: Build release candidate
         run: npm run build
 

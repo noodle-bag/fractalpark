@@ -23,6 +23,7 @@ export const STANDARD_LIBRARY_PERFORMANCE_SOURCE_PATHS_V1 = [
   "public/formula-library/v1/runtime/published/index.json",
   "public/formula-library/v1/runtime/published/manifest.json",
   "public/formula-library/v1/previews/manifest.json",
+  "public/formula-library/v1/record-previews/manifest.json",
   "public/formula-library/v1/directory/index.json",
   "resources/formula-library/v1/recovery-evidence/transcendental-v1/cross-check.json",
   "resources/formula-library/v1/recovery-evidence/transcendental-v1/manifest.json",

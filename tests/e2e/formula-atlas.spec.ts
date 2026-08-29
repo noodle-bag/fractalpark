@@ -57,6 +57,15 @@ test.describe('Formula Atlas', () => {
   }) => {
     const context = await browser.newContext({ javaScriptEnabled: false });
     const page = await context.newPage();
+    const directoryImageRequests: string[] = [];
+    page.on('request', (request) => {
+      if (
+        request.resourceType() === 'image' &&
+        request.url().includes('/formula-library/v1/')
+      ) {
+        directoryImageRequests.push(request.url());
+      }
+    });
 
     await page.goto('/en/formulas/directory');
 
@@ -73,6 +82,7 @@ test.describe('Formula Atlas', () => {
 
     await page.goto('/en/formulas/directory?category=root-finding');
     await expect(page.locator('[data-formula-id]')).toHaveCount(14);
+    expect(directoryImageRequests).toEqual([]);
 
     await context.close();
   });

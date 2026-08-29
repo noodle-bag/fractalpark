@@ -169,7 +169,10 @@ export async function generateMetadata({
           indexedLocales,
         )
       : undefined;
-    const image = `${SITE.url}${SITE.ogImage}`;
+    const image =
+      routeRecord.formulaRecord.availability === 'published'
+        ? `${SITE.url}${routeRecord.formulaRecord.preview.src}`
+        : `${SITE.url}${SITE.ogImage}`;
     return {
       title,
       description,
@@ -187,7 +190,17 @@ export async function generateMetadata({
               siteName: SITE.name,
               locale: OG_LOCALE[locale as SupportedLocale] ?? OG_LOCALE.en,
               type: 'article' as const,
-              images: [image],
+              images:
+                routeRecord.formulaRecord.availability === 'published'
+                  ? [
+                      {
+                        url: image,
+                        width: routeRecord.formulaRecord.preview.width,
+                        height: routeRecord.formulaRecord.preview.height,
+                        alt: title,
+                      },
+                    ]
+                  : [image],
             },
             twitter: {
               card: 'summary_large_image' as const,
@@ -755,6 +768,11 @@ async function FormulaIdentityPage({
           canonicalName: record.displayName,
           name,
           description,
+          image: {
+            url: `${SITE.url}${record.formulaRecord.preview.src}`,
+            width: record.formulaRecord.preview.width,
+            height: record.formulaRecord.preview.height,
+          },
         })
       : null;
 

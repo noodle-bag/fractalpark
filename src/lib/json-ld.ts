@@ -95,6 +95,7 @@ export interface FormulaRecordJsonLdOptionsV1 {
   readonly canonicalName: string;
   readonly name: string;
   readonly description: string;
+  readonly image: Readonly<{ url: string; width: number; height: number }>;
 }
 
 export function buildFormulaRecordJsonLdV1(
@@ -113,12 +114,20 @@ export function buildFormulaRecordJsonLdV1(
         inLanguage: JSON_LD_LANGUAGE_BY_LOCALE[options.locale] ?? options.locale,
         isPartOf: { '@id': `${baseUrl}/#website` },
         mainEntity: { '@id': formulaEntityId },
+        primaryImageOfPage: {
+          '@type': 'ImageObject',
+          ...options.image,
+        },
       },
       {
         '@type': 'DefinedTerm',
         '@id': formulaEntityId,
         name: options.canonicalName,
         termCode: options.formulaId,
+        image: {
+          '@type': 'ImageObject',
+          ...options.image,
+        },
         inDefinedTermSet: {
           '@type': 'DefinedTermSet',
           '@id': `${options.directoryUrl}#formula-directory`,

@@ -1,10 +1,11 @@
 // @vitest-environment jsdom
 
 import React from 'react';
-import { render, screen } from '@testing-library/react';
+import { fireEvent, render, screen } from '@testing-library/react';
 import { describe, expect, it, vi } from 'vitest';
 
 import { FormulaRecordPanel } from '@/components/formulas/FormulaRecordPanel';
+import { FormulaRecordPreviewImage } from '@/components/formulas/FormulaRecordPreviewImage';
 import {
   FORMULA_ROUTE_RECORD_REVISION_V1,
   buildFormulaRouteRecordV1,
@@ -53,8 +54,39 @@ async function record(formulaId: string) {
 }
 
 describe('streamlined Formula Record panel', () => {
+  it('resets the active master when client navigation changes the record', () => {
+    const view = render(
+      <FormulaRecordPreviewImage
+        alt="record preview"
+        fallbackSrc="/fallback-a.png"
+        height={750}
+        src="/master-a.webp"
+        width={1200}
+      />,
+    );
+    fireEvent.error(screen.getByRole('img', { name: 'record preview' }));
+    expect(screen.getByRole('img', { name: 'record preview' })).toHaveAttribute(
+      'src',
+      '/fallback-a.png',
+    );
+    view.rerender(
+      <FormulaRecordPreviewImage
+        alt="record preview"
+        fallbackSrc="/fallback-b.png"
+        height={750}
+        src="/master-b.webp"
+        width={1200}
+      />,
+    );
+    expect(screen.getByRole('img', { name: 'record preview' })).toHaveAttribute(
+      'src',
+      '/master-b.webp',
+    );
+  });
+
   it('keeps one canonical source module and hides published governance fields', async () => {
     const published = await record(PUBLISHED_FORMULA_ID);
+    if (published.availability !== 'published') throw new Error('unreachable');
     render(await FormulaRecordPanel({ locale: 'en', record: published }));
 
     expect(screen.getByTestId('canonical-source-workspace')).toBeInTheDocument();
@@ -64,6 +96,15 @@ describe('streamlined Formula Record panel', () => {
       screen.getByTestId('formula-record-rights-attribution'),
     ).toHaveTextContent('sourceAndImplementation');
     expect(screen.getByText('formulaId')).toBeInTheDocument();
+    const preview = screen.getByRole('img', { name: 'previewAlt' });
+    expect(preview).toHaveAttribute('src', published.preview.src);
+    expect(preview).toHaveAttribute('loading', 'lazy');
+    expect(preview).toHaveAttribute(
+      'sizes',
+      '(min-width: 1024px) 45vw, 100vw',
+    );
+    fireEvent.error(preview);
+    expect(preview).toHaveAttribute('src', published.preview.fallbackSrc);
 
     for (const hidden of [
       'sourceRevision',

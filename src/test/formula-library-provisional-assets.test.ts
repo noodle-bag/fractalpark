@@ -38,6 +38,7 @@ import {
   provisionalLegacySmoothIterationV1,
   renderProvisionalPreviewV1,
 } from "@/engine/formulas/v1/provisional-preview";
+import { renderRecordPreviewV1 } from "@/engine/formulas/v1/record-preview-renderer";
 import {
   PROVISIONAL_PROFILE_POLICY_V1,
   projectProvisionalProfileV1,
@@ -426,6 +427,51 @@ describe("formula-library provisional Profile projection", () => {
     expect(first.rgba).toHaveLength(16 * 10 * 4);
     expect(first.escapedPixels + first.interiorPixels + first.nonFinitePixels).toBe(160);
     expect(first.uniqueColors).toBeGreaterThan(1);
+    const boundedBlackProfile = {
+      ...projected.profile,
+      view: {
+        ...projected.profile.view,
+        centerX: 0,
+        centerY: 0,
+        zoom: 100,
+      },
+      iterations: 8,
+    };
+    const boundedBlack = renderProvisionalPreviewV1(
+      backendResult.backend,
+      boundedBlackProfile,
+      16,
+      10,
+    );
+    expect(boundedBlack.escapedPixels).toBe(0);
+    expect(boundedBlack.nonFinitePixels).toBe(0);
+    expect(boundedBlack.uniqueColors).toBe(1);
+    const boundedOrbitProfile = {
+      ...boundedBlackProfile,
+      coloring: {
+        ...boundedBlackProfile.coloring,
+        insideColoringId: "record-preview-orbit-average-v1",
+      },
+    };
+    const boundedOrbit = renderRecordPreviewV1(
+      backendResult.backend,
+      boundedOrbitProfile,
+      16,
+      10,
+    );
+    expect(
+      renderRecordPreviewV1(
+        backendResult.backend,
+        boundedOrbitProfile,
+        16,
+        10,
+      ),
+    ).toEqual(boundedOrbit);
+    expect(boundedOrbit.escapedPixels).toBe(0);
+    expect(boundedOrbit.interiorPixels).toBe(160);
+    expect(boundedOrbit.nonFinitePixels).toBe(0);
+    expect(boundedOrbit.uniqueColors).toBeGreaterThan(4);
+    expect(boundedOrbit.rgba).not.toEqual(boundedBlack.rgba);
     const sheet = composeProvisionalContactSheetV1([first, second], 2);
     expect(sheet).toEqual(composeProvisionalContactSheetV1([first, second], 2));
     expect(sheet.width).toBe(32);

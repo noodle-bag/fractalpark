@@ -331,22 +331,49 @@ The active public v1 projection is exact-set and decision-ledger-backed:
   license terms are identical to Fractint's. Independent rewrites identify the
   historical source and state that original FRM text is not redistributed;
 - each of the 534 `publish` rows exposes its content-addressed pinned `.frm`
-  Definition source,
-  source/semantic revisions, parameter schema, pinned default Profile facts, a
-  deterministic 96 x 60 static PNG generated from the pinned source and Profile,
-  and locale-preserving Explore/Remix plus view/download-source actions;
-- 357 generated previews are anomaly-free and shown by default; 177 report one
-  or more deterministic visual diagnostics and are preserved behind an explicit
-  diagnostic link instead of being presented as verified imagery;
+  Definition source, source/semantic revisions, parameter schema, pinned runtime
+  default Profile facts, and locale-preserving Explore/Remix plus
+  view/download-source actions;
+- each published Record also binds an independent, exact-set
+  `record-preview Profile`. This Profile is selected by a versioned, bounded,
+  formula-ID-agnostic policy. Candidate parameters, views, coloring policies,
+  order, first-pass selection rule, probe dimensions, zero non-finite rule, and
+  Profile/content hashes are checked in and independently verified. The Profile
+  is used only for static Record imagery and never replaces or mutates the
+  runtime default Profile;
+- the Record image master is a deterministic 1200 x 750 WebP. Formula pixels are
+  computed by the FRM-like v1 CPU backend at 400 x 250 with iteration cap 16;
+  Chromium canvas performs only the exact 3x high-quality scale and WebP
+  encoding. The earlier deterministic 96 x 60 PNG remains a load-error fallback
+  and historical diagnostic input, not the authoritative Record master. With
+  JavaScript disabled, the server-rendered Record conservatively displays this
+  fallback instead of depending on a client `onError` handler;
+- the legacy PNG census contains 177 diagnostic rows, including 80 flat rows.
+  Those diagnostics remain auditable. Record masters fail closed on flat,
+  under-diverse, non-finite, over-budget, incorrectly sized, or non-deterministic
+  output unless the exact failure row and category appears in the committed,
+  self-hashed quality scan and exact-set acceptance artifact. Revision 1 accepts
+  exactly 43 rows (37 `visual-integrity`, 6 `source-non-finite`); the 44th failure
+  remains blocking, and no acceptance changes the global thresholds;
 - each of the 143 `hold` rows, and any future `exclude` row, exposes the factual
   decision and rights projection in the read model but renders only the N1
   minimal page, with no historical-resource link, source, preview, or runnable
   CTA.
 
-`scripts/generate-formula-record-previews.ts` regenerates or byte-verifies the
-exact 534-file preview set in four deterministic worker shards. Its content-hash
-manifest is public evidence for static preview reproducibility only; it does not
-close the representative GPU/device image-difference gate C9.
+`scripts/generate-formula-record-preview-profiles.ts` and the separate
+`scripts/verify-formula-record-preview-profiles.ts` generate and independently
+verify the exact 534 Profile artifact. `scripts/generate-formula-record-masters.ts`
+first writes a committed full-corpus quality scan, binds the exact failure set to
+the acceptance artifact, and then writes the exact WebP set through a temporary
+tree and atomic publication;
+`scripts/verify-formula-record-masters.ts` independently verifies source bindings,
+scan/acceptance self-hashes and exact mapping, manifest mapping and self-hash,
+exact files, and WebP dimensions. It recompiles each pinned `.frm`, rerenders the
+400 x 250 source, independently performs the 3x Chromium WebP encoding, requires
+byte equality with the checked-in artifact, and recomputes decoded pixel
+fingerprints, composite visual gates, resource budgets, and frozen Profile
+bindings. These static artifacts do not close the representative real-GPU/device
+image-difference gate C9.
 
 ## 5. Self-contained formats
 

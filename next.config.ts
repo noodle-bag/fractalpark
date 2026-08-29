@@ -21,6 +21,16 @@ const nextConfig: NextConfig = {
   async headers() {
     return [
       {
+        source:
+          '/formula-library/v1/record-previews/:formulaId.:assetRevision.webp',
+        headers: [
+          {
+            key: 'Cache-Control',
+            value: 'public, max-age=31536000, immutable',
+          },
+        ],
+      },
+      {
         source: '/(.*)',
         headers: [
           {

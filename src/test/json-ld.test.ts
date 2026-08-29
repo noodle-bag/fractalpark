@@ -1,5 +1,6 @@
 import { describe, expect, it } from 'vitest';
 import {
+  buildFormulaRecordJsonLdV1,
   buildFormulaTeachingJsonLdV1,
   buildSoftwareApplicationJsonLd,
   renderJsonLd,
@@ -60,6 +61,35 @@ describe('SoftwareApplication JSON-LD builder', () => {
     ) as Record<string, unknown>;
     expect(parsed['@context']).toBe('https://schema.org');
     expect(parsed['@id']).toBe(`${SITE.url}/#software`);
+  });
+});
+
+describe('Formula Record JSON-LD', () => {
+  it('binds the WebPage and DefinedTerm to the same record master', () => {
+    const url = `${SITE.url}/en/formulas/00e14aa8-b766-54ea-a359-3f5d20d329b7`;
+    const image = {
+      url: `${SITE.url}/formula-library/v1/record-previews/example.webp`,
+      width: 1200,
+      height: 750,
+    };
+    const jsonLd = buildFormulaRecordJsonLdV1({
+      url,
+      directoryUrl: `${SITE.url}/en/formulas/directory`,
+      locale: 'en',
+      formulaId: '00e14aa8-b766-54ea-a359-3f5d20d329b7',
+      canonicalName: 'mandelbrot',
+      name: 'Mandelbrot',
+      description: 'Formula Record',
+      image,
+    });
+    expect(jsonLd['@graph'][0].primaryImageOfPage).toEqual({
+      '@type': 'ImageObject',
+      ...image,
+    });
+    expect(jsonLd['@graph'][1].image).toEqual({
+      '@type': 'ImageObject',
+      ...image,
+    });
   });
 });
 

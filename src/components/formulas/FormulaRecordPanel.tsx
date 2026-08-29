@@ -1,10 +1,10 @@
-import Image from 'next/image';
-import { ArrowRight, ShieldCheck, TriangleAlert } from 'lucide-react';
+import { ArrowRight, ShieldCheck } from 'lucide-react';
 import { getTranslations } from 'next-intl/server';
 
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { CanonicalSourceWorkspace } from '@/components/formulas/CanonicalSourceWorkspace';
+import { FormulaRecordPreviewImage } from '@/components/formulas/FormulaRecordPreviewImage';
 import { buildPublishedFormulaSourceReferenceV1 } from '@/lib/published-formula-source';
 import type {
   PublicFormulaRecordV1,
@@ -64,47 +64,15 @@ export async function FormulaRecordPanel({
       ) : (
         <>
           <div className="mt-10 grid gap-8 lg:grid-cols-[minmax(0,0.9fr)_minmax(0,1.1fr)]">
-            {record.preview.status === 'ready' ? (
-              <figure className="relative aspect-[8/5] self-start overflow-hidden rounded-2xl border bg-black shadow-sm">
-                <Image
-                  alt={t('previewAlt', { name: record.canonicalName })}
-                  className="aspect-[8/5] h-auto w-full"
-                  height={record.preview.height}
-                  src={record.preview.src}
-                  unoptimized
-                  width={record.preview.width}
-                />
-              </figure>
-            ) : (
-              <div
-                className="flex min-h-64 flex-col justify-center rounded-2xl border border-amber-500/40 bg-amber-500/5 p-6"
-                data-testid="formula-record-diagnostic-preview"
-                role="note"
-              >
-                <TriangleAlert aria-hidden className="size-7 text-amber-600" />
-                <h3 className="mt-4 text-xl font-semibold">
-                  {t('previewDiagnostic')}
-                </h3>
-                <p className="mt-2 text-sm leading-6 text-muted-foreground">
-                  {t('previewDiagnosticBody')}
-                </p>
-                <div className="mt-4 flex flex-wrap gap-2">
-                  {record.preview.anomalies.map((anomaly) => (
-                    <Badge key={anomaly} variant="outline">
-                      {anomaly}
-                    </Badge>
-                  ))}
-                </div>
-                <a
-                  className="mt-5 w-fit text-sm font-medium text-primary underline underline-offset-4"
-                  href={record.preview.src}
-                  rel="noreferrer"
-                  target="_blank"
-                >
-                  {t('viewDiagnosticPreview')}
-                </a>
-              </div>
-            )}
+            <figure className="relative aspect-[8/5] self-start overflow-hidden rounded-2xl border bg-black shadow-sm">
+              <FormulaRecordPreviewImage
+                alt={t('previewAlt', { name: record.canonicalName })}
+                fallbackSrc={record.preview.fallbackSrc}
+                height={record.preview.height}
+                src={record.preview.src}
+                width={record.preview.width}
+              />
+            </figure>
             <div>
               <h3 className="text-xl font-semibold">{t('source')}</h3>
               <dl className="mt-5 grid gap-4 sm:grid-cols-2">

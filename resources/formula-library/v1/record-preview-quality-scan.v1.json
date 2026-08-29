@@ -1,0 +1,203 @@
+{
+  "schema": "fractalpark-formula-record-preview-quality-scan/v1",
+  "revision": 1,
+  "status": "fail",
+  "sourceBindings": {
+    "resources/formula-library/v1/record-preview-gates.v1.json": "c13fed3f9373fde38080772e87560d62017356661170638cb16aeb3600989030",
+    "public/formula-library/v1/runtime/published/index.json": "e912b1cb4ad884a6a021fd0d2683495e8ea61911d05c4135fbecaa335cade742",
+    "resources/formula-library/v1/julia-runtime-activation.v1.json": "0aaf7e38ea019884bcc21a64d8fce2ffe9e835bc4a4ccd19ee3fdc872230e1d8",
+    "resources/formula-library/v1/record-preview-profiles.v1.json": "a638c0e140b9e623837ef8673d9ee48ba4569f2ed2738ef50acbf7382d75bee7",
+    "scripts/generate-formula-record-masters.ts": "14c5e3053f1257c28dd27b6c3d2cbfe6697087b017f0ed27b47a6bc5405aaf71",
+    "scripts/run-formula-record-masters.ts": "59afbfd8275295fd2e48bd94418162e030bd98de7df645c354f4a13dafd32522",
+    "src/engine/formulas/v1/published-adapter.ts": "a45251017b75ac9ab13357f1f39876a4619cd0e2906d390fc73b898d4f01c3dc",
+    "src/engine/formulas/v1/julia-runtime-activation-v1.ts": "d34869164818c35e327ace30ac76fdf50f2a720c66440b081d962c4c54778b19",
+    "src/engine/formulas/v1/record-preview-renderer.ts": "ed809591337300a18a3f2c72e3139559bf724963eeb03131f4b329fc39608d87",
+    "src/engine/frm/v1-backend.ts": "076273190738b02622091bb31d0c30ef2a3fdd3edc82e573a1cebf5c541d1f67",
+    "package-lock.json": "e0b2fc48bafca283ed7a9c76dc821859d448632681d83af4882bdcf280ea1045"
+  },
+  "profileArtifactContentHash": "434071e7c6bee7b583b7c6fce45a3f9ed05a643b7cf80ca58aac9b0a52c39a5f",
+  "browserVersion": "145.0.7632.6",
+  "rowCount": 534,
+  "passedCount": 491,
+  "failureCount": 43,
+  "sourceRenderCount": 534,
+  "wallMs": 3624446,
+  "peakProcessTreeRssBytes": 1550774272,
+  "totalBytes": 20085628,
+  "maximumBytes": 192600,
+  "failures": [
+    {
+      "formulaId": "0b667736-2930-56c9-ba2b-f5c1f4f76d58",
+      "error": "record-preview-visual-gate-failed:0b667736-2930-56c9-ba2b-f5c1f4f76d58:{\"luminanceRange\":12,\"distinctLuminanceValues\":13,\"edgeEnergy\":0.00051590505966554,\"opaqueFraction\":1,\"darkFraction\":0.13229166666666667,\"lightFraction\":0}"
+    },
+    {
+      "formulaId": "0f6c423d-2d1f-5b44-ad96-b4798b2a5fc5",
+      "error": "record-preview-visual-gate-failed:0f6c423d-2d1f-5b44-ad96-b4798b2a5fc5:{\"luminanceRange\":12,\"distinctLuminanceValues\":13,\"edgeEnergy\":0.00051590505966554,\"opaqueFraction\":1,\"darkFraction\":0.13229166666666667,\"lightFraction\":0}"
+    },
+    {
+      "formulaId": "126b0255-8e0b-535c-b752-36473c926fe9",
+      "error": "record-preview-visual-gate-failed:126b0255-8e0b-535c-b752-36473c926fe9:{\"luminanceRange\":12,\"distinctLuminanceValues\":13,\"edgeEnergy\":0.00051590505966554,\"opaqueFraction\":1,\"darkFraction\":0.13229166666666667,\"lightFraction\":0}"
+    },
+    {
+      "formulaId": "189a3551-e768-55db-b9f5-a3c4e35f9927",
+      "error": "record-preview-visual-gate-failed:189a3551-e768-55db-b9f5-a3c4e35f9927:{\"luminanceRange\":11,\"distinctLuminanceValues\":12,\"edgeEnergy\":0.0005034819277939951,\"opaqueFraction\":1,\"darkFraction\":0.06579861111111111,\"lightFraction\":0}"
+    },
+    {
+      "formulaId": "1ac85fe0-8fcb-557d-abf4-5a71bfcea5e5",
+      "error": "record-preview-visual-gate-failed:1ac85fe0-8fcb-557d-abf4-5a71bfcea5e5:{\"luminanceRange\":17,\"distinctLuminanceValues\":18,\"edgeEnergy\":0.0008813521888868154,\"opaqueFraction\":1,\"darkFraction\":0,\"lightFraction\":0}"
+    },
+    {
+      "formulaId": "267869db-2e96-5d61-80ed-fab704e61585",
+      "error": "record-preview-visual-gate-failed:267869db-2e96-5d61-80ed-fab704e61585:{\"luminanceRange\":9,\"distinctLuminanceValues\":10,\"edgeEnergy\":0.0007422821293248003,\"opaqueFraction\":1,\"darkFraction\":0,\"lightFraction\":0}"
+    },
+    {
+      "formulaId": "269daa88-48be-5078-96f9-1b700bacddec",
+      "error": "record-preview-visual-gate-failed:269daa88-48be-5078-96f9-1b700bacddec:{\"luminanceRange\":12,\"distinctLuminanceValues\":13,\"edgeEnergy\":0.00051590505966554,\"opaqueFraction\":1,\"darkFraction\":0.13229166666666667,\"lightFraction\":0}"
+    },
+    {
+      "formulaId": "32af09e8-c0e1-59de-9193-43021db7fcdc",
+      "error": "record-preview-visual-gate-failed:32af09e8-c0e1-59de-9193-43021db7fcdc:{\"luminanceRange\":12,\"distinctLuminanceValues\":13,\"edgeEnergy\":0.00051590505966554,\"opaqueFraction\":1,\"darkFraction\":0.13229166666666667,\"lightFraction\":0}"
+    },
+    {
+      "formulaId": "3582fcef-3d34-5acf-a701-4d5a9165ebc7",
+      "error": "record-preview-visual-gate-failed:3582fcef-3d34-5acf-a701-4d5a9165ebc7:{\"luminanceRange\":17,\"distinctLuminanceValues\":18,\"edgeEnergy\":0.0008813521888868154,\"opaqueFraction\":1,\"darkFraction\":0,\"lightFraction\":0}"
+    },
+    {
+      "formulaId": "3773f101-06b1-5e58-bdb7-708853997f30",
+      "error": "record-preview-visual-gate-failed:3773f101-06b1-5e58-bdb7-708853997f30:{\"luminanceRange\":12,\"distinctLuminanceValues\":13,\"edgeEnergy\":0.00051590505966554,\"opaqueFraction\":1,\"darkFraction\":0.13229166666666667,\"lightFraction\":0}"
+    },
+    {
+      "formulaId": "4082549c-cbbd-55ad-bb38-61e4eb3d46dd",
+      "error": "record-preview-visual-gate-failed:4082549c-cbbd-55ad-bb38-61e4eb3d46dd:{\"luminanceRange\":12,\"distinctLuminanceValues\":13,\"edgeEnergy\":0.00051590505966554,\"opaqueFraction\":1,\"darkFraction\":0.13229166666666667,\"lightFraction\":0}"
+    },
+    {
+      "formulaId": "54fa972b-b4c3-5ec2-a47f-e00141e22dfc",
+      "error": "record-preview-visual-gate-failed:54fa972b-b4c3-5ec2-a47f-e00141e22dfc:{\"luminanceRange\":17,\"distinctLuminanceValues\":18,\"edgeEnergy\":0.0008813521888868154,\"opaqueFraction\":1,\"darkFraction\":0,\"lightFraction\":0}"
+    },
+    {
+      "formulaId": "6b0c0c41-adc5-54d4-9c59-1a738099b5ec",
+      "error": "record-preview-visual-gate-failed:6b0c0c41-adc5-54d4-9c59-1a738099b5ec:{\"luminanceRange\":12,\"distinctLuminanceValues\":13,\"edgeEnergy\":0.00051590505966554,\"opaqueFraction\":1,\"darkFraction\":0.13229166666666667,\"lightFraction\":0}"
+    },
+    {
+      "formulaId": "6ca66e2b-035b-594a-8169-553bf1e51d99",
+      "error": "record-preview-visual-gate-failed:6ca66e2b-035b-594a-8169-553bf1e51d99:{\"luminanceRange\":12,\"distinctLuminanceValues\":13,\"edgeEnergy\":0.00051590505966554,\"opaqueFraction\":1,\"darkFraction\":0.13229166666666667,\"lightFraction\":0}"
+    },
+    {
+      "formulaId": "6fd03e0d-2427-5967-b53d-5540ebc4be56",
+      "error": "record-preview-visual-gate-failed:6fd03e0d-2427-5967-b53d-5540ebc4be56:{\"luminanceRange\":12,\"distinctLuminanceValues\":13,\"edgeEnergy\":0.00051590505966554,\"opaqueFraction\":1,\"darkFraction\":0.13229166666666667,\"lightFraction\":0}"
+    },
+    {
+      "formulaId": "70b6af5a-8da1-5403-8039-d5b475f48248",
+      "error": "record-preview-visual-gate-failed:70b6af5a-8da1-5403-8039-d5b475f48248:{\"luminanceRange\":11,\"distinctLuminanceValues\":12,\"edgeEnergy\":0.0005034819277939951,\"opaqueFraction\":1,\"darkFraction\":0.06579861111111111,\"lightFraction\":0}"
+    },
+    {
+      "formulaId": "77fb9270-e9aa-5e7d-af63-d3c28af6d9ad",
+      "error": "record-preview-visual-gate-failed:77fb9270-e9aa-5e7d-af63-d3c28af6d9ad:{\"luminanceRange\":12,\"distinctLuminanceValues\":13,\"edgeEnergy\":0.00051590505966554,\"opaqueFraction\":1,\"darkFraction\":0.13229166666666667,\"lightFraction\":0}"
+    },
+    {
+      "formulaId": "7d41553d-885e-5f7a-810e-3be60046c9f9",
+      "error": "record-preview-cpu-source-invalid:7d41553d-885e-5f7a-810e-3be60046c9f9:9630:90356:14:1242"
+    },
+    {
+      "formulaId": "8216cd19-79d0-56e3-88ac-5c58a28bce85",
+      "error": "record-preview-visual-gate-failed:8216cd19-79d0-56e3-88ac-5c58a28bce85:{\"luminanceRange\":12,\"distinctLuminanceValues\":13,\"edgeEnergy\":0.00051590505966554,\"opaqueFraction\":1,\"darkFraction\":0.13229166666666667,\"lightFraction\":0}"
+    },
+    {
+      "formulaId": "8b4578e2-5ecf-5500-9dc9-57a1e51e627e",
+      "error": "record-preview-visual-gate-failed:8b4578e2-5ecf-5500-9dc9-57a1e51e627e:{\"luminanceRange\":12,\"distinctLuminanceValues\":13,\"edgeEnergy\":0.00051590505966554,\"opaqueFraction\":1,\"darkFraction\":0.13229166666666667,\"lightFraction\":0}"
+    },
+    {
+      "formulaId": "8ddf2423-d8ff-5d3d-967c-5374c52925cb",
+      "error": "record-preview-visual-gate-failed:8ddf2423-d8ff-5d3d-967c-5374c52925cb:{\"luminanceRange\":12,\"distinctLuminanceValues\":13,\"edgeEnergy\":0.00051590505966554,\"opaqueFraction\":1,\"darkFraction\":0.13229166666666667,\"lightFraction\":0}"
+    },
+    {
+      "formulaId": "93102e86-d35b-53f2-8569-47a4a20a656d",
+      "error": "record-preview-cpu-source-invalid:93102e86-d35b-53f2-8569-47a4a20a656d:34336:65656:8:1458"
+    },
+    {
+      "formulaId": "9cc91fab-f386-5ebc-9a71-722c4a8c7c75",
+      "error": "record-preview-visual-gate-failed:9cc91fab-f386-5ebc-9a71-722c4a8c7c75:{\"luminanceRange\":12,\"distinctLuminanceValues\":13,\"edgeEnergy\":0.00051590505966554,\"opaqueFraction\":1,\"darkFraction\":0.13229166666666667,\"lightFraction\":0}"
+    },
+    {
+      "formulaId": "9e7250d0-f815-521a-9cf6-6c4d68598b2c",
+      "error": "record-preview-visual-gate-failed:9e7250d0-f815-521a-9cf6-6c4d68598b2c:{\"luminanceRange\":12,\"distinctLuminanceValues\":13,\"edgeEnergy\":0.00051590505966554,\"opaqueFraction\":1,\"darkFraction\":0.13229166666666667,\"lightFraction\":0}"
+    },
+    {
+      "formulaId": "a3c91590-898f-55f7-92b0-ca549477edd3",
+      "error": "record-preview-visual-gate-failed:a3c91590-898f-55f7-92b0-ca549477edd3:{\"luminanceRange\":12,\"distinctLuminanceValues\":13,\"edgeEnergy\":0.00051590505966554,\"opaqueFraction\":1,\"darkFraction\":0.13229166666666667,\"lightFraction\":0}"
+    },
+    {
+      "formulaId": "a3f8a298-ed79-5826-8652-74589c595e06",
+      "error": "record-preview-visual-gate-failed:a3f8a298-ed79-5826-8652-74589c595e06:{\"luminanceRange\":12,\"distinctLuminanceValues\":13,\"edgeEnergy\":0.00051590505966554,\"opaqueFraction\":1,\"darkFraction\":0.13229166666666667,\"lightFraction\":0}"
+    },
+    {
+      "formulaId": "abc996b8-b004-5ec2-8ea8-661615271efc",
+      "error": "record-preview-visual-gate-failed:abc996b8-b004-5ec2-8ea8-661615271efc:{\"luminanceRange\":12,\"distinctLuminanceValues\":13,\"edgeEnergy\":0.00051590505966554,\"opaqueFraction\":1,\"darkFraction\":0.13229166666666667,\"lightFraction\":0}"
+    },
+    {
+      "formulaId": "ad38dcc4-1079-5638-a35c-b16f53ce6e62",
+      "error": "record-preview-visual-gate-failed:ad38dcc4-1079-5638-a35c-b16f53ce6e62:{\"luminanceRange\":12,\"distinctLuminanceValues\":13,\"edgeEnergy\":0.00051590505966554,\"opaqueFraction\":1,\"darkFraction\":0.13229166666666667,\"lightFraction\":0}"
+    },
+    {
+      "formulaId": "b0bf5217-893a-5a0f-9a46-5e5ce89223c3",
+      "error": "record-preview-visual-gate-failed:b0bf5217-893a-5a0f-9a46-5e5ce89223c3:{\"luminanceRange\":17,\"distinctLuminanceValues\":18,\"edgeEnergy\":0.0007015618637458479,\"opaqueFraction\":1,\"darkFraction\":0.4300347222222222,\"lightFraction\":0}"
+    },
+    {
+      "formulaId": "c0dec4b4-5412-5c02-966a-612c56880508",
+      "error": "record-preview-visual-gate-failed:c0dec4b4-5412-5c02-966a-612c56880508:{\"luminanceRange\":12,\"distinctLuminanceValues\":13,\"edgeEnergy\":0.00051590505966554,\"opaqueFraction\":1,\"darkFraction\":0.13229166666666667,\"lightFraction\":0}"
+    },
+    {
+      "formulaId": "c18f4721-75e2-5ea4-81a0-95b8c49dfc86",
+      "error": "record-preview-cpu-source-invalid:c18f4721-75e2-5ea4-81a0-95b8c49dfc86:55282:44710:8:1488"
+    },
+    {
+      "formulaId": "ccfe0283-df10-5b17-bd2a-5f3cdfd69b4a",
+      "error": "record-preview-visual-gate-failed:ccfe0283-df10-5b17-bd2a-5f3cdfd69b4a:{\"luminanceRange\":1,\"distinctLuminanceValues\":2,\"edgeEnergy\":0.00004727691851115653,\"opaqueFraction\":1,\"darkFraction\":1,\"lightFraction\":0}"
+    },
+    {
+      "formulaId": "d541fbeb-4dcc-5fc9-9b88-116bb28bf327",
+      "error": "record-preview-cpu-source-invalid:d541fbeb-4dcc-5fc9-9b88-116bb28bf327:0:99994:6:1507"
+    },
+    {
+      "formulaId": "d55f924e-86a7-540d-afb4-e678f640a66b",
+      "error": "record-preview-visual-gate-failed:d55f924e-86a7-540d-afb4-e678f640a66b:{\"luminanceRange\":12,\"distinctLuminanceValues\":13,\"edgeEnergy\":0.00051590505966554,\"opaqueFraction\":1,\"darkFraction\":0.13229166666666667,\"lightFraction\":0}"
+    },
+    {
+      "formulaId": "d9bc4e37-3fc6-5fa1-b334-e136b94b1e8c",
+      "error": "record-preview-cpu-source-invalid:d9bc4e37-3fc6-5fa1-b334-e136b94b1e8c:58442:41550:8:1497"
+    },
+    {
+      "formulaId": "df1c8979-3e38-5868-87ee-4f2e2a460b72",
+      "error": "record-preview-visual-gate-failed:df1c8979-3e38-5868-87ee-4f2e2a460b72:{\"luminanceRange\":12,\"distinctLuminanceValues\":13,\"edgeEnergy\":0.00051590505966554,\"opaqueFraction\":1,\"darkFraction\":0.13229166666666667,\"lightFraction\":0}"
+    },
+    {
+      "formulaId": "e5659975-2319-56c3-ab28-edf6f6981635",
+      "error": "record-preview-visual-gate-failed:e5659975-2319-56c3-ab28-edf6f6981635:{\"luminanceRange\":12,\"distinctLuminanceValues\":13,\"edgeEnergy\":0.00051590505966554,\"opaqueFraction\":1,\"darkFraction\":0.13229166666666667,\"lightFraction\":0}"
+    },
+    {
+      "formulaId": "e7a86d4b-06bf-575d-9eaf-c0ab7f21841e",
+      "error": "record-preview-visual-gate-failed:e7a86d4b-06bf-575d-9eaf-c0ab7f21841e:{\"luminanceRange\":12,\"distinctLuminanceValues\":13,\"edgeEnergy\":0.00051590505966554,\"opaqueFraction\":1,\"darkFraction\":0.13229166666666667,\"lightFraction\":0}"
+    },
+    {
+      "formulaId": "e84e8cee-b68f-5494-b098-a7b7a7237705",
+      "error": "record-preview-visual-gate-failed:e84e8cee-b68f-5494-b098-a7b7a7237705:{\"luminanceRange\":12,\"distinctLuminanceValues\":13,\"edgeEnergy\":0.00051590505966554,\"opaqueFraction\":1,\"darkFraction\":0.13229166666666667,\"lightFraction\":0}"
+    },
+    {
+      "formulaId": "ebe7d5f6-7f65-50cc-b03b-f208d78c955a",
+      "error": "record-preview-cpu-source-invalid:ebe7d5f6-7f65-50cc-b03b-f208d78c955a:1:99951:48:430"
+    },
+    {
+      "formulaId": "ed7e4ea5-2118-5ade-8fbc-19b5c2a6c8fc",
+      "error": "record-preview-visual-gate-failed:ed7e4ea5-2118-5ade-8fbc-19b5c2a6c8fc:{\"luminanceRange\":12,\"distinctLuminanceValues\":13,\"edgeEnergy\":0.00051590505966554,\"opaqueFraction\":1,\"darkFraction\":0.13229166666666667,\"lightFraction\":0}"
+    },
+    {
+      "formulaId": "ee3be07b-bfde-53bf-bea2-db01f18ab0f2",
+      "error": "record-preview-visual-gate-failed:ee3be07b-bfde-53bf-bea2-db01f18ab0f2:{\"luminanceRange\":17,\"distinctLuminanceValues\":18,\"edgeEnergy\":0.0008813521888868154,\"opaqueFraction\":1,\"darkFraction\":0,\"lightFraction\":0}"
+    },
+    {
+      "formulaId": "f9a6409b-130b-5dd5-be4f-789927e47ad2",
+      "error": "record-preview-visual-gate-failed:f9a6409b-130b-5dd5-be4f-789927e47ad2:{\"luminanceRange\":12,\"distinctLuminanceValues\":13,\"edgeEnergy\":0.00051590505966554,\"opaqueFraction\":1,\"darkFraction\":0.13229166666666667,\"lightFraction\":0}"
+    }
+  ],
+  "contentHash": "93e43edad52440714554511ecf95371afbdca2fc531faa5f0e21a3c590fcc02b"
+}

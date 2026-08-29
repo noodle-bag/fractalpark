@@ -14,8 +14,23 @@ import {
 } from '@/lib/formula-records';
 
 const PUBLIC_ROOT = join(process.cwd(), 'public');
-const PREVIEW_ROOT = join(PUBLIC_ROOT, 'formula-library/v1/previews');
+const RECORD_PREVIEW_ROOT = join(
+  PUBLIC_ROOT,
+  'formula-library/v1/record-previews',
+);
 const SUPPORTED_JULIA_PROFILE_ID = '5d0877c0-5f84-5c3b-9466-b9f9b417cb6a';
+
+function canonicalize(value: unknown): unknown {
+  if (Array.isArray(value)) return value.map(canonicalize);
+  if (value !== null && typeof value === 'object') {
+    return Object.fromEntries(
+      Object.entries(value as Record<string, unknown>)
+        .sort(([left], [right]) => left.localeCompare(right))
+        .map(([key, child]) => [key, canonicalize(child)]),
+    );
+  }
+  return value;
+}
 
 describe('public Formula Record v1', () => {
   const records = STANDARD_MANIFEST_INDEX_V1.formulaIds.map((formulaId) => {
@@ -107,17 +122,34 @@ describe('public Formula Record v1', () => {
       expect(record.defaultProfile.iterations).toBeGreaterThan(0);
       expect(record.defaultProfile.quality).toMatch(/^(mechanical|family)$/);
 
-      expect(record.preview.src).toBe(
-        `/formula-library/v1/previews/${record.formulaId}.png`
+      expect(record.preview.src).toMatch(
+        new RegExp(
+          `^/formula-library/v1/record-previews/${record.formulaId}\\.[a-f0-9]{16}\\.webp$`,
+        ),
+      );
+      expect(record.preview.fallbackSrc).toBe(
+        `/formula-library/v1/previews/${record.formulaId}.png`,
       );
       expect(record.preview.width).toBe(FORMULA_RECORD_PREVIEW_WIDTH_V1);
       expect(record.preview.height).toBe(FORMULA_RECORD_PREVIEW_HEIGHT_V1);
-      expect(record.preview.pngSha256).toMatch(/^[a-f0-9]{64}$/);
-      expect(record.preview.status).toBe(
-        record.preview.anomalies.length === 0 ? 'ready' : 'diagnostic'
+      expect(record.preview.status).toBe('ready');
+      expect(record.preview.assetRevision).toMatch(/^[a-f0-9]{16}$/);
+      expect(record.preview.recordPreviewProfileRevision).toMatch(
+        /^[a-f0-9]{64}$/,
       );
-      expect(existsSync(join(PUBLIC_ROOT, record.preview.src))).toBe(true);
-      expect(readFileSync(join(PUBLIC_ROOT, record.preview.src)).subarray(1, 4).toString()).toBe('PNG');
+      expect(record.preview.recordPreviewProfileSha256).toMatch(
+        /^[a-f0-9]{64}$/,
+      );
+      expect(record.preview.webpSha256).toMatch(/^[a-f0-9]{64}$/);
+      expect(record.preview.bytes).toBeGreaterThan(0);
+      expect(record.preview.perceptualHash).toMatch(/^[a-f0-9]{16}$/);
+      const previewBytes = readFileSync(join(PUBLIC_ROOT, record.preview.src));
+      expect(previewBytes.subarray(0, 4).toString()).toBe('RIFF');
+      expect(previewBytes.subarray(8, 12).toString()).toBe('WEBP');
+      expect(createHash('sha256').update(previewBytes).digest('hex')).toBe(
+        record.preview.webpSha256,
+      );
+      expect(existsSync(join(PUBLIC_ROOT, record.preview.fallbackSrc))).toBe(true);
 
       expect(record.actions.openExploreHref).toBe(
         `/en/explore?open=standard-formula&formula=${record.formulaId}`
@@ -128,34 +160,29 @@ describe('public Formula Record v1', () => {
     }
   });
 
-  it('pins the exact preview output set and every PNG byte string', () => {
+  it('pins the exact record-preview output set and every WebP byte string', () => {
     const manifest = JSON.parse(
-      readFileSync(join(PREVIEW_ROOT, 'manifest.json'), 'utf8')
+      readFileSync(join(RECORD_PREVIEW_ROOT, 'manifest.json'), 'utf8'),
     ) as {
       schema: string;
       width: number;
       height: number;
       rowCount: number;
-      rows: Array<{ formulaId: string; file: string; pngSha256: string }>;
+      rows: Array<{
+        formulaId: string;
+        file: string;
+        webpSha256: string;
+        bytes: number;
+      }>;
       manifestContentHash: string;
     };
-    expect(manifest.schema).toBe('fractalpark-formula-record-previews/v1');
+    expect(manifest.schema).toBe(
+      'fractalpark-formula-record-preview-masters/v1',
+    );
     expect(manifest.width).toBe(FORMULA_RECORD_PREVIEW_WIDTH_V1);
     expect(manifest.height).toBe(FORMULA_RECORD_PREVIEW_HEIGHT_V1);
     expect(manifest.rowCount).toBe(PUBLISHED_FORMULA_RECORD_COUNT_V1);
     expect(manifest.rows).toHaveLength(PUBLISHED_FORMULA_RECORD_COUNT_V1);
-    expect(
-      records.filter(
-        (record) =>
-          record.availability === 'published' && record.preview.status === 'ready'
-      )
-    ).toHaveLength(357);
-    expect(
-      records.filter(
-        (record) =>
-          record.availability === 'published' && record.preview.status === 'diagnostic'
-      )
-    ).toHaveLength(177);
     expect(new Set(manifest.rows.map((row) => row.formulaId))).toEqual(
       new Set(
         records
@@ -163,19 +190,22 @@ describe('public Formula Record v1', () => {
           .map((record) => record.formulaId)
       )
     );
-    expect(readdirSync(PREVIEW_ROOT).sort()).toEqual(
-      [...manifest.rows.map((row) => row.file), 'manifest.json'].sort()
+    expect(readdirSync(RECORD_PREVIEW_ROOT).sort()).toEqual(
+      [...manifest.rows.map((row) => row.file), 'manifest.json'].sort(),
     );
 
     for (const row of manifest.rows) {
-      const bytes = readFileSync(join(PREVIEW_ROOT, row.file));
+      const bytes = readFileSync(join(RECORD_PREVIEW_ROOT, row.file));
+      expect(bytes).toHaveLength(row.bytes);
       expect(createHash('sha256').update(bytes).digest('hex')).toBe(
-        row.pngSha256
+        row.webpSha256,
       );
     }
     const { manifestContentHash, ...withoutHash } = manifest;
     expect(
-      createHash('sha256').update(JSON.stringify(withoutHash)).digest('hex')
+      createHash('sha256')
+        .update(JSON.stringify(canonicalize(withoutHash)))
+        .digest('hex'),
     ).toBe(manifestContentHash);
   });
 
