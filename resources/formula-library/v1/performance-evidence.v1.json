@@ -1,8 +1,8 @@
 {
   "schema": "fractalpark-standard-library-performance-evidence/v1",
   "sourceBindings": {
-    ".github/workflows/ci.yml": "ba71739d337e74d7b6ab04fc048339696910af793c8e1231ecfb02d6bacf2b77",
-    ".github/workflows/release.yml": "6354abab49c801abc88589f61d02d90f794ba267513dfee30e39e7722aa17114",
+    ".github/workflows/ci.yml": "98d850ccaac498dddead7842bcde01f9ba286e1eab360d07a26d680cb3dc2f99",
+    ".github/workflows/release.yml": "1fab86411d03a1f4ba91cb80262ee481bf29c46bf730399b813855fb0e6c5d14",
     "resources/formula-library/v1/performance-gates.v1.json": "e31539cd08cba545f888b9888c958692b735442776300aaf5d949c3f81235714",
     "resources/formula-library/v1/julia-runtime-activation.v1.json": "0aaf7e38ea019884bcc21a64d8fce2ffe9e835bc4a4ccd19ee3fdc872230e1d8",
     "resources/formula-library/v1/publication-decisions.json": "ed63d7fab46530ac61a2dfb562644b9d36c1d8f4a73128cc51c0c7fbcb625de6",
@@ -338,35 +338,35 @@
       "status": "pass",
       "artifact": {
         "path": "resources/formula-library/v1/rollback-evidence/writerOff.json",
-        "sha256": "8a20cb6093d6a991ccbf89a316e950ff55c3253d0298314d534e7dd984362bce"
+        "sha256": "f24a84e5ed77581934770e8bf72039ad3f32c4e47d5b05564cbe3dd3bf90a313"
       }
     },
     "featureOff": {
       "status": "pass",
       "artifact": {
         "path": "resources/formula-library/v1/rollback-evidence/featureOff.json",
-        "sha256": "73f0e8284fa8c512059447a1a317053ecd3884fc51e0470eb5019200b4ae70bd"
+        "sha256": "c7cbc2fb4fb7802998d86c6f39f04e7a590b1c956671da6088b4647a91fdfcf5"
       }
     },
     "lkgRuntime": {
       "status": "pass",
       "artifact": {
         "path": "resources/formula-library/v1/rollback-evidence/lkgRuntime.json",
-        "sha256": "db3cda984471d95129aec83c55df4abd07b562d574ed5f1e5184f7a6ebae2ad6"
+        "sha256": "fd1d73cdcd580751d68ebeac01145448883f3a5d78f8eac05ef73825b82adc4f"
       }
     },
     "readerFloor": {
       "status": "pass",
       "artifact": {
         "path": "resources/formula-library/v1/rollback-evidence/readerFloor.json",
-        "sha256": "c91d360b639d44d0e9e9513cc9d0f00070bda3cd94d2cdf45f8f4143b8d68655"
+        "sha256": "13aa962d333203e7d59b3d42aba2912bebaaa986bb061a457dc99ee086266a6f"
       }
     },
     "aliasResolver": {
       "status": "pass",
       "artifact": {
         "path": "resources/formula-library/v1/rollback-evidence/aliasResolver.json",
-        "sha256": "e535807d027425cebf32883587e0a0a596756a2fb339ee9f2b0491c5f9e0e354"
+        "sha256": "935c5157be5242f5ee332a747fd1a9f31dc5efb852f88cfad0df0ef0646bc1f0"
       }
     },
     "deployedPreview": {
