@@ -3,9 +3,9 @@
   "revision": 1,
   "evidenceClass": "source-binding-receipts-only",
   "sourceBindings": {
-    "recoveryContractContentHash": "4b60e659e9fc621f80525e0b2c7e6b9d2b3432acd0d64cdba898939a8ee1d91e",
-    "parameterBindingEvidenceContentHash": "8d8d43cf6ef5a6726afb322e41f897ef0e3feb59f4240a9a7d6a145734e93e4e",
-    "pixelRoleCensusContentHash": "a9726166bf3b34bf0044dc02ae7fada16155cd5d3ee0771aa495c112fbace16d",
+    "recoveryContractContentHash": "528c21d17dfb6cf44c770df401ae0d7b2674bf92bed35f3e9eb66c949627bec3",
+    "parameterBindingEvidenceContentHash": "6c03562d69731ed3e4484799057d32eb3dc1049478bfb2e31a1d5e9322027f49",
+    "pixelRoleCensusContentHash": "0b6401fcb1a296fba074edebe05c16fbb65cdb74c75dd52db1449f71ccb04be0",
     "runtimeIndexCanonicalSha256": "362f327b260f38ceb1d9afd7dc619d4ef010f8365ee84a8673ba1df6285fc3f5",
     "publicationDecisionsContentHash": "cac35a05d2d0c219b4f5ac00f3dea5b5fbb2b9c6b2fc15ea3383ef0f62d6031d"
   },
@@ -12302,5 +12302,5 @@
       "authorityDecision": "undetermined-unknown"
     }
   ],
-  "contentHash": "a038887d22fe4868d17cfeed6b7033437cc782469ac7f0cef03172c7ae9b50e5"
+  "contentHash": "ea6b1cfc79d1a650910b9a0b80df628a2c9e91979d25373a97b776414a0374e1"
 }

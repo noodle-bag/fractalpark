@@ -10,8 +10,8 @@
   "activationStatus": "inactive-evidence-only",
   "contractContentHash": "528c21d17dfb6cf44c770df401ae0d7b2674bf92bed35f3e9eb66c949627bec3",
   "runtimeIndexCanonicalSha256": "362f327b260f38ceb1d9afd7dc619d4ef010f8365ee84a8673ba1df6285fc3f5",
-  "parameterAuthorityContentHash": "a038887d22fe4868d17cfeed6b7033437cc782469ac7f0cef03172c7ae9b50e5",
-  "recoveryCandidatesContentHash": "173a13fc29f0e6d43d4ab8a026a5d296e3fdb8275bcccb5affa1c91cece138f4",
+  "parameterAuthorityContentHash": "ea6b1cfc79d1a650910b9a0b80df628a2c9e91979d25373a97b776414a0374e1",
+  "recoveryCandidatesContentHash": "10925fa1a00db6a2505ba2a4f64380f7366f7adeab8a203685368c8dd7e8697a",
   "failureDiagnosisManifestContentHash": "7d02687cc7a1bbf714af6da97f7f99cd55d07e1a9b6e2367edda095219409785",
   "sourceBindings": {
     "package-lock.json": "c7fb57104902f454d6dc1c29e776eebab2c19a26d98dc2253fef84058a033168",
@@ -260,8 +260,8 @@
     "public/formula-library/v1/runtime/published/definitions/feb96948077dd253e8f9cd2b34495db6c4636a7fd5552996c966f69875ccc372.frm": "feb96948077dd253e8f9cd2b34495db6c4636a7fd5552996c966f69875ccc372",
     "public/formula-library/v1/runtime/published/index.json": "e912b1cb4ad884a6a021fd0d2683495e8ea61911d05c4135fbecaa335cade742",
     "resources/formula-library/v1/julia-existing-system-c-evidence.v1.json": "18e41da9bd349469675357e051104901b1c2a308fbfc95fbfc726656dce90e17",
-    "resources/formula-library/v1/julia-parameter-authority.v1.json": "df0045242a7484fc0f97c77e3c6546aa2f864022ddca262304a9ea5668179bc5",
-    "resources/formula-library/v1/julia-pixel-recovery-candidates.v1.json": "0364034bf97b3cf17943865437cd692cfd74563f60b4d987778578d7ae0dcd4c",
+    "resources/formula-library/v1/julia-parameter-authority.v1.json": "d80587b773b9a8c1108d8e4d0e4872e41cd4d2b9373ebd9769d450b87e778f4f",
+    "resources/formula-library/v1/julia-pixel-recovery-candidates.v1.json": "dafffa6cdae3115337d88db2076fc07cabf04bc0213976aa3e2f44ff13f0b60c",
     "resources/formula-library/v1/julia-pixel-recovery-candidates/definitions/00134f5dd062fa048d91e09a44dbf767e3123201feec420b01be0c214d83840e.frm": "00134f5dd062fa048d91e09a44dbf767e3123201feec420b01be0c214d83840e",
     "resources/formula-library/v1/julia-pixel-recovery-candidates/definitions/00e9ecb446b0c0af153fc39b55f2b29cabd38cd26358eff356d1804f2cc5f8f1.frm": "00e9ecb446b0c0af153fc39b55f2b29cabd38cd26358eff356d1804f2cc5f8f1",
     "resources/formula-library/v1/julia-pixel-recovery-candidates/definitions/00ed579bc88e73992f8cedea9c3a1caa5ae3a6ab9bef74419cc85ad2e98a8475.frm": "00ed579bc88e73992f8cedea9c3a1caa5ae3a6ab9bef74419cc85ad2e98a8475",
@@ -10248,5 +10248,5 @@
       "rowReceipt": "9faca6c67f1bd1bb4333a5b10cf14cdec016509d50ebff9581cfbc2c0b47d0bf"
     }
   ],
-  "contentHash": "6506a55afabba49069646d96446eb6e65ad5b1f6c125a884c29c0d922645595a"
+  "contentHash": "657812d646945a05b6a0b4e76d1e83c6a45839a63817bdf57dc9053973855af9"
 }

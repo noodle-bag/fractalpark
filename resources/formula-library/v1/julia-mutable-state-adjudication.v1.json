@@ -5,9 +5,9 @@
   "activationStatus": "inactive-evidence-only",
   "tier2": "reused-pass-exact-tuple",
   "recoveryContractContentHash": "528c21d17dfb6cf44c770df401ae0d7b2674bf92bed35f3e9eb66c949627bec3",
-  "finalV3ContentHash": "ec239762e44338bab8dcabf3d3c00c51b825194cc463c44dc62a41e1a845a572",
-  "finalV3WholeFileSha256": "db14973560e947d4ca76bd2c8e33898c0fc6d9dc1539c208146fba6da844e58a",
-  "finalV3AuditContentHash": "f0a2b93661289ea5688f4fd6de0b5970a13ebe3508a34fa3a9ccaacf07d7304b",
+  "finalV3ContentHash": "db7578e6ac05eaa92fc7696d9f734d118144fe61e3aa5bab80446a774ff6a8ca",
+  "finalV3WholeFileSha256": "093cf75bbcec0e446abade664b6e2f7c5692ae8798089d7ce426705818b79900",
+  "finalV3AuditContentHash": "3e57cd0371ce60a5c62d0e6581485e9d1f0c9ce08b35c0fea2f386921443a16d",
   "sourceSplitContentHash": "f7901187c6af82ca131a1acfeb8a05c49714a90cafd57e0c29d1c564e5a48cc3",
   "preGpuContentHash": "40698dbca2ac0e9454f29a9361d93d3734a860f0d0929bca22b7c45984f1a825",
   "rendererContentHash": "6fa8d8160016433023bf20f1a968549b24630fa6a3a790cfdf56b33bb5622566",
@@ -24,10 +24,10 @@
     "public/formula-library/v1/runtime/published/definitions/ecb46088409251fde7d0e1a7685fccce8b1518e6da5ec93e318293ef174d5132.frm": "ecb46088409251fde7d0e1a7685fccce8b1518e6da5ec93e318293ef174d5132",
     "public/formula-library/v1/runtime/published/index.json": "e912b1cb4ad884a6a021fd0d2683495e8ea61911d05c4135fbecaa335cade742",
     "resources/formula-library/v1/julia-final-capability-census.v1.json": "eb6f8ad1f4d2a26f467abb86de84f9d865c9c85e5e823657013b0a2d6e47fc20",
-    "resources/formula-library/v1/julia-pixel-final-capability-census.v3.json": "db14973560e947d4ca76bd2c8e33898c0fc6d9dc1539c208146fba6da844e58a",
-    "resources/formula-library/v1/julia-pixel-final-recovery-audit.v2.json": "a72bc2424f3ce070bd879bb416ce3e112059656beb8d1ab67be595c4745d4664",
+    "resources/formula-library/v1/julia-pixel-final-capability-census.v3.json": "093cf75bbcec0e446abade664b6e2f7c5692ae8798089d7ce426705818b79900",
+    "resources/formula-library/v1/julia-pixel-final-recovery-audit.v2.json": "c3c15afed335021e8a74643922d20f2ac2b4e76fbdef811d69a8dd3cd19a87c3",
     "resources/formula-library/v1/julia-pixel-recovery-contract.v1.json": "f03cf73047c37ed0baf7b61f615aef7cf316ba11a7f173c28c224fc14ec2634c",
-    "resources/formula-library/v1/julia-pixel-role-census.v1.json": "cd5a991aa4fee940ca3d859cf9e20d644adae1967ec87fbc0e9a4c7efa17407e",
+    "resources/formula-library/v1/julia-pixel-role-census.v1.json": "cf8c35e0005931f5d276b0650defdb880a3dd0c8bf583091cc2656a889fd1b14",
     "resources/formula-library/v1/julia-pre-gpu-capability-census.v1.json": "b05313475183083daca940d6de05331521450b217be3e22c8e7992a1968795e2",
     "resources/formula-library/v1/julia-renderer-evidence.v1.json": "d3471e6237a1946b5e0ed770cb41d5de54ba4a02112e3edcb782c78d9d8e1d0b",
     "resources/formula-library/v1/julia-source-split-candidates/definitions/2213361a1d322f60deecdb1922c441953257e8899af90a8641c86b3463fb1045.frm": "2213361a1d322f60deecdb1922c441953257e8899af90a8641c86b3463fb1045",
@@ -457,5 +457,5 @@
       "rowReceipt": "743e35e4aad4162712bd26e80d701535784af34a3b40d2c719a1162033937513"
     }
   ],
-  "contentHash": "134c54ff39432650a5066fc184a7ce8b085652bdf3eb471f6919ae4ed24646c0"
+  "contentHash": "22899b373288e91c8707e684e06037be1f8fe12955f5e0cc784835bd265e8570"
 }

@@ -24,17 +24,17 @@ export const JULIA_ACTIVATION_CLOSURE_HANDOFF_SCHEMA_V4 =
 export const JULIA_ACTIVATION_CLOSURE_APPROVED_AT_V1 =
   "2026-08-28T18:47:11+08:00" as const;
 export const JULIA_ACTIVATION_CLOSURE_APPROVED_AT_V2 =
-  "2026-09-01T12:54:12+08:00" as const;
+  "2026-09-01T16:37:15+08:00" as const;
 export const JULIA_ACTIVATION_CLOSURE_RESIDUAL_RESPONSE_V1 =
   "不弄了，跳过这11个" as const;
 export const JULIA_ACTIVATION_CLOSURE_MAINTAINER_RESPONSE_V1 =
   "确认路线一，并启动 handoff closure" as const;
 export const JULIA_ACTIVATION_CLOSURE_MAINTAINER_RESPONSE_V2 =
-  "签发新的 v2 acknowledgment：接受相同的 exact-195 / exact-11 边界，只重绑当前 source-closed final census；不授权激活、merge、部署或 Release" as const;
+  "签发更正后的 v2 acknowledgment：接受相同 exact-195 / exact-11 边界，仅重绑当前完整 source-closed 证据链；仍不授权激活、Ready、merge、部署或 Release" as const;
 export const JULIA_ACTIVATION_CLOSURE_APPROVAL_STATEMENT_V1 =
   "接受 final v4 中 exact-11 residual 在 v0.4.19 保持 held/blocked；允许生成 activation-eligible handoff 供后续单独授权的 29h 使用；不改变 final census、不恢复 residual、不执行 29h 或任何外部发布动作。" as const;
 export const JULIA_ACTIVATION_CLOSURE_APPROVAL_STATEMENT_V2 =
-  "确认 current-candidate source rebind 后 exact-195 supported 与 exact-11 residual 的成员、状态和 digest 均未改变；只重绑 current source-closed final census，不授权执行激活、merge、部署或 Release。" as const;
+  "确认 current-candidate 完整 source-closed 证据链重建后 exact-195 supported 与 exact-11 residual 的成员、状态和 digest 均未改变；仅重绑当前证据链，不授权执行激活、Ready、merge、部署或 Release。" as const;
 export const JULIA_ACTIVATION_CLOSURE_TRUST_MODEL_V1 = Object.freeze({
   authorityRoot: "repository-governed-human-maintainer-decision",
   identityAssurance: "approval-observed-in-authenticated-project-session",
@@ -45,7 +45,7 @@ export const JULIA_ACTIVATION_CLOSURE_TRUST_MODEL_V1 = Object.freeze({
 export const JULIA_ACTIVATION_CLOSURE_AI_DISCLOSURE_V1 =
   "This acknowledgment receipt and its machine closure were drafted with AI assistance by Ellie; the residual disposition, route selection, and permission to start this closure were explicitly approved by the human maintainer." as const;
 export const JULIA_ACTIVATION_CLOSURE_AI_DISCLOSURE_V2 =
-  "This source-rebound acknowledgment receipt and its machine closure were drafted with AI assistance by Ellie; the unchanged exact-195/exact-11 boundary and the limited rebind scope were explicitly approved by the human maintainer." as const;
+  "This corrected source-rebound acknowledgment receipt and its machine closure were drafted with AI assistance by Ellie; the unchanged exact-195/exact-11 boundary and the limited full-chain rebind scope were explicitly approved by the human maintainer." as const;
 export const JULIA_ACTIVATION_CLOSURE_CONSUMER_PREDICATE_V1 =
   "modeClass=classic-julia AND finalStatus=supported AND requiredReceipts=pass" as const;
 

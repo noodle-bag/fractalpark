@@ -2,9 +2,9 @@
   "schema": "fractalpark-julia-runtime-activation/v1",
   "revision": 1,
   "stage": "activation-projection",
-  "handoffContentHash": "c4c8f509fa8b43dc04c5fe59634fba906eae895e3f50abe2f18efb39166fe07f",
-  "finalCensusContentHash": "609f8067ebaa1b263dd8c65ce9ad0b366b8724c54ee2755212eb4b7f03d022d1",
-  "authorityManifestContentHash": "ad10971c9733bc9ca8c5306e34b7a11503dcb6d5300f406141c562160b4b4076",
+  "handoffContentHash": "4ed14d2740fb840a62b623a0a37b2ae14b8f2e0f922f1905bbc0247e8c6a0e0c",
+  "finalCensusContentHash": "5303590a7dfb5b374a2028a5586e9cb8465913768423bc58e23f2bd99481e997",
+  "authorityManifestContentHash": "b58d09dc1ea12dc9bef7a6f47cc6077c12657ad2b7a5b3e162088431c19c3c62",
   "runtimeIndexCanonicalSha256": "362f327b260f38ceb1d9afd7dc619d4ef010f8365ee84a8673ba1df6285fc3f5",
   "supportedCount": 195,
   "supportedSetDigest": "e6b3eb7576cd9d752492b6e4f6e1017744d560ff1b3de1709c2ca3d29b669b96",
@@ -790,5 +790,5 @@
       "sourceRevision": "da1f561fb7db0d001bc9018b144cf4bf2aaef4f2d7b5cff7516699177895d559"
     }
   ],
-  "contentHash": "4b68f84faabe16d4f1016f2088e780cef888a0a2dcf5bdf28b35b865937fd81c"
+  "contentHash": "8ae8ae6d4f24002ecf4e043eac3e48c03f8b043e47ea00dcc2abf2b2770d9b29"
 }

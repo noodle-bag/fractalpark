@@ -12,6 +12,7 @@ import { dirname, join, resolve } from "node:path";
 import { pathToFileURL } from "node:url";
 
 import activationAsset from "../resources/formula-library/v1/julia-runtime-activation.v1.json";
+import classicCorrectiveAsset from "../resources/formula-library/v1/julia-classic-regression-corrective.v1.json";
 import classicRendererAsset from "../resources/formula-library/v1/julia-classic-regression-renderer-evidence.v1.json";
 import mutableAsset from "../resources/formula-library/v1/julia-mutable-state-adjudication.v1.json";
 import rendererV1Asset from "../resources/formula-library/v1/julia-renderer-evidence.v1.json";
@@ -197,6 +198,23 @@ export function buildCoverage(): Coverage {
     "corrective-count",
   );
   invariant(reusedIds.length === EXPECTED_REUSED_COUNT, "reused-count");
+
+  const correctiveById = new Map(
+    classicCorrectiveAsset.rows.map((row) => [row.formulaId, row]),
+  );
+  for (const row of classicRendererAsset.rows) {
+    const corrective = correctiveById.get(row.formulaId);
+    invariant(
+      corrective !== undefined &&
+        row.candidateContentHash === corrective.rowReceipt &&
+        row.evaluatedSourceRevision === corrective.candidateSourceRevision &&
+        row.evaluatedSemanticHash === corrective.candidateSemanticHash &&
+        row.bindingRevision === corrective.correctiveBindingRevision &&
+        row.supportLane === corrective.supportLane &&
+        JSON.stringify(row.binding) === JSON.stringify(corrective.binding),
+      `corrective-authority:${row.formulaId}`,
+    );
+  }
 
   const unionIds = sortedUnique(
     [...mainIds, ...correctiveIds, ...reusedIds],

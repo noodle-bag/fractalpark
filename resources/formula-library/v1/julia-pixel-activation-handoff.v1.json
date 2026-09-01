@@ -7,13 +7,13 @@
     "withdrawnBy": null
   },
   "handoffState": "review-pending",
-  "finalCensusContentHash": "84022a54a0b53d0f04170923f8a864e254722a3287e4165f3e2882bf9c9cd7af",
+  "finalCensusContentHash": "b4c451e6552439c5bddf248eca7d04cd1015012309fbc5b1b6373f979b757963",
   "finalCensusAuthorityState": "sealed",
-  "authorityManifestContentHash": "05aa4a96dedd1eb3e54cae1343ef28190a8c77b150a0a2219020e5f1f5df487e",
+  "authorityManifestContentHash": "e882383e48d3ca19e272c18e9c8923111f100d8fb4cdf48d6a065f2c87144ddb",
   "supportedClassicRowSetDigest": "021ef50de54f9d642cd7cf0959a524ec5f7cb98bf310d67d8e22ef30586105f4",
   "supportedClassicRowCount": 179,
   "regressionSetDigest": "d9e767492ea8d1e03d5553833893f5893e7e6dc68b4d20638134163d48cceeee",
   "regressionCount": 27,
   "maintainerAcknowledgmentReceiptDigest": null,
-  "contentHash": "102e7a0458510ded54715b6097f51f57429f526d99ac92dc3039d2139e62f3ef"
+  "contentHash": "a69bbdb7416b1cd5cfd93d99d14ae9929ea6476bfb9b815c2308326fb625840a"
 }

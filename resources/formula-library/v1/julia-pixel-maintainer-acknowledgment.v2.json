@@ -7,16 +7,16 @@
     "withdrawnBy": null
   },
   "status": "maintainer-approved",
-  "approvedAt": "2026-09-01T12:54:12+08:00",
+  "approvedAt": "2026-09-01T16:37:15+08:00",
   "actorId": "fractalpark-maintainer",
   "actorKind": "human-maintainer",
   "actorRole": "maintainer",
   "decision": "accept-v0.4.19-residual-boundary",
   "targetVersion": "0.4.19",
-  "finalCensusContentHash": "054d97a7766dfbbbd890b53fa483a688662aac7e3c9e43e6adc7996ba31e33e6",
-  "predecessorAuthorityManifestContentHash": "95ddca1433c4e891064cfa4298d71012b07d5eadb9c60bfc705ba04645ac87f4",
-  "predecessorHandoffContentHash": "b28dceaa3d1f074647f92b23269f272c998654b39197a3118af400c23f305821",
-  "predecessorAuditContentHash": "0d4c6f4c3bd2a5256b795200426a24d0e31655a7e7a4897a12ffacb80d34f844",
+  "finalCensusContentHash": "5303590a7dfb5b374a2028a5586e9cb8465913768423bc58e23f2bd99481e997",
+  "predecessorAuthorityManifestContentHash": "73fbb89624a4d87aa59e813a33fa282f74923b82ee348d0f686a49c6ad042004",
+  "predecessorHandoffContentHash": "15ee0541f7e7e8287e8a7bb97d80aaec1cc7cc0e75998e0ab5bafa0fe3682fa6",
+  "predecessorAuditContentHash": "36e49d5966c6e9c446a535f328768f99aa722759f4db53652d4914fa1fe7d4a4",
   "supportedClassicRowSetDigest": "e6b3eb7576cd9d752492b6e4f6e1017744d560ff1b3de1709c2ca3d29b669b96",
   "supportedClassicRowCount": 195,
   "regressionSetDigest": "edabd82d9fdc83d1173a01666fc1ed2a13a8039a193bfefe376a0ee96f8b236e",
@@ -89,16 +89,16 @@
       "remediationLane": "identity-review"
     }
   ],
-  "approvalStatement": "确认 current-candidate source rebind 后 exact-195 supported 与 exact-11 residual 的成员、状态和 digest 均未改变；只重绑 current source-closed final census，不授权执行激活、merge、部署或 Release。",
+  "approvalStatement": "确认 current-candidate 完整 source-closed 证据链重建后 exact-195 supported 与 exact-11 residual 的成员、状态和 digest 均未改变；仅重绑当前证据链，不授权执行激活、Ready、merge、部署或 Release。",
   "residualDispositionResponse": "不弄了，跳过这11个",
-  "maintainerResponse": "签发新的 v2 acknowledgment：接受相同的 exact-195 / exact-11 边界，只重绑当前 source-closed final census；不授权激活、merge、部署或 Release",
+  "maintainerResponse": "签发更正后的 v2 acknowledgment：接受相同 exact-195 / exact-11 边界，仅重绑当前完整 source-closed 证据链；仍不授权激活、Ready、merge、部署或 Release",
   "trustModel": {
     "authorityRoot": "repository-governed-human-maintainer-decision",
     "identityAssurance": "approval-observed-in-authenticated-project-session",
     "cryptographicSignature": "not-provided-by-project-policy",
     "threatBoundary": "detects stale or substituted receipt bytes; repository-maintainer compromise is out of scope"
   },
-  "aiAssistanceDisclosure": "This source-rebound acknowledgment receipt and its machine closure were drafted with AI assistance by Ellie; the unchanged exact-195/exact-11 boundary and the limited rebind scope were explicitly approved by the human maintainer.",
+  "aiAssistanceDisclosure": "This corrected source-rebound acknowledgment receipt and its machine closure were drafted with AI assistance by Ellie; the unchanged exact-195/exact-11 boundary and the limited full-chain rebind scope were explicitly approved by the human maintainer.",
   "scope": {
     "allows": [
       "seal and commit/push the v0.4.19 source-rebound acknowledgment closure within Draft PR #20",
@@ -111,5 +111,5 @@
       "deploy or promote Production, run migrations, create a tag or Release, or submit IndexNow"
     ]
   },
-  "contentHash": "60adcbd55b0e360f5b743ddc3883fa681a93394d030f4176baa37fbf096cc4e2"
+  "contentHash": "98a76490c28f0b7cc6a0ec8ab655ab5b3612c8b2611da42ec5819c8bcba6e566"
 }

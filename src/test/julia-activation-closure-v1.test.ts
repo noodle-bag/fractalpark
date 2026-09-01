@@ -192,13 +192,13 @@ describe("julia activation closure v1", () => {
   it("pins all protected predecessor bytes to fixed SHA-256 values", () => {
     const expected = {
       "resources/formula-library/v1/julia-pixel-final-capability-census.v4.json":
-        "18ee3fbd7cc8ba456e6360bf84e2b4aa3a50f40518b05e376b034442ce2bdf4a",
+        "63a0b91ca852f815813b58f27b6c58d2600e9fb645f118613e3c42e425a180ab",
       "resources/formula-library/v1/julia-pixel-final-authority-manifest.v3.json":
-        "957ae8094979f52e326e07b09fd4a2e85a2746cd393ae567d67dd7ec5d7b36ee",
+        "b5a05c0d52301294d7a5709c068ba69ff4ec69d7dc03e5e1cbbece635759876c",
       "resources/formula-library/v1/julia-pixel-activation-handoff.v3.json":
-        "08cf80a3b2ca8812f3143d84fdac448e230e52929b121a9a49519c3d3c227fb7",
+        "a93eb5029ae448168118c77ca9f409ab8eb8f5d26da9c290624bf43ad29ebe7d",
       "resources/formula-library/v1/julia-pixel-final-recovery-audit.v3.json":
-        "1cdddf4e590cf48ab85c701bc7a260542ace765738029d40590f3de5a496fdf6",
+        "3cf95003c8ab1738b9ca94978ce9d6a2b1c064a81f0540daf3c6e4080dae74d9",
       "src/engine/formulas/v1/julia-final-recovery-v4.ts":
         "e93a570b806bb9316b56d1fd734dcb9344af75ae23d4f6536276e015e6da7f4f",
     };

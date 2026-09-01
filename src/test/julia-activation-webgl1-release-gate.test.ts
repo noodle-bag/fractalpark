@@ -5,6 +5,8 @@ import { join } from "node:path";
 import { describe, expect, it } from "vitest";
 
 import activationAsset from "../../resources/formula-library/v1/julia-runtime-activation.v1.json";
+import classicCorrectiveAsset from "../../resources/formula-library/v1/julia-classic-regression-corrective.v1.json";
+import classicRendererAsset from "../../resources/formula-library/v1/julia-classic-regression-renderer-evidence.v1.json";
 import mutableAsset from "../../resources/formula-library/v1/julia-mutable-state-adjudication.v1.json";
 import rendererV1Asset from "../../resources/formula-library/v1/julia-renderer-evidence.v1.json";
 import rendererV2Asset from "../../resources/formula-library/v1/julia-renderer-evidence.v2.json";
@@ -84,6 +86,18 @@ describe("Julia activation WebGL1 release gate", () => {
     expect(() =>
       validateReportRow(row, String(authority.formulaId), authority),
     ).toThrow("julia-activation-webgl1-release:report-row-renderer-contract");
+  });
+
+  it("binds every corrective renderer row to the current corrective receipt", () => {
+    const correctiveById = new Map(
+      classicCorrectiveAsset.rows.map((row) => [row.formulaId, row]),
+    );
+    expect(classicRendererAsset.rows).toHaveLength(classicCorrectiveAsset.rows.length);
+    for (const row of classicRendererAsset.rows) {
+      const corrective = correctiveById.get(row.formulaId);
+      expect(corrective).toBeDefined();
+      expect(row.candidateContentHash).toBe(corrective?.rowReceipt);
+    }
   });
 
   it("transforms both exact workers without writing repository source", () => {

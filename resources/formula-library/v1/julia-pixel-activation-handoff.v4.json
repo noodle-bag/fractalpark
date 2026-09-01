@@ -7,15 +7,15 @@
     "withdrawnBy": null
   },
   "handoffState": "activation-eligible",
-  "finalCensusContentHash": "054d97a7766dfbbbd890b53fa483a688662aac7e3c9e43e6adc7996ba31e33e6",
+  "finalCensusContentHash": "5303590a7dfb5b374a2028a5586e9cb8465913768423bc58e23f2bd99481e997",
   "finalCensusAuthorityState": "sealed",
-  "authorityManifestContentHash": "4182c79b90f6b3c98ef130fb8a40bfebe146a93a7f8bde85141828c447210357",
-  "predecessorHandoffContentHash": "b28dceaa3d1f074647f92b23269f272c998654b39197a3118af400c23f305821",
+  "authorityManifestContentHash": "b58d09dc1ea12dc9bef7a6f47cc6077c12657ad2b7a5b3e162088431c19c3c62",
+  "predecessorHandoffContentHash": "15ee0541f7e7e8287e8a7bb97d80aaec1cc7cc0e75998e0ab5bafa0fe3682fa6",
   "supportedClassicRowSetDigest": "e6b3eb7576cd9d752492b6e4f6e1017744d560ff1b3de1709c2ca3d29b669b96",
   "supportedClassicRowCount": 195,
   "regressionSetDigest": "edabd82d9fdc83d1173a01666fc1ed2a13a8039a193bfefe376a0ee96f8b236e",
   "regressionCount": 11,
-  "maintainerAcknowledgmentReceiptDigest": "60adcbd55b0e360f5b743ddc3883fa681a93394d030f4176baa37fbf096cc4e2",
+  "maintainerAcknowledgmentReceiptDigest": "98a76490c28f0b7cc6a0ec8ab655ab5b3612c8b2611da42ec5819c8bcba6e566",
   "consumerRowPredicate": "modeClass=classic-julia AND finalStatus=supported AND requiredReceipts=pass",
-  "contentHash": "05d2a9da07b1c4e8a195c873e43d3be32ee5cbdf5b620271e02537d780b28f38"
+  "contentHash": "4ed14d2740fb840a62b623a0a37b2ae14b8f2e0f922f1905bbc0247e8c6a0e0c"
 }

@@ -3,8 +3,8 @@
   "revision": 1,
   "status": "temporarily-accepted",
   "gateRevision": 7,
-  "profileArtifactContentHash": "434071e7c6bee7b583b7c6fce45a3f9ed05a643b7cf80ca58aac9b0a52c39a5f",
-  "scanReportContentHash": "93e43edad52440714554511ecf95371afbdca2fc531faa5f0e21a3c590fcc02b",
+  "profileArtifactContentHash": "0753ea05b6c0b3f8000c0be1f90cdb0cef8bff6970e1c6d0342e4b866e51aa42",
+  "scanReportContentHash": "91c233468df9da6dbda03061f9456709491dddbb2ebc989efd21e8ef0562301e",
   "scanRowCount": 534,
   "acceptedCount": 43,
   "rows": [
@@ -224,5 +224,5 @@
       "observedError": "record-preview-visual-gate-failed:f9a6409b-130b-5dd5-be4f-789927e47ad2:{\"luminanceRange\":12,\"distinctLuminanceValues\":13,\"edgeEnergy\":0.00051590505966554,\"opaqueFraction\":1,\"darkFraction\":0.13229166666666667,\"lightFraction\":0}"
     }
   ],
-  "contentHash": "7b8b7b691d76564aa552be6e2e6554e98a34e892c3686c6870bac83e19eaa88e"
+  "contentHash": "b622063870a6ad0e891b8eeeadfbd0f3ce97b10f757acc832f20ecb547760e60"
 }

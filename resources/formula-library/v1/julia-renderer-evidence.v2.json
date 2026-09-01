@@ -21,7 +21,7 @@
   },
   "candidateManifestContentHash": "2c2356b5d6b1b138308948e9a4c3357ea4374e57d881448de8746a93041ae531",
   "waveId": "2c2356b5d6b1b138308948e9a4c3357ea4374e57d881448de8746a93041ae531",
-  "preGpuContentHash": "6506a55afabba49069646d96446eb6e65ad5b1f6c125a884c29c0d922645595a",
+  "preGpuContentHash": "657812d646945a05b6a0b4e76d1e83c6a45839a63817bdf57dc9053973855af9",
   "integrationWitnessFormulaId": "00e14aa8-b766-54ea-a359-3f5d20d329b7",
   "integrationWitnessCount": 1,
   "traceContract": {
@@ -136,7 +136,7 @@
     "public/formula-library/v1/runtime/published/index.json": "e912b1cb4ad884a6a021fd0d2683495e8ea61911d05c4135fbecaa335cade742",
     "resources/formula-library/v1/julia-capability-census.v1.json": "93a57236600f9738dc854f53c6ee59e180d327d87b0995482c609355d70ab8f6",
     "resources/formula-library/v1/julia-pixel-candidate-manifest.v1.json": "2d4dcfc17ae71503d8b5fd89102e6373333c2e0c8fb70f4d56c7fc95376c2cf1",
-    "resources/formula-library/v1/julia-pixel-recovery-candidates.v1.json": "0364034bf97b3cf17943865437cd692cfd74563f60b4d987778578d7ae0dcd4c",
+    "resources/formula-library/v1/julia-pixel-recovery-candidates.v1.json": "dafffa6cdae3115337d88db2076fc07cabf04bc0213976aa3e2f44ff13f0b60c",
     "resources/formula-library/v1/julia-pixel-recovery-candidates/definitions/00134f5dd062fa048d91e09a44dbf767e3123201feec420b01be0c214d83840e.frm": "00134f5dd062fa048d91e09a44dbf767e3123201feec420b01be0c214d83840e",
     "resources/formula-library/v1/julia-pixel-recovery-candidates/definitions/00e9ecb446b0c0af153fc39b55f2b29cabd38cd26358eff356d1804f2cc5f8f1.frm": "00e9ecb446b0c0af153fc39b55f2b29cabd38cd26358eff356d1804f2cc5f8f1",
     "resources/formula-library/v1/julia-pixel-recovery-candidates/definitions/00ed579bc88e73992f8cedea9c3a1caa5ae3a6ab9bef74419cc85ad2e98a8475.frm": "00ed579bc88e73992f8cedea9c3a1caa5ae3a6ab9bef74419cc85ad2e98a8475",
@@ -293,7 +293,7 @@
     "resources/formula-library/v1/julia-pixel-recovery-candidates/definitions/fc31fb9c433d3fbdabd7de6ea3d056871f3784966d904027cb203c3e5a2436c1.frm": "fc31fb9c433d3fbdabd7de6ea3d056871f3784966d904027cb203c3e5a2436c1",
     "resources/formula-library/v1/julia-pixel-recovery-candidates/definitions/fd5e06ad5ab04e1a0351b5cb00dfa96e6fb35053a4bffe7f61be63db9c75a654.frm": "fd5e06ad5ab04e1a0351b5cb00dfa96e6fb35053a4bffe7f61be63db9c75a654",
     "resources/formula-library/v1/julia-pixel-recovery-contract.v1.json": "f03cf73047c37ed0baf7b61f615aef7cf316ba11a7f173c28c224fc14ec2634c",
-    "resources/formula-library/v1/julia-pre-gpu-recovery-census.v2.json": "2d73ed87fd468174631e9ca5621564d515115310202a4a94ee22461792f67331",
+    "resources/formula-library/v1/julia-pre-gpu-recovery-census.v2.json": "d71404df52a111046425e44f4fc34ccb0687c610558161a430987f04150bc01f",
     "scripts/build-julia-pixel-holdout-attempt-manifest.ts": "9c8201f5fa61fee2f55ea13fc33f2e6d905d57cb2c31c43207b00446fa83dc78",
     "scripts/build-julia-renderer-evidence-v2.ts": "568c13db58378277886a324aea313a7751cf05118ca6660ab84b428975806476",
     "scripts/lib/julia-private-evidence-root.ts": "e41dd0dcc02ce10198f1fe2e76412bc3008be7ab5b03bb9a49970f85dda6498e",
@@ -6398,5 +6398,5 @@
       "relativeTolerance": 0.005
     }
   ],
-  "contentHash": "56a6ecb4874d9c940b86cd3be2e208dee2e64d5594596b90cbd20ec58e312ee7"
+  "contentHash": "a26792401a945c388c8e22818b2d10bdf2e01dc1071643ca00dad49c87903b96"
 }
