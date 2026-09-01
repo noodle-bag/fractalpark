@@ -272,11 +272,17 @@ async function main(): Promise<void> {
       }
     }
   }
-  writeFileSync(
-    join(IN as string, DRY_RUN ? 'uuid-remap.dryrun.json' : 'uuid-remap.json'),
-    JSON.stringify(Object.fromEntries(remap), null, 2),
-  );
-  console.log(`uuid remap: ${remap.size} identities re-keyed`);
+  if (DRY_RUN) {
+    console.log(
+      'uuid remap: unavailable in dry run; target identities are not queried or created',
+    );
+  } else {
+    writeFileSync(
+      join(IN as string, 'uuid-remap.json'),
+      JSON.stringify(Object.fromEntries(remap), null, 2),
+    );
+    console.log(`uuid remap: ${remap.size} identities re-keyed`);
+  }
 
   // FK order: profiles -> drafts -> formulas -> formula revisions ->
   // publications -> operations -> jobs.

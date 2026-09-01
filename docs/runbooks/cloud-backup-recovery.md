@@ -65,10 +65,12 @@ key) and re-upload verbatim after.
 ```bash
 SUPABASE_URL=http://127.0.0.1:54321 SUPABASE_SERVICE_ROLE_KEY=... \
   node --import tsx scripts/restore-cloud.ts --in backups/<dir>
-# Add --dry-run first on any real target: prints the remap plan, writes nothing.
+# Add --dry-run first: validates the manifest and prints the row plan without
+# querying or mutating the target. UUID remaps are known only during restore.
 ```
 
-The script imports auth identities first (GoTrue admin; passwordless
+Dry-run does not contact the target or write a remap file. A real restore
+imports auth identities first (GoTrue admin; passwordless
 project — users sign in with a fresh OTP afterwards), emits
 `uuid-remap.json` for every identity that was re-keyed, and rewrites every
 `owner_id`/`user_id`/`created_by` reference through the remap before

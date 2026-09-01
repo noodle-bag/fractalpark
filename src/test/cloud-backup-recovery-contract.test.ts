@@ -1,5 +1,5 @@
 import { createHash } from 'node:crypto';
-import { mkdtempSync, rmSync, writeFileSync } from 'node:fs';
+import { existsSync, mkdtempSync, rmSync, writeFileSync } from 'node:fs';
 import { tmpdir } from 'node:os';
 import { join } from 'node:path';
 import { spawnSync } from 'node:child_process';
@@ -163,14 +163,21 @@ describe('cloud backup and restore durable-table contract', () => {
   });
 
   it('restores a pre-lifecycle snapshot without a revisions payload', () => {
-    const result = restoreDryRun(
-      writeBackupFixture({ lifecycleMigration: false, includeRevisions: false }),
-    );
+    const directory = writeBackupFixture({
+      lifecycleMigration: false,
+      includeRevisions: false,
+    });
+    const result = restoreDryRun(directory);
 
     expect(result.status, result.stderr).toBe(0);
     expect(result.stdout).toContain(
       'skip custom_formula_revisions: pre-lifecycle backup',
     );
+    expect(result.stdout).toContain(
+      'uuid remap: unavailable in dry run; target identities are not queried or created',
+    );
+    expect(existsSync(join(directory, 'uuid-remap.dryrun.json'))).toBe(false);
+    expect(existsSync(join(directory, 'uuid-remap.json'))).toBe(false);
   });
 
   it('rejects a lifecycle snapshot that omits its revisions payload', () => {
