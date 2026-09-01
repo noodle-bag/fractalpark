@@ -47,6 +47,7 @@ const FUNCTION_RETURN_TYPES: Record<string, VarType> = {
   'imag': { kind: 'real' },
   'conj': { kind: 'complex' },
   'flip': { kind: 'complex' },
+  'identity': { kind: 'complex' },
   'sqr': { kind: 'complex' },
   'recip': { kind: 'complex' },
   'atan2': { kind: 'real' },

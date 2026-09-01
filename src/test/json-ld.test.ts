@@ -1,5 +1,7 @@
 import { describe, expect, it } from 'vitest';
 import {
+  buildFormulaRecordJsonLdV1,
+  buildFormulaTeachingJsonLdV1,
   buildSoftwareApplicationJsonLd,
   renderJsonLd,
   websiteJsonLd,
@@ -25,12 +27,22 @@ describe('SoftwareApplication JSON-LD builder', () => {
   it('draws feature facts from the public-project contract', () => {
     const { facts } = PUBLIC_PROJECT;
     const features = buildSoftwareApplicationJsonLd().featureList.join('\n');
-    expect(features).toContain(`${facts.formulaCount} GLSL fractal formulas`);
+    expect(features).toContain(
+      `${facts.formulaCount} published Standard Definitions`,
+    );
+    expect(features).toContain(
+      `${facts.classicFormulaCount} also belong to the Classic collection`,
+    );
+    expect(features).toContain('Julia mode where supported');
     expect(features).toContain(`${facts.coloringModeCount} coloring modes`);
     expect(features).toContain(`${facts.transformCount} UV transform plugins`);
     expect(features).toContain(`${facts.formulaGuideCount} in-depth Formula Guides`);
     expect(features).toContain(`${facts.maxExportScale}×`);
+    expect(features).toContain('tested Classic-compatible FRM subset');
+    expect(features).toContain('private cloud library with email sign-in');
     expect(features).not.toMatch(/\b7 coloring modes\b/);
+    expect(features).not.toContain('Fractint-compatible FRM formula language');
+    expect(features).not.toContain('Local on-device artwork storage');
   });
 
   it('defaults to the approved tagline and accepts localized descriptions', () => {
@@ -59,6 +71,56 @@ describe('SoftwareApplication JSON-LD builder', () => {
     ) as Record<string, unknown>;
     expect(parsed['@context']).toBe('https://schema.org');
     expect(parsed['@id']).toBe(`${SITE.url}/#software`);
+  });
+});
+
+describe('Formula Record JSON-LD', () => {
+  it('binds the WebPage and DefinedTerm to the same record master', () => {
+    const url = `${SITE.url}/en/formulas/00e14aa8-b766-54ea-a359-3f5d20d329b7`;
+    const image = {
+      url: `${SITE.url}/formula-library/v1/record-previews/example.webp`,
+      width: 1200,
+      height: 750,
+    };
+    const jsonLd = buildFormulaRecordJsonLdV1({
+      url,
+      directoryUrl: `${SITE.url}/en/formulas/directory`,
+      locale: 'en',
+      formulaId: '00e14aa8-b766-54ea-a359-3f5d20d329b7',
+      canonicalName: 'mandelbrot',
+      name: 'Mandelbrot',
+      description: 'Formula Record',
+      image,
+    });
+    expect(jsonLd['@graph'][0].primaryImageOfPage).toEqual({
+      '@type': 'ImageObject',
+      ...image,
+    });
+    expect(jsonLd['@graph'][1].image).toEqual({
+      '@type': 'ImageObject',
+      ...image,
+    });
+  });
+});
+
+describe('Formula teaching JSON-LD', () => {
+  it('uses canonical locale URLs, BCP 47 language, and reviewed learning goals', () => {
+    const url = `${SITE.url}/zh/formulas/00e14aa8-b766-54ea-a359-3f5d20d329b7`;
+    const jsonLd = buildFormulaTeachingJsonLdV1({
+      url,
+      locale: 'zh',
+      formulaId: '00e14aa8-b766-54ea-a359-3f5d20d329b7',
+      canonicalName: 'mandelbrot',
+      name: '曼德勃罗教学页',
+      description: '已审校说明',
+    });
+    expect(jsonLd['@id']).toBe(`${url}#learning-resource`);
+    expect(jsonLd['@type']).toEqual(['WebPage', 'LearningResource']);
+    expect(jsonLd.inLanguage).toBe('zh-CN');
+    expect(jsonLd.url).toBe(url);
+    expect(jsonLd.description).toBe('已审校说明');
+    expect(jsonLd.isPartOf['@id']).toBe(`${SITE.url}/#website`);
+    expect(JSON.parse(renderJsonLd(jsonLd))).toEqual(jsonLd);
   });
 });
 

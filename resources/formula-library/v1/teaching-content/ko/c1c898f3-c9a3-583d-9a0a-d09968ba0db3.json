@@ -1,0 +1,36 @@
+{
+  "schema": "fractalpark-teaching-locale/v1",
+  "formulaId": "c1c898f3-c9a3-583d-9a0a-d09968ba0db3",
+  "locale": "ko",
+  "sourceRevision": "a265807bb53747d256b0cbfee89991527a72e8bb9ceac9a41888c3ad1419448e",
+  "semanticHash": "1316ce063761dd9a4c2c2a043c2a44723021e369cd01f42ae89454251079349f",
+  "englishContentHash": "8da88c667957f2c7fa532fe359a78689ecd583ee9a8024a1a18f57c38b902838",
+  "overview": "lambda는 고정된 FRM-like/1 정의로 배워요. actualZ = z + (0.5, 0), oneMinusZ = (1, 0) - actualZ, 이어서 z = c * (actualZ * oneMinusZ)를 따라가고 이미지를 보장으로 여기지 않아요. 고정 프로필은 하나의 구체적인 관찰 설정만 제공해요.",
+  "sourceWalkthrough": {
+    "c1c898f3-c9a3-583d-9a0a-d09968ba0db3:a265807bb53747d256b0cbfee89991527a72e8bb9ceac9a41888c3ad1419448e:start-branch": "lambda에서 이 노드는 다음 연산을 실행해요: ismand이면 z = 0; 아니면 z = pixel.",
+    "c1c898f3-c9a3-583d-9a0a-d09968ba0db3:a265807bb53747d256b0cbfee89991527a72e8bb9ceac9a41888c3ad1419448e:shift": "lambda에서 이 노드는 다음 연산을 실행해요: actualZ = z + (0.5, 0).",
+    "c1c898f3-c9a3-583d-9a0a-d09968ba0db3:a265807bb53747d256b0cbfee89991527a72e8bb9ceac9a41888c3ad1419448e:product-update": "lambda에서 이 노드는 다음 연산을 실행해요: z = c * (actualZ * oneMinusZ).",
+    "c1c898f3-c9a3-583d-9a0a-d09968ba0db3:a265807bb53747d256b0cbfee89991527a72e8bb9ceac9a41888c3ad1419448e:termination": "lambda에서 이 노드는 다음 연산을 실행해요: |z| <= 256."
+  },
+  "syntaxFeatures": {
+    "state-flow": "구체적인 상태 흐름은 ismand 선택이 z의 초기값을 정하고, 이어서 actualZ와 oneMinusZ가 곱셈 갱신에 쓰여요.",
+    "stopping-test": "종료 검사는 |z| <= 256만 판단하며 상태에 값을 대입하지 않아요."
+  },
+  "parameterExperiment": {
+    "steps": [
+      "다른 프로필 제어를 고정하고 lambda을 48회 반복으로 실행한 결과를 기록하세요.",
+      "고정 프로필의 96회 반복 실행과 비교하여 차이를 기록하세요."
+    ],
+    "expectedObservation": "기준 실행과 비교해 actualZ = z + (0.5, 0), oneMinusZ = (1, 0) - actualZ, 이어서 z = c * (actualZ * oneMinusZ)가 보이는 결과나 |z| <= 256 종료 검사에 차이를 만드는지 기록하세요. 정의가 차이를 보장하지는 않아요."
+  },
+  "exercise": {
+    "prompt": "lambda의 주석을 추적하고 표시된 연산에서 actualZ = z + (0.5, 0), oneMinusZ = (1, 0) - actualZ, 이어서 z = c * (actualZ * oneMinusZ)가 어떻게 실행되는지 설명하세요.",
+    "completionCheck": "답에는 4개 주석의 설명, actualZ = z + (0.5, 0), oneMinusZ = (1, 0) - actualZ, 이어서 z = c * (actualZ * oneMinusZ)의 식별, 그리고 |z| <= 256가 대입이 아닌 종료 검사라는 구분이 있어요.",
+    "hint": "상태 흐름에서는 ismand이면: z = 0; 아니면 z = pixel → actualZ = z + (0.5, 0) → z = c * (actualZ * oneMinusZ) 순서로 연산하고 결과를 다음 단계에 넘겨요."
+  },
+  "factsPresentation": {
+    "provenanceLead": "출처: 고정된 실행 정의와 공개 결정이에요.",
+    "rightsLead": "권리 정보는 영어 단원의 고정된 결정을 따라요."
+  },
+  "contentHash": "39aff3e582708d6467260fb6bf57c2a720238fd24625230ce3f41a87d17bb744"
+}

@@ -1,0 +1,106 @@
+{
+  "schema": "fractalpark-standard-library-performance-gates/v1",
+  "decisionRevision": 4,
+  "publicationDecisionsContentHash": "cac35a05d2d0c219b4f5ac00f3dea5b5fbb2b9c6b2fc15ea3383ef0f62d6031d",
+  "counts": {
+    "decisions": 677,
+    "published": 534,
+    "held": 143,
+    "excluded": 0,
+    "initialLibraryRows": 48
+  },
+  "measurementContract": {
+    "libraryOpenSamples": 20,
+    "libraryHeapDeltaSamples": 20,
+    "previewDecodeSamples": 20,
+    "coldSelectionSamples": 20,
+    "hotSelectionSamples": 30,
+    "facetPaintSamples": 50,
+    "selectedLoadingSamples": 50,
+    "facetPercentile": 75,
+    "framePercentile": 95,
+    "responsiveWidths": [320, 390],
+    "coldCacheMode": "isolated-browser-context-per-sample",
+    "hotCacheMode": "preloaded-definition-and-compiled-program",
+    "requiredTuple": [
+      "gitCommit",
+      "targetUrl",
+      "sourceBindings",
+      "environment",
+      "samples"
+    ]
+  },
+  "budgets": {
+    "staticAssets": {
+      "publishedIndexBytes": 850000,
+      "publishedManifestBytes": 1024,
+      "definitionsTotalBytes": 200000,
+      "definitionMaxBytes": 1024,
+      "previewManifestBytes": 300000,
+      "previewsTotalBytes": 1800000,
+      "previewMaxBytes": 10000,
+      "nativeDefinitionOverlapCount": 89,
+      "nativeDefinitionOverlapSha256": "5f53f89a1a34767cafaff8111da18f5ccc19693f6f98d5a465dc7ec0bd7550c7"
+    },
+    "browser": {
+      "libraryOpenP95Ms": 1000,
+      "libraryDialogDescendants": 256,
+      "libraryHeapDeltaP95Bytes": 4194304,
+      "publishedIndexTransferBytes": 100000,
+      "facetPaintP75Ms": 100,
+      "selectedLoadingMaxMs": 100,
+      "previewDecodeP95Ms": 250,
+      "initialFormulaAssetRequests": 0,
+      "hotFormulaAssetRequests": 0,
+      "coldSelectionToCorrectFrameDesktopP95Ms": 2000,
+      "coldSelectionToCorrectFrameMobileP95Ms": 3000,
+      "hotSelectionToCorrectFrameP95Ms": 300
+    },
+    "build": {
+      "wallMs": 240000,
+      "maxRssBytes": 3221225472,
+      "generatedPages": 832
+    }
+  },
+  "releaseDevices": [
+    "desktop-chromium-real-gpu",
+    "desktop-firefox-real-gpu",
+    "iphone-safari-touch",
+    "ipad-safari-touch",
+    "android-chrome-touch",
+    "screen-reader-keyboard"
+  ],
+  "rollbackContract": {
+    "requiredDeployedSteps": [
+      "backup-current",
+      "disable-writer",
+      "disable-feature",
+      "activate-lkg-runtime",
+      "verify-reader-floor",
+      "verify-alias-resolver",
+      "restore-current"
+    ]
+  },
+  "accessibilityContract": {
+    "requiredScreenReaderTasks": [
+      "open-close-focus",
+      "loading-announcement",
+      "selection-busy",
+      "failure-alert-lkg",
+      "keyboard-pagination-facets"
+    ]
+  },
+  "deviceTaskContract": {
+    "desktopPerformanceTasks": [
+      "library-walking-skeleton",
+      "responsive-320",
+      "responsive-390",
+      "gpu-recovery"
+    ],
+    "touchPerformanceTasks": [
+      "library-walking-skeleton",
+      "touch-facet-selection",
+      "gpu-recovery"
+    ]
+  }
+}

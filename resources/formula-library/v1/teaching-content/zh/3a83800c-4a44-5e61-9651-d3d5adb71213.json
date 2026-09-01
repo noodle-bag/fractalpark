@@ -1,0 +1,33 @@
+{
+  "schema": "fractalpark-teaching-locale/v1",
+  "formulaId": "3a83800c-4a44-5e61-9651-d3d5adb71213",
+  "locale": "zh",
+  "sourceRevision": "12a2fd990373fc6f7467674871cbd2c82c78ec9b8354a805b442ef4c6ef58b06",
+  "semanticHash": "491ebbc691a954b85f04cbbf05afa44e877026f31cb3eaa403db6dbf61fd435e",
+  "englishContentHash": "3a4a36bf448f739d13d4ec8eec66cb48af1d5ba38ec55bd66e62918caf6236ce",
+  "localizedName": "perpendicularTricorn",
+  "overview": "在 FRM-like/1 中，perpendicularTricorn 按源代码的初始化、循环和退出测试运行。请把每一步当作对当前状态的明确操作，而不是从名称推测规则。固定配置让你能观察同一迭代过程。",
+  "sourceWalkthrough": {
+    "3a83800c-4a44-5e61-9651-d3d5adb71213:12a2fd990373fc6f7467674871cbd2c82c78ec9b8354a805b442ef4c6ef58b06:init": "初始化节点执行： `if ismand`",
+    "3a83800c-4a44-5e61-9651-d3d5adb71213:12a2fd990373fc6f7467674871cbd2c82c78ec9b8354a805b442ef4c6ef58b06:loop": "循环节点执行： `p = (0, 0)`",
+    "3a83800c-4a44-5e61-9651-d3d5adb71213:12a2fd990373fc6f7467674871cbd2c82c78ec9b8354a805b442ef4c6ef58b06:bailout": "终止测试为： `|z| <= 256`"
+  },
+  "syntaxFeatures": {
+    "source-sequence": "此结构把所引用的源代码步骤组织为一个可检查的顺序。 3a83800c-4a44-5e61-9651-d3d5adb71213:12a2fd990373fc6f7467674871cbd2c82c78ec9b8354a805b442ef4c6ef58b06:init, 3a83800c-4a44-5e61-9651-d3d5adb71213:12a2fd990373fc6f7467674871cbd2c82c78ec9b8354a805b442ef4c6ef58b06:loop, 3a83800c-4a44-5e61-9651-d3d5adb71213:12a2fd990373fc6f7467674871cbd2c82c78ec9b8354a805b442ef4c6ef58b06:bailout"
+  },
+  "parameterExperiment": {
+    "steps": [
+      "使用固定配置：mode parameter-plane; center (-0.5, 0); zoom 0.4; rotation 0; iterations 96。运行一次并记录结果；再以同一配置重复运行。"
+    ],
+    "expectedObservation": "比较两次运行，记录`p = (0, 0)`是否得到相同的可见结果和迭代行为。"
+  },
+  "exercise": {
+    "prompt": "找出与`p = (0, 0)`有关的源注释，并说明初始化、循环和终止测试的顺序。",
+    "completionCheck": "完成时列出所引用的三个注释键，并按`p = (0, 0)`对应的初始化、循环和终止顺序排列。"
+  },
+  "factsPresentation": {
+    "provenanceLead": "来源：",
+    "rightsLead": "权利："
+  },
+  "contentHash": "bb3cee195021fc82a3bbd8ebc92ca02ccb511cae8a1ef0b7b6c85d81fd9fab42"
+}

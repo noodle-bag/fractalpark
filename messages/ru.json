@@ -256,7 +256,8 @@
       "breadcrumb": "Формулы",
       "eyebrow": "Атлас формул",
       "title": "Атлас формул",
-      "intro": "Изучите полный каталог FractalPark: 94 встроенные формулы в семи семействах. Начните с канонического вида, пройдите один из 21 подробного профиля с руководством или научитесь писать собственные формулы на FRM.",
+      "publishedIntro": "Изучите 534 опубликованных Standard Definition из семи структурных семейств; 94 из них также входят в коллекцию Classic. Открывайте канонические Formula Record, перейдите к одному из 21 подробного профиля руководства или разберитесь, как работает исходный код FRM, и выберите подходящую поверхность разработки.",
+      "intro": "Изучите 534 опубликованных Standard Definition из семи структурных семейств; 94 из них также входят в коллекцию Classic. Открывайте канонические Formula Record, перейдите к одному из 21 подробного профиля руководства или разберитесь, как работает исходный код FRM, и выберите подходящую поверхность разработки.",
       "stats": {
         "formulas": "Формулы",
         "families": "Семейства",
@@ -265,7 +266,7 @@
       "capabilities": {
         "eyebrow": "Создано для исследования",
         "title": "Один каталог — множество способов творить",
-        "intro": "Каждая запись основана на том же каталоге формул и утверждённом состоянии по умолчанию, которые использует интерактивный Обзор.",
+        "intro": "Каждая опубликованная запись берётся из того же версионируемого каталога Formula Record, который использует Standard Library.",
         "items": {
           "realtime": {
             "title": "WebGL в реальном времени",
@@ -277,14 +278,15 @@
           },
           "server": {
             "title": "Каталог, доступный серверу",
-            "description": "Все семь семейств и 94 раздела остаются доступными в исходном HTML без поиска и фильтрации на стороне клиента."
+            "description": "Все 534 опубликованных Formula Record и их категории доступны в HTML, отрисованном на сервере."
           }
         }
       },
       "families": {
-        "eyebrow": "Семь семейств",
-        "title": "Выберите математический характер",
-        "intro": "Семейства группируют формулы по структуре итераций и визуальному поведению. Количество берётся непосредственно из текущего каталога встроенных формул.",
+        "eyebrow": "Семь структурных семейств",
+        "title": "Просмотр по математической структуре",
+        "intro": "Семь структурных семейств включают каждую опубликованную формулу ровно один раз. Classic — отдельная пересекающаяся коллекция, поэтому её 94 формулы также легко найти.",
+        "browse": "Открыть категорию",
         "descriptions": {
           "classic": "Квадратичные, полиномиальные, Жюлиа, мультикорн и другие базовые формулы времени убегания.",
           "burning-ship": "Свёрнутые отображения абсолютной величины с острыми корпусами, гребнями и пламеподобными границами.",
@@ -297,8 +299,8 @@
       },
       "frm": {
         "eyebrow": "Создайте свою",
-        "title": "Изучайте и пишите формулы на FRM",
-        "description": "FRM — это проверенный текстовый способ создания формул в FractalPark. Прочитайте руководство по совместимости, изучите примеры, проверенные компиляцией, затем напишите и просмотрите формулу в отдельном редакторе.",
+        "title": "Изучите FRM и Formula Editor",
+        "description": "Опубликованные Standard Definition используют закреплённый исходный код FRM-like v1. Отдельный Editor использует контракт исходного кода, совместимый с Classic; Guide объясняет оба пути и содержит примеры для Editor, проверенные компиляцией.",
         "learn": "Изучить FRM",
         "openEditor": "Открыть редактор формул"
       },
@@ -311,17 +313,21 @@
       },
       "directory": {
         "eyebrow": "Полный каталог",
-        "title": "Все 94 формулы",
-        "intro": "Полный каталог сгруппирован по семействам и рендерится на сервере. Каждая ссылка открывает формулу с её каноническим локализованным состоянием в Обзоре.",
+        "title": "Все 534 опубликованные формулы",
+        "intro": "Опубликованный каталог сгруппирован по структурным семействам и рендерится на сервере. Каждая ссылка открывает каноническую Formula Record.",
         "familyCount": "{count, plural, one {# формула} few {# формулы} many {# формул} other {# формул}}",
         "backToFamilies": "Обзор семейства",
         "guideBadge": "Руководство"
       },
       "cta": {
-        "title": "Начните с формулы или напишите свою",
-        "description": "Используйте Обзор для встроенных формул или откройте отдельный редактор FRM, когда захотите самостоятельно определить итерацию.",
+        "title": "Начните с формулы или используйте Editor, совместимый с Classic",
+        "description": "Используйте Explorer для встроенных формул или откройте отдельный FRM Editor для поддерживаемого подмножества пользовательских итераций, совместимого с Classic.",
         "explore": "Открыть Обзор",
         "editor": "Открыть редактор формул"
+      },
+      "standardDirectory": {
+        "cta": "Открыть стандартный каталог",
+        "hint": "Сейчас опубликовано 534 стандартных определений."
       }
     },
     "guide": {
@@ -356,10 +362,28 @@
         "cta": "Создать ремикс в Обзоре"
       }
     },
+    "teaching": {
+      "fallbackNotice": "Запрошенный перевод недоступен, поэтому показан проверенный учебный материал на английском языке. Эта резервная страница исключена из индексации.",
+      "sections": {
+        "overview": "Обзор материала",
+        "sourceWalkthrough": "Разбор исходного кода",
+        "syntaxFeatures": "Синтаксические особенности",
+        "parameterExperiment": "Эксперимент с параметрами",
+        "exercise": "Упражнение",
+        "provenance": "Источники и права"
+      },
+      "labels": {
+        "steps": "Шаги",
+        "expectedObservation": "Что наблюдать",
+        "safetyNote": "Примечание о безопасности",
+        "completionCheck": "Проверка выполнения",
+        "hint": "Подсказка"
+      }
+    },
     "frmGuide": {
-      "eyebrow": "Язык формул FRM",
-      "title": "Создавайте фракталы на FRM",
-      "intro": "Изучите проверенное подмножество FRM FractalPark, поймите, как исходный код превращается в GPU-шейдер, и соберите три рабочие формулы на тех же примерах, что использует редактор.",
+      "eyebrow": "Язык FRM и совместимость",
+      "title": "Изучите FRM в FractalPark",
+      "intro": "Узнайте, как канонические Definition FRM-like v1 обеспечивают опубликованные формулы Standard, а затем используйте отдельные примеры Editor, совместимые с Classic, не смешивая два контракта исходного кода.",
       "contentsLabel": "На этой странице",
       "copy": {
         "copy": "Копировать",
@@ -370,15 +394,15 @@
         "what-is-frm": {
           "title": "Что такое FRM",
           "body": [
-            "FRM — это компактный текстовый способ описания итеративного фрактала. Формула задаёт начальное состояние, вычисление, повторяемое для каждой орбиты, и условие, определяющее, продолжается ли итерация.",
-            "Формат вырос из экосистемы Fractint, где файлы формул позволяли обмениваться экспериментами без пересборки программы рендеринга. FractalPark переносит эту идею создания формул в браузерный рабочий процесс, документируя собственное проверенное подмножество вместо заявления о полной совместимости."
+            "FractalPark FRM-like v1 — канонический типизированный язык исходного кода для опубликованных Standard Definition. Definition закрепляет язык, стандартную библиотеку, NumericProfile, параметры, начальное состояние, повторяющийся шаг орбиты и предикат продолжения итерации.",
+            "Classic .frm вырос из экосистемы Fractint и остаётся контрактом исходного кода для отдельного Editor, совместимого с Classic, и конвейера import. FractalPark отдельно сканирует и диагностирует этот диалект; исходный код Classic и frmSemanticsVersion 1 или 2 не являются альтернативной записью канонического FRM-like v1."
           ],
           "historyPrefix": "Об истоках и истории более широкого проекта см.",
           "historyLink": "сайт проекта Fractint"
         },
         "support": {
           "title": "Поддержка FRM в FractalPark",
-          "intro": "FractalPark токенизирует, разбирает, проверяет и компилирует продуманное подмножество FRM. Таблица разделяет конструкции, которые работают напрямую, конструкции с документированной семантикой FractalPark и конструкции, которые текущий рабочий процесс не может сохранить.",
+          "intro": "Эта таблица совместимости описывает Editor и путь import, совместимые с Classic. Канонические опубликованные Standard Definition используют отдельно версионируемые parser FRM-like v1, типизированный IR, backend standard32 и фиксированную Safety Envelope.",
           "table": {
             "level": "Уровень",
             "meaning": "Значение",
@@ -418,10 +442,10 @@
             "preprocessor": "возможности препроцессора",
             "rejected-constructs": "любые конструкции, отклоняемые текущим конвейером компиляции"
           },
-          "disclaimer": "Это проверенный базовый уровень совместимости, а не заявление о полной совместимости с Fractint. Когда меняется компилятор, эта матрица и её тесты должны меняться вместе.",
+          "disclaimer": "Это проверенная базовая совместимость Classic, а не заявление о полной совместимости с Fractint. Её следует отличать от реестра публикаций Standard.",
           "verified": {
             "title": "Проверенная совместимость",
-            "intro": "Эти показатели возможностей взяты из версионированного манифеста: 588 целевых записей включают 579 прохождений strict-v2 и 9 документированных отступлений; 117 отдельных записей исключены по стабильным причинам.",
+            "intro": "Эти показатели возможностей Classic-import взяты из версионированного манифеста совместимости: 588 целевых записей состоят из 579 прохождений strict-v2 и 9 документированных исключений; 117 отдельных записей исключены по стабильным причинам. В эти числа не входят опубликованные Definition FRM-like v1.",
             "stats": {
               "builtins": "Встроенные функции",
               "descriptors": "Типы дескрипторов bailout",
@@ -441,7 +465,7 @@
         },
         "anatomy": {
           "title": "Анатомия формулы",
-          "intro": "FRM-формула FractalPark состоит из одного именованного объявления и трёх явных секций. Вместе они определяют переход состояния для каждого пикселя.",
+          "intro": "Канонический FRM-like v1 и текущие примеры Classic Editor разделяют именованную формулу и идеи init, loop и bailout, но их полные грамматики различаются. В v1 семантические директивы и необязательный типизированный раздел parameters также являются частью Definition.",
           "parts": {
             "init": "Выполняется один раз для пикселя. Здесь задайте начальное значение орбиты и вспомогательные переменные.",
             "loop": "Выполняется один раз за итерацию. Обновите z и любое состояние, необходимое следующей итерации.",
@@ -451,7 +475,7 @@
         },
         "syntax": {
           "title": "Руководство по синтаксису",
-          "intro": "Язык намеренно остаётся небольшим: выражения описывают комплексную арифметику, операторы обновляют состояние орбиты, а управляющие конструкции выбирают между обновлениями.",
+          "intro": "Обе поверхности намеренно остаются небольшими. Приведённые ниже сводки описывают общие понятия; для канонических директив и типизированных параметров используйте действие Source опубликованного Formula Record, а для исходного кода Classic — диагностику Editor.",
           "topics": {
             "sections": {
               "title": "Объявление и секции",
@@ -481,7 +505,7 @@
         },
         "pipeline": {
           "title": "Конвейер: FRM → AST → GLSL",
-          "intro": "FractalPark не вставляет текст FRM в шейдер. Он прогоняет исходный код через поэтапный компилятор, чтобы синтаксис, смысл, сгенерированный код и диагностика оставались связанными.",
+          "intro": "FractalPark никогда не вставляет исходный текст в шейдер. Канонический исходный код v1 проходит через типизированный parser и backend CPU/GLSL; исходный код Classic Editor проходит через scanner, frontend выбранной записи, каноническую модель формулы и plugin compiler.",
           "steps": {
             "source": {
               "title": "Исходный код FRM",
@@ -508,11 +532,11 @@
               "body": "Успешная компиляция превращается в тот же контракт плагина формулы, который используют рендерер и система сборки шейдеров."
             }
           },
-          "note": "Общий контракт компилятора держит Обзор, отдельный редактор, сохранённые пользовательские формулы, примеры и тесты на одном пути реализации."
+          "note": "У каждого контракта исходного кода есть собственный путь реализации. Опубликованная среда выполнения Standard использует FRM-like v1; отдельный Editor и текущие примеры пользовательских формул используют путь, совместимый с Classic. Ни один из них не переключается на другой незаметно."
         },
         "tutorials": {
           "title": "Пошаговые уроки",
-          "intro": "Эти примеры идут от простейшей квадратичной формулы к параметрам и обратной связи с состоянием. Каждый блок исходного кода взят непосредственно из общего реестра примеров и компилируется во время тестов.",
+          "intro": "Это примеры Editor, совместимые с Classic, а не канонические Definition FRM-like v1. Они переходят от небольшой квадратичной формулы к параметрам и обратной связи с состоянием; каждый блок исходного кода взят из общего реестра Editor и компилируется во время тестов.",
           "lesson": "Урок {number}",
           "openInEditor": "Открыть во FRM Editor",
           "goals": {
@@ -520,7 +544,7 @@
             "parameter-drift": "В центре внимания: слоты параметров p1 и p2, комплексный литерал и cabs(z) как явная функция величины.",
             "orbit-echo": "В центре внимания: zPrev как предыдущее состояние орбиты. Обратная связь добавляет память без введения второй вручную управляемой переменной состояния."
           },
-          "editorNote": "Редактор FRM открывает эти же примеры, проверенные компиляцией, по стабильному ID. Исходный код формулы остаётся только на текущей вкладке, пока вы не сохраните его в облачной библиотеке формул, и никогда не встраивается в URL."
+          "editorNote": "Отдельный FRM Editor открывает эти примеры, совместимые с Classic и проверенные компиляцией, по стабильному ID. Исходный код формулы остаётся на текущей вкладке, пока вы не сохраните его в облачной библиотеке, и никогда не встраивается в URL. Это не активирует import или writers канонического v1."
         },
         "diagnostics": {
           "title": "Ошибки и диагностика",
@@ -550,7 +574,7 @@
           "exploreTitle": "Посмотрите на рендерер в контексте",
           "exploreBody": "Откройте Обзор, чтобы сравнить поведение встроенных формул, раскраску, трансформации, анимацию и элементы управления экспортом, прежде чем писать собственную формулу.",
           "exploreCta": "Открыть Обзор",
-          "editorNote": "Используйте специальный редактор FRM, чтобы компилировать, просматривать, импортировать и скачивать формулы; войдите, чтобы сохранить формулу в облачной библиотеке, прежде чем передать её в Обзор.",
+          "editorNote": "Используйте специальный FRM Editor для текущего рабочего процесса компиляции, предпросмотра, импорта и загрузки, совместимого с Classic. Он не принимает канонический исходный код FRM-like v1; изучайте опубликованный исходный код v1 через Formula Record и используйте действия Open или Remix этого Record, чтобы его запустить.",
           "referencesTitle": "Ссылки",
           "referencesIntro": "Исторический контекст и детали реализации указаны отдельными ссылками, чтобы руководство могло отличать наследие Fractint от текущего контракта компилятора FractalPark.",
           "references": {
@@ -641,25 +665,25 @@
         "imageCaption": "Карта FractalPark, вдохновлённая Mandelbox: прямые стены, прямые углы и слоистые углубления, словно интерьер кристаллической крепости.",
         "math": {
           "iteration": {
-            "label": "Fold-and-scale iteration",
-            "explanation": "Each round puts the orbit through four moves: box fold, radial fold, scale, then a shift by c.\n\nThe box fold handles one coordinate at a time. Take a component a of z. Above 1, it reflects as a → 2 − a; below −1, as a → −2 − a. Components in [−1, 1] stay put. The outer plane folds back into the central square.\n\nNext comes the ball fold, checking the squared magnitude r² = |z|². If r² < 0.25 (|z| < 0.5), scale the point by 4 and push it away from the origin. If 0.25 ≤ r² < 1, invert it through the unit sphere: z → z/r², so a radius of m becomes 1/m. Points with r² ≥ 1 stay put. The near points move outward; the middle band turns across the unit sphere. These moves make the unsettled interface behind the Mandelbox's boxy layers.\n\nTry z₀ = (1.5, 0) with scale s = 2. The box fold reflects x = 1.5 to x = 0.5. Since r² = 0.25 falls in the middle band, the ball fold inverts it: z = z/r² = (2, 0). Scaling by 2 gives (4, 0), and adding c completes the step. Start at the origin instead and you are in the innermost band: the ball fold multiplies it by 4—still the origin—so the first iterate lands exactly on c."
+            "label": "Итерация со складыванием и масштабированием",
+            "explanation": "Каждый шаг проводит орбиту через четыре действия: складывание по кубу, радиальное складывание, масштабирование, затем сдвиг на c.\n\nСкладывание по кубу применяется к каждой координате по отдельности. Возьмём компоненту a числа z. При a > 1 она отражается по правилу a → 2 − a; при a < −1 — по правилу a → −2 − a. Компоненты из [−1, 1] остаются без изменения. Внешняя плоскость складывается обратно к центральному квадрату.\n\nДалее следует складывание по шару: проверяется квадрат модуля r² = |z|². Если r² < 0.25 (|z| < 0.5), точка масштабируется в 4 раза и отодвигается от начала координат. Если 0.25 ≤ r² < 1, она инвертируется относительно единичной сферы: z → z/r², так что радиус m становится равен 1/m. Точки с r² ≥ 1 остаются без изменения. Ближние точки перемещаются наружу; средняя полоса переворачивается относительно единичной сферы. Эти преобразования создают неустойчивую границу за угловатыми слоями Mandelbox.\n\nВозьмём z₀ = (1.5, 0) при масштабе s = 2. Складывание по кубу отражает x = 1.5 в x = 0.5. Поскольку r² = 0.25 попадает в среднюю полосу, складывание по шару инвертирует точку: z = z/r² = (2, 0). Масштабирование на 2 даёт (4, 0), а добавление c завершает шаг. Если же начать в начале координат, точка находится в самой внутренней полосе: складывание по шару умножает её на 4 — она всё равно остаётся началом координат, — поэтому первая итерация попадает точно в c."
           }
         },
-        "visualCharacteristics": "Repeated folds produce hard-edged chambers, nested fortifications, and corridors with depth. The default parameter s = 2 gives the structure straight walls, right-angle corners, and layered recesses like the inside of a crystalline fortress.\n\nAt finer scales, the box theme returns: small copies of the overall shape appear in recesses and along boundaries, all with the same rectilinear geometry. The canonical image uses cool blues and cyans, which suit the mechanical geometry of the folds.",
+        "visualCharacteristics": "Повторяющиеся складывания создают камеры с жёсткими гранями, вложенные укрепления и глубокие коридоры. Параметр по умолчанию s = 2 придаёт структуре прямые стены, прямоугольные углы и слоистые углубления, напоминающие внутренность кристаллической крепости.\n\nНа более мелком масштабе возвращается мотив куба: в углублениях и вдоль границ появляются маленькие копии общей формы — все с той же прямолинейной геометрией. В каноническом изображении используются холодные синие и голубые тона, подходящие механической геометрии складываний.",
         "parameters": {
-          "scale": "Scale sets how strongly the folded orbit expands or reverses before c is added. A scale of 2 (the default) roughly doubles the folded value; negative values reverse direction and produce mirror-image variations."
+          "scale": "Масштаб задаёт, насколько сильно сложенная орбита расширяется или меняет направление перед добавлением c. Масштаб 2 (значение по умолчанию) примерно удваивает сложенное значение; отрицательные значения меняют направление и создают зеркальные варианты."
         },
         "faq": {
           "folds": {
-            "question": "What are box and ball folds?",
-            "answer": "A box fold reflects coordinates outside a fixed interval toward the origin—like folding a sheet’s edges inward. A ball fold (or sphere fold) makes a conditional inversion: points too close to the origin are pushed outward, points at an intermediate distance invert through a sphere, and distant points remain unchanged. Together they redirect the orbit at every step and make the Mandelbox’s layered geometry."
+            "question": "Что такое складывания по кубу и по шару?",
+            "answer": "Складывание по кубу отражает координаты за пределами фиксированного интервала в сторону начала координат — подобно тому, как края листа загибают внутрь. Складывание по шару выполняет условную инверсию: точки слишком близко к началу координат отталкиваются наружу, точки на промежуточном расстоянии инвертируются относительно сферы, а далёкие точки остаются неизменными. Вместе они на каждом шаге перенаправляют орбиту и создают слоистую геометрию Mandelbox."
           },
           "dimension": {
-            "question": "Is this the three‑dimensional Mandelbox?",
-            "answer": "No. FractalPark renders a two-dimensional map inspired by the same fold-and-scale construction. The original Mandelbox is most often explored in 3D, where the box fold reflects across a cube’s faces; here the same logic works in the complex plane with a square boundary."
+            "question": "Это трёхмерная Mandelbox?",
+            "answer": "Нет. FractalPark отображает двумерную карту, вдохновлённую той же конструкцией со складыванием и масштабированием. Исходную Mandelbox чаще всего исследуют в 3D, где складывание по кубу отражает относительно граней куба; здесь та же логика работает в комплексной плоскости с квадратной границей."
           }
         },
-        "history": "The Mandelbox was first presented by Tom Lowe (known online as Tglad) in early 2010 on the FractalForums community. Lowe was experimenting with iterative folding operations in three dimensions — box reflections and spherical inversions — to see whether they could produce bounded, self‑similar structures analogous to the Mandelbrot set. The results were immediately recognised as a new class of fractal, and the name \"Mandelbox\" was adopted both as an homage to the Mandelbrot set and because of the boxlike shape of the set when visualised.\n\nThe discovery followed closely on the 2009 Mandelbulb by Daniel White and Paul Nylander, which had sparked renewed hobbyist interest in finding non‑trivial 3D fractals. Within months, contributors on FractalForums — including Knighty, Jesse, and others — extended the Mandelbox idea to different symmetry planes and polyhedral folds.\n\nDespite its popularity in fractal art software (Mandelbulber, Mandelbulb3D, Fragmentarium, Ultra Fractal), the Mandelbox has received relatively little formal mathematical analysis. One of the few peer‑reviewed treatments is Gregg Helt's 2018 Bridges Conference paper, which generalises the spherical inversion step to arbitrary shape inversions."
+        "history": "Mandelbox впервые представил Том Лоу (известный в сети как Tglad) в начале 2010 года в сообществе FractalForums. Лоу экспериментировал с итеративными операциями складывания в трёх измерениях — отражениями от куба и сферическими инверсиями, — чтобы выяснить, могут ли они создавать ограниченные самоподобные структуры, подобные множеству Мандельброта. Результаты сразу признали новым классом фракталов, а название «Mandelbox» было принято и как дань множеству Мандельброта, и из-за коробчатой формы множества при визуализации.\n\nОткрытие последовало вскоре после Mandelbulb 2009 года Дэниела Уайта и Пола Найландера, который возродил интерес любителей к поиску нетривиальных трёхмерных фракталов. В течение нескольких месяцев участники FractalForums, включая Knighty, Jesse и других, распространили идею Mandelbox на разные плоскости симметрии и многогранные складывания.\n\nНесмотря на популярность в программах для фрактального искусства (Mandelbulber, Mandelbulb3D, Fragmentarium, Ultra Fractal), Mandelbox получила сравнительно мало формального математического анализа. Одна из немногих рецензируемых работ — статья Грегга Хелта для конференции Bridges 2018 года, обобщающая шаг сферической инверсии на инверсии относительно произвольных форм."
       },
       "perpendicular-celtic": {
         "title": "Perpendicular Celtic",
@@ -787,25 +811,25 @@
       },
       "newton-cosh": {
         "title": "Newton Cosh",
-        "summary": "Метод Ньютона для cosh z = 1: бесконечно много равномерно расположенных корней превращают плоскость в повторяющиеся полосы сходимости.",
-        "overview": "Обычный шаг поиска корня по Ньютону меняет характер, когда f(z) = cosh z − 1. Его корни — 2πik для каждого целого k. Многочлен даёт орбите лишь конечное число возможных назначений; эти корни продолжают маршировать вдоль мнимой оси через равные интервалы. Поэтому фрактал устраивается полосами, идущими вверх и вниз, а не укладывается в несколько бассейнов.\n\nОтображение N(z) = z − (cosh z − 1) / sinh z мероморфно: оно работает на всей комплексной плоскости, кроме своих особенностей. Следите за двумя повторяющимися наборами точек: корни cosh z − 1 и нули знаменателя sinh z при z = πik для целого k. Вблизи нуля знаменателя лёгкий сдвиг стартовой точки может переключить корень, которого достигнет орбита.\n\nПериодичность вдоль мнимой оси видна с первого взгляда — математическая подготовка не нужна. Горизонтальные полосы повторяются одна над другой, по одной на каждый период корней. На их стыках тонкие вертикальные нити отмечают, где один бассейн передаёт орбиту следующему.",
+        "summary": "Метод Ньютона для cosh z = 1: бесконечно много равноотстоящих кратных корней создают повторяющиеся полосы сходимости.",
+        "overview": "При f(z) = cosh z − 1 корни имеют вид 2πik для любого целого k, и каждый из них кратный. Они равноудалённо идут по мнимой оси, создавая повторяющиеся полосы.\n\nПоправка (cosh z − 1) / sinh z вне нулей упрощается до tanh(z/2). sinh z обращается в ноль при каждом πik: чётные кратные — это корни и устранимые точки упрощённого частного, а настоящие полюса — нечётные кратные (2k+1)πi.\n\nПовторение вдоль мнимой оси видно в горизонтальных полосах и тонких границах.",
         "imageAlt": "Фрактал Ньютона для cosh z = 1 с повторяющимися горизонтальными полосами и искривлёнными границами, сложенными вдоль мнимой оси",
         "imageCaption": "Ньютоновский вид cosh z = 1 от FractalPark: повторяющиеся полосы сходимости вдоль мнимой оси, разделённые сложенными нитевидными границами.",
         "math": {
           "iteration": {
-            "label": "Newton’s cosh iteration",
-            "explanation": "Newton's rule is N(z) = z − f(z) / f′(z). Here f(z) = cosh z − 1 and f′(z) = sinh z. Each step finds the correction (cosh z − 1) / sinh z, then takes it away from z.\n\nThe equation cosh z = 1 has infinitely many solutions: z = 2πik for every integer k. Each is a simple root: cosh z grows linearly close by, so Newton's method converges quadratically there. Far from the real axis, cosh and sinh grow exponentially. Their quotient may be tiny or enormous, and that is where the image's sensitive seams take shape.\n\nTry z₀ = 0.2i. Since i·sinh(0.2) ≈ 0.201i and cosh(0.2) ≈ 1.020, the first correction is small; the orbit quickly reaches the root at z = 0. Now move to z₀ = (0.5 + 3.0i), farther from every root. The correction now contains large exponential terms. The orbit can cross several basin boundaries before settling, or wander chaotically between roots for many iterations before one captures it.\n\nThe function repeats with period 2πi in the imaginary direction, and the Newton map does too: N(z + 2πi) = N(z) + 2πi. That repeated rule is the source of the horizontal banding."
+            "label": "Итерация Ньютона для cosh",
+            "explanation": "Правило Ньютона: N(z) = z − f(z) / f′(z), где f(z) = cosh z − 1 и f′(z) = sinh z. Вычитается поправка (cosh z − 1) / sinh z, равная tanh(z/2) вне нулей sinh z.\n\nРешения cosh z = 1 имеют вид z = 2πik и все они кратные. Вблизи них ошибка примерно уменьшается вдвое на каждом шаге: сходимость линейная, а не квадратичная. При всех πik знаменатель нулевой, но настоящие полюса находятся только в (2k+1)πi.\n\nДля z₀ = 0.2i поправка равна tanh(0.1i) = i tan(0.1) ≈ 0.1003i, поэтому z₁ ≈ 0.0997i. Возле πi она может быть очень большой. Реализация ограничивает действительную компоненту и оставляет шаг без изменений при |sinh(z)|² < 1e-10; это численные защиты, а не утверждения о математике отображения без этих защит.\n\nПериод равен 2πi: N(z + 2πi) = N(z) + 2πi."
           }
         },
-        "visualCharacteristics": "Start with the horizontal bands along the imaginary axis. A period of roots makes one band, and the convergence pattern returns in the next. The borders do not run straight: they bend and fold, then pull out fine vertical filaments like taut threads.\n\nWithin each band, the basin geometry resembles its neighbours, with small distortions. Think of a ribbon folded repeatedly. The warm and cool zones come from the colouring; the sharp breaks arise where singularities of sinh z destabilise the Newton correction.",
+        "visualCharacteristics": "Горизонтальные полосы повторяются вдоль мнимой оси. Границы изгибаются и образуют тонкие вертикальные нити.\n\nРезкие разрывы собираются около нечётных кратных πi, где поправка Ньютона имеет настоящие полюса.",
         "faq": {
           "target": {
-            "question": "What equation is being solved?",
-            "answer": "It seeks the complex solutions of cosh(z) = 1: z = 2πik for every integer k. The equally spaced roots line the imaginary axis. Each draws in nearby Newton orbits, and their repeating arrangement creates the horizontal bands."
+            "question": "Какое уравнение решается?",
+            "answer": "Ищутся комплексные решения cosh(z) = 1: z = 2πik для любого целого k. Это равноотстоящие кратные корни на мнимой оси."
           },
           "singularities": {
-            "question": "Why are some regions extremely sensitive?",
-            "answer": "The correction divides by sinh(z), which vanishes at z = πik for integer k. Close to one of these points, the correction can become huge, sending an orbit across several basin boundaries before it converges. These singularities are not roots; they pull the fine vertical filaments and unsettled border zones into view."
+            "question": "Почему некоторые области чрезвычайно чувствительны?",
+            "answer": "sinh(z) обращается в ноль при z = πik. Чётные кратные — корни и устранимые точки упрощённого частного; настоящие полюса — нечётные кратные (2k+1)πi. Рядом с ними поправка может стать огромной."
           }
         }
       },
@@ -895,22 +919,22 @@
         "imageCaption": "Cosh Mandelbrot от FractalPark: золочёные перья и слоистые веера возвращаются по вертикали с периодом cosh 2π в мнимом направлении.",
         "math": {
           "iteration": {
-            "label": "Hyperbolic cosine iteration",
-            "explanation": "Each turn evaluates complex hyperbolic cosine at the current z, then adds c. The definition cosh(z) = (eᶻ + e⁻ᶻ)/2 puts exponential growth on the real axis beside imaginary-axis repetition with period 2π.\n\nTry z = iπ/2 on the imaginary axis. Since cosh(iπ/2) = cos(π/2) = 0, starting there with c = 0 leaves the recurrence at zero. Nudge the point off that axis and the eᶻ term can drive exponential growth and rapid escape. That sharp divide—bounded behavior in a narrow strip, rapid escape elsewhere—is typical of transcendental iteration. Unlike a polynomial, this map has no universal escape radius; FractalPark uses a bailout threshold chosen to detect divergence in practice."
+            "label": "Итерация гиперболического косинуса",
+            "explanation": "На каждом шаге вычисляется комплексный гиперболический косинус от текущего z, затем прибавляется c. Определение cosh(z) = (eᶻ + e⁻ᶻ)/2 сочетает экспоненциальный рост по вещественной оси с периодичностью по мнимой оси с периодом 2π.\n\nВозьмём z = iπ/2 на мнимой оси. Поскольку cosh(iπ/2) = cos(π/2) = 0, начало в этой точке при c = 0 даёт z₁ = 0 после одного шага. Но ноль здесь не является фиксированной точкой: на следующем шаге z₂ = cosh(0) = 1. Сдвиньте точку с этой оси — и член eᶻ может вызвать экспоненциальный рост и быстрое расхождение. Это резкое разделение — ограниченное поведение в узкой полосе и быстрое расхождение в других местах — характерно для трансцендентной итерации. В отличие от многочлена, у этого отображения нет универсального радиуса ухода; FractalPark использует порог выхода, выбранный для практического обнаружения расхождения."
           }
         },
-        "visualCharacteristics": "First notice the vertical repetition. Because cosh(z) repeats in the imaginary direction every 2π, fine plumes, layered fans, and gilt filaments return at regular intervals. The result is striped and tiered, far from the radial branching of polynomial Mandelbrot sets.\n\nIn the canonical rendering, plumes and fans often carry warm tones. The finest detail concentrates in narrow horizontal bands, where an orbit lingers near the boundary between escape and non-escape. Above and below, escape accelerates and the image becomes smoother.",
+        "visualCharacteristics": "Прежде всего заметна вертикальная повторяемость. Поскольку cosh(z) повторяется в мнимом направлении через каждые 2π, тонкие перья, слоистые веера и золочёные нити возвращаются через равные интервалы. Результат получается полосатым и ярусным, совсем не похожим на радиальное ветвление полиномиальных множеств Мандельброта.\n\nВ каноническом рендеринге перья и веера часто окрашены в тёплые тона. Самые тонкие детали сосредоточены в узких горизонтальных полосах, где орбита задерживается около границы между уходом и неуходом. Выше и ниже уход ускоряется, и изображение становится более гладким.",
         "faq": {
           "periodicity": {
-            "question": "Why do patterns repeat vertically?",
-            "answer": "Complex hyperbolic cosine repeats along the imaginary axis with period 2π. Because every step uses cosh(z), the orbit structure repeats too: bounded and escaping behavior returns at regular vertical intervals in the parameter plane."
+            "question": "Почему узоры повторяются по вертикали?",
+            "answer": "Комплексный гиперболический косинус повторяется вдоль мнимой оси с периодом 2π. Поскольку на каждом шаге используется cosh(z), структура орбиты тоже повторяется: ограниченное и уходящее поведение возвращается через равные вертикальные интервалы в плоскости параметров."
           },
           "growth": {
-            "question": "Why do many points escape rapidly?",
-            "answer": "Hyperbolic cosine is built from exponentials: cosh(z) = (eᶻ + e⁻ᶻ)/2. At a point with a substantial real part, the eᶻ term takes over and the orbit can grow extremely fast. There is no simple polynomial-style escape radius, so the bailout threshold is a practical computational choice."
+            "question": "Почему многие точки быстро уходят?",
+            "answer": "Гиперболический косинус построен из экспонент: cosh(z) = (eᶻ + e⁻ᶻ)/2. В точке со значительной вещественной частью доминирует член eᶻ, и орбита может расти чрезвычайно быстро. Простого радиуса ухода, как у многочленов, нет, поэтому порог выхода — практический вычислительный выбор."
           }
         },
-        "history": "In 1988, Clifford A. Pickover, a computer scientist and author at IBM's Thomas J. Watson Research Center, published the short paper \"Chaotic behavior of the transcendental mapping (Z → cosh(Z) + μ)\" in The Visual Computer. He presented images of chaotic behavior produced by this transcendental function, alongside maps such as z → sin(z) + c and z → eᶻ + c.\n\nPickover’s work brought the cosh-based map into the fractal-rendering community, where it became a standard transcendental escape-time example. Earlier, mathematicians including Robert Devaney and Michał Krych had developed the broader study of transcendental complex dynamics—exponential, trigonometric, and hyperbolic families—and analyzed the dynamics of exp(z) in the 1980s."
+        "history": "В 1988 году Клиффорд А. Пиковер, специалист по информатике и автор из Исследовательского центра IBM имени Томаса Дж. Уотсона, опубликовал в The Visual Computer краткую статью «Chaotic behavior of the transcendental mapping (Z → cosh(Z) + μ)». Он представил изображения хаотического поведения, создаваемого этой трансцендентной функцией, наряду с отображениями вида z → sin(z) + c и z → eᶻ + c.\n\nРабота Пиковера ввела основанное на cosh отображение в сообщество фрактального рендеринга, где оно стало стандартным примером трансцендентного времени ухода. Ранее математики, включая Роберта Девани и Михала Крыха, развивали более широкое изучение трансцендентной комплексной динамики — экспоненциальных, тригонометрических и гиперболических семейств — и в 1980-х годах анализировали динамику exp(z)."
       },
       "buffalo": {
         "title": "Buffalo",
@@ -1062,28 +1086,28 @@
       },
       "zaslavsky-map": {
         "title": "Zaslavsky Map",
-        "summary": "Комплексное синусное отображение: синус изгибает орбиту, фиксированный поворот на 0,55 радиана вращает её, а c сдвигает её — адаптация, вдохновлённая диссипативным отображением ударного ротора Джорджа Заславского 1978 года.",
-        "overview": "Отображение Заславского изгибает орбиту синусом, поворачивает результат на фиксированную комплексную фазу (e^{0.55i}), затем прибавляет c. Полиномиальное отображение ухода получает свой характер от степеней z, растущих всё больше и больше. Здесь сюжет строится из периодических изгибов, встречающих устойчивый поворот.\n\nВ 1978 году Джордж М. Заславский ввёл исходное отображение для моделирования диссипативного ударного ротора: вращающееся тело, по которому многократно ударяют, пока трение истощает энергию. То классическое отображение двумерно и использует вещественные переменные «действие — угол». FractalPark переосмысляет идею в одной комплексной переменной: синус поставляет нелинейный удар, фиксированный комплексный множитель — поворот, а c делает возможными изображения времени ухода при сканировании параметра.\n\nКомплексный синус может неограниченно расти вдоль мнимой оси, так что это не просто полиномиальный уход. Орбита может некоторое время кружить, а затем разлететься. Эта заминка оставляет кружащиеся рукава и концентрические кольца, особенно после калейдоскопического пространственного преобразования.",
+        "summary": "Комплексное отображение с синусом: синусоидальное возмущение с весом 0.28 изгибает орбиту, фиксированный поворот на 0.55 радиана вращает её, а c сдвигает результат — адаптация, вдохновлённая диссипативным отображением кик-ротора Джорджа Заславского 1978 года.",
+        "overview": "FractalPark реализует z(n+1) = exp(0.55 i) * (z(n) + 0.28 sin(z(n))) + c. Синус с весом 0.28 возмущает существующую орбиту; фиксированный множитель поворачивает всю возмущённую орбиту на 0.55 радиана, затем c её сдвигает.\n\nИсходное отображение Джорджа Заславского 1978 года описывало диссипативный кик-ротор двумя действительными переменными. Комплексный вариант FractalPark для времени ухода — не точная рекурсия той статьи.\n\nКомплексный синус может неограниченно расти вдоль мнимой оси, оставляя завитки и кольца.",
         "imageAlt": "Отображение Заславского: кружащиеся рукава и мандалоподобные кольца в тёплых оранжевых и золотых тонах",
         "imageCaption": "Отображение Заславского в рендеринге FractalPark: концентрические дуги и расходящиеся спицы образуют светящуюся мандалу в тёплых оранжевых и золотых тонах.",
         "math": {
           "iteration": {
-            "label": "Sinusoidal rotation map",
-            "explanation": "Sine bends z; the fixed complex multiplier turns it; c shifts the result.\n\nStart on the real axis. For z₀ = (0, 0), sin(0) = 0, so z₁ = e^{0.55i} × 0 + c = c. After that, complex sine can grow: the magnitude of sin(a + ib) contains terms up to cosh(b). A point with a large imaginary coordinate gets a large kick from sine, and is more likely to escape.\n\nThe 0.55-radian rotation (about 31.5°) is not a parameter; it is hard-coded in the formula. Every orbit gets the same angular twist each time. Hence the swirls."
+            "label": "Синусоидальное поворотное отображение",
+            "explanation": "FractalPark использует z(n+1) = exp(0.55 i) * (z(n) + 0.28 sin(z(n))) + c. Синус — возмущение z с весом 0.28, а не его замена. Фиксированный множитель поворачивает всю возмущённую орбиту против часовой стрелки на 0.55 радиана (около 31.5°), затем c сдвигает результат.\n\nПри z₀ = 0, sin(0)=0, поэтому возмущённый член в скобках равен нулю; поворот нуля остаётся нулём, и остаётся только c: z₁ = c. Затем комплексный синус может расти; в модуле sin(a + ib) присутствуют члены до cosh(b).\n\nПоворот на 0.55 радиана фиксирован в формуле и недоступен пользователю. Как деталь реализации, а не часть идеализированной рекурсии, FractalPark ограничивает входную мнимую компоненту значениями ±80 и округляет каждую выходную компоненту к сетке 1/16."
           }
         },
-        "visualCharacteristics": "Kaleidoscopic transforms make the swirling arms and mandala-like rings especially clear. The canonical image sets concentric arcs and radiating spokes around a central region where the sine perturbation keeps orbits bounded.\n\nWarm oranges and golds sit against deep black in the canonical rendering. Constant rotation curves the arms; sine puts fine ripples along the ring edges.",
+        "visualCharacteristics": "Калейдоскопические преобразования подчёркивают завитые рукава и кольца. Каноническое изображение строит дуги вокруг центра, где возмущённая орбита может оставаться ограниченной.\n\nТёплые оранжевые и золотые тона лежат на глубоком чёрном фоне. Постоянный поворот изгибает рукава, а синусоидальное возмущение добавляет мелкую рябь по краям колец.",
         "faq": {
           "rotation": {
-            "question": "Where does the rotation come from?",
-            "answer": "The map multiplies the perturbed orbit by e^{0.55i}, the unit complex number that turns the plane about 31.5° counter-clockwise. It happens on every iteration and is fixed in the formula, not adjustable by the user. The 0.55-radian value was chosen empirically for balanced swirls."
+            "question": "Откуда берётся поворот?",
+            "answer": "Отображение умножает всю возмущённую орбиту z + 0.28 sin(z) на exp(0.55 i), поворачивая её примерно на 31.5° против часовой стрелки, затем прибавляет c. Это фиксированная часть каждой итерации."
           },
           "transform": {
-            "question": "Is kaleidoscope part of the formula?",
-            "answer": "No. Kaleidoscope is an optional spatial transform outside the iteration. It reflects or copies sectors of the parameter plane. The Zaslavsky Map has no built-in reflection symmetry; the kaleidoscope is a separate rendering step that can be switched independently."
+            "question": "Является ли калейдоскоп частью формулы?",
+            "answer": "Нет. Калейдоскоп — необязательное пространственное преобразование вне итерации. Оно отражает или копирует секторы плоскости параметров. У отображения Заславского нет встроенной отражательной симметрии; калейдоскоп — отдельный этап рендеринга, который можно включать независимо."
           }
         },
-        "history": "George M. Zaslavsky (1929–2008) was a Soviet‑born mathematical physicist who made foundational contributions to the theory of dynamical chaos. He introduced the map that now bears his name in a 1978 paper titled \"The Simplest Case of a Strange Attractor,\" published in Physics Letters A. The map was derived as a stroboscopic description of a dissipative kicked rotor — a rotating system that receives periodic impulses and loses energy through friction.\n\nZaslavsky later moved to the United States, joining New York University's physics department and the Courant Institute of Mathematical Sciences. He authored several books on Hamiltonian chaos and fractional dynamics. The Scholarpedia article on the Zaslavsky map, written by Zaslavsky himself in 2007, provides an authoritative technical reference.\n\nClassical Zaslavsky maps operate on two real variables (action and angle). The complex variant used by FractalPark, with its sine perturbation and fixed complex multiplier, is a creative adaptation suitable for escape‑time rendering rather than a direct transcription of the original dissipative system."
+        "history": "George M. Zaslavsky (1929–2008) был советским математическим физиком, внёсшим основополагающий вклад в теорию динамического хаоса. Он представил отображение, носящее теперь его имя, в статье 1978 года «The Simplest Case of a Strange Attractor», опубликованной в Physics Letters A. Отображение было выведено как стробоскопическое описание диссипативного кик-ротора — вращающейся системы, получающей периодические импульсы и теряющей энергию из-за трения.\n\nПозднее Заславский переехал в Соединённые Штаты, присоединившись к физическому факультету Нью-Йоркского университета и Courant Institute of Mathematical Sciences. Он написал несколько книг о гамильтоновом хаосе и дробной динамике. Статья Scholarpedia об отображении Заславского, написанная самим Заславским в 2007 году, служит авторитетным техническим справочником.\n\nКлассические отображения Заславского работают с двумя действительными переменными (действием и углом). Комплексный вариант FractalPark для времени ухода использует z(n+1) = exp(0.55 i) * (z(n) + 0.28 sin(z(n))) + c; это творческая адаптация, а не прямая запись исходной диссипативной системы."
       },
       "zubieta": {
         "title": "Zubieta",
@@ -1110,6 +1134,145 @@
         },
         "history": "Zubieta belongs to a broader family of \"abs\" fractal variants — maps that apply absolute-value folds at different stages of the quadratic iteration. The best-known member of this family is the Burning Ship fractal, discovered by Michael Michelitsch and Otto E. Rössler in 1992, which folds the components before squaring. The Buffalo fractal, another relative, applies the fold after squaring but before adding c.\n\nThe Zubieta variant applies the component-wise absolute value after both squaring and the addition of c. Its precise origin is difficult to pin to a single published academic source. Variants of this kind circulated among fractal-rendering communities and software packages (Ultra Fractal, Fractint, XaoS) in the 1990s and 2000s, often named after whoever first implemented or popularized them in a given program.\n\nFractalPark's implementation follows the standard component-wise fold and renders the parameter plane in Mandelbrot mode."
       }
+    },
+    "directory": {
+      "breadcrumbLabel": "Хлебные крошки",
+      "breadcrumbAtlas": "Атлас формул",
+      "breadcrumb": "Каталог",
+      "eyebrow": "Каталог стандартных формул",
+      "title": "Каталог стандартных формул",
+      "description": "Просматривайте {count} опубликованных стандартных определений FractalPark по семействам.",
+      "intro": "В этом каталоге собраны все {count} опубликованных стандартных определений. Каждая формула имеет полную исполняемую реализацию.",
+      "facets": {
+        "title": "Обзор по семействам",
+        "family": "Семейство",
+        "status": "Статус публикации",
+        "all": "Все",
+        "categoryTitle": "Обзор по категориям",
+        "category": "Категория"
+      },
+      "family": {
+        "algebraic-power": "Алгебраическая степень",
+        "transcendental": "Трансцендентные",
+        "function-composition": "Композиция функций",
+        "rational-reciprocal": "Рациональная обратная",
+        "orbit-memory": "Память орбиты",
+        "folded-absolute": "Свёрнутый модуль",
+        "root-finding": "Поиск корней"
+      },
+      "status": {
+        "publish": "Опубликована",
+        "hold": "Отложена",
+        "exclude": "Исключена"
+      },
+      "resultCount": "Опубликовано определений: {count}",
+      "category": {
+        "classic": "Классические"
+      },
+      "guideBadge": "Руководство",
+      "searchLabel": "Поиск формул",
+      "searchPlaceholder": "Поиск по названию формулы",
+      "sortLabel": "Сортировка",
+      "apply": "Применить",
+      "sort": {
+        "nameAsc": "Название А–Я",
+        "nameDesc": "Название Я–А"
+      }
+    },
+    "record": {
+      "eyebrow": "Карточка формулы",
+      "identity": "Идентичность и происхождение",
+      "formulaId": "ID формулы",
+      "rightsAttribution": "Права и атрибуция",
+      "sourceAndImplementation": "Источник и текущая реализация",
+      "canonicalName": "Каноническое имя",
+      "originalName": "Исходное имя",
+      "historicalSource": "Исторический источник",
+      "repository": "Репозиторий",
+      "currentImplementation": "Текущая реализация",
+      "author": "Автор",
+      "originalResource": "Исходный ресурс",
+      "originalVersion": "Исходная версия",
+      "unconfirmed": "Не подтверждено",
+      "provenance": "Коллекция происхождения",
+      "aliases": "Устаревшие псевдонимы",
+      "rights": "Права и публичный объём",
+      "rightsStatus": "Статус прав",
+      "rightsScope": "Публичный объём",
+      "canonicalLicense": "Лицензия канонической реализации",
+      "decision": "Решение о публикации",
+      "reason": "Причина",
+      "basis": "Основание реализации",
+      "reviewed": "Дата проверки",
+      "leakage": "Проверка утечек",
+      "publishedSummary": "Эта каноническая реализация FractalPark опубликована и готова к запуску.",
+      "unavailableSummary": "Эта идентичность задокументирована, но текущее решение не разрешает исходный код, запуск, редактирование или ремикс.",
+      "source": "Канонический исходный код",
+      "language": "Язык",
+      "stdlib": "Стандартная библиотека",
+      "profileMode": "Режим профиля",
+      "profileCenter": "Центр профиля",
+      "profileZoom": "Масштаб профиля",
+      "profileIterations": "Итерации профиля",
+      "profileQuality": "Основание профиля",
+      "sourceRevision": "Ревизия исходного кода",
+      "semanticHash": "Семантический хеш",
+      "parameters": "Параметры",
+      "noParameters": "Объявленных параметров нет",
+      "previewAlt": "Детерминированный предпросмотр {name}",
+      "previewDiagnostic": "Превью ожидает визуальной проверки",
+      "previewDiagnosticBody": "Детерминированный рендер выявил визуальные аномалии. Он сохранён как диагностическое свидетельство, но не показывается как проверенное превью.",
+      "viewDiagnosticPreview": "Открыть диагностический рендер",
+      "openExplore": "Открыть в обозревателе",
+      "remix": "Создать анонимный ремикс",
+      "viewSource": "Посмотреть исходный код",
+      "downloadSource": "Скачать исходный код",
+      "takedown": "Есть вопрос о правах или атрибуции?",
+      "takedownBody": "Отправьте ID формулы и подтверждающие материалы. На время проверки сопровождающий может приостановить или отозвать реализацию.",
+      "rightsValues": {
+        "project-owned": "Собственность проекта",
+        "source-declared-public-domain-assumption": "Заявленное источником предположение об общественном достоянии",
+        "gpl3Only": "Только GPL-3.0",
+        "no-explicit-permission": "Нет явного разрешения"
+      },
+      "scopeValues": {
+        "project-canonical-implementation": "Каноническая реализация FractalPark",
+        "original-source-public-domain-assumption-and-project-canonical-implementation": "Для источника предполагается общественное достояние; каноническая реализация FractalPark — MIT",
+        "project-independent-rewrite-only": "Только независимая реализация FractalPark",
+        "identity-and-provenance-metadata-only": "Только метаданные идентичности и происхождения"
+      },
+      "sourceNotes": {
+        "fractalparkProjectOwned": "Это собственная реализация проекта FractalPark. Ссылка ведёт на зафиксированный канонический файл Definition.",
+        "fractintDirectAdaptation": "Текущая реализация FractalPark следует проверенной семантике связанной формулы Fractint. Для исходного файла сохраняются его собственные условия прав.",
+        "fractintIndependentRewrite": "Исторический источник — Fractint. Текущая реализация FractalPark является изолированной независимой переработкой; исходный текст FRM не распространяется.",
+        "iteratedDynamicsIndependentRewrite": "Исторический источник — Iterated Dynamics, преемник Fractint. Текущая реализация FractalPark является изолированной независимой переработкой; исходный текст FRM не распространяется."
+      },
+      "basisValues": {
+        "project-owned": "Собственность проекта",
+        "direct-adaptation": "Прямая адаптация",
+        "separated-independent-rewrite": "Изолированная независимая реализация",
+        "none": "Не применимо"
+      },
+      "scanValues": {
+        "not-applicable": "Не применимо",
+        "pending": "Ожидается",
+        "passed": "Пройдено",
+        "failed": "Не пройдено"
+      }
+    },
+    "sourceWorkspace": {
+      "title": "Канонический исходный код",
+      "readOnlyDescription": "Эта проверенная каноническая ревизия доступна только для чтения. Remix создаёт отдельную редактируемую копию.",
+      "previewLabel": "Предпросмотр канонического кода {name}",
+      "editorLabel": "Канонический код {name} только для чтения",
+      "loading": "Загрузка канонического кода…",
+      "unavailable": "Не удалось загрузить и проверить канонический код.",
+      "retry": "Повторить",
+      "open": "Открыть полный код",
+      "workspaceDescription": "Канонический код {name} только для чтения. Remix создаёт отдельную копию.",
+      "readOnly": "Каноническая ревизия только для чтения",
+      "remix": "Remix",
+      "download": "Скачать .frm"
     }
   },
   "artworks": {
@@ -1355,6 +1518,23 @@
       "active": "Активная",
       "builtin": "Встроенная",
       "custom": "Пользовательская",
+      "standard": "Стандартная библиотека",
+      "mine": "Мои формулы",
+      "library": {
+        "current": "Текущая формула",
+        "open": "Открыть библиотеку",
+        "title": "Стандартная библиотека формул",
+        "description": "Просмотрите все опубликованные формулы ({count}). Определение загружается только после выбора.",
+        "loading": "Загрузка индекса формул...",
+        "unavailable": "Стандартная библиотека формул сейчас недоступна.",
+        "selectionFailed": "Не удалось загрузить эту формулу. Текущая формула сохранена.",
+        "familyFilter": "Фильтр формул по семейству",
+        "categoryFilter": "Фильтр формул по категориям",
+        "loadMore": "Показать ещё",
+        "lucky": "Мне повезёт?",
+        "resetProfile": "Сбросить профиль формулы",
+        "undoFormulaChange": "Отменить смену формулы"
+      },
       "resolution": {
         "loading": "Загружаем формулу...",
         "notFound": "Не удалось загрузить пользовательскую формулу «{formula}».",
@@ -1411,6 +1591,12 @@
       },
       "family": {
         "all": "Все",
+        "algebraic-power": "Алгебраическая степень",
+        "folded-absolute": "Свёрнутый модуль",
+        "function-composition": "Композиция функций",
+        "orbit-memory": "Память орбиты",
+        "rational-reciprocal": "Рациональные и обратные",
+        "root-finding": "Поиск корней",
         "classic": "Классические",
         "burning-ship": "Горящий корабль",
         "newton": "Ньютон",
@@ -1426,6 +1612,9 @@
       "position": "Положение",
       "center": "Центр",
       "zoom": "Масштаб",
+      "invalidNumber": "Введите допустимое конечное число.",
+      "increase": "Увеличить",
+      "decrease": "Уменьшить",
       "mode": {
         "label": "Режим фрактала",
         "mandelbrot": "Мандельброт",
@@ -1659,6 +1848,8 @@
       "loadFailed": "Не удалось загрузить редактор",
       "loadFailedDescription": "Не удалось загрузить редактор кода. Пожалуйста, обновите страницу.",
       "compile": "Скомпилировать",
+      "apply": "Применить",
+      "invalidDraft": "Недопустимый черновик — при сохранении исходный текст и диагностика сохраняются, а последняя успешная предпросмотренная версия остаётся активной.",
       "compiling": "Компилируем...",
       "save": "Сохранить",
       "saved": "Сохранено",
@@ -1693,13 +1884,13 @@
     "landing": {
       "heading": "FractalPark: генератор фракталов с открытым исходным кодом прямо в браузере",
       "whatIsHeading": "Что такое FractalPark?",
-      "whatIsAnswer": "FractalPark — это бесплатная платформа с открытым исходным кодом (MIT) для изучения и создания фракталов, которая полностью рендерит изображения в вашем браузере с помощью WebGL: {formulaCount} встроенных формул, создание формул FRM, совместимых с Fractint, и экспорт PNG в высоком разрешении. Для создания аккаунт не нужен; сохранение работ и формул выполняется через вход по email и личную облачную библиотеку.",
+      "whatIsAnswer": "FractalPark — бесплатная платформа для изучения и создания фракталов с открытым исходным кодом (MIT), которая целиком выполняет рендеринг в вашем браузере с WebGL: {formulaCount} опубликованных Standard Definition в {formulaFamilyCount} структурных семействах, из них {classicFormulaCount} также входят в коллекцию Classic; опубликованный исходный код FRM-like v1; рабочий процесс FRM Editor, совместимый с Classic; и экспорт PNG в высоком разрешении. Для создания учётная запись не нужна; для сохранения работ и формул используется вход по email и личная облачная библиотека.",
       "capabilitiesHeading": "Основные возможности",
-      "capabilitiesIntro": "{formulaCount} формул в {formulaFamilyCount} семействах · {formulaGuideCount} подробных руководств по формулам · {transformCount} трансформаций · {coloringModeCount} режимов раскраски · общие ссылки · экспорт PNG до {maxExportScale}×",
+      "capabilitiesIntro": "{formulaCount} опубликованных Standard Definition в {formulaFamilyCount} структурных семействах · из них {classicFormulaCount} также входят в коллекцию Classic · {formulaGuideCount} подробных руководств по формулам · {transformCount} трансформаций · {coloringModeCount} режимов раскраски · общие ссылки · экспорт PNG до {maxExportScale}×",
       "linksHeading": "Продолжайте исследовать",
       "links": {
         "formulas": "Атлас формул — каждая формула с математикой, историей и живыми примерами",
-        "frmGuide": "Руководство по FRM — создавайте формулы, совместимые с Fractint, прямо в браузере",
+        "frmGuide": "FRM Guide — изучите опубликованный FRM-like v1 и исходный код Editor, совместимый с Classic",
         "drift": "Drift — расслабьтесь под захватывающее слайд-шоу пресетов",
         "about": "О проекте — факты, границы и детали открытого исходного кода"
       },
@@ -1716,7 +1907,7 @@
   },
   "frmEditor": {
     "title": "FRM Editor",
-    "description": "Пишите, компилируйте и просматривайте FRM-формулы в браузере; сохраняйте их в облачной библиотеке.",
+    "description": "Пишите, компилируйте и просматривайте в браузере формулы из подмножества FRM FractalPark, совместимого с Classic; сохраняйте их в облачной библиотеке.",
     "breadcrumb": "Хлебные крошки",
     "crumbGuide": "Руководство по FRM",
     "beta": "Бета",
@@ -1744,6 +1935,10 @@
     "replaceConfirm": "Заменить текущий несохранённый черновик?",
     "leaveConfirm": "Выйти из редактора и отбросить несохранённые изменения черновика?",
     "saved": "Сохранено в вашей облачной библиотеке формул.",
+    "remixLoading": "Загружаем точный опубликованный исходный код и Profile…",
+    "remixReady": "Remix-fork создан из {name}. Опубликованный исходный код Standard не изменён.",
+    "remixUnavailable": "Не удалось безопасно открыть эту опубликованную формулу для Remix.",
+    "invalidDraftSaved": "Недопустимый черновик сохранён приватно. Последняя запускаемая revision остаётся активной.",
     "saveError": "Облачная библиотека формул недоступна. Ваша формула не была сохранена.",
     "errors": {
       "maxCount": "Достигнут максимум формул ({count}).",
@@ -1786,9 +1981,9 @@
   "metadata": {
     "explore": {
       "title": "FractalPark — генератор фракталов с открытым исходным кодом в браузере",
-      "description": "Платформа с открытым исходным кодом для изучения и создания фракталов, где формула — в центре всего, работает прямо в браузере: 94 встроенные формулы, рендеринг WebGL в реальном времени, создание формул FRM, совместимых с Fractint, и экспорт PNG в высоком разрешении.",
+      "description": "Платформа для изучения и создания фракталов с открытым исходным кодом, работающая в браузере: 534 опубликованных Standard Definition в 7 структурных семействах, из них 94 также входят в коллекцию Classic; рендеринг WebGL в реальном времени; опубликованный исходный код FRM-like v1; FRM Editor, совместимый с Classic; и экспорт PNG в высоком разрешении.",
       "ogTitle": "FractalPark — фрактальное искусство с открытым исходным кодом в вашем браузере",
-      "ogDescription": "Создавайте фрактальное искусство в браузере: 94 формулы, рендеринг WebGL в реальном времени, создание FRM, экспорт PNG в высоком разрешении."
+      "ogDescription": "Создавайте фрактальное искусство в браузере с 534 опубликованными Standard Definition из 7 структурных семейств, из них 94 также входят в коллекцию Classic, рендерингом WebGL в реальном времени, опубликованным исходным кодом FRM-like v1, FRM Editor, совместимым с Classic, и экспортом PNG в высоком разрешении."
     },
     "gallery": {
       "title": "Моя галерея | Личная коллекция фракталов - FractalPark",
@@ -1796,21 +1991,22 @@
     },
     "about": {
       "title": "О проекте | Генератор фракталов с открытым исходным кодом в браузере - FractalPark",
-      "description": "Узнайте о FractalPark — генераторе фракталов с открытым исходным кодом (MIT), работающем в браузере на WebGL: 94 формулы, пользовательские палитры и экспорт PNG."
+      "description": "FractalPark — платформа для изучения и создания фракталов с открытым исходным кодом, где формула в центре всего: опубликованный исходный код формул можно читать и запускать, а также доступен отдельный редактор формул, совместимый с Classic."
     },
     "formulaAtlas": {
-      "title": "Атлас формул | 94 фрактальные формулы - FractalPark",
-      "description": "Просматривайте все 94 формулы FractalPark из семи семейств, изучайте 21 избранный профиль с руководством, осваивайте FRM и открывайте канонические состояния формул в WebGL-Обзоре.",
-      "imageAlt": "Атлас формул FractalPark со 94 встроенными формулами"
+      "title": "Атлас формул | 534 опубликованные формулы - FractalPark",
+      "publishedDescription": "Просматривайте 534 опубликованных Standard Definition в семи структурных семействах, из которых 94 также входят в коллекцию Classic; изучайте 21 профиль руководства, узнайте, как работает исходный код FRM, и открывайте канонические Formula Record.",
+      "description": "Просматривайте 534 опубликованных Standard Definition в семи структурных семействах, из которых 94 также входят в коллекцию Classic; изучайте 21 профиль руководства, узнайте, как работает исходный код FRM, и открывайте канонические Formula Record.",
+      "imageAlt": "Атлас формул FractalPark с 534 опубликованными формулами"
     },
     "frmEditor": {
       "title": "FRM Editor | FractalPark",
-      "description": "Пишите, компилируйте и просматривайте FRM-формулы в браузере; сохраняйте их в облачной библиотеке."
+      "description": "Пишите, компилируйте и просматривайте в браузере формулы из подмножества FRM FractalPark, совместимого с Classic; сохраняйте их в облачной библиотеке."
     },
     "frmGuide": {
-      "title": "Руководство по FRM | Создавайте собственные фрактальные формулы - FractalPark",
-      "description": "Изучите проверенный синтаксис FRM FractalPark, уровни совместимости, конвейер компиляции AST в GLSL, диагностику и три примера пользовательских формул, прошедших проверку компиляции.",
-      "imageAlt": "Руководство по языку формул FRM FractalPark"
+      "title": "FRM Guide: Classic Editor и FRM-like v1 - FractalPark",
+      "description": "Изучите канонические Definition FRM-like v1 FractalPark, опубликованную среду выполнения и отдельный рабочий процесс Editor, совместимый с Classic.",
+      "imageAlt": "Руководство FractalPark по FRM-like v1 и совместимым с Classic формулам"
     },
     "drift": {
       "title": "Drift — захватывающее слайд-шоу фракталов | FractalPark",
@@ -1821,13 +2017,13 @@
   },
   "about": {
     "title": "О FractalPark",
-    "aiDescription": "FractalPark — это генератор фрактального искусства с открытым исходным кодом (MIT), работающий в браузере и использующий WebGL для рендеринга на GPU в реальном времени. Он включает 94 встроенные формулы фракталов времени убегания (семейства Мандельброта, Жюлиа, Ньютона, Феникса, Магнита, Макмаллена, рациональные и трансцендентные), редактор пользовательских формул с поддержкой синтаксиса Fractint .frm, 7 плагинов UV-трансформаций, 9 режимов раскраски и экспорт PNG в высоком разрешении. Создан на Next.js 16, React 19, TypeScript 5 и Tailwind CSS. Рендер-движок использует плагинную архитектуру с динамической сборкой GLSL-шейдеров и LRU-кэшированием.",
+    "aiDescription": "FractalPark — браузерный генератор фракталов с открытым исходным кодом по лицензии MIT, использующий WebGL для рендеринга GPU в реальном времени. Он включает 534 опубликованных Standard Definition в 7 структурных семействах, из них 94 также входят в коллекцию Classic; 21 Formula Guide; опубликованный исходный код FRM-like v1; отдельный FRM Editor, совместимый с Classic, с транспиляцией AST-to-GLSL; 7 плагинов UV-трансформации; 9 режимов раскраски; ссылки для общего доступа; облачную библиотеку работ и формул со входом по email; публикацию в сообществе; и экспорт PNG в высоком разрешении до 4x. Создан на Next.js, React и TypeScript.",
     "techStack": {
       "title": "Технологии",
       "description": "Создано на Next.js, WebGL и TypeScript. Рендеринг фракталов в реальном времени обеспечивают GPU-шейдеры.",
       "frontend": "Фронтенд: Next.js 16 (App Router), React 19, TypeScript 5, Tailwind CSS 4, shadcn/ui",
       "rendering": "Рендеринг: WebGL 1 (GLSL-фрагментные шейдеры), плагинная архитектура, LRU-кэш шейдеров",
-      "formula": "Система формул: собственный парсер Fractint .frm, редактор CodeMirror 6, транспилятор AST в GLSL"
+      "formula": "Система формул: опубликованные parser/backend FRM-like v1 для Standard Definition; отдельный редактор CodeMirror 6, совместимый с Classic, и путь AST-в-GLSL для пользовательских формул"
     },
     "openSource": {
       "title": "Открытый исходный код",
@@ -1843,22 +2039,22 @@
     "next": "Следующий пресет"
   },
   "publicProject": {
-    "tagline": "FractalPark — это платформа с открытым исходным кодом для изучения и создания фракталов, где формула — в центре всего; поддержка FRM, совместимого с Fractint, постоянно растёт, и мы работаем над тем, чтобы перенести формульное наследие Fractint в современный браузер.",
-    "definition": "FractalPark — это бесплатное приложение с открытым исходным кодом (MIT) на WebGL для исследования, изучения и создания фрактального искусства. В него входят {formulaCount} встроенных формул в {formulaFamilyCount} семействах, {formulaGuideCount} подробных руководств по формулам, язык FRM, совместимый с Fractint, с руководством и отдельным редактором, а также Галерея сообщества. Рендеринг выполняется в вашем браузере; сохранение работ и формул — через вход по email и личную облачную библиотеку.",
-    "aiDescription": "FractalPark — это генератор фракталов с открытым исходным кодом (MIT) в браузере, использующий WebGL для рендеринга на GPU в реальном времени. Он включает {formulaCount} встроенных фрактальных формул в {formulaFamilyCount} семействах, {formulaGuideCount} руководств по формулам, совместимый с Fractint редактор FRM с транспиляцией AST в GLSL, {transformCount} плагинов UV-трансформаций, {coloringModeCount} режимов раскраски, общие ссылки, облачную библиотеку с входом по email для работ и формул, публикацию в сообществе и экспорт PNG в высоком разрешении до {maxExportScale}x. Создан на Next.js, React и TypeScript.",
+    "tagline": "FractalPark — платформа для изучения и создания фракталов с открытым исходным кодом, где формула в центре всего: опубликованный исходный код формул можно читать и запускать, а также доступен отдельный редактор формул, совместимый с Classic.",
+    "definition": "FractalPark — бесплатное WebGL-приложение с открытым исходным кодом (MIT) для исследования, изучения и создания фрактального искусства. Оно включает {formulaCount} опубликованных Standard Definition в {formulaFamilyCount} структурных семействах, из них {classicFormulaCount} также входят в коллекцию Classic; {formulaGuideCount} подробных Formula Guide; опубликованный исходный код FRM-like v1; отдельный FRM Editor, совместимый с Classic; и галерею сообщества. Рендеринг выполняется в вашем браузере; для сохранения работ и формул используются вход по email и личная облачная библиотека.",
+    "aiDescription": "FractalPark — браузерный генератор фракталов с открытым исходным кодом по лицензии MIT, использующий WebGL для рендеринга GPU в реальном времени. Он включает {formulaCount} опубликованных Standard Definition в {formulaFamilyCount} структурных семействах, из них {classicFormulaCount} также входят в коллекцию Classic; {formulaGuideCount} Formula Guide; опубликованный исходный код FRM-like v1; отдельный FRM Editor, совместимый с Classic, с транспиляцией AST-to-GLSL; {transformCount} плагинов UV-трансформации; {coloringModeCount} режимов раскраски; ссылки для общего доступа; облачную библиотеку работ и формул со входом по email; публикацию в сообществе; и экспорт PNG в высоком разрешении до {maxExportScale}x. Создан на Next.js, React и TypeScript.",
     "capabilitiesHeading": "Что доступно уже сегодня",
     "capabilities": {
       "discover": {
         "title": "Открывайте формулы",
-        "summary": "Изучайте Атлас формул: 94 встроенные формулы в 7 семействах и 21 подробное руководство, рассказывающее о математике, истории и визуальном характере классических формул."
+        "summary": "Изучайте Атлас формул: 534 опубликованных Standard Definition в 7 структурных семействах, из них 94 также входят в коллекцию Classic, и 21 подробное руководство о математике, истории и визуальном характере классических формул."
       },
       "create": {
         "title": "Создавайте в браузере",
-        "summary": "Исследуйте и рендерите в реальном времени на WebGL: режимы Мандельброта и Жюлиа для каждой формулы, 7 трансформаций, 9 режимов раскраски, градиенты, освещение и покадровая анимация."
+        "summary": "Исследуйте и рендерите в реальном времени на WebGL: режим Мандельброта для всех 534 опубликованных Standard Definition, режим Жюлиа там, где он поддерживается, 7 трансформаций, 9 режимов раскраски, градиенты, освещение и покадровая анимация."
       },
       "authorFrm": {
-        "title": "Пишите формулы FRM",
-        "summary": "Пишите пользовательские формулы на языке FRM, совместимом с Fractint, с помощью руководства и отдельного редактора: проверка AST, живой предпросмотр GLSL и понятная диагностика."
+        "title": "Изучайте FRM и пишите пользовательские формулы",
+        "summary": "Пишите пользовательские формулы в проверенном подмножестве FRM FractalPark, совместимом с Classic, с помощью Guide и отдельного Editor: проверка AST, предварительный просмотр GLSL в реальном времени и понятная диагностика."
       },
       "saveExport": {
         "title": "Сохраняйте и делитесь",
@@ -1870,7 +2066,7 @@
     "futureHeading": "В планах",
     "boundaries": {
       "current": {
-        "0": "Растущая поддержка совместимого с Fractint FRM: сегодня работает практичное, проверенное подмножество языка формул Fractint — это не полная реимплементация Fractint.",
+        "0": "Опубликованные Standard Definition используют исходный код FRM-like v1. Отдельный Editor использует отдельное практическое подмножество, совместимое с Classic, — не полную реализацию Fractint.",
         "1": "Для создания аккаунт не нужен. Сохранение работ и формул выполняется через вход по одноразовому коду из email и хранение в личной облачной библиотеке; публикация всегда явная, а работы с пользовательскими формулами публикуют их исходный код по лицензии MIT.",
         "2": "Интерфейс доступен на семи языках: английском, китайском упрощённом, португальском, корейском, русском, испанском и французском."
       },

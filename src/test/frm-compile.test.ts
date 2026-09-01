@@ -163,6 +163,7 @@ bailout:
     
     expect(result.success).toBe(true);
     expect(result.plugin?.id).toBe('custom-id');
+    expect(result.plugin?.supportsJulia).toBe(false);
   });
 
   it('should auto-generate ID if not provided', () => {

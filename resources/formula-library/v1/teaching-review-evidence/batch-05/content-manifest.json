@@ -1,0 +1,727 @@
+{
+  "schema": "fractalpark-teaching-batch-content-manifest/v1",
+  "batch": 5,
+  "status": "maintainer-approved",
+  "candidateSha256": "232a5567178fc4f045b6a6474bd795ddcfe62f1ebc932d09ae1247a76ce82dbe",
+  "sourcePacketSha256": "2fd9bb2039f8308d2a73ae579ba3bf0aa804d06a8d3e1cf88a72e7a62a8add52",
+  "reviewManifestSha256": "2cca3777d0c826b6141a2558c3e10c910a991de324797fb52ea6a5c78215cb3a",
+  "maintainerApprovalSha256": "c0aa89af7edc362698173994f79e3eead8f56a970201ac921a27d91c89be1283",
+  "formulaCount": 10,
+  "contentUnitCount": 70,
+  "formulaIds": [
+    "0ba0b082-c4b0-51d8-b981-7ca1ca25b9f3",
+    "1936e9b5-1312-593e-ab67-72e95bc514b0",
+    "20e16f12-e0e9-5f56-9364-5c2b60c05f20",
+    "1bb379a2-3588-53f8-a3ab-e52021c78054",
+    "0df5ac6e-d97e-55db-b624-96c310af07dd",
+    "6d27b5fd-462b-5561-bac2-7c5f915e3cb5",
+    "75e70076-b422-5535-b3c9-c484fbf879e6",
+    "599a7fda-4c0e-5489-b12e-6e4179ee11f2",
+    "b79313f5-2181-5013-bd21-e59a7222dce5",
+    "d0079630-8ed3-5379-9e37-52cb7f0f7379"
+  ],
+  "unitHashes": [
+    {
+      "formulaId": "0ba0b082-c4b0-51d8-b981-7ca1ca25b9f3",
+      "locale": "en",
+      "contentHash": "4d1388e4a77c8fb0a510057b3c870f9fd99512c188860dbca3ca32043bc404f0"
+    },
+    {
+      "formulaId": "0ba0b082-c4b0-51d8-b981-7ca1ca25b9f3",
+      "locale": "zh",
+      "contentHash": "1037968e99b979fd123f637251326de74e86f97804bc625e22d19f664d610ee8"
+    },
+    {
+      "formulaId": "0ba0b082-c4b0-51d8-b981-7ca1ca25b9f3",
+      "locale": "pt",
+      "contentHash": "9973829af354386d076c76ad8ad7e9fc70815778af80ab3eb0765856bfbeb8bd"
+    },
+    {
+      "formulaId": "0ba0b082-c4b0-51d8-b981-7ca1ca25b9f3",
+      "locale": "ko",
+      "contentHash": "0240355acb478236ccd8cdb3afb809f5f9510a46f837e5bb106cc212ff8c28a4"
+    },
+    {
+      "formulaId": "0ba0b082-c4b0-51d8-b981-7ca1ca25b9f3",
+      "locale": "ru",
+      "contentHash": "53869a27742ed46e88ae766b244d6f0c35a7f142b598cfea215363b19ba0ff74"
+    },
+    {
+      "formulaId": "0ba0b082-c4b0-51d8-b981-7ca1ca25b9f3",
+      "locale": "es",
+      "contentHash": "999875d76d917e62688738b6dac4fbcc3a1906ed2582c742cd15017686dfef81"
+    },
+    {
+      "formulaId": "0ba0b082-c4b0-51d8-b981-7ca1ca25b9f3",
+      "locale": "fr",
+      "contentHash": "2b5af7e9141c5b2857af5eecd065cfd293e46b223d23fbeb9f1c88c86555af31"
+    },
+    {
+      "formulaId": "1936e9b5-1312-593e-ab67-72e95bc514b0",
+      "locale": "en",
+      "contentHash": "8ad1ddfcd2a71b3a7a561c0247f2d30c48887de2d08a5ab54df6307c665db562"
+    },
+    {
+      "formulaId": "1936e9b5-1312-593e-ab67-72e95bc514b0",
+      "locale": "zh",
+      "contentHash": "adf257e468ee47df315ecc91c83fee00e0c7737a9d0622ba400e344f71273a08"
+    },
+    {
+      "formulaId": "1936e9b5-1312-593e-ab67-72e95bc514b0",
+      "locale": "pt",
+      "contentHash": "a0b2736a683b11e2499377eb53b4960ecd31f9cca226df6cd1eaf243a84d979c"
+    },
+    {
+      "formulaId": "1936e9b5-1312-593e-ab67-72e95bc514b0",
+      "locale": "ko",
+      "contentHash": "aa0083fe33cc9a10184b7fb8e38fd8e484773d1f444c5f21753e60d9cda93f1c"
+    },
+    {
+      "formulaId": "1936e9b5-1312-593e-ab67-72e95bc514b0",
+      "locale": "ru",
+      "contentHash": "656fbe423dbef02e838bd9c9d04bb9824e56f2829ba2e6dbe1c909f57d33513d"
+    },
+    {
+      "formulaId": "1936e9b5-1312-593e-ab67-72e95bc514b0",
+      "locale": "es",
+      "contentHash": "21f9e90254de895c26f0fdda56a2e7e528afa806cd904a8b78aeb72d8a36090c"
+    },
+    {
+      "formulaId": "1936e9b5-1312-593e-ab67-72e95bc514b0",
+      "locale": "fr",
+      "contentHash": "38352cd87661955e0fc24964352ce0b6ee61b2535a0fd44add07ead51d43b7a6"
+    },
+    {
+      "formulaId": "20e16f12-e0e9-5f56-9364-5c2b60c05f20",
+      "locale": "en",
+      "contentHash": "dacdad9b8155a4ececb9a74b010134188c76050c8adee67842a02f1dfc74b2db"
+    },
+    {
+      "formulaId": "20e16f12-e0e9-5f56-9364-5c2b60c05f20",
+      "locale": "zh",
+      "contentHash": "683f3dbf4f0ad94931ac52320ca0cd67d059d618690b457284f31e63053e0967"
+    },
+    {
+      "formulaId": "20e16f12-e0e9-5f56-9364-5c2b60c05f20",
+      "locale": "pt",
+      "contentHash": "2478eea06ef618138a3db0bf1b71fd484087da518564ae9d1be9b4cbeb4fa01f"
+    },
+    {
+      "formulaId": "20e16f12-e0e9-5f56-9364-5c2b60c05f20",
+      "locale": "ko",
+      "contentHash": "402c33917262bbc0cd4331b1991c1204df0765e60d8c7761766a60d6290ed69a"
+    },
+    {
+      "formulaId": "20e16f12-e0e9-5f56-9364-5c2b60c05f20",
+      "locale": "ru",
+      "contentHash": "0cbedb9b3940d003850c4ae8b54fc1efa59ad5797d3d62bc0dd69693492eb58d"
+    },
+    {
+      "formulaId": "20e16f12-e0e9-5f56-9364-5c2b60c05f20",
+      "locale": "es",
+      "contentHash": "193804e7bcc317a50137ad910522022bb080145b482a4faa87a2cb700d3d0fe0"
+    },
+    {
+      "formulaId": "20e16f12-e0e9-5f56-9364-5c2b60c05f20",
+      "locale": "fr",
+      "contentHash": "a1816dbf14315deec7159b10796c49cef6a73cab2fc5e6c45229669da7c91244"
+    },
+    {
+      "formulaId": "1bb379a2-3588-53f8-a3ab-e52021c78054",
+      "locale": "en",
+      "contentHash": "1608ffe1a8a2eb227fdac49d45bb2acd6e8c1cc72c87ad2aaba26f5086036ba6"
+    },
+    {
+      "formulaId": "1bb379a2-3588-53f8-a3ab-e52021c78054",
+      "locale": "zh",
+      "contentHash": "fa6165925feae6cedc2a82ba610ccc8b36273f420d28c6ef2245731b10208f71"
+    },
+    {
+      "formulaId": "1bb379a2-3588-53f8-a3ab-e52021c78054",
+      "locale": "pt",
+      "contentHash": "f7acc3ec15b43965d9c231556319e12fd7e6c4b3b6264459683b0a5bf98df173"
+    },
+    {
+      "formulaId": "1bb379a2-3588-53f8-a3ab-e52021c78054",
+      "locale": "ko",
+      "contentHash": "4946bfc13bdf7a481c1ea737785d34f7c59ae46e6ac5e8dec5dcb25133359c65"
+    },
+    {
+      "formulaId": "1bb379a2-3588-53f8-a3ab-e52021c78054",
+      "locale": "ru",
+      "contentHash": "8ca889d50e2dcd125d6c082fb907b4df45bb773e92de2a3810c46bd6530cde61"
+    },
+    {
+      "formulaId": "1bb379a2-3588-53f8-a3ab-e52021c78054",
+      "locale": "es",
+      "contentHash": "08e5372f67578a04e7fa2a733ca451b58b4a9a426e53e5b869ba7404a72eb586"
+    },
+    {
+      "formulaId": "1bb379a2-3588-53f8-a3ab-e52021c78054",
+      "locale": "fr",
+      "contentHash": "d2af6095f21fa1668755f4a75a6ccf8d561b1c4ed6919f4dd025e8e83942170c"
+    },
+    {
+      "formulaId": "0df5ac6e-d97e-55db-b624-96c310af07dd",
+      "locale": "en",
+      "contentHash": "95137002ad32c06577e02def4799eacd6fb98795877b8144428777fb641352d1"
+    },
+    {
+      "formulaId": "0df5ac6e-d97e-55db-b624-96c310af07dd",
+      "locale": "zh",
+      "contentHash": "712d17068eefe4dd3f68f0ea7d7f88c136b9d7517f9805ff7794f987db24fced"
+    },
+    {
+      "formulaId": "0df5ac6e-d97e-55db-b624-96c310af07dd",
+      "locale": "pt",
+      "contentHash": "35de970d93b6d289c065b3743fd69a6f8403c2b2559a1abbf763bde937f4e787"
+    },
+    {
+      "formulaId": "0df5ac6e-d97e-55db-b624-96c310af07dd",
+      "locale": "ko",
+      "contentHash": "13c85b6b13f6f346ffe7d8b54c527fd2e5e6e8b7ca78d6cf7c073a90afc4bb68"
+    },
+    {
+      "formulaId": "0df5ac6e-d97e-55db-b624-96c310af07dd",
+      "locale": "ru",
+      "contentHash": "5fad36a51c96e458efc64df35d8750f4b2cffe2a715b42c20b9f311b08e29f92"
+    },
+    {
+      "formulaId": "0df5ac6e-d97e-55db-b624-96c310af07dd",
+      "locale": "es",
+      "contentHash": "637d66ea83bb2bcbe14324062c6ec67b059c6aebf9b62b3f30b7a2dfc7c79467"
+    },
+    {
+      "formulaId": "0df5ac6e-d97e-55db-b624-96c310af07dd",
+      "locale": "fr",
+      "contentHash": "a3c9bf3abc0619cb615995b80fd5482f2aac2c51a4d7d694a970c95606a53678"
+    },
+    {
+      "formulaId": "6d27b5fd-462b-5561-bac2-7c5f915e3cb5",
+      "locale": "en",
+      "contentHash": "e6d09d556daddf1d6bf53de03354a43d35ae9954a4b7f0ab0e759c64518a9eb2"
+    },
+    {
+      "formulaId": "6d27b5fd-462b-5561-bac2-7c5f915e3cb5",
+      "locale": "zh",
+      "contentHash": "ff95ac94e3b37ddb764e881e6d53885d9ed7b607fe873f880668fd6b6450b1dd"
+    },
+    {
+      "formulaId": "6d27b5fd-462b-5561-bac2-7c5f915e3cb5",
+      "locale": "pt",
+      "contentHash": "330b4649b018b5e0e69ce78051ac23b783a6e0e99f1fc590ae18c9bc24b64655"
+    },
+    {
+      "formulaId": "6d27b5fd-462b-5561-bac2-7c5f915e3cb5",
+      "locale": "ko",
+      "contentHash": "923a41a5bf0f6714f0b4e403b916b90a7be4ea3baa3a7e6618594ab02ada89ba"
+    },
+    {
+      "formulaId": "6d27b5fd-462b-5561-bac2-7c5f915e3cb5",
+      "locale": "ru",
+      "contentHash": "223fd17ce73032b3037a6c9c48dcbe194a4ebded02477d62e5015276ce36a7b1"
+    },
+    {
+      "formulaId": "6d27b5fd-462b-5561-bac2-7c5f915e3cb5",
+      "locale": "es",
+      "contentHash": "801e247cd92bb73f8ef7071aee29aab511dcad7bb15de056d8020f29f52a2c68"
+    },
+    {
+      "formulaId": "6d27b5fd-462b-5561-bac2-7c5f915e3cb5",
+      "locale": "fr",
+      "contentHash": "a1644efad54c4507ff5ec1b648343522121df14590322dd27e2f2f7c4743c113"
+    },
+    {
+      "formulaId": "75e70076-b422-5535-b3c9-c484fbf879e6",
+      "locale": "en",
+      "contentHash": "d9ce80f39061c879038b92a392a9d3785eaaba6b3e70b88d73dcd47383fa4d14"
+    },
+    {
+      "formulaId": "75e70076-b422-5535-b3c9-c484fbf879e6",
+      "locale": "zh",
+      "contentHash": "862f7f0466799a85c79ac32ec744447b9528005188ddc653357ed921410b8bf9"
+    },
+    {
+      "formulaId": "75e70076-b422-5535-b3c9-c484fbf879e6",
+      "locale": "pt",
+      "contentHash": "913151c52a8b892f9edbdfad9ea78ebdfe9b0ff38bc63e60444222b8691d18dd"
+    },
+    {
+      "formulaId": "75e70076-b422-5535-b3c9-c484fbf879e6",
+      "locale": "ko",
+      "contentHash": "6dacc4941425ac65d2c778645241986a1bac26fc9e017c5c654820a83e64f058"
+    },
+    {
+      "formulaId": "75e70076-b422-5535-b3c9-c484fbf879e6",
+      "locale": "ru",
+      "contentHash": "7f9410e0e7eaaf7184cb1880d92920c6c41e5c7228cf9b7cf50ccb86e410c308"
+    },
+    {
+      "formulaId": "75e70076-b422-5535-b3c9-c484fbf879e6",
+      "locale": "es",
+      "contentHash": "721123e1b806e5cb46af9167fd6339ccd567e95addcdc43f5671a48d19347cdf"
+    },
+    {
+      "formulaId": "75e70076-b422-5535-b3c9-c484fbf879e6",
+      "locale": "fr",
+      "contentHash": "b98c7750000a00980634a89842745eac063139471efc00df90c46965d1a8ccee"
+    },
+    {
+      "formulaId": "599a7fda-4c0e-5489-b12e-6e4179ee11f2",
+      "locale": "en",
+      "contentHash": "90e78447859e27af456be2ff6cdbeadc31a08f9f7557e06d242347218dbc39b2"
+    },
+    {
+      "formulaId": "599a7fda-4c0e-5489-b12e-6e4179ee11f2",
+      "locale": "zh",
+      "contentHash": "4c9dc015d98947eca8f23caaec8a54063823555a20b191fcc59e1b1ad19cb093"
+    },
+    {
+      "formulaId": "599a7fda-4c0e-5489-b12e-6e4179ee11f2",
+      "locale": "pt",
+      "contentHash": "d8de922362a3c6ec624db7654f5fb87ed7250aac93a95dadbd2a56582436906c"
+    },
+    {
+      "formulaId": "599a7fda-4c0e-5489-b12e-6e4179ee11f2",
+      "locale": "ko",
+      "contentHash": "ea54ba81aa3c4a4a267145c6e791f10ea62d7a31b9fe57b3d08dd71443acaaf3"
+    },
+    {
+      "formulaId": "599a7fda-4c0e-5489-b12e-6e4179ee11f2",
+      "locale": "ru",
+      "contentHash": "6b76bd93f435c0e786ae3fbe0990bc4a20903651d3a5afddc13558c3b4655d3c"
+    },
+    {
+      "formulaId": "599a7fda-4c0e-5489-b12e-6e4179ee11f2",
+      "locale": "es",
+      "contentHash": "1ce9538c1805e29aa4f3bf383a97c2f90e76094d33ada56ff09fdc91f71617db"
+    },
+    {
+      "formulaId": "599a7fda-4c0e-5489-b12e-6e4179ee11f2",
+      "locale": "fr",
+      "contentHash": "3ef90dde3390bd55075dcf6a2ce51530c2a07817dd4187e7ac22aef354a3cba6"
+    },
+    {
+      "formulaId": "b79313f5-2181-5013-bd21-e59a7222dce5",
+      "locale": "en",
+      "contentHash": "2c12da817e0836f218bfc3d7f04aa142abb4af1c201e11618814062a28084447"
+    },
+    {
+      "formulaId": "b79313f5-2181-5013-bd21-e59a7222dce5",
+      "locale": "zh",
+      "contentHash": "7fbf34fa799d08b246be77c302065c4fb3e57865b121b6f5ecb5e09366d98560"
+    },
+    {
+      "formulaId": "b79313f5-2181-5013-bd21-e59a7222dce5",
+      "locale": "pt",
+      "contentHash": "c43b1acfdadcf341b90d2adca10c81724b0f2d2f62e0b896d1430d8ea4503394"
+    },
+    {
+      "formulaId": "b79313f5-2181-5013-bd21-e59a7222dce5",
+      "locale": "ko",
+      "contentHash": "38733194d1160d034cb736c446d46df73080e8a98ea5dbd9ccc926e3b81a3983"
+    },
+    {
+      "formulaId": "b79313f5-2181-5013-bd21-e59a7222dce5",
+      "locale": "ru",
+      "contentHash": "bb24cf0d949923861a4511b3d971ff8434994320f37c8a5e9d60adf627a42720"
+    },
+    {
+      "formulaId": "b79313f5-2181-5013-bd21-e59a7222dce5",
+      "locale": "es",
+      "contentHash": "445daa31c87b3224c4ba594cc8ba440fec401686bf48f03580bb298c21400f77"
+    },
+    {
+      "formulaId": "b79313f5-2181-5013-bd21-e59a7222dce5",
+      "locale": "fr",
+      "contentHash": "2e6bba50155130b6aaecf463dcbc03d484a18aaee1c874ebe9f7816f5b0140e3"
+    },
+    {
+      "formulaId": "d0079630-8ed3-5379-9e37-52cb7f0f7379",
+      "locale": "en",
+      "contentHash": "cac3ad7ec669d840a2475c536729e43852f64a1b57b6b3a6dfb0c33944f05e12"
+    },
+    {
+      "formulaId": "d0079630-8ed3-5379-9e37-52cb7f0f7379",
+      "locale": "zh",
+      "contentHash": "64f7e1a3c71926ce4ad64483fda567b8871d43e3234d6b47f9652ebdfb041ad2"
+    },
+    {
+      "formulaId": "d0079630-8ed3-5379-9e37-52cb7f0f7379",
+      "locale": "pt",
+      "contentHash": "5a06e49d6a120808a6a9e00b11681839ac8a0796e9505a125e966f8638537d90"
+    },
+    {
+      "formulaId": "d0079630-8ed3-5379-9e37-52cb7f0f7379",
+      "locale": "ko",
+      "contentHash": "254fa5d81135b455848daf620d8656be6517f75b860a15c34551bb6796e5a9fe"
+    },
+    {
+      "formulaId": "d0079630-8ed3-5379-9e37-52cb7f0f7379",
+      "locale": "ru",
+      "contentHash": "d99342e4d8102190ed9d6010e5ee1f68a4eabef15a72bfdcc60866fb3cf43312"
+    },
+    {
+      "formulaId": "d0079630-8ed3-5379-9e37-52cb7f0f7379",
+      "locale": "es",
+      "contentHash": "5e8ef5434e2376e0a016acbb9f83ac5a64b4a5bd257b5d9ae4058982168b910e"
+    },
+    {
+      "formulaId": "d0079630-8ed3-5379-9e37-52cb7f0f7379",
+      "locale": "fr",
+      "contentHash": "e3f2a05cf3d56464edae38fc324544d7a440f552c455d042009dd823b8d32e97"
+    }
+  ],
+  "files": [
+    {
+      "path": "resources/formula-library/v1/teaching-content/en/0ba0b082-c4b0-51d8-b981-7ca1ca25b9f3.json",
+      "sha256": "8c0cc564e9f9928a0a3fa36e08af91163e3473f6acd05335edf620c51517eb8f",
+      "contentHash": "4d1388e4a77c8fb0a510057b3c870f9fd99512c188860dbca3ca32043bc404f0"
+    },
+    {
+      "path": "resources/formula-library/v1/teaching-content/zh/0ba0b082-c4b0-51d8-b981-7ca1ca25b9f3.json",
+      "sha256": "34ca660cd544a457722fc64804d687f4c9e4944dd953ba334fd0968b22dcb3d8",
+      "contentHash": "1037968e99b979fd123f637251326de74e86f97804bc625e22d19f664d610ee8"
+    },
+    {
+      "path": "resources/formula-library/v1/teaching-content/pt/0ba0b082-c4b0-51d8-b981-7ca1ca25b9f3.json",
+      "sha256": "7ab24720877be91248899ce9ea93ecb143c1a4efea0bb15fbbab7c350f2f7dbe",
+      "contentHash": "9973829af354386d076c76ad8ad7e9fc70815778af80ab3eb0765856bfbeb8bd"
+    },
+    {
+      "path": "resources/formula-library/v1/teaching-content/ko/0ba0b082-c4b0-51d8-b981-7ca1ca25b9f3.json",
+      "sha256": "21aacbe03563779009d2102af209c9a7987605bf9f1a6fa85a40875584a7c911",
+      "contentHash": "0240355acb478236ccd8cdb3afb809f5f9510a46f837e5bb106cc212ff8c28a4"
+    },
+    {
+      "path": "resources/formula-library/v1/teaching-content/ru/0ba0b082-c4b0-51d8-b981-7ca1ca25b9f3.json",
+      "sha256": "fc3dc60bd197875a5ac10d737f28cf73c0bfe6f2b1a100a620a85fb7b3408193",
+      "contentHash": "53869a27742ed46e88ae766b244d6f0c35a7f142b598cfea215363b19ba0ff74"
+    },
+    {
+      "path": "resources/formula-library/v1/teaching-content/es/0ba0b082-c4b0-51d8-b981-7ca1ca25b9f3.json",
+      "sha256": "924c38191a27f5215ddd63fad1df30848f2a96ce8660f4e7defa247d179b3768",
+      "contentHash": "999875d76d917e62688738b6dac4fbcc3a1906ed2582c742cd15017686dfef81"
+    },
+    {
+      "path": "resources/formula-library/v1/teaching-content/fr/0ba0b082-c4b0-51d8-b981-7ca1ca25b9f3.json",
+      "sha256": "db99c060223fc1bbcbdc9d645f333bcd59b42adb778d8f94eb0e16496a8059d1",
+      "contentHash": "2b5af7e9141c5b2857af5eecd065cfd293e46b223d23fbeb9f1c88c86555af31"
+    },
+    {
+      "path": "resources/formula-library/v1/teaching-content/en/1936e9b5-1312-593e-ab67-72e95bc514b0.json",
+      "sha256": "afc61152cdeb4db374574bf3a1b140d5ed5fcdf86ed998bfe6d89873e960aaa9",
+      "contentHash": "8ad1ddfcd2a71b3a7a561c0247f2d30c48887de2d08a5ab54df6307c665db562"
+    },
+    {
+      "path": "resources/formula-library/v1/teaching-content/zh/1936e9b5-1312-593e-ab67-72e95bc514b0.json",
+      "sha256": "c6392e40d341a49507fe6a18ce75d4c04bf1c3ae12f3adb0298384ad3094e38b",
+      "contentHash": "adf257e468ee47df315ecc91c83fee00e0c7737a9d0622ba400e344f71273a08"
+    },
+    {
+      "path": "resources/formula-library/v1/teaching-content/pt/1936e9b5-1312-593e-ab67-72e95bc514b0.json",
+      "sha256": "f50e9156be1e5ff24591695d5bb8e7d1f35b9d939d812e02dea6e69399d6ac5e",
+      "contentHash": "a0b2736a683b11e2499377eb53b4960ecd31f9cca226df6cd1eaf243a84d979c"
+    },
+    {
+      "path": "resources/formula-library/v1/teaching-content/ko/1936e9b5-1312-593e-ab67-72e95bc514b0.json",
+      "sha256": "4f3c5f2eef740e5ae87b486acaeee71093e89646a8d65ff97ee6437100df585d",
+      "contentHash": "aa0083fe33cc9a10184b7fb8e38fd8e484773d1f444c5f21753e60d9cda93f1c"
+    },
+    {
+      "path": "resources/formula-library/v1/teaching-content/ru/1936e9b5-1312-593e-ab67-72e95bc514b0.json",
+      "sha256": "85b83804d527d21e365f7279172372f05fbc511cc124e7cdfc36388f2160abd2",
+      "contentHash": "656fbe423dbef02e838bd9c9d04bb9824e56f2829ba2e6dbe1c909f57d33513d"
+    },
+    {
+      "path": "resources/formula-library/v1/teaching-content/es/1936e9b5-1312-593e-ab67-72e95bc514b0.json",
+      "sha256": "06e08f22fe48744a1c0beaaee03d06b3358a76772f731826bedf14b87e584536",
+      "contentHash": "21f9e90254de895c26f0fdda56a2e7e528afa806cd904a8b78aeb72d8a36090c"
+    },
+    {
+      "path": "resources/formula-library/v1/teaching-content/fr/1936e9b5-1312-593e-ab67-72e95bc514b0.json",
+      "sha256": "4ebf80b621755b41bea16d7f6e8036ec381442be86c7c355e864629630be61b0",
+      "contentHash": "38352cd87661955e0fc24964352ce0b6ee61b2535a0fd44add07ead51d43b7a6"
+    },
+    {
+      "path": "resources/formula-library/v1/teaching-content/en/20e16f12-e0e9-5f56-9364-5c2b60c05f20.json",
+      "sha256": "7298216a4b035c9c526d5677a19fa73291e5cace862323744dd564451d6b950a",
+      "contentHash": "dacdad9b8155a4ececb9a74b010134188c76050c8adee67842a02f1dfc74b2db"
+    },
+    {
+      "path": "resources/formula-library/v1/teaching-content/zh/20e16f12-e0e9-5f56-9364-5c2b60c05f20.json",
+      "sha256": "fc16a4d72acdbafebc8a49f7379e3885c6ad6d8b11fcef0518767181c2e9726b",
+      "contentHash": "683f3dbf4f0ad94931ac52320ca0cd67d059d618690b457284f31e63053e0967"
+    },
+    {
+      "path": "resources/formula-library/v1/teaching-content/pt/20e16f12-e0e9-5f56-9364-5c2b60c05f20.json",
+      "sha256": "e8cdec5fef72db071d7b8ff4c270a0fea6ee596b1d95b955f0faca472a8e780d",
+      "contentHash": "2478eea06ef618138a3db0bf1b71fd484087da518564ae9d1be9b4cbeb4fa01f"
+    },
+    {
+      "path": "resources/formula-library/v1/teaching-content/ko/20e16f12-e0e9-5f56-9364-5c2b60c05f20.json",
+      "sha256": "4d00acc610a4ed9e9c2d1dc98cdecba4300bcf98b5f2b2e35281058f361d1a79",
+      "contentHash": "402c33917262bbc0cd4331b1991c1204df0765e60d8c7761766a60d6290ed69a"
+    },
+    {
+      "path": "resources/formula-library/v1/teaching-content/ru/20e16f12-e0e9-5f56-9364-5c2b60c05f20.json",
+      "sha256": "5124573efef780aceacba2f533d852df14b064f63ef0d8851a5185ea8731f356",
+      "contentHash": "0cbedb9b3940d003850c4ae8b54fc1efa59ad5797d3d62bc0dd69693492eb58d"
+    },
+    {
+      "path": "resources/formula-library/v1/teaching-content/es/20e16f12-e0e9-5f56-9364-5c2b60c05f20.json",
+      "sha256": "7b9d79a7cbb86591fc15b7dffc6391003dc48f6d2ecc331a8fadabedd9b5499f",
+      "contentHash": "193804e7bcc317a50137ad910522022bb080145b482a4faa87a2cb700d3d0fe0"
+    },
+    {
+      "path": "resources/formula-library/v1/teaching-content/fr/20e16f12-e0e9-5f56-9364-5c2b60c05f20.json",
+      "sha256": "f9cc138dc362e38b8524e3985c234753dfe989f779cd1b28401d80283fcd0062",
+      "contentHash": "a1816dbf14315deec7159b10796c49cef6a73cab2fc5e6c45229669da7c91244"
+    },
+    {
+      "path": "resources/formula-library/v1/teaching-content/en/1bb379a2-3588-53f8-a3ab-e52021c78054.json",
+      "sha256": "008575004dc9d975d10f11bdaf7076a8973de2bba71314a23cc0e3dab8866518",
+      "contentHash": "1608ffe1a8a2eb227fdac49d45bb2acd6e8c1cc72c87ad2aaba26f5086036ba6"
+    },
+    {
+      "path": "resources/formula-library/v1/teaching-content/zh/1bb379a2-3588-53f8-a3ab-e52021c78054.json",
+      "sha256": "025dc4d0a5ae21f3a785ca1fb680a41c5fad5f30dcb21951d265ada2bfc3cfe3",
+      "contentHash": "fa6165925feae6cedc2a82ba610ccc8b36273f420d28c6ef2245731b10208f71"
+    },
+    {
+      "path": "resources/formula-library/v1/teaching-content/pt/1bb379a2-3588-53f8-a3ab-e52021c78054.json",
+      "sha256": "57040856f122825af3cbb34a199ad40a0ad9f825ce2efd8765180ce35b8bf4a6",
+      "contentHash": "f7acc3ec15b43965d9c231556319e12fd7e6c4b3b6264459683b0a5bf98df173"
+    },
+    {
+      "path": "resources/formula-library/v1/teaching-content/ko/1bb379a2-3588-53f8-a3ab-e52021c78054.json",
+      "sha256": "4d020e42abd651c90ed5d69cd4d6a82435658fa88a1440b23b7287d63c7281ec",
+      "contentHash": "4946bfc13bdf7a481c1ea737785d34f7c59ae46e6ac5e8dec5dcb25133359c65"
+    },
+    {
+      "path": "resources/formula-library/v1/teaching-content/ru/1bb379a2-3588-53f8-a3ab-e52021c78054.json",
+      "sha256": "ccd3250f1793eaa4a2269aa4046e06b456fa37df119ae66db709796e192a92e8",
+      "contentHash": "8ca889d50e2dcd125d6c082fb907b4df45bb773e92de2a3810c46bd6530cde61"
+    },
+    {
+      "path": "resources/formula-library/v1/teaching-content/es/1bb379a2-3588-53f8-a3ab-e52021c78054.json",
+      "sha256": "927705995ec669202ae9b4606d19b298a178dffd689026f2e6f286efa8483925",
+      "contentHash": "08e5372f67578a04e7fa2a733ca451b58b4a9a426e53e5b869ba7404a72eb586"
+    },
+    {
+      "path": "resources/formula-library/v1/teaching-content/fr/1bb379a2-3588-53f8-a3ab-e52021c78054.json",
+      "sha256": "79537b36c1f893431b8783dfe3056164f28e9df4f3455b820c31ad64dbd643ce",
+      "contentHash": "d2af6095f21fa1668755f4a75a6ccf8d561b1c4ed6919f4dd025e8e83942170c"
+    },
+    {
+      "path": "resources/formula-library/v1/teaching-content/en/0df5ac6e-d97e-55db-b624-96c310af07dd.json",
+      "sha256": "0dba67220bb2d234a6187cd7f5e3372e68479b85f854d8ff58802910b8857674",
+      "contentHash": "95137002ad32c06577e02def4799eacd6fb98795877b8144428777fb641352d1"
+    },
+    {
+      "path": "resources/formula-library/v1/teaching-content/zh/0df5ac6e-d97e-55db-b624-96c310af07dd.json",
+      "sha256": "0b4f98f5403b91c062f74bc8f572d718dacc8e2da6c9cd2b7318d1ffc8a7abed",
+      "contentHash": "712d17068eefe4dd3f68f0ea7d7f88c136b9d7517f9805ff7794f987db24fced"
+    },
+    {
+      "path": "resources/formula-library/v1/teaching-content/pt/0df5ac6e-d97e-55db-b624-96c310af07dd.json",
+      "sha256": "b9044ce1bb74591fa2213b23799484982dda4d158245a27de40ee1bd974952a5",
+      "contentHash": "35de970d93b6d289c065b3743fd69a6f8403c2b2559a1abbf763bde937f4e787"
+    },
+    {
+      "path": "resources/formula-library/v1/teaching-content/ko/0df5ac6e-d97e-55db-b624-96c310af07dd.json",
+      "sha256": "a4250dffdd2d9fe14b3952715c89e051228c7ecbb3fb1f36cb6a10f857ebfdee",
+      "contentHash": "13c85b6b13f6f346ffe7d8b54c527fd2e5e6e8b7ca78d6cf7c073a90afc4bb68"
+    },
+    {
+      "path": "resources/formula-library/v1/teaching-content/ru/0df5ac6e-d97e-55db-b624-96c310af07dd.json",
+      "sha256": "e68b368ce7c016b4c1e43b8264536f2b6bc352bac26d5fc826c3d3883a615c85",
+      "contentHash": "5fad36a51c96e458efc64df35d8750f4b2cffe2a715b42c20b9f311b08e29f92"
+    },
+    {
+      "path": "resources/formula-library/v1/teaching-content/es/0df5ac6e-d97e-55db-b624-96c310af07dd.json",
+      "sha256": "fb60a73e5ce2a4194308aea593ca1d9a0e9b4348e068d15fd5100ea943e01b38",
+      "contentHash": "637d66ea83bb2bcbe14324062c6ec67b059c6aebf9b62b3f30b7a2dfc7c79467"
+    },
+    {
+      "path": "resources/formula-library/v1/teaching-content/fr/0df5ac6e-d97e-55db-b624-96c310af07dd.json",
+      "sha256": "04ec4fd0670853d1e47c17b840659e3f939dd65fb441ecb8c923983f5a9658ae",
+      "contentHash": "a3c9bf3abc0619cb615995b80fd5482f2aac2c51a4d7d694a970c95606a53678"
+    },
+    {
+      "path": "resources/formula-library/v1/teaching-content/en/6d27b5fd-462b-5561-bac2-7c5f915e3cb5.json",
+      "sha256": "261958f410033e4290e32959ab73d06fcdbbc842864e1f8aa8b188bd3f13b04e",
+      "contentHash": "e6d09d556daddf1d6bf53de03354a43d35ae9954a4b7f0ab0e759c64518a9eb2"
+    },
+    {
+      "path": "resources/formula-library/v1/teaching-content/zh/6d27b5fd-462b-5561-bac2-7c5f915e3cb5.json",
+      "sha256": "0a766d1e31c675465ed4efa554c69fa56251c186d81c3756d6303159d2b905ff",
+      "contentHash": "ff95ac94e3b37ddb764e881e6d53885d9ed7b607fe873f880668fd6b6450b1dd"
+    },
+    {
+      "path": "resources/formula-library/v1/teaching-content/pt/6d27b5fd-462b-5561-bac2-7c5f915e3cb5.json",
+      "sha256": "16b78ea45daaf10947e70a07f92c8fc67b8eea0efcc5795fcf2c60f2cdc84e8a",
+      "contentHash": "330b4649b018b5e0e69ce78051ac23b783a6e0e99f1fc590ae18c9bc24b64655"
+    },
+    {
+      "path": "resources/formula-library/v1/teaching-content/ko/6d27b5fd-462b-5561-bac2-7c5f915e3cb5.json",
+      "sha256": "d93eece4bf3c7b21f97517718387ac07530efd1dbc7fd3fb124321de8800f036",
+      "contentHash": "923a41a5bf0f6714f0b4e403b916b90a7be4ea3baa3a7e6618594ab02ada89ba"
+    },
+    {
+      "path": "resources/formula-library/v1/teaching-content/ru/6d27b5fd-462b-5561-bac2-7c5f915e3cb5.json",
+      "sha256": "22936d0c094e084a4ba35f751cb415399bbb5f99b0e82d8829b9f63b002ac830",
+      "contentHash": "223fd17ce73032b3037a6c9c48dcbe194a4ebded02477d62e5015276ce36a7b1"
+    },
+    {
+      "path": "resources/formula-library/v1/teaching-content/es/6d27b5fd-462b-5561-bac2-7c5f915e3cb5.json",
+      "sha256": "f902d00c56abfb17ea71c985278f4b150abe402e434f2f9bd4074aaa9977f216",
+      "contentHash": "801e247cd92bb73f8ef7071aee29aab511dcad7bb15de056d8020f29f52a2c68"
+    },
+    {
+      "path": "resources/formula-library/v1/teaching-content/fr/6d27b5fd-462b-5561-bac2-7c5f915e3cb5.json",
+      "sha256": "e419f81aec2deb3d65f1b4d120e4e5235f80eb72e0b8c0377cd134e4f607a35c",
+      "contentHash": "a1644efad54c4507ff5ec1b648343522121df14590322dd27e2f2f7c4743c113"
+    },
+    {
+      "path": "resources/formula-library/v1/teaching-content/en/75e70076-b422-5535-b3c9-c484fbf879e6.json",
+      "sha256": "d09ae9e39424ed698a7fdb9fb5a5e4d139be21df2aa5996f6ef221d6b7f99e0e",
+      "contentHash": "d9ce80f39061c879038b92a392a9d3785eaaba6b3e70b88d73dcd47383fa4d14"
+    },
+    {
+      "path": "resources/formula-library/v1/teaching-content/zh/75e70076-b422-5535-b3c9-c484fbf879e6.json",
+      "sha256": "f20cb04192fdba4028688adc08a83b808e57ad1bf270739660c7f42d8cb740c5",
+      "contentHash": "862f7f0466799a85c79ac32ec744447b9528005188ddc653357ed921410b8bf9"
+    },
+    {
+      "path": "resources/formula-library/v1/teaching-content/pt/75e70076-b422-5535-b3c9-c484fbf879e6.json",
+      "sha256": "af72eee58c624005a9ae69489223e4ffe2ebd43bb14763bb57faeb4b826f4053",
+      "contentHash": "913151c52a8b892f9edbdfad9ea78ebdfe9b0ff38bc63e60444222b8691d18dd"
+    },
+    {
+      "path": "resources/formula-library/v1/teaching-content/ko/75e70076-b422-5535-b3c9-c484fbf879e6.json",
+      "sha256": "925c46512f12f1bb0f9a788dda71b7946ddb836cecbf38609dc2be2bf1995126",
+      "contentHash": "6dacc4941425ac65d2c778645241986a1bac26fc9e017c5c654820a83e64f058"
+    },
+    {
+      "path": "resources/formula-library/v1/teaching-content/ru/75e70076-b422-5535-b3c9-c484fbf879e6.json",
+      "sha256": "461b9df9bf254b2ee94cf99096356cc9813facd19c69806e86cd8a20b7fc2a2d",
+      "contentHash": "7f9410e0e7eaaf7184cb1880d92920c6c41e5c7228cf9b7cf50ccb86e410c308"
+    },
+    {
+      "path": "resources/formula-library/v1/teaching-content/es/75e70076-b422-5535-b3c9-c484fbf879e6.json",
+      "sha256": "50e7cbc3e663f5e94f8f79560b16dae3709b5a5840c32cd81cfa018f46d92eb5",
+      "contentHash": "721123e1b806e5cb46af9167fd6339ccd567e95addcdc43f5671a48d19347cdf"
+    },
+    {
+      "path": "resources/formula-library/v1/teaching-content/fr/75e70076-b422-5535-b3c9-c484fbf879e6.json",
+      "sha256": "6a17df1518ad952708a425694fb71d48d089689cb8cb599c5f6bc1ddf62e95b1",
+      "contentHash": "b98c7750000a00980634a89842745eac063139471efc00df90c46965d1a8ccee"
+    },
+    {
+      "path": "resources/formula-library/v1/teaching-content/en/599a7fda-4c0e-5489-b12e-6e4179ee11f2.json",
+      "sha256": "59624b83afcdcc164c3a59ff7960d9dceb1aca3d4b997033d9862da8fd3b62c3",
+      "contentHash": "90e78447859e27af456be2ff6cdbeadc31a08f9f7557e06d242347218dbc39b2"
+    },
+    {
+      "path": "resources/formula-library/v1/teaching-content/zh/599a7fda-4c0e-5489-b12e-6e4179ee11f2.json",
+      "sha256": "4509f6d3249c50035c6ac53d4d5cbf1176a8990595ba278ca412bbc053ed3771",
+      "contentHash": "4c9dc015d98947eca8f23caaec8a54063823555a20b191fcc59e1b1ad19cb093"
+    },
+    {
+      "path": "resources/formula-library/v1/teaching-content/pt/599a7fda-4c0e-5489-b12e-6e4179ee11f2.json",
+      "sha256": "cdcd13a34761b84ebc7f265ca03bedb9f0c8a807cdb8fc4c8048f568a755ff50",
+      "contentHash": "d8de922362a3c6ec624db7654f5fb87ed7250aac93a95dadbd2a56582436906c"
+    },
+    {
+      "path": "resources/formula-library/v1/teaching-content/ko/599a7fda-4c0e-5489-b12e-6e4179ee11f2.json",
+      "sha256": "935a8d28d49f3117ac5d9032ed78b6b9d8e856bbc2404550b7859b4779e080e6",
+      "contentHash": "ea54ba81aa3c4a4a267145c6e791f10ea62d7a31b9fe57b3d08dd71443acaaf3"
+    },
+    {
+      "path": "resources/formula-library/v1/teaching-content/ru/599a7fda-4c0e-5489-b12e-6e4179ee11f2.json",
+      "sha256": "d910f28c0793cf8eb7b2f121591e4f9c3cb92adb3755d2dc29acc6b464e27a3c",
+      "contentHash": "6b76bd93f435c0e786ae3fbe0990bc4a20903651d3a5afddc13558c3b4655d3c"
+    },
+    {
+      "path": "resources/formula-library/v1/teaching-content/es/599a7fda-4c0e-5489-b12e-6e4179ee11f2.json",
+      "sha256": "6f4cb3b9e56351298719236d90dca62dbe69d49c642b66d90d4700c35bdc32df",
+      "contentHash": "1ce9538c1805e29aa4f3bf383a97c2f90e76094d33ada56ff09fdc91f71617db"
+    },
+    {
+      "path": "resources/formula-library/v1/teaching-content/fr/599a7fda-4c0e-5489-b12e-6e4179ee11f2.json",
+      "sha256": "6dac0089fb3060b5338ec4507257ad87079119083698ca0febf0254b89628f96",
+      "contentHash": "3ef90dde3390bd55075dcf6a2ce51530c2a07817dd4187e7ac22aef354a3cba6"
+    },
+    {
+      "path": "resources/formula-library/v1/teaching-content/en/b79313f5-2181-5013-bd21-e59a7222dce5.json",
+      "sha256": "b26efcc6a637df79ae21eaf2f6df87e0e075fd063ac0ee967ba92db8509e807d",
+      "contentHash": "2c12da817e0836f218bfc3d7f04aa142abb4af1c201e11618814062a28084447"
+    },
+    {
+      "path": "resources/formula-library/v1/teaching-content/zh/b79313f5-2181-5013-bd21-e59a7222dce5.json",
+      "sha256": "dc8ae535be594f541fd04abb4307348df0d048c5f2c005827754a6ef1b9b692b",
+      "contentHash": "7fbf34fa799d08b246be77c302065c4fb3e57865b121b6f5ecb5e09366d98560"
+    },
+    {
+      "path": "resources/formula-library/v1/teaching-content/pt/b79313f5-2181-5013-bd21-e59a7222dce5.json",
+      "sha256": "351993ccf9dc9ba6341e455d42818769c634114f4910b20a943da2396eee2552",
+      "contentHash": "c43b1acfdadcf341b90d2adca10c81724b0f2d2f62e0b896d1430d8ea4503394"
+    },
+    {
+      "path": "resources/formula-library/v1/teaching-content/ko/b79313f5-2181-5013-bd21-e59a7222dce5.json",
+      "sha256": "64a260326a9020886518c02f86139bfac35f72d4b29c8bc08f990fadd6c40e2f",
+      "contentHash": "38733194d1160d034cb736c446d46df73080e8a98ea5dbd9ccc926e3b81a3983"
+    },
+    {
+      "path": "resources/formula-library/v1/teaching-content/ru/b79313f5-2181-5013-bd21-e59a7222dce5.json",
+      "sha256": "b51e0387cff933dfb356da5775cbcda9998a80582dfacfda419223d40d7b22f4",
+      "contentHash": "bb24cf0d949923861a4511b3d971ff8434994320f37c8a5e9d60adf627a42720"
+    },
+    {
+      "path": "resources/formula-library/v1/teaching-content/es/b79313f5-2181-5013-bd21-e59a7222dce5.json",
+      "sha256": "d14a925de051cbb234928d1c0318229aae17196a59052061e333c8071110a85b",
+      "contentHash": "445daa31c87b3224c4ba594cc8ba440fec401686bf48f03580bb298c21400f77"
+    },
+    {
+      "path": "resources/formula-library/v1/teaching-content/fr/b79313f5-2181-5013-bd21-e59a7222dce5.json",
+      "sha256": "62a87fd7452837836362248f96cb52dfb41f85776693335f607a92c7891ec2e2",
+      "contentHash": "2e6bba50155130b6aaecf463dcbc03d484a18aaee1c874ebe9f7816f5b0140e3"
+    },
+    {
+      "path": "resources/formula-library/v1/teaching-content/en/d0079630-8ed3-5379-9e37-52cb7f0f7379.json",
+      "sha256": "a88a29d2223bad9a4ef1f10bd655afe1c60b976f12ed1636a975317c8fbf0400",
+      "contentHash": "cac3ad7ec669d840a2475c536729e43852f64a1b57b6b3a6dfb0c33944f05e12"
+    },
+    {
+      "path": "resources/formula-library/v1/teaching-content/zh/d0079630-8ed3-5379-9e37-52cb7f0f7379.json",
+      "sha256": "ad1b75c37bbfe26b00dbd71f7d3c18cac95b479f8c341ba6125e423dd88ac6b1",
+      "contentHash": "64f7e1a3c71926ce4ad64483fda567b8871d43e3234d6b47f9652ebdfb041ad2"
+    },
+    {
+      "path": "resources/formula-library/v1/teaching-content/pt/d0079630-8ed3-5379-9e37-52cb7f0f7379.json",
+      "sha256": "51f69f9f5a867cecf498668c00347c71db41c316d7b4d164a5438079f7ded2cb",
+      "contentHash": "5a06e49d6a120808a6a9e00b11681839ac8a0796e9505a125e966f8638537d90"
+    },
+    {
+      "path": "resources/formula-library/v1/teaching-content/ko/d0079630-8ed3-5379-9e37-52cb7f0f7379.json",
+      "sha256": "92eca7068c3d47907d447e08fe941047f23c8fbdf0a87dee4f9b94c8c86f10ae",
+      "contentHash": "254fa5d81135b455848daf620d8656be6517f75b860a15c34551bb6796e5a9fe"
+    },
+    {
+      "path": "resources/formula-library/v1/teaching-content/ru/d0079630-8ed3-5379-9e37-52cb7f0f7379.json",
+      "sha256": "95630bfa95d64df350903380ff4a3a452dc1e09e913da81048f7be886ca36a1e",
+      "contentHash": "d99342e4d8102190ed9d6010e5ee1f68a4eabef15a72bfdcc60866fb3cf43312"
+    },
+    {
+      "path": "resources/formula-library/v1/teaching-content/es/d0079630-8ed3-5379-9e37-52cb7f0f7379.json",
+      "sha256": "8533868786f1becf3755a5a0d25ff98afa04a33905a9f2bce98a968dd6b65bf1",
+      "contentHash": "5e8ef5434e2376e0a016acbb9f83ac5a64b4a5bd257b5d9ae4058982168b910e"
+    },
+    {
+      "path": "resources/formula-library/v1/teaching-content/fr/d0079630-8ed3-5379-9e37-52cb7f0f7379.json",
+      "sha256": "1e485e9ae3c2be1d5c56d816cb6c442b1226dbf003bd1b0a309d72d3691807ee",
+      "contentHash": "e3f2a05cf3d56464edae38fc324544d7a440f552c455d042009dd823b8d32e97"
+    }
+  ]
+}

@@ -1,5 +1,6 @@
 import type { Metadata } from 'next';
 import Script from 'next/script';
+import { notFound } from 'next/navigation';
 import { NextIntlClientProvider } from 'next-intl';
 import { getMessages, getTranslations, setRequestLocale } from 'next-intl/server';
 import { Analytics } from '@vercel/analytics/next';
@@ -13,10 +14,16 @@ import { HTML_LANG, OG_LOCALE, SUPPORTED_LOCALES, type SupportedLocale } from '@
 import { SITE } from '@/lib/site';
 import { websiteJsonLd, renderJsonLd } from '@/lib/json-ld';
 
-export const dynamicParams = false;
+export const dynamicParams = true;
 
 export function generateStaticParams() {
   return SUPPORTED_LOCALES.map((locale) => ({ locale }));
+}
+
+export function isSupportedLocaleRoute(
+  locale: string
+): locale is SupportedLocale {
+  return (SUPPORTED_LOCALES as readonly string[]).includes(locale);
 }
 
 /**
@@ -36,6 +43,7 @@ export async function generateMetadata({
   params: Promise<{ locale: string }>;
 }): Promise<Metadata> {
   const { locale } = await params;
+  if (!isSupportedLocaleRoute(locale)) notFound();
   const t = await getTranslations({ locale, namespace: 'metadata.explore' });
   const baseUrl = SITE.url;
   const image = `${SITE.url}${SITE.ogImage}`;
@@ -74,6 +82,7 @@ export default async function LocaleLayout({
   params: Promise<{ locale: string }>;
 }) {
   const { locale } = await params;
+  if (!isSupportedLocaleRoute(locale)) notFound();
   setRequestLocale(locale);
   const messages = await getMessages();
 

@@ -1,0 +1,35 @@
+{
+  "schema": "fractalpark-teaching-locale/v1",
+  "formulaId": "cc40b50c-d3ff-54f0-b4ea-98bdf0fd0096",
+  "locale": "zh",
+  "sourceRevision": "37a6c61666fd5bf3e2bdef96849dc27a10bd58d152e6a161005ab6e565f12ce0",
+  "semanticHash": "4386e45ac1c4535868f2e3607857b8ae92a8ffbf497de4c7c572717d5db6245c",
+  "englishContentHash": "a7b71692c36b942c1fcdb8f8e21dea6b0ddc8fcc1fa832655d08c0391f0cde98",
+  "overview": "在 FRM-like/1 中，mcMullen23 从 ismand 分支把 z 设为 0，否则设为 pixel 开始，循环首个节点是 z3 = z ^ 3，并以 |z| <= 256 限制迭代。请按源代码的实际顺序阅读这些操作。",
+  "sourceWalkthrough": {
+    "cc40b50c-d3ff-54f0-b4ea-98bdf0fd0096:37a6c61666fd5bf3e2bdef96849dc27a10bd58d152e6a161005ab6e565f12ce0:initialization": "在 mcMullen23 中，初始化节点仅执行：ismand 分支把 z 设为 0，否则设为 pixel。",
+    "cc40b50c-d3ff-54f0-b4ea-98bdf0fd0096:37a6c61666fd5bf3e2bdef96849dc27a10bd58d152e6a161005ab6e565f12ce0:iteration": "在 mcMullen23 中，此循环节点仅执行：z3 = z ^ 3。",
+    "cc40b50c-d3ff-54f0-b4ea-98bdf0fd0096:37a6c61666fd5bf3e2bdef96849dc27a10bd58d152e6a161005ab6e565f12ce0:termination": "在 mcMullen23 中，bailout 节点仅测试：|z| <= 256。"
+  },
+  "syntaxFeatures": {
+    "initialization-flow": "在 mcMullen23 中，初始化特征聚焦 ismand 分支把 z 设为 0，否则设为 pixel 这一个起始操作。",
+    "iteration-flow": "在 mcMullen23 中，迭代特征聚焦 z3 = z ^ 3 这一个循环赋值。",
+    "bailout-test": "在 mcMullen23 中，终止特征聚焦比较 |z| <= 256。"
+  },
+  "parameterExperiment": {
+    "steps": [
+      "以固定参数平面基线渲染 mcMullen23：中心 (0, 0)、缩放 0.25、旋转 0、96 次迭代。",
+      "除迭代次数外保持基线不变，以 48 次迭代再渲染一次，并与 96 次迭代的基线比较。"
+    ],
+    "expectedObservation": "在 mcMullen23 中，记录 48 次与 96 次迭代的比较是否出现差异，并标出源代码限制 |z| <= 256。"
+  },
+  "exercise": {
+    "prompt": "在 mcMullen23 中，找出三个注释：分别说明 ismand 分支把 z 设为 0，否则设为 pixel、z3 = z ^ 3 和 |z| <= 256，并解释为什么相邻语句不属于循环注释。",
+    "completionCheck": "在 mcMullen23 中，完成时应列出全部 3 个注释键，并准确说明 z3 = z ^ 3 与 |z| <= 256 的作用。"
+  },
+  "factsPresentation": {
+    "provenanceLead": "来源说明见英文事实单元。",
+    "rightsLead": "权利说明见英文事实单元。"
+  },
+  "contentHash": "f95d3f0d214ac03e9c98f40d0256e2a62717a6fb0b37a0a5a79e499d07256997"
+}

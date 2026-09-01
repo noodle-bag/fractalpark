@@ -1,0 +1,33 @@
+{
+  "schema": "fractalpark-teaching-locale/v1",
+  "formulaId": "3a83800c-4a44-5e61-9651-d3d5adb71213",
+  "locale": "pt",
+  "sourceRevision": "12a2fd990373fc6f7467674871cbd2c82c78ec9b8354a805b442ef4c6ef58b06",
+  "semanticHash": "491ebbc691a954b85f04cbbf05afa44e877026f31cb3eaa403db6dbf61fd435e",
+  "englishContentHash": "3a4a36bf448f739d13d4ec8eec66cb48af1d5ba38ec55bd66e62918caf6236ce",
+  "localizedName": "perpendicularTricorn",
+  "overview": "Em FRM-like/1, perpendicularTricorn segue a inicialização, o laço e o teste de saída do código-fonte. Trate cada passo como uma operação explícita sobre o estado, sem deduzir regras pelo nome. O perfil fixado permite observar o mesmo processo iterativo.",
+  "sourceWalkthrough": {
+    "3a83800c-4a44-5e61-9651-d3d5adb71213:12a2fd990373fc6f7467674871cbd2c82c78ec9b8354a805b442ef4c6ef58b06:init": "O nó de inicialização executa: `if ismand`",
+    "3a83800c-4a44-5e61-9651-d3d5adb71213:12a2fd990373fc6f7467674871cbd2c82c78ec9b8354a805b442ef4c6ef58b06:loop": "O nó do laço executa: `p = (0, 0)`",
+    "3a83800c-4a44-5e61-9651-d3d5adb71213:12a2fd990373fc6f7467674871cbd2c82c78ec9b8354a805b442ef4c6ef58b06:bailout": "O teste de término é: `|z| <= 256`"
+  },
+  "syntaxFeatures": {
+    "source-sequence": "Esta estrutura organiza os passos do código-fonte citados em uma sequência verificável. 3a83800c-4a44-5e61-9651-d3d5adb71213:12a2fd990373fc6f7467674871cbd2c82c78ec9b8354a805b442ef4c6ef58b06:init, 3a83800c-4a44-5e61-9651-d3d5adb71213:12a2fd990373fc6f7467674871cbd2c82c78ec9b8354a805b442ef4c6ef58b06:loop, 3a83800c-4a44-5e61-9651-d3d5adb71213:12a2fd990373fc6f7467674871cbd2c82c78ec9b8354a805b442ef4c6ef58b06:bailout"
+  },
+  "parameterExperiment": {
+    "steps": [
+      "Use o perfil fixado: mode parameter-plane; center (-0.5, 0); zoom 0.4; rotation 0; iterations 96. Execute uma vez e registre o resultado; depois repita com o mesmo perfil."
+    ],
+    "expectedObservation": "Compare as duas execuções e registre se `p = (0, 0)` produz o mesmo resultado visível e comportamento iterativo."
+  },
+  "exercise": {
+    "prompt": "Encontre as anotações de fonte ligadas a `p = (0, 0)` e explique a ordem entre inicialização, laço e término.",
+    "completionCheck": "Para concluir, liste as três chaves de anotação citadas para `p = (0, 0)` e ordene-as de inicialização a laço e término."
+  },
+  "factsPresentation": {
+    "provenanceLead": "Proveniência:",
+    "rightsLead": "Direitos:"
+  },
+  "contentHash": "458257e67dacecf94b61474910e55a671285fd2b507e247e4ad2bd91e801ac7d"
+}

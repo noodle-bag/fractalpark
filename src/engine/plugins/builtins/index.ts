@@ -1,4 +1,5 @@
 import { pluginRegistry } from '../registry';
+import type { FormulaPlugin } from '../types';
 
 // Classic (28)
 import { mandelbrotPlugin } from './formulas/mandelbrot';
@@ -268,8 +269,16 @@ export function registerBuiltins(options?: { quiet?: boolean }): void {
     sphericalTransform,
   ];
 
-  // Register all plugins
-  for (const plugin of [...formulas, ...coloring, ...transforms]) {
+  // Legacy built-ins are not canonical published identities. Historical source
+  // flags remain metadata only and can never authorize Julia activation.
+  for (const plugin of formulas) {
+    const failClosedPlugin: FormulaPlugin = {
+      ...plugin,
+      supportsJulia: false,
+    };
+    pluginRegistry.register(failClosedPlugin);
+  }
+  for (const plugin of [...coloring, ...transforms]) {
     pluginRegistry.register(plugin);
   }
 

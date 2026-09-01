@@ -1,0 +1,332 @@
+{
+  "version": 1,
+  "status": "prototype-not-reviewed-localization",
+  "locales": [
+    "en",
+    "zh",
+    "pt",
+    "ko",
+    "ru",
+    "es",
+    "fr"
+  ],
+  "formulaCount": 5,
+  "entryCount": 35,
+  "entries": [
+    {
+      "formulaId": "00e14aa8-b766-54ea-a359-3f5d20d329b7",
+      "requestedLocale": "en",
+      "contentLocale": "en",
+      "translationStatus": "draft",
+      "indexability": "noindex",
+      "title": "Mandelbrot",
+      "summary": "Iterate z² + c from z = 0 and stop when the orbit escapes."
+    },
+    {
+      "formulaId": "00e14aa8-b766-54ea-a359-3f5d20d329b7",
+      "requestedLocale": "zh",
+      "contentLocale": "en",
+      "translationStatus": "fallback",
+      "indexability": "noindex",
+      "title": "Mandelbrot",
+      "summary": "Iterate z² + c from z = 0 and stop when the orbit escapes."
+    },
+    {
+      "formulaId": "00e14aa8-b766-54ea-a359-3f5d20d329b7",
+      "requestedLocale": "pt",
+      "contentLocale": "en",
+      "translationStatus": "fallback",
+      "indexability": "noindex",
+      "title": "Mandelbrot",
+      "summary": "Iterate z² + c from z = 0 and stop when the orbit escapes."
+    },
+    {
+      "formulaId": "00e14aa8-b766-54ea-a359-3f5d20d329b7",
+      "requestedLocale": "ko",
+      "contentLocale": "en",
+      "translationStatus": "fallback",
+      "indexability": "noindex",
+      "title": "Mandelbrot",
+      "summary": "Iterate z² + c from z = 0 and stop when the orbit escapes."
+    },
+    {
+      "formulaId": "00e14aa8-b766-54ea-a359-3f5d20d329b7",
+      "requestedLocale": "ru",
+      "contentLocale": "en",
+      "translationStatus": "fallback",
+      "indexability": "noindex",
+      "title": "Mandelbrot",
+      "summary": "Iterate z² + c from z = 0 and stop when the orbit escapes."
+    },
+    {
+      "formulaId": "00e14aa8-b766-54ea-a359-3f5d20d329b7",
+      "requestedLocale": "es",
+      "contentLocale": "en",
+      "translationStatus": "fallback",
+      "indexability": "noindex",
+      "title": "Mandelbrot",
+      "summary": "Iterate z² + c from z = 0 and stop when the orbit escapes."
+    },
+    {
+      "formulaId": "00e14aa8-b766-54ea-a359-3f5d20d329b7",
+      "requestedLocale": "fr",
+      "contentLocale": "en",
+      "translationStatus": "fallback",
+      "indexability": "noindex",
+      "title": "Mandelbrot",
+      "summary": "Iterate z² + c from z = 0 and stop when the orbit escapes."
+    },
+    {
+      "formulaId": "2ab193f5-4919-5e5c-a9fb-c1a0e3f5eb02",
+      "requestedLocale": "en",
+      "contentLocale": "en",
+      "translationStatus": "draft",
+      "indexability": "noindex",
+      "title": "Burning Ship",
+      "summary": "Fold both coordinates to absolute values before the quadratic step."
+    },
+    {
+      "formulaId": "2ab193f5-4919-5e5c-a9fb-c1a0e3f5eb02",
+      "requestedLocale": "zh",
+      "contentLocale": "en",
+      "translationStatus": "fallback",
+      "indexability": "noindex",
+      "title": "Burning Ship",
+      "summary": "Fold both coordinates to absolute values before the quadratic step."
+    },
+    {
+      "formulaId": "2ab193f5-4919-5e5c-a9fb-c1a0e3f5eb02",
+      "requestedLocale": "pt",
+      "contentLocale": "en",
+      "translationStatus": "fallback",
+      "indexability": "noindex",
+      "title": "Burning Ship",
+      "summary": "Fold both coordinates to absolute values before the quadratic step."
+    },
+    {
+      "formulaId": "2ab193f5-4919-5e5c-a9fb-c1a0e3f5eb02",
+      "requestedLocale": "ko",
+      "contentLocale": "en",
+      "translationStatus": "fallback",
+      "indexability": "noindex",
+      "title": "Burning Ship",
+      "summary": "Fold both coordinates to absolute values before the quadratic step."
+    },
+    {
+      "formulaId": "2ab193f5-4919-5e5c-a9fb-c1a0e3f5eb02",
+      "requestedLocale": "ru",
+      "contentLocale": "en",
+      "translationStatus": "fallback",
+      "indexability": "noindex",
+      "title": "Burning Ship",
+      "summary": "Fold both coordinates to absolute values before the quadratic step."
+    },
+    {
+      "formulaId": "2ab193f5-4919-5e5c-a9fb-c1a0e3f5eb02",
+      "requestedLocale": "es",
+      "contentLocale": "en",
+      "translationStatus": "fallback",
+      "indexability": "noindex",
+      "title": "Burning Ship",
+      "summary": "Fold both coordinates to absolute values before the quadratic step."
+    },
+    {
+      "formulaId": "2ab193f5-4919-5e5c-a9fb-c1a0e3f5eb02",
+      "requestedLocale": "fr",
+      "contentLocale": "en",
+      "translationStatus": "fallback",
+      "indexability": "noindex",
+      "title": "Burning Ship",
+      "summary": "Fold both coordinates to absolute values before the quadratic step."
+    },
+    {
+      "formulaId": "dd052c9f-868f-5516-9af0-3f4e78ac7a13",
+      "requestedLocale": "en",
+      "contentLocale": "en",
+      "translationStatus": "draft",
+      "indexability": "noindex",
+      "title": "Newton Cubic",
+      "summary": "Use Newton's method to converge toward roots of z³ − 1."
+    },
+    {
+      "formulaId": "dd052c9f-868f-5516-9af0-3f4e78ac7a13",
+      "requestedLocale": "zh",
+      "contentLocale": "en",
+      "translationStatus": "fallback",
+      "indexability": "noindex",
+      "title": "Newton Cubic",
+      "summary": "Use Newton's method to converge toward roots of z³ − 1."
+    },
+    {
+      "formulaId": "dd052c9f-868f-5516-9af0-3f4e78ac7a13",
+      "requestedLocale": "pt",
+      "contentLocale": "en",
+      "translationStatus": "fallback",
+      "indexability": "noindex",
+      "title": "Newton Cubic",
+      "summary": "Use Newton's method to converge toward roots of z³ − 1."
+    },
+    {
+      "formulaId": "dd052c9f-868f-5516-9af0-3f4e78ac7a13",
+      "requestedLocale": "ko",
+      "contentLocale": "en",
+      "translationStatus": "fallback",
+      "indexability": "noindex",
+      "title": "Newton Cubic",
+      "summary": "Use Newton's method to converge toward roots of z³ − 1."
+    },
+    {
+      "formulaId": "dd052c9f-868f-5516-9af0-3f4e78ac7a13",
+      "requestedLocale": "ru",
+      "contentLocale": "en",
+      "translationStatus": "fallback",
+      "indexability": "noindex",
+      "title": "Newton Cubic",
+      "summary": "Use Newton's method to converge toward roots of z³ − 1."
+    },
+    {
+      "formulaId": "dd052c9f-868f-5516-9af0-3f4e78ac7a13",
+      "requestedLocale": "es",
+      "contentLocale": "en",
+      "translationStatus": "fallback",
+      "indexability": "noindex",
+      "title": "Newton Cubic",
+      "summary": "Use Newton's method to converge toward roots of z³ − 1."
+    },
+    {
+      "formulaId": "dd052c9f-868f-5516-9af0-3f4e78ac7a13",
+      "requestedLocale": "fr",
+      "contentLocale": "en",
+      "translationStatus": "fallback",
+      "indexability": "noindex",
+      "title": "Newton Cubic",
+      "summary": "Use Newton's method to converge toward roots of z³ − 1."
+    },
+    {
+      "formulaId": "e2456b54-ef50-5ac9-9faa-dcb576c5e774",
+      "requestedLocale": "en",
+      "contentLocale": "en",
+      "translationStatus": "draft",
+      "indexability": "noindex",
+      "title": "Phoenix",
+      "summary": "Feed the previous orbit value back into the next quadratic step."
+    },
+    {
+      "formulaId": "e2456b54-ef50-5ac9-9faa-dcb576c5e774",
+      "requestedLocale": "zh",
+      "contentLocale": "en",
+      "translationStatus": "fallback",
+      "indexability": "noindex",
+      "title": "Phoenix",
+      "summary": "Feed the previous orbit value back into the next quadratic step."
+    },
+    {
+      "formulaId": "e2456b54-ef50-5ac9-9faa-dcb576c5e774",
+      "requestedLocale": "pt",
+      "contentLocale": "en",
+      "translationStatus": "fallback",
+      "indexability": "noindex",
+      "title": "Phoenix",
+      "summary": "Feed the previous orbit value back into the next quadratic step."
+    },
+    {
+      "formulaId": "e2456b54-ef50-5ac9-9faa-dcb576c5e774",
+      "requestedLocale": "ko",
+      "contentLocale": "en",
+      "translationStatus": "fallback",
+      "indexability": "noindex",
+      "title": "Phoenix",
+      "summary": "Feed the previous orbit value back into the next quadratic step."
+    },
+    {
+      "formulaId": "e2456b54-ef50-5ac9-9faa-dcb576c5e774",
+      "requestedLocale": "ru",
+      "contentLocale": "en",
+      "translationStatus": "fallback",
+      "indexability": "noindex",
+      "title": "Phoenix",
+      "summary": "Feed the previous orbit value back into the next quadratic step."
+    },
+    {
+      "formulaId": "e2456b54-ef50-5ac9-9faa-dcb576c5e774",
+      "requestedLocale": "es",
+      "contentLocale": "en",
+      "translationStatus": "fallback",
+      "indexability": "noindex",
+      "title": "Phoenix",
+      "summary": "Feed the previous orbit value back into the next quadratic step."
+    },
+    {
+      "formulaId": "e2456b54-ef50-5ac9-9faa-dcb576c5e774",
+      "requestedLocale": "fr",
+      "contentLocale": "en",
+      "translationStatus": "fallback",
+      "indexability": "noindex",
+      "title": "Phoenix",
+      "summary": "Feed the previous orbit value back into the next quadratic step."
+    },
+    {
+      "formulaId": "07a0afc6-ced5-5765-9314-fdb0ef593cb9",
+      "requestedLocale": "en",
+      "contentLocale": "en",
+      "translationStatus": "draft",
+      "indexability": "noindex",
+      "title": "Asinh Mandelbrot",
+      "summary": "Apply the principal inverse hyperbolic sine before adding c."
+    },
+    {
+      "formulaId": "07a0afc6-ced5-5765-9314-fdb0ef593cb9",
+      "requestedLocale": "zh",
+      "contentLocale": "en",
+      "translationStatus": "fallback",
+      "indexability": "noindex",
+      "title": "Asinh Mandelbrot",
+      "summary": "Apply the principal inverse hyperbolic sine before adding c."
+    },
+    {
+      "formulaId": "07a0afc6-ced5-5765-9314-fdb0ef593cb9",
+      "requestedLocale": "pt",
+      "contentLocale": "en",
+      "translationStatus": "fallback",
+      "indexability": "noindex",
+      "title": "Asinh Mandelbrot",
+      "summary": "Apply the principal inverse hyperbolic sine before adding c."
+    },
+    {
+      "formulaId": "07a0afc6-ced5-5765-9314-fdb0ef593cb9",
+      "requestedLocale": "ko",
+      "contentLocale": "en",
+      "translationStatus": "fallback",
+      "indexability": "noindex",
+      "title": "Asinh Mandelbrot",
+      "summary": "Apply the principal inverse hyperbolic sine before adding c."
+    },
+    {
+      "formulaId": "07a0afc6-ced5-5765-9314-fdb0ef593cb9",
+      "requestedLocale": "ru",
+      "contentLocale": "en",
+      "translationStatus": "fallback",
+      "indexability": "noindex",
+      "title": "Asinh Mandelbrot",
+      "summary": "Apply the principal inverse hyperbolic sine before adding c."
+    },
+    {
+      "formulaId": "07a0afc6-ced5-5765-9314-fdb0ef593cb9",
+      "requestedLocale": "es",
+      "contentLocale": "en",
+      "translationStatus": "fallback",
+      "indexability": "noindex",
+      "title": "Asinh Mandelbrot",
+      "summary": "Apply the principal inverse hyperbolic sine before adding c."
+    },
+    {
+      "formulaId": "07a0afc6-ced5-5765-9314-fdb0ef593cb9",
+      "requestedLocale": "fr",
+      "contentLocale": "en",
+      "translationStatus": "fallback",
+      "indexability": "noindex",
+      "title": "Asinh Mandelbrot",
+      "summary": "Apply the principal inverse hyperbolic sine before adding c."
+    }
+  ]
+}

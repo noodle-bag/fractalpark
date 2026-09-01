@@ -3,6 +3,8 @@ import { registerBuiltins } from '@/engine/plugins/builtins/index';
 import type { FractalParams, Keyframe } from '@/engine/types';
 import {
   documentToRuntimeParams,
+  projectDocumentToRuntimeParams,
+  resolveEffectiveJuliaStateV1,
   runtimeParamsToDocument,
   urlStateToDocument,
 } from '@/engine/document-adapter';
@@ -77,9 +79,18 @@ describe('document adapter', () => {
     expect(doc.animation?.viewKeyframes).toHaveLength(2);
     expect(doc.metadata?.source).toBe('saved');
 
-    const roundTripped = documentToRuntimeParams(doc);
+    const persistedProjection = projectDocumentToRuntimeParams(doc);
+    expect(persistedProjection).toEqual(runtime);
 
-    expect(roundTripped).toEqual(runtime);
+    const rendererProjection = documentToRuntimeParams(doc);
+    expect(rendererProjection).toEqual({ ...runtime, isJulia: false });
+    expect(resolveEffectiveJuliaStateV1(doc)).toEqual({
+      persistedIntent: true,
+      effective: false,
+      reason: 'non-canonical',
+    });
+    expect(doc.formula.isJulia).toBe(true);
+    expect(doc.formula.juliaC).toEqual([-0.62, 0.41]);
   });
 
   it('maps decoded URL state to a document with defaults', () => {

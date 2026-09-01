@@ -1,0 +1,29 @@
+{
+  "evidenceId": "ad8a139ac612b6750b1b337ce20dde932e8224ceea194e4996944eed07db0c96",
+  "schemaVersion": 1,
+  "locale": "fr",
+  "surface": "manual-a",
+  "provider": "deepseek",
+  "requestedModel": "deepseek-chat",
+  "actualModel": "deepseek-v4-flash",
+  "finishReason": "stop",
+  "status": "approved",
+  "reviewedAt": "2026-08-21T08:24:22.717009+00:00",
+  "sourceCommit": "37320f293839812017178bb91efe7670239edfa3",
+  "sourceManualSha256": "e5168f1a0211596659314d748fa53825892a2a6f089350e636a8c0baf3903758",
+  "sourceMessageProjectionSha256": "effb295f43ad338c80f1becab42a90cbb8afd2345a79c2e014acf031ea1faaf7",
+  "targetManualSha256": "e846c775ceb8945ff5b703dfb62496f8025735f5377869c608020f82d1023d67",
+  "targetMessageProjectionSha256": "d00db50962e26cb756d12e7805c31c468d9a522efd59149159332aa55a37d92d",
+  "messagePathCount": 39,
+  "reviewText": "VERDICT: APPROVE",
+  "usage": {
+    "prompt_tokens": 4280,
+    "completion_tokens": 6,
+    "total_tokens": 4286,
+    "prompt_tokens_details": {
+      "cached_tokens": 0
+    },
+    "prompt_cache_hit_tokens": 0,
+    "prompt_cache_miss_tokens": 4280
+  }
+}

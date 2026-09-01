@@ -256,7 +256,8 @@
       "breadcrumb": "Fórmulas",
       "eyebrow": "Atlas de Fórmulas",
       "title": "Atlas de Fórmulas",
-      "intro": "Explore o catálogo completo das 94 fórmulas integradas do FractalPark em sete famílias. Comece por uma visualização canônica, siga um dos 21 perfis de guia aprofundados ou aprenda a escrever sua própria fórmula com FRM.",
+      "publishedIntro": "Explore 534 definições padrão publicadas em sete famílias estruturais; 94 delas também pertencem à coleção Classic. Abra Formula Records canônicos, siga um dos 21 perfis de guia aprofundados ou aprenda como funciona o código-fonte FRM e escolha a superfície de autoria correspondente.",
+      "intro": "Explore 534 definições padrão publicadas em sete famílias estruturais; 94 delas também pertencem à coleção Classic. Abra Formula Records canônicos, siga um dos 21 perfis de guia aprofundados ou aprenda como funciona o código-fonte FRM e escolha a superfície de autoria correspondente.",
       "stats": {
         "formulas": "Fórmulas",
         "families": "Famílias",
@@ -265,7 +266,7 @@
       "capabilities": {
         "eyebrow": "Feito para explorar",
         "title": "Um catálogo, muitas formas de criar",
-        "intro": "Cada entrada deriva do mesmo catálogo de fórmulas e do estado padrão aprovado usados pelo Explorar interativo.",
+        "intro": "Cada entrada publicada vem do mesmo diretório versionado de Formula Records usado pela Standard Library.",
         "items": {
           "realtime": {
             "title": "WebGL em tempo real",
@@ -277,14 +278,15 @@
           },
           "server": {
             "title": "Diretório legível pelo servidor",
-            "description": "Todas as sete famílias e os 94 destinos permanecem disponíveis no HTML inicial, sem busca ou filtragem no cliente."
+            "description": "Todos os 534 Formula Records publicados e suas categorias permanecem acessíveis no HTML renderizado pelo servidor."
           }
         }
       },
       "families": {
-        "eyebrow": "Sete famílias",
-        "title": "Escolha um caráter matemático",
-        "intro": "As famílias organizam as fórmulas pela estrutura de iteração e pelo comportamento visual. As contagens vêm diretamente do catálogo integrado atual.",
+        "eyebrow": "Sete famílias estruturais",
+        "title": "Navegue por estrutura matemática",
+        "intro": "Sete famílias estruturais cobrem cada fórmula publicada exatamente uma vez. Classic é uma coleção sobreposta separada, mantendo suas 94 fórmulas fáceis de encontrar.",
+        "browse": "Explorar categoria",
         "descriptions": {
           "classic": "Fundamentos de tempo de escape quadráticos, polinomiais, Julia, multicorn e relacionados.",
           "burning-ship": "Mapas de valor absoluto dobrados, com cascos afiados, cristas e fronteiras semelhantes a chamas.",
@@ -297,9 +299,9 @@
       },
       "frm": {
         "eyebrow": "Crie a sua",
-        "title": "Aprenda e escreva fórmulas com FRM",
-        "description": "FRM é o caminho de autoria baseado em texto e testado do FractalPark. Leia o guia de compatibilidade, estude exemplos verificados pela compilação e depois escreva e visualize uma fórmula no editor independente.",
-        "learn": "Aprenda FRM",
+        "title": "Entenda o FRM e o Editor de Fórmulas",
+        "description": "As Definitions Standard publicadas usam código-fonte FRM-like v1 fixado. O Editor independente usa o contrato de código-fonte compatível com Classic; o Guia explica os dois caminhos e oferece exemplos do Editor verificados pela compilação.",
+        "learn": "Entenda o FRM",
         "openEditor": "Abrir Editor de Fórmulas"
       },
       "guides": {
@@ -311,17 +313,21 @@
       },
       "directory": {
         "eyebrow": "Catálogo completo",
-        "title": "Todas as 94 fórmulas",
-        "intro": "O diretório completo é agrupado por família e renderizado no servidor. Cada link abre a fórmula com seu estado canônico localizado no Explorar.",
+        "title": "Todas as 534 fórmulas publicadas",
+        "intro": "O diretório publicado é agrupado por família estrutural e renderizado no servidor. Cada link abre o Formula Record canônico da fórmula.",
         "familyCount": "{count, plural, one {# fórmula} other {# fórmulas}}",
         "backToFamilies": "Visão geral das famílias",
         "guideBadge": "Guia"
       },
       "cta": {
-        "title": "Comece por uma fórmula ou escreva a sua",
-        "description": "Use o Explorar para fórmulas integradas ou abra o Editor FRM independente quando quiser definir a iteração por conta própria.",
+        "title": "Comece com uma fórmula ou use o Editor compatível com Classic",
+        "description": "Use o Explorer para fórmulas integradas ou abra o Editor FRM independente para o subconjunto compatível com Classic que ele oferece para iterações personalizadas.",
         "explore": "Abrir o Explorar",
         "editor": "Abrir Editor de Fórmulas"
+      },
+      "standardDirectory": {
+        "cta": "Explorar o diretório padrão",
+        "hint": "Há atualmente 534 definições padrão publicadas."
       }
     },
     "guide": {
@@ -356,10 +362,28 @@
         "cta": "Remixar no Explorar"
       }
     },
+    "teaching": {
+      "fallbackNotice": "A unidade didática em inglês revisada é exibida porque a tradução solicitada não está disponível. Esta página de fallback não é indexada.",
+      "sections": {
+        "overview": "Visão geral didática",
+        "sourceWalkthrough": "Leitura guiada do código-fonte",
+        "syntaxFeatures": "Recursos de sintaxe",
+        "parameterExperiment": "Experimento de parâmetros",
+        "exercise": "Exercício",
+        "provenance": "Fontes e direitos"
+      },
+      "labels": {
+        "steps": "Etapas",
+        "expectedObservation": "O que observar",
+        "safetyNote": "Nota de segurança",
+        "completionCheck": "Verificação de conclusão",
+        "hint": "Dica"
+      }
+    },
     "frmGuide": {
-      "eyebrow": "Linguagem de fórmulas FRM",
-      "title": "Escreva Fractais com FRM",
-      "intro": "Aprenda o subconjunto FRM testado do FractalPark, entenda como o código-fonte vira um shader de GPU e construa três fórmulas funcionais a partir dos mesmos exemplos usados pelo editor.",
+      "eyebrow": "Linguagem FRM e compatibilidade",
+      "title": "Entenda o FRM no FractalPark",
+      "intro": "Aprenda como Definitions FRM-like v1 canônicas alimentam fórmulas Standard publicadas e depois use os exemplos separados do Editor compatível com Classic sem confundir os dois contratos de código-fonte.",
       "contentsLabel": "Nesta página",
       "copy": {
         "copy": "Copiar",
@@ -370,15 +394,15 @@
         "what-is-frm": {
           "title": "O que é FRM",
           "body": [
-            "FRM é uma forma compacta e baseada em texto de descrever um fractal iterativo. Uma fórmula define seu estado inicial, o cálculo repetido para cada órbita e a condição que decide se a iteração continua.",
-            "O formato nasceu do ecossistema Fractint, onde arquivos de fórmula permitiam trocar experimentos sem recompilar o programa de renderização. O FractalPark leva essa ideia de autoria para um fluxo de trabalho no navegador, documentando seu próprio subconjunto testado em vez de reivindicar compatibilidade completa."
+            "FRM-like v1 do FractalPark é a linguagem de código-fonte canônica e tipada por trás das Definitions Standard publicadas. Uma Definition fixa sua linguagem, biblioteca padrão, NumericProfile, parâmetros, estado inicial, passo repetido da órbita e predicado de continuação da iteração.",
+            "O .frm Classic surgiu no ecossistema Fractint e continua sendo o contrato de código-fonte usado pelo Editor independente compatível com Classic e pelo pipeline de importação. O FractalPark examina e diagnostica esse dialeto separadamente; código-fonte Classic e frmSemanticsVersion 1 ou 2 não são grafias alternativas do FRM-like v1 canônico."
           ],
           "historyPrefix": "Para as origens e a história do projeto em geral, veja o",
           "historyLink": "site do projeto Fractint"
         },
         "support": {
           "title": "Suporte a FRM no FractalPark",
-          "intro": "O FractalPark tokeniza, analisa, valida e compila um subconjunto deliberado de FRM. A tabela separa construções que funcionam diretamente, construções com semântica documentada do FractalPark e construções que o fluxo de trabalho atual não consegue preservar.",
+          "intro": "Esta tabela de compatibilidade descreve o Editor e o caminho de importação compatíveis com Classic. As Definitions Standard canônicas publicadas usam o parser FRM-like v1 versionado separadamente, IR tipado, backend standard32 e Safety Envelope fixo.",
           "table": {
             "level": "Nível",
             "meaning": "Significado",
@@ -418,10 +442,10 @@
             "preprocessor": "Recursos de pré-processador",
             "rejected-constructs": "Qualquer construção rejeitada pelo pipeline de compilação atual"
           },
-          "disclaimer": "Esta é uma linha de base de compatibilidade testada, não uma afirmação de compatibilidade total com o Fractint. Quando o compilador mudar, esta matriz e seus testes devem mudar juntos.",
+          "disclaimer": "Esta é uma referência de compatibilidade Classic testada, não uma alegação de compatibilidade completa com Fractint. Ela é distinta do registro de publicação Standard.",
           "verified": {
             "title": "Compatibilidade verificada",
-            "intro": "Essas contagens de capacidades vêm do manifesto versionado: 588 entradas-alvo compreendem 579 aprovações strict-v2 e 9 dispensas documentadas; 117 entradas separadas são excluídas com motivos estáveis.",
+            "intro": "Estas contagens de capacidade de importação Classic vêm do manifesto de compatibilidade versionado: 588 entradas-alvo abrangem 579 aprovações strict-v2 e 9 dispensas documentadas; 117 entradas separadas são excluídas com motivos estáveis. Elas não contam Definitions FRM-like v1 publicadas.",
             "stats": {
               "builtins": "Funções integradas",
               "descriptors": "Tipos de descritor de bailout",
@@ -441,7 +465,7 @@
         },
         "anatomy": {
           "title": "Anatomia da Fórmula",
-          "intro": "Uma fórmula FRM do FractalPark tem uma declaração nomeada e três seções explícitas. Juntas, elas definem a transição de estado para cada pixel.",
+          "intro": "O FRM-like v1 canônico e os exemplos atuais do Editor Classic compartilham uma fórmula nomeada e as ideias de init, loop e bailout, mas suas gramáticas completas são diferentes. No v1, diretivas semânticas e uma seção opcional de parâmetros tipados também fazem parte da Definition.",
           "parts": {
             "init": "Executa uma vez por pixel. Defina aqui o valor inicial da órbita e as variáveis auxiliares.",
             "loop": "Executa uma vez por iteração. Atualize z e qualquer estado de que a próxima iteração precise.",
@@ -451,7 +475,7 @@
         },
         "syntax": {
           "title": "Guia de Sintaxe",
-          "intro": "A linguagem permanece intencionalmente pequena: expressões descrevem aritmética complexa, instruções atualizam o estado da órbita e o fluxo de controle seleciona entre atualizações.",
+          "intro": "As duas superfícies permanecem deliberadamente pequenas. Os resumos abaixo mostram conceitos compartilhados; use a ação Source de um Formula Record publicado para ver as diretivas canônicas e os parâmetros tipados, e use os diagnósticos do Editor para código-fonte Classic.",
           "topics": {
             "sections": {
               "title": "Declaração e seções",
@@ -481,7 +505,7 @@
         },
         "pipeline": {
           "title": "Pipeline de FRM para AST para GLSL",
-          "intro": "O FractalPark não cola texto FRM em um shader. Ele passa o código-fonte por um compilador em etapas para que sintaxe, significado, código gerado e diagnósticos permaneçam conectados.",
+          "intro": "O FractalPark nunca cola código-fonte em um shader. O código-fonte v1 canônico passa pelo parser tipado e pelo backend CPU/GLSL; o código-fonte do Editor Classic passa pelo scanner, frontend da entrada selecionada, modelo canônico de fórmula e compilador de plugins.",
           "steps": {
             "source": {
               "title": "Código-fonte FRM",
@@ -508,11 +532,11 @@
               "body": "Uma compilação bem-sucedida se torna o mesmo contrato de plugin de fórmula usado pelo renderizador e pelo sistema de montagem de shaders."
             }
           },
-          "note": "O contrato compartilhado do compilador mantém o Explorar, o Editor autônomo, as fórmulas personalizadas salvas, os exemplos e os testes em um único caminho de implementação."
+          "note": "Cada contrato de código-fonte tem seu próprio caminho de implementação. O runtime Standard publicado usa FRM-like v1; o Editor independente e os exemplos atuais de fórmulas personalizadas usam o caminho compatível com Classic. Nenhum deles recorre silenciosamente ao outro."
         },
         "tutorials": {
           "title": "Tutoriais Progressivos",
-          "intro": "Estes exemplos avançam da menor fórmula quadrática até parâmetros e realimentação com estado. Cada bloco de código-fonte vem diretamente do registro compartilhado de exemplos e é compilado durante os testes.",
+          "intro": "Estes são exemplos do Editor compatíveis com Classic, não Definitions FRM-like v1 canônicas. Eles vão de uma pequena fórmula quadrática a parâmetros e realimentação com estado; cada bloco de código-fonte vem do registro compartilhado do Editor e é compilado durante os testes.",
           "lesson": "Lição {number}",
           "openInEditor": "Abrir no Editor FRM",
           "goals": {
@@ -520,7 +544,7 @@
             "parameter-drift": "Foco: os slots de parâmetro p1 e p2, um literal complexo e cabs(z) como função explícita de magnitude.",
             "orbit-echo": "Foco: zPrev como o estado anterior da órbita. A realimentação adiciona memória sem introduzir uma segunda variável de estado gerenciada manualmente."
           },
-          "editorNote": "O Editor FRM abre esses mesmos exemplos verificados pela compilação por ID estável. O código-fonte da fórmula permanece na aba atual até você salvá-lo na sua biblioteca de fórmulas na nuvem e nunca é incorporado à URL."
+          "editorNote": "O Editor FRM independente abre esses exemplos compatíveis com Classic, verificados pela compilação, por ID estável. O código-fonte da fórmula fica na aba atual até você salvá-lo na sua biblioteca na nuvem e nunca é incorporado à URL. Isso não ativa a importação nem os writers do v1 canônico."
         },
         "diagnostics": {
           "title": "Erros e Diagnósticos",
@@ -550,7 +574,7 @@
           "exploreTitle": "Veja o renderizador em contexto",
           "exploreBody": "Abra o Explorar para comparar o comportamento das fórmulas integradas, coloração, transformações, animação e controles de exportação antes de escrever uma fórmula personalizada.",
           "exploreCta": "Abrir o Explorar",
-          "editorNote": "Use o Editor FRM dedicado para compilar, visualizar, importar e baixar fórmulas; faça login para salvar uma na sua biblioteca de fórmulas na nuvem antes de encaminhá-la ao Explorar.",
+          "editorNote": "Use o Editor FRM dedicado para o fluxo atual de compilação, prévia, importação e download compatível com Classic. Ele não aceita código-fonte FRM-like v1 canônico; inspecione o código-fonte v1 publicado em um Formula Record e use a ação Open ou Remix desse Record para executá-lo.",
           "referencesTitle": "Referências",
           "referencesIntro": "O contexto histórico e os detalhes de implementação são linkados separadamente para que o guia possa distinguir a linhagem do Fractint do contrato atual do compilador do FractalPark.",
           "references": {
@@ -635,31 +659,31 @@
       },
       "mandelbox": {
         "title": "Mandelbox",
-        "summary": "Um mapa de dobra e escala inspirado no Mandelbox de 2010 de Tom Lowe: reflexões de caixa, dobra radial e escala transformam uma iteração em cômodos e paredes.",
+        "summary": "Um mapa de dobra e escala inspirado no Mandelbox de 2010 de Tom Lowe: reflexões de caixa, dobra radial e escala fazem a órbita formar câmaras e paredes.",
         "overview": "A maioria das fórmulas fractais começa elevando ao quadrado, como em z² + c. O Mandelbox escolhe outro caminho: uma dobra de caixa envia as coordenadas fora de um cubo fixo de volta em direção às suas faces; uma dobra radial, ou esférica, então inverte ou escala um ponto conforme sua distância da origem; uma escala uniforme estica ou comprime o resultado antes de somar c. Repita a sequência, e são as dobras — não a quadratura — que constroem a estrutura.\n\nReflexões e inversões não exigem um número específico de dimensões, então a construção pode ser feita em qualquer uma delas. O FractalPark desenha uma variante bidimensional que mantém o mesmo núcleo de dobra e escala no plano complexo.\n\nEste mapa de parâmetros não se suaviza nas curvas familiares dos polinômios. Ele recorta câmaras de bordas duras, fortificações aninhadas e passagens que parecem saídas de uma planta. Sua borda divide as órbitas limitadas — as que permanecem ao alcance — das que escapam. Aproxime-se e a borda irregular e autossimilar traz de volta o motivo da caixa em escala menor.",
         "imageAlt": "Mapa Mandelbox bidimensional com câmaras de bordas duras e recuos aninhados semelhantes a fortalezas, em azuis frios",
         "imageCaption": "O mapa inspirado no Mandelbox do FractalPark: paredes retas, cantos em ângulo reto e recuos em camadas como o interior de uma fortaleza cristalina.",
         "math": {
           "iteration": {
-            "label": "Fold-and-scale iteration",
-            "explanation": "Each round puts the orbit through four moves: box fold, radial fold, scale, then a shift by c.\n\nThe box fold handles one coordinate at a time. Take a component a of z. Above 1, it reflects as a → 2 − a; below −1, as a → −2 − a. Components in [−1, 1] stay put. The outer plane folds back into the central square.\n\nNext comes the ball fold, checking the squared magnitude r² = |z|². If r² < 0.25 (|z| < 0.5), scale the point by 4 and push it away from the origin. If 0.25 ≤ r² < 1, invert it through the unit sphere: z → z/r², so a radius of m becomes 1/m. Points with r² ≥ 1 stay put. The near points move outward; the middle band turns across the unit sphere. These moves make the unsettled interface behind the Mandelbox's boxy layers.\n\nTry z₀ = (1.5, 0) with scale s = 2. The box fold reflects x = 1.5 to x = 0.5. Since r² = 0.25 falls in the middle band, the ball fold inverts it: z = z/r² = (2, 0). Scaling by 2 gives (4, 0), and adding c completes the step. Start at the origin instead and you are in the innermost band: the ball fold multiplies it by 4—still the origin—so the first iterate lands exactly on c."
+            "label": "Iteração de dobrar e escalar",
+            "explanation": "Cada rodada leva a órbita por quatro movimentos: dobra de caixa, dobra radial, escala e depois um deslocamento por c.\n\nA dobra de caixa trata uma coordenada por vez. Tome uma componente a de z. Acima de 1, ela se reflete como a → 2 − a; abaixo de −1, como a → −2 − a. Componentes em [−1, 1] não mudam. O plano exterior é dobrado de volta para o quadrado central.\n\nEm seguida vem a dobra de esfera, que verifica o módulo ao quadrado r² = |z|². Se r² < 0.25 (|z| < 0.5), multiplique o ponto por 4 e afaste-o da origem. Se 0.25 ≤ r² < 1, inverta-o pela esfera unitária: z → z/r²; assim, um raio m se torna 1/m. Pontos com r² ≥ 1 não mudam. Os pontos próximos vão para fora; a faixa intermediária se vira através da esfera unitária. Esses movimentos criam a interface agitada por trás das camadas quadradas do Mandelbox.\n\nExperimente z₀ = (1.5, 0) com escala s = 2. A dobra de caixa reflete x = 1.5 em x = 0.5. Como r² = 0.25 está na faixa intermediária, a dobra de esfera o inverte: z = z/r² = (2, 0). Multiplicar por 2 dá (4, 0), e somar c completa o passo. Comece na origem e estará na faixa mais interna: a dobra de esfera multiplica por 4 — ainda a origem —, então o primeiro iterado cai exatamente em c."
           }
         },
-        "visualCharacteristics": "Repeated folds produce hard-edged chambers, nested fortifications, and corridors with depth. The default parameter s = 2 gives the structure straight walls, right-angle corners, and layered recesses like the inside of a crystalline fortress.\n\nAt finer scales, the box theme returns: small copies of the overall shape appear in recesses and along boundaries, all with the same rectilinear geometry. The canonical image uses cool blues and cyans, which suit the mechanical geometry of the folds.",
+        "visualCharacteristics": "Dobras repetidas produzem câmaras de arestas duras, fortificações aninhadas e corredores profundos. O parâmetro padrão s = 2 dá à estrutura paredes retas, cantos retos e reentrâncias em camadas, como o interior de uma fortaleza cristalina.\n\nEm escalas menores, o tema da caixa retorna: cópias pequenas da forma geral aparecem nas reentrâncias e nas bordas, todas com a mesma geometria retilínea. A imagem canônica usa azuis frios e cianos, adequados à geometria mecânica das dobras.",
         "parameters": {
-          "scale": "Scale sets how strongly the folded orbit expands or reverses before c is added. A scale of 2 (the default) roughly doubles the folded value; negative values reverse direction and produce mirror-image variations."
+          "scale": "A escala define com que força a órbita dobrada se expande ou se inverte antes de c ser somado. Uma escala de 2 (o padrão) aproximadamente dobra o valor dobrado; valores negativos invertem a direção e produzem variações espelhadas."
         },
         "faq": {
           "folds": {
-            "question": "What are box and ball folds?",
-            "answer": "A box fold reflects coordinates outside a fixed interval toward the origin—like folding a sheet’s edges inward. A ball fold (or sphere fold) makes a conditional inversion: points too close to the origin are pushed outward, points at an intermediate distance invert through a sphere, and distant points remain unchanged. Together they redirect the orbit at every step and make the Mandelbox’s layered geometry."
+            "question": "O que são dobras de caixa e de esfera?",
+            "answer": "Uma dobra de caixa reflete coordenadas fora de um intervalo fixo em direção à origem — como dobrar as bordas de uma folha para dentro. Uma dobra de esfera (ou dobra esférica) faz uma inversão condicional: pontos próximos demais da origem são empurrados para fora, pontos a uma distância intermediária são invertidos através de uma esfera e pontos distantes permanecem inalterados. Juntas, elas redirecionam a órbita em cada passo e formam a geometria em camadas do Mandelbox."
           },
           "dimension": {
-            "question": "Is this the three‑dimensional Mandelbox?",
-            "answer": "No. FractalPark renders a two-dimensional map inspired by the same fold-and-scale construction. The original Mandelbox is most often explored in 3D, where the box fold reflects across a cube’s faces; here the same logic works in the complex plane with a square boundary."
+            "question": "Este é o Mandelbox tridimensional?",
+            "answer": "Não. FractalPark renderiza um mapa bidimensional inspirado na mesma construção de dobrar e escalar. O Mandelbox original é explorado sobretudo em 3D, onde a dobra de caixa reflete nas faces de um cubo; aqui a mesma lógica funciona no plano complexo, com um limite quadrado."
           }
         },
-        "history": "The Mandelbox was first presented by Tom Lowe (known online as Tglad) in early 2010 on the FractalForums community. Lowe was experimenting with iterative folding operations in three dimensions — box reflections and spherical inversions — to see whether they could produce bounded, self‑similar structures analogous to the Mandelbrot set. The results were immediately recognised as a new class of fractal, and the name \"Mandelbox\" was adopted both as an homage to the Mandelbrot set and because of the boxlike shape of the set when visualised.\n\nThe discovery followed closely on the 2009 Mandelbulb by Daniel White and Paul Nylander, which had sparked renewed hobbyist interest in finding non‑trivial 3D fractals. Within months, contributors on FractalForums — including Knighty, Jesse, and others — extended the Mandelbox idea to different symmetry planes and polyhedral folds.\n\nDespite its popularity in fractal art software (Mandelbulber, Mandelbulb3D, Fragmentarium, Ultra Fractal), the Mandelbox has received relatively little formal mathematical analysis. One of the few peer‑reviewed treatments is Gregg Helt's 2018 Bridges Conference paper, which generalises the spherical inversion step to arbitrary shape inversions."
+        "history": "O Mandelbox foi apresentado pela primeira vez por Tom Lowe (conhecido on-line como Tglad) no início de 2010, na comunidade FractalForums. Lowe experimentava operações iterativas de dobra em três dimensões — reflexões de caixa e inversões esféricas — para ver se poderiam produzir estruturas limitadas e auto-semelhantes análogas ao conjunto de Mandelbrot. Os resultados foram logo reconhecidos como uma nova classe de fractal, e o nome “Mandelbox” foi adotado tanto em homenagem ao conjunto de Mandelbrot quanto pela forma de caixa do conjunto quando visualizado.\n\nA descoberta veio pouco depois do Mandelbulb de 2009, de Daniel White e Paul Nylander, que renovara o interesse de amadores em encontrar fractais 3D não triviais. Em poucos meses, colaboradores do FractalForums — incluindo Knighty, Jesse e outros — estenderam a ideia do Mandelbox a diferentes planos de simetria e dobras poliédricas.\n\nApesar da popularidade em programas de arte fractal (Mandelbulber, Mandelbulb3D, Fragmentarium, Ultra Fractal), o Mandelbox recebeu relativamente pouca análise matemática formal. Um dos poucos estudos revisados por pares é o artigo de Gregg Helt para a Bridges Conference de 2018, que generaliza a etapa de inversão esférica para inversões de formas arbitrárias."
       },
       "perpendicular-celtic": {
         "title": "Perpendicular Celtic",
@@ -787,25 +811,25 @@
       },
       "newton-cosh": {
         "title": "Newton Cosh",
-        "summary": "O método de Newton aplicado a cosh z = 1: infinitas raízes igualmente espaçadas transformam o plano em faixas de convergência que se repetem.",
-        "overview": "O passo usual de busca de raízes de Newton muda de caráter quando f(z) = cosh z − 1. Suas raízes são 2πik para cada inteiro k. Um polinômio dá a uma órbita apenas um número finito de destinos possíveis; essas raízes continuam marchando pelo eixo imaginário em intervalos iguais. O fractal, portanto, se organiza em faixas que sobem e descem, em vez de se assentar em algumas bacias.\n\nO mapa N(z) = z − (cosh z − 1) / sinh z é meromorfo: ele funciona em todo o plano complexo, exceto em suas singularidades. Fique de olho em dois conjuntos de pontos que se repetem: as raízes de cosh z − 1 e os zeros de seu denominador sinh z em z = πik, para k inteiro. Perto de um zero do denominador, um pequeno ajuste no ponto inicial pode trocar a raiz que a órbita alcança.\n\nVocê percebe a periodicidade ao longo do eixo imaginário num relance — sem precisar de formação em matemática. As faixas horizontais se repetem umas sobre as outras, uma para cada período das raízes. Nas junções, finos fios verticais registram onde uma bacia entrega uma órbita à seguinte.",
+        "summary": "O método de Newton aplicado a cosh z = 1: infinitas raízes duplas igualmente espaçadas transformam o plano em faixas de convergência que se repetem.",
+        "overview": "O passo usual de busca de raízes de Newton muda de caráter quando f(z) = cosh z − 1. Suas raízes são 2πik para cada inteiro k, e cada uma é uma raiz dupla. Um polinômio dá a uma órbita apenas um número finito de destinos possíveis; essas raízes continuam pelo eixo imaginário em intervalos iguais. O fractal, portanto, se organiza em faixas que sobem e descem, em vez de se assentar em algumas bacias.\n\nA correção (cosh z − 1) / sinh z se simplifica, longe dos zeros, para tanh(z/2). O denominador sinh z zera em todo πik: os múltiplos pares são as raízes e são removíveis no quociente simplificado; os polos genuínos e as singularidades sensíveis são os múltiplos ímpares (2k+1)πi. Perto deles, uma pequena mudança no ponto inicial pode alterar muito o passo.\n\nA periodicidade ao longo do eixo imaginário é visível num relance. As faixas horizontais se repetem umas sobre as outras, uma por cada período das raízes. Nas junções, finos fios verticais registram onde uma bacia entrega uma órbita à seguinte.",
         "imageAlt": "Fractal de Newton para cosh z = 1, com faixas horizontais que se repetem e bordas deformadas empilhadas ao longo do eixo imaginário",
         "imageCaption": "A visão de Newton do FractalPark para cosh z = 1: faixas de convergência que se repetem ao longo do eixo imaginário, separadas por bordas dobradas e filiformes.",
         "math": {
           "iteration": {
-            "label": "Newton’s cosh iteration",
-            "explanation": "Newton's rule is N(z) = z − f(z) / f′(z). Here f(z) = cosh z − 1 and f′(z) = sinh z. Each step finds the correction (cosh z − 1) / sinh z, then takes it away from z.\n\nThe equation cosh z = 1 has infinitely many solutions: z = 2πik for every integer k. Each is a simple root: cosh z grows linearly close by, so Newton's method converges quadratically there. Far from the real axis, cosh and sinh grow exponentially. Their quotient may be tiny or enormous, and that is where the image's sensitive seams take shape.\n\nTry z₀ = 0.2i. Since i·sinh(0.2) ≈ 0.201i and cosh(0.2) ≈ 1.020, the first correction is small; the orbit quickly reaches the root at z = 0. Now move to z₀ = (0.5 + 3.0i), farther from every root. The correction now contains large exponential terms. The orbit can cross several basin boundaries before settling, or wander chaotically between roots for many iterations before one captures it.\n\nThe function repeats with period 2πi in the imaginary direction, and the Newton map does too: N(z + 2πi) = N(z) + 2πi. That repeated rule is the source of the horizontal banding."
+            "label": "Iteração de Newton para cosh",
+            "explanation": "A regra de Newton é N(z) = z − f(z) / f′(z). Aqui f(z) = cosh z − 1 e f′(z) = sinh z. Cada passo subtrai a correção (cosh z − 1) / sinh z, que é tanh(z/2) longe dos zeros de sinh z.\n\nA equação cosh z = 1 tem infinitas soluções: z = 2πik para cada inteiro k. Todas são raízes duplas; perto delas, o erro de Newton é aproximadamente reduzido à metade a cada passo: a convergência é linear, não quadrática. O denominador zera em todo πik. Nos múltiplos pares o quociente é removível, pois são raízes; os polos genuínos são os múltiplos ímpares (2k+1)πi.\n\nExperimente z₀ = 0.2i. A correção é tanh(0.1i) = i tan(0.1) ≈ 0.1003i, então z₁ ≈ 0.0997i: o erro fica visivelmente pela metade. Perto de um múltiplo ímpar como πi, a correção pode ficar muito grande. Na implementação, a componente real é limitada para estabilidade numérica, e o passo não muda quando |sinh(z)|² < 1e-10; são proteções, não afirmações sobre o mapa sem proteção.\n\nA função se repete com período 2πi na direção imaginária, e o mapa de Newton também: N(z + 2πi) = N(z) + 2πi. Essa regra repetida cria as faixas horizontais."
           }
         },
-        "visualCharacteristics": "Start with the horizontal bands along the imaginary axis. A period of roots makes one band, and the convergence pattern returns in the next. The borders do not run straight: they bend and fold, then pull out fine vertical filaments like taut threads.\n\nWithin each band, the basin geometry resembles its neighbours, with small distortions. Think of a ribbon folded repeatedly. The warm and cool zones come from the colouring; the sharp breaks arise where singularities of sinh z destabilise the Newton correction.",
+        "visualCharacteristics": "Comece pelas faixas horizontais ao longo do eixo imaginário. Um período de raízes forma uma faixa, e o padrão de convergência retorna na seguinte. As bordas dobram e se curvam, puxando filamentos verticais finos como fios esticados.\n\nEm cada faixa, a geometria das bacias lembra a das vizinhas, com pequenas distorções. As zonas quentes e frias vêm da cor; as quebras nítidas se concentram perto dos múltiplos ímpares de πi, onde a correção de Newton tem polos genuínos.",
         "faq": {
           "target": {
-            "question": "What equation is being solved?",
-            "answer": "It seeks the complex solutions of cosh(z) = 1: z = 2πik for every integer k. The equally spaced roots line the imaginary axis. Each draws in nearby Newton orbits, and their repeating arrangement creates the horizontal bands."
+            "question": "Que equação está sendo resolvida?",
+            "answer": "Ela busca as soluções complexas de cosh(z) = 1: z = 2πik para cada inteiro k. Essas raízes duplas igualmente espaçadas alinham-se no eixo imaginário, e sua repetição cria as faixas horizontais."
           },
           "singularities": {
-            "question": "Why are some regions extremely sensitive?",
-            "answer": "The correction divides by sinh(z), which vanishes at z = πik for integer k. Close to one of these points, the correction can become huge, sending an orbit across several basin boundaries before it converges. These singularities are not roots; they pull the fine vertical filaments and unsettled border zones into view."
+            "question": "Por que algumas regiões são extremamente sensíveis?",
+            "answer": "A correção divide por sinh(z), que zera em z = πik para k inteiro. Os múltiplos pares são raízes e são removíveis no quociente simplificado; os polos genuínos são os múltiplos ímpares (2k+1)πi. Perto de um múltiplo ímpar, a correção pode ficar enorme, levando uma órbita através de várias fronteiras de bacias e revelando filamentos verticais finos."
           }
         }
       },
@@ -895,22 +919,22 @@
         "imageCaption": "O Cosh Mandelbrot do FractalPark: plumas douradas e leques em camadas retornam verticalmente com o período de 2π de cosh na direção imaginária.",
         "math": {
           "iteration": {
-            "label": "Hyperbolic cosine iteration",
-            "explanation": "Each turn evaluates complex hyperbolic cosine at the current z, then adds c. The definition cosh(z) = (eᶻ + e⁻ᶻ)/2 puts exponential growth on the real axis beside imaginary-axis repetition with period 2π.\n\nTry z = iπ/2 on the imaginary axis. Since cosh(iπ/2) = cos(π/2) = 0, starting there with c = 0 leaves the recurrence at zero. Nudge the point off that axis and the eᶻ term can drive exponential growth and rapid escape. That sharp divide—bounded behavior in a narrow strip, rapid escape elsewhere—is typical of transcendental iteration. Unlike a polynomial, this map has no universal escape radius; FractalPark uses a bailout threshold chosen to detect divergence in practice."
+            "label": "Iteração de cosseno hiperbólico",
+            "explanation": "Cada passo avalia o cosseno hiperbólico complexo no z atual e depois soma c. A definição cosh(z) = (eᶻ + e⁻ᶻ)/2 coloca crescimento exponencial no eixo real ao lado da repetição no eixo imaginário, de período 2π.\n\nExperimente z = iπ/2 no eixo imaginário. Como cosh(iπ/2) = cos(π/2) = 0, começar ali com c = 0 produz z₁ = 0 após um passo. Zero não é um ponto fixo aqui: no passo seguinte, z₂ = cosh(0) = 1. Desloque o ponto para fora desse eixo e o termo eᶻ pode causar crescimento exponencial e escape rápido. Essa divisão nítida — comportamento limitado numa faixa estreita e escape rápido em outro lugar — é típica da iteração transcendental. Ao contrário de um polinômio, este mapa não tem raio de escape universal; FractalPark usa um limiar de bailout escolhido para detectar divergência na prática."
           }
         },
-        "visualCharacteristics": "First notice the vertical repetition. Because cosh(z) repeats in the imaginary direction every 2π, fine plumes, layered fans, and gilt filaments return at regular intervals. The result is striped and tiered, far from the radial branching of polynomial Mandelbrot sets.\n\nIn the canonical rendering, plumes and fans often carry warm tones. The finest detail concentrates in narrow horizontal bands, where an orbit lingers near the boundary between escape and non-escape. Above and below, escape accelerates and the image becomes smoother.",
+        "visualCharacteristics": "Observe primeiro a repetição vertical. Como cosh(z) se repete na direção imaginária a cada 2π, plumas finas, leques em camadas e filamentos dourados retornam em intervalos regulares. O resultado é listrado e escalonado, muito diferente da ramificação radial dos conjuntos de Mandelbrot polinomiais.\n\nNa renderização canônica, plumas e leques costumam ter tons quentes. O detalhe mais fino se concentra em faixas horizontais estreitas, onde uma órbita demora perto da fronteira entre escape e não escape. Acima e abaixo, o escape acelera e a imagem fica mais suave.",
         "faq": {
           "periodicity": {
-            "question": "Why do patterns repeat vertically?",
-            "answer": "Complex hyperbolic cosine repeats along the imaginary axis with period 2π. Because every step uses cosh(z), the orbit structure repeats too: bounded and escaping behavior returns at regular vertical intervals in the parameter plane."
+            "question": "Por que os padrões se repetem verticalmente?",
+            "answer": "O cosseno hiperbólico complexo se repete ao longo do eixo imaginário com período 2π. Como cada passo usa cosh(z), a estrutura da órbita também se repete: comportamentos limitados e de escape retornam em intervalos verticais regulares no plano de parâmetros."
           },
           "growth": {
-            "question": "Why do many points escape rapidly?",
-            "answer": "Hyperbolic cosine is built from exponentials: cosh(z) = (eᶻ + e⁻ᶻ)/2. At a point with a substantial real part, the eᶻ term takes over and the orbit can grow extremely fast. There is no simple polynomial-style escape radius, so the bailout threshold is a practical computational choice."
+            "question": "Por que muitos pontos escapam rapidamente?",
+            "answer": "O cosseno hiperbólico é construído de exponenciais: cosh(z) = (eᶻ + e⁻ᶻ)/2. Num ponto com parte real substancial, o termo eᶻ domina e a órbita pode crescer extremamente rápido. Não há raio de escape simples como o de polinômios, portanto o limiar de bailout é uma escolha computacional prática."
           }
         },
-        "history": "In 1988, Clifford A. Pickover, a computer scientist and author at IBM's Thomas J. Watson Research Center, published the short paper \"Chaotic behavior of the transcendental mapping (Z → cosh(Z) + μ)\" in The Visual Computer. He presented images of chaotic behavior produced by this transcendental function, alongside maps such as z → sin(z) + c and z → eᶻ + c.\n\nPickover’s work brought the cosh-based map into the fractal-rendering community, where it became a standard transcendental escape-time example. Earlier, mathematicians including Robert Devaney and Michał Krych had developed the broader study of transcendental complex dynamics—exponential, trigonometric, and hyperbolic families—and analyzed the dynamics of exp(z) in the 1980s."
+        "history": "Em 1988, Clifford A. Pickover, cientista da computação e autor no Thomas J. Watson Research Center da IBM, publicou o artigo curto “Chaotic behavior of the transcendental mapping (Z → cosh(Z) + μ)” em The Visual Computer. Ele apresentou imagens de comportamento caótico produzido por essa função transcendental, ao lado de mapas como z → sin(z) + c e z → eᶻ + c.\n\nO trabalho de Pickover levou o mapa baseado em cosh à comunidade de renderização de fractais, onde se tornou um exemplo padrão de tempo de escape transcendental. Antes disso, matemáticos como Robert Devaney e Michał Krych haviam desenvolvido o estudo mais amplo da dinâmica complexa transcendental — famílias exponenciais, trigonométricas e hiperbólicas — e analisado a dinâmica de exp(z) nos anos 1980."
       },
       "buffalo": {
         "title": "Buffalo",
@@ -1062,28 +1086,28 @@
       },
       "zaslavsky-map": {
         "title": "Zaslavsky Map",
-        "summary": "Um mapa seno complexo: o seno curva a órbita, uma rotação fixa de 0.55 radiano a gira e c a desloca — uma adaptação inspirada no mapa dissipativo de rotor chutado de George Zaslavsky, de 1978.",
-        "overview": "O mapa de Zaslavsky curva uma órbita com seno, gira o resultado pela fase complexa fixa (e^{0.55i}) e depois soma c. Um mapa polinomial de escape tira seu caráter de potências de z cada vez maiores. Aqui, a trama vem de curvas periódicas encontrando uma rotação constante.\n\nEm 1978, George M. Zaslavsky introduziu o mapa original para modelar um rotor chutado dissipativo: um corpo em rotação recebendo chutes repetidos enquanto o atrito drena energia. Esse mapa clássico é bidimensional e usa variáveis reais de ação-ângulo. O FractalPark reformula a ideia em uma variável complexa: o seno fornece o chute não linear, o multiplicador complexo fixo fornece a rotação, e c torna possíveis imagens de tempo de escape com varredura de parâmetros.\n\nO seno complexo pode crescer sem limite ao longo do eixo imaginário, então este não é um escape polinomial simples. Uma órbita pode circular por um tempo e depois se despedaçar. Essa hesitação deixa braços giratórios e anéis concêntricos, especialmente após uma transformação espacial caleidoscópica.",
+        "summary": "Um mapa seno complexo: uma perturbação de seno com peso 0.28 curva a órbita, uma rotação fixa de 0.55 radiano a gira e c a desloca — uma adaptação inspirada no mapa dissipativo de rotor chutado de George Zaslavsky, de 1978.",
+        "overview": "FractalPark implementa z(n+1) = exp(0.55 i) * (z(n) + 0.28 sin(z(n))) + c. O seno é uma perturbação de peso 0.28 da órbita existente; a fase complexa fixa gira toda a órbita perturbada em 0.55 radiano (cerca de 31.5°), e então c a desloca.\n\nEm 1978, George M. Zaslavsky introduziu o mapa original para modelar um rotor chutado dissipativo. Esse mapa clássico usa duas variáveis reais. FractalPark adapta a ideia a uma variável complexa para imagens de tempo de escape; não é a recorrência exata do artigo de 1978.\n\nO seno complexo pode crescer sem limite ao longo do eixo imaginário. Uma órbita pode circular por um tempo e depois se afastar, deixando braços giratórios e anéis concêntricos.",
         "imageAlt": "O mapa de Zaslavsky: braços giratórios e anéis semelhantes a mandalas em laranja e dourado quentes",
         "imageCaption": "O mapa de Zaslavsky renderizado pelo FractalPark: arcos concêntricos e raios radiantes formam uma mandala brilhante em laranjas e dourados quentes.",
         "math": {
           "iteration": {
-            "label": "Sinusoidal rotation map",
-            "explanation": "Sine bends z; the fixed complex multiplier turns it; c shifts the result.\n\nStart on the real axis. For z₀ = (0, 0), sin(0) = 0, so z₁ = e^{0.55i} × 0 + c = c. After that, complex sine can grow: the magnitude of sin(a + ib) contains terms up to cosh(b). A point with a large imaginary coordinate gets a large kick from sine, and is more likely to escape.\n\nThe 0.55-radian rotation (about 31.5°) is not a parameter; it is hard-coded in the formula. Every orbit gets the same angular twist each time. Hence the swirls."
+            "label": "Mapa de rotação sinusoidal",
+            "explanation": "FractalPark usa z(n+1) = exp(0.55 i) * (z(n) + 0.28 sin(z(n))) + c. O seno é uma perturbação de peso 0.28 de z, não sua substituição. O multiplicador fixo gira toda a órbita perturbada em 0.55 radiano no sentido anti-horário (cerca de 31.5°), e então c desloca o resultado.\n\nPara z₀ = 0, sin(0)=0; portanto o termo perturbado entre parênteses é zero. Rotacionar zero ainda dá zero, e só resta c: z₁ = c. Depois disso, o seno complexo pode crescer; a magnitude de sin(a + ib) contém termos até cosh(b).\n\nA rotação de 0.55 radiano é fixa na fórmula, não ajustável pelo usuário. Como detalhe de implementação, e não parte da recorrência idealizada, FractalPark limita a componente imaginária de entrada a ±80 e arredonda cada componente de saída a uma grade de 1/16."
           }
         },
-        "visualCharacteristics": "Kaleidoscopic transforms make the swirling arms and mandala-like rings especially clear. The canonical image sets concentric arcs and radiating spokes around a central region where the sine perturbation keeps orbits bounded.\n\nWarm oranges and golds sit against deep black in the canonical rendering. Constant rotation curves the arms; sine puts fine ripples along the ring edges.",
+        "visualCharacteristics": "Transformações caleidoscópicas deixam claros os braços giratórios e os anéis semelhantes a mandalas. A imagem canônica reúne arcos concêntricos e raios em torno de uma região central onde a órbita perturbada pode permanecer limitada.\n\nLaranjas e dourados quentes aparecem sobre preto profundo. A rotação constante curva os braços; a perturbação de seno cria ondulações finas nas bordas dos anéis.",
         "faq": {
           "rotation": {
-            "question": "Where does the rotation come from?",
-            "answer": "The map multiplies the perturbed orbit by e^{0.55i}, the unit complex number that turns the plane about 31.5° counter-clockwise. It happens on every iteration and is fixed in the formula, not adjustable by the user. The 0.55-radian value was chosen empirically for balanced swirls."
+            "question": "De onde vem a rotação?",
+            "answer": "O mapa multiplica toda a órbita perturbada z + 0.28 sin(z) por exp(0.55 i), girando-a cerca de 31.5° no sentido anti-horário, e então soma c. Isso ocorre a cada iteração e é fixo na fórmula, não ajustável pelo usuário."
           },
           "transform": {
-            "question": "Is kaleidoscope part of the formula?",
-            "answer": "No. Kaleidoscope is an optional spatial transform outside the iteration. It reflects or copies sectors of the parameter plane. The Zaslavsky Map has no built-in reflection symmetry; the kaleidoscope is a separate rendering step that can be switched independently."
+            "question": "O caleidoscópio faz parte da fórmula?",
+            "answer": "Não. O caleidoscópio é uma transformação espacial opcional fora da iteração. Ele reflete ou copia setores do plano de parâmetros. O Mapa de Zaslavsky não tem simetria de reflexão incorporada; o caleidoscópio é uma etapa de renderização separada que pode ser ativada independentemente."
           }
         },
-        "history": "George M. Zaslavsky (1929–2008) was a Soviet‑born mathematical physicist who made foundational contributions to the theory of dynamical chaos. He introduced the map that now bears his name in a 1978 paper titled \"The Simplest Case of a Strange Attractor,\" published in Physics Letters A. The map was derived as a stroboscopic description of a dissipative kicked rotor — a rotating system that receives periodic impulses and loses energy through friction.\n\nZaslavsky later moved to the United States, joining New York University's physics department and the Courant Institute of Mathematical Sciences. He authored several books on Hamiltonian chaos and fractional dynamics. The Scholarpedia article on the Zaslavsky map, written by Zaslavsky himself in 2007, provides an authoritative technical reference.\n\nClassical Zaslavsky maps operate on two real variables (action and angle). The complex variant used by FractalPark, with its sine perturbation and fixed complex multiplier, is a creative adaptation suitable for escape‑time rendering rather than a direct transcription of the original dissipative system."
+        "history": "George M. Zaslavsky (1929–2008) foi um físico matemático nascido na União Soviética que fez contribuições fundamentais para a teoria do caos dinâmico. Ele introduziu o mapa que hoje leva seu nome em um artigo de 1978 intitulado \"The Simplest Case of a Strange Attractor\", publicado em Physics Letters A. O mapa foi derivado como uma descrição estroboscópica de um rotor impulsionado dissipativo — um sistema rotativo que recebe impulsos periódicos e perde energia por atrito.\n\nZaslavsky mais tarde se mudou para os Estados Unidos, integrando o departamento de física da Universidade de Nova York e o Courant Institute of Mathematical Sciences. Foi autor de vários livros sobre caos hamiltoniano e dinâmica fracionária. O artigo da Scholarpedia sobre o mapa de Zaslavsky, escrito pelo próprio Zaslavsky em 2007, fornece uma referência técnica autorizada.\n\nOs mapas clássicos de Zaslavsky operam em duas variáveis reais (ação e ângulo). A variante complexa de tempo de escape do FractalPark usa z(n+1) = exp(0.55 i) * (z(n) + 0.28 sin(z(n))) + c; é uma adaptação criativa, e não uma transcrição direta do sistema dissipativo original."
       },
       "zubieta": {
         "title": "Zubieta",
@@ -1110,6 +1134,145 @@
         },
         "history": "Zubieta belongs to a broader family of \"abs\" fractal variants — maps that apply absolute-value folds at different stages of the quadratic iteration. The best-known member of this family is the Burning Ship fractal, discovered by Michael Michelitsch and Otto E. Rössler in 1992, which folds the components before squaring. The Buffalo fractal, another relative, applies the fold after squaring but before adding c.\n\nThe Zubieta variant applies the component-wise absolute value after both squaring and the addition of c. Its precise origin is difficult to pin to a single published academic source. Variants of this kind circulated among fractal-rendering communities and software packages (Ultra Fractal, Fractint, XaoS) in the 1990s and 2000s, often named after whoever first implemented or popularized them in a given program.\n\nFractalPark's implementation follows the standard component-wise fold and renders the parameter plane in Mandelbrot mode."
       }
+    },
+    "directory": {
+      "breadcrumbLabel": "Trilha de navegação",
+      "breadcrumbAtlas": "Atlas de fórmulas",
+      "breadcrumb": "Diretório",
+      "eyebrow": "Diretório de fórmulas padrão",
+      "title": "Diretório de fórmulas padrão",
+      "description": "Explore as {count} definições padrão publicadas do FractalPark por família.",
+      "intro": "Este diretório reúne todas as {count} definições padrão publicadas. Cada fórmula listada tem uma implementação completa e executável.",
+      "facets": {
+        "title": "Navegar por família",
+        "family": "Família",
+        "status": "Status de publicação",
+        "all": "Todas",
+        "categoryTitle": "Navegar por categoria",
+        "category": "Categoria"
+      },
+      "family": {
+        "algebraic-power": "Potência algébrica",
+        "transcendental": "Transcendental",
+        "function-composition": "Composição de funções",
+        "rational-reciprocal": "Recíproca racional",
+        "orbit-memory": "Memória de órbita",
+        "folded-absolute": "Valor absoluto dobrado",
+        "root-finding": "Busca de raízes"
+      },
+      "status": {
+        "publish": "Publicada",
+        "hold": "Retida",
+        "exclude": "Excluída"
+      },
+      "resultCount": "{count} definições publicadas",
+      "category": {
+        "classic": "Clássicas"
+      },
+      "guideBadge": "Guia",
+      "searchLabel": "Pesquisar fórmulas",
+      "searchPlaceholder": "Pesquisar pelo nome da fórmula",
+      "sortLabel": "Ordenar",
+      "apply": "Aplicar",
+      "sort": {
+        "nameAsc": "Nome A–Z",
+        "nameDesc": "Nome Z–A"
+      }
+    },
+    "record": {
+      "eyebrow": "Registro da fórmula",
+      "identity": "Identidade e proveniência",
+      "formulaId": "ID da fórmula",
+      "rightsAttribution": "Direitos e atribuição",
+      "sourceAndImplementation": "Fonte e implementação",
+      "canonicalName": "Nome canônico",
+      "originalName": "Nome original",
+      "historicalSource": "Fonte histórica",
+      "repository": "Repositório",
+      "currentImplementation": "Implementação atual",
+      "author": "Autor",
+      "originalResource": "Recurso original",
+      "originalVersion": "Versão original",
+      "unconfirmed": "Não confirmado",
+      "provenance": "Coleção de proveniência",
+      "aliases": "Aliases legados",
+      "rights": "Direitos e escopo público",
+      "rightsStatus": "Status dos direitos",
+      "rightsScope": "Escopo público",
+      "canonicalLicense": "Licença da implementação canônica",
+      "decision": "Decisão de publicação",
+      "reason": "Motivo",
+      "basis": "Base da implementação",
+      "reviewed": "Revisado em",
+      "leakage": "Verificação de vazamento",
+      "publishedSummary": "Esta implementação canônica do FractalPark está publicada e pode ser executada.",
+      "unavailableSummary": "Esta identidade está documentada, mas a decisão atual não permite ações de código-fonte, execução, edição ou remix.",
+      "source": "Código-fonte canônico",
+      "language": "Linguagem",
+      "stdlib": "Biblioteca padrão",
+      "profileMode": "Modo do perfil",
+      "profileCenter": "Centro do perfil",
+      "profileZoom": "Zoom do perfil",
+      "profileIterations": "Iterações do perfil",
+      "profileQuality": "Evidência do perfil",
+      "sourceRevision": "Revisão do código-fonte",
+      "semanticHash": "Hash semântico",
+      "parameters": "Parâmetros",
+      "noParameters": "Nenhum parâmetro declarado",
+      "previewAlt": "Prévia determinística de {name}",
+      "previewDiagnostic": "Prévia aguardando revisão visual",
+      "previewDiagnosticBody": "A renderização determinística relatou anomalias visuais. Ela é preservada como evidência diagnóstica, mas não é exibida como prévia verificada.",
+      "viewDiagnosticPreview": "Ver renderização diagnóstica",
+      "openExplore": "Abrir no Explorador",
+      "remix": "Remixar anonimamente",
+      "viewSource": "Ver código-fonte",
+      "downloadSource": "Baixar código-fonte",
+      "takedown": "Problema de direitos ou atribuição?",
+      "takedownBody": "Envie o ID da fórmula e as evidências. O mantenedor pode suspender ou retirar a implementação durante a análise.",
+      "rightsValues": {
+        "project-owned": "Propriedade do projeto",
+        "source-declared-public-domain-assumption": "Suposição de domínio público declarada pela fonte",
+        "gpl3Only": "Somente GPL-3.0",
+        "no-explicit-permission": "Sem permissão explícita"
+      },
+      "scopeValues": {
+        "project-canonical-implementation": "Implementação canônica do FractalPark",
+        "original-source-public-domain-assumption-and-project-canonical-implementation": "Suposição de domínio público para a fonte; MIT para a implementação canônica do FractalPark",
+        "project-independent-rewrite-only": "Somente reescrita independente do FractalPark",
+        "identity-and-provenance-metadata-only": "Somente metadados de identidade e proveniência"
+      },
+      "sourceNotes": {
+        "fractalparkProjectOwned": "Esta é uma implementação própria do projeto FractalPark. O arquivo vinculado é a Definition canônica fixada.",
+        "fractintDirectAdaptation": "A implementação atual do FractalPark segue a semântica verificada da fórmula Fractint vinculada. O arquivo original mantém seus próprios termos de direitos.",
+        "fractintIndependentRewrite": "Fonte histórica: Fractint. A implementação atual do FractalPark é uma reescrita independente e isolada; o texto FRM original não é redistribuído.",
+        "iteratedDynamicsIndependentRewrite": "Fonte histórica: Iterated Dynamics, sucessor do Fractint. A implementação atual do FractalPark é uma reescrita independente e isolada; o texto FRM original não é redistribuído."
+      },
+      "basisValues": {
+        "project-owned": "Propriedade do projeto",
+        "direct-adaptation": "Adaptação direta",
+        "separated-independent-rewrite": "Reescrita independente separada",
+        "none": "Não se aplica"
+      },
+      "scanValues": {
+        "not-applicable": "Não se aplica",
+        "pending": "Pendente",
+        "passed": "Aprovada",
+        "failed": "Reprovada"
+      }
+    },
+    "sourceWorkspace": {
+      "title": "Código-fonte canônico",
+      "readOnlyDescription": "Esta revisão canônica verificada é somente leitura. Remix cria uma bifurcação editável separada.",
+      "previewLabel": "Prévia do código-fonte canônico de {name}",
+      "editorLabel": "Código-fonte canônico somente leitura de {name}",
+      "loading": "Carregando código-fonte canônico…",
+      "unavailable": "Não foi possível carregar e verificar o código-fonte canônico.",
+      "retry": "Tentar novamente",
+      "open": "Abrir código-fonte completo",
+      "workspaceDescription": "Código-fonte canônico somente leitura de {name}. Remix cria uma bifurcação separada.",
+      "readOnly": "Revisão canônica somente leitura",
+      "remix": "Remix",
+      "download": "Baixar .frm"
     }
   },
   "artworks": {
@@ -1355,6 +1518,23 @@
       "active": "Ativa",
       "builtin": "Integrada",
       "custom": "Personalizada",
+      "standard": "Biblioteca padrão",
+      "mine": "Minhas fórmulas",
+      "library": {
+        "current": "Fórmula atual",
+        "open": "Abrir biblioteca",
+        "title": "Biblioteca de fórmulas padrão",
+        "description": "Explore as {count} fórmulas publicadas. A definição só é carregada após a seleção.",
+        "loading": "Carregando o índice de fórmulas...",
+        "unavailable": "A biblioteca de fórmulas padrão está indisponível no momento.",
+        "selectionFailed": "Não foi possível carregar esta fórmula. A fórmula atual foi mantida.",
+        "familyFilter": "Filtrar fórmulas por família",
+        "categoryFilter": "Filtrar fórmulas por categoria",
+        "loadMore": "Carregar mais",
+        "lucky": "Estou com sorte?",
+        "resetProfile": "Redefinir perfil da fórmula",
+        "undoFormulaChange": "Desfazer alteração da fórmula"
+      },
       "resolution": {
         "loading": "Carregando fórmula…",
         "notFound": "A fórmula personalizada “{formula}” não pôde ser carregada.",
@@ -1411,6 +1591,12 @@
       },
       "family": {
         "all": "Todas",
+        "algebraic-power": "Potência algébrica",
+        "folded-absolute": "Valor absoluto dobrado",
+        "function-composition": "Composição de funções",
+        "orbit-memory": "Memória de órbita",
+        "rational-reciprocal": "Racional e recíproca",
+        "root-finding": "Busca de raízes",
         "classic": "Clássica",
         "burning-ship": "Burning Ship",
         "newton": "Newton",
@@ -1426,6 +1612,9 @@
       "position": "Posição",
       "center": "Centro",
       "zoom": "Zoom",
+      "invalidNumber": "Insira um número finito válido.",
+      "increase": "Aumentar",
+      "decrease": "Diminuir",
       "mode": {
         "label": "Modo Fractal",
         "mandelbrot": "Mandelbrot",
@@ -1659,6 +1848,8 @@
       "loadFailed": "Falha ao carregar o editor",
       "loadFailedDescription": "Não foi possível carregar o editor de código. Atualize a página.",
       "compile": "Compilar",
+      "apply": "Aplicar",
+      "invalidDraft": "Rascunho inválido — salvar preserva estes bytes de origem e diagnósticos, mas a última visualização bem-sucedida continua ativa.",
       "compiling": "Compilando…",
       "save": "Salvar",
       "saved": "Salvo",
@@ -1693,13 +1884,13 @@
     "landing": {
       "heading": "FractalPark: gerador de fractais open-source no seu navegador",
       "whatIsHeading": "O que é o FractalPark?",
-      "whatIsAnswer": "O FractalPark é uma plataforma gratuita e open-source (MIT) de conhecimento e criação de fractais que renderiza inteiramente no seu navegador com WebGL: {formulaCount} fórmulas integradas, autoria FRM compatível com Fractint e exportação de PNG em alta resolução. Criar não exige conta; salvar obras e fórmulas usa login por e-mail e uma biblioteca privada na nuvem.",
+      "whatIsAnswer": "FractalPark é uma plataforma gratuita e open-source (MIT) de conhecimento e criação de fractais que renderiza inteiramente no seu navegador com WebGL: {formulaCount} definições padrão publicadas em {formulaFamilyCount} famílias estruturais, das quais {classicFormulaCount} também pertencem à coleção Classic; código-fonte FRM-like v1 publicado; um fluxo de trabalho do Editor FRM compatível com Classic; e exportação de PNG em alta resolução. Criar não exige conta; salvar obras e fórmulas usa login por e-mail e uma biblioteca privada na nuvem.",
       "capabilitiesHeading": "Principais recursos",
-      "capabilitiesIntro": "{formulaCount} fórmulas em {formulaFamilyCount} famílias · {formulaGuideCount} Guias de Fórmulas aprofundados · {transformCount} transformações · {coloringModeCount} modos de coloração · URLs compartilháveis · exportação de PNG de até {maxExportScale}×",
+      "capabilitiesIntro": "{formulaCount} definições padrão publicadas em {formulaFamilyCount} famílias estruturais · destas, {classicFormulaCount} também pertencem à coleção Classic · {formulaGuideCount} Guias de Fórmulas aprofundados · {transformCount} transformações · {coloringModeCount} modos de coloração · URLs compartilháveis · exportação de PNG de até {maxExportScale}×",
       "linksHeading": "Continue explorando",
       "links": {
         "formulas": "Atlas de Fórmulas — todas as fórmulas com matemática, história e exemplos ao vivo",
-        "frmGuide": "Guia FRM — escreva fórmulas compatíveis com Fractint no navegador",
+        "frmGuide": "Guia FRM — entenda o FRM-like v1 publicado e o código-fonte do Editor compatível com Classic",
         "drift": "Drift — relaxe com uma apresentação imersiva de presets",
         "about": "Sobre — fatos do projeto, limites e detalhes open-source"
       },
@@ -1716,7 +1907,7 @@
   },
   "frmEditor": {
     "title": "Editor FRM",
-    "description": "Escreva, compile e pré-visualize fórmulas FRM no seu navegador; salve-as na sua biblioteca na nuvem.",
+    "description": "Escreva, compile e visualize fórmulas do subconjunto FRM compatível com Classic do FractalPark no navegador; salve-as na sua biblioteca na nuvem.",
     "breadcrumb": "Trilha de navegação",
     "crumbGuide": "Guia FRM",
     "beta": "Beta",
@@ -1743,7 +1934,11 @@
     "unknownExample": "Esse exemplo não está disponível. Comece com uma fórmula em branco.",
     "replaceConfirm": "Substituir o rascunho atual não salvo?",
     "leaveConfirm": "Sair deste editor e descartar as alterações não salvas do rascunho?",
-    "saved": "Salva na sua biblioteca de fórmulas na nuvem.",
+    "saved": "Salvo na sua biblioteca de fórmulas na nuvem.",
+    "remixLoading": "Carregando a origem publicada e o Profile exatos…",
+    "remixReady": "Fork de Remix pronto a partir de {name}. A origem Standard publicada permanece inalterada.",
+    "remixUnavailable": "Não foi possível abrir esta fórmula publicada com segurança para Remix.",
+    "invalidDraftSaved": "Rascunho inválido salvo de forma privada. A última revisão executável permanece ativa.",
     "saveError": "A biblioteca de fórmulas na nuvem está indisponível. Sua fórmula não foi salva.",
     "errors": {
       "maxCount": "Limite máximo de fórmulas atingido ({count}).",
@@ -1786,9 +1981,9 @@
   "metadata": {
     "explore": {
       "title": "FractalPark — Gerador de fractais open-source no navegador",
-      "description": "Plataforma open-source de conhecimento e criação de fractais no seu navegador, com as fórmulas em primeiro lugar: 94 fórmulas integradas, renderização WebGL em tempo real, autoria FRM compatível com Fractint e exportação de PNG em alta resolução.",
+      "description": "Plataforma open-source de conhecimento e criação de fractais no seu navegador, com fórmulas em primeiro lugar: 534 definições padrão publicadas em 7 famílias estruturais, das quais 94 também pertencem à coleção Classic; renderização WebGL em tempo real; código-fonte FRM-like v1 publicado; um Editor FRM compatível com Classic; e exportação de PNG em alta resolução.",
       "ogTitle": "FractalPark — Arte fractal open-source no seu navegador",
-      "ogDescription": "Crie arte fractal no seu navegador: 94 fórmulas, renderização WebGL em tempo real, autoria FRM e exportação de PNG em alta resolução."
+      "ogDescription": "Crie arte fractal no seu navegador com 534 definições padrão publicadas em 7 famílias estruturais, das quais 94 também pertencem à coleção Classic, renderização WebGL em tempo real, código-fonte FRM-like v1 publicado, um Editor FRM compatível com Classic e exportação de PNG em alta resolução."
     },
     "gallery": {
       "title": "Minha Galeria | Coleção Pessoal de Fractais - FractalPark",
@@ -1796,21 +1991,22 @@
     },
     "about": {
       "title": "Sobre | Gerador de Fractais Open Source no Navegador - FractalPark",
-      "description": "Conheça o FractalPark, um gerador de fractais open-source licenciado sob MIT que roda no navegador com WebGL, 94 fórmulas, paletas personalizadas e exportação de PNG."
+      "description": "FractalPark é uma plataforma open-source de conhecimento e criação de fractais, com fórmulas em primeiro lugar e código-fonte de fórmulas publicado que você pode ler e executar, além de um editor de fórmulas distinto compatível com Classic."
     },
     "formulaAtlas": {
-      "title": "Atlas de Fórmulas | 94 Fórmulas de Fractais - FractalPark",
-      "description": "Navegue pelas 94 fórmulas do FractalPark em sete famílias, explore 21 perfis de guia selecionados, aprenda FRM e abra estados canônicos de fórmulas no Explorar WebGL.",
-      "imageAlt": "Atlas de Fórmulas do FractalPark com 94 fórmulas integradas"
+      "title": "Atlas de Fórmulas | 534 Fórmulas Publicadas - FractalPark",
+      "publishedDescription": "Navegue por 534 definições padrão publicadas em sete famílias estruturais, das quais 94 também pertencem à coleção Classic; explore 21 perfis de guia, aprenda como funciona o código-fonte FRM e abra Formula Records canônicos.",
+      "description": "Navegue por 534 definições padrão publicadas em sete famílias estruturais, das quais 94 também pertencem à coleção Classic; explore 21 perfis de guia, aprenda como funciona o código-fonte FRM e abra Formula Records canônicos.",
+      "imageAlt": "Atlas de Fórmulas do FractalPark com 534 fórmulas publicadas"
     },
     "frmEditor": {
       "title": "Editor FRM | FractalPark",
-      "description": "Escreva, compile e pré-visualize fórmulas FRM no seu navegador; salve-as na sua biblioteca na nuvem."
+      "description": "Escreva, compile e visualize fórmulas do subconjunto FRM compatível com Classic do FractalPark no navegador; salve-as na sua biblioteca na nuvem."
     },
     "frmGuide": {
-      "title": "Guia FRM | Escreva Fórmulas de Fractais Personalizadas - FractalPark",
-      "description": "Aprenda a sintaxe FRM testada do FractalPark, os níveis de compatibilidade, o pipeline de compilação de AST para GLSL, os diagnósticos e três exemplos de fórmulas personalizadas verificados por compilação.",
-      "imageAlt": "Guia da linguagem de fórmulas FRM do FractalPark"
+      "title": "Guia FRM: Editor Classic e FRM-like v1 - FractalPark",
+      "description": "Entenda as Definitions FRM-like v1 canônicas do FractalPark, o runtime publicado e o fluxo de trabalho distinto do Editor compatível com Classic.",
+      "imageAlt": "Guia de fórmulas FRM-like v1 e compatíveis com Classic do FractalPark"
     },
     "drift": {
       "title": "Drift — Apresentação imersiva de fractais | FractalPark",
@@ -1821,13 +2017,13 @@
   },
   "about": {
     "title": "Sobre o FractalPark",
-    "aiDescription": "O FractalPark é um gerador de arte fractal open-source licenciado sob MIT, baseado em navegador, que usa WebGL para renderização em tempo real na GPU. Ele traz 94 fórmulas integradas de fractais de tempo de escape (famílias Mandelbrot, Julia, Newton, Phoenix, Magnet, McMullen, racional e transcendental), um editor de fórmulas personalizadas com suporte à sintaxe .frm do Fractint, 7 plugins de transformação UV, 9 modos de coloração e exportação de PNG em alta resolução. Construído com Next.js 16, React 19, TypeScript 5 e Tailwind CSS. O motor de renderização usa uma arquitetura de plugins com montagem dinâmica de shaders GLSL e cache LRU.",
+    "aiDescription": "FractalPark é um gerador de fractais open-source, licenciado sob MIT e baseado em navegador, que usa WebGL para renderização em tempo real na GPU. Ele inclui 534 definições padrão publicadas em 7 famílias estruturais, das quais 94 também pertencem à coleção Classic; 21 Guias de Fórmulas; código-fonte FRM-like v1 publicado; um Editor FRM distinto compatível com Classic com transpilação de AST para GLSL; 7 plugins de transformação UV; 9 modos de coloração; URLs compartilháveis; uma biblioteca na nuvem com login por e-mail para obras e fórmulas; publicação na comunidade; e exportação de PNG em alta resolução de até 4x. Construído com Next.js, React e TypeScript.",
     "techStack": {
       "title": "Tecnologia",
       "description": "Construído com Next.js, WebGL e TypeScript. Renderização de fractais em tempo real alimentada por shaders de GPU.",
       "frontend": "Front-end: Next.js 16 (App Router), React 19, TypeScript 5, Tailwind CSS 4, shadcn/ui",
       "rendering": "Renderização: WebGL 1 (shaders de fragmento GLSL), arquitetura baseada em plugins, cache LRU de shaders",
-      "formula": "Sistema de Fórmulas: parser .frm Fractint personalizado, editor CodeMirror 6, transpilador de AST para GLSL"
+      "formula": "Sistema de Fórmulas: parser/backend FRM-like v1 publicado para Definitions Standard; Editor separado CodeMirror 6 compatível com Classic e caminho AST-para-GLSL para fórmulas personalizadas"
     },
     "openSource": {
       "title": "Open Source",
@@ -1843,22 +2039,22 @@
     "next": "Próximo preset"
   },
   "publicProject": {
-    "tagline": "O FractalPark é uma plataforma open-source de conhecimento e criação de fractais, com as fórmulas em primeiro lugar e suporte crescente a FRM compatível com Fractint, trabalhando para trazer o legado de fórmulas do Fractint para o navegador moderno.",
-    "definition": "O FractalPark é um aplicativo WebGL gratuito e open-source (MIT) para explorar, aprender e criar arte fractal. Ele traz {formulaCount} fórmulas integradas em {formulaFamilyCount} famílias, {formulaGuideCount} Guias de Fórmulas aprofundados, uma linguagem FRM compatível com Fractint com um Guia e um Editor autônomo, e uma Galeria da comunidade. A renderização roda no seu navegador; salvar obras e fórmulas usa login por e-mail e uma biblioteca privada na nuvem.",
-    "aiDescription": "O FractalPark é um gerador de fractais open-source licenciado sob MIT, baseado em navegador, que usa WebGL para renderização em tempo real na GPU. Ele traz {formulaCount} fórmulas integradas de fractais em {formulaFamilyCount} famílias, {formulaGuideCount} Guias de Fórmulas, um editor FRM compatível com Fractint com transpilação de AST para GLSL, {transformCount} plugins de transformação UV, {coloringModeCount} modos de coloração, URLs compartilháveis, uma biblioteca na nuvem com login por e-mail para obras e fórmulas, publicação na comunidade e exportação de PNG em alta resolução de até {maxExportScale}x. Construído com Next.js, React e TypeScript.",
+    "tagline": "FractalPark é uma plataforma open-source de conhecimento e criação de fractais, com fórmulas em primeiro lugar e código-fonte de fórmulas publicado que você pode ler e executar, além de um editor de fórmulas distinto compatível com Classic.",
+    "definition": "FractalPark é um aplicativo WebGL gratuito e open-source (MIT) para explorar, aprender e criar arte fractal. Ele oferece {formulaCount} definições padrão publicadas em {formulaFamilyCount} famílias estruturais, das quais {classicFormulaCount} também pertencem à coleção Classic; {formulaGuideCount} Guias de Fórmulas aprofundados; código-fonte FRM-like v1 publicado; um Editor FRM independente compatível com Classic; e uma Galeria da comunidade. A renderização é executada no seu navegador; salvar obras e fórmulas usa login por e-mail e uma biblioteca privada na nuvem.",
+    "aiDescription": "FractalPark é um gerador de fractais open-source, licenciado sob MIT e baseado em navegador, que usa WebGL para renderização em tempo real na GPU. Ele inclui {formulaCount} definições padrão publicadas em {formulaFamilyCount} famílias estruturais, das quais {classicFormulaCount} também pertencem à coleção Classic; {formulaGuideCount} Guias de Fórmulas; código-fonte FRM-like v1 publicado; um Editor FRM distinto compatível com Classic com transpilação de AST para GLSL; {transformCount} plugins de transformação UV; {coloringModeCount} modos de coloração; URLs compartilháveis; uma biblioteca na nuvem com login por e-mail para obras e fórmulas; publicação na comunidade; e exportação de PNG em alta resolução de até {maxExportScale}x. Construído com Next.js, React e TypeScript.",
     "capabilitiesHeading": "O que você pode fazer hoje",
     "capabilities": {
       "discover": {
         "title": "Descubra fórmulas",
-        "summary": "Navegue pelo Atlas de Fórmulas: 94 fórmulas integradas em 7 famílias, com 21 Guias de Fórmulas aprofundados cobrindo a matemática, a história e o caráter visual dos clássicos."
+        "summary": "Navegue pelo Atlas de Fórmulas: 534 definições padrão publicadas em 7 famílias estruturais, das quais 94 também pertencem à coleção Classic, com 21 Guias de Fórmulas aprofundados sobre a matemática, a história e o caráter visual dos clássicos."
       },
       "create": {
         "title": "Crie no navegador",
-        "summary": "Explore e renderize em tempo real com WebGL: modos Mandelbrot e Julia para todas as fórmulas, 7 transformações, 9 modos de coloração, gradientes, iluminação e animação por keyframes."
+        "summary": "Explore e renderize em tempo real com WebGL: modo Mandelbrot para as 534 definições padrão publicadas, modo Julia quando compatível, 7 transformações, 9 modos de coloração, gradientes, iluminação e animação por keyframes."
       },
       "authorFrm": {
-        "title": "Crie fórmulas FRM",
-        "summary": "Escreva fórmulas personalizadas na linguagem FRM compatível com Fractint usando o Guia e o Editor autônomo: validação de AST, prévia GLSL ao vivo e diagnósticos claros."
+        "title": "Aprenda FRM e escreva fórmulas personalizadas",
+        "summary": "Escreva fórmulas personalizadas no subconjunto FRM testado e compatível com Classic do FractalPark usando o Guia e o Editor independente: validação de AST, prévia GLSL ao vivo e diagnósticos claros."
       },
       "saveExport": {
         "title": "Salve e compartilhe",
@@ -1870,7 +2066,7 @@
     "futureHeading": "No roadmap",
     "boundaries": {
       "current": {
-        "0": "Suporte crescente a FRM compatível com Fractint: um subconjunto prático e testado da linguagem de fórmulas do Fractint roda hoje — não é uma reimplementação completa do Fractint.",
+        "0": "As Definitions Standard publicadas usam código-fonte FRM-like v1. O Editor independente usa um subconjunto prático e separado, compatível com Classic — não uma reimplementação completa do Fractint.",
         "1": "Criar não exige conta. Salvar obras e fórmulas usa login por código único enviado por e-mail e as armazena na sua biblioteca privada na nuvem; publicar é sempre explícito, e obras com fórmula personalizada publicam seu código-fonte sob a licença MIT.",
         "2": "A interface está disponível em sete idiomas: inglês, chinês simplificado, português, coreano, russo, espanhol e francês."
       },

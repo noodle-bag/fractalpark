@@ -1,11 +1,21 @@
 import { SUPPORTED_LOCALES } from '@/i18n/supported-locales';
 import { describe, expect, it } from 'vitest';
+import restoredGuideAsset from '../../resources/formula-library/v1/teaching-restored-guide-projection.v1.json';
+import {
+  formulaGuidePath,
+  getPublishedFormulaGuideFormulaId,
+} from '@/content/formula-guides';
+import { PUBLISHED_TEACHING_GUIDES_V1 } from '@/content/teaching/guide-route-policy';
+import { loadFormulaRecordSeoSetsV1 } from '@/content/formula-record-seo-policy';
+import {
+  formulaLocaleKeyV1,
+} from '@/content/teaching/formula-seo-policy';
 import {
   INDEXABLE_PAGE_PATHS,
   buildIndexableAlternates,
   buildIndexableUrls,
 } from '@/lib/indexable-pages';
-import sitemap from '@/app/sitemap';
+import sitemap, { buildSitemapV1 } from '@/app/sitemap';
 import { SITE } from '@/lib/site';
 
 /**
@@ -32,10 +42,15 @@ describe('indexable pages', () => {
     ]) {
       expect(INDEXABLE_PAGE_PATHS).toContain(required);
     }
-    // 21 published formula guides ride the same set.
+    // Two formula tools and all 534 published Formula Records ride the set.
     expect(
       INDEXABLE_PAGE_PATHS.filter((page) => page.startsWith('/formulas/')).length
-    ).toBeGreaterThanOrEqual(23);
+    ).toBe(536);
+    for (const restored of restoredGuideAsset.rows) {
+      expect(INDEXABLE_PAGE_PATHS).toContain(
+        `/formulas/${restored.formulaId}`,
+      );
+    }
   });
 
   it('builds one canonical URL per locale per page on the www host', () => {
@@ -73,5 +88,28 @@ describe('sitemap', () => {
       expect(entry.priority).toBeUndefined();
       expect(entry.alternates?.languages).toBeDefined();
     }
+  });
+
+  it('removes an unavailable Record locale from both URLs and alternates', () => {
+    const guide = PUBLISHED_TEACHING_GUIDES_V1[0];
+    const formulaId = getPublishedFormulaGuideFormulaId(guide);
+    const page = formulaGuidePath(guide);
+    const production = loadFormulaRecordSeoSetsV1();
+    const fallbackKey = formulaLocaleKeyV1('zh', formulaId);
+    const withoutZh = production.indexSet.filter((key) => key !== fallbackKey);
+    const entries = buildSitemapV1({
+      ...production,
+      indexSet: withoutZh,
+      sitemapSet: withoutZh,
+      hreflangSet: withoutZh,
+    });
+    expect(entries.some((entry) => entry.url === `${SITE.url}/zh${page}`)).toBe(false);
+    const english = entries.find((entry) => entry.url === `${SITE.url}/en${page}`);
+    const languages = english?.alternates?.languages;
+    expect(languages).toBeDefined();
+    expect(languages).not.toHaveProperty('zh');
+    expect(languages?.en).toBe(`${SITE.url}/en${page}`);
+    expect(languages?.['x-default']).toBe(`${SITE.url}/en${page}`);
+    expect(Object.keys(languages ?? {})).toHaveLength(7);
   });
 });

@@ -1,0 +1,35 @@
+{
+  "schema": "fractalpark-teaching-locale/v1",
+  "formulaId": "599a7fda-4c0e-5489-b12e-6e4179ee11f2",
+  "locale": "fr",
+  "sourceRevision": "6864baf1c6fb93ea8ce506200e19583fd0b7c1b361fb17764b661d6424762cfa",
+  "semanticHash": "a1fa3e6dd83f4cafacb8e242810e80e35de45513e75ec6cc7759d7a11f046193",
+  "englishContentHash": "90e78447859e27af456be2ff6cdbeadc31a08f9f7557e06d242347218dbc39b2",
+  "overview": "Dans FRM-like/1, l’initialisation effectue z = pixel. À chaque itération, le nœud exécute correction = f / fp. La terminaison vérifie |z - zPrev| >= 0.000001.",
+  "sourceWalkthrough": {
+    "599a7fda-4c0e-5489-b12e-6e4179ee11f2:6864baf1c6fb93ea8ce506200e19583fd0b7c1b361fb17764b661d6424762cfa:init": "Dans FRM-like/1, l’initialisation effectue z = pixel.",
+    "599a7fda-4c0e-5489-b12e-6e4179ee11f2:6864baf1c6fb93ea8ce506200e19583fd0b7c1b361fb17764b661d6424762cfa:loop": "À chaque itération, le nœud exécute correction = f / fp.",
+    "599a7fda-4c0e-5489-b12e-6e4179ee11f2:6864baf1c6fb93ea8ce506200e19583fd0b7c1b361fb17764b661d6424762cfa:branch": "La branche utilise |z| < 0.00001 → z = (0.00001,0).",
+    "599a7fda-4c0e-5489-b12e-6e4179ee11f2:6864baf1c6fb93ea8ce506200e19583fd0b7c1b361fb17764b661d6424762cfa:termination": "La terminaison vérifie |z - zPrev| >= 0.000001."
+  },
+  "syntaxFeatures": {
+    "sequence": "À chaque itération, le nœud exécute correction = f / fp.",
+    "branch": "La branche utilise |z| < 0.00001 → z = (0.00001,0)."
+  },
+  "parameterExperiment": {
+    "steps": [
+      "Utilise le profil fixé comme référence. Exécute 48 puis 96 itérations, tous les contrôles fixes, et note si correction = f / fp ou |z - zPrev| >= 0.000001 diffèrent."
+    ],
+    "expectedObservation": "La limite supérieure peut révéler davantage de mises à jour correction = f / fp après la protection initiale ; note si les nombres d’itérations diffèrent."
+  },
+  "exercise": {
+    "prompt": "Explique comment correction est définie et par quelle valeur la protection initiale remplace z.",
+    "completionCheck": "Pour terminer, tu dois nommer exactement les 4 annotations et indiquer correction = f / fp ainsi que la valeur de remplacement (0.00001,0).",
+    "hint": "Indice : correction = f / fp ; la protection initiale remplace z par (0.00001,0)."
+  },
+  "factsPresentation": {
+    "provenanceLead": "La provenance figure dans l’enregistrement de source épinglé.",
+    "rightsLead": "Le statut des droits et la décision de publication figurent dans l’enregistrement de décision épinglé."
+  },
+  "contentHash": "3ef90dde3390bd55075dcf6a2ce51530c2a07817dd4187e7ac22aef354a3cba6"
+}

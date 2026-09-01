@@ -38,14 +38,36 @@ import {
   stripEditorToExploreIntent,
 } from '@/lib/frm-editor';
 import {
+  parsePublishedFormulaExploreIntent,
+  stripPublishedFormulaExploreIntent,
+} from '@/lib/published-formula-handoff';
+import {
   resolveFormulaReference,
   readSessionFormulaAssets,
   type FormulaResolution,
 } from '@/lib/formula-resolver';
 import { pluginRegistry } from '@/engine/plugins/registry';
+import {
+  resolveActivatedPublishedFormulaDefaultProfileV1,
+  resolveJuliaRuntimeCapabilityV1,
+} from '@/engine/formulas/v1/julia-runtime-activation-v1';
+import { registerBuiltins } from '@/engine/plugins/builtins';
 import { resolveEffectiveSmoothMethod } from '@/engine/frm/smooth-capability';
 import { resolveRendererPipelineVersion } from '@/engine/frm/semantics-version';
 import { getFormulaUniformDefaults } from '@/lib/formula-documents';
+import {
+  isStandardFormulaIdV1,
+  type PublishedFormulaDescriptorV1,
+} from '@/engine/formulas/v1';
+import { getPublishedFormulaLibraryClient } from '@/lib/published-formula-library';
+import { partitionPublishedFormulaParams } from '@/lib/published-formula-params';
+import {
+  PublishedFormulaActionCoordinator,
+  PublishedFormulaSelectionCoordinator,
+  pickPublishedFormulaLuckyRow,
+  type PublishedFormulaBeforeApply,
+  type PublishedFormulaSelectionResult,
+} from '@/lib/published-formula-selection';
 
 type ExploreFormulaResolution =
   | FormulaResolution
@@ -66,10 +88,46 @@ function ExploreClient({ posterImage }: { posterImage?: string }) {
   );
   const initializedRef = useRef(false);
   const handoffConsumedRef = useRef<string | null>(null);
+  const publishedHandoffConsumedRef = useRef<string | null>(null);
   const debounceRef = useRef<ReturnType<typeof setTimeout> | null>(null);
+  const [publishedActionPendingCount, setPublishedActionPendingCount] = useState(0);
+  const [publishedRestoreRevision, setPublishedRestoreRevision] = useState(0);
+  const publishedPendingActionsRef = useRef(new Set<number>());
+  const isExploreMountedRef = useRef(true);
+  const publishedActionRef = useRef(new PublishedFormulaActionCoordinator());
+  const publishedRestoreActionRef = useRef(new PublishedFormulaActionCoordinator());
+  const publishedSelectionRef = useRef(new PublishedFormulaSelectionCoordinator());
+  const publishedRestoreRef = useRef(new PublishedFormulaSelectionCoordinator());
+  const cancelPublishedFormulaActions = useCallback(() => {
+    publishedActionRef.current.cancel();
+    publishedSelectionRef.current.cancel();
+    publishedRestoreActionRef.current.cancel();
+    publishedRestoreRef.current.cancel();
+    publishedPendingActionsRef.current.clear();
+    setPublishedActionPendingCount(0);
+    setPublishedRestoreRevision((revision) => revision + 1);
+  }, []);
 
-  const { document, runtimeParams, updateBounds, updateFormula, updateColoring, updateTransform, updateRender, updateAnimation, selectBuiltInFormula, loadFromDocument } =
-    useExploreDocumentState(new URLSearchParams(searchParams.toString()));
+  const {
+    document,
+    runtimeParams,
+    updateBounds,
+    updateFormula,
+    updateColoring,
+    updateTransform,
+    updateRender,
+    updateAnimation,
+    replacePluginParamDomains,
+    applyPublishedFormulaSelection,
+    canUndoPublishedFormulaSelection,
+    undoPublishedFormulaSelection,
+    clearPublishedFormulaSelectionUndo,
+    selectBuiltInFormula,
+    loadFromDocument,
+  } = useExploreDocumentState(
+    new URLSearchParams(searchParams.toString()),
+    cancelPublishedFormulaActions,
+  );
 
   const {
     paletteIndex,
@@ -89,6 +147,11 @@ function ExploreClient({ posterImage }: { posterImage?: string }) {
     lighting,
     customGradient,
   } = runtimeParams;
+  const currentFormulaPlugin = pluginRegistry.getFormula(formula);
+  const canEditJulia = resolveJuliaRuntimeCapabilityV1(
+    formula,
+    currentFormulaPlugin?.cacheFingerprint,
+  ).supportsEditing;
   const [pickToast, setPickToast] = useState<string | null>(null);
   const keyframes = useMemo(
     () => document.animation?.viewKeyframes ?? [],
@@ -98,6 +161,8 @@ function ExploreClient({ posterImage }: { posterImage?: string }) {
   const [isPanelCollapsed, setIsPanelCollapsed] = useState(false);
   const [formulaResolution, setFormulaResolution] =
     useState<ExploreFormulaResolution | null>(null);
+  const [publishedDescriptor, setPublishedDescriptor] =
+    useState<PublishedFormulaDescriptorV1 | null>(null);
   const [handoffTargetId, setHandoffTargetId] = useState<string | null>(() =>
     initialHandoffIntentRef.current.status === 'valid'
       ? initialHandoffIntentRef.current.formulaId
@@ -279,6 +344,22 @@ function ExploreClient({ posterImage }: { posterImage?: string }) {
   useEffect(() => {
     const resolveCurrentFormula = () => {
       try {
+        // A Standard plugin can survive a client-side route remount in the
+        // module registry. It is not ready for this document until its
+        // validated descriptor has been re-associated and URL params have
+        // passed the same partition/normalization boundary as a cold load.
+        if (
+          isStandardFormulaIdV1(formula) &&
+          publishedDescriptor?.formulaId !== formula
+        ) {
+          setFormulaResolution({
+            success: false,
+            formulaId: formula,
+            code: 'formula-not-found',
+            errors: ['Standard formula descriptor is not resolved.'],
+          });
+          return;
+        }
         setFormulaResolution(
           // v0.4.16: session-registered sources replace the local library;
           // the registry's transient fallback covers formulas registered
@@ -310,7 +391,88 @@ function ExploreClient({ posterImage }: { posterImage?: string }) {
         resolveCurrentFormula
       );
     };
-  }, [formula]);
+  }, [formula, publishedDescriptor]);
+
+  // Standard UUID restoration is descriptor-gated even when its plugin is
+  // already warm in the module registry. The index is validated first and
+  // only the selected Definition is fetched. URL `pp` values are then split
+  // across formula/coloring/transform descriptors in one document update.
+  useEffect(() => {
+    if (!isStandardFormulaIdV1(formula)) return;
+    if (publishedDescriptor?.formulaId === formula) return;
+    if (publishedActionPendingCount > 0) return;
+
+    const target = formula;
+    let active = true;
+    const publishedRestoreAction = publishedRestoreActionRef.current;
+    const restoreGeneration = publishedRestoreAction.begin();
+    const publishedRestore = publishedRestoreRef.current;
+    void getPublishedFormulaLibraryClient().then(async (clientResult) => {
+      if (
+        !active ||
+        !publishedRestoreAction.isCurrent(restoreGeneration) ||
+        !clientResult.ok
+      ) return;
+      if (!clientResult.value.get(target)) return;
+
+      await publishedRestore.select(
+        target,
+        clientResult.value,
+        (artifact) => {
+          if (
+            !active ||
+            !publishedRestoreAction.isCurrent(restoreGeneration)
+          ) return;
+          registerBuiltins({ quiet: true });
+          const restoredParams = partitionPublishedFormulaParams(
+            artifact.descriptor,
+            {
+              formula: document.formula.params?.formula,
+              outside: document.coloring.params?.outside,
+              inside: document.coloring.params?.inside,
+              transform: document.transform.params?.transform,
+            },
+            {
+              outside: pluginRegistry.getOutsideColoring(
+                document.coloring.outsideColoringId,
+              )?.uniforms,
+              inside: pluginRegistry.getInsideColoring(
+                document.coloring.insideColoringId,
+              )?.uniforms,
+              transform: pluginRegistry.getTransform(
+                document.transform.transformId,
+              )?.uniforms,
+            },
+          );
+          pluginRegistry.register(artifact.plugin);
+          replacePluginParamDomains(restoredParams);
+          setPublishedDescriptor(artifact.descriptor);
+          setFormulaResolution(
+            resolveFormulaReference(target, readSessionFormulaAssets()),
+          );
+        },
+      );
+    });
+
+    return () => {
+      active = false;
+      publishedRestoreAction.cancel();
+      publishedRestore.cancel();
+    };
+  }, [
+    document.coloring.insideColoringId,
+    document.coloring.outsideColoringId,
+    document.coloring.params?.inside,
+    document.coloring.params?.outside,
+    document.formula.params?.formula,
+    document.transform.params?.transform,
+    document.transform.transformId,
+    formula,
+    publishedActionPendingCount,
+    publishedDescriptor,
+    publishedRestoreRevision,
+    replacePluginParamDomains,
+  ]);
 
   useEffect(() => {
     if (
@@ -341,6 +503,7 @@ function ExploreClient({ posterImage }: { posterImage?: string }) {
     if (formulaResolution.code !== 'formula-not-found') return;
     if (cloudSessionState.status !== 'authenticated') return;
     const target = formulaResolution.formulaId;
+    if (isStandardFormulaIdV1(target)) return;
     if (rescueInFlightRef.current === target) return;
     rescueInFlightRef.current = target;
     void cloudFormulas.ensureRegistered(target).then((ok) => {
@@ -377,10 +540,25 @@ function ExploreClient({ posterImage }: { posterImage?: string }) {
 
     if (debounceRef.current) clearTimeout(debounceRef.current);
     debounceRef.current = setTimeout(() => {
+      // A published selection owns the next URL projection. Canonicalizing
+      // the previous document while its index/Definition is still loading
+      // can remount Explore and cancel the action before its atomic apply.
+      if (publishedActionPendingCount > 0) return;
       // Never project while a ?draft= load is unresolved: rebuilding the
       // URL from the canvas would erase the param before identity lands
       // and the draft would silently never load (review N1).
       if (draftParam && !cloudDraft.identity) return;
+      // A cold Standard URL resolves after its single Definition is loaded.
+      // Projecting before registration would omit descriptor-backed `pp`
+      // values, so preserve the incoming URL until resolution succeeds.
+      if (
+        isStandardFormulaIdV1(document.formula.formulaId) &&
+        (publishedDescriptor?.formulaId !== document.formula.formulaId ||
+          !formulaResolution?.success ||
+          formulaResolution.formulaId !== document.formula.formulaId)
+      ) {
+        return;
+      }
       const newUrl = documentToExploreHref(document, locale);
       const withDraft = cloudDraft.identity
         ? `${newUrl}${newUrl.includes('?') ? '&' : '?'}draft=${cloudDraft.identity.id}`
@@ -397,6 +575,9 @@ function ExploreClient({ posterImage }: { posterImage?: string }) {
     router,
     cloudDraft.identity,
     draftParam,
+    formulaResolution,
+    publishedDescriptor,
+    publishedActionPendingCount,
   ]);
 
   // Anonymous remix handoff consumption (spec §17 transient): a one-shot
@@ -427,6 +608,23 @@ function ExploreClient({ posterImage }: { posterImage?: string }) {
     setHandoffError(null);
     setHandoffTargetId(null);
   }, []);
+
+  const runPublishedFormulaAction = useCallback(async (
+    action: (generation: number) => Promise<PublishedFormulaSelectionResult>,
+  ): Promise<PublishedFormulaSelectionResult> => {
+    cancelPublishedFormulaActions();
+    const generation = publishedActionRef.current.begin();
+    publishedPendingActionsRef.current.add(generation);
+    setPublishedActionPendingCount(publishedPendingActionsRef.current.size);
+    try {
+      return await action(generation);
+    } finally {
+      publishedPendingActionsRef.current.delete(generation);
+      if (isExploreMountedRef.current) {
+        setPublishedActionPendingCount(publishedPendingActionsRef.current.size);
+      }
+    }
+  }, [cancelPublishedFormulaActions]);
 
   const handleLoadDocument = useCallback((nextDocument: typeof document) => {
     clearHandoffFailure();
@@ -503,6 +701,7 @@ function ExploreClient({ posterImage }: { posterImage?: string }) {
   });
 
   const handleJuliaModeChange = useCallback((julia: boolean) => {
+    if (julia && !canEditJulia) return;
     updateFormula({ isJulia: julia });
     trackEvent('julia_mode_toggle', { mode: julia ? 'julia' : 'mandelbrot' });
     if (julia) {
@@ -510,13 +709,14 @@ function ExploreClient({ posterImage }: { posterImage?: string }) {
     } else {
       updateBounds(DEFAULT_FRACTAL_DOCUMENT.scene.bounds);
     }
-  }, [bounds.rotation, updateBounds, updateFormula]);
+  }, [bounds.rotation, canEditJulia, updateBounds, updateFormula]);
 
   const handleRotationChange = useCallback((rotation: number) => {
     updateBounds({ ...bounds, rotation });
   }, [bounds, updateBounds]);
 
   const handleCanvasPointSelect = useCallback((point: [number, number]) => {
+    if (!canEditJulia) return;
     updateFormula({ juliaC: point, isJulia: true });
     if (pickToastTimerRef.current) clearTimeout(pickToastTimerRef.current);
     setPickToast(
@@ -528,13 +728,31 @@ function ExploreClient({ posterImage }: { posterImage?: string }) {
     pickToastTimerRef.current = setTimeout(() => {
       setPickToast(null);
     }, 2200);
-  }, [t, updateFormula]);
+  }, [canEditJulia, t, updateFormula]);
 
   useEffect(() => {
+    isExploreMountedRef.current = true;
+    const publishedAction = publishedActionRef.current;
+    const publishedRestoreAction = publishedRestoreActionRef.current;
+    const publishedSelection = publishedSelectionRef.current;
+    const publishedRestore = publishedRestoreRef.current;
+    const publishedPendingActions = publishedPendingActionsRef.current;
     return () => {
+      isExploreMountedRef.current = false;
       if (pickToastTimerRef.current) clearTimeout(pickToastTimerRef.current);
+      publishedPendingActions.clear();
+      publishedAction.cancel();
+      publishedRestoreAction.cancel();
+      publishedSelection.cancel();
+      publishedRestore.cancel();
     };
   }, []);
+
+  useEffect(() => {
+    if (publishedDescriptor && publishedDescriptor.formulaId !== formula) {
+      setPublishedDescriptor(null);
+    }
+  }, [formula, publishedDescriptor]);
 
   const handleCanvasReady = useCallback((canvas: HTMLCanvasElement) => {
     canvasElRef.current = canvas;
@@ -546,10 +764,146 @@ function ExploreClient({ posterImage }: { posterImage?: string }) {
 
   // Handle formula change - reset to formula's default bounds
   const handleFormulaChange = useCallback((newFormula: string) => {
+    cancelPublishedFormulaActions();
+    setPublishedDescriptor(null);
     clearHandoffFailure();
     selectBuiltInFormula(newFormula);
     trackEvent('change_formula', { formula: newFormula });
-  }, [clearHandoffFailure, selectBuiltInFormula]);
+  }, [cancelPublishedFormulaActions, clearHandoffFailure, selectBuiltInFormula]);
+
+  const selectPublishedFormula = useCallback(async (
+    formulaId: string,
+    beforeApply: PublishedFormulaBeforeApply | undefined,
+    options: {
+      forceProfile?: boolean;
+      source: 'published-library' | 'feeling-lucky' | 'profile-reset';
+    },
+    generation: number,
+  ): Promise<PublishedFormulaSelectionResult> => {
+    if (!publishedActionRef.current.isCurrent(generation)) {
+      return { ok: false, code: 'selection-superseded' };
+    }
+    if (
+      !options.forceProfile &&
+      formulaId === document.formula.formulaId &&
+      publishedDescriptor?.formulaId === formulaId &&
+      pluginRegistry.getFormula(formulaId)
+    ) {
+      publishedSelectionRef.current.cancel();
+      return { ok: true };
+    }
+
+    const clientResult = await getPublishedFormulaLibraryClient();
+    if (!publishedActionRef.current.isCurrent(generation)) {
+      return { ok: false, code: 'selection-superseded' };
+    }
+    if (!clientResult.ok) return clientResult;
+    const row = clientResult.value.get(formulaId);
+    if (!row) return { ok: false, code: 'formula-not-published' };
+
+    return publishedSelectionRef.current.select(
+      formulaId,
+      clientResult.value,
+      (artifact) => {
+        clearHandoffFailure();
+        pluginRegistry.register(artifact.plugin);
+        setPublishedDescriptor(artifact.descriptor);
+        applyPublishedFormulaSelection({
+          formulaId,
+          formulaParams: getFormulaUniformDefaults(artifact.plugin),
+          profile: resolveActivatedPublishedFormulaDefaultProfileV1(row),
+        });
+        trackEvent('change_formula', {
+          formula: formulaId,
+          source: options.source,
+        });
+      },
+      beforeApply,
+    );
+  }, [
+    applyPublishedFormulaSelection,
+    clearHandoffFailure,
+    document.formula.formulaId,
+    publishedDescriptor,
+  ]);
+
+  const handlePublishedFormulaSelect = useCallback((
+    formulaId: string,
+    beforeApply?: PublishedFormulaBeforeApply,
+  ): Promise<PublishedFormulaSelectionResult> => (
+    runPublishedFormulaAction((generation) =>
+      selectPublishedFormula(formulaId, beforeApply, {
+        source: 'published-library',
+      }, generation)
+    )
+  ), [runPublishedFormulaAction, selectPublishedFormula]);
+
+  useEffect(() => {
+    const currentParams = new URLSearchParams(searchParams.toString());
+    const intent = parsePublishedFormulaExploreIntent(currentParams);
+    if (intent.status === 'none') return;
+
+    const handoffKey = `${intent.status}:${intent.formulaId}:${
+      intent.status === 'valid' ? intent.action : 'invalid'
+    }`;
+    if (publishedHandoffConsumedRef.current === handoffKey) return;
+    publishedHandoffConsumedRef.current = handoffKey;
+    const destination = stripPublishedFormulaExploreIntent(locale, currentParams);
+
+    if (intent.status === 'invalid') {
+      router.replace(destination, { scroll: false });
+      return;
+    }
+
+    void handlePublishedFormulaSelect(intent.formulaId).then((result) => {
+      if (!isExploreMountedRef.current) return;
+      if (!result.ok) {
+        setPickToast(t('controls.formula.library.selectionFailed'));
+      }
+      router.replace(destination, { scroll: false });
+    });
+  }, [handlePublishedFormulaSelect, locale, router, searchParams, t]);
+
+  const handleFeelingLucky = useCallback((): Promise<PublishedFormulaSelectionResult> => (
+    runPublishedFormulaAction(async (generation) => {
+      const clientResult = await getPublishedFormulaLibraryClient();
+      if (!publishedActionRef.current.isCurrent(generation)) {
+        return { ok: false, code: 'selection-superseded' };
+      }
+      if (!clientResult.ok) return clientResult;
+      const row = pickPublishedFormulaLuckyRow(
+        clientResult.value.index.rows,
+        document.formula.formulaId,
+      );
+      if (!row) return { ok: false, code: 'formula-not-published' };
+      return selectPublishedFormula(row.formulaId, undefined, {
+        source: 'feeling-lucky',
+      }, generation);
+    })
+  ), [document.formula.formulaId, runPublishedFormulaAction, selectPublishedFormula]);
+
+  const handlePublishedProfileReset = useCallback((): Promise<PublishedFormulaSelectionResult> => {
+    if (!isStandardFormulaIdV1(document.formula.formulaId)) {
+      return Promise.resolve({ ok: false, code: 'formula-not-published' });
+    }
+    return runPublishedFormulaAction((generation) =>
+      selectPublishedFormula(document.formula.formulaId, undefined, {
+        forceProfile: true,
+        source: 'profile-reset',
+      }, generation)
+    );
+  }, [
+    document.formula.formulaId,
+    runPublishedFormulaAction,
+    selectPublishedFormula,
+  ]);
+
+  const handleUndoPublishedFormulaSelection = useCallback(() => {
+    cancelPublishedFormulaActions();
+    clearHandoffFailure();
+    undoPublishedFormulaSelection();
+    trackEvent('undo_formula_change', { source: 'published-library' });
+  }, [cancelPublishedFormulaActions, clearHandoffFailure, undoPublishedFormulaSelection]);
 
   const handleFormulaParamChange = useCallback((name: string, value: PluginParamValue) => {
     updateFormula({
@@ -563,6 +917,9 @@ function ExploreClient({ posterImage }: { posterImage?: string }) {
   }, [document.formula.params?.formula, updateFormula]);
 
   const handleCustomFormulaSelect = useCallback((selection: FormulaSelectionRequest) => {
+    cancelPublishedFormulaActions();
+    clearPublishedFormulaSelectionUndo();
+    setPublishedDescriptor(null);
     clearHandoffFailure();
     const plugin = pluginRegistry.getFormula(selection.formulaId);
     updateFormula({
@@ -584,7 +941,15 @@ function ExploreClient({ posterImage }: { posterImage?: string }) {
         ...selection.experienceHint.coloring,
       });
     }
-  }, [clearHandoffFailure, document.formula.formulaId, updateBounds, updateColoring, updateFormula]);
+  }, [
+    cancelPublishedFormulaActions,
+    clearHandoffFailure,
+    clearPublishedFormulaSelectionUndo,
+    document.formula.formulaId,
+    updateBounds,
+    updateColoring,
+    updateFormula,
+  ]);
 
   // Handle transform change
   const handleTransformChange = useCallback((newTransform: string) => {
@@ -666,7 +1031,11 @@ function ExploreClient({ posterImage }: { posterImage?: string }) {
   }
 
   return (
-    <div className="flex flex-col lg:flex-row h-[calc(100dvh-3rem)] overflow-hidden">
+    <div
+      className="flex h-[calc(100dvh-3rem)] flex-col overflow-hidden lg:flex-row"
+      data-formula-id={document.formula.formulaId}
+      data-testid="explore-root"
+    >
       <div
         className={`relative bg-black lg:flex-1 ${isPanelCollapsed ? 'flex-1' : 'min-h-[50vh] lg:min-h-0'}`}
         style={posterImage ? {
@@ -752,7 +1121,9 @@ function ExploreClient({ posterImage }: { posterImage?: string }) {
             lighting={lighting}
             customGradient={customGradient}
             onBoundsChange={updateBounds}
-            onPointSelect={isJulia ? undefined : handleCanvasPointSelect}
+            onPointSelect={
+              isJulia || !canEditJulia ? undefined : handleCanvasPointSelect
+            }
             onCanvasReady={handleCanvasReady}
           />
         )}
@@ -885,7 +1256,15 @@ function ExploreClient({ posterImage }: { posterImage?: string }) {
                 onJuliaModeChange={handleJuliaModeChange}
                 onJuliaCChange={(value) => updateFormula({ juliaC: value })}
                 currentFormula={formula}
+                publishedDescriptor={publishedDescriptor}
                 onFormulaChange={handleFormulaChange}
+                onPublishedFormulaSelect={handlePublishedFormulaSelect}
+                onPublishedFormulaCancel={cancelPublishedFormulaActions}
+                onFeelingLucky={handleFeelingLucky}
+                onPublishedProfileReset={handlePublishedProfileReset}
+                canResetPublishedProfile={publishedDescriptor?.formulaId === formula}
+                canUndoPublishedFormulaSelection={canUndoPublishedFormulaSelection}
+                onUndoPublishedFormulaSelection={handleUndoPublishedFormulaSelection}
                 onFormulaParamChange={handleFormulaParamChange}
                 onCustomFormulaSelect={handleCustomFormulaSelect}
               />

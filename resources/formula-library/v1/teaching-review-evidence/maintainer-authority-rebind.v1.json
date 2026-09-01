@@ -1,0 +1,56 @@
+{
+  "schema": "fractalpark-teaching-maintainer-authority-rebind/v1",
+  "status": "maintainer-approved",
+  "approvedAt": "2026-08-22T14:37:29+08:00",
+  "actorId": "fractalpark-maintainer",
+  "actorKind": "human-maintainer",
+  "actorRole": "maintainer",
+  "maintainerResponse": "批准这次仅限派生哈希的 authority rebind（建议）",
+  "approvalStatement": "批准仅将原 50 条 teaching selection 及其语义锚点在内容行不变的前提下再绑定到 Commit 23 的 published runtime index；不授权修改 teaching 内容、选择行、语义锚点行、publication decision、PR Ready、merge、Production 或发布。",
+  "priorApprovalSha256": "c0aa89af7edc362698173994f79e3eead8f56a970201ac921a27d91c89be1283",
+  "priorApprovalPacketSha256": "a4ecee10c064a8844ff195edbd2cc15b6d179ea1b0d27f946111ce659032d09a",
+  "priorSelectionSha256": "1ea4fff7f3c0f22d3cdae99aa06f775987a35871427b79d7005be5acd344b2fa",
+  "reboundSelectionSha256": "08460aba150a7dcab418cdda06ec21a56b2a113b641cb155d9dced22d037760a",
+  "selectionRowsCanonicalSha256": "36b4e813c39362651f21794273ef40c2c85dd5c697f05f594690859ebcb1fca9",
+  "priorSemanticAnchorsSha256": "9bd8ddbbbe16055eab215bd245c576e9268928980bb2e2759a77af4725f34241",
+  "reboundSemanticAnchorsSha256": "f130128dab9274b4c8ea2bfa43108d5daa65a578c973faf9696791e68fd15262",
+  "semanticAnchorRowsCanonicalSha256": "67d9b351024c2e70adca7293348315fc0b1514a3e3dfde36ac904fd4d3da32d2",
+  "changedPins": {
+    "runtimeIndexSha256": {
+      "before": "1b27e129a102c0d64774bce7112be41de102028743cbcf440ba12bb45d906ff8",
+      "after": "9a4774f2dfb8ebb31e80abf3a0efe7b330d1a4627fb38317bdcf069560fa9ddf"
+    },
+    "runtimeIndexCanonicalSha256": {
+      "before": "1c543581ce6569d9c43e1e9505020dc51088f51e54cb3f2fa9e814b020bb710f",
+      "after": "c10faceaa52356d2e48042f64010cd0f3f170c0087b5d609a01ede360a7c874c"
+    }
+  },
+  "invariants": {
+    "formulaCount": 50,
+    "contentUnitCount": 350,
+    "localeCount": 7,
+    "selectionRowsChanged": false,
+    "semanticAnchorRowsChanged": false,
+    "teachingContentChanged": false,
+    "publicationCountsChanged": false,
+    "publishedCount": 513,
+    "heldCount": 164
+  },
+  "scope": {
+    "allows": [
+      "rebind the unchanged 50-row teaching selection and semantic-anchor rows to the recorded runtime index hashes",
+      "continue Commit 23 rights-isolation verification and Draft PR delivery"
+    ],
+    "doesNotAllow": [
+      "modify teaching content, selection rows, or semantic-anchor rows",
+      "change formula publication decisions",
+      "mark the pull request ready",
+      "merge or auto-merge",
+      "deploy or promote Production",
+      "modify Production environment",
+      "run migrations",
+      "create a tag or Release",
+      "submit IndexNow"
+    ]
+  }
+}

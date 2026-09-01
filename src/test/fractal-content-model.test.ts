@@ -1,6 +1,9 @@
 import { describe, expect, it } from 'vitest';
 import presetsFile from '../../public/gallery-presets.json';
-import { documentToRuntimeParams } from '@/engine/document-adapter';
+import {
+  documentToRuntimeParams,
+  projectDocumentToRuntimeParams,
+} from '@/engine/document-adapter';
 import {
   buildCanonicalPresetDocument,
   buildFractalParamsFromPresetQuery,
@@ -15,14 +18,18 @@ import {
 import { documentToExploreHref, fractalParamsToHref } from '@/lib/url-params';
 
 describe('fractal content model', () => {
-  it('builds one canonical preset document without changing runtime behavior', () => {
+  it('preserves saved Julia intent while fail-closing legacy presets at runtime', () => {
     const configs = parseGalleryPresetsFile(presetsFile).presets;
 
     for (const config of configs) {
       const parsed = buildFractalParamsFromPresetQuery(config.url);
       const document = buildCanonicalPresetDocument(config);
 
-      expect(documentToRuntimeParams(document)).toEqual(parsed.params);
+      expect(projectDocumentToRuntimeParams(document)).toEqual(parsed.params);
+      expect(documentToRuntimeParams(document)).toEqual({
+        ...parsed.params,
+        isJulia: false,
+      });
       expect(document.animation?.viewKeyframes).toEqual(parsed.keyframes);
     }
   });

@@ -1,0 +1,36 @@
+{
+  "schema": "fractalpark-teaching-locale/v1",
+  "formulaId": "c1c898f3-c9a3-583d-9a0a-d09968ba0db3",
+  "locale": "pt",
+  "sourceRevision": "a265807bb53747d256b0cbfee89991527a72e8bb9ceac9a41888c3ad1419448e",
+  "semanticHash": "1316ce063761dd9a4c2c2a043c2a44723021e369cd01f42ae89454251079349f",
+  "englishContentHash": "8da88c667957f2c7fa532fe359a78689ecd583ee9a8024a1a18f57c38b902838",
+  "overview": "lambda é estudada pela definição fixa FRM-like/1: você acompanha actualZ = z + (0.5, 0), oneMinusZ = (1, 0) - actualZ, então z = c * (actualZ * oneMinusZ), sem tomar uma imagem como garantia. O perfil fixo oferece apenas uma configuração concreta.",
+  "sourceWalkthrough": {
+    "c1c898f3-c9a3-583d-9a0a-d09968ba0db3:a265807bb53747d256b0cbfee89991527a72e8bb9ceac9a41888c3ad1419448e:start-branch": "Em lambda, este nó executa if ismand: z = 0; caso contrário z = pixel.",
+    "c1c898f3-c9a3-583d-9a0a-d09968ba0db3:a265807bb53747d256b0cbfee89991527a72e8bb9ceac9a41888c3ad1419448e:shift": "Em lambda, este nó executa actualZ = z + (0.5, 0).",
+    "c1c898f3-c9a3-583d-9a0a-d09968ba0db3:a265807bb53747d256b0cbfee89991527a72e8bb9ceac9a41888c3ad1419448e:product-update": "Em lambda, este nó executa z = c * (actualZ * oneMinusZ).",
+    "c1c898f3-c9a3-583d-9a0a-d09968ba0db3:a265807bb53747d256b0cbfee89991527a72e8bb9ceac9a41888c3ad1419448e:termination": "Em lambda, este nó executa |z| <= 256."
+  },
+  "syntaxFeatures": {
+    "state-flow": "O fluxo de estado específico é: a escolha de ismand inicializa z; em seguida, actualZ e oneMinusZ alimentam a atualização do produto.",
+    "stopping-test": "O teste de parada verifica apenas |z| <= 256; ele não atribui um valor ao estado."
+  },
+  "parameterExperiment": {
+    "steps": [
+      "Com os outros controles do perfil fixos, execute lambda com 48 iterações.",
+      "Depois use as 96 iterações do perfil fixo e registre se há diferença."
+    ],
+    "expectedObservation": "Registre se actualZ = z + (0.5, 0), oneMinusZ = (1, 0) - actualZ, então z = c * (actualZ * oneMinusZ) muda o resultado visível ou o teste de parada |z| <= 256 em relação à linha de base; a definição não garante diferença."
+  },
+  "exercise": {
+    "prompt": "Rastreie as anotações de lambda e explique como actualZ = z + (0.5, 0), oneMinusZ = (1, 0) - actualZ, então z = c * (actualZ * oneMinusZ) é executado nas operações indicadas.",
+    "completionCheck": "Sua resposta explica as 4 anotações, identifica actualZ = z + (0.5, 0), oneMinusZ = (1, 0) - actualZ, então z = c * (actualZ * oneMinusZ) e trata |z| <= 256 como teste de parada, não como atribuição.",
+    "hint": "O fluxo de estado executa if ismand: z = 0; caso contrário z = pixel → actualZ = z + (0.5, 0) → z = c * (actualZ * oneMinusZ) em sequência, fornecendo o resultado à etapa seguinte."
+  },
+  "factsPresentation": {
+    "provenanceLead": "Fonte: definição de execução fixada e decisão de publicação.",
+    "rightsLead": "As informações de direitos seguem a decisão fixada na unidade em inglês."
+  },
+  "contentHash": "968692ab38bb0793bf02d298efef0839706ed82c3142c1062127d49732137efc"
+}

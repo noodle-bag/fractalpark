@@ -1,0 +1,35 @@
+{
+  "schema": "fractalpark-teaching-locale/v1",
+  "formulaId": "a9263b21-23c1-5d94-ba30-f7bef1a66629",
+  "locale": "fr",
+  "sourceRevision": "bf1462942af10c52a5adbecf8856b4e34a8a5110637c84fa613728b76a1d6b4a",
+  "semanticHash": "f170562c56a5af50f20613a53ad362101ca5c82901b219a828ce640149d25f6a",
+  "englishContentHash": "a7d280a201d8754b7f1495c21ded116d9bcba534b3095187f237a962cfe235a7",
+  "overview": "Dans FRM-like/1, spider commence par si ismand : z = 0 ; sinon z = pixel, le premier nœud de boucle fait z2 = z * z, et |z| <= 256 limite l’itération. Lis ces opérations dans l’ordre réel de la source.",
+  "sourceWalkthrough": {
+    "a9263b21-23c1-5d94-ba30-f7bef1a66629:bf1462942af10c52a5adbecf8856b4e34a8a5110637c84fa613728b76a1d6b4a:initialization": "Dans spider, le nœud d’initialisation exécute seulement : si ismand : z = 0 ; sinon z = pixel.",
+    "a9263b21-23c1-5d94-ba30-f7bef1a66629:bf1462942af10c52a5adbecf8856b4e34a8a5110637c84fa613728b76a1d6b4a:iteration": "Dans spider, ce nœud de boucle exécute seulement : z2 = z * z.",
+    "a9263b21-23c1-5d94-ba30-f7bef1a66629:bf1462942af10c52a5adbecf8856b4e34a8a5110637c84fa613728b76a1d6b4a:termination": "Dans spider, le nœud bailout teste seulement : |z| <= 256."
+  },
+  "syntaxFeatures": {
+    "initialization-flow": "Dans spider, la caractéristique d’initialisation cible la seule opération initiale si ismand : z = 0 ; sinon z = pixel.",
+    "iteration-flow": "Dans spider, la caractéristique d’itération cible la seule affectation z2 = z * z.",
+    "bailout-test": "Dans spider, la caractéristique de terminaison cible la comparaison |z| <= 256."
+  },
+  "parameterExperiment": {
+    "steps": [
+      "Fais le rendu de spider avec la base du plan des paramètres fixée : centre (0, 0), zoom 0.25, rotation 0, et 96 itérations.",
+      "Garde la base fixe sauf le nombre d’itérations, fais un rendu à 48 itérations et compare-le à la base de 96."
+    ],
+    "expectedObservation": "Dans spider, note si la comparaison entre 48 et 96 itérations change quelque chose et repère la limite source |z| <= 256."
+  },
+  "exercise": {
+    "prompt": "Dans spider, repère les trois annotations et explique si ismand : z = 0 ; sinon z = pixel, z2 = z * z et |z| <= 256 et explique pourquoi aucune instruction voisine n’appartient à l’annotation de boucle.",
+    "completionCheck": "Dans spider, tu as terminé en listant les 3 clés d’annotation et en expliquant précisément z2 = z * z et |z| <= 256."
+  },
+  "factsPresentation": {
+    "provenanceLead": "La provenance est dans l’unité factuelle anglaise.",
+    "rightsLead": "Les droits sont dans l’unité factuelle anglaise."
+  },
+  "contentHash": "b82268be14360d1b50f8a686888ae92a909fe99c710dde3a5e710e9210441b8e"
+}

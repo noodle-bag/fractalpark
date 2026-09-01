@@ -1,0 +1,33 @@
+{
+  "schema": "fractalpark-teaching-locale/v1",
+  "formulaId": "58edc237-4978-5aed-8229-028b1d9cbbb9",
+  "locale": "fr",
+  "sourceRevision": "e59afb2646e8e04f36955f7d7798930d0e752b7b0da90c11417283da41eb398a",
+  "semanticHash": "ed9a34c1038bc242b27bc60680e5be6ecdfe84818f3acf5a7a299fa0cfe643fb",
+  "englishContentHash": "e5d1e88e5e038bbf924642857cd0cbaf23aac57f85d3475a166aa88f3960d318",
+  "overview": "Cette unité repose pour toi sur les opérations exactes suivantes de FRM-like/1 :  `init: cclassic = c; z = pixel; cclassic = z. loop: z = z * z + cclassic; cclassic = (1 + imag(cclassic)) * real(cclassic) / 2 + z. bailout: |z| <= 4.`",
+  "sourceWalkthrough": {
+    "58edc237-4978-5aed-8229-028b1d9cbbb9:e59afb2646e8e04f36955f7d7798930d0e752b7b0da90c11417283da41eb398a:init-overwrite": "Cette annotation exécute `cclassic = z`.",
+    "58edc237-4978-5aed-8229-028b1d9cbbb9:e59afb2646e8e04f36955f7d7798930d0e752b7b0da90c11417283da41eb398a:z-update": "Cette annotation exécute `z = z * z + cclassic`.",
+    "58edc237-4978-5aed-8229-028b1d9cbbb9:e59afb2646e8e04f36955f7d7798930d0e752b7b0da90c11417283da41eb398a:carrier-update": "Cette annotation exécute `cclassic = (1 + imag(cclassic)) * real(cclassic) / 2 + z`.",
+    "58edc237-4978-5aed-8229-028b1d9cbbb9:e59afb2646e8e04f36955f7d7798930d0e752b7b0da90c11417283da41eb398a:bailout": "Cette annotation exécute `|z| <= 4`. Elle termine la séquence d’itération de cette formule."
+  },
+  "syntaxFeatures": {
+    "source-sequence": "Cette caractéristique de séquence relie, dans l’ordre du code source, les opérations citées liées à `cclassic = z`et sa mise à jour ultérieure."
+  },
+  "parameterExperiment": {
+    "steps": [
+      "Effectue d’abord le rendu de référence fixé à 96 itérations de wineglass, en suivant `cclassic = z`, `cclassic`. Puis garde le centre, le zoom, la rotation et la formule fixes, change uniquement la limite à 48 itérations et effectue le second rendu."
+    ],
+    "expectedObservation": "Dans les essais de wineglass portant sur `cclassic = z`, `cclassic`, note s’il existe une différence visible par rapport à la référence ; note aussi l’absence de différence."
+  },
+  "exercise": {
+    "prompt": "Explique le rôle de `cclassic = z`et sa mise à jour ultérieure dans l’ordre du code source et compare les exécutions selon les étapes de l’expérience sur les paramètres.",
+    "completionCheck": "Ta réponse doit expliquer les 4 opérations annotées, noter la comparaison de l’expérience et mentionner `cclassic = z`et sa mise à jour ultérieure."
+  },
+  "factsPresentation": {
+    "provenanceLead": "Source : révision d’exécution fixée et décision de publication.",
+    "rightsLead": "Les informations de droits figurent dans l’unité factuelle anglaise."
+  },
+  "contentHash": "9b365dab1c439077fccdc8dc405c0a1cefcef08c26389a1746052a059b23ff4d"
+}

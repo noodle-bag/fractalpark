@@ -1,0 +1,74 @@
+{
+  "schema": "fractalpark-teaching-en-fact/v1",
+  "formulaId": "0672aed0-1fd1-5acd-9263-a52d5680d3b4",
+  "sourceRevision": "a2e5619bb8e9528ea042184634f69711d1f7522254d8e39d6060310db4663132",
+  "semanticHash": "2f8606ed369648b2fd3327a06ade9f9f82969b5734dbc9bb78bd31cf806526ec",
+  "overview": "fzpfncoh’s FRM-like/1 source starts z at pixel and creates a fixed addend f = 1 / cosh(pixel). Each loop applies fn1 to z and then adds f. The bailout bound is |z| <= 50.",
+  "mathDisclosure": "exact-structured",
+  "mathSummary": "init: z = pixel; f = 1 / cosh(pixel). loop: z = fn1(z) + f. bailout: |z| <= 50.",
+  "sourceWalkthrough": [
+    {
+      "annotationId": "0672aed0-1fd1-5acd-9263-a52d5680d3b4:a2e5619bb8e9528ea042184634f69711d1f7522254d8e39d6060310db4663132:fixed-addend",
+      "nodeId": "frm-v1:a2e5619bb8e9528ea042184634f69711d1f7522254d8e39d6060310db4663132:init/1",
+      "explanation": "This initialization assignment fixes f as 1 / cosh(pixel), while z was initialized from pixel."
+    },
+    {
+      "annotationId": "0672aed0-1fd1-5acd-9263-a52d5680d3b4:a2e5619bb8e9528ea042184634f69711d1f7522254d8e39d6060310db4663132:loop-transform",
+      "nodeId": "frm-v1:a2e5619bb8e9528ea042184634f69711d1f7522254d8e39d6060310db4663132:loop/0",
+      "explanation": "This loop assignment replaces z with fn1(z) + f, adding the fixed cosh-based value after the function call."
+    },
+    {
+      "annotationId": "0672aed0-1fd1-5acd-9263-a52d5680d3b4:a2e5619bb8e9528ea042184634f69711d1f7522254d8e39d6060310db4663132:bailout",
+      "nodeId": "frm-v1:a2e5619bb8e9528ea042184634f69711d1f7522254d8e39d6060310db4663132:bailout",
+      "explanation": "The bailout permits the orbit while |z| <= 50."
+    }
+  ],
+  "syntaxFeatures": [
+    {
+      "featureId": "source-sequence",
+      "annotationIds": [
+        "0672aed0-1fd1-5acd-9263-a52d5680d3b4:a2e5619bb8e9528ea042184634f69711d1f7522254d8e39d6060310db4663132:fixed-addend",
+        "0672aed0-1fd1-5acd-9263-a52d5680d3b4:a2e5619bb8e9528ea042184634f69711d1f7522254d8e39d6060310db4663132:loop-transform",
+        "0672aed0-1fd1-5acd-9263-a52d5680d3b4:a2e5619bb8e9528ea042184634f69711d1f7522254d8e39d6060310db4663132:bailout"
+      ],
+      "explanation": "The initialization supplies a fixed cosh-based addend, and the loop combines it with the current fn1(z)."
+    }
+  ],
+  "parameterExperiment": {
+    "parameterSymbols": [
+      "function1"
+    ],
+    "steps": [
+      "Use function1 = identity at the pinned profile. Keep center, zoom, rotation, and iterations fixed, change only function1 to sqr, and render the trial."
+    ],
+    "expectedObservation": "Record a visible difference or no visible difference between the identity baseline and the sqr trial, noting the fixed 1 / cosh(pixel) addend."
+  },
+  "exercise": {
+    "prompt": "Identify the fixed addend and the function update, then compare identity with sqr.",
+    "completionCheck": "Your response explains all 3 annotated operations, records the requested comparison, and mentions `1 / cosh(pixel)`.",
+    "answerDisclosure": "none"
+  },
+  "facts": {
+    "provenanceStatement": "Pinned runtime revision a2e5619bb8e9528ea042184634f69711d1f7522254d8e39d6060310db4663132 and its publication decision ground this unit.",
+    "rightsStatement": "rightsStatus: source-declared-public-domain-assumption; implementationBasis: direct-adaptation; publicationDecision: publish; decisionReason: publish-census-full-chain-green. This statement makes no broader claim about any third-party original.",
+    "sourceIds": [
+      "runtime:a2e5619bb8e9528ea042184634f69711d1f7522254d8e39d6060310db4663132",
+      "decision:0672aed0-1fd1-5acd-9263-a52d5680d3b4"
+    ],
+    "licenseIds": [],
+    "claims": [
+      {
+        "text": "The pinned definition supplies initialization, loop, and bailout operations for fzpfncoh.",
+        "sourceIds": [
+          "runtime:a2e5619bb8e9528ea042184634f69711d1f7522254d8e39d6060310db4663132"
+        ]
+      },
+      {
+        "text": "The publication decision is publish for the recorded reason publish-census-full-chain-green.",
+        "sourceIds": [
+          "decision:0672aed0-1fd1-5acd-9263-a52d5680d3b4"
+        ]
+      }
+    ]
+  }
+}

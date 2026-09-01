@@ -13,6 +13,44 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
+      - name: Check out release tag
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+
+      - name: Install locked dependencies
+        run: npm ci
+
+      - name: Install Chromium for Record image verification
+        run: npx playwright install chromium
+
+      - name: Verify Record preview profiles
+        run: npx tsx scripts/verify-formula-record-preview-profiles.ts
+
+      - name: Verify Record image masters from source
+        run: npx tsx scripts/verify-formula-record-masters.ts
+
+      - name: Build release candidate
+        run: npm run build
+
+      - name: Enforce formula publication isolation
+        run: npm run formula:rights:release
+
+      - name: Reject eager formula definitions in build output
+        run: npm run formula:performance:verify-build
+
+      - name: Enforce standard-library release evidence
+        env:
+          FORMULA_PERFORMANCE_CANDIDATE_SHA: ${{ github.sha }}
+          FORMULA_PERFORMANCE_TARGET_URL: ${{ vars.FORMULA_PERFORMANCE_TARGET_URL }}
+        run: npm run formula:performance:release
+
       - name: Create GitHub Release
         env:
           GH_TOKEN: ${{ github.token }}

@@ -1,0 +1,35 @@
+{
+  "schema": "fractalpark-teaching-locale/v1",
+  "formulaId": "0a9a153b-bb4e-53df-9cdf-54fd0ad0081e",
+  "locale": "zh",
+  "sourceRevision": "0a9786849dd78c3643bae1f6de80fbc42d2e57e50e591090e67d681c81c0822e",
+  "semanticHash": "60f95642c01edfef967fd1d305e4c24747437321c32abbe847217193b9fe64eb",
+  "englishContentHash": "22eb63c262fd38ce1517d8325d7eabb007f7c9a4a66c3dcb726177f8c47fd45e",
+  "overview": "在 FRM-like/1 中，ok-35 从 z = pixel 开始，循环首个节点是 mapped = firstMap(z)，并以 |z| <= real(threshold) 限制迭代。请按源代码的实际顺序阅读这些操作。",
+  "sourceWalkthrough": {
+    "0a9a153b-bb4e-53df-9cdf-54fd0ad0081e:0a9786849dd78c3643bae1f6de80fbc42d2e57e50e591090e67d681c81c0822e:initialization": "在 ok-35 中，初始化节点仅执行：z = pixel。",
+    "0a9a153b-bb4e-53df-9cdf-54fd0ad0081e:0a9786849dd78c3643bae1f6de80fbc42d2e57e50e591090e67d681c81c0822e:iteration": "在 ok-35 中，此循环节点仅执行：mapped = firstMap(z)。",
+    "0a9a153b-bb4e-53df-9cdf-54fd0ad0081e:0a9786849dd78c3643bae1f6de80fbc42d2e57e50e591090e67d681c81c0822e:termination": "在 ok-35 中，bailout 节点仅测试：|z| <= real(threshold)。"
+  },
+  "syntaxFeatures": {
+    "initialization-flow": "在 ok-35 中，初始化特征聚焦 z = pixel 这一个起始操作。",
+    "iteration-flow": "在 ok-35 中，迭代特征聚焦 mapped = firstMap(z) 这一个循环赋值。",
+    "bailout-test": "在 ok-35 中，终止特征聚焦比较 |z| <= real(threshold)。"
+  },
+  "parameterExperiment": {
+    "steps": [
+      "以固定参数平面基线渲染 ok-35，并使用运行时默认值 multiplier (0, 0), thresholdOffset (0, 0), firstMap (identity), secondMap (identity)。",
+      "每次只改变 multiplier, thresholdOffset, firstMap, secondMap 中的一个，固定中心 (0, 0)、缩放 0.25、旋转 0、96 次迭代和其余槽位，再比较渲染结果。"
+    ],
+    "expectedObservation": "分别改变multiplier、thresholdOffset、firstMap或secondMap时，记录渲染是否不同于基线，并把比较结果联系到`|z| <= real(threshold)`。"
+  },
+  "exercise": {
+    "prompt": "在 ok-35 中，找出三个注释：分别说明 z = pixel、mapped = firstMap(z) 和 |z| <= real(threshold)，并解释为什么相邻语句不属于循环注释。",
+    "completionCheck": "在 ok-35 中，完成时应列出全部 3 个注释键，并准确说明 mapped = firstMap(z) 与 |z| <= real(threshold) 的作用。"
+  },
+  "factsPresentation": {
+    "provenanceLead": "来源说明见英文事实单元。",
+    "rightsLead": "权利说明见英文事实单元。"
+  },
+  "contentHash": "7cee4ca83a6de153930fbf6de0f81998fefb8de2cfcdfb1798fa5d9eac99fe27"
+}

@@ -1,0 +1,33 @@
+{
+  "schema": "fractalpark-teaching-locale/v1",
+  "formulaId": "06223e69-6d8c-50ba-8e5d-b630d342d910",
+  "locale": "es",
+  "sourceRevision": "6fd1272cca8d356da5f0c49cbbb4278f0e5d727cefab5ad1daefa83fb4c1f3ce",
+  "semanticHash": "88a93741043d5f43532adda4f96b789b0e10c4bd3d31319b8c9aa7ba3af5fee9",
+  "englishContentHash": "dbff8e9436104f3caedd85de72fcbf92209ab78b3312bad81ab9f84813408da3",
+  "localizedName": "celticMandelbar",
+  "overview": "En FRM-like/1, celticMandelbar sigue la inicialización, el bucle y la prueba de salida del código fuente. Trata cada paso como una operación explícita sobre el estado, sin deducir reglas por el nombre. El perfil fijado te permite observar el mismo proceso iterativo.",
+  "sourceWalkthrough": {
+    "06223e69-6d8c-50ba-8e5d-b630d342d910:6fd1272cca8d356da5f0c49cbbb4278f0e5d727cefab5ad1daefa83fb4c1f3ce:init": "El nodo de inicialización ejecuta: `if ismand`",
+    "06223e69-6d8c-50ba-8e5d-b630d342d910:6fd1272cca8d356da5f0c49cbbb4278f0e5d727cefab5ad1daefa83fb4c1f3ce:loop": "El nodo del bucle ejecuta: `z2 = z * z`",
+    "06223e69-6d8c-50ba-8e5d-b630d342d910:6fd1272cca8d356da5f0c49cbbb4278f0e5d727cefab5ad1daefa83fb4c1f3ce:bailout": "La prueba de terminación es: `|z| <= 256`"
+  },
+  "syntaxFeatures": {
+    "source-sequence": "Esta estructura organiza los pasos citados del código fuente en una secuencia comprobable. 06223e69-6d8c-50ba-8e5d-b630d342d910:6fd1272cca8d356da5f0c49cbbb4278f0e5d727cefab5ad1daefa83fb4c1f3ce:init, 06223e69-6d8c-50ba-8e5d-b630d342d910:6fd1272cca8d356da5f0c49cbbb4278f0e5d727cefab5ad1daefa83fb4c1f3ce:loop, 06223e69-6d8c-50ba-8e5d-b630d342d910:6fd1272cca8d356da5f0c49cbbb4278f0e5d727cefab5ad1daefa83fb4c1f3ce:bailout"
+  },
+  "parameterExperiment": {
+    "steps": [
+      "Usa el perfil fijado: mode parameter-plane; center (-0.5, 0); zoom 0.4; rotation 0; iterations 96. Ejecútalo una vez y registra el resultado; después repite con el mismo perfil."
+    ],
+    "expectedObservation": "Compara las dos ejecuciones y registra si `z = conj(folded) + c` produce el mismo resultado visible y comportamiento iterativo."
+  },
+  "exercise": {
+    "prompt": "Encuentra las anotaciones de fuente relacionadas con `z = conj(folded) + c` y explica el orden de inicialización, bucle y terminación.",
+    "completionCheck": "Para completar, enumera las tres claves de anotación citadas para `z = conj(folded) + c` y ordénalas de inicialización a bucle y terminación."
+  },
+  "factsPresentation": {
+    "provenanceLead": "Procedencia:",
+    "rightsLead": "Derechos:"
+  },
+  "contentHash": "42e268b87dbbfc8e6cac0e74be8739eee3d78569a7123321bbcf3c45430ad89a"
+}

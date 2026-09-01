@@ -1,0 +1,33 @@
+{
+  "schema": "fractalpark-teaching-locale/v1",
+  "formulaId": "09ee96d1-18a8-5dad-83e1-d05f0c59be4b",
+  "locale": "pt",
+  "sourceRevision": "ab0bdc1929dee1daeb9486d7b1fd885a6644367232854694fa88908eb4e6c0ce",
+  "semanticHash": "061df18cf898a0a049d63cd5f6cf087a28ac7f830bb9694e954c1aaae0b29851",
+  "englishContentHash": "1cf5b919d9d0433642e675460df0a931cc349fe32425c11b23f74e23e66db79b",
+  "localizedName": "chebyshev2",
+  "overview": "Em FRM-like/1, chebyshev2 segue a inicialização, o laço e o teste de saída do código-fonte. Trate cada passo como uma operação explícita sobre o estado, sem deduzir regras pelo nome. O perfil fixado permite observar o mesmo processo iterativo.",
+  "sourceWalkthrough": {
+    "09ee96d1-18a8-5dad-83e1-d05f0c59be4b:ab0bdc1929dee1daeb9486d7b1fd885a6644367232854694fa88908eb4e6c0ce:init": "O nó de inicialização executa: `if ismand`",
+    "09ee96d1-18a8-5dad-83e1-d05f0c59be4b:ab0bdc1929dee1daeb9486d7b1fd885a6644367232854694fa88908eb4e6c0ce:loop": "O nó do laço executa: `z = 2 * (z * z) - (1, 0) + c`",
+    "09ee96d1-18a8-5dad-83e1-d05f0c59be4b:ab0bdc1929dee1daeb9486d7b1fd885a6644367232854694fa88908eb4e6c0ce:bailout": "O teste de término é: `|z| <= 256`"
+  },
+  "syntaxFeatures": {
+    "source-sequence": "Esta estrutura organiza os passos do código-fonte citados em uma sequência verificável. 09ee96d1-18a8-5dad-83e1-d05f0c59be4b:ab0bdc1929dee1daeb9486d7b1fd885a6644367232854694fa88908eb4e6c0ce:init, 09ee96d1-18a8-5dad-83e1-d05f0c59be4b:ab0bdc1929dee1daeb9486d7b1fd885a6644367232854694fa88908eb4e6c0ce:loop, 09ee96d1-18a8-5dad-83e1-d05f0c59be4b:ab0bdc1929dee1daeb9486d7b1fd885a6644367232854694fa88908eb4e6c0ce:bailout"
+  },
+  "parameterExperiment": {
+    "steps": [
+      "Use o perfil fixado: mode parameter-plane; center (-0.5, 0); zoom 0.4; rotation 0; iterations 96. Execute uma vez e registre o resultado; depois repita com o mesmo perfil."
+    ],
+    "expectedObservation": "Compare as duas execuções e registre se `z = 2 * (z * z) - (1, 0) + c` produz o mesmo resultado visível e comportamento iterativo."
+  },
+  "exercise": {
+    "prompt": "Encontre as anotações de fonte ligadas a `z = 2 * (z * z) - (1, 0) + c` e explique a ordem entre inicialização, laço e término.",
+    "completionCheck": "Para concluir, liste as três chaves de anotação citadas para `z = 2 * (z * z) - (1, 0) + c` e ordene-as de inicialização a laço e término."
+  },
+  "factsPresentation": {
+    "provenanceLead": "Proveniência:",
+    "rightsLead": "Direitos:"
+  },
+  "contentHash": "b7ea55f3f5d31754269b8544ca2de3c84203ae6898b76e430f7c4c89fbbffef8"
+}

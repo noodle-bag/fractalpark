@@ -1,0 +1,33 @@
+{
+  "schema": "fractalpark-teaching-locale/v1",
+  "formulaId": "06223e69-6d8c-50ba-8e5d-b630d342d910",
+  "locale": "ru",
+  "sourceRevision": "6fd1272cca8d356da5f0c49cbbb4278f0e5d727cefab5ad1daefa83fb4c1f3ce",
+  "semanticHash": "88a93741043d5f43532adda4f96b789b0e10c4bd3d31319b8c9aa7ba3af5fee9",
+  "englishContentHash": "dbff8e9436104f3caedd85de72fcbf92209ab78b3312bad81ab9f84813408da3",
+  "localizedName": "celticMandelbar",
+  "overview": "В FRM-like/1 формула celticMandelbar следует инициализации, циклу и проверке выхода из исходного кода. Рассматривайте каждый шаг как явную операцию над состоянием, не выводя правила из названия. Закреплённый профиль позволяет вам наблюдать один и тот же итерационный процесс.",
+  "sourceWalkthrough": {
+    "06223e69-6d8c-50ba-8e5d-b630d342d910:6fd1272cca8d356da5f0c49cbbb4278f0e5d727cefab5ad1daefa83fb4c1f3ce:init": "Узел инициализации выполняет: `if ismand`",
+    "06223e69-6d8c-50ba-8e5d-b630d342d910:6fd1272cca8d356da5f0c49cbbb4278f0e5d727cefab5ad1daefa83fb4c1f3ce:loop": "Узел цикла выполняет: `z2 = z * z`",
+    "06223e69-6d8c-50ba-8e5d-b630d342d910:6fd1272cca8d356da5f0c49cbbb4278f0e5d727cefab5ad1daefa83fb4c1f3ce:bailout": "Проверка завершения: `|z| <= 256`"
+  },
+  "syntaxFeatures": {
+    "source-sequence": "Эта структура располагает процитированные шаги исходного кода в проверяемой последовательности. 06223e69-6d8c-50ba-8e5d-b630d342d910:6fd1272cca8d356da5f0c49cbbb4278f0e5d727cefab5ad1daefa83fb4c1f3ce:init, 06223e69-6d8c-50ba-8e5d-b630d342d910:6fd1272cca8d356da5f0c49cbbb4278f0e5d727cefab5ad1daefa83fb4c1f3ce:loop, 06223e69-6d8c-50ba-8e5d-b630d342d910:6fd1272cca8d356da5f0c49cbbb4278f0e5d727cefab5ad1daefa83fb4c1f3ce:bailout"
+  },
+  "parameterExperiment": {
+    "steps": [
+      "Используйте закреплённый профиль: mode parameter-plane; center (-0.5, 0); zoom 0.4; rotation 0; iterations 96. Выполните его один раз и запишите результат, затем повторите с тем же профилем."
+    ],
+    "expectedObservation": "Сравните два запуска и отметьте, совпадают ли видимый результат и поведение итераций для `z = conj(folded) + c`."
+  },
+  "exercise": {
+    "prompt": "Найдите исходные аннотации, связанные с `z = conj(folded) + c`, и объясните порядок инициализации, цикла и завершения.",
+    "completionCheck": "Для завершения перечислите три процитированных ключа аннотаций для `z = conj(folded) + c` и расположите их от инициализации через цикл к завершению."
+  },
+  "factsPresentation": {
+    "provenanceLead": "Происхождение:",
+    "rightsLead": "Права:"
+  },
+  "contentHash": "485cbbeb660ed0312326d4bd79373441cd48d7356789f6405669ef9b7986671f"
+}

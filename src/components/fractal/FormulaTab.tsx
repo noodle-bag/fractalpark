@@ -1,8 +1,7 @@
 /**
  * Formula Tab Component
- * M4.2 Phase 2.2
- * 
- * Combines FormulaBrowser with CustomFormulaList
+ * Keeps the published Standard Library and cloud-backed My Formulas as
+ * separate scopes. The Standard selector intentionally has no text search.
  */
 
 'use client';
@@ -10,22 +9,48 @@
 import { useState } from 'react';
 import { useTranslations } from 'next-intl';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
-import { FormulaBrowser } from './FormulaBrowser';
 import { CustomFormulaList } from './CustomFormulaList';
+import { PublishedFormulaLibrary } from './PublishedFormulaLibrary';
 import type { FormulaPlugin } from '@/engine/plugins/types';
 import type { FormulaExperienceHint, FormulaSelectionRequest } from '@/engine/frm/authoring';
 import type { ViewBounds } from '@/engine/types';
+import type {
+  PublishedFormulaBeforeApply,
+  PublishedFormulaSelectionResult,
+} from '@/lib/published-formula-selection';
 
 interface FormulaTabProps {
   currentFormula: string;
   currentBounds?: ViewBounds;
   onFormulaChange: (formula: string) => void;
+  onPublishedFormulaSelect: (
+    formulaId: string,
+    beforeApply?: PublishedFormulaBeforeApply,
+  ) => Promise<PublishedFormulaSelectionResult>;
+  onPublishedFormulaCancel?: () => void;
+  onFeelingLucky?: () => Promise<PublishedFormulaSelectionResult>;
+  onPublishedProfileReset?: () => Promise<PublishedFormulaSelectionResult>;
+  canResetPublishedProfile?: boolean;
+  canUndoPublishedFormulaSelection?: boolean;
+  onUndoPublishedFormulaSelection?: () => void;
   onCustomFormulaSelect?: (selection: FormulaSelectionRequest) => void;
 }
 
-export function FormulaTab({ currentFormula, currentBounds, onFormulaChange, onCustomFormulaSelect }: FormulaTabProps) {
+export function FormulaTab({
+  currentFormula,
+  currentBounds,
+  onPublishedFormulaSelect,
+  onPublishedFormulaCancel,
+  onFeelingLucky,
+  onPublishedProfileReset,
+  canResetPublishedProfile = false,
+  canUndoPublishedFormulaSelection = false,
+  onUndoPublishedFormulaSelection,
+  onFormulaChange,
+  onCustomFormulaSelect,
+}: FormulaTabProps) {
   const t = useTranslations('explore');
-  const [activeTab, setActiveTab] = useState('builtin');
+  const [activeTab, setActiveTab] = useState('standard');
 
   const handleSelectCustomFormula = (plugin: FormulaPlugin, experienceHint?: FormulaExperienceHint) => {
     if (onCustomFormulaSelect) {
@@ -43,22 +68,28 @@ export function FormulaTab({ currentFormula, currentBounds, onFormulaChange, onC
     <div className="space-y-4">
       <Tabs value={activeTab} onValueChange={setActiveTab}>
         <TabsList className="grid w-full grid-cols-2">
-          <TabsTrigger value="builtin">
-            {t('formula.builtin')}
+          <TabsTrigger value="standard">
+            {t('formula.standard')}
           </TabsTrigger>
-          <TabsTrigger value="custom">
-            {t('formula.custom')}
+          <TabsTrigger value="mine">
+            {t('formula.mine')}
           </TabsTrigger>
         </TabsList>
 
-        <TabsContent value="builtin" className="mt-4">
-          <FormulaBrowser
+        <TabsContent value="standard" className="mt-4">
+          <PublishedFormulaLibrary
             currentFormula={currentFormula}
-            onFormulaChange={onFormulaChange}
+            onSelect={onPublishedFormulaSelect}
+            onCancel={onPublishedFormulaCancel}
+            onFeelingLucky={onFeelingLucky}
+            onResetProfile={onPublishedProfileReset}
+            canResetProfile={canResetPublishedProfile}
+            canUndo={canUndoPublishedFormulaSelection}
+            onUndo={onUndoPublishedFormulaSelection}
           />
         </TabsContent>
 
-        <TabsContent value="custom" className="mt-4">
+        <TabsContent value="mine" className="mt-4">
           <CustomFormulaList
             currentFormula={currentFormula}
             currentBounds={currentBounds}

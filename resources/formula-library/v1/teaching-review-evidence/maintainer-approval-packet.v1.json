@@ -1,0 +1,285 @@
+{
+  "schema": "fractalpark-teaching-maintainer-approval-packet/v1",
+  "status": "maintainer-pending",
+  "aiAssistanceDisclosure": "Teaching candidates and DeepSeek/Kimi review artifacts were AI-assisted; final maintainer approval must be signed explicitly by the human maintainer.",
+  "selectionSha256": "1ea4fff7f3c0f22d3cdae99aa06f775987a35871427b79d7005be5acd344b2fa",
+  "semanticAnchorsSha256": "9bd8ddbbbe16055eab215bd245c576e9268928980bb2e2759a77af4725f34241",
+  "formulaCount": 50,
+  "localeCount": 7,
+  "contentUnitCount": 350,
+  "locales": [
+    "en",
+    "zh",
+    "pt",
+    "ko",
+    "ru",
+    "es",
+    "fr"
+  ],
+  "qualityGates": {
+    "compiler": "PASS",
+    "duplicateGroups": 0,
+    "localeFlags": 0,
+    "heldGuideCount": 4,
+    "heldRuntimeIdentityCount": 22
+  },
+  "batches": [
+    {
+      "batch": 1,
+      "candidateSha256": "92e071430341e36e16ec6e141ff5791a26097df1dd9ff85a11fb25e0304b1062",
+      "reviewManifestSha256": "de26249aab54deebe61793522559c9b232eba292e5f5370f02cc1f19e4f018cd",
+      "sourcePacketSha256": "0f755f0e9e6869b92e9975fee9f1a287c496ce16bb3bdae846c64388497afe0d",
+      "formulaCount": 10,
+      "contentUnitCount": 70,
+      "formulaIds": [
+        "00e14aa8-b766-54ea-a359-3f5d20d329b7",
+        "c1c898f3-c9a3-583d-9a0a-d09968ba0db3",
+        "2ab193f5-4919-5e5c-a9fb-c1a0e3f5eb02",
+        "dd052c9f-868f-5516-9af0-3f4e78ac7a13",
+        "e2456b54-ef50-5ac9-9faa-dcb576c5e774",
+        "07a0afc6-ced5-5765-9314-fdb0ef593cb9",
+        "627c38a8-8f4d-548f-a5a6-dd9f215adf60",
+        "12fc34ff-196d-5924-830e-6edb72dfc172",
+        "0109434e-e9cc-5d80-ad3f-d25ec62cbfda",
+        "059080eb-da12-5e85-a1a3-049929bdcf49"
+      ],
+      "displayNames": [
+        "mandelbrot",
+        "lambda",
+        "burningShip",
+        "newton3",
+        "phoenix",
+        "asinhMandelbrot",
+        "perpendicularCeltic",
+        "magnet1",
+        "jm_18",
+        "rcl_pick10"
+      ],
+      "reviewers": [
+        {
+          "provider": "deepseek",
+          "requestedModel": "deepseek-chat",
+          "actualModel": "deepseek-v4-flash",
+          "rubricSha256": null,
+          "reviewSha256": "b3851d59d6f6c4fa1c4836cc1904f39dc6cda94927d8ef12e34ad85d86174a23"
+        },
+        {
+          "provider": "kimi",
+          "requestedModel": "k3",
+          "actualModel": "k3",
+          "rubricSha256": null,
+          "reviewSha256": "9388f99aabbe12fd494e8e3ffbd1e470729f4e06fe0bb209691c8d9924a4165d"
+        }
+      ]
+    },
+    {
+      "batch": 2,
+      "candidateSha256": "171ffb2dfbe1a2e3b9e3b741c939189e8d26c9d83f128a6b4ccb170c6695c308",
+      "reviewManifestSha256": "c69771c669676b313d71a339d2d34c4e1ebd6d69bc7a1a5c18ec263d25d10bf4",
+      "sourcePacketSha256": "d444d1acb82deea5f58e4c7d308bcef6091e2907cd180255f4a4a040a2ca587d",
+      "formulaCount": 10,
+      "contentUnitCount": 70,
+      "formulaIds": [
+        "1768f194-bdc1-5881-b269-a58730967c2c",
+        "38c3b212-c33b-5dd3-aae5-a514fc7e37e3",
+        "a569d2c4-d397-5634-9dfe-21b2ab1a386a",
+        "e435bbb6-d866-5876-9f16-f04fbe61ff2b",
+        "06223e69-6d8c-50ba-8e5d-b630d342d910",
+        "3a83800c-4a44-5e61-9651-d3d5adb71213",
+        "280229ec-dd2f-5982-9954-75829a37a5f2",
+        "0e1b1705-ae4c-5685-b0fc-b82586ff144e",
+        "17b83663-a502-5e34-bd4c-a116e49eab5f",
+        "09ee96d1-18a8-5dad-83e1-d05f0c59be4b"
+      ],
+      "displayNames": [
+        "quarticMandelbrot",
+        "airship",
+        "buffalo",
+        "zubieta",
+        "celticMandelbar",
+        "perpendicularTricorn",
+        "liar4",
+        "ok-34",
+        "cubic",
+        "chebyshev2"
+      ],
+      "reviewers": [
+        {
+          "provider": "deepseek",
+          "requestedModel": "deepseek-chat",
+          "actualModel": "deepseek-v4-flash",
+          "rubricSha256": "eeed22d0dab5b322807fd5079790f64a18675f55adaf140c178ec5db47cb6c15",
+          "reviewSha256": "b3851d59d6f6c4fa1c4836cc1904f39dc6cda94927d8ef12e34ad85d86174a23"
+        },
+        {
+          "provider": "kimi",
+          "requestedModel": "k3",
+          "actualModel": "k3",
+          "rubricSha256": "103a893ea74c5ec21cd1fc7b4d610849d82fe8b9bb0f97d43be93e8580c1d47d",
+          "reviewSha256": "1b949a1d37ddad05cf892aadc01addedf280f3891cf936a2e279777268e59161"
+        }
+      ]
+    },
+    {
+      "batch": 3,
+      "candidateSha256": "a9b3b354f8edbbd74d43cc80442fa568be984e2c50f4822cc7439a3418c23758",
+      "reviewManifestSha256": "5bc56d84e1fa176d49ada9a884dbcbba1a45b8fe844d41995da6576770726a70",
+      "sourcePacketSha256": "1f47ffa9db30faf83a06d76c71bcdaf9c0ce61ff650f20d49d4710483e5eafba",
+      "formulaCount": 10,
+      "contentUnitCount": 70,
+      "formulaIds": [
+        "2dd8a5a7-052a-5539-aab9-c533f7dec857",
+        "6c1385a9-2d23-5816-90d1-2752905fc353",
+        "c6b5dcf4-cef5-5630-b3f6-a68b92ae75ee",
+        "cc40b50c-d3ff-54f0-b4ea-98bdf0fd0096",
+        "37425fb2-8542-502f-94ac-94c0ccb6e508",
+        "a9263b21-23c1-5d94-ba30-f7bef1a66629",
+        "2edf64a9-157c-57d7-8894-1f4781bc4f8c",
+        "da95ae4b-d401-5eb0-862c-7d977c328fad",
+        "0a9a153b-bb4e-53df-9cdf-54fd0ad0081e",
+        "028a6158-e5dd-5d63-a5a7-5db2e3f7d87d"
+      ],
+      "displayNames": [
+        "magnet2",
+        "circleInversion",
+        "invertedLambda",
+        "mcMullen23",
+        "rationalMap1",
+        "spider",
+        "reciprocalQuadratic",
+        "jm_27",
+        "ok-35",
+        "fzppcoct"
+      ],
+      "reviewers": [
+        {
+          "provider": "deepseek",
+          "requestedModel": "deepseek-chat",
+          "actualModel": "deepseek-v4-flash",
+          "rubricSha256": null,
+          "reviewSha256": "fc156ede1a08173bf35ffb11807ef39eee827b989a06121ea159fca6f187152a"
+        },
+        {
+          "provider": "kimi",
+          "requestedModel": "k3",
+          "actualModel": "k3",
+          "rubricSha256": null,
+          "reviewSha256": "f11653c1cb97979430ab940301be21a0f7d97b47ea24a6b3fab53f3d51a413ea"
+        }
+      ]
+    },
+    {
+      "batch": 4,
+      "candidateSha256": "2e1e04c257da772807a0534e95170cb4fa20f26d629f12de14f5115f56956b52",
+      "reviewManifestSha256": "c84dae19e30e030a5ebdf8f686d0514a552332f78963194584fee888d8163011",
+      "sourcePacketSha256": "7a4c14b3d8112ef18a89c8924af0d6b302b067e3bbc2ce843eac5b2c22191e41",
+      "formulaCount": 10,
+      "contentUnitCount": 70,
+      "formulaIds": [
+        "0f49d971-917e-50a5-ae83-20e11fd4854c",
+        "04338d55-9f3d-574a-8fb6-58ec7d530cc5",
+        "58edc237-4978-5aed-8229-028b1d9cbbb9",
+        "05a7f40f-5cb6-538e-b376-40df4c543d49",
+        "0236be89-f1e9-5e23-b0a3-f4dd201ee788",
+        "0672aed0-1fd1-5acd-9263-a52d5680d3b4",
+        "14d3cb89-d3e7-5bff-b848-af88c9a561ae",
+        "09288426-4968-5e78-9ab0-00607cc290bd",
+        "2d237187-b3fd-54e2-8bf4-ef973080f389",
+        "06504747-8ee8-5c39-869b-8b3a992e8c24"
+      ],
+      "displayNames": [
+        "phoenixMulti",
+        "flip2_man_m",
+        "wineglass",
+        "jfnc",
+        "ifthen-b1",
+        "fzpfncoh",
+        "bali",
+        "birdofprey",
+        "quadrants",
+        "flyc"
+      ],
+      "reviewers": [
+        {
+          "provider": "deepseek",
+          "requestedModel": "deepseek-chat",
+          "actualModel": "deepseek-v4-flash",
+          "rubricSha256": "2aaeb3f484c66d97ee35ed98bbbc8a84d56fe28ea6ed2c95f1f10919b625be0d",
+          "reviewSha256": "bda7ddd28821172dbfd27f0f59205ad06c344694afde09a00ec9432caae05618"
+        },
+        {
+          "provider": "kimi",
+          "requestedModel": "k3",
+          "actualModel": "k3",
+          "rubricSha256": "7248db2bb6c8622a815d064c8d4d3a2c9f6100acd26082f9548b5e9cb637166e",
+          "reviewSha256": "70d847e0e0e78b65b40b8271c73c2f07a460d53c1c62de510a337009cbef4c1c"
+        }
+      ]
+    },
+    {
+      "batch": 5,
+      "candidateSha256": "232a5567178fc4f045b6a6474bd795ddcfe62f1ebc932d09ae1247a76ce82dbe",
+      "reviewManifestSha256": "2cca3777d0c826b6141a2558c3e10c910a991de324797fb52ea6a5c78215cb3a",
+      "sourcePacketSha256": "2fd9bb2039f8308d2a73ae579ba3bf0aa804d06a8d3e1cf88a72e7a62a8add52",
+      "formulaCount": 10,
+      "contentUnitCount": 70,
+      "formulaIds": [
+        "0ba0b082-c4b0-51d8-b981-7ca1ca25b9f3",
+        "1936e9b5-1312-593e-ab67-72e95bc514b0",
+        "20e16f12-e0e9-5f56-9364-5c2b60c05f20",
+        "1bb379a2-3588-53f8-a3ab-e52021c78054",
+        "0df5ac6e-d97e-55db-b624-96c310af07dd",
+        "6d27b5fd-462b-5561-bac2-7c5f915e3cb5",
+        "75e70076-b422-5535-b3c9-c484fbf879e6",
+        "599a7fda-4c0e-5489-b12e-6e4179ee11f2",
+        "b79313f5-2181-5013-bd21-e59a7222dce5",
+        "d0079630-8ed3-5379-9e37-52cb7f0f7379"
+      ],
+      "displayNames": [
+        "islandofchaos",
+        "richard8",
+        "aa-z-to-z",
+        "frm-d2",
+        "novaSine",
+        "newtonSinh",
+        "newton4",
+        "novaBasin",
+        "halleyCubic",
+        "newtonCos"
+      ],
+      "reviewers": [
+        {
+          "provider": "deepseek",
+          "requestedModel": "deepseek-chat",
+          "actualModel": "deepseek-v4-flash",
+          "rubricSha256": "2aaeb3f484c66d97ee35ed98bbbc8a84d56fe28ea6ed2c95f1f10919b625be0d",
+          "reviewSha256": "2c003f8e6a528c38f8a9706878d62d04693ba780bc4002bc69462f55b780265f"
+        },
+        {
+          "provider": "kimi",
+          "requestedModel": "k3",
+          "actualModel": "k3",
+          "rubricSha256": "2aaeb3f484c66d97ee35ed98bbbc8a84d56fe28ea6ed2c95f1f10919b625be0d",
+          "reviewSha256": "a0de5fc9a5ca4bc9fa76594f551de9937aabceec53478145feb2be13414a6b9e"
+        }
+      ]
+    }
+  ],
+  "approvalScope": {
+    "allows": [
+      "commit the five immutable Batch 1-5 teaching artifacts and their evidence",
+      "push the five atomic 20c commits to feat/unified-formula-library-v0.4.19",
+      "continue to planned commit 20d and 21 under existing constraints"
+    ],
+    "doesNotAllow": [
+      "mark PR ready",
+      "merge or auto-merge",
+      "deploy or promote Production",
+      "modify Production environment",
+      "migration",
+      "tag or release",
+      "IndexNow"
+    ]
+  },
+  "approvalStatement": "批准20c：同意本审批包中5个candidateSha256对应的50个teaching packages进入maintainer-approved提交；不授权转Ready、merge、Production发布或其他approvalScope.doesNotAllow事项。"
+}

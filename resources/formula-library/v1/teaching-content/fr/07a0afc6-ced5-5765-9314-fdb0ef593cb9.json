@@ -1,0 +1,35 @@
+{
+  "schema": "fractalpark-teaching-locale/v1",
+  "formulaId": "07a0afc6-ced5-5765-9314-fdb0ef593cb9",
+  "locale": "fr",
+  "sourceRevision": "dce84ac5a7ee55fff27d70df826af67d386f905ee65cee65f5fa8d418e68ba27",
+  "semanticHash": "7d62c7f378c70b9fbfaeb2381d3c82383ab50a76fe5ea5cbe7fd788b451af907",
+  "englishContentHash": "698d89cd42589a9a021c5645d491bb8981449b2c531a297b45dee1f607c68f56",
+  "overview": "asinhMandelbrot s’étudie avec sa définition épinglée FRM-like/1 : tu suis z = asinh(z) + c, sans prendre une image pour une garantie. Le profil épinglé fournit seulement un réglage concret.",
+  "sourceWalkthrough": {
+    "07a0afc6-ced5-5765-9314-fdb0ef593cb9:dce84ac5a7ee55fff27d70df826af67d386f905ee65cee65f5fa8d418e68ba27:start-branch": "Dans asinhMandelbrot, ce nœud exécute if ismand: z = 0; sinon z = pixel.",
+    "07a0afc6-ced5-5765-9314-fdb0ef593cb9:dce84ac5a7ee55fff27d70df826af67d386f905ee65cee65f5fa8d418e68ba27:asinh-update": "Dans asinhMandelbrot, ce nœud exécute z = asinh(z) + c.",
+    "07a0afc6-ced5-5765-9314-fdb0ef593cb9:dce84ac5a7ee55fff27d70df826af67d386f905ee65cee65f5fa8d418e68ba27:termination": "Dans asinhMandelbrot, ce nœud exécute |z| <= 256."
+  },
+  "syntaxFeatures": {
+    "state-flow": "Le flux d’état concret est : le choix de ismand initialise z avant que asinh(z) + c le remplace.",
+    "stopping-test": "Le test d’arrêt évalue seulement |z| <= 256 ; il n’affecte pas l’état."
+  },
+  "parameterExperiment": {
+    "steps": [
+      "En gardant les autres contrôles du profil fixes, exécute asinhMandelbrot avec 48 itérations.",
+      "Utilise ensuite les 96 itérations du profil épinglé et note la différence."
+    ],
+    "expectedObservation": "Note si z = asinh(z) + c modifie le résultat visible ou le test d’arrêt |z| <= 256 par rapport à la référence ; la définition ne garantit pas de différence."
+  },
+  "exercise": {
+    "prompt": "Suis les annotations de asinhMandelbrot et explique comment z = asinh(z) + c s’exécute dans les opérations indiquées.",
+    "completionCheck": "Ta réponse explique les 3 annotations, identifie z = asinh(z) + c et distingue |z| <= 256 comme test d’arrêt plutôt que comme affectation.",
+    "hint": "Le flux d’état exécute successivement if ismand: z = 0; sinon z = pixel → z = asinh(z) + c et transmet le résultat à l’étape suivante."
+  },
+  "factsPresentation": {
+    "provenanceLead": "Source : définition d’exécution épinglée et décision de publication.",
+    "rightsLead": "Les informations de droits suivent la décision épinglée dans l’unité anglaise."
+  },
+  "contentHash": "69bfef0863ac7c33229d053dbb0a2afb332b6d74aba9d20c301e0426ceaf65c2"
+}

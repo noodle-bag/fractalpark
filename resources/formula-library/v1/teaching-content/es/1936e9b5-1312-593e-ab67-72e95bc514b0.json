@@ -1,0 +1,33 @@
+{
+  "schema": "fractalpark-teaching-locale/v1",
+  "formulaId": "1936e9b5-1312-593e-ab67-72e95bc514b0",
+  "locale": "es",
+  "sourceRevision": "2f024a184f50b87076b883408a33387a2010e89996414646d1b51844d2f181fc",
+  "semanticHash": "c1fed8de512318463b90399a68d9eca445ab7908923d0a54ce4aed3bd2f631df",
+  "englishContentHash": "8ad1ddfcd2a71b3a7a561c0247f2d30c48887de2d08a5ab54df6307c665db562",
+  "overview": "En FRM-like/1, la inicialización hace z = pixel; sinp = sin(pixel). En cada iteración, el nodo ejecuta z = sin(z)+sinp. La terminación comprueba |z| <= 50.",
+  "sourceWalkthrough": {
+    "1936e9b5-1312-593e-ab67-72e95bc514b0:2f024a184f50b87076b883408a33387a2010e89996414646d1b51844d2f181fc:init": "En FRM-like/1, la inicialización hace z = pixel; sinp = sin(pixel).",
+    "1936e9b5-1312-593e-ab67-72e95bc514b0:2f024a184f50b87076b883408a33387a2010e89996414646d1b51844d2f181fc:loop": "En cada iteración, el nodo ejecuta z = sin(z)+sinp.",
+    "1936e9b5-1312-593e-ab67-72e95bc514b0:2f024a184f50b87076b883408a33387a2010e89996414646d1b51844d2f181fc:termination": "La terminación comprueba |z| <= 50."
+  },
+  "syntaxFeatures": {
+    "sequence": "En cada iteración, el nodo ejecuta z = sin(z)+sinp."
+  },
+  "parameterExperiment": {
+    "steps": [
+      "Usa el perfil fijado como base. Ejecuta 48 y luego 96 iteraciones, con todos los controles fijos, y registra si difieren z = sin(z)+sinp o |z| <= 50."
+    ],
+    "expectedObservation": "El límite mayor puede mostrar aplicaciones posteriores de sin(z)+sinp; registra si difieren los recuentos de escape observados."
+  },
+  "exercise": {
+    "prompt": "Identifica el valor sinp = sin(pixel), derivado de pixel y reutilizado por el bucle, y explica cómo entra en z = sin(z)+sinp.",
+    "completionCheck": "Para terminar, debes nombrar exactamente las 3 anotaciones y explicar este detalle de la fórmula: Pista: z = sin(z)+sinp.",
+    "hint": "Pista: z = sin(z)+sinp."
+  },
+  "factsPresentation": {
+    "provenanceLead": "La procedencia figura en el registro de fuente fijado.",
+    "rightsLead": "El estado de derechos y la decisión de publicación figuran en el registro de decisión fijado."
+  },
+  "contentHash": "21f9e90254de895c26f0fdda56a2e7e528afa806cd904a8b78aeb72d8a36090c"
+}

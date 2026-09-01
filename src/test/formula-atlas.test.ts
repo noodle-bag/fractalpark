@@ -3,11 +3,14 @@ import {
   buildFormulaAtlas,
   FORMULA_FAMILY_ORDER,
 } from '@/content/formula-atlas';
-import { PUBLISHED_FORMULA_GUIDE_IDS } from '@/content/formula-guides';
+import { PUBLISHED_TEACHING_GUIDES_V1 } from '@/content/teaching/guide-route-policy';
+import aliasesAsset from '../../resources/formula-library/v1/legacy-formula-aliases.json';
+import decisionsAsset from '../../resources/formula-library/v1/publication-decisions.json';
+import restoredGuideAsset from '../../resources/formula-library/v1/teaching-restored-guide-projection.v1.json';
 import { decodeParams } from '@/lib/url-params';
 
-describe('Formula Atlas projection', () => {
-  it('publishes 94 unique formulas, seven families, and 21 guide identities', () => {
+describe('legacy Explorer formula projection', () => {
+  it('projects 94 runtime identities, seven legacy families, and 21 Guides', () => {
     const atlas = buildFormulaAtlas('en');
 
     expect(atlas.formulas).toHaveLength(94);
@@ -19,12 +22,28 @@ describe('Formula Atlas projection', () => {
       true
     );
     expect(atlas.guides).toHaveLength(21);
+    expect(atlas.formulas.filter(({ recordHref }) => recordHref)).toHaveLength(0);
+    expect(atlas.formulas.filter(({ exploreHref }) => exploreHref)).toHaveLength(94);
   });
 
-  it('links every directory entry to its localized canonical Explore state', () => {
+  it('routes every published runtime identity to Explore with restored Guides separately authorized', () => {
     const atlas = buildFormulaAtlas('zh');
+    const runtimeIds = new Map(
+      aliasesAsset.aliases
+        .filter((alias) => alias.kind === 'runtime-id')
+        .map((alias) => [alias.value, alias.formulaId]),
+    );
+    const decisions = new Map(
+      decisionsAsset.rows.map((row) => [row.formulaId, row.publicationDecision]),
+    );
 
     for (const entry of atlas.formulas) {
+      const formulaId = runtimeIds.get(entry.metadata.id);
+      if (!formulaId) throw new Error(`Missing runtime alias for ${entry.metadata.id}`);
+      expect(entry.recordHref).toBeUndefined();
+      expect(decisions.get(formulaId)).toBe('publish');
+      expect(entry.exploreHref).toBeDefined();
+      if (!entry.exploreHref) continue;
       const url = new URL(entry.exploreHref, 'https://www.fractalpark.com');
       const decoded = decodeParams(url.searchParams);
 
@@ -34,14 +53,29 @@ describe('Formula Atlas projection', () => {
         `formula:${entry.metadata.id}`
       );
     }
+    const recordIds = new Set(
+      atlas.formulas.flatMap((entry) =>
+        entry.recordHref ? [entry.recordHref.slice('/formulas/'.length)] : [],
+      ),
+    );
+    expect(recordIds.size).toBe(0);
+    expect(
+      restoredGuideAsset.rows.every(
+        (row) =>
+          decisions.get(row.formulaId) === 'publish' &&
+          row.guideAvailability === 'published',
+      ),
+    ).toBe(true);
   });
 
-  it('routes all 21 published guides to editorial pages', () => {
+  it('routes all 21 selected or restored published Guides to editorial pages', () => {
     const atlas = buildFormulaAtlas('en');
     const publishedGuides = atlas.guides.filter(({ guideHref }) => guideHref);
 
     expect(publishedGuides.map(({ metadata }) => metadata.id)).toEqual(
-      expect.arrayContaining(PUBLISHED_FORMULA_GUIDE_IDS)
+      expect.arrayContaining(
+        PUBLISHED_TEACHING_GUIDES_V1.map((guide) => guide.formulaId),
+      ),
     );
     expect(publishedGuides).toHaveLength(21);
 
@@ -49,7 +83,9 @@ describe('Formula Atlas projection', () => {
       expect(entry.destinationHref).toBe(
         entry.guideHref
           ? `/en${entry.guideHref}`
-          : entry.exploreHref
+          : entry.recordHref
+            ? `/en${entry.recordHref}`
+            : entry.exploreHref,
       );
     }
   });

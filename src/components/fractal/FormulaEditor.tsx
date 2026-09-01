@@ -16,7 +16,11 @@ import { Alert, AlertDescription } from '@/components/ui/alert';
 import { useToast } from '@/hooks/use-toast';
 import { Loader2, Play, Save, AlertCircle, CheckCircle, ChevronDown, ChevronUp, Info, RotateCcw } from 'lucide-react';
 import type { FormulaPlugin } from '@/engine/plugins/types';
-import { compileImportedFrm, mapGLSLErrorToFRM } from '@/engine/frm/compile';
+import {
+  compileImportedFrm,
+  mapGLSLErrorToFRM,
+  type CompileResult,
+} from '@/engine/frm/compile';
 import type { FormulaCompatibilityNote, FormulaDialect } from '@/engine/frm/ast';
 import {
   formulaMetadataToExperienceHint,
@@ -32,7 +36,10 @@ import { trackEvent } from '@/components/analytics/PageViewTracker';
 
 import type { EditorView } from '@codemirror/view';
 import type { Extension } from '@codemirror/state';
-import type { EditorError } from '@/engine/frm/codemirror-lint';
+import type {
+  EditorError,
+  EditorErrorCollector,
+} from '@/engine/frm/codemirror-lint';
 
 interface CodeMirrorModules {
   EditorView: typeof EditorView;
@@ -95,6 +102,8 @@ interface FormulaEditorProps {
   frmSemanticsVersion?: FrmSemanticsVersion;
   initialSource?: string;
   initialExperienceHint?: FormulaExperienceHint;
+  initialLastSuccessfulSource?: string | null;
+  initialLastSuccessfulExperienceHint?: FormulaExperienceHint;
   currentBounds?: ViewBounds;
   sourcePreflightError?: string;
   /** Request a cursor jump to a 1-based source line/col (nonce retriggers). */
@@ -102,10 +111,24 @@ interface FormulaEditorProps {
   onCompile?: (plugin: FormulaPlugin, experienceHint?: FormulaExperienceHint) => void;
   onSourceChange?: (source: string) => void;
   onExperienceHintChange?: (experienceHint?: FormulaExperienceHint) => void;
+  mode?: 'classic' | 'remix';
+  collectEditorErrors?: EditorErrorCollector;
+  compileSource?: (
+    source: string,
+    formulaId: string | undefined,
+    semanticsVersion: FrmSemanticsVersion,
+  ) => CompileResult | Promise<CompileResult>;
+  validateBeforeCompile?: (
+    source: string,
+  ) => Promise<
+    | { readonly ok: true }
+    | { readonly ok: false; readonly errors: readonly string[] }
+  >;
   onSave?: (
     name: string,
     source: string,
     experienceHint?: FormulaExperienceHint,
+    context?: FormulaSaveContext,
   ) =>
     | {
         success: boolean;
@@ -123,6 +146,11 @@ interface FormulaEditorProps {
       }>
     | void;
   onClose?: () => void;
+}
+
+export interface FormulaSaveContext {
+  readonly runnable: boolean;
+  readonly diagnostics: readonly string[];
 }
 
 const DEFAULT_SOURCE = `MyFormula {
@@ -159,12 +187,18 @@ export function FormulaEditor({
   frmSemanticsVersion = 2,
   initialSource = DEFAULT_SOURCE,
   initialExperienceHint,
+  initialLastSuccessfulSource,
+  initialLastSuccessfulExperienceHint,
   jumpTo,
   currentBounds,
   sourcePreflightError,
   onCompile,
   onSourceChange,
   onExperienceHintChange,
+  mode = 'classic',
+  collectEditorErrors,
+  compileSource,
+  validateBeforeCompile,
   onSave,
   onClose,
 }: FormulaEditorProps) {
@@ -183,18 +217,25 @@ export function FormulaEditor({
   } | null>(null);
   const [editorErrors, setEditorErrors] = useState<EditorError[]>([]);
   const [showAllErrors, setShowAllErrors] = useState(false);
-  const [lastSuccessfulSource, setLastSuccessfulSource] = useState<string | null>(null);
-  const [lastSuccessfulHint, setLastSuccessfulHint] = useState<FormulaExperienceHint | undefined>(initialExperienceHint);
+  const [lastSuccessfulSource, setLastSuccessfulSource] = useState<
+    string | undefined
+  >(initialLastSuccessfulSource ?? undefined);
+  const [lastSuccessfulHint, setLastSuccessfulHint] = useState<
+    FormulaExperienceHint | undefined
+  >(initialLastSuccessfulExperienceHint);
 
   const { toast } = useToast();
   const editorRef = useRef<HTMLDivElement>(null);
   const cmViewRef = useRef<EditorView | null>(null);
   const savingRef = useRef(false);
+  const compileGenerationRef = useRef(0);
   const lastSourceMapRef = useRef<FRMSourceMap | null>(null);
   const lastSourceRef = useRef<string>(initialSource);
   const currentDialect: FormulaDialect = detectFormulaDialect(source);
 
   const replaceSource = useCallback((nextSource: string) => {
+    compileGenerationRef.current += 1;
+    setIsCompiling(false);
     setSource(nextSource);
     lastSourceRef.current = nextSource;
     setCompileResult(null);
@@ -238,9 +279,13 @@ export function FormulaEditor({
         const { EditorView: EV, EditorState: ES, frmLanguage, createFRMLinter } = await loadCodeMirror();
         if (!isMounted) return;
 
-        const frmLinter = createFRMLinter((errors) => {
-          errorsCallbackRef.current(errors);
-        }, () => frmSemanticsVersionRef.current);
+        const frmLinter = createFRMLinter(
+          (errors) => {
+            errorsCallbackRef.current(errors);
+          },
+          () => frmSemanticsVersionRef.current,
+          collectEditorErrors,
+        );
 
         const editorState = ES.create({
           doc: source,
@@ -305,6 +350,8 @@ export function FormulaEditor({
             EV.lineWrapping,
             EV.updateListener.of((update) => {
               if (update.docChanged) {
+                compileGenerationRef.current += 1;
+                setIsCompiling(false);
                 const newSource = update.state.doc.toString();
                 setSource(newSource);
                 onSourceChange?.(newSource);
@@ -371,64 +418,86 @@ export function FormulaEditor({
 
   const handleCompile = useCallback(async () => {
     if (sourcePreflightError) return;
+    const generation = ++compileGenerationRef.current;
+    const sourceSnapshot = source;
     setIsCompiling(true);
     setCompileResult(null);
 
     try {
-      const result = compileImportedFrm(
-        source,
-        formulaId,
-        frmSemanticsVersion,
-      );
-
-      // Store source map for potential GLSL error mapping
-      if (result.sourceMap) {
-        lastSourceMapRef.current = result.sourceMap;
+      if (validateBeforeCompile) {
+        const validation = await validateBeforeCompile(sourceSnapshot);
+        if (
+          generation !== compileGenerationRef.current ||
+          sourceSnapshot !== lastSourceRef.current
+        ) {
+          return;
+        }
+        if (!validation.ok) {
+          setCompileResult({
+            success: false,
+            errors: [...validation.errors],
+            warnings: [],
+            compatibilityNotes: [],
+            effectiveExperienceHint: undefined,
+          });
+          toast({
+            title: t('compileFailed'),
+            description: t('compileFailedDescription', {
+              count: validation.errors.length,
+            }),
+            variant: 'destructive',
+          });
+          return;
+        }
       }
 
-      // If FRM compilation produced GLSL, check for GLSL-level issues
-      // by attempting to map any errors through the source map
+      const result = await (compileSource
+        ? compileSource(sourceSnapshot, formulaId, frmSemanticsVersion)
+        : compileImportedFrm(sourceSnapshot, formulaId, frmSemanticsVersion));
+      if (
+        generation !== compileGenerationRef.current ||
+        sourceSnapshot !== lastSourceRef.current
+      ) {
+        return;
+      }
+      if (result.sourceMap) lastSourceMapRef.current = result.sourceMap;
+
       let mappedErrors = [...result.errors];
       const mappedWarnings = [...result.warnings];
-
-      // If compilation failed and we have a source map, try to enrich error messages
       if (!result.success && result.sourceMap) {
-        mappedErrors = result.errors.map(err => {
-          // Try to parse GLSL error format from the error string
-          const glslErrors = parseGLSLErrorLog(err);
-          if (glslErrors.length > 0) {
-            const mapped = mapGLSLErrorToFRM(glslErrors[0], result.sourceMap!, source);
-            if (mapped) {
-              return mapped.formatted;
-            }
-          }
-          return err;
+        mappedErrors = result.errors.map((error) => {
+          const glslErrors = parseGLSLErrorLog(error);
+          if (glslErrors.length === 0) return error;
+          return (
+            mapGLSLErrorToFRM(
+              glslErrors[0],
+              result.sourceMap!,
+              sourceSnapshot,
+            )?.formatted ?? error
+          );
         });
       }
 
+      const effectiveHint = mergeFormulaExperienceHints(
+        experienceHint,
+        formulaMetadataToExperienceHint(result.canonicalFormula?.metadata),
+      );
       setCompileResult({
         success: result.success,
         errors: mappedErrors,
         warnings: mappedWarnings,
         compatibilityNotes: result.canonicalFormula?.compatibilityNotes ?? [],
-        effectiveExperienceHint: mergeFormulaExperienceHints(
-          experienceHint,
-          formulaMetadataToExperienceHint(result.canonicalFormula?.metadata),
-        ),
+        effectiveExperienceHint: effectiveHint,
         plugin: result.plugin,
       });
 
       if (result.success && result.plugin) {
-        const effectiveHint = mergeFormulaExperienceHints(
-          experienceHint,
-          formulaMetadataToExperienceHint(result.canonicalFormula?.metadata),
-        );
-        setLastSuccessfulSource(source);
+        setLastSuccessfulSource(sourceSnapshot);
         setLastSuccessfulHint(effectiveHint);
         try {
           pluginRegistry.register(result.plugin);
         } catch {
-          // May already be registered
+          // May already be registered.
         }
         toast({
           title: t('compileSuccess'),
@@ -443,20 +512,32 @@ export function FormulaEditor({
         });
       }
     } catch (error) {
-      // Try to map GLSL errors through source map if available
+      if (
+        generation !== compileGenerationRef.current ||
+        sourceSnapshot !== lastSourceRef.current
+      ) {
+        return;
+      }
       const errorMessage = error instanceof Error ? error.message : String(error);
       let displayErrors = [errorMessage];
-
-      if (lastSourceMapRef.current && errorMessage.includes('Shader compilation failed')) {
+      if (
+        lastSourceMapRef.current &&
+        errorMessage.includes('Shader compilation failed')
+      ) {
         const glslErrors = parseGLSLErrorLog(errorMessage);
         if (glslErrors.length > 0) {
-          displayErrors = glslErrors.map(glslErr => {
-            const mapped = mapGLSLErrorToFRM(glslErr, lastSourceMapRef.current!, lastSourceRef.current);
-            return mapped ? mapped.formatted : `${t('glslErrorUnmapped')}: ${glslErr.message}`;
+          displayErrors = glslErrors.map((glslError) => {
+            const mapped = mapGLSLErrorToFRM(
+              glslError,
+              lastSourceMapRef.current!,
+              sourceSnapshot,
+            );
+            return mapped
+              ? mapped.formatted
+              : `${t('glslErrorUnmapped')}: ${glslError.message}`;
           });
         }
       }
-
       setCompileResult({
         success: false,
         errors: displayErrors,
@@ -464,24 +545,25 @@ export function FormulaEditor({
         compatibilityNotes: [],
         effectiveExperienceHint: undefined,
       });
-
       toast({
         title: t('compileError'),
         description: errorMessage,
         variant: 'destructive',
       });
     } finally {
-      setIsCompiling(false);
+      if (generation === compileGenerationRef.current) setIsCompiling(false);
     }
   }, [
     experienceHint,
     formulaId,
     frmSemanticsVersion,
+    compileSource,
     source,
     sourcePreflightError,
     onCompile,
     toast,
     t,
+    validateBeforeCompile,
   ]);
 
   const handleSave = useCallback(async () => {
@@ -490,7 +572,14 @@ export function FormulaEditor({
     try {
       const name = compileResult?.plugin?.name || 'Untitled';
       const effectiveHint = compileResult?.effectiveExperienceHint ?? experienceHint;
-      const saveResult = await onSave?.(name, source, effectiveHint);
+      const diagnostics = [
+        ...editorErrors.map((error) => error.message),
+        ...(compileResult?.success === false ? compileResult.errors : []),
+      ];
+      const saveResult = await onSave?.(name, source, effectiveHint, {
+        runnable: Boolean(compileResult?.success),
+        diagnostics: [...new Set(diagnostics)],
+      });
       if (saveResult && 'silent' in saveResult && saveResult.silent) {
         // A sign-in intent owns the UI now (v0.4.16): no toast either way.
         return;
@@ -513,7 +602,15 @@ export function FormulaEditor({
     } finally {
       savingRef.current = false;
     }
-  }, [source, compileResult, experienceHint, onSave, toast, t]);
+  }, [
+    source,
+    compileResult,
+    editorErrors,
+    experienceHint,
+    onSave,
+    toast,
+    t,
+  ]);
 
   const handleRestoreLastSuccessful = useCallback(() => {
     if (!lastSuccessfulSource) return;
@@ -761,6 +858,14 @@ export function FormulaEditor({
             )}
           </div>
         )}
+
+        {mode === 'remix' &&
+          (errorCount > 0 || compileResult?.success === false) && (
+            <Alert variant="destructive" data-testid="formula-invalid-draft">
+              <AlertCircle className="h-4 w-4" />
+              <AlertDescription>{t('invalidDraft')}</AlertDescription>
+            </Alert>
+          )}
       </CardContent>
 
       <CardFooter
@@ -789,12 +894,12 @@ export function FormulaEditor({
             ) : (
               <>
                 <Play className="w-4 h-4 mr-2" />
-                {t('compile')}
+                {t(mode === 'remix' ? 'apply' : 'compile')}
               </>
             )}
           </Button>
 
-          {compileResult?.success && (
+          {(compileResult?.success || mode === 'remix') && (
             <Button
               className="h-auto min-h-9 max-w-full shrink whitespace-normal text-center"
               variant="outline"

@@ -1,0 +1,85 @@
+{
+  "schema": "fractalpark-teaching-en-fact/v1",
+  "formulaId": "12fc34ff-196d-5924-830e-6edb72dfc172",
+  "sourceRevision": "3aec931a4991e14e53348c6d28e9fcbaf8127cad6298dafc2a8ee9e2ac8d8143",
+  "semanticHash": "a155deea383578e6e4ff5901f5c5a0adaa97b84e8c73df146732db9096cebee9",
+  "overview": "magnet1 is taught from its pinned FRM-like/1 definition. Follow the numerator and denominator, their ratio, and its square as source operations, rather than treating an image as guaranteed. The pinned mechanical profile supplies one concrete viewing setup, not a universal visual prediction.",
+  "mathDisclosure": "exact-structured",
+  "mathSummary": "The loop forms numerator = z + c and denominator = z - c, divides them as ratio = numerator / denominator, and assigns z = ratio * ratio.",
+  "sourceWalkthrough": [
+    {
+      "annotationId": "12fc34ff-196d-5924-830e-6edb72dfc172:3aec931a4991e14e53348c6d28e9fcbaf8127cad6298dafc2a8ee9e2ac8d8143:start-branch",
+      "nodeId": "frm-v1:3aec931a4991e14e53348c6d28e9fcbaf8127cad6298dafc2a8ee9e2ac8d8143:init/0",
+      "explanation": "In magnet1, this node executes if ismand: z = 0; otherwise z = pixel."
+    },
+    {
+      "annotationId": "12fc34ff-196d-5924-830e-6edb72dfc172:3aec931a4991e14e53348c6d28e9fcbaf8127cad6298dafc2a8ee9e2ac8d8143:ratio",
+      "nodeId": "frm-v1:3aec931a4991e14e53348c6d28e9fcbaf8127cad6298dafc2a8ee9e2ac8d8143:loop/2",
+      "explanation": "In magnet1, this node executes ratio = numerator / denominator."
+    },
+    {
+      "annotationId": "12fc34ff-196d-5924-830e-6edb72dfc172:3aec931a4991e14e53348c6d28e9fcbaf8127cad6298dafc2a8ee9e2ac8d8143:square-update",
+      "nodeId": "frm-v1:3aec931a4991e14e53348c6d28e9fcbaf8127cad6298dafc2a8ee9e2ac8d8143:loop/3",
+      "explanation": "In magnet1, this node executes z = ratio * ratio."
+    },
+    {
+      "annotationId": "12fc34ff-196d-5924-830e-6edb72dfc172:3aec931a4991e14e53348c6d28e9fcbaf8127cad6298dafc2a8ee9e2ac8d8143:termination",
+      "nodeId": "frm-v1:3aec931a4991e14e53348c6d28e9fcbaf8127cad6298dafc2a8ee9e2ac8d8143:bailout",
+      "explanation": "In magnet1, this node executes |z| <= 4."
+    }
+  ],
+  "syntaxFeatures": [
+    {
+      "featureId": "state-flow",
+      "annotationIds": [
+        "12fc34ff-196d-5924-830e-6edb72dfc172:3aec931a4991e14e53348c6d28e9fcbaf8127cad6298dafc2a8ee9e2ac8d8143:start-branch",
+        "12fc34ff-196d-5924-830e-6edb72dfc172:3aec931a4991e14e53348c6d28e9fcbaf8127cad6298dafc2a8ee9e2ac8d8143:ratio",
+        "12fc34ff-196d-5924-830e-6edb72dfc172:3aec931a4991e14e53348c6d28e9fcbaf8127cad6298dafc2a8ee9e2ac8d8143:square-update"
+      ],
+      "explanation": "These annotations trace the formula-specific state flow through if ismand: z = 0; otherwise z = pixel; ratio = numerator / denominator; z = ratio * ratio."
+    },
+    {
+      "featureId": "stopping-test",
+      "annotationIds": [
+        "12fc34ff-196d-5924-830e-6edb72dfc172:3aec931a4991e14e53348c6d28e9fcbaf8127cad6298dafc2a8ee9e2ac8d8143:termination"
+      ],
+      "explanation": "This annotation is the stopping test, |z| <= 4, rather than a state update."
+    }
+  ],
+  "parameterExperiment": {
+    "parameterSymbols": [],
+    "steps": [
+      "Run magnet1 with 48 iterations while keeping the pinned profile’s other controls fixed, and record the result.",
+      "Run magnet1 at the pinned profile iteration count of 96, compare the two runs, and record whether a difference occurs."
+    ],
+    "expectedObservation": "Record whether numerator = z + c; denominator = z - c; ratio = numerator / denominator; z = ratio * ratio produces a visible-result or |z| <= 4 stopping-behavior difference from the baseline; the pinned definition does not guarantee a difference."
+  },
+  "exercise": {
+    "prompt": "Trace magnet1 through its annotations, explaining the source operation numerator = z + c; denominator = z - c; ratio = numerator / denominator; z = ratio * ratio and the stopping test |z| <= 4.",
+    "completionCheck": "Your trace explains all 4 annotations for magnet1, including numerator = z + c; denominator = z - c; ratio = numerator / denominator; z = ratio * ratio, and distinguishes |z| <= 4 from a state update.",
+    "answerDisclosure": "hint"
+  },
+  "facts": {
+    "provenanceStatement": "This teaching unit is grounded in runtime:3aec931a4991e14e53348c6d28e9fcbaf8127cad6298dafc2a8ee9e2ac8d8143 and decision:12fc34ff-196d-5924-830e-6edb72dfc172.",
+    "rightsStatement": "rightsStatus is project-owned; implementationBasis is project-owned; publicationDecision is publish; decisionReason is publish-project-owned-native-recipe. This statement does not make broader claims about any third-party original.",
+    "sourceIds": [
+      "runtime:3aec931a4991e14e53348c6d28e9fcbaf8127cad6298dafc2a8ee9e2ac8d8143",
+      "decision:12fc34ff-196d-5924-830e-6edb72dfc172"
+    ],
+    "licenseIds": [],
+    "claims": [
+      {
+        "text": "The pinned runtime definition supplies the operations described in this unit.",
+        "sourceIds": [
+          "runtime:3aec931a4991e14e53348c6d28e9fcbaf8127cad6298dafc2a8ee9e2ac8d8143"
+        ]
+      },
+      {
+        "text": "The publication decision for this formula is publish.",
+        "sourceIds": [
+          "decision:12fc34ff-196d-5924-830e-6edb72dfc172"
+        ]
+      }
+    ]
+  }
+}

@@ -1,0 +1,477 @@
+{
+  "schemaVersion": 1,
+  "generatedAt": "2026-08-21T17:18:09+08:00",
+  "source": {
+    "commit": "37320f293839812017178bb91efe7670239edfa3",
+    "manualPath": "docs/manuals/frm-like-v1.md",
+    "manualSha256": "e5168f1a0211596659314d748fa53825892a2a6f089350e636a8c0baf3903758",
+    "messageFile": "messages/en.json",
+    "messageProjectionSha256": "effb295f43ad338c80f1becab42a90cbb8afd2345a79c2e014acf031ea1faaf7"
+  },
+  "messagePaths": [
+    "formulas.index.intro",
+    "formulas.index.frm.title",
+    "formulas.index.frm.description",
+    "formulas.index.frm.learn",
+    "formulas.index.cta.title",
+    "formulas.index.cta.description",
+    "formulas.frmGuide.eyebrow",
+    "formulas.frmGuide.title",
+    "formulas.frmGuide.intro",
+    "formulas.frmGuide.sections.what-is-frm.body.0",
+    "formulas.frmGuide.sections.what-is-frm.body.1",
+    "formulas.frmGuide.sections.support.intro",
+    "formulas.frmGuide.sections.support.disclaimer",
+    "formulas.frmGuide.sections.support.verified.intro",
+    "formulas.frmGuide.sections.anatomy.intro",
+    "formulas.frmGuide.sections.syntax.intro",
+    "formulas.frmGuide.sections.pipeline.intro",
+    "formulas.frmGuide.sections.pipeline.note",
+    "formulas.frmGuide.sections.tutorials.intro",
+    "formulas.frmGuide.sections.tutorials.editorNote",
+    "formulas.frmGuide.sections.next-steps.editorNote",
+    "explore.landing.whatIsAnswer",
+    "explore.landing.links.frmGuide",
+    "frmEditor.description",
+    "metadata.explore.description",
+    "metadata.explore.ogDescription",
+    "metadata.formulaAtlas.description",
+    "metadata.frmEditor.description",
+    "metadata.frmGuide.title",
+    "metadata.frmGuide.description",
+    "metadata.frmGuide.imageAlt",
+    "about.aiDescription",
+    "about.techStack.formula",
+    "publicProject.tagline",
+    "publicProject.definition",
+    "publicProject.aiDescription",
+    "publicProject.capabilities.authorFrm.title",
+    "publicProject.capabilities.authorFrm.summary",
+    "publicProject.boundaries.current.0"
+  ],
+  "reviewPolicy": {
+    "aiGenerated": true,
+    "modelReviewRequired": [
+      "deepseek",
+      "kimi-k3"
+    ],
+    "maintainerApprovalRequired": true,
+    "aiMayApproveAsMaintainer": false,
+    "numericParity": "semantic-value; locale thousands separators are allowed outside byte-locked code and inline code",
+    "modelReviewEvidence": "repository-resolved, file-hash-bound JSON artifacts",
+    "maintainerApprovalRecordedAt": "2026-08-21T17:18:09+08:00"
+  },
+  "locales": {
+    "zh": {
+      "manualPath": "docs/manuals/frm-like-v1.zh.md",
+      "manualSha256": "0e33629cfaa0e13f70150748e3ca34601fd2a1bf8c07a548637e5c6e45d43e05",
+      "messageFile": "messages/zh.json",
+      "messageProjectionSha256": "90301979c504e8c329e0c45544823e5e8520df5c41ef79f1078fbfdc3c6c7ce5",
+      "generation": {
+        "primary": "Codex CLI",
+        "integration": "Kimi K3"
+      },
+      "modelReviews": {
+        "deepseek": {
+          "status": "approved",
+          "provider": "deepseek",
+          "requestedModel": "deepseek-chat",
+          "actualModel": "deepseek-v4-flash",
+          "evidence": [
+            {
+              "surface": "manual-a",
+              "path": "resources/formula-library/v1/manual-reviews/v1/zh.deepseek.manual-a.json",
+              "sha256": "6f3a3377083a1ca819942b6657bb54b7a45800de9fe90dadf35c852e054a3730"
+            },
+            {
+              "surface": "manual-b",
+              "path": "resources/formula-library/v1/manual-reviews/v1/zh.deepseek.manual-b.json",
+              "sha256": "35c305f9247d2e0aa544208fce62ef08c29d70b8088c5626eba78c86f6524c82"
+            },
+            {
+              "surface": "messages",
+              "path": "resources/formula-library/v1/manual-reviews/v1/zh.deepseek.messages.json",
+              "sha256": "27f094773009da9c063f1742b9f5cff1adcc0a4b3aa9fb5be97832d6f41f5e30"
+            }
+          ]
+        },
+        "kimi-k3": {
+          "status": "approved",
+          "provider": "kimi-coding",
+          "requestedModel": "k3",
+          "actualModel": "k3",
+          "evidence": [
+            {
+              "surface": "combined",
+              "path": "resources/formula-library/v1/manual-reviews/v1/zh.kimi-k3.combined.json",
+              "sha256": "c18b5f0190e6b443c7616b7799cc39db8fab89479f0a6d7d802d5eddd4434dfa"
+            }
+          ]
+        }
+      },
+      "maintainerApproval": {
+        "status": "approved",
+        "approvedBy": "project-maintainer",
+        "approvedAt": "2026-08-21T17:18:09+08:00"
+      },
+      "state": "maintainer-approved"
+    },
+    "pt": {
+      "manualPath": "docs/manuals/frm-like-v1.pt.md",
+      "manualSha256": "c9bb8bba706aed238858012646c000b4d2333bb3a6915c2cbea9dab186fe9fc1",
+      "messageFile": "messages/pt.json",
+      "messageProjectionSha256": "3a126962e9bf3d0871d10e714a31f620dcc58b8af8fce81867ae52210354185f",
+      "generation": {
+        "primary": "Codex CLI",
+        "integration": "Kimi K3"
+      },
+      "modelReviews": {
+        "deepseek": {
+          "status": "approved",
+          "provider": "deepseek",
+          "requestedModel": "deepseek-chat",
+          "actualModel": "deepseek-v4-flash",
+          "evidence": [
+            {
+              "surface": "manual-a",
+              "path": "resources/formula-library/v1/manual-reviews/v1/pt.deepseek.manual-a.json",
+              "sha256": "ecf406e24213347f4334f52694dbe41941cc996f07504fd77d3845ac53a25cf5"
+            },
+            {
+              "surface": "manual-b",
+              "path": "resources/formula-library/v1/manual-reviews/v1/pt.deepseek.manual-b.json",
+              "sha256": "b6af95d80c19495ca794059b4002d4e959948f056a87331ae8a1930ff4bb5524"
+            },
+            {
+              "surface": "messages",
+              "path": "resources/formula-library/v1/manual-reviews/v1/pt.deepseek.messages.json",
+              "sha256": "4da0d5e706ef3951daca3f809b4542a6b877267b522a722ae0c71bd7e36d096f"
+            }
+          ]
+        },
+        "kimi-k3": {
+          "status": "approved",
+          "provider": "kimi-coding",
+          "requestedModel": "k3",
+          "actualModel": "k3",
+          "evidence": [
+            {
+              "surface": "combined",
+              "path": "resources/formula-library/v1/manual-reviews/v1/pt.kimi-k3.combined.json",
+              "sha256": "656e642c4e0a353710831c15ac18f3d31aee73dae4193fc85396634a3df022e0"
+            }
+          ]
+        }
+      },
+      "maintainerApproval": {
+        "status": "approved",
+        "approvedBy": "project-maintainer",
+        "approvedAt": "2026-08-21T17:18:09+08:00"
+      },
+      "state": "maintainer-approved"
+    },
+    "ko": {
+      "manualPath": "docs/manuals/frm-like-v1.ko.md",
+      "manualSha256": "07d348173685cd0835a745be0ddda9cc9dc5acf605758a5ba5f909be9e57db55",
+      "messageFile": "messages/ko.json",
+      "messageProjectionSha256": "be95160f1092fe2542631f278ac996f91418b03e9f9e1fe64d14726fb65b7ba1",
+      "generation": {
+        "primary": "Codex CLI",
+        "integration": "Kimi K3"
+      },
+      "modelReviews": {
+        "deepseek": {
+          "status": "approved",
+          "provider": "deepseek",
+          "requestedModel": "deepseek-chat",
+          "actualModel": "deepseek-v4-flash",
+          "evidence": [
+            {
+              "surface": "manual-a",
+              "path": "resources/formula-library/v1/manual-reviews/v1/ko.deepseek.manual-a.json",
+              "sha256": "ad8df5fe0f5f653ca81f4eb47b2a90e3d39bf2bd2f93e7ca56495688056b9264"
+            },
+            {
+              "surface": "manual-b",
+              "path": "resources/formula-library/v1/manual-reviews/v1/ko.deepseek.manual-b.json",
+              "sha256": "c93902d662fd2fc0529587368fe719a2c3427d7d7e3c6058af7a5ddad4550f59"
+            },
+            {
+              "surface": "messages",
+              "path": "resources/formula-library/v1/manual-reviews/v1/ko.deepseek.messages.json",
+              "sha256": "deb485fce6531e8e1556fdeafae2721eb73b480fa53c3a3fe2035e8b2591f75d"
+            }
+          ]
+        },
+        "kimi-k3": {
+          "status": "approved",
+          "provider": "kimi-coding",
+          "requestedModel": "k3",
+          "actualModel": "k3",
+          "evidence": [
+            {
+              "surface": "combined",
+              "path": "resources/formula-library/v1/manual-reviews/v1/ko.kimi-k3.combined.json",
+              "sha256": "a21bb898108c6d838e469e1eec636704a1a3f63f26fbec83fd18d125878645ef"
+            }
+          ]
+        }
+      },
+      "maintainerApproval": {
+        "status": "approved",
+        "approvedBy": "project-maintainer",
+        "approvedAt": "2026-08-21T17:18:09+08:00"
+      },
+      "state": "maintainer-approved"
+    },
+    "ru": {
+      "manualPath": "docs/manuals/frm-like-v1.ru.md",
+      "manualSha256": "459abd4157459803b60ed683220d4d371739aad477fa01138a92c3d15db17bf6",
+      "messageFile": "messages/ru.json",
+      "messageProjectionSha256": "0dc299cbef03208a4d140ab3c556e318529af9f8ab258a1606f419c2accf5f24",
+      "generation": {
+        "primary": "Codex CLI",
+        "integration": "Kimi K3"
+      },
+      "modelReviews": {
+        "deepseek": {
+          "status": "approved",
+          "provider": "deepseek",
+          "requestedModel": "deepseek-chat",
+          "actualModel": "deepseek-v4-flash",
+          "evidence": [
+            {
+              "surface": "manual-a",
+              "path": "resources/formula-library/v1/manual-reviews/v1/ru.deepseek.manual-a.json",
+              "sha256": "50b3f44506897b05b2c560fcf967c2c58128e364ad58e4fc80d3de1d6bbf9dfd"
+            },
+            {
+              "surface": "manual-b",
+              "path": "resources/formula-library/v1/manual-reviews/v1/ru.deepseek.manual-b.json",
+              "sha256": "f33f11daf3942dd65f7d4599c59d0b02367c2d7fc07485d8d7cc1b83c4634034"
+            },
+            {
+              "surface": "messages",
+              "path": "resources/formula-library/v1/manual-reviews/v1/ru.deepseek.messages.json",
+              "sha256": "09ec345beebbac6899036642392e6ed55137b80e9954ae469111365e19c31d75"
+            }
+          ]
+        },
+        "kimi-k3": {
+          "status": "approved",
+          "provider": "kimi-coding",
+          "requestedModel": "k3",
+          "actualModel": "k3",
+          "evidence": [
+            {
+              "surface": "combined",
+              "path": "resources/formula-library/v1/manual-reviews/v1/ru.kimi-k3.combined.json",
+              "sha256": "970defc736940b1c7742ece6694d6c9f04aeb082ffcbd2545bf81f8a7c8373b1"
+            }
+          ]
+        }
+      },
+      "maintainerApproval": {
+        "status": "approved",
+        "approvedBy": "project-maintainer",
+        "approvedAt": "2026-08-21T17:18:09+08:00"
+      },
+      "state": "maintainer-approved"
+    },
+    "es": {
+      "manualPath": "docs/manuals/frm-like-v1.es.md",
+      "manualSha256": "de79e8576d3516e8169eb9057478792e1b086ef19f3a7c471ba6bb3e704bed75",
+      "messageFile": "messages/es.json",
+      "messageProjectionSha256": "c4797689e9537fb797a129b58ad03805326b0e2798464060fb81e15a9fc74024",
+      "generation": {
+        "primary": "Codex CLI",
+        "manualRepair": "DeepSeek API",
+        "integration": "Kimi K3"
+      },
+      "modelReviews": {
+        "deepseek": {
+          "status": "approved",
+          "provider": "deepseek",
+          "requestedModel": "deepseek-chat",
+          "actualModel": "deepseek-v4-flash",
+          "evidence": [
+            {
+              "surface": "manual-a",
+              "path": "resources/formula-library/v1/manual-reviews/v1/es.deepseek.manual-a.json",
+              "sha256": "9ea9ea50702076d9bda5e681d4456d1e6bbe5acf62f6e8d26eb4d74d2d48691b"
+            },
+            {
+              "surface": "manual-b",
+              "path": "resources/formula-library/v1/manual-reviews/v1/es.deepseek.manual-b.json",
+              "sha256": "6a3d3d2c508891597a69b25ee6fdd4d0975ab7cc661cebb894ba6ea487a24e3d"
+            },
+            {
+              "surface": "messages",
+              "path": "resources/formula-library/v1/manual-reviews/v1/es.deepseek.messages.json",
+              "sha256": "e6c59bb3a7a61f6f0eda5e186a0ce35ed96ea838982358c5a71f6f157c442490"
+            }
+          ]
+        },
+        "kimi-k3": {
+          "status": "approved",
+          "provider": "kimi-coding",
+          "requestedModel": "k3",
+          "actualModel": "k3",
+          "evidence": [
+            {
+              "surface": "combined",
+              "path": "resources/formula-library/v1/manual-reviews/v1/es.kimi-k3.combined.json",
+              "sha256": "032e189809524e87a1b8e89b90b4c9e5bcd36de0ceee8b13faddfaec6a9f775e"
+            }
+          ]
+        }
+      },
+      "maintainerApproval": {
+        "status": "approved",
+        "approvedBy": "project-maintainer",
+        "approvedAt": "2026-08-21T17:18:09+08:00"
+      },
+      "state": "maintainer-approved"
+    },
+    "fr": {
+      "manualPath": "docs/manuals/frm-like-v1.fr.md",
+      "manualSha256": "e846c775ceb8945ff5b703dfb62496f8025735f5377869c608020f82d1023d67",
+      "messageFile": "messages/fr.json",
+      "messageProjectionSha256": "d00db50962e26cb756d12e7805c31c468d9a522efd59149159332aa55a37d92d",
+      "generation": {
+        "primary": "Codex CLI",
+        "integration": "Kimi K3"
+      },
+      "modelReviews": {
+        "deepseek": {
+          "status": "approved",
+          "provider": "deepseek",
+          "requestedModel": "deepseek-chat",
+          "actualModel": "deepseek-v4-flash",
+          "evidence": [
+            {
+              "surface": "manual-a",
+              "path": "resources/formula-library/v1/manual-reviews/v1/fr.deepseek.manual-a.json",
+              "sha256": "4641aa798b99f99db733fd7a887857a44a734b3799b535f064d3066e288409d3"
+            },
+            {
+              "surface": "manual-b",
+              "path": "resources/formula-library/v1/manual-reviews/v1/fr.deepseek.manual-b.json",
+              "sha256": "82c4385a7a53e50bee9b295a50bf0bba3cfb771c99364419afa6fd933382af79"
+            },
+            {
+              "surface": "messages",
+              "path": "resources/formula-library/v1/manual-reviews/v1/fr.deepseek.messages.json",
+              "sha256": "5e250edfb4f9a660364f5de6a16aee98fa455ba93c34af29380bbc0c99c6dd28"
+            }
+          ]
+        },
+        "kimi-k3": {
+          "status": "approved",
+          "provider": "kimi-coding",
+          "requestedModel": "k3",
+          "actualModel": "k3",
+          "evidence": [
+            {
+              "surface": "combined",
+              "path": "resources/formula-library/v1/manual-reviews/v1/fr.kimi-k3.combined.json",
+              "sha256": "8ee5d2aed8dafca39fa7d1352daf86fe15f235e84879f4ac2e9c2a0f65e80cc2"
+            }
+          ]
+        }
+      },
+      "maintainerApproval": {
+        "status": "approved",
+        "approvedBy": "project-maintainer",
+        "approvedAt": "2026-08-21T17:18:09+08:00"
+      },
+      "state": "maintainer-approved"
+    }
+  },
+  "publicationRevision4Rebind": {
+    "recordedAt": "2026-08-24T02:47:19+08:00",
+    "authorization": "approved-v0.4.19-plan-v1.5-expected-commit-26c",
+    "scope": "mechanical-release-fact-and-public-boundary-copy-only",
+    "aiAssistanceDisclosure": "Ellie generated the mechanical count and boundary-copy update; final correctness review remains with Ellie. Prior DeepSeek/Kimi and human-maintainer approvals apply only to the preserved prior snapshot hashes below.",
+    "changes": {
+      "manualNumericSubstitutions": [
+        "513 -> 534",
+        "164 -> 143"
+      ],
+      "reviewedMessagePaths": [
+        "formulas.frmGuide.sections.support.disclaimer",
+        "about.aiDescription"
+      ],
+      "additionalMessagePaths": [
+        "formulas.index.standardDirectory.hint"
+      ],
+      "forbiddenPublicNumbersRemoved": [
+        "677 catalog count from promotional copy",
+        "held count from promotional copy"
+      ]
+    },
+    "priorSnapshot": {
+      "en": {
+        "manualSha256": "e5168f1a0211596659314d748fa53825892a2a6f089350e636a8c0baf3903758",
+        "messageProjectionSha256": "effb295f43ad338c80f1becab42a90cbb8afd2345a79c2e014acf031ea1faaf7"
+      },
+      "zh": {
+        "manualSha256": "0e33629cfaa0e13f70150748e3ca34601fd2a1bf8c07a548637e5c6e45d43e05",
+        "messageProjectionSha256": "90301979c504e8c329e0c45544823e5e8520df5c41ef79f1078fbfdc3c6c7ce5"
+      },
+      "pt": {
+        "manualSha256": "c9bb8bba706aed238858012646c000b4d2333bb3a6915c2cbea9dab186fe9fc1",
+        "messageProjectionSha256": "3a126962e9bf3d0871d10e714a31f620dcc58b8af8fce81867ae52210354185f"
+      },
+      "ko": {
+        "manualSha256": "07d348173685cd0835a745be0ddda9cc9dc5acf605758a5ba5f909be9e57db55",
+        "messageProjectionSha256": "be95160f1092fe2542631f278ac996f91418b03e9f9e1fe64d14726fb65b7ba1"
+      },
+      "ru": {
+        "manualSha256": "459abd4157459803b60ed683220d4d371739aad477fa01138a92c3d15db17bf6",
+        "messageProjectionSha256": "0dc299cbef03208a4d140ab3c556e318529af9f8ab258a1606f419c2accf5f24"
+      },
+      "es": {
+        "manualSha256": "de79e8576d3516e8169eb9057478792e1b086ef19f3a7c471ba6bb3e704bed75",
+        "messageProjectionSha256": "c4797689e9537fb797a129b58ad03805326b0e2798464060fb81e15a9fc74024"
+      },
+      "fr": {
+        "manualSha256": "e846c775ceb8945ff5b703dfb62496f8025735f5377869c608020f82d1023d67",
+        "messageProjectionSha256": "d00db50962e26cb756d12e7805c31c468d9a522efd59149159332aa55a37d92d"
+      }
+    },
+    "currentProjection": {
+      "en": {
+        "manualSha256": "fd5e22761fef599ee113e803b59aa9f157f3e39e591c0a86aeeb804713139921",
+        "messageProjectionSha256": "5808cb7b30f509770ea2af0693a0a9c0e5a25b7af770fe794a84b998b57933d1"
+      },
+      "zh": {
+        "manualSha256": "8182f36d116d228cec65deb056ca53dbcecd1207d3e2c6fda75b6de78047d84d",
+        "messageProjectionSha256": "23e34f6f73bed7151258925c4431a1739399da8c49e5a9b9f359c0bc70eeae60"
+      },
+      "pt": {
+        "manualSha256": "d4d8c6adf4e6792300e2008dd70927966c1800c83c41a2b6d5d3d72aabb2484f",
+        "messageProjectionSha256": "dda6eae6c95a563edfb70c9aff73e16fc2b35f4234eb8a3f8302eb53ff23d114"
+      },
+      "ko": {
+        "manualSha256": "3f6890a7b90ae987831e4cfebe12443e25f87048fdd186f34251f9f80215af3c",
+        "messageProjectionSha256": "77f457121baa0658d892b9e284cee6b7e82a2890888ed7fd3a9a0f9dc8d57d9a"
+      },
+      "ru": {
+        "manualSha256": "31ba0f76d64223cb018194d5472d0112f3163475fec6594f3c755cd822b33864",
+        "messageProjectionSha256": "dea0c3cb93bb7539d6bed323bf6d4430fb4db2bf32106392f05ae3cac3a5178f"
+      },
+      "es": {
+        "manualSha256": "f7ee2d056bdf4983637bf18f92ecbd670a3b05f57cd3c69964bf9c964dfc63a3",
+        "messageProjectionSha256": "e15ce26ab08555b2fbb5a75882d3bc2aa83c0e6b8b9c0e9e95381eab208a9588"
+      },
+      "fr": {
+        "manualSha256": "24bc7db00ae39628004905a73c933da824c021eee9d1de3e3a8578ec92305627",
+        "messageProjectionSha256": "27c790161fc47716095d7c042f45a19d5637bf98b55acb672b3083635750b89a"
+      }
+    },
+    "contentRowsChanged": false,
+    "modelReviewEvidenceReusedForCurrentBytes": false,
+    "reviewStatus": "ellie-main-agent-reviewed"
+  }
+}

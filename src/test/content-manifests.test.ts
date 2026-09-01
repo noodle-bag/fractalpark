@@ -20,6 +20,7 @@ import {
   type FormulaContentEntry,
 } from '@/content/formula-manifest';
 import { validateContentManifests } from '@/content/manifest-validation';
+import { PUBLISHED_TEACHING_GUIDES_V1 } from '@/content/teaching/guide-route-policy';
 import { registerBuiltins } from '@/engine/plugins/builtins';
 import { FORMULA_CATALOG } from '@/engine/plugins/formula-catalog';
 import { pluginRegistry } from '@/engine/plugins/registry';
@@ -37,6 +38,9 @@ const ALL_MESSAGES: Record<string, Record<string, unknown>> = {
   es: esMessages,
   fr: frMessages,
 };
+const RENDERABLE_FORMULA_SLUGS = new Set(
+  PUBLISHED_TEACHING_GUIDES_V1.map((entry) => entry.slug),
+);
 
 function buildValidationInput(overrides?: {
   formulas?: FormulaContentEntry[];
@@ -58,9 +62,10 @@ describe('formula and artwork content manifests', () => {
     registerBuiltins({ quiet: true });
   });
 
-  it('validates the complete multilingual 21-formula and 26-artwork set', () => {
+  it('validates 21 identities, 21 locale projections, and 26 artworks', () => {
     expect(() => validateContentManifests(buildValidationInput())).not.toThrow();
     expect(FORMULA_CONTENT_MANIFEST).toHaveLength(21);
+    expect(RENDERABLE_FORMULA_SLUGS.size).toBe(21);
     expect(ARTWORK_CONTENT_MANIFEST).toHaveLength(26);
   });
 

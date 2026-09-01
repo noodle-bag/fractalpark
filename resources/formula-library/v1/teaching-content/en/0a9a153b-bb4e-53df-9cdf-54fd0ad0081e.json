@@ -1,0 +1,90 @@
+{
+  "schema": "fractalpark-teaching-en-fact/v1",
+  "formulaId": "0a9a153b-bb4e-53df-9cdf-54fd0ad0081e",
+  "sourceRevision": "0a9786849dd78c3643bae1f6de80fbc42d2e57e50e591090e67d681c81c0822e",
+  "semanticHash": "60f95642c01edfef967fd1d305e4c24747437321c32abbe847217193b9fe64eb",
+  "overview": "FRM-like/1 defines ok-35 with source initialization z = pixel, then a loop whose first node is mapped = firstMap(z). The pinned parameter-plane profile uses center (0, 0), zoom 0.25, rotation 0, and 96 iterations, and the source tests |z| <= real(threshold) for bailout.",
+  "mathDisclosure": "exact-structured",
+  "mathSummary": "For ok-35, the cited first loop node is exactly mapped = firstMap(z); the source’s bailout comparison is |z| <= real(threshold). The full source loop remains the authoritative sequence of subsequent operations.",
+  "sourceWalkthrough": [
+    {
+      "annotationId": "0a9a153b-bb4e-53df-9cdf-54fd0ad0081e:0a9786849dd78c3643bae1f6de80fbc42d2e57e50e591090e67d681c81c0822e:initialization",
+      "nodeId": "frm-v1:0a9786849dd78c3643bae1f6de80fbc42d2e57e50e591090e67d681c81c0822e:init/0",
+      "explanation": "This cited initialization node performs only: z = pixel."
+    },
+    {
+      "annotationId": "0a9a153b-bb4e-53df-9cdf-54fd0ad0081e:0a9786849dd78c3643bae1f6de80fbc42d2e57e50e591090e67d681c81c0822e:iteration",
+      "nodeId": "frm-v1:0a9786849dd78c3643bae1f6de80fbc42d2e57e50e591090e67d681c81c0822e:loop/0",
+      "explanation": "This cited first loop node performs only: mapped = firstMap(z)."
+    },
+    {
+      "annotationId": "0a9a153b-bb4e-53df-9cdf-54fd0ad0081e:0a9786849dd78c3643bae1f6de80fbc42d2e57e50e591090e67d681c81c0822e:termination",
+      "nodeId": "frm-v1:0a9786849dd78c3643bae1f6de80fbc42d2e57e50e591090e67d681c81c0822e:bailout",
+      "explanation": "This cited bailout node tests only: |z| <= real(threshold)."
+    }
+  ],
+  "syntaxFeatures": [
+    {
+      "featureId": "initialization-flow",
+      "annotationIds": [
+        "0a9a153b-bb4e-53df-9cdf-54fd0ad0081e:0a9786849dd78c3643bae1f6de80fbc42d2e57e50e591090e67d681c81c0822e:initialization"
+      ],
+      "explanation": "The initialization annotation isolates z = pixel rather than a later initialization statement. This is specific to ok-35."
+    },
+    {
+      "featureId": "iteration-flow",
+      "annotationIds": [
+        "0a9a153b-bb4e-53df-9cdf-54fd0ad0081e:0a9786849dd78c3643bae1f6de80fbc42d2e57e50e591090e67d681c81c0822e:iteration"
+      ],
+      "explanation": "The iteration annotation isolates the first loop assignment mapped = firstMap(z); ok-35 maps z with firstMap before comparing product and quotient magnitudes. This is specific to ok-35."
+    },
+    {
+      "featureId": "bailout-test",
+      "annotationIds": [
+        "0a9a153b-bb4e-53df-9cdf-54fd0ad0081e:0a9786849dd78c3643bae1f6de80fbc42d2e57e50e591090e67d681c81c0822e:termination"
+      ],
+      "explanation": "The termination annotation identifies the exact continuation comparison |z| <= real(threshold). This is specific to ok-35."
+    }
+  ],
+  "parameterExperiment": {
+    "parameterSymbols": [
+      "multiplier",
+      "thresholdOffset",
+      "firstMap",
+      "secondMap"
+    ],
+    "steps": [
+      "Render ok-35 at the pinned parameter-plane baseline with multiplier (0, 0), thresholdOffset (0, 0), firstMap (identity), secondMap (identity) at their runtime defaults.",
+      "Change one of multiplier, thresholdOffset, firstMap, secondMap at a time, keep center (0, 0), zoom 0.25, rotation 0, and 96 iterations and every other slot fixed, then compare the renderings."
+    ],
+    "expectedObservation": "For each isolated change to multiplier, thresholdOffset, firstMap, or secondMap, record whether the rendering differs from the baseline and relate the comparison to |z| <= real(threshold)."
+  },
+  "exercise": {
+    "prompt": "For ok-35, use the three annotations to distinguish the single-node operations z = pixel, mapped = firstMap(z), and |z| <= real(threshold); explain why no neighboring statement belongs to the loop annotation.",
+    "completionCheck": "Name all 3 annotation IDs, then state exactly that the cited loop node is mapped = firstMap(z) and the cited bailout node is |z| <= real(threshold). This completes the ok-35 reading.",
+    "answerDisclosure": "hint"
+  },
+  "facts": {
+    "provenanceStatement": "Grounded in runtime source revision 0a9786849dd78c3643bae1f6de80fbc42d2e57e50e591090e67d681c81c0822e and the publication decision for 0a9a153b-bb4e-53df-9cdf-54fd0ad0081e.",
+    "rightsStatement": "rightsStatus is no-explicit-permission; implementationBasis is separated-independent-rewrite; publicationDecision is publish; decisionReason is publish-cleanroom-independent-rewrite-full-chain-green. These records describe this project decision only and do not assert broader rights in any third-party original.",
+    "sourceIds": [
+      "runtime:0a9786849dd78c3643bae1f6de80fbc42d2e57e50e591090e67d681c81c0822e",
+      "decision:0a9a153b-bb4e-53df-9cdf-54fd0ad0081e"
+    ],
+    "licenseIds": [],
+    "claims": [
+      {
+        "text": "The pinned runtime profile uses parameter-plane mode and 96 iterations.",
+        "sourceIds": [
+          "runtime:0a9786849dd78c3643bae1f6de80fbc42d2e57e50e591090e67d681c81c0822e"
+        ]
+      },
+      {
+        "text": "The recorded publication decision is publish with reason publish-cleanroom-independent-rewrite-full-chain-green.",
+        "sourceIds": [
+          "decision:0a9a153b-bb4e-53df-9cdf-54fd0ad0081e"
+        ]
+      }
+    ]
+  }
+}

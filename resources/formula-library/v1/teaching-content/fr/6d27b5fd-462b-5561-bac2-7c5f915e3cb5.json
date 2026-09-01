@@ -1,0 +1,35 @@
+{
+  "schema": "fractalpark-teaching-locale/v1",
+  "formulaId": "6d27b5fd-462b-5561-bac2-7c5f915e3cb5",
+  "locale": "fr",
+  "sourceRevision": "7ef2bf1f2dd573053bbe1e8af171472dff08ed6346b2e760ab2780c9244d1e85",
+  "semanticHash": "62ccdf4f274bf35079ca98a39ad59a05132b3580ef937b766945087358c454e7",
+  "englishContentHash": "e6d09d556daddf1d6bf53de03354a43d35ae9954a4b7f0ab0e759c64518a9eb2",
+  "overview": "Dans FRM-like/1, l’initialisation effectue z = pixel. À chaque itération, le nœud exécute denom = cosh(z). La terminaison vérifie |z - zPrev| >= 0.000001.",
+  "sourceWalkthrough": {
+    "6d27b5fd-462b-5561-bac2-7c5f915e3cb5:7ef2bf1f2dd573053bbe1e8af171472dff08ed6346b2e760ab2780c9244d1e85:init": "Dans FRM-like/1, l’initialisation effectue z = pixel.",
+    "6d27b5fd-462b-5561-bac2-7c5f915e3cb5:7ef2bf1f2dd573053bbe1e8af171472dff08ed6346b2e760ab2780c9244d1e85:loop": "À chaque itération, le nœud exécute denom = cosh(z).",
+    "6d27b5fd-462b-5561-bac2-7c5f915e3cb5:7ef2bf1f2dd573053bbe1e8af171472dff08ed6346b2e760ab2780c9244d1e85:branch": "La branche utilise |denom|² < 1e-10 → z = z; |denom|² >= 1e-10 → z = z - sinh(z)/denom.",
+    "6d27b5fd-462b-5561-bac2-7c5f915e3cb5:7ef2bf1f2dd573053bbe1e8af171472dff08ed6346b2e760ab2780c9244d1e85:termination": "La terminaison vérifie |z - zPrev| >= 0.000001."
+  },
+  "syntaxFeatures": {
+    "sequence": "À chaque itération, le nœud exécute denom = cosh(z).",
+    "branch": "La branche utilise |denom|² < 1e-10 → z = z; |denom|² >= 1e-10 → z = z - sinh(z)/denom."
+  },
+  "parameterExperiment": {
+    "steps": [
+      "Utilise le profil fixé comme référence. Exécute 48 puis 96 itérations, tous les contrôles fixes, et note si denom = cosh(z) ou |z - zPrev| >= 0.000001 diffèrent."
+    ],
+    "expectedObservation": "La limite supérieure peut révéler des mises à jour sinh/cosh supplémentaires, protégées ou non ; note si les nombres d’itérations diffèrent."
+  },
+  "exercise": {
+    "prompt": "Explique les deux issues de la protection sur la taille de cosh(z) denom.",
+    "completionCheck": "Pour terminer, tu dois nommer exactement les 4 annotations et expliquer ce détail de la formule : Indice : denom = cosh(z).",
+    "hint": "Indice : denom = cosh(z)."
+  },
+  "factsPresentation": {
+    "provenanceLead": "La provenance figure dans l’enregistrement de source épinglé.",
+    "rightsLead": "Le statut des droits et la décision de publication figurent dans l’enregistrement de décision épinglé."
+  },
+  "contentHash": "a1644efad54c4507ff5ec1b648343522121df14590322dd27e2f2f7c4743c113"
+}

@@ -1,0 +1,33 @@
+{
+  "schema": "fractalpark-teaching-locale/v1",
+  "formulaId": "a569d2c4-d397-5634-9dfe-21b2ab1a386a",
+  "locale": "zh",
+  "sourceRevision": "b7dd588e3cf8c70a1ec52801a03b6ee1b6980009c0725f8a32ecfa8fe1a6dfad",
+  "semanticHash": "89e7b983a7455e1e3f1c4179ba6894492bcee9066e57e829ba9dc42efb44e1a9",
+  "englishContentHash": "369d555eed6b8b72baa0f8dec31e8d3c22416d94d5271028080f842cdcfecba2",
+  "localizedName": "buffalo",
+  "overview": "在 FRM-like/1 中，buffalo 按源代码的初始化、循环和退出测试运行。请把每一步当作对当前状态的明确操作，而不是从名称推测规则。固定配置让你能观察同一迭代过程。",
+  "sourceWalkthrough": {
+    "a569d2c4-d397-5634-9dfe-21b2ab1a386a:b7dd588e3cf8c70a1ec52801a03b6ee1b6980009c0725f8a32ecfa8fe1a6dfad:init": "初始化节点执行： `if ismand`",
+    "a569d2c4-d397-5634-9dfe-21b2ab1a386a:b7dd588e3cf8c70a1ec52801a03b6ee1b6980009c0725f8a32ecfa8fe1a6dfad:loop": "循环节点执行： `x2 = abs(real(z)) * abs(real(z))`",
+    "a569d2c4-d397-5634-9dfe-21b2ab1a386a:b7dd588e3cf8c70a1ec52801a03b6ee1b6980009c0725f8a32ecfa8fe1a6dfad:bailout": "终止测试为： `|z| <= 256`"
+  },
+  "syntaxFeatures": {
+    "source-sequence": "此结构把所引用的源代码步骤组织为一个可检查的顺序。 a569d2c4-d397-5634-9dfe-21b2ab1a386a:b7dd588e3cf8c70a1ec52801a03b6ee1b6980009c0725f8a32ecfa8fe1a6dfad:init, a569d2c4-d397-5634-9dfe-21b2ab1a386a:b7dd588e3cf8c70a1ec52801a03b6ee1b6980009c0725f8a32ecfa8fe1a6dfad:loop, a569d2c4-d397-5634-9dfe-21b2ab1a386a:b7dd588e3cf8c70a1ec52801a03b6ee1b6980009c0725f8a32ecfa8fe1a6dfad:bailout"
+  },
+  "parameterExperiment": {
+    "steps": [
+      "使用固定配置：mode parameter-plane; center (-0.5, 0); zoom 0.4; rotation 0; iterations 96。运行一次并记录结果；再以同一配置重复运行。"
+    ],
+    "expectedObservation": "比较两次运行，记录`x2 = abs(real(z)) * abs(real(z))`是否得到相同的可见结果和迭代行为。"
+  },
+  "exercise": {
+    "prompt": "找出与`x2 = abs(real(z)) * abs(real(z))`有关的源注释，并说明初始化、循环和终止测试的顺序。",
+    "completionCheck": "完成时列出所引用的三个注释键，并按`x2 = abs(real(z)) * abs(real(z))`对应的初始化、循环和终止顺序排列。"
+  },
+  "factsPresentation": {
+    "provenanceLead": "来源：",
+    "rightsLead": "权利："
+  },
+  "contentHash": "9b3e2fc5cc22cc7c70c831957633d54282da4c98cf764f225f7c0e23691ef26e"
+}

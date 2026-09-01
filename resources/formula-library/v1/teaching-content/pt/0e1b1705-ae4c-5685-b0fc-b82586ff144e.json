@@ -1,0 +1,34 @@
+{
+  "schema": "fractalpark-teaching-locale/v1",
+  "formulaId": "0e1b1705-ae4c-5685-b0fc-b82586ff144e",
+  "locale": "pt",
+  "sourceRevision": "ae01647cb774c689e3b51db29ed4e42fee4f0a1f63716ae8a5fe10d41aa4a985",
+  "semanticHash": "0960756fc1dc1b8a80afcb65aa073a990f64c1801605934bb4a473dd102f5652",
+  "englishContentHash": "856c806fd04ca678954c6e938babb483fd770c70f69128fe9d8aa633a62bac17",
+  "localizedName": "ok-34",
+  "overview": "Em FRM-like/1, ok-34 segue a inicialização, o laço e o teste de saída do código-fonte. Trate cada passo como uma operação explícita sobre o estado, sem deduzir regras pelo nome. O perfil fixado permite observar o mesmo processo iterativo.",
+  "sourceWalkthrough": {
+    "0e1b1705-ae4c-5685-b0fc-b82586ff144e:ae01647cb774c689e3b51db29ed4e42fee4f0a1f63716ae8a5fe10d41aa4a985:init": "O nó de inicialização executa: `z = pixel`",
+    "0e1b1705-ae4c-5685-b0fc-b82586ff144e:ae01647cb774c689e3b51db29ed4e42fee4f0a1f63716ae8a5fe10d41aa4a985:loop": "O nó do laço executa: `horizontal = abs(real(z))`",
+    "0e1b1705-ae4c-5685-b0fc-b82586ff144e:ae01647cb774c689e3b51db29ed4e42fee4f0a1f63716ae8a5fe10d41aa4a985:branch": "O ramo no laço começa aqui: `if horizontal <= vertical`",
+    "0e1b1705-ae4c-5685-b0fc-b82586ff144e:ae01647cb774c689e3b51db29ed4e42fee4f0a1f63716ae8a5fe10d41aa4a985:bailout": "O teste de término é: `LastSqr <= real(limit) * real(limit)`"
+  },
+  "syntaxFeatures": {
+    "source-sequence": "Esta estrutura organiza os passos do código-fonte citados em uma sequência verificável. 0e1b1705-ae4c-5685-b0fc-b82586ff144e:ae01647cb774c689e3b51db29ed4e42fee4f0a1f63716ae8a5fe10d41aa4a985:init, 0e1b1705-ae4c-5685-b0fc-b82586ff144e:ae01647cb774c689e3b51db29ed4e42fee4f0a1f63716ae8a5fe10d41aa4a985:loop, 0e1b1705-ae4c-5685-b0fc-b82586ff144e:ae01647cb774c689e3b51db29ed4e42fee4f0a1f63716ae8a5fe10d41aa4a985:branch, 0e1b1705-ae4c-5685-b0fc-b82586ff144e:ae01647cb774c689e3b51db29ed4e42fee4f0a1f63716ae8a5fe10d41aa4a985:bailout"
+  },
+  "parameterExperiment": {
+    "steps": [
+      "Comece com os valores padrão e altere apenas um slot de execução por vez: multiplier (0, 0)→(1, 0), thresholdOffset (0, 0)→(1, 0), initialMap identity→abs, orbitMap identity→sqr. Registre o resultado visível a cada vez."
+    ],
+    "expectedObservation": "Compare as execuções e registre se `if horizontal <= vertical` apresenta o mesmo resultado visível e comportamento iterativo."
+  },
+  "exercise": {
+    "prompt": "Use as quatro anotações citadas de ok-34 — `z = pixel`, `horizontal = abs(real(z))`, o ramo `horizontal <= vertical` e o teste LastSqr — para explicar a ordem no código-fonte.",
+    "completionCheck": "Para concluir, liste as quatro chaves e ordene `z = pixel`, `horizontal = abs(real(z))`, o ramo `horizontal <= vertical` e o teste LastSqr conforme o código-fonte."
+  },
+  "factsPresentation": {
+    "provenanceLead": "Proveniência:",
+    "rightsLead": "Direitos:"
+  },
+  "contentHash": "d450cf13c86d3872ac5be04215270824d5e97c25c7cee60655b7683de57ff0f2"
+}

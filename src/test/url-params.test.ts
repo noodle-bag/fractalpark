@@ -229,6 +229,15 @@ bailout:
     const href = documentToExploreHref(document, 'zh');
 
     expect(urlState.formula).toBe('phoenix');
+    expect(urlState.julia).toBe(true);
+    expect(urlState.juliaRe).toBe(-0.62);
+    expect(urlState.juliaIm).toBe(0.41);
+    expect(decodeParams(new URLSearchParams(encodeParams(urlState)))).toMatchObject({
+      formula: 'phoenix',
+      julia: true,
+      juliaRe: -0.62,
+      juliaIm: 0.41,
+    });
     expect(urlState.transformId).toBe('kaleidoscope');
     expect(urlState.keyframes).toHaveLength(2);
     expect(href.startsWith('/zh/explore?')).toBe(true);

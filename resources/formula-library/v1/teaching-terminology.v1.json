@@ -1,0 +1,69 @@
+{
+  "schema": "fractalpark-teaching-terminology/v1",
+  "locales": [
+    "en",
+    "zh",
+    "pt",
+    "ko",
+    "ru",
+    "es",
+    "fr"
+  ],
+  "localizedLocales": [
+    "zh",
+    "pt",
+    "ko",
+    "ru",
+    "es",
+    "fr"
+  ],
+  "protectedFieldValues": [
+    "formulaId",
+    "displayName",
+    "historicalName",
+    "author",
+    "source",
+    "sourceIds",
+    "licenseIds",
+    "sourceRevision",
+    "semanticHash",
+    "parameterSymbols",
+    "mathematicalExpressions",
+    "languageVersion",
+    "numericProfile",
+    "publicationDecision",
+    "decisionReason",
+    "guideAvailability",
+    "guideHoldReason"
+  ],
+  "protectedLiteralTokens": [
+    "Formula ID",
+    "FRM-like/1",
+    "standard32",
+    "sourceRevision",
+    "semanticHash"
+  ],
+  "protectedDecisionReasonCodes": [
+    "held-awaiting-independent-rewrite",
+    "held-census-release-oracle-mismatch",
+    "held-census-webgl-compile-link-draw-failed",
+    "held-census-webgl-cpu-mismatch",
+    "held-license-gpl-3.0-only",
+    "held-missing-input",
+    "publish-census-full-chain-green",
+    "publish-cleanroom-independent-rewrite-full-chain-green",
+    "publish-project-owned-native-recipe",
+    "publish-project-owned-recovery-gate-green",
+    "held-guide-content-restoration-pending-26d"
+  ],
+  "rules": {
+    "canonicalNames": "preserve-byte-for-byte",
+    "formulaSource": "never-translate",
+    "mathematics": "never-translate",
+    "parameterSymbols": "preserve-byte-for-byte-and-join-runtime-schema",
+    "authorAndLicense": "preserve-byte-for-byte",
+    "editorialProse": "localize-only-after-source-fact-review",
+    "fallback": "English under non-English routes is browse-only and noindex",
+    "heldGuideImagery": "implementation-generated imagery forbidden"
+  }
+}

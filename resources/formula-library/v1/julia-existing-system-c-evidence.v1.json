@@ -1,0 +1,2820 @@
+{
+  "schema": "fractalpark-julia-existing-system-c-evidence/v1",
+  "revision": 1,
+  "stage": "tier0-tier1-pre-gpu",
+  "runtimeIndexCanonicalSha256": "362f327b260f38ceb1d9afd7dc619d4ef010f8365ee84a8673ba1df6285fc3f5",
+  "publicationDecisionsContentHash": "cac35a05d2d0c219b4f5ac00f3dea5b5fbb2b9c6b2fc15ea3383ef0f62d6031d",
+  "numericProfile": "standard32",
+  "sourceBindings": {
+    "package-lock.json": "c7fb57104902f454d6dc1c29e776eebab2c19a26d98dc2253fef84058a033168",
+    "package.json": "852c7b8eb594c0a4b54b947ed7712a32f69907234124ddccf7e2cce46cab268f",
+    "resources/formula-library/v1/julia-capability-census.v1.json": "93a57236600f9738dc854f53c6ee59e180d327d87b0995482c609355d70ab8f6",
+    "resources/formula-library/v1/legacy-formula-aliases.json": "0b966ca5f5e238b9f5fe523caa082a682cfe51d1e6affeb945d580dba72842e8",
+    "resources/formula-library/v1/publication-decisions.json": "ed63d7fab46530ac61a2dfb562644b9d36c1d8f4a73128cc51c0c7fbcb625de6",
+    "resources/formula-library/v1/standard-formula-ids.json": "b98bbc2b954871b227acfd7c882443cbeb44870931ddb4714c9aed3ffcf33729",
+    "scripts/build-julia-existing-system-c-evidence.ts": "dd2ac3405bc006efbb40c38e931adf0fa3a25802e3ac62b6412af490405379e6",
+    "src/engine/formulas/v1/identity.ts": "b5a46c0c0fe0b402ea76761458b91e3404fa4e877b5ad68603e0879d792cb884",
+    "src/engine/formulas/v1/julia-binding.ts": "0a645ff7e53c3fcd7c8daee5f6b252df03c2af1c809541edb3727d9da451e40c",
+    "src/engine/formulas/v1/julia-capability.ts": "e1b0caded565849c00dbd5c9a62078353597029c6ae838b22a5c6995c9e57ada",
+    "src/engine/formulas/v1/julia-cpu-harness.ts": "1d61d82de4df6dab11e5fd12544dca00ea181132871b4941ca4cc0fdf2e7200f",
+    "src/engine/formulas/v1/publication-decisions.ts": "3823598f929bca36846599b316bfff3f7b9ce0f9faafa89bf7a7b517e7eb77b3",
+    "src/engine/formulas/v1/published-adapter.ts": "a45251017b75ac9ab13357f1f39876a4619cd0e2906d390fc73b898d4f01c3dc",
+    "src/engine/formulas/v1/published-runtime.ts": "ab87434d19df080aa38661492fc92fc32033408ca363a0754379cc8ff1de8f16",
+    "src/engine/formulas/v1/revisions.ts": "7a457e21bc6c5d539b23ef1dc6581fc05d3578434b1c47c1a0061518abab4397",
+    "src/engine/formulas/v1/safety-envelope.ts": "ee4cb69ea21bbc4bb53ff76de8e7b8fe4dd1ba44e5ebaeb91c1543a9f95cdaee",
+    "src/engine/formulas/v1/standard-manifest.ts": "585fd7752ee7f532acf5b3beb1750a468b238d1a6132d565bcbc76f637bb26f2",
+    "src/engine/formulas/v1/types.ts": "4fe19a708a53389f1a8dc97c2902466129df3a2d770d368ffe297350b105b096",
+    "src/engine/frm/frm-v1-glsl-prelude.ts": "c50480ff75af9e3f1dd49866ca2156e9c566a9297b448012533c9835ef66b09a",
+    "src/engine/frm/frm-v1-stdlib.ts": "e7b48941d8b6307133a1718a99f7a933cdc75f8ea7a68d99449a1ad7e5e31b6c",
+    "src/engine/frm/v1-backend.ts": "076273190738b02622091bb31d0c30ef2a3fdd3edc82e573a1cebf5c541d1f67",
+    "src/engine/frm/v1.ts": "850f912a879eaabfda3c0b14de7c1f5e42d6e32f6cbd47f7751dadab9c5650c8",
+    "src/engine/plugins/types.ts": "012b9304b6074648355b4fca78866c92d274bf609c3001d440a3327110783012",
+    "tsconfig.json": "fb2eecd42de1a9b1a91dc012edb40f2cacddf595862fc3227f8439930364bb8c"
+  },
+  "candidateCount": 76,
+  "tier1PassCount": 74,
+  "tier1BlockedCount": 2,
+  "probeGrid": {
+    "points": [
+      [
+        -0.35,
+        0.2
+      ],
+      [
+        0.12,
+        -0.28
+      ],
+      [
+        0.43,
+        0.11
+      ]
+    ],
+    "constants": [
+      [
+        -0.7,
+        0.27
+      ],
+      [
+        0.285,
+        0.01
+      ],
+      [
+        -0.1542022,
+        0.6137691
+      ]
+    ],
+    "depths": [
+      1,
+      2,
+      4,
+      8,
+      16,
+      32,
+      64,
+      128
+    ]
+  },
+  "rows": [
+    {
+      "formulaId": "00e14aa8-b766-54ea-a359-3f5d20d329b7",
+      "sourceRevision": "e4d2259a5dd3fe7b3af646514a4313e83efcc80e887e04c07b7469bb27a66b90",
+      "semanticHash": "26270fc7b1577aa266c7a0eb23b2664ffcb020cf5a7528ea9be23950ba10a72c",
+      "bindingRevision": "15c604a4c25490404d7732d31a8905b581d97822820bd6ff0bb4befaaed65e82",
+      "rightsStatus": "project-owned",
+      "publicationDecision": "publish",
+      "implementationBasis": "project-owned",
+      "leakageScanStatus": "passed",
+      "contract": {
+        "binding": {
+          "kind": "system-c"
+        },
+        "modeClass": "classic-julia",
+        "supportLane": "existing-system-c",
+        "z0Role": "pixel-seed",
+        "invariant": "parameter-plane-bit-identical"
+      },
+      "tier0": {
+        "sourceBound": true,
+        "rightsBound": true,
+        "safetyEnvelope": true
+      },
+      "tier1": {
+        "evidenceClass": "tier1-candidate-only",
+        "status": "tier1-candidate",
+        "checks": {
+          "parameterPlaneBitIdentical": true,
+          "deterministic": true,
+          "finiteEvidence": true,
+          "pixelSensitive": true,
+          "constantSensitive": true
+        },
+        "reasonCodes": []
+      }
+    },
+    {
+      "formulaId": "06223e69-6d8c-50ba-8e5d-b630d342d910",
+      "sourceRevision": "6fd1272cca8d356da5f0c49cbbb4278f0e5d727cefab5ad1daefa83fb4c1f3ce",
+      "semanticHash": "88a93741043d5f43532adda4f96b789b0e10c4bd3d31319b8c9aa7ba3af5fee9",
+      "bindingRevision": "23e540ed8325db6025542b6cbcd9594ec5d0b2c7b3fe438a9e98e858a268dff2",
+      "rightsStatus": "project-owned",
+      "publicationDecision": "publish",
+      "implementationBasis": "project-owned",
+      "leakageScanStatus": "passed",
+      "contract": {
+        "binding": {
+          "kind": "system-c"
+        },
+        "modeClass": "classic-julia",
+        "supportLane": "existing-system-c",
+        "z0Role": "pixel-seed",
+        "invariant": "parameter-plane-bit-identical"
+      },
+      "tier0": {
+        "sourceBound": true,
+        "rightsBound": true,
+        "safetyEnvelope": true
+      },
+      "tier1": {
+        "evidenceClass": "tier1-candidate-only",
+        "status": "tier1-candidate",
+        "checks": {
+          "parameterPlaneBitIdentical": true,
+          "deterministic": true,
+          "finiteEvidence": true,
+          "pixelSensitive": true,
+          "constantSensitive": true
+        },
+        "reasonCodes": []
+      }
+    },
+    {
+      "formulaId": "07a0afc6-ced5-5765-9314-fdb0ef593cb9",
+      "sourceRevision": "dce84ac5a7ee55fff27d70df826af67d386f905ee65cee65f5fa8d418e68ba27",
+      "semanticHash": "7d62c7f378c70b9fbfaeb2381d3c82383ab50a76fe5ea5cbe7fd788b451af907",
+      "bindingRevision": "9afe1e714466fd05ede6dbdc215aef7cc018b3856c08c3e6d340924c6788ba63",
+      "rightsStatus": "project-owned",
+      "publicationDecision": "publish",
+      "implementationBasis": "project-owned",
+      "leakageScanStatus": "passed",
+      "contract": {
+        "binding": {
+          "kind": "system-c"
+        },
+        "modeClass": "classic-julia",
+        "supportLane": "existing-system-c",
+        "z0Role": "pixel-seed",
+        "invariant": "parameter-plane-bit-identical"
+      },
+      "tier0": {
+        "sourceBound": true,
+        "rightsBound": true,
+        "safetyEnvelope": true
+      },
+      "tier1": {
+        "evidenceClass": "tier1-candidate-only",
+        "status": "tier1-candidate",
+        "checks": {
+          "parameterPlaneBitIdentical": true,
+          "deterministic": true,
+          "finiteEvidence": true,
+          "pixelSensitive": true,
+          "constantSensitive": true
+        },
+        "reasonCodes": []
+      }
+    },
+    {
+      "formulaId": "09ee96d1-18a8-5dad-83e1-d05f0c59be4b",
+      "sourceRevision": "ab0bdc1929dee1daeb9486d7b1fd885a6644367232854694fa88908eb4e6c0ce",
+      "semanticHash": "061df18cf898a0a049d63cd5f6cf087a28ac7f830bb9694e954c1aaae0b29851",
+      "bindingRevision": "12b1adfc3c5c6bd5de889ddc5ced2e5ef5d6599049ff90ccbc54c6f70bcab9c6",
+      "rightsStatus": "project-owned",
+      "publicationDecision": "publish",
+      "implementationBasis": "project-owned",
+      "leakageScanStatus": "passed",
+      "contract": {
+        "binding": {
+          "kind": "system-c"
+        },
+        "modeClass": "classic-julia",
+        "supportLane": "existing-system-c",
+        "z0Role": "pixel-seed",
+        "invariant": "parameter-plane-bit-identical"
+      },
+      "tier0": {
+        "sourceBound": true,
+        "rightsBound": true,
+        "safetyEnvelope": true
+      },
+      "tier1": {
+        "evidenceClass": "tier1-candidate-only",
+        "status": "tier1-candidate",
+        "checks": {
+          "parameterPlaneBitIdentical": true,
+          "deterministic": true,
+          "finiteEvidence": true,
+          "pixelSensitive": true,
+          "constantSensitive": true
+        },
+        "reasonCodes": []
+      }
+    },
+    {
+      "formulaId": "0df5ac6e-d97e-55db-b624-96c310af07dd",
+      "sourceRevision": "bb7d3fd03ddb3b27f66b28fea82cdfa4da6c88cf15a23c6da8fe27a8adf1e34e",
+      "semanticHash": "b3d93634d09622186eeef16d005021fb8bf551698b662dbdf5da191841efe1d5",
+      "bindingRevision": "17495b0679a9a2a772a4936afd35f1cd3fcf382c866aa52c379b4682aa35635e",
+      "rightsStatus": "project-owned",
+      "publicationDecision": "publish",
+      "implementationBasis": "project-owned",
+      "leakageScanStatus": "passed",
+      "contract": {
+        "binding": {
+          "kind": "system-c"
+        },
+        "modeClass": "classic-julia",
+        "supportLane": "existing-system-c",
+        "z0Role": "pixel-seed",
+        "invariant": "parameter-plane-bit-identical"
+      },
+      "tier0": {
+        "sourceBound": true,
+        "rightsBound": true,
+        "safetyEnvelope": true
+      },
+      "tier1": {
+        "evidenceClass": "tier1-candidate-only",
+        "status": "tier1-candidate",
+        "checks": {
+          "parameterPlaneBitIdentical": true,
+          "deterministic": true,
+          "finiteEvidence": true,
+          "pixelSensitive": true,
+          "constantSensitive": true
+        },
+        "reasonCodes": []
+      }
+    },
+    {
+      "formulaId": "0f49d971-917e-50a5-ae83-20e11fd4854c",
+      "sourceRevision": "a9fa9931913aeafac8b527f31cae7b519db79c8d54829ffcea20bcb6fc9dce4d",
+      "semanticHash": "0af8be92998a0e683977cd229a71195010327ae03c66d87a8c5b97871dce6d72",
+      "bindingRevision": "63e45af33bc690bb4473f8da91962bb6fe9c8a0d6d4f80020133ca2ce2c48ed2",
+      "rightsStatus": "project-owned",
+      "publicationDecision": "publish",
+      "implementationBasis": "project-owned",
+      "leakageScanStatus": "passed",
+      "contract": {
+        "binding": {
+          "kind": "system-c"
+        },
+        "modeClass": "classic-julia",
+        "supportLane": "existing-system-c",
+        "z0Role": "pixel-seed",
+        "invariant": "parameter-plane-bit-identical"
+      },
+      "tier0": {
+        "sourceBound": true,
+        "rightsBound": true,
+        "safetyEnvelope": true
+      },
+      "tier1": {
+        "evidenceClass": "tier1-candidate-only",
+        "status": "tier1-candidate",
+        "checks": {
+          "parameterPlaneBitIdentical": true,
+          "deterministic": true,
+          "finiteEvidence": true,
+          "pixelSensitive": true,
+          "constantSensitive": true
+        },
+        "reasonCodes": []
+      }
+    },
+    {
+      "formulaId": "12fc34ff-196d-5924-830e-6edb72dfc172",
+      "sourceRevision": "3aec931a4991e14e53348c6d28e9fcbaf8127cad6298dafc2a8ee9e2ac8d8143",
+      "semanticHash": "a155deea383578e6e4ff5901f5c5a0adaa97b84e8c73df146732db9096cebee9",
+      "bindingRevision": "2f8b575bb515a492caa190db7197a6d6a166c7f7af2911cc8e32a4498d5a9e24",
+      "rightsStatus": "project-owned",
+      "publicationDecision": "publish",
+      "implementationBasis": "project-owned",
+      "leakageScanStatus": "passed",
+      "contract": {
+        "binding": {
+          "kind": "system-c"
+        },
+        "modeClass": "classic-julia",
+        "supportLane": "existing-system-c",
+        "z0Role": "pixel-seed",
+        "invariant": "parameter-plane-bit-identical"
+      },
+      "tier0": {
+        "sourceBound": true,
+        "rightsBound": true,
+        "safetyEnvelope": true
+      },
+      "tier1": {
+        "evidenceClass": "tier1-candidate-only",
+        "status": "tier1-candidate",
+        "checks": {
+          "parameterPlaneBitIdentical": true,
+          "deterministic": true,
+          "finiteEvidence": true,
+          "pixelSensitive": true,
+          "constantSensitive": true
+        },
+        "reasonCodes": []
+      }
+    },
+    {
+      "formulaId": "1768f194-bdc1-5881-b269-a58730967c2c",
+      "sourceRevision": "d8e2c1950f3a30b27d380c3132e6a62ebe287cd26cd24c3dbc28dfd47ad784ed",
+      "semanticHash": "0c21f93a3361be1da89f3199f91349e0980e617ded57c2347f8294faf02bd622",
+      "bindingRevision": "d17c6ab7da6720ed9ee5496e42fd3523adbd4249e1090738821120f0a666d426",
+      "rightsStatus": "project-owned",
+      "publicationDecision": "publish",
+      "implementationBasis": "project-owned",
+      "leakageScanStatus": "passed",
+      "contract": {
+        "binding": {
+          "kind": "system-c"
+        },
+        "modeClass": "classic-julia",
+        "supportLane": "existing-system-c",
+        "z0Role": "pixel-seed",
+        "invariant": "parameter-plane-bit-identical"
+      },
+      "tier0": {
+        "sourceBound": true,
+        "rightsBound": true,
+        "safetyEnvelope": true
+      },
+      "tier1": {
+        "evidenceClass": "tier1-candidate-only",
+        "status": "tier1-candidate",
+        "checks": {
+          "parameterPlaneBitIdentical": true,
+          "deterministic": true,
+          "finiteEvidence": true,
+          "pixelSensitive": true,
+          "constantSensitive": true
+        },
+        "reasonCodes": []
+      }
+    },
+    {
+      "formulaId": "17d88272-6dbf-5622-996a-b116ea3a3fab",
+      "sourceRevision": "32437882a899d589e7ff8fa968c7248e5c9436fa6a87a48fa2072ff09e3c6540",
+      "semanticHash": "834623aa2e4578e5c976d7d769d4ca9d49beaf484c27da4943546e23ef555e7e",
+      "bindingRevision": "040cff4d22800203900c0220dd7e0c4a969caf8d003a150179f858555e222aba",
+      "rightsStatus": "project-owned",
+      "publicationDecision": "publish",
+      "implementationBasis": "project-owned",
+      "leakageScanStatus": "passed",
+      "contract": {
+        "binding": {
+          "kind": "system-c"
+        },
+        "modeClass": "classic-julia",
+        "supportLane": "existing-system-c",
+        "z0Role": "pixel-seed",
+        "invariant": "parameter-plane-bit-identical"
+      },
+      "tier0": {
+        "sourceBound": true,
+        "rightsBound": true,
+        "safetyEnvelope": true
+      },
+      "tier1": {
+        "evidenceClass": "tier1-candidate-only",
+        "status": "blocked",
+        "checks": {
+          "parameterPlaneBitIdentical": true,
+          "deterministic": true,
+          "finiteEvidence": false,
+          "pixelSensitive": true,
+          "constantSensitive": true
+        },
+        "reasonCodes": [
+          "non-finite-evidence"
+        ]
+      }
+    },
+    {
+      "formulaId": "18d30091-ce1c-5b10-b214-37eb4337df83",
+      "sourceRevision": "5fc275e31b93767b2ba03c07ee856b9f362233f80497d4fbf275a9424c880ef0",
+      "semanticHash": "4bbf213741e2332feff70ad44ebb5289d09de9749f464f0859dfcf042de23202",
+      "bindingRevision": "ddc42c3ff05c052d7517bca02c93d8738c4a627500299b5f0c5a940a80a5b78e",
+      "rightsStatus": "project-owned",
+      "publicationDecision": "publish",
+      "implementationBasis": "project-owned",
+      "leakageScanStatus": "passed",
+      "contract": {
+        "binding": {
+          "kind": "system-c"
+        },
+        "modeClass": "classic-julia",
+        "supportLane": "existing-system-c",
+        "z0Role": "pixel-seed",
+        "invariant": "parameter-plane-bit-identical"
+      },
+      "tier0": {
+        "sourceBound": true,
+        "rightsBound": true,
+        "safetyEnvelope": true
+      },
+      "tier1": {
+        "evidenceClass": "tier1-candidate-only",
+        "status": "tier1-candidate",
+        "checks": {
+          "parameterPlaneBitIdentical": true,
+          "deterministic": true,
+          "finiteEvidence": true,
+          "pixelSensitive": true,
+          "constantSensitive": true
+        },
+        "reasonCodes": []
+      }
+    },
+    {
+      "formulaId": "190fa538-89c9-590f-8170-34b3c570fc5d",
+      "sourceRevision": "4070d643142a8bac0a93df5f50b3bd47671076d603cf06e041aaa67035e806ce",
+      "semanticHash": "f5e5b1dbe941381eadddcd3e71d7e007cb00b342c89f4721ef89f24309396dc7",
+      "bindingRevision": "cd68eac56c9fda94619c48cb2eb2e929241fab68c09ef9c905fb8447e43f0ff4",
+      "rightsStatus": "project-owned",
+      "publicationDecision": "publish",
+      "implementationBasis": "project-owned",
+      "leakageScanStatus": "passed",
+      "contract": {
+        "binding": {
+          "kind": "system-c"
+        },
+        "modeClass": "classic-julia",
+        "supportLane": "existing-system-c",
+        "z0Role": "pixel-seed",
+        "invariant": "parameter-plane-bit-identical"
+      },
+      "tier0": {
+        "sourceBound": true,
+        "rightsBound": true,
+        "safetyEnvelope": true
+      },
+      "tier1": {
+        "evidenceClass": "tier1-candidate-only",
+        "status": "tier1-candidate",
+        "checks": {
+          "parameterPlaneBitIdentical": true,
+          "deterministic": true,
+          "finiteEvidence": true,
+          "pixelSensitive": true,
+          "constantSensitive": true
+        },
+        "reasonCodes": []
+      }
+    },
+    {
+      "formulaId": "201c54f3-a77a-5be0-a0a5-6f4f1998ee6d",
+      "sourceRevision": "90d43b9c2bc9a7eda5ca6f997a1ae2dc6640f0cc12cdcc34e8c82ca0765eff12",
+      "semanticHash": "0726adb6bfb5eba7bbcbef971478685027a6336bf4a9296f668187c39daab4a3",
+      "bindingRevision": "4d19a5ea50a2087997f247c88be7d5e3dd53fb25f4535bfc34bfc9ea77180b49",
+      "rightsStatus": "project-owned",
+      "publicationDecision": "publish",
+      "implementationBasis": "project-owned",
+      "leakageScanStatus": "passed",
+      "contract": {
+        "binding": {
+          "kind": "system-c"
+        },
+        "modeClass": "classic-julia",
+        "supportLane": "existing-system-c",
+        "z0Role": "pixel-seed",
+        "invariant": "parameter-plane-bit-identical"
+      },
+      "tier0": {
+        "sourceBound": true,
+        "rightsBound": true,
+        "safetyEnvelope": true
+      },
+      "tier1": {
+        "evidenceClass": "tier1-candidate-only",
+        "status": "tier1-candidate",
+        "checks": {
+          "parameterPlaneBitIdentical": true,
+          "deterministic": true,
+          "finiteEvidence": true,
+          "pixelSensitive": true,
+          "constantSensitive": true
+        },
+        "reasonCodes": []
+      }
+    },
+    {
+      "formulaId": "22d9a008-eb14-53de-9960-11eb5d37bb8e",
+      "sourceRevision": "fb9db2dede500db19463ee53c8d059c2e7a92651d7de472a4bedd6e7ee58a831",
+      "semanticHash": "dabc6e573e13fc60004c12150faa4bfada8b5db90b340c1b1db153927c46e21c",
+      "bindingRevision": "bb86bb00eb1770647ceaf0e75f59030643bd863106ed399ce7db9bcb550048c5",
+      "rightsStatus": "project-owned",
+      "publicationDecision": "publish",
+      "implementationBasis": "project-owned",
+      "leakageScanStatus": "passed",
+      "contract": {
+        "binding": {
+          "kind": "system-c"
+        },
+        "modeClass": "classic-julia",
+        "supportLane": "existing-system-c",
+        "z0Role": "pixel-seed",
+        "invariant": "parameter-plane-bit-identical"
+      },
+      "tier0": {
+        "sourceBound": true,
+        "rightsBound": true,
+        "safetyEnvelope": true
+      },
+      "tier1": {
+        "evidenceClass": "tier1-candidate-only",
+        "status": "tier1-candidate",
+        "checks": {
+          "parameterPlaneBitIdentical": true,
+          "deterministic": true,
+          "finiteEvidence": true,
+          "pixelSensitive": true,
+          "constantSensitive": true
+        },
+        "reasonCodes": []
+      }
+    },
+    {
+      "formulaId": "27a3da95-a9e6-5fc2-81af-d5e9076fc8fa",
+      "sourceRevision": "a5b8caea9b95b304fdd8e805ed00e480d9d9e69ce17f72f554835ffde095b228",
+      "semanticHash": "0f2f3648627eac217a5d4b212ebec98d75edbc730f823cb056e420eb34ed586a",
+      "bindingRevision": "12119df7e64cd6d13d879ad1a4052bf17b8a2fd2b18fdeffd54c2e36eca7777a",
+      "rightsStatus": "project-owned",
+      "publicationDecision": "publish",
+      "implementationBasis": "project-owned",
+      "leakageScanStatus": "passed",
+      "contract": {
+        "binding": {
+          "kind": "system-c"
+        },
+        "modeClass": "classic-julia",
+        "supportLane": "existing-system-c",
+        "z0Role": "pixel-seed",
+        "invariant": "parameter-plane-bit-identical"
+      },
+      "tier0": {
+        "sourceBound": true,
+        "rightsBound": true,
+        "safetyEnvelope": true
+      },
+      "tier1": {
+        "evidenceClass": "tier1-candidate-only",
+        "status": "tier1-candidate",
+        "checks": {
+          "parameterPlaneBitIdentical": true,
+          "deterministic": true,
+          "finiteEvidence": true,
+          "pixelSensitive": true,
+          "constantSensitive": true
+        },
+        "reasonCodes": []
+      }
+    },
+    {
+      "formulaId": "280cd3e2-865b-5c78-90b7-39b2a36d7be0",
+      "sourceRevision": "b4677349cc60d66a5b7ad87655a89585d2bf83c7284ef949afe081e8eb294aac",
+      "semanticHash": "fff469604a4d169b4319e7cceab70ec599cdaeecdaa7d1cac4011e13d914db94",
+      "bindingRevision": "bd907fac4d2faf789bf8100d34dafcc3e53435d449ace855e6b5ae1929e2e571",
+      "rightsStatus": "project-owned",
+      "publicationDecision": "publish",
+      "implementationBasis": "project-owned",
+      "leakageScanStatus": "passed",
+      "contract": {
+        "binding": {
+          "kind": "system-c"
+        },
+        "modeClass": "classic-julia",
+        "supportLane": "existing-system-c",
+        "z0Role": "pixel-seed",
+        "invariant": "parameter-plane-bit-identical"
+      },
+      "tier0": {
+        "sourceBound": true,
+        "rightsBound": true,
+        "safetyEnvelope": true
+      },
+      "tier1": {
+        "evidenceClass": "tier1-candidate-only",
+        "status": "tier1-candidate",
+        "checks": {
+          "parameterPlaneBitIdentical": true,
+          "deterministic": true,
+          "finiteEvidence": true,
+          "pixelSensitive": true,
+          "constantSensitive": true
+        },
+        "reasonCodes": []
+      }
+    },
+    {
+      "formulaId": "2ab193f5-4919-5e5c-a9fb-c1a0e3f5eb02",
+      "sourceRevision": "cfef49944d8f9bd8f2ee91b2d4ab4f9b30ad66475a6f783f52bb91a7a36b1617",
+      "semanticHash": "66120f8c30ea579f64ef57e054eb33b08e9c00eeed9c33c9cecc1e6bba600898",
+      "bindingRevision": "acf8f965dbe94dd91ce813641bb68ae64a65c909dbf226ac0e5991d87b3f5ad6",
+      "rightsStatus": "project-owned",
+      "publicationDecision": "publish",
+      "implementationBasis": "project-owned",
+      "leakageScanStatus": "passed",
+      "contract": {
+        "binding": {
+          "kind": "system-c"
+        },
+        "modeClass": "classic-julia",
+        "supportLane": "existing-system-c",
+        "z0Role": "pixel-seed",
+        "invariant": "parameter-plane-bit-identical"
+      },
+      "tier0": {
+        "sourceBound": true,
+        "rightsBound": true,
+        "safetyEnvelope": true
+      },
+      "tier1": {
+        "evidenceClass": "tier1-candidate-only",
+        "status": "tier1-candidate",
+        "checks": {
+          "parameterPlaneBitIdentical": true,
+          "deterministic": true,
+          "finiteEvidence": true,
+          "pixelSensitive": true,
+          "constantSensitive": true
+        },
+        "reasonCodes": []
+      }
+    },
+    {
+      "formulaId": "2daea798-a058-5b4c-ada8-1712c475fadf",
+      "sourceRevision": "0ec0a7f7fc2d2433aec56bf952eb9a89bea48f2bd5c4776c472f7548eb422f83",
+      "semanticHash": "1831183954c6614a54ed0a8dc964f4d3529b30b81f944ff445f3376b208dea4f",
+      "bindingRevision": "418edaba9deb7eb1e09011f3362a7d5614602e99445d990f2f70b77d1ab82593",
+      "rightsStatus": "project-owned",
+      "publicationDecision": "publish",
+      "implementationBasis": "project-owned",
+      "leakageScanStatus": "passed",
+      "contract": {
+        "binding": {
+          "kind": "system-c"
+        },
+        "modeClass": "classic-julia",
+        "supportLane": "existing-system-c",
+        "z0Role": "pixel-seed",
+        "invariant": "parameter-plane-bit-identical"
+      },
+      "tier0": {
+        "sourceBound": true,
+        "rightsBound": true,
+        "safetyEnvelope": true
+      },
+      "tier1": {
+        "evidenceClass": "tier1-candidate-only",
+        "status": "tier1-candidate",
+        "checks": {
+          "parameterPlaneBitIdentical": true,
+          "deterministic": true,
+          "finiteEvidence": true,
+          "pixelSensitive": true,
+          "constantSensitive": true
+        },
+        "reasonCodes": []
+      }
+    },
+    {
+      "formulaId": "2dd8a5a7-052a-5539-aab9-c533f7dec857",
+      "sourceRevision": "6c2c19cfb9bff9d9aa0cca56cea6dc62e324e80009b931665b604726d3784e5d",
+      "semanticHash": "7f1e0790ad3270f2419b1c8db5ac3ec9d232d334c0144acf64f1f3155a2ca68e",
+      "bindingRevision": "10ff1e597f75376d0386b8d13af6c129b8ac6802fe10caa5ac918a8039f735be",
+      "rightsStatus": "project-owned",
+      "publicationDecision": "publish",
+      "implementationBasis": "project-owned",
+      "leakageScanStatus": "passed",
+      "contract": {
+        "binding": {
+          "kind": "system-c"
+        },
+        "modeClass": "classic-julia",
+        "supportLane": "existing-system-c",
+        "z0Role": "pixel-seed",
+        "invariant": "parameter-plane-bit-identical"
+      },
+      "tier0": {
+        "sourceBound": true,
+        "rightsBound": true,
+        "safetyEnvelope": true
+      },
+      "tier1": {
+        "evidenceClass": "tier1-candidate-only",
+        "status": "tier1-candidate",
+        "checks": {
+          "parameterPlaneBitIdentical": true,
+          "deterministic": true,
+          "finiteEvidence": true,
+          "pixelSensitive": true,
+          "constantSensitive": true
+        },
+        "reasonCodes": []
+      }
+    },
+    {
+      "formulaId": "2edf64a9-157c-57d7-8894-1f4781bc4f8c",
+      "sourceRevision": "37344c3bc7fc90852e94c7b74ec99df5400c6332e8ca9bdad5e5c8ff3b51e688",
+      "semanticHash": "5c2a39a58bea81ef4853efa2e111c5a86f81b6e019640cc845a02d3764fe2c1a",
+      "bindingRevision": "3a54b8d535b5f80f11511ae1f3c10fe6670a6b9cfcbe14f1dde56770b630d29f",
+      "rightsStatus": "project-owned",
+      "publicationDecision": "publish",
+      "implementationBasis": "project-owned",
+      "leakageScanStatus": "passed",
+      "contract": {
+        "binding": {
+          "kind": "system-c"
+        },
+        "modeClass": "classic-julia",
+        "supportLane": "existing-system-c",
+        "z0Role": "pixel-seed",
+        "invariant": "parameter-plane-bit-identical"
+      },
+      "tier0": {
+        "sourceBound": true,
+        "rightsBound": true,
+        "safetyEnvelope": true
+      },
+      "tier1": {
+        "evidenceClass": "tier1-candidate-only",
+        "status": "tier1-candidate",
+        "checks": {
+          "parameterPlaneBitIdentical": true,
+          "deterministic": true,
+          "finiteEvidence": true,
+          "pixelSensitive": true,
+          "constantSensitive": true
+        },
+        "reasonCodes": []
+      }
+    },
+    {
+      "formulaId": "33236fd9-4bd1-539b-961a-7b95ab92a1e0",
+      "sourceRevision": "8b784f29c0e46b55e45eb6406c4fae4e01ef3cd876844c2749eeea4acdf1bd0a",
+      "semanticHash": "bb696f766c22814c475246b48a6f33f8845936cec7ecb445196304140248d2ce",
+      "bindingRevision": "ed4bc3ebc659a5fe491a9dc237c2b5294ab08f35eeb5bd06415af01ea962645f",
+      "rightsStatus": "project-owned",
+      "publicationDecision": "publish",
+      "implementationBasis": "project-owned",
+      "leakageScanStatus": "passed",
+      "contract": {
+        "binding": {
+          "kind": "system-c"
+        },
+        "modeClass": "classic-julia",
+        "supportLane": "existing-system-c",
+        "z0Role": "pixel-seed",
+        "invariant": "parameter-plane-bit-identical"
+      },
+      "tier0": {
+        "sourceBound": true,
+        "rightsBound": true,
+        "safetyEnvelope": true
+      },
+      "tier1": {
+        "evidenceClass": "tier1-candidate-only",
+        "status": "tier1-candidate",
+        "checks": {
+          "parameterPlaneBitIdentical": true,
+          "deterministic": true,
+          "finiteEvidence": true,
+          "pixelSensitive": true,
+          "constantSensitive": true
+        },
+        "reasonCodes": []
+      }
+    },
+    {
+      "formulaId": "34f41a82-3ede-5eda-8c1c-67962c37366b",
+      "sourceRevision": "3659c6747e09ecf73bf1ed558c9c7592250b0ef82fde8a8915bccb35a443436b",
+      "semanticHash": "55b193e9a7bc7fdd5f00f089656ba8d3948c57e850f758b45594349a2dc45357",
+      "bindingRevision": "7cc77c5547228202d73c77d7549165eee731138e621f7754aa0fc96a0b9a5b40",
+      "rightsStatus": "project-owned",
+      "publicationDecision": "publish",
+      "implementationBasis": "project-owned",
+      "leakageScanStatus": "passed",
+      "contract": {
+        "binding": {
+          "kind": "system-c"
+        },
+        "modeClass": "classic-julia",
+        "supportLane": "existing-system-c",
+        "z0Role": "pixel-seed",
+        "invariant": "parameter-plane-bit-identical"
+      },
+      "tier0": {
+        "sourceBound": true,
+        "rightsBound": true,
+        "safetyEnvelope": true
+      },
+      "tier1": {
+        "evidenceClass": "tier1-candidate-only",
+        "status": "tier1-candidate",
+        "checks": {
+          "parameterPlaneBitIdentical": true,
+          "deterministic": true,
+          "finiteEvidence": true,
+          "pixelSensitive": true,
+          "constantSensitive": true
+        },
+        "reasonCodes": []
+      }
+    },
+    {
+      "formulaId": "34fcff23-f75a-539c-9102-181945abee60",
+      "sourceRevision": "3a9b6d2563e6a85164ff6070013ad037a61764451d644340116ed47d3e1b5381",
+      "semanticHash": "cbec07c0ac9df6a03d2b6a95aab7a3e44c8db04431353be6a6eb10d6c346bc41",
+      "bindingRevision": "1484282da69d3f1daacba5d37cc281af5240fa4d4c09dae06ca8c116494819dc",
+      "rightsStatus": "project-owned",
+      "publicationDecision": "publish",
+      "implementationBasis": "project-owned",
+      "leakageScanStatus": "passed",
+      "contract": {
+        "binding": {
+          "kind": "system-c"
+        },
+        "modeClass": "classic-julia",
+        "supportLane": "existing-system-c",
+        "z0Role": "pixel-seed",
+        "invariant": "parameter-plane-bit-identical"
+      },
+      "tier0": {
+        "sourceBound": true,
+        "rightsBound": true,
+        "safetyEnvelope": true
+      },
+      "tier1": {
+        "evidenceClass": "tier1-candidate-only",
+        "status": "tier1-candidate",
+        "checks": {
+          "parameterPlaneBitIdentical": true,
+          "deterministic": true,
+          "finiteEvidence": true,
+          "pixelSensitive": true,
+          "constantSensitive": true
+        },
+        "reasonCodes": []
+      }
+    },
+    {
+      "formulaId": "35a7e33c-fcba-5a81-ba80-8eab6d59925c",
+      "sourceRevision": "69272fec1fe79de794f32c7d677f215e956beb2926b63adfc2a5b069f5621cfe",
+      "semanticHash": "28ca8fc08cf04e9831fd52e652c5d7cf97afc403fa2ed5e28d2a1233579e8965",
+      "bindingRevision": "2bbdfeb487f5d92dd7a71006e4f0f6ec7d3499cb577efae3890ac3df8f212be1",
+      "rightsStatus": "project-owned",
+      "publicationDecision": "publish",
+      "implementationBasis": "project-owned",
+      "leakageScanStatus": "passed",
+      "contract": {
+        "binding": {
+          "kind": "system-c"
+        },
+        "modeClass": "classic-julia",
+        "supportLane": "existing-system-c",
+        "z0Role": "pixel-seed",
+        "invariant": "parameter-plane-bit-identical"
+      },
+      "tier0": {
+        "sourceBound": true,
+        "rightsBound": true,
+        "safetyEnvelope": true
+      },
+      "tier1": {
+        "evidenceClass": "tier1-candidate-only",
+        "status": "tier1-candidate",
+        "checks": {
+          "parameterPlaneBitIdentical": true,
+          "deterministic": true,
+          "finiteEvidence": true,
+          "pixelSensitive": true,
+          "constantSensitive": true
+        },
+        "reasonCodes": []
+      }
+    },
+    {
+      "formulaId": "37425fb2-8542-502f-94ac-94c0ccb6e508",
+      "sourceRevision": "69a7d072638f6981ee8e06c85d03831c9a53fb549337605eb35bb3cdf1db4e10",
+      "semanticHash": "01a25a87e2bb305345f4b72f0a9a87809258c73d5b379604dfd9625796dbb372",
+      "bindingRevision": "624e7aa973b60969aa51c51e78a15fa41e0d7b287542c7ee0e10682ad6dfee87",
+      "rightsStatus": "project-owned",
+      "publicationDecision": "publish",
+      "implementationBasis": "project-owned",
+      "leakageScanStatus": "passed",
+      "contract": {
+        "binding": {
+          "kind": "system-c"
+        },
+        "modeClass": "classic-julia",
+        "supportLane": "existing-system-c",
+        "z0Role": "pixel-seed",
+        "invariant": "parameter-plane-bit-identical"
+      },
+      "tier0": {
+        "sourceBound": true,
+        "rightsBound": true,
+        "safetyEnvelope": true
+      },
+      "tier1": {
+        "evidenceClass": "tier1-candidate-only",
+        "status": "tier1-candidate",
+        "checks": {
+          "parameterPlaneBitIdentical": true,
+          "deterministic": true,
+          "finiteEvidence": true,
+          "pixelSensitive": true,
+          "constantSensitive": true
+        },
+        "reasonCodes": []
+      }
+    },
+    {
+      "formulaId": "38c3b212-c33b-5dd3-aae5-a514fc7e37e3",
+      "sourceRevision": "824eda8dc180b39ab6c7e32f187530e1c35edeaec7db3f9d00c7a7acef78df63",
+      "semanticHash": "4d4a33c69523f26a7d553ecdc0a52d6a166aa8ea602de09bea6de0af124927cc",
+      "bindingRevision": "6bd8efb15c8f245b3649f7cde1f23eaa93b151a9b0314412c59d440fadbb0b98",
+      "rightsStatus": "project-owned",
+      "publicationDecision": "publish",
+      "implementationBasis": "project-owned",
+      "leakageScanStatus": "passed",
+      "contract": {
+        "binding": {
+          "kind": "system-c"
+        },
+        "modeClass": "classic-julia",
+        "supportLane": "existing-system-c",
+        "z0Role": "pixel-seed",
+        "invariant": "parameter-plane-bit-identical"
+      },
+      "tier0": {
+        "sourceBound": true,
+        "rightsBound": true,
+        "safetyEnvelope": true
+      },
+      "tier1": {
+        "evidenceClass": "tier1-candidate-only",
+        "status": "tier1-candidate",
+        "checks": {
+          "parameterPlaneBitIdentical": true,
+          "deterministic": true,
+          "finiteEvidence": true,
+          "pixelSensitive": true,
+          "constantSensitive": true
+        },
+        "reasonCodes": []
+      }
+    },
+    {
+      "formulaId": "3a83800c-4a44-5e61-9651-d3d5adb71213",
+      "sourceRevision": "12a2fd990373fc6f7467674871cbd2c82c78ec9b8354a805b442ef4c6ef58b06",
+      "semanticHash": "491ebbc691a954b85f04cbbf05afa44e877026f31cb3eaa403db6dbf61fd435e",
+      "bindingRevision": "2e5e69f32392f10e4f5255fb7b0b347ac4970039203ec17c239f99da8599e9c0",
+      "rightsStatus": "project-owned",
+      "publicationDecision": "publish",
+      "implementationBasis": "project-owned",
+      "leakageScanStatus": "passed",
+      "contract": {
+        "binding": {
+          "kind": "system-c"
+        },
+        "modeClass": "classic-julia",
+        "supportLane": "existing-system-c",
+        "z0Role": "pixel-seed",
+        "invariant": "parameter-plane-bit-identical"
+      },
+      "tier0": {
+        "sourceBound": true,
+        "rightsBound": true,
+        "safetyEnvelope": true
+      },
+      "tier1": {
+        "evidenceClass": "tier1-candidate-only",
+        "status": "tier1-candidate",
+        "checks": {
+          "parameterPlaneBitIdentical": true,
+          "deterministic": true,
+          "finiteEvidence": true,
+          "pixelSensitive": true,
+          "constantSensitive": true
+        },
+        "reasonCodes": []
+      }
+    },
+    {
+      "formulaId": "3edbea29-956a-5900-9aa7-02ccc2183016",
+      "sourceRevision": "75cc7f04fc69d74294c3ed9dcd5271585a6d186311dd10a906e781958cb46870",
+      "semanticHash": "a3978790b2aba850f4f6765da8820e3792696877b2c5005c1128b9d18f1bbceb",
+      "bindingRevision": "ca35b046a1cf5628015808ff5339c7d3543764b337f98409e1aa8c0dbeb412b0",
+      "rightsStatus": "project-owned",
+      "publicationDecision": "publish",
+      "implementationBasis": "project-owned",
+      "leakageScanStatus": "passed",
+      "contract": {
+        "binding": {
+          "kind": "system-c"
+        },
+        "modeClass": "classic-julia",
+        "supportLane": "existing-system-c",
+        "z0Role": "pixel-seed",
+        "invariant": "parameter-plane-bit-identical"
+      },
+      "tier0": {
+        "sourceBound": true,
+        "rightsBound": true,
+        "safetyEnvelope": true
+      },
+      "tier1": {
+        "evidenceClass": "tier1-candidate-only",
+        "status": "tier1-candidate",
+        "checks": {
+          "parameterPlaneBitIdentical": true,
+          "deterministic": true,
+          "finiteEvidence": true,
+          "pixelSensitive": true,
+          "constantSensitive": true
+        },
+        "reasonCodes": []
+      }
+    },
+    {
+      "formulaId": "42b369a5-2873-50e9-8684-cad5e60630ff",
+      "sourceRevision": "67d0d96182f217e37faab85d6b7e3cf28bd9e959348589957ff49a4f5436f049",
+      "semanticHash": "565c412f9a5d97805f1afc5022fa80cda2f92156207f31bb00d50fc8379fd7e2",
+      "bindingRevision": "79ab58fda1ccb4dcf51b1089bd550a7d5be74e959f6a0b845bc0df633d729be3",
+      "rightsStatus": "project-owned",
+      "publicationDecision": "publish",
+      "implementationBasis": "project-owned",
+      "leakageScanStatus": "passed",
+      "contract": {
+        "binding": {
+          "kind": "system-c"
+        },
+        "modeClass": "classic-julia",
+        "supportLane": "existing-system-c",
+        "z0Role": "pixel-seed",
+        "invariant": "parameter-plane-bit-identical"
+      },
+      "tier0": {
+        "sourceBound": true,
+        "rightsBound": true,
+        "safetyEnvelope": true
+      },
+      "tier1": {
+        "evidenceClass": "tier1-candidate-only",
+        "status": "tier1-candidate",
+        "checks": {
+          "parameterPlaneBitIdentical": true,
+          "deterministic": true,
+          "finiteEvidence": true,
+          "pixelSensitive": true,
+          "constantSensitive": true
+        },
+        "reasonCodes": []
+      }
+    },
+    {
+      "formulaId": "42d4c442-040b-59be-892f-1f10c8e47cb6",
+      "sourceRevision": "a5276054252d440fc11576d9500641d4eb4139bf9e4ca4233dee774813568b85",
+      "semanticHash": "596873c08e04b0c5588f9df2fc3df9997d4b14aecdc35aa5338353354cb5c24c",
+      "bindingRevision": "a65ad0869f25c6ba1fd8241abd0e72a110de4cf73bc5d01af3444d6eb7c67b1d",
+      "rightsStatus": "project-owned",
+      "publicationDecision": "publish",
+      "implementationBasis": "project-owned",
+      "leakageScanStatus": "passed",
+      "contract": {
+        "binding": {
+          "kind": "system-c"
+        },
+        "modeClass": "classic-julia",
+        "supportLane": "existing-system-c",
+        "z0Role": "pixel-seed",
+        "invariant": "parameter-plane-bit-identical"
+      },
+      "tier0": {
+        "sourceBound": true,
+        "rightsBound": true,
+        "safetyEnvelope": true
+      },
+      "tier1": {
+        "evidenceClass": "tier1-candidate-only",
+        "status": "tier1-candidate",
+        "checks": {
+          "parameterPlaneBitIdentical": true,
+          "deterministic": true,
+          "finiteEvidence": true,
+          "pixelSensitive": true,
+          "constantSensitive": true
+        },
+        "reasonCodes": []
+      }
+    },
+    {
+      "formulaId": "4514ac15-fecc-5b92-9e79-0b95b5158d3f",
+      "sourceRevision": "1a87c3eee8cbfdee863e521522cdbcfb559773070af04a317bcc6ebe6fcb3f3e",
+      "semanticHash": "d30d20f8bdcab36bf50589b8230925491216e9120c65f8bc11f22dd9f7b01e85",
+      "bindingRevision": "97954d52c51bf67492611f7e6acfdc999bd1187ab7d9e93548d73ca99463af0d",
+      "rightsStatus": "project-owned",
+      "publicationDecision": "publish",
+      "implementationBasis": "project-owned",
+      "leakageScanStatus": "passed",
+      "contract": {
+        "binding": {
+          "kind": "system-c"
+        },
+        "modeClass": "classic-julia",
+        "supportLane": "existing-system-c",
+        "z0Role": "pixel-seed",
+        "invariant": "parameter-plane-bit-identical"
+      },
+      "tier0": {
+        "sourceBound": true,
+        "rightsBound": true,
+        "safetyEnvelope": true
+      },
+      "tier1": {
+        "evidenceClass": "tier1-candidate-only",
+        "status": "tier1-candidate",
+        "checks": {
+          "parameterPlaneBitIdentical": true,
+          "deterministic": true,
+          "finiteEvidence": true,
+          "pixelSensitive": true,
+          "constantSensitive": true
+        },
+        "reasonCodes": []
+      }
+    },
+    {
+      "formulaId": "4536f1e3-1f15-5b7e-8e58-68ea3b63d4fb",
+      "sourceRevision": "18a51ec5ab4c5e47bdd687cf36595663437d8341dedda7e3965751f5e8001d82",
+      "semanticHash": "744d4174359b4c0caba50174da004fe4f8e97ee88b7943ba1345518cc3f6e7e2",
+      "bindingRevision": "87828eb4c22cf251342d83b30777fb27403b5c247a59b19a070eacfe177a2072",
+      "rightsStatus": "project-owned",
+      "publicationDecision": "publish",
+      "implementationBasis": "project-owned",
+      "leakageScanStatus": "passed",
+      "contract": {
+        "binding": {
+          "kind": "system-c"
+        },
+        "modeClass": "classic-julia",
+        "supportLane": "existing-system-c",
+        "z0Role": "pixel-seed",
+        "invariant": "parameter-plane-bit-identical"
+      },
+      "tier0": {
+        "sourceBound": true,
+        "rightsBound": true,
+        "safetyEnvelope": true
+      },
+      "tier1": {
+        "evidenceClass": "tier1-candidate-only",
+        "status": "tier1-candidate",
+        "checks": {
+          "parameterPlaneBitIdentical": true,
+          "deterministic": true,
+          "finiteEvidence": true,
+          "pixelSensitive": true,
+          "constantSensitive": true
+        },
+        "reasonCodes": []
+      }
+    },
+    {
+      "formulaId": "465a5b03-469d-59b3-8564-45af7564e37a",
+      "sourceRevision": "590db3453ca43c558e7b8c955e661b5ec68951b6afbb7feb3a07d0aa474a5910",
+      "semanticHash": "251d31784c00f05de51a357db62a33a374371d616304f6c07fb3a90bf3b432f1",
+      "bindingRevision": "df2ba0ccb48bf317e6cfdf5487aaf4ad5c1533f47d31a04801d8785cda3f6c6d",
+      "rightsStatus": "project-owned",
+      "publicationDecision": "publish",
+      "implementationBasis": "project-owned",
+      "leakageScanStatus": "passed",
+      "contract": {
+        "binding": {
+          "kind": "system-c"
+        },
+        "modeClass": "classic-julia",
+        "supportLane": "existing-system-c",
+        "z0Role": "pixel-seed",
+        "invariant": "parameter-plane-bit-identical"
+      },
+      "tier0": {
+        "sourceBound": true,
+        "rightsBound": true,
+        "safetyEnvelope": true
+      },
+      "tier1": {
+        "evidenceClass": "tier1-candidate-only",
+        "status": "tier1-candidate",
+        "checks": {
+          "parameterPlaneBitIdentical": true,
+          "deterministic": true,
+          "finiteEvidence": true,
+          "pixelSensitive": true,
+          "constantSensitive": true
+        },
+        "reasonCodes": []
+      }
+    },
+    {
+      "formulaId": "46acfdeb-2dac-59c9-a94a-fd4809420dc2",
+      "sourceRevision": "c0c320f05c5531b4e17bf96b47e87114374914b52151576ed9854fa35e60c8d4",
+      "semanticHash": "d7ad03652c7e8c728041e2036c119b2ddc66c764e21bfa51358e55f1e23ee827",
+      "bindingRevision": "40b0c0ba6918ea281cce59a854691761389212117ff16db98d51a03285e5a295",
+      "rightsStatus": "project-owned",
+      "publicationDecision": "publish",
+      "implementationBasis": "project-owned",
+      "leakageScanStatus": "passed",
+      "contract": {
+        "binding": {
+          "kind": "system-c"
+        },
+        "modeClass": "classic-julia",
+        "supportLane": "existing-system-c",
+        "z0Role": "pixel-seed",
+        "invariant": "parameter-plane-bit-identical"
+      },
+      "tier0": {
+        "sourceBound": true,
+        "rightsBound": true,
+        "safetyEnvelope": true
+      },
+      "tier1": {
+        "evidenceClass": "tier1-candidate-only",
+        "status": "tier1-candidate",
+        "checks": {
+          "parameterPlaneBitIdentical": true,
+          "deterministic": true,
+          "finiteEvidence": true,
+          "pixelSensitive": true,
+          "constantSensitive": true
+        },
+        "reasonCodes": []
+      }
+    },
+    {
+      "formulaId": "48a9aa85-f5d4-5f9a-b640-89e93890a8ad",
+      "sourceRevision": "ef6a9ee325473be1beadbbc91f6aa28773271649a751e12044d03d1faa0c41b3",
+      "semanticHash": "5a8625c2eefbf12273bae39f845492801498d1fff52076c601ab71f4dee7dbdc",
+      "bindingRevision": "c2e7c195d58a671c2b72f36db6ed5db9351683d33eeac9321b09336ab3e83817",
+      "rightsStatus": "project-owned",
+      "publicationDecision": "publish",
+      "implementationBasis": "project-owned",
+      "leakageScanStatus": "passed",
+      "contract": {
+        "binding": {
+          "kind": "system-c"
+        },
+        "modeClass": "classic-julia",
+        "supportLane": "existing-system-c",
+        "z0Role": "pixel-seed",
+        "invariant": "parameter-plane-bit-identical"
+      },
+      "tier0": {
+        "sourceBound": true,
+        "rightsBound": true,
+        "safetyEnvelope": true
+      },
+      "tier1": {
+        "evidenceClass": "tier1-candidate-only",
+        "status": "tier1-candidate",
+        "checks": {
+          "parameterPlaneBitIdentical": true,
+          "deterministic": true,
+          "finiteEvidence": true,
+          "pixelSensitive": true,
+          "constantSensitive": true
+        },
+        "reasonCodes": []
+      }
+    },
+    {
+      "formulaId": "56935004-bdb8-5682-974f-3821cd422965",
+      "sourceRevision": "5e913f2f48004cf2e75a308428500639b2d50a3c12ed001e9c9cbc83f92f42d2",
+      "semanticHash": "9f8ee3f44892d46874a57a804d1021dc18338be1b05cd5177677c7309866e950",
+      "bindingRevision": "0293c47d73ef4323297c237ece908dff5f7f7c0872eed5ae660fd677bff8224b",
+      "rightsStatus": "project-owned",
+      "publicationDecision": "publish",
+      "implementationBasis": "project-owned",
+      "leakageScanStatus": "passed",
+      "contract": {
+        "binding": {
+          "kind": "system-c"
+        },
+        "modeClass": "classic-julia",
+        "supportLane": "existing-system-c",
+        "z0Role": "pixel-seed",
+        "invariant": "parameter-plane-bit-identical"
+      },
+      "tier0": {
+        "sourceBound": true,
+        "rightsBound": true,
+        "safetyEnvelope": true
+      },
+      "tier1": {
+        "evidenceClass": "tier1-candidate-only",
+        "status": "tier1-candidate",
+        "checks": {
+          "parameterPlaneBitIdentical": true,
+          "deterministic": true,
+          "finiteEvidence": true,
+          "pixelSensitive": true,
+          "constantSensitive": true
+        },
+        "reasonCodes": []
+      }
+    },
+    {
+      "formulaId": "62098934-def3-527a-ac43-2c80449c9848",
+      "sourceRevision": "826c473c5cdf710c5273c29a219eaf17ffc9117c74eb03282a51f9501eb9342c",
+      "semanticHash": "1ea3de8d94b9a00c937cfffc932f8af19d00defd4eb950516417f0db268dbc44",
+      "bindingRevision": "4aa3f28614da3d25eba3a70b0b0cc8573f6d7dfe3c5d17c800f15aa1e8667c43",
+      "rightsStatus": "project-owned",
+      "publicationDecision": "publish",
+      "implementationBasis": "project-owned",
+      "leakageScanStatus": "passed",
+      "contract": {
+        "binding": {
+          "kind": "system-c"
+        },
+        "modeClass": "classic-julia",
+        "supportLane": "existing-system-c",
+        "z0Role": "pixel-seed",
+        "invariant": "parameter-plane-bit-identical"
+      },
+      "tier0": {
+        "sourceBound": true,
+        "rightsBound": true,
+        "safetyEnvelope": true
+      },
+      "tier1": {
+        "evidenceClass": "tier1-candidate-only",
+        "status": "tier1-candidate",
+        "checks": {
+          "parameterPlaneBitIdentical": true,
+          "deterministic": true,
+          "finiteEvidence": true,
+          "pixelSensitive": true,
+          "constantSensitive": true
+        },
+        "reasonCodes": []
+      }
+    },
+    {
+      "formulaId": "627c38a8-8f4d-548f-a5a6-dd9f215adf60",
+      "sourceRevision": "01058522dac48f2278d74a3e8a06b4c18e6d2589a3ccda69565dad37c325298d",
+      "semanticHash": "96e81ed9a1c4c222c0bf0ce8034a51d3291cde23ee6111f2082649d8854f6f5e",
+      "bindingRevision": "38673770c1c04b3dded3313da74c650634a9789e8624cd282a23901da6f7ee99",
+      "rightsStatus": "project-owned",
+      "publicationDecision": "publish",
+      "implementationBasis": "project-owned",
+      "leakageScanStatus": "passed",
+      "contract": {
+        "binding": {
+          "kind": "system-c"
+        },
+        "modeClass": "classic-julia",
+        "supportLane": "existing-system-c",
+        "z0Role": "pixel-seed",
+        "invariant": "parameter-plane-bit-identical"
+      },
+      "tier0": {
+        "sourceBound": true,
+        "rightsBound": true,
+        "safetyEnvelope": true
+      },
+      "tier1": {
+        "evidenceClass": "tier1-candidate-only",
+        "status": "tier1-candidate",
+        "checks": {
+          "parameterPlaneBitIdentical": true,
+          "deterministic": true,
+          "finiteEvidence": true,
+          "pixelSensitive": true,
+          "constantSensitive": true
+        },
+        "reasonCodes": []
+      }
+    },
+    {
+      "formulaId": "6c1385a9-2d23-5816-90d1-2752905fc353",
+      "sourceRevision": "decba7b7f3d2b3e121f53906a98d62d32743da89d72ea79c2aa1ebd5f5aa2e37",
+      "semanticHash": "0126714b6b16415137cb09eba57dc601ff56a5efc76c754cedc84d5c0130fa82",
+      "bindingRevision": "e7e1dab8c309c4f488f3dd15d73a64187c15a5c2ee987b92a6d5b0a901d44573",
+      "rightsStatus": "project-owned",
+      "publicationDecision": "publish",
+      "implementationBasis": "project-owned",
+      "leakageScanStatus": "passed",
+      "contract": {
+        "binding": {
+          "kind": "system-c"
+        },
+        "modeClass": "classic-julia",
+        "supportLane": "existing-system-c",
+        "z0Role": "pixel-seed",
+        "invariant": "parameter-plane-bit-identical"
+      },
+      "tier0": {
+        "sourceBound": true,
+        "rightsBound": true,
+        "safetyEnvelope": true
+      },
+      "tier1": {
+        "evidenceClass": "tier1-candidate-only",
+        "status": "tier1-candidate",
+        "checks": {
+          "parameterPlaneBitIdentical": true,
+          "deterministic": true,
+          "finiteEvidence": true,
+          "pixelSensitive": true,
+          "constantSensitive": true
+        },
+        "reasonCodes": []
+      }
+    },
+    {
+      "formulaId": "88dd57cd-a348-55e8-983a-74c0acba57ae",
+      "sourceRevision": "1afe2c3b50115c812e5adefc0a74020b2fd1eef286fcbe7d3a724944bfe04240",
+      "semanticHash": "e96e5f6733e711cc5a09fcd26be2ad187538bcc23233ab2b78a20b4075e2e6da",
+      "bindingRevision": "0cca883d240a73ed15d3838e7bc441f9dc2d6aa0f100704b85f9dd1906e5d50c",
+      "rightsStatus": "project-owned",
+      "publicationDecision": "publish",
+      "implementationBasis": "project-owned",
+      "leakageScanStatus": "passed",
+      "contract": {
+        "binding": {
+          "kind": "system-c"
+        },
+        "modeClass": "classic-julia",
+        "supportLane": "existing-system-c",
+        "z0Role": "pixel-seed",
+        "invariant": "parameter-plane-bit-identical"
+      },
+      "tier0": {
+        "sourceBound": true,
+        "rightsBound": true,
+        "safetyEnvelope": true
+      },
+      "tier1": {
+        "evidenceClass": "tier1-candidate-only",
+        "status": "tier1-candidate",
+        "checks": {
+          "parameterPlaneBitIdentical": true,
+          "deterministic": true,
+          "finiteEvidence": true,
+          "pixelSensitive": true,
+          "constantSensitive": true
+        },
+        "reasonCodes": []
+      }
+    },
+    {
+      "formulaId": "8eb342fe-8a05-524e-8b98-35cdc8af5be3",
+      "sourceRevision": "9f102aa122c2f49ca1ec0ad883ddcb51dd58a92e86501ba081f22fab82fe0410",
+      "semanticHash": "6d56d30875bbcf8280116f57f7ae925115708f9832dbf8c14e85a7ec943b6fe8",
+      "bindingRevision": "d78466dfbc2347416c92d89dae3400985a3db224b5c7d121107bdb559da4269c",
+      "rightsStatus": "project-owned",
+      "publicationDecision": "publish",
+      "implementationBasis": "project-owned",
+      "leakageScanStatus": "passed",
+      "contract": {
+        "binding": {
+          "kind": "system-c"
+        },
+        "modeClass": "classic-julia",
+        "supportLane": "existing-system-c",
+        "z0Role": "pixel-seed",
+        "invariant": "parameter-plane-bit-identical"
+      },
+      "tier0": {
+        "sourceBound": true,
+        "rightsBound": true,
+        "safetyEnvelope": true
+      },
+      "tier1": {
+        "evidenceClass": "tier1-candidate-only",
+        "status": "tier1-candidate",
+        "checks": {
+          "parameterPlaneBitIdentical": true,
+          "deterministic": true,
+          "finiteEvidence": true,
+          "pixelSensitive": true,
+          "constantSensitive": true
+        },
+        "reasonCodes": []
+      }
+    },
+    {
+      "formulaId": "8f661407-f2c9-57e5-8c01-9b63a3cd0493",
+      "sourceRevision": "ccf0789e752a08f4dcc10feba172e7132287c4716c55a2ac86cb5df98015e014",
+      "semanticHash": "69d60d586af57cb3548be2ae0a6a4d1a19b0270e6d88ae2b75d3daf9ddd4f441",
+      "bindingRevision": "b37da729a665e43a6e879a74dbb244835841356eb6e8399b1f13a872b5b16580",
+      "rightsStatus": "project-owned",
+      "publicationDecision": "publish",
+      "implementationBasis": "project-owned",
+      "leakageScanStatus": "passed",
+      "contract": {
+        "binding": {
+          "kind": "system-c"
+        },
+        "modeClass": "classic-julia",
+        "supportLane": "existing-system-c",
+        "z0Role": "pixel-seed",
+        "invariant": "parameter-plane-bit-identical"
+      },
+      "tier0": {
+        "sourceBound": true,
+        "rightsBound": true,
+        "safetyEnvelope": true
+      },
+      "tier1": {
+        "evidenceClass": "tier1-candidate-only",
+        "status": "tier1-candidate",
+        "checks": {
+          "parameterPlaneBitIdentical": true,
+          "deterministic": true,
+          "finiteEvidence": true,
+          "pixelSensitive": true,
+          "constantSensitive": true
+        },
+        "reasonCodes": []
+      }
+    },
+    {
+      "formulaId": "8f9eb07a-b405-5d9c-8b6a-9447ad7165b0",
+      "sourceRevision": "62dbe6e2d3a50b62da0ac3e58b7f0d86a36f196cc593d21dac783a04426d6194",
+      "semanticHash": "62c178e13c7b0308955b67f6f604cb65cf9521a61f257156e8fca13762526ef3",
+      "bindingRevision": "c4e45866ab1cda7873f9953514ce5255d35cd0198e8074a7d52adba7e57e23d1",
+      "rightsStatus": "project-owned",
+      "publicationDecision": "publish",
+      "implementationBasis": "project-owned",
+      "leakageScanStatus": "passed",
+      "contract": {
+        "binding": {
+          "kind": "system-c"
+        },
+        "modeClass": "classic-julia",
+        "supportLane": "existing-system-c",
+        "z0Role": "pixel-seed",
+        "invariant": "parameter-plane-bit-identical"
+      },
+      "tier0": {
+        "sourceBound": true,
+        "rightsBound": true,
+        "safetyEnvelope": true
+      },
+      "tier1": {
+        "evidenceClass": "tier1-candidate-only",
+        "status": "tier1-candidate",
+        "checks": {
+          "parameterPlaneBitIdentical": true,
+          "deterministic": true,
+          "finiteEvidence": true,
+          "pixelSensitive": true,
+          "constantSensitive": true
+        },
+        "reasonCodes": []
+      }
+    },
+    {
+      "formulaId": "9577c6c0-3a56-5a17-bea5-0ad2d6ea7e08",
+      "sourceRevision": "fb8c0f2d92c13fa06f201a8d72caf26cf4371f4e951fc2c5719d2a598d170566",
+      "semanticHash": "7986cb83e2dbbd63f5e4313f7e68e979b7a457401ccb71bf9d8a7e62a1c5111f",
+      "bindingRevision": "59b1e661d725ddd0e080f68ff37b6a68753113420aabb06dca4932a9f72fb7d8",
+      "rightsStatus": "project-owned",
+      "publicationDecision": "publish",
+      "implementationBasis": "project-owned",
+      "leakageScanStatus": "passed",
+      "contract": {
+        "binding": {
+          "kind": "system-c"
+        },
+        "modeClass": "classic-julia",
+        "supportLane": "existing-system-c",
+        "z0Role": "pixel-seed",
+        "invariant": "parameter-plane-bit-identical"
+      },
+      "tier0": {
+        "sourceBound": true,
+        "rightsBound": true,
+        "safetyEnvelope": true
+      },
+      "tier1": {
+        "evidenceClass": "tier1-candidate-only",
+        "status": "tier1-candidate",
+        "checks": {
+          "parameterPlaneBitIdentical": true,
+          "deterministic": true,
+          "finiteEvidence": true,
+          "pixelSensitive": true,
+          "constantSensitive": true
+        },
+        "reasonCodes": []
+      }
+    },
+    {
+      "formulaId": "9693612f-d5c2-5d77-9058-58ee16e14b4b",
+      "sourceRevision": "7cff43d492398231de0ad3df0d14557c9ec8b13683c1d091b18213978afd74af",
+      "semanticHash": "b1128aca17d2c1a18fe0bf79b35640d79fdeb845ae06c16a935a9ba6d0b06fb2",
+      "bindingRevision": "98f33edaab8b00e91d2c3a4e0a3cf7604623ea68cab16d550b7d07a68a95e17d",
+      "rightsStatus": "project-owned",
+      "publicationDecision": "publish",
+      "implementationBasis": "project-owned",
+      "leakageScanStatus": "passed",
+      "contract": {
+        "binding": {
+          "kind": "system-c"
+        },
+        "modeClass": "classic-julia",
+        "supportLane": "existing-system-c",
+        "z0Role": "pixel-seed",
+        "invariant": "parameter-plane-bit-identical"
+      },
+      "tier0": {
+        "sourceBound": true,
+        "rightsBound": true,
+        "safetyEnvelope": true
+      },
+      "tier1": {
+        "evidenceClass": "tier1-candidate-only",
+        "status": "tier1-candidate",
+        "checks": {
+          "parameterPlaneBitIdentical": true,
+          "deterministic": true,
+          "finiteEvidence": true,
+          "pixelSensitive": true,
+          "constantSensitive": true
+        },
+        "reasonCodes": []
+      }
+    },
+    {
+      "formulaId": "9b437c43-72bc-51a3-8b61-227f916d724c",
+      "sourceRevision": "03da48b632c5d4144486ea1c56255bf4c908cd5e5f20ef4fbec1806d4bac6964",
+      "semanticHash": "51ab7bf5f4b067740ceee1ac9caa31f7667982ff4895927aee20cb9e1e6101df",
+      "bindingRevision": "9c79dcdd90b584ed1f8f035da220ef4d53deed31c889464976b62f57540a8aff",
+      "rightsStatus": "project-owned",
+      "publicationDecision": "publish",
+      "implementationBasis": "project-owned",
+      "leakageScanStatus": "passed",
+      "contract": {
+        "binding": {
+          "kind": "system-c"
+        },
+        "modeClass": "classic-julia",
+        "supportLane": "existing-system-c",
+        "z0Role": "pixel-seed",
+        "invariant": "parameter-plane-bit-identical"
+      },
+      "tier0": {
+        "sourceBound": true,
+        "rightsBound": true,
+        "safetyEnvelope": true
+      },
+      "tier1": {
+        "evidenceClass": "tier1-candidate-only",
+        "status": "tier1-candidate",
+        "checks": {
+          "parameterPlaneBitIdentical": true,
+          "deterministic": true,
+          "finiteEvidence": true,
+          "pixelSensitive": true,
+          "constantSensitive": true
+        },
+        "reasonCodes": []
+      }
+    },
+    {
+      "formulaId": "9f301c01-13fa-57b4-a3b2-99add821bfb0",
+      "sourceRevision": "df2d4387d714cd91b67a6c019af286fad376b27ee36e6ec038ba44c301f64c25",
+      "semanticHash": "6aad95ff04b5fe8f3072b1704aca784a2c78755e17134e2d4032216b2b9924ad",
+      "bindingRevision": "598960c44a46025a283f002c6f6b6469c4e1550473203f2f98f2313838a15a29",
+      "rightsStatus": "project-owned",
+      "publicationDecision": "publish",
+      "implementationBasis": "project-owned",
+      "leakageScanStatus": "passed",
+      "contract": {
+        "binding": {
+          "kind": "system-c"
+        },
+        "modeClass": "classic-julia",
+        "supportLane": "existing-system-c",
+        "z0Role": "pixel-seed",
+        "invariant": "parameter-plane-bit-identical"
+      },
+      "tier0": {
+        "sourceBound": true,
+        "rightsBound": true,
+        "safetyEnvelope": true
+      },
+      "tier1": {
+        "evidenceClass": "tier1-candidate-only",
+        "status": "tier1-candidate",
+        "checks": {
+          "parameterPlaneBitIdentical": true,
+          "deterministic": true,
+          "finiteEvidence": true,
+          "pixelSensitive": true,
+          "constantSensitive": true
+        },
+        "reasonCodes": []
+      }
+    },
+    {
+      "formulaId": "a3ab1c2f-5940-51d3-8c13-58f7feeb084b",
+      "sourceRevision": "a40c549ceff1450e3827f366d47cb83b7c531c20469f3c9a8c88082639f0b7d1",
+      "semanticHash": "98dc6b51da0475d48b272fbac5f9161b9118637ea48d45771784412583e400f0",
+      "bindingRevision": "0b8a1a61f1f9bcdd35b7bb750f80e9e056e90b32b88172be408980b16f66a8ec",
+      "rightsStatus": "project-owned",
+      "publicationDecision": "publish",
+      "implementationBasis": "project-owned",
+      "leakageScanStatus": "passed",
+      "contract": {
+        "binding": {
+          "kind": "system-c"
+        },
+        "modeClass": "classic-julia",
+        "supportLane": "existing-system-c",
+        "z0Role": "pixel-seed",
+        "invariant": "parameter-plane-bit-identical"
+      },
+      "tier0": {
+        "sourceBound": true,
+        "rightsBound": true,
+        "safetyEnvelope": true
+      },
+      "tier1": {
+        "evidenceClass": "tier1-candidate-only",
+        "status": "tier1-candidate",
+        "checks": {
+          "parameterPlaneBitIdentical": true,
+          "deterministic": true,
+          "finiteEvidence": true,
+          "pixelSensitive": true,
+          "constantSensitive": true
+        },
+        "reasonCodes": []
+      }
+    },
+    {
+      "formulaId": "a569d2c4-d397-5634-9dfe-21b2ab1a386a",
+      "sourceRevision": "b7dd588e3cf8c70a1ec52801a03b6ee1b6980009c0725f8a32ecfa8fe1a6dfad",
+      "semanticHash": "89e7b983a7455e1e3f1c4179ba6894492bcee9066e57e829ba9dc42efb44e1a9",
+      "bindingRevision": "c4d4c71afd40c063fcd697937fec94d76d39bd5c6115f90e9f2423ae887aea0b",
+      "rightsStatus": "project-owned",
+      "publicationDecision": "publish",
+      "implementationBasis": "project-owned",
+      "leakageScanStatus": "passed",
+      "contract": {
+        "binding": {
+          "kind": "system-c"
+        },
+        "modeClass": "classic-julia",
+        "supportLane": "existing-system-c",
+        "z0Role": "pixel-seed",
+        "invariant": "parameter-plane-bit-identical"
+      },
+      "tier0": {
+        "sourceBound": true,
+        "rightsBound": true,
+        "safetyEnvelope": true
+      },
+      "tier1": {
+        "evidenceClass": "tier1-candidate-only",
+        "status": "tier1-candidate",
+        "checks": {
+          "parameterPlaneBitIdentical": true,
+          "deterministic": true,
+          "finiteEvidence": true,
+          "pixelSensitive": true,
+          "constantSensitive": true
+        },
+        "reasonCodes": []
+      }
+    },
+    {
+      "formulaId": "a69bc250-315d-5a74-9109-d23a820974e5",
+      "sourceRevision": "99df8d1a5ac5a7dda5b7744a6776a4fac8a05e769351b8f4b351163c0f4e8dae",
+      "semanticHash": "5151922844c2cb51ddf92db41c4ecd0ad52219c22530c1a1353d98070bf1ad34",
+      "bindingRevision": "5ebd08c0d024610007c757a5bcf104f7e1d68480f0da05d7a47b2761eee8ae69",
+      "rightsStatus": "project-owned",
+      "publicationDecision": "publish",
+      "implementationBasis": "project-owned",
+      "leakageScanStatus": "passed",
+      "contract": {
+        "binding": {
+          "kind": "system-c"
+        },
+        "modeClass": "classic-julia",
+        "supportLane": "existing-system-c",
+        "z0Role": "pixel-seed",
+        "invariant": "parameter-plane-bit-identical"
+      },
+      "tier0": {
+        "sourceBound": true,
+        "rightsBound": true,
+        "safetyEnvelope": true
+      },
+      "tier1": {
+        "evidenceClass": "tier1-candidate-only",
+        "status": "tier1-candidate",
+        "checks": {
+          "parameterPlaneBitIdentical": true,
+          "deterministic": true,
+          "finiteEvidence": true,
+          "pixelSensitive": true,
+          "constantSensitive": true
+        },
+        "reasonCodes": []
+      }
+    },
+    {
+      "formulaId": "a9263b21-23c1-5d94-ba30-f7bef1a66629",
+      "sourceRevision": "bf1462942af10c52a5adbecf8856b4e34a8a5110637c84fa613728b76a1d6b4a",
+      "semanticHash": "f170562c56a5af50f20613a53ad362101ca5c82901b219a828ce640149d25f6a",
+      "bindingRevision": "557acf9df90f11f24f31bdf3dd5dac70e5471fd10f28923fad16cb25b8c789d1",
+      "rightsStatus": "project-owned",
+      "publicationDecision": "publish",
+      "implementationBasis": "project-owned",
+      "leakageScanStatus": "passed",
+      "contract": {
+        "binding": {
+          "kind": "system-c"
+        },
+        "modeClass": "classic-julia",
+        "supportLane": "existing-system-c",
+        "z0Role": "pixel-seed",
+        "invariant": "parameter-plane-bit-identical"
+      },
+      "tier0": {
+        "sourceBound": true,
+        "rightsBound": true,
+        "safetyEnvelope": true
+      },
+      "tier1": {
+        "evidenceClass": "tier1-candidate-only",
+        "status": "tier1-candidate",
+        "checks": {
+          "parameterPlaneBitIdentical": true,
+          "deterministic": true,
+          "finiteEvidence": true,
+          "pixelSensitive": true,
+          "constantSensitive": true
+        },
+        "reasonCodes": []
+      }
+    },
+    {
+      "formulaId": "af500910-46ce-5a43-b430-c0154cc05959",
+      "sourceRevision": "305c68341d9d4be9e65092c899f7cfbdd83919af59b69a633b0a53d251a5f99b",
+      "semanticHash": "310b37da0dfa6d8541b699b6819cb9b623046a0b6c434e9d1d1b96414a5065aa",
+      "bindingRevision": "ce88b64905b3b6109979238dc623e110d7e6fc7dc36b99cdb2f9be7c03339db7",
+      "rightsStatus": "project-owned",
+      "publicationDecision": "publish",
+      "implementationBasis": "project-owned",
+      "leakageScanStatus": "passed",
+      "contract": {
+        "binding": {
+          "kind": "system-c"
+        },
+        "modeClass": "classic-julia",
+        "supportLane": "existing-system-c",
+        "z0Role": "pixel-seed",
+        "invariant": "parameter-plane-bit-identical"
+      },
+      "tier0": {
+        "sourceBound": true,
+        "rightsBound": true,
+        "safetyEnvelope": true
+      },
+      "tier1": {
+        "evidenceClass": "tier1-candidate-only",
+        "status": "blocked",
+        "checks": {
+          "parameterPlaneBitIdentical": true,
+          "deterministic": true,
+          "finiteEvidence": false,
+          "pixelSensitive": true,
+          "constantSensitive": true
+        },
+        "reasonCodes": [
+          "non-finite-evidence"
+        ]
+      }
+    },
+    {
+      "formulaId": "b0bf5217-893a-5a0f-9a46-5e5ce89223c3",
+      "sourceRevision": "422c91b1c26c90c5e193b72e416ea4f8ddb2849b72301512727135a745a6d69a",
+      "semanticHash": "5e9705fb9cc07e0b0df8f9f3c4bdc457a8e13d91dc1e914e076340b9704f7f10",
+      "bindingRevision": "c26deaf0722af28a67f836d8e6308d93cfb25af357c6f29d02334cc6459459d2",
+      "rightsStatus": "project-owned",
+      "publicationDecision": "publish",
+      "implementationBasis": "project-owned",
+      "leakageScanStatus": "passed",
+      "contract": {
+        "binding": {
+          "kind": "system-c"
+        },
+        "modeClass": "classic-julia",
+        "supportLane": "existing-system-c",
+        "z0Role": "pixel-seed",
+        "invariant": "parameter-plane-bit-identical"
+      },
+      "tier0": {
+        "sourceBound": true,
+        "rightsBound": true,
+        "safetyEnvelope": true
+      },
+      "tier1": {
+        "evidenceClass": "tier1-candidate-only",
+        "status": "tier1-candidate",
+        "checks": {
+          "parameterPlaneBitIdentical": true,
+          "deterministic": true,
+          "finiteEvidence": true,
+          "pixelSensitive": true,
+          "constantSensitive": true
+        },
+        "reasonCodes": []
+      }
+    },
+    {
+      "formulaId": "b6ccba60-aba6-5136-9c92-679ae55ba5ce",
+      "sourceRevision": "3857ea8d4ca78064e6f19198f16e21954bd654f63f1d12ee923836709196d3a5",
+      "semanticHash": "a02a00f1bfd5f68aff76a07ff7dc349f07f8bddbcc3651f3daddf46917e648ac",
+      "bindingRevision": "31c9f722505c61d4ee43e9467eb8339cb68f3320b78a9ff4745d888d8f264beb",
+      "rightsStatus": "project-owned",
+      "publicationDecision": "publish",
+      "implementationBasis": "project-owned",
+      "leakageScanStatus": "passed",
+      "contract": {
+        "binding": {
+          "kind": "system-c"
+        },
+        "modeClass": "classic-julia",
+        "supportLane": "existing-system-c",
+        "z0Role": "pixel-seed",
+        "invariant": "parameter-plane-bit-identical"
+      },
+      "tier0": {
+        "sourceBound": true,
+        "rightsBound": true,
+        "safetyEnvelope": true
+      },
+      "tier1": {
+        "evidenceClass": "tier1-candidate-only",
+        "status": "tier1-candidate",
+        "checks": {
+          "parameterPlaneBitIdentical": true,
+          "deterministic": true,
+          "finiteEvidence": true,
+          "pixelSensitive": true,
+          "constantSensitive": true
+        },
+        "reasonCodes": []
+      }
+    },
+    {
+      "formulaId": "b9a54802-21b4-5cb9-8b8f-e4afc3c99f3b",
+      "sourceRevision": "d6aed2ec300e8c2a94dd291096ddc56d357c4271c225c8e266ef6256cd2b4fcb",
+      "semanticHash": "39c28b08f4880b438131e05daf7bf0400269f76631eb8452de9c0195c1ab9ef5",
+      "bindingRevision": "983ca6e53b7d43b9fbed497869c7c938eca802bea52ee72c011b6ee829c47087",
+      "rightsStatus": "project-owned",
+      "publicationDecision": "publish",
+      "implementationBasis": "project-owned",
+      "leakageScanStatus": "passed",
+      "contract": {
+        "binding": {
+          "kind": "system-c"
+        },
+        "modeClass": "classic-julia",
+        "supportLane": "existing-system-c",
+        "z0Role": "pixel-seed",
+        "invariant": "parameter-plane-bit-identical"
+      },
+      "tier0": {
+        "sourceBound": true,
+        "rightsBound": true,
+        "safetyEnvelope": true
+      },
+      "tier1": {
+        "evidenceClass": "tier1-candidate-only",
+        "status": "tier1-candidate",
+        "checks": {
+          "parameterPlaneBitIdentical": true,
+          "deterministic": true,
+          "finiteEvidence": true,
+          "pixelSensitive": true,
+          "constantSensitive": true
+        },
+        "reasonCodes": []
+      }
+    },
+    {
+      "formulaId": "beeb4aec-91cd-5d01-83bb-0b98ca851e79",
+      "sourceRevision": "082b4f74a9e2798f67c8d2a61cb29cdc92e6e9f67f6b46c80bcf7af415a61a0b",
+      "semanticHash": "463443e20ecad73b9d695bfbdca187d465aeaf5f9ffe907e7d0b3c176b72b534",
+      "bindingRevision": "cec16182bc8ace26737f428669c4fba6f4e6d11499cf2a1218c4d52d3d51cd16",
+      "rightsStatus": "project-owned",
+      "publicationDecision": "publish",
+      "implementationBasis": "project-owned",
+      "leakageScanStatus": "passed",
+      "contract": {
+        "binding": {
+          "kind": "system-c"
+        },
+        "modeClass": "classic-julia",
+        "supportLane": "existing-system-c",
+        "z0Role": "pixel-seed",
+        "invariant": "parameter-plane-bit-identical"
+      },
+      "tier0": {
+        "sourceBound": true,
+        "rightsBound": true,
+        "safetyEnvelope": true
+      },
+      "tier1": {
+        "evidenceClass": "tier1-candidate-only",
+        "status": "tier1-candidate",
+        "checks": {
+          "parameterPlaneBitIdentical": true,
+          "deterministic": true,
+          "finiteEvidence": true,
+          "pixelSensitive": true,
+          "constantSensitive": true
+        },
+        "reasonCodes": []
+      }
+    },
+    {
+      "formulaId": "c09b9dec-60a6-5a26-8f03-d5ea40f0d49b",
+      "sourceRevision": "4788720325f40f284ca8126f3bffda0f3c3abad0702b49bbebf81ce2a4f2f68d",
+      "semanticHash": "adc81d0335dd23c0137e7b1a44c703e496a59235385f338ca22c46098942c3f4",
+      "bindingRevision": "92da1c897d43860abd321aad0546b261a170b4bdf5b48409c59cc8feab33cc63",
+      "rightsStatus": "project-owned",
+      "publicationDecision": "publish",
+      "implementationBasis": "project-owned",
+      "leakageScanStatus": "passed",
+      "contract": {
+        "binding": {
+          "kind": "system-c"
+        },
+        "modeClass": "classic-julia",
+        "supportLane": "existing-system-c",
+        "z0Role": "pixel-seed",
+        "invariant": "parameter-plane-bit-identical"
+      },
+      "tier0": {
+        "sourceBound": true,
+        "rightsBound": true,
+        "safetyEnvelope": true
+      },
+      "tier1": {
+        "evidenceClass": "tier1-candidate-only",
+        "status": "tier1-candidate",
+        "checks": {
+          "parameterPlaneBitIdentical": true,
+          "deterministic": true,
+          "finiteEvidence": true,
+          "pixelSensitive": true,
+          "constantSensitive": true
+        },
+        "reasonCodes": []
+      }
+    },
+    {
+      "formulaId": "c1c898f3-c9a3-583d-9a0a-d09968ba0db3",
+      "sourceRevision": "a265807bb53747d256b0cbfee89991527a72e8bb9ceac9a41888c3ad1419448e",
+      "semanticHash": "1316ce063761dd9a4c2c2a043c2a44723021e369cd01f42ae89454251079349f",
+      "bindingRevision": "0d0aa1b4e0aadc9784747f2bcd7e1996e80faa695e6884f818dbb712e2d5cac7",
+      "rightsStatus": "project-owned",
+      "publicationDecision": "publish",
+      "implementationBasis": "project-owned",
+      "leakageScanStatus": "passed",
+      "contract": {
+        "binding": {
+          "kind": "system-c"
+        },
+        "modeClass": "classic-julia",
+        "supportLane": "existing-system-c",
+        "z0Role": "pixel-seed",
+        "invariant": "parameter-plane-bit-identical"
+      },
+      "tier0": {
+        "sourceBound": true,
+        "rightsBound": true,
+        "safetyEnvelope": true
+      },
+      "tier1": {
+        "evidenceClass": "tier1-candidate-only",
+        "status": "tier1-candidate",
+        "checks": {
+          "parameterPlaneBitIdentical": true,
+          "deterministic": true,
+          "finiteEvidence": true,
+          "pixelSensitive": true,
+          "constantSensitive": true
+        },
+        "reasonCodes": []
+      }
+    },
+    {
+      "formulaId": "c6b5dcf4-cef5-5630-b3f6-a68b92ae75ee",
+      "sourceRevision": "5aa4f9b2c35d3bded213756bb80da01f95fef7ee766779a7f02090a1116a0e9a",
+      "semanticHash": "76d9f98f4a32eecaab99814d1209a6d87f10a53909a6bbfca13a1ea43b6e4d9c",
+      "bindingRevision": "b2e9fc72b60a401b37d8ef324dbe81103f2e832cbc04e8d770a5464e86f30191",
+      "rightsStatus": "project-owned",
+      "publicationDecision": "publish",
+      "implementationBasis": "project-owned",
+      "leakageScanStatus": "passed",
+      "contract": {
+        "binding": {
+          "kind": "system-c"
+        },
+        "modeClass": "classic-julia",
+        "supportLane": "existing-system-c",
+        "z0Role": "pixel-seed",
+        "invariant": "parameter-plane-bit-identical"
+      },
+      "tier0": {
+        "sourceBound": true,
+        "rightsBound": true,
+        "safetyEnvelope": true
+      },
+      "tier1": {
+        "evidenceClass": "tier1-candidate-only",
+        "status": "tier1-candidate",
+        "checks": {
+          "parameterPlaneBitIdentical": true,
+          "deterministic": true,
+          "finiteEvidence": true,
+          "pixelSensitive": true,
+          "constantSensitive": true
+        },
+        "reasonCodes": []
+      }
+    },
+    {
+      "formulaId": "ca206908-8323-5ef9-979b-c80575765e63",
+      "sourceRevision": "8e7b7ec8823dd032017038ead294ae8e204dc43cc1a24b5709402af1ef075d2b",
+      "semanticHash": "03be43915a9ffaae8f77304ce1a3315ba988103453c85facc6667bb15eaaf87b",
+      "bindingRevision": "3c7a7890d9579bc6fcde48abfd1882a84a296d26cec9d48ab0cf6559ca99ee81",
+      "rightsStatus": "project-owned",
+      "publicationDecision": "publish",
+      "implementationBasis": "project-owned",
+      "leakageScanStatus": "passed",
+      "contract": {
+        "binding": {
+          "kind": "system-c"
+        },
+        "modeClass": "classic-julia",
+        "supportLane": "existing-system-c",
+        "z0Role": "pixel-seed",
+        "invariant": "parameter-plane-bit-identical"
+      },
+      "tier0": {
+        "sourceBound": true,
+        "rightsBound": true,
+        "safetyEnvelope": true
+      },
+      "tier1": {
+        "evidenceClass": "tier1-candidate-only",
+        "status": "tier1-candidate",
+        "checks": {
+          "parameterPlaneBitIdentical": true,
+          "deterministic": true,
+          "finiteEvidence": true,
+          "pixelSensitive": true,
+          "constantSensitive": true
+        },
+        "reasonCodes": []
+      }
+    },
+    {
+      "formulaId": "cb9f75de-2acb-563b-9090-f58f17e65f92",
+      "sourceRevision": "15e9e1fe969445d456a619767b333ee3d664f1ed11db98d853d89cd1c674beca",
+      "semanticHash": "029ecbe67b163a094fe8fe166becb58723bdd5f1351e05670cb1d5e80171aca9",
+      "bindingRevision": "9d6e71eb48ea2e289f44f2f9a1aae69ea86e38e7960b885905e18987c2975332",
+      "rightsStatus": "project-owned",
+      "publicationDecision": "publish",
+      "implementationBasis": "project-owned",
+      "leakageScanStatus": "passed",
+      "contract": {
+        "binding": {
+          "kind": "system-c"
+        },
+        "modeClass": "classic-julia",
+        "supportLane": "existing-system-c",
+        "z0Role": "pixel-seed",
+        "invariant": "parameter-plane-bit-identical"
+      },
+      "tier0": {
+        "sourceBound": true,
+        "rightsBound": true,
+        "safetyEnvelope": true
+      },
+      "tier1": {
+        "evidenceClass": "tier1-candidate-only",
+        "status": "tier1-candidate",
+        "checks": {
+          "parameterPlaneBitIdentical": true,
+          "deterministic": true,
+          "finiteEvidence": true,
+          "pixelSensitive": true,
+          "constantSensitive": true
+        },
+        "reasonCodes": []
+      }
+    },
+    {
+      "formulaId": "cc40b50c-d3ff-54f0-b4ea-98bdf0fd0096",
+      "sourceRevision": "37a6c61666fd5bf3e2bdef96849dc27a10bd58d152e6a161005ab6e565f12ce0",
+      "semanticHash": "4386e45ac1c4535868f2e3607857b8ae92a8ffbf497de4c7c572717d5db6245c",
+      "bindingRevision": "2223fc9c894b541829322b6dcd0ded48bfd4ae0acb0479b67a9b9e5a02b1dc76",
+      "rightsStatus": "project-owned",
+      "publicationDecision": "publish",
+      "implementationBasis": "project-owned",
+      "leakageScanStatus": "passed",
+      "contract": {
+        "binding": {
+          "kind": "system-c"
+        },
+        "modeClass": "classic-julia",
+        "supportLane": "existing-system-c",
+        "z0Role": "pixel-seed",
+        "invariant": "parameter-plane-bit-identical"
+      },
+      "tier0": {
+        "sourceBound": true,
+        "rightsBound": true,
+        "safetyEnvelope": true
+      },
+      "tier1": {
+        "evidenceClass": "tier1-candidate-only",
+        "status": "tier1-candidate",
+        "checks": {
+          "parameterPlaneBitIdentical": true,
+          "deterministic": true,
+          "finiteEvidence": true,
+          "pixelSensitive": true,
+          "constantSensitive": true
+        },
+        "reasonCodes": []
+      }
+    },
+    {
+      "formulaId": "d01f1a01-6e77-5a24-8593-a7009e1c3ea3",
+      "sourceRevision": "c4f8d250a6b7cf0925639e5cc6232b7518ae83dc70a6791cdb8e279b75b2f881",
+      "semanticHash": "dabe24003d6c8a38bc505b435803ce03c0370bd274b4d5042c4ef97fb9733985",
+      "bindingRevision": "f85af1ad6e7c83b099167c98c74112defee9138c153549d6915e453fa5814296",
+      "rightsStatus": "project-owned",
+      "publicationDecision": "publish",
+      "implementationBasis": "project-owned",
+      "leakageScanStatus": "passed",
+      "contract": {
+        "binding": {
+          "kind": "system-c"
+        },
+        "modeClass": "classic-julia",
+        "supportLane": "existing-system-c",
+        "z0Role": "pixel-seed",
+        "invariant": "parameter-plane-bit-identical"
+      },
+      "tier0": {
+        "sourceBound": true,
+        "rightsBound": true,
+        "safetyEnvelope": true
+      },
+      "tier1": {
+        "evidenceClass": "tier1-candidate-only",
+        "status": "tier1-candidate",
+        "checks": {
+          "parameterPlaneBitIdentical": true,
+          "deterministic": true,
+          "finiteEvidence": true,
+          "pixelSensitive": true,
+          "constantSensitive": true
+        },
+        "reasonCodes": []
+      }
+    },
+    {
+      "formulaId": "d09224e0-8712-5ec3-bc1a-e951b3d42ca9",
+      "sourceRevision": "4df8ff51b736f17773ebb3767c9e73e9414bc69d3e00779f2aa3547586e4c23f",
+      "semanticHash": "cb6ac8820dbc443f5dc90d5ec450a6a5054fc3c08b8cd8b6fcf298722a094168",
+      "bindingRevision": "e55a30b8b56a1ef839947a4f6c8f69f41c2ae31f88eeae8887045248845f73a1",
+      "rightsStatus": "project-owned",
+      "publicationDecision": "publish",
+      "implementationBasis": "project-owned",
+      "leakageScanStatus": "passed",
+      "contract": {
+        "binding": {
+          "kind": "system-c"
+        },
+        "modeClass": "classic-julia",
+        "supportLane": "existing-system-c",
+        "z0Role": "pixel-seed",
+        "invariant": "parameter-plane-bit-identical"
+      },
+      "tier0": {
+        "sourceBound": true,
+        "rightsBound": true,
+        "safetyEnvelope": true
+      },
+      "tier1": {
+        "evidenceClass": "tier1-candidate-only",
+        "status": "tier1-candidate",
+        "checks": {
+          "parameterPlaneBitIdentical": true,
+          "deterministic": true,
+          "finiteEvidence": true,
+          "pixelSensitive": true,
+          "constantSensitive": true
+        },
+        "reasonCodes": []
+      }
+    },
+    {
+      "formulaId": "d541fbeb-4dcc-5fc9-9b88-116bb28bf327",
+      "sourceRevision": "f892ebc14d4ae2437f5858f1c79d466b2c320024c6318e53dff1baabbfbd78d4",
+      "semanticHash": "cf11559b27508edc83c5d33f74ff3f1f7359e357e64559906da6ec2f37687a57",
+      "bindingRevision": "aec1c16c24d8a783e25b9543a0b030a29ff2df2e2f185d4cbcd0ca1648fbf9c5",
+      "rightsStatus": "project-owned",
+      "publicationDecision": "publish",
+      "implementationBasis": "project-owned",
+      "leakageScanStatus": "passed",
+      "contract": {
+        "binding": {
+          "kind": "system-c"
+        },
+        "modeClass": "classic-julia",
+        "supportLane": "existing-system-c",
+        "z0Role": "pixel-seed",
+        "invariant": "parameter-plane-bit-identical"
+      },
+      "tier0": {
+        "sourceBound": true,
+        "rightsBound": true,
+        "safetyEnvelope": true
+      },
+      "tier1": {
+        "evidenceClass": "tier1-candidate-only",
+        "status": "tier1-candidate",
+        "checks": {
+          "parameterPlaneBitIdentical": true,
+          "deterministic": true,
+          "finiteEvidence": true,
+          "pixelSensitive": true,
+          "constantSensitive": true
+        },
+        "reasonCodes": []
+      }
+    },
+    {
+      "formulaId": "d747aff8-e49f-5875-a85f-89d4a1d25846",
+      "sourceRevision": "e9aa563e5c1ab3def817a357ba4d8ef52b7085cbd1ff9ffd9fb239eece7241a1",
+      "semanticHash": "b9e68bdd0377e04b7ddd311885a54475e679dea9b87ef7573fb297f9091e0556",
+      "bindingRevision": "37b57adc81ca304fe69af58bf7723076dbf51adee2578984cf5f9084186f2107",
+      "rightsStatus": "project-owned",
+      "publicationDecision": "publish",
+      "implementationBasis": "project-owned",
+      "leakageScanStatus": "passed",
+      "contract": {
+        "binding": {
+          "kind": "system-c"
+        },
+        "modeClass": "classic-julia",
+        "supportLane": "existing-system-c",
+        "z0Role": "pixel-seed",
+        "invariant": "parameter-plane-bit-identical"
+      },
+      "tier0": {
+        "sourceBound": true,
+        "rightsBound": true,
+        "safetyEnvelope": true
+      },
+      "tier1": {
+        "evidenceClass": "tier1-candidate-only",
+        "status": "tier1-candidate",
+        "checks": {
+          "parameterPlaneBitIdentical": true,
+          "deterministic": true,
+          "finiteEvidence": true,
+          "pixelSensitive": true,
+          "constantSensitive": true
+        },
+        "reasonCodes": []
+      }
+    },
+    {
+      "formulaId": "d848b143-1bb8-524e-b716-f0dd41a836df",
+      "sourceRevision": "5ce01ae7c092860aabda2683065abad88ca3d319b5a1c7427e7e3218860acd7f",
+      "semanticHash": "fde760e924c78aeed0ac4d5e8986b5e0b5a6bdb1cc00c60d363c4821a6f2751f",
+      "bindingRevision": "55de3fe8ba9afe89a25976234be2ec61d1069dcf908c8c8c8009fa6757cf9116",
+      "rightsStatus": "project-owned",
+      "publicationDecision": "publish",
+      "implementationBasis": "project-owned",
+      "leakageScanStatus": "passed",
+      "contract": {
+        "binding": {
+          "kind": "system-c"
+        },
+        "modeClass": "classic-julia",
+        "supportLane": "existing-system-c",
+        "z0Role": "pixel-seed",
+        "invariant": "parameter-plane-bit-identical"
+      },
+      "tier0": {
+        "sourceBound": true,
+        "rightsBound": true,
+        "safetyEnvelope": true
+      },
+      "tier1": {
+        "evidenceClass": "tier1-candidate-only",
+        "status": "tier1-candidate",
+        "checks": {
+          "parameterPlaneBitIdentical": true,
+          "deterministic": true,
+          "finiteEvidence": true,
+          "pixelSensitive": true,
+          "constantSensitive": true
+        },
+        "reasonCodes": []
+      }
+    },
+    {
+      "formulaId": "d89f722f-35fe-587a-bee9-efdf05885728",
+      "sourceRevision": "f05366105906d0524885fafa45e4b11808d37b0c7de3ef287da876b972df653a",
+      "semanticHash": "3a8c07a844f512a55fe2b83a664529994f4bdd00f0a80b145593f9fda0481788",
+      "bindingRevision": "8ee97eed722fcffdafb4c83357ae449c7acd5c7500978383f5c224e976c07ea1",
+      "rightsStatus": "project-owned",
+      "publicationDecision": "publish",
+      "implementationBasis": "project-owned",
+      "leakageScanStatus": "passed",
+      "contract": {
+        "binding": {
+          "kind": "system-c"
+        },
+        "modeClass": "classic-julia",
+        "supportLane": "existing-system-c",
+        "z0Role": "pixel-seed",
+        "invariant": "parameter-plane-bit-identical"
+      },
+      "tier0": {
+        "sourceBound": true,
+        "rightsBound": true,
+        "safetyEnvelope": true
+      },
+      "tier1": {
+        "evidenceClass": "tier1-candidate-only",
+        "status": "tier1-candidate",
+        "checks": {
+          "parameterPlaneBitIdentical": true,
+          "deterministic": true,
+          "finiteEvidence": true,
+          "pixelSensitive": true,
+          "constantSensitive": true
+        },
+        "reasonCodes": []
+      }
+    },
+    {
+      "formulaId": "d93a2f0f-7208-5019-ad82-7a1d319a4412",
+      "sourceRevision": "8c3c844e1684a8cde9d26c89688595ee9c85e63fb540ca5752b2e2de49eedf91",
+      "semanticHash": "ce8fb9de833f9ae0b35fc298f3a2debe1211f852f13f966ad2c9e5fcce757ba2",
+      "bindingRevision": "d970ce74d197eda8531847575dc8266ec83b0156d91f1f2a1a086b8f690212d6",
+      "rightsStatus": "project-owned",
+      "publicationDecision": "publish",
+      "implementationBasis": "project-owned",
+      "leakageScanStatus": "passed",
+      "contract": {
+        "binding": {
+          "kind": "system-c"
+        },
+        "modeClass": "classic-julia",
+        "supportLane": "existing-system-c",
+        "z0Role": "pixel-seed",
+        "invariant": "parameter-plane-bit-identical"
+      },
+      "tier0": {
+        "sourceBound": true,
+        "rightsBound": true,
+        "safetyEnvelope": true
+      },
+      "tier1": {
+        "evidenceClass": "tier1-candidate-only",
+        "status": "tier1-candidate",
+        "checks": {
+          "parameterPlaneBitIdentical": true,
+          "deterministic": true,
+          "finiteEvidence": true,
+          "pixelSensitive": true,
+          "constantSensitive": true
+        },
+        "reasonCodes": []
+      }
+    },
+    {
+      "formulaId": "e1220621-19f8-54ef-ad36-4220b5d7fedc",
+      "sourceRevision": "4f4c9c6798374a9eb0ef22bf6997229a1c44de9ed2770d544014b916f6c836d8",
+      "semanticHash": "11b787fcbb713ff491a4b44731f6f47cca86990d526b4ce0c7e780c436cb347c",
+      "bindingRevision": "c534ed0d9dd9687a3b5842d1fa91466ed05de1be3845f7784e506d3975e527de",
+      "rightsStatus": "project-owned",
+      "publicationDecision": "publish",
+      "implementationBasis": "project-owned",
+      "leakageScanStatus": "passed",
+      "contract": {
+        "binding": {
+          "kind": "system-c"
+        },
+        "modeClass": "classic-julia",
+        "supportLane": "existing-system-c",
+        "z0Role": "pixel-seed",
+        "invariant": "parameter-plane-bit-identical"
+      },
+      "tier0": {
+        "sourceBound": true,
+        "rightsBound": true,
+        "safetyEnvelope": true
+      },
+      "tier1": {
+        "evidenceClass": "tier1-candidate-only",
+        "status": "tier1-candidate",
+        "checks": {
+          "parameterPlaneBitIdentical": true,
+          "deterministic": true,
+          "finiteEvidence": true,
+          "pixelSensitive": true,
+          "constantSensitive": true
+        },
+        "reasonCodes": []
+      }
+    },
+    {
+      "formulaId": "e2456b54-ef50-5ac9-9faa-dcb576c5e774",
+      "sourceRevision": "25f923b51ea1e36408f9c48e008187e67a946fc58ef634f93bf0cba216f622aa",
+      "semanticHash": "3d14554a8a35c0e2ee8fc80436926dd493babd846a9d5294bc6b58ad7580c62f",
+      "bindingRevision": "78196ea56800a76de7355505dc2dbe7cc904c291e61c9615fe94423670f4b7cf",
+      "rightsStatus": "project-owned",
+      "publicationDecision": "publish",
+      "implementationBasis": "project-owned",
+      "leakageScanStatus": "passed",
+      "contract": {
+        "binding": {
+          "kind": "system-c"
+        },
+        "modeClass": "classic-julia",
+        "supportLane": "existing-system-c",
+        "z0Role": "pixel-seed",
+        "invariant": "parameter-plane-bit-identical"
+      },
+      "tier0": {
+        "sourceBound": true,
+        "rightsBound": true,
+        "safetyEnvelope": true
+      },
+      "tier1": {
+        "evidenceClass": "tier1-candidate-only",
+        "status": "tier1-candidate",
+        "checks": {
+          "parameterPlaneBitIdentical": true,
+          "deterministic": true,
+          "finiteEvidence": true,
+          "pixelSensitive": true,
+          "constantSensitive": true
+        },
+        "reasonCodes": []
+      }
+    },
+    {
+      "formulaId": "e375f423-dfa4-54bf-9d56-c41215f4f72a",
+      "sourceRevision": "10f7accf02bbb79e4e7df8120ed2d02ea8b5a922fe780006c693da9a4ebe013d",
+      "semanticHash": "0ea7fae18fa0aaf0dfdcedb1f39260fdac05fc3ead1b61afd719fd62a0ce1389",
+      "bindingRevision": "2edaf40fdca743b938d28cb107ea3a4a803527177178ac54d3b9f74fa109ef76",
+      "rightsStatus": "project-owned",
+      "publicationDecision": "publish",
+      "implementationBasis": "project-owned",
+      "leakageScanStatus": "passed",
+      "contract": {
+        "binding": {
+          "kind": "system-c"
+        },
+        "modeClass": "classic-julia",
+        "supportLane": "existing-system-c",
+        "z0Role": "pixel-seed",
+        "invariant": "parameter-plane-bit-identical"
+      },
+      "tier0": {
+        "sourceBound": true,
+        "rightsBound": true,
+        "safetyEnvelope": true
+      },
+      "tier1": {
+        "evidenceClass": "tier1-candidate-only",
+        "status": "tier1-candidate",
+        "checks": {
+          "parameterPlaneBitIdentical": true,
+          "deterministic": true,
+          "finiteEvidence": true,
+          "pixelSensitive": true,
+          "constantSensitive": true
+        },
+        "reasonCodes": []
+      }
+    },
+    {
+      "formulaId": "e435bbb6-d866-5876-9f16-f04fbe61ff2b",
+      "sourceRevision": "04817a2a54e195117685266ac9b569e294050cd4617bf3df518390c17ca0cf5f",
+      "semanticHash": "05fe294dadeb96fb7f8268f7fd5134f9a91882770485d3379f7c47bbe4425cb5",
+      "bindingRevision": "79eff8c159292e4a8572c91d66295ef2fa936953d49791d3dcae72a6aaf418eb",
+      "rightsStatus": "project-owned",
+      "publicationDecision": "publish",
+      "implementationBasis": "project-owned",
+      "leakageScanStatus": "passed",
+      "contract": {
+        "binding": {
+          "kind": "system-c"
+        },
+        "modeClass": "classic-julia",
+        "supportLane": "existing-system-c",
+        "z0Role": "pixel-seed",
+        "invariant": "parameter-plane-bit-identical"
+      },
+      "tier0": {
+        "sourceBound": true,
+        "rightsBound": true,
+        "safetyEnvelope": true
+      },
+      "tier1": {
+        "evidenceClass": "tier1-candidate-only",
+        "status": "tier1-candidate",
+        "checks": {
+          "parameterPlaneBitIdentical": true,
+          "deterministic": true,
+          "finiteEvidence": true,
+          "pixelSensitive": true,
+          "constantSensitive": true
+        },
+        "reasonCodes": []
+      }
+    },
+    {
+      "formulaId": "ebe7d5f6-7f65-50cc-b03b-f208d78c955a",
+      "sourceRevision": "2df46891cf4701d035aad8979ee2dfbcb991f6c66802bdfdb27c0cc79c9af9dc",
+      "semanticHash": "a2fad154ba7df8ae8d0d8d6845f7f4c069b1c9fe021f887f66ff213ca466f7e6",
+      "bindingRevision": "9c09527f2c1d688140401b882704b9730ffc069936a01e07adcbaff8125aae00",
+      "rightsStatus": "project-owned",
+      "publicationDecision": "publish",
+      "implementationBasis": "project-owned",
+      "leakageScanStatus": "passed",
+      "contract": {
+        "binding": {
+          "kind": "system-c"
+        },
+        "modeClass": "classic-julia",
+        "supportLane": "existing-system-c",
+        "z0Role": "pixel-seed",
+        "invariant": "parameter-plane-bit-identical"
+      },
+      "tier0": {
+        "sourceBound": true,
+        "rightsBound": true,
+        "safetyEnvelope": true
+      },
+      "tier1": {
+        "evidenceClass": "tier1-candidate-only",
+        "status": "tier1-candidate",
+        "checks": {
+          "parameterPlaneBitIdentical": true,
+          "deterministic": true,
+          "finiteEvidence": true,
+          "pixelSensitive": true,
+          "constantSensitive": true
+        },
+        "reasonCodes": []
+      }
+    },
+    {
+      "formulaId": "ecee6e9d-a5c9-5b29-be39-edbe00e73c50",
+      "sourceRevision": "4d5153905d6fb7405991db7488ce8b225586f8bfb7c012a3c07b528cb28ba5b6",
+      "semanticHash": "fa595104a3d07d79b389a0c763d4a9ce3487873f6f2c44fe19ff4f171a4cea87",
+      "bindingRevision": "cc369ea4352a221683f2488144414eb05a2450307e12d58e2812037ff76cbf25",
+      "rightsStatus": "project-owned",
+      "publicationDecision": "publish",
+      "implementationBasis": "project-owned",
+      "leakageScanStatus": "passed",
+      "contract": {
+        "binding": {
+          "kind": "system-c"
+        },
+        "modeClass": "classic-julia",
+        "supportLane": "existing-system-c",
+        "z0Role": "pixel-seed",
+        "invariant": "parameter-plane-bit-identical"
+      },
+      "tier0": {
+        "sourceBound": true,
+        "rightsBound": true,
+        "safetyEnvelope": true
+      },
+      "tier1": {
+        "evidenceClass": "tier1-candidate-only",
+        "status": "tier1-candidate",
+        "checks": {
+          "parameterPlaneBitIdentical": true,
+          "deterministic": true,
+          "finiteEvidence": true,
+          "pixelSensitive": true,
+          "constantSensitive": true
+        },
+        "reasonCodes": []
+      }
+    },
+    {
+      "formulaId": "ed671b4c-a04c-5545-ad0c-a73727761ce8",
+      "sourceRevision": "46472f355f4ed06661a7e8cc666c73d3037e394e4be8fe56abe43e9b9c7c303a",
+      "semanticHash": "db5860d280c16cb8850866b13075fb29a5d7b43bd24aebb318deac78dfa366d8",
+      "bindingRevision": "2130fb922b0216849afaa235e0b99447ec61ed23625ad8a4e5e825ee3f371813",
+      "rightsStatus": "project-owned",
+      "publicationDecision": "publish",
+      "implementationBasis": "project-owned",
+      "leakageScanStatus": "passed",
+      "contract": {
+        "binding": {
+          "kind": "system-c"
+        },
+        "modeClass": "classic-julia",
+        "supportLane": "existing-system-c",
+        "z0Role": "pixel-seed",
+        "invariant": "parameter-plane-bit-identical"
+      },
+      "tier0": {
+        "sourceBound": true,
+        "rightsBound": true,
+        "safetyEnvelope": true
+      },
+      "tier1": {
+        "evidenceClass": "tier1-candidate-only",
+        "status": "tier1-candidate",
+        "checks": {
+          "parameterPlaneBitIdentical": true,
+          "deterministic": true,
+          "finiteEvidence": true,
+          "pixelSensitive": true,
+          "constantSensitive": true
+        },
+        "reasonCodes": []
+      }
+    },
+    {
+      "formulaId": "f58059ef-67f2-58a4-bac0-bdb1d8608cc0",
+      "sourceRevision": "fcf3406ffb7f4abe696c7d98c1fe2673a32420ed31698337404376096bf28b96",
+      "semanticHash": "de636ea39e2b1927ac77a076a315173c63aa0a59ef720a484fe497cc291e9e7a",
+      "bindingRevision": "e498789a5de9a09c03190fb482eeb98446c0f94432598a2a8160fbe3afac534c",
+      "rightsStatus": "project-owned",
+      "publicationDecision": "publish",
+      "implementationBasis": "project-owned",
+      "leakageScanStatus": "passed",
+      "contract": {
+        "binding": {
+          "kind": "system-c"
+        },
+        "modeClass": "classic-julia",
+        "supportLane": "existing-system-c",
+        "z0Role": "pixel-seed",
+        "invariant": "parameter-plane-bit-identical"
+      },
+      "tier0": {
+        "sourceBound": true,
+        "rightsBound": true,
+        "safetyEnvelope": true
+      },
+      "tier1": {
+        "evidenceClass": "tier1-candidate-only",
+        "status": "tier1-candidate",
+        "checks": {
+          "parameterPlaneBitIdentical": true,
+          "deterministic": true,
+          "finiteEvidence": true,
+          "pixelSensitive": true,
+          "constantSensitive": true
+        },
+        "reasonCodes": []
+      }
+    }
+  ],
+  "contentHash": "7b0aa9566152eba57af1fb93ff2cf3f1df188a3f534e8e08608cf41fcf1e8b91"
+}

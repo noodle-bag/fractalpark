@@ -1,0 +1,31 @@
+{
+  "schema": "fractalpark-formula-library-runtime-manifest/v1",
+  "decisionRevision": 4,
+  "runtimeRevision": 4,
+  "releaseManifestSha256": "55f1705bddd2bd1662dc88a079c315696b63540643bf2f7703a31dbdeac59034",
+  "publicationDecisionsContentHash": "cac35a05d2d0c219b4f5ac00f3dea5b5fbb2b9c6b2fc15ea3383ef0f62d6031d",
+  "shardCount": 4,
+  "rowCount": 195,
+  "shards": [
+    {
+      "file": "shard-000.json",
+      "sha256": "f09f4180c2a6f84e86509a76adda0d229790699d8efd2eecf7588bd1a7721266",
+      "rows": 64
+    },
+    {
+      "file": "shard-001.json",
+      "sha256": "23bea034c0e5c74bc37015f4a87c0699a5d574e57ac08a6e9b6a6b0522b35d5f",
+      "rows": 64
+    },
+    {
+      "file": "shard-002.json",
+      "sha256": "23af8047d303b30bd2905ef83490ea598ede3dc683164357a48a2c29d3dee0ad",
+      "rows": 64
+    },
+    {
+      "file": "shard-003.json",
+      "sha256": "1bf7269f4bd1ef008204a1d751e6baec00bcb9bc0ebfb114a72f15776f0f8fd4",
+      "rows": 3
+    }
+  ]
+}

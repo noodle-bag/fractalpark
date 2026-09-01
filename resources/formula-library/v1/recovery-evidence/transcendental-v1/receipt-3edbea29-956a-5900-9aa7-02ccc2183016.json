@@ -1,0 +1,102 @@
+{
+  "schema": "fractalpark-b94-transcendental-recovery-receipt/v1",
+  "deterministicDoubleRender": true,
+  "publicationEligible": false,
+  "publicationDecisionMutation": false,
+  "sourceBindings": {
+    "scripts/generate-transcendental-recovery-evidence.ts": "e2ca417e5d6715bc644c7a50521a1cd8e8fc5cbc6b4f64a13b2110c8291276d4",
+    "src/engine/formulas/v1/native-recipes-b94-recovered-transcendental.ts": "61fc575963d4ffce71c38f921e1d2e16272a1fd689dba1201275f31f14ebe51e",
+    "src/engine/formulas/v1/provisional-profile.ts": "9ccfccfb24b5abe991d95f9ad6561e0d01499bdd95955b7a3e9a07d7c31abfe4",
+    "src/engine/formulas/v1/provisional-preview.ts": "6f018547e3d111aea53f72fa66bdf15a995c9490649237a4aee7fbadc5d648ee",
+    "src/engine/frm/frm-v1-stdlib.ts": "e7b48941d8b6307133a1718a99f7a933cdc75f8ea7a68d99449a1ad7e5e31b6c",
+    "src/engine/frm/v1-backend.ts": "076273190738b02622091bb31d0c30ef2a3fdd3edc82e573a1cebf5c541d1f67",
+    "src/engine/frm/frm-v1-glsl-prelude.ts": "c50480ff75af9e3f1dd49866ca2156e9c566a9297b448012533c9835ef66b09a",
+    "src/engine/shaders/complex-math.glsl": "0e45ee640e2c62de66c616b9cf53ee12ce0b78a59d168de0f8fadbb3335aea89",
+    "src/engine/plugins/builtins/formulas/recoveredTranscendentalMath.ts": "46ee77aa60652c81b6a379ce423dac9a8d7a5d8d2771cae307e60fe34d3c96e4",
+    "src/engine/plugins/formula-catalog.ts": "14570ae82c6f1e659f7a4cfcc2318997df5080f981070c409e808cbd57bd58c2",
+    "scripts/formula-library-bulk-migration.ts": "d5f0a90e0b7a96eadfbe9c442b54216bb851b743e7ca16da4b5a6f6f9b8f01e2",
+    "resources/formula-library/v1/recovery-evidence/transcendental-v1/cross-check.json": "765ec8e150f641d54a76195366f1fc0b3d96c63e320291a58dda30982ce797b9"
+  },
+  "row": {
+    "formulaId": "3edbea29-956a-5900-9aa7-02ccc2183016",
+    "runtimeId": "cosJulia",
+    "family": "transcendental",
+    "failureClass": "swiftshader-transcendental",
+    "technicalStatus": "passed",
+    "publicationDecision": "publish",
+    "sourceRevision": "75cc7f04fc69d74294c3ed9dcd5271585a6d186311dd10a906e781958cb46870",
+    "semanticHash": "a3978790b2aba850f4f6765da8820e3792696877b2c5005c1128b9d18f1bbceb",
+    "numericRemedy": {
+      "stableExp": "binary32-taylor8-x-over-256-square8",
+      "stableSinCos": "binary32-taylor-range-reduced-double-angle",
+      "stableHypot": "binary32-scaled-hypot",
+      "orbitOutputGrid": 16
+    },
+    "crossCheck": {
+      "formulaId": "3edbea29-956a-5900-9aa7-02ccc2183016",
+      "runtimeId": "cosJulia",
+      "family": "transcendental",
+      "ok": true,
+      "v1WebglParity": "passed",
+      "nativeCrossCheck": {
+        "ok": true,
+        "maxRelativeDelta": 0
+      },
+      "orbitPoints": 67,
+      "sourceRevision": "75cc7f04fc69d74294c3ed9dcd5271585a6d186311dd10a906e781958cb46870"
+    },
+    "profile": {
+      "boundsSource": "upstream-candidate",
+      "value": {
+        "schemaVersion": 1,
+        "formulaId": "3edbea29-956a-5900-9aa7-02ccc2183016",
+        "sourceRevision": "75cc7f04fc69d74294c3ed9dcd5271585a6d186311dd10a906e781958cb46870",
+        "profileRevision": "b591d2d9a0457ed72cc6fdf0b0ad0a9fe8e40fc200726d601f79b86a0e4b5e25",
+        "parameters": {},
+        "mode": "julia",
+        "juliaC": [
+          -0.8,
+          0.156
+        ],
+        "view": {
+          "centerX": 0,
+          "centerY": 0.5,
+          "zoom": 0.25,
+          "rotation": 0
+        },
+        "iterations": 200,
+        "coloring": {
+          "pipelineVersion": 1,
+          "outsideColoringId": "smooth",
+          "insideColoringId": "black",
+          "smooth": true
+        },
+        "palette": {
+          "paletteId": "inferno"
+        },
+        "transform": {
+          "rotation": 0,
+          "scaleX": 1,
+          "scaleY": 1,
+          "skewX": 0,
+          "skewY": 0,
+          "offsetX": 0,
+          "offsetY": 0
+        }
+      }
+    },
+    "preview": {
+      "file": "preview-3edbea29-956a-5900-9aa7-02ccc2183016.png",
+      "width": 96,
+      "height": 60,
+      "rawRgbaSha256": "27301e3d20bf780ec46ccf5314f2cf3e583e2b1525e1ddd60b046383206f37fd",
+      "pngSha256": "7893bec6f819a52fd8900e7e8e64524e8d0449920e84ce5531c44cc1b51647a0",
+      "escapedPixels": 910,
+      "interiorPixels": 4850,
+      "nonFinitePixels": 0,
+      "uniqueColors": 176,
+      "anomalies": []
+    }
+  },
+  "contentHash": "22b78ee3a8f73da0856dd03d23218cd05f4ac237f003b35893763ded01486945"
+}

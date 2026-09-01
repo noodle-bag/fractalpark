@@ -1,0 +1,33 @@
+{
+  "schema": "fractalpark-teaching-locale/v1",
+  "formulaId": "09ee96d1-18a8-5dad-83e1-d05f0c59be4b",
+  "locale": "ko",
+  "sourceRevision": "ab0bdc1929dee1daeb9486d7b1fd885a6644367232854694fa88908eb4e6c0ce",
+  "semanticHash": "061df18cf898a0a049d63cd5f6cf087a28ac7f830bb9694e954c1aaae0b29851",
+  "englishContentHash": "1cf5b919d9d0433642e675460df0a931cc349fe32425c11b23f74e23e66db79b",
+  "localizedName": "chebyshev2",
+  "overview": "FRM-like/1에서 chebyshev2은 소스의 초기화, 반복, 종료 검사를 따라 실행돼요. 이름으로 규칙을 추측하지 말고 각 단계를 현재 상태에 대한 명시적 연산으로 보세요. 고정 프로필로 같은 반복 과정을 관찰할 수 있어요.",
+  "sourceWalkthrough": {
+    "09ee96d1-18a8-5dad-83e1-d05f0c59be4b:ab0bdc1929dee1daeb9486d7b1fd885a6644367232854694fa88908eb4e6c0ce:init": "초기화 노드가 실행하는 내용: `if ismand`",
+    "09ee96d1-18a8-5dad-83e1-d05f0c59be4b:ab0bdc1929dee1daeb9486d7b1fd885a6644367232854694fa88908eb4e6c0ce:loop": "반복 노드가 실행하는 내용: `z = 2 * (z * z) - (1, 0) + c`",
+    "09ee96d1-18a8-5dad-83e1-d05f0c59be4b:ab0bdc1929dee1daeb9486d7b1fd885a6644367232854694fa88908eb4e6c0ce:bailout": "종료 검사는 다음과 같아요: `|z| <= 256`"
+  },
+  "syntaxFeatures": {
+    "source-sequence": "이 구조는 인용된 소스 단계들을 확인 가능한 순서로 정리해요. 09ee96d1-18a8-5dad-83e1-d05f0c59be4b:ab0bdc1929dee1daeb9486d7b1fd885a6644367232854694fa88908eb4e6c0ce:init, 09ee96d1-18a8-5dad-83e1-d05f0c59be4b:ab0bdc1929dee1daeb9486d7b1fd885a6644367232854694fa88908eb4e6c0ce:loop, 09ee96d1-18a8-5dad-83e1-d05f0c59be4b:ab0bdc1929dee1daeb9486d7b1fd885a6644367232854694fa88908eb4e6c0ce:bailout"
+  },
+  "parameterExperiment": {
+    "steps": [
+      "고정 프로필을 사용하세요: mode parameter-plane; center (-0.5, 0); zoom 0.4; rotation 0; iterations 96. 한 번 실행해 결과를 기록하고, 같은 프로필로 다시 실행하세요."
+    ],
+    "expectedObservation": "두 실행을 비교하고 `z = 2 * (z * z) - (1, 0) + c`에서 보이는 결과와 반복 동작이 같은지 기록하세요."
+  },
+  "exercise": {
+    "prompt": "`z = 2 * (z * z) - (1, 0) + c`와 관련된 소스 주석을 찾아 초기화, 반복, 종료 검사의 순서를 설명하세요.",
+    "completionCheck": "완료하려면 `z = 2 * (z * z) - (1, 0) + c`에 인용된 주석 키 세 개를 적고 초기화, 반복, 종료 순서로 배열하세요."
+  },
+  "factsPresentation": {
+    "provenanceLead": "출처:",
+    "rightsLead": "권리:"
+  },
+  "contentHash": "431b463bf17a49ec9c46d526af77f16a2d99a0cb766347ae3367b953b95ad99f"
+}

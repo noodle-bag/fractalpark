@@ -1,0 +1,27 @@
+{
+  "evidenceId": "0e5b68412492e0fe169897d8b1015d6890b569be76a45a4747b6c04bc9778c75",
+  "schemaVersion": 1,
+  "locale": "pt",
+  "surface": "combined",
+  "provider": "kimi-coding",
+  "requestedModel": "k3",
+  "actualModel": "k3",
+  "finishReason": "stop",
+  "status": "approved",
+  "reviewedAt": "2026-08-21T08:19:35.030387+00:00",
+  "sourceCommit": "37320f293839812017178bb91efe7670239edfa3",
+  "sourceManualSha256": "e5168f1a0211596659314d748fa53825892a2a6f089350e636a8c0baf3903758",
+  "sourceMessageProjectionSha256": "effb295f43ad338c80f1becab42a90cbb8afd2345a79c2e014acf031ea1faaf7",
+  "targetManualSha256": "c9bb8bba706aed238858012646c000b4d2333bb3a6915c2cbea9dab186fe9fc1",
+  "targetMessageProjectionSha256": "3a126962e9bf3d0871d10e714a31f620dcc58b8af8fce81867ae52210354185f",
+  "messagePathCount": 39,
+  "reviewText": "VERDICT: APPROVE\n\n覆盖：手册头 + 第1–8节 + 39/39 消息对全部核对通过。\n\n- 数字（677/513/164、94/7/21、588/579/9/117、65.536 等）与原文一致；千分位为 locale 约定。\n- 规范语气（MUST/MUST NOT → DEVE/NÃO DEVE）逐条对应，无否定反转、无遗漏或新增语义。\n- 术语（Definition、Record、Profile、Remix、sourceRevision、semanticHash 等）保持英文或一致译法；链接锚点通过新增 `<a id>` 保持可用，属必要保留，不算缺陷。\n- 手册元数据（Locale、SHA-256、AI 翻译声明）与 `/pt/formulas/<formulaId>` 为既定 provenance，符合要求。\n- 技术语义检查：一元负号优先级、`|z| <= 4` 半径语义、LastSqr 饱和行为、v0.4.19 偏差、gated writer、CRLF 规范化、安全信封等均准确传达。\n\n未发现事实性、规范性、技术性、语法或可用性缺陷。",
+  "usage": {
+    "prompt_tokens": 13388,
+    "completion_tokens": 1875,
+    "total_tokens": 15263,
+    "completion_tokens_details": {
+      "reasoning_tokens": 1606
+    }
+  }
+}

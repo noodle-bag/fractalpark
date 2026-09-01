@@ -1,0 +1,33 @@
+{
+  "schema": "fractalpark-teaching-locale/v1",
+  "formulaId": "04338d55-9f3d-574a-8fb6-58ec7d530cc5",
+  "locale": "es",
+  "sourceRevision": "fd21d1feee8546a286c7af891e3a671613d5b55571c0426f07c77c20d409eff6",
+  "semanticHash": "d4d06a88f0945a41992881622664918d3d41170d18777cae7554e4d2fe90f7ed",
+  "englishContentHash": "b25aaf88875f800e6740dd28bf82a8cab8dd089da3cfc2bc634439a7410be649",
+  "overview": "Esta unidad se basa para ti en las siguientes operaciones exactas de FRM-like/1:  `init: z = 0; q = pixel. loop: q = flip(q); z = flip(z ^ 2 + q). bailout: |z| <= 4.`",
+  "sourceWalkthrough": {
+    "04338d55-9f3d-574a-8fb6-58ec7d530cc5:fd21d1feee8546a286c7af891e3a671613d5b55571c0426f07c77c20d409eff6:init": "Esta anotación ejecuta `z = 0`.",
+    "04338d55-9f3d-574a-8fb6-58ec7d530cc5:fd21d1feee8546a286c7af891e3a671613d5b55571c0426f07c77c20d409eff6:flip-q": "Esta anotación ejecuta `q = flip(q)`.",
+    "04338d55-9f3d-574a-8fb6-58ec7d530cc5:fd21d1feee8546a286c7af891e3a671613d5b55571c0426f07c77c20d409eff6:flip-z": "Esta anotación ejecuta `z = flip(z ^ 2 + q)`.",
+    "04338d55-9f3d-574a-8fb6-58ec7d530cc5:fd21d1feee8546a286c7af891e3a671613d5b55571c0426f07c77c20d409eff6:bailout": "Esta anotación ejecuta `|z| <= 4`. Cierra la secuencia de iteración de esta fórmula."
+  },
+  "syntaxFeatures": {
+    "source-sequence": "Esta característica de secuencia conecta, en el orden del código fuente, las operaciones citadas relacionadas con `flip(q)` y `flip(z ^ 2 + q)`."
+  },
+  "parameterExperiment": {
+    "steps": [
+      "Renderiza primero la base fijada de 96 iteraciones de flip2_man_m, siguiendo `flip(q)`, `flip(z ^ 2 + q)`. Después mantén fijos el centro, el zoom, la rotación y la fórmula, cambia solo el límite a 48 iteraciones y renderiza de nuevo."
+    ],
+    "expectedObservation": "En las pruebas de `flip(q)`, `flip(z ^ 2 + q)` de flip2_man_m, registra si hay una diferencia visible respecto de la base; registra también cuando no haya diferencia."
+  },
+  "exercise": {
+    "prompt": "Explica el papel de `flip(q)` y `flip(z ^ 2 + q)` en el orden del código fuente y compara las ejecuciones según los pasos del experimento de parámetros.",
+    "completionCheck": "Tu respuesta debe explicar las 4 operaciones anotadas, registrar la comparación del experimento y mencionar `flip(q)` y `flip(z ^ 2 + q)`."
+  },
+  "factsPresentation": {
+    "provenanceLead": "Fuente: revisión de ejecución fijada y decisión de publicación.",
+    "rightsLead": "La información de derechos está en la unidad factual en inglés."
+  },
+  "contentHash": "9287234dc62edf9c1dc86969164b580a5b806a364f9d7c5ad19b2ac6625e1d85"
+}

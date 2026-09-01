@@ -1,0 +1,889 @@
+{
+  "schema": "fractalpark-formula-record-preview-preflight/v1",
+  "revision": 1,
+  "status": "pass",
+  "sourceBindings": {
+    "resources/formula-library/v1/record-preview-gates.v1.json": "c13fed3f9373fde38080772e87560d62017356661170638cb16aeb3600989030",
+    "public/formula-library/v1/runtime/published/index.json": "e912b1cb4ad884a6a021fd0d2683495e8ea61911d05c4135fbecaa335cade742",
+    "resources/formula-library/v1/julia-runtime-activation.v1.json": "7d7e82d3c5de8388e615149a2d790862efece855a8e6cefb67f852c51461cedc",
+    "resources/formula-library/v1/record-preview-profiles.v1.json": "53ba73680174600901e217339a233a48b81d91e84b0fd74bb17def2908a86b3e",
+    "resources/formula-library/v1/record-preview-quality-scan.v1.json": "e7afc3afa74319c2ff45cca80c283eafc7d9bc96ee7cc9ddbd79ad362edd1807",
+    "resources/formula-library/v1/record-preview-accepted-deviations.v1.json": "5dd843e3f865e8d25117e47f0e41f080060f280d2e291fef04ed937b794c8b00",
+    "scripts/generate-formula-record-masters.ts": "14c5e3053f1257c28dd27b6c3d2cbfe6697087b017f0ed27b47a6bc5405aaf71",
+    "scripts/run-formula-record-masters.ts": "59afbfd8275295fd2e48bd94418162e030bd98de7df645c354f4a13dafd32522",
+    "src/engine/formulas/v1/published-adapter.ts": "a45251017b75ac9ab13357f1f39876a4619cd0e2906d390fc73b898d4f01c3dc",
+    "src/engine/formulas/v1/julia-runtime-activation-v1.ts": "3562135bfcfaca801ef918e7be2388446f3493f148ab8d06493a1a045eed669a",
+    "src/engine/formulas/v1/record-preview-renderer.ts": "ed809591337300a18a3f2c72e3139559bf724963eeb03131f4b329fc39608d87",
+    "src/engine/frm/v1-backend.ts": "076273190738b02622091bb31d0c30ef2a3fdd3edc82e573a1cebf5c541d1f67",
+    "package-lock.json": "c7fb57104902f454d6dc1c29e776eebab2c19a26d98dc2253fef84058a033168"
+  },
+  "profileArtifactContentHash": "0753ea05b6c0b3f8000c0be1f90cdb0cef8bff6970e1c6d0342e4b866e51aa42",
+  "profilePolicySha256": "31a9603880a1aed7dbceeb511b53a3e6b74681a7235e9448998add390cd82395",
+  "acceptedDeviationPolicyContentHash": "b622063870a6ad0e891b8eeeadfbd0f3ce97b10f757acc832f20ecb547760e60",
+  "acceptedDeviationPolicyRows": 43,
+  "acceptedDeviationRows": 0,
+  "profileDeterminismVerifiedRows": 534,
+  "profileVerificationRenders": 2,
+  "sourceEncoderDeterminismFormulaIds": [
+    "06504747-8ee8-5c39-869b-8b3a992e8c24",
+    "0ba0b082-c4b0-51d8-b981-7ca1ca25b9f3",
+    "17d88272-6dbf-5622-996a-b116ea3a3fab",
+    "212174eb-5344-57a9-95d4-24882df4b972",
+    "3705eb33-b86f-5ef4-9ad5-022ab076390f",
+    "37425fb2-8542-502f-94ac-94c0ccb6e508",
+    "5d0877c0-5f84-5c3b-9466-b9f9b417cb6a",
+    "62423e7c-842d-5b59-b73d-03a40ec11da1",
+    "743f6bbf-4cc1-5df7-8f3e-2e654ddc81ba",
+    "74874658-3c47-5813-869a-70e642dc0038",
+    "78e550c6-d58d-57b7-92ff-82e9ed0728f0",
+    "88dd57cd-a348-55e8-983a-74c0acba57ae",
+    "9923991c-19b5-5559-8250-5eb04726f4bd",
+    "999adf4a-6019-56f0-89a4-c09250e9a0a2",
+    "a569d2c4-d397-5634-9dfe-21b2ab1a386a",
+    "af500910-46ce-5a43-b430-c0154cc05959",
+    "bb186688-4571-5725-a8ed-a17e0100dbc8",
+    "d0079630-8ed3-5379-9e37-52cb7f0f7379",
+    "de8106f4-22ce-567c-a1c7-e299a8d4a878",
+    "f031c5ee-cb45-5389-80ed-1c5365a12e02",
+    "fdbbc343-f4c3-5eb4-94de-f5a1d9ef2525"
+  ],
+  "sourceEncoderDeterminismRows": 21,
+  "sourceEncoderDeterminismRenders": 2,
+  "renderer": "frm-like-v1-cpu-400x250-chromium-upscale",
+  "encoder": "chromium-canvas-webp-q0.82",
+  "browserVersion": "145.0.7632.6",
+  "nodeVersion": "v22.23.1",
+  "platform": "linux-x64",
+  "width": 1200,
+  "height": 750,
+  "rowCount": 21,
+  "sourceRenderCount": 42,
+  "wallMs": 247672,
+  "peakProcessTreeRssBytes": 1077776384,
+  "totalBytes": 704646,
+  "maximumBytes": 162970,
+  "projectedTotalBytes": 17918142,
+  "projectedWallMs": 3272809,
+  "rows": [
+    {
+      "formulaId": "06504747-8ee8-5c39-869b-8b3a992e8c24",
+      "sourceRevision": "9550f75ecdb596526b8a5c980361843f70210a5bb6c19a90746736acb8f8faac",
+      "semanticHash": "8523153026068da89b9bcb85c15f28c87a878c2fd5a8c2fd113b28ddd7bf69a7",
+      "runtimeDefaultProfileSha256": "74568d8e1f43c0909b689642eb052eff42adf404eb70581018deef4b9a588023",
+      "recordPreviewProfileRevision": "838ce454aa7b1d1d75d196093da09bf90ee7633ab450a026a0cac0888e21d09a",
+      "recordPreviewProfileSha256": "54e4575a49a2ccaf81946cee0dfd5120142744090c144c1e20b47298d98012d5",
+      "profileSelection": {
+        "strategy": "bounded-black",
+        "candidateOrdinal": 623,
+        "iterationCandidate": 16,
+        "parameterCandidateId": "single-function:secondTransform:sqr",
+        "viewCandidateId": "effective-default"
+      },
+      "assetRevision": "a7eb2fea98d22e98",
+      "file": "06504747-8ee8-5c39-869b-8b3a992e8c24.a7eb2fea98d22e98.webp",
+      "webpSha256": "ec9fea4ad5ed5616fbafafada03437086de01f95f2a8b07368e50345ef04c3f0",
+      "width": 1200,
+      "height": 750,
+      "bytes": 17470,
+      "sourceMetrics": {
+        "escapedPixels": 100000,
+        "interiorPixels": 0,
+        "nonFinitePixels": 0,
+        "uniqueColors": 1313,
+        "rawRgbaSha256": "939ae510b2eae5beb2716154ce492b92d15df7fe68c22b2549dde88d8216b011"
+      },
+      "pixelFingerprintSha256": "b717d8e10810c754d7578b6c3c2d4facfa5d5d5bf2ad9ddb118086deb426ec8e",
+      "perceptualHash": "7f7763e3e363777f",
+      "metrics": {
+        "luminanceRange": 242,
+        "distinctLuminanceValues": 241,
+        "edgeEnergy": 0.027897177878541613,
+        "opaqueFraction": 1,
+        "darkFraction": 0.025694444444444443,
+        "lightFraction": 0.34913194444444445
+      },
+      "acceptedDeviations": []
+    },
+    {
+      "formulaId": "0ba0b082-c4b0-51d8-b981-7ca1ca25b9f3",
+      "sourceRevision": "46f51a27e66b8e029ee20112496383b57cc510dbfcae0bc63dd9b0a6886dcb8f",
+      "semanticHash": "374bad563fd78d9d062b53d35dc9be8498dba81eb412aea6c35e29d54ef4456a",
+      "runtimeDefaultProfileSha256": "74568d8e1f43c0909b689642eb052eff42adf404eb70581018deef4b9a588023",
+      "recordPreviewProfileRevision": "40ed5728b6172d970a521ddddea1bf7b42693cf870fe555e8e021a23c31076df",
+      "recordPreviewProfileSha256": "72b33672a0076f2b3561a81fd67dd78af02af7698c740e3f6c0a3fda62e621c3",
+      "profileSelection": {
+        "strategy": "runtime-black",
+        "candidateOrdinal": 1,
+        "iterationCandidate": 16,
+        "parameterCandidateId": "defaults",
+        "viewCandidateId": "effective-default"
+      },
+      "assetRevision": "e40590fc34451092",
+      "file": "0ba0b082-c4b0-51d8-b981-7ca1ca25b9f3.e40590fc34451092.webp",
+      "webpSha256": "dfdb6db209bb21f4bb1097b40960c5eefc0952cb68e7e7c7210cf488f3ec295d",
+      "width": 1200,
+      "height": 750,
+      "bytes": 17386,
+      "sourceMetrics": {
+        "escapedPixels": 100000,
+        "interiorPixels": 0,
+        "nonFinitePixels": 0,
+        "uniqueColors": 1165,
+        "rawRgbaSha256": "34d0b9a2b2f79d7b1a820a9d0ffb0ce71b094e0534e2ffb60c6f8036746a3bd5"
+      },
+      "pixelFingerprintSha256": "f56967eb56eec87c2b246db64895c0275994dfe0a46d4dab6739ca3838f0967e",
+      "perceptualHash": "e7c3c38181c3c3e7",
+      "metrics": {
+        "luminanceRange": 237,
+        "distinctLuminanceValues": 238,
+        "edgeEnergy": 0.030719644422358174,
+        "opaqueFraction": 1,
+        "darkFraction": 0.08506944444444445,
+        "lightFraction": 0.0642361111111111
+      },
+      "acceptedDeviations": []
+    },
+    {
+      "formulaId": "17d88272-6dbf-5622-996a-b116ea3a3fab",
+      "sourceRevision": "32437882a899d589e7ff8fa968c7248e5c9436fa6a87a48fa2072ff09e3c6540",
+      "semanticHash": "834623aa2e4578e5c976d7d769d4ca9d49beaf484c27da4943546e23ef555e7e",
+      "runtimeDefaultProfileSha256": "728d610cfcb3e01139cbe5ba742bb66211c63d3282c2fbeda2823a8a3daa19a9",
+      "recordPreviewProfileRevision": "e5dc2f330b7597c977a354b06b845c0a4d998de6e81c6249218f6fd94ed166a8",
+      "recordPreviewProfileSha256": "b69f968456a60f29280c0d3f2ec1d9025f90e0e8471054daf55175804dde4bef",
+      "profileSelection": {
+        "strategy": "runtime-orbit-average",
+        "candidateOrdinal": 2,
+        "iterationCandidate": 2,
+        "parameterCandidateId": "defaults",
+        "viewCandidateId": "effective-default"
+      },
+      "assetRevision": "5768d1c19870c116",
+      "file": "17d88272-6dbf-5622-996a-b116ea3a3fab.5768d1c19870c116.webp",
+      "webpSha256": "8ce02d1fcb2acfd5aff1d176ee1be403601858d530e2085c299a5024fd10854f",
+      "width": 1200,
+      "height": 750,
+      "bytes": 5842,
+      "sourceMetrics": {
+        "escapedPixels": 0,
+        "interiorPixels": 100000,
+        "nonFinitePixels": 0,
+        "uniqueColors": 319,
+        "rawRgbaSha256": "2e41708bfcce6d1c414a30ff51724cb9bdb311bf11e47ef9eb465eb3a83941cf"
+      },
+      "pixelFingerprintSha256": "f0b292c1844cdcc9869fdffde1af19c87e44c312bc73b4a54d457be6fa37cafb",
+      "perceptualHash": "fffffffb00000000",
+      "metrics": {
+        "luminanceRange": 107,
+        "distinctLuminanceValues": 108,
+        "edgeEnergy": 0.003987135156773666,
+        "opaqueFraction": 1,
+        "darkFraction": 0.1685763888888889,
+        "lightFraction": 0
+      },
+      "acceptedDeviations": []
+    },
+    {
+      "formulaId": "212174eb-5344-57a9-95d4-24882df4b972",
+      "sourceRevision": "d983483ead4b85d85231cfd98bc0e5977db343fdee220480e9e9a1829f7225dd",
+      "semanticHash": "a2566d3cea612f26da988a860abda1894c5f2aca98ed42ad5484fd680e2192e4",
+      "runtimeDefaultProfileSha256": "a9c6dec8c4bbbdd55dc8e5a82b5111ba06c1414dde42beb3d32953864a21fea9",
+      "recordPreviewProfileRevision": "2f804ebdc10d85da2f469d1ff3eabaa3ae90cbd5f8b6ed93883bc87f6b76fb25",
+      "recordPreviewProfileSha256": "1c21e53b1fc4f3ceba3a955aa9bd58578dce6a0f0096d2da6328602c393a0adf",
+      "profileSelection": {
+        "strategy": "runtime-black",
+        "candidateOrdinal": 1,
+        "iterationCandidate": 16,
+        "parameterCandidateId": "defaults",
+        "viewCandidateId": "effective-default"
+      },
+      "assetRevision": "2ded9a32fd59ad03",
+      "file": "212174eb-5344-57a9-95d4-24882df4b972.2ded9a32fd59ad03.webp",
+      "webpSha256": "89649e620c3bef2ce614419a1f859ce7a8dccb1fde6f6b0ec964829ca316250a",
+      "width": 1200,
+      "height": 750,
+      "bytes": 36158,
+      "sourceMetrics": {
+        "escapedPixels": 88468,
+        "interiorPixels": 11532,
+        "nonFinitePixels": 0,
+        "uniqueColors": 1478,
+        "rawRgbaSha256": "393ce3740cef70fa412455913194bc48186b2d0ba4ffe08026974b660fd74000"
+      },
+      "pixelFingerprintSha256": "43b06e07eead7e4edf4001ec07c84d37e7b41d92807cfc47c312bafd54b0f38b",
+      "perceptualHash": "e7c383818183c3e3",
+      "metrics": {
+        "luminanceRange": 249,
+        "distinctLuminanceValues": 250,
+        "edgeEnergy": 0.05248600672229283,
+        "opaqueFraction": 1,
+        "darkFraction": 0.18125,
+        "lightFraction": 0.2873263888888889
+      },
+      "acceptedDeviations": []
+    },
+    {
+      "formulaId": "3705eb33-b86f-5ef4-9ad5-022ab076390f",
+      "sourceRevision": "213a75925ffe62e49d04f21515373c49941b9db664c69bc2629d8f202518a2aa",
+      "semanticHash": "601f1df7a5d9ace6bb1efb51044961206245022c79c68e466de3ca142b962b60",
+      "runtimeDefaultProfileSha256": "74568d8e1f43c0909b689642eb052eff42adf404eb70581018deef4b9a588023",
+      "recordPreviewProfileRevision": "34c99297b09a3caf40af9f07fda8aae66b5b88fd5776cf02b58c1ed8e117be5d",
+      "recordPreviewProfileSha256": "f0f08ccfa2d2a229d90fbefc6b9e8ccffa40fd3ca6f7695aac802f74cfbe42a2",
+      "profileSelection": {
+        "strategy": "runtime-orbit-average",
+        "candidateOrdinal": 2,
+        "iterationCandidate": 16,
+        "parameterCandidateId": "defaults",
+        "viewCandidateId": "effective-default"
+      },
+      "assetRevision": "7d749f0bebc14be9",
+      "file": "3705eb33-b86f-5ef4-9ad5-022ab076390f.7d749f0bebc14be9.webp",
+      "webpSha256": "88bec2cbaac44e0d454e128efcc528a4ca8f68a95fdda7a13bd685f6050edbd2",
+      "width": 1200,
+      "height": 750,
+      "bytes": 5348,
+      "sourceMetrics": {
+        "escapedPixels": 4792,
+        "interiorPixels": 95208,
+        "nonFinitePixels": 0,
+        "uniqueColors": 117,
+        "rawRgbaSha256": "43040e3c48a99cd059500cbb3aba7ef7f2da69be90639e6972ebce31194db3c2"
+      },
+      "pixelFingerprintSha256": "198aefc07ff787f98f771a6637b19d5b264db6625e771507ed82b5b73fefdb80",
+      "perceptualHash": "ffe7e3000081c3c3",
+      "metrics": {
+        "luminanceRange": 35,
+        "distinctLuminanceValues": 36,
+        "edgeEnergy": 0.0023617754035792343,
+        "opaqueFraction": 1,
+        "darkFraction": 0.04861111111111111,
+        "lightFraction": 0
+      },
+      "acceptedDeviations": []
+    },
+    {
+      "formulaId": "37425fb2-8542-502f-94ac-94c0ccb6e508",
+      "sourceRevision": "69a7d072638f6981ee8e06c85d03831c9a53fb549337605eb35bb3cdf1db4e10",
+      "semanticHash": "01a25a87e2bb305345f4b72f0a9a87809258c73d5b379604dfd9625796dbb372",
+      "runtimeDefaultProfileSha256": "74568d8e1f43c0909b689642eb052eff42adf404eb70581018deef4b9a588023",
+      "recordPreviewProfileRevision": "0b42dd300e9395b4b1a8436425ca7bb0282dec90129a92436a8fbfbc2f3e7654",
+      "recordPreviewProfileSha256": "b6630109de60f47de8332b54ea599353173e6ab5262e083532cd8ca4e7c58053",
+      "profileSelection": {
+        "strategy": "runtime-orbit-average",
+        "candidateOrdinal": 2,
+        "iterationCandidate": 16,
+        "parameterCandidateId": "defaults",
+        "viewCandidateId": "effective-default"
+      },
+      "assetRevision": "12b68cf1ea9860a3",
+      "file": "37425fb2-8542-502f-94ac-94c0ccb6e508.12b68cf1ea9860a3.webp",
+      "webpSha256": "58c56702bd3a5d77b0f67ed4e08a7ff6e0aaa213822a0e60e8dc64b784121438",
+      "width": 1200,
+      "height": 750,
+      "bytes": 5396,
+      "sourceMetrics": {
+        "escapedPixels": 0,
+        "interiorPixels": 100000,
+        "nonFinitePixels": 0,
+        "uniqueColors": 66,
+        "rawRgbaSha256": "9b8cdf74eb3aefb7ef1e689d3381db3ca8210a82ef385f599915b72accabb521"
+      },
+      "pixelFingerprintSha256": "867d057d5be1e9dc6aceefe3d7d6cb535a85bfad08782760d12890aa4cccbf85",
+      "perceptualHash": "00000000ffffffff",
+      "metrics": {
+        "luminanceRange": 20,
+        "distinctLuminanceValues": 21,
+        "edgeEnergy": 0.0022261562139815373,
+        "opaqueFraction": 1,
+        "darkFraction": 0.4979166666666667,
+        "lightFraction": 0
+      },
+      "acceptedDeviations": []
+    },
+    {
+      "formulaId": "5d0877c0-5f84-5c3b-9466-b9f9b417cb6a",
+      "sourceRevision": "ea2f2364c6b7d4fc9954031f5cd1f4785990dec758cb4496d6151360d90e52d0",
+      "semanticHash": "567e8ce9b2d28e6165b7839ef0673118e7640420a06c2640ab731f7a26ca0241",
+      "runtimeDefaultProfileSha256": "d1d8f7faa593523e8d10ffe25dd5122c651ecddc99a7b453c90cb389b24a4864",
+      "recordPreviewProfileRevision": "a24a2430fe9f24685b6649b9512e34e459f0ff751643569c31d9d5f24a717716",
+      "recordPreviewProfileSha256": "b5206aa0fef68442645481950aef1272e4ffb0006ba20f09ea4612d983f87239",
+      "profileSelection": {
+        "strategy": "runtime-orbit-average",
+        "candidateOrdinal": 2,
+        "iterationCandidate": 16,
+        "parameterCandidateId": "defaults",
+        "viewCandidateId": "effective-default"
+      },
+      "assetRevision": "ec92b9eaf44f9b4e",
+      "file": "5d0877c0-5f84-5c3b-9466-b9f9b417cb6a.ec92b9eaf44f9b4e.webp",
+      "webpSha256": "f9ca185d166ec616e594937d0683dd08186ec865801b803afb2e8d575b0a18c4",
+      "width": 1200,
+      "height": 750,
+      "bytes": 14104,
+      "sourceMetrics": {
+        "escapedPixels": 2076,
+        "interiorPixels": 97924,
+        "nonFinitePixels": 0,
+        "uniqueColors": 1487,
+        "rawRgbaSha256": "df750ab1d19c4650f7a38e7b2c22a808a96dbbc848223d87b2f814d2cc81368d"
+      },
+      "pixelFingerprintSha256": "b7032f5e3bf9bbfd309941a6cc432d8a35841df22434c746774aeeb65ab30b84",
+      "perceptualHash": "1f07070f0f1f1f07",
+      "metrics": {
+        "luminanceRange": 242,
+        "distinctLuminanceValues": 243,
+        "edgeEnergy": 0.015694901684714515,
+        "opaqueFraction": 1,
+        "darkFraction": 0.03611111111111111,
+        "lightFraction": 0.03159722222222222
+      },
+      "acceptedDeviations": []
+    },
+    {
+      "formulaId": "62423e7c-842d-5b59-b73d-03a40ec11da1",
+      "sourceRevision": "3fdfb70a3302abfaeb245d3f2217993258b48f25aa9d54ccde2f88cfaceed33b",
+      "semanticHash": "5e4bab0b0e1f8e66af6d7e01aa2eabb6805b841eda6974eb61e50a449d2f4d03",
+      "runtimeDefaultProfileSha256": "ed2387779a3ccbe22e708de1c4f75bae384e1c29655c7ae62883c618420a3a2a",
+      "recordPreviewProfileRevision": "d6d181aa6783576acea01bbbe10779dfa5b6ef722500d9c313b6783875cff72d",
+      "recordPreviewProfileSha256": "f570dd71e8d813dc3d954611da5e7fc34eab4c300f4f74c66b16575d9b607bb6",
+      "profileSelection": {
+        "strategy": "runtime-black",
+        "candidateOrdinal": 1,
+        "iterationCandidate": 16,
+        "parameterCandidateId": "defaults",
+        "viewCandidateId": "effective-default"
+      },
+      "assetRevision": "e11d92d67d6f949f",
+      "file": "62423e7c-842d-5b59-b73d-03a40ec11da1.e11d92d67d6f949f.webp",
+      "webpSha256": "851372e6d80e7d6980b0f049f7d0a08f9973278d7f161706afd571bc18bbbb6e",
+      "width": 1200,
+      "height": 750,
+      "bytes": 5692,
+      "sourceMetrics": {
+        "escapedPixels": 60000,
+        "interiorPixels": 40000,
+        "nonFinitePixels": 0,
+        "uniqueColors": 160,
+        "rawRgbaSha256": "6ccc4e054841dc5ebbaba409a35ef53c12ccde7f99d08fd23381ab35b1cb5a53"
+      },
+      "pixelFingerprintSha256": "c021832ad4d52246f3b385d474cc171cac7270fd3c2c11f33a1c5b9d58ec94c0",
+      "perceptualHash": "c1c1c1c1c1c1c1c1",
+      "metrics": {
+        "luminanceRange": 249,
+        "distinctLuminanceValues": 83,
+        "edgeEnergy": 0.026954745291287895,
+        "opaqueFraction": 1,
+        "darkFraction": 0.4482638888888889,
+        "lightFraction": 0.19791666666666666
+      },
+      "acceptedDeviations": []
+    },
+    {
+      "formulaId": "743f6bbf-4cc1-5df7-8f3e-2e654ddc81ba",
+      "sourceRevision": "6ef3c1a98f33a913748dfe8a0b2e86a0d5e8da7cc24ba7ecfcc6feca7b3daacf",
+      "semanticHash": "b7c63a7d7cc5a6e0ab45255227a81c4d013ae6d5ac184a646cca10eeda827f87",
+      "runtimeDefaultProfileSha256": "be6827cbccfeccbebda78a02f0c1c8cdfe483a1e113f3c4afb7b95b38978c9cb",
+      "recordPreviewProfileRevision": "e9a083a8972e1757d5321758c3990fdeaba243a8be37f79023b6d82820e7eb06",
+      "recordPreviewProfileSha256": "99ae3aae786b669e513af2f7fe891dbd8073e7aa91ab120d2a9b8d1a761813e2",
+      "profileSelection": {
+        "strategy": "runtime-black",
+        "candidateOrdinal": 1,
+        "iterationCandidate": 16,
+        "parameterCandidateId": "defaults",
+        "viewCandidateId": "effective-default"
+      },
+      "assetRevision": "8b8392e6d69c73a0",
+      "file": "743f6bbf-4cc1-5df7-8f3e-2e654ddc81ba.8b8392e6d69c73a0.webp",
+      "webpSha256": "fa49c28573b6552654660267a63449d2002ba94428940fe41419c1848a2f9324",
+      "width": 1200,
+      "height": 750,
+      "bytes": 132102,
+      "sourceMetrics": {
+        "escapedPixels": 99988,
+        "interiorPixels": 12,
+        "nonFinitePixels": 0,
+        "uniqueColors": 1345,
+        "rawRgbaSha256": "26302f44c42a3c8b4aa8056e1c0ec79533580f540cd80949f55c9f23667dc047"
+      },
+      "pixelFingerprintSha256": "362c3b07e9951104b60c51011bf7e8ec920e8741f6d316c8ed4d00d105c1065a",
+      "perceptualHash": "3f6d7f6d3f1e9ecc",
+      "metrics": {
+        "luminanceRange": 241,
+        "distinctLuminanceValues": 241,
+        "edgeEnergy": 0.109331497470506,
+        "opaqueFraction": 1,
+        "darkFraction": 0.12256944444444444,
+        "lightFraction": 0.04392361111111111
+      },
+      "acceptedDeviations": []
+    },
+    {
+      "formulaId": "74874658-3c47-5813-869a-70e642dc0038",
+      "sourceRevision": "f300a870451cdb2f7c02f9f3e679de9c7cbe235ccb71494471a19f87bece0458",
+      "semanticHash": "46b3f5e26f27e7d0b07f32e1c35b192714b44d088bdb9a95b995f2898c8f7922",
+      "runtimeDefaultProfileSha256": "3c0728e0448f965c28224a35103ccba15a1176d5dbef7ee0f185d1f8f9e22561",
+      "recordPreviewProfileRevision": "3a02aaac81429bfde37121281319941548a30f5f8c00f0414b5173ba1880b48c",
+      "recordPreviewProfileSha256": "b75486c2d1f63a54546f2e2144a662dcfb957139c9b9eec767b7aa53f69ba9a4",
+      "profileSelection": {
+        "strategy": "runtime-black",
+        "candidateOrdinal": 1,
+        "iterationCandidate": 16,
+        "parameterCandidateId": "defaults",
+        "viewCandidateId": "effective-default"
+      },
+      "assetRevision": "f41d683e13c5d8a1",
+      "file": "74874658-3c47-5813-869a-70e642dc0038.f41d683e13c5d8a1.webp",
+      "webpSha256": "c312876a819715ccb78a6ad7db7d7647370190c9a3a3b3a6b9e01fee31b0b74e",
+      "width": 1200,
+      "height": 750,
+      "bytes": 40662,
+      "sourceMetrics": {
+        "escapedPixels": 89576,
+        "interiorPixels": 10424,
+        "nonFinitePixels": 0,
+        "uniqueColors": 1388,
+        "rawRgbaSha256": "10b1716c0f55b7b05e4506a6ad40bf09c8a923c38740d64cfd4b97ee65a35cd2"
+      },
+      "pixelFingerprintSha256": "ad88a6f70b5468251c63b7752aedbe601b80c768e7f18309628f4cb4d222c9bf",
+      "perceptualHash": "7f7361e1e161637f",
+      "metrics": {
+        "luminanceRange": 249,
+        "distinctLuminanceValues": 247,
+        "edgeEnergy": 0.04605427528279625,
+        "opaqueFraction": 1,
+        "darkFraction": 0.12586805555555555,
+        "lightFraction": 0.3723958333333333
+      },
+      "acceptedDeviations": []
+    },
+    {
+      "formulaId": "78e550c6-d58d-57b7-92ff-82e9ed0728f0",
+      "sourceRevision": "9372d322b21755b6e9e529e348ceead65a526ca3243e976845c39144ce8b38df",
+      "semanticHash": "0144f3a6cdf7bef74e1f5c5b6f2acb773158013bbbc7d3a66948a8e973a7f5ab",
+      "runtimeDefaultProfileSha256": "eafba1ca240bff5955ea6ffbc0ebd6c8d2ff59a697e51eeee2144f27fef12c23",
+      "recordPreviewProfileRevision": "24bbc504272e696ec1060d06f2812e96e87d50993543c9dd19bf5311391bfec4",
+      "recordPreviewProfileSha256": "e21b934279325cb7f9be07d22d09f5e78d1044be6528fd072f02956e2c6d95e5",
+      "profileSelection": {
+        "strategy": "bounded-orbit-average",
+        "candidateOrdinal": 39,
+        "iterationCandidate": 2,
+        "parameterCandidateId": "defaults",
+        "viewCandidateId": "parameter-threshold-16"
+      },
+      "assetRevision": "ca7740c24aca153a",
+      "file": "78e550c6-d58d-57b7-92ff-82e9ed0728f0.ca7740c24aca153a.webp",
+      "webpSha256": "4b4abc2beded0f064b131184221c7988f7d1189daad576384bcc38c2f1d0b724",
+      "width": 1200,
+      "height": 750,
+      "bytes": 5622,
+      "sourceMetrics": {
+        "escapedPixels": 0,
+        "interiorPixels": 100000,
+        "nonFinitePixels": 0,
+        "uniqueColors": 441,
+        "rawRgbaSha256": "7167b78ca4057c0026b09330faa86d77bbe0543839136912a8a94019a4d28697"
+      },
+      "pixelFingerprintSha256": "55c764e4c3d091800d29a44b55b2201d1776e77705bdd0a43e044589d0b3ff5f",
+      "perceptualHash": "ffff7f1f1f0f0707",
+      "metrics": {
+        "luminanceRange": 141,
+        "distinctLuminanceValues": 142,
+        "edgeEnergy": 0.003351829996342296,
+        "opaqueFraction": 1,
+        "darkFraction": 0,
+        "lightFraction": 0.5826388888888889
+      },
+      "acceptedDeviations": []
+    },
+    {
+      "formulaId": "88dd57cd-a348-55e8-983a-74c0acba57ae",
+      "sourceRevision": "1afe2c3b50115c812e5adefc0a74020b2fd1eef286fcbe7d3a724944bfe04240",
+      "semanticHash": "e96e5f6733e711cc5a09fcd26be2ad187538bcc23233ab2b78a20b4075e2e6da",
+      "runtimeDefaultProfileSha256": "74568d8e1f43c0909b689642eb052eff42adf404eb70581018deef4b9a588023",
+      "recordPreviewProfileRevision": "fbd8fbb2dc160403deb51aaf824b09a243b88bc338a115dd9a08efb69e3f4c27",
+      "recordPreviewProfileSha256": "0038b0eaf9aa4aaa8e8d1af9dce339532b8aeab14daa79911b47c3b1d733f3ea",
+      "profileSelection": {
+        "strategy": "bounded-orbit-average",
+        "candidateOrdinal": 46,
+        "iterationCandidate": 16,
+        "parameterCandidateId": "defaults",
+        "viewCandidateId": "julia-a"
+      },
+      "assetRevision": "dd515febf8c2a156",
+      "file": "88dd57cd-a348-55e8-983a-74c0acba57ae.dd515febf8c2a156.webp",
+      "webpSha256": "83955053ccec8bd0d6cb65cbcb38fd253f8fbadc61f5a8608d3189be17e4cf71",
+      "width": 1200,
+      "height": 750,
+      "bytes": 10778,
+      "sourceMetrics": {
+        "escapedPixels": 0,
+        "interiorPixels": 100000,
+        "nonFinitePixels": 0,
+        "uniqueColors": 1492,
+        "rawRgbaSha256": "c909922b18926c6704136ef0519dc87d03a404ec46c13f73fc7bdacfa7885689"
+      },
+      "pixelFingerprintSha256": "cb37b064ae251ca1f3622fee4c57f54f9a191429bb4069441e5afedec0f5ec40",
+      "perceptualHash": "f0f03018eff3f0f0",
+      "metrics": {
+        "luminanceRange": 243,
+        "distinctLuminanceValues": 244,
+        "edgeEnergy": 0.017191543988238835,
+        "opaqueFraction": 1,
+        "darkFraction": 0.2144097222222222,
+        "lightFraction": 0.21215277777777777
+      },
+      "acceptedDeviations": []
+    },
+    {
+      "formulaId": "9923991c-19b5-5559-8250-5eb04726f4bd",
+      "sourceRevision": "930137bf1435df5d0499587da18e55bf5bb6d8bcdd5a4adb9ebe298a00185718",
+      "semanticHash": "09f4d0ee7f4ef0a4eccc0afc0a890aa984948cb98f41b4ea9f238cfa1d6a3007",
+      "runtimeDefaultProfileSha256": "74568d8e1f43c0909b689642eb052eff42adf404eb70581018deef4b9a588023",
+      "recordPreviewProfileRevision": "e7ca88aee529079d69adf67cd3842d079eb2b083d0f6b67f907c30030b26d809",
+      "recordPreviewProfileSha256": "0e6dfca8a58614ce91b5b5612bc837c00016c240c61807c0c3a9f4d015eda8a9",
+      "profileSelection": {
+        "strategy": "runtime-black",
+        "candidateOrdinal": 1,
+        "iterationCandidate": 16,
+        "parameterCandidateId": "defaults",
+        "viewCandidateId": "effective-default"
+      },
+      "assetRevision": "069c7d5aea9742b6",
+      "file": "9923991c-19b5-5559-8250-5eb04726f4bd.069c7d5aea9742b6.webp",
+      "webpSha256": "06e80c7980963e6d99a1f512e084164d90184b84c5dccefb92c3c1d135ffe13a",
+      "width": 1200,
+      "height": 750,
+      "bytes": 38664,
+      "sourceMetrics": {
+        "escapedPixels": 99174,
+        "interiorPixels": 826,
+        "nonFinitePixels": 0,
+        "uniqueColors": 1174,
+        "rawRgbaSha256": "5fb89634ef556486f80dd301f606169a0077168baf1a64be6ae150166ced0e77"
+      },
+      "pixelFingerprintSha256": "c7a706d6cf3fe863bb33331db770afb67bbc7b05476eb6aa6b4e6339146a8c77",
+      "perceptualHash": "c3c3c3c3c3c3c3c3",
+      "metrics": {
+        "luminanceRange": 244,
+        "distinctLuminanceValues": 245,
+        "edgeEnergy": 0.03962944558323026,
+        "opaqueFraction": 1,
+        "darkFraction": 0.08940972222222222,
+        "lightFraction": 0.3802083333333333
+      },
+      "acceptedDeviations": []
+    },
+    {
+      "formulaId": "999adf4a-6019-56f0-89a4-c09250e9a0a2",
+      "sourceRevision": "8a3e8d808d767d55d917700c710860377d1b815d3f6419f4ab32c9e54047c40c",
+      "semanticHash": "1ceadd22113441b65f474c2237e514a69b11e133bf5982e8ebe189ca60fe1279",
+      "runtimeDefaultProfileSha256": "5a1145a6db598a200e18843e37d9a6d55c638b96853c06d1282332297270137b",
+      "recordPreviewProfileRevision": "1e055fd172b71e19bd2487b99a1d843435bfc52cf190becb6e850604242e8c74",
+      "recordPreviewProfileSha256": "f8e7b2fd4deb6304c7338b8d6e0b0da29b5120f418eb86ba71c61a5f4a8b89da",
+      "profileSelection": {
+        "strategy": "runtime-black",
+        "candidateOrdinal": 1,
+        "iterationCandidate": 16,
+        "parameterCandidateId": "defaults",
+        "viewCandidateId": "effective-default"
+      },
+      "assetRevision": "aa8c6490d83a038d",
+      "file": "999adf4a-6019-56f0-89a4-c09250e9a0a2.aa8c6490d83a038d.webp",
+      "webpSha256": "6bc0e76309d89819fe7ff028a8e7c3afd628812eeb926925c0f73960249282fc",
+      "width": 1200,
+      "height": 750,
+      "bytes": 22202,
+      "sourceMetrics": {
+        "escapedPixels": 79892,
+        "interiorPixels": 20108,
+        "nonFinitePixels": 0,
+        "uniqueColors": 1185,
+        "rawRgbaSha256": "d11536ff56531086ed19d97e1d573f57bbfe2c321563bb70c9c68a2a8f65d182"
+      },
+      "pixelFingerprintSha256": "c09b48998ebdacb1a83f0b085f6465aba6ca7bc9f0ce2c70410cbedf32774953",
+      "perceptualHash": "f3e1c1c1c1c1e1e3",
+      "metrics": {
+        "luminanceRange": 249,
+        "distinctLuminanceValues": 250,
+        "edgeEnergy": 0.0412089087658991,
+        "opaqueFraction": 1,
+        "darkFraction": 0.26319444444444445,
+        "lightFraction": 0.26510416666666664
+      },
+      "acceptedDeviations": []
+    },
+    {
+      "formulaId": "a569d2c4-d397-5634-9dfe-21b2ab1a386a",
+      "sourceRevision": "b7dd588e3cf8c70a1ec52801a03b6ee1b6980009c0725f8a32ecfa8fe1a6dfad",
+      "semanticHash": "89e7b983a7455e1e3f1c4179ba6894492bcee9066e57e829ba9dc42efb44e1a9",
+      "runtimeDefaultProfileSha256": "3952d76e571743ba16cbab0ee9a99b4482447b64c616a335bf5afd2a35e7529b",
+      "recordPreviewProfileRevision": "172a9d33a902b77473decd41ccf4dfb6a41f726473620c461619e995aefba087",
+      "recordPreviewProfileSha256": "308fdac6b973ba559134592ce6370b0189ac9db1c9372dbfee8a424da66b1c9f",
+      "profileSelection": {
+        "strategy": "runtime-black",
+        "candidateOrdinal": 1,
+        "iterationCandidate": 16,
+        "parameterCandidateId": "defaults",
+        "viewCandidateId": "effective-default"
+      },
+      "assetRevision": "285f73a73131112e",
+      "file": "a569d2c4-d397-5634-9dfe-21b2ab1a386a.285f73a73131112e.webp",
+      "webpSha256": "1f6678c6e775c3f9f453b35847dc80b13a87fcf7de6106d9bed53adf250e505c",
+      "width": 1200,
+      "height": 750,
+      "bytes": 35084,
+      "sourceMetrics": {
+        "escapedPixels": 90023,
+        "interiorPixels": 9977,
+        "nonFinitePixels": 0,
+        "uniqueColors": 1517,
+        "rawRgbaSha256": "56f2dd1c5e46f8d5c06580a61b1d5834e794703226a75327b8f09ce0cf7d226e"
+      },
+      "pixelFingerprintSha256": "14603c0b469855a3c74d93ee8f877813efb6fbed0352d232da1553a617243eba",
+      "perceptualHash": "c19da525358dc6e6",
+      "metrics": {
+        "luminanceRange": 245,
+        "distinctLuminanceValues": 246,
+        "edgeEnergy": 0.057351733371979866,
+        "opaqueFraction": 1,
+        "darkFraction": 0.2713541666666667,
+        "lightFraction": 0.026909722222222224
+      },
+      "acceptedDeviations": []
+    },
+    {
+      "formulaId": "af500910-46ce-5a43-b430-c0154cc05959",
+      "sourceRevision": "305c68341d9d4be9e65092c899f7cfbdd83919af59b69a633b0a53d251a5f99b",
+      "semanticHash": "310b37da0dfa6d8541b699b6819cb9b623046a0b6c434e9d1d1b96414a5065aa",
+      "runtimeDefaultProfileSha256": "bb97a1b064b358dd5011d2533ff3b644196d65c2f1cc6a7fd78477d855255cfd",
+      "recordPreviewProfileRevision": "726bec57091878b07d3e2329fbb9d0aa6810b5629f8b7764dc2e7b8ab42dfa99",
+      "recordPreviewProfileSha256": "41cd5d091af641dd7752faf55d974645bd2aedddbdc27f0344cf90a28367a890",
+      "profileSelection": {
+        "strategy": "runtime-orbit-average",
+        "candidateOrdinal": 2,
+        "iterationCandidate": 2,
+        "parameterCandidateId": "defaults",
+        "viewCandidateId": "effective-default"
+      },
+      "assetRevision": "5f94d1b959fc3433",
+      "file": "af500910-46ce-5a43-b430-c0154cc05959.5f94d1b959fc3433.webp",
+      "webpSha256": "5e8ef8c2f2a6f180ae1130dd7bd693ba34b7246472f1478e26d65d8c8befae46",
+      "width": 1200,
+      "height": 750,
+      "bytes": 9444,
+      "sourceMetrics": {
+        "escapedPixels": 0,
+        "interiorPixels": 100000,
+        "nonFinitePixels": 0,
+        "uniqueColors": 1155,
+        "rawRgbaSha256": "24bf15d39f6203550b3a789b4360d7f5aa3010587fb988288bef2c905ce3e4a2"
+      },
+      "pixelFingerprintSha256": "3c1970a0cb58b7e1609adc7b4662bc2265d79da9a75440f183aa067f3a434f15",
+      "perceptualHash": "ffffffe3e1000000",
+      "metrics": {
+        "luminanceRange": 243,
+        "distinctLuminanceValues": 244,
+        "edgeEnergy": 0.01050272273640305,
+        "opaqueFraction": 1,
+        "darkFraction": 0.12135416666666667,
+        "lightFraction": 0.12013888888888889
+      },
+      "acceptedDeviations": []
+    },
+    {
+      "formulaId": "bb186688-4571-5725-a8ed-a17e0100dbc8",
+      "sourceRevision": "f4a3b0126993d678f9cb6759f6d2e078741ec0cd9b749ab31b043f4f1ce2428a",
+      "semanticHash": "92792bf33c108fdf900dbc433202d12e0d38408ca83e8a011caf3d775506e335",
+      "runtimeDefaultProfileSha256": "d135f9b7b4795477ef68bddc7bb927c017cc7935c1dd66f10ea4ce4da47b0e48",
+      "recordPreviewProfileRevision": "a4b33769ac58339a5ed3ab4981ef4edcf3d59053af5e4c409781e13b70547471",
+      "recordPreviewProfileSha256": "03abb54222ee705b1e183fde5275b20f8259c28700dcd8e57d0473317686f1c5",
+      "profileSelection": {
+        "strategy": "runtime-black",
+        "candidateOrdinal": 1,
+        "iterationCandidate": 16,
+        "parameterCandidateId": "defaults",
+        "viewCandidateId": "effective-default"
+      },
+      "assetRevision": "b3b2ff093dd0d5c8",
+      "file": "bb186688-4571-5725-a8ed-a17e0100dbc8.b3b2ff093dd0d5c8.webp",
+      "webpSha256": "2220b057442e90f284474d80cae687f6b4a294ff6f58ba485bae8c314dbca606",
+      "width": 1200,
+      "height": 750,
+      "bytes": 162970,
+      "sourceMetrics": {
+        "escapedPixels": 88150,
+        "interiorPixels": 11850,
+        "nonFinitePixels": 0,
+        "uniqueColors": 276,
+        "rawRgbaSha256": "1bcef7b2a743a45462a6432eda2c70afca623856e1bc0c2c74d20a9797645623"
+      },
+      "pixelFingerprintSha256": "0c35d8258bb2a6730bef4a01eca19b33fff0031ff29dbe4433fbc8557c80a2a0",
+      "perceptualHash": "0f5121282821510f",
+      "metrics": {
+        "luminanceRange": 244,
+        "distinctLuminanceValues": 235,
+        "edgeEnergy": 0.0875040547722055,
+        "opaqueFraction": 1,
+        "darkFraction": 0.058506944444444445,
+        "lightFraction": 0.001736111111111111
+      },
+      "acceptedDeviations": []
+    },
+    {
+      "formulaId": "d0079630-8ed3-5379-9e37-52cb7f0f7379",
+      "sourceRevision": "9d5148d6443b6dd4f5f0015e415b8642a324fb222f5a7769e1d7765e432bd1bc",
+      "semanticHash": "f857f7b3cac012dbc5ef1de0d2bb586ac0c9e5c8c692f711545467fdaf58a3ec",
+      "runtimeDefaultProfileSha256": "d5a764bc9b6864920bfd9e86ecd79dd96b573b96dc026c0924895997fad937bf",
+      "recordPreviewProfileRevision": "0e2c127756ceb354bc1e96c34014ea893a6b68fb663d8dc1f4880b600a3d854e",
+      "recordPreviewProfileSha256": "c3081981d28afd2fe6f43243ab43f036e256410e3c56948a406dcbf3b57c66eb",
+      "profileSelection": {
+        "strategy": "bounded-orbit-average",
+        "candidateOrdinal": 33,
+        "iterationCandidate": 2,
+        "parameterCandidateId": "defaults",
+        "viewCandidateId": "parameter-close"
+      },
+      "assetRevision": "08e45af0a88692b1",
+      "file": "d0079630-8ed3-5379-9e37-52cb7f0f7379.08e45af0a88692b1.webp",
+      "webpSha256": "b5a8f387c467ccbcec3055b42c6a02b673fd165cf03bb6ac35b8a72d64f4dcb8",
+      "width": 1200,
+      "height": 750,
+      "bytes": 9170,
+      "sourceMetrics": {
+        "escapedPixels": 0,
+        "interiorPixels": 100000,
+        "nonFinitePixels": 0,
+        "uniqueColors": 1297,
+        "rawRgbaSha256": "f9d4fdc0720b35ed00e5ed9558c5c619e4dc3ba109bb4e3a52f7dd3ac96aeedb"
+      },
+      "pixelFingerprintSha256": "98b43fd521287b0ee812d62b3f110835f205f7a3eeafd08058553f249d9d1f36",
+      "perceptualHash": "1f1f18f080c0e0e0",
+      "metrics": {
+        "luminanceRange": 243,
+        "distinctLuminanceValues": 241,
+        "edgeEnergy": 0.011603895342015948,
+        "opaqueFraction": 1,
+        "darkFraction": 0.07170138888888888,
+        "lightFraction": 0.04635416666666667
+      },
+      "acceptedDeviations": []
+    },
+    {
+      "formulaId": "de8106f4-22ce-567c-a1c7-e299a8d4a878",
+      "sourceRevision": "d7e6bdf484c6ed09c197d82072e24377d5cc87d2e081e3a04380de7e1a506ebc",
+      "semanticHash": "618d4139bc4506e617ce959d9ce3698b644fba628e39b948238f0c0faee60861",
+      "runtimeDefaultProfileSha256": "74568d8e1f43c0909b689642eb052eff42adf404eb70581018deef4b9a588023",
+      "recordPreviewProfileRevision": "562b126ea0c6415ef7bc84c157e674c73f7aff4c9dd77be284ee8a6656ff060a",
+      "recordPreviewProfileSha256": "cbcd93177b1a7e16ea80b9d46ae382f8dde56b11bff8c166cdf16d9b8596fddd",
+      "profileSelection": {
+        "strategy": "runtime-black",
+        "candidateOrdinal": 1,
+        "iterationCandidate": 16,
+        "parameterCandidateId": "defaults",
+        "viewCandidateId": "effective-default"
+      },
+      "assetRevision": "b9d189cc752fba91",
+      "file": "de8106f4-22ce-567c-a1c7-e299a8d4a878.b9d189cc752fba91.webp",
+      "webpSha256": "28d7ab89344c6a1a2bf59832a71360cb4d43ee70d6dc6f6127371273043a5e16",
+      "width": 1200,
+      "height": 750,
+      "bytes": 11744,
+      "sourceMetrics": {
+        "escapedPixels": 100000,
+        "interiorPixels": 0,
+        "nonFinitePixels": 0,
+        "uniqueColors": 457,
+        "rawRgbaSha256": "72415ca3dd48d5f34b42239a3252484f1976ebd1de82e7db1df3ada3231ba564"
+      },
+      "pixelFingerprintSha256": "eded6c0c43daf4e05a2d2a9fae74465981e4e113631f3aec007c0711c5132cc2",
+      "perceptualHash": "e7c3c3c3c3c3c3e7",
+      "metrics": {
+        "luminanceRange": 244,
+        "distinctLuminanceValues": 199,
+        "edgeEnergy": 0.014252438039629691,
+        "opaqueFraction": 1,
+        "darkFraction": 0.04861111111111111,
+        "lightFraction": 0.49618055555555557
+      },
+      "acceptedDeviations": []
+    },
+    {
+      "formulaId": "f031c5ee-cb45-5389-80ed-1c5365a12e02",
+      "sourceRevision": "305abf9a0a8a9613c2a214d39b6ec22adfde4dbe3d161d0729ac9db483f5a440",
+      "semanticHash": "f066b964d00ce90a5c095c49fce105b268db3a7b64ecc0371c6bf625f1d88da2",
+      "runtimeDefaultProfileSha256": "06c3025c4195186a915e0a7c7ca8da2a66b7e2d193d5fbc03edffd837d038faa",
+      "recordPreviewProfileRevision": "aeb3bc1dcbf03606b0d76f534b732454922cb735ba0da5322013b007fbf53100",
+      "recordPreviewProfileSha256": "8e6c1d7e99113d28576f23dde0ab0a54678a1a6e1781418c7b8b74b52ea5e7b8",
+      "profileSelection": {
+        "strategy": "runtime-black",
+        "candidateOrdinal": 1,
+        "iterationCandidate": 16,
+        "parameterCandidateId": "defaults",
+        "viewCandidateId": "effective-default"
+      },
+      "assetRevision": "9f11e9b376a1d97b",
+      "file": "f031c5ee-cb45-5389-80ed-1c5365a12e02.9f11e9b376a1d97b.webp",
+      "webpSha256": "6bc0e76309d89819fe7ff028a8e7c3afd628812eeb926925c0f73960249282fc",
+      "width": 1200,
+      "height": 750,
+      "bytes": 22202,
+      "sourceMetrics": {
+        "escapedPixels": 79892,
+        "interiorPixels": 20108,
+        "nonFinitePixels": 0,
+        "uniqueColors": 1185,
+        "rawRgbaSha256": "d11536ff56531086ed19d97e1d573f57bbfe2c321563bb70c9c68a2a8f65d182"
+      },
+      "pixelFingerprintSha256": "c09b48998ebdacb1a83f0b085f6465aba6ca7bc9f0ce2c70410cbedf32774953",
+      "perceptualHash": "f3e1c1c1c1c1e1e3",
+      "metrics": {
+        "luminanceRange": 249,
+        "distinctLuminanceValues": 250,
+        "edgeEnergy": 0.0412089087658991,
+        "opaqueFraction": 1,
+        "darkFraction": 0.26319444444444445,
+        "lightFraction": 0.26510416666666664
+      },
+      "acceptedDeviations": []
+    },
+    {
+      "formulaId": "fdbbc343-f4c3-5eb4-94de-f5a1d9ef2525",
+      "sourceRevision": "99e84da9eee8f7780890e9cce6008eea3dfbd8324f827aaca70f82f1d4170daf",
+      "semanticHash": "7b2662304a33d6f260bf345807e95e5b513f54226ab70357649f6c3bea4d2403",
+      "runtimeDefaultProfileSha256": "dfa73a43d0541dc6ceb011e7c23c3207a1bddbfc2de37571a63a9662da3f5e07",
+      "recordPreviewProfileRevision": "6b7b3df42c08ed20ef14c839dbaf2722ca406e95ac8818b6c02349e51877c70f",
+      "recordPreviewProfileSha256": "a2f74f28e8d4f268105ee20f1548c6bbf75ac6545cae4ab67307c904150737d7",
+      "profileSelection": {
+        "strategy": "runtime-black",
+        "candidateOrdinal": 1,
+        "iterationCandidate": 16,
+        "parameterCandidateId": "defaults",
+        "viewCandidateId": "effective-default"
+      },
+      "assetRevision": "93969192b4ce07b0",
+      "file": "fdbbc343-f4c3-5eb4-94de-f5a1d9ef2525.93969192b4ce07b0.webp",
+      "webpSha256": "aff1cec67dc5397d2dfafcce185a2133380821e245d0dbc87d74895fd90ee1e4",
+      "width": 1200,
+      "height": 750,
+      "bytes": 96606,
+      "sourceMetrics": {
+        "escapedPixels": 38948,
+        "interiorPixels": 61052,
+        "nonFinitePixels": 0,
+        "uniqueColors": 1467,
+        "rawRgbaSha256": "e0c75925d140fb31334f32f3cc0efa78462f74a4c3fb8d9e390c7c226573c4f6"
+      },
+      "pixelFingerprintSha256": "78c40b88df4999e900fc6aeba116616b29cb82a123cb696142e67b1fea6eabee",
+      "perceptualHash": "7313131119131373",
+      "metrics": {
+        "luminanceRange": 247,
+        "distinctLuminanceValues": 248,
+        "edgeEnergy": 0.0690149836773847,
+        "opaqueFraction": 1,
+        "darkFraction": 0.5600694444444444,
+        "lightFraction": 0.02673611111111111
+      },
+      "acceptedDeviations": []
+    }
+  ],
+  "contentHash": "cf1e7be18f0b7fb0c3247718e610fb95d2263fc024527c474d9ce3f5d0b7ed77"
+}

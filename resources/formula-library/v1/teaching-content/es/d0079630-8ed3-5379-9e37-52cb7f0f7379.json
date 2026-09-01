@@ -1,0 +1,35 @@
+{
+  "schema": "fractalpark-teaching-locale/v1",
+  "formulaId": "d0079630-8ed3-5379-9e37-52cb7f0f7379",
+  "locale": "es",
+  "sourceRevision": "9d5148d6443b6dd4f5f0015e415b8642a324fb222f5a7769e1d7765e432bd1bc",
+  "semanticHash": "f857f7b3cac012dbc5ef1de0d2bb586ac0c9e5c8c692f711545467fdaf58a3ec",
+  "englishContentHash": "cac3ad7ec669d840a2475c536729e43852f64a1b57b6b3a6dfb0c33944f05e12",
+  "overview": "En FRM-like/1, la inicialización hace z = pixel. En cada iteración, el nodo ejecuta denom = sin(z)+(1,0). La terminación comprueba |z - zPrev| >= 0.000001.",
+  "sourceWalkthrough": {
+    "d0079630-8ed3-5379-9e37-52cb7f0f7379:9d5148d6443b6dd4f5f0015e415b8642a324fb222f5a7769e1d7765e432bd1bc:init": "En FRM-like/1, la inicialización hace z = pixel.",
+    "d0079630-8ed3-5379-9e37-52cb7f0f7379:9d5148d6443b6dd4f5f0015e415b8642a324fb222f5a7769e1d7765e432bd1bc:loop": "En cada iteración, el nodo ejecuta denom = sin(z)+(1,0).",
+    "d0079630-8ed3-5379-9e37-52cb7f0f7379:9d5148d6443b6dd4f5f0015e415b8642a324fb222f5a7769e1d7765e432bd1bc:branch": "La rama usa |denom|² < 1e-10 → z = z; |denom|² >= 1e-10 → z = z + (cos(z)-z)/denom.",
+    "d0079630-8ed3-5379-9e37-52cb7f0f7379:9d5148d6443b6dd4f5f0015e415b8642a324fb222f5a7769e1d7765e432bd1bc:termination": "La terminación comprueba |z - zPrev| >= 0.000001."
+  },
+  "syntaxFeatures": {
+    "sequence": "En cada iteración, el nodo ejecuta denom = sin(z)+(1,0).",
+    "branch": "La rama usa |denom|² < 1e-10 → z = z; |denom|² >= 1e-10 → z = z + (cos(z)-z)/denom."
+  },
+  "parameterExperiment": {
+    "steps": [
+      "Usa el perfil fijado como base. Ejecuta 48 y luego 96 iteraciones, con todos los controles fijos, y registra si difieren denom = sin(z)+(1,0) o |z - zPrev| >= 0.000001."
+    ],
+    "expectedObservation": "El límite mayor puede mostrar actualizaciones coseno adicionales, protegidas o no; registra si difieren los recuentos de iteraciones."
+  },
+  "exercise": {
+    "prompt": "Explica los dos resultados de la protección por tamaño de sin(z)+(1,0) denom.",
+    "completionCheck": "Para terminar, debes nombrar exactamente las 4 anotaciones y explicar este detalle de la fórmula: Pista: denom = sin(z)+(1,0).",
+    "hint": "Pista: denom = sin(z)+(1,0)."
+  },
+  "factsPresentation": {
+    "provenanceLead": "La procedencia figura en el registro de fuente fijado.",
+    "rightsLead": "El estado de derechos y la decisión de publicación figuran en el registro de decisión fijado."
+  },
+  "contentHash": "5e8ef5434e2376e0a016acbb9f83ac5a64b4a5bd257b5d9ae4058982168b910e"
+}

@@ -1,0 +1,35 @@
+{
+  "schema": "fractalpark-teaching-locale/v1",
+  "formulaId": "6d27b5fd-462b-5561-bac2-7c5f915e3cb5",
+  "locale": "ru",
+  "sourceRevision": "7ef2bf1f2dd573053bbe1e8af171472dff08ed6346b2e760ab2780c9244d1e85",
+  "semanticHash": "62ccdf4f274bf35079ca98a39ad59a05132b3580ef937b766945087358c454e7",
+  "englishContentHash": "e6d09d556daddf1d6bf53de03354a43d35ae9954a4b7f0ab0e759c64518a9eb2",
+  "overview": "В FRM-like/1 инициализация задаёт z = pixel. В цикле выполняется denom = cosh(z). Завершение проверяет |z - zPrev| >= 0.000001.",
+  "sourceWalkthrough": {
+    "6d27b5fd-462b-5561-bac2-7c5f915e3cb5:7ef2bf1f2dd573053bbe1e8af171472dff08ed6346b2e760ab2780c9244d1e85:init": "В FRM-like/1 инициализация задаёт z = pixel.",
+    "6d27b5fd-462b-5561-bac2-7c5f915e3cb5:7ef2bf1f2dd573053bbe1e8af171472dff08ed6346b2e760ab2780c9244d1e85:loop": "В цикле выполняется denom = cosh(z).",
+    "6d27b5fd-462b-5561-bac2-7c5f915e3cb5:7ef2bf1f2dd573053bbe1e8af171472dff08ed6346b2e760ab2780c9244d1e85:branch": "Ветвление использует |denom|² < 1e-10 → z = z; |denom|² >= 1e-10 → z = z - sinh(z)/denom.",
+    "6d27b5fd-462b-5561-bac2-7c5f915e3cb5:7ef2bf1f2dd573053bbe1e8af171472dff08ed6346b2e760ab2780c9244d1e85:termination": "Завершение проверяет |z - zPrev| >= 0.000001."
+  },
+  "syntaxFeatures": {
+    "sequence": "В цикле выполняется denom = cosh(z).",
+    "branch": "Ветвление использует |denom|² < 1e-10 → z = z; |denom|² >= 1e-10 → z = z - sinh(z)/denom."
+  },
+  "parameterExperiment": {
+    "steps": [
+      "Используйте закреплённый профиль как базу. Выполните 48, затем 96 итераций при неизменных настройках и запишите, различаются ли denom = cosh(z) или |z - zPrev| >= 0.000001."
+    ],
+    "expectedObservation": "Больший предел итераций может показать дополнительные защищённые или незащищённые обновления sinh/cosh; зафиксируйте, различаются ли числа итераций."
+  },
+  "exercise": {
+    "prompt": "Опишите два исхода проверки величины cosh(z) denom.",
+    "completionCheck": "Для завершения вы должны точно назвать все 4 аннотации и объяснить следующую деталь формулы: Подсказка: denom = cosh(z).",
+    "hint": "Подсказка: denom = cosh(z)."
+  },
+  "factsPresentation": {
+    "provenanceLead": "Сведения о происхождении приведены в закреплённой записи источника.",
+    "rightsLead": "Статус прав и решение о публикации приведены в закреплённой записи решения."
+  },
+  "contentHash": "223fd17ce73032b3037a6c9c48dcbe194a4ebded02477d62e5015276ce36a7b1"
+}

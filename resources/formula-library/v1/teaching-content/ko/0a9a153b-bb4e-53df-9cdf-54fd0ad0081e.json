@@ -1,0 +1,35 @@
+{
+  "schema": "fractalpark-teaching-locale/v1",
+  "formulaId": "0a9a153b-bb4e-53df-9cdf-54fd0ad0081e",
+  "locale": "ko",
+  "sourceRevision": "0a9786849dd78c3643bae1f6de80fbc42d2e57e50e591090e67d681c81c0822e",
+  "semanticHash": "60f95642c01edfef967fd1d305e4c24747437321c32abbe847217193b9fe64eb",
+  "englishContentHash": "22eb63c262fd38ce1517d8325d7eabb007f7c9a4a66c3dcb726177f8c47fd45e",
+  "overview": "FRM-like/1에서 ok-35은 z = pixel으로 시작하고, 반복의 첫 노드는 mapped = firstMap(z)이며, |z| <= real(threshold)로 반복을 제한해요. 소스의 실제 순서대로 이 연산을 읽어 보세요.",
+  "sourceWalkthrough": {
+    "0a9a153b-bb4e-53df-9cdf-54fd0ad0081e:0a9786849dd78c3643bae1f6de80fbc42d2e57e50e591090e67d681c81c0822e:initialization": "ok-35에서는 초기화 노드는 다음만 실행해요: z = pixel.",
+    "0a9a153b-bb4e-53df-9cdf-54fd0ad0081e:0a9786849dd78c3643bae1f6de80fbc42d2e57e50e591090e67d681c81c0822e:iteration": "ok-35에서는 이 반복 노드는 다음만 실행해요: mapped = firstMap(z).",
+    "0a9a153b-bb4e-53df-9cdf-54fd0ad0081e:0a9786849dd78c3643bae1f6de80fbc42d2e57e50e591090e67d681c81c0822e:termination": "ok-35에서는 bailout 노드는 다음만 검사해요: |z| <= real(threshold)."
+  },
+  "syntaxFeatures": {
+    "initialization-flow": "ok-35에서는 초기화 특징은 하나의 시작 연산 z = pixel에 초점을 맞춰요.",
+    "iteration-flow": "ok-35에서는 반복 특징은 하나의 대입 mapped = firstMap(z)에 초점을 맞춰요.",
+    "bailout-test": "ok-35에서는 종료 특징은 비교 |z| <= real(threshold)에 초점을 맞춰요."
+  },
+  "parameterExperiment": {
+    "steps": [
+      "고정된 매개변수 평면 기준으로 ok-35을 렌더링하고 multiplier (0, 0), thresholdOffset (0, 0), firstMap (identity), secondMap (identity)의 런타임 기본값을 사용하세요.",
+      "multiplier, thresholdOffset, firstMap, secondMap 중 하나만 한 번에 바꾸고, 중심 (0, 0), 확대 0.25, 회전 0, 96회 반복과 다른 슬롯은 고정한 뒤 렌더링을 비교하세요."
+    ],
+    "expectedObservation": "multiplier, thresholdOffset, firstMap, secondMap을 하나씩 바꿀 때마다 렌더링이 기준과 다른지 기록하고 `|z| <= real(threshold)`와 연결해 비교하세요."
+  },
+  "exercise": {
+    "prompt": "ok-35에서는 세 주석을 찾아 z = pixel, mapped = firstMap(z), |z| <= real(threshold)을 설명하고 그리고 이웃 명령이 반복 주석에 속하지 않는 이유를 설명하세요.",
+    "completionCheck": "ok-35에서는 모든 3개 주석 키를 열거하고 mapped = firstMap(z)와 |z| <= real(threshold)의 역할을 정확히 설명하면 완료예요."
+  },
+  "factsPresentation": {
+    "provenanceLead": "출처 정보는 영어 사실 단위에 있어요.",
+    "rightsLead": "권리 정보는 영어 사실 단위에 있어요."
+  },
+  "contentHash": "3546ae8619c858e0e93d8208b6cda415b7a775e29e9ed2d2875448f47c99f4f2"
+}

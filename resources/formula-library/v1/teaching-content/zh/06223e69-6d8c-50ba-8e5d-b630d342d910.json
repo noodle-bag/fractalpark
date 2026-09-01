@@ -1,0 +1,33 @@
+{
+  "schema": "fractalpark-teaching-locale/v1",
+  "formulaId": "06223e69-6d8c-50ba-8e5d-b630d342d910",
+  "locale": "zh",
+  "sourceRevision": "6fd1272cca8d356da5f0c49cbbb4278f0e5d727cefab5ad1daefa83fb4c1f3ce",
+  "semanticHash": "88a93741043d5f43532adda4f96b789b0e10c4bd3d31319b8c9aa7ba3af5fee9",
+  "englishContentHash": "dbff8e9436104f3caedd85de72fcbf92209ab78b3312bad81ab9f84813408da3",
+  "localizedName": "celticMandelbar",
+  "overview": "在 FRM-like/1 中，celticMandelbar 按源代码的初始化、循环和退出测试运行。请把每一步当作对当前状态的明确操作，而不是从名称推测规则。固定配置让你能观察同一迭代过程。",
+  "sourceWalkthrough": {
+    "06223e69-6d8c-50ba-8e5d-b630d342d910:6fd1272cca8d356da5f0c49cbbb4278f0e5d727cefab5ad1daefa83fb4c1f3ce:init": "初始化节点执行： `if ismand`",
+    "06223e69-6d8c-50ba-8e5d-b630d342d910:6fd1272cca8d356da5f0c49cbbb4278f0e5d727cefab5ad1daefa83fb4c1f3ce:loop": "循环节点执行： `z2 = z * z`",
+    "06223e69-6d8c-50ba-8e5d-b630d342d910:6fd1272cca8d356da5f0c49cbbb4278f0e5d727cefab5ad1daefa83fb4c1f3ce:bailout": "终止测试为： `|z| <= 256`"
+  },
+  "syntaxFeatures": {
+    "source-sequence": "此结构把所引用的源代码步骤组织为一个可检查的顺序。 06223e69-6d8c-50ba-8e5d-b630d342d910:6fd1272cca8d356da5f0c49cbbb4278f0e5d727cefab5ad1daefa83fb4c1f3ce:init, 06223e69-6d8c-50ba-8e5d-b630d342d910:6fd1272cca8d356da5f0c49cbbb4278f0e5d727cefab5ad1daefa83fb4c1f3ce:loop, 06223e69-6d8c-50ba-8e5d-b630d342d910:6fd1272cca8d356da5f0c49cbbb4278f0e5d727cefab5ad1daefa83fb4c1f3ce:bailout"
+  },
+  "parameterExperiment": {
+    "steps": [
+      "使用固定配置：mode parameter-plane; center (-0.5, 0); zoom 0.4; rotation 0; iterations 96。运行一次并记录结果；再以同一配置重复运行。"
+    ],
+    "expectedObservation": "比较两次运行，记录`z = conj(folded) + c`是否得到相同的可见结果和迭代行为。"
+  },
+  "exercise": {
+    "prompt": "找出与`z = conj(folded) + c`有关的源注释，并说明初始化、循环和终止测试的顺序。",
+    "completionCheck": "完成时列出所引用的三个注释键，并按`z = conj(folded) + c`对应的初始化、循环和终止顺序排列。"
+  },
+  "factsPresentation": {
+    "provenanceLead": "来源：",
+    "rightsLead": "权利："
+  },
+  "contentHash": "84949949de71bc5ff541dcfecff6c127aa7195d98219e30cab1990e6a72591ef"
+}

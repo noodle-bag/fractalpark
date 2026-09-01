@@ -1,0 +1,79 @@
+{
+  "schema": "fractalpark-teaching-en-fact/v1",
+  "formulaId": "07a0afc6-ced5-5765-9314-fdb0ef593cb9",
+  "sourceRevision": "dce84ac5a7ee55fff27d70df826af67d386f905ee65cee65f5fa8d418e68ba27",
+  "semanticHash": "7d62c7f378c70b9fbfaeb2381d3c82383ab50a76fe5ea5cbe7fd788b451af907",
+  "overview": "asinhMandelbrot is taught from its pinned FRM-like/1 definition. Follow the asinh transformation followed by addition of c as source operations, rather than treating an image as guaranteed. The pinned profile supplies one concrete viewing setup, not a universal visual prediction.",
+  "mathDisclosure": "exact-structured",
+  "mathSummary": "The loop assigns z = asinh(z) + c: it applies asinh to the current z and then adds c.",
+  "sourceWalkthrough": [
+    {
+      "annotationId": "07a0afc6-ced5-5765-9314-fdb0ef593cb9:dce84ac5a7ee55fff27d70df826af67d386f905ee65cee65f5fa8d418e68ba27:start-branch",
+      "nodeId": "frm-v1:dce84ac5a7ee55fff27d70df826af67d386f905ee65cee65f5fa8d418e68ba27:init/0",
+      "explanation": "In asinhMandelbrot, this node executes if ismand: z = 0; otherwise z = pixel."
+    },
+    {
+      "annotationId": "07a0afc6-ced5-5765-9314-fdb0ef593cb9:dce84ac5a7ee55fff27d70df826af67d386f905ee65cee65f5fa8d418e68ba27:asinh-update",
+      "nodeId": "frm-v1:dce84ac5a7ee55fff27d70df826af67d386f905ee65cee65f5fa8d418e68ba27:loop/0",
+      "explanation": "In asinhMandelbrot, this node executes z = asinh(z) + c."
+    },
+    {
+      "annotationId": "07a0afc6-ced5-5765-9314-fdb0ef593cb9:dce84ac5a7ee55fff27d70df826af67d386f905ee65cee65f5fa8d418e68ba27:termination",
+      "nodeId": "frm-v1:dce84ac5a7ee55fff27d70df826af67d386f905ee65cee65f5fa8d418e68ba27:bailout",
+      "explanation": "In asinhMandelbrot, this node executes |z| <= 256."
+    }
+  ],
+  "syntaxFeatures": [
+    {
+      "featureId": "state-flow",
+      "annotationIds": [
+        "07a0afc6-ced5-5765-9314-fdb0ef593cb9:dce84ac5a7ee55fff27d70df826af67d386f905ee65cee65f5fa8d418e68ba27:start-branch",
+        "07a0afc6-ced5-5765-9314-fdb0ef593cb9:dce84ac5a7ee55fff27d70df826af67d386f905ee65cee65f5fa8d418e68ba27:asinh-update"
+      ],
+      "explanation": "These annotations trace the formula-specific state flow: if ismand: z = 0; otherwise z = pixel; z = asinh(z) + c."
+    },
+    {
+      "featureId": "stopping-test",
+      "annotationIds": [
+        "07a0afc6-ced5-5765-9314-fdb0ef593cb9:dce84ac5a7ee55fff27d70df826af67d386f905ee65cee65f5fa8d418e68ba27:termination"
+      ],
+      "explanation": "This annotation is the stopping test, |z| <= 256, rather than a state update."
+    }
+  ],
+  "parameterExperiment": {
+    "parameterSymbols": [],
+    "steps": [
+      "Run asinhMandelbrot with 48 iterations while keeping the pinned profile’s other controls fixed, and record the result.",
+      "Run asinhMandelbrot at the pinned profile iteration count of 96, compare the two runs, and record whether a difference occurs."
+    ],
+    "expectedObservation": "Record whether z = asinh(z) + c produces a visible-result or |z| <= 256 stopping-behavior difference from the baseline; the pinned definition does not guarantee a difference."
+  },
+  "exercise": {
+    "prompt": "Trace asinhMandelbrot through its annotations, explaining the source operation z = asinh(z) + c and the stopping test |z| <= 256.",
+    "completionCheck": "Your trace explains all 3 annotations for asinhMandelbrot, including z = asinh(z) + c, and distinguishes |z| <= 256 from a state update.",
+    "answerDisclosure": "hint"
+  },
+  "facts": {
+    "provenanceStatement": "This teaching unit is grounded in runtime:dce84ac5a7ee55fff27d70df826af67d386f905ee65cee65f5fa8d418e68ba27 and decision:07a0afc6-ced5-5765-9314-fdb0ef593cb9.",
+    "rightsStatement": "rightsStatus is project-owned; implementationBasis is project-owned; publicationDecision is publish; decisionReason is publish-project-owned-native-recipe. This statement does not make broader claims about any third-party original.",
+    "sourceIds": [
+      "runtime:dce84ac5a7ee55fff27d70df826af67d386f905ee65cee65f5fa8d418e68ba27",
+      "decision:07a0afc6-ced5-5765-9314-fdb0ef593cb9"
+    ],
+    "licenseIds": [],
+    "claims": [
+      {
+        "text": "The pinned runtime definition supplies the operations described in this unit.",
+        "sourceIds": [
+          "runtime:dce84ac5a7ee55fff27d70df826af67d386f905ee65cee65f5fa8d418e68ba27"
+        ]
+      },
+      {
+        "text": "The publication decision for this formula is publish.",
+        "sourceIds": [
+          "decision:07a0afc6-ced5-5765-9314-fdb0ef593cb9"
+        ]
+      }
+    ]
+  }
+}

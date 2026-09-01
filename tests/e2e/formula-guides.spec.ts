@@ -1,4 +1,6 @@
 import { expect, test } from '@playwright/test';
+import recordPreviewManifest from '../../public/formula-library/v1/record-previews/manifest.json';
+import aliasManifest from '../../resources/formula-library/v1/legacy-formula-aliases.json';
 
 const publishedSlugs = [
   'mandelbrot',
@@ -24,6 +26,24 @@ const publishedSlugs = [
   'zubieta',
 ] as const;
 
+function guideFormulaId(slug: (typeof publishedSlugs)[number]): string {
+  const alias = aliasManifest.aliases.find(
+    (entry) => entry.kind === 'guide-slug' && entry.value === slug
+  );
+  if (!alias) throw new Error(`Missing Guide alias: ${slug}`);
+  return alias.formulaId;
+}
+
+function guidePath(locale: string, slug: (typeof publishedSlugs)[number]): string {
+  return `/${locale}/formulas/${guideFormulaId(slug)}`;
+}
+
+function recordPreviewPath(formulaId: string): string {
+  const row = recordPreviewManifest.rows.find((entry) => entry.formulaId === formulaId);
+  if (!row) throw new Error(`Missing Record preview: ${formulaId}`);
+  return `/formula-library/v1/record-previews/${row.file}`;
+}
+
 test.describe('Formula guides', () => {
   test('renders the English Mandelbrot guide without JavaScript', async ({
     browser,
@@ -31,7 +51,7 @@ test.describe('Formula guides', () => {
     const context = await browser.newContext({ javaScriptEnabled: false });
     const page = await context.newPage();
 
-    await page.goto('/en/formulas/mandelbrot');
+    await page.goto(guidePath('en', 'mandelbrot'));
 
     await expect(
       page.getByRole('heading', { level: 1, name: 'Mandelbrot Set' })
@@ -65,11 +85,11 @@ test.describe('Formula guides', () => {
     );
     await expect(page.locator('link[rel="canonical"]')).toHaveAttribute(
       'href',
-      'https://www.fractalpark.com/en/formulas/mandelbrot'
+      `https://www.fractalpark.com${guidePath('en', 'mandelbrot')}`
     );
     await expect(page.locator('link[hreflang="zh"]')).toHaveAttribute(
       'href',
-      'https://www.fractalpark.com/zh/formulas/mandelbrot'
+      `https://www.fractalpark.com${guidePath('zh', 'mandelbrot')}`
     );
     await expect(page.locator('meta[property="og:image"]')).toHaveAttribute(
       'content',
@@ -83,11 +103,11 @@ test.describe('Formula guides', () => {
     page,
   }) => {
     for (const slug of publishedSlugs) {
-      const response = await page.goto(`/en/formulas/${slug}`);
+      const response = await page.goto(guidePath('en', slug));
       expect(response?.status(), slug).toBe(200);
     }
 
-    await page.goto('/zh/formulas/burning-ship');
+    await page.goto(guidePath('zh', 'burning-ship'));
     await expect(
       page.getByRole('heading', { level: 1, name: '燃烧船' })
     ).toBeVisible();
@@ -102,7 +122,7 @@ test.describe('Formula guides', () => {
   test('renders formula images at their native target aspect ratios', async ({
     page,
   }) => {
-    await page.goto('/en/formulas/mandelbrot');
+    await page.goto(guidePath('en', 'mandelbrot'));
 
     const heroImage = page.getByTestId('formula-guide-hero-image');
     await expect(heroImage).toHaveAttribute('width', '1200');
@@ -136,6 +156,7 @@ test.describe('Formula guides', () => {
 
     const exploreHref = await page
       .getByRole('link', { name: 'Open in Explorer' })
+      .first()
       .getAttribute('href');
     expect(exploreHref).toBeTruthy();
 
@@ -162,19 +183,179 @@ test.describe('Formula guides', () => {
       });
   });
 
-  test('does not create a thin page for a non-guide formula', async ({ request }) => {
-    const response = await request.get('/en/formulas/tricorn');
+  test('permanently redirects all 21 legacy Guide slugs to canonical IDs', async ({
+    request,
+  }) => {
+    for (const slug of publishedSlugs) {
+      const response = await request.get(`/en/formulas/${slug}`, {
+        maxRedirects: 0,
+      });
+      expect(response.status(), slug).toBe(308);
+      expect(
+        new Set(
+          response
+            .headers()
+            .location.split(',')
+            .map((value) => value.trim())
+        ),
+        slug
+      ).toEqual(new Set([guidePath('en', slug)]));
+    }
 
-    expect(response.status()).toBe(404);
+    const localized = await request.get('/zh/formulas/mandelbrot', {
+      maxRedirects: 0,
+    });
+    expect(localized.status()).toBe(308);
+    expect(
+      new Set(
+        localized
+          .headers()
+          .location.split(',')
+          .map((value) => value.trim())
+      )
+    ).toEqual(new Set([guidePath('zh', 'mandelbrot')]));
+  });
+
+  test('serves the canonical long tail as noindex and rejects unknown IDs', async ({
+    request,
+  }) => {
+    const response = await request.get(
+      '/en/formulas/1cd7a16f-0474-5b8f-a974-e122ea893769'
+    );
+
+    expect(response.status()).toBe(200);
+    expect(await response.text()).toContain(
+      'name="robots" content="noindex, follow"'
+    );
+
+    const unknown = await request.get(
+      '/en/formulas/00000000-0000-5000-8000-000000000000'
+    );
+    expect(unknown.status()).toBe(404);
+
+    const uppercase = await request.get(
+      `/en/formulas/${guideFormulaId('mandelbrot').toUpperCase()}`
+    );
+    expect(uppercase.status()).toBe(404);
+
+    const unsupportedLocale = await request.get(
+      `/de/formulas/${guideFormulaId('mandelbrot')}`
+    );
+    expect(unsupportedLocale.status()).toBe(404);
+  });
+
+  test('renders a published Record master and server action without JavaScript', async ({
+    browser,
+  }) => {
+    const context = await browser.newContext({ javaScriptEnabled: false });
+    const page = await context.newPage();
+    const formulaId = '1cd7a16f-0474-5b8f-a974-e122ea893769';
+    await page.goto(`/en/formulas/${formulaId}`);
+
+    await expect(page.getByTestId('formula-record')).toHaveAttribute(
+      'data-formula-record-availability',
+      'published'
+    );
+    const fallbackPreview = page.getByTestId('formula-record-no-js-fallback');
+    await expect(fallbackPreview).toBeVisible();
+    await expect(fallbackPreview).toHaveAttribute(
+      'src',
+      `/formula-library/v1/previews/${formulaId}.png`
+    );
+    const previewBox = await fallbackPreview.boundingBox();
+    expect(previewBox).not.toBeNull();
+    expect((previewBox?.width ?? 0) / (previewBox?.height ?? 1)).toBeCloseTo(
+      8 / 5,
+      1
+    );
+    await expect(page.getByRole('link', { name: 'Open in Explorer' })).toHaveAttribute(
+      'href',
+      `/en/explore?open=standard-formula&formula=${formulaId}`
+    );
+    await context.close();
+  });
+
+  test('keeps unavailable identities private and inert', async ({ page }) => {
+    const formulaId = '0e0fa64e-9005-52e3-b9aa-83e73b933dfe';
+    await page.goto(`/en/formulas/${formulaId}`);
+
+    await expect(page.getByRole('heading', { name: 'newducks' })).toBeVisible();
+    await expect(
+      page.getByText(
+        'This identity is documented, but no source, run, edit, or remix action is available under the current decision.',
+      ),
+    ).toBeVisible();
+    await expect(page.getByText('held-license-gpl-3.0-only')).toHaveCount(0);
+    await expect(page.getByText('GPL-3.0-only', { exact: true })).toHaveCount(0);
+    await expect(page.getByRole('link', { name: 'Open in Explorer' })).toHaveCount(0);
+    await expect(page.getByRole('link', { name: 'Remix anonymously' })).toHaveCount(0);
+    await expect(page.getByRole('link', { name: 'View source' })).toHaveCount(0);
+    await expect(page.getByRole('link', { name: 'Download source' })).toHaveCount(0);
+  });
+
+  test('uses a strict Record master in place of the legacy diagnostic preview', async ({
+    page,
+  }) => {
+    const formulaId = '06504747-8ee8-5c39-869b-8b3a992e8c24';
+    await page.goto(`/en/formulas/${formulaId}`);
+
+    await expect(page.getByTestId('formula-record')).toHaveAttribute(
+      'data-formula-record-availability',
+      'published'
+    );
+    const preview = page.getByTestId('formula-record').locator('img').first();
+    const previewSrc = await preview.getAttribute('src');
+    expect(previewSrc).not.toBeNull();
+    const previewUrl = new URL(previewSrc!, 'http://localhost');
+    expect(previewUrl.searchParams.get('url')).toBe(recordPreviewPath(formulaId));
+    await expect(page.getByTestId('formula-record-diagnostic-preview')).toHaveCount(0);
+    await expect(page.getByRole('link', { name: 'Open in Explorer' })).toHaveCount(1);
   });
 
   test('keeps the guide layout within a mobile viewport', async ({ page }) => {
     await page.setViewportSize({ width: 390, height: 844 });
-    await page.goto('/en/formulas/mcmullen-2-3');
+    await page.goto(guidePath('en', 'mcmullen-2-3'));
 
     const overflow = await page.evaluate(
       () => document.documentElement.scrollWidth - window.innerWidth
     );
     expect(overflow).toBeLessThanOrEqual(1);
+  });
+
+  test('rejects an ambiguous duplicate UUID handoff without selecting either target', async ({
+    page,
+  }) => {
+    const formulaId = '1cd7a16f-0474-5b8f-a974-e122ea893769';
+    const otherFormulaId = '00e14aa8-b766-54ea-a359-3f5d20d329b7';
+    await page.goto(
+      `/en/explore?open=standard-formula&formula=${formulaId}&formula=${otherFormulaId}`
+    );
+
+    await expect(page).toHaveURL('/en/explore', { timeout: 30_000 });
+    await expect(page.getByTestId('explore-root')).not.toHaveAttribute(
+      'data-formula-id',
+      formulaId
+    );
+    await expect(page.getByTestId('explore-root')).not.toHaveAttribute(
+      'data-formula-id',
+      otherFormulaId
+    );
+  });
+
+  test('opens a published Record in Explorer through a one-shot UUID handoff', async ({
+    page,
+  }) => {
+    test.setTimeout(60_000);
+    const formulaId = '1cd7a16f-0474-5b8f-a974-e122ea893769';
+    await page.goto(
+      `/en/explore?open=standard-formula&formula=${formulaId}`
+    );
+
+    await expect(page.getByTestId('explore-root')).toHaveAttribute(
+      'data-formula-id',
+      formulaId,
+      { timeout: 30_000 }
+    );
+    await expect(page).toHaveURL('/en/explore', { timeout: 30_000 });
   });
 });

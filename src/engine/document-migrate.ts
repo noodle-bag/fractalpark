@@ -14,7 +14,11 @@ import {
   type ColoringStyleState,
   type FractalDocument,
 } from './document';
-import { documentToRuntimeParams, runtimeParamsToDocument, urlStateToDocument } from './document-adapter';
+import {
+  projectDocumentToRuntimeParams,
+  runtimeParamsToDocument,
+  urlStateToDocument,
+} from './document-adapter';
 
 type DeepPartial<T> = {
   [K in keyof T]?: T[K] extends object ? DeepPartial<T[K]> : T[K];
@@ -236,14 +240,14 @@ function normalizeAssetReference(value: unknown): AssetReference | undefined {
 }
 
 export function normalizeRuntimeFractalParams(input: unknown): FractalParams {
-  const defaults = documentToRuntimeParams(DEFAULT_FRACTAL_DOCUMENT);
+  const defaults = projectDocumentToRuntimeParams(DEFAULT_FRACTAL_DOCUMENT);
   const source = isObject(input) ? input : {};
   const bounds = isObject(source.bounds) ? source.bounds : {};
   const orbitTrap = isObject(source.orbitTrap) ? source.orbitTrap : {};
   const lighting = isObject(source.lighting) ? source.lighting : {};
   const pluginParams = normalizePluginParamRecord(source.pluginParams) ?? defaults.pluginParams;
 
-  return documentToRuntimeParams(
+  return projectDocumentToRuntimeParams(
     normalizeFractalDocument(
       runtimeParamsToDocument({
         maxIterations: normalizeNumber(source.maxIterations, defaults.maxIterations),

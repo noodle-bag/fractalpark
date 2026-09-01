@@ -1,0 +1,35 @@
+{
+  "schema": "fractalpark-teaching-locale/v1",
+  "formulaId": "cc40b50c-d3ff-54f0-b4ea-98bdf0fd0096",
+  "locale": "pt",
+  "sourceRevision": "37a6c61666fd5bf3e2bdef96849dc27a10bd58d152e6a161005ab6e565f12ce0",
+  "semanticHash": "4386e45ac1c4535868f2e3607857b8ae92a8ffbf497de4c7c572717d5db6245c",
+  "englishContentHash": "a7b71692c36b942c1fcdb8f8e21dea6b0ddc8fcc1fa832655d08c0391f0cde98",
+  "overview": "Em FRM-like/1, mcMullen23 começa com se ismand, z = 0; caso contrário, z = pixel, usa z3 = z ^ 3 no primeiro nó do laço e limita a iteração com |z| <= 256. Leia essas operações na ordem real da fonte.",
+  "sourceWalkthrough": {
+    "cc40b50c-d3ff-54f0-b4ea-98bdf0fd0096:37a6c61666fd5bf3e2bdef96849dc27a10bd58d152e6a161005ab6e565f12ce0:initialization": "Em mcMullen23, o nó de inicialização executa somente: se ismand, z = 0; caso contrário, z = pixel.",
+    "cc40b50c-d3ff-54f0-b4ea-98bdf0fd0096:37a6c61666fd5bf3e2bdef96849dc27a10bd58d152e6a161005ab6e565f12ce0:iteration": "Em mcMullen23, este nó do laço executa somente: z3 = z ^ 3.",
+    "cc40b50c-d3ff-54f0-b4ea-98bdf0fd0096:37a6c61666fd5bf3e2bdef96849dc27a10bd58d152e6a161005ab6e565f12ce0:termination": "Em mcMullen23, o nó bailout testa somente: |z| <= 256."
+  },
+  "syntaxFeatures": {
+    "initialization-flow": "Em mcMullen23, a característica de inicialização focaliza a única operação se ismand, z = 0; caso contrário, z = pixel.",
+    "iteration-flow": "Em mcMullen23, a característica de iteração focaliza a única atribuição z3 = z ^ 3.",
+    "bailout-test": "Em mcMullen23, a característica de término focaliza a comparação |z| <= 256."
+  },
+  "parameterExperiment": {
+    "steps": [
+      "Renderize mcMullen23 com a base do plano de parâmetros fixada: centro (0, 0), zoom 0.25, rotação 0, e 96 iterações.",
+      "Mantenha a base fixa exceto pelas iterações, renderize uma vez com 48 iterações e compare com a base de 96."
+    ],
+    "expectedObservation": "Em mcMullen23, registre se a comparação entre 48 e 96 iterações muda algo e anote o limite da fonte |z| <= 256."
+  },
+  "exercise": {
+    "prompt": "Em mcMullen23, localize as três anotações e explique se ismand, z = 0; caso contrário, z = pixel, z3 = z ^ 3 e |z| <= 256 e explique por que nenhuma instrução vizinha pertence à anotação do laço.",
+    "completionCheck": "Em mcMullen23, você concluiu ao listar todas as 3 chaves de anotação e explicar corretamente z3 = z ^ 3 e |z| <= 256."
+  },
+  "factsPresentation": {
+    "provenanceLead": "A proveniência está na unidade factual inglesa.",
+    "rightsLead": "Os direitos estão na unidade factual inglesa."
+  },
+  "contentHash": "a0118635924503eb8f5916877fe19a19f56b6d5dcb08b67e7944565be053f320"
+}

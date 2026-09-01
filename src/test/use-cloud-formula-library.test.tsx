@@ -72,6 +72,8 @@ const RESCUE_STORAGE_ID = '66666666-6666-4666-8666-666666666666';
 const RESCUE_RUNTIME_ID = `custom-${RESCUE_STORAGE_ID}`;
 const BROKEN_STORAGE_ID = '77777777-7777-4777-8777-777777777777';
 const BROKEN_RUNTIME_ID = `custom-${BROKEN_STORAGE_ID}`;
+const LIFECYCLE_STORAGE_ID = '88888888-8888-4888-8888-888888888888';
+const LIFECYCLE_RUNTIME_ID = `custom-${LIFECYCLE_STORAGE_ID}`;
 const BROKEN_SOURCE = `BrokenCloud {
 init:
   z = 0
@@ -157,6 +159,50 @@ describe('useCloudFormulaLibrary session registration', () => {
       2,
       BROKEN_STORAGE_ID,
     );
+  });
+
+  it('registers only the active runnable lifecycle head while returning the invalid editable head', async () => {
+    cloudMocks.listCustomFormulas.mockResolvedValueOnce([]);
+    cloudMocks.getCustomFormula.mockResolvedValue({
+      id: LIFECYCLE_STORAGE_ID,
+      name: 'Lifecycle fork',
+      revision: 1,
+      sourceBytes: BROKEN_SOURCE.length,
+      hasExperienceHint: true,
+      frmSemanticsVersion: 2,
+      createdAt: '2026-08-24T00:00:00.000Z',
+      updatedAt: '2026-08-24T00:00:00.000Z',
+      source: BROKEN_SOURCE,
+      experienceHint: HINT,
+      lifecycle: {
+        editableHeadRevisionId: '10000000-0000-4000-8000-000000000001',
+        activeRunnableRevisionId: '10000000-0000-4000-8000-000000000002',
+        editableDefinition: {},
+        editableProfile: {},
+        remixedFromFormulaId: 'bbbbbbbb-bbbb-5bbb-8bbb-bbbbbbbbbbbb',
+        lineageSourceRevision: 'a'.repeat(64),
+        lineageProfileRevision: 'b'.repeat(64),
+        diagnostics: [{ code: 'invalid-draft' }],
+        activeRunnableSource: NEW_SOURCE,
+        activeRunnableExperienceHint: HINT,
+      },
+    });
+
+    const { result } = renderHook(() => useCloudFormulaLibrary());
+    await waitFor(() => expect(result.current.isLoading).toBe(false));
+
+    await expect(
+      result.current.ensureRegistered(LIFECYCLE_RUNTIME_ID),
+    ).resolves.toBe(true);
+    await expect(result.current.getDetail(LIFECYCLE_RUNTIME_ID)).resolves.toMatchObject({
+      source: BROKEN_SOURCE,
+      lifecycle: { activeRunnableSource: NEW_SOURCE },
+    });
+    expect(
+      readSessionFormulaAssets().find(
+        (asset) => asset.id === LIFECYCLE_RUNTIME_ID,
+      ),
+    ).toMatchObject({ source: NEW_SOURCE, experienceHint: HINT });
   });
 
   it('registers a newly saved formula as strict v2 with its experience hint even if refresh fails', async () => {

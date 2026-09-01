@@ -1,0 +1,36 @@
+{
+  "schema": "fractalpark-teaching-locale/v1",
+  "formulaId": "12fc34ff-196d-5924-830e-6edb72dfc172",
+  "locale": "fr",
+  "sourceRevision": "3aec931a4991e14e53348c6d28e9fcbaf8127cad6298dafc2a8ee9e2ac8d8143",
+  "semanticHash": "a155deea383578e6e4ff5901f5c5a0adaa97b84e8c73df146732db9096cebee9",
+  "englishContentHash": "780fd1d12b9638344c5802cdcb2b61af7f8cafe3df046262af004db546d890ca",
+  "overview": "magnet1 s’étudie avec sa définition épinglée FRM-like/1 : tu suis numerator = z + c; denominator = z - c; ratio = numerator / denominator; z = ratio * ratio, sans prendre une image pour une garantie. Le profil épinglé fournit seulement un réglage concret.",
+  "sourceWalkthrough": {
+    "12fc34ff-196d-5924-830e-6edb72dfc172:3aec931a4991e14e53348c6d28e9fcbaf8127cad6298dafc2a8ee9e2ac8d8143:start-branch": "Dans magnet1, ce nœud exécute if ismand: z = 0; sinon z = pixel.",
+    "12fc34ff-196d-5924-830e-6edb72dfc172:3aec931a4991e14e53348c6d28e9fcbaf8127cad6298dafc2a8ee9e2ac8d8143:ratio": "Dans magnet1, ce nœud exécute ratio = numerator / denominator.",
+    "12fc34ff-196d-5924-830e-6edb72dfc172:3aec931a4991e14e53348c6d28e9fcbaf8127cad6298dafc2a8ee9e2ac8d8143:square-update": "Dans magnet1, ce nœud exécute z = ratio * ratio.",
+    "12fc34ff-196d-5924-830e-6edb72dfc172:3aec931a4991e14e53348c6d28e9fcbaf8127cad6298dafc2a8ee9e2ac8d8143:termination": "Dans magnet1, ce nœud exécute |z| <= 4."
+  },
+  "syntaxFeatures": {
+    "state-flow": "Le flux d’état concret est : le choix de ismand initialise z ; puis numerator et denominator forment ratio avant sa mise au carré.",
+    "stopping-test": "Le test d’arrêt évalue seulement |z| <= 4 ; il n’affecte pas l’état."
+  },
+  "parameterExperiment": {
+    "steps": [
+      "En gardant les autres contrôles du profil fixes, exécute magnet1 avec 48 itérations.",
+      "Utilise ensuite les 96 itérations du profil épinglé et note la différence."
+    ],
+    "expectedObservation": "Note si numerator = z + c; denominator = z - c; ratio = numerator / denominator; z = ratio * ratio modifie le résultat visible ou le test d’arrêt |z| <= 4 par rapport à la référence ; la définition ne garantit pas de différence."
+  },
+  "exercise": {
+    "prompt": "Suis les annotations de magnet1 et explique comment numerator = z + c; denominator = z - c; ratio = numerator / denominator; z = ratio * ratio s’exécute dans les opérations indiquées.",
+    "completionCheck": "Ta réponse explique les 4 annotations, identifie numerator = z + c; denominator = z - c; ratio = numerator / denominator; z = ratio * ratio et distingue |z| <= 4 comme test d’arrêt plutôt que comme affectation.",
+    "hint": "Le flux d’état exécute successivement if ismand: z = 0; sinon z = pixel → numerator = z + c → denominator = z - c → ratio = numerator / denominator → z = ratio * ratio et transmet le résultat à l’étape suivante."
+  },
+  "factsPresentation": {
+    "provenanceLead": "Source : définition d’exécution épinglée et décision de publication.",
+    "rightsLead": "Les informations de droits suivent la décision épinglée dans l’unité anglaise."
+  },
+  "contentHash": "cdde29bd7d33bb4611501157a2ff5f2231f4f58a132c266d4d35b4c215e58218"
+}

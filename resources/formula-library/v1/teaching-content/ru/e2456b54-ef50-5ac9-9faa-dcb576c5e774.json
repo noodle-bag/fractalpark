@@ -1,0 +1,36 @@
+{
+  "schema": "fractalpark-teaching-locale/v1",
+  "formulaId": "e2456b54-ef50-5ac9-9faa-dcb576c5e774",
+  "locale": "ru",
+  "sourceRevision": "25f923b51ea1e36408f9c48e008187e67a946fc58ef634f93bf0cba216f622aa",
+  "semanticHash": "3d14554a8a35c0e2ee8fc80436926dd493babd846a9d5294bc6b58ad7580c62f",
+  "englishContentHash": "e7b4b6dd9db26d332b52d8767c96bf0b310f8354ab721d68a860b4cbcece3848",
+  "overview": "phoenix изучается по закреплённому определению FRM-like/1: вы прослеживаете nextZ = z * z + c + phoenixP * previousZ; previousZ = z; z = nextZ, не считая изображение гарантированным. Закреплённый профиль задаёт лишь одну конкретную настройку наблюдения.",
+  "sourceWalkthrough": {
+    "e2456b54-ef50-5ac9-9faa-dcb576c5e774:25f923b51ea1e36408f9c48e008187e67a946fc58ef634f93bf0cba216f622aa:start-branch": "В phoenix, этот узел выполняет if ismand: z = 0; иначе z = pixel.",
+    "e2456b54-ef50-5ac9-9faa-dcb576c5e774:25f923b51ea1e36408f9c48e008187e67a946fc58ef634f93bf0cba216f622aa:memory-init": "В phoenix, этот узел выполняет previousZ = (0, 0).",
+    "e2456b54-ef50-5ac9-9faa-dcb576c5e774:25f923b51ea1e36408f9c48e008187e67a946fc58ef634f93bf0cba216f622aa:next-state": "В phoenix, этот узел выполняет nextZ = z * z + c + phoenixP * previousZ.",
+    "e2456b54-ef50-5ac9-9faa-dcb576c5e774:25f923b51ea1e36408f9c48e008187e67a946fc58ef634f93bf0cba216f622aa:termination": "В phoenix, этот узел выполняет |z| <= 256."
+  },
+  "syntaxFeatures": {
+    "state-flow": "Конкретный поток состояния: выбор ismand задаёт начальное z и previousZ = (0, 0), затем nextZ переносит предыдущее состояние.",
+    "stopping-test": "Проверка остановки оценивает только |z| <= 256; она не присваивает состояние."
+  },
+  "parameterExperiment": {
+    "steps": [
+      "Запустите phoenix с закреплённым профилем и запишите результат.",
+      "Измените только phoenixP, оставьте остальные слоты выполнения и настройки профиля неизменными, снова запустите и запишите, есть ли различие."
+    ],
+    "expectedObservation": "Запишите, меняет ли nextZ = z * z + c + phoenixP * previousZ; previousZ = z; z = nextZ видимый результат или проверку остановки |z| <= 256 относительно базового запуска; определение не гарантирует различие."
+  },
+  "exercise": {
+    "prompt": "Проследите аннотации phoenix и объясните, как nextZ = z * z + c + phoenixP * previousZ; previousZ = z; z = nextZ выполняется в отмеченных операциях.",
+    "completionCheck": "Ваш ответ объясняет все 4 аннотации, указывает nextZ = z * z + c + phoenixP * previousZ; previousZ = z; z = nextZ и отличает |z| <= 256 как проверку остановки от присваивания.",
+    "hint": "Поток состояния последовательно выполняет если ismand: z = 0; иначе z = pixel → previousZ = (0, 0) → nextZ = z * z + c + phoenixP * previousZ → previousZ = z → z = nextZ и передаёт результат следующему шагу."
+  },
+  "factsPresentation": {
+    "provenanceLead": "Источник: закреплённое определение выполнения и решение о публикации.",
+    "rightsLead": "Сведения о правах следуют закреплённому решению в английском разделе."
+  },
+  "contentHash": "e32416ad8210b4ac9b54eafaad827c8713e756cab910641319a33ea597df517c"
+}

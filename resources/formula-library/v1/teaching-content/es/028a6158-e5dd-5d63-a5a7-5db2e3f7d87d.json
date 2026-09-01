@@ -1,0 +1,35 @@
+{
+  "schema": "fractalpark-teaching-locale/v1",
+  "formulaId": "028a6158-e5dd-5d63-a5a7-5db2e3f7d87d",
+  "locale": "es",
+  "sourceRevision": "77c461de2d9cf0bbfb4a3257fb4e83bd1f250f6f5f1c52020ff3da0ecee366d9",
+  "semanticHash": "fd88674f04392ce72cbb6d0baf06b941def420ddc8785d0b0a67752d9fe0a7f9",
+  "englishContentHash": "675a619211706eb93d24abf7610c14d84ac5a56e0343c31e687af0433a8f77c4",
+  "overview": "En FRM-like/1, fzppcoct comienza con z = pixel, el primer nodo del bucle hace z = cosxx(z) + offset y |z| <= 50 limita la iteración. Lee estas operaciones en el orden real de la fuente.",
+  "sourceWalkthrough": {
+    "028a6158-e5dd-5d63-a5a7-5db2e3f7d87d:77c461de2d9cf0bbfb4a3257fb4e83bd1f250f6f5f1c52020ff3da0ecee366d9:initialization": "En fzppcoct, el nodo de inicialización ejecuta solo: z = pixel.",
+    "028a6158-e5dd-5d63-a5a7-5db2e3f7d87d:77c461de2d9cf0bbfb4a3257fb4e83bd1f250f6f5f1c52020ff3da0ecee366d9:iteration": "En fzppcoct, este nodo del bucle ejecuta solo: z = cosxx(z) + offset.",
+    "028a6158-e5dd-5d63-a5a7-5db2e3f7d87d:77c461de2d9cf0bbfb4a3257fb4e83bd1f250f6f5f1c52020ff3da0ecee366d9:termination": "En fzppcoct, el nodo bailout prueba solo: |z| <= 50."
+  },
+  "syntaxFeatures": {
+    "initialization-flow": "En fzppcoct, la característica de inicialización se centra en la única operación inicial z = pixel.",
+    "iteration-flow": "En fzppcoct, la característica de iteración se centra en la única asignación z = cosxx(z) + offset.",
+    "bailout-test": "En fzppcoct, la característica de terminación se centra en la comparación |z| <= 50."
+  },
+  "parameterExperiment": {
+    "steps": [
+      "Renderiza fzppcoct con la base del plano de parámetros fijada: centro (-0.5, 0), zoom 0.4, rotación 0, y 96 iteraciones.",
+      "Mantén fija la base salvo las iteraciones, renderiza una vez con 48 iteraciones y compárala con la base de 96."
+    ],
+    "expectedObservation": "En fzppcoct, anota si la comparación entre 48 y 96 iteraciones cambia algo e identifica el límite fuente |z| <= 50."
+  },
+  "exercise": {
+    "prompt": "En fzppcoct, localiza las tres anotaciones y explica z = pixel, z = cosxx(z) + offset y |z| <= 50 y explica por qué ninguna instrucción vecina pertenece a la anotación del bucle.",
+    "completionCheck": "En fzppcoct, has terminado al enumerar las 3 claves de anotación y explicar con precisión z = cosxx(z) + offset y |z| <= 50."
+  },
+  "factsPresentation": {
+    "provenanceLead": "La procedencia está en la unidad factual inglesa.",
+    "rightsLead": "Los derechos están en la unidad factual inglesa."
+  },
+  "contentHash": "a82b44c91aac5e0da1ae43b08c8c06826ac620f39dda2aa2ad5f8b73e4fbe664"
+}

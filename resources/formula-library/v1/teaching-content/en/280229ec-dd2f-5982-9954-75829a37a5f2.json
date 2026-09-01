@@ -1,0 +1,74 @@
+{
+  "schema": "fractalpark-teaching-en-fact/v1",
+  "formulaId": "280229ec-dd2f-5982-9954-75829a37a5f2",
+  "sourceRevision": "503739d928f438a7edc79d8d7fb1931b1435b45b0c8231950a2b11cf7104d22c",
+  "semanticHash": "98af05f90861656958d24b58d63d4b9eb08eca323b126001c38eb467e5646e5c",
+  "overview": "liar4 is presented from its pinned FRM-like/1 source rather than from its name. The source supplies an initialization block, a loop block, and a bailout test; the pinned profile uses mode parameter-plane; center (-0.5, 0); zoom 0.4; rotation 0; iterations 96. Follow the cited operations to compare repeated runs.",
+  "mathDisclosure": "exact-structured",
+  "mathSummary": "The source is structured as init, loop, and bailout blocks. Its loop operations are z = 1 - abs(imag(z) * p - real(z)) + (1 - abs(1 - real(z) - imag(z))).",
+  "sourceWalkthrough": [
+    {
+      "annotationId": "280229ec-dd2f-5982-9954-75829a37a5f2:503739d928f438a7edc79d8d7fb1931b1435b45b0c8231950a2b11cf7104d22c:init",
+      "nodeId": "frm-v1:503739d928f438a7edc79d8d7fb1931b1435b45b0c8231950a2b11cf7104d22c:init/0",
+      "explanation": "The init source node begins with `z = pixel`; it establishes the starting path before the loop."
+    },
+    {
+      "annotationId": "280229ec-dd2f-5982-9954-75829a37a5f2:503739d928f438a7edc79d8d7fb1931b1435b45b0c8231950a2b11cf7104d22c:loop",
+      "nodeId": "frm-v1:503739d928f438a7edc79d8d7fb1931b1435b45b0c8231950a2b11cf7104d22c:loop/0",
+      "explanation": "The loop source node executes `z = 1 - abs(imag(z) * p - real(z)) + (1 - abs(1 - real(z) - imag(z)))` on each pass."
+    },
+    {
+      "annotationId": "280229ec-dd2f-5982-9954-75829a37a5f2:503739d928f438a7edc79d8d7fb1931b1435b45b0c8231950a2b11cf7104d22c:bailout",
+      "nodeId": "frm-v1:503739d928f438a7edc79d8d7fb1931b1435b45b0c8231950a2b11cf7104d22c:bailout",
+      "explanation": "The bailout source node tests `|z| <= 1`; the iteration continues while that condition holds."
+    }
+  ],
+  "syntaxFeatures": [
+    {
+      "featureId": "source-sequence",
+      "annotationIds": [
+        "280229ec-dd2f-5982-9954-75829a37a5f2:503739d928f438a7edc79d8d7fb1931b1435b45b0c8231950a2b11cf7104d22c:init",
+        "280229ec-dd2f-5982-9954-75829a37a5f2:503739d928f438a7edc79d8d7fb1931b1435b45b0c8231950a2b11cf7104d22c:loop",
+        "280229ec-dd2f-5982-9954-75829a37a5f2:503739d928f438a7edc79d8d7fb1931b1435b45b0c8231950a2b11cf7104d22c:bailout"
+      ],
+      "explanation": "The cited source nodes for liar4—`z = pixel`, its absolute-expression loop, and `|z| <= 1`—form its source-ordered path from setup through update to termination."
+    }
+  ],
+  "parameterExperiment": {
+    "parameterSymbols": [
+      "parameter1"
+    ],
+    "steps": [
+      "Use the pinned profile (mode parameter-plane; center (-0.5, 0); zoom 0.4; rotation 0; iterations 96). Run once with parameter1 at its default (0, 0), then run again with parameter1 set to (1, 0). Record the visible result after each run."
+    ],
+    "expectedObservation": "Compare the liar4 runs and record whether `z = 1 - abs(imag(z) * p - real(z)) + (1 - abs(1 - real(z) - imag(z)))` has matching visible results and iteration behavior."
+  },
+  "exercise": {
+    "prompt": "Use the cited annotations for liar4—`z = pixel`, its absolute-expression loop, and `|z| <= 1`—to describe the source order.",
+    "completionCheck": "Your response lists the 3 cited annotation IDs and orders liar4’s `z = pixel`, its absolute-expression loop, and `|z| <= 1` from initialization through loop to termination.",
+    "answerDisclosure": "none"
+  },
+  "facts": {
+    "provenanceStatement": "Grounded in the pinned runtime source revision 503739d928f438a7edc79d8d7fb1931b1435b45b0c8231950a2b11cf7104d22c and its semantic anchors.",
+    "rightsStatement": "rightsStatus: source-declared-public-domain-assumption; implementationBasis: direct-adaptation; publicationDecision: publish; decisionReason: publish-census-full-chain-green. This does not make any broader claim about a third-party original.",
+    "sourceIds": [
+      "runtime:503739d928f438a7edc79d8d7fb1931b1435b45b0c8231950a2b11cf7104d22c",
+      "decision:280229ec-dd2f-5982-9954-75829a37a5f2"
+    ],
+    "licenseIds": [],
+    "claims": [
+      {
+        "text": "The runtime profile specifies mode parameter-plane; center (-0.5, 0); zoom 0.4; rotation 0; iterations 96.",
+        "sourceIds": [
+          "runtime:503739d928f438a7edc79d8d7fb1931b1435b45b0c8231950a2b11cf7104d22c"
+        ]
+      },
+      {
+        "text": "The publication record states publish with reason publish-census-full-chain-green.",
+        "sourceIds": [
+          "decision:280229ec-dd2f-5982-9954-75829a37a5f2"
+        ]
+      }
+    ]
+  }
+}

@@ -1,0 +1,36 @@
+{
+  "schema": "fractalpark-teaching-locale/v1",
+  "formulaId": "627c38a8-8f4d-548f-a5a6-dd9f215adf60",
+  "locale": "ru",
+  "sourceRevision": "01058522dac48f2278d74a3e8a06b4c18e6d2589a3ccda69565dad37c325298d",
+  "semanticHash": "96e81ed9a1c4c222c0bf0ce8034a51d3291cde23ee6111f2082649d8854f6f5e",
+  "englishContentHash": "c7ab35c3b99b3ef9b70bd98940300799957c71eeaf2bf1571f104aea080a39a2",
+  "overview": "perpendicularCeltic изучается по закреплённому определению FRM-like/1: вы прослеживаете у p действительная часть равна abs(real(z)), а мнимая — imag(z); z2 = p * p; z заново строится из abs(real(z2)) и imag(z2), затем z = z + c, не считая изображение гарантированным. Закреплённый профиль задаёт лишь одну конкретную настройку наблюдения.",
+  "sourceWalkthrough": {
+    "627c38a8-8f4d-548f-a5a6-dd9f215adf60:01058522dac48f2278d74a3e8a06b4c18e6d2589a3ccda69565dad37c325298d:start-branch": "В perpendicularCeltic, этот узел выполняет if ismand: z = 0; иначе z = pixel.",
+    "627c38a8-8f4d-548f-a5a6-dd9f215adf60:01058522dac48f2278d74a3e8a06b4c18e6d2589a3ccda69565dad37c325298d:fold-real": "В perpendicularCeltic, этот узел выполняет real(p) = abs(real(z)).",
+    "627c38a8-8f4d-548f-a5a6-dd9f215adf60:01058522dac48f2278d74a3e8a06b4c18e6d2589a3ccda69565dad37c325298d:fold-result": "В perpendicularCeltic, этот узел выполняет real(z) = abs(real(z2)).",
+    "627c38a8-8f4d-548f-a5a6-dd9f215adf60:01058522dac48f2278d74a3e8a06b4c18e6d2589a3ccda69565dad37c325298d:termination": "В perpendicularCeltic, этот узел выполняет |z| <= 256."
+  },
+  "syntaxFeatures": {
+    "state-flow": "Конкретный поток состояния: выбор ismand задаёт начальное z, p и z2 являются временными состояниями, затем z строится заново и к нему прибавляется c.",
+    "stopping-test": "Проверка остановки оценивает только |z| <= 256; она не присваивает состояние."
+  },
+  "parameterExperiment": {
+    "steps": [
+      "Не меняя остальные настройки профиля, запустите perpendicularCeltic с 48 итерациями.",
+      "Затем используйте 96 итераций закреплённого профиля и запишите различие."
+    ],
+    "expectedObservation": "Запишите, меняет ли последовательность, в которой p получает действительную часть abs(real(z)) и мнимую imag(z), затем z2 = p * p, z заново строится из abs(real(z2)) и imag(z2) и выполняется z = z + c, видимый результат или проверку остановки |z| <= 256 относительно базового запуска; определение не гарантирует различие."
+  },
+  "exercise": {
+    "prompt": "Проследите аннотации perpendicularCeltic и объясните, как у p действительная часть равна abs(real(z)), а мнимая — imag(z); z2 = p * p; z заново строится из abs(real(z2)) и imag(z2), затем z = z + c выполняется в отмеченных операциях.",
+    "completionCheck": "Ваш ответ объясняет все 4 аннотации, указывает у p действительная часть равна abs(real(z)), а мнимая — imag(z); z2 = p * p; z заново строится из abs(real(z2)) и imag(z2), затем z = z + c и отличает |z| <= 256 как проверку остановки от присваивания.",
+    "hint": "Поток состояния последовательно выполняет если ismand: z = 0; иначе z = pixel → p = (0, 0) → real(p) = abs(real(z)) → z2 = p * p → real(z) = abs(real(z2)) → z = z + c и передаёт результат следующему шагу."
+  },
+  "factsPresentation": {
+    "provenanceLead": "Источник: закреплённое определение выполнения и решение о публикации.",
+    "rightsLead": "Сведения о правах следуют закреплённому решению в английском разделе."
+  },
+  "contentHash": "b3fc9338c0910463dd4b8be7220f87732cf54ffea0aed2a33340a3ce8b574041"
+}

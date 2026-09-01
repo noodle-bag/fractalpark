@@ -1,0 +1,29 @@
+{
+  "evidenceId": "76add9dd3ed77c3316e9a16878c19d82300213579a8d2c8c44c131a0042ee0be",
+  "schemaVersion": 1,
+  "locale": "ko",
+  "surface": "manual-a",
+  "provider": "deepseek",
+  "requestedModel": "deepseek-chat",
+  "actualModel": "deepseek-v4-flash",
+  "finishReason": "stop",
+  "status": "approved",
+  "reviewedAt": "2026-08-21T08:18:52.466785+00:00",
+  "sourceCommit": "37320f293839812017178bb91efe7670239edfa3",
+  "sourceManualSha256": "e5168f1a0211596659314d748fa53825892a2a6f089350e636a8c0baf3903758",
+  "sourceMessageProjectionSha256": "effb295f43ad338c80f1becab42a90cbb8afd2345a79c2e014acf031ea1faaf7",
+  "targetManualSha256": "07d348173685cd0835a745be0ddda9cc9dc5acf605758a5ba5f909be9e57db55",
+  "targetMessageProjectionSha256": "be95160f1092fe2542631f278ac996f91418b03e9f9e1fe64d14726fb65b7ba1",
+  "messagePathCount": 39,
+  "reviewText": "VERDICT: APPROVE\n\n번역은 원문의 기술적 의미, 규범적 제약, 범위 및 어조를 정확히 보존합니다. 코드 블록, 인라인 코드, 제목, 목록, 표, 링크, 자리 표시자, 보호된 토큰 및 숫자 값은 기계 게이트에서 검증되었으며, 로캘 천 단위 구분 기호는 의도적입니다. 로캘 출처 메타데이터와 `/ko/formulas/<formulaId>`는 의도적입니다. 제품/코드 용어(Definition, Record, Profile, Remix, Classic 등)는 영어로 유지되어 명확성을 보장합니다. 누락, 추가, 부정, 범위 변경 또는 사용성에 영향을 주는 모호성은 발견되지 않았습니다.",
+  "usage": {
+    "prompt_tokens": 4429,
+    "completion_tokens": 188,
+    "total_tokens": 4617,
+    "prompt_tokens_details": {
+      "cached_tokens": 0
+    },
+    "prompt_cache_hit_tokens": 0,
+    "prompt_cache_miss_tokens": 4429
+  }
+}

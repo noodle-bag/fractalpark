@@ -1,0 +1,35 @@
+{
+  "schema": "fractalpark-teaching-locale/v1",
+  "formulaId": "0ba0b082-c4b0-51d8-b981-7ca1ca25b9f3",
+  "locale": "es",
+  "sourceRevision": "46f51a27e66b8e029ee20112496383b57cc510dbfcae0bc63dd9b0a6886dcb8f",
+  "semanticHash": "374bad563fd78d9d062b53d35dc9be8498dba81eb412aea6c35e29d54ef4456a",
+  "englishContentHash": "4d1388e4a77c8fb0a510057b3c870f9fd99512c188860dbca3ca32043bc404f0",
+  "overview": "En FRM-like/1, la inicialización hace z = seed. En cada iteración, el nodo ejecuta roundCount < 10 → z = earlyTransform(z)+pixel; roundCount >= 10 → z = numeratorTransform(z)/denominatorTransform(z)+pixel. La terminación comprueba |z| <= real(escapeLimit).",
+  "sourceWalkthrough": {
+    "0ba0b082-c4b0-51d8-b981-7ca1ca25b9f3:46f51a27e66b8e029ee20112496383b57cc510dbfcae0bc63dd9b0a6886dcb8f:init": "En FRM-like/1, la inicialización hace z = seed.",
+    "0ba0b082-c4b0-51d8-b981-7ca1ca25b9f3:46f51a27e66b8e029ee20112496383b57cc510dbfcae0bc63dd9b0a6886dcb8f:loop": "En cada iteración, el nodo ejecuta roundCount < 10 → z = earlyTransform(z)+pixel; roundCount >= 10 → z = numeratorTransform(z)/denominatorTransform(z)+pixel.",
+    "0ba0b082-c4b0-51d8-b981-7ca1ca25b9f3:46f51a27e66b8e029ee20112496383b57cc510dbfcae0bc63dd9b0a6886dcb8f:branch": "La rama usa roundCount < 10 → z = earlyTransform(z)+pixel; roundCount >= 10 → z = numeratorTransform(z)/denominatorTransform(z)+pixel.",
+    "0ba0b082-c4b0-51d8-b981-7ca1ca25b9f3:46f51a27e66b8e029ee20112496383b57cc510dbfcae0bc63dd9b0a6886dcb8f:termination": "La terminación comprueba |z| <= real(escapeLimit)."
+  },
+  "syntaxFeatures": {
+    "sequence": "En cada iteración, el nodo ejecuta roundCount < 10 → z = earlyTransform(z)+pixel; roundCount >= 10 → z = numeratorTransform(z)/denominatorTransform(z)+pixel.",
+    "branch": "La rama usa roundCount < 10 → z = earlyTransform(z)+pixel; roundCount >= 10 → z = numeratorTransform(z)/denominatorTransform(z)+pixel."
+  },
+  "parameterExperiment": {
+    "steps": [
+      "Usa el perfil fijado y los valores predeterminados como base. Cambia solo seed, mantén escapeLimit, earlyTransform, numeratorTransform, denominatorTransform fijos, ejecuta 96 iteraciones, restaura el valor predeterminado de seed y registra si el resultado difiere."
+    ],
+    "expectedObservation": "Registra si aparece roundCount < 10 → z = earlyTransform(z)+pixel; roundCount >= 10 → z = numeratorTransform(z)/denominatorTransform(z)+pixel."
+  },
+  "exercise": {
+    "prompt": "Explica roundCount < 10 → z = earlyTransform(z)+pixel; roundCount >= 10 → z = numeratorTransform(z)/denominatorTransform(z)+pixel.",
+    "completionCheck": "Para terminar, debes nombrar exactamente las 4 anotaciones y explicar este detalle de la fórmula: Pista: roundCount < 10 → z = earlyTransform(z)+pixel; roundCount >= 10 → z = numeratorTransform(z)/denominatorTransform(z)+pixel.",
+    "hint": "Pista: roundCount < 10 → z = earlyTransform(z)+pixel; roundCount >= 10 → z = numeratorTransform(z)/denominatorTransform(z)+pixel."
+  },
+  "factsPresentation": {
+    "provenanceLead": "La procedencia figura en el registro de fuente fijado.",
+    "rightsLead": "El estado de derechos y la decisión de publicación figuran en el registro de decisión fijado."
+  },
+  "contentHash": "999875d76d917e62688738b6dac4fbcc3a1906ed2582c742cd15017686dfef81"
+}

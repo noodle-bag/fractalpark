@@ -1,0 +1,33 @@
+{
+  "schema": "fractalpark-teaching-locale/v1",
+  "formulaId": "09ee96d1-18a8-5dad-83e1-d05f0c59be4b",
+  "locale": "fr",
+  "sourceRevision": "ab0bdc1929dee1daeb9486d7b1fd885a6644367232854694fa88908eb4e6c0ce",
+  "semanticHash": "061df18cf898a0a049d63cd5f6cf087a28ac7f830bb9694e954c1aaae0b29851",
+  "englishContentHash": "1cf5b919d9d0433642e675460df0a931cc349fe32425c11b23f74e23e66db79b",
+  "localizedName": "chebyshev2",
+  "overview": "Dans FRM-like/1, chebyshev2 suit l’initialisation, la boucle et le test de sortie du code source. Considère chaque étape comme une opération explicite sur l’état, sans déduire des règles du nom. Le profil fixé te permet d’observer le même processus itératif.",
+  "sourceWalkthrough": {
+    "09ee96d1-18a8-5dad-83e1-d05f0c59be4b:ab0bdc1929dee1daeb9486d7b1fd885a6644367232854694fa88908eb4e6c0ce:init": "Le nœud d’initialisation exécute : `if ismand`",
+    "09ee96d1-18a8-5dad-83e1-d05f0c59be4b:ab0bdc1929dee1daeb9486d7b1fd885a6644367232854694fa88908eb4e6c0ce:loop": "Le nœud de boucle exécute : `z = 2 * (z * z) - (1, 0) + c`",
+    "09ee96d1-18a8-5dad-83e1-d05f0c59be4b:ab0bdc1929dee1daeb9486d7b1fd885a6644367232854694fa88908eb4e6c0ce:bailout": "Le test d’arrêt est : `|z| <= 256`"
+  },
+  "syntaxFeatures": {
+    "source-sequence": "Cette structure organise les étapes citées du code source dans une séquence vérifiable. 09ee96d1-18a8-5dad-83e1-d05f0c59be4b:ab0bdc1929dee1daeb9486d7b1fd885a6644367232854694fa88908eb4e6c0ce:init, 09ee96d1-18a8-5dad-83e1-d05f0c59be4b:ab0bdc1929dee1daeb9486d7b1fd885a6644367232854694fa88908eb4e6c0ce:loop, 09ee96d1-18a8-5dad-83e1-d05f0c59be4b:ab0bdc1929dee1daeb9486d7b1fd885a6644367232854694fa88908eb4e6c0ce:bailout"
+  },
+  "parameterExperiment": {
+    "steps": [
+      "Utilise le profil fixé : mode parameter-plane; center (-0.5, 0); zoom 0.4; rotation 0; iterations 96. Exécute-le une fois et note le résultat ; puis répète avec le même profil."
+    ],
+    "expectedObservation": "Compare les deux exécutions et note si `z = 2 * (z * z) - (1, 0) + c` donne le même résultat visible et le même comportement itératif."
+  },
+  "exercise": {
+    "prompt": "Trouve les annotations sources liées à `z = 2 * (z * z) - (1, 0) + c` et explique l’ordre entre initialisation, boucle et arrêt.",
+    "completionCheck": "Pour terminer, liste les trois clés d’annotation citées pour `z = 2 * (z * z) - (1, 0) + c` et range-les de l’initialisation à la boucle puis à l’arrêt."
+  },
+  "factsPresentation": {
+    "provenanceLead": "Provenance :",
+    "rightsLead": "Droits :"
+  },
+  "contentHash": "9aab5e8d967bbcb31cce6a054286c6db4c9e44ed70874f3c190fcb631c712fbf"
+}

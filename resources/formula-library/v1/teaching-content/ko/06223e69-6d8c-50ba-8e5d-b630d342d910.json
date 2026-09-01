@@ -1,0 +1,33 @@
+{
+  "schema": "fractalpark-teaching-locale/v1",
+  "formulaId": "06223e69-6d8c-50ba-8e5d-b630d342d910",
+  "locale": "ko",
+  "sourceRevision": "6fd1272cca8d356da5f0c49cbbb4278f0e5d727cefab5ad1daefa83fb4c1f3ce",
+  "semanticHash": "88a93741043d5f43532adda4f96b789b0e10c4bd3d31319b8c9aa7ba3af5fee9",
+  "englishContentHash": "dbff8e9436104f3caedd85de72fcbf92209ab78b3312bad81ab9f84813408da3",
+  "localizedName": "celticMandelbar",
+  "overview": "FRM-like/1에서 celticMandelbar은 소스의 초기화, 반복, 종료 검사를 따라 실행돼요. 이름으로 규칙을 추측하지 말고 각 단계를 현재 상태에 대한 명시적 연산으로 보세요. 고정 프로필로 같은 반복 과정을 관찰할 수 있어요.",
+  "sourceWalkthrough": {
+    "06223e69-6d8c-50ba-8e5d-b630d342d910:6fd1272cca8d356da5f0c49cbbb4278f0e5d727cefab5ad1daefa83fb4c1f3ce:init": "초기화 노드가 실행하는 내용: `if ismand`",
+    "06223e69-6d8c-50ba-8e5d-b630d342d910:6fd1272cca8d356da5f0c49cbbb4278f0e5d727cefab5ad1daefa83fb4c1f3ce:loop": "반복 노드가 실행하는 내용: `z2 = z * z`",
+    "06223e69-6d8c-50ba-8e5d-b630d342d910:6fd1272cca8d356da5f0c49cbbb4278f0e5d727cefab5ad1daefa83fb4c1f3ce:bailout": "종료 검사는 다음과 같아요: `|z| <= 256`"
+  },
+  "syntaxFeatures": {
+    "source-sequence": "이 구조는 인용된 소스 단계들을 확인 가능한 순서로 정리해요. 06223e69-6d8c-50ba-8e5d-b630d342d910:6fd1272cca8d356da5f0c49cbbb4278f0e5d727cefab5ad1daefa83fb4c1f3ce:init, 06223e69-6d8c-50ba-8e5d-b630d342d910:6fd1272cca8d356da5f0c49cbbb4278f0e5d727cefab5ad1daefa83fb4c1f3ce:loop, 06223e69-6d8c-50ba-8e5d-b630d342d910:6fd1272cca8d356da5f0c49cbbb4278f0e5d727cefab5ad1daefa83fb4c1f3ce:bailout"
+  },
+  "parameterExperiment": {
+    "steps": [
+      "고정 프로필을 사용하세요: mode parameter-plane; center (-0.5, 0); zoom 0.4; rotation 0; iterations 96. 한 번 실행해 결과를 기록하고, 같은 프로필로 다시 실행하세요."
+    ],
+    "expectedObservation": "두 실행을 비교하고 `z = conj(folded) + c`에서 보이는 결과와 반복 동작이 같은지 기록하세요."
+  },
+  "exercise": {
+    "prompt": "`z = conj(folded) + c`와 관련된 소스 주석을 찾아 초기화, 반복, 종료 검사의 순서를 설명하세요.",
+    "completionCheck": "완료하려면 `z = conj(folded) + c`에 인용된 주석 키 세 개를 적고 초기화, 반복, 종료 순서로 배열하세요."
+  },
+  "factsPresentation": {
+    "provenanceLead": "출처:",
+    "rightsLead": "권리:"
+  },
+  "contentHash": "6de84f04b62bca828a56b146417b768f1bd1fb891218f7d16cbe98505b7ae669"
+}

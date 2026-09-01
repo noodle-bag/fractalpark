@@ -6,6 +6,7 @@ import { buildCanonicalPresetDocument } from '@/lib/gallery-presets';
 import { renderMathToHtml } from '@/lib/math';
 import type { ArtworkContentEntry } from './artwork-manifest';
 import type { FormulaContentEntry } from './formula-manifest';
+import { PUBLISHED_TEACHING_GUIDES_V1 } from './teaching/guide-route-policy';
 
 const PUBLIC_SLUG_PATTERN = /^[a-z0-9-]+$/;
 const RESERVED_FORMULA_SLUGS = new Set(['frm', 'editor']);
@@ -20,6 +21,10 @@ export interface ContentManifestValidationInput {
   presets: readonly GalleryPresetConfig[];
   messages: Record<string, Messages>;
 }
+
+const renderableFormulaSlugs = new Set(
+  PUBLISHED_TEACHING_GUIDES_V1.map((entry) => entry.slug),
+);
 
 function findMessage(messages: Messages, key: string): unknown {
   return key.split('.').reduce<unknown>((value, part) => {
@@ -101,7 +106,6 @@ export function validateContentManifests({
     artworks.map((entry) => entry.slug),
     'Artwork manifest slugs'
   );
-
   const presetFormulaIds = new Set(
     presets.map(
       (preset) => buildCanonicalPresetDocument(preset).formula.formulaId
@@ -265,7 +269,9 @@ export function validateContentManifests({
           `History for ${entry.formulaId} needs a non-Wikipedia source`
         );
       }
-      assertNonEmptyMessage(messages, `formulas.entries.${entry.slug}.history`);
+      if (renderableFormulaSlugs.has(entry.slug)) {
+        assertNonEmptyMessage(messages, `formulas.entries.${entry.slug}.history`);
+      }
     }
     if (
       entry.frm &&
@@ -293,30 +299,40 @@ export function validateContentManifests({
       }
     }
 
-    const messageRoot = `formulas.entries.${entry.slug}`;
-    assertNonEmptyMessage(messages, `${messageRoot}.title`);
-    assertNonEmptyMessage(messages, `${messageRoot}.summary`);
-    assertNonEmptyMessage(messages, `${messageRoot}.visualCharacteristics`);
-    for (const item of entry.math) {
-      assertNonEmptyMessage(messages, `${messageRoot}.math.${item.id}.label`);
-      assertNonEmptyMessage(
-        messages,
-        `${messageRoot}.math.${item.id}.explanation`
-      );
+    if (renderableFormulaSlugs.has(entry.slug)) {
+      const messageRoot = `formulas.entries.${entry.slug}`;
+      assertNonEmptyMessage(messages, `${messageRoot}.title`);
+      assertNonEmptyMessage(messages, `${messageRoot}.summary`);
+      assertNonEmptyMessage(messages, `${messageRoot}.visualCharacteristics`);
+      for (const item of entry.math) {
+        assertNonEmptyMessage(messages, `${messageRoot}.math.${item.id}.label`);
+        assertNonEmptyMessage(
+          messages,
+          `${messageRoot}.math.${item.id}.explanation`
+        );
+      }
+      for (const parameter of entry.parameters ?? []) {
+        assertNonEmptyMessage(
+          messages,
+          `${messageRoot}.parameters.${parameter.id}`
+        );
+      }
+      for (const faqId of entry.faqIds) {
+        assertNonEmptyMessage(
+          messages,
+          `${messageRoot}.faq.${faqId}.question`
+        );
+        assertNonEmptyMessage(messages, `${messageRoot}.faq.${faqId}.answer`);
+      }
     }
-    for (const parameter of entry.parameters ?? []) {
-      assertNonEmptyMessage(
-        messages,
-        `${messageRoot}.parameters.${parameter.id}`
-      );
-    }
-    for (const faqId of entry.faqIds) {
-      assertNonEmptyMessage(
-        messages,
-        `${messageRoot}.faq.${faqId}.question`
-      );
-      assertNonEmptyMessage(messages, `${messageRoot}.faq.${faqId}.answer`);
-    }
+  }
+
+  if (
+    [...renderableFormulaSlugs].some(
+      (slug) => !formulas.some((formula) => formula.slug === slug)
+    )
+  ) {
+    throw new Error('Renderable formula slugs must resolve in the formula manifest');
   }
 
   const referencedArtworkIds = formulas.flatMap((entry) => entry.artworkIds);

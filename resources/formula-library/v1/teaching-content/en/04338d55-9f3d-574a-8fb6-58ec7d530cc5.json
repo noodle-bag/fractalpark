@@ -1,0 +1,78 @@
+{
+  "schema": "fractalpark-teaching-en-fact/v1",
+  "formulaId": "04338d55-9f3d-574a-8fb6-58ec7d530cc5",
+  "sourceRevision": "fd21d1feee8546a286c7af891e3a671613d5b55571c0426f07c77c20d409eff6",
+  "semanticHash": "d4d06a88f0945a41992881622664918d3d41170d18777cae7554e4d2fe90f7ed",
+  "overview": "flip2_man_m’s FRM-like/1 source starts z at 0 and q at pixel. Every iteration first replaces q with flip(q), then replaces z with flip(z ^ 2 + q) using that updated q. The bailout accepts |z| <= 4.",
+  "mathDisclosure": "exact-structured",
+  "mathSummary": "init: z = 0; q = pixel. loop: q = flip(q); z = flip(z ^ 2 + q). bailout: |z| <= 4.",
+  "sourceWalkthrough": [
+    {
+      "annotationId": "04338d55-9f3d-574a-8fb6-58ec7d530cc5:fd21d1feee8546a286c7af891e3a671613d5b55571c0426f07c77c20d409eff6:init",
+      "nodeId": "frm-v1:fd21d1feee8546a286c7af891e3a671613d5b55571c0426f07c77c20d409eff6:init/0",
+      "explanation": "This initialization assignment sets z = 0; the next initialization separately sets q = pixel."
+    },
+    {
+      "annotationId": "04338d55-9f3d-574a-8fb6-58ec7d530cc5:fd21d1feee8546a286c7af891e3a671613d5b55571c0426f07c77c20d409eff6:flip-q",
+      "nodeId": "frm-v1:fd21d1feee8546a286c7af891e3a671613d5b55571c0426f07c77c20d409eff6:loop/0",
+      "explanation": "This loop assignment replaces q with flip(q), so the next operation receives the flipped q."
+    },
+    {
+      "annotationId": "04338d55-9f3d-574a-8fb6-58ec7d530cc5:fd21d1feee8546a286c7af891e3a671613d5b55571c0426f07c77c20d409eff6:flip-z",
+      "nodeId": "frm-v1:fd21d1feee8546a286c7af891e3a671613d5b55571c0426f07c77c20d409eff6:loop/1",
+      "explanation": "This assignment computes z ^ 2 + q with the updated q and applies flip to that result for the new z."
+    },
+    {
+      "annotationId": "04338d55-9f3d-574a-8fb6-58ec7d530cc5:fd21d1feee8546a286c7af891e3a671613d5b55571c0426f07c77c20d409eff6:bailout",
+      "nodeId": "frm-v1:fd21d1feee8546a286c7af891e3a671613d5b55571c0426f07c77c20d409eff6:bailout",
+      "explanation": "The termination test permits another iteration only when |z| <= 4."
+    }
+  ],
+  "syntaxFeatures": [
+    {
+      "featureId": "source-sequence",
+      "annotationIds": [
+        "04338d55-9f3d-574a-8fb6-58ec7d530cc5:fd21d1feee8546a286c7af891e3a671613d5b55571c0426f07c77c20d409eff6:init",
+        "04338d55-9f3d-574a-8fb6-58ec7d530cc5:fd21d1feee8546a286c7af891e3a671613d5b55571c0426f07c77c20d409eff6:flip-q",
+        "04338d55-9f3d-574a-8fb6-58ec7d530cc5:fd21d1feee8546a286c7af891e3a671613d5b55571c0426f07c77c20d409eff6:flip-z",
+        "04338d55-9f3d-574a-8fb6-58ec7d530cc5:fd21d1feee8546a286c7af891e3a671613d5b55571c0426f07c77c20d409eff6:bailout"
+      ],
+      "explanation": "The two loop annotations show a dependency: q is flipped before the z expression reads it."
+    }
+  ],
+  "parameterExperiment": {
+    "parameterSymbols": [],
+    "steps": [
+      "Render the pinned 96-iteration profile, then keep center, zoom, rotation, and formula fixed and render it with the iteration cap set to 48. Compare the two stages of the flip recurrence across the renders."
+    ],
+    "expectedObservation": "For the 96- and 48-iteration renders, record a visible boundary or symmetry difference, or record no visible difference."
+  },
+  "exercise": {
+    "prompt": "Give the order of q = flip(q) and z = flip(z ^ 2 + q), then compare 96 and 48 iterations.",
+    "completionCheck": "Your response explains all 4 annotated operations, records the requested comparison, and mentions `flip(q)` and `flip(z ^ 2 + q)`.",
+    "answerDisclosure": "none"
+  },
+  "facts": {
+    "provenanceStatement": "Pinned runtime revision fd21d1feee8546a286c7af891e3a671613d5b55571c0426f07c77c20d409eff6 and its publication decision ground this unit.",
+    "rightsStatement": "rightsStatus: no-explicit-permission; implementationBasis: separated-independent-rewrite; publicationDecision: publish; decisionReason: publish-cleanroom-independent-rewrite-full-chain-green. This statement makes no broader claim about any third-party original.",
+    "sourceIds": [
+      "runtime:fd21d1feee8546a286c7af891e3a671613d5b55571c0426f07c77c20d409eff6",
+      "decision:04338d55-9f3d-574a-8fb6-58ec7d530cc5"
+    ],
+    "licenseIds": [],
+    "claims": [
+      {
+        "text": "The pinned definition supplies initialization, loop, and bailout operations for flip2_man_m.",
+        "sourceIds": [
+          "runtime:fd21d1feee8546a286c7af891e3a671613d5b55571c0426f07c77c20d409eff6"
+        ]
+      },
+      {
+        "text": "The publication decision is publish for the recorded reason publish-cleanroom-independent-rewrite-full-chain-green.",
+        "sourceIds": [
+          "decision:04338d55-9f3d-574a-8fb6-58ec7d530cc5"
+        ]
+      }
+    ]
+  }
+}

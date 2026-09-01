@@ -1,4 +1,5 @@
 import type { FormulaPlugin } from '../../types';
+import { RECOVERED_TRANSCENDENTAL_MATH_GLSL_V1 } from './recoveredTranscendentalMath';
 
 export const coshSinhPlugin: FormulaPlugin = {
   id: 'coshSinh',
@@ -10,9 +11,13 @@ export const coshSinhPlugin: FormulaPlugin = {
   bailout: 65536.0,
   family: 'transcendental',
   uniforms: [],
-  glsl: `
+  glsl: `${RECOVERED_TRANSCENDENTAL_MATH_GLSL_V1}
+
 vec2 iterateStep(vec2 z, vec2 c, vec2 zPrev, vec2 point) {
-  return complexMul(complexCoshVec(z), complexSinhVec(z)) + c;
+  vec2 clampedZ = vec2(clamp(z.x, -8.0, 8.0), z.y);
+  vec2 stableCosh = recoveredQuantize(recoveredCoshVec(clampedZ), 16.0);
+  vec2 stableSinh = recoveredQuantize(recoveredSinhVec(clampedZ), 16.0);
+  return recoveredQuantize(complexMul(stableCosh, stableSinh) + c, 16.0);
 }
 `,
 };

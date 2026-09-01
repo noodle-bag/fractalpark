@@ -1,0 +1,405 @@
+import runtimeIndexAsset from '../../public/formula-library/v1/runtime/published/index.json';
+import fallbackPreviewManifestAsset from '../../public/formula-library/v1/previews/manifest.json';
+import recordMasterManifestAsset from '../../public/formula-library/v1/record-previews/manifest.json';
+import {
+  PUBLICATION_DECISION_LEDGER_V1,
+  type FormulaImplementationBasisV1,
+  type FormulaLeakageScanStatusV1,
+  type FormulaPublicationDecisionV1,
+  type FormulaRightsStatusV1,
+} from '@/engine/formulas/v1/publication-decisions';
+import { getFormulaDirectoryEntryV1 } from '@/engine/formulas/v1/directory';
+import {
+  STANDARD_MANIFEST_INDEX_V1,
+  type LegacyAliasV1,
+} from '@/engine/formulas/v1/standard-manifest';
+import {
+  FORMULA_RECORD_PROVENANCE_CONTENT_HASH_V1,
+  FORMULA_RECORD_PROVENANCE_INDEX_V1,
+  PUBLISHED_FORMULA_INDEX_CANONICAL_SHA256_V1,
+  parsePublishedFormulaRuntimeIndexV1,
+  type FormulaHistoricalSourceV1,
+  type PublishedFormulaParameterDescriptorV1,
+  type PublishedFormulaProfileQualityV1,
+  type PublishedFormulaProfileV1,
+  type PublishedFormulaRuntimeIndexRowV1,
+} from '@/engine/formulas/v1';
+import { resolveActivatedPublishedFormulaDefaultProfileV1 } from '@/engine/formulas/v1/julia-runtime-activation-v1';
+import type { FormulaIdV1 } from '@/engine/formulas/v1/types';
+import { buildPublishedFormulaRemixHref } from '@/lib/published-formula-remix';
+import {
+  SUPPORTED_LOCALES,
+  type SupportedLocale,
+} from '@/i18n/supported-locales';
+
+export const FORMULA_RECORD_COUNT_V1 = 677 as const;
+export const PUBLISHED_FORMULA_RECORD_COUNT_V1 = 534 as const;
+export const FORMULA_RECORD_PREVIEW_WIDTH_V1 = 1200 as const;
+export const FORMULA_RECORD_PREVIEW_HEIGHT_V1 = 750 as const;
+export const FORMULA_RECORD_TAKEDOWN_EMAIL_V1 = 'contact@fractalpark.com' as const;
+
+const runtimeResult = parsePublishedFormulaRuntimeIndexV1(runtimeIndexAsset);
+if (!runtimeResult.ok) throw new Error('formula-record-runtime-index-invalid');
+const RUNTIME_BY_ID = new Map(
+  runtimeResult.value.rows.map((row) => [row.formulaId, row]),
+);
+
+interface FormulaRecordFallbackPreviewManifestRowV1 {
+  readonly formulaId: FormulaIdV1;
+  readonly file: string;
+}
+
+const rawFallbackPreviewManifest = fallbackPreviewManifestAsset as {
+  readonly schema?: unknown;
+  readonly rowCount?: unknown;
+  readonly rows?: unknown;
+};
+if (
+  rawFallbackPreviewManifest.schema !==
+    'fractalpark-formula-record-previews/v1' ||
+  rawFallbackPreviewManifest.rowCount !== PUBLISHED_FORMULA_RECORD_COUNT_V1 ||
+  !Array.isArray(rawFallbackPreviewManifest.rows)
+) {
+  throw new Error('formula-record-fallback-preview-manifest-invalid');
+}
+const FALLBACK_PREVIEW_BY_ID = new Map<
+  FormulaIdV1,
+  FormulaRecordFallbackPreviewManifestRowV1
+>();
+for (const raw of rawFallbackPreviewManifest.rows) {
+  const row = raw as Partial<FormulaRecordFallbackPreviewManifestRowV1>;
+  if (
+    typeof row.formulaId !== 'string' ||
+    row.file !== `${row.formulaId}.png` ||
+    FALLBACK_PREVIEW_BY_ID.has(row.formulaId as FormulaIdV1)
+  ) {
+    throw new Error('formula-record-fallback-preview-manifest-invalid');
+  }
+  FALLBACK_PREVIEW_BY_ID.set(row.formulaId as FormulaIdV1, {
+    formulaId: row.formulaId as FormulaIdV1,
+    file: row.file,
+  });
+}
+
+interface FormulaRecordMasterManifestRowV1 {
+  readonly formulaId: FormulaIdV1;
+  readonly sourceRevision: string;
+  readonly semanticHash: string;
+  readonly runtimeDefaultProfileSha256: string;
+  readonly recordPreviewProfileRevision: string;
+  readonly recordPreviewProfileSha256: string;
+  readonly assetRevision: string;
+  readonly file: string;
+  readonly webpSha256: string;
+  readonly width: number;
+  readonly height: number;
+  readonly bytes: number;
+  readonly perceptualHash: string;
+}
+
+const rawRecordMasterManifest = recordMasterManifestAsset as {
+  readonly schema?: unknown;
+  readonly rowCount?: unknown;
+  readonly width?: unknown;
+  readonly height?: unknown;
+  readonly manifestContentHash?: unknown;
+  readonly rows?: unknown;
+};
+if (
+  rawRecordMasterManifest.schema !==
+    'fractalpark-formula-record-preview-masters/v1' ||
+  rawRecordMasterManifest.rowCount !== PUBLISHED_FORMULA_RECORD_COUNT_V1 ||
+  rawRecordMasterManifest.width !== FORMULA_RECORD_PREVIEW_WIDTH_V1 ||
+  rawRecordMasterManifest.height !== FORMULA_RECORD_PREVIEW_HEIGHT_V1 ||
+  typeof rawRecordMasterManifest.manifestContentHash !== 'string' ||
+  !/^[a-f0-9]{64}$/.test(rawRecordMasterManifest.manifestContentHash) ||
+  !Array.isArray(rawRecordMasterManifest.rows)
+) {
+  throw new Error('formula-record-master-manifest-invalid');
+}
+const MASTER_PREVIEW_BY_ID = new Map<
+  FormulaIdV1,
+  FormulaRecordMasterManifestRowV1
+>();
+for (const raw of rawRecordMasterManifest.rows) {
+  const row = raw as Partial<FormulaRecordMasterManifestRowV1>;
+  if (
+    typeof row.formulaId !== 'string' ||
+    typeof row.sourceRevision !== 'string' ||
+    !/^[a-f0-9]{64}$/.test(row.sourceRevision) ||
+    typeof row.semanticHash !== 'string' ||
+    !/^[a-f0-9]{64}$/.test(row.semanticHash) ||
+    typeof row.runtimeDefaultProfileSha256 !== 'string' ||
+    !/^[a-f0-9]{64}$/.test(row.runtimeDefaultProfileSha256) ||
+    typeof row.recordPreviewProfileRevision !== 'string' ||
+    !/^[a-f0-9]{64}$/.test(row.recordPreviewProfileRevision) ||
+    typeof row.recordPreviewProfileSha256 !== 'string' ||
+    !/^[a-f0-9]{64}$/.test(row.recordPreviewProfileSha256) ||
+    typeof row.assetRevision !== 'string' ||
+    !/^[a-f0-9]{16}$/.test(row.assetRevision) ||
+    row.file !== `${row.formulaId}.${row.assetRevision}.webp` ||
+    typeof row.webpSha256 !== 'string' ||
+    !/^[a-f0-9]{64}$/.test(row.webpSha256) ||
+    row.width !== FORMULA_RECORD_PREVIEW_WIDTH_V1 ||
+    row.height !== FORMULA_RECORD_PREVIEW_HEIGHT_V1 ||
+    typeof row.bytes !== 'number' ||
+    !Number.isSafeInteger(row.bytes) ||
+    row.bytes < 1 ||
+    typeof row.perceptualHash !== 'string' ||
+    !/^[a-f0-9]{16}$/.test(row.perceptualHash) ||
+    MASTER_PREVIEW_BY_ID.has(row.formulaId as FormulaIdV1)
+  ) {
+    throw new Error('formula-record-master-manifest-invalid');
+  }
+  MASTER_PREVIEW_BY_ID.set(row.formulaId as FormulaIdV1, {
+    formulaId: row.formulaId as FormulaIdV1,
+    sourceRevision: row.sourceRevision,
+    semanticHash: row.semanticHash,
+    runtimeDefaultProfileSha256: row.runtimeDefaultProfileSha256,
+    recordPreviewProfileRevision: row.recordPreviewProfileRevision,
+    recordPreviewProfileSha256: row.recordPreviewProfileSha256,
+    assetRevision: row.assetRevision,
+    file: row.file,
+    webpSha256: row.webpSha256,
+    width: row.width,
+    height: row.height,
+    bytes: row.bytes,
+    perceptualHash: row.perceptualHash,
+  });
+}
+if (
+  FALLBACK_PREVIEW_BY_ID.size !== PUBLISHED_FORMULA_RECORD_COUNT_V1 ||
+  MASTER_PREVIEW_BY_ID.size !== PUBLISHED_FORMULA_RECORD_COUNT_V1 ||
+  [...RUNTIME_BY_ID.keys()].some(
+    (formulaId) =>
+      !FALLBACK_PREVIEW_BY_ID.has(formulaId as FormulaIdV1) ||
+      !MASTER_PREVIEW_BY_ID.has(formulaId as FormulaIdV1) ||
+      MASTER_PREVIEW_BY_ID.get(formulaId as FormulaIdV1)?.sourceRevision !==
+        RUNTIME_BY_ID.get(formulaId)?.sourceRevision ||
+      MASTER_PREVIEW_BY_ID.get(formulaId as FormulaIdV1)?.semanticHash !==
+        RUNTIME_BY_ID.get(formulaId)?.semanticHash,
+  )
+) {
+  throw new Error('formula-record-preview-manifest-invalid');
+}
+
+export const FORMULA_RECORD_REVISION_V1 =
+  `decision-${PUBLICATION_DECISION_LEDGER_V1.decisionRevision}-runtime-${PUBLISHED_FORMULA_INDEX_CANONICAL_SHA256_V1}-provenance-${FORMULA_RECORD_PROVENANCE_CONTENT_HASH_V1}-preview-master-${rawRecordMasterManifest.manifestContentHash}` as const;
+
+const PROVENANCE_COLLECTION_BY_ID = new Map<FormulaIdV1, 'F588' | 'B94'>();
+for (const formulaId of STANDARD_MANIFEST_INDEX_V1.formulaIds) {
+  const aliases = STANDARD_MANIFEST_INDEX_V1.aliasesFor(formulaId);
+  const collection = aliases.some((alias) => alias.kind === 'f588')
+    ? 'F588'
+    : aliases.some((alias) => alias.kind === 'b94-canonical')
+      ? 'B94'
+      : undefined;
+  if (!collection) throw new Error('formula-record-provenance-missing');
+  PROVENANCE_COLLECTION_BY_ID.set(formulaId, collection);
+}
+
+export type FormulaRecordRightsScopeV1 =
+  | 'project-canonical-implementation'
+  | 'original-source-public-domain-assumption-and-project-canonical-implementation'
+  | 'project-independent-rewrite-only'
+  | 'identity-and-provenance-metadata-only';
+
+export type FormulaRecordAliasV1 = Readonly<
+  Pick<LegacyAliasV1, 'kind' | 'value'>
+>;
+
+interface FormulaRecordCommonV1 {
+  readonly schema: 'fractalpark-formula-record/v1';
+  readonly recordRevision: string;
+  readonly formulaId: FormulaIdV1;
+  readonly locale: SupportedLocale;
+  readonly canonicalName: string;
+  readonly originalName: string;
+  readonly authorStatus: 'unconfirmed';
+  readonly originalResourceStatus: 'confirmed' | 'unconfirmed';
+  readonly originalVersionStatus: 'confirmed' | 'unconfirmed';
+  readonly aliases: readonly FormulaRecordAliasV1[];
+  readonly provenanceCollection: 'F588' | 'B94';
+  readonly primaryFamily: string;
+  readonly rightsStatus: FormulaRightsStatusV1;
+  readonly rightsScope: FormulaRecordRightsScopeV1;
+  readonly canonicalImplementationLicense: 'MIT' | null;
+  readonly publicationDecision: FormulaPublicationDecisionV1;
+  readonly decisionReason: string;
+  readonly implementationBasis: FormulaImplementationBasisV1 | null;
+  readonly implementationBasisRecordedAt: string | null;
+  readonly leakageScanStatus: FormulaLeakageScanStatusV1;
+  readonly reviewedAt: string;
+  readonly takedown: Readonly<{
+    email: typeof FORMULA_RECORD_TAKEDOWN_EMAIL_V1;
+    subject: string;
+  }>;
+}
+
+export interface PublishedFormulaRecordV1 extends FormulaRecordCommonV1 {
+  readonly availability: 'published';
+  readonly historicalSource: FormulaHistoricalSourceV1;
+  readonly source: Readonly<{
+    href: string;
+    sourceRevision: string;
+    semanticHash: string;
+    languageVersion: 'frm-like/1';
+    stdlibVersion: 1;
+    parameters: readonly PublishedFormulaParameterDescriptorV1[];
+  }>;
+  readonly defaultProfile: PublishedFormulaProfileV1;
+  readonly preview: Readonly<{
+    src: string;
+    fallbackSrc: string;
+    width: typeof FORMULA_RECORD_PREVIEW_WIDTH_V1;
+    height: typeof FORMULA_RECORD_PREVIEW_HEIGHT_V1;
+    profileQuality: PublishedFormulaProfileQualityV1;
+    status: 'ready';
+    assetRevision: string;
+    recordPreviewProfileRevision: string;
+    recordPreviewProfileSha256: string;
+    webpSha256: string;
+    bytes: number;
+    perceptualHash: string;
+  }>;
+  readonly actions: Readonly<{
+    openExploreHref: string;
+    remixHref: string;
+  }>;
+}
+
+export interface UnavailableFormulaRecordV1 extends FormulaRecordCommonV1 {
+  readonly availability: 'hold' | 'exclude';
+}
+
+export type PublicFormulaRecordV1 =
+  | PublishedFormulaRecordV1
+  | UnavailableFormulaRecordV1;
+
+function isSupportedLocale(value: unknown): value is SupportedLocale {
+  return (
+    typeof value === 'string' &&
+    (SUPPORTED_LOCALES as readonly string[]).includes(value)
+  );
+}
+
+function rightsScope(
+  rightsStatus: FormulaRightsStatusV1,
+  decision: FormulaPublicationDecisionV1,
+): FormulaRecordRightsScopeV1 {
+  if (decision !== 'publish') return 'identity-and-provenance-metadata-only';
+  if (rightsStatus === 'project-owned') {
+    return 'project-canonical-implementation';
+  }
+  if (rightsStatus === 'source-declared-public-domain-assumption') {
+    return 'original-source-public-domain-assumption-and-project-canonical-implementation';
+  }
+  return 'project-independent-rewrite-only';
+}
+
+function sourceFacts(row: PublishedFormulaRuntimeIndexRowV1) {
+  const href = `/formula-library/v1/runtime/published/${row.definitionPath}`;
+  return Object.freeze({
+    href,
+    sourceRevision: row.sourceRevision,
+    semanticHash: row.semanticHash,
+    languageVersion: 'frm-like/1' as const,
+    stdlibVersion: 1 as const,
+    parameters: row.parameters,
+  });
+}
+
+export function buildFormulaRecordV1(
+  formulaId: FormulaIdV1,
+  locale: unknown,
+): PublicFormulaRecordV1 | undefined {
+  if (!isSupportedLocale(locale)) return undefined;
+  const directory = getFormulaDirectoryEntryV1(formulaId);
+  const decision = PUBLICATION_DECISION_LEDGER_V1.decisionFor(formulaId);
+  const provenanceCollection = PROVENANCE_COLLECTION_BY_ID.get(formulaId);
+  if (!directory || !decision || !provenanceCollection) return undefined;
+  const historicalSource =
+    decision.publicationDecision === 'publish'
+      ? FORMULA_RECORD_PROVENANCE_INDEX_V1.provenanceFor(formulaId)
+      : undefined;
+
+  const common = {
+    schema: 'fractalpark-formula-record/v1' as const,
+    recordRevision: FORMULA_RECORD_REVISION_V1,
+    formulaId,
+    locale,
+    canonicalName: directory.displayName,
+    originalName: directory.displayName,
+    authorStatus: 'unconfirmed' as const,
+    originalResourceStatus: historicalSource
+      ? ('confirmed' as const)
+      : ('unconfirmed' as const),
+    originalVersionStatus: historicalSource
+      ? ('confirmed' as const)
+      : ('unconfirmed' as const),
+    aliases: Object.freeze(
+      STANDARD_MANIFEST_INDEX_V1.aliasesFor(formulaId).map((alias) =>
+        Object.freeze({ kind: alias.kind, value: alias.value }),
+      ),
+    ),
+    provenanceCollection,
+    primaryFamily: directory.primaryFamily,
+    rightsStatus: decision.rightsStatus,
+    rightsScope: rightsScope(
+      decision.rightsStatus,
+      decision.publicationDecision,
+    ),
+    canonicalImplementationLicense:
+      decision.publicationDecision === 'publish' ? ('MIT' as const) : null,
+    publicationDecision: decision.publicationDecision,
+    decisionReason: decision.decisionReason,
+    implementationBasis: decision.implementationBasis,
+    implementationBasisRecordedAt: decision.implementationBasisRecordedAt,
+    leakageScanStatus: decision.leakageScanStatus,
+    reviewedAt: decision.reviewedAt,
+    takedown: Object.freeze({
+      email: FORMULA_RECORD_TAKEDOWN_EMAIL_V1,
+      subject: `[Formula Record Takedown] ${formulaId}`,
+    }),
+  };
+
+  if (decision.publicationDecision !== 'publish') {
+    return Object.freeze({
+      ...common,
+      availability: decision.publicationDecision,
+    });
+  }
+  if (!historicalSource) return undefined;
+
+  const runtime = RUNTIME_BY_ID.get(formulaId);
+  const masterPreview = MASTER_PREVIEW_BY_ID.get(formulaId);
+  const fallbackPreview = FALLBACK_PREVIEW_BY_ID.get(formulaId);
+  if (!runtime || !masterPreview || !fallbackPreview) return undefined;
+  const source = sourceFacts(runtime);
+  const openExploreHref = `/${locale}/explore?open=standard-formula&formula=${formulaId}`;
+  return Object.freeze({
+    ...common,
+    availability: 'published' as const,
+    historicalSource,
+    source,
+    defaultProfile: resolveActivatedPublishedFormulaDefaultProfileV1(runtime),
+    preview: Object.freeze({
+      src: `/formula-library/v1/record-previews/${masterPreview.file}`,
+      fallbackSrc: `/formula-library/v1/previews/${fallbackPreview.file}`,
+      width: FORMULA_RECORD_PREVIEW_WIDTH_V1,
+      height: FORMULA_RECORD_PREVIEW_HEIGHT_V1,
+      profileQuality: runtime.profile.quality,
+      status: 'ready' as const,
+      assetRevision: masterPreview.assetRevision,
+      recordPreviewProfileRevision: masterPreview.recordPreviewProfileRevision,
+      recordPreviewProfileSha256: masterPreview.recordPreviewProfileSha256,
+      webpSha256: masterPreview.webpSha256,
+      bytes: masterPreview.bytes,
+      perceptualHash: masterPreview.perceptualHash,
+    }),
+    actions: Object.freeze({
+      openExploreHref,
+      remixHref: buildPublishedFormulaRemixHref(locale, formulaId),
+    }),
+  });
+}

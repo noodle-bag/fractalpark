@@ -1,6 +1,11 @@
 import createMiddleware from 'next-intl/middleware';
 import { NextResponse, type NextRequest } from 'next/server';
 import { routing } from './i18n/routing';
+import {
+  renderLegacyFormulaDirectoryGoneHtmlV1,
+  resolveLegacyFormulaDirectoryStatusV1,
+} from './lib/formula-directory-status';
+import { isHeldFormulaRecordPathV1 } from './lib/held-formula-record-route';
 
 // Disable the middleware's HTTP `Link` alternate headers: their x-default
 // targets the unprefixed path (/explore, /drift), which is intentionally a
@@ -36,6 +41,35 @@ export default function proxy(request: NextRequest) {
     return NextResponse.next();
   }
 
+  const directoryStatus = resolveLegacyFormulaDirectoryStatusV1(
+    new URL(request.nextUrl.toString()),
+  );
+  if (directoryStatus.kind === 'redirect') {
+    return NextResponse.redirect(directoryStatus.location, 301);
+  }
+  if (directoryStatus.kind === 'gone') {
+    return new NextResponse(
+      renderLegacyFormulaDirectoryGoneHtmlV1(directoryStatus.locale),
+      {
+        status: 410,
+        headers: {
+          'Content-Type': 'text/html; charset=utf-8',
+          'Cache-Control': 'no-store',
+          'X-Robots-Tag': 'noindex, follow',
+        },
+      },
+    );
+  }
+  if (directoryStatus.kind === 'not-found') {
+    return new NextResponse(null, {
+      status: 404,
+      headers: {
+        'Cache-Control': 'no-store',
+        'X-Robots-Tag': 'noindex, follow',
+      },
+    });
+  }
+
   const redirectTarget = LEGACY_ENTRY_TARGETS[request.nextUrl.pathname];
   if (redirectTarget) {
     // clone() preserves the original query string item-for-item.
@@ -44,7 +78,11 @@ export default function proxy(request: NextRequest) {
     return NextResponse.redirect(target, 301);
   }
 
-  return intlMiddleware(request);
+  const response = intlMiddleware(request);
+  if (isHeldFormulaRecordPathV1(request.nextUrl.pathname)) {
+    response.headers.set('X-Robots-Tag', 'noindex, follow');
+  }
+  return response;
 }
 
 export const config = {

@@ -1,0 +1,33 @@
+{
+  "schema": "fractalpark-teaching-locale/v1",
+  "formulaId": "14d3cb89-d3e7-5bff-b848-af88c9a561ae",
+  "locale": "ko",
+  "sourceRevision": "459d2a30210e9171b03fb5d7480eeeb22db0051d977a6dc000d39886924a66eb",
+  "semanticHash": "2ed2266b921e3c3ac6a495eec3da1ff79cc2dcd492e42d068ee21196337eb60f",
+  "englishContentHash": "3a658953f1970acadb7cc2ac012f462da0d3881b3577ddec29283d52015c16d5",
+  "overview": "이 단원은 FRM-like/1의 다음 정확한 연산을 바탕으로 해요:  `init: cclassic = c; x = 1 / pixel; z = x; cclassic = fn1(z). loop: z = (x + cclassic) * (x - cclassic); x = fn2(z). bailout: |z| <= 3.`",
+  "sourceWalkthrough": {
+    "14d3cb89-d3e7-5bff-b848-af88c9a561ae:459d2a30210e9171b03fb5d7480eeeb22db0051d977a6dc000d39886924a66eb:init-transform": "이 주석은 다음을 실행해요: `cclassic = fn1(z)`.",
+    "14d3cb89-d3e7-5bff-b848-af88c9a561ae:459d2a30210e9171b03fb5d7480eeeb22db0051d977a6dc000d39886924a66eb:product": "이 주석은 다음을 실행해요: `z = (x + cclassic) * (x - cclassic)`.",
+    "14d3cb89-d3e7-5bff-b848-af88c9a561ae:459d2a30210e9171b03fb5d7480eeeb22db0051d977a6dc000d39886924a66eb:x-update": "이 주석은 다음을 실행해요: `x = fn2(z)`.",
+    "14d3cb89-d3e7-5bff-b848-af88c9a561ae:459d2a30210e9171b03fb5d7480eeeb22db0051d977a6dc000d39886924a66eb:bailout": "이 주석은 다음을 실행해요: `|z| <= 3`. 이 연산은 이 공식의 반복 순서를 끝내요."
+  },
+  "syntaxFeatures": {
+    "source-sequence": "이 소스 순서 특성은 `(x + cclassic) * (x - cclassic)`와 관련된 인용 연산을 소스 순서대로 연결해요."
+  },
+  "parameterExperiment": {
+    "steps": [
+      "고정 프로필에서 먼저 `function1 = identity`, `function2 = identity`로 기준 결과를 렌더링하세요. 중심, 확대, 회전, 반복 횟수와 다른 슬롯을 고정하고 한 번에 하나만 바꿔 렌더링하세요: `function1 = sqr`, `function2 = sqr`. 새 시험 전에는 기준값을 복원하세요."
+    ],
+    "expectedObservation": "bali의 `function1`, `function2` 시험에서 기준과 비교해 보이는 차이가 있는지 기록하고, 차이가 없어도 그대로 기록하세요."
+  },
+  "exercise": {
+    "prompt": "`(x + cclassic) * (x - cclassic)`이 소스 순서에서 하는 역할을 설명하고 매개변수 실험 단계에 따라 실행 결과를 비교하세요.",
+    "completionCheck": "답에는 4개의 주석 연산에 대한 설명과 실험 비교 기록이 있어야 하며 `(x + cclassic) * (x - cclassic)`도 언급해야 해요."
+  },
+  "factsPresentation": {
+    "provenanceLead": "출처: 고정된 런타임 수정본과 게시 결정이에요.",
+    "rightsLead": "권리 정보는 영어 사실 단원에 있어요."
+  },
+  "contentHash": "3af45b699d8882f96e3547b5b3c0ccdb9bd1754147ac718a489960c625b72421"
+}

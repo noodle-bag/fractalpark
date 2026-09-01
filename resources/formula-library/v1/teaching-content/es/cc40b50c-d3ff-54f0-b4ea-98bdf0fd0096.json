@@ -1,0 +1,35 @@
+{
+  "schema": "fractalpark-teaching-locale/v1",
+  "formulaId": "cc40b50c-d3ff-54f0-b4ea-98bdf0fd0096",
+  "locale": "es",
+  "sourceRevision": "37a6c61666fd5bf3e2bdef96849dc27a10bd58d152e6a161005ab6e565f12ce0",
+  "semanticHash": "4386e45ac1c4535868f2e3607857b8ae92a8ffbf497de4c7c572717d5db6245c",
+  "englishContentHash": "a7b71692c36b942c1fcdb8f8e21dea6b0ddc8fcc1fa832655d08c0391f0cde98",
+  "overview": "En FRM-like/1, mcMullen23 comienza con si ismand, z = 0; si no, z = pixel, el primer nodo del bucle hace z3 = z ^ 3 y |z| <= 256 limita la iteración. Lee estas operaciones en el orden real de la fuente.",
+  "sourceWalkthrough": {
+    "cc40b50c-d3ff-54f0-b4ea-98bdf0fd0096:37a6c61666fd5bf3e2bdef96849dc27a10bd58d152e6a161005ab6e565f12ce0:initialization": "En mcMullen23, el nodo de inicialización ejecuta solo: si ismand, z = 0; si no, z = pixel.",
+    "cc40b50c-d3ff-54f0-b4ea-98bdf0fd0096:37a6c61666fd5bf3e2bdef96849dc27a10bd58d152e6a161005ab6e565f12ce0:iteration": "En mcMullen23, este nodo del bucle ejecuta solo: z3 = z ^ 3.",
+    "cc40b50c-d3ff-54f0-b4ea-98bdf0fd0096:37a6c61666fd5bf3e2bdef96849dc27a10bd58d152e6a161005ab6e565f12ce0:termination": "En mcMullen23, el nodo bailout prueba solo: |z| <= 256."
+  },
+  "syntaxFeatures": {
+    "initialization-flow": "En mcMullen23, la característica de inicialización se centra en la única operación inicial si ismand, z = 0; si no, z = pixel.",
+    "iteration-flow": "En mcMullen23, la característica de iteración se centra en la única asignación z3 = z ^ 3.",
+    "bailout-test": "En mcMullen23, la característica de terminación se centra en la comparación |z| <= 256."
+  },
+  "parameterExperiment": {
+    "steps": [
+      "Renderiza mcMullen23 con la base del plano de parámetros fijada: centro (0, 0), zoom 0.25, rotación 0, y 96 iteraciones.",
+      "Mantén fija la base salvo las iteraciones, renderiza una vez con 48 iteraciones y compárala con la base de 96."
+    ],
+    "expectedObservation": "En mcMullen23, anota si la comparación entre 48 y 96 iteraciones cambia algo e identifica el límite fuente |z| <= 256."
+  },
+  "exercise": {
+    "prompt": "En mcMullen23, localiza las tres anotaciones y explica si ismand, z = 0; si no, z = pixel, z3 = z ^ 3 y |z| <= 256 y explica por qué ninguna instrucción vecina pertenece a la anotación del bucle.",
+    "completionCheck": "En mcMullen23, has terminado al enumerar las 3 claves de anotación y explicar con precisión z3 = z ^ 3 y |z| <= 256."
+  },
+  "factsPresentation": {
+    "provenanceLead": "La procedencia está en la unidad factual inglesa.",
+    "rightsLead": "Los derechos están en la unidad factual inglesa."
+  },
+  "contentHash": "5d64c2c811ab0310ab0f828f0d3c0064cdf1e71b6a4ee1b7714fa8ae83977a01"
+}

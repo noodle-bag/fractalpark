@@ -1,0 +1,88 @@
+{
+  "schema": "fractalpark-teaching-en-fact/v1",
+  "formulaId": "da95ae4b-d401-5eb0-862c-7d977c328fad",
+  "sourceRevision": "c0fdb8fb46828947defe52dd82bdabd45a1a8baeb32278ae649b7231e647bf2f",
+  "semanticHash": "6ecfdd7558b795aaff0dc5bf3609c3c580e4ef18af90fbe45686a204d2dd9443",
+  "overview": "FRM-like/1 defines jm_27 with source initialization z = pixel, then a loop whose first node is sqrz = fn1(z). The pinned parameter-plane profile uses center (0, 0), zoom 0.25, rotation 0, and 96 iterations, and the source tests |z| <= t for bailout.",
+  "mathDisclosure": "exact-structured",
+  "mathSummary": "For jm_27, the cited first loop node is exactly sqrz = fn1(z); the source’s bailout comparison is |z| <= t. The full source loop remains the authoritative sequence of subsequent operations.",
+  "sourceWalkthrough": [
+    {
+      "annotationId": "da95ae4b-d401-5eb0-862c-7d977c328fad:c0fdb8fb46828947defe52dd82bdabd45a1a8baeb32278ae649b7231e647bf2f:initialization",
+      "nodeId": "frm-v1:c0fdb8fb46828947defe52dd82bdabd45a1a8baeb32278ae649b7231e647bf2f:init/0",
+      "explanation": "This cited initialization node performs only: z = pixel."
+    },
+    {
+      "annotationId": "da95ae4b-d401-5eb0-862c-7d977c328fad:c0fdb8fb46828947defe52dd82bdabd45a1a8baeb32278ae649b7231e647bf2f:iteration",
+      "nodeId": "frm-v1:c0fdb8fb46828947defe52dd82bdabd45a1a8baeb32278ae649b7231e647bf2f:loop/0",
+      "explanation": "This cited first loop node performs only: sqrz = fn1(z)."
+    },
+    {
+      "annotationId": "da95ae4b-d401-5eb0-862c-7d977c328fad:c0fdb8fb46828947defe52dd82bdabd45a1a8baeb32278ae649b7231e647bf2f:termination",
+      "nodeId": "frm-v1:c0fdb8fb46828947defe52dd82bdabd45a1a8baeb32278ae649b7231e647bf2f:bailout",
+      "explanation": "This cited bailout node tests only: |z| <= t."
+    }
+  ],
+  "syntaxFeatures": [
+    {
+      "featureId": "initialization-flow",
+      "annotationIds": [
+        "da95ae4b-d401-5eb0-862c-7d977c328fad:c0fdb8fb46828947defe52dd82bdabd45a1a8baeb32278ae649b7231e647bf2f:initialization"
+      ],
+      "explanation": "The initialization annotation isolates z = pixel rather than a later initialization statement. This is specific to jm_27."
+    },
+    {
+      "featureId": "iteration-flow",
+      "annotationIds": [
+        "da95ae4b-d401-5eb0-862c-7d977c328fad:c0fdb8fb46828947defe52dd82bdabd45a1a8baeb32278ae649b7231e647bf2f:iteration"
+      ],
+      "explanation": "The iteration annotation isolates the first loop assignment sqrz = fn1(z); jm_27 applies fn1 to z before the reciprocal update. This is specific to jm_27."
+    },
+    {
+      "featureId": "bailout-test",
+      "annotationIds": [
+        "da95ae4b-d401-5eb0-862c-7d977c328fad:c0fdb8fb46828947defe52dd82bdabd45a1a8baeb32278ae649b7231e647bf2f:termination"
+      ],
+      "explanation": "The termination annotation identifies the exact continuation comparison |z| <= t. This is specific to jm_27."
+    }
+  ],
+  "parameterExperiment": {
+    "parameterSymbols": [
+      "parameter1",
+      "function1"
+    ],
+    "steps": [
+      "Render jm_27 at the pinned parameter-plane baseline with parameter1 (0, 0), function1 (identity) at their runtime defaults.",
+      "Change one of parameter1, function1 at a time, keep center (0, 0), zoom 0.25, rotation 0, and 96 iterations and every other slot fixed, then compare the renderings."
+    ],
+    "expectedObservation": "For each isolated change to parameter1 or function1, record whether the rendering differs from the baseline and relate the comparison to |z| <= t."
+  },
+  "exercise": {
+    "prompt": "For jm_27, use the three annotations to distinguish the single-node operations z = pixel, sqrz = fn1(z), and |z| <= t; explain why no neighboring statement belongs to the loop annotation.",
+    "completionCheck": "Name all 3 annotation IDs, then state exactly that the cited loop node is sqrz = fn1(z) and the cited bailout node is |z| <= t. This completes the jm_27 reading.",
+    "answerDisclosure": "hint"
+  },
+  "facts": {
+    "provenanceStatement": "Grounded in runtime source revision c0fdb8fb46828947defe52dd82bdabd45a1a8baeb32278ae649b7231e647bf2f and the publication decision for da95ae4b-d401-5eb0-862c-7d977c328fad.",
+    "rightsStatement": "rightsStatus is source-declared-public-domain-assumption; implementationBasis is direct-adaptation; publicationDecision is publish; decisionReason is publish-census-full-chain-green. These records describe this project decision only and do not assert broader rights in any third-party original.",
+    "sourceIds": [
+      "runtime:c0fdb8fb46828947defe52dd82bdabd45a1a8baeb32278ae649b7231e647bf2f",
+      "decision:da95ae4b-d401-5eb0-862c-7d977c328fad"
+    ],
+    "licenseIds": [],
+    "claims": [
+      {
+        "text": "The pinned runtime profile uses parameter-plane mode and 96 iterations.",
+        "sourceIds": [
+          "runtime:c0fdb8fb46828947defe52dd82bdabd45a1a8baeb32278ae649b7231e647bf2f"
+        ]
+      },
+      {
+        "text": "The recorded publication decision is publish with reason publish-census-full-chain-green.",
+        "sourceIds": [
+          "decision:da95ae4b-d401-5eb0-862c-7d977c328fad"
+        ]
+      }
+    ]
+  }
+}

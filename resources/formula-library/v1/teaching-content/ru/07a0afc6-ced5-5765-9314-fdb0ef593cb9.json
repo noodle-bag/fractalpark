@@ -1,0 +1,35 @@
+{
+  "schema": "fractalpark-teaching-locale/v1",
+  "formulaId": "07a0afc6-ced5-5765-9314-fdb0ef593cb9",
+  "locale": "ru",
+  "sourceRevision": "dce84ac5a7ee55fff27d70df826af67d386f905ee65cee65f5fa8d418e68ba27",
+  "semanticHash": "7d62c7f378c70b9fbfaeb2381d3c82383ab50a76fe5ea5cbe7fd788b451af907",
+  "englishContentHash": "698d89cd42589a9a021c5645d491bb8981449b2c531a297b45dee1f607c68f56",
+  "overview": "asinhMandelbrot изучается по закреплённому определению FRM-like/1: вы прослеживаете z = asinh(z) + c, не считая изображение гарантированным. Закреплённый профиль задаёт лишь одну конкретную настройку наблюдения.",
+  "sourceWalkthrough": {
+    "07a0afc6-ced5-5765-9314-fdb0ef593cb9:dce84ac5a7ee55fff27d70df826af67d386f905ee65cee65f5fa8d418e68ba27:start-branch": "В asinhMandelbrot, этот узел выполняет if ismand: z = 0; иначе z = pixel.",
+    "07a0afc6-ced5-5765-9314-fdb0ef593cb9:dce84ac5a7ee55fff27d70df826af67d386f905ee65cee65f5fa8d418e68ba27:asinh-update": "В asinhMandelbrot, этот узел выполняет z = asinh(z) + c.",
+    "07a0afc6-ced5-5765-9314-fdb0ef593cb9:dce84ac5a7ee55fff27d70df826af67d386f905ee65cee65f5fa8d418e68ba27:termination": "В asinhMandelbrot, этот узел выполняет |z| <= 256."
+  },
+  "syntaxFeatures": {
+    "state-flow": "Конкретный поток состояния: выбор ismand задаёт начальное z после чего asinh(z) + c заменяет z.",
+    "stopping-test": "Проверка остановки оценивает только |z| <= 256; она не присваивает состояние."
+  },
+  "parameterExperiment": {
+    "steps": [
+      "Не меняя остальные настройки профиля, запустите asinhMandelbrot с 48 итерациями.",
+      "Затем используйте 96 итераций закреплённого профиля и запишите различие."
+    ],
+    "expectedObservation": "Запишите, меняет ли z = asinh(z) + c видимый результат или проверку остановки |z| <= 256 относительно базового запуска; определение не гарантирует различие."
+  },
+  "exercise": {
+    "prompt": "Проследите аннотации asinhMandelbrot и объясните, как z = asinh(z) + c выполняется в отмеченных операциях.",
+    "completionCheck": "Ваш ответ объясняет все 3 аннотации, указывает z = asinh(z) + c и отличает |z| <= 256 как проверку остановки от присваивания.",
+    "hint": "Поток состояния последовательно выполняет if ismand: z = 0; иначе z = pixel → z = asinh(z) + c и передаёт результат следующему шагу."
+  },
+  "factsPresentation": {
+    "provenanceLead": "Источник: закреплённое определение выполнения и решение о публикации.",
+    "rightsLead": "Сведения о правах следуют закреплённому решению в английском разделе."
+  },
+  "contentHash": "edce57d40446aff1d6af73fb51614af9fb5b39062ed7af5942e636bd5676d0ab"
+}

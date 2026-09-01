@@ -67,6 +67,7 @@ import {
   compareFrmSemantics,
   type FrmSemanticsComparison,
 } from '@/lib/frm-semantics-comparison';
+import { buildMineFormulaEditorHref } from '@/lib/published-formula-remix';
 
 function runtimeIdForStorageId(formulaId: string): string | undefined {
   const storageId = parseCloudCustomFormulaStorageId(formulaId);
@@ -127,6 +128,7 @@ export function CustomFormulaList({
   const [semanticsCompareStatus, setSemanticsCompareStatus] =
     useState<'idle' | 'loading' | 'ready' | 'failed'>('idle');
   const semanticsRequestRef = useRef(0);
+  const editorRequestRef = useRef(0);
 
   const authenticated = session.status === 'authenticated';
   const activeCloudStorageId = parseCloudCustomFormulaReference(
@@ -150,22 +152,35 @@ export function CustomFormulaList({
     }
   };
 
-  const openBlankEditor = () => {
+  const openNewEditor = (
+    initialSource?: string,
+    initialExperienceHint?: FormulaExperienceHint,
+  ) => {
+    editorRequestRef.current += 1;
+    setBusyId(null);
     setActionError('');
     setEditingFormulaId(undefined);
-    setEditorSource(undefined);
-    setEditorExperienceHint(undefined);
+    setEditorSource(initialSource);
+    setEditorExperienceHint(initialExperienceHint);
     setEditorSemanticsVersion(2);
     setShowEditor(true);
   };
 
+  const openBlankEditor = () => openNewEditor();
+
   const openFormulaEditor = async (formula: CloudCustomFormulaSummary) => {
+    const request = ++editorRequestRef.current;
     setActionError('');
     setBusyId(formula.id);
     const detail = await getDetail(formula.id);
+    if (request !== editorRequestRef.current) return;
     setBusyId(null);
     if (!detail) {
       setActionError(customT('unavailable'));
+      return;
+    }
+    if (detail.lifecycle) {
+      window.location.assign(buildMineFormulaEditorHref(locale, detail.id));
       return;
     }
     setEditingFormulaId(detail.id);
@@ -421,13 +436,9 @@ export function CustomFormulaList({
                 key={example.id}
                 type="button"
                 className="rounded-md border bg-background px-3 py-2 text-left transition-colors hover:bg-muted/60"
-                onClick={() => {
-                  setEditingFormulaId(undefined);
-                  setEditorSource(example.source);
-                  setEditorExperienceHint(example.experienceHint);
-                  setEditorSemanticsVersion(2);
-                  setShowEditor(true);
-                }}
+                onClick={() =>
+                  openNewEditor(example.source, example.experienceHint)
+                }
               >
                 <div className="font-medium">{t(example.nameKey)}</div>
                 <div className="text-xs text-muted-foreground mt-1">{t(example.descriptionKey)}</div>

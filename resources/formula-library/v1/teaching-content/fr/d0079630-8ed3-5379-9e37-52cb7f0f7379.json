@@ -1,0 +1,35 @@
+{
+  "schema": "fractalpark-teaching-locale/v1",
+  "formulaId": "d0079630-8ed3-5379-9e37-52cb7f0f7379",
+  "locale": "fr",
+  "sourceRevision": "9d5148d6443b6dd4f5f0015e415b8642a324fb222f5a7769e1d7765e432bd1bc",
+  "semanticHash": "f857f7b3cac012dbc5ef1de0d2bb586ac0c9e5c8c692f711545467fdaf58a3ec",
+  "englishContentHash": "cac3ad7ec669d840a2475c536729e43852f64a1b57b6b3a6dfb0c33944f05e12",
+  "overview": "Dans FRM-like/1, l’initialisation effectue z = pixel. À chaque itération, le nœud exécute denom = sin(z)+(1,0). La terminaison vérifie |z - zPrev| >= 0.000001.",
+  "sourceWalkthrough": {
+    "d0079630-8ed3-5379-9e37-52cb7f0f7379:9d5148d6443b6dd4f5f0015e415b8642a324fb222f5a7769e1d7765e432bd1bc:init": "Dans FRM-like/1, l’initialisation effectue z = pixel.",
+    "d0079630-8ed3-5379-9e37-52cb7f0f7379:9d5148d6443b6dd4f5f0015e415b8642a324fb222f5a7769e1d7765e432bd1bc:loop": "À chaque itération, le nœud exécute denom = sin(z)+(1,0).",
+    "d0079630-8ed3-5379-9e37-52cb7f0f7379:9d5148d6443b6dd4f5f0015e415b8642a324fb222f5a7769e1d7765e432bd1bc:branch": "La branche utilise |denom|² < 1e-10 → z = z; |denom|² >= 1e-10 → z = z + (cos(z)-z)/denom.",
+    "d0079630-8ed3-5379-9e37-52cb7f0f7379:9d5148d6443b6dd4f5f0015e415b8642a324fb222f5a7769e1d7765e432bd1bc:termination": "La terminaison vérifie |z - zPrev| >= 0.000001."
+  },
+  "syntaxFeatures": {
+    "sequence": "À chaque itération, le nœud exécute denom = sin(z)+(1,0).",
+    "branch": "La branche utilise |denom|² < 1e-10 → z = z; |denom|² >= 1e-10 → z = z + (cos(z)-z)/denom."
+  },
+  "parameterExperiment": {
+    "steps": [
+      "Utilise le profil fixé comme référence. Exécute 48 puis 96 itérations, tous les contrôles fixes, et note si denom = sin(z)+(1,0) ou |z - zPrev| >= 0.000001 diffèrent."
+    ],
+    "expectedObservation": "La limite supérieure peut révéler des mises à jour cosinus supplémentaires, protégées ou non ; note si les nombres d’itérations diffèrent."
+  },
+  "exercise": {
+    "prompt": "Explique les deux issues de la protection sur la taille de sin(z)+(1,0) denom.",
+    "completionCheck": "Pour terminer, tu dois nommer exactement les 4 annotations et expliquer ce détail de la formule : Indice : denom = sin(z)+(1,0).",
+    "hint": "Indice : denom = sin(z)+(1,0)."
+  },
+  "factsPresentation": {
+    "provenanceLead": "La provenance figure dans l’enregistrement de source épinglé.",
+    "rightsLead": "Le statut des droits et la décision de publication figurent dans l’enregistrement de décision épinglé."
+  },
+  "contentHash": "e3f2a05cf3d56464edae38fc324544d7a440f552c455d042009dd823b8d32e97"
+}

@@ -1,0 +1,33 @@
+{
+  "schema": "fractalpark-teaching-locale/v1",
+  "formulaId": "1768f194-bdc1-5881-b269-a58730967c2c",
+  "locale": "es",
+  "sourceRevision": "d8e2c1950f3a30b27d380c3132e6a62ebe287cd26cd24c3dbc28dfd47ad784ed",
+  "semanticHash": "0c21f93a3361be1da89f3199f91349e0980e617ded57c2347f8294faf02bd622",
+  "englishContentHash": "4f0b53f0b2ae83da119a9d6e1b0e1709165266592e7e029b48ac7d4aaff6b874",
+  "localizedName": "quarticMandelbrot",
+  "overview": "En FRM-like/1, quarticMandelbrot sigue la inicialización, el bucle y la prueba de salida del código fuente. Trata cada paso como una operación explícita sobre el estado, sin deducir reglas por el nombre. El perfil fijado te permite observar el mismo proceso iterativo.",
+  "sourceWalkthrough": {
+    "1768f194-bdc1-5881-b269-a58730967c2c:d8e2c1950f3a30b27d380c3132e6a62ebe287cd26cd24c3dbc28dfd47ad784ed:init": "El nodo de inicialización ejecuta: `if ismand`",
+    "1768f194-bdc1-5881-b269-a58730967c2c:d8e2c1950f3a30b27d380c3132e6a62ebe287cd26cd24c3dbc28dfd47ad784ed:loop": "El nodo del bucle ejecuta: `z2 = z * z`",
+    "1768f194-bdc1-5881-b269-a58730967c2c:d8e2c1950f3a30b27d380c3132e6a62ebe287cd26cd24c3dbc28dfd47ad784ed:bailout": "La prueba de terminación es: `|z| <= 256`"
+  },
+  "syntaxFeatures": {
+    "source-sequence": "Esta estructura organiza los pasos citados del código fuente en una secuencia comprobable. 1768f194-bdc1-5881-b269-a58730967c2c:d8e2c1950f3a30b27d380c3132e6a62ebe287cd26cd24c3dbc28dfd47ad784ed:init, 1768f194-bdc1-5881-b269-a58730967c2c:d8e2c1950f3a30b27d380c3132e6a62ebe287cd26cd24c3dbc28dfd47ad784ed:loop, 1768f194-bdc1-5881-b269-a58730967c2c:d8e2c1950f3a30b27d380c3132e6a62ebe287cd26cd24c3dbc28dfd47ad784ed:bailout"
+  },
+  "parameterExperiment": {
+    "steps": [
+      "Usa el perfil fijado: mode parameter-plane; center (-0.5, 0); zoom 0.4; rotation 0; iterations 96. Ejecútalo una vez y registra el resultado; después repite con el mismo perfil."
+    ],
+    "expectedObservation": "Compara las dos ejecuciones y registra si, después de `z2 = z * z`, el paso `z = z2 * z2 + c` mantiene el mismo resultado visible y comportamiento iterativo."
+  },
+  "exercise": {
+    "prompt": "Encuentra las anotaciones de fuente que contienen `if ismand`, `z2 = z * z; z = z2 * z2 + c` y `|z| <= 256`, y explica su orden.",
+    "completionCheck": "Para completar, enumera las tres claves de anotación citadas en el orden de fuente: `if ismand`, `z2 = z * z; z = z2 * z2 + c`, `|z| <= 256`."
+  },
+  "factsPresentation": {
+    "provenanceLead": "Procedencia:",
+    "rightsLead": "Derechos:"
+  },
+  "contentHash": "a6aa7d3f104242d09bd6e090a0b633aacc5cc3391b67f10dd483ea81186fa001"
+}

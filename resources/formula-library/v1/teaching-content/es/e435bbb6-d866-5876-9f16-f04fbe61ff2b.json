@@ -1,0 +1,33 @@
+{
+  "schema": "fractalpark-teaching-locale/v1",
+  "formulaId": "e435bbb6-d866-5876-9f16-f04fbe61ff2b",
+  "locale": "es",
+  "sourceRevision": "04817a2a54e195117685266ac9b569e294050cd4617bf3df518390c17ca0cf5f",
+  "semanticHash": "05fe294dadeb96fb7f8268f7fd5134f9a91882770485d3379f7c47bbe4425cb5",
+  "englishContentHash": "dda24ac4488bf55d772e1a7e2e01dc5eebfdf95dc6acde7077e900ad787b14b0",
+  "localizedName": "zubieta",
+  "overview": "En FRM-like/1, zubieta sigue la inicialización, el bucle y la prueba de salida del código fuente. Trata cada paso como una operación explícita sobre el estado, sin deducir reglas por el nombre. El perfil fijado te permite observar el mismo proceso iterativo.",
+  "sourceWalkthrough": {
+    "e435bbb6-d866-5876-9f16-f04fbe61ff2b:04817a2a54e195117685266ac9b569e294050cd4617bf3df518390c17ca0cf5f:init": "El nodo de inicialización ejecuta: `if ismand`",
+    "e435bbb6-d866-5876-9f16-f04fbe61ff2b:04817a2a54e195117685266ac9b569e294050cd4617bf3df518390c17ca0cf5f:loop": "El nodo del bucle ejecuta: `z2 = z * z`",
+    "e435bbb6-d866-5876-9f16-f04fbe61ff2b:04817a2a54e195117685266ac9b569e294050cd4617bf3df518390c17ca0cf5f:bailout": "La prueba de terminación es: `|z| <= 256`"
+  },
+  "syntaxFeatures": {
+    "source-sequence": "Esta estructura organiza los pasos citados del código fuente en una secuencia comprobable. e435bbb6-d866-5876-9f16-f04fbe61ff2b:04817a2a54e195117685266ac9b569e294050cd4617bf3df518390c17ca0cf5f:init, e435bbb6-d866-5876-9f16-f04fbe61ff2b:04817a2a54e195117685266ac9b569e294050cd4617bf3df518390c17ca0cf5f:loop, e435bbb6-d866-5876-9f16-f04fbe61ff2b:04817a2a54e195117685266ac9b569e294050cd4617bf3df518390c17ca0cf5f:bailout"
+  },
+  "parameterExperiment": {
+    "steps": [
+      "Usa el perfil fijado: mode parameter-plane; center (-0.5, 0); zoom 0.4; rotation 0; iterations 96. Ejecútalo una vez y registra el resultado; después repite con el mismo perfil."
+    ],
+    "expectedObservation": "Compara las dos ejecuciones y registra si, después de `z2 = z * z`, el paso `z = abs(z2 + c)` mantiene el mismo resultado visible y comportamiento iterativo."
+  },
+  "exercise": {
+    "prompt": "Encuentra las anotaciones de fuente que contienen `if ismand`, `z2 = z * z; z = abs(z2 + c)` y `|z| <= 256`, y explica su orden.",
+    "completionCheck": "Para completar, enumera las tres claves de anotación citadas en el orden de fuente: `if ismand`, `z2 = z * z; z = abs(z2 + c)`, `|z| <= 256`."
+  },
+  "factsPresentation": {
+    "provenanceLead": "Procedencia:",
+    "rightsLead": "Derechos:"
+  },
+  "contentHash": "2a9a98a6c8f23d8e28790d45afec8b2dcd65a28971fee916023a72c2b9ac276b"
+}

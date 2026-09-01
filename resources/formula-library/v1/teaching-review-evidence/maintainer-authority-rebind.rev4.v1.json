@@ -1,0 +1,66 @@
+{
+  "schema": "fractalpark-teaching-maintainer-authority-rebind/v2",
+  "status": "maintainer-approved",
+  "approvedAt": "2026-08-24T09:04:08+08:00",
+  "actorId": "fractalpark-maintainer",
+  "actorKind": "human-maintainer",
+  "actorRole": "maintainer",
+  "maintainerResponse": "批准仅限 revision 4 runtime 派生哈希的 authority rebind，继续修复和复审",
+  "aiAssistanceDisclosure": "This mechanical hash-rebind receipt was drafted with AI assistance by Ellie; its scope and final authorization were explicitly approved by the human maintainer.",
+  "approvalStatement": "批准仅将原 50 条 teaching selection 及其语义锚点在选择行、语义行和 350 个教学内容单元不变的前提下再绑定到 Expected Commit 26c 的 revision 4 published runtime index。两条已选公式仅更新 preview profile；source revision、semantic hash 与 parameters 均不变。四篇 Guide 继续 editorial hold，留待 Expected Commit 26d。本批准允许继续修复和复审 26c，不授权转 Ready、merge、Production 或发布。",
+  "priorAuthorityRebindSha256": "d9ffb79078f4a67241ba1e6bcf223063e0f1eb56788eb13ee666a35b4ebf4e2f",
+  "priorApprovalSha256": "c0aa89af7edc362698173994f79e3eead8f56a970201ac921a27d91c89be1283",
+  "priorApprovalPacketSha256": "a4ecee10c064a8844ff195edbd2cc15b6d179ea1b0d27f946111ce659032d09a",
+  "approvalSelectionSha256": "1ea4fff7f3c0f22d3cdae99aa06f775987a35871427b79d7005be5acd344b2fa",
+  "approvalSemanticAnchorsSha256": "9bd8ddbbbe16055eab215bd245c576e9268928980bb2e2759a77af4725f34241",
+  "priorSelectionSha256": "08460aba150a7dcab418cdda06ec21a56b2a113b641cb155d9dced22d037760a",
+  "reboundSelectionSha256": "287dbd9670b57fdc8eafb63593952c9d179827326ffcdf2b36c3eefad9c74b55",
+  "selectionRowsCanonicalSha256": "36b4e813c39362651f21794273ef40c2c85dd5c697f05f594690859ebcb1fca9",
+  "priorSemanticAnchorsSha256": "f130128dab9274b4c8ea2bfa43108d5daa65a578c973faf9696791e68fd15262",
+  "reboundSemanticAnchorsSha256": "239f75049ec0d5cf461cd42d60cd9ca120097b8bdbe607b105ced02770921478",
+  "semanticAnchorRowsCanonicalSha256": "67d9b351024c2e70adca7293348315fc0b1514a3e3dfde36ac904fd4d3da32d2",
+  "changedPins": {
+    "runtimeIndexSha256": {
+      "before": "9a4774f2dfb8ebb31e80abf3a0efe7b330d1a4627fb38317bdcf069560fa9ddf",
+      "after": "e912b1cb4ad884a6a021fd0d2683495e8ea61911d05c4135fbecaa335cade742"
+    },
+    "runtimeIndexCanonicalSha256": {
+      "before": "c10faceaa52356d2e48042f64010cd0f3f170c0087b5d609a01ede360a7c874c",
+      "after": "362f327b260f38ceb1d9afd7dc619d4ef010f8365ee84a8673ba1df6285fc3f5"
+    }
+  },
+  "invariants": {
+    "formulaCount": 50,
+    "contentUnitCount": 350,
+    "localeCount": 7,
+    "selectionRowsChanged": false,
+    "semanticAnchorRowsChanged": false,
+    "teachingContentChanged": false,
+    "selectedRuntimeSourceRevisionChanged": false,
+    "selectedRuntimeSemanticHashChanged": false,
+    "selectedRuntimeParametersChanged": false,
+    "selectedRuntimeProfileRowsChanged": 2,
+    "publicationDecisionRevision": 4,
+    "publishedCount": 534,
+    "heldCount": 143,
+    "guideContentRestoredCount": 0
+  },
+  "scope": {
+    "allows": [
+      "rebind the unchanged 50-row teaching selection and semantic-anchor rows to the Expected Commit 26c revision 4 runtime index hashes",
+      "continue Expected Commit 26c correction and independent review"
+    ],
+    "doesNotAllow": [
+      "modify teaching content, selection rows, or semantic-anchor rows",
+      "restore the four editorially held Guides before Expected Commit 26d",
+      "expand publication beyond the exact 534 published and 143 held revision 4 set",
+      "mark the pull request ready",
+      "merge or auto-merge",
+      "deploy or promote Production",
+      "modify Production environment",
+      "run migrations",
+      "create a tag or Release",
+      "submit IndexNow"
+    ]
+  }
+}

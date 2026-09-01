@@ -1,0 +1,33 @@
+{
+  "schema": "fractalpark-teaching-locale/v1",
+  "formulaId": "0f49d971-917e-50a5-ae83-20e11fd4854c",
+  "locale": "fr",
+  "sourceRevision": "a9fa9931913aeafac8b527f31cae7b519db79c8d54829ffcea20bcb6fc9dce4d",
+  "semanticHash": "0af8be92998a0e683977cd229a71195010327ae03c66d87a8c5b97871dce6d72",
+  "englishContentHash": "0f849ac8ba8ad41ee8943e5a36d009b53faa78e773f99c8cfa6426c0af8867c5",
+  "overview": "Cette unité repose pour toi sur les opérations exactes suivantes de FRM-like/1 :  `init: if ismand z = 0 else z = pixel endif; previousZ = (0, 0). loop: z2 = z * z; nextZ = z2 + c + phoenixMultiP * previousZ; previousZ = z; z = nextZ. bailout: |z| <= 256.`",
+  "sourceWalkthrough": {
+    "0f49d971-917e-50a5-ae83-20e11fd4854c:a9fa9931913aeafac8b527f31cae7b519db79c8d54829ffcea20bcb6fc9dce4d:init": "Cette annotation exécute `if ismand: z = 0; else: z = pixel`.",
+    "0f49d971-917e-50a5-ae83-20e11fd4854c:a9fa9931913aeafac8b527f31cae7b519db79c8d54829ffcea20bcb6fc9dce4d:recurrence": "Cette annotation exécute `nextZ = z2 + c + phoenixMultiP * previousZ`.",
+    "0f49d971-917e-50a5-ae83-20e11fd4854c:a9fa9931913aeafac8b527f31cae7b519db79c8d54829ffcea20bcb6fc9dce4d:state-shift": "Cette annotation exécute `previousZ = z`.",
+    "0f49d971-917e-50a5-ae83-20e11fd4854c:a9fa9931913aeafac8b527f31cae7b519db79c8d54829ffcea20bcb6fc9dce4d:bailout": "Cette annotation exécute `|z| <= 256`. Elle termine la séquence d’itération de cette formule."
+  },
+  "syntaxFeatures": {
+    "source-sequence": "Cette caractéristique de séquence relie, dans l’ordre du code source, les opérations citées liées à `ismand` et `previousZ`."
+  },
+  "parameterExperiment": {
+    "steps": [
+      "Avec le profil fixé, effectue d’abord le rendu de référence avec `phoenixMultiP = 0.5`. Garde le centre, le zoom, la rotation, les itérations et les autres slots fixes ; ne fais et ne rends qu’une modification à la fois : `phoenixMultiP = 0.0`, `phoenixMultiP = 1.0`. Rétablis la référence avant chaque nouvel essai."
+    ],
+    "expectedObservation": "Dans les essais de phoenixMulti portant sur `phoenixMultiP`, `previousZ`, note s’il existe une différence visible par rapport à la référence ; note aussi l’absence de différence."
+  },
+  "exercise": {
+    "prompt": "Explique le rôle de `ismand` et `previousZ` dans l’ordre du code source et compare les exécutions selon les étapes de l’expérience sur les paramètres.",
+    "completionCheck": "Ta réponse doit expliquer les 4 opérations annotées, noter la comparaison de l’expérience et mentionner `ismand` et `previousZ`."
+  },
+  "factsPresentation": {
+    "provenanceLead": "Source : révision d’exécution fixée et décision de publication.",
+    "rightsLead": "Les informations de droits figurent dans l’unité factuelle anglaise."
+  },
+  "contentHash": "28e8079776ff51b3b25d654213f616077247ca8495ea8817f50c481af970fc59"
+}

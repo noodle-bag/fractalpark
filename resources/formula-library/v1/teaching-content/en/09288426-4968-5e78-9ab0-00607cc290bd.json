@@ -1,0 +1,74 @@
+{
+  "schema": "fractalpark-teaching-en-fact/v1",
+  "formulaId": "09288426-4968-5e78-9ab0-00607cc290bd",
+  "sourceRevision": "dbb90a875ab0a6e56b3210ab8021339e7f9ea19d4bc8f26f82ed22f37ff58ede",
+  "semanticHash": "807ce46c199ce20d11753c94f74ce710ad607335764e9ad485963c840d6a0f5c",
+  "overview": "birdofprey’s FRM-like/1 source initializes z from seed. Each iteration squares z, adds pixel inside cosxx, then adds pixel again outside cosxx. The orbit continues while |z| <= 4.",
+  "mathDisclosure": "exact-structured",
+  "mathSummary": "init: z = seed. loop: z = cosxx(sqr(z) + pixel) + pixel. bailout: |z| <= 4.",
+  "sourceWalkthrough": [
+    {
+      "annotationId": "09288426-4968-5e78-9ab0-00607cc290bd:dbb90a875ab0a6e56b3210ab8021339e7f9ea19d4bc8f26f82ed22f37ff58ede:init-seed",
+      "nodeId": "frm-v1:dbb90a875ab0a6e56b3210ab8021339e7f9ea19d4bc8f26f82ed22f37ff58ede:init/0",
+      "explanation": "This initialization assignment sets z = seed."
+    },
+    {
+      "annotationId": "09288426-4968-5e78-9ab0-00607cc290bd:dbb90a875ab0a6e56b3210ab8021339e7f9ea19d4bc8f26f82ed22f37ff58ede:cosxx-update",
+      "nodeId": "frm-v1:dbb90a875ab0a6e56b3210ab8021339e7f9ea19d4bc8f26f82ed22f37ff58ede:loop/0",
+      "explanation": "This loop assignment replaces z with cosxx(sqr(z) + pixel) + pixel, so pixel is added once inside cosxx and once after it."
+    },
+    {
+      "annotationId": "09288426-4968-5e78-9ab0-00607cc290bd:dbb90a875ab0a6e56b3210ab8021339e7f9ea19d4bc8f26f82ed22f37ff58ede:bailout",
+      "nodeId": "frm-v1:dbb90a875ab0a6e56b3210ab8021339e7f9ea19d4bc8f26f82ed22f37ff58ede:bailout",
+      "explanation": "The termination comparison allows another iteration while |z| <= 4."
+    }
+  ],
+  "syntaxFeatures": [
+    {
+      "featureId": "source-sequence",
+      "annotationIds": [
+        "09288426-4968-5e78-9ab0-00607cc290bd:dbb90a875ab0a6e56b3210ab8021339e7f9ea19d4bc8f26f82ed22f37ff58ede:init-seed",
+        "09288426-4968-5e78-9ab0-00607cc290bd:dbb90a875ab0a6e56b3210ab8021339e7f9ea19d4bc8f26f82ed22f37ff58ede:cosxx-update",
+        "09288426-4968-5e78-9ab0-00607cc290bd:dbb90a875ab0a6e56b3210ab8021339e7f9ea19d4bc8f26f82ed22f37ff58ede:bailout"
+      ],
+      "explanation": "The loop nests sqr inside cosxx and places a second pixel addition outside that call."
+    }
+  ],
+  "parameterExperiment": {
+    "parameterSymbols": [
+      "seed"
+    ],
+    "steps": [
+      "Use seed = 0 + 0i at the pinned profile. Keep center, zoom, rotation, and iterations fixed, change only seed to 1 + 0i, and render the trial."
+    ],
+    "expectedObservation": "Record a visible difference or no visible difference between the seed baseline and the 1 + 0i trial."
+  },
+  "exercise": {
+    "prompt": "Describe the two pixel additions around cosxx, then compare the two seed renders.",
+    "completionCheck": "Your response explains all 3 annotated operations, records the requested comparison, and mentions `cosxx(sqr(z) + pixel)`.",
+    "answerDisclosure": "none"
+  },
+  "facts": {
+    "provenanceStatement": "Pinned runtime revision dbb90a875ab0a6e56b3210ab8021339e7f9ea19d4bc8f26f82ed22f37ff58ede and its publication decision ground this unit.",
+    "rightsStatement": "rightsStatus: no-explicit-permission; implementationBasis: separated-independent-rewrite; publicationDecision: publish; decisionReason: publish-cleanroom-independent-rewrite-full-chain-green. This statement makes no broader claim about any third-party original.",
+    "sourceIds": [
+      "runtime:dbb90a875ab0a6e56b3210ab8021339e7f9ea19d4bc8f26f82ed22f37ff58ede",
+      "decision:09288426-4968-5e78-9ab0-00607cc290bd"
+    ],
+    "licenseIds": [],
+    "claims": [
+      {
+        "text": "The pinned definition supplies initialization, loop, and bailout operations for birdofprey.",
+        "sourceIds": [
+          "runtime:dbb90a875ab0a6e56b3210ab8021339e7f9ea19d4bc8f26f82ed22f37ff58ede"
+        ]
+      },
+      {
+        "text": "The publication decision is publish for the recorded reason publish-cleanroom-independent-rewrite-full-chain-green.",
+        "sourceIds": [
+          "decision:09288426-4968-5e78-9ab0-00607cc290bd"
+        ]
+      }
+    ]
+  }
+}

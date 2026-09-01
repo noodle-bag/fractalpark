@@ -1,0 +1,33 @@
+{
+  "schema": "fractalpark-teaching-locale/v1",
+  "formulaId": "58edc237-4978-5aed-8229-028b1d9cbbb9",
+  "locale": "ru",
+  "sourceRevision": "e59afb2646e8e04f36955f7d7798930d0e752b7b0da90c11417283da41eb398a",
+  "semanticHash": "ed9a34c1038bc242b27bc60680e5be6ecdfe84818f3acf5a7a299fa0cfe643fb",
+  "englishContentHash": "e5d1e88e5e038bbf924642857cd0cbaf23aac57f85d3475a166aa88f3960d318",
+  "overview": "Этот раздел основан на следующих точных операциях FRM-like/1:  `init: cclassic = c; z = pixel; cclassic = z. loop: z = z * z + cclassic; cclassic = (1 + imag(cclassic)) * real(cclassic) / 2 + z. bailout: |z| <= 4.`",
+  "sourceWalkthrough": {
+    "58edc237-4978-5aed-8229-028b1d9cbbb9:e59afb2646e8e04f36955f7d7798930d0e752b7b0da90c11417283da41eb398a:init-overwrite": "Эта аннотация выполняет `cclassic = z`.",
+    "58edc237-4978-5aed-8229-028b1d9cbbb9:e59afb2646e8e04f36955f7d7798930d0e752b7b0da90c11417283da41eb398a:z-update": "Эта аннотация выполняет `z = z * z + cclassic`.",
+    "58edc237-4978-5aed-8229-028b1d9cbbb9:e59afb2646e8e04f36955f7d7798930d0e752b7b0da90c11417283da41eb398a:carrier-update": "Эта аннотация выполняет `cclassic = (1 + imag(cclassic)) * real(cclassic) / 2 + z`.",
+    "58edc237-4978-5aed-8229-028b1d9cbbb9:e59afb2646e8e04f36955f7d7798930d0e752b7b0da90c11417283da41eb398a:bailout": "Эта аннотация выполняет `|z| <= 4`. Она завершает последовательность итераций этой формулы."
+  },
+  "syntaxFeatures": {
+    "source-sequence": "Этот признак последовательности связывает в порядке исходного кода процитированные операции, относящиеся к `cclassic = z`и его последующее обновление."
+  },
+  "parameterExperiment": {
+    "steps": [
+      "Сначала отрисуйте закреплённую базу wineglass с 96 итерациями, отслеживая `cclassic = z`, `cclassic`. Затем, сохраняя центр, масштаб, поворот и формулу, измените только предел итераций на 48 и выполните второй рендеринг."
+    ],
+    "expectedObservation": "В испытаниях wineglass с `cclassic = z`, `cclassic` отметьте, есть ли видимое отличие от базового результата; отсутствие отличия также зафиксируйте."
+  },
+  "exercise": {
+    "prompt": "Объясните роль `cclassic = z`и его последующее обновление в порядке исходного кода и сравните запуски по шагам эксперимента с параметрами.",
+    "completionCheck": "Ваш ответ должен объяснить все 4 аннотированных операций, зафиксировать сравнение эксперимента и упомянуть `cclassic = z`и его последующее обновление."
+  },
+  "factsPresentation": {
+    "provenanceLead": "Источник: закреплённая ревизия выполнения и решение о публикации.",
+    "rightsLead": "Сведения о правах приведены в английском фактологическом разделе."
+  },
+  "contentHash": "8df1f8f8d4cd3964f746f2b67f812b9e4d5cbd3ab60b89278c00c5502c3666d2"
+}

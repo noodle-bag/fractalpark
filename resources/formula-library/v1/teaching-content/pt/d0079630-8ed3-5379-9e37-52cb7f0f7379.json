@@ -1,0 +1,35 @@
+{
+  "schema": "fractalpark-teaching-locale/v1",
+  "formulaId": "d0079630-8ed3-5379-9e37-52cb7f0f7379",
+  "locale": "pt",
+  "sourceRevision": "9d5148d6443b6dd4f5f0015e415b8642a324fb222f5a7769e1d7765e432bd1bc",
+  "semanticHash": "f857f7b3cac012dbc5ef1de0d2bb586ac0c9e5c8c692f711545467fdaf58a3ec",
+  "englishContentHash": "cac3ad7ec669d840a2475c536729e43852f64a1b57b6b3a6dfb0c33944f05e12",
+  "overview": "Em FRM-like/1, a inicialização faz z = pixel. Em cada iteração, o nó executa denom = sin(z)+(1,0). O término testa |z - zPrev| >= 0.000001.",
+  "sourceWalkthrough": {
+    "d0079630-8ed3-5379-9e37-52cb7f0f7379:9d5148d6443b6dd4f5f0015e415b8642a324fb222f5a7769e1d7765e432bd1bc:init": "Em FRM-like/1, a inicialização faz z = pixel.",
+    "d0079630-8ed3-5379-9e37-52cb7f0f7379:9d5148d6443b6dd4f5f0015e415b8642a324fb222f5a7769e1d7765e432bd1bc:loop": "Em cada iteração, o nó executa denom = sin(z)+(1,0).",
+    "d0079630-8ed3-5379-9e37-52cb7f0f7379:9d5148d6443b6dd4f5f0015e415b8642a324fb222f5a7769e1d7765e432bd1bc:branch": "A ramificação usa |denom|² < 1e-10 → z = z; |denom|² >= 1e-10 → z = z + (cos(z)-z)/denom.",
+    "d0079630-8ed3-5379-9e37-52cb7f0f7379:9d5148d6443b6dd4f5f0015e415b8642a324fb222f5a7769e1d7765e432bd1bc:termination": "O término testa |z - zPrev| >= 0.000001."
+  },
+  "syntaxFeatures": {
+    "sequence": "Em cada iteração, o nó executa denom = sin(z)+(1,0).",
+    "branch": "A ramificação usa |denom|² < 1e-10 → z = z; |denom|² >= 1e-10 → z = z + (cos(z)-z)/denom."
+  },
+  "parameterExperiment": {
+    "steps": [
+      "Use o perfil fixo como base. Execute 48 e depois 96 iterações, mantendo todos os controles fixos, e registre se denom = sin(z)+(1,0) ou |z - zPrev| >= 0.000001 diferem."
+    ],
+    "expectedObservation": "O limite maior pode expor atualizações cosseno adicionais, protegidas ou não; registre se as contagens de iteração diferem."
+  },
+  "exercise": {
+    "prompt": "Explique os dois resultados da proteção pelo tamanho de sin(z)+(1,0) denom.",
+    "completionCheck": "Para concluir, você deve nomear exatamente as 4 anotações e explicar este detalhe da fórmula: Dica: denom = sin(z)+(1,0).",
+    "hint": "Dica: denom = sin(z)+(1,0)."
+  },
+  "factsPresentation": {
+    "provenanceLead": "A proveniência está no registro de fonte fixado.",
+    "rightsLead": "O status de direitos e a decisão de publicação estão no registro de decisão fixado."
+  },
+  "contentHash": "5a06e49d6a120808a6a9e00b11681839ac8a0796e9505a125e966f8638537d90"
+}

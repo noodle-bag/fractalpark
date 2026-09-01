@@ -1,0 +1,33 @@
+{
+  "schema": "fractalpark-teaching-locale/v1",
+  "formulaId": "0f49d971-917e-50a5-ae83-20e11fd4854c",
+  "locale": "es",
+  "sourceRevision": "a9fa9931913aeafac8b527f31cae7b519db79c8d54829ffcea20bcb6fc9dce4d",
+  "semanticHash": "0af8be92998a0e683977cd229a71195010327ae03c66d87a8c5b97871dce6d72",
+  "englishContentHash": "0f849ac8ba8ad41ee8943e5a36d009b53faa78e773f99c8cfa6426c0af8867c5",
+  "overview": "Esta unidad se basa para ti en las siguientes operaciones exactas de FRM-like/1:  `init: if ismand z = 0 else z = pixel endif; previousZ = (0, 0). loop: z2 = z * z; nextZ = z2 + c + phoenixMultiP * previousZ; previousZ = z; z = nextZ. bailout: |z| <= 256.`",
+  "sourceWalkthrough": {
+    "0f49d971-917e-50a5-ae83-20e11fd4854c:a9fa9931913aeafac8b527f31cae7b519db79c8d54829ffcea20bcb6fc9dce4d:init": "Esta anotación ejecuta `if ismand: z = 0; else: z = pixel`.",
+    "0f49d971-917e-50a5-ae83-20e11fd4854c:a9fa9931913aeafac8b527f31cae7b519db79c8d54829ffcea20bcb6fc9dce4d:recurrence": "Esta anotación ejecuta `nextZ = z2 + c + phoenixMultiP * previousZ`.",
+    "0f49d971-917e-50a5-ae83-20e11fd4854c:a9fa9931913aeafac8b527f31cae7b519db79c8d54829ffcea20bcb6fc9dce4d:state-shift": "Esta anotación ejecuta `previousZ = z`.",
+    "0f49d971-917e-50a5-ae83-20e11fd4854c:a9fa9931913aeafac8b527f31cae7b519db79c8d54829ffcea20bcb6fc9dce4d:bailout": "Esta anotación ejecuta `|z| <= 256`. Cierra la secuencia de iteración de esta fórmula."
+  },
+  "syntaxFeatures": {
+    "source-sequence": "Esta característica de secuencia conecta, en el orden del código fuente, las operaciones citadas relacionadas con `ismand` y `previousZ`."
+  },
+  "parameterExperiment": {
+    "steps": [
+      "Con el perfil fijado, renderiza primero la base con `phoenixMultiP = 0.5`. Mantén fijos el centro, el zoom, la rotación, las iteraciones y los demás slots; haz y renderiza un solo cambio cada vez: `phoenixMultiP = 0.0`, `phoenixMultiP = 1.0`. Restaura la base antes de cada prueba nueva."
+    ],
+    "expectedObservation": "En las pruebas de `phoenixMultiP`, `previousZ` de phoenixMulti, registra si hay una diferencia visible respecto de la base; registra también cuando no haya diferencia."
+  },
+  "exercise": {
+    "prompt": "Explica el papel de `ismand` y `previousZ` en el orden del código fuente y compara las ejecuciones según los pasos del experimento de parámetros.",
+    "completionCheck": "Tu respuesta debe explicar las 4 operaciones anotadas, registrar la comparación del experimento y mencionar `ismand` y `previousZ`."
+  },
+  "factsPresentation": {
+    "provenanceLead": "Fuente: revisión de ejecución fijada y decisión de publicación.",
+    "rightsLead": "La información de derechos está en la unidad factual en inglés."
+  },
+  "contentHash": "79ed8f279eb653399824bedda05fe815682e76cdb49ed6c965a2c7173b99e10b"
+}

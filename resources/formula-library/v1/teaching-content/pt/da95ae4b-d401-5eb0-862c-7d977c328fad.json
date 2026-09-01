@@ -1,0 +1,35 @@
+{
+  "schema": "fractalpark-teaching-locale/v1",
+  "formulaId": "da95ae4b-d401-5eb0-862c-7d977c328fad",
+  "locale": "pt",
+  "sourceRevision": "c0fdb8fb46828947defe52dd82bdabd45a1a8baeb32278ae649b7231e647bf2f",
+  "semanticHash": "6ecfdd7558b795aaff0dc5bf3609c3c580e4ef18af90fbe45686a204d2dd9443",
+  "englishContentHash": "e06f064d9449516b1d9c94f02c1960cc348557decee4c593baccf30e9bb0bf78",
+  "overview": "Em FRM-like/1, jm_27 começa com z = pixel, usa sqrz = fn1(z) no primeiro nó do laço e limita a iteração com |z| <= t. Leia essas operações na ordem real da fonte.",
+  "sourceWalkthrough": {
+    "da95ae4b-d401-5eb0-862c-7d977c328fad:c0fdb8fb46828947defe52dd82bdabd45a1a8baeb32278ae649b7231e647bf2f:initialization": "Em jm_27, o nó de inicialização executa somente: z = pixel.",
+    "da95ae4b-d401-5eb0-862c-7d977c328fad:c0fdb8fb46828947defe52dd82bdabd45a1a8baeb32278ae649b7231e647bf2f:iteration": "Em jm_27, este nó do laço executa somente: sqrz = fn1(z).",
+    "da95ae4b-d401-5eb0-862c-7d977c328fad:c0fdb8fb46828947defe52dd82bdabd45a1a8baeb32278ae649b7231e647bf2f:termination": "Em jm_27, o nó bailout testa somente: |z| <= t."
+  },
+  "syntaxFeatures": {
+    "initialization-flow": "Em jm_27, a característica de inicialização focaliza a única operação z = pixel.",
+    "iteration-flow": "Em jm_27, a característica de iteração focaliza a única atribuição sqrz = fn1(z).",
+    "bailout-test": "Em jm_27, a característica de término focaliza a comparação |z| <= t."
+  },
+  "parameterExperiment": {
+    "steps": [
+      "Renderize jm_27 na linha de base fixa do plano de parâmetros com parameter1 (0, 0), function1 (identity) nos valores padrão de execução.",
+      "Mude apenas um entre parameter1, function1 de cada vez, mantenha centro (0, 0), zoom 0.25, rotação 0, e 96 iterações e os outros parâmetros fixos, e compare as renderizações."
+    ],
+    "expectedObservation": "Para cada alteração isolada de parameter1 ou function1, registre se a renderização difere da base e relacione a comparação a `|z| <= t`."
+  },
+  "exercise": {
+    "prompt": "Em jm_27, localize as três anotações e explique z = pixel, sqrz = fn1(z) e |z| <= t e explique por que nenhuma instrução vizinha pertence à anotação do laço.",
+    "completionCheck": "Em jm_27, você concluiu ao listar todas as 3 chaves de anotação e explicar corretamente sqrz = fn1(z) e |z| <= t."
+  },
+  "factsPresentation": {
+    "provenanceLead": "A proveniência está na unidade factual inglesa.",
+    "rightsLead": "Os direitos estão na unidade factual inglesa."
+  },
+  "contentHash": "e4cef26ffd5f79217b3a77118b75d6288ed25af867334d39af529139df776b39"
+}

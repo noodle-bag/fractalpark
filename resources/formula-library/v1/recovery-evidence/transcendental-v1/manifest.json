@@ -1,0 +1,1275 @@
+{
+  "schema": "fractalpark-b94-transcendental-recovery-evidence/v1",
+  "deterministic": true,
+  "publicationEligible": false,
+  "publicationDecisionMutation": false,
+  "gateProgress": {
+    "passed": 12,
+    "required": 21
+  },
+  "dimensions": {
+    "width": 96,
+    "height": 60
+  },
+  "previewContract": {
+    "minimumUniqueColors": 2,
+    "maximumNonFiniteFraction": 0.02,
+    "nonFiniteMarkersRecordedNotHidden": true
+  },
+  "sourceBindings": {
+    "scripts/generate-transcendental-recovery-evidence.ts": "e2ca417e5d6715bc644c7a50521a1cd8e8fc5cbc6b4f64a13b2110c8291276d4",
+    "resources/formula-library/v1/recovery-evidence/transcendental-v1/cross-check.json": "765ec8e150f641d54a76195366f1fc0b3d96c63e320291a58dda30982ce797b9"
+  },
+  "crossCheckArtifact": {
+    "path": "resources/formula-library/v1/recovery-evidence/transcendental-v1/cross-check.json",
+    "sha256": "765ec8e150f641d54a76195366f1fc0b3d96c63e320291a58dda30982ce797b9",
+    "result": {
+      "ok": true,
+      "contract": {
+        "probePixels": 5,
+        "extraProbe": [
+          0,
+          0
+        ],
+        "maxIterations": 16,
+        "relativeTolerance": 0.0003
+      },
+      "recipes": 12,
+      "passed": 12,
+      "failed": 0,
+      "rows": [
+        {
+          "formulaId": "62098934-def3-527a-ac43-2c80449c9848",
+          "runtimeId": "coshJulia",
+          "family": "transcendental",
+          "ok": true,
+          "v1WebglParity": "passed",
+          "nativeCrossCheck": {
+            "ok": true,
+            "maxRelativeDelta": 0
+          },
+          "orbitPoints": 67,
+          "sourceRevision": "826c473c5cdf710c5273c29a219eaf17ffc9117c74eb03282a51f9501eb9342c"
+        },
+        {
+          "formulaId": "201c54f3-a77a-5be0-a0a5-6f4f1998ee6d",
+          "runtimeId": "coshMandelb",
+          "family": "transcendental",
+          "ok": true,
+          "v1WebglParity": "passed",
+          "nativeCrossCheck": {
+            "ok": true,
+            "maxRelativeDelta": 0
+          },
+          "orbitPoints": 37,
+          "sourceRevision": "90d43b9c2bc9a7eda5ca6f997a1ae2dc6640f0cc12cdcc34e8c82ca0765eff12"
+        },
+        {
+          "formulaId": "d89f722f-35fe-587a-bee9-efdf05885728",
+          "runtimeId": "coshSinh",
+          "family": "transcendental",
+          "ok": true,
+          "v1WebglParity": "passed",
+          "nativeCrossCheck": {
+            "ok": true,
+            "maxRelativeDelta": 0
+          },
+          "orbitPoints": 44,
+          "sourceRevision": "f05366105906d0524885fafa45e4b11808d37b0c7de3ef287da876b972df653a"
+        },
+        {
+          "formulaId": "190fa538-89c9-590f-8170-34b3c570fc5d",
+          "runtimeId": "sinhMandelb",
+          "family": "transcendental",
+          "ok": true,
+          "v1WebglParity": "passed",
+          "nativeCrossCheck": {
+            "ok": true,
+            "maxRelativeDelta": 0
+          },
+          "orbitPoints": 62,
+          "sourceRevision": "4070d643142a8bac0a93df5f50b3bd47671076d603cf06e041aaa67035e806ce"
+        },
+        {
+          "formulaId": "3edbea29-956a-5900-9aa7-02ccc2183016",
+          "runtimeId": "cosJulia",
+          "family": "transcendental",
+          "ok": true,
+          "v1WebglParity": "passed",
+          "nativeCrossCheck": {
+            "ok": true,
+            "maxRelativeDelta": 0
+          },
+          "orbitPoints": 67,
+          "sourceRevision": "75cc7f04fc69d74294c3ed9dcd5271585a6d186311dd10a906e781958cb46870"
+        },
+        {
+          "formulaId": "9f301c01-13fa-57b4-a3b2-99add821bfb0",
+          "runtimeId": "cosMandelb",
+          "family": "transcendental",
+          "ok": true,
+          "v1WebglParity": "passed",
+          "nativeCrossCheck": {
+            "ok": true,
+            "maxRelativeDelta": 0
+          },
+          "orbitPoints": 69,
+          "sourceRevision": "df2d4387d714cd91b67a6c019af286fad376b27ee36e6ec038ba44c301f64c25"
+        },
+        {
+          "formulaId": "beeb4aec-91cd-5d01-83bb-0b98ca851e79",
+          "runtimeId": "sineMandelb",
+          "family": "transcendental",
+          "ok": true,
+          "v1WebglParity": "passed",
+          "nativeCrossCheck": {
+            "ok": true,
+            "maxRelativeDelta": 0
+          },
+          "orbitPoints": 70,
+          "sourceRevision": "082b4f74a9e2798f67c8d2a61cb29cdc92e6e9f67f6b46c80bcf7af415a61a0b"
+        },
+        {
+          "formulaId": "af500910-46ce-5a43-b430-c0154cc05959",
+          "runtimeId": "expMandelbrot",
+          "family": "transcendental",
+          "ok": true,
+          "v1WebglParity": "passed",
+          "nativeCrossCheck": {
+            "ok": true,
+            "maxRelativeDelta": 0
+          },
+          "orbitPoints": 44,
+          "sourceRevision": "305c68341d9d4be9e65092c899f7cfbdd83919af59b69a633b0a53d251a5f99b"
+        },
+        {
+          "formulaId": "17d88272-6dbf-5622-996a-b116ea3a3fab",
+          "runtimeId": "tetration",
+          "family": "exotic",
+          "ok": true,
+          "v1WebglParity": "passed",
+          "nativeCrossCheck": {
+            "ok": true,
+            "maxRelativeDelta": 0
+          },
+          "orbitPoints": 80,
+          "sourceRevision": "32437882a899d589e7ff8fa968c7248e5c9436fa6a87a48fa2072ff09e3c6540"
+        },
+        {
+          "formulaId": "8eb342fe-8a05-524e-8b98-35cdc8af5be3",
+          "runtimeId": "collatz",
+          "family": "exotic",
+          "ok": true,
+          "v1WebglParity": "passed",
+          "nativeCrossCheck": {
+            "ok": true,
+            "maxRelativeDelta": 0
+          },
+          "orbitPoints": 44,
+          "sourceRevision": "9f102aa122c2f49ca1ec0ad883ddcb51dd58a92e86501ba081f22fab82fe0410"
+        },
+        {
+          "formulaId": "22d9a008-eb14-53de-9960-11eb5d37bb8e",
+          "runtimeId": "zaslavskyMap",
+          "family": "exotic",
+          "ok": true,
+          "v1WebglParity": "passed",
+          "nativeCrossCheck": {
+            "ok": true,
+            "maxRelativeDelta": 0
+          },
+          "orbitPoints": 59,
+          "sourceRevision": "fb9db2dede500db19463ee53c8d059c2e7a92651d7de472a4bedd6e7ee58a831"
+        },
+        {
+          "formulaId": "78e550c6-d58d-57b7-92ff-82e9ed0728f0",
+          "runtimeId": "newton6",
+          "family": "newton",
+          "ok": true,
+          "v1WebglParity": "passed",
+          "nativeCrossCheck": {
+            "ok": true,
+            "maxRelativeDelta": 0
+          },
+          "orbitPoints": 54,
+          "sourceRevision": "9372d322b21755b6e9e529e348ceead65a526ca3243e976845c39144ce8b38df"
+        }
+      ]
+    }
+  },
+  "artifacts": [
+    {
+      "formulaId": "17d88272-6dbf-5622-996a-b116ea3a3fab",
+      "receipt": {
+        "file": "receipt-17d88272-6dbf-5622-996a-b116ea3a3fab.json",
+        "sha256": "1ceb9b4537240aa6bc081534e8d0a25a8ff8a1b3ffd4018c053df79a16163399"
+      },
+      "preview": {
+        "file": "preview-17d88272-6dbf-5622-996a-b116ea3a3fab.png",
+        "sha256": "ff3fa72791a7bda8670d07fd36c3a4e11cfa82d1177c8350677c02fe9535c4f1"
+      }
+    },
+    {
+      "formulaId": "190fa538-89c9-590f-8170-34b3c570fc5d",
+      "receipt": {
+        "file": "receipt-190fa538-89c9-590f-8170-34b3c570fc5d.json",
+        "sha256": "3bbc9454103d3f43714f35c683b5f1c0d37ff09772e513a1d20c8ab6237060a2"
+      },
+      "preview": {
+        "file": "preview-190fa538-89c9-590f-8170-34b3c570fc5d.png",
+        "sha256": "37a7241d089f8976f5b102e387a3d66e342005a95fc3d242e5ad4ad97125dcaf"
+      }
+    },
+    {
+      "formulaId": "201c54f3-a77a-5be0-a0a5-6f4f1998ee6d",
+      "receipt": {
+        "file": "receipt-201c54f3-a77a-5be0-a0a5-6f4f1998ee6d.json",
+        "sha256": "42e63859b4ff7b284151c6db1320b75d791492970b7cd5b7c37cfd0c17e93ee5"
+      },
+      "preview": {
+        "file": "preview-201c54f3-a77a-5be0-a0a5-6f4f1998ee6d.png",
+        "sha256": "31787ca3bd82b04dd139007344ccb140c18256262ba4774c6e2a14f8a382fed1"
+      }
+    },
+    {
+      "formulaId": "22d9a008-eb14-53de-9960-11eb5d37bb8e",
+      "receipt": {
+        "file": "receipt-22d9a008-eb14-53de-9960-11eb5d37bb8e.json",
+        "sha256": "b63de8d489891ed4141b397f615cb75710c375d1377252920df71ae5f8445b63"
+      },
+      "preview": {
+        "file": "preview-22d9a008-eb14-53de-9960-11eb5d37bb8e.png",
+        "sha256": "dccf2e9368d2af668863590970dd92c2a4f6f5bc799fe2188da215eb98cc317d"
+      }
+    },
+    {
+      "formulaId": "3edbea29-956a-5900-9aa7-02ccc2183016",
+      "receipt": {
+        "file": "receipt-3edbea29-956a-5900-9aa7-02ccc2183016.json",
+        "sha256": "9d395914e807fd693d0bd36da7b0797acb827c12dd11dd4c0c80eac3f3f5e8bf"
+      },
+      "preview": {
+        "file": "preview-3edbea29-956a-5900-9aa7-02ccc2183016.png",
+        "sha256": "7893bec6f819a52fd8900e7e8e64524e8d0449920e84ce5531c44cc1b51647a0"
+      }
+    },
+    {
+      "formulaId": "62098934-def3-527a-ac43-2c80449c9848",
+      "receipt": {
+        "file": "receipt-62098934-def3-527a-ac43-2c80449c9848.json",
+        "sha256": "680ef004013294c49e4ed1e3b099971d7d5c84f4bdae9ec7c7cdd8d10564fa9a"
+      },
+      "preview": {
+        "file": "preview-62098934-def3-527a-ac43-2c80449c9848.png",
+        "sha256": "c7ac92409c348882abc0fb983b46ccf2a901d4f82d25639a9c6e11473b116ef9"
+      }
+    },
+    {
+      "formulaId": "78e550c6-d58d-57b7-92ff-82e9ed0728f0",
+      "receipt": {
+        "file": "receipt-78e550c6-d58d-57b7-92ff-82e9ed0728f0.json",
+        "sha256": "27201e144fea797fbc13caddc58e5c93b4f448637f70d979d8f878a253f1c9a2"
+      },
+      "preview": {
+        "file": "preview-78e550c6-d58d-57b7-92ff-82e9ed0728f0.png",
+        "sha256": "0379f4f3f28e2b8f228cb594d1886ad8790fc033e4cc36e9f8dae12dbd7dd78a"
+      }
+    },
+    {
+      "formulaId": "8eb342fe-8a05-524e-8b98-35cdc8af5be3",
+      "receipt": {
+        "file": "receipt-8eb342fe-8a05-524e-8b98-35cdc8af5be3.json",
+        "sha256": "5c91bdcfb9d51e237dc569f710ab5150cef90f5c31ece4ca9768d09b4db3463a"
+      },
+      "preview": {
+        "file": "preview-8eb342fe-8a05-524e-8b98-35cdc8af5be3.png",
+        "sha256": "73d363745e4e19061827b43c23ee860690d8fa5ce05fabc88f9ade24e9a1ed48"
+      }
+    },
+    {
+      "formulaId": "9f301c01-13fa-57b4-a3b2-99add821bfb0",
+      "receipt": {
+        "file": "receipt-9f301c01-13fa-57b4-a3b2-99add821bfb0.json",
+        "sha256": "4f433519f64a058826af712cad4098ccfd5896db337261a44076d99fc1c44375"
+      },
+      "preview": {
+        "file": "preview-9f301c01-13fa-57b4-a3b2-99add821bfb0.png",
+        "sha256": "b68ca0c30056ee4a8ff9cf17bc650fcb5603d650dd5fd1a3b5d2f741c06a0feb"
+      }
+    },
+    {
+      "formulaId": "af500910-46ce-5a43-b430-c0154cc05959",
+      "receipt": {
+        "file": "receipt-af500910-46ce-5a43-b430-c0154cc05959.json",
+        "sha256": "43c8d9348035ad8f1f57fd29ae728ff80a5866b888b31885b96f885064defd46"
+      },
+      "preview": {
+        "file": "preview-af500910-46ce-5a43-b430-c0154cc05959.png",
+        "sha256": "d8947f13cf6dca8d825ba931cd830cdc4e49a4b3dd6ff4828531e459cd7075aa"
+      }
+    },
+    {
+      "formulaId": "beeb4aec-91cd-5d01-83bb-0b98ca851e79",
+      "receipt": {
+        "file": "receipt-beeb4aec-91cd-5d01-83bb-0b98ca851e79.json",
+        "sha256": "c083014331fd60645de9b916ab128c51df0599d388a08c8de86cb14c87b3156a"
+      },
+      "preview": {
+        "file": "preview-beeb4aec-91cd-5d01-83bb-0b98ca851e79.png",
+        "sha256": "b054c51a4d33c4ee763fbe2c1a3e8e2f6df03837eee9d3e437f996a5e703c4a8"
+      }
+    },
+    {
+      "formulaId": "d89f722f-35fe-587a-bee9-efdf05885728",
+      "receipt": {
+        "file": "receipt-d89f722f-35fe-587a-bee9-efdf05885728.json",
+        "sha256": "4dec88d1f1f9d9be3e1ed0d369a9fb59c331e600400f01b0a7ea98320fb65188"
+      },
+      "preview": {
+        "file": "preview-d89f722f-35fe-587a-bee9-efdf05885728.png",
+        "sha256": "a4c947ef1c86df28676201cf331f8d1f5c45a1e4964680ae6811bfb6f2e5bdec"
+      }
+    }
+  ],
+  "rows": [
+    {
+      "formulaId": "17d88272-6dbf-5622-996a-b116ea3a3fab",
+      "runtimeId": "tetration",
+      "family": "exotic",
+      "failureClass": "swiftshader-transcendental",
+      "technicalStatus": "passed",
+      "publicationDecision": "publish",
+      "sourceRevision": "32437882a899d589e7ff8fa968c7248e5c9436fa6a87a48fa2072ff09e3c6540",
+      "semanticHash": "834623aa2e4578e5c976d7d769d4ca9d49beaf484c27da4943546e23ef555e7e",
+      "numericRemedy": {
+        "stableExp": "binary32-taylor8-x-over-256-square8",
+        "stableSinCos": "binary32-taylor-range-reduced-double-angle",
+        "stableHypot": "binary32-scaled-hypot",
+        "orbitOutputGrid": 16
+      },
+      "crossCheck": {
+        "formulaId": "17d88272-6dbf-5622-996a-b116ea3a3fab",
+        "runtimeId": "tetration",
+        "family": "exotic",
+        "ok": true,
+        "v1WebglParity": "passed",
+        "nativeCrossCheck": {
+          "ok": true,
+          "maxRelativeDelta": 0
+        },
+        "orbitPoints": 80,
+        "sourceRevision": "32437882a899d589e7ff8fa968c7248e5c9436fa6a87a48fa2072ff09e3c6540"
+      },
+      "profile": {
+        "boundsSource": "b94-catalog",
+        "value": {
+          "schemaVersion": 1,
+          "formulaId": "17d88272-6dbf-5622-996a-b116ea3a3fab",
+          "sourceRevision": "32437882a899d589e7ff8fa968c7248e5c9436fa6a87a48fa2072ff09e3c6540",
+          "profileRevision": "a53b8a8ef7ac849c15bdcf59490329bbb28eff900009dfe2ac58139ed0e1e445",
+          "parameters": {},
+          "mode": "parameter-plane",
+          "view": {
+            "centerX": 0.18,
+            "centerY": 0,
+            "zoom": 1.15,
+            "rotation": 0
+          },
+          "iterations": 200,
+          "coloring": {
+            "pipelineVersion": 1,
+            "outsideColoringId": "smooth",
+            "insideColoringId": "black",
+            "smooth": true
+          },
+          "palette": {
+            "paletteId": "inferno"
+          },
+          "transform": {
+            "rotation": 0,
+            "scaleX": 1,
+            "scaleY": 1,
+            "skewX": 0,
+            "skewY": 0,
+            "offsetX": 0,
+            "offsetY": 0
+          }
+        }
+      },
+      "preview": {
+        "file": "preview-17d88272-6dbf-5622-996a-b116ea3a3fab.png",
+        "width": 96,
+        "height": 60,
+        "rawRgbaSha256": "bbcc4c8011642aa935599fbde64ef3329c6f1099026e8ea7c229bdf6e60eb8c2",
+        "pngSha256": "ff3fa72791a7bda8670d07fd36c3a4e11cfa82d1177c8350677c02fe9535c4f1",
+        "escapedPixels": 330,
+        "interiorPixels": 5380,
+        "nonFinitePixels": 50,
+        "uniqueColors": 119,
+        "anomalies": [
+          "non-finite-pixels"
+        ]
+      }
+    },
+    {
+      "formulaId": "190fa538-89c9-590f-8170-34b3c570fc5d",
+      "runtimeId": "sinhMandelb",
+      "family": "transcendental",
+      "failureClass": "swiftshader-transcendental",
+      "technicalStatus": "passed",
+      "publicationDecision": "publish",
+      "sourceRevision": "4070d643142a8bac0a93df5f50b3bd47671076d603cf06e041aaa67035e806ce",
+      "semanticHash": "f5e5b1dbe941381eadddcd3e71d7e007cb00b342c89f4721ef89f24309396dc7",
+      "numericRemedy": {
+        "stableExp": "binary32-taylor8-x-over-256-square8",
+        "stableSinCos": "binary32-taylor-range-reduced-double-angle",
+        "stableHypot": "binary32-scaled-hypot",
+        "orbitOutputGrid": 16
+      },
+      "crossCheck": {
+        "formulaId": "190fa538-89c9-590f-8170-34b3c570fc5d",
+        "runtimeId": "sinhMandelb",
+        "family": "transcendental",
+        "ok": true,
+        "v1WebglParity": "passed",
+        "nativeCrossCheck": {
+          "ok": true,
+          "maxRelativeDelta": 0
+        },
+        "orbitPoints": 62,
+        "sourceRevision": "4070d643142a8bac0a93df5f50b3bd47671076d603cf06e041aaa67035e806ce"
+      },
+      "profile": {
+        "boundsSource": "b94-catalog",
+        "value": {
+          "schemaVersion": 1,
+          "formulaId": "190fa538-89c9-590f-8170-34b3c570fc5d",
+          "sourceRevision": "4070d643142a8bac0a93df5f50b3bd47671076d603cf06e041aaa67035e806ce",
+          "profileRevision": "096695896f633e1f9300eed52b9f752c787ba400f2277b5c626d7571dcf049b5",
+          "parameters": {},
+          "mode": "parameter-plane",
+          "view": {
+            "centerX": -0.16,
+            "centerY": 0,
+            "zoom": 1.15,
+            "rotation": 0
+          },
+          "iterations": 200,
+          "coloring": {
+            "pipelineVersion": 1,
+            "outsideColoringId": "smooth",
+            "insideColoringId": "black",
+            "smooth": true
+          },
+          "palette": {
+            "paletteId": "inferno"
+          },
+          "transform": {
+            "rotation": 0,
+            "scaleX": 1,
+            "scaleY": 1,
+            "skewX": 0,
+            "skewY": 0,
+            "offsetX": 0,
+            "offsetY": 0
+          }
+        }
+      },
+      "preview": {
+        "file": "preview-190fa538-89c9-590f-8170-34b3c570fc5d.png",
+        "width": 96,
+        "height": 60,
+        "rawRgbaSha256": "78307d227e73c41a343a7b53e950be53efc4cf76a9710683fa791a9d926d51c9",
+        "pngSha256": "37a7241d089f8976f5b102e387a3d66e342005a95fc3d242e5ad4ad97125dcaf",
+        "escapedPixels": 2258,
+        "interiorPixels": 3502,
+        "nonFinitePixels": 0,
+        "uniqueColors": 281,
+        "anomalies": []
+      }
+    },
+    {
+      "formulaId": "201c54f3-a77a-5be0-a0a5-6f4f1998ee6d",
+      "runtimeId": "coshMandelb",
+      "family": "transcendental",
+      "failureClass": "swiftshader-transcendental",
+      "technicalStatus": "passed",
+      "publicationDecision": "publish",
+      "sourceRevision": "90d43b9c2bc9a7eda5ca6f997a1ae2dc6640f0cc12cdcc34e8c82ca0765eff12",
+      "semanticHash": "0726adb6bfb5eba7bbcbef971478685027a6336bf4a9296f668187c39daab4a3",
+      "numericRemedy": {
+        "stableExp": "binary32-taylor8-x-over-256-square8",
+        "stableSinCos": "binary32-taylor-range-reduced-double-angle",
+        "stableHypot": "binary32-scaled-hypot",
+        "orbitOutputGrid": 16
+      },
+      "crossCheck": {
+        "formulaId": "201c54f3-a77a-5be0-a0a5-6f4f1998ee6d",
+        "runtimeId": "coshMandelb",
+        "family": "transcendental",
+        "ok": true,
+        "v1WebglParity": "passed",
+        "nativeCrossCheck": {
+          "ok": true,
+          "maxRelativeDelta": 0
+        },
+        "orbitPoints": 37,
+        "sourceRevision": "90d43b9c2bc9a7eda5ca6f997a1ae2dc6640f0cc12cdcc34e8c82ca0765eff12"
+      },
+      "profile": {
+        "boundsSource": "b94-catalog",
+        "value": {
+          "schemaVersion": 1,
+          "formulaId": "201c54f3-a77a-5be0-a0a5-6f4f1998ee6d",
+          "sourceRevision": "90d43b9c2bc9a7eda5ca6f997a1ae2dc6640f0cc12cdcc34e8c82ca0765eff12",
+          "profileRevision": "679247ace7a6a12a58b8fbde2f34a6a22429dda65dd7c1128c4d6a649631f937",
+          "parameters": {},
+          "mode": "parameter-plane",
+          "view": {
+            "centerX": -1.0953073803,
+            "centerY": -0.1848506655,
+            "zoom": 0.0694,
+            "rotation": 1.57
+          },
+          "iterations": 200,
+          "coloring": {
+            "pipelineVersion": 1,
+            "outsideColoringId": "smooth",
+            "insideColoringId": "black",
+            "smooth": true
+          },
+          "palette": {
+            "paletteId": "inferno"
+          },
+          "transform": {
+            "rotation": 0,
+            "scaleX": 1,
+            "scaleY": 1,
+            "skewX": 0,
+            "skewY": 0,
+            "offsetX": 0,
+            "offsetY": 0
+          }
+        }
+      },
+      "preview": {
+        "file": "preview-201c54f3-a77a-5be0-a0a5-6f4f1998ee6d.png",
+        "width": 96,
+        "height": 60,
+        "rawRgbaSha256": "71db794880f6918a81199470888bedefa9eb139c3c6cc810ac511f0aeac1b9a0",
+        "pngSha256": "31787ca3bd82b04dd139007344ccb140c18256262ba4774c6e2a14f8a382fed1",
+        "escapedPixels": 5208,
+        "interiorPixels": 552,
+        "nonFinitePixels": 0,
+        "uniqueColors": 410,
+        "anomalies": []
+      }
+    },
+    {
+      "formulaId": "22d9a008-eb14-53de-9960-11eb5d37bb8e",
+      "runtimeId": "zaslavskyMap",
+      "family": "exotic",
+      "failureClass": "swiftshader-transcendental",
+      "technicalStatus": "passed",
+      "publicationDecision": "publish",
+      "sourceRevision": "fb9db2dede500db19463ee53c8d059c2e7a92651d7de472a4bedd6e7ee58a831",
+      "semanticHash": "dabc6e573e13fc60004c12150faa4bfada8b5db90b340c1b1db153927c46e21c",
+      "numericRemedy": {
+        "stableExp": "binary32-taylor8-x-over-256-square8",
+        "stableSinCos": "binary32-taylor-range-reduced-double-angle",
+        "stableHypot": "binary32-scaled-hypot",
+        "orbitOutputGrid": 16
+      },
+      "crossCheck": {
+        "formulaId": "22d9a008-eb14-53de-9960-11eb5d37bb8e",
+        "runtimeId": "zaslavskyMap",
+        "family": "exotic",
+        "ok": true,
+        "v1WebglParity": "passed",
+        "nativeCrossCheck": {
+          "ok": true,
+          "maxRelativeDelta": 0
+        },
+        "orbitPoints": 59,
+        "sourceRevision": "fb9db2dede500db19463ee53c8d059c2e7a92651d7de472a4bedd6e7ee58a831"
+      },
+      "profile": {
+        "boundsSource": "b94-catalog",
+        "value": {
+          "schemaVersion": 1,
+          "formulaId": "22d9a008-eb14-53de-9960-11eb5d37bb8e",
+          "sourceRevision": "fb9db2dede500db19463ee53c8d059c2e7a92651d7de472a4bedd6e7ee58a831",
+          "profileRevision": "e8d9cd725f6a60310afce5df4167360fcd372fec1eab152b0a490cce3ab7e38f",
+          "parameters": {},
+          "mode": "parameter-plane",
+          "view": {
+            "centerX": -0.0036386858,
+            "centerY": -0.0036407475,
+            "zoom": 4,
+            "rotation": 0
+          },
+          "iterations": 200,
+          "coloring": {
+            "pipelineVersion": 1,
+            "outsideColoringId": "smooth",
+            "insideColoringId": "black",
+            "smooth": true
+          },
+          "palette": {
+            "paletteId": "inferno"
+          },
+          "transform": {
+            "rotation": 0,
+            "scaleX": 1,
+            "scaleY": 1,
+            "skewX": 0,
+            "skewY": 0,
+            "offsetX": 0,
+            "offsetY": 0
+          }
+        }
+      },
+      "preview": {
+        "file": "preview-22d9a008-eb14-53de-9960-11eb5d37bb8e.png",
+        "width": 96,
+        "height": 60,
+        "rawRgbaSha256": "991d940d24776d52e8271f1610057736a3e7e21eecd01d142f6bd2eab1fa9310",
+        "pngSha256": "dccf2e9368d2af668863590970dd92c2a4f6f5bc799fe2188da215eb98cc317d",
+        "escapedPixels": 5571,
+        "interiorPixels": 189,
+        "nonFinitePixels": 0,
+        "uniqueColors": 536,
+        "anomalies": []
+      }
+    },
+    {
+      "formulaId": "3edbea29-956a-5900-9aa7-02ccc2183016",
+      "runtimeId": "cosJulia",
+      "family": "transcendental",
+      "failureClass": "swiftshader-transcendental",
+      "technicalStatus": "passed",
+      "publicationDecision": "publish",
+      "sourceRevision": "75cc7f04fc69d74294c3ed9dcd5271585a6d186311dd10a906e781958cb46870",
+      "semanticHash": "a3978790b2aba850f4f6765da8820e3792696877b2c5005c1128b9d18f1bbceb",
+      "numericRemedy": {
+        "stableExp": "binary32-taylor8-x-over-256-square8",
+        "stableSinCos": "binary32-taylor-range-reduced-double-angle",
+        "stableHypot": "binary32-scaled-hypot",
+        "orbitOutputGrid": 16
+      },
+      "crossCheck": {
+        "formulaId": "3edbea29-956a-5900-9aa7-02ccc2183016",
+        "runtimeId": "cosJulia",
+        "family": "transcendental",
+        "ok": true,
+        "v1WebglParity": "passed",
+        "nativeCrossCheck": {
+          "ok": true,
+          "maxRelativeDelta": 0
+        },
+        "orbitPoints": 67,
+        "sourceRevision": "75cc7f04fc69d74294c3ed9dcd5271585a6d186311dd10a906e781958cb46870"
+      },
+      "profile": {
+        "boundsSource": "upstream-candidate",
+        "value": {
+          "schemaVersion": 1,
+          "formulaId": "3edbea29-956a-5900-9aa7-02ccc2183016",
+          "sourceRevision": "75cc7f04fc69d74294c3ed9dcd5271585a6d186311dd10a906e781958cb46870",
+          "profileRevision": "b591d2d9a0457ed72cc6fdf0b0ad0a9fe8e40fc200726d601f79b86a0e4b5e25",
+          "parameters": {},
+          "mode": "julia",
+          "juliaC": [
+            -0.8,
+            0.156
+          ],
+          "view": {
+            "centerX": 0,
+            "centerY": 0.5,
+            "zoom": 0.25,
+            "rotation": 0
+          },
+          "iterations": 200,
+          "coloring": {
+            "pipelineVersion": 1,
+            "outsideColoringId": "smooth",
+            "insideColoringId": "black",
+            "smooth": true
+          },
+          "palette": {
+            "paletteId": "inferno"
+          },
+          "transform": {
+            "rotation": 0,
+            "scaleX": 1,
+            "scaleY": 1,
+            "skewX": 0,
+            "skewY": 0,
+            "offsetX": 0,
+            "offsetY": 0
+          }
+        }
+      },
+      "preview": {
+        "file": "preview-3edbea29-956a-5900-9aa7-02ccc2183016.png",
+        "width": 96,
+        "height": 60,
+        "rawRgbaSha256": "27301e3d20bf780ec46ccf5314f2cf3e583e2b1525e1ddd60b046383206f37fd",
+        "pngSha256": "7893bec6f819a52fd8900e7e8e64524e8d0449920e84ce5531c44cc1b51647a0",
+        "escapedPixels": 910,
+        "interiorPixels": 4850,
+        "nonFinitePixels": 0,
+        "uniqueColors": 176,
+        "anomalies": []
+      }
+    },
+    {
+      "formulaId": "62098934-def3-527a-ac43-2c80449c9848",
+      "runtimeId": "coshJulia",
+      "family": "transcendental",
+      "failureClass": "swiftshader-transcendental",
+      "technicalStatus": "passed",
+      "publicationDecision": "publish",
+      "sourceRevision": "826c473c5cdf710c5273c29a219eaf17ffc9117c74eb03282a51f9501eb9342c",
+      "semanticHash": "1ea3de8d94b9a00c937cfffc932f8af19d00defd4eb950516417f0db268dbc44",
+      "numericRemedy": {
+        "stableExp": "binary32-taylor8-x-over-256-square8",
+        "stableSinCos": "binary32-taylor-range-reduced-double-angle",
+        "stableHypot": "binary32-scaled-hypot",
+        "orbitOutputGrid": 16
+      },
+      "crossCheck": {
+        "formulaId": "62098934-def3-527a-ac43-2c80449c9848",
+        "runtimeId": "coshJulia",
+        "family": "transcendental",
+        "ok": true,
+        "v1WebglParity": "passed",
+        "nativeCrossCheck": {
+          "ok": true,
+          "maxRelativeDelta": 0
+        },
+        "orbitPoints": 67,
+        "sourceRevision": "826c473c5cdf710c5273c29a219eaf17ffc9117c74eb03282a51f9501eb9342c"
+      },
+      "profile": {
+        "boundsSource": "upstream-candidate",
+        "value": {
+          "schemaVersion": 1,
+          "formulaId": "62098934-def3-527a-ac43-2c80449c9848",
+          "sourceRevision": "826c473c5cdf710c5273c29a219eaf17ffc9117c74eb03282a51f9501eb9342c",
+          "profileRevision": "d6cb8f8bf6ea8f1c18d1a33d0ea4f0a0657d1ef906c903dd868487060ea77c64",
+          "parameters": {},
+          "mode": "julia",
+          "juliaC": [
+            -0.8,
+            0.156
+          ],
+          "view": {
+            "centerX": 0,
+            "centerY": 0.5,
+            "zoom": 0.35,
+            "rotation": 0
+          },
+          "iterations": 200,
+          "coloring": {
+            "pipelineVersion": 1,
+            "outsideColoringId": "smooth",
+            "insideColoringId": "black",
+            "smooth": true
+          },
+          "palette": {
+            "paletteId": "inferno"
+          },
+          "transform": {
+            "rotation": 0,
+            "scaleX": 1,
+            "scaleY": 1,
+            "skewX": 0,
+            "skewY": 0,
+            "offsetX": 0,
+            "offsetY": 0
+          }
+        }
+      },
+      "preview": {
+        "file": "preview-62098934-def3-527a-ac43-2c80449c9848.png",
+        "width": 96,
+        "height": 60,
+        "rawRgbaSha256": "e948811889031cbad8fbcf3d91a107ec867dd4258214051a98fe6cc9f492e3ef",
+        "pngSha256": "c7ac92409c348882abc0fb983b46ccf2a901d4f82d25639a9c6e11473b116ef9",
+        "escapedPixels": 1478,
+        "interiorPixels": 4282,
+        "nonFinitePixels": 0,
+        "uniqueColors": 236,
+        "anomalies": []
+      }
+    },
+    {
+      "formulaId": "78e550c6-d58d-57b7-92ff-82e9ed0728f0",
+      "runtimeId": "newton6",
+      "family": "newton",
+      "failureClass": "swiftshader-transcendental",
+      "technicalStatus": "passed",
+      "publicationDecision": "publish",
+      "sourceRevision": "9372d322b21755b6e9e529e348ceead65a526ca3243e976845c39144ce8b38df",
+      "semanticHash": "0144f3a6cdf7bef74e1f5c5b6f2acb773158013bbbc7d3a66948a8e973a7f5ab",
+      "numericRemedy": {
+        "stableExp": "binary32-taylor8-x-over-256-square8",
+        "stableSinCos": "binary32-taylor-range-reduced-double-angle",
+        "stableHypot": "binary32-scaled-hypot",
+        "orbitOutputGrid": 16
+      },
+      "crossCheck": {
+        "formulaId": "78e550c6-d58d-57b7-92ff-82e9ed0728f0",
+        "runtimeId": "newton6",
+        "family": "newton",
+        "ok": true,
+        "v1WebglParity": "passed",
+        "nativeCrossCheck": {
+          "ok": true,
+          "maxRelativeDelta": 0
+        },
+        "orbitPoints": 54,
+        "sourceRevision": "9372d322b21755b6e9e529e348ceead65a526ca3243e976845c39144ce8b38df"
+      },
+      "profile": {
+        "boundsSource": "upstream-candidate",
+        "value": {
+          "schemaVersion": 1,
+          "formulaId": "78e550c6-d58d-57b7-92ff-82e9ed0728f0",
+          "sourceRevision": "9372d322b21755b6e9e529e348ceead65a526ca3243e976845c39144ce8b38df",
+          "profileRevision": "bfaec87f182159ad5d1fb963bcbf8a6f2e8e405372f7a3f9dc3387a258ecc9c2",
+          "parameters": {},
+          "mode": "parameter-plane",
+          "view": {
+            "centerX": 0.5,
+            "centerY": 0.866,
+            "zoom": 1,
+            "rotation": 0
+          },
+          "iterations": 200,
+          "coloring": {
+            "pipelineVersion": 1,
+            "outsideColoringId": "smooth",
+            "insideColoringId": "black",
+            "smooth": true
+          },
+          "palette": {
+            "paletteId": "inferno"
+          },
+          "transform": {
+            "rotation": 0,
+            "scaleX": 1,
+            "scaleY": 1,
+            "skewX": 0,
+            "skewY": 0,
+            "offsetX": 0,
+            "offsetY": 0
+          }
+        }
+      },
+      "preview": {
+        "file": "preview-78e550c6-d58d-57b7-92ff-82e9ed0728f0.png",
+        "width": 96,
+        "height": 60,
+        "rawRgbaSha256": "835dfa5e4282b3a002ec16d9fd693547232562b6837f7ebc37279b8332145234",
+        "pngSha256": "0379f4f3f28e2b8f228cb594d1886ad8790fc033e4cc36e9f8dae12dbd7dd78a",
+        "escapedPixels": 5494,
+        "interiorPixels": 247,
+        "nonFinitePixels": 19,
+        "uniqueColors": 78,
+        "anomalies": [
+          "non-finite-pixels"
+        ]
+      }
+    },
+    {
+      "formulaId": "8eb342fe-8a05-524e-8b98-35cdc8af5be3",
+      "runtimeId": "collatz",
+      "family": "exotic",
+      "failureClass": "swiftshader-transcendental",
+      "technicalStatus": "passed",
+      "publicationDecision": "publish",
+      "sourceRevision": "9f102aa122c2f49ca1ec0ad883ddcb51dd58a92e86501ba081f22fab82fe0410",
+      "semanticHash": "6d56d30875bbcf8280116f57f7ae925115708f9832dbf8c14e85a7ec943b6fe8",
+      "numericRemedy": {
+        "stableExp": "binary32-taylor8-x-over-256-square8",
+        "stableSinCos": "binary32-taylor-range-reduced-double-angle",
+        "stableHypot": "binary32-scaled-hypot",
+        "orbitOutputGrid": 16
+      },
+      "crossCheck": {
+        "formulaId": "8eb342fe-8a05-524e-8b98-35cdc8af5be3",
+        "runtimeId": "collatz",
+        "family": "exotic",
+        "ok": true,
+        "v1WebglParity": "passed",
+        "nativeCrossCheck": {
+          "ok": true,
+          "maxRelativeDelta": 0
+        },
+        "orbitPoints": 44,
+        "sourceRevision": "9f102aa122c2f49ca1ec0ad883ddcb51dd58a92e86501ba081f22fab82fe0410"
+      },
+      "profile": {
+        "boundsSource": "upstream-candidate",
+        "value": {
+          "schemaVersion": 1,
+          "formulaId": "8eb342fe-8a05-524e-8b98-35cdc8af5be3",
+          "sourceRevision": "9f102aa122c2f49ca1ec0ad883ddcb51dd58a92e86501ba081f22fab82fe0410",
+          "profileRevision": "6c99f3aca2730af7175d46fb97712eef474c161f8fb50da7c55c22310a0ec948",
+          "parameters": {},
+          "mode": "parameter-plane",
+          "view": {
+            "centerX": 1,
+            "centerY": 0,
+            "zoom": 10,
+            "rotation": 0
+          },
+          "iterations": 200,
+          "coloring": {
+            "pipelineVersion": 1,
+            "outsideColoringId": "smooth",
+            "insideColoringId": "black",
+            "smooth": true
+          },
+          "palette": {
+            "paletteId": "inferno"
+          },
+          "transform": {
+            "rotation": 0,
+            "scaleX": 1,
+            "scaleY": 1,
+            "skewX": 0,
+            "skewY": 0,
+            "offsetX": 0,
+            "offsetY": 0
+          }
+        }
+      },
+      "preview": {
+        "file": "preview-8eb342fe-8a05-524e-8b98-35cdc8af5be3.png",
+        "width": 96,
+        "height": 60,
+        "rawRgbaSha256": "cbdf806788e096c71a317b79592c04ce8af6aa396f1d8f6da9e8eb92241fda9c",
+        "pngSha256": "73d363745e4e19061827b43c23ee860690d8fa5ce05fabc88f9ade24e9a1ed48",
+        "escapedPixels": 3120,
+        "interiorPixels": 2640,
+        "nonFinitePixels": 0,
+        "uniqueColors": 31,
+        "anomalies": []
+      }
+    },
+    {
+      "formulaId": "9f301c01-13fa-57b4-a3b2-99add821bfb0",
+      "runtimeId": "cosMandelb",
+      "family": "transcendental",
+      "failureClass": "swiftshader-transcendental",
+      "technicalStatus": "passed",
+      "publicationDecision": "publish",
+      "sourceRevision": "df2d4387d714cd91b67a6c019af286fad376b27ee36e6ec038ba44c301f64c25",
+      "semanticHash": "6aad95ff04b5fe8f3072b1704aca784a2c78755e17134e2d4032216b2b9924ad",
+      "numericRemedy": {
+        "stableExp": "binary32-taylor8-x-over-256-square8",
+        "stableSinCos": "binary32-taylor-range-reduced-double-angle",
+        "stableHypot": "binary32-scaled-hypot",
+        "orbitOutputGrid": 16
+      },
+      "crossCheck": {
+        "formulaId": "9f301c01-13fa-57b4-a3b2-99add821bfb0",
+        "runtimeId": "cosMandelb",
+        "family": "transcendental",
+        "ok": true,
+        "v1WebglParity": "passed",
+        "nativeCrossCheck": {
+          "ok": true,
+          "maxRelativeDelta": 0
+        },
+        "orbitPoints": 69,
+        "sourceRevision": "df2d4387d714cd91b67a6c019af286fad376b27ee36e6ec038ba44c301f64c25"
+      },
+      "profile": {
+        "boundsSource": "b94-catalog",
+        "value": {
+          "schemaVersion": 1,
+          "formulaId": "9f301c01-13fa-57b4-a3b2-99add821bfb0",
+          "sourceRevision": "df2d4387d714cd91b67a6c019af286fad376b27ee36e6ec038ba44c301f64c25",
+          "profileRevision": "62651802e8e32a4de6fd481dae2506cb47a5876730ddeba1617f3492d461cbe7",
+          "parameters": {},
+          "mode": "parameter-plane",
+          "view": {
+            "centerX": -1.2,
+            "centerY": 0,
+            "zoom": 0.25,
+            "rotation": 0
+          },
+          "iterations": 200,
+          "coloring": {
+            "pipelineVersion": 1,
+            "outsideColoringId": "smooth",
+            "insideColoringId": "black",
+            "smooth": true
+          },
+          "palette": {
+            "paletteId": "inferno"
+          },
+          "transform": {
+            "rotation": 0,
+            "scaleX": 1,
+            "scaleY": 1,
+            "skewX": 0,
+            "skewY": 0,
+            "offsetX": 0,
+            "offsetY": 0
+          }
+        }
+      },
+      "preview": {
+        "file": "preview-9f301c01-13fa-57b4-a3b2-99add821bfb0.png",
+        "width": 96,
+        "height": 60,
+        "rawRgbaSha256": "0ed5466f448bc80712a19ae8bae7d196dfe02e60ef0faa863940373b0ccbdf9c",
+        "pngSha256": "b68ca0c30056ee4a8ff9cf17bc650fcb5603d650dd5fd1a3b5d2f741c06a0feb",
+        "escapedPixels": 3110,
+        "interiorPixels": 2650,
+        "nonFinitePixels": 0,
+        "uniqueColors": 460,
+        "anomalies": []
+      }
+    },
+    {
+      "formulaId": "af500910-46ce-5a43-b430-c0154cc05959",
+      "runtimeId": "expMandelbrot",
+      "family": "transcendental",
+      "failureClass": "swiftshader-transcendental",
+      "technicalStatus": "passed",
+      "publicationDecision": "publish",
+      "sourceRevision": "305c68341d9d4be9e65092c899f7cfbdd83919af59b69a633b0a53d251a5f99b",
+      "semanticHash": "310b37da0dfa6d8541b699b6819cb9b623046a0b6c434e9d1d1b96414a5065aa",
+      "numericRemedy": {
+        "stableExp": "binary32-taylor8-x-over-256-square8",
+        "stableSinCos": "binary32-taylor-range-reduced-double-angle",
+        "stableHypot": "binary32-scaled-hypot",
+        "orbitOutputGrid": 16
+      },
+      "crossCheck": {
+        "formulaId": "af500910-46ce-5a43-b430-c0154cc05959",
+        "runtimeId": "expMandelbrot",
+        "family": "transcendental",
+        "ok": true,
+        "v1WebglParity": "passed",
+        "nativeCrossCheck": {
+          "ok": true,
+          "maxRelativeDelta": 0
+        },
+        "orbitPoints": 44,
+        "sourceRevision": "305c68341d9d4be9e65092c899f7cfbdd83919af59b69a633b0a53d251a5f99b"
+      },
+      "profile": {
+        "boundsSource": "b94-catalog",
+        "value": {
+          "schemaVersion": 1,
+          "formulaId": "af500910-46ce-5a43-b430-c0154cc05959",
+          "sourceRevision": "305c68341d9d4be9e65092c899f7cfbdd83919af59b69a633b0a53d251a5f99b",
+          "profileRevision": "690d4f74d3b26baa67d9516d235608b17d825a5cb4e68c2e3cb5c2c1c8bedf9c",
+          "parameters": {},
+          "mode": "parameter-plane",
+          "view": {
+            "centerX": -0.3,
+            "centerY": 0,
+            "zoom": 1.6,
+            "rotation": 0
+          },
+          "iterations": 200,
+          "coloring": {
+            "pipelineVersion": 1,
+            "outsideColoringId": "smooth",
+            "insideColoringId": "black",
+            "smooth": true
+          },
+          "palette": {
+            "paletteId": "inferno"
+          },
+          "transform": {
+            "rotation": 0,
+            "scaleX": 1,
+            "scaleY": 1,
+            "skewX": 0,
+            "skewY": 0,
+            "offsetX": 0,
+            "offsetY": 0
+          }
+        }
+      },
+      "preview": {
+        "file": "preview-af500910-46ce-5a43-b430-c0154cc05959.png",
+        "width": 96,
+        "height": 60,
+        "rawRgbaSha256": "931058cf7ce5cbae7393dbf793b0ac89429881b8d302300f19e3c8d2f8c88009",
+        "pngSha256": "d8947f13cf6dca8d825ba931cd830cdc4e49a4b3dd6ff4828531e459cd7075aa",
+        "escapedPixels": 3020,
+        "interiorPixels": 2658,
+        "nonFinitePixels": 82,
+        "uniqueColors": 64,
+        "anomalies": [
+          "non-finite-pixels"
+        ]
+      }
+    },
+    {
+      "formulaId": "beeb4aec-91cd-5d01-83bb-0b98ca851e79",
+      "runtimeId": "sineMandelb",
+      "family": "transcendental",
+      "failureClass": "swiftshader-transcendental",
+      "technicalStatus": "passed",
+      "publicationDecision": "publish",
+      "sourceRevision": "082b4f74a9e2798f67c8d2a61cb29cdc92e6e9f67f6b46c80bcf7af415a61a0b",
+      "semanticHash": "463443e20ecad73b9d695bfbdca187d465aeaf5f9ffe907e7d0b3c176b72b534",
+      "numericRemedy": {
+        "stableExp": "binary32-taylor8-x-over-256-square8",
+        "stableSinCos": "binary32-taylor-range-reduced-double-angle",
+        "stableHypot": "binary32-scaled-hypot",
+        "orbitOutputGrid": 16
+      },
+      "crossCheck": {
+        "formulaId": "beeb4aec-91cd-5d01-83bb-0b98ca851e79",
+        "runtimeId": "sineMandelb",
+        "family": "transcendental",
+        "ok": true,
+        "v1WebglParity": "passed",
+        "nativeCrossCheck": {
+          "ok": true,
+          "maxRelativeDelta": 0
+        },
+        "orbitPoints": 70,
+        "sourceRevision": "082b4f74a9e2798f67c8d2a61cb29cdc92e6e9f67f6b46c80bcf7af415a61a0b"
+      },
+      "profile": {
+        "boundsSource": "b94-catalog",
+        "value": {
+          "schemaVersion": 1,
+          "formulaId": "beeb4aec-91cd-5d01-83bb-0b98ca851e79",
+          "sourceRevision": "082b4f74a9e2798f67c8d2a61cb29cdc92e6e9f67f6b46c80bcf7af415a61a0b",
+          "profileRevision": "a10382ec30f1d2505ac8b75974b97fc4665a19945c290a596c7d198ed7ad4cbe",
+          "parameters": {},
+          "mode": "parameter-plane",
+          "view": {
+            "centerX": -0.25,
+            "centerY": 0.12,
+            "zoom": 1.25,
+            "rotation": 0
+          },
+          "iterations": 200,
+          "coloring": {
+            "pipelineVersion": 1,
+            "outsideColoringId": "smooth",
+            "insideColoringId": "black",
+            "smooth": true
+          },
+          "palette": {
+            "paletteId": "inferno"
+          },
+          "transform": {
+            "rotation": 0,
+            "scaleX": 1,
+            "scaleY": 1,
+            "skewX": 0,
+            "skewY": 0,
+            "offsetX": 0,
+            "offsetY": 0
+          }
+        }
+      },
+      "preview": {
+        "file": "preview-beeb4aec-91cd-5d01-83bb-0b98ca851e79.png",
+        "width": 96,
+        "height": 60,
+        "rawRgbaSha256": "4b0e8e7daceb002253e714f88fc1455d6dfca8e32bae43857bb4cd17cb053c49",
+        "pngSha256": "b054c51a4d33c4ee763fbe2c1a3e8e2f6df03837eee9d3e437f996a5e703c4a8",
+        "escapedPixels": 622,
+        "interiorPixels": 5138,
+        "nonFinitePixels": 0,
+        "uniqueColors": 131,
+        "anomalies": []
+      }
+    },
+    {
+      "formulaId": "d89f722f-35fe-587a-bee9-efdf05885728",
+      "runtimeId": "coshSinh",
+      "family": "transcendental",
+      "failureClass": "swiftshader-transcendental",
+      "technicalStatus": "passed",
+      "publicationDecision": "publish",
+      "sourceRevision": "f05366105906d0524885fafa45e4b11808d37b0c7de3ef287da876b972df653a",
+      "semanticHash": "3a8c07a844f512a55fe2b83a664529994f4bdd00f0a80b145593f9fda0481788",
+      "numericRemedy": {
+        "stableExp": "binary32-taylor8-x-over-256-square8",
+        "stableSinCos": "binary32-taylor-range-reduced-double-angle",
+        "stableHypot": "binary32-scaled-hypot",
+        "orbitOutputGrid": 16
+      },
+      "crossCheck": {
+        "formulaId": "d89f722f-35fe-587a-bee9-efdf05885728",
+        "runtimeId": "coshSinh",
+        "family": "transcendental",
+        "ok": true,
+        "v1WebglParity": "passed",
+        "nativeCrossCheck": {
+          "ok": true,
+          "maxRelativeDelta": 0
+        },
+        "orbitPoints": 44,
+        "sourceRevision": "f05366105906d0524885fafa45e4b11808d37b0c7de3ef287da876b972df653a"
+      },
+      "profile": {
+        "boundsSource": "b94-catalog",
+        "value": {
+          "schemaVersion": 1,
+          "formulaId": "d89f722f-35fe-587a-bee9-efdf05885728",
+          "sourceRevision": "f05366105906d0524885fafa45e4b11808d37b0c7de3ef287da876b972df653a",
+          "profileRevision": "6c67596d70efb9c026ff605d76846de4f331c7de50721d6bae69ecdf5ec3ebaf",
+          "parameters": {},
+          "mode": "parameter-plane",
+          "view": {
+            "centerX": 0,
+            "centerY": 0,
+            "zoom": 1.05,
+            "rotation": 0
+          },
+          "iterations": 200,
+          "coloring": {
+            "pipelineVersion": 1,
+            "outsideColoringId": "smooth",
+            "insideColoringId": "black",
+            "smooth": true
+          },
+          "palette": {
+            "paletteId": "inferno"
+          },
+          "transform": {
+            "rotation": 0,
+            "scaleX": 1,
+            "scaleY": 1,
+            "skewX": 0,
+            "skewY": 0,
+            "offsetX": 0,
+            "offsetY": 0
+          }
+        }
+      },
+      "preview": {
+        "file": "preview-d89f722f-35fe-587a-bee9-efdf05885728.png",
+        "width": 96,
+        "height": 60,
+        "rawRgbaSha256": "2ccd015340c62795b79faf1d9506476f91826c56b9995edeafa39cf4e616422e",
+        "pngSha256": "a4c947ef1c86df28676201cf331f8d1f5c45a1e4964680ae6811bfb6f2e5bdec",
+        "escapedPixels": 3364,
+        "interiorPixels": 2396,
+        "nonFinitePixels": 0,
+        "uniqueColors": 134,
+        "anomalies": []
+      }
+    }
+  ],
+  "contentHash": "03758aa850b3231dc7293080d85765311b0c0d14d12034e65a124659ddee7f25"
+}

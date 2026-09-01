@@ -1,0 +1,35 @@
+{
+  "schema": "fractalpark-teaching-locale/v1",
+  "formulaId": "2dd8a5a7-052a-5539-aab9-c533f7dec857",
+  "locale": "fr",
+  "sourceRevision": "6c2c19cfb9bff9d9aa0cca56cea6dc62e324e80009b931665b604726d3784e5d",
+  "semanticHash": "7f1e0790ad3270f2419b1c8db5ac3ec9d232d334c0144acf64f1f3155a2ca68e",
+  "englishContentHash": "31804c8280d33040dc47417296a01b83a4ec9dac34ba94e4477f175f74c6297f",
+  "overview": "Dans FRM-like/1, magnet2 commence par si ismand : z = 0 ; sinon z = pixel, le premier nœud de boucle fait z2 = z * z, et |z| <= 4 limite l’itération. Lis ces opérations dans l’ordre réel de la source.",
+  "sourceWalkthrough": {
+    "2dd8a5a7-052a-5539-aab9-c533f7dec857:6c2c19cfb9bff9d9aa0cca56cea6dc62e324e80009b931665b604726d3784e5d:initialization": "Dans magnet2, le nœud d’initialisation exécute seulement : si ismand : z = 0 ; sinon z = pixel.",
+    "2dd8a5a7-052a-5539-aab9-c533f7dec857:6c2c19cfb9bff9d9aa0cca56cea6dc62e324e80009b931665b604726d3784e5d:iteration": "Dans magnet2, ce nœud de boucle exécute seulement : z2 = z * z.",
+    "2dd8a5a7-052a-5539-aab9-c533f7dec857:6c2c19cfb9bff9d9aa0cca56cea6dc62e324e80009b931665b604726d3784e5d:termination": "Dans magnet2, le nœud bailout teste seulement : |z| <= 4."
+  },
+  "syntaxFeatures": {
+    "initialization-flow": "Dans magnet2, la caractéristique d’initialisation cible la seule opération initiale si ismand : z = 0 ; sinon z = pixel.",
+    "iteration-flow": "Dans magnet2, la caractéristique d’itération cible la seule affectation z2 = z * z.",
+    "bailout-test": "Dans magnet2, la caractéristique de terminaison cible la comparaison |z| <= 4."
+  },
+  "parameterExperiment": {
+    "steps": [
+      "Fais le rendu de magnet2 avec la base du plan des paramètres fixée : centre (-0.5, 0), zoom 0.4, rotation 0, et 96 itérations.",
+      "Garde la base fixe sauf le nombre d’itérations, fais un rendu à 48 itérations et compare-le à la base de 96."
+    ],
+    "expectedObservation": "Dans magnet2, note si la comparaison entre 48 et 96 itérations change quelque chose et repère la limite source |z| <= 4."
+  },
+  "exercise": {
+    "prompt": "Dans magnet2, repère les trois annotations et explique si ismand : z = 0 ; sinon z = pixel, z2 = z * z et |z| <= 4 et explique pourquoi aucune instruction voisine n’appartient à l’annotation de boucle.",
+    "completionCheck": "Dans magnet2, tu as terminé en listant les 3 clés d’annotation et en expliquant précisément z2 = z * z et |z| <= 4."
+  },
+  "factsPresentation": {
+    "provenanceLead": "La provenance est dans l’unité factuelle anglaise.",
+    "rightsLead": "Les droits sont dans l’unité factuelle anglaise."
+  },
+  "contentHash": "40e067d253cb82f426e22837e63093656fef190e873ee0330e72dca733797ce6"
+}

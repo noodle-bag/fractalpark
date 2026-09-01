@@ -1,0 +1,35 @@
+{
+  "schema": "fractalpark-teaching-locale/v1",
+  "formulaId": "028a6158-e5dd-5d63-a5a7-5db2e3f7d87d",
+  "locale": "ru",
+  "sourceRevision": "77c461de2d9cf0bbfb4a3257fb4e83bd1f250f6f5f1c52020ff3da0ecee366d9",
+  "semanticHash": "fd88674f04392ce72cbb6d0baf06b941def420ddc8785d0b0a67752d9fe0a7f9",
+  "englishContentHash": "675a619211706eb93d24abf7610c14d84ac5a56e0343c31e687af0433a8f77c4",
+  "overview": "В FRM-like/1 формула fzppcoct начинается с z = pixel, первый узел цикла задаёт z = cosxx(z) + offset, а итерацию ограничивает |z| <= 50. Читайте эти операции в фактическом порядке исходника.",
+  "sourceWalkthrough": {
+    "028a6158-e5dd-5d63-a5a7-5db2e3f7d87d:77c461de2d9cf0bbfb4a3257fb4e83bd1f250f6f5f1c52020ff3da0ecee366d9:initialization": "В fzppcoct, узел инициализации выполняет только: z = pixel.",
+    "028a6158-e5dd-5d63-a5a7-5db2e3f7d87d:77c461de2d9cf0bbfb4a3257fb4e83bd1f250f6f5f1c52020ff3da0ecee366d9:iteration": "В fzppcoct, этот узел цикла выполняет только: z = cosxx(z) + offset.",
+    "028a6158-e5dd-5d63-a5a7-5db2e3f7d87d:77c461de2d9cf0bbfb4a3257fb4e83bd1f250f6f5f1c52020ff3da0ecee366d9:termination": "В fzppcoct, узел bailout проверяет только: |z| <= 50."
+  },
+  "syntaxFeatures": {
+    "initialization-flow": "В fzppcoct, признак инициализации выделяет единственную начальную операцию z = pixel.",
+    "iteration-flow": "В fzppcoct, признак итерации выделяет единственное присваивание z = cosxx(z) + offset.",
+    "bailout-test": "В fzppcoct, признак завершения выделяет сравнение |z| <= 50."
+  },
+  "parameterExperiment": {
+    "steps": [
+      "Выполните рендер fzppcoct с закреплённой базой плоскости параметров: центр (-0.5, 0), масштаб 0.4, поворот 0, и 96 итераций.",
+      "Не меняя базу, кроме числа итераций, выполните один рендер с 48 итерациями и сравните его с базой в 96 итераций."
+    ],
+    "expectedObservation": "В fzppcoct, запишите, меняется ли что-либо при сравнении 48 и 96 итераций, и отметьте ограничение исходника |z| <= 50."
+  },
+  "exercise": {
+    "prompt": "В fzppcoct, найдите три аннотации и объясните z = pixel, z = cosxx(z) + offset и |z| <= 50 и объясните, почему соседние инструкции не относятся к аннотации цикла.",
+    "completionCheck": "В fzppcoct, вы завершили задание, если перечислили все 3 ключа аннотаций и точно объяснили z = cosxx(z) + offset и |z| <= 50."
+  },
+  "factsPresentation": {
+    "provenanceLead": "Происхождение указано в английском фактологическом блоке.",
+    "rightsLead": "Права указаны в английском фактологическом блоке."
+  },
+  "contentHash": "35ed96755402250a470cd5e165e4744fa4e554c0286abdb0834371835288325b"
+}

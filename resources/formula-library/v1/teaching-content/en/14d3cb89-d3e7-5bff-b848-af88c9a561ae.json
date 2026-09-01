@@ -1,0 +1,81 @@
+{
+  "schema": "fractalpark-teaching-en-fact/v1",
+  "formulaId": "14d3cb89-d3e7-5bff-b848-af88c9a561ae",
+  "sourceRevision": "459d2a30210e9171b03fb5d7480eeeb22db0051d977a6dc000d39886924a66eb",
+  "semanticHash": "2ed2266b921e3c3ac6a495eec3da1ff79cc2dcd492e42d068ee21196337eb60f",
+  "overview": "bali’s FRM-like/1 source forms x = 1 / pixel, sets z = x, and sets cclassic = fn1(z). Each loop forms the product (x + cclassic) * (x - cclassic) for z, then replaces x with fn2(z). The bailout is |z| <= 3.",
+  "mathDisclosure": "exact-structured",
+  "mathSummary": "init: cclassic = c; x = 1 / pixel; z = x; cclassic = fn1(z). loop: z = (x + cclassic) * (x - cclassic); x = fn2(z). bailout: |z| <= 3.",
+  "sourceWalkthrough": [
+    {
+      "annotationId": "14d3cb89-d3e7-5bff-b848-af88c9a561ae:459d2a30210e9171b03fb5d7480eeeb22db0051d977a6dc000d39886924a66eb:init-transform",
+      "nodeId": "frm-v1:459d2a30210e9171b03fb5d7480eeeb22db0051d977a6dc000d39886924a66eb:init/3",
+      "explanation": "This initialization assignment sets cclassic = fn1(z) after x = 1 / pixel and z = x have been assigned."
+    },
+    {
+      "annotationId": "14d3cb89-d3e7-5bff-b848-af88c9a561ae:459d2a30210e9171b03fb5d7480eeeb22db0051d977a6dc000d39886924a66eb:product",
+      "nodeId": "frm-v1:459d2a30210e9171b03fb5d7480eeeb22db0051d977a6dc000d39886924a66eb:loop/0",
+      "explanation": "This loop assignment sets z = (x + cclassic) * (x - cclassic)."
+    },
+    {
+      "annotationId": "14d3cb89-d3e7-5bff-b848-af88c9a561ae:459d2a30210e9171b03fb5d7480eeeb22db0051d977a6dc000d39886924a66eb:x-update",
+      "nodeId": "frm-v1:459d2a30210e9171b03fb5d7480eeeb22db0051d977a6dc000d39886924a66eb:loop/1",
+      "explanation": "This following assignment updates x = fn2(z) using the newly computed z."
+    },
+    {
+      "annotationId": "14d3cb89-d3e7-5bff-b848-af88c9a561ae:459d2a30210e9171b03fb5d7480eeeb22db0051d977a6dc000d39886924a66eb:bailout",
+      "nodeId": "frm-v1:459d2a30210e9171b03fb5d7480eeeb22db0051d977a6dc000d39886924a66eb:bailout",
+      "explanation": "The orbit continues only while |z| <= 3."
+    }
+  ],
+  "syntaxFeatures": [
+    {
+      "featureId": "source-sequence",
+      "annotationIds": [
+        "14d3cb89-d3e7-5bff-b848-af88c9a561ae:459d2a30210e9171b03fb5d7480eeeb22db0051d977a6dc000d39886924a66eb:init-transform",
+        "14d3cb89-d3e7-5bff-b848-af88c9a561ae:459d2a30210e9171b03fb5d7480eeeb22db0051d977a6dc000d39886924a66eb:product",
+        "14d3cb89-d3e7-5bff-b848-af88c9a561ae:459d2a30210e9171b03fb5d7480eeeb22db0051d977a6dc000d39886924a66eb:x-update",
+        "14d3cb89-d3e7-5bff-b848-af88c9a561ae:459d2a30210e9171b03fb5d7480eeeb22db0051d977a6dc000d39886924a66eb:bailout"
+      ],
+      "explanation": "The product reads the current x and cclassic, and only afterward does fn2 replace x from that product."
+    }
+  ],
+  "parameterExperiment": {
+    "parameterSymbols": [
+      "function1",
+      "function2"
+    ],
+    "steps": [
+      "Use function1 = identity and function2 = identity at the pinned profile. Hold the view fixed, change only function1 to sqr and render; restore it, then change only function2 to sqr and render."
+    ],
+    "expectedObservation": "For each bali function trial, record a visible difference or no visible difference from the identity baseline."
+  },
+  "exercise": {
+    "prompt": "Explain the product and the later x update, then compare one one-slot function trial.",
+    "completionCheck": "Your response explains all 4 annotated operations, records the requested comparison, and mentions `(x + cclassic) * (x - cclassic)`.",
+    "answerDisclosure": "none"
+  },
+  "facts": {
+    "provenanceStatement": "Pinned runtime revision 459d2a30210e9171b03fb5d7480eeeb22db0051d977a6dc000d39886924a66eb and its publication decision ground this unit.",
+    "rightsStatement": "rightsStatus: source-declared-public-domain-assumption; implementationBasis: direct-adaptation; publicationDecision: publish; decisionReason: publish-census-full-chain-green. This statement makes no broader claim about any third-party original.",
+    "sourceIds": [
+      "runtime:459d2a30210e9171b03fb5d7480eeeb22db0051d977a6dc000d39886924a66eb",
+      "decision:14d3cb89-d3e7-5bff-b848-af88c9a561ae"
+    ],
+    "licenseIds": [],
+    "claims": [
+      {
+        "text": "The pinned definition supplies initialization, loop, and bailout operations for bali.",
+        "sourceIds": [
+          "runtime:459d2a30210e9171b03fb5d7480eeeb22db0051d977a6dc000d39886924a66eb"
+        ]
+      },
+      {
+        "text": "The publication decision is publish for the recorded reason publish-census-full-chain-green.",
+        "sourceIds": [
+          "decision:14d3cb89-d3e7-5bff-b848-af88c9a561ae"
+        ]
+      }
+    ]
+  }
+}

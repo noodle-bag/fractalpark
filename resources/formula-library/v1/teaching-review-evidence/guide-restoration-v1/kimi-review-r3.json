@@ -1,0 +1,21 @@
+{
+  "provider": "kimi",
+  "requestedModel": "k3-256k",
+  "actualModel": "k3-256k",
+  "finishReason": "stop",
+  "candidateSha256": "e0f6818728c8dbf8510bf1ffcea6f7db93dd59658171a05b0e3c261df1981bfb",
+  "reviewPackageSha256": "cdd11559ff041ac09dabf826001209fef72f8897205c156cc00dc9fc7c5fae81",
+  "usage": {
+    "prompt_tokens": 43366,
+    "completion_tokens": 10576,
+    "total_tokens": 53942,
+    "cached_tokens": 512,
+    "completion_tokens_details": {
+      "reasoning_tokens": 8859
+    },
+    "prompt_tokens_details": {
+      "cached_tokens": 512
+    }
+  },
+  "review": "VERDICT: CHANGES_REQUESTED\n\n## 检查矩阵（1–7）\n\n| 检查项 | 结果 | 说明 |\n|---|---|---|\n| 1 确定性范围 | 通过 | 包内确为 7 语言 × 4 slug 全量条目；无任何内容与父级证明的 137 允许路径、120/120 残留本地化、跨语言重复=0、ko/ru 脚本比例=0、cosh 单步示例 7 语言已修正等门禁事实相矛盾。 |\n| 2 源文件忠实度 | 通过 | Mandelbox：盒折叠 a→2−a / −2−a、r²<0.25 乘 4、0.25≤r²<1 反演 z/r²、先缩放后加 c 的顺序、z₀=(1.5,0) 示例均与 `.frm` 一致。Newton Cosh：二重根 2πik、tanh(z/2)、误差线性减半、偶数倍可去/奇数倍真极点、z₀=0.2i→z₁≈0.0997i 示例、实部钳制与 |sinh|²<1e-10 跳过均正确。Cosh Mandelbrot：cosh(z)+c、无统一逃逸半径、bailout 表述诚实，未提及的实现保护未构成矛盾（评分细则允许）。Zaslavsky：exp(0.55 i)·(z+0.28 sin z)+c、整轨道旋转、sin(0)=0→z₁=c、输入虚部 ±80 钳制与 1/16 输出网格均标注为\"实现细节而非理想化递推\"，原始映射与 FractalPark 适配明确区分。 |\n| 3 语言对等 | 基本通过 | ru/es/fr 的 newton-cosh 与 zaslavsky 有明显压缩，但检查 2 要求的全部实质事实在各语言中均保留（部分移至 FAQ/概述）。无残留英文段落。见发现 5（fr 摘要缺一项归属表述，指南层级事实仍在）。 |\n| 4 翻译质量 | 发现问题 | 见轻微发现 1–4：词性不一致、人称语域混用、术语假朋友、语法性错误。未发现错误否定或数学错误。 |\n| 5 历史/出处 | 通过 | 各语言历史段与英文基线一致；Zaslavsky 各语言均声明\"创造性适配而非原文转录\"；无强化史实、无虚构来源。 |\n| 6 学生可读性 | 通过 | 公式与实现保护在所有语言中明确区分；图片说明与 FAQ 表述清晰一致。 |\n| 7 失败关闭 | 已执行 | 以下为全部可执行发现，均为轻微级。 |\n\n## 发现（按严重度分组）\n\n**严重**：无。\n**中等**：无。\n\n**轻微**\n\n1. **词性（语法性别）前后不一**\n   - 语言/Slug：pt、es、fr × mandelbox\n   - 路径：`candidateEntries.pt.mandelbox.overview`（\"**O** Mandelbox escolhe outro caminho\"）对比 `candidateEntries.pt.mandelbox.history`（\"**A** Mandelbox foi apresentada\"）；`candidateEntries.es.mandelbox.overview`（\"**El** Mandelbox toma otra ruta\"）对比 `candidateEntries.es.mandelbox.history`（\"**La** Mandelbox fue presentada\"）；`candidateEntries.fr.mandelbox.overview`（\"**Le** Mandelbox choisit une autre voie\"）对比 `candidateEntries.fr.mandelbox.history`（\"**La** Mandelbox a été présentée\"）\n   - 原因：同一语言内 Mandelbox 的语法性别在概述（阳性）与历史/FAQ/数学段（阴性）之间摇摆，属明显机器式不一致。\n   - 修正：每个语言统一为一种性别（建议跟随多数用法的阴性：a Mandelbox / la Mandelbox），并同步调整 `math.iteration.explanation`、`faq.*` 中的冠词与形容词。\n\n2. **祈使人称语域混用**\n   - 语言/Slug：es、fr × mandelbox\n   - 路径：`candidateEntries.es.mandelbox.overview`（\"**Repite** la secuencia… **Acércate** y el borde dentado…\"，tú 形）对比 `candidateEntries.es.mandelbox.math.iteration.explanation`（\"**Tome** una componente… **Pruebe** z₀ = (1.5, 0)\"，usted 形）；`candidateEntries.fr.mandelbox.overview`（\"**Répète** la séquence… **Zoome** et le bord dentelé…\"，tu 形）对比 `candidateEntries.fr.mandelbox.math.iteration.explanation`（\"**Prenez**… **Essayez**…\"，vous 形）\n   - 原因：同一指南内第二人称祈使在亲昵形与敬体形之间切换，语域断裂。\n   - 修正：统一为敬体形（es: \"Repita… Acérquese…\"；fr: \"Répétez… Zoomez…\"），与数学段保持一致。\n\n3. **术语假朋友：Mandelbrot \"bulbs\" 误译**\n   - 语言/Slug：ru × cosh-mandelbrot\n   - 路径：`candidateEntries.ru.cosh-mandelbrot.overview`\n   - 引文：\"больше не напоминает кардиоиду и «почки» множества Мандельброта\"\n   - 原因：\"почки\"（肾/植物芽）不是 Mandelbrot 集球状芽苞的标准俄语术语，属英语 \"bulbs\" 的假朋友误译。\n   - 修正：改为 «кардиоиду и бульбы множества Мандельброта»。\n\n4. **法语语法性错误**\n   - 语言/Slug：fr × cosh-mandelbrot\n   - 路径：`candidateEntries.fr.cosh-mandelbrot.overview`\n   - 引文：\"ne ressemble plus **au cardioïde** et aux bulbes\"\n   - 原因：cardioïde 为阴性名词（la cardioïde），\"au\" 为阳性缩合冠词。\n   - 修正：改为 \"ne ressemble plus **à la cardioïde** et aux bulbes\"。\n\n5. **摘要级事实缺位（指南层级已覆盖）**\n   - 语言/Slug：fr × zaslavsky-map\n   - 路径：`candidateEntries.fr.zaslavsky-map.summary`\n   - 引文：\"FractalPark met en œuvre z(n+1) = … c décale le résultat.\"\n   - 原因：其余六种语言的 summary 均含\"受 George Zaslavsky 1978 年耗散受击转子映射启发的适配\"归属，仅 fr 摘要缺失；该事实仍存在于 fr 的 overview 与 history，故不定为对等失败。\n   - 修正：在 fr 摘要末尾补 \"— une adaptation inspirée de l'application de rotor frappé dissipatif de George Zaslavsky (1978)\"。\n\n## 结论\n\n候选 `e0f6818728c8dbf8510bf1ffcea6f7db93dd59658171a05b0e3c261df1981bfb` 在数学忠实度、历史出处与实质事实对等方面全部通过，但存在 5 项轻微翻译质量问题；按失败关闭原则，该精确哈希的候选在上述轻微问题修复并经维护者授权之前不应直接集成，修复后无需重新审查数学内容，仅核对修订处哈希即可。"
+}

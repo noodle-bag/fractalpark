@@ -1,0 +1,35 @@
+{
+  "schema": "fractalpark-teaching-locale/v1",
+  "formulaId": "6d27b5fd-462b-5561-bac2-7c5f915e3cb5",
+  "locale": "pt",
+  "sourceRevision": "7ef2bf1f2dd573053bbe1e8af171472dff08ed6346b2e760ab2780c9244d1e85",
+  "semanticHash": "62ccdf4f274bf35079ca98a39ad59a05132b3580ef937b766945087358c454e7",
+  "englishContentHash": "e6d09d556daddf1d6bf53de03354a43d35ae9954a4b7f0ab0e759c64518a9eb2",
+  "overview": "Em FRM-like/1, a inicialização faz z = pixel. Em cada iteração, o nó executa denom = cosh(z). O término testa |z - zPrev| >= 0.000001.",
+  "sourceWalkthrough": {
+    "6d27b5fd-462b-5561-bac2-7c5f915e3cb5:7ef2bf1f2dd573053bbe1e8af171472dff08ed6346b2e760ab2780c9244d1e85:init": "Em FRM-like/1, a inicialização faz z = pixel.",
+    "6d27b5fd-462b-5561-bac2-7c5f915e3cb5:7ef2bf1f2dd573053bbe1e8af171472dff08ed6346b2e760ab2780c9244d1e85:loop": "Em cada iteração, o nó executa denom = cosh(z).",
+    "6d27b5fd-462b-5561-bac2-7c5f915e3cb5:7ef2bf1f2dd573053bbe1e8af171472dff08ed6346b2e760ab2780c9244d1e85:branch": "A ramificação usa |denom|² < 1e-10 → z = z; |denom|² >= 1e-10 → z = z - sinh(z)/denom.",
+    "6d27b5fd-462b-5561-bac2-7c5f915e3cb5:7ef2bf1f2dd573053bbe1e8af171472dff08ed6346b2e760ab2780c9244d1e85:termination": "O término testa |z - zPrev| >= 0.000001."
+  },
+  "syntaxFeatures": {
+    "sequence": "Em cada iteração, o nó executa denom = cosh(z).",
+    "branch": "A ramificação usa |denom|² < 1e-10 → z = z; |denom|² >= 1e-10 → z = z - sinh(z)/denom."
+  },
+  "parameterExperiment": {
+    "steps": [
+      "Use o perfil fixo como base. Execute 48 e depois 96 iterações, mantendo todos os controles fixos, e registre se denom = cosh(z) ou |z - zPrev| >= 0.000001 diferem."
+    ],
+    "expectedObservation": "O limite maior pode expor atualizações sinh/cosh adicionais, protegidas ou não; registre se as contagens de iteração diferem."
+  },
+  "exercise": {
+    "prompt": "Explique os dois resultados da proteção pelo tamanho de cosh(z) denom.",
+    "completionCheck": "Para concluir, você deve nomear exatamente as 4 anotações e explicar este detalhe da fórmula: Dica: denom = cosh(z).",
+    "hint": "Dica: denom = cosh(z)."
+  },
+  "factsPresentation": {
+    "provenanceLead": "A proveniência está no registro de fonte fixado.",
+    "rightsLead": "O status de direitos e a decisão de publicação estão no registro de decisão fixado."
+  },
+  "contentHash": "330b4649b018b5e0e69ce78051ac23b783a6e0e99f1fc590ae18c9bc24b64655"
+}

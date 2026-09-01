@@ -1,0 +1,33 @@
+{
+  "schema": "fractalpark-teaching-locale/v1",
+  "formulaId": "20e16f12-e0e9-5f56-9364-5c2b60c05f20",
+  "locale": "pt",
+  "sourceRevision": "cccfbd116d3760e4b3cd57e20f2cb9f5102c7326c75c5d89137be22c2352892c",
+  "semanticHash": "72efb4d2a055e760c18f96b5776a3e25000f7d57d81352136617b91d8199344c",
+  "englishContentHash": "dacdad9b8155a4ececb9a74b010134188c76050c8adee67842a02f1dfc74b2db",
+  "overview": "Em FRM-like/1, a inicialização faz z = pixel. Em cada iteração, o nó executa z = exp(z * log(z)). O término testa |z| <= real(threshold).",
+  "sourceWalkthrough": {
+    "20e16f12-e0e9-5f56-9364-5c2b60c05f20:cccfbd116d3760e4b3cd57e20f2cb9f5102c7326c75c5d89137be22c2352892c:init": "Em FRM-like/1, a inicialização faz z = pixel.",
+    "20e16f12-e0e9-5f56-9364-5c2b60c05f20:cccfbd116d3760e4b3cd57e20f2cb9f5102c7326c75c5d89137be22c2352892c:loop": "Em cada iteração, o nó executa z = exp(z * log(z)).",
+    "20e16f12-e0e9-5f56-9364-5c2b60c05f20:cccfbd116d3760e4b3cd57e20f2cb9f5102c7326c75c5d89137be22c2352892c:termination": "O término testa |z| <= real(threshold)."
+  },
+  "syntaxFeatures": {
+    "sequence": "Em cada iteração, o nó executa z = exp(z * log(z))."
+  },
+  "parameterExperiment": {
+    "steps": [
+      "Use o perfil fixo e os valores padrão como base. Altere somente threshold, mantenha os outros slots de execução fixos, execute 96 iterações, restaure o padrão de threshold e registre se o resultado difere."
+    ],
+    "expectedObservation": "Registre se o resultado difere em z = exp(z * log(z)) ou em |z| <= real(threshold) ao alterar threshold."
+  },
+  "exercise": {
+    "prompt": "Explique z = exp(z * log(z)).",
+    "completionCheck": "Para concluir, você deve nomear exatamente as 3 anotações e explicar este detalhe da fórmula: Dica: z = exp(z * log(z)).",
+    "hint": "Dica: z = exp(z * log(z))."
+  },
+  "factsPresentation": {
+    "provenanceLead": "A proveniência está no registro de fonte fixado.",
+    "rightsLead": "O status de direitos e a decisão de publicação estão no registro de decisão fixado."
+  },
+  "contentHash": "2478eea06ef618138a3db0bf1b71fd484087da518564ae9d1be9b4cbeb4fa01f"
+}

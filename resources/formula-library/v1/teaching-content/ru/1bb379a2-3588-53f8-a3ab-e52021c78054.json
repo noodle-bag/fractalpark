@@ -1,0 +1,33 @@
+{
+  "schema": "fractalpark-teaching-locale/v1",
+  "formulaId": "1bb379a2-3588-53f8-a3ab-e52021c78054",
+  "locale": "ru",
+  "sourceRevision": "d51707785f4d59fbfa309c2dbd8da93ac1a0ca152c067e6e34c4851585652768",
+  "semanticHash": "597a8cb34733ab22b5f2452fa41e5f56f5bae984c8ae2c8e6fdc43d5c45a4318",
+  "englishContentHash": "1608ffe1a8a2eb227fdac49d45bb2acd6e8c1cc72c87ad2aaba26f5086036ba6",
+  "overview": "В FRM-like/1 инициализация задаёт seed = pixel; z = seed. В цикле выполняется z = sqr(z)+sin(z)+seed. Завершение проверяет |z| < 4.",
+  "sourceWalkthrough": {
+    "1bb379a2-3588-53f8-a3ab-e52021c78054:d51707785f4d59fbfa309c2dbd8da93ac1a0ca152c067e6e34c4851585652768:init": "В FRM-like/1 инициализация задаёт seed = pixel; z = seed.",
+    "1bb379a2-3588-53f8-a3ab-e52021c78054:d51707785f4d59fbfa309c2dbd8da93ac1a0ca152c067e6e34c4851585652768:loop": "В цикле выполняется z = sqr(z)+sin(z)+seed.",
+    "1bb379a2-3588-53f8-a3ab-e52021c78054:d51707785f4d59fbfa309c2dbd8da93ac1a0ca152c067e6e34c4851585652768:termination": "Завершение проверяет |z| < 4."
+  },
+  "syntaxFeatures": {
+    "sequence": "В цикле выполняется z = sqr(z)+sin(z)+seed."
+  },
+  "parameterExperiment": {
+    "steps": [
+      "Используйте закреплённый профиль как базу. Выполните 48, затем 96 итераций при неизменных настройках и запишите, различаются ли z = sqr(z)+sin(z)+seed или |z| < 4."
+    ],
+    "expectedObservation": "Больший предел итераций может показать более позднее использование сохранённого seed в обновлении; зафиксируйте, различаются ли наблюдаемые числа выходов."
+  },
+  "exercise": {
+    "prompt": "Объясните z = sqr(z)+sin(z)+seed.",
+    "completionCheck": "Для завершения вы должны точно назвать все 3 аннотации и объяснить следующую деталь формулы: Подсказка: z = sqr(z)+sin(z)+seed.",
+    "hint": "Подсказка: z = sqr(z)+sin(z)+seed."
+  },
+  "factsPresentation": {
+    "provenanceLead": "Сведения о происхождении приведены в закреплённой записи источника.",
+    "rightsLead": "Статус прав и решение о публикации приведены в закреплённой записи решения."
+  },
+  "contentHash": "8ca889d50e2dcd125d6c082fb907b4df45bb773e92de2a3810c46bd6530cde61"
+}

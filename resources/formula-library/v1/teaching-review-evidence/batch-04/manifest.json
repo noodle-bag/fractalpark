@@ -1,0 +1,33 @@
+{
+  "schema": "fractalpark-teaching-final-review-manifest/v1",
+  "batch": 4,
+  "status": "model-reviewed-maintainer-pending",
+  "candidateSha256": "2e1e04c257da772807a0534e95170cb4fa20f26d629f12de14f5115f56956b52",
+  "sourcePacketSha256": "7a4c14b3d8112ef18a89c8924af0d6b302b067e3bbc2ce843eac5b2c22191e41",
+  "reviewers": [
+    {
+      "provider": "deepseek",
+      "requestedModel": "deepseek-chat",
+      "actualModel": "deepseek-v4-flash",
+      "rubricSha256": "2aaeb3f484c66d97ee35ed98bbbc8a84d56fe28ea6ed2c95f1f10919b625be0d",
+      "finishReason": "stop",
+      "verdict": "APPROVE",
+      "findings": 0,
+      "coverageGaps": 0,
+      "rawSha256": "e357c79bbcebad2a0376f375be484b2a8d0d18eb91656365e503526519543926",
+      "reviewSha256": "bda7ddd28821172dbfd27f0f59205ad06c344694afde09a00ec9432caae05618"
+    },
+    {
+      "provider": "kimi",
+      "requestedModel": "k3",
+      "actualModel": "k3",
+      "rubricSha256": "7248db2bb6c8622a815d064c8d4d3a2c9f6100acd26082f9548b5e9cb637166e",
+      "finishReason": "stop",
+      "verdict": "APPROVE",
+      "findings": 0,
+      "coverageGaps": 0,
+      "rawSha256": "06b51e7f5d2500b3bfdb61e89b288f41ccc117e5c9e272a68211c5c1094e8296",
+      "reviewSha256": "70d847e0e0e78b65b40b8271c73c2f07a460d53c1c62de510a337009cbef4c1c"
+    }
+  ]
+}

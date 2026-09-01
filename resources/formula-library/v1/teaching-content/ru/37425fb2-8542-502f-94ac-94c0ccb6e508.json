@@ -1,0 +1,35 @@
+{
+  "schema": "fractalpark-teaching-locale/v1",
+  "formulaId": "37425fb2-8542-502f-94ac-94c0ccb6e508",
+  "locale": "ru",
+  "sourceRevision": "69a7d072638f6981ee8e06c85d03831c9a53fb549337605eb35bb3cdf1db4e10",
+  "semanticHash": "01a25a87e2bb305345f4b72f0a9a87809258c73d5b379604dfd9625796dbb372",
+  "englishContentHash": "a08a2e14a156823109e5fc986b1746001470dd96fc6651abc89c94e02ae77859",
+  "overview": "В FRM-like/1 формула rationalMap1 начинается с если ismand, то z = 0; иначе z = pixel, первый узел цикла задаёт numer = z * z, а итерацию ограничивает |z| <= 256. Читайте эти операции в фактическом порядке исходника.",
+  "sourceWalkthrough": {
+    "37425fb2-8542-502f-94ac-94c0ccb6e508:69a7d072638f6981ee8e06c85d03831c9a53fb549337605eb35bb3cdf1db4e10:initialization": "В rationalMap1, узел инициализации выполняет только: если ismand, то z = 0; иначе z = pixel.",
+    "37425fb2-8542-502f-94ac-94c0ccb6e508:69a7d072638f6981ee8e06c85d03831c9a53fb549337605eb35bb3cdf1db4e10:iteration": "В rationalMap1, этот узел цикла выполняет только: numer = z * z.",
+    "37425fb2-8542-502f-94ac-94c0ccb6e508:69a7d072638f6981ee8e06c85d03831c9a53fb549337605eb35bb3cdf1db4e10:termination": "В rationalMap1, узел bailout проверяет только: |z| <= 256."
+  },
+  "syntaxFeatures": {
+    "initialization-flow": "В rationalMap1, признак инициализации выделяет единственную начальную операцию если ismand, то z = 0; иначе z = pixel.",
+    "iteration-flow": "В rationalMap1, признак итерации выделяет единственное присваивание numer = z * z.",
+    "bailout-test": "В rationalMap1, признак завершения выделяет сравнение |z| <= 256."
+  },
+  "parameterExperiment": {
+    "steps": [
+      "Выполните рендер rationalMap1 с закреплённой базой плоскости параметров: центр (0, 0), масштаб 0.25, поворот 0, и 96 итераций.",
+      "Не меняя базу, кроме числа итераций, выполните один рендер с 48 итерациями и сравните его с базой в 96 итераций."
+    ],
+    "expectedObservation": "В rationalMap1, запишите, меняется ли что-либо при сравнении 48 и 96 итераций, и отметьте ограничение исходника |z| <= 256."
+  },
+  "exercise": {
+    "prompt": "В rationalMap1, найдите три аннотации и объясните если ismand, то z = 0; иначе z = pixel, numer = z * z и |z| <= 256 и объясните, почему соседние инструкции не относятся к аннотации цикла.",
+    "completionCheck": "В rationalMap1, вы завершили задание, если перечислили все 3 ключа аннотаций и точно объяснили numer = z * z и |z| <= 256."
+  },
+  "factsPresentation": {
+    "provenanceLead": "Происхождение указано в английском фактологическом блоке.",
+    "rightsLead": "Права указаны в английском фактологическом блоке."
+  },
+  "contentHash": "16ba5adedee436c500b0b591d3d1d3b592da5f4111bcf202ea3994251c9a91e5"
+}

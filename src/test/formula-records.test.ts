@@ -1,0 +1,313 @@
+import { createHash } from 'node:crypto';
+import { existsSync, readFileSync, readdirSync } from 'node:fs';
+import { join } from 'node:path';
+
+import { describe, expect, it } from 'vitest';
+
+import { STANDARD_MANIFEST_INDEX_V1 } from '@/engine/formulas/v1/standard-manifest';
+import {
+  FORMULA_RECORD_COUNT_V1,
+  FORMULA_RECORD_PREVIEW_HEIGHT_V1,
+  FORMULA_RECORD_PREVIEW_WIDTH_V1,
+  PUBLISHED_FORMULA_RECORD_COUNT_V1,
+  buildFormulaRecordV1,
+} from '@/lib/formula-records';
+
+const PUBLIC_ROOT = join(process.cwd(), 'public');
+const RECORD_PREVIEW_ROOT = join(
+  PUBLIC_ROOT,
+  'formula-library/v1/record-previews',
+);
+const SUPPORTED_JULIA_PROFILE_ID = '5d0877c0-5f84-5c3b-9466-b9f9b417cb6a';
+
+function canonicalize(value: unknown): unknown {
+  if (Array.isArray(value)) return value.map(canonicalize);
+  if (value !== null && typeof value === 'object') {
+    return Object.fromEntries(
+      Object.entries(value as Record<string, unknown>)
+        .sort(([left], [right]) => left.localeCompare(right))
+        .map(([key, child]) => [key, canonicalize(child)]),
+    );
+  }
+  return value;
+}
+
+describe('public Formula Record v1', () => {
+  const records = STANDARD_MANIFEST_INDEX_V1.formulaIds.map((formulaId) => {
+    const record = buildFormulaRecordV1(formulaId, 'en');
+    if (!record) throw new Error(`missing-formula-record:${formulaId}`);
+    return record;
+  });
+
+  it('accounts for every Standard identity and the frozen decision set', () => {
+    expect(FORMULA_RECORD_COUNT_V1).toBe(677);
+    expect(PUBLISHED_FORMULA_RECORD_COUNT_V1).toBe(534);
+    expect(records).toHaveLength(677);
+    expect(new Set(records.map((record) => record.formulaId))).toHaveLength(677);
+
+    expect(
+      records.filter((record) => record.publicationDecision === 'publish')
+    ).toHaveLength(534);
+    expect(
+      records.filter((record) => record.publicationDecision === 'hold')
+    ).toHaveLength(143);
+    expect(
+      records.filter((record) => record.publicationDecision === 'exclude')
+    ).toHaveLength(0);
+    expect(
+      Object.fromEntries(
+        [
+          'project-owned',
+          'source-declared-public-domain-assumption',
+          'gpl-3.0-only',
+          'no-explicit-permission',
+        ].map((status) => [
+          status,
+          records.filter((record) => record.rightsStatus === status).length,
+        ])
+      )
+    ).toEqual({
+      'project-owned': 89,
+      'source-declared-public-domain-assumption': 137,
+      'gpl-3.0-only': 73,
+      'no-explicit-permission': 378,
+    });
+    const gplRecords = records.filter(
+      (record) => record.rightsStatus === 'gpl-3.0-only'
+    );
+    expect(gplRecords).toHaveLength(73);
+    expect(
+      gplRecords.every((record) => record.publicationDecision === 'hold')
+    ).toBe(true);
+    expect(
+      records.reduce((count, record) => count + record.aliases.length, 0)
+    ).toBe(797);
+    expect(
+      records
+        .flatMap((record) => record.aliases)
+        .filter((alias) => alias.kind === 'guide-slug')
+    ).toHaveLength(21);
+  });
+
+  it('gives every published Record canonical source, deterministic preview, and working action destinations', () => {
+    const published = records.filter(
+      (record) => record.publicationDecision === 'publish'
+    );
+    expect(
+      published
+        .filter(
+          (record) =>
+            record.availability === 'published' &&
+            record.defaultProfile.mode === 'julia'
+        )
+        .map((record) => record.formulaId)
+    ).toEqual([SUPPORTED_JULIA_PROFILE_ID]);
+
+    for (const record of published) {
+      expect(record.availability).toBe('published');
+      if (record.availability !== 'published') throw new Error('unreachable');
+
+      expect(record.source.href).toMatch(
+        /^\/formula-library\/v1\/runtime\/published\/definitions\/[a-f0-9]{64}\.frm$/
+      );
+      expect(record.source.sourceRevision).toMatch(/^[a-f0-9]{64}$/);
+      expect(record.source.semanticHash).toMatch(/^[a-f0-9]{64}$/);
+      expect(record.source.languageVersion).toBe('frm-like/1');
+      expect(record.source.stdlibVersion).toBe(1);
+      expect(record.source.parameters).toBeInstanceOf(Array);
+      expect(record.defaultProfile.mode).toMatch(/^(parameter-plane|julia)$/);
+      expect(record.defaultProfile.center).toHaveLength(2);
+      expect(record.defaultProfile.center.every(Number.isFinite)).toBe(true);
+      expect(record.defaultProfile.zoom).toBeGreaterThan(0);
+      expect(record.defaultProfile.iterations).toBeGreaterThan(0);
+      expect(record.defaultProfile.quality).toMatch(/^(mechanical|family)$/);
+
+      expect(record.preview.src).toMatch(
+        new RegExp(
+          `^/formula-library/v1/record-previews/${record.formulaId}\\.[a-f0-9]{16}\\.webp$`,
+        ),
+      );
+      expect(record.preview.fallbackSrc).toBe(
+        `/formula-library/v1/previews/${record.formulaId}.png`,
+      );
+      expect(record.preview.width).toBe(FORMULA_RECORD_PREVIEW_WIDTH_V1);
+      expect(record.preview.height).toBe(FORMULA_RECORD_PREVIEW_HEIGHT_V1);
+      expect(record.preview.status).toBe('ready');
+      expect(record.preview.assetRevision).toMatch(/^[a-f0-9]{16}$/);
+      expect(record.preview.recordPreviewProfileRevision).toMatch(
+        /^[a-f0-9]{64}$/,
+      );
+      expect(record.preview.recordPreviewProfileSha256).toMatch(
+        /^[a-f0-9]{64}$/,
+      );
+      expect(record.preview.webpSha256).toMatch(/^[a-f0-9]{64}$/);
+      expect(record.preview.bytes).toBeGreaterThan(0);
+      expect(record.preview.perceptualHash).toMatch(/^[a-f0-9]{16}$/);
+      const previewBytes = readFileSync(join(PUBLIC_ROOT, record.preview.src));
+      expect(previewBytes.subarray(0, 4).toString()).toBe('RIFF');
+      expect(previewBytes.subarray(8, 12).toString()).toBe('WEBP');
+      expect(createHash('sha256').update(previewBytes).digest('hex')).toBe(
+        record.preview.webpSha256,
+      );
+      expect(existsSync(join(PUBLIC_ROOT, record.preview.fallbackSrc))).toBe(true);
+
+      expect(record.actions.openExploreHref).toBe(
+        `/en/explore?open=standard-formula&formula=${record.formulaId}`
+      );
+      expect(record.actions.remixHref).toBe(
+        `/en/formulas/editor?open=standard-formula&formula=${record.formulaId}&intent=remix`
+      );
+    }
+  });
+
+  it('pins the exact record-preview output set and every WebP byte string', () => {
+    const manifest = JSON.parse(
+      readFileSync(join(RECORD_PREVIEW_ROOT, 'manifest.json'), 'utf8'),
+    ) as {
+      schema: string;
+      width: number;
+      height: number;
+      rowCount: number;
+      rows: Array<{
+        formulaId: string;
+        file: string;
+        webpSha256: string;
+        bytes: number;
+      }>;
+      manifestContentHash: string;
+    };
+    expect(manifest.schema).toBe(
+      'fractalpark-formula-record-preview-masters/v1',
+    );
+    expect(manifest.width).toBe(FORMULA_RECORD_PREVIEW_WIDTH_V1);
+    expect(manifest.height).toBe(FORMULA_RECORD_PREVIEW_HEIGHT_V1);
+    expect(manifest.rowCount).toBe(PUBLISHED_FORMULA_RECORD_COUNT_V1);
+    expect(manifest.rows).toHaveLength(PUBLISHED_FORMULA_RECORD_COUNT_V1);
+    expect(new Set(manifest.rows.map((row) => row.formulaId))).toEqual(
+      new Set(
+        records
+          .filter((record) => record.publicationDecision === 'publish')
+          .map((record) => record.formulaId)
+      )
+    );
+    expect(readdirSync(RECORD_PREVIEW_ROOT).sort()).toEqual(
+      [...manifest.rows.map((row) => row.file), 'manifest.json'].sort(),
+    );
+
+    for (const row of manifest.rows) {
+      const bytes = readFileSync(join(RECORD_PREVIEW_ROOT, row.file));
+      expect(bytes).toHaveLength(row.bytes);
+      expect(createHash('sha256').update(bytes).digest('hex')).toBe(
+        row.webpSha256,
+      );
+    }
+    const { manifestContentHash, ...withoutHash } = manifest;
+    expect(
+      createHash('sha256')
+        .update(JSON.stringify(canonicalize(withoutHash)))
+        .digest('hex'),
+    ).toBe(manifestContentHash);
+  });
+
+  it('keeps held and excluded Records factual and renders no runnable CTA payload', () => {
+    const unavailable = records.filter(
+      (record) => record.publicationDecision !== 'publish'
+    );
+
+    for (const record of unavailable) {
+      expect(record.availability).toBe(record.publicationDecision);
+      expect(record.decisionReason).toBeTruthy();
+      expect(record).not.toHaveProperty('source');
+      expect(record).not.toHaveProperty('preview');
+      expect(record).not.toHaveProperty('defaultProfile');
+      expect(record).not.toHaveProperty('actions');
+    }
+  });
+
+  it('discloses rights and takedown facts without exposing private provenance or third-party source', () => {
+    for (const record of records) {
+      expect(record.canonicalName).toBeTruthy();
+      expect(record.originalName).toBeTruthy();
+      expect(record.authorStatus).toBe('unconfirmed');
+      expect(record.originalResourceStatus).toBe(
+        record.availability === 'published' ? 'confirmed' : 'unconfirmed'
+      );
+      expect(record.originalVersionStatus).toBe(
+        record.availability === 'published' ? 'confirmed' : 'unconfirmed'
+      );
+      expect(record.aliases.length).toBeGreaterThan(0);
+      expect(record.provenanceCollection).toMatch(/^(F588|B94)$/);
+      expect(record.rightsStatus).toMatch(
+        /^(project-owned|source-declared-public-domain-assumption|gpl-3\.0-only|no-explicit-permission)$/
+      );
+      expect(record.reviewedAt).toMatch(/^\d{4}-\d{2}-\d{2}$/);
+      expect(record.takedown.email).toBe('contact@fractalpark.com');
+      expect(record.takedown.subject).toContain(record.formulaId);
+
+      const serialized = JSON.stringify(record);
+      expect(serialized).not.toContain('originalSource');
+      expect(serialized).not.toContain('sourceFile');
+      expect(serialized).not.toContain('private');
+      expect(serialized).not.toContain('credential');
+    }
+  });
+
+  it('binds every published Record to a safe immutable historical resource', () => {
+    const published = records.filter(
+      (record) => record.availability === 'published'
+    );
+    const sourceCounts = {
+      fractalpark: 0,
+      fractint: 0,
+      'iterated-dynamics': 0,
+    };
+
+    for (const record of published) {
+      sourceCounts[record.historicalSource.sourceProject]++;
+      expect(record.historicalSource.repositoryRevision).toMatch(/^[a-f0-9]{40}$/);
+      expect(record.historicalSource.resourceUrl).toBe(
+        `${record.historicalSource.repositoryUrl}/blob/${record.historicalSource.repositoryRevision}/${record.historicalSource.filePath}`
+      );
+      expect(record.historicalSource.observedAt).toBe('2026-08-25');
+    }
+    expect(sourceCounts).toEqual({
+      fractalpark: 89,
+      fractint: 415,
+      'iterated-dynamics': 30,
+    });
+    expect(
+      records
+        .filter((record) => record.availability !== 'published')
+        .every((record) => !('historicalSource' in record))
+    ).toBe(true);
+  });
+
+  it('keeps all localized Record message keys compatible with next-intl namespaces', () => {
+    const dottedKeys: string[] = [];
+    const visit = (value: unknown, path: string) => {
+      if (!value || typeof value !== 'object' || Array.isArray(value)) return;
+      for (const [key, child] of Object.entries(value)) {
+        if (key.includes('.')) dottedKeys.push(`${path}.${key}`);
+        visit(child, `${path}.${key}`);
+      }
+    };
+    for (const locale of ['en', 'zh', 'pt', 'ko', 'ru', 'es', 'fr']) {
+      const messages = JSON.parse(
+        readFileSync(join(process.cwd(), 'messages', `${locale}.json`), 'utf8')
+      ) as { formulas: { record: unknown } };
+      visit(messages.formulas.record, `${locale}.formulas.record`);
+    }
+    expect(dottedKeys).toEqual([]);
+  });
+
+  it('fails closed for unknown IDs and invalid locales', () => {
+    const formulaId = STANDARD_MANIFEST_INDEX_V1.formulaIds[0];
+    expect(buildFormulaRecordV1(formulaId, '')).toBeUndefined();
+    expect(
+      buildFormulaRecordV1(
+        '00000000-0000-5000-8000-000000000000' as typeof formulaId,
+        'en'
+      )
+    ).toBeUndefined();
+  });
+});

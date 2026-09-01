@@ -1,0 +1,35 @@
+{
+  "schema": "fractalpark-teaching-locale/v1",
+  "formulaId": "2edf64a9-157c-57d7-8894-1f4781bc4f8c",
+  "locale": "es",
+  "sourceRevision": "37344c3bc7fc90852e94c7b74ec99df5400c6332e8ca9bdad5e5c8ff3b51e688",
+  "semanticHash": "5c2a39a58bea81ef4853efa2e111c5a86f81b6e019640cc845a02d3764fe2c1a",
+  "englishContentHash": "c08555c12df774bd3e50ed0c97df132df6c41aeb3c50eab506290a9631422050",
+  "overview": "En FRM-like/1, reciprocalQuadratic comienza con si ismand, z = 0; si no, z = pixel, el primer nodo del bucle hace denom = z * z + c y |z| <= 256 limita la iteración. Lee estas operaciones en el orden real de la fuente.",
+  "sourceWalkthrough": {
+    "2edf64a9-157c-57d7-8894-1f4781bc4f8c:37344c3bc7fc90852e94c7b74ec99df5400c6332e8ca9bdad5e5c8ff3b51e688:initialization": "En reciprocalQuadratic, el nodo de inicialización ejecuta solo: si ismand, z = 0; si no, z = pixel.",
+    "2edf64a9-157c-57d7-8894-1f4781bc4f8c:37344c3bc7fc90852e94c7b74ec99df5400c6332e8ca9bdad5e5c8ff3b51e688:iteration": "En reciprocalQuadratic, este nodo del bucle ejecuta solo: denom = z * z + c.",
+    "2edf64a9-157c-57d7-8894-1f4781bc4f8c:37344c3bc7fc90852e94c7b74ec99df5400c6332e8ca9bdad5e5c8ff3b51e688:termination": "En reciprocalQuadratic, el nodo bailout prueba solo: |z| <= 256."
+  },
+  "syntaxFeatures": {
+    "initialization-flow": "En reciprocalQuadratic, la característica de inicialización se centra en la única operación inicial si ismand, z = 0; si no, z = pixel.",
+    "iteration-flow": "En reciprocalQuadratic, la característica de iteración se centra en la única asignación denom = z * z + c.",
+    "bailout-test": "En reciprocalQuadratic, la característica de terminación se centra en la comparación |z| <= 256."
+  },
+  "parameterExperiment": {
+    "steps": [
+      "Renderiza reciprocalQuadratic con la base del plano de parámetros fijada: centro (0, 0), zoom 0.25, rotación 0, y 96 iteraciones.",
+      "Mantén fija la base salvo las iteraciones, renderiza una vez con 48 iteraciones y compárala con la base de 96."
+    ],
+    "expectedObservation": "En reciprocalQuadratic, anota si la comparación entre 48 y 96 iteraciones cambia algo e identifica el límite fuente |z| <= 256."
+  },
+  "exercise": {
+    "prompt": "En reciprocalQuadratic, localiza las tres anotaciones y explica si ismand, z = 0; si no, z = pixel, denom = z * z + c y |z| <= 256 y explica por qué ninguna instrucción vecina pertenece a la anotación del bucle.",
+    "completionCheck": "En reciprocalQuadratic, has terminado al enumerar las 3 claves de anotación y explicar con precisión denom = z * z + c y |z| <= 256."
+  },
+  "factsPresentation": {
+    "provenanceLead": "La procedencia está en la unidad factual inglesa.",
+    "rightsLead": "Los derechos están en la unidad factual inglesa."
+  },
+  "contentHash": "469b0ed4ecf8602f30288bc6eecce0e87b0fd27a88448fab3b691c5b50f79635"
+}

@@ -1,0 +1,33 @@
+{
+  "schema": "fractalpark-teaching-locale/v1",
+  "formulaId": "05a7f40f-5cb6-538e-b376-40df4c543d49",
+  "locale": "fr",
+  "sourceRevision": "0107d6f68a942fd97a649693ec769e74382943bd54cec83f0d6327aec4336e0d",
+  "semanticHash": "b32fa945bfba42330ddf09bed9c93b53b14da83a922c3ced6c44d57c05c47598",
+  "englishContentHash": "17453b2804569eb8ac89795384c824dd64a4d67f3b370e14afaec11e55fb8e1a",
+  "overview": "Cette unité repose pour toi sur les opérations exactes suivantes de FRM-like/1 :  `init: z = pixel; state = seed. loop: z = sqr(z) + state; state = state + drift * transform(state). bailout: |z| <= 4.`",
+  "sourceWalkthrough": {
+    "05a7f40f-5cb6-538e-b376-40df4c543d49:0107d6f68a942fd97a649693ec769e74382943bd54cec83f0d6327aec4336e0d:init-state": "Cette annotation exécute `state = seed`.",
+    "05a7f40f-5cb6-538e-b376-40df4c543d49:0107d6f68a942fd97a649693ec769e74382943bd54cec83f0d6327aec4336e0d:z-update": "Cette annotation exécute `z = sqr(z) + state`.",
+    "05a7f40f-5cb6-538e-b376-40df4c543d49:0107d6f68a942fd97a649693ec769e74382943bd54cec83f0d6327aec4336e0d:state-update": "Cette annotation exécute `state = state + drift * transform(state)`.",
+    "05a7f40f-5cb6-538e-b376-40df4c543d49:0107d6f68a942fd97a649693ec769e74382943bd54cec83f0d6327aec4336e0d:bailout": "Cette annotation exécute `|z| <= 4`. Elle termine la séquence d’itération de cette formule."
+  },
+  "syntaxFeatures": {
+    "source-sequence": "Cette caractéristique de séquence relie, dans l’ordre du code source, les opérations citées liées à `state` et `drift * transform(state)`."
+  },
+  "parameterExperiment": {
+    "steps": [
+      "Avec le profil fixé, effectue d’abord le rendu de référence avec `seed = 0 + 0i`, `drift = 0 + 0i`, `transform = identity`. Garde le centre, le zoom, la rotation, les itérations et les autres slots fixes ; ne fais et ne rends qu’une modification à la fois : `seed = 1 + 0i`, `drift = 1 + 0i`, `transform = sqr`. Rétablis la référence avant chaque nouvel essai."
+    ],
+    "expectedObservation": "Dans les essais de jfnc portant sur `seed`, `drift`, `transform`, note s’il existe une différence visible par rapport à la référence ; note aussi l’absence de différence."
+  },
+  "exercise": {
+    "prompt": "Explique le rôle de `state` et `drift * transform(state)` dans l’ordre du code source et compare les exécutions selon les étapes de l’expérience sur les paramètres.",
+    "completionCheck": "Ta réponse doit expliquer les 4 opérations annotées, noter la comparaison de l’expérience et mentionner `state` et `drift * transform(state)`."
+  },
+  "factsPresentation": {
+    "provenanceLead": "Source : révision d’exécution fixée et décision de publication.",
+    "rightsLead": "Les informations de droits figurent dans l’unité factuelle anglaise."
+  },
+  "contentHash": "3e0960a50a5cb14737c082a9bf21fe5bee47fdd9135a324e607dc5be6e19b299"
+}

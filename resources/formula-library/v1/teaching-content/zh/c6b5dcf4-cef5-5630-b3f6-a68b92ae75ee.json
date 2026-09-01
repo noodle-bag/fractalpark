@@ -1,0 +1,35 @@
+{
+  "schema": "fractalpark-teaching-locale/v1",
+  "formulaId": "c6b5dcf4-cef5-5630-b3f6-a68b92ae75ee",
+  "locale": "zh",
+  "sourceRevision": "5aa4f9b2c35d3bded213756bb80da01f95fef7ee766779a7f02090a1116a0e9a",
+  "semanticHash": "76d9f98f4a32eecaab99814d1209a6d87f10a53909a6bbfca13a1ea43b6e4d9c",
+  "englishContentHash": "bd0a67aadd387e376fc7ddc0026164d80801c0cbdd55def4b8419bc0b0736de7",
+  "overview": "在 FRM-like/1 中，invertedLambda 从 ismand 分支把 z 设为 0，否则设为 pixel 开始，循环首个节点是 oneMinusZ = (1, 0) - z，并以 |z| <= 256 限制迭代。请按源代码的实际顺序阅读这些操作。",
+  "sourceWalkthrough": {
+    "c6b5dcf4-cef5-5630-b3f6-a68b92ae75ee:5aa4f9b2c35d3bded213756bb80da01f95fef7ee766779a7f02090a1116a0e9a:initialization": "在 invertedLambda 中，初始化节点仅执行：ismand 分支把 z 设为 0，否则设为 pixel。",
+    "c6b5dcf4-cef5-5630-b3f6-a68b92ae75ee:5aa4f9b2c35d3bded213756bb80da01f95fef7ee766779a7f02090a1116a0e9a:iteration": "在 invertedLambda 中，此循环节点仅执行：oneMinusZ = (1, 0) - z。",
+    "c6b5dcf4-cef5-5630-b3f6-a68b92ae75ee:5aa4f9b2c35d3bded213756bb80da01f95fef7ee766779a7f02090a1116a0e9a:termination": "在 invertedLambda 中，bailout 节点仅测试：|z| <= 256。"
+  },
+  "syntaxFeatures": {
+    "initialization-flow": "在 invertedLambda 中，初始化特征聚焦 ismand 分支把 z 设为 0，否则设为 pixel 这一个起始操作。",
+    "iteration-flow": "在 invertedLambda 中，迭代特征聚焦 oneMinusZ = (1, 0) - z 这一个循环赋值。",
+    "bailout-test": "在 invertedLambda 中，终止特征聚焦比较 |z| <= 256。"
+  },
+  "parameterExperiment": {
+    "steps": [
+      "以固定参数平面基线渲染 invertedLambda：中心 (-0.5, 0)、缩放 0.4、旋转 0、96 次迭代。",
+      "除迭代次数外保持基线不变，以 48 次迭代再渲染一次，并与 96 次迭代的基线比较。"
+    ],
+    "expectedObservation": "在 invertedLambda 中，记录 48 次与 96 次迭代的比较是否出现差异，并标出源代码限制 |z| <= 256。"
+  },
+  "exercise": {
+    "prompt": "在 invertedLambda 中，找出三个注释：分别说明 ismand 分支把 z 设为 0，否则设为 pixel、oneMinusZ = (1, 0) - z 和 |z| <= 256，并解释为什么相邻语句不属于循环注释。",
+    "completionCheck": "在 invertedLambda 中，完成时应列出全部 3 个注释键，并准确说明 oneMinusZ = (1, 0) - z 与 |z| <= 256 的作用。"
+  },
+  "factsPresentation": {
+    "provenanceLead": "来源说明见英文事实单元。",
+    "rightsLead": "权利说明见英文事实单元。"
+  },
+  "contentHash": "304a15ec61df926080867039b6a037e0585d0743f127669ba32cc1d15d7c2439"
+}

@@ -1,0 +1,6124 @@
+{
+  "schema": "fractalpark-published-formula-directory/v1",
+  "revision": 1,
+  "authority": {
+    "decisionRevision": 4,
+    "publicationDecisionsContentHash": "cac35a05d2d0c219b4f5ac00f3dea5b5fbb2b9c6b2fc15ea3383ef0f62d6031d",
+    "classicExactSetContentHash": "be917e9d25d9fa082099747e2b6c35579fc004afde1ea27d38713d3054544320"
+  },
+  "sourceBindings": {
+    "identities": {
+      "path": "resources/formula-library/v1/standard-formula-ids.json",
+      "sha256": "b98bbc2b954871b227acfd7c882443cbeb44870931ddb4714c9aed3ffcf33729"
+    },
+    "aliases": {
+      "path": "resources/formula-library/v1/legacy-formula-aliases.json",
+      "sha256": "0b966ca5f5e238b9f5fe523caa082a682cfe51d1e6affeb945d580dba72842e8"
+    },
+    "decisions": {
+      "path": "resources/formula-library/v1/publication-decisions.json",
+      "sha256": "ed63d7fab46530ac61a2dfb562644b9d36c1d8f4a73128cc51c0c7fbcb625de6"
+    },
+    "runtime": {
+      "path": "public/formula-library/v1/runtime/published/index.json",
+      "sha256": "e912b1cb4ad884a6a021fd0d2683495e8ea61911d05c4135fbecaa335cade742"
+    },
+    "classic": {
+      "path": "resources/formula-library/v1/classic-formula-exact-set.v1.json",
+      "sha256": "d0ee66d5422cfd38fd1264b13b4673a627e29e3faf34799593ace46ccc10e4d5"
+    },
+    "catalog": {
+      "path": "src/engine/plugins/formula-catalog.ts",
+      "sha256": "14570ae82c6f1e659f7a4cfcc2318997df5080f981070c409e808cbd57bd58c2"
+    },
+    "formulaDocuments": {
+      "path": "src/lib/formula-documents.ts",
+      "sha256": "4b7222e21ff449290af47c529ff0c5ba01dd738827a2b3a4b09bea4822e6bf19"
+    }
+  },
+  "counts": {
+    "published": 534,
+    "classic": 94,
+    "guides": 21,
+    "categoryMemberships": 628,
+    "runtimeAliases": 94
+  },
+  "categoryOrder": [
+    "classic",
+    "algebraic-power",
+    "transcendental",
+    "function-composition",
+    "rational-reciprocal",
+    "orbit-memory",
+    "folded-absolute",
+    "root-finding"
+  ],
+  "categoryCounts": {
+    "classic": 94,
+    "algebraic-power": 190,
+    "transcendental": 104,
+    "function-composition": 94,
+    "rational-reciprocal": 61,
+    "orbit-memory": 45,
+    "folded-absolute": 26,
+    "root-finding": 14
+  },
+  "rows": [
+    {
+      "formulaId": "1cd7a16f-0474-5b8f-a974-e122ea893769",
+      "displayName": "3damand01",
+      "primaryFamily": "algebraic-power",
+      "categories": [
+        "algebraic-power"
+      ],
+      "canonicalPath": "/formulas/1cd7a16f-0474-5b8f-a974-e122ea893769",
+      "guideSlug": null
+    },
+    {
+      "formulaId": "9b51d265-8603-5613-9b2a-938430309021",
+      "displayName": "3damand02",
+      "primaryFamily": "algebraic-power",
+      "categories": [
+        "algebraic-power"
+      ],
+      "canonicalPath": "/formulas/9b51d265-8603-5613-9b2a-938430309021",
+      "guideSlug": null
+    },
+    {
+      "formulaId": "f36b3c6f-8676-55c3-8d21-6413d7db848f",
+      "displayName": "3rdim01",
+      "primaryFamily": "algebraic-power",
+      "categories": [
+        "algebraic-power"
+      ],
+      "canonicalPath": "/formulas/f36b3c6f-8676-55c3-8d21-6413d7db848f",
+      "guideSlug": null
+    },
+    {
+      "formulaId": "6bd676b3-4d37-597d-b780-b6028c91e3dc",
+      "displayName": "3rdim05",
+      "primaryFamily": "function-composition",
+      "categories": [
+        "function-composition"
+      ],
+      "canonicalPath": "/formulas/6bd676b3-4d37-597d-b780-b6028c91e3dc",
+      "guideSlug": null
+    },
+    {
+      "formulaId": "f2305da6-5fc0-59e4-8204-9b0adb61bc74",
+      "displayName": "a---mand",
+      "primaryFamily": "algebraic-power",
+      "categories": [
+        "algebraic-power"
+      ],
+      "canonicalPath": "/formulas/f2305da6-5fc0-59e4-8204-9b0adb61bc74",
+      "guideSlug": null
+    },
+    {
+      "formulaId": "0bdb9874-8e03-5804-b215-af22cc413c41",
+      "displayName": "a--mand",
+      "primaryFamily": "algebraic-power",
+      "categories": [
+        "algebraic-power"
+      ],
+      "canonicalPath": "/formulas/0bdb9874-8e03-5804-b215-af22cc413c41",
+      "guideSlug": null
+    },
+    {
+      "formulaId": "3aa12569-e267-56b6-b582-bf95b73fd1a4",
+      "displayName": "aa-c-to-z",
+      "primaryFamily": "transcendental",
+      "categories": [
+        "transcendental"
+      ],
+      "canonicalPath": "/formulas/3aa12569-e267-56b6-b582-bf95b73fd1a4",
+      "guideSlug": null
+    },
+    {
+      "formulaId": "4f44ec51-258e-5ac2-a579-9273cfe99080",
+      "displayName": "aa-z-to-c",
+      "primaryFamily": "transcendental",
+      "categories": [
+        "transcendental"
+      ],
+      "canonicalPath": "/formulas/4f44ec51-258e-5ac2-a579-9273cfe99080",
+      "guideSlug": null
+    },
+    {
+      "formulaId": "20e16f12-e0e9-5f56-9364-5c2b60c05f20",
+      "displayName": "aa-z-to-z",
+      "primaryFamily": "transcendental",
+      "categories": [
+        "transcendental"
+      ],
+      "canonicalPath": "/formulas/20e16f12-e0e9-5f56-9364-5c2b60c05f20",
+      "guideSlug": null
+    },
+    {
+      "formulaId": "f50a14b0-7031-5d9a-a9b8-f7bdee1b69a2",
+      "displayName": "aaa-dealsfix1",
+      "primaryFamily": "algebraic-power",
+      "categories": [
+        "algebraic-power"
+      ],
+      "canonicalPath": "/formulas/f50a14b0-7031-5d9a-a9b8-f7bdee1b69a2",
+      "guideSlug": null
+    },
+    {
+      "formulaId": "f9cfda9b-5757-5fa2-bd63-ca10c88a7295",
+      "displayName": "aaa-dealsfix2",
+      "primaryFamily": "algebraic-power",
+      "categories": [
+        "algebraic-power"
+      ],
+      "canonicalPath": "/formulas/f9cfda9b-5757-5fa2-bd63-ca10c88a7295",
+      "guideSlug": null
+    },
+    {
+      "formulaId": "c09b9dec-60a6-5a26-8f03-d5ea40f0d49b",
+      "displayName": "acoshJulia",
+      "primaryFamily": "transcendental",
+      "categories": [
+        "classic",
+        "transcendental"
+      ],
+      "canonicalPath": "/formulas/c09b9dec-60a6-5a26-8f03-d5ea40f0d49b",
+      "guideSlug": null
+    },
+    {
+      "formulaId": "cb9f75de-2acb-563b-9090-f58f17e65f92",
+      "displayName": "acoshMandelbrot",
+      "primaryFamily": "transcendental",
+      "categories": [
+        "classic",
+        "transcendental"
+      ],
+      "canonicalPath": "/formulas/cb9f75de-2acb-563b-9090-f58f17e65f92",
+      "guideSlug": null
+    },
+    {
+      "formulaId": "38c3b212-c33b-5dd3-aae5-a514fc7e37e3",
+      "displayName": "airship",
+      "primaryFamily": "folded-absolute",
+      "categories": [
+        "classic",
+        "folded-absolute"
+      ],
+      "canonicalPath": "/formulas/38c3b212-c33b-5dd3-aae5-a514fc7e37e3",
+      "guideSlug": "airship"
+    },
+    {
+      "formulaId": "42b369a5-2873-50e9-8684-cad5e60630ff",
+      "displayName": "airshipCubic",
+      "primaryFamily": "folded-absolute",
+      "categories": [
+        "classic",
+        "folded-absolute"
+      ],
+      "canonicalPath": "/formulas/42b369a5-2873-50e9-8684-cad5e60630ff",
+      "guideSlug": null
+    },
+    {
+      "formulaId": "92287c3c-4301-5481-9397-092a089de3af",
+      "displayName": "alt",
+      "primaryFamily": "orbit-memory",
+      "categories": [
+        "orbit-memory"
+      ],
+      "canonicalPath": "/formulas/92287c3c-4301-5481-9397-092a089de3af",
+      "guideSlug": null
+    },
+    {
+      "formulaId": "b6ccba60-aba6-5136-9c92-679ae55ba5ce",
+      "displayName": "asinhJulia",
+      "primaryFamily": "transcendental",
+      "categories": [
+        "classic",
+        "transcendental"
+      ],
+      "canonicalPath": "/formulas/b6ccba60-aba6-5136-9c92-679ae55ba5ce",
+      "guideSlug": null
+    },
+    {
+      "formulaId": "07a0afc6-ced5-5765-9314-fdb0ef593cb9",
+      "displayName": "asinhMandelbrot",
+      "primaryFamily": "transcendental",
+      "categories": [
+        "classic",
+        "transcendental"
+      ],
+      "canonicalPath": "/formulas/07a0afc6-ced5-5765-9314-fdb0ef593cb9",
+      "guideSlug": null
+    },
+    {
+      "formulaId": "88dd57cd-a348-55e8-983a-74c0acba57ae",
+      "displayName": "atanhJulia",
+      "primaryFamily": "transcendental",
+      "categories": [
+        "classic",
+        "transcendental"
+      ],
+      "canonicalPath": "/formulas/88dd57cd-a348-55e8-983a-74c0acba57ae",
+      "guideSlug": null
+    },
+    {
+      "formulaId": "ecee6e9d-a5c9-5b29-be39-edbe00e73c50",
+      "displayName": "atanhMandelbrot",
+      "primaryFamily": "transcendental",
+      "categories": [
+        "classic",
+        "transcendental"
+      ],
+      "canonicalPath": "/formulas/ecee6e9d-a5c9-5b29-be39-edbe00e73c50",
+      "guideSlug": null
+    },
+    {
+      "formulaId": "9e4246cb-bc41-57ba-9903-5c3dcc366cac",
+      "displayName": "bailout-a",
+      "primaryFamily": "function-composition",
+      "categories": [
+        "function-composition"
+      ],
+      "canonicalPath": "/formulas/9e4246cb-bc41-57ba-9903-5c3dcc366cac",
+      "guideSlug": null
+    },
+    {
+      "formulaId": "a8ec7595-53a9-52cc-994c-e4a09fe63d83",
+      "displayName": "bailout-b",
+      "primaryFamily": "function-composition",
+      "categories": [
+        "function-composition"
+      ],
+      "canonicalPath": "/formulas/a8ec7595-53a9-52cc-994c-e4a09fe63d83",
+      "guideSlug": null
+    },
+    {
+      "formulaId": "6409d7e7-7652-5222-865c-5367ff372d7d",
+      "displayName": "bailout-c",
+      "primaryFamily": "function-composition",
+      "categories": [
+        "function-composition"
+      ],
+      "canonicalPath": "/formulas/6409d7e7-7652-5222-865c-5367ff372d7d",
+      "guideSlug": null
+    },
+    {
+      "formulaId": "14d3cb89-d3e7-5bff-b848-af88c9a561ae",
+      "displayName": "bali",
+      "primaryFamily": "function-composition",
+      "categories": [
+        "classic",
+        "function-composition"
+      ],
+      "canonicalPath": "/formulas/14d3cb89-d3e7-5bff-b848-af88c9a561ae",
+      "guideSlug": null
+    },
+    {
+      "formulaId": "09288426-4968-5e78-9ab0-00607cc290bd",
+      "displayName": "birdofprey",
+      "primaryFamily": "function-composition",
+      "categories": [
+        "classic",
+        "function-composition"
+      ],
+      "canonicalPath": "/formulas/09288426-4968-5e78-9ab0-00607cc290bd",
+      "guideSlug": null
+    },
+    {
+      "formulaId": "a569d2c4-d397-5634-9dfe-21b2ab1a386a",
+      "displayName": "buffalo",
+      "primaryFamily": "folded-absolute",
+      "categories": [
+        "classic",
+        "folded-absolute"
+      ],
+      "canonicalPath": "/formulas/a569d2c4-d397-5634-9dfe-21b2ab1a386a",
+      "guideSlug": "buffalo"
+    },
+    {
+      "formulaId": "2ab193f5-4919-5e5c-a9fb-c1a0e3f5eb02",
+      "displayName": "burningShip",
+      "primaryFamily": "folded-absolute",
+      "categories": [
+        "classic",
+        "folded-absolute"
+      ],
+      "canonicalPath": "/formulas/2ab193f5-4919-5e5c-a9fb-c1a0e3f5eb02",
+      "guideSlug": "burning-ship"
+    },
+    {
+      "formulaId": "465a5b03-469d-59b3-8564-45af7564e37a",
+      "displayName": "burningShipCubic",
+      "primaryFamily": "folded-absolute",
+      "categories": [
+        "classic",
+        "folded-absolute"
+      ],
+      "canonicalPath": "/formulas/465a5b03-469d-59b3-8564-45af7564e37a",
+      "guideSlug": null
+    },
+    {
+      "formulaId": "33236fd9-4bd1-539b-961a-7b95ab92a1e0",
+      "displayName": "burningShipImag",
+      "primaryFamily": "folded-absolute",
+      "categories": [
+        "classic",
+        "folded-absolute"
+      ],
+      "canonicalPath": "/formulas/33236fd9-4bd1-539b-961a-7b95ab92a1e0",
+      "guideSlug": null
+    },
+    {
+      "formulaId": "46acfdeb-2dac-59c9-a94a-fd4809420dc2",
+      "displayName": "burningShipQuartic",
+      "primaryFamily": "folded-absolute",
+      "categories": [
+        "classic",
+        "folded-absolute"
+      ],
+      "canonicalPath": "/formulas/46acfdeb-2dac-59c9-a94a-fd4809420dc2",
+      "guideSlug": null
+    },
+    {
+      "formulaId": "a3ab1c2f-5940-51d3-8c13-58f7feeb084b",
+      "displayName": "cactus",
+      "primaryFamily": "algebraic-power",
+      "categories": [
+        "classic",
+        "algebraic-power"
+      ],
+      "canonicalPath": "/formulas/a3ab1c2f-5940-51d3-8c13-58f7feeb084b",
+      "guideSlug": null
+    },
+    {
+      "formulaId": "6df24dea-4668-5590-b251-c9bf208aa45d",
+      "displayName": "cardioid",
+      "primaryFamily": "algebraic-power",
+      "categories": [
+        "algebraic-power"
+      ],
+      "canonicalPath": "/formulas/6df24dea-4668-5590-b251-c9bf208aa45d",
+      "guideSlug": null
+    },
+    {
+      "formulaId": "8f661407-f2c9-57e5-8c01-9b63a3cd0493",
+      "displayName": "celticBurningShip",
+      "primaryFamily": "folded-absolute",
+      "categories": [
+        "classic",
+        "folded-absolute"
+      ],
+      "canonicalPath": "/formulas/8f661407-f2c9-57e5-8c01-9b63a3cd0493",
+      "guideSlug": null
+    },
+    {
+      "formulaId": "06223e69-6d8c-50ba-8e5d-b630d342d910",
+      "displayName": "celticMandelbar",
+      "primaryFamily": "folded-absolute",
+      "categories": [
+        "classic",
+        "folded-absolute"
+      ],
+      "canonicalPath": "/formulas/06223e69-6d8c-50ba-8e5d-b630d342d910",
+      "guideSlug": null
+    },
+    {
+      "formulaId": "09ee96d1-18a8-5dad-83e1-d05f0c59be4b",
+      "displayName": "chebyshev2",
+      "primaryFamily": "algebraic-power",
+      "categories": [
+        "classic",
+        "algebraic-power"
+      ],
+      "canonicalPath": "/formulas/09ee96d1-18a8-5dad-83e1-d05f0c59be4b",
+      "guideSlug": null
+    },
+    {
+      "formulaId": "e1220621-19f8-54ef-ad36-4220b5d7fedc",
+      "displayName": "chebyshev3",
+      "primaryFamily": "algebraic-power",
+      "categories": [
+        "classic",
+        "algebraic-power"
+      ],
+      "canonicalPath": "/formulas/e1220621-19f8-54ef-ad36-4220b5d7fedc",
+      "guideSlug": null
+    },
+    {
+      "formulaId": "18d30091-ce1c-5b10-b214-37eb4337df83",
+      "displayName": "chebyshev4",
+      "primaryFamily": "algebraic-power",
+      "categories": [
+        "classic",
+        "algebraic-power"
+      ],
+      "canonicalPath": "/formulas/18d30091-ce1c-5b10-b214-37eb4337df83",
+      "guideSlug": null
+    },
+    {
+      "formulaId": "34f41a82-3ede-5eda-8c1c-67962c37366b",
+      "displayName": "chebyshev5",
+      "primaryFamily": "algebraic-power",
+      "categories": [
+        "classic",
+        "algebraic-power"
+      ],
+      "canonicalPath": "/formulas/34f41a82-3ede-5eda-8c1c-67962c37366b",
+      "guideSlug": null
+    },
+    {
+      "formulaId": "6c1385a9-2d23-5816-90d1-2752905fc353",
+      "displayName": "circleInversion",
+      "primaryFamily": "rational-reciprocal",
+      "categories": [
+        "classic",
+        "rational-reciprocal"
+      ],
+      "canonicalPath": "/formulas/6c1385a9-2d23-5816-90d1-2752905fc353",
+      "guideSlug": "circle-inversion"
+    },
+    {
+      "formulaId": "8eb342fe-8a05-524e-8b98-35cdc8af5be3",
+      "displayName": "collatz",
+      "primaryFamily": "transcendental",
+      "categories": [
+        "classic",
+        "transcendental"
+      ],
+      "canonicalPath": "/formulas/8eb342fe-8a05-524e-8b98-35cdc8af5be3",
+      "guideSlug": null
+    },
+    {
+      "formulaId": "62098934-def3-527a-ac43-2c80449c9848",
+      "displayName": "coshJulia",
+      "primaryFamily": "transcendental",
+      "categories": [
+        "classic",
+        "transcendental"
+      ],
+      "canonicalPath": "/formulas/62098934-def3-527a-ac43-2c80449c9848",
+      "guideSlug": null
+    },
+    {
+      "formulaId": "201c54f3-a77a-5be0-a0a5-6f4f1998ee6d",
+      "displayName": "coshMandelb",
+      "primaryFamily": "transcendental",
+      "categories": [
+        "classic",
+        "transcendental"
+      ],
+      "canonicalPath": "/formulas/201c54f3-a77a-5be0-a0a5-6f4f1998ee6d",
+      "guideSlug": "cosh-mandelbrot"
+    },
+    {
+      "formulaId": "d89f722f-35fe-587a-bee9-efdf05885728",
+      "displayName": "coshSinh",
+      "primaryFamily": "transcendental",
+      "categories": [
+        "classic",
+        "transcendental"
+      ],
+      "canonicalPath": "/formulas/d89f722f-35fe-587a-bee9-efdf05885728",
+      "guideSlug": null
+    },
+    {
+      "formulaId": "3edbea29-956a-5900-9aa7-02ccc2183016",
+      "displayName": "cosJulia",
+      "primaryFamily": "transcendental",
+      "categories": [
+        "classic",
+        "transcendental"
+      ],
+      "canonicalPath": "/formulas/3edbea29-956a-5900-9aa7-02ccc2183016",
+      "guideSlug": null
+    },
+    {
+      "formulaId": "9f301c01-13fa-57b4-a3b2-99add821bfb0",
+      "displayName": "cosMandelb",
+      "primaryFamily": "transcendental",
+      "categories": [
+        "classic",
+        "transcendental"
+      ],
+      "canonicalPath": "/formulas/9f301c01-13fa-57b4-a3b2-99add821bfb0",
+      "guideSlug": null
+    },
+    {
+      "formulaId": "8f9eb07a-b405-5d9c-8b6a-9447ad7165b0",
+      "displayName": "cothJulia",
+      "primaryFamily": "transcendental",
+      "categories": [
+        "classic",
+        "transcendental"
+      ],
+      "canonicalPath": "/formulas/8f9eb07a-b405-5d9c-8b6a-9447ad7165b0",
+      "guideSlug": null
+    },
+    {
+      "formulaId": "ebe7d5f6-7f65-50cc-b03b-f208d78c955a",
+      "displayName": "cothMandelbrot",
+      "primaryFamily": "transcendental",
+      "categories": [
+        "classic",
+        "transcendental"
+      ],
+      "canonicalPath": "/formulas/ebe7d5f6-7f65-50cc-b03b-f208d78c955a",
+      "guideSlug": null
+    },
+    {
+      "formulaId": "17b83663-a502-5e34-bd4c-a116e49eab5f",
+      "displayName": "cubic",
+      "primaryFamily": "algebraic-power",
+      "categories": [
+        "algebraic-power"
+      ],
+      "canonicalPath": "/formulas/17b83663-a502-5e34-bd4c-a116e49eab5f",
+      "guideSlug": null
+    },
+    {
+      "formulaId": "34fcff23-f75a-539c-9102-181945abee60",
+      "displayName": "cubicMandelbrot",
+      "primaryFamily": "algebraic-power",
+      "categories": [
+        "classic",
+        "algebraic-power"
+      ],
+      "canonicalPath": "/formulas/34fcff23-f75a-539c-9102-181945abee60",
+      "guideSlug": null
+    },
+    {
+      "formulaId": "e375f423-dfa4-54bf-9d56-c41215f4f72a",
+      "displayName": "cubicPerpendicularMandelbrot",
+      "primaryFamily": "folded-absolute",
+      "categories": [
+        "classic",
+        "folded-absolute"
+      ],
+      "canonicalPath": "/formulas/e375f423-dfa4-54bf-9d56-c41215f4f72a",
+      "guideSlug": null
+    },
+    {
+      "formulaId": "7c45552a-cb92-5510-a7bb-25dbd60a8ff3",
+      "displayName": "dafrm09",
+      "primaryFamily": "function-composition",
+      "categories": [
+        "function-composition"
+      ],
+      "canonicalPath": "/formulas/7c45552a-cb92-5510-a7bb-25dbd60a8ff3",
+      "guideSlug": null
+    },
+    {
+      "formulaId": "bdd74323-97f3-5fe8-a9b7-951f7a72dc9e",
+      "displayName": "daisy",
+      "primaryFamily": "algebraic-power",
+      "categories": [
+        "algebraic-power"
+      ],
+      "canonicalPath": "/formulas/bdd74323-97f3-5fe8-a9b7-951f7a72dc9e",
+      "guideSlug": null
+    },
+    {
+      "formulaId": "c02008d3-60b8-5494-99eb-bdec331227ca",
+      "displayName": "deepspaceprobe",
+      "primaryFamily": "function-composition",
+      "categories": [
+        "function-composition"
+      ],
+      "canonicalPath": "/formulas/c02008d3-60b8-5494-99eb-bdec331227ca",
+      "guideSlug": null
+    },
+    {
+      "formulaId": "c91835ba-9dcc-559c-85fb-0e456ca9987d",
+      "displayName": "deepspaceprobec",
+      "primaryFamily": "function-composition",
+      "categories": [
+        "function-composition"
+      ],
+      "canonicalPath": "/formulas/c91835ba-9dcc-559c-85fb-0e456ca9987d",
+      "guideSlug": null
+    },
+    {
+      "formulaId": "f02ad930-de3d-5aac-b19c-8a904a8ca72a",
+      "displayName": "deltalog",
+      "primaryFamily": "algebraic-power",
+      "categories": [
+        "algebraic-power"
+      ],
+      "canonicalPath": "/formulas/f02ad930-de3d-5aac-b19c-8a904a8ca72a",
+      "guideSlug": null
+    },
+    {
+      "formulaId": "d170fae4-0295-5149-84e8-acf7254c7162",
+      "displayName": "dissected-a",
+      "primaryFamily": "algebraic-power",
+      "categories": [
+        "algebraic-power"
+      ],
+      "canonicalPath": "/formulas/d170fae4-0295-5149-84e8-acf7254c7162",
+      "guideSlug": null
+    },
+    {
+      "formulaId": "9e88fbd0-1e8e-5257-8294-8a872d9e4aab",
+      "displayName": "dissected-b",
+      "primaryFamily": "function-composition",
+      "categories": [
+        "function-composition"
+      ],
+      "canonicalPath": "/formulas/9e88fbd0-1e8e-5257-8294-8a872d9e4aab",
+      "guideSlug": null
+    },
+    {
+      "formulaId": "a903b5ad-0378-5e5f-ab42-f1bfe15b919c",
+      "displayName": "dots",
+      "primaryFamily": "algebraic-power",
+      "categories": [
+        "algebraic-power"
+      ],
+      "canonicalPath": "/formulas/a903b5ad-0378-5e5f-ab42-f1bfe15b919c",
+      "guideSlug": null
+    },
+    {
+      "formulaId": "54cc5b4b-9710-5995-a216-8f4c61ff1c02",
+      "displayName": "dragon",
+      "primaryFamily": "algebraic-power",
+      "categories": [
+        "classic",
+        "algebraic-power"
+      ],
+      "canonicalPath": "/formulas/54cc5b4b-9710-5995-a216-8f4c61ff1c02",
+      "guideSlug": null
+    },
+    {
+      "formulaId": "138723af-2481-5634-9a31-2cfabdc0094a",
+      "displayName": "drchaosbrot",
+      "primaryFamily": "algebraic-power",
+      "categories": [
+        "algebraic-power"
+      ],
+      "canonicalPath": "/formulas/138723af-2481-5634-9a31-2cfabdc0094a",
+      "guideSlug": null
+    },
+    {
+      "formulaId": "32152c27-d299-585c-9ff9-bf236b575486",
+      "displayName": "element",
+      "primaryFamily": "algebraic-power",
+      "categories": [
+        "algebraic-power"
+      ],
+      "canonicalPath": "/formulas/32152c27-d299-585c-9ff9-bf236b575486",
+      "guideSlug": null
+    },
+    {
+      "formulaId": "97e2fc76-3590-5119-8b38-d8cc43f18d74",
+      "displayName": "ent",
+      "primaryFamily": "transcendental",
+      "categories": [
+        "transcendental"
+      ],
+      "canonicalPath": "/formulas/97e2fc76-3590-5119-8b38-d8cc43f18d74",
+      "guideSlug": null
+    },
+    {
+      "formulaId": "f978281a-4cea-5545-a9c6-7ca68ca084f0",
+      "displayName": "ent2",
+      "primaryFamily": "function-composition",
+      "categories": [
+        "function-composition"
+      ],
+      "canonicalPath": "/formulas/f978281a-4cea-5545-a9c6-7ca68ca084f0",
+      "guideSlug": null
+    },
+    {
+      "formulaId": "c57b91ae-e899-5fef-99b4-dc2ae3e0d9cd",
+      "displayName": "evileyec",
+      "primaryFamily": "function-composition",
+      "categories": [
+        "function-composition"
+      ],
+      "canonicalPath": "/formulas/c57b91ae-e899-5fef-99b4-dc2ae3e0d9cd",
+      "guideSlug": null
+    },
+    {
+      "formulaId": "af500910-46ce-5a43-b430-c0154cc05959",
+      "displayName": "expMandelbrot",
+      "primaryFamily": "transcendental",
+      "categories": [
+        "classic",
+        "transcendental"
+      ],
+      "canonicalPath": "/formulas/af500910-46ce-5a43-b430-c0154cc05959",
+      "guideSlug": null
+    },
+    {
+      "formulaId": "4648b165-1bb6-5b33-a7ff-3f3518e2a984",
+      "displayName": "f'liar1d",
+      "primaryFamily": "folded-absolute",
+      "categories": [
+        "folded-absolute"
+      ],
+      "canonicalPath": "/formulas/4648b165-1bb6-5b33-a7ff-3f3518e2a984",
+      "guideSlug": null
+    },
+    {
+      "formulaId": "fd4db987-1bd3-5ab0-983f-9a9bb01d0304",
+      "displayName": "fatso",
+      "primaryFamily": "function-composition",
+      "categories": [
+        "function-composition"
+      ],
+      "canonicalPath": "/formulas/fd4db987-1bd3-5ab0-983f-9a9bb01d0304",
+      "guideSlug": null
+    },
+    {
+      "formulaId": "54319a01-cd74-5064-aaa0-9e3a57fd201c",
+      "displayName": "fibo-a",
+      "primaryFamily": "orbit-memory",
+      "categories": [
+        "orbit-memory"
+      ],
+      "canonicalPath": "/formulas/54319a01-cd74-5064-aaa0-9e3a57fd201c",
+      "guideSlug": null
+    },
+    {
+      "formulaId": "cca1c833-de83-5b34-9aa8-cd1750b28354",
+      "displayName": "fibo-b",
+      "primaryFamily": "orbit-memory",
+      "categories": [
+        "orbit-memory"
+      ],
+      "canonicalPath": "/formulas/cca1c833-de83-5b34-9aa8-cd1750b28354",
+      "guideSlug": null
+    },
+    {
+      "formulaId": "e44558f3-a2cf-5a16-a6cb-6ac4452a6832",
+      "displayName": "five-mandels",
+      "primaryFamily": "orbit-memory",
+      "categories": [
+        "orbit-memory"
+      ],
+      "canonicalPath": "/formulas/e44558f3-a2cf-5a16-a6cb-6ac4452a6832",
+      "guideSlug": null
+    },
+    {
+      "formulaId": "74a7ad74-f5bd-5e11-8c33-5887487d5180",
+      "displayName": "flip0_man_m",
+      "primaryFamily": "algebraic-power",
+      "categories": [
+        "algebraic-power"
+      ],
+      "canonicalPath": "/formulas/74a7ad74-f5bd-5e11-8c33-5887487d5180",
+      "guideSlug": null
+    },
+    {
+      "formulaId": "8a2b9778-56df-5da9-a9fc-f47f4ec5820a",
+      "displayName": "flip1_man_j",
+      "primaryFamily": "orbit-memory",
+      "categories": [
+        "orbit-memory"
+      ],
+      "canonicalPath": "/formulas/8a2b9778-56df-5da9-a9fc-f47f4ec5820a",
+      "guideSlug": null
+    },
+    {
+      "formulaId": "070664be-6b62-5383-938f-4f89e73df367",
+      "displayName": "flip1_man_m",
+      "primaryFamily": "orbit-memory",
+      "categories": [
+        "orbit-memory"
+      ],
+      "canonicalPath": "/formulas/070664be-6b62-5383-938f-4f89e73df367",
+      "guideSlug": null
+    },
+    {
+      "formulaId": "aca5a897-d01b-5a45-85e9-d1be3d137293",
+      "displayName": "flip2_man_j",
+      "primaryFamily": "orbit-memory",
+      "categories": [
+        "orbit-memory"
+      ],
+      "canonicalPath": "/formulas/aca5a897-d01b-5a45-85e9-d1be3d137293",
+      "guideSlug": null
+    },
+    {
+      "formulaId": "04338d55-9f3d-574a-8fb6-58ec7d530cc5",
+      "displayName": "flip2_man_m",
+      "primaryFamily": "orbit-memory",
+      "categories": [
+        "orbit-memory"
+      ],
+      "canonicalPath": "/formulas/04338d55-9f3d-574a-8fb6-58ec7d530cc5",
+      "guideSlug": null
+    },
+    {
+      "formulaId": "a52047b7-4e94-55ef-9b8a-9033bcf17a09",
+      "displayName": "flip3_man_j",
+      "primaryFamily": "rational-reciprocal",
+      "categories": [
+        "rational-reciprocal"
+      ],
+      "canonicalPath": "/formulas/a52047b7-4e94-55ef-9b8a-9033bcf17a09",
+      "guideSlug": null
+    },
+    {
+      "formulaId": "31680a23-4d7e-5844-a598-9682609d0ade",
+      "displayName": "flip3_man_m",
+      "primaryFamily": "rational-reciprocal",
+      "categories": [
+        "rational-reciprocal"
+      ],
+      "canonicalPath": "/formulas/31680a23-4d7e-5844-a598-9682609d0ade",
+      "guideSlug": null
+    },
+    {
+      "formulaId": "0b667736-2930-56c9-ba2b-f5c1f4f76d58",
+      "displayName": "fliplambdaj",
+      "primaryFamily": "algebraic-power",
+      "categories": [
+        "algebraic-power"
+      ],
+      "canonicalPath": "/formulas/0b667736-2930-56c9-ba2b-f5c1f4f76d58",
+      "guideSlug": null
+    },
+    {
+      "formulaId": "06504747-8ee8-5c39-869b-8b3a992e8c24",
+      "displayName": "flyc",
+      "primaryFamily": "function-composition",
+      "categories": [
+        "function-composition"
+      ],
+      "canonicalPath": "/formulas/06504747-8ee8-5c39-869b-8b3a992e8c24",
+      "guideSlug": null
+    },
+    {
+      "formulaId": "26d168e6-cb44-5e94-a3f2-e5fd65528034",
+      "displayName": "flyingsquirrel",
+      "primaryFamily": "rational-reciprocal",
+      "categories": [
+        "rational-reciprocal"
+      ],
+      "canonicalPath": "/formulas/26d168e6-cb44-5e94-a3f2-e5fd65528034",
+      "guideSlug": null
+    },
+    {
+      "formulaId": "a0295fbb-2275-53db-b59d-c969cd722c8c",
+      "displayName": "flyingsquirrelc",
+      "primaryFamily": "rational-reciprocal",
+      "categories": [
+        "rational-reciprocal"
+      ],
+      "canonicalPath": "/formulas/a0295fbb-2275-53db-b59d-c969cd722c8c",
+      "guideSlug": null
+    },
+    {
+      "formulaId": "a89c54bd-2f5c-5aac-95d2-450a07212850",
+      "displayName": "fndog",
+      "primaryFamily": "function-composition",
+      "categories": [
+        "function-composition"
+      ],
+      "canonicalPath": "/formulas/a89c54bd-2f5c-5aac-95d2-450a07212850",
+      "guideSlug": null
+    },
+    {
+      "formulaId": "2eec1b15-ca6a-5817-bba6-8766396b3d18",
+      "displayName": "fractalfender",
+      "primaryFamily": "function-composition",
+      "categories": [
+        "function-composition"
+      ],
+      "canonicalPath": "/formulas/2eec1b15-ca6a-5817-bba6-8766396b3d18",
+      "guideSlug": null
+    },
+    {
+      "formulaId": "fd6c2fac-31db-55f1-9d93-726bd261671d",
+      "displayName": "fractalfenderca",
+      "primaryFamily": "transcendental",
+      "categories": [
+        "transcendental"
+      ],
+      "canonicalPath": "/formulas/fd6c2fac-31db-55f1-9d93-726bd261671d",
+      "guideSlug": null
+    },
+    {
+      "formulaId": "f7a06a52-361c-598f-bf99-5e55a0047f1f",
+      "displayName": "frame-rbtm",
+      "primaryFamily": "algebraic-power",
+      "categories": [
+        "algebraic-power"
+      ],
+      "canonicalPath": "/formulas/f7a06a52-361c-598f-bf99-5e55a0047f1f",
+      "guideSlug": null
+    },
+    {
+      "formulaId": "1cf46735-3e73-51f5-b752-48040233a417",
+      "displayName": "frm-a",
+      "primaryFamily": "algebraic-power",
+      "categories": [
+        "algebraic-power"
+      ],
+      "canonicalPath": "/formulas/1cf46735-3e73-51f5-b752-48040233a417",
+      "guideSlug": null
+    },
+    {
+      "formulaId": "c0d25070-a434-5c38-aafc-caf0ee114f67",
+      "displayName": "frm-b",
+      "primaryFamily": "function-composition",
+      "categories": [
+        "function-composition"
+      ],
+      "canonicalPath": "/formulas/c0d25070-a434-5c38-aafc-caf0ee114f67",
+      "guideSlug": null
+    },
+    {
+      "formulaId": "34325634-553e-5841-9ae0-bcb17954060c",
+      "displayName": "frm-c1",
+      "primaryFamily": "algebraic-power",
+      "categories": [
+        "algebraic-power"
+      ],
+      "canonicalPath": "/formulas/34325634-553e-5841-9ae0-bcb17954060c",
+      "guideSlug": null
+    },
+    {
+      "formulaId": "ae504daa-09cc-5a59-8052-c91b9535ff24",
+      "displayName": "frm-c2",
+      "primaryFamily": "algebraic-power",
+      "categories": [
+        "algebraic-power"
+      ],
+      "canonicalPath": "/formulas/ae504daa-09cc-5a59-8052-c91b9535ff24",
+      "guideSlug": null
+    },
+    {
+      "formulaId": "1bb379a2-3588-53f8-a3ab-e52021c78054",
+      "displayName": "frm-d2",
+      "primaryFamily": "transcendental",
+      "categories": [
+        "transcendental"
+      ],
+      "canonicalPath": "/formulas/1bb379a2-3588-53f8-a3ab-e52021c78054",
+      "guideSlug": null
+    },
+    {
+      "formulaId": "1f5b5a3a-0b63-527a-a408-e7b45d377cb2",
+      "displayName": "frog",
+      "primaryFamily": "function-composition",
+      "categories": [
+        "function-composition"
+      ],
+      "canonicalPath": "/formulas/1f5b5a3a-0b63-527a-a408-e7b45d377cb2",
+      "guideSlug": null
+    },
+    {
+      "formulaId": "242e6b7b-932d-5d58-b095-278dc7506144",
+      "displayName": "frogc",
+      "primaryFamily": "function-composition",
+      "categories": [
+        "function-composition"
+      ],
+      "canonicalPath": "/formulas/242e6b7b-932d-5d58-b095-278dc7506144",
+      "guideSlug": null
+    },
+    {
+      "formulaId": "56935004-bdb8-5682-974f-3821cd422965",
+      "displayName": "frothyBasin",
+      "primaryFamily": "algebraic-power",
+      "categories": [
+        "classic",
+        "algebraic-power"
+      ],
+      "canonicalPath": "/formulas/56935004-bdb8-5682-974f-3821cd422965",
+      "guideSlug": null
+    },
+    {
+      "formulaId": "dbf387b3-2c00-5e84-a781-01742fcf893b",
+      "displayName": "frrbtgenm",
+      "primaryFamily": "algebraic-power",
+      "categories": [
+        "algebraic-power"
+      ],
+      "canonicalPath": "/formulas/dbf387b3-2c00-5e84-a781-01742fcf893b",
+      "guideSlug": null
+    },
+    {
+      "formulaId": "1586a75a-acb4-533b-a3e5-a92eca3acbc9",
+      "displayName": "fzpcocoh",
+      "primaryFamily": "transcendental",
+      "categories": [
+        "transcendental"
+      ],
+      "canonicalPath": "/formulas/1586a75a-acb4-533b-a3e5-a92eca3acbc9",
+      "guideSlug": null
+    },
+    {
+      "formulaId": "df5e06a1-1983-5ce5-90df-9b545d112551",
+      "displayName": "fzpcopch",
+      "primaryFamily": "transcendental",
+      "categories": [
+        "transcendental"
+      ],
+      "canonicalPath": "/formulas/df5e06a1-1983-5ce5-90df-9b545d112551",
+      "guideSlug": null
+    },
+    {
+      "formulaId": "88887758-7d89-5be3-b0ef-6cdbdc9f5825",
+      "displayName": "fzpcopcs",
+      "primaryFamily": "transcendental",
+      "categories": [
+        "transcendental"
+      ],
+      "canonicalPath": "/formulas/88887758-7d89-5be3-b0ef-6cdbdc9f5825",
+      "guideSlug": null
+    },
+    {
+      "formulaId": "93102e86-d35b-53f2-8569-47a4a20a656d",
+      "displayName": "fzpcophs",
+      "primaryFamily": "transcendental",
+      "categories": [
+        "transcendental"
+      ],
+      "canonicalPath": "/formulas/93102e86-d35b-53f2-8569-47a4a20a656d",
+      "guideSlug": null
+    },
+    {
+      "formulaId": "c18f4721-75e2-5ea4-81a0-95b8c49dfc86",
+      "displayName": "fzpcopse",
+      "primaryFamily": "transcendental",
+      "categories": [
+        "transcendental"
+      ],
+      "canonicalPath": "/formulas/c18f4721-75e2-5ea4-81a0-95b8c49dfc86",
+      "guideSlug": null
+    },
+    {
+      "formulaId": "fdbbc343-f4c3-5eb4-94de-f5a1d9ef2525",
+      "displayName": "fzpcopsh",
+      "primaryFamily": "transcendental",
+      "categories": [
+        "transcendental"
+      ],
+      "canonicalPath": "/formulas/fdbbc343-f4c3-5eb4-94de-f5a1d9ef2525",
+      "guideSlug": null
+    },
+    {
+      "formulaId": "09d9b20b-7e97-5d87-a883-e1c4435effa3",
+      "displayName": "fzpcopta",
+      "primaryFamily": "transcendental",
+      "categories": [
+        "transcendental"
+      ],
+      "canonicalPath": "/formulas/09d9b20b-7e97-5d87-a883-e1c4435effa3",
+      "guideSlug": null
+    },
+    {
+      "formulaId": "9b116c1f-4bb9-5788-83db-7aecb0b03404",
+      "displayName": "fzpcopth",
+      "primaryFamily": "transcendental",
+      "categories": [
+        "transcendental"
+      ],
+      "canonicalPath": "/formulas/9b116c1f-4bb9-5788-83db-7aecb0b03404",
+      "guideSlug": null
+    },
+    {
+      "formulaId": "bcde4dcc-ca1c-52cb-b5b2-b917aca39761",
+      "displayName": "fzpcoseh",
+      "primaryFamily": "transcendental",
+      "categories": [
+        "transcendental"
+      ],
+      "canonicalPath": "/formulas/bcde4dcc-ca1c-52cb-b5b2-b917aca39761",
+      "guideSlug": null
+    },
+    {
+      "formulaId": "0672aed0-1fd1-5acd-9263-a52d5680d3b4",
+      "displayName": "fzpfncoh",
+      "primaryFamily": "function-composition",
+      "categories": [
+        "function-composition"
+      ],
+      "canonicalPath": "/formulas/0672aed0-1fd1-5acd-9263-a52d5680d3b4",
+      "guideSlug": null
+    },
+    {
+      "formulaId": "9523e03d-c417-590e-8d03-ebaabe392327",
+      "displayName": "fzpfnseh",
+      "primaryFamily": "function-composition",
+      "categories": [
+        "function-composition"
+      ],
+      "canonicalPath": "/formulas/9523e03d-c417-590e-8d03-ebaabe392327",
+      "guideSlug": null
+    },
+    {
+      "formulaId": "68753107-933c-565b-8833-052a2886fa86",
+      "displayName": "fzppchco",
+      "primaryFamily": "transcendental",
+      "categories": [
+        "transcendental"
+      ],
+      "canonicalPath": "/formulas/68753107-933c-565b-8833-052a2886fa86",
+      "guideSlug": null
+    },
+    {
+      "formulaId": "23d2bc83-a564-5890-b438-307333cbcf68",
+      "displayName": "fzppchex",
+      "primaryFamily": "transcendental",
+      "categories": [
+        "transcendental"
+      ],
+      "canonicalPath": "/formulas/23d2bc83-a564-5890-b438-307333cbcf68",
+      "guideSlug": null
+    },
+    {
+      "formulaId": "1ecff9ef-b771-589a-a804-9eb223f43f60",
+      "displayName": "fzppchlo",
+      "primaryFamily": "transcendental",
+      "categories": [
+        "transcendental"
+      ],
+      "canonicalPath": "/formulas/1ecff9ef-b771-589a-a804-9eb223f43f60",
+      "guideSlug": null
+    },
+    {
+      "formulaId": "363cdbd3-c78f-5187-9ab1-74c2020b504e",
+      "displayName": "fzppcoch",
+      "primaryFamily": "transcendental",
+      "categories": [
+        "transcendental"
+      ],
+      "canonicalPath": "/formulas/363cdbd3-c78f-5187-9ab1-74c2020b504e",
+      "guideSlug": null
+    },
+    {
+      "formulaId": "0b6fa82f-3b3a-584f-acaf-d51fe7f0f6aa",
+      "displayName": "fzppcocs",
+      "primaryFamily": "transcendental",
+      "categories": [
+        "transcendental"
+      ],
+      "canonicalPath": "/formulas/0b6fa82f-3b3a-584f-acaf-d51fe7f0f6aa",
+      "guideSlug": null
+    },
+    {
+      "formulaId": "028a6158-e5dd-5d63-a5a7-5db2e3f7d87d",
+      "displayName": "fzppcoct",
+      "primaryFamily": "transcendental",
+      "categories": [
+        "transcendental"
+      ],
+      "canonicalPath": "/formulas/028a6158-e5dd-5d63-a5a7-5db2e3f7d87d",
+      "guideSlug": null
+    },
+    {
+      "formulaId": "2827125f-9ac7-585e-9f38-d8067abb8474",
+      "displayName": "fzppcoex",
+      "primaryFamily": "transcendental",
+      "categories": [
+        "transcendental"
+      ],
+      "canonicalPath": "/formulas/2827125f-9ac7-585e-9f38-d8067abb8474",
+      "guideSlug": null
+    },
+    {
+      "formulaId": "2515834d-dd11-5f8a-afb7-0ac9908a3c0a",
+      "displayName": "fzppcohs",
+      "primaryFamily": "transcendental",
+      "categories": [
+        "transcendental"
+      ],
+      "canonicalPath": "/formulas/2515834d-dd11-5f8a-afb7-0ac9908a3c0a",
+      "guideSlug": null
+    },
+    {
+      "formulaId": "8cde6ebb-f5cc-577e-8abc-9e4d20c1d994",
+      "displayName": "fzppcoht",
+      "primaryFamily": "transcendental",
+      "categories": [
+        "transcendental"
+      ],
+      "canonicalPath": "/formulas/8cde6ebb-f5cc-577e-8abc-9e4d20c1d994",
+      "guideSlug": null
+    },
+    {
+      "formulaId": "063f210d-e292-53a5-aab5-15150eb12ce2",
+      "displayName": "fzppcolo",
+      "primaryFamily": "transcendental",
+      "categories": [
+        "transcendental"
+      ],
+      "canonicalPath": "/formulas/063f210d-e292-53a5-aab5-15150eb12ce2",
+      "guideSlug": null
+    },
+    {
+      "formulaId": "dc949eb5-0f2b-576b-a102-d2015d463a7b",
+      "displayName": "fzppcopc",
+      "primaryFamily": "transcendental",
+      "categories": [
+        "transcendental"
+      ],
+      "canonicalPath": "/formulas/dc949eb5-0f2b-576b-a102-d2015d463a7b",
+      "guideSlug": null
+    },
+    {
+      "formulaId": "1faac719-6536-5496-a61c-f7c739b78f12",
+      "displayName": "fzppcope",
+      "primaryFamily": "transcendental",
+      "categories": [
+        "transcendental"
+      ],
+      "canonicalPath": "/formulas/1faac719-6536-5496-a61c-f7c739b78f12",
+      "guideSlug": null
+    },
+    {
+      "formulaId": "bfb1ea12-9b8e-512b-830e-06ef19a94198",
+      "displayName": "fzppcopo",
+      "primaryFamily": "transcendental",
+      "categories": [
+        "transcendental"
+      ],
+      "canonicalPath": "/formulas/bfb1ea12-9b8e-512b-830e-06ef19a94198",
+      "guideSlug": null
+    },
+    {
+      "formulaId": "d9bc4e37-3fc6-5fa1-b334-e136b94b1e8c",
+      "displayName": "fzppcopr",
+      "primaryFamily": "transcendental",
+      "categories": [
+        "transcendental"
+      ],
+      "canonicalPath": "/formulas/d9bc4e37-3fc6-5fa1-b334-e136b94b1e8c",
+      "guideSlug": null
+    },
+    {
+      "formulaId": "91653f7a-de43-5f1e-ab4d-c98f815b879b",
+      "displayName": "fzppcops",
+      "primaryFamily": "transcendental",
+      "categories": [
+        "transcendental"
+      ],
+      "canonicalPath": "/formulas/91653f7a-de43-5f1e-ab4d-c98f815b879b",
+      "guideSlug": null
+    },
+    {
+      "formulaId": "ec9ca8e4-66ef-5b97-a706-9164d2b03622",
+      "displayName": "fzppcore",
+      "primaryFamily": "transcendental",
+      "categories": [
+        "transcendental"
+      ],
+      "canonicalPath": "/formulas/ec9ca8e4-66ef-5b97-a706-9164d2b03622",
+      "guideSlug": null
+    },
+    {
+      "formulaId": "23808fdd-db5b-5dc8-87bd-19c42d2a5065",
+      "displayName": "fzppcos",
+      "primaryFamily": "transcendental",
+      "categories": [
+        "transcendental"
+      ],
+      "canonicalPath": "/formulas/23808fdd-db5b-5dc8-87bd-19c42d2a5065",
+      "guideSlug": null
+    },
+    {
+      "formulaId": "2826b57e-ae1a-564b-a17d-6ae3beedd30b",
+      "displayName": "fzppcose",
+      "primaryFamily": "transcendental",
+      "categories": [
+        "transcendental"
+      ],
+      "canonicalPath": "/formulas/2826b57e-ae1a-564b-a17d-6ae3beedd30b",
+      "guideSlug": null
+    },
+    {
+      "formulaId": "769fa5c9-0c91-5628-8971-eff383502158",
+      "displayName": "fzppcosh",
+      "primaryFamily": "transcendental",
+      "categories": [
+        "transcendental"
+      ],
+      "canonicalPath": "/formulas/769fa5c9-0c91-5628-8971-eff383502158",
+      "guideSlug": null
+    },
+    {
+      "formulaId": "aa007826-291a-5969-8563-5b4c97cec10b",
+      "displayName": "fzppcosi",
+      "primaryFamily": "transcendental",
+      "categories": [
+        "transcendental"
+      ],
+      "canonicalPath": "/formulas/aa007826-291a-5969-8563-5b4c97cec10b",
+      "guideSlug": null
+    },
+    {
+      "formulaId": "b926b11a-815d-535c-b91c-facfb9399b21",
+      "displayName": "fzppcosq",
+      "primaryFamily": "transcendental",
+      "categories": [
+        "transcendental"
+      ],
+      "canonicalPath": "/formulas/b926b11a-815d-535c-b91c-facfb9399b21",
+      "guideSlug": null
+    },
+    {
+      "formulaId": "ca6f9430-10c2-5d79-92dc-852c97c2feb9",
+      "displayName": "fzppexch",
+      "primaryFamily": "transcendental",
+      "categories": [
+        "transcendental"
+      ],
+      "canonicalPath": "/formulas/ca6f9430-10c2-5d79-92dc-852c97c2feb9",
+      "guideSlug": null
+    },
+    {
+      "formulaId": "c1a0a2a9-d5d5-5f53-8d0b-64c49ce9162f",
+      "displayName": "fzppexco",
+      "primaryFamily": "transcendental",
+      "categories": [
+        "transcendental"
+      ],
+      "canonicalPath": "/formulas/c1a0a2a9-d5d5-5f53-8d0b-64c49ce9162f",
+      "guideSlug": null
+    },
+    {
+      "formulaId": "9c4b2d9f-48ce-5b9c-a71e-e6843a71501f",
+      "displayName": "fzppexp",
+      "primaryFamily": "transcendental",
+      "categories": [
+        "transcendental"
+      ],
+      "canonicalPath": "/formulas/9c4b2d9f-48ce-5b9c-a71e-e6843a71501f",
+      "guideSlug": null
+    },
+    {
+      "formulaId": "861ec40f-56db-530f-b5fd-918c038ea6d3",
+      "displayName": "fzppexsh",
+      "primaryFamily": "transcendental",
+      "categories": [
+        "transcendental"
+      ],
+      "canonicalPath": "/formulas/861ec40f-56db-530f-b5fd-918c038ea6d3",
+      "guideSlug": null
+    },
+    {
+      "formulaId": "3fc4005b-e6d4-5cda-a9b1-de96a0d6a458",
+      "displayName": "fzppexsi",
+      "primaryFamily": "transcendental",
+      "categories": [
+        "transcendental"
+      ],
+      "canonicalPath": "/formulas/3fc4005b-e6d4-5cda-a9b1-de96a0d6a458",
+      "guideSlug": null
+    },
+    {
+      "formulaId": "a1d276ef-65af-501c-b787-f98365f8a6d5",
+      "displayName": "fzppexsq",
+      "primaryFamily": "transcendental",
+      "categories": [
+        "transcendental"
+      ],
+      "canonicalPath": "/formulas/a1d276ef-65af-501c-b787-f98365f8a6d5",
+      "guideSlug": null
+    },
+    {
+      "formulaId": "909f3ac5-9bc2-5e0a-835f-f4f73b1da23f",
+      "displayName": "fzppfncs",
+      "primaryFamily": "function-composition",
+      "categories": [
+        "function-composition"
+      ],
+      "canonicalPath": "/formulas/909f3ac5-9bc2-5e0a-835f-f4f73b1da23f",
+      "guideSlug": null
+    },
+    {
+      "formulaId": "0e01b854-3b21-56f8-8310-3fa32ec2af99",
+      "displayName": "fzppfnct",
+      "primaryFamily": "function-composition",
+      "categories": [
+        "function-composition"
+      ],
+      "canonicalPath": "/formulas/0e01b854-3b21-56f8-8310-3fa32ec2af99",
+      "guideSlug": null
+    },
+    {
+      "formulaId": "5d0877c0-5f84-5c3b-9466-b9f9b417cb6a",
+      "displayName": "fzppfnht",
+      "primaryFamily": "function-composition",
+      "categories": [
+        "function-composition"
+      ],
+      "canonicalPath": "/formulas/5d0877c0-5f84-5c3b-9466-b9f9b417cb6a",
+      "guideSlug": null
+    },
+    {
+      "formulaId": "411ac01c-ba08-5200-add7-b60b3f98795c",
+      "displayName": "fzppfnpo",
+      "primaryFamily": "function-composition",
+      "categories": [
+        "function-composition"
+      ],
+      "canonicalPath": "/formulas/411ac01c-ba08-5200-add7-b60b3f98795c",
+      "guideSlug": null
+    },
+    {
+      "formulaId": "16e44954-d897-5037-9c2e-2ad203c4207f",
+      "displayName": "fzppfnre",
+      "primaryFamily": "function-composition",
+      "categories": [
+        "function-composition"
+      ],
+      "canonicalPath": "/formulas/16e44954-d897-5037-9c2e-2ad203c4207f",
+      "guideSlug": null
+    },
+    {
+      "formulaId": "7e6e1c30-7b53-587c-827e-cdacba48a024",
+      "displayName": "fzppfnse",
+      "primaryFamily": "function-composition",
+      "categories": [
+        "function-composition"
+      ],
+      "canonicalPath": "/formulas/7e6e1c30-7b53-587c-827e-cdacba48a024",
+      "guideSlug": null
+    },
+    {
+      "formulaId": "9cd1e5fd-0d01-5371-ae9a-37d6ec85d93b",
+      "displayName": "fzppfnsr",
+      "primaryFamily": "function-composition",
+      "categories": [
+        "function-composition"
+      ],
+      "canonicalPath": "/formulas/9cd1e5fd-0d01-5371-ae9a-37d6ec85d93b",
+      "guideSlug": null
+    },
+    {
+      "formulaId": "6f69b9f4-cea0-5ee1-bea1-468f7a268b9c",
+      "displayName": "fzppfnta",
+      "primaryFamily": "function-composition",
+      "categories": [
+        "function-composition"
+      ],
+      "canonicalPath": "/formulas/6f69b9f4-cea0-5ee1-bea1-468f7a268b9c",
+      "guideSlug": null
+    },
+    {
+      "formulaId": "4c0559f7-9f60-51f4-b100-2ea5f1d330e8",
+      "displayName": "fzppfnth",
+      "primaryFamily": "function-composition",
+      "categories": [
+        "function-composition"
+      ],
+      "canonicalPath": "/formulas/4c0559f7-9f60-51f4-b100-2ea5f1d330e8",
+      "guideSlug": null
+    },
+    {
+      "formulaId": "de7a2025-caeb-58ac-b3ea-cf26c70c5e24",
+      "displayName": "fzppshch",
+      "primaryFamily": "transcendental",
+      "categories": [
+        "transcendental"
+      ],
+      "canonicalPath": "/formulas/de7a2025-caeb-58ac-b3ea-cf26c70c5e24",
+      "guideSlug": null
+    },
+    {
+      "formulaId": "bd3cabb7-66ad-5b86-a8d9-547d8eaeffc4",
+      "displayName": "fzppshco",
+      "primaryFamily": "transcendental",
+      "categories": [
+        "transcendental"
+      ],
+      "canonicalPath": "/formulas/bd3cabb7-66ad-5b86-a8d9-547d8eaeffc4",
+      "guideSlug": null
+    },
+    {
+      "formulaId": "564827f6-4abd-5360-aec3-75e800b499ab",
+      "displayName": "fzppshex",
+      "primaryFamily": "transcendental",
+      "categories": [
+        "transcendental"
+      ],
+      "canonicalPath": "/formulas/564827f6-4abd-5360-aec3-75e800b499ab",
+      "guideSlug": null
+    },
+    {
+      "formulaId": "8a01fc8e-1b68-5db5-85dd-6eebb78dacf5",
+      "displayName": "fzppshsi",
+      "primaryFamily": "transcendental",
+      "categories": [
+        "transcendental"
+      ],
+      "canonicalPath": "/formulas/8a01fc8e-1b68-5db5-85dd-6eebb78dacf5",
+      "guideSlug": null
+    },
+    {
+      "formulaId": "dd5a6937-3b00-5bc9-8c18-5d048471126e",
+      "displayName": "fzppshsq",
+      "primaryFamily": "transcendental",
+      "categories": [
+        "transcendental"
+      ],
+      "canonicalPath": "/formulas/dd5a6937-3b00-5bc9-8c18-5d048471126e",
+      "guideSlug": null
+    },
+    {
+      "formulaId": "3f1835a4-0bd3-54ec-8d3b-dad2c6d3bfd3",
+      "displayName": "fzppsich",
+      "primaryFamily": "transcendental",
+      "categories": [
+        "transcendental"
+      ],
+      "canonicalPath": "/formulas/3f1835a4-0bd3-54ec-8d3b-dad2c6d3bfd3",
+      "guideSlug": null
+    },
+    {
+      "formulaId": "e89afab6-33b1-5cd2-bfc0-98b2dfca400e",
+      "displayName": "fzppsico",
+      "primaryFamily": "transcendental",
+      "categories": [
+        "transcendental"
+      ],
+      "canonicalPath": "/formulas/e89afab6-33b1-5cd2-bfc0-98b2dfca400e",
+      "guideSlug": null
+    },
+    {
+      "formulaId": "f6126a12-f689-5eac-8917-71580950caba",
+      "displayName": "fzppsiex",
+      "primaryFamily": "transcendental",
+      "categories": [
+        "transcendental"
+      ],
+      "canonicalPath": "/formulas/f6126a12-f689-5eac-8917-71580950caba",
+      "guideSlug": null
+    },
+    {
+      "formulaId": "defaf6f8-db0a-52c8-9ca0-0d5d3bdac49f",
+      "displayName": "fzppsinh",
+      "primaryFamily": "transcendental",
+      "categories": [
+        "transcendental"
+      ],
+      "canonicalPath": "/formulas/defaf6f8-db0a-52c8-9ca0-0d5d3bdac49f",
+      "guideSlug": null
+    },
+    {
+      "formulaId": "5f0a5361-4138-5a1a-9097-0765a5b77e40",
+      "displayName": "fzppsish",
+      "primaryFamily": "transcendental",
+      "categories": [
+        "transcendental"
+      ],
+      "canonicalPath": "/formulas/5f0a5361-4138-5a1a-9097-0765a5b77e40",
+      "guideSlug": null
+    },
+    {
+      "formulaId": "c5c8d6cd-3d5a-565d-90c4-f1b7572f9b71",
+      "displayName": "fzppsisq",
+      "primaryFamily": "transcendental",
+      "categories": [
+        "transcendental"
+      ],
+      "canonicalPath": "/formulas/c5c8d6cd-3d5a-565d-90c4-f1b7572f9b71",
+      "guideSlug": null
+    },
+    {
+      "formulaId": "d3e27379-6323-5764-8a1e-17d88e5ea696",
+      "displayName": "fzppsqlo",
+      "primaryFamily": "algebraic-power",
+      "categories": [
+        "algebraic-power"
+      ],
+      "canonicalPath": "/formulas/d3e27379-6323-5764-8a1e-17d88e5ea696",
+      "guideSlug": null
+    },
+    {
+      "formulaId": "e8e735b4-3eb6-53b6-979e-7f70268ceb6b",
+      "displayName": "fzppsqsh",
+      "primaryFamily": "algebraic-power",
+      "categories": [
+        "algebraic-power"
+      ],
+      "canonicalPath": "/formulas/e8e735b4-3eb6-53b6-979e-7f70268ceb6b",
+      "guideSlug": null
+    },
+    {
+      "formulaId": "87b4ebc7-ba9d-527b-ab3b-aaa45967b255",
+      "displayName": "fzppsqsi",
+      "primaryFamily": "algebraic-power",
+      "categories": [
+        "algebraic-power"
+      ],
+      "canonicalPath": "/formulas/87b4ebc7-ba9d-527b-ab3b-aaa45967b255",
+      "guideSlug": null
+    },
+    {
+      "formulaId": "cc100ec7-53ba-58c3-9471-03c3188bbaef",
+      "displayName": "geninvmand1_n",
+      "primaryFamily": "function-composition",
+      "categories": [
+        "function-composition"
+      ],
+      "canonicalPath": "/formulas/cc100ec7-53ba-58c3-9471-03c3188bbaef",
+      "guideSlug": null
+    },
+    {
+      "formulaId": "ecabbf7e-6f47-5335-9dea-4584fef5607c",
+      "displayName": "ghost",
+      "primaryFamily": "orbit-memory",
+      "categories": [
+        "orbit-memory"
+      ],
+      "canonicalPath": "/formulas/ecabbf7e-6f47-5335-9dea-4584fef5607c",
+      "guideSlug": null
+    },
+    {
+      "formulaId": "5a5062e4-635e-5569-8be7-bed7c3a05365",
+      "displayName": "ghostless-a",
+      "primaryFamily": "orbit-memory",
+      "categories": [
+        "orbit-memory"
+      ],
+      "canonicalPath": "/formulas/5a5062e4-635e-5569-8be7-bed7c3a05365",
+      "guideSlug": null
+    },
+    {
+      "formulaId": "c45604cb-3319-59e7-b1a4-aca549ee25c2",
+      "displayName": "ghostless-b",
+      "primaryFamily": "orbit-memory",
+      "categories": [
+        "orbit-memory"
+      ],
+      "canonicalPath": "/formulas/c45604cb-3319-59e7-b1a4-aca549ee25c2",
+      "guideSlug": null
+    },
+    {
+      "formulaId": "81701548-4c1a-5038-a7e2-27ee265b0abc",
+      "displayName": "ghostless-c",
+      "primaryFamily": "orbit-memory",
+      "categories": [
+        "orbit-memory"
+      ],
+      "canonicalPath": "/formulas/81701548-4c1a-5038-a7e2-27ee265b0abc",
+      "guideSlug": null
+    },
+    {
+      "formulaId": "3582fcef-3d34-5acf-a701-4d5a9165ebc7",
+      "displayName": "glynn",
+      "primaryFamily": "algebraic-power",
+      "categories": [
+        "algebraic-power"
+      ],
+      "canonicalPath": "/formulas/3582fcef-3d34-5acf-a701-4d5a9165ebc7",
+      "guideSlug": null
+    },
+    {
+      "formulaId": "93e5f276-7b4a-56fa-9e2e-9989ca19c710",
+      "displayName": "gopalsamy1",
+      "primaryFamily": "algebraic-power",
+      "categories": [
+        "algebraic-power"
+      ],
+      "canonicalPath": "/formulas/93e5f276-7b4a-56fa-9e2e-9989ca19c710",
+      "guideSlug": null
+    },
+    {
+      "formulaId": "b88a02e9-0ef5-5a1a-932a-d2edc968a7ca",
+      "displayName": "gopalsamy2",
+      "primaryFamily": "algebraic-power",
+      "categories": [
+        "algebraic-power"
+      ],
+      "canonicalPath": "/formulas/b88a02e9-0ef5-5a1a-932a-d2edc968a7ca",
+      "guideSlug": null
+    },
+    {
+      "formulaId": "5982efd3-160d-5a50-9eaf-2629efd87ed6",
+      "displayName": "gopalsamy3",
+      "primaryFamily": "algebraic-power",
+      "categories": [
+        "algebraic-power"
+      ],
+      "canonicalPath": "/formulas/5982efd3-160d-5a50-9eaf-2629efd87ed6",
+      "guideSlug": null
+    },
+    {
+      "formulaId": "641e81e3-1e4a-5539-bdce-1ee07521b421",
+      "displayName": "gopalsamy4",
+      "primaryFamily": "algebraic-power",
+      "categories": [
+        "algebraic-power"
+      ],
+      "canonicalPath": "/formulas/641e81e3-1e4a-5539-bdce-1ee07521b421",
+      "guideSlug": null
+    },
+    {
+      "formulaId": "a86f88ad-cfed-59dc-a83b-93e77917e842",
+      "displayName": "gopalsamy5",
+      "primaryFamily": "algebraic-power",
+      "categories": [
+        "algebraic-power"
+      ],
+      "canonicalPath": "/formulas/a86f88ad-cfed-59dc-a83b-93e77917e842",
+      "guideSlug": null
+    },
+    {
+      "formulaId": "7d41553d-885e-5f7a-810e-3be60046c9f9",
+      "displayName": "gopalsamyexp",
+      "primaryFamily": "transcendental",
+      "categories": [
+        "transcendental"
+      ],
+      "canonicalPath": "/formulas/7d41553d-885e-5f7a-810e-3be60046c9f9",
+      "guideSlug": null
+    },
+    {
+      "formulaId": "3705eb33-b86f-5ef4-9ad5-022ab076390f",
+      "displayName": "gopalsamyfn",
+      "primaryFamily": "function-composition",
+      "categories": [
+        "function-composition"
+      ],
+      "canonicalPath": "/formulas/3705eb33-b86f-5ef4-9ad5-022ab076390f",
+      "guideSlug": null
+    },
+    {
+      "formulaId": "c5d5dfae-9f15-5529-8f10-042938047b7f",
+      "displayName": "gopalsamysin",
+      "primaryFamily": "transcendental",
+      "categories": [
+        "transcendental"
+      ],
+      "canonicalPath": "/formulas/c5d5dfae-9f15-5529-8f10-042938047b7f",
+      "guideSlug": null
+    },
+    {
+      "formulaId": "a2b483f2-1066-54e6-8e28-c22f6983975a",
+      "displayName": "gopalsamysin2",
+      "primaryFamily": "transcendental",
+      "categories": [
+        "transcendental"
+      ],
+      "canonicalPath": "/formulas/a2b483f2-1066-54e6-8e28-c22f6983975a",
+      "guideSlug": null
+    },
+    {
+      "formulaId": "9915da24-f5e1-539c-84b2-4924d52efbb7",
+      "displayName": "gopalsamysinh",
+      "primaryFamily": "transcendental",
+      "categories": [
+        "transcendental"
+      ],
+      "canonicalPath": "/formulas/9915da24-f5e1-539c-84b2-4924d52efbb7",
+      "guideSlug": null
+    },
+    {
+      "formulaId": "a7a97d42-4e18-5048-b5d9-65eb80cbdc60",
+      "displayName": "gopalsamysinh2",
+      "primaryFamily": "transcendental",
+      "categories": [
+        "transcendental"
+      ],
+      "canonicalPath": "/formulas/a7a97d42-4e18-5048-b5d9-65eb80cbdc60",
+      "guideSlug": null
+    },
+    {
+      "formulaId": "c4431abf-9d47-5537-ae91-9bd5cfdaa567",
+      "displayName": "groucho",
+      "primaryFamily": "function-composition",
+      "categories": [
+        "function-composition"
+      ],
+      "canonicalPath": "/formulas/c4431abf-9d47-5537-ae91-9bd5cfdaa567",
+      "guideSlug": null
+    },
+    {
+      "formulaId": "b79313f5-2181-5013-bd21-e59a7222dce5",
+      "displayName": "halleyCubic",
+      "primaryFamily": "root-finding",
+      "categories": [
+        "classic",
+        "root-finding"
+      ],
+      "canonicalPath": "/formulas/b79313f5-2181-5013-bd21-e59a7222dce5",
+      "guideSlug": null
+    },
+    {
+      "formulaId": "4536f1e3-1f15-5b7e-8e58-68ea3b63d4fb",
+      "displayName": "heart",
+      "primaryFamily": "folded-absolute",
+      "categories": [
+        "classic",
+        "folded-absolute"
+      ],
+      "canonicalPath": "/formulas/4536f1e3-1f15-5b7e-8e58-68ea3b63d4fb",
+      "guideSlug": null
+    },
+    {
+      "formulaId": "415b068e-0261-50ca-ac77-4f6ade3916f1",
+      "displayName": "ifelsefn1fn2fn3",
+      "primaryFamily": "function-composition",
+      "categories": [
+        "function-composition"
+      ],
+      "canonicalPath": "/formulas/415b068e-0261-50ca-ac77-4f6ade3916f1",
+      "guideSlug": null
+    },
+    {
+      "formulaId": "6bf0fce4-9f20-5cb0-aa49-bd0202c16a1f",
+      "displayName": "ifthen-a1",
+      "primaryFamily": "function-composition",
+      "categories": [
+        "function-composition"
+      ],
+      "canonicalPath": "/formulas/6bf0fce4-9f20-5cb0-aa49-bd0202c16a1f",
+      "guideSlug": null
+    },
+    {
+      "formulaId": "b1cee702-e3f6-557f-a277-365a5097016f",
+      "displayName": "ifthen-a2",
+      "primaryFamily": "function-composition",
+      "categories": [
+        "function-composition"
+      ],
+      "canonicalPath": "/formulas/b1cee702-e3f6-557f-a277-365a5097016f",
+      "guideSlug": null
+    },
+    {
+      "formulaId": "2e7a0672-e737-52fc-b2b3-14f577546eea",
+      "displayName": "ifthen-a3",
+      "primaryFamily": "function-composition",
+      "categories": [
+        "function-composition"
+      ],
+      "canonicalPath": "/formulas/2e7a0672-e737-52fc-b2b3-14f577546eea",
+      "guideSlug": null
+    },
+    {
+      "formulaId": "0236be89-f1e9-5e23-b0a3-f4dd201ee788",
+      "displayName": "ifthen-b1",
+      "primaryFamily": "function-composition",
+      "categories": [
+        "function-composition"
+      ],
+      "canonicalPath": "/formulas/0236be89-f1e9-5e23-b0a3-f4dd201ee788",
+      "guideSlug": null
+    },
+    {
+      "formulaId": "c95aeaaa-10f4-5e83-ad16-169018862669",
+      "displayName": "ifthen-b2",
+      "primaryFamily": "function-composition",
+      "categories": [
+        "function-composition"
+      ],
+      "canonicalPath": "/formulas/c95aeaaa-10f4-5e83-ad16-169018862669",
+      "guideSlug": null
+    },
+    {
+      "formulaId": "4f32e099-69b0-5b43-8d37-c547cee8f4f5",
+      "displayName": "ifthen-c1",
+      "primaryFamily": "function-composition",
+      "categories": [
+        "function-composition"
+      ],
+      "canonicalPath": "/formulas/4f32e099-69b0-5b43-8d37-c547cee8f4f5",
+      "guideSlug": null
+    },
+    {
+      "formulaId": "d0716513-4af5-5183-a963-e9fb6c4f9323",
+      "displayName": "ifthen-c2",
+      "primaryFamily": "function-composition",
+      "categories": [
+        "function-composition"
+      ],
+      "canonicalPath": "/formulas/d0716513-4af5-5183-a963-e9fb6c4f9323",
+      "guideSlug": null
+    },
+    {
+      "formulaId": "d50c004c-3394-5858-aecb-51aaa76ea0a5",
+      "displayName": "ifthenelsefn1fn2",
+      "primaryFamily": "function-composition",
+      "categories": [
+        "function-composition"
+      ],
+      "canonicalPath": "/formulas/d50c004c-3394-5858-aecb-51aaa76ea0a5",
+      "guideSlug": null
+    },
+    {
+      "formulaId": "890ef186-8e18-5b9b-a928-b2b3f0b20e92",
+      "displayName": "ifthenfn1fn2",
+      "primaryFamily": "function-composition",
+      "categories": [
+        "function-composition"
+      ],
+      "canonicalPath": "/formulas/890ef186-8e18-5b9b-a928-b2b3f0b20e92",
+      "guideSlug": null
+    },
+    {
+      "formulaId": "15396678-55fc-50e8-a51d-77bb277a5a50",
+      "displayName": "ikefrrbtgenj",
+      "primaryFamily": "algebraic-power",
+      "categories": [
+        "algebraic-power"
+      ],
+      "canonicalPath": "/formulas/15396678-55fc-50e8-a51d-77bb277a5a50",
+      "guideSlug": null
+    },
+    {
+      "formulaId": "3d5c83f1-a31b-55d3-b0a9-c17cb5737d5e",
+      "displayName": "ikefrrbtgenm",
+      "primaryFamily": "algebraic-power",
+      "categories": [
+        "algebraic-power"
+      ],
+      "canonicalPath": "/formulas/3d5c83f1-a31b-55d3-b0a9-c17cb5737d5e",
+      "guideSlug": null
+    },
+    {
+      "formulaId": "9c0fb578-8cb6-5793-9c94-af3f02e3a85b",
+      "displayName": "ikegenj",
+      "primaryFamily": "algebraic-power",
+      "categories": [
+        "algebraic-power"
+      ],
+      "canonicalPath": "/formulas/9c0fb578-8cb6-5793-9c94-af3f02e3a85b",
+      "guideSlug": null
+    },
+    {
+      "formulaId": "d81aaac8-9440-5241-95ab-5791f8fbb141",
+      "displayName": "ikegenm",
+      "primaryFamily": "algebraic-power",
+      "categories": [
+        "algebraic-power"
+      ],
+      "canonicalPath": "/formulas/d81aaac8-9440-5241-95ab-5791f8fbb141",
+      "guideSlug": null
+    },
+    {
+      "formulaId": "2f0a0f01-53ee-585e-b2bd-6179a0413df1",
+      "displayName": "ikenaga",
+      "primaryFamily": "algebraic-power",
+      "categories": [
+        "algebraic-power"
+      ],
+      "canonicalPath": "/formulas/2f0a0f01-53ee-585e-b2bd-6179a0413df1",
+      "guideSlug": null
+    },
+    {
+      "formulaId": "a2f48cb8-1aa3-5b80-bf04-e10ddc033ed0",
+      "displayName": "ikenaga2",
+      "primaryFamily": "algebraic-power",
+      "categories": [
+        "algebraic-power"
+      ],
+      "canonicalPath": "/formulas/a2f48cb8-1aa3-5b80-bf04-e10ddc033ed0",
+      "guideSlug": null
+    },
+    {
+      "formulaId": "550b2811-b28e-552d-af2c-07deea1f019f",
+      "displayName": "ikenaga4",
+      "primaryFamily": "algebraic-power",
+      "categories": [
+        "algebraic-power"
+      ],
+      "canonicalPath": "/formulas/550b2811-b28e-552d-af2c-07deea1f019f",
+      "guideSlug": null
+    },
+    {
+      "formulaId": "e528748d-efea-5745-99f5-a2ed96f7d86b",
+      "displayName": "ikenaga4jul",
+      "primaryFamily": "algebraic-power",
+      "categories": [
+        "algebraic-power"
+      ],
+      "canonicalPath": "/formulas/e528748d-efea-5745-99f5-a2ed96f7d86b",
+      "guideSlug": null
+    },
+    {
+      "formulaId": "e25a768a-a075-5ecb-bb65-9271354a94e2",
+      "displayName": "ikenagaabs",
+      "primaryFamily": "algebraic-power",
+      "categories": [
+        "algebraic-power"
+      ],
+      "canonicalPath": "/formulas/e25a768a-a075-5ecb-bb65-9271354a94e2",
+      "guideSlug": null
+    },
+    {
+      "formulaId": "b0c3cd60-22b6-56cc-8e4e-2fd6cf9224d9",
+      "displayName": "ikenagaabsjul",
+      "primaryFamily": "algebraic-power",
+      "categories": [
+        "algebraic-power"
+      ],
+      "canonicalPath": "/formulas/b0c3cd60-22b6-56cc-8e4e-2fd6cf9224d9",
+      "guideSlug": null
+    },
+    {
+      "formulaId": "962d33f0-f95b-58db-9450-47088ecc26ac",
+      "displayName": "ikenagafn",
+      "primaryFamily": "algebraic-power",
+      "categories": [
+        "algebraic-power"
+      ],
+      "canonicalPath": "/formulas/962d33f0-f95b-58db-9450-47088ecc26ac",
+      "guideSlug": null
+    },
+    {
+      "formulaId": "59a0bf0a-ddf3-5f3e-ad94-984d10cdc42a",
+      "displayName": "ikenagafnjul",
+      "primaryFamily": "algebraic-power",
+      "categories": [
+        "algebraic-power"
+      ],
+      "canonicalPath": "/formulas/59a0bf0a-ddf3-5f3e-ad94-984d10cdc42a",
+      "guideSlug": null
+    },
+    {
+      "formulaId": "c04cedf4-32ec-5b61-b2da-f8bf988e05e0",
+      "displayName": "ikenagaj.1",
+      "primaryFamily": "algebraic-power",
+      "categories": [
+        "algebraic-power"
+      ],
+      "canonicalPath": "/formulas/c04cedf4-32ec-5b61-b2da-f8bf988e05e0",
+      "guideSlug": null
+    },
+    {
+      "formulaId": "b2c06ce2-e976-571a-af8b-c20203c91bc2",
+      "displayName": "ikenagajul",
+      "primaryFamily": "algebraic-power",
+      "categories": [
+        "algebraic-power"
+      ],
+      "canonicalPath": "/formulas/b2c06ce2-e976-571a-af8b-c20203c91bc2",
+      "guideSlug": null
+    },
+    {
+      "formulaId": "74874658-3c47-5813-869a-70e642dc0038",
+      "displayName": "ikenagajul1+",
+      "primaryFamily": "algebraic-power",
+      "categories": [
+        "algebraic-power"
+      ],
+      "canonicalPath": "/formulas/74874658-3c47-5813-869a-70e642dc0038",
+      "guideSlug": null
+    },
+    {
+      "formulaId": "26834584-a1da-54a6-a98d-3a680ea6b259",
+      "displayName": "ikenagajulj.1",
+      "primaryFamily": "algebraic-power",
+      "categories": [
+        "algebraic-power"
+      ],
+      "canonicalPath": "/formulas/26834584-a1da-54a6-a98d-3a680ea6b259",
+      "guideSlug": null
+    },
+    {
+      "formulaId": "fedcfb68-071a-5b21-9552-ac641af3ecce",
+      "displayName": "ikenagamap",
+      "primaryFamily": "algebraic-power",
+      "categories": [
+        "algebraic-power"
+      ],
+      "canonicalPath": "/formulas/fedcfb68-071a-5b21-9552-ac641af3ecce",
+      "guideSlug": null
+    },
+    {
+      "formulaId": "e6716e4b-be44-52a2-befd-77354070e972",
+      "displayName": "ikenagapwr",
+      "primaryFamily": "algebraic-power",
+      "categories": [
+        "algebraic-power"
+      ],
+      "canonicalPath": "/formulas/e6716e4b-be44-52a2-befd-77354070e972",
+      "guideSlug": null
+    },
+    {
+      "formulaId": "24477311-d938-5e87-9900-bc3dfd384274",
+      "displayName": "ikenagapwrjul",
+      "primaryFamily": "algebraic-power",
+      "categories": [
+        "algebraic-power"
+      ],
+      "canonicalPath": "/formulas/24477311-d938-5e87-9900-bc3dfd384274",
+      "guideSlug": null
+    },
+    {
+      "formulaId": "212174eb-5344-57a9-95d4-24882df4b972",
+      "displayName": "inandout01",
+      "primaryFamily": "orbit-memory",
+      "categories": [
+        "orbit-memory"
+      ],
+      "canonicalPath": "/formulas/212174eb-5344-57a9-95d4-24882df4b972",
+      "guideSlug": null
+    },
+    {
+      "formulaId": "a8becf49-83d1-5692-b087-e520652013d2",
+      "displayName": "inandout02",
+      "primaryFamily": "orbit-memory",
+      "categories": [
+        "orbit-memory"
+      ],
+      "canonicalPath": "/formulas/a8becf49-83d1-5692-b087-e520652013d2",
+      "guideSlug": null
+    },
+    {
+      "formulaId": "24c09b96-95f6-5bff-bc76-8113f4eb51a0",
+      "displayName": "inandout03",
+      "primaryFamily": "orbit-memory",
+      "categories": [
+        "orbit-memory"
+      ],
+      "canonicalPath": "/formulas/24c09b96-95f6-5bff-bc76-8113f4eb51a0",
+      "guideSlug": null
+    },
+    {
+      "formulaId": "f2ef0d24-8eff-5bf2-b896-aa111350aa5b",
+      "displayName": "inandout04",
+      "primaryFamily": "orbit-memory",
+      "categories": [
+        "orbit-memory"
+      ],
+      "canonicalPath": "/formulas/f2ef0d24-8eff-5bf2-b896-aa111350aa5b",
+      "guideSlug": null
+    },
+    {
+      "formulaId": "c6b5dcf4-cef5-5630-b3f6-a68b92ae75ee",
+      "displayName": "invertedLambda",
+      "primaryFamily": "rational-reciprocal",
+      "categories": [
+        "classic",
+        "rational-reciprocal"
+      ],
+      "canonicalPath": "/formulas/c6b5dcf4-cef5-5630-b3f6-a68b92ae75ee",
+      "guideSlug": "inverted-lambda"
+    },
+    {
+      "formulaId": "a866079c-332f-5e5d-aba0-ae0512627582",
+      "displayName": "invmandel",
+      "primaryFamily": "algebraic-power",
+      "categories": [
+        "algebraic-power"
+      ],
+      "canonicalPath": "/formulas/a866079c-332f-5e5d-aba0-ae0512627582",
+      "guideSlug": null
+    },
+    {
+      "formulaId": "0ba0b082-c4b0-51d8-b981-7ca1ca25b9f3",
+      "displayName": "islandofchaos",
+      "primaryFamily": "rational-reciprocal",
+      "categories": [
+        "rational-reciprocal"
+      ],
+      "canonicalPath": "/formulas/0ba0b082-c4b0-51d8-b981-7ca1ca25b9f3",
+      "guideSlug": null
+    },
+    {
+      "formulaId": "c523ec02-e1a2-52b5-a8a9-bada5fccae6f",
+      "displayName": "islandofchaosc",
+      "primaryFamily": "rational-reciprocal",
+      "categories": [
+        "rational-reciprocal"
+      ],
+      "canonicalPath": "/formulas/c523ec02-e1a2-52b5-a8a9-bada5fccae6f",
+      "guideSlug": null
+    },
+    {
+      "formulaId": "cf335fbe-f1d3-5335-a68b-738197760a06",
+      "displayName": "ismand_demo",
+      "primaryFamily": "rational-reciprocal",
+      "categories": [
+        "rational-reciprocal"
+      ],
+      "canonicalPath": "/formulas/cf335fbe-f1d3-5335-a68b-738197760a06",
+      "guideSlug": null
+    },
+    {
+      "formulaId": "41a527d4-3c75-5d8d-905d-95381c9f7c6c",
+      "displayName": "j_lagandre2",
+      "primaryFamily": "algebraic-power",
+      "categories": [
+        "algebraic-power"
+      ],
+      "canonicalPath": "/formulas/41a527d4-3c75-5d8d-905d-95381c9f7c6c",
+      "guideSlug": null
+    },
+    {
+      "formulaId": "27ff838d-9331-5fd6-89d7-6afa24341f44",
+      "displayName": "j_lagandre3",
+      "primaryFamily": "algebraic-power",
+      "categories": [
+        "algebraic-power"
+      ],
+      "canonicalPath": "/formulas/27ff838d-9331-5fd6-89d7-6afa24341f44",
+      "guideSlug": null
+    },
+    {
+      "formulaId": "6a292c82-ac95-5d4c-98d7-963e2f7c5755",
+      "displayName": "j_lagandre4",
+      "primaryFamily": "algebraic-power",
+      "categories": [
+        "algebraic-power"
+      ],
+      "canonicalPath": "/formulas/6a292c82-ac95-5d4c-98d7-963e2f7c5755",
+      "guideSlug": null
+    },
+    {
+      "formulaId": "2e504dd9-c973-5867-98ff-ed809a862428",
+      "displayName": "j_lagandre5",
+      "primaryFamily": "algebraic-power",
+      "categories": [
+        "algebraic-power"
+      ],
+      "canonicalPath": "/formulas/2e504dd9-c973-5867-98ff-ed809a862428",
+      "guideSlug": null
+    },
+    {
+      "formulaId": "579c54b7-c055-53fa-86a9-104f8f69752d",
+      "displayName": "j_lagandre6",
+      "primaryFamily": "algebraic-power",
+      "categories": [
+        "algebraic-power"
+      ],
+      "canonicalPath": "/formulas/579c54b7-c055-53fa-86a9-104f8f69752d",
+      "guideSlug": null
+    },
+    {
+      "formulaId": "559966c9-b838-56af-9591-5cb42e8955ee",
+      "displayName": "j_lagandre7",
+      "primaryFamily": "algebraic-power",
+      "categories": [
+        "algebraic-power"
+      ],
+      "canonicalPath": "/formulas/559966c9-b838-56af-9591-5cb42e8955ee",
+      "guideSlug": null
+    },
+    {
+      "formulaId": "42b54420-5e0a-5f09-9dcd-0c262fd41d04",
+      "displayName": "j_laguerre2",
+      "primaryFamily": "algebraic-power",
+      "categories": [
+        "algebraic-power"
+      ],
+      "canonicalPath": "/formulas/42b54420-5e0a-5f09-9dcd-0c262fd41d04",
+      "guideSlug": null
+    },
+    {
+      "formulaId": "c9c7f540-acdd-5092-8132-02ddf980daa7",
+      "displayName": "j_laguerre3",
+      "primaryFamily": "algebraic-power",
+      "categories": [
+        "algebraic-power"
+      ],
+      "canonicalPath": "/formulas/c9c7f540-acdd-5092-8132-02ddf980daa7",
+      "guideSlug": null
+    },
+    {
+      "formulaId": "805b4a5b-0ac9-5a3e-b589-1cdd1df06075",
+      "displayName": "j_laguerre4",
+      "primaryFamily": "algebraic-power",
+      "categories": [
+        "algebraic-power"
+      ],
+      "canonicalPath": "/formulas/805b4a5b-0ac9-5a3e-b589-1cdd1df06075",
+      "guideSlug": null
+    },
+    {
+      "formulaId": "0d5e8e2e-45bd-5a45-beab-2f989d765db4",
+      "displayName": "j_laguerre6",
+      "primaryFamily": "algebraic-power",
+      "categories": [
+        "algebraic-power"
+      ],
+      "canonicalPath": "/formulas/0d5e8e2e-45bd-5a45-beab-2f989d765db4",
+      "guideSlug": null
+    },
+    {
+      "formulaId": "8966ff50-0c66-5b18-a73e-6275e6ee5d88",
+      "displayName": "j_tchebychevc2",
+      "primaryFamily": "algebraic-power",
+      "categories": [
+        "algebraic-power"
+      ],
+      "canonicalPath": "/formulas/8966ff50-0c66-5b18-a73e-6275e6ee5d88",
+      "guideSlug": null
+    },
+    {
+      "formulaId": "b5010cf1-03f9-5127-9d05-01e7e947dcec",
+      "displayName": "j_tchebychevc3",
+      "primaryFamily": "algebraic-power",
+      "categories": [
+        "algebraic-power"
+      ],
+      "canonicalPath": "/formulas/b5010cf1-03f9-5127-9d05-01e7e947dcec",
+      "guideSlug": null
+    },
+    {
+      "formulaId": "bf323001-5e0b-51a6-8d04-f0102ef740a9",
+      "displayName": "j_tchebychevc4",
+      "primaryFamily": "algebraic-power",
+      "categories": [
+        "algebraic-power"
+      ],
+      "canonicalPath": "/formulas/bf323001-5e0b-51a6-8d04-f0102ef740a9",
+      "guideSlug": null
+    },
+    {
+      "formulaId": "ea4eaa45-ff53-5a7d-af21-690a58118510",
+      "displayName": "j_tchebychevc5",
+      "primaryFamily": "algebraic-power",
+      "categories": [
+        "algebraic-power"
+      ],
+      "canonicalPath": "/formulas/ea4eaa45-ff53-5a7d-af21-690a58118510",
+      "guideSlug": null
+    },
+    {
+      "formulaId": "33afbae3-7ccb-54ca-8f50-771b34de7326",
+      "displayName": "j_tchebychevc6",
+      "primaryFamily": "algebraic-power",
+      "categories": [
+        "algebraic-power"
+      ],
+      "canonicalPath": "/formulas/33afbae3-7ccb-54ca-8f50-771b34de7326",
+      "guideSlug": null
+    },
+    {
+      "formulaId": "bb1b85d1-ea8d-5439-a808-be19afcabb30",
+      "displayName": "j_tchebychevc7",
+      "primaryFamily": "algebraic-power",
+      "categories": [
+        "algebraic-power"
+      ],
+      "canonicalPath": "/formulas/bb1b85d1-ea8d-5439-a808-be19afcabb30",
+      "guideSlug": null
+    },
+    {
+      "formulaId": "85f4fcd2-42ed-5608-83a9-896ffa2e0129",
+      "displayName": "j_tchebychevs2",
+      "primaryFamily": "algebraic-power",
+      "categories": [
+        "algebraic-power"
+      ],
+      "canonicalPath": "/formulas/85f4fcd2-42ed-5608-83a9-896ffa2e0129",
+      "guideSlug": null
+    },
+    {
+      "formulaId": "d524bd96-37d0-5a16-b38e-7a8e6bd30c09",
+      "displayName": "j_tchebychevs3",
+      "primaryFamily": "algebraic-power",
+      "categories": [
+        "algebraic-power"
+      ],
+      "canonicalPath": "/formulas/d524bd96-37d0-5a16-b38e-7a8e6bd30c09",
+      "guideSlug": null
+    },
+    {
+      "formulaId": "dd0517c2-73c1-55c6-aee7-5cd72c2cdc4e",
+      "displayName": "j_tchebychevs4",
+      "primaryFamily": "algebraic-power",
+      "categories": [
+        "algebraic-power"
+      ],
+      "canonicalPath": "/formulas/dd0517c2-73c1-55c6-aee7-5cd72c2cdc4e",
+      "guideSlug": null
+    },
+    {
+      "formulaId": "6ed1543a-f382-5daf-9bec-4f26f7ffed04",
+      "displayName": "j_tchebychevs5",
+      "primaryFamily": "algebraic-power",
+      "categories": [
+        "algebraic-power"
+      ],
+      "canonicalPath": "/formulas/6ed1543a-f382-5daf-9bec-4f26f7ffed04",
+      "guideSlug": null
+    },
+    {
+      "formulaId": "f0680a59-42e8-52e4-8444-a1b4026d87b6",
+      "displayName": "j_tchebychevs6",
+      "primaryFamily": "algebraic-power",
+      "categories": [
+        "algebraic-power"
+      ],
+      "canonicalPath": "/formulas/f0680a59-42e8-52e4-8444-a1b4026d87b6",
+      "guideSlug": null
+    },
+    {
+      "formulaId": "4d839da6-3dad-5698-80eb-603fc91db5f4",
+      "displayName": "j_tchebychevs7",
+      "primaryFamily": "algebraic-power",
+      "categories": [
+        "algebraic-power"
+      ],
+      "canonicalPath": "/formulas/4d839da6-3dad-5698-80eb-603fc91db5f4",
+      "guideSlug": null
+    },
+    {
+      "formulaId": "a3ac54dd-5172-5239-b7fd-8540636ff4eb",
+      "displayName": "j_tchebychevt2",
+      "primaryFamily": "algebraic-power",
+      "categories": [
+        "algebraic-power"
+      ],
+      "canonicalPath": "/formulas/a3ac54dd-5172-5239-b7fd-8540636ff4eb",
+      "guideSlug": null
+    },
+    {
+      "formulaId": "79a1e37c-169d-5603-84ae-ebf291c3ff97",
+      "displayName": "j_tchebychevt3",
+      "primaryFamily": "algebraic-power",
+      "categories": [
+        "algebraic-power"
+      ],
+      "canonicalPath": "/formulas/79a1e37c-169d-5603-84ae-ebf291c3ff97",
+      "guideSlug": null
+    },
+    {
+      "formulaId": "6a9f2e31-71d3-5074-b552-9aa2e704ff94",
+      "displayName": "j_tchebychevt4",
+      "primaryFamily": "algebraic-power",
+      "categories": [
+        "algebraic-power"
+      ],
+      "canonicalPath": "/formulas/6a9f2e31-71d3-5074-b552-9aa2e704ff94",
+      "guideSlug": null
+    },
+    {
+      "formulaId": "e92b4390-cc41-5e7d-9b25-53ac3ba3908d",
+      "displayName": "j_tchebychevt5",
+      "primaryFamily": "algebraic-power",
+      "categories": [
+        "algebraic-power"
+      ],
+      "canonicalPath": "/formulas/e92b4390-cc41-5e7d-9b25-53ac3ba3908d",
+      "guideSlug": null
+    },
+    {
+      "formulaId": "725485b6-49a7-5063-a603-d0f92783d276",
+      "displayName": "j_tchebychevt6",
+      "primaryFamily": "algebraic-power",
+      "categories": [
+        "algebraic-power"
+      ],
+      "canonicalPath": "/formulas/725485b6-49a7-5063-a603-d0f92783d276",
+      "guideSlug": null
+    },
+    {
+      "formulaId": "3aaa6cca-c480-5359-a2f3-547f3a955eb1",
+      "displayName": "j_tchebychevt7",
+      "primaryFamily": "algebraic-power",
+      "categories": [
+        "algebraic-power"
+      ],
+      "canonicalPath": "/formulas/3aaa6cca-c480-5359-a2f3-547f3a955eb1",
+      "guideSlug": null
+    },
+    {
+      "formulaId": "2525eb15-1ca6-560c-9aa3-09bc8c9aef58",
+      "displayName": "j_tchebychevu2",
+      "primaryFamily": "algebraic-power",
+      "categories": [
+        "algebraic-power"
+      ],
+      "canonicalPath": "/formulas/2525eb15-1ca6-560c-9aa3-09bc8c9aef58",
+      "guideSlug": null
+    },
+    {
+      "formulaId": "670ca9f2-5188-595e-86ea-6a44b7cb73e3",
+      "displayName": "j_tchebychevu3",
+      "primaryFamily": "algebraic-power",
+      "categories": [
+        "algebraic-power"
+      ],
+      "canonicalPath": "/formulas/670ca9f2-5188-595e-86ea-6a44b7cb73e3",
+      "guideSlug": null
+    },
+    {
+      "formulaId": "220b121f-2a09-5c0a-a90e-b81044f0206b",
+      "displayName": "j_tchebychevu4",
+      "primaryFamily": "algebraic-power",
+      "categories": [
+        "algebraic-power"
+      ],
+      "canonicalPath": "/formulas/220b121f-2a09-5c0a-a90e-b81044f0206b",
+      "guideSlug": null
+    },
+    {
+      "formulaId": "7ead9a6a-0c66-5aa8-a448-d8594876e727",
+      "displayName": "j_tchebychevu5",
+      "primaryFamily": "algebraic-power",
+      "categories": [
+        "algebraic-power"
+      ],
+      "canonicalPath": "/formulas/7ead9a6a-0c66-5aa8-a448-d8594876e727",
+      "guideSlug": null
+    },
+    {
+      "formulaId": "1b93e201-bdba-5bb4-8605-562d2548e100",
+      "displayName": "j_tchebychevu6",
+      "primaryFamily": "algebraic-power",
+      "categories": [
+        "algebraic-power"
+      ],
+      "canonicalPath": "/formulas/1b93e201-bdba-5bb4-8605-562d2548e100",
+      "guideSlug": null
+    },
+    {
+      "formulaId": "ad3fb2d1-4157-51aa-8576-2fb203e4747a",
+      "displayName": "j_tchebychevu7",
+      "primaryFamily": "algebraic-power",
+      "categories": [
+        "algebraic-power"
+      ],
+      "canonicalPath": "/formulas/ad3fb2d1-4157-51aa-8576-2fb203e4747a",
+      "guideSlug": null
+    },
+    {
+      "formulaId": "5e9ec92f-0bb6-5534-adf5-d7ddc7ff60c3",
+      "displayName": "j1",
+      "primaryFamily": "orbit-memory",
+      "categories": [
+        "orbit-memory"
+      ],
+      "canonicalPath": "/formulas/5e9ec92f-0bb6-5534-adf5-d7ddc7ff60c3",
+      "guideSlug": null
+    },
+    {
+      "formulaId": "b2e4941a-18d3-5551-a140-525de1f0d1df",
+      "displayName": "jc",
+      "primaryFamily": "orbit-memory",
+      "categories": [
+        "orbit-memory"
+      ],
+      "canonicalPath": "/formulas/b2e4941a-18d3-5551-a140-525de1f0d1df",
+      "guideSlug": null
+    },
+    {
+      "formulaId": "05a7f40f-5cb6-538e-b376-40df4c543d49",
+      "displayName": "jfnc",
+      "primaryFamily": "orbit-memory",
+      "categories": [
+        "orbit-memory"
+      ],
+      "canonicalPath": "/formulas/05a7f40f-5cb6-538e-b376-40df4c543d49",
+      "guideSlug": null
+    },
+    {
+      "formulaId": "ff90e8db-2d3f-5cef-a493-489752eed57b",
+      "displayName": "jfnz",
+      "primaryFamily": "orbit-memory",
+      "categories": [
+        "orbit-memory"
+      ],
+      "canonicalPath": "/formulas/ff90e8db-2d3f-5cef-a493-489752eed57b",
+      "guideSlug": null
+    },
+    {
+      "formulaId": "5e77d815-2c11-519d-a7fb-edcddb504d54",
+      "displayName": "jm_03",
+      "primaryFamily": "function-composition",
+      "categories": [
+        "function-composition"
+      ],
+      "canonicalPath": "/formulas/5e77d815-2c11-519d-a7fb-edcddb504d54",
+      "guideSlug": null
+    },
+    {
+      "formulaId": "423bcb75-4e45-58fb-97f2-999f51947bd3",
+      "displayName": "jm_03a",
+      "primaryFamily": "function-composition",
+      "categories": [
+        "function-composition"
+      ],
+      "canonicalPath": "/formulas/423bcb75-4e45-58fb-97f2-999f51947bd3",
+      "guideSlug": null
+    },
+    {
+      "formulaId": "34246d25-1aa2-5f1e-b37e-fc442b3ad9a6",
+      "displayName": "jm_04",
+      "primaryFamily": "function-composition",
+      "categories": [
+        "function-composition"
+      ],
+      "canonicalPath": "/formulas/34246d25-1aa2-5f1e-b37e-fc442b3ad9a6",
+      "guideSlug": null
+    },
+    {
+      "formulaId": "3d70a4c8-af83-58ad-9985-326f1412ef5d",
+      "displayName": "jm_05",
+      "primaryFamily": "function-composition",
+      "categories": [
+        "function-composition"
+      ],
+      "canonicalPath": "/formulas/3d70a4c8-af83-58ad-9985-326f1412ef5d",
+      "guideSlug": null
+    },
+    {
+      "formulaId": "f876a613-3cb0-58ac-b124-f2985773809f",
+      "displayName": "jm_06",
+      "primaryFamily": "function-composition",
+      "categories": [
+        "function-composition"
+      ],
+      "canonicalPath": "/formulas/f876a613-3cb0-58ac-b124-f2985773809f",
+      "guideSlug": null
+    },
+    {
+      "formulaId": "3de9b6ff-2b9b-5187-93ea-dd1161a70d92",
+      "displayName": "jm_09",
+      "primaryFamily": "function-composition",
+      "categories": [
+        "function-composition"
+      ],
+      "canonicalPath": "/formulas/3de9b6ff-2b9b-5187-93ea-dd1161a70d92",
+      "guideSlug": null
+    },
+    {
+      "formulaId": "445e20a5-2d78-56e2-9741-8429545ecb5e",
+      "displayName": "jm_10",
+      "primaryFamily": "function-composition",
+      "categories": [
+        "function-composition"
+      ],
+      "canonicalPath": "/formulas/445e20a5-2d78-56e2-9741-8429545ecb5e",
+      "guideSlug": null
+    },
+    {
+      "formulaId": "5f788658-714f-5153-923c-4dcf2f551b12",
+      "displayName": "jm_11",
+      "primaryFamily": "function-composition",
+      "categories": [
+        "function-composition"
+      ],
+      "canonicalPath": "/formulas/5f788658-714f-5153-923c-4dcf2f551b12",
+      "guideSlug": null
+    },
+    {
+      "formulaId": "4d80463c-a4d2-539d-957c-40340039c419",
+      "displayName": "jm_11a",
+      "primaryFamily": "function-composition",
+      "categories": [
+        "function-composition"
+      ],
+      "canonicalPath": "/formulas/4d80463c-a4d2-539d-957c-40340039c419",
+      "guideSlug": null
+    },
+    {
+      "formulaId": "08604031-781f-5563-a07d-ba4ee2ba5521",
+      "displayName": "jm_12",
+      "primaryFamily": "function-composition",
+      "categories": [
+        "function-composition"
+      ],
+      "canonicalPath": "/formulas/08604031-781f-5563-a07d-ba4ee2ba5521",
+      "guideSlug": null
+    },
+    {
+      "formulaId": "87580e5e-bb87-5b05-87f6-45bc8b4e03fb",
+      "displayName": "jm_13",
+      "primaryFamily": "function-composition",
+      "categories": [
+        "function-composition"
+      ],
+      "canonicalPath": "/formulas/87580e5e-bb87-5b05-87f6-45bc8b4e03fb",
+      "guideSlug": null
+    },
+    {
+      "formulaId": "d68394df-e4bf-5004-9605-89f14ff00e93",
+      "displayName": "jm_14",
+      "primaryFamily": "function-composition",
+      "categories": [
+        "function-composition"
+      ],
+      "canonicalPath": "/formulas/d68394df-e4bf-5004-9605-89f14ff00e93",
+      "guideSlug": null
+    },
+    {
+      "formulaId": "32d004cc-c75b-5242-b08a-202a8f378a8d",
+      "displayName": "jm_15",
+      "primaryFamily": "function-composition",
+      "categories": [
+        "function-composition"
+      ],
+      "canonicalPath": "/formulas/32d004cc-c75b-5242-b08a-202a8f378a8d",
+      "guideSlug": null
+    },
+    {
+      "formulaId": "05f97a66-bed1-5a90-9477-2c1c0679015a",
+      "displayName": "jm_16",
+      "primaryFamily": "function-composition",
+      "categories": [
+        "function-composition"
+      ],
+      "canonicalPath": "/formulas/05f97a66-bed1-5a90-9477-2c1c0679015a",
+      "guideSlug": null
+    },
+    {
+      "formulaId": "0ab98320-d82b-5b61-b491-7dc2d2b1fe03",
+      "displayName": "jm_17",
+      "primaryFamily": "function-composition",
+      "categories": [
+        "function-composition"
+      ],
+      "canonicalPath": "/formulas/0ab98320-d82b-5b61-b491-7dc2d2b1fe03",
+      "guideSlug": null
+    },
+    {
+      "formulaId": "0109434e-e9cc-5d80-ad3f-d25ec62cbfda",
+      "displayName": "jm_18",
+      "primaryFamily": "function-composition",
+      "categories": [
+        "function-composition"
+      ],
+      "canonicalPath": "/formulas/0109434e-e9cc-5d80-ad3f-d25ec62cbfda",
+      "guideSlug": null
+    },
+    {
+      "formulaId": "32542eeb-e9fe-5c0f-9414-b00f98c03709",
+      "displayName": "jm_19",
+      "primaryFamily": "function-composition",
+      "categories": [
+        "function-composition"
+      ],
+      "canonicalPath": "/formulas/32542eeb-e9fe-5c0f-9414-b00f98c03709",
+      "guideSlug": null
+    },
+    {
+      "formulaId": "bb048a8c-0c83-59b9-97e7-c5ed2fc39524",
+      "displayName": "jm_20",
+      "primaryFamily": "function-composition",
+      "categories": [
+        "function-composition"
+      ],
+      "canonicalPath": "/formulas/bb048a8c-0c83-59b9-97e7-c5ed2fc39524",
+      "guideSlug": null
+    },
+    {
+      "formulaId": "fd6040b2-2f96-5fa8-81db-6b7c996c764f",
+      "displayName": "jm_22",
+      "primaryFamily": "function-composition",
+      "categories": [
+        "function-composition"
+      ],
+      "canonicalPath": "/formulas/fd6040b2-2f96-5fa8-81db-6b7c996c764f",
+      "guideSlug": null
+    },
+    {
+      "formulaId": "99e9f931-2711-51ae-ae06-28e9345277ba",
+      "displayName": "jm_23",
+      "primaryFamily": "function-composition",
+      "categories": [
+        "function-composition"
+      ],
+      "canonicalPath": "/formulas/99e9f931-2711-51ae-ae06-28e9345277ba",
+      "guideSlug": null
+    },
+    {
+      "formulaId": "5f191f8d-ec65-52c1-8e86-c747a919f3cf",
+      "displayName": "jm_24",
+      "primaryFamily": "function-composition",
+      "categories": [
+        "function-composition"
+      ],
+      "canonicalPath": "/formulas/5f191f8d-ec65-52c1-8e86-c747a919f3cf",
+      "guideSlug": null
+    },
+    {
+      "formulaId": "c724efce-f10b-5d8c-848a-4c00698210a7",
+      "displayName": "jm_25",
+      "primaryFamily": "function-composition",
+      "categories": [
+        "function-composition"
+      ],
+      "canonicalPath": "/formulas/c724efce-f10b-5d8c-848a-4c00698210a7",
+      "guideSlug": null
+    },
+    {
+      "formulaId": "834e2e45-7622-5f87-b825-b0bcfc15cfe2",
+      "displayName": "jm_26",
+      "primaryFamily": "function-composition",
+      "categories": [
+        "function-composition"
+      ],
+      "canonicalPath": "/formulas/834e2e45-7622-5f87-b825-b0bcfc15cfe2",
+      "guideSlug": null
+    },
+    {
+      "formulaId": "da95ae4b-d401-5eb0-862c-7d977c328fad",
+      "displayName": "jm_27",
+      "primaryFamily": "rational-reciprocal",
+      "categories": [
+        "rational-reciprocal"
+      ],
+      "canonicalPath": "/formulas/da95ae4b-d401-5eb0-862c-7d977c328fad",
+      "guideSlug": null
+    },
+    {
+      "formulaId": "0be09ed0-d506-51d9-aadf-2d06d7316aeb",
+      "displayName": "jm_ducks",
+      "primaryFamily": "algebraic-power",
+      "categories": [
+        "algebraic-power"
+      ],
+      "canonicalPath": "/formulas/0be09ed0-d506-51d9-aadf-2d06d7316aeb",
+      "guideSlug": null
+    },
+    {
+      "formulaId": "70b6af5a-8da1-5403-8039-d5b475f48248",
+      "displayName": "jmask",
+      "primaryFamily": "function-composition",
+      "categories": [
+        "function-composition"
+      ],
+      "canonicalPath": "/formulas/70b6af5a-8da1-5403-8039-d5b475f48248",
+      "guideSlug": null
+    },
+    {
+      "formulaId": "f9fd2a6b-2734-50d3-9431-5ccf33887682",
+      "displayName": "joc",
+      "primaryFamily": "orbit-memory",
+      "categories": [
+        "orbit-memory"
+      ],
+      "canonicalPath": "/formulas/f9fd2a6b-2734-50d3-9431-5ccf33887682",
+      "guideSlug": null
+    },
+    {
+      "formulaId": "999adf4a-6019-56f0-89a4-c09250e9a0a2",
+      "displayName": "joz",
+      "primaryFamily": "orbit-memory",
+      "categories": [
+        "orbit-memory"
+      ],
+      "canonicalPath": "/formulas/999adf4a-6019-56f0-89a4-c09250e9a0a2",
+      "guideSlug": null
+    },
+    {
+      "formulaId": "b8b69fda-a887-58b0-995a-8343f768477e",
+      "displayName": "juliaconj",
+      "primaryFamily": "algebraic-power",
+      "categories": [
+        "algebraic-power"
+      ],
+      "canonicalPath": "/formulas/b8b69fda-a887-58b0-995a-8343f768477e",
+      "guideSlug": null
+    },
+    {
+      "formulaId": "89eea36e-372e-5530-90f9-69879253080a",
+      "displayName": "juliconj01",
+      "primaryFamily": "algebraic-power",
+      "categories": [
+        "algebraic-power"
+      ],
+      "canonicalPath": "/formulas/89eea36e-372e-5530-90f9-69879253080a",
+      "guideSlug": null
+    },
+    {
+      "formulaId": "82fb9306-8444-58a1-a86e-c4794093d7ed",
+      "displayName": "juliconj02",
+      "primaryFamily": "algebraic-power",
+      "categories": [
+        "algebraic-power"
+      ],
+      "canonicalPath": "/formulas/82fb9306-8444-58a1-a86e-c4794093d7ed",
+      "guideSlug": null
+    },
+    {
+      "formulaId": "47c9fe8a-3476-5f65-a063-62638c2e6069",
+      "displayName": "juliconj03",
+      "primaryFamily": "algebraic-power",
+      "categories": [
+        "algebraic-power"
+      ],
+      "canonicalPath": "/formulas/47c9fe8a-3476-5f65-a063-62638c2e6069",
+      "guideSlug": null
+    },
+    {
+      "formulaId": "7953b392-8bc6-5913-be0a-d458c854647f",
+      "displayName": "juliconj04",
+      "primaryFamily": "algebraic-power",
+      "categories": [
+        "algebraic-power"
+      ],
+      "canonicalPath": "/formulas/7953b392-8bc6-5913-be0a-d458c854647f",
+      "guideSlug": null
+    },
+    {
+      "formulaId": "1be7d921-6d6e-5141-9387-d7a6c5493eac",
+      "displayName": "juliconj05",
+      "primaryFamily": "algebraic-power",
+      "categories": [
+        "algebraic-power"
+      ],
+      "canonicalPath": "/formulas/1be7d921-6d6e-5141-9387-d7a6c5493eac",
+      "guideSlug": null
+    },
+    {
+      "formulaId": "16add0c8-8818-5127-9e53-c429c673e127",
+      "displayName": "juliconj06",
+      "primaryFamily": "algebraic-power",
+      "categories": [
+        "algebraic-power"
+      ],
+      "canonicalPath": "/formulas/16add0c8-8818-5127-9e53-c429c673e127",
+      "guideSlug": null
+    },
+    {
+      "formulaId": "35750620-a4a0-5454-b03b-18df45ddd0f4",
+      "displayName": "juliconj07",
+      "primaryFamily": "algebraic-power",
+      "categories": [
+        "algebraic-power"
+      ],
+      "canonicalPath": "/formulas/35750620-a4a0-5454-b03b-18df45ddd0f4",
+      "guideSlug": null
+    },
+    {
+      "formulaId": "d3aba0c4-e0db-57c9-a0e0-78894ad0b2e6",
+      "displayName": "juliconj08",
+      "primaryFamily": "algebraic-power",
+      "categories": [
+        "algebraic-power"
+      ],
+      "canonicalPath": "/formulas/d3aba0c4-e0db-57c9-a0e0-78894ad0b2e6",
+      "guideSlug": null
+    },
+    {
+      "formulaId": "ee3be07b-bfde-53bf-bea2-db01f18ab0f2",
+      "displayName": "juliconj09",
+      "primaryFamily": "algebraic-power",
+      "categories": [
+        "algebraic-power"
+      ],
+      "canonicalPath": "/formulas/ee3be07b-bfde-53bf-bea2-db01f18ab0f2",
+      "guideSlug": null
+    },
+    {
+      "formulaId": "54fa972b-b4c3-5ec2-a47f-e00141e22dfc",
+      "displayName": "juliconj10",
+      "primaryFamily": "algebraic-power",
+      "categories": [
+        "algebraic-power"
+      ],
+      "canonicalPath": "/formulas/54fa972b-b4c3-5ec2-a47f-e00141e22dfc",
+      "guideSlug": null
+    },
+    {
+      "formulaId": "1ac85fe0-8fcb-557d-abf4-5a71bfcea5e5",
+      "displayName": "juliconj11",
+      "primaryFamily": "algebraic-power",
+      "categories": [
+        "algebraic-power"
+      ],
+      "canonicalPath": "/formulas/1ac85fe0-8fcb-557d-abf4-5a71bfcea5e5",
+      "guideSlug": null
+    },
+    {
+      "formulaId": "fe092eb1-5e44-5b5b-b028-f1298671a038",
+      "displayName": "julike",
+      "primaryFamily": "algebraic-power",
+      "categories": [
+        "algebraic-power"
+      ],
+      "canonicalPath": "/formulas/fe092eb1-5e44-5b5b-b028-f1298671a038",
+      "guideSlug": null
+    },
+    {
+      "formulaId": "62423e7c-842d-5b59-b73d-03a40ec11da1",
+      "displayName": "julitile1",
+      "primaryFamily": "algebraic-power",
+      "categories": [
+        "algebraic-power"
+      ],
+      "canonicalPath": "/formulas/62423e7c-842d-5b59-b73d-03a40ec11da1",
+      "guideSlug": null
+    },
+    {
+      "formulaId": "40e5fff7-6c0b-58da-a044-12489e500bef",
+      "displayName": "jz",
+      "primaryFamily": "orbit-memory",
+      "categories": [
+        "orbit-memory"
+      ],
+      "canonicalPath": "/formulas/40e5fff7-6c0b-58da-a044-12489e500bef",
+      "guideSlug": null
+    },
+    {
+      "formulaId": "c1c898f3-c9a3-583d-9a0a-d09968ba0db3",
+      "displayName": "lambda",
+      "primaryFamily": "algebraic-power",
+      "categories": [
+        "classic",
+        "algebraic-power"
+      ],
+      "canonicalPath": "/formulas/c1c898f3-c9a3-583d-9a0a-d09968ba0db3",
+      "guideSlug": "lambda"
+    },
+    {
+      "formulaId": "8b4578e2-5ecf-5500-9dc9-57a1e51e627e",
+      "displayName": "lambdapwr",
+      "primaryFamily": "algebraic-power",
+      "categories": [
+        "algebraic-power"
+      ],
+      "canonicalPath": "/formulas/8b4578e2-5ecf-5500-9dc9-57a1e51e627e",
+      "guideSlug": null
+    },
+    {
+      "formulaId": "8c95abba-5037-5019-899b-12492010ce3a",
+      "displayName": "larry",
+      "primaryFamily": "function-composition",
+      "categories": [
+        "function-composition"
+      ],
+      "canonicalPath": "/formulas/8c95abba-5037-5019-899b-12492010ce3a",
+      "guideSlug": null
+    },
+    {
+      "formulaId": "c64fd5e1-77f7-5b37-bafa-e5da99a5e22d",
+      "displayName": "leemandel1",
+      "primaryFamily": "rational-reciprocal",
+      "categories": [
+        "rational-reciprocal"
+      ],
+      "canonicalPath": "/formulas/c64fd5e1-77f7-5b37-bafa-e5da99a5e22d",
+      "guideSlug": null
+    },
+    {
+      "formulaId": "77ca142c-a2c6-568d-acbd-2b4dde8c7e89",
+      "displayName": "leemandel2",
+      "primaryFamily": "rational-reciprocal",
+      "categories": [
+        "rational-reciprocal"
+      ],
+      "canonicalPath": "/formulas/77ca142c-a2c6-568d-acbd-2b4dde8c7e89",
+      "guideSlug": null
+    },
+    {
+      "formulaId": "9eca49f4-3219-5791-99fb-395ce7646f7c",
+      "displayName": "leemandel3",
+      "primaryFamily": "orbit-memory",
+      "categories": [
+        "orbit-memory"
+      ],
+      "canonicalPath": "/formulas/9eca49f4-3219-5791-99fb-395ce7646f7c",
+      "guideSlug": null
+    },
+    {
+      "formulaId": "c3ce9a18-7a6d-5043-b8bb-7bde0f95096b",
+      "displayName": "liar1",
+      "primaryFamily": "folded-absolute",
+      "categories": [
+        "folded-absolute"
+      ],
+      "canonicalPath": "/formulas/c3ce9a18-7a6d-5043-b8bb-7bde0f95096b",
+      "guideSlug": null
+    },
+    {
+      "formulaId": "526aa565-87eb-5edd-b059-8f4e44876f0f",
+      "displayName": "liar2",
+      "primaryFamily": "folded-absolute",
+      "categories": [
+        "folded-absolute"
+      ],
+      "canonicalPath": "/formulas/526aa565-87eb-5edd-b059-8f4e44876f0f",
+      "guideSlug": null
+    },
+    {
+      "formulaId": "7d7ac95b-e1aa-53d0-a306-a2be1aa2b095",
+      "displayName": "liar3",
+      "primaryFamily": "folded-absolute",
+      "categories": [
+        "folded-absolute"
+      ],
+      "canonicalPath": "/formulas/7d7ac95b-e1aa-53d0-a306-a2be1aa2b095",
+      "guideSlug": null
+    },
+    {
+      "formulaId": "280229ec-dd2f-5982-9954-75829a37a5f2",
+      "displayName": "liar4",
+      "primaryFamily": "folded-absolute",
+      "categories": [
+        "folded-absolute"
+      ],
+      "canonicalPath": "/formulas/280229ec-dd2f-5982-9954-75829a37a5f2",
+      "guideSlug": null
+    },
+    {
+      "formulaId": "c47127de-9359-5548-b99f-f9c69b21b79b",
+      "displayName": "liar4[float=y]",
+      "primaryFamily": "folded-absolute",
+      "categories": [
+        "folded-absolute"
+      ],
+      "canonicalPath": "/formulas/c47127de-9359-5548-b99f-f9c69b21b79b",
+      "guideSlug": null
+    },
+    {
+      "formulaId": "2daea798-a058-5b4c-ada8-1712c475fadf",
+      "displayName": "logistic",
+      "primaryFamily": "algebraic-power",
+      "categories": [
+        "classic",
+        "algebraic-power"
+      ],
+      "canonicalPath": "/formulas/2daea798-a058-5b4c-ada8-1712c475fadf",
+      "guideSlug": null
+    },
+    {
+      "formulaId": "d93a2f0f-7208-5019-ad82-7a1d319a4412",
+      "displayName": "logJulia",
+      "primaryFamily": "transcendental",
+      "categories": [
+        "classic",
+        "transcendental"
+      ],
+      "canonicalPath": "/formulas/d93a2f0f-7208-5019-ad82-7a1d319a4412",
+      "guideSlug": null
+    },
+    {
+      "formulaId": "cce36994-9654-5214-b931-b865d4f4bb90",
+      "displayName": "m_lagandre2",
+      "primaryFamily": "algebraic-power",
+      "categories": [
+        "algebraic-power"
+      ],
+      "canonicalPath": "/formulas/cce36994-9654-5214-b931-b865d4f4bb90",
+      "guideSlug": null
+    },
+    {
+      "formulaId": "79260cb1-fa26-5139-a3dc-8ecdc29a2afd",
+      "displayName": "m_lagandre4",
+      "primaryFamily": "algebraic-power",
+      "categories": [
+        "algebraic-power"
+      ],
+      "canonicalPath": "/formulas/79260cb1-fa26-5139-a3dc-8ecdc29a2afd",
+      "guideSlug": null
+    },
+    {
+      "formulaId": "c2bcb574-f9c9-56c7-bc74-86c3818b2a6e",
+      "displayName": "m_lagandre5",
+      "primaryFamily": "algebraic-power",
+      "categories": [
+        "algebraic-power"
+      ],
+      "canonicalPath": "/formulas/c2bcb574-f9c9-56c7-bc74-86c3818b2a6e",
+      "guideSlug": null
+    },
+    {
+      "formulaId": "165d6b06-a4b2-53fe-bac1-07a6fc2ab142",
+      "displayName": "m_lagandre6",
+      "primaryFamily": "algebraic-power",
+      "categories": [
+        "algebraic-power"
+      ],
+      "canonicalPath": "/formulas/165d6b06-a4b2-53fe-bac1-07a6fc2ab142",
+      "guideSlug": null
+    },
+    {
+      "formulaId": "1c33f476-635f-5845-8f0a-56ab2315e051",
+      "displayName": "m_lagandre7",
+      "primaryFamily": "algebraic-power",
+      "categories": [
+        "algebraic-power"
+      ],
+      "canonicalPath": "/formulas/1c33f476-635f-5845-8f0a-56ab2315e051",
+      "guideSlug": null
+    },
+    {
+      "formulaId": "1a6253b6-de0e-5a0b-9028-f6db40da8fa7",
+      "displayName": "m_laguerre2",
+      "primaryFamily": "algebraic-power",
+      "categories": [
+        "algebraic-power"
+      ],
+      "canonicalPath": "/formulas/1a6253b6-de0e-5a0b-9028-f6db40da8fa7",
+      "guideSlug": null
+    },
+    {
+      "formulaId": "0cfbe9a6-cad4-51c5-a85c-345978b19bfe",
+      "displayName": "m_laguerre3",
+      "primaryFamily": "algebraic-power",
+      "categories": [
+        "algebraic-power"
+      ],
+      "canonicalPath": "/formulas/0cfbe9a6-cad4-51c5-a85c-345978b19bfe",
+      "guideSlug": null
+    },
+    {
+      "formulaId": "d090c254-4d6e-5d89-b8b6-3345c59b2a89",
+      "displayName": "m_laguerre4",
+      "primaryFamily": "algebraic-power",
+      "categories": [
+        "algebraic-power"
+      ],
+      "canonicalPath": "/formulas/d090c254-4d6e-5d89-b8b6-3345c59b2a89",
+      "guideSlug": null
+    },
+    {
+      "formulaId": "cc4886bd-bff6-5563-b798-677da9a92dab",
+      "displayName": "m_laguerre5",
+      "primaryFamily": "algebraic-power",
+      "categories": [
+        "algebraic-power"
+      ],
+      "canonicalPath": "/formulas/cc4886bd-bff6-5563-b798-677da9a92dab",
+      "guideSlug": null
+    },
+    {
+      "formulaId": "c2a51dc4-1d42-5d4e-ad5b-5ffe960c5f50",
+      "displayName": "m_laguerre6",
+      "primaryFamily": "algebraic-power",
+      "categories": [
+        "algebraic-power"
+      ],
+      "canonicalPath": "/formulas/c2a51dc4-1d42-5d4e-ad5b-5ffe960c5f50",
+      "guideSlug": null
+    },
+    {
+      "formulaId": "e5659975-2319-56c3-ab28-edf6f6981635",
+      "displayName": "m_tchebychevc2",
+      "primaryFamily": "algebraic-power",
+      "categories": [
+        "algebraic-power"
+      ],
+      "canonicalPath": "/formulas/e5659975-2319-56c3-ab28-edf6f6981635",
+      "guideSlug": null
+    },
+    {
+      "formulaId": "ad38dcc4-1079-5638-a35c-b16f53ce6e62",
+      "displayName": "m_tchebychevc3",
+      "primaryFamily": "algebraic-power",
+      "categories": [
+        "algebraic-power"
+      ],
+      "canonicalPath": "/formulas/ad38dcc4-1079-5638-a35c-b16f53ce6e62",
+      "guideSlug": null
+    },
+    {
+      "formulaId": "e84e8cee-b68f-5494-b098-a7b7a7237705",
+      "displayName": "m_tchebychevc4",
+      "primaryFamily": "algebraic-power",
+      "categories": [
+        "algebraic-power"
+      ],
+      "canonicalPath": "/formulas/e84e8cee-b68f-5494-b098-a7b7a7237705",
+      "guideSlug": null
+    },
+    {
+      "formulaId": "abc996b8-b004-5ec2-8ea8-661615271efc",
+      "displayName": "m_tchebychevc5",
+      "primaryFamily": "algebraic-power",
+      "categories": [
+        "algebraic-power"
+      ],
+      "canonicalPath": "/formulas/abc996b8-b004-5ec2-8ea8-661615271efc",
+      "guideSlug": null
+    },
+    {
+      "formulaId": "77fb9270-e9aa-5e7d-af63-d3c28af6d9ad",
+      "displayName": "m_tchebychevc6",
+      "primaryFamily": "algebraic-power",
+      "categories": [
+        "algebraic-power"
+      ],
+      "canonicalPath": "/formulas/77fb9270-e9aa-5e7d-af63-d3c28af6d9ad",
+      "guideSlug": null
+    },
+    {
+      "formulaId": "a3f8a298-ed79-5826-8652-74589c595e06",
+      "displayName": "m_tchebychevc7",
+      "primaryFamily": "algebraic-power",
+      "categories": [
+        "algebraic-power"
+      ],
+      "canonicalPath": "/formulas/a3f8a298-ed79-5826-8652-74589c595e06",
+      "guideSlug": null
+    },
+    {
+      "formulaId": "e7a86d4b-06bf-575d-9eaf-c0ab7f21841e",
+      "displayName": "m_tchebychevs2",
+      "primaryFamily": "algebraic-power",
+      "categories": [
+        "algebraic-power"
+      ],
+      "canonicalPath": "/formulas/e7a86d4b-06bf-575d-9eaf-c0ab7f21841e",
+      "guideSlug": null
+    },
+    {
+      "formulaId": "126b0255-8e0b-535c-b752-36473c926fe9",
+      "displayName": "m_tchebychevs3",
+      "primaryFamily": "algebraic-power",
+      "categories": [
+        "algebraic-power"
+      ],
+      "canonicalPath": "/formulas/126b0255-8e0b-535c-b752-36473c926fe9",
+      "guideSlug": null
+    },
+    {
+      "formulaId": "8ddf2423-d8ff-5d3d-967c-5374c52925cb",
+      "displayName": "m_tchebychevs4",
+      "primaryFamily": "algebraic-power",
+      "categories": [
+        "algebraic-power"
+      ],
+      "canonicalPath": "/formulas/8ddf2423-d8ff-5d3d-967c-5374c52925cb",
+      "guideSlug": null
+    },
+    {
+      "formulaId": "0f6c423d-2d1f-5b44-ad96-b4798b2a5fc5",
+      "displayName": "m_tchebychevs5",
+      "primaryFamily": "algebraic-power",
+      "categories": [
+        "algebraic-power"
+      ],
+      "canonicalPath": "/formulas/0f6c423d-2d1f-5b44-ad96-b4798b2a5fc5",
+      "guideSlug": null
+    },
+    {
+      "formulaId": "a3c91590-898f-55f7-92b0-ca549477edd3",
+      "displayName": "m_tchebychevs6",
+      "primaryFamily": "algebraic-power",
+      "categories": [
+        "algebraic-power"
+      ],
+      "canonicalPath": "/formulas/a3c91590-898f-55f7-92b0-ca549477edd3",
+      "guideSlug": null
+    },
+    {
+      "formulaId": "269daa88-48be-5078-96f9-1b700bacddec",
+      "displayName": "m_tchebychevs7",
+      "primaryFamily": "algebraic-power",
+      "categories": [
+        "algebraic-power"
+      ],
+      "canonicalPath": "/formulas/269daa88-48be-5078-96f9-1b700bacddec",
+      "guideSlug": null
+    },
+    {
+      "formulaId": "4082549c-cbbd-55ad-bb38-61e4eb3d46dd",
+      "displayName": "m_tchebychevt2",
+      "primaryFamily": "algebraic-power",
+      "categories": [
+        "algebraic-power"
+      ],
+      "canonicalPath": "/formulas/4082549c-cbbd-55ad-bb38-61e4eb3d46dd",
+      "guideSlug": null
+    },
+    {
+      "formulaId": "ed7e4ea5-2118-5ade-8fbc-19b5c2a6c8fc",
+      "displayName": "m_tchebychevt3",
+      "primaryFamily": "algebraic-power",
+      "categories": [
+        "algebraic-power"
+      ],
+      "canonicalPath": "/formulas/ed7e4ea5-2118-5ade-8fbc-19b5c2a6c8fc",
+      "guideSlug": null
+    },
+    {
+      "formulaId": "f9a6409b-130b-5dd5-be4f-789927e47ad2",
+      "displayName": "m_tchebychevt4",
+      "primaryFamily": "algebraic-power",
+      "categories": [
+        "algebraic-power"
+      ],
+      "canonicalPath": "/formulas/f9a6409b-130b-5dd5-be4f-789927e47ad2",
+      "guideSlug": null
+    },
+    {
+      "formulaId": "df1c8979-3e38-5868-87ee-4f2e2a460b72",
+      "displayName": "m_tchebychevt5",
+      "primaryFamily": "algebraic-power",
+      "categories": [
+        "algebraic-power"
+      ],
+      "canonicalPath": "/formulas/df1c8979-3e38-5868-87ee-4f2e2a460b72",
+      "guideSlug": null
+    },
+    {
+      "formulaId": "3773f101-06b1-5e58-bdb7-708853997f30",
+      "displayName": "m_tchebychevt6",
+      "primaryFamily": "algebraic-power",
+      "categories": [
+        "algebraic-power"
+      ],
+      "canonicalPath": "/formulas/3773f101-06b1-5e58-bdb7-708853997f30",
+      "guideSlug": null
+    },
+    {
+      "formulaId": "8216cd19-79d0-56e3-88ac-5c58a28bce85",
+      "displayName": "m_tchebychevt7",
+      "primaryFamily": "algebraic-power",
+      "categories": [
+        "algebraic-power"
+      ],
+      "canonicalPath": "/formulas/8216cd19-79d0-56e3-88ac-5c58a28bce85",
+      "guideSlug": null
+    },
+    {
+      "formulaId": "d55f924e-86a7-540d-afb4-e678f640a66b",
+      "displayName": "m_tchebychevu2",
+      "primaryFamily": "algebraic-power",
+      "categories": [
+        "algebraic-power"
+      ],
+      "canonicalPath": "/formulas/d55f924e-86a7-540d-afb4-e678f640a66b",
+      "guideSlug": null
+    },
+    {
+      "formulaId": "6b0c0c41-adc5-54d4-9c59-1a738099b5ec",
+      "displayName": "m_tchebychevu3",
+      "primaryFamily": "algebraic-power",
+      "categories": [
+        "algebraic-power"
+      ],
+      "canonicalPath": "/formulas/6b0c0c41-adc5-54d4-9c59-1a738099b5ec",
+      "guideSlug": null
+    },
+    {
+      "formulaId": "c0dec4b4-5412-5c02-966a-612c56880508",
+      "displayName": "m_tchebychevu4",
+      "primaryFamily": "algebraic-power",
+      "categories": [
+        "algebraic-power"
+      ],
+      "canonicalPath": "/formulas/c0dec4b4-5412-5c02-966a-612c56880508",
+      "guideSlug": null
+    },
+    {
+      "formulaId": "6ca66e2b-035b-594a-8169-553bf1e51d99",
+      "displayName": "m_tchebychevu5",
+      "primaryFamily": "algebraic-power",
+      "categories": [
+        "algebraic-power"
+      ],
+      "canonicalPath": "/formulas/6ca66e2b-035b-594a-8169-553bf1e51d99",
+      "guideSlug": null
+    },
+    {
+      "formulaId": "9cc91fab-f386-5ebc-9a71-722c4a8c7c75",
+      "displayName": "m_tchebychevu6",
+      "primaryFamily": "algebraic-power",
+      "categories": [
+        "algebraic-power"
+      ],
+      "canonicalPath": "/formulas/9cc91fab-f386-5ebc-9a71-722c4a8c7c75",
+      "guideSlug": null
+    },
+    {
+      "formulaId": "32af09e8-c0e1-59de-9193-43021db7fcdc",
+      "displayName": "m_tchebychevu7",
+      "primaryFamily": "algebraic-power",
+      "categories": [
+        "algebraic-power"
+      ],
+      "canonicalPath": "/formulas/32af09e8-c0e1-59de-9193-43021db7fcdc",
+      "guideSlug": null
+    },
+    {
+      "formulaId": "44d9b35c-ed7c-51d6-8ee1-14e56f5ade7d",
+      "displayName": "m1",
+      "primaryFamily": "orbit-memory",
+      "categories": [
+        "orbit-memory"
+      ],
+      "canonicalPath": "/formulas/44d9b35c-ed7c-51d6-8ee1-14e56f5ade7d",
+      "guideSlug": null
+    },
+    {
+      "formulaId": "12fc34ff-196d-5924-830e-6edb72dfc172",
+      "displayName": "magnet1",
+      "primaryFamily": "rational-reciprocal",
+      "categories": [
+        "classic",
+        "rational-reciprocal"
+      ],
+      "canonicalPath": "/formulas/12fc34ff-196d-5924-830e-6edb72dfc172",
+      "guideSlug": "magnet-type-1"
+    },
+    {
+      "formulaId": "2dd8a5a7-052a-5539-aab9-c533f7dec857",
+      "displayName": "magnet2",
+      "primaryFamily": "rational-reciprocal",
+      "categories": [
+        "classic",
+        "rational-reciprocal"
+      ],
+      "canonicalPath": "/formulas/2dd8a5a7-052a-5539-aab9-c533f7dec857",
+      "guideSlug": "magnet-type-2"
+    },
+    {
+      "formulaId": "554eef03-e757-5146-87f5-f03e5f75225e",
+      "displayName": "mandconj01",
+      "primaryFamily": "algebraic-power",
+      "categories": [
+        "algebraic-power"
+      ],
+      "canonicalPath": "/formulas/554eef03-e757-5146-87f5-f03e5f75225e",
+      "guideSlug": null
+    },
+    {
+      "formulaId": "2b86fa34-dd83-542e-9718-6e8ee2f8b5d2",
+      "displayName": "mandconj02",
+      "primaryFamily": "algebraic-power",
+      "categories": [
+        "algebraic-power"
+      ],
+      "canonicalPath": "/formulas/2b86fa34-dd83-542e-9718-6e8ee2f8b5d2",
+      "guideSlug": null
+    },
+    {
+      "formulaId": "11915b30-2b96-51dc-8d0d-b998c34c5fc0",
+      "displayName": "mandconj03",
+      "primaryFamily": "algebraic-power",
+      "categories": [
+        "algebraic-power"
+      ],
+      "canonicalPath": "/formulas/11915b30-2b96-51dc-8d0d-b998c34c5fc0",
+      "guideSlug": null
+    },
+    {
+      "formulaId": "6d413a47-cca9-5cb0-8c0e-60e3887a6138",
+      "displayName": "mandconj04",
+      "primaryFamily": "algebraic-power",
+      "categories": [
+        "algebraic-power"
+      ],
+      "canonicalPath": "/formulas/6d413a47-cca9-5cb0-8c0e-60e3887a6138",
+      "guideSlug": null
+    },
+    {
+      "formulaId": "3e73820f-a131-5b85-ae43-4bbc5ff697d2",
+      "displayName": "mandconj05",
+      "primaryFamily": "algebraic-power",
+      "categories": [
+        "algebraic-power"
+      ],
+      "canonicalPath": "/formulas/3e73820f-a131-5b85-ae43-4bbc5ff697d2",
+      "guideSlug": null
+    },
+    {
+      "formulaId": "540fc5ba-6b3a-5e55-8718-be55789231bf",
+      "displayName": "mandconj06",
+      "primaryFamily": "algebraic-power",
+      "categories": [
+        "algebraic-power"
+      ],
+      "canonicalPath": "/formulas/540fc5ba-6b3a-5e55-8718-be55789231bf",
+      "guideSlug": null
+    },
+    {
+      "formulaId": "f03e39ad-e077-5e01-8085-f25d653b506e",
+      "displayName": "mandconj07",
+      "primaryFamily": "algebraic-power",
+      "categories": [
+        "algebraic-power"
+      ],
+      "canonicalPath": "/formulas/f03e39ad-e077-5e01-8085-f25d653b506e",
+      "guideSlug": null
+    },
+    {
+      "formulaId": "a7beb1e7-dc8b-5411-acdf-6781eafd8b29",
+      "displayName": "mandconj08",
+      "primaryFamily": "algebraic-power",
+      "categories": [
+        "algebraic-power"
+      ],
+      "canonicalPath": "/formulas/a7beb1e7-dc8b-5411-acdf-6781eafd8b29",
+      "guideSlug": null
+    },
+    {
+      "formulaId": "81bf246a-0822-57e7-b659-cce3fbd8d818",
+      "displayName": "mandconj09",
+      "primaryFamily": "algebraic-power",
+      "categories": [
+        "algebraic-power"
+      ],
+      "canonicalPath": "/formulas/81bf246a-0822-57e7-b659-cce3fbd8d818",
+      "guideSlug": null
+    },
+    {
+      "formulaId": "82d5f7e0-77f9-5115-a6a4-3222eb0df696",
+      "displayName": "mandconj10",
+      "primaryFamily": "algebraic-power",
+      "categories": [
+        "algebraic-power"
+      ],
+      "canonicalPath": "/formulas/82d5f7e0-77f9-5115-a6a4-3222eb0df696",
+      "guideSlug": null
+    },
+    {
+      "formulaId": "3f5a2b00-8250-5df6-b48f-0c79749cf4a5",
+      "displayName": "mandconj11",
+      "primaryFamily": "algebraic-power",
+      "categories": [
+        "algebraic-power"
+      ],
+      "canonicalPath": "/formulas/3f5a2b00-8250-5df6-b48f-0c79749cf4a5",
+      "guideSlug": null
+    },
+    {
+      "formulaId": "280cd3e2-865b-5c78-90b7-39b2a36d7be0",
+      "displayName": "mandelbox",
+      "primaryFamily": "folded-absolute",
+      "categories": [
+        "classic",
+        "folded-absolute"
+      ],
+      "canonicalPath": "/formulas/280cd3e2-865b-5c78-90b7-39b2a36d7be0",
+      "guideSlug": "mandelbox"
+    },
+    {
+      "formulaId": "00e14aa8-b766-54ea-a359-3f5d20d329b7",
+      "displayName": "mandelbrot",
+      "primaryFamily": "algebraic-power",
+      "categories": [
+        "classic",
+        "algebraic-power"
+      ],
+      "canonicalPath": "/formulas/00e14aa8-b766-54ea-a359-3f5d20d329b7",
+      "guideSlug": "mandelbrot"
+    },
+    {
+      "formulaId": "d8ed1025-8ccf-5424-b161-df178a36a0fa",
+      "displayName": "mandelbrot",
+      "primaryFamily": "algebraic-power",
+      "categories": [
+        "algebraic-power"
+      ],
+      "canonicalPath": "/formulas/d8ed1025-8ccf-5424-b161-df178a36a0fa",
+      "guideSlug": null
+    },
+    {
+      "formulaId": "ce4febcc-cac4-5319-a46e-389a76e08d6f",
+      "displayName": "mandelconj",
+      "primaryFamily": "algebraic-power",
+      "categories": [
+        "algebraic-power"
+      ],
+      "canonicalPath": "/formulas/ce4febcc-cac4-5319-a46e-389a76e08d6f",
+      "guideSlug": null
+    },
+    {
+      "formulaId": "6e972810-83ea-5557-be77-084f730ee87b",
+      "displayName": "mandellambdapwr",
+      "primaryFamily": "algebraic-power",
+      "categories": [
+        "algebraic-power"
+      ],
+      "canonicalPath": "/formulas/6e972810-83ea-5557-be77-084f730ee87b",
+      "guideSlug": null
+    },
+    {
+      "formulaId": "ca206908-8323-5ef9-979b-c80575765e63",
+      "displayName": "manowar",
+      "primaryFamily": "orbit-memory",
+      "categories": [
+        "classic",
+        "orbit-memory"
+      ],
+      "canonicalPath": "/formulas/ca206908-8323-5ef9-979b-c80575765e63",
+      "guideSlug": null
+    },
+    {
+      "formulaId": "34678277-c72d-5f9e-a192-f3bdfea6907d",
+      "displayName": "mask",
+      "primaryFamily": "function-composition",
+      "categories": [
+        "function-composition"
+      ],
+      "canonicalPath": "/formulas/34678277-c72d-5f9e-a192-f3bdfea6907d",
+      "guideSlug": null
+    },
+    {
+      "formulaId": "cddc90de-e9bd-51ce-909b-b9b956bf419b",
+      "displayName": "mc",
+      "primaryFamily": "orbit-memory",
+      "categories": [
+        "orbit-memory"
+      ],
+      "canonicalPath": "/formulas/cddc90de-e9bd-51ce-909b-b9b956bf419b",
+      "guideSlug": null
+    },
+    {
+      "formulaId": "cc40b50c-d3ff-54f0-b4ea-98bdf0fd0096",
+      "displayName": "mcMullen23",
+      "primaryFamily": "rational-reciprocal",
+      "categories": [
+        "classic",
+        "rational-reciprocal"
+      ],
+      "canonicalPath": "/formulas/cc40b50c-d3ff-54f0-b4ea-98bdf0fd0096",
+      "guideSlug": "mcmullen-2-3"
+    },
+    {
+      "formulaId": "9577c6c0-3a56-5a17-bea5-0ad2d6ea7e08",
+      "displayName": "mcMullen32",
+      "primaryFamily": "rational-reciprocal",
+      "categories": [
+        "classic",
+        "rational-reciprocal"
+      ],
+      "canonicalPath": "/formulas/9577c6c0-3a56-5a17-bea5-0ad2d6ea7e08",
+      "guideSlug": null
+    },
+    {
+      "formulaId": "48a9aa85-f5d4-5f9a-b640-89e93890a8ad",
+      "displayName": "mcMullen34",
+      "primaryFamily": "rational-reciprocal",
+      "categories": [
+        "classic",
+        "rational-reciprocal"
+      ],
+      "canonicalPath": "/formulas/48a9aa85-f5d4-5f9a-b640-89e93890a8ad",
+      "guideSlug": null
+    },
+    {
+      "formulaId": "d808ce74-e717-5d98-af4c-dab9d713f01e",
+      "displayName": "mfnc",
+      "primaryFamily": "orbit-memory",
+      "categories": [
+        "orbit-memory"
+      ],
+      "canonicalPath": "/formulas/d808ce74-e717-5d98-af4c-dab9d713f01e",
+      "guideSlug": null
+    },
+    {
+      "formulaId": "2e810d90-19b3-5434-ab66-248c7675913f",
+      "displayName": "mfnz",
+      "primaryFamily": "orbit-memory",
+      "categories": [
+        "orbit-memory"
+      ],
+      "canonicalPath": "/formulas/2e810d90-19b3-5434-ab66-248c7675913f",
+      "guideSlug": null
+    },
+    {
+      "formulaId": "fb27a5ed-2865-5fca-ad62-76118c39414f",
+      "displayName": "michaelbrot",
+      "primaryFamily": "algebraic-power",
+      "categories": [
+        "algebraic-power"
+      ],
+      "canonicalPath": "/formulas/fb27a5ed-2865-5fca-ad62-76118c39414f",
+      "guideSlug": null
+    },
+    {
+      "formulaId": "5fba3d0c-c66e-5ad2-9415-584034543625",
+      "displayName": "moc",
+      "primaryFamily": "orbit-memory",
+      "categories": [
+        "orbit-memory"
+      ],
+      "canonicalPath": "/formulas/5fba3d0c-c66e-5ad2-9415-584034543625",
+      "guideSlug": null
+    },
+    {
+      "formulaId": "066c7fbe-88ed-5421-b2f9-e5870f649a39",
+      "displayName": "moe",
+      "primaryFamily": "function-composition",
+      "categories": [
+        "function-composition"
+      ],
+      "canonicalPath": "/formulas/066c7fbe-88ed-5421-b2f9-e5870f649a39",
+      "guideSlug": null
+    },
+    {
+      "formulaId": "6d4aca24-66e6-5bcc-9cc6-e4e7c94d0a96",
+      "displayName": "moz",
+      "primaryFamily": "orbit-memory",
+      "categories": [
+        "orbit-memory"
+      ],
+      "canonicalPath": "/formulas/6d4aca24-66e6-5bcc-9cc6-e4e7c94d0a96",
+      "guideSlug": null
+    },
+    {
+      "formulaId": "b9a54802-21b4-5cb9-8b8f-e4afc3c99f3b",
+      "displayName": "multicorn4",
+      "primaryFamily": "algebraic-power",
+      "categories": [
+        "classic",
+        "algebraic-power"
+      ],
+      "canonicalPath": "/formulas/b9a54802-21b4-5cb9-8b8f-e4afc3c99f3b",
+      "guideSlug": null
+    },
+    {
+      "formulaId": "ed671b4c-a04c-5545-ad0c-a73727761ce8",
+      "displayName": "multicorn5",
+      "primaryFamily": "algebraic-power",
+      "categories": [
+        "classic",
+        "algebraic-power"
+      ],
+      "canonicalPath": "/formulas/ed671b4c-a04c-5545-ad0c-a73727761ce8",
+      "guideSlug": null
+    },
+    {
+      "formulaId": "a69bc250-315d-5a74-9109-d23a820974e5",
+      "displayName": "multicorn6",
+      "primaryFamily": "algebraic-power",
+      "categories": [
+        "classic",
+        "algebraic-power"
+      ],
+      "canonicalPath": "/formulas/a69bc250-315d-5a74-9109-d23a820974e5",
+      "guideSlug": null
+    },
+    {
+      "formulaId": "f58059ef-67f2-58a4-bac0-bdb1d8608cc0",
+      "displayName": "multicorn7",
+      "primaryFamily": "algebraic-power",
+      "categories": [
+        "classic",
+        "algebraic-power"
+      ],
+      "canonicalPath": "/formulas/f58059ef-67f2-58a4-bac0-bdb1d8608cc0",
+      "guideSlug": null
+    },
+    {
+      "formulaId": "573d8cb0-13e5-51e6-880d-a7c4fb4f5321",
+      "displayName": "mutantbrot",
+      "primaryFamily": "transcendental",
+      "categories": [
+        "transcendental"
+      ],
+      "canonicalPath": "/formulas/573d8cb0-13e5-51e6-880d-a7c4fb4f5321",
+      "guideSlug": null
+    },
+    {
+      "formulaId": "8f8f2d09-9907-5cde-b1e2-93aa88caaa24",
+      "displayName": "myfractal",
+      "primaryFamily": "algebraic-power",
+      "categories": [
+        "algebraic-power"
+      ],
+      "canonicalPath": "/formulas/8f8f2d09-9907-5cde-b1e2-93aa88caaa24",
+      "guideSlug": null
+    },
+    {
+      "formulaId": "1f56b41c-720e-5a42-9772-dd3a64ce8391",
+      "displayName": "mz",
+      "primaryFamily": "orbit-memory",
+      "categories": [
+        "orbit-memory"
+      ],
+      "canonicalPath": "/formulas/1f56b41c-720e-5a42-9772-dd3a64ce8391",
+      "guideSlug": null
+    },
+    {
+      "formulaId": "0c8029ff-30be-5596-8cc6-e9ae0fa9c635",
+      "displayName": "natura",
+      "primaryFamily": "algebraic-power",
+      "categories": [
+        "algebraic-power"
+      ],
+      "canonicalPath": "/formulas/0c8029ff-30be-5596-8cc6-e9ae0fa9c635",
+      "guideSlug": null
+    },
+    {
+      "formulaId": "dd052c9f-868f-5516-9af0-3f4e78ac7a13",
+      "displayName": "newton3",
+      "primaryFamily": "root-finding",
+      "categories": [
+        "classic",
+        "root-finding"
+      ],
+      "canonicalPath": "/formulas/dd052c9f-868f-5516-9af0-3f4e78ac7a13",
+      "guideSlug": "newton-3"
+    },
+    {
+      "formulaId": "75e70076-b422-5535-b3c9-c484fbf879e6",
+      "displayName": "newton4",
+      "primaryFamily": "root-finding",
+      "categories": [
+        "classic",
+        "root-finding"
+      ],
+      "canonicalPath": "/formulas/75e70076-b422-5535-b3c9-c484fbf879e6",
+      "guideSlug": null
+    },
+    {
+      "formulaId": "e44d5dec-2cee-53a9-a21d-541c929792f6",
+      "displayName": "newton5",
+      "primaryFamily": "root-finding",
+      "categories": [
+        "classic",
+        "root-finding"
+      ],
+      "canonicalPath": "/formulas/e44d5dec-2cee-53a9-a21d-541c929792f6",
+      "guideSlug": null
+    },
+    {
+      "formulaId": "78e550c6-d58d-57b7-92ff-82e9ed0728f0",
+      "displayName": "newton6",
+      "primaryFamily": "root-finding",
+      "categories": [
+        "classic",
+        "root-finding"
+      ],
+      "canonicalPath": "/formulas/78e550c6-d58d-57b7-92ff-82e9ed0728f0",
+      "guideSlug": null
+    },
+    {
+      "formulaId": "d0079630-8ed3-5379-9e37-52cb7f0f7379",
+      "displayName": "newtonCos",
+      "primaryFamily": "root-finding",
+      "categories": [
+        "classic",
+        "root-finding"
+      ],
+      "canonicalPath": "/formulas/d0079630-8ed3-5379-9e37-52cb7f0f7379",
+      "guideSlug": null
+    },
+    {
+      "formulaId": "a89891b1-8ccb-5d58-9fbb-05944b85ce3c",
+      "displayName": "newtonCosh",
+      "primaryFamily": "root-finding",
+      "categories": [
+        "classic",
+        "root-finding"
+      ],
+      "canonicalPath": "/formulas/a89891b1-8ccb-5d58-9fbb-05944b85ce3c",
+      "guideSlug": "newton-cosh"
+    },
+    {
+      "formulaId": "bb186688-4571-5725-a8ed-a17e0100dbc8",
+      "displayName": "newtonExp",
+      "primaryFamily": "root-finding",
+      "categories": [
+        "classic",
+        "root-finding"
+      ],
+      "canonicalPath": "/formulas/bb186688-4571-5725-a8ed-a17e0100dbc8",
+      "guideSlug": null
+    },
+    {
+      "formulaId": "848e8cdc-d391-5098-9fdc-1de2f83be3f0",
+      "displayName": "newtonSin",
+      "primaryFamily": "root-finding",
+      "categories": [
+        "classic",
+        "root-finding"
+      ],
+      "canonicalPath": "/formulas/848e8cdc-d391-5098-9fdc-1de2f83be3f0",
+      "guideSlug": null
+    },
+    {
+      "formulaId": "6d27b5fd-462b-5561-bac2-7c5f915e3cb5",
+      "displayName": "newtonSinh",
+      "primaryFamily": "root-finding",
+      "categories": [
+        "classic",
+        "root-finding"
+      ],
+      "canonicalPath": "/formulas/6d27b5fd-462b-5561-bac2-7c5f915e3cb5",
+      "guideSlug": null
+    },
+    {
+      "formulaId": "599a7fda-4c0e-5489-b12e-6e4179ee11f2",
+      "displayName": "novaBasin",
+      "primaryFamily": "root-finding",
+      "categories": [
+        "classic",
+        "root-finding"
+      ],
+      "canonicalPath": "/formulas/599a7fda-4c0e-5489-b12e-6e4179ee11f2",
+      "guideSlug": null
+    },
+    {
+      "formulaId": "a63c7852-626f-5659-a556-b0193030f25b",
+      "displayName": "novaClassic",
+      "primaryFamily": "root-finding",
+      "categories": [
+        "classic",
+        "root-finding"
+      ],
+      "canonicalPath": "/formulas/a63c7852-626f-5659-a556-b0193030f25b",
+      "guideSlug": null
+    },
+    {
+      "formulaId": "4514ac15-fecc-5b92-9e79-0b95b5158d3f",
+      "displayName": "novaCos",
+      "primaryFamily": "root-finding",
+      "categories": [
+        "classic",
+        "root-finding"
+      ],
+      "canonicalPath": "/formulas/4514ac15-fecc-5b92-9e79-0b95b5158d3f",
+      "guideSlug": null
+    },
+    {
+      "formulaId": "0df5ac6e-d97e-55db-b624-96c310af07dd",
+      "displayName": "novaSine",
+      "primaryFamily": "root-finding",
+      "categories": [
+        "classic",
+        "root-finding"
+      ],
+      "canonicalPath": "/formulas/0df5ac6e-d97e-55db-b624-96c310af07dd",
+      "guideSlug": null
+    },
+    {
+      "formulaId": "73a3c993-2317-53e1-9cfa-836aaf906859",
+      "displayName": "ok-04",
+      "primaryFamily": "function-composition",
+      "categories": [
+        "function-composition"
+      ],
+      "canonicalPath": "/formulas/73a3c993-2317-53e1-9cfa-836aaf906859",
+      "guideSlug": null
+    },
+    {
+      "formulaId": "7f899f9c-1f66-5864-8fb1-48135bb269ed",
+      "displayName": "ok-08",
+      "primaryFamily": "rational-reciprocal",
+      "categories": [
+        "rational-reciprocal"
+      ],
+      "canonicalPath": "/formulas/7f899f9c-1f66-5864-8fb1-48135bb269ed",
+      "guideSlug": null
+    },
+    {
+      "formulaId": "fa8afc22-abfd-5101-be65-cd4d0b1919cc",
+      "displayName": "ok-22",
+      "primaryFamily": "orbit-memory",
+      "categories": [
+        "orbit-memory"
+      ],
+      "canonicalPath": "/formulas/fa8afc22-abfd-5101-be65-cd4d0b1919cc",
+      "guideSlug": null
+    },
+    {
+      "formulaId": "32bccc7f-91c2-533c-9f14-46c1943358fe",
+      "displayName": "ok-32",
+      "primaryFamily": "function-composition",
+      "categories": [
+        "function-composition"
+      ],
+      "canonicalPath": "/formulas/32bccc7f-91c2-533c-9f14-46c1943358fe",
+      "guideSlug": null
+    },
+    {
+      "formulaId": "0e1b1705-ae4c-5685-b0fc-b82586ff144e",
+      "displayName": "ok-34",
+      "primaryFamily": "folded-absolute",
+      "categories": [
+        "folded-absolute"
+      ],
+      "canonicalPath": "/formulas/0e1b1705-ae4c-5685-b0fc-b82586ff144e",
+      "guideSlug": null
+    },
+    {
+      "formulaId": "0a9a153b-bb4e-53df-9cdf-54fd0ad0081e",
+      "displayName": "ok-35",
+      "primaryFamily": "rational-reciprocal",
+      "categories": [
+        "rational-reciprocal"
+      ],
+      "canonicalPath": "/formulas/0a9a153b-bb4e-53df-9cdf-54fd0ad0081e",
+      "guideSlug": null
+    },
+    {
+      "formulaId": "dbdc62ab-2298-5f9a-9479-47f2b6d920d5",
+      "displayName": "ok-36",
+      "primaryFamily": "function-composition",
+      "categories": [
+        "function-composition"
+      ],
+      "canonicalPath": "/formulas/dbdc62ab-2298-5f9a-9479-47f2b6d920d5",
+      "guideSlug": null
+    },
+    {
+      "formulaId": "596924fd-c7dd-51c5-891a-42406ee23fb6",
+      "displayName": "ok-38",
+      "primaryFamily": "function-composition",
+      "categories": [
+        "function-composition"
+      ],
+      "canonicalPath": "/formulas/596924fd-c7dd-51c5-891a-42406ee23fb6",
+      "guideSlug": null
+    },
+    {
+      "formulaId": "de8106f4-22ce-567c-a1c7-e299a8d4a878",
+      "displayName": "ok-42",
+      "primaryFamily": "function-composition",
+      "categories": [
+        "function-composition"
+      ],
+      "canonicalPath": "/formulas/de8106f4-22ce-567c-a1c7-e299a8d4a878",
+      "guideSlug": null
+    },
+    {
+      "formulaId": "044d9b5f-6ead-5aa6-93c9-19d60c2e97eb",
+      "displayName": "ok-43",
+      "primaryFamily": "orbit-memory",
+      "categories": [
+        "orbit-memory"
+      ],
+      "canonicalPath": "/formulas/044d9b5f-6ead-5aa6-93c9-19d60c2e97eb",
+      "guideSlug": null
+    },
+    {
+      "formulaId": "c122edfc-bdf6-5f5d-a988-6564c73d6a14",
+      "displayName": "oldmanowar",
+      "primaryFamily": "orbit-memory",
+      "categories": [
+        "classic",
+        "orbit-memory"
+      ],
+      "canonicalPath": "/formulas/c122edfc-bdf6-5f5d-a988-6564c73d6a14",
+      "guideSlug": null
+    },
+    {
+      "formulaId": "42d4c442-040b-59be-892f-1f10c8e47cb6",
+      "displayName": "perpendicularBurningShip",
+      "primaryFamily": "folded-absolute",
+      "categories": [
+        "classic",
+        "folded-absolute"
+      ],
+      "canonicalPath": "/formulas/42d4c442-040b-59be-892f-1f10c8e47cb6",
+      "guideSlug": null
+    },
+    {
+      "formulaId": "627c38a8-8f4d-548f-a5a6-dd9f215adf60",
+      "displayName": "perpendicularCeltic",
+      "primaryFamily": "folded-absolute",
+      "categories": [
+        "classic",
+        "folded-absolute"
+      ],
+      "canonicalPath": "/formulas/627c38a8-8f4d-548f-a5a6-dd9f215adf60",
+      "guideSlug": "perpendicular-celtic"
+    },
+    {
+      "formulaId": "d01f1a01-6e77-5a24-8593-a7009e1c3ea3",
+      "displayName": "perpendicularMandelbrot",
+      "primaryFamily": "folded-absolute",
+      "categories": [
+        "classic",
+        "folded-absolute"
+      ],
+      "canonicalPath": "/formulas/d01f1a01-6e77-5a24-8593-a7009e1c3ea3",
+      "guideSlug": null
+    },
+    {
+      "formulaId": "3a83800c-4a44-5e61-9651-d3d5adb71213",
+      "displayName": "perpendicularTricorn",
+      "primaryFamily": "folded-absolute",
+      "categories": [
+        "classic",
+        "folded-absolute"
+      ],
+      "canonicalPath": "/formulas/3a83800c-4a44-5e61-9651-d3d5adb71213",
+      "guideSlug": null
+    },
+    {
+      "formulaId": "e2456b54-ef50-5ac9-9faa-dcb576c5e774",
+      "displayName": "phoenix",
+      "primaryFamily": "orbit-memory",
+      "categories": [
+        "classic",
+        "orbit-memory"
+      ],
+      "canonicalPath": "/formulas/e2456b54-ef50-5ac9-9faa-dcb576c5e774",
+      "guideSlug": null
+    },
+    {
+      "formulaId": "5c699919-a5f7-5995-8673-53b7088d5b39",
+      "displayName": "phoenix_j",
+      "primaryFamily": "orbit-memory",
+      "categories": [
+        "orbit-memory"
+      ],
+      "canonicalPath": "/formulas/5c699919-a5f7-5995-8673-53b7088d5b39",
+      "guideSlug": null
+    },
+    {
+      "formulaId": "ef6d6019-b21e-59df-99ca-dea6b70c0f63",
+      "displayName": "phoenix_m",
+      "primaryFamily": "orbit-memory",
+      "categories": [
+        "orbit-memory"
+      ],
+      "canonicalPath": "/formulas/ef6d6019-b21e-59df-99ca-dea6b70c0f63",
+      "guideSlug": null
+    },
+    {
+      "formulaId": "0f49d971-917e-50a5-ae83-20e11fd4854c",
+      "displayName": "phoenixMulti",
+      "primaryFamily": "orbit-memory",
+      "categories": [
+        "classic",
+        "orbit-memory"
+      ],
+      "canonicalPath": "/formulas/0f49d971-917e-50a5-ae83-20e11fd4854c",
+      "guideSlug": "multi-phoenix"
+    },
+    {
+      "formulaId": "9e7250d0-f815-521a-9cf6-6c4d68598b2c",
+      "displayName": "pseudolambda",
+      "primaryFamily": "algebraic-power",
+      "categories": [
+        "algebraic-power"
+      ],
+      "canonicalPath": "/formulas/9e7250d0-f815-521a-9cf6-6c4d68598b2c",
+      "guideSlug": null
+    },
+    {
+      "formulaId": "cefe7738-0e8a-547f-ac85-ac3db2529907",
+      "displayName": "pseudomandellambda",
+      "primaryFamily": "algebraic-power",
+      "categories": [
+        "algebraic-power"
+      ],
+      "canonicalPath": "/formulas/cefe7738-0e8a-547f-ac85-ac3db2529907",
+      "guideSlug": null
+    },
+    {
+      "formulaId": "7ce8c07c-0ba6-560c-9316-9aa2439997b3",
+      "displayName": "pseudozeepi",
+      "primaryFamily": "rational-reciprocal",
+      "categories": [
+        "rational-reciprocal"
+      ],
+      "canonicalPath": "/formulas/7ce8c07c-0ba6-560c-9316-9aa2439997b3",
+      "guideSlug": null
+    },
+    {
+      "formulaId": "2d237187-b3fd-54e2-8bf4-ef973080f389",
+      "displayName": "quadrants",
+      "primaryFamily": "orbit-memory",
+      "categories": [
+        "classic",
+        "orbit-memory"
+      ],
+      "canonicalPath": "/formulas/2d237187-b3fd-54e2-8bf4-ef973080f389",
+      "guideSlug": null
+    },
+    {
+      "formulaId": "1768f194-bdc1-5881-b269-a58730967c2c",
+      "displayName": "quarticMandelbrot",
+      "primaryFamily": "algebraic-power",
+      "categories": [
+        "classic",
+        "algebraic-power"
+      ],
+      "canonicalPath": "/formulas/1768f194-bdc1-5881-b269-a58730967c2c",
+      "guideSlug": "quartic-julia"
+    },
+    {
+      "formulaId": "d747aff8-e49f-5875-a85f-89d4a1d25846",
+      "displayName": "quarticPerpendicularMandelbrot",
+      "primaryFamily": "folded-absolute",
+      "categories": [
+        "classic",
+        "folded-absolute"
+      ],
+      "canonicalPath": "/formulas/d747aff8-e49f-5875-a85f-89d4a1d25846",
+      "guideSlug": null
+    },
+    {
+      "formulaId": "6b633456-4a1d-580e-9a61-6824ca303486",
+      "displayName": "rabbitJulia",
+      "primaryFamily": "algebraic-power",
+      "categories": [
+        "classic",
+        "algebraic-power"
+      ],
+      "canonicalPath": "/formulas/6b633456-4a1d-580e-9a61-6824ca303486",
+      "guideSlug": null
+    },
+    {
+      "formulaId": "926cfb41-c7f8-5c51-b036-18a8428121bb",
+      "displayName": "raphaelbrot",
+      "primaryFamily": "algebraic-power",
+      "categories": [
+        "algebraic-power"
+      ],
+      "canonicalPath": "/formulas/926cfb41-c7f8-5c51-b036-18a8428121bb",
+      "guideSlug": null
+    },
+    {
+      "formulaId": "37425fb2-8542-502f-94ac-94c0ccb6e508",
+      "displayName": "rationalMap1",
+      "primaryFamily": "rational-reciprocal",
+      "categories": [
+        "classic",
+        "rational-reciprocal"
+      ],
+      "canonicalPath": "/formulas/37425fb2-8542-502f-94ac-94c0ccb6e508",
+      "guideSlug": "rational-map-1"
+    },
+    {
+      "formulaId": "b0bf5217-893a-5a0f-9a46-5e5ce89223c3",
+      "displayName": "rationalMap2",
+      "primaryFamily": "rational-reciprocal",
+      "categories": [
+        "classic",
+        "rational-reciprocal"
+      ],
+      "canonicalPath": "/formulas/b0bf5217-893a-5a0f-9a46-5e5ce89223c3",
+      "guideSlug": null
+    },
+    {
+      "formulaId": "c871e135-86d3-59c2-a879-69eaca0a8c22",
+      "displayName": "rcl_10",
+      "primaryFamily": "rational-reciprocal",
+      "categories": [
+        "rational-reciprocal"
+      ],
+      "canonicalPath": "/formulas/c871e135-86d3-59c2-a879-69eaca0a8c22",
+      "guideSlug": null
+    },
+    {
+      "formulaId": "11c43e72-94aa-5b99-a899-f9de9ec1fb66",
+      "displayName": "rcl_11",
+      "primaryFamily": "rational-reciprocal",
+      "categories": [
+        "rational-reciprocal"
+      ],
+      "canonicalPath": "/formulas/11c43e72-94aa-5b99-a899-f9de9ec1fb66",
+      "guideSlug": null
+    },
+    {
+      "formulaId": "948e00da-175d-5863-8c9c-6038df9a402a",
+      "displayName": "rcl_12",
+      "primaryFamily": "rational-reciprocal",
+      "categories": [
+        "rational-reciprocal"
+      ],
+      "canonicalPath": "/formulas/948e00da-175d-5863-8c9c-6038df9a402a",
+      "guideSlug": null
+    },
+    {
+      "formulaId": "665c8e11-c7d0-5fa2-8b80-ac4027e9ba89",
+      "displayName": "rcl_13",
+      "primaryFamily": "rational-reciprocal",
+      "categories": [
+        "rational-reciprocal"
+      ],
+      "canonicalPath": "/formulas/665c8e11-c7d0-5fa2-8b80-ac4027e9ba89",
+      "guideSlug": null
+    },
+    {
+      "formulaId": "0e58167e-79e1-56f9-86f7-149737fcfaea",
+      "displayName": "rcl_14",
+      "primaryFamily": "transcendental",
+      "categories": [
+        "transcendental"
+      ],
+      "canonicalPath": "/formulas/0e58167e-79e1-56f9-86f7-149737fcfaea",
+      "guideSlug": null
+    },
+    {
+      "formulaId": "ded18937-1f80-5248-a6f2-be82db2b676e",
+      "displayName": "rcl_16",
+      "primaryFamily": "rational-reciprocal",
+      "categories": [
+        "rational-reciprocal"
+      ],
+      "canonicalPath": "/formulas/ded18937-1f80-5248-a6f2-be82db2b676e",
+      "guideSlug": null
+    },
+    {
+      "formulaId": "f4216f6d-c8ed-5837-8417-8ae719f186a8",
+      "displayName": "rcl_4_j",
+      "primaryFamily": "transcendental",
+      "categories": [
+        "transcendental"
+      ],
+      "canonicalPath": "/formulas/f4216f6d-c8ed-5837-8417-8ae719f186a8",
+      "guideSlug": null
+    },
+    {
+      "formulaId": "d37c76aa-101e-5911-abd2-37ded44be307",
+      "displayName": "rcl_4_m",
+      "primaryFamily": "transcendental",
+      "categories": [
+        "transcendental"
+      ],
+      "canonicalPath": "/formulas/d37c76aa-101e-5911-abd2-37ded44be307",
+      "guideSlug": null
+    },
+    {
+      "formulaId": "c1668bd9-76d4-5e34-813e-a5bb8898008c",
+      "displayName": "rcl_5_j",
+      "primaryFamily": "transcendental",
+      "categories": [
+        "transcendental"
+      ],
+      "canonicalPath": "/formulas/c1668bd9-76d4-5e34-813e-a5bb8898008c",
+      "guideSlug": null
+    },
+    {
+      "formulaId": "14cf0fba-341d-5332-b3f0-2648304429e1",
+      "displayName": "rcl_5_m",
+      "primaryFamily": "transcendental",
+      "categories": [
+        "transcendental"
+      ],
+      "canonicalPath": "/formulas/14cf0fba-341d-5332-b3f0-2648304429e1",
+      "guideSlug": null
+    },
+    {
+      "formulaId": "ae1a8559-552c-52be-973b-7b9d8d8e3cdc",
+      "displayName": "rcl_6_j",
+      "primaryFamily": "transcendental",
+      "categories": [
+        "transcendental"
+      ],
+      "canonicalPath": "/formulas/ae1a8559-552c-52be-973b-7b9d8d8e3cdc",
+      "guideSlug": null
+    },
+    {
+      "formulaId": "59dd9fd1-38d1-5887-a9f6-b6941f532cad",
+      "displayName": "rcl_6_m",
+      "primaryFamily": "transcendental",
+      "categories": [
+        "transcendental"
+      ],
+      "canonicalPath": "/formulas/59dd9fd1-38d1-5887-a9f6-b6941f532cad",
+      "guideSlug": null
+    },
+    {
+      "formulaId": "4fa3c747-6705-5d4c-9d3f-bfa9e3eb463a",
+      "displayName": "rcl_7",
+      "primaryFamily": "orbit-memory",
+      "categories": [
+        "orbit-memory"
+      ],
+      "canonicalPath": "/formulas/4fa3c747-6705-5d4c-9d3f-bfa9e3eb463a",
+      "guideSlug": null
+    },
+    {
+      "formulaId": "71ab3539-56d9-5792-9c33-2cc7a67b73ac",
+      "displayName": "rcl_9",
+      "primaryFamily": "rational-reciprocal",
+      "categories": [
+        "rational-reciprocal"
+      ],
+      "canonicalPath": "/formulas/71ab3539-56d9-5792-9c33-2cc7a67b73ac",
+      "guideSlug": null
+    },
+    {
+      "formulaId": "ce1388b4-8994-5948-beaf-e9b54a80a350",
+      "displayName": "rcl_cosh_j",
+      "primaryFamily": "transcendental",
+      "categories": [
+        "transcendental"
+      ],
+      "canonicalPath": "/formulas/ce1388b4-8994-5948-beaf-e9b54a80a350",
+      "guideSlug": null
+    },
+    {
+      "formulaId": "189a3551-e768-55db-b9f5-a3c4e35f9927",
+      "displayName": "rcl_cross1",
+      "primaryFamily": "function-composition",
+      "categories": [
+        "function-composition"
+      ],
+      "canonicalPath": "/formulas/189a3551-e768-55db-b9f5-a3c4e35f9927",
+      "guideSlug": null
+    },
+    {
+      "formulaId": "563693bd-ba1d-5628-b402-98a98a5b4043",
+      "displayName": "rcl_cross2",
+      "primaryFamily": "function-composition",
+      "categories": [
+        "function-composition"
+      ],
+      "canonicalPath": "/formulas/563693bd-ba1d-5628-b402-98a98a5b4043",
+      "guideSlug": null
+    },
+    {
+      "formulaId": "6fd03e0d-2427-5967-b53d-5540ebc4be56",
+      "displayName": "rcl_logistic_1",
+      "primaryFamily": "algebraic-power",
+      "categories": [
+        "algebraic-power"
+      ],
+      "canonicalPath": "/formulas/6fd03e0d-2427-5967-b53d-5540ebc4be56",
+      "guideSlug": null
+    },
+    {
+      "formulaId": "059080eb-da12-5e85-a1a3-049929bdcf49",
+      "displayName": "rcl_pick10",
+      "primaryFamily": "algebraic-power",
+      "categories": [
+        "algebraic-power"
+      ],
+      "canonicalPath": "/formulas/059080eb-da12-5e85-a1a3-049929bdcf49",
+      "guideSlug": null
+    },
+    {
+      "formulaId": "ccfe0283-df10-5b17-bd2a-5f3cdfd69b4a",
+      "displayName": "rcl_pick13",
+      "primaryFamily": "algebraic-power",
+      "categories": [
+        "algebraic-power"
+      ],
+      "canonicalPath": "/formulas/ccfe0283-df10-5b17-bd2a-5f3cdfd69b4a",
+      "guideSlug": null
+    },
+    {
+      "formulaId": "83d9e65a-3f99-58a5-8fca-1f0312ee7b35",
+      "displayName": "rcl_pick3",
+      "primaryFamily": "rational-reciprocal",
+      "categories": [
+        "rational-reciprocal"
+      ],
+      "canonicalPath": "/formulas/83d9e65a-3f99-58a5-8fca-1f0312ee7b35",
+      "guideSlug": null
+    },
+    {
+      "formulaId": "e39472e4-6152-5f8e-be96-a9566c891dc8",
+      "displayName": "rcl_pick4",
+      "primaryFamily": "rational-reciprocal",
+      "categories": [
+        "rational-reciprocal"
+      ],
+      "canonicalPath": "/formulas/e39472e4-6152-5f8e-be96-a9566c891dc8",
+      "guideSlug": null
+    },
+    {
+      "formulaId": "274e03a7-1442-5d59-a18f-72f5f23b5e1a",
+      "displayName": "reb004a",
+      "primaryFamily": "function-composition",
+      "categories": [
+        "function-composition"
+      ],
+      "canonicalPath": "/formulas/274e03a7-1442-5d59-a18f-72f5f23b5e1a",
+      "guideSlug": null
+    },
+    {
+      "formulaId": "9923991c-19b5-5559-8250-5eb04726f4bd",
+      "displayName": "reb004k",
+      "primaryFamily": "rational-reciprocal",
+      "categories": [
+        "rational-reciprocal"
+      ],
+      "canonicalPath": "/formulas/9923991c-19b5-5559-8250-5eb04726f4bd",
+      "guideSlug": null
+    },
+    {
+      "formulaId": "015c5d9d-b9b1-5155-afa7-10a3f48c194a",
+      "displayName": "reb004k[float=y]",
+      "primaryFamily": "rational-reciprocal",
+      "categories": [
+        "rational-reciprocal"
+      ],
+      "canonicalPath": "/formulas/015c5d9d-b9b1-5155-afa7-10a3f48c194a",
+      "guideSlug": null
+    },
+    {
+      "formulaId": "89e6c1c2-5105-50b7-b7e2-e1f03e4fe8e1",
+      "displayName": "reb004l",
+      "primaryFamily": "rational-reciprocal",
+      "categories": [
+        "rational-reciprocal"
+      ],
+      "canonicalPath": "/formulas/89e6c1c2-5105-50b7-b7e2-e1f03e4fe8e1",
+      "guideSlug": null
+    },
+    {
+      "formulaId": "09cecc65-3da9-543a-a1dd-7963f5e2f830",
+      "displayName": "reb004l[float=y]",
+      "primaryFamily": "rational-reciprocal",
+      "categories": [
+        "rational-reciprocal"
+      ],
+      "canonicalPath": "/formulas/09cecc65-3da9-543a-a1dd-7963f5e2f830",
+      "guideSlug": null
+    },
+    {
+      "formulaId": "0bcc248f-6ef2-5162-afd1-9a748a8104a8",
+      "displayName": "reb004m",
+      "primaryFamily": "rational-reciprocal",
+      "categories": [
+        "rational-reciprocal"
+      ],
+      "canonicalPath": "/formulas/0bcc248f-6ef2-5162-afd1-9a748a8104a8",
+      "guideSlug": null
+    },
+    {
+      "formulaId": "c6c4669e-c6f6-5867-990e-8d650b34bc53",
+      "displayName": "reb004m[float=y]",
+      "primaryFamily": "rational-reciprocal",
+      "categories": [
+        "rational-reciprocal"
+      ],
+      "canonicalPath": "/formulas/c6c4669e-c6f6-5867-990e-8d650b34bc53",
+      "guideSlug": null
+    },
+    {
+      "formulaId": "d9e5247a-f929-5751-9368-e5a291e62176",
+      "displayName": "reb005a",
+      "primaryFamily": "rational-reciprocal",
+      "categories": [
+        "rational-reciprocal"
+      ],
+      "canonicalPath": "/formulas/d9e5247a-f929-5751-9368-e5a291e62176",
+      "guideSlug": null
+    },
+    {
+      "formulaId": "a51d0f1c-29d5-5dbf-a83f-5d9da282f6c5",
+      "displayName": "reb005a[float=y]",
+      "primaryFamily": "rational-reciprocal",
+      "categories": [
+        "rational-reciprocal"
+      ],
+      "canonicalPath": "/formulas/a51d0f1c-29d5-5dbf-a83f-5d9da282f6c5",
+      "guideSlug": null
+    },
+    {
+      "formulaId": "c224d80c-fccb-50cc-90ef-c2a6d0731999",
+      "displayName": "reb005e",
+      "primaryFamily": "rational-reciprocal",
+      "categories": [
+        "rational-reciprocal"
+      ],
+      "canonicalPath": "/formulas/c224d80c-fccb-50cc-90ef-c2a6d0731999",
+      "guideSlug": null
+    },
+    {
+      "formulaId": "e2ced79d-211e-55e0-89c1-558d261133e6",
+      "displayName": "reb005e[float=y]",
+      "primaryFamily": "rational-reciprocal",
+      "categories": [
+        "rational-reciprocal"
+      ],
+      "canonicalPath": "/formulas/e2ced79d-211e-55e0-89c1-558d261133e6",
+      "guideSlug": null
+    },
+    {
+      "formulaId": "b37a8ffb-b751-5527-a517-2d36afc9e426",
+      "displayName": "reb005f",
+      "primaryFamily": "rational-reciprocal",
+      "categories": [
+        "rational-reciprocal"
+      ],
+      "canonicalPath": "/formulas/b37a8ffb-b751-5527-a517-2d36afc9e426",
+      "guideSlug": null
+    },
+    {
+      "formulaId": "f3cd0dda-37c9-5d2e-8103-9b2a7ee25c53",
+      "displayName": "reb005f[float=y]",
+      "primaryFamily": "rational-reciprocal",
+      "categories": [
+        "rational-reciprocal"
+      ],
+      "canonicalPath": "/formulas/f3cd0dda-37c9-5d2e-8103-9b2a7ee25c53",
+      "guideSlug": null
+    },
+    {
+      "formulaId": "18aa30c7-6c32-505f-be32-5c0bf438d151",
+      "displayName": "reb005g",
+      "primaryFamily": "rational-reciprocal",
+      "categories": [
+        "rational-reciprocal"
+      ],
+      "canonicalPath": "/formulas/18aa30c7-6c32-505f-be32-5c0bf438d151",
+      "guideSlug": null
+    },
+    {
+      "formulaId": "e7ce5bb7-7fcf-527e-92ef-95d6d1233d2a",
+      "displayName": "reb005g[float=y]",
+      "primaryFamily": "rational-reciprocal",
+      "categories": [
+        "rational-reciprocal"
+      ],
+      "canonicalPath": "/formulas/e7ce5bb7-7fcf-527e-92ef-95d6d1233d2a",
+      "guideSlug": null
+    },
+    {
+      "formulaId": "a0780d2d-a2e9-5139-92fe-b9d0f7edada2",
+      "displayName": "rebrefind2",
+      "primaryFamily": "rational-reciprocal",
+      "categories": [
+        "rational-reciprocal"
+      ],
+      "canonicalPath": "/formulas/a0780d2d-a2e9-5139-92fe-b9d0f7edada2",
+      "guideSlug": null
+    },
+    {
+      "formulaId": "6bcf077e-6f30-5f3f-9ae8-4cf5d3fb4020",
+      "displayName": "rebrefind2[float=y]",
+      "primaryFamily": "rational-reciprocal",
+      "categories": [
+        "rational-reciprocal"
+      ],
+      "canonicalPath": "/formulas/6bcf077e-6f30-5f3f-9ae8-4cf5d3fb4020",
+      "guideSlug": null
+    },
+    {
+      "formulaId": "51daceff-89f2-5567-bfe0-ca2933f2402c",
+      "displayName": "recipike",
+      "primaryFamily": "rational-reciprocal",
+      "categories": [
+        "rational-reciprocal"
+      ],
+      "canonicalPath": "/formulas/51daceff-89f2-5567-bfe0-ca2933f2402c",
+      "guideSlug": null
+    },
+    {
+      "formulaId": "35a7e33c-fcba-5a81-ba80-8eab6d59925c",
+      "displayName": "reciprocalCubic",
+      "primaryFamily": "rational-reciprocal",
+      "categories": [
+        "classic",
+        "rational-reciprocal"
+      ],
+      "canonicalPath": "/formulas/35a7e33c-fcba-5a81-ba80-8eab6d59925c",
+      "guideSlug": null
+    },
+    {
+      "formulaId": "2edf64a9-157c-57d7-8894-1f4781bc4f8c",
+      "displayName": "reciprocalQuadratic",
+      "primaryFamily": "rational-reciprocal",
+      "categories": [
+        "classic",
+        "rational-reciprocal"
+      ],
+      "canonicalPath": "/formulas/2edf64a9-157c-57d7-8894-1f4781bc4f8c",
+      "guideSlug": null
+    },
+    {
+      "formulaId": "cc489215-c7d7-5f2c-b11a-1be049b167bd",
+      "displayName": "richard7",
+      "primaryFamily": "transcendental",
+      "categories": [
+        "transcendental"
+      ],
+      "canonicalPath": "/formulas/cc489215-c7d7-5f2c-b11a-1be049b167bd",
+      "guideSlug": null
+    },
+    {
+      "formulaId": "1936e9b5-1312-593e-ab67-72e95bc514b0",
+      "displayName": "richard8",
+      "primaryFamily": "transcendental",
+      "categories": [
+        "transcendental"
+      ],
+      "canonicalPath": "/formulas/1936e9b5-1312-593e-ab67-72e95bc514b0",
+      "guideSlug": null
+    },
+    {
+      "formulaId": "fc36a6e1-9778-511c-8f5d-0bdddc463b62",
+      "displayName": "richard9",
+      "primaryFamily": "rational-reciprocal",
+      "categories": [
+        "rational-reciprocal"
+      ],
+      "canonicalPath": "/formulas/fc36a6e1-9778-511c-8f5d-0bdddc463b62",
+      "guideSlug": null
+    },
+    {
+      "formulaId": "d848b143-1bb8-524e-b716-f0dd41a836df",
+      "displayName": "rings",
+      "primaryFamily": "rational-reciprocal",
+      "categories": [
+        "classic",
+        "rational-reciprocal"
+      ],
+      "canonicalPath": "/formulas/d848b143-1bb8-524e-b716-f0dd41a836df",
+      "guideSlug": null
+    },
+    {
+      "formulaId": "d48b109c-4368-53b6-b7bf-c7da60c9c2eb",
+      "displayName": "scottlpc",
+      "primaryFamily": "transcendental",
+      "categories": [
+        "transcendental"
+      ],
+      "canonicalPath": "/formulas/d48b109c-4368-53b6-b7bf-c7da60c9c2eb",
+      "guideSlug": null
+    },
+    {
+      "formulaId": "3a1b7843-3ead-534e-9fac-d05890211020",
+      "displayName": "scottlps",
+      "primaryFamily": "transcendental",
+      "categories": [
+        "transcendental"
+      ],
+      "canonicalPath": "/formulas/3a1b7843-3ead-534e-9fac-d05890211020",
+      "guideSlug": null
+    },
+    {
+      "formulaId": "57e13d8d-2db6-59c5-baeb-549c22034c7f",
+      "displayName": "scottltc",
+      "primaryFamily": "transcendental",
+      "categories": [
+        "transcendental"
+      ],
+      "canonicalPath": "/formulas/57e13d8d-2db6-59c5-baeb-549c22034c7f",
+      "guideSlug": null
+    },
+    {
+      "formulaId": "ca15991c-ebe9-5bd1-b6f6-04b6067ab90f",
+      "displayName": "scottlts",
+      "primaryFamily": "transcendental",
+      "categories": [
+        "transcendental"
+      ],
+      "canonicalPath": "/formulas/ca15991c-ebe9-5bd1-b6f6-04b6067ab90f",
+      "guideSlug": null
+    },
+    {
+      "formulaId": "76cb0ae7-7f3e-5bba-bb20-5bec91f9f3a6",
+      "displayName": "scottsic",
+      "primaryFamily": "rational-reciprocal",
+      "categories": [
+        "rational-reciprocal"
+      ],
+      "canonicalPath": "/formulas/76cb0ae7-7f3e-5bba-bb20-5bec91f9f3a6",
+      "guideSlug": null
+    },
+    {
+      "formulaId": "9c60877e-d554-5578-b7ba-90405b44d604",
+      "displayName": "scskcosh",
+      "primaryFamily": "transcendental",
+      "categories": [
+        "transcendental"
+      ],
+      "canonicalPath": "/formulas/9c60877e-d554-5578-b7ba-90405b44d604",
+      "guideSlug": null
+    },
+    {
+      "formulaId": "07c3a5ae-0504-57d9-b033-95debcce6d5c",
+      "displayName": "scsklms",
+      "primaryFamily": "transcendental",
+      "categories": [
+        "transcendental"
+      ],
+      "canonicalPath": "/formulas/07c3a5ae-0504-57d9-b033-95debcce6d5c",
+      "guideSlug": null
+    },
+    {
+      "formulaId": "0c89c8ab-1cd9-58fc-bc1a-e19dfe5fef7e",
+      "displayName": "scskzczz",
+      "primaryFamily": "transcendental",
+      "categories": [
+        "transcendental"
+      ],
+      "canonicalPath": "/formulas/0c89c8ab-1cd9-58fc-bc1a-e19dfe5fef7e",
+      "guideSlug": null
+    },
+    {
+      "formulaId": "8683972b-c782-5583-80a7-b1df1631e7ac",
+      "displayName": "shifter",
+      "primaryFamily": "algebraic-power",
+      "categories": [
+        "algebraic-power"
+      ],
+      "canonicalPath": "/formulas/8683972b-c782-5583-80a7-b1df1631e7ac",
+      "guideSlug": null
+    },
+    {
+      "formulaId": "c582ae06-6d94-5aef-b8d2-2735b7c34f11",
+      "displayName": "shifter01",
+      "primaryFamily": "algebraic-power",
+      "categories": [
+        "algebraic-power"
+      ],
+      "canonicalPath": "/formulas/c582ae06-6d94-5aef-b8d2-2735b7c34f11",
+      "guideSlug": null
+    },
+    {
+      "formulaId": "bcfe3aa5-28c4-5b45-b5db-44b29ef8055d",
+      "displayName": "silverado",
+      "primaryFamily": "algebraic-power",
+      "categories": [
+        "algebraic-power"
+      ],
+      "canonicalPath": "/formulas/bcfe3aa5-28c4-5b45-b5db-44b29ef8055d",
+      "guideSlug": null
+    },
+    {
+      "formulaId": "17eea2ca-49cc-5b0b-9608-28694fcde4eb",
+      "displayName": "silverado2",
+      "primaryFamily": "algebraic-power",
+      "categories": [
+        "algebraic-power"
+      ],
+      "canonicalPath": "/formulas/17eea2ca-49cc-5b0b-9608-28694fcde4eb",
+      "guideSlug": null
+    },
+    {
+      "formulaId": "d09224e0-8712-5ec3-bc1a-e951b3d42ca9",
+      "displayName": "simonBrot",
+      "primaryFamily": "algebraic-power",
+      "categories": [
+        "classic",
+        "algebraic-power"
+      ],
+      "canonicalPath": "/formulas/d09224e0-8712-5ec3-bc1a-e951b3d42ca9",
+      "guideSlug": null
+    },
+    {
+      "formulaId": "4827faca-8ea6-5d14-8a05-a2cbef5c8971",
+      "displayName": "sinegg",
+      "primaryFamily": "function-composition",
+      "categories": [
+        "function-composition"
+      ],
+      "canonicalPath": "/formulas/4827faca-8ea6-5d14-8a05-a2cbef5c8971",
+      "guideSlug": null
+    },
+    {
+      "formulaId": "fbde208b-8c88-5d55-8e5a-ecac4245add1",
+      "displayName": "sineggc",
+      "primaryFamily": "function-composition",
+      "categories": [
+        "function-composition"
+      ],
+      "canonicalPath": "/formulas/fbde208b-8c88-5d55-8e5a-ecac4245add1",
+      "guideSlug": null
+    },
+    {
+      "formulaId": "9693612f-d5c2-5d77-9058-58ee16e14b4b",
+      "displayName": "sineJulia",
+      "primaryFamily": "transcendental",
+      "categories": [
+        "classic",
+        "transcendental"
+      ],
+      "canonicalPath": "/formulas/9693612f-d5c2-5d77-9058-58ee16e14b4b",
+      "guideSlug": null
+    },
+    {
+      "formulaId": "beeb4aec-91cd-5d01-83bb-0b98ca851e79",
+      "displayName": "sineMandelb",
+      "primaryFamily": "transcendental",
+      "categories": [
+        "classic",
+        "transcendental"
+      ],
+      "canonicalPath": "/formulas/beeb4aec-91cd-5d01-83bb-0b98ca851e79",
+      "guideSlug": null
+    },
+    {
+      "formulaId": "9b437c43-72bc-51a3-8b61-227f916d724c",
+      "displayName": "sinhJulia",
+      "primaryFamily": "transcendental",
+      "categories": [
+        "classic",
+        "transcendental"
+      ],
+      "canonicalPath": "/formulas/9b437c43-72bc-51a3-8b61-227f916d724c",
+      "guideSlug": null
+    },
+    {
+      "formulaId": "190fa538-89c9-590f-8170-34b3c570fc5d",
+      "displayName": "sinhMandelb",
+      "primaryFamily": "transcendental",
+      "categories": [
+        "classic",
+        "transcendental"
+      ],
+      "canonicalPath": "/formulas/190fa538-89c9-590f-8170-34b3c570fc5d",
+      "guideSlug": null
+    },
+    {
+      "formulaId": "2380f8fa-cae0-56b1-baab-63bd8e2ccf85",
+      "displayName": "sjmand01",
+      "primaryFamily": "algebraic-power",
+      "categories": [
+        "algebraic-power"
+      ],
+      "canonicalPath": "/formulas/2380f8fa-cae0-56b1-baab-63bd8e2ccf85",
+      "guideSlug": null
+    },
+    {
+      "formulaId": "4424528d-f0a1-58e5-938e-560b39d58fff",
+      "displayName": "sjmand03",
+      "primaryFamily": "function-composition",
+      "categories": [
+        "function-composition"
+      ],
+      "canonicalPath": "/formulas/4424528d-f0a1-58e5-938e-560b39d58fff",
+      "guideSlug": null
+    },
+    {
+      "formulaId": "bebc8626-5930-5034-a8d3-38c0e134fb1b",
+      "displayName": "sjmand05",
+      "primaryFamily": "function-composition",
+      "categories": [
+        "function-composition"
+      ],
+      "canonicalPath": "/formulas/bebc8626-5930-5034-a8d3-38c0e134fb1b",
+      "guideSlug": null
+    },
+    {
+      "formulaId": "267869db-2e96-5d61-80ed-fab704e61585",
+      "displayName": "sjmand10",
+      "primaryFamily": "function-composition",
+      "categories": [
+        "function-composition"
+      ],
+      "canonicalPath": "/formulas/267869db-2e96-5d61-80ed-fab704e61585",
+      "guideSlug": null
+    },
+    {
+      "formulaId": "9068c579-4fc9-57bb-99a7-4e86d15dc55b",
+      "displayName": "sjmand11",
+      "primaryFamily": "function-composition",
+      "categories": [
+        "function-composition"
+      ],
+      "canonicalPath": "/formulas/9068c579-4fc9-57bb-99a7-4e86d15dc55b",
+      "guideSlug": null
+    },
+    {
+      "formulaId": "be109980-7f5d-537e-8197-c3392a3ac0cb",
+      "displayName": "speed-a",
+      "primaryFamily": "transcendental",
+      "categories": [
+        "transcendental"
+      ],
+      "canonicalPath": "/formulas/be109980-7f5d-537e-8197-c3392a3ac0cb",
+      "guideSlug": null
+    },
+    {
+      "formulaId": "28c77140-c5f9-557a-93d7-cac12cf08e63",
+      "displayName": "speed-b",
+      "primaryFamily": "algebraic-power",
+      "categories": [
+        "algebraic-power"
+      ],
+      "canonicalPath": "/formulas/28c77140-c5f9-557a-93d7-cac12cf08e63",
+      "guideSlug": null
+    },
+    {
+      "formulaId": "a9263b21-23c1-5d94-ba30-f7bef1a66629",
+      "displayName": "spider",
+      "primaryFamily": "rational-reciprocal",
+      "categories": [
+        "classic",
+        "rational-reciprocal"
+      ],
+      "canonicalPath": "/formulas/a9263b21-23c1-5d94-ba30-f7bef1a66629",
+      "guideSlug": "spider"
+    },
+    {
+      "formulaId": "5ebf37c7-2ce9-53ef-a6ec-fdbfa5c8742c",
+      "displayName": "sterling2",
+      "primaryFamily": "rational-reciprocal",
+      "categories": [
+        "rational-reciprocal"
+      ],
+      "canonicalPath": "/formulas/5ebf37c7-2ce9-53ef-a6ec-fdbfa5c8742c",
+      "guideSlug": null
+    },
+    {
+      "formulaId": "3a6e9b04-e85d-54ad-8de9-7e7fc980bf42",
+      "displayName": "sym-a",
+      "primaryFamily": "algebraic-power",
+      "categories": [
+        "algebraic-power"
+      ],
+      "canonicalPath": "/formulas/3a6e9b04-e85d-54ad-8de9-7e7fc980bf42",
+      "guideSlug": null
+    },
+    {
+      "formulaId": "623fec59-86d1-5702-88ee-4a638079c6b0",
+      "displayName": "sym-b",
+      "primaryFamily": "algebraic-power",
+      "categories": [
+        "algebraic-power"
+      ],
+      "canonicalPath": "/formulas/623fec59-86d1-5702-88ee-4a638079c6b0",
+      "guideSlug": null
+    },
+    {
+      "formulaId": "d541fbeb-4dcc-5fc9-9b88-116bb28bf327",
+      "displayName": "tanJulia",
+      "primaryFamily": "transcendental",
+      "categories": [
+        "classic",
+        "transcendental"
+      ],
+      "canonicalPath": "/formulas/d541fbeb-4dcc-5fc9-9b88-116bb28bf327",
+      "guideSlug": null
+    },
+    {
+      "formulaId": "da1b12b4-9d7d-5d69-b744-385ae5e4b577",
+      "displayName": "test",
+      "primaryFamily": "algebraic-power",
+      "categories": [
+        "algebraic-power"
+      ],
+      "canonicalPath": "/formulas/da1b12b4-9d7d-5d69-b744-385ae5e4b577",
+      "guideSlug": null
+    },
+    {
+      "formulaId": "9851c160-cf6c-5e04-b0bc-ce59657c4478",
+      "displayName": "test1",
+      "primaryFamily": "algebraic-power",
+      "categories": [
+        "algebraic-power"
+      ],
+      "canonicalPath": "/formulas/9851c160-cf6c-5e04-b0bc-ce59657c4478",
+      "guideSlug": null
+    },
+    {
+      "formulaId": "2037d212-b1c4-59f4-a773-90b627b1d7df",
+      "displayName": "test2",
+      "primaryFamily": "algebraic-power",
+      "categories": [
+        "algebraic-power"
+      ],
+      "canonicalPath": "/formulas/2037d212-b1c4-59f4-a773-90b627b1d7df",
+      "guideSlug": null
+    },
+    {
+      "formulaId": "0beb26b1-80e9-5902-9c1c-99eeba6a9465",
+      "displayName": "test3",
+      "primaryFamily": "algebraic-power",
+      "categories": [
+        "algebraic-power"
+      ],
+      "canonicalPath": "/formulas/0beb26b1-80e9-5902-9c1c-99eeba6a9465",
+      "guideSlug": null
+    },
+    {
+      "formulaId": "2b3b3de9-9e48-5b8e-9f65-97eefdf642fb",
+      "displayName": "testm",
+      "primaryFamily": "orbit-memory",
+      "categories": [
+        "orbit-memory"
+      ],
+      "canonicalPath": "/formulas/2b3b3de9-9e48-5b8e-9f65-97eefdf642fb",
+      "guideSlug": null
+    },
+    {
+      "formulaId": "247a0490-dacf-5df2-8a6f-67514402e4d2",
+      "displayName": "testsinmandc",
+      "primaryFamily": "function-composition",
+      "categories": [
+        "function-composition"
+      ],
+      "canonicalPath": "/formulas/247a0490-dacf-5df2-8a6f-67514402e4d2",
+      "guideSlug": null
+    },
+    {
+      "formulaId": "17d88272-6dbf-5622-996a-b116ea3a3fab",
+      "displayName": "tetration",
+      "primaryFamily": "transcendental",
+      "categories": [
+        "classic",
+        "transcendental"
+      ],
+      "canonicalPath": "/formulas/17d88272-6dbf-5622-996a-b116ea3a3fab",
+      "guideSlug": null
+    },
+    {
+      "formulaId": "d90c3a37-4a7a-5939-af78-67d0a8724e58",
+      "displayName": "tjercubic",
+      "primaryFamily": "algebraic-power",
+      "categories": [
+        "algebraic-power"
+      ],
+      "canonicalPath": "/formulas/d90c3a37-4a7a-5939-af78-67d0a8724e58",
+      "guideSlug": null
+    },
+    {
+      "formulaId": "74406ccc-7611-5893-b076-733e7c288c61",
+      "displayName": "tjerdeltalog",
+      "primaryFamily": "transcendental",
+      "categories": [
+        "transcendental"
+      ],
+      "canonicalPath": "/formulas/74406ccc-7611-5893-b076-733e7c288c61",
+      "guideSlug": null
+    },
+    {
+      "formulaId": "c76de166-3e77-5fcd-89e3-92561b33f0b8",
+      "displayName": "tjerdragon",
+      "primaryFamily": "transcendental",
+      "categories": [
+        "transcendental"
+      ],
+      "canonicalPath": "/formulas/c76de166-3e77-5fcd-89e3-92561b33f0b8",
+      "guideSlug": null
+    },
+    {
+      "formulaId": "68dbf03a-d943-55ae-ba14-8a597d4c8477",
+      "displayName": "tjerent",
+      "primaryFamily": "transcendental",
+      "categories": [
+        "transcendental"
+      ],
+      "canonicalPath": "/formulas/68dbf03a-d943-55ae-ba14-8a597d4c8477",
+      "guideSlug": null
+    },
+    {
+      "formulaId": "56fb67d7-2474-5076-8d59-ac9dbfb7c0b1",
+      "displayName": "tjerfzppfnpo",
+      "primaryFamily": "function-composition",
+      "categories": [
+        "function-composition"
+      ],
+      "canonicalPath": "/formulas/56fb67d7-2474-5076-8d59-ac9dbfb7c0b1",
+      "guideSlug": null
+    },
+    {
+      "formulaId": "9c92a2b0-a3a8-55ca-b89c-941099319d6e",
+      "displayName": "tjerfzppfnre",
+      "primaryFamily": "function-composition",
+      "categories": [
+        "function-composition"
+      ],
+      "canonicalPath": "/formulas/9c92a2b0-a3a8-55ca-b89c-941099319d6e",
+      "guideSlug": null
+    },
+    {
+      "formulaId": "7c9a2273-28b9-5850-b521-9689a84a3700",
+      "displayName": "tjerinvmandel",
+      "primaryFamily": "transcendental",
+      "categories": [
+        "transcendental"
+      ],
+      "canonicalPath": "/formulas/7c9a2273-28b9-5850-b521-9689a84a3700",
+      "guideSlug": null
+    },
+    {
+      "formulaId": "e03055ad-b642-5ada-b4ce-7819d9282cbe",
+      "displayName": "tjermtet",
+      "primaryFamily": "function-composition",
+      "categories": [
+        "function-composition"
+      ],
+      "canonicalPath": "/formulas/e03055ad-b642-5ada-b4ce-7819d9282cbe",
+      "guideSlug": null
+    },
+    {
+      "formulaId": "6e987df6-9931-5242-9f83-80ebb0c922be",
+      "displayName": "tobeyleemandel2",
+      "primaryFamily": "rational-reciprocal",
+      "categories": [
+        "rational-reciprocal"
+      ],
+      "canonicalPath": "/formulas/6e987df6-9931-5242-9f83-80ebb0c922be",
+      "guideSlug": null
+    },
+    {
+      "formulaId": "c698d9dd-78c0-5478-8aa2-0230a9728ca8",
+      "displayName": "tobeyleemandel3",
+      "primaryFamily": "orbit-memory",
+      "categories": [
+        "orbit-memory"
+      ],
+      "canonicalPath": "/formulas/c698d9dd-78c0-5478-8aa2-0230a9728ca8",
+      "guideSlug": null
+    },
+    {
+      "formulaId": "338c7feb-1b14-556e-bc71-4383529f4f20",
+      "displayName": "tobeymyfractal",
+      "primaryFamily": "function-composition",
+      "categories": [
+        "function-composition"
+      ],
+      "canonicalPath": "/formulas/338c7feb-1b14-556e-bc71-4383529f4f20",
+      "guideSlug": null
+    },
+    {
+      "formulaId": "3c71e05b-12c2-5eae-b4c7-b4bc36f52dc2",
+      "displayName": "tobeypsudomandel",
+      "primaryFamily": "function-composition",
+      "categories": [
+        "function-composition"
+      ],
+      "canonicalPath": "/formulas/3c71e05b-12c2-5eae-b4c7-b4bc36f52dc2",
+      "guideSlug": null
+    },
+    {
+      "formulaId": "ed92fb8b-18a9-5e2b-acd7-ee933bf7df93",
+      "displayName": "tobeyrichard1",
+      "primaryFamily": "function-composition",
+      "categories": [
+        "function-composition"
+      ],
+      "canonicalPath": "/formulas/ed92fb8b-18a9-5e2b-acd7-ee933bf7df93",
+      "guideSlug": null
+    },
+    {
+      "formulaId": "dff2d794-c48f-5555-af0d-e7fe77a80099",
+      "displayName": "tobeyrichard2",
+      "primaryFamily": "rational-reciprocal",
+      "categories": [
+        "rational-reciprocal"
+      ],
+      "canonicalPath": "/formulas/dff2d794-c48f-5555-af0d-e7fe77a80099",
+      "guideSlug": null
+    },
+    {
+      "formulaId": "28fe8474-fcfd-5fca-88ed-008e976c5707",
+      "displayName": "tobeyrichard3",
+      "primaryFamily": "rational-reciprocal",
+      "categories": [
+        "rational-reciprocal"
+      ],
+      "canonicalPath": "/formulas/28fe8474-fcfd-5fca-88ed-008e976c5707",
+      "guideSlug": null
+    },
+    {
+      "formulaId": "c6a188ae-ec58-5a57-bfe2-caf85a83d2f8",
+      "displayName": "tobeysterling2",
+      "primaryFamily": "rational-reciprocal",
+      "categories": [
+        "rational-reciprocal"
+      ],
+      "canonicalPath": "/formulas/c6a188ae-ec58-5a57-bfe2-caf85a83d2f8",
+      "guideSlug": null
+    },
+    {
+      "formulaId": "3832742e-41f6-5d14-8749-a4955ab123fb",
+      "displayName": "tobeywineglass",
+      "primaryFamily": "orbit-memory",
+      "categories": [
+        "orbit-memory"
+      ],
+      "canonicalPath": "/formulas/3832742e-41f6-5d14-8749-a4955ab123fb",
+      "guideSlug": null
+    },
+    {
+      "formulaId": "27a3da95-a9e6-5fc2-81af-d5e9076fc8fa",
+      "displayName": "tricorn",
+      "primaryFamily": "algebraic-power",
+      "categories": [
+        "classic",
+        "algebraic-power"
+      ],
+      "canonicalPath": "/formulas/27a3da95-a9e6-5fc2-81af-d5e9076fc8fa",
+      "guideSlug": null
+    },
+    {
+      "formulaId": "82df8478-c0f0-5b64-86fe-5bc56b4a462b",
+      "displayName": "turtlec",
+      "primaryFamily": "function-composition",
+      "categories": [
+        "function-composition"
+      ],
+      "canonicalPath": "/formulas/82df8478-c0f0-5b64-86fe-5bc56b4a462b",
+      "guideSlug": null
+    },
+    {
+      "formulaId": "4c8382ac-ee39-5f57-87e7-7314d1dca9d2",
+      "displayName": "uli_4",
+      "primaryFamily": "rational-reciprocal",
+      "categories": [
+        "rational-reciprocal"
+      ],
+      "canonicalPath": "/formulas/4c8382ac-ee39-5f57-87e7-7314d1dca9d2",
+      "guideSlug": null
+    },
+    {
+      "formulaId": "25a44643-404e-5254-8cba-a1b639779fbb",
+      "displayName": "uli_5",
+      "primaryFamily": "rational-reciprocal",
+      "categories": [
+        "rational-reciprocal"
+      ],
+      "canonicalPath": "/formulas/25a44643-404e-5254-8cba-a1b639779fbb",
+      "guideSlug": null
+    },
+    {
+      "formulaId": "f031c5ee-cb45-5389-80ed-1c5365a12e02",
+      "displayName": "uli_6",
+      "primaryFamily": "function-composition",
+      "categories": [
+        "function-composition"
+      ],
+      "canonicalPath": "/formulas/f031c5ee-cb45-5389-80ed-1c5365a12e02",
+      "guideSlug": null
+    },
+    {
+      "formulaId": "90b86064-929f-5dc8-b671-0284b76ee3fb",
+      "displayName": "waldotwinsc",
+      "primaryFamily": "function-composition",
+      "categories": [
+        "function-composition"
+      ],
+      "canonicalPath": "/formulas/90b86064-929f-5dc8-b671-0284b76ee3fb",
+      "guideSlug": null
+    },
+    {
+      "formulaId": "58edc237-4978-5aed-8229-028b1d9cbbb9",
+      "displayName": "wineglass",
+      "primaryFamily": "orbit-memory",
+      "categories": [
+        "orbit-memory"
+      ],
+      "canonicalPath": "/formulas/58edc237-4978-5aed-8229-028b1d9cbbb9",
+      "guideSlug": null
+    },
+    {
+      "formulaId": "22d9a008-eb14-53de-9960-11eb5d37bb8e",
+      "displayName": "zaslavskyMap",
+      "primaryFamily": "transcendental",
+      "categories": [
+        "classic",
+        "transcendental"
+      ],
+      "canonicalPath": "/formulas/22d9a008-eb14-53de-9960-11eb5d37bb8e",
+      "guideSlug": "zaslavsky-map"
+    },
+    {
+      "formulaId": "300db23f-8a8a-59d7-b4f1-bc77757286c6",
+      "displayName": "zeepi",
+      "primaryFamily": "rational-reciprocal",
+      "categories": [
+        "rational-reciprocal"
+      ],
+      "canonicalPath": "/formulas/300db23f-8a8a-59d7-b4f1-bc77757286c6",
+      "guideSlug": null
+    },
+    {
+      "formulaId": "743f6bbf-4cc1-5df7-8f3e-2e654ddc81ba",
+      "displayName": "zeppo",
+      "primaryFamily": "folded-absolute",
+      "categories": [
+        "folded-absolute"
+      ],
+      "canonicalPath": "/formulas/743f6bbf-4cc1-5df7-8f3e-2e654ddc81ba",
+      "guideSlug": null
+    },
+    {
+      "formulaId": "e435bbb6-d866-5876-9f16-f04fbe61ff2b",
+      "displayName": "zubieta",
+      "primaryFamily": "folded-absolute",
+      "categories": [
+        "classic",
+        "folded-absolute"
+      ],
+      "canonicalPath": "/formulas/e435bbb6-d866-5876-9f16-f04fbe61ff2b",
+      "guideSlug": "zubieta"
+    }
+  ],
+  "runtimeAliases": [
+    {
+      "runtimeId": "acoshJulia",
+      "canonicalFormulaId": "c09b9dec-60a6-5a26-8f03-d5ea40f0d49b"
+    },
+    {
+      "runtimeId": "acoshMandelbrot",
+      "canonicalFormulaId": "cb9f75de-2acb-563b-9090-f58f17e65f92"
+    },
+    {
+      "runtimeId": "airship",
+      "canonicalFormulaId": "38c3b212-c33b-5dd3-aae5-a514fc7e37e3"
+    },
+    {
+      "runtimeId": "airshipCubic",
+      "canonicalFormulaId": "42b369a5-2873-50e9-8684-cad5e60630ff"
+    },
+    {
+      "runtimeId": "asinhJulia",
+      "canonicalFormulaId": "b6ccba60-aba6-5136-9c92-679ae55ba5ce"
+    },
+    {
+      "runtimeId": "asinhMandelbrot",
+      "canonicalFormulaId": "07a0afc6-ced5-5765-9314-fdb0ef593cb9"
+    },
+    {
+      "runtimeId": "atanhJulia",
+      "canonicalFormulaId": "88dd57cd-a348-55e8-983a-74c0acba57ae"
+    },
+    {
+      "runtimeId": "atanhMandelbrot",
+      "canonicalFormulaId": "ecee6e9d-a5c9-5b29-be39-edbe00e73c50"
+    },
+    {
+      "runtimeId": "biomorph",
+      "canonicalFormulaId": "34fcff23-f75a-539c-9102-181945abee60"
+    },
+    {
+      "runtimeId": "buffalo",
+      "canonicalFormulaId": "a569d2c4-d397-5634-9dfe-21b2ab1a386a"
+    },
+    {
+      "runtimeId": "burningShip",
+      "canonicalFormulaId": "2ab193f5-4919-5e5c-a9fb-c1a0e3f5eb02"
+    },
+    {
+      "runtimeId": "burningShipCubic",
+      "canonicalFormulaId": "465a5b03-469d-59b3-8564-45af7564e37a"
+    },
+    {
+      "runtimeId": "burningShipImag",
+      "canonicalFormulaId": "33236fd9-4bd1-539b-961a-7b95ab92a1e0"
+    },
+    {
+      "runtimeId": "burningShipQuartic",
+      "canonicalFormulaId": "46acfdeb-2dac-59c9-a94a-fd4809420dc2"
+    },
+    {
+      "runtimeId": "cactus",
+      "canonicalFormulaId": "a3ab1c2f-5940-51d3-8c13-58f7feeb084b"
+    },
+    {
+      "runtimeId": "celticBurningShip",
+      "canonicalFormulaId": "8f661407-f2c9-57e5-8c01-9b63a3cd0493"
+    },
+    {
+      "runtimeId": "celticMandelbar",
+      "canonicalFormulaId": "06223e69-6d8c-50ba-8e5d-b630d342d910"
+    },
+    {
+      "runtimeId": "celticMandelbrot",
+      "canonicalFormulaId": "4536f1e3-1f15-5b7e-8e58-68ea3b63d4fb"
+    },
+    {
+      "runtimeId": "chebyshev2",
+      "canonicalFormulaId": "09ee96d1-18a8-5dad-83e1-d05f0c59be4b"
+    },
+    {
+      "runtimeId": "chebyshev3",
+      "canonicalFormulaId": "e1220621-19f8-54ef-ad36-4220b5d7fedc"
+    },
+    {
+      "runtimeId": "chebyshev4",
+      "canonicalFormulaId": "18d30091-ce1c-5b10-b214-37eb4337df83"
+    },
+    {
+      "runtimeId": "chebyshev5",
+      "canonicalFormulaId": "34f41a82-3ede-5eda-8c1c-67962c37366b"
+    },
+    {
+      "runtimeId": "circleInversion",
+      "canonicalFormulaId": "6c1385a9-2d23-5816-90d1-2752905fc353"
+    },
+    {
+      "runtimeId": "collatz",
+      "canonicalFormulaId": "8eb342fe-8a05-524e-8b98-35cdc8af5be3"
+    },
+    {
+      "runtimeId": "coshJulia",
+      "canonicalFormulaId": "62098934-def3-527a-ac43-2c80449c9848"
+    },
+    {
+      "runtimeId": "coshMandelb",
+      "canonicalFormulaId": "201c54f3-a77a-5be0-a0a5-6f4f1998ee6d"
+    },
+    {
+      "runtimeId": "coshSinh",
+      "canonicalFormulaId": "d89f722f-35fe-587a-bee9-efdf05885728"
+    },
+    {
+      "runtimeId": "cosJulia",
+      "canonicalFormulaId": "3edbea29-956a-5900-9aa7-02ccc2183016"
+    },
+    {
+      "runtimeId": "cosMandelb",
+      "canonicalFormulaId": "9f301c01-13fa-57b4-a3b2-99add821bfb0"
+    },
+    {
+      "runtimeId": "cothJulia",
+      "canonicalFormulaId": "8f9eb07a-b405-5d9c-8b6a-9447ad7165b0"
+    },
+    {
+      "runtimeId": "cothMandelbrot",
+      "canonicalFormulaId": "ebe7d5f6-7f65-50cc-b03b-f208d78c955a"
+    },
+    {
+      "runtimeId": "cubicMandelbrot",
+      "canonicalFormulaId": "34fcff23-f75a-539c-9102-181945abee60"
+    },
+    {
+      "runtimeId": "cubicPerpendicularMandelbrot",
+      "canonicalFormulaId": "e375f423-dfa4-54bf-9d56-c41215f4f72a"
+    },
+    {
+      "runtimeId": "expJulia",
+      "canonicalFormulaId": "af500910-46ce-5a43-b430-c0154cc05959"
+    },
+    {
+      "runtimeId": "expMandelbrot",
+      "canonicalFormulaId": "af500910-46ce-5a43-b430-c0154cc05959"
+    },
+    {
+      "runtimeId": "frothyBasin",
+      "canonicalFormulaId": "56935004-bdb8-5682-974f-3821cd422965"
+    },
+    {
+      "runtimeId": "halleyCubic",
+      "canonicalFormulaId": "b79313f5-2181-5013-bd21-e59a7222dce5"
+    },
+    {
+      "runtimeId": "heart",
+      "canonicalFormulaId": "4536f1e3-1f15-5b7e-8e58-68ea3b63d4fb"
+    },
+    {
+      "runtimeId": "invertedLambda",
+      "canonicalFormulaId": "c6b5dcf4-cef5-5630-b3f6-a68b92ae75ee"
+    },
+    {
+      "runtimeId": "lambda",
+      "canonicalFormulaId": "c1c898f3-c9a3-583d-9a0a-d09968ba0db3"
+    },
+    {
+      "runtimeId": "logistic",
+      "canonicalFormulaId": "2daea798-a058-5b4c-ada8-1712c475fadf"
+    },
+    {
+      "runtimeId": "logJulia",
+      "canonicalFormulaId": "d93a2f0f-7208-5019-ad82-7a1d319a4412"
+    },
+    {
+      "runtimeId": "magnet1",
+      "canonicalFormulaId": "12fc34ff-196d-5924-830e-6edb72dfc172"
+    },
+    {
+      "runtimeId": "magnet2",
+      "canonicalFormulaId": "2dd8a5a7-052a-5539-aab9-c533f7dec857"
+    },
+    {
+      "runtimeId": "mandelbox",
+      "canonicalFormulaId": "280cd3e2-865b-5c78-90b7-39b2a36d7be0"
+    },
+    {
+      "runtimeId": "mandelbrot",
+      "canonicalFormulaId": "00e14aa8-b766-54ea-a359-3f5d20d329b7"
+    },
+    {
+      "runtimeId": "manowar",
+      "canonicalFormulaId": "ca206908-8323-5ef9-979b-c80575765e63"
+    },
+    {
+      "runtimeId": "mcMullen23",
+      "canonicalFormulaId": "cc40b50c-d3ff-54f0-b4ea-98bdf0fd0096"
+    },
+    {
+      "runtimeId": "mcMullen32",
+      "canonicalFormulaId": "9577c6c0-3a56-5a17-bea5-0ad2d6ea7e08"
+    },
+    {
+      "runtimeId": "mcMullen34",
+      "canonicalFormulaId": "48a9aa85-f5d4-5f9a-b640-89e93890a8ad"
+    },
+    {
+      "runtimeId": "multicorn4",
+      "canonicalFormulaId": "b9a54802-21b4-5cb9-8b8f-e4afc3c99f3b"
+    },
+    {
+      "runtimeId": "multicorn5",
+      "canonicalFormulaId": "ed671b4c-a04c-5545-ad0c-a73727761ce8"
+    },
+    {
+      "runtimeId": "multicorn6",
+      "canonicalFormulaId": "a69bc250-315d-5a74-9109-d23a820974e5"
+    },
+    {
+      "runtimeId": "multicorn7",
+      "canonicalFormulaId": "f58059ef-67f2-58a4-bac0-bdb1d8608cc0"
+    },
+    {
+      "runtimeId": "newton3",
+      "canonicalFormulaId": "dd052c9f-868f-5516-9af0-3f4e78ac7a13"
+    },
+    {
+      "runtimeId": "newton4",
+      "canonicalFormulaId": "75e70076-b422-5535-b3c9-c484fbf879e6"
+    },
+    {
+      "runtimeId": "newton5",
+      "canonicalFormulaId": "e44d5dec-2cee-53a9-a21d-541c929792f6"
+    },
+    {
+      "runtimeId": "newton6",
+      "canonicalFormulaId": "78e550c6-d58d-57b7-92ff-82e9ed0728f0"
+    },
+    {
+      "runtimeId": "newtonCos",
+      "canonicalFormulaId": "d0079630-8ed3-5379-9e37-52cb7f0f7379"
+    },
+    {
+      "runtimeId": "newtonCosh",
+      "canonicalFormulaId": "a89891b1-8ccb-5d58-9fbb-05944b85ce3c"
+    },
+    {
+      "runtimeId": "newtonExp",
+      "canonicalFormulaId": "bb186688-4571-5725-a8ed-a17e0100dbc8"
+    },
+    {
+      "runtimeId": "newtonSin",
+      "canonicalFormulaId": "848e8cdc-d391-5098-9fdc-1de2f83be3f0"
+    },
+    {
+      "runtimeId": "newtonSinh",
+      "canonicalFormulaId": "6d27b5fd-462b-5561-bac2-7c5f915e3cb5"
+    },
+    {
+      "runtimeId": "novaBasin",
+      "canonicalFormulaId": "599a7fda-4c0e-5489-b12e-6e4179ee11f2"
+    },
+    {
+      "runtimeId": "novaClassic",
+      "canonicalFormulaId": "a63c7852-626f-5659-a556-b0193030f25b"
+    },
+    {
+      "runtimeId": "novaCos",
+      "canonicalFormulaId": "4514ac15-fecc-5b92-9e79-0b95b5158d3f"
+    },
+    {
+      "runtimeId": "novaSine",
+      "canonicalFormulaId": "0df5ac6e-d97e-55db-b624-96c310af07dd"
+    },
+    {
+      "runtimeId": "perpendicularBurningShip",
+      "canonicalFormulaId": "42d4c442-040b-59be-892f-1f10c8e47cb6"
+    },
+    {
+      "runtimeId": "perpendicularCeltic",
+      "canonicalFormulaId": "627c38a8-8f4d-548f-a5a6-dd9f215adf60"
+    },
+    {
+      "runtimeId": "perpendicularCelticBurningShip",
+      "canonicalFormulaId": "8f661407-f2c9-57e5-8c01-9b63a3cd0493"
+    },
+    {
+      "runtimeId": "perpendicularMandelbrot",
+      "canonicalFormulaId": "d01f1a01-6e77-5a24-8593-a7009e1c3ea3"
+    },
+    {
+      "runtimeId": "perpendicularTricorn",
+      "canonicalFormulaId": "3a83800c-4a44-5e61-9651-d3d5adb71213"
+    },
+    {
+      "runtimeId": "phoenix",
+      "canonicalFormulaId": "e2456b54-ef50-5ac9-9faa-dcb576c5e774"
+    },
+    {
+      "runtimeId": "phoenixMulti",
+      "canonicalFormulaId": "0f49d971-917e-50a5-ae83-20e11fd4854c"
+    },
+    {
+      "runtimeId": "quadJulia",
+      "canonicalFormulaId": "1768f194-bdc1-5881-b269-a58730967c2c"
+    },
+    {
+      "runtimeId": "quarticMandelbrot",
+      "canonicalFormulaId": "1768f194-bdc1-5881-b269-a58730967c2c"
+    },
+    {
+      "runtimeId": "quarticPerpendicularMandelbrot",
+      "canonicalFormulaId": "d747aff8-e49f-5875-a85f-89d4a1d25846"
+    },
+    {
+      "runtimeId": "rabbitJulia",
+      "canonicalFormulaId": "6b633456-4a1d-580e-9a61-6824ca303486"
+    },
+    {
+      "runtimeId": "rationalMap1",
+      "canonicalFormulaId": "37425fb2-8542-502f-94ac-94c0ccb6e508"
+    },
+    {
+      "runtimeId": "rationalMap2",
+      "canonicalFormulaId": "b0bf5217-893a-5a0f-9a46-5e5ce89223c3"
+    },
+    {
+      "runtimeId": "reciprocalCubic",
+      "canonicalFormulaId": "35a7e33c-fcba-5a81-ba80-8eab6d59925c"
+    },
+    {
+      "runtimeId": "reciprocalQuadratic",
+      "canonicalFormulaId": "2edf64a9-157c-57d7-8894-1f4781bc4f8c"
+    },
+    {
+      "runtimeId": "rings",
+      "canonicalFormulaId": "d848b143-1bb8-524e-b716-f0dd41a836df"
+    },
+    {
+      "runtimeId": "simonBrot",
+      "canonicalFormulaId": "d09224e0-8712-5ec3-bc1a-e951b3d42ca9"
+    },
+    {
+      "runtimeId": "sineJulia",
+      "canonicalFormulaId": "9693612f-d5c2-5d77-9058-58ee16e14b4b"
+    },
+    {
+      "runtimeId": "sineMandelb",
+      "canonicalFormulaId": "beeb4aec-91cd-5d01-83bb-0b98ca851e79"
+    },
+    {
+      "runtimeId": "sinhJulia",
+      "canonicalFormulaId": "9b437c43-72bc-51a3-8b61-227f916d724c"
+    },
+    {
+      "runtimeId": "sinhMandelb",
+      "canonicalFormulaId": "190fa538-89c9-590f-8170-34b3c570fc5d"
+    },
+    {
+      "runtimeId": "spider",
+      "canonicalFormulaId": "a9263b21-23c1-5d94-ba30-f7bef1a66629"
+    },
+    {
+      "runtimeId": "tanJulia",
+      "canonicalFormulaId": "d541fbeb-4dcc-5fc9-9b88-116bb28bf327"
+    },
+    {
+      "runtimeId": "tetration",
+      "canonicalFormulaId": "17d88272-6dbf-5622-996a-b116ea3a3fab"
+    },
+    {
+      "runtimeId": "tricorn",
+      "canonicalFormulaId": "27a3da95-a9e6-5fc2-81af-d5e9076fc8fa"
+    },
+    {
+      "runtimeId": "zaslavskyMap",
+      "canonicalFormulaId": "22d9a008-eb14-53de-9960-11eb5d37bb8e"
+    },
+    {
+      "runtimeId": "zubieta",
+      "canonicalFormulaId": "e435bbb6-d866-5876-9f16-f04fbe61ff2b"
+    }
+  ],
+  "aliasDeepLinks": [
+    {
+      "legacyRuntimeId": "biomorph",
+      "canonicalFormulaId": "34fcff23-f75a-539c-9102-181945abee60",
+      "canonicalPath": "/formulas/34fcff23-f75a-539c-9102-181945abee60",
+      "alternateProfile": {
+        "schema": "fractalpark-classic-alternate-profile/v1",
+        "authority": "legacy-formula-catalog",
+        "bounds": {
+          "centerX": -0.1,
+          "centerY": 0,
+          "zoom": 0.6,
+          "rotation": 0
+        },
+        "formula": {
+          "isJulia": false,
+          "juliaC": [
+            -0.7,
+            0.27
+          ],
+          "power": 2,
+          "params": {}
+        },
+        "coloring": {
+          "pipelineVersion": 1,
+          "paletteIndex": 1,
+          "customGradient": null,
+          "outsideColoringId": "smooth",
+          "insideColoringId": "black",
+          "orbitTrap": {
+            "shape": "point",
+            "point": [
+              0,
+              0
+            ],
+            "radius": 0.35,
+            "width": 0.02
+          },
+          "lighting": {
+            "enabled": false,
+            "mode": "normalMap",
+            "azimuth": 45,
+            "elevation": 35,
+            "intensity": 0.65
+          }
+        },
+        "iterations": 200
+      }
+    },
+    {
+      "legacyRuntimeId": "celticMandelbrot",
+      "canonicalFormulaId": "4536f1e3-1f15-5b7e-8e58-68ea3b63d4fb",
+      "canonicalPath": "/formulas/4536f1e3-1f15-5b7e-8e58-68ea3b63d4fb",
+      "alternateProfile": {
+        "schema": "fractalpark-classic-alternate-profile/v1",
+        "authority": "legacy-formula-catalog",
+        "bounds": {
+          "centerX": -0.42,
+          "centerY": 0,
+          "zoom": 0.48,
+          "rotation": 0
+        },
+        "formula": {
+          "isJulia": false,
+          "juliaC": [
+            -0.7,
+            0.27
+          ],
+          "power": 2,
+          "params": {}
+        },
+        "coloring": {
+          "pipelineVersion": 1,
+          "paletteIndex": 0,
+          "customGradient": null,
+          "outsideColoringId": "smooth",
+          "insideColoringId": "black",
+          "orbitTrap": {
+            "shape": "point",
+            "point": [
+              0,
+              0
+            ],
+            "radius": 0.35,
+            "width": 0.02
+          },
+          "lighting": {
+            "enabled": false,
+            "mode": "normalMap",
+            "azimuth": 45,
+            "elevation": 35,
+            "intensity": 0.65
+          }
+        },
+        "iterations": 200
+      }
+    },
+    {
+      "legacyRuntimeId": "expJulia",
+      "canonicalFormulaId": "af500910-46ce-5a43-b430-c0154cc05959",
+      "canonicalPath": "/formulas/af500910-46ce-5a43-b430-c0154cc05959",
+      "alternateProfile": {
+        "schema": "fractalpark-classic-alternate-profile/v1",
+        "authority": "legacy-formula-catalog",
+        "bounds": {
+          "centerX": -0.2,
+          "centerY": 0.15,
+          "zoom": 2.2,
+          "rotation": 0
+        },
+        "formula": {
+          "isJulia": false,
+          "juliaC": [
+            -0.7,
+            0.27
+          ],
+          "power": 2,
+          "params": {}
+        },
+        "coloring": {
+          "pipelineVersion": 1,
+          "paletteIndex": 2,
+          "customGradient": null,
+          "outsideColoringId": "smooth",
+          "insideColoringId": "black",
+          "orbitTrap": {
+            "shape": "point",
+            "point": [
+              0,
+              0
+            ],
+            "radius": 0.35,
+            "width": 0.02
+          },
+          "lighting": {
+            "enabled": false,
+            "mode": "normalMap",
+            "azimuth": 45,
+            "elevation": 35,
+            "intensity": 0.65
+          }
+        },
+        "iterations": 200
+      }
+    },
+    {
+      "legacyRuntimeId": "perpendicularCelticBurningShip",
+      "canonicalFormulaId": "8f661407-f2c9-57e5-8c01-9b63a3cd0493",
+      "canonicalPath": "/formulas/8f661407-f2c9-57e5-8c01-9b63a3cd0493",
+      "alternateProfile": {
+        "schema": "fractalpark-classic-alternate-profile/v1",
+        "authority": "legacy-formula-catalog",
+        "bounds": {
+          "centerX": -0.42,
+          "centerY": -0.16,
+          "zoom": 0.46,
+          "rotation": 0
+        },
+        "formula": {
+          "isJulia": false,
+          "juliaC": [
+            -0.7,
+            0.27
+          ],
+          "power": 2,
+          "params": {}
+        },
+        "coloring": {
+          "pipelineVersion": 1,
+          "paletteIndex": 0,
+          "customGradient": null,
+          "outsideColoringId": "smooth",
+          "insideColoringId": "black",
+          "orbitTrap": {
+            "shape": "point",
+            "point": [
+              0,
+              0
+            ],
+            "radius": 0.35,
+            "width": 0.02
+          },
+          "lighting": {
+            "enabled": false,
+            "mode": "normalMap",
+            "azimuth": 45,
+            "elevation": 35,
+            "intensity": 0.65
+          }
+        },
+        "iterations": 200
+      }
+    },
+    {
+      "legacyRuntimeId": "quadJulia",
+      "canonicalFormulaId": "1768f194-bdc1-5881-b269-a58730967c2c",
+      "canonicalPath": "/formulas/1768f194-bdc1-5881-b269-a58730967c2c",
+      "alternateProfile": {
+        "schema": "fractalpark-classic-alternate-profile/v1",
+        "authority": "legacy-formula-catalog",
+        "bounds": {
+          "centerX": 0,
+          "centerY": 0,
+          "zoom": 0.27,
+          "rotation": 0
+        },
+        "formula": {
+          "isJulia": false,
+          "juliaC": [
+            -0.7,
+            0.27
+          ],
+          "power": 2,
+          "params": {}
+        },
+        "coloring": {
+          "pipelineVersion": 1,
+          "paletteIndex": 0,
+          "customGradient": null,
+          "outsideColoringId": "smooth",
+          "insideColoringId": "black",
+          "orbitTrap": {
+            "shape": "point",
+            "point": [
+              0,
+              0
+            ],
+            "radius": 0.35,
+            "width": 0.02
+          },
+          "lighting": {
+            "enabled": false,
+            "mode": "normalMap",
+            "azimuth": 45,
+            "elevation": 35,
+            "intensity": 0.65
+          },
+          "params": {}
+        },
+        "iterations": 200
+      }
+    }
+  ],
+  "contentHash": "20acd210094d0553090094bf7bfb676fa72f7de44130698a386e01a46c0cdf29"
+}

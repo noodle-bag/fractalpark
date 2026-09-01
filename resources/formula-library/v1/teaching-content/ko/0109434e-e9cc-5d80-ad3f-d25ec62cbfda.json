@@ -1,0 +1,39 @@
+{
+  "schema": "fractalpark-teaching-locale/v1",
+  "formulaId": "0109434e-e9cc-5d80-ad3f-d25ec62cbfda",
+  "locale": "ko",
+  "sourceRevision": "41794347e36147808476dcb16e41d7bdbf24b94327ce2f0bf13fd67a1cf1901f",
+  "semanticHash": "d26f1d44391d40c073dbec81bde9b52fe1fbf4e6235750ea29e9de422955fcd8",
+  "englishContentHash": "c88a2faa701905966d39f5f3d225e0d8243056cfe486cfd081eebb33b3a5a15c",
+  "overview": "jm_18은 고정된 FRM-like/1 정의로 배워요. z = pixel; t = p1 + 4; 그런 다음 z = fn1(z) * pixel * fn2(fn3(z) * pixel)를 따라가고 이미지를 보장으로 여기지 않아요. 고정 프로필은 하나의 구체적인 관찰 설정만 제공해요.",
+  "sourceWalkthrough": {
+    "0109434e-e9cc-5d80-ad3f-d25ec62cbfda:41794347e36147808476dcb16e41d7bdbf24b94327ce2f0bf13fd67a1cf1901f:initial-state": "jm_18에서 이 노드는 다음 연산을 실행해요: z = pixel.",
+    "0109434e-e9cc-5d80-ad3f-d25ec62cbfda:41794347e36147808476dcb16e41d7bdbf24b94327ce2f0bf13fd67a1cf1901f:threshold-init": "jm_18에서 이 노드는 다음 연산을 실행해요: t = p1 + 4.",
+    "0109434e-e9cc-5d80-ad3f-d25ec62cbfda:41794347e36147808476dcb16e41d7bdbf24b94327ce2f0bf13fd67a1cf1901f:function-update": "jm_18에서 이 노드는 다음 연산을 실행해요: z = fn1(z) * pixel * fn2(fn3(z) * pixel).",
+    "0109434e-e9cc-5d80-ad3f-d25ec62cbfda:41794347e36147808476dcb16e41d7bdbf24b94327ce2f0bf13fd67a1cf1901f:termination": "jm_18에서 이 노드는 다음 연산을 실행해요: |z| <= t."
+  },
+  "syntaxFeatures": {
+    "state-flow": "구체적인 상태 흐름은 z는 pixel로, t는 p1 + 4로 초기화한 뒤 중첩 함수 갱신을 수행해요.",
+    "stopping-test": "종료 검사는 |z| <= t만 판단하며 상태에 값을 대입하지 않아요."
+  },
+  "parameterExperiment": {
+    "steps": [
+      "고정 프로필에서 jm_18을 실행하고 결과를 기록하세요.",
+      "parameter1만 바꾸고 다른 런타임 슬롯과 프로필 제어는 고정한 뒤 다시 실행하여 차이가 있는지 기록하세요.",
+      "function1만 바꾸고 다른 런타임 슬롯과 프로필 제어는 고정한 뒤 다시 실행하여 차이가 있는지 기록하세요.",
+      "function2만 바꾸고 다른 런타임 슬롯과 프로필 제어는 고정한 뒤 다시 실행하여 차이가 있는지 기록하세요.",
+      "function3만 바꾸고 다른 런타임 슬롯과 프로필 제어는 고정한 뒤 다시 실행하여 차이가 있는지 기록하세요."
+    ],
+    "expectedObservation": "기준 실행과 비교해 z = pixel; t = p1 + 4; 그런 다음 z = fn1(z) * pixel * fn2(fn3(z) * pixel)가 보이는 결과나 |z| <= t 종료 검사에 차이를 만드는지 기록하세요. 정의가 차이를 보장하지는 않아요."
+  },
+  "exercise": {
+    "prompt": "jm_18의 주석을 추적하고 표시된 연산에서 z = pixel; t = p1 + 4; 그런 다음 z = fn1(z) * pixel * fn2(fn3(z) * pixel)가 어떻게 실행되는지 설명하세요.",
+    "completionCheck": "답에는 4개 주석의 설명, z = pixel; t = p1 + 4; 그런 다음 z = fn1(z) * pixel * fn2(fn3(z) * pixel)의 식별, 그리고 |z| <= t가 대입이 아닌 종료 검사라는 구분이 있어요.",
+    "hint": "상태 흐름에서는 z = pixel → t = p1 + 4 → z = fn1(z) * pixel * fn2(fn3(z) * pixel) 순서로 연산하고 결과를 다음 단계에 넘겨요."
+  },
+  "factsPresentation": {
+    "provenanceLead": "출처: 고정된 실행 정의와 공개 결정이에요.",
+    "rightsLead": "권리 정보는 영어 단원의 고정된 결정을 따라요."
+  },
+  "contentHash": "416105588dde65a7ac03685c0e7503f67de05bd77973ef2180ed445f19e3dda4"
+}

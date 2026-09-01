@@ -1,0 +1,81 @@
+{
+  "schema": "fractalpark-teaching-en-fact/v1",
+  "formulaId": "00e14aa8-b766-54ea-a359-3f5d20d329b7",
+  "sourceRevision": "e4d2259a5dd3fe7b3af646514a4313e83efcc80e887e04c07b7469bb27a66b90",
+  "semanticHash": "26270fc7b1577aa266c7a0eb23b2664ffcb020cf5a7528ea9be23950ba10a72c",
+  "overview": "mandelbrot is taught from its pinned FRM-like/1 definition. Follow the ismand starting choice and the power-controlled quadratic or exponent update as source operations without treating an image as guaranteed. The pinned mechanical profile supplies one concrete viewing setup, not a universal visual prediction.",
+  "mathDisclosure": "exact-structured",
+  "mathSummary": "The loop tests power == 2: it assigns z = z * z + c on that path, and assigns z = z ^ power + c otherwise.",
+  "sourceWalkthrough": [
+    {
+      "annotationId": "00e14aa8-b766-54ea-a359-3f5d20d329b7:e4d2259a5dd3fe7b3af646514a4313e83efcc80e887e04c07b7469bb27a66b90:start-branch",
+      "nodeId": "frm-v1:e4d2259a5dd3fe7b3af646514a4313e83efcc80e887e04c07b7469bb27a66b90:init/0",
+      "explanation": "In mandelbrot, this node executes if ismand: z = 0; otherwise z = pixel."
+    },
+    {
+      "annotationId": "00e14aa8-b766-54ea-a359-3f5d20d329b7:e4d2259a5dd3fe7b3af646514a4313e83efcc80e887e04c07b7469bb27a66b90:power-branch",
+      "nodeId": "frm-v1:e4d2259a5dd3fe7b3af646514a4313e83efcc80e887e04c07b7469bb27a66b90:loop/0",
+      "explanation": "In mandelbrot, this node executes if power == 2: z = z * z + c; otherwise z = z ^ power + c."
+    },
+    {
+      "annotationId": "00e14aa8-b766-54ea-a359-3f5d20d329b7:e4d2259a5dd3fe7b3af646514a4313e83efcc80e887e04c07b7469bb27a66b90:termination",
+      "nodeId": "frm-v1:e4d2259a5dd3fe7b3af646514a4313e83efcc80e887e04c07b7469bb27a66b90:bailout",
+      "explanation": "In mandelbrot, this node executes |z| <= 256."
+    }
+  ],
+  "syntaxFeatures": [
+    {
+      "featureId": "state-flow",
+      "annotationIds": [
+        "00e14aa8-b766-54ea-a359-3f5d20d329b7:e4d2259a5dd3fe7b3af646514a4313e83efcc80e887e04c07b7469bb27a66b90:start-branch",
+        "00e14aa8-b766-54ea-a359-3f5d20d329b7:e4d2259a5dd3fe7b3af646514a4313e83efcc80e887e04c07b7469bb27a66b90:power-branch"
+      ],
+      "explanation": "These annotations trace the formula-specific state flow: if ismand: z = 0; otherwise z = pixel; if power == 2: z = z * z + c; otherwise z = z ^ power + c."
+    },
+    {
+      "featureId": "stopping-test",
+      "annotationIds": [
+        "00e14aa8-b766-54ea-a359-3f5d20d329b7:e4d2259a5dd3fe7b3af646514a4313e83efcc80e887e04c07b7469bb27a66b90:termination"
+      ],
+      "explanation": "This annotation is the stopping test, |z| <= 256, rather than a state update."
+    }
+  ],
+  "parameterExperiment": {
+    "parameterSymbols": [
+      "power"
+    ],
+    "steps": [
+      "Run mandelbrot with the pinned profile and record the result.",
+      "Change only power, keep every other runtime slot and profile control fixed, run again, and record whether a difference occurs."
+    ],
+    "expectedObservation": "Record whether if power == 2, z = z * z + c; otherwise z = z ^ power + c produces a visible-result or |z| <= 256 stopping-behavior difference from the baseline; the pinned definition does not guarantee a difference."
+  },
+  "exercise": {
+    "prompt": "Trace mandelbrot through its annotations, explaining the source operation if power == 2, z = z * z + c; otherwise z = z ^ power + c and the stopping test |z| <= 256.",
+    "completionCheck": "Your trace explains all 3 annotations for mandelbrot, including if power == 2, z = z * z + c; otherwise z = z ^ power + c, and distinguishes |z| <= 256 from a state update.",
+    "answerDisclosure": "hint"
+  },
+  "facts": {
+    "provenanceStatement": "This teaching unit is grounded in runtime:e4d2259a5dd3fe7b3af646514a4313e83efcc80e887e04c07b7469bb27a66b90 and decision:00e14aa8-b766-54ea-a359-3f5d20d329b7.",
+    "rightsStatement": "rightsStatus is project-owned; implementationBasis is project-owned; publicationDecision is publish; decisionReason is publish-project-owned-native-recipe. This statement does not make broader claims about any third-party original.",
+    "sourceIds": [
+      "runtime:e4d2259a5dd3fe7b3af646514a4313e83efcc80e887e04c07b7469bb27a66b90",
+      "decision:00e14aa8-b766-54ea-a359-3f5d20d329b7"
+    ],
+    "licenseIds": [],
+    "claims": [
+      {
+        "text": "The pinned runtime definition supplies the operations described in this unit.",
+        "sourceIds": [
+          "runtime:e4d2259a5dd3fe7b3af646514a4313e83efcc80e887e04c07b7469bb27a66b90"
+        ]
+      },
+      {
+        "text": "The publication decision for this formula is publish.",
+        "sourceIds": [
+          "decision:00e14aa8-b766-54ea-a359-3f5d20d329b7"
+        ]
+      }
+    ]
+  }
+}

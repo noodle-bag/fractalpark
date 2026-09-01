@@ -1,0 +1,35 @@
+{
+  "schema": "fractalpark-teaching-locale/v1",
+  "formulaId": "0df5ac6e-d97e-55db-b624-96c310af07dd",
+  "locale": "pt",
+  "sourceRevision": "bb7d3fd03ddb3b27f66b28fea82cdfa4da6c88cf15a23c6da8fe27a8adf1e34e",
+  "semanticHash": "b3d93634d09622186eeef16d005021fb8bf551698b662dbdf5da191841efe1d5",
+  "englishContentHash": "95137002ad32c06577e02def4799eacd6fb98795877b8144428777fb641352d1",
+  "overview": "Em FRM-like/1, a inicialização faz z = pixel. Em cada iteração, o nó executa denom = cos(z). O término testa |z - zPrev| >= 0.000001.",
+  "sourceWalkthrough": {
+    "0df5ac6e-d97e-55db-b624-96c310af07dd:bb7d3fd03ddb3b27f66b28fea82cdfa4da6c88cf15a23c6da8fe27a8adf1e34e:init": "Em FRM-like/1, a inicialização faz z = pixel.",
+    "0df5ac6e-d97e-55db-b624-96c310af07dd:bb7d3fd03ddb3b27f66b28fea82cdfa4da6c88cf15a23c6da8fe27a8adf1e34e:loop": "Em cada iteração, o nó executa denom = cos(z).",
+    "0df5ac6e-d97e-55db-b624-96c310af07dd:bb7d3fd03ddb3b27f66b28fea82cdfa4da6c88cf15a23c6da8fe27a8adf1e34e:branch": "A ramificação usa |denom|² < 1e-10 → z = z; |denom|² >= 1e-10 → z = z - sin(z)/denom + 0.18*c.",
+    "0df5ac6e-d97e-55db-b624-96c310af07dd:bb7d3fd03ddb3b27f66b28fea82cdfa4da6c88cf15a23c6da8fe27a8adf1e34e:termination": "O término testa |z - zPrev| >= 0.000001."
+  },
+  "syntaxFeatures": {
+    "sequence": "Em cada iteração, o nó executa denom = cos(z).",
+    "branch": "A ramificação usa |denom|² < 1e-10 → z = z; |denom|² >= 1e-10 → z = z - sin(z)/denom + 0.18*c."
+  },
+  "parameterExperiment": {
+    "steps": [
+      "Use o perfil fixo como base. Execute 48 e depois 96 iterações, mantendo todos os controles fixos, e registre se denom = cos(z) ou |z - zPrev| >= 0.000001 diferem."
+    ],
+    "expectedObservation": "O limite maior pode expor atualizações sin/cos adicionais, protegidas ou não; registre se as contagens de iteração diferem."
+  },
+  "exercise": {
+    "prompt": "Explique os dois resultados da proteção pelo tamanho de cos(z) denom.",
+    "completionCheck": "Para concluir, você deve nomear exatamente as 4 anotações e indicar os dois resultados da proteção: z = z e z = z - sin(z)/denom + 0.18*c.",
+    "hint": "Dica: se |denom|² < 1e-10, z = z; caso contrário, z = z - sin(z)/denom + 0.18*c."
+  },
+  "factsPresentation": {
+    "provenanceLead": "A proveniência está no registro de fonte fixado.",
+    "rightsLead": "O status de direitos e a decisão de publicação estão no registro de decisão fixado."
+  },
+  "contentHash": "35de970d93b6d289c065b3743fd69a6f8403c2b2559a1abbf763bde937f4e787"
+}

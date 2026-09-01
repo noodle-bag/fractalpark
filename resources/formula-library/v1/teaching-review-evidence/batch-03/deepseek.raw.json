@@ -1,0 +1,28 @@
+{
+  "id": "2739fea1-e841-4f0f-bcf4-7174cfd7af71",
+  "object": "chat.completion",
+  "created": 1787317881,
+  "model": "deepseek-v4-flash",
+  "choices": [
+    {
+      "index": 0,
+      "message": {
+        "role": "assistant",
+        "content": "{\n  \"verdict\": \"APPROVE\",\n  \"summary\": \"All 10 formulas and 7 units reviewed. Technical fidelity, rights/provenance, locale fidelity, teaching quality, and review integrity are all compliant with the source packet and contract clarifications.\",\n  \"findings\": [],\n  \"coverageGaps\": []\n}"
+      },
+      "logprobs": null,
+      "finish_reason": "stop"
+    }
+  ],
+  "usage": {
+    "prompt_tokens": 120751,
+    "completion_tokens": 70,
+    "total_tokens": 120821,
+    "prompt_tokens_details": {
+      "cached_tokens": 42496
+    },
+    "prompt_cache_hit_tokens": 42496,
+    "prompt_cache_miss_tokens": 78255
+  },
+  "system_fingerprint": "a26a7955944dc5c60445bff77fac9c8e"
+}

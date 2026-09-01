@@ -1,0 +1,85 @@
+{
+  "schema": "fractalpark-teaching-en-fact/v1",
+  "formulaId": "c6b5dcf4-cef5-5630-b3f6-a68b92ae75ee",
+  "sourceRevision": "5aa4f9b2c35d3bded213756bb80da01f95fef7ee766779a7f02090a1116a0e9a",
+  "semanticHash": "76d9f98f4a32eecaab99814d1209a6d87f10a53909a6bbfca13a1ea43b6e4d9c",
+  "overview": "FRM-like/1 defines invertedLambda with source initialization if ismand: z = 0; otherwise z = pixel, then a loop whose first node is oneMinusZ = (1, 0) - z. The pinned parameter-plane profile uses center (-0.5, 0), zoom 0.4, rotation 0, and 96 iterations, and the source tests |z| <= 256 for bailout.",
+  "mathDisclosure": "exact-structured",
+  "mathSummary": "For invertedLambda, the cited first loop node is exactly oneMinusZ = (1, 0) - z; the source’s bailout comparison is |z| <= 256. The full source loop remains the authoritative sequence of subsequent operations.",
+  "sourceWalkthrough": [
+    {
+      "annotationId": "c6b5dcf4-cef5-5630-b3f6-a68b92ae75ee:5aa4f9b2c35d3bded213756bb80da01f95fef7ee766779a7f02090a1116a0e9a:initialization",
+      "nodeId": "frm-v1:5aa4f9b2c35d3bded213756bb80da01f95fef7ee766779a7f02090a1116a0e9a:init/0",
+      "explanation": "This cited initialization node performs only: if ismand: z = 0; otherwise z = pixel."
+    },
+    {
+      "annotationId": "c6b5dcf4-cef5-5630-b3f6-a68b92ae75ee:5aa4f9b2c35d3bded213756bb80da01f95fef7ee766779a7f02090a1116a0e9a:iteration",
+      "nodeId": "frm-v1:5aa4f9b2c35d3bded213756bb80da01f95fef7ee766779a7f02090a1116a0e9a:loop/0",
+      "explanation": "This cited first loop node performs only: oneMinusZ = (1, 0) - z."
+    },
+    {
+      "annotationId": "c6b5dcf4-cef5-5630-b3f6-a68b92ae75ee:5aa4f9b2c35d3bded213756bb80da01f95fef7ee766779a7f02090a1116a0e9a:termination",
+      "nodeId": "frm-v1:5aa4f9b2c35d3bded213756bb80da01f95fef7ee766779a7f02090a1116a0e9a:bailout",
+      "explanation": "This cited bailout node tests only: |z| <= 256."
+    }
+  ],
+  "syntaxFeatures": [
+    {
+      "featureId": "initialization-flow",
+      "annotationIds": [
+        "c6b5dcf4-cef5-5630-b3f6-a68b92ae75ee:5aa4f9b2c35d3bded213756bb80da01f95fef7ee766779a7f02090a1116a0e9a:initialization"
+      ],
+      "explanation": "The initialization annotation isolates if ismand: z = 0; otherwise z = pixel rather than a later initialization statement. This is specific to invertedLambda."
+    },
+    {
+      "featureId": "iteration-flow",
+      "annotationIds": [
+        "c6b5dcf4-cef5-5630-b3f6-a68b92ae75ee:5aa4f9b2c35d3bded213756bb80da01f95fef7ee766779a7f02090a1116a0e9a:iteration"
+      ],
+      "explanation": "The iteration annotation isolates the first loop assignment oneMinusZ = (1, 0) - z; invertedLambda first forms oneMinusZ before constructing the lambda term. This is specific to invertedLambda."
+    },
+    {
+      "featureId": "bailout-test",
+      "annotationIds": [
+        "c6b5dcf4-cef5-5630-b3f6-a68b92ae75ee:5aa4f9b2c35d3bded213756bb80da01f95fef7ee766779a7f02090a1116a0e9a:termination"
+      ],
+      "explanation": "The termination annotation identifies the exact continuation comparison |z| <= 256. This is specific to invertedLambda."
+    }
+  ],
+  "parameterExperiment": {
+    "parameterSymbols": [],
+    "steps": [
+      "Render invertedLambda with the pinned parameter-plane baseline: center (-0.5, 0), zoom 0.4, rotation 0, and 96 iterations.",
+      "Keep center (-0.5, 0), zoom 0.4, rotation 0, and 96 iterations fixed except for iterations, render once at 48 iterations, and compare it with the 96-iteration baseline."
+    ],
+    "expectedObservation": "Record whether the 48- versus 96-iteration comparison changes anything, and note the source limit |z| <= 256. This is the invertedLambda comparison."
+  },
+  "exercise": {
+    "prompt": "For invertedLambda, use the three annotations to distinguish the single-node operations if ismand: z = 0; otherwise z = pixel, oneMinusZ = (1, 0) - z, and |z| <= 256; explain why no neighboring statement belongs to the loop annotation.",
+    "completionCheck": "Name all 3 annotation IDs, then state exactly that the cited loop node is oneMinusZ = (1, 0) - z and the cited bailout node is |z| <= 256. This completes the invertedLambda reading.",
+    "answerDisclosure": "hint"
+  },
+  "facts": {
+    "provenanceStatement": "Grounded in runtime source revision 5aa4f9b2c35d3bded213756bb80da01f95fef7ee766779a7f02090a1116a0e9a and the publication decision for c6b5dcf4-cef5-5630-b3f6-a68b92ae75ee.",
+    "rightsStatement": "rightsStatus is project-owned; implementationBasis is project-owned; publicationDecision is publish; decisionReason is publish-project-owned-native-recipe. These records describe this project decision only and do not assert broader rights in any third-party original.",
+    "sourceIds": [
+      "runtime:5aa4f9b2c35d3bded213756bb80da01f95fef7ee766779a7f02090a1116a0e9a",
+      "decision:c6b5dcf4-cef5-5630-b3f6-a68b92ae75ee"
+    ],
+    "licenseIds": [],
+    "claims": [
+      {
+        "text": "The pinned runtime profile uses parameter-plane mode and 96 iterations.",
+        "sourceIds": [
+          "runtime:5aa4f9b2c35d3bded213756bb80da01f95fef7ee766779a7f02090a1116a0e9a"
+        ]
+      },
+      {
+        "text": "The recorded publication decision is publish with reason publish-project-owned-native-recipe.",
+        "sourceIds": [
+          "decision:c6b5dcf4-cef5-5630-b3f6-a68b92ae75ee"
+        ]
+      }
+    ]
+  }
+}

@@ -1,0 +1,17 @@
+{
+  "provider": "kimi",
+  "requestedModel": "k3-256k",
+  "actualModel": "k3-256k",
+  "finishReason": "stop",
+  "reviewPackageSha256": "3655813bfc0ed64b00f4fbd62395550337113f8994c3feaf30ae036422f756a1",
+  "draftSha256": "aebdca6368ceecff498643751cf5dd407fa1773bfdaa015f2d43edc30aa5e622",
+  "usage": {
+    "prompt_tokens": 17877,
+    "completion_tokens": 5682,
+    "total_tokens": 23559,
+    "completion_tokens_details": {
+      "reasoning_tokens": 4421
+    }
+  },
+  "review": "VERDICT: CHANGES_REQUESTED\n\n## 检查矩阵（1–8）\n\n| 检查项 | 结果 |\n|---|---|\n| 1. 成员与结构（7×4、无新增字段） | 通过（依确定性门槛 allowedPathGate=true 及 frozenSlugsExact 声明；审查包未附 baseline 全文，建议人工抽核） |\n| 2. 冻结范围（mandelbox / cosh-mandelbrot 逐字不变） | 通过（门槛声明，未发现反证） |\n| 3. 允许路径范围 | 通过（变更路径与清单一致） |\n| 4. Newton 准确性 | 通过：二重根 2πik、tanh(z/2)、线性误差减半、偶数倍可去/奇数倍 (2k+1)πi 为真极点、数值例 tanh(0.1i)=i·tan(0.1)≈0.1003i → z₁≈0.0997i 均正确；实部钳制与 \\|sinh(z)\\|²<1e-10 保护表述与 .frm 一致且明确标注为数值保护 |\n| 5. Zaslavsky 准确性 | 基本通过：递推式、保留基底 z、整体旋转 0.55 rad（≈31.5° 正确）、z₀=0→z₁=c、原作与改编区分清晰、无伪经验来源主张；轻微遗漏见下 |\n| 6. 语言对等 | **不通过**：pt/ko/ru/es/fr 的 zaslavsky-map/history 大段保留英文 |\n| 7. 读者质量 | 大体通过，个别语气问题（见轻微项） |\n| 8. 失败即拒结论 | CHANGES_REQUESTED |\n\n## 严重\n\n1. **pt / zaslavsky-map / history** — 引文：「George M. Zaslavsky (1929–2008) was a Soviet‑born mathematical physicist who made foundational contributions…」（前两段整段英文，第三段开头 \"Classical Zaslavsky maps operate on two real variables (action and angle).\" 亦为英文）。理由：history 属允许变更路径，变更内容未本地化，违反检查 6。修正：将全部三段译为葡萄牙语，仅保留公式与人名原拼写。\n2. **ko / zaslavsky-map / history** — 同上引文。前两段及第三段首句为英文。修正：全文译为韩语。\n3. **ru / zaslavsky-map / history** — 同上引文。修正：全文译为俄语。\n4. **es / zaslavsky-map / history** — 同上引文。修正：全文译为西班牙语。\n5. **fr / zaslavsky-map / history** — 同上引文。修正：全文译为法语。\n（zh 的 history 已完整翻译，仅以上五语种受影响。）\n\n## 中等\n\n1. **pt,ko,ru,es,fr / 两个 slug / faq.*.question 与 math.iteration.label** — 引文：「What equation is being solved?」「Why are some regions extremely sensitive?」「Where does the rotation come from?」「Is kaleidoscope part of the formula?」「Newton’s cosh iteration」「Sinusoidal rotation map」。理由：这些路径不在本次允许变更清单内，疑为基线遗留而非本次回归，但 zh 已全部翻译，造成明显语言不对等并损害学生读者体验（检查 6/7）。修正：非阻断项，建议维护者确认基线状态后一并补译。\n2. **en（及全部语种）/ zaslavsky-map / history** — 引文：「The Scholarpedia article on the Zaslavsky map, written by Zaslavsky himself in 2007, provides an authoritative technical reference.」及生卒年、期刊名等。理由：审查包内无法核证这些引证是否由起草简报提供；若简报未提供，则违反检查 1「不得新增引证/年份」。修正：请维护者对照简报核实；若无依据，删去该句及相关未授权细节。\n\n## 轻微\n\n1. **全部语种 / zaslavsky-map / math.iteration.explanation** — 引文：「FractalPark implements z(n+1) = exp(0.55 i) * (z(n) + 0.28 sin(z(n))) + c」。理由：与评审口径的递推式一致，但 .frm 实际还对 Im(z) 做 ±80 钳制并执行 round(…×16)/16 网格量化，未披露；而 newton-cosh 条目主动披露了数值保护，两条目披露标准不对等。修正：可补一句「实现另对虚部做数值钳制并将结果量化到 1/16 网格」，或经维护者确认后维持现状。\n2. **ko / newton-cosh / imageAlt 与 imageCaption** — 引文：「…쌓여 있어요」「…만다라를 이뤄요」。理由：句尾为 해요체，与正文 한다체 语体混杂。修正：统一为「쌓여 있다」「만다라를 이룬다」。\n\n结论：在 pt/ko/ru/es/fr 五语种的 zaslavsky-map/history 完成本地化、并由人工维护者核准上述中等项之前，本草稿不安全合入仓库；修复严重项并经维护者批准后其余内容可安全集成。"
+}

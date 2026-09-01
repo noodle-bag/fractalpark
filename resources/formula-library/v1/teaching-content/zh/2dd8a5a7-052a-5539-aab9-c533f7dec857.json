@@ -1,0 +1,35 @@
+{
+  "schema": "fractalpark-teaching-locale/v1",
+  "formulaId": "2dd8a5a7-052a-5539-aab9-c533f7dec857",
+  "locale": "zh",
+  "sourceRevision": "6c2c19cfb9bff9d9aa0cca56cea6dc62e324e80009b931665b604726d3784e5d",
+  "semanticHash": "7f1e0790ad3270f2419b1c8db5ac3ec9d232d334c0144acf64f1f3155a2ca68e",
+  "englishContentHash": "31804c8280d33040dc47417296a01b83a4ec9dac34ba94e4477f175f74c6297f",
+  "overview": "在 FRM-like/1 中，magnet2 从 ismand 分支把 z 设为 0，否则设为 pixel 开始，循环首个节点是 z2 = z * z，并以 |z| <= 4 限制迭代。请按源代码的实际顺序阅读这些操作。",
+  "sourceWalkthrough": {
+    "2dd8a5a7-052a-5539-aab9-c533f7dec857:6c2c19cfb9bff9d9aa0cca56cea6dc62e324e80009b931665b604726d3784e5d:initialization": "在 magnet2 中，初始化节点仅执行：ismand 分支把 z 设为 0，否则设为 pixel。",
+    "2dd8a5a7-052a-5539-aab9-c533f7dec857:6c2c19cfb9bff9d9aa0cca56cea6dc62e324e80009b931665b604726d3784e5d:iteration": "在 magnet2 中，此循环节点仅执行：z2 = z * z。",
+    "2dd8a5a7-052a-5539-aab9-c533f7dec857:6c2c19cfb9bff9d9aa0cca56cea6dc62e324e80009b931665b604726d3784e5d:termination": "在 magnet2 中，bailout 节点仅测试：|z| <= 4。"
+  },
+  "syntaxFeatures": {
+    "initialization-flow": "在 magnet2 中，初始化特征聚焦 ismand 分支把 z 设为 0，否则设为 pixel 这一个起始操作。",
+    "iteration-flow": "在 magnet2 中，迭代特征聚焦 z2 = z * z 这一个循环赋值。",
+    "bailout-test": "在 magnet2 中，终止特征聚焦比较 |z| <= 4。"
+  },
+  "parameterExperiment": {
+    "steps": [
+      "以固定参数平面基线渲染 magnet2：中心 (-0.5, 0)、缩放 0.4、旋转 0、96 次迭代。",
+      "除迭代次数外保持基线不变，以 48 次迭代再渲染一次，并与 96 次迭代的基线比较。"
+    ],
+    "expectedObservation": "在 magnet2 中，记录 48 次与 96 次迭代的比较是否出现差异，并标出源代码限制 |z| <= 4。"
+  },
+  "exercise": {
+    "prompt": "在 magnet2 中，找出三个注释：分别说明 ismand 分支把 z 设为 0，否则设为 pixel、z2 = z * z 和 |z| <= 4，并解释为什么相邻语句不属于循环注释。",
+    "completionCheck": "在 magnet2 中，完成时应列出全部 3 个注释键，并准确说明 z2 = z * z 与 |z| <= 4 的作用。"
+  },
+  "factsPresentation": {
+    "provenanceLead": "来源说明见英文事实单元。",
+    "rightsLead": "权利说明见英文事实单元。"
+  },
+  "contentHash": "2b4f280e52b231e537dbc3be694a4d226f073dc55d04f54ccd47879acc7f62c7"
+}

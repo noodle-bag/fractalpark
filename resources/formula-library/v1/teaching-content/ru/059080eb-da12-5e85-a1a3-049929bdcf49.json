@@ -1,0 +1,35 @@
+{
+  "schema": "fractalpark-teaching-locale/v1",
+  "formulaId": "059080eb-da12-5e85-a1a3-049929bdcf49",
+  "locale": "ru",
+  "sourceRevision": "ef31384c340c3899555f3de5048b4c9863b397c767e8ed72cae190d600f3ea48",
+  "semanticHash": "45f7a65ad99eb0a0b301fa2853808a2b9fc0c81ab14a8cd8f7eaab8335c61b12",
+  "englishContentHash": "70910a97be1e2dccc985a8ae1551a5cda1d037160ebc507819c92ece0208be6d",
+  "overview": "rcl_pick10 изучается по закреплённому определению FRM-like/1: вы прослеживаете z = z / pixel - pixel * sqr(z), не считая изображение гарантированным. Закреплённый профиль задаёт лишь одну конкретную настройку наблюдения.",
+  "sourceWalkthrough": {
+    "059080eb-da12-5e85-a1a3-049929bdcf49:ef31384c340c3899555f3de5048b4c9863b397c767e8ed72cae190d600f3ea48:initial-state": "В rcl_pick10, этот узел выполняет z = pixel.",
+    "059080eb-da12-5e85-a1a3-049929bdcf49:ef31384c340c3899555f3de5048b4c9863b397c767e8ed72cae190d600f3ea48:division-and-square-update": "В rcl_pick10, этот узел выполняет z = z / pixel - pixel * sqr(z).",
+    "059080eb-da12-5e85-a1a3-049929bdcf49:ef31384c340c3899555f3de5048b4c9863b397c767e8ed72cae190d600f3ea48:termination": "В rcl_pick10, этот узел выполняет |z| < 8."
+  },
+  "syntaxFeatures": {
+    "state-flow": "Конкретный поток состояния: z начинается с pixel, затем делением на pixel и вычитанием pixel * sqr(z).",
+    "stopping-test": "Проверка остановки оценивает только |z| < 8; она не присваивает состояние."
+  },
+  "parameterExperiment": {
+    "steps": [
+      "Не меняя остальные настройки профиля, запустите rcl_pick10 с 64 итерациями.",
+      "Затем используйте 128 итераций закреплённого профиля и запишите различие."
+    ],
+    "expectedObservation": "Запишите, меняет ли z = z / pixel - pixel * sqr(z) видимый результат или проверку остановки |z| < 8 относительно базового запуска; определение не гарантирует различие."
+  },
+  "exercise": {
+    "prompt": "Проследите аннотации rcl_pick10 и объясните, как z = z / pixel - pixel * sqr(z) выполняется в отмеченных операциях.",
+    "completionCheck": "Ваш ответ объясняет все 3 аннотации, указывает z = z / pixel - pixel * sqr(z) и отличает |z| < 8 как проверку остановки от присваивания.",
+    "hint": "Поток состояния последовательно выполняет z = pixel → z = z / pixel - pixel * sqr(z) и передаёт результат следующему шагу."
+  },
+  "factsPresentation": {
+    "provenanceLead": "Источник: закреплённое определение выполнения и решение о публикации.",
+    "rightsLead": "Сведения о правах следуют закреплённому решению в английском разделе."
+  },
+  "contentHash": "00c79717ea94efdf425f2a0e328f995035d3986bb8aedb59411727ca21305540"
+}

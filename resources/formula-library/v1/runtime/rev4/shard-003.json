@@ -1,0 +1,39 @@
+{
+  "schema": "fractalpark-formula-library-runtime-shard/v1",
+  "decisionRevision": 4,
+  "runtimeRevision": 4,
+  "shardIndex": 3,
+  "shardCount": 4,
+  "rows": [
+    {
+      "formulaId": "fd6040b2-2f96-5fa8-81db-6b7c996c764f",
+      "displayName": "jm_22",
+      "family": "function-composition",
+      "implementationBasis": "direct-adaptation",
+      "sourceRevision": "55db546af730fa92d1593af9ce3313e9b1bdaaa70d129fa130894664f1323b55",
+      "semanticHash": "651c6529ec81ad817e48fe3f90ab4a2fde90f2e1600152ec69f5e50ce5b3710a",
+      "definitionSha256": "55db546af730fa92d1593af9ce3313e9b1bdaaa70d129fa130894664f1323b55",
+      "definition": "; @language: frm-like/1\n; @stdlib: 1\n; @numeric-profile: standard32\nFormula_fd6040b2_2f96_5fa8_81db_6b7c996c764f {\n  parameters:\n    parameter1: complex = (0, 0) classic p1\n    function1: function = identity classic fn1\n    function2: function = identity classic fn2\n  init:\n    z = pixel\n    t = p1 + 4\n  loop:\n    sq = fn1(z)\n    z = sq * fn2(sq) + sq + pixel\n  bailout:\n    |z| <= t\n}"
+    },
+    {
+      "formulaId": "fd6c2fac-31db-55f1-9d93-726bd261671d",
+      "displayName": "fractalfenderca",
+      "family": "transcendental",
+      "implementationBasis": "direct-adaptation",
+      "sourceRevision": "da1f561fb7db0d001bc9018b144cf4bf2aaef4f2d7b5cff7516699177895d559",
+      "semanticHash": "635c1b2cc7fecfdee224b6dea40c62914c9d26e6947c3dc862a3a529825f577c",
+      "definitionSha256": "da1f561fb7db0d001bc9018b144cf4bf2aaef4f2d7b5cff7516699177895d559",
+      "definition": "; @language: frm-like/1\n; @stdlib: 1\n; @numeric-profile: standard32\nFormula_fd6c2fac_31db_55f1_9d93_726bd261671d {\n  parameters:\n    parameter1: complex = (0, 0) classic p1\n  init:\n    z = p1\n    x = |z|\n  loop:\n    if 0.9999999999 < x\n      z = cosh(z) + pixel\n    endif\n    z = sqr(z) + pixel\n    x = |z|\n  bailout:\n    x <= 4\n}"
+    },
+    {
+      "formulaId": "fe092eb1-5e44-5b5b-b028-f1298671a038",
+      "displayName": "julike",
+      "family": "algebraic-power",
+      "implementationBasis": "direct-adaptation",
+      "sourceRevision": "15d86a1eb22036c017cf20d7175bb2aa4d1b24a7c35f1d700cc14f0928a6aa27",
+      "semanticHash": "c259fc1ee80d647739cff81264202439b3d0192109a1ba457f595f3552ef5c27",
+      "definitionSha256": "15d86a1eb22036c017cf20d7175bb2aa4d1b24a7c35f1d700cc14f0928a6aa27",
+      "definition": "; @language: frm-like/1\n; @stdlib: 1\n; @numeric-profile: standard32\nFormula_fe092eb1_5e44_5b5b_b028_f1298671a038 {\n  parameters:\n    parameter1: complex = (0, 0) classic p1\n  init:\n    z = pixel\n  loop:\n    z = z * z * z + (p1 - 1) * z - p1\n  bailout:\n    |z| <= 4\n}"
+    }
+  ]
+}

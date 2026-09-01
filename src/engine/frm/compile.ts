@@ -442,7 +442,9 @@ function compileFrmUncached(
       source: 'frm',
       frmSemanticsVersion: semanticsVersion,
       supportsPower: false, // DEPRECATED per ADR-0007: capability resolves from AST/dataflow, not this flag.
-      supportsJulia: true,
+      // User-authored/custom FRM identities never inherit the sealed published
+      // runtime authority, even if a caller supplies a look-alike ID.
+      supportsJulia: false,
       bailout,
       ...(bailoutDescriptor ? { bailoutDescriptor } : {}),
       // Classic dialect + strict v2 → after-step bailout timing (Fractint

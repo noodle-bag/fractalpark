@@ -1,0 +1,35 @@
+{
+  "schema": "fractalpark-teaching-locale/v1",
+  "formulaId": "c6b5dcf4-cef5-5630-b3f6-a68b92ae75ee",
+  "locale": "ru",
+  "sourceRevision": "5aa4f9b2c35d3bded213756bb80da01f95fef7ee766779a7f02090a1116a0e9a",
+  "semanticHash": "76d9f98f4a32eecaab99814d1209a6d87f10a53909a6bbfca13a1ea43b6e4d9c",
+  "englishContentHash": "bd0a67aadd387e376fc7ddc0026164d80801c0cbdd55def4b8419bc0b0736de7",
+  "overview": "В FRM-like/1 формула invertedLambda начинается с если ismand, то z = 0; иначе z = pixel, первый узел цикла задаёт oneMinusZ = (1, 0) - z, а итерацию ограничивает |z| <= 256. Читайте эти операции в фактическом порядке исходника.",
+  "sourceWalkthrough": {
+    "c6b5dcf4-cef5-5630-b3f6-a68b92ae75ee:5aa4f9b2c35d3bded213756bb80da01f95fef7ee766779a7f02090a1116a0e9a:initialization": "В invertedLambda, узел инициализации выполняет только: если ismand, то z = 0; иначе z = pixel.",
+    "c6b5dcf4-cef5-5630-b3f6-a68b92ae75ee:5aa4f9b2c35d3bded213756bb80da01f95fef7ee766779a7f02090a1116a0e9a:iteration": "В invertedLambda, этот узел цикла выполняет только: oneMinusZ = (1, 0) - z.",
+    "c6b5dcf4-cef5-5630-b3f6-a68b92ae75ee:5aa4f9b2c35d3bded213756bb80da01f95fef7ee766779a7f02090a1116a0e9a:termination": "В invertedLambda, узел bailout проверяет только: |z| <= 256."
+  },
+  "syntaxFeatures": {
+    "initialization-flow": "В invertedLambda, признак инициализации выделяет единственную начальную операцию если ismand, то z = 0; иначе z = pixel.",
+    "iteration-flow": "В invertedLambda, признак итерации выделяет единственное присваивание oneMinusZ = (1, 0) - z.",
+    "bailout-test": "В invertedLambda, признак завершения выделяет сравнение |z| <= 256."
+  },
+  "parameterExperiment": {
+    "steps": [
+      "Выполните рендер invertedLambda с закреплённой базой плоскости параметров: центр (-0.5, 0), масштаб 0.4, поворот 0, и 96 итераций.",
+      "Не меняя базу, кроме числа итераций, выполните один рендер с 48 итерациями и сравните его с базой в 96 итераций."
+    ],
+    "expectedObservation": "В invertedLambda, запишите, меняется ли что-либо при сравнении 48 и 96 итераций, и отметьте ограничение исходника |z| <= 256."
+  },
+  "exercise": {
+    "prompt": "В invertedLambda, найдите три аннотации и объясните если ismand, то z = 0; иначе z = pixel, oneMinusZ = (1, 0) - z и |z| <= 256 и объясните, почему соседние инструкции не относятся к аннотации цикла.",
+    "completionCheck": "В invertedLambda, вы завершили задание, если перечислили все 3 ключа аннотаций и точно объяснили oneMinusZ = (1, 0) - z и |z| <= 256."
+  },
+  "factsPresentation": {
+    "provenanceLead": "Происхождение указано в английском фактологическом блоке.",
+    "rightsLead": "Права указаны в английском фактологическом блоке."
+  },
+  "contentHash": "83046aad128e141ea3ef7498f6087a508b79ca03e462e4fd34a309f203ff617f"
+}

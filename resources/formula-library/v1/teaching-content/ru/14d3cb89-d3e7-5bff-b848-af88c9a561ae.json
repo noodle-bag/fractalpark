@@ -1,0 +1,33 @@
+{
+  "schema": "fractalpark-teaching-locale/v1",
+  "formulaId": "14d3cb89-d3e7-5bff-b848-af88c9a561ae",
+  "locale": "ru",
+  "sourceRevision": "459d2a30210e9171b03fb5d7480eeeb22db0051d977a6dc000d39886924a66eb",
+  "semanticHash": "2ed2266b921e3c3ac6a495eec3da1ff79cc2dcd492e42d068ee21196337eb60f",
+  "englishContentHash": "3a658953f1970acadb7cc2ac012f462da0d3881b3577ddec29283d52015c16d5",
+  "overview": "Этот раздел основан на следующих точных операциях FRM-like/1:  `init: cclassic = c; x = 1 / pixel; z = x; cclassic = fn1(z). loop: z = (x + cclassic) * (x - cclassic); x = fn2(z). bailout: |z| <= 3.`",
+  "sourceWalkthrough": {
+    "14d3cb89-d3e7-5bff-b848-af88c9a561ae:459d2a30210e9171b03fb5d7480eeeb22db0051d977a6dc000d39886924a66eb:init-transform": "Эта аннотация выполняет `cclassic = fn1(z)`.",
+    "14d3cb89-d3e7-5bff-b848-af88c9a561ae:459d2a30210e9171b03fb5d7480eeeb22db0051d977a6dc000d39886924a66eb:product": "Эта аннотация выполняет `z = (x + cclassic) * (x - cclassic)`.",
+    "14d3cb89-d3e7-5bff-b848-af88c9a561ae:459d2a30210e9171b03fb5d7480eeeb22db0051d977a6dc000d39886924a66eb:x-update": "Эта аннотация выполняет `x = fn2(z)`.",
+    "14d3cb89-d3e7-5bff-b848-af88c9a561ae:459d2a30210e9171b03fb5d7480eeeb22db0051d977a6dc000d39886924a66eb:bailout": "Эта аннотация выполняет `|z| <= 3`. Она завершает последовательность итераций этой формулы."
+  },
+  "syntaxFeatures": {
+    "source-sequence": "Этот признак последовательности связывает в порядке исходного кода процитированные операции, относящиеся к `(x + cclassic) * (x - cclassic)`."
+  },
+  "parameterExperiment": {
+    "steps": [
+      "С закреплённым профилем сначала отрисуйте базовый результат при `function1 = identity`, `function2 = identity`. Сохраняйте центр, масштаб, поворот, число итераций и остальные слоты; за один запуск меняйте только одно: `function1 = sqr`, `function2 = sqr`. Перед новым испытанием восстанавливайте базовые значения."
+    ],
+    "expectedObservation": "В испытаниях bali с `function1`, `function2` отметьте, есть ли видимое отличие от базового результата; отсутствие отличия также зафиксируйте."
+  },
+  "exercise": {
+    "prompt": "Объясните роль `(x + cclassic) * (x - cclassic)` в порядке исходного кода и сравните запуски по шагам эксперимента с параметрами.",
+    "completionCheck": "Ваш ответ должен объяснить все 4 аннотированных операций, зафиксировать сравнение эксперимента и упомянуть `(x + cclassic) * (x - cclassic)`."
+  },
+  "factsPresentation": {
+    "provenanceLead": "Источник: закреплённая ревизия выполнения и решение о публикации.",
+    "rightsLead": "Сведения о правах приведены в английском фактологическом разделе."
+  },
+  "contentHash": "1cfe71fb89e00cdadad2fc9cb109d60805e4334aeef880188ab3c7de6adf8353"
+}

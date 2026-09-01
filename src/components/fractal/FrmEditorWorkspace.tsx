@@ -13,7 +13,10 @@ import {
 } from 'lucide-react';
 import { useLocale, useTranslations } from 'next-intl';
 import { useRouter, useSearchParams } from 'next/navigation';
-import { FormulaEditor } from '@/components/fractal/FormulaEditor';
+import {
+  FormulaEditor,
+  type FormulaSaveContext,
+} from '@/components/fractal/FormulaEditor';
 import FractalCanvas from '@/components/fractal/FractalCanvas';
 import { Button } from '@/components/ui/button';
 import {
@@ -32,7 +35,7 @@ import {
   useCloudFormulaLibrary,
   type FormulaMutationResult,
 } from '@/hooks/useCloudFormulaLibrary';
-import { MAX_CUSTOM_FORMULAS } from '@/lib/formula-resolver';
+import { MAX_CUSTOM_FORMULAS, resolveCustomFormula } from '@/lib/formula-resolver';
 import { scanFrmEntries } from '@/engine/frm/scanner';
 import { classifyImportedFrmSource } from '@/engine/frm/compat-status';
 import { FrmCompatStatusCard } from '@/components/fractal/FrmCompatStatusCard';
@@ -48,6 +51,22 @@ import {
   preflightFrmSource,
   readFrmFile,
 } from '@/lib/frm-editor';
+import { getPublishedFormulaLibraryClient } from '@/lib/published-formula-library';
+import { buildPublishedFormulaSourceReferenceV1 } from '@/lib/published-formula-source';
+import {
+  buildMineRemixLifecycleRevisionV1,
+  collectMineRemixEditorErrorsV1,
+  compileMineRemixSourceV1,
+  createFrozenPublishedFormulaRemixV1,
+  parseMineFormulaEditorIntent,
+  parsePublishedFormulaRemixIntent,
+  restoreFrozenMineFormulaRemixV1,
+  stripMineFormulaEditorIntent,
+  stripPublishedFormulaRemixIntent,
+  validateMineRemixApplyV1,
+  type FrozenPublishedFormulaRemixV1,
+} from '@/lib/published-formula-remix';
+import { saveMineFormulaLifecycleRevision } from '@/lib/cloud/client';
 
 const DEFAULT_SOURCE = `MyFormula {
 init:
@@ -91,6 +110,16 @@ export function FrmEditorWorkspace() {
   const searchParams = useSearchParams();
   const fileRef = useRef<HTMLInputElement>(null);
   const requestedExample = searchParams.get('example');
+  const [initialRemixIntent] = useState(() =>
+    parsePublishedFormulaRemixIntent(
+      new URLSearchParams(searchParams.toString()),
+    ),
+  );
+  const [initialMineIntent] = useState(() =>
+    parseMineFormulaEditorIntent(
+      new URLSearchParams(searchParams.toString()),
+    ),
+  );
   const [initialDraft] = useState(() => {
     const exampleId = searchParams.get('example');
     const tutorial = exampleId
@@ -98,19 +127,26 @@ export function FrmEditorWorkspace() {
       : undefined;
     return {
       requestedExample: exampleId,
-      source: exampleId ? tutorial?.example.source ?? '' : DEFAULT_SOURCE,
+      source:
+        initialRemixIntent.status === 'none' &&
+        initialMineIntent.status === 'none'
+          ? exampleId
+            ? tutorial?.example.source ?? ''
+            : DEFAULT_SOURCE
+          : '',
       hint: tutorial?.example.experienceHint,
       unknown: Boolean(exampleId && !tutorial),
     };
   });
   const lastExampleRequestRef = useRef(initialDraft.requestedExample);
 
-  const { state: cloudSession } = useCloudSession();
+  const { state: cloudSession, openSignIn } = useCloudSession();
   const {
     formulas,
     isLoading,
     saveFormula,
     getDetail,
+    refresh,
   } = useCloudFormulaLibrary();
   const [source, setSource] = useState(initialDraft.source);
   const [savedSource, setSavedSource] = useState<string | null>(null);
@@ -135,6 +171,24 @@ export function FrmEditorWorkspace() {
   const [showExamples, setShowExamples] = useState(false);
   const [showLibrary, setShowLibrary] = useState(false);
   const [mobileMode, setMobileMode] = useState<'editor' | 'preview'>('editor');
+  const [remixFork, setRemixFork] =
+    useState<FrozenPublishedFormulaRemixV1 | null>(null);
+  const [remixStatus, setRemixStatus] = useState<
+    'none' | 'loading' | 'ready' | 'error'
+  >(
+    initialRemixIntent.status === 'none' && initialMineIntent.status === 'none'
+      ? 'none'
+      : 'loading',
+  );
+  const [remixEditableHeadId, setRemixEditableHeadId] = useState<string | null>(
+    null,
+  );
+  const [remixActiveSource, setRemixActiveSource] = useState<string | null>(null);
+  const [remixActiveHint, setRemixActiveHint] =
+    useState<FormulaExperienceHint>();
+  const remixLoadGenerationRef = useRef(0);
+  const remixIntentConsumedRef = useRef(false);
+  const mineIntentConsumedRef = useRef(false);
 
   const currentHintKey = experienceHintKey(hint);
   const isDirty =
@@ -199,13 +253,19 @@ export function FrmEditorWorkspace() {
       const nextHintKey = experienceHintKey(nextHint);
       if (
         isDirty &&
-        (source !== nextSource || currentHintKey !== nextHintKey) &&
+        (nextSource !== source || nextHintKey !== currentHintKey) &&
         !window.confirm(t('replaceConfirm'))
       ) {
         return false;
       }
 
+      remixLoadGenerationRef.current += 1;
       setSource(nextSource);
+      setRemixFork(null);
+      setRemixStatus('none');
+      setRemixEditableHeadId(null);
+      setRemixActiveSource(null);
+      setRemixActiveHint(undefined);
       setSavedSource(id ? nextSource : null);
       setSavedHintKey(id ? nextHintKey : experienceHintKey(undefined));
       setHint(nextHint);
@@ -219,6 +279,178 @@ export function FrmEditorWorkspace() {
     },
     [currentHintKey, isDirty, source, t]
   );
+
+  useEffect(() => {
+    if (initialRemixIntent.status === 'none') return;
+    if (remixIntentConsumedRef.current) return;
+    remixIntentConsumedRef.current = true;
+    const currentParams = new URLSearchParams(searchParams.toString());
+    if (initialRemixIntent.status === 'invalid') {
+      queueMicrotask(() => {
+        setRemixStatus('error');
+        setNotice(t('remixUnavailable'));
+        router.replace(
+          stripPublishedFormulaRemixIntent(locale, currentParams),
+          { scroll: false },
+        );
+      });
+      return;
+    }
+
+    const generation = ++remixLoadGenerationRef.current;
+    const controller = new AbortController();
+    void getPublishedFormulaLibraryClient()
+      .then(async (clientResult) => {
+        if (!clientResult.ok) throw new Error('Published library unavailable.');
+        const row = clientResult.value.get(initialRemixIntent.formulaId);
+        const reference = row
+          ? buildPublishedFormulaSourceReferenceV1(row)
+          : undefined;
+        if (!row || !reference) throw new Error('Published formula unavailable.');
+        const sourceResult = await clientResult.value.loadSource(
+          reference,
+          controller.signal,
+        );
+        if (!sourceResult.ok) throw new Error(sourceResult.code);
+        return createFrozenPublishedFormulaRemixV1({
+          formulaId: crypto.randomUUID(),
+          row,
+          source: sourceResult.value,
+        });
+      })
+      .then((fork) => {
+        if (
+          generation !== remixLoadGenerationRef.current ||
+          controller.signal.aborted
+        ) {
+          return;
+        }
+        loadSource(fork.source, fork.experienceHint);
+        setRemixFork(fork);
+        setRemixStatus('ready');
+        setNotice(t('remixReady', { name: fork.displayName }));
+        router.replace(
+          stripPublishedFormulaRemixIntent(locale, currentParams),
+          { scroll: false },
+        );
+      })
+      .catch(() => {
+        if (
+          generation !== remixLoadGenerationRef.current ||
+          controller.signal.aborted
+        ) {
+          return;
+        }
+        setRemixStatus('error');
+        setNotice(t('remixUnavailable'));
+        router.replace(
+          stripPublishedFormulaRemixIntent(locale, currentParams),
+          { scroll: false },
+        );
+      });
+    return () => {
+      remixLoadGenerationRef.current += 1;
+      controller.abort();
+    };
+  }, [
+    initialRemixIntent,
+    loadSource,
+    locale,
+    router,
+    searchParams,
+    t,
+  ]);
+
+  useEffect(() => {
+    if (initialMineIntent.status === 'none') return;
+    if (mineIntentConsumedRef.current) return;
+    if (cloudSession.status === 'loading') return;
+    mineIntentConsumedRef.current = true;
+    const currentParams = new URLSearchParams(searchParams.toString());
+    const failClosed = () => {
+      setRemixStatus('error');
+      setNotice(t('remixUnavailable'));
+      router.replace(stripMineFormulaEditorIntent(locale, currentParams), {
+        scroll: false,
+      });
+    };
+    if (initialMineIntent.status === 'invalid') {
+      queueMicrotask(failClosed);
+      return;
+    }
+
+    const generation = ++remixLoadGenerationRef.current;
+    void getDetail(initialMineIntent.formulaId).then(async (detail) => {
+      if (generation !== remixLoadGenerationRef.current) return;
+      if (!detail?.lifecycle) {
+        failClosed();
+        return;
+      }
+      try {
+        const restored = restoreFrozenMineFormulaRemixV1({
+          formulaId: detail.id,
+          displayName: detail.name,
+          source: detail.source,
+          definition: detail.lifecycle.editableDefinition,
+          profile: detail.lifecycle.editableProfile,
+          remixedFromFormulaId: detail.lifecycle.remixedFromFormulaId,
+          lineageSourceRevision: detail.lifecycle.lineageSourceRevision,
+          lineageProfileRevision: detail.lifecycle.lineageProfileRevision,
+        });
+        const detailHint = (detail.experienceHint ?? undefined) as
+          | FormulaExperienceHint
+          | undefined;
+        const activeSource = detail.lifecycle.activeRunnableSource;
+        const activeHint = (
+          detail.lifecycle.activeRunnableExperienceHint ?? undefined
+        ) as FormulaExperienceHint | undefined;
+        let activePreview: CompiledPreview | null = null;
+        if (activeSource) {
+          const compiled = await compileMineRemixSourceV1({
+            fork: restored,
+            source: activeSource,
+            runtimeFormulaId: runtimeIdForStorageId(detail.id),
+          });
+          if (generation !== remixLoadGenerationRef.current) return;
+          if (!compiled.success || !compiled.plugin) {
+            throw new Error('Active runnable lifecycle head did not compile.');
+          }
+          activePreview = { plugin: compiled.plugin, source: activeSource };
+        }
+        loadSource(
+          detail.source,
+          detailHint,
+          detail.id,
+          resolveFrmSemanticsVersion(detail.frmSemanticsVersion),
+        );
+        setRemixFork(restored);
+        setRemixStatus('ready');
+        setRemixEditableHeadId(detail.lifecycle.editableHeadRevisionId);
+        setRemixActiveSource(activeSource);
+        setRemixActiveHint(activeHint);
+        setCompiledPreview(activePreview);
+        if (activeHint?.bounds) setBounds(activeHint.bounds);
+        setNotice(t('remixReady', { name: detail.name }));
+        router.replace(stripMineFormulaEditorIntent(locale, currentParams), {
+          scroll: false,
+        });
+      } catch {
+        failClosed();
+      }
+    });
+    return () => {
+      remixLoadGenerationRef.current += 1;
+    };
+  }, [
+    cloudSession.status,
+    getDetail,
+    initialMineIntent,
+    loadSource,
+    locale,
+    router,
+    searchParams,
+    t,
+  ]);
 
   // Multi-entry picker: slice the chosen entry into the editor (the dirty
   // guard in loadSource protects unsaved edits).
@@ -342,6 +574,7 @@ export function FrmEditorWorkspace() {
       name: string,
       currentSource: string,
       experienceHint?: FormulaExperienceHint,
+      context?: FormulaSaveContext,
       id?: string
     ): Promise<{
       success: boolean;
@@ -350,6 +583,72 @@ export function FrmEditorWorkspace() {
       runtimeId?: string;
       silent?: boolean;
     }> => {
+      if (remixFork) {
+        const frozenContext = context ?? {
+          runnable: Boolean(
+            compiledPreview && compiledPreview.source === currentSource,
+          ),
+          diagnostics: [] as readonly string[],
+        };
+        const lifecycle = await buildMineRemixLifecycleRevisionV1(remixFork, {
+          name: name === 'Untitled' ? `${remixFork.displayName} Remix` : name,
+          source: currentSource,
+          experienceHint,
+          runnable: frozenContext.runnable,
+          diagnostics: frozenContext.diagnostics,
+          supersedes: remixEditableHeadId,
+        });
+        const execute = () =>
+          saveMineFormulaLifecycleRevision({
+            formulaId: remixFork.formulaId,
+            lifecycle: lifecycle as unknown as Readonly<Record<string, unknown>>,
+          });
+        let lifecycleResult:
+          | Awaited<ReturnType<typeof saveMineFormulaLifecycleRevision>>
+          | undefined;
+        if (cloudSession.status === 'authenticated') {
+          lifecycleResult = await execute().catch(() => undefined);
+        } else if (cloudSession.status === 'anonymous') {
+          lifecycleResult = await new Promise((resolve) => {
+            openSignIn(
+              () => execute().then(resolve).catch(() => resolve(undefined)),
+              () => resolve(undefined),
+            );
+          });
+          if (!lifecycleResult) return { success: false, silent: true };
+        }
+        if (!lifecycleResult) {
+          const error = t('errors.storageUnavailable');
+          setNotice(error);
+          return { success: false, error };
+        }
+        setRemixEditableHeadId(lifecycleResult.editableHeadRevisionId);
+        setRecordId(lifecycleResult.formulaId);
+        setSavedSource(currentSource);
+        setSavedHintKey(experienceHintKey(experienceHint));
+        setHint(experienceHint);
+        setNotice(
+          frozenContext.runnable ? t('saved') : t('invalidDraftSaved'),
+        );
+        const runtimeId = runtimeIdForStorageId(lifecycleResult.formulaId);
+        if (frozenContext.runnable && runtimeId) {
+          setRemixActiveSource(currentSource);
+          setRemixActiveHint(experienceHint);
+          resolveCustomFormula({
+            id: runtimeId,
+            source: currentSource,
+            experienceHint,
+            frmSemanticsVersion: 2,
+          });
+        }
+        await refresh();
+        return {
+          success: true,
+          storageId: lifecycleResult.formulaId,
+          runtimeId,
+        };
+      }
+
       const result = await saveFormula({
         name,
         source: currentSource,
@@ -376,7 +675,18 @@ export function FrmEditorWorkspace() {
       setNotice(error);
       return { success: false, error };
     },
-    [mutationErrorMessage, recordId, saveFormula, t]
+    [
+      cloudSession.status,
+      compiledPreview,
+      mutationErrorMessage,
+      openSignIn,
+      recordId,
+      refresh,
+      remixEditableHeadId,
+      remixFork,
+      saveFormula,
+      t,
+    ]
   );
 
   const download = useCallback(() => {
@@ -417,6 +727,7 @@ export function FrmEditorWorkspace() {
       compiledPreview.plugin.name,
       source,
       hint,
+      undefined,
       recordId
     ).then((result) => {
       // auth-intent (silent) leaves navigation to the post-OTP resume.
@@ -425,6 +736,38 @@ export function FrmEditorWorkspace() {
       }
     });
   }, [compiledPreview, hint, locale, recordId, router, save, source, t]);
+
+  if (remixStatus === 'loading') {
+    return (
+      <section
+        className="mx-auto max-w-7xl px-4 py-16 text-center sm:px-6"
+        data-testid="formula-remix-loading"
+        role="status"
+      >
+        {t('remixLoading')}
+      </section>
+    );
+  }
+
+  if (remixStatus === 'error') {
+    return (
+      <section
+        className="mx-auto max-w-3xl px-4 py-16 text-center sm:px-6"
+        data-testid="formula-remix-error"
+        role="alert"
+      >
+        <p>{t('remixUnavailable')}</p>
+        <Button
+          className="mt-4"
+          onClick={() => loadSource(DEFAULT_SOURCE)}
+          type="button"
+          variant="outline"
+        >
+          {t('new')}
+        </Button>
+      </section>
+    );
+  }
 
   return (
     <section
@@ -580,21 +923,96 @@ export function FrmEditorWorkspace() {
                     className="rounded border p-2 text-left hover:bg-muted"
                     key={formula.id}
                     onClick={() => {
-                      void getDetail(formula.id).then((detail) => {
+                      const generation = ++remixLoadGenerationRef.current;
+                      void getDetail(formula.id).then(async (detail) => {
+                        if (generation !== remixLoadGenerationRef.current) return;
                         if (!detail) {
                           setNotice(t('saveError'));
                           return;
                         }
-                        loadSource(
-                          detail.source,
-                          (detail.experienceHint ?? undefined) as
-                            | FormulaExperienceHint
-                            | undefined,
-                          detail.id,
-                          resolveFrmSemanticsVersion(
-                            detail.frmSemanticsVersion
-                          )
-                        );
+                        const detailHint = (detail.experienceHint ?? undefined) as
+                          | FormulaExperienceHint
+                          | undefined;
+                        if (!detail.lifecycle) {
+                          loadSource(
+                            detail.source,
+                            detailHint,
+                            detail.id,
+                            resolveFrmSemanticsVersion(
+                              detail.frmSemanticsVersion,
+                            ),
+                          );
+                          return;
+                        }
+                        try {
+                          const restored = restoreFrozenMineFormulaRemixV1({
+                            formulaId: detail.id,
+                            displayName: formula.name,
+                            source: detail.source,
+                            definition: detail.lifecycle.editableDefinition,
+                            profile: detail.lifecycle.editableProfile,
+                            remixedFromFormulaId:
+                              detail.lifecycle.remixedFromFormulaId,
+                            lineageSourceRevision:
+                              detail.lifecycle.lineageSourceRevision,
+                            lineageProfileRevision:
+                              detail.lifecycle.lineageProfileRevision,
+                          });
+                          const activeSource =
+                            detail.lifecycle.activeRunnableSource;
+                          const activeHint = (
+                            detail.lifecycle.activeRunnableExperienceHint ??
+                            undefined
+                          ) as FormulaExperienceHint | undefined;
+                          let activePreview: CompiledPreview | null = null;
+                          if (activeSource) {
+                            const compiled = await compileMineRemixSourceV1({
+                              fork: restored,
+                              source: activeSource,
+                              runtimeFormulaId: runtimeIdForStorageId(detail.id),
+                            });
+                            if (
+                              generation !== remixLoadGenerationRef.current
+                            ) {
+                              return;
+                            }
+                            if (!compiled.success || !compiled.plugin) {
+                              throw new Error(
+                                'Active runnable lifecycle head did not compile.',
+                              );
+                            }
+                            activePreview = {
+                              plugin: compiled.plugin,
+                              source: activeSource,
+                            };
+                          }
+                          if (
+                            generation !== remixLoadGenerationRef.current ||
+                            !loadSource(
+                              detail.source,
+                              detailHint,
+                              detail.id,
+                              resolveFrmSemanticsVersion(
+                                detail.frmSemanticsVersion,
+                              ),
+                            )
+                          ) {
+                            return;
+                          }
+                          setRemixFork(restored);
+                          setRemixStatus('ready');
+                          setRemixEditableHeadId(
+                            detail.lifecycle.editableHeadRevisionId,
+                          );
+                          setRemixActiveSource(activeSource);
+                          setRemixActiveHint(activeHint);
+                          setCompiledPreview(activePreview);
+                          if (activeHint?.bounds) setBounds(activeHint.bounds);
+                        } catch {
+                          if (generation === remixLoadGenerationRef.current) {
+                            setNotice(t('saveError'));
+                          }
+                        }
                       });
                     }}
                     type="button"
@@ -611,7 +1029,7 @@ export function FrmEditorWorkspace() {
             </div>
           </details>
 
-          {classification && (
+          {classification && !remixFork && (
             <FrmCompatStatusCard
               classification={classification}
               onJumpToLocation={jumpToLocation}
@@ -622,13 +1040,29 @@ export function FrmEditorWorkspace() {
           )}
 
           <FormulaEditor
+            collectEditorErrors={
+              remixFork ? collectMineRemixEditorErrorsV1 : undefined
+            }
+            compileSource={
+              remixFork
+                ? (nextSource, runtimeFormulaId) =>
+                    compileMineRemixSourceV1({
+                      fork: remixFork,
+                      source: nextSource,
+                      runtimeFormulaId,
+                    })
+                : undefined
+            }
             currentBounds={bounds}
-            formulaId={runtimeIdForStorageId(recordId)}
+            formulaId={runtimeIdForStorageId(remixFork?.formulaId ?? recordId)}
             frmSemanticsVersion={frmSemanticsVersion}
             initialExperienceHint={hint}
+            initialLastSuccessfulExperienceHint={remixActiveHint}
+            initialLastSuccessfulSource={remixActiveSource}
             initialSource={source}
             jumpTo={jumpTo}
             key={revision}
+            mode={remixFork ? 'remix' : 'classic'}
             onCompile={(plugin, effectiveHint) => {
               setCompiledPreview({ plugin, source });
               setHint(effectiveHint);
@@ -641,7 +1075,16 @@ export function FrmEditorWorkspace() {
             onExperienceHintChange={setHint}
             onSave={save}
             onSourceChange={setSource}
-            sourcePreflightError={compileBlockError}
+            sourcePreflightError={remixFork ? undefined : compileBlockError}
+            validateBeforeCompile={
+              remixFork
+                ? (nextSource) =>
+                    validateMineRemixApplyV1({
+                      fork: remixFork,
+                      source: nextSource,
+                    })
+                : undefined
+            }
           />
         </div>
 

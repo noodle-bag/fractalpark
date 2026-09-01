@@ -1,0 +1,33 @@
+{
+  "schema": "fractalpark-teaching-locale/v1",
+  "formulaId": "0236be89-f1e9-5e23-b0a3-f4dd201ee788",
+  "locale": "zh",
+  "sourceRevision": "373c7bfd6f8f05a21f9e9af35ea4c77fa92b6f63e3c3484f760a2ef3c03de052",
+  "semanticHash": "3028bb0a2c595da4c51aaf118c7e24c8c8036b63a5fe8b7271e4c7559243adac",
+  "englishContentHash": "d14be731368737a914ec81ee833488134cb171bd89d869b0a43484e03c32020f",
+  "overview": "本单元依据 FRM-like/1 的下列精确运算： `init: z = pixel; anchor = pixel. loop: z = fn1(z) + anchor; z = fn2(z) + anchor. bailout: |z| < 4.`",
+  "sourceWalkthrough": {
+    "0236be89-f1e9-5e23-b0a3-f4dd201ee788:373c7bfd6f8f05a21f9e9af35ea4c77fa92b6f63e3c3484f760a2ef3c03de052:init-anchor": "此标注执行 `anchor = pixel`.",
+    "0236be89-f1e9-5e23-b0a3-f4dd201ee788:373c7bfd6f8f05a21f9e9af35ea4c77fa92b6f63e3c3484f760a2ef3c03de052:first-transform": "此标注执行 `z = fn1(z) + anchor`.",
+    "0236be89-f1e9-5e23-b0a3-f4dd201ee788:373c7bfd6f8f05a21f9e9af35ea4c77fa92b6f63e3c3484f760a2ef3c03de052:second-transform": "此标注执行 `z = fn2(z) + anchor`.",
+    "0236be89-f1e9-5e23-b0a3-f4dd201ee788:373c7bfd6f8f05a21f9e9af35ea4c77fa92b6f63e3c3484f760a2ef3c03de052:bailout": "此标注执行 `|z| < 4`. 它终结本公式上方所述的迭代序列。"
+  },
+  "syntaxFeatures": {
+    "source-sequence": "该源顺序特征依次串联与 `fn1(z)` 和 `fn2(z)` 相关的已引用操作。"
+  },
+  "parameterExperiment": {
+    "steps": [
+      "在固定配置下先以 `first = identity`, `second = identity` 渲染基线。保持中心、缩放、旋转、迭代次数和其他槽位不变，每次只做一项变更并渲染：`first = sqr`、`second = sqr`；每次新试验前恢复基线。"
+    ],
+    "expectedObservation": "针对 ifthen-b1 的 `first`、`second` 试验，记录相对基线是否出现可见差异；没有差异也如实记录。"
+  },
+  "exercise": {
+    "prompt": "说明 `fn1(z)` 和 `fn2(z)` 在源顺序中的作用，并按照参数实验步骤比较各次运行。",
+    "completionCheck": "答案必须说明全部 4 个标注操作，记录实验比较，并提及 `fn1(z)` 和 `fn2(z)`。"
+  },
+  "factsPresentation": {
+    "provenanceLead": "来源：固定运行时修订与发布决定。",
+    "rightsLead": "权利信息见英文事实单元。"
+  },
+  "contentHash": "b6e6ec591a80ecd3ab6b2c10f28e87c3e9314ed6107c8735c9eff26f0b0d1803"
+}

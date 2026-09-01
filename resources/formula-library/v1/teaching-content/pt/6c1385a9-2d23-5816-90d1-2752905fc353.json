@@ -1,0 +1,35 @@
+{
+  "schema": "fractalpark-teaching-locale/v1",
+  "formulaId": "6c1385a9-2d23-5816-90d1-2752905fc353",
+  "locale": "pt",
+  "sourceRevision": "decba7b7f3d2b3e121f53906a98d62d32743da89d72ea79c2aa1ebd5f5aa2e37",
+  "semanticHash": "0126714b6b16415137cb09eba57dc601ff56a5efc76c754cedc84d5c0130fa82",
+  "englishContentHash": "0cb3e7092ec9d11b8accd8e839642327fb89ede59958cf352c3cb6d3cf3e97ec",
+  "overview": "Em FRM-like/1, circleInversion começa com se ismand, z = 0; caso contrário, z = pixel, usa z2 = z * z no primeiro nó do laço e limita a iteração com |z| <= 256. Leia essas operações na ordem real da fonte.",
+  "sourceWalkthrough": {
+    "6c1385a9-2d23-5816-90d1-2752905fc353:decba7b7f3d2b3e121f53906a98d62d32743da89d72ea79c2aa1ebd5f5aa2e37:initialization": "Em circleInversion, o nó de inicialização executa somente: se ismand, z = 0; caso contrário, z = pixel.",
+    "6c1385a9-2d23-5816-90d1-2752905fc353:decba7b7f3d2b3e121f53906a98d62d32743da89d72ea79c2aa1ebd5f5aa2e37:iteration": "Em circleInversion, este nó do laço executa somente: z2 = z * z.",
+    "6c1385a9-2d23-5816-90d1-2752905fc353:decba7b7f3d2b3e121f53906a98d62d32743da89d72ea79c2aa1ebd5f5aa2e37:termination": "Em circleInversion, o nó bailout testa somente: |z| <= 256."
+  },
+  "syntaxFeatures": {
+    "initialization-flow": "Em circleInversion, a característica de inicialização focaliza a única operação se ismand, z = 0; caso contrário, z = pixel.",
+    "iteration-flow": "Em circleInversion, a característica de iteração focaliza a única atribuição z2 = z * z.",
+    "bailout-test": "Em circleInversion, a característica de término focaliza a comparação |z| <= 256."
+  },
+  "parameterExperiment": {
+    "steps": [
+      "Renderize circleInversion com a base do plano de parâmetros fixada: centro (0, 0), zoom 0.25, rotação 0, e 96 iterações.",
+      "Mantenha a base fixa exceto pelas iterações, renderize uma vez com 48 iterações e compare com a base de 96."
+    ],
+    "expectedObservation": "Em circleInversion, registre se a comparação entre 48 e 96 iterações muda algo e anote o limite da fonte |z| <= 256."
+  },
+  "exercise": {
+    "prompt": "Em circleInversion, localize as três anotações e explique se ismand, z = 0; caso contrário, z = pixel, z2 = z * z e |z| <= 256 e explique por que nenhuma instrução vizinha pertence à anotação do laço.",
+    "completionCheck": "Em circleInversion, você concluiu ao listar todas as 3 chaves de anotação e explicar corretamente z2 = z * z e |z| <= 256."
+  },
+  "factsPresentation": {
+    "provenanceLead": "A proveniência está na unidade factual inglesa.",
+    "rightsLead": "Os direitos estão na unidade factual inglesa."
+  },
+  "contentHash": "a19308bb645eb108c68b53373609afc01e727bbbcd4982502d6deb10d7f0a229"
+}

@@ -1,0 +1,33 @@
+{
+  "schema": "fractalpark-teaching-locale/v1",
+  "formulaId": "1936e9b5-1312-593e-ab67-72e95bc514b0",
+  "locale": "fr",
+  "sourceRevision": "2f024a184f50b87076b883408a33387a2010e89996414646d1b51844d2f181fc",
+  "semanticHash": "c1fed8de512318463b90399a68d9eca445ab7908923d0a54ce4aed3bd2f631df",
+  "englishContentHash": "8ad1ddfcd2a71b3a7a561c0247f2d30c48887de2d08a5ab54df6307c665db562",
+  "overview": "Dans FRM-like/1, l’initialisation effectue z = pixel; sinp = sin(pixel). À chaque itération, le nœud exécute z = sin(z)+sinp. La terminaison vérifie |z| <= 50.",
+  "sourceWalkthrough": {
+    "1936e9b5-1312-593e-ab67-72e95bc514b0:2f024a184f50b87076b883408a33387a2010e89996414646d1b51844d2f181fc:init": "Dans FRM-like/1, l’initialisation effectue z = pixel; sinp = sin(pixel).",
+    "1936e9b5-1312-593e-ab67-72e95bc514b0:2f024a184f50b87076b883408a33387a2010e89996414646d1b51844d2f181fc:loop": "À chaque itération, le nœud exécute z = sin(z)+sinp.",
+    "1936e9b5-1312-593e-ab67-72e95bc514b0:2f024a184f50b87076b883408a33387a2010e89996414646d1b51844d2f181fc:termination": "La terminaison vérifie |z| <= 50."
+  },
+  "syntaxFeatures": {
+    "sequence": "À chaque itération, le nœud exécute z = sin(z)+sinp."
+  },
+  "parameterExperiment": {
+    "steps": [
+      "Utilise le profil fixé comme référence. Exécute 48 puis 96 itérations, tous les contrôles fixes, et note si z = sin(z)+sinp ou |z| <= 50 diffèrent."
+    ],
+    "expectedObservation": "La limite supérieure peut révéler des applications ultérieures de sin(z)+sinp ; note si les nombres de sorties observés diffèrent."
+  },
+  "exercise": {
+    "prompt": "Identifie la valeur sinp = sin(pixel), dérivée de pixel et réutilisée par la boucle, puis explique comment elle intervient dans z = sin(z)+sinp.",
+    "completionCheck": "Pour terminer, tu dois nommer exactement les 3 annotations et expliquer ce détail de la formule : Indice : z = sin(z)+sinp.",
+    "hint": "Indice : z = sin(z)+sinp."
+  },
+  "factsPresentation": {
+    "provenanceLead": "La provenance figure dans l’enregistrement de source épinglé.",
+    "rightsLead": "Le statut des droits et la décision de publication figurent dans l’enregistrement de décision épinglé."
+  },
+  "contentHash": "38352cd87661955e0fc24964352ce0b6ee61b2535a0fd44add07ead51d43b7a6"
+}

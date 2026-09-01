@@ -1,0 +1,35 @@
+{
+  "schema": "fractalpark-teaching-locale/v1",
+  "formulaId": "00e14aa8-b766-54ea-a359-3f5d20d329b7",
+  "locale": "ru",
+  "sourceRevision": "e4d2259a5dd3fe7b3af646514a4313e83efcc80e887e04c07b7469bb27a66b90",
+  "semanticHash": "26270fc7b1577aa266c7a0eb23b2664ffcb020cf5a7528ea9be23950ba10a72c",
+  "englishContentHash": "33fdd9a9bed5aeb3d99c36e1707080931f4644906ecd7fca36a3afe1b75a3075",
+  "overview": "mandelbrot изучается по закреплённому определению FRM-like/1: вы прослеживаете if power == 2, z = z * z + c; иначе z = z ^ power + c, не считая изображение гарантированным. Закреплённый профиль задаёт лишь одну конкретную настройку наблюдения.",
+  "sourceWalkthrough": {
+    "00e14aa8-b766-54ea-a359-3f5d20d329b7:e4d2259a5dd3fe7b3af646514a4313e83efcc80e887e04c07b7469bb27a66b90:start-branch": "В mandelbrot, этот узел выполняет if ismand: z = 0; иначе z = pixel.",
+    "00e14aa8-b766-54ea-a359-3f5d20d329b7:e4d2259a5dd3fe7b3af646514a4313e83efcc80e887e04c07b7469bb27a66b90:power-branch": "В mandelbrot, этот узел выполняет if power == 2: z = z * z + c; иначе z = z ^ power + c.",
+    "00e14aa8-b766-54ea-a359-3f5d20d329b7:e4d2259a5dd3fe7b3af646514a4313e83efcc80e887e04c07b7469bb27a66b90:termination": "В mandelbrot, этот узел выполняет |z| <= 256."
+  },
+  "syntaxFeatures": {
+    "state-flow": "Конкретный поток состояния: если ismand, z = 0; иначе z = pixel, затем ветвь power обновляет z.",
+    "stopping-test": "Проверка остановки оценивает только |z| <= 256; она не присваивает состояние."
+  },
+  "parameterExperiment": {
+    "steps": [
+      "Запустите mandelbrot с закреплённым профилем и запишите результат.",
+      "Измените только power, оставьте остальные слоты выполнения и настройки профиля неизменными, снова запустите и запишите, есть ли различие."
+    ],
+    "expectedObservation": "Запишите, меняет ли if power == 2, z = z * z + c; иначе z = z ^ power + c видимый результат или проверку остановки |z| <= 256 относительно базового запуска; определение не гарантирует различие."
+  },
+  "exercise": {
+    "prompt": "Проследите аннотации mandelbrot и объясните, как if power == 2, z = z * z + c; иначе z = z ^ power + c выполняется в отмеченных операциях.",
+    "completionCheck": "Ваш ответ объясняет все 3 аннотации, указывает if power == 2, z = z * z + c; иначе z = z ^ power + c и отличает |z| <= 256 как проверку остановки от присваивания.",
+    "hint": "Поток состояния последовательно выполняет если ismand: z = 0; иначе z = pixel → если power == 2: z = z * z + c; иначе z = z ^ power + c и передаёт результат следующему шагу."
+  },
+  "factsPresentation": {
+    "provenanceLead": "Источник: закреплённое определение выполнения и решение о публикации.",
+    "rightsLead": "Сведения о правах следуют закреплённому решению в английском разделе."
+  },
+  "contentHash": "5ffd56ac17021469a5ce3f02846193267bd76074a96a687be4a4e6b40a093551"
+}

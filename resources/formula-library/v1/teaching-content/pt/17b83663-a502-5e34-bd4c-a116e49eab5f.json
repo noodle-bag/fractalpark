@@ -1,0 +1,33 @@
+{
+  "schema": "fractalpark-teaching-locale/v1",
+  "formulaId": "17b83663-a502-5e34-bd4c-a116e49eab5f",
+  "locale": "pt",
+  "sourceRevision": "581fbcb6400907433c24d3061ac2585a5090574f7ee6e7288bffe177432eaafa",
+  "semanticHash": "b0539f17c0e00e498da7c745374933b658189a600327bf3ec201522a0903a8e7",
+  "englishContentHash": "44b9a09b266c216f316f52535d117fd49c711b7a0e278f8fc9ef8e634368f322",
+  "localizedName": "cubic",
+  "overview": "Em FRM-like/1, cubic segue a inicialização, o laço e o teste de saída do código-fonte. Trate cada passo como uma operação explícita sobre o estado, sem deduzir regras pelo nome. O perfil fixado permite observar o mesmo processo iterativo.",
+  "sourceWalkthrough": {
+    "17b83663-a502-5e34-bd4c-a116e49eab5f:581fbcb6400907433c24d3061ac2585a5090574f7ee6e7288bffe177432eaafa:init": "O nó de inicialização executa: `p = pixel`",
+    "17b83663-a502-5e34-bd4c-a116e49eab5f:581fbcb6400907433c24d3061ac2585a5090574f7ee6e7288bffe177432eaafa:loop": "O nó do laço executa: `z = z * z * z - aa3 * z + b`",
+    "17b83663-a502-5e34-bd4c-a116e49eab5f:581fbcb6400907433c24d3061ac2585a5090574f7ee6e7288bffe177432eaafa:bailout": "O teste de término é: `|z| < test`"
+  },
+  "syntaxFeatures": {
+    "source-sequence": "Esta estrutura organiza os passos do código-fonte citados em uma sequência verificável. 17b83663-a502-5e34-bd4c-a116e49eab5f:581fbcb6400907433c24d3061ac2585a5090574f7ee6e7288bffe177432eaafa:init, 17b83663-a502-5e34-bd4c-a116e49eab5f:581fbcb6400907433c24d3061ac2585a5090574f7ee6e7288bffe177432eaafa:loop, 17b83663-a502-5e34-bd4c-a116e49eab5f:581fbcb6400907433c24d3061ac2585a5090574f7ee6e7288bffe177432eaafa:bailout"
+  },
+  "parameterExperiment": {
+    "steps": [
+      "Comece com os valores padrão e altere apenas um slot de execução por vez: parameter1 (0, 0)→(1, 0). Registre o resultado visível a cada vez."
+    ],
+    "expectedObservation": "Compare as duas execuções e registre se `z = z * z * z - aa3 * z + b` produz o mesmo resultado visível e comportamento iterativo."
+  },
+  "exercise": {
+    "prompt": "Encontre as anotações de fonte ligadas a `z = z * z * z - aa3 * z + b` e explique a ordem entre inicialização, laço e término.",
+    "completionCheck": "Para concluir, liste as três chaves de anotação citadas para `z = z * z * z - aa3 * z + b` e ordene-as de inicialização a laço e término."
+  },
+  "factsPresentation": {
+    "provenanceLead": "Proveniência:",
+    "rightsLead": "Direitos:"
+  },
+  "contentHash": "bb7096b77999e9abd50920fab2679510ea30bf5520fe579daf4060618b2c1475"
+}

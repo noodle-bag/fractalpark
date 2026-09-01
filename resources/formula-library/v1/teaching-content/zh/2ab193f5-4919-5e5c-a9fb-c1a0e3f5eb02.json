@@ -1,0 +1,36 @@
+{
+  "schema": "fractalpark-teaching-locale/v1",
+  "formulaId": "2ab193f5-4919-5e5c-a9fb-c1a0e3f5eb02",
+  "locale": "zh",
+  "sourceRevision": "cfef49944d8f9bd8f2ee91b2d4ab4f9b30ad66475a6f783f52bb91a7a36b1617",
+  "semanticHash": "66120f8c30ea579f64ef57e054eb33b08e9c00eeed9c33c9cecc1e6bba600898",
+  "englishContentHash": "01cf3e2d82e2a9fd405ea6049d5131f2dd13253e0195e0783ac932c11993f620",
+  "overview": "burningShip 按固定的 FRM-like/1 定义学习：请追踪 a = abs(z); 当 power == 2 时，基于 real(a) 和 imag(a) 重建 z，再令 z = z + c, 否则 z = a ^ power + c，而不要把图像当作保证。固定配置只提供一个具体观察设置。",
+  "sourceWalkthrough": {
+    "2ab193f5-4919-5e5c-a9fb-c1a0e3f5eb02:cfef49944d8f9bd8f2ee91b2d4ab4f9b30ad66475a6f783f52bb91a7a36b1617:start-branch": "在 burningShip，此节点执行 if ismand: z = 0; 否则 z = pixel。",
+    "2ab193f5-4919-5e5c-a9fb-c1a0e3f5eb02:cfef49944d8f9bd8f2ee91b2d4ab4f9b30ad66475a6f783f52bb91a7a36b1617:absolute-value": "在 burningShip，此节点执行 a = abs(z)。",
+    "2ab193f5-4919-5e5c-a9fb-c1a0e3f5eb02:cfef49944d8f9bd8f2ee91b2d4ab4f9b30ad66475a6f783f52bb91a7a36b1617:power-branch": "在 burningShip，此节点执行：若 power == 2，real(z) = real(a) * real(a) - imag(a) * imag(a)，imag(z) = 2 * real(a) * imag(a)，随后 z = z + c；否则 z = a ^ power + c。",
+    "2ab193f5-4919-5e5c-a9fb-c1a0e3f5eb02:cfef49944d8f9bd8f2ee91b2d4ab4f9b30ad66475a6f783f52bb91a7a36b1617:termination": "在 burningShip，此节点执行 |z| <= 256。"
+  },
+  "syntaxFeatures": {
+    "state-flow": "状态流具体为：ismand 的选择先为 z 赋初值, abs(z) 赋给 a, 随后 power 分支重建 z。",
+    "stopping-test": "停止测试只判断 |z| <= 256，不会给状态变量赋值。"
+  },
+  "parameterExperiment": {
+    "steps": [
+      "先按固定配置 运行 burningShip 并记录结果。",
+      "只改变 power，其余 运行时槽位和配置项保持固定后再次运行，并记录是否有差异。"
+    ],
+    "expectedObservation": "记录 a = abs(z); 当 power == 2 时，基于 real(a) 和 imag(a) 重建 z，再令 z = z + c, 否则 z = a ^ power + c 相比基线是否改变可见结果或 |z| <= 256 的停止判断；源定义不保证差异。"
+  },
+  "exercise": {
+    "prompt": "追踪 burningShip 的标注，并说明 a = abs(z); 当 power == 2 时，基于 real(a) 和 imag(a) 重建 z，再令 z = z + c, 否则 z = a ^ power + c 在每个相关操作中如何执行。",
+    "completionCheck": "答案准确解释全部 4 个标注，指出 a = abs(z); 当 power == 2 时，基于 real(a) 和 imag(a) 重建 z，再令 z = z + c, 否则 z = a ^ power + c，并将 |z| <= 256 识别为停止测试而非状态赋值。",
+    "hint": "状态流按顺序执行 若 ismand: z = 0; 否则 z = pixel → a = abs(z) → 若 power == 2: 基于 a 的分量重建 z 并加上 c; 否则 z = a ^ power + c，其结果供下一步使用。"
+  },
+  "factsPresentation": {
+    "provenanceLead": "来源：固定的运行时定义与发布决定。",
+    "rightsLead": "权利信息见英文事实单元的固定决定。"
+  },
+  "contentHash": "665ac251706fd0c3b8cfe78b1ec995dedceb92eefed81802727969131bdbf9b1"
+}

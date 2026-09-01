@@ -1,0 +1,33 @@
+{
+  "schema": "fractalpark-teaching-locale/v1",
+  "formulaId": "280229ec-dd2f-5982-9954-75829a37a5f2",
+  "locale": "zh",
+  "sourceRevision": "503739d928f438a7edc79d8d7fb1931b1435b45b0c8231950a2b11cf7104d22c",
+  "semanticHash": "98af05f90861656958d24b58d63d4b9eb08eca323b126001c38eb467e5646e5c",
+  "englishContentHash": "4bff26a131cb3d7291ac0abfa91a6c336b86cc3030038995dae885a4997d3810",
+  "localizedName": "liar4",
+  "overview": "在 FRM-like/1 中，liar4 按源代码的初始化、循环和退出测试运行。请把每一步当作对当前状态的明确操作，而不是从名称推测规则。固定配置让你能观察同一迭代过程。",
+  "sourceWalkthrough": {
+    "280229ec-dd2f-5982-9954-75829a37a5f2:503739d928f438a7edc79d8d7fb1931b1435b45b0c8231950a2b11cf7104d22c:init": "初始化节点执行： `z = pixel`",
+    "280229ec-dd2f-5982-9954-75829a37a5f2:503739d928f438a7edc79d8d7fb1931b1435b45b0c8231950a2b11cf7104d22c:loop": "循环节点执行： `z = 1 - abs(imag(z) * p - real(z)) + (1 - abs(1 - real(z) - imag(z)))`",
+    "280229ec-dd2f-5982-9954-75829a37a5f2:503739d928f438a7edc79d8d7fb1931b1435b45b0c8231950a2b11cf7104d22c:bailout": "终止测试为： `|z| <= 1`"
+  },
+  "syntaxFeatures": {
+    "source-sequence": "此结构把所引用的源代码步骤组织为一个可检查的顺序。 280229ec-dd2f-5982-9954-75829a37a5f2:503739d928f438a7edc79d8d7fb1931b1435b45b0c8231950a2b11cf7104d22c:init, 280229ec-dd2f-5982-9954-75829a37a5f2:503739d928f438a7edc79d8d7fb1931b1435b45b0c8231950a2b11cf7104d22c:loop, 280229ec-dd2f-5982-9954-75829a37a5f2:503739d928f438a7edc79d8d7fb1931b1435b45b0c8231950a2b11cf7104d22c:bailout"
+  },
+  "parameterExperiment": {
+    "steps": [
+      "使用固定配置（mode parameter-plane; center (-0.5, 0); zoom 0.4; rotation 0; iterations 96）。先以parameter1默认值(0, 0)运行一次，再将parameter1设为(1, 0)运行一次；分别记录可见结果。"
+    ],
+    "expectedObservation": "比较两次运行，记录`z = 1 - abs(imag(z) * p - real(z)) + (1 - abs(1 - real(z) - imag(z)))`是否得到相同的可见结果和迭代行为。"
+  },
+  "exercise": {
+    "prompt": "找出与`z = 1 - abs(imag(z) * p - real(z)) + (1 - abs(1 - real(z) - imag(z)))`有关的源注释，并说明初始化、循环和终止测试的顺序。",
+    "completionCheck": "完成时列出所引用的三个注释键，并按`z = 1 - abs(imag(z) * p - real(z)) + (1 - abs(1 - real(z) - imag(z)))`对应的初始化、循环和终止顺序排列。"
+  },
+  "factsPresentation": {
+    "provenanceLead": "来源：",
+    "rightsLead": "权利："
+  },
+  "contentHash": "ce8b9a8bc578e5a94c6086146a9be348132d7ea74b0d46a3d9079ea11ab66be7"
+}

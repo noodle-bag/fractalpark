@@ -87,29 +87,32 @@ export function PresetThumbnail({
 
       // Create renderer
       const renderer = new FractalRenderer(gl);
-      await renderer.precompileDefault();
+      try {
+        await renderer.precompileDefault();
 
-      // Set canvas size (low resolution for thumbnail)
-      const thumbnailSize = 320;
-      canvas.width = thumbnailSize;
-      canvas.height = thumbnailSize;
+        // Set canvas size (low resolution for thumbnail)
+        const thumbnailSize = 320;
+        canvas.width = thumbnailSize;
+        canvas.height = thumbnailSize;
 
-      // Render one frame
-      renderer.render({
-        ...params,
-        maxIterations: Math.min(params.maxIterations, 300),
-        useSSAA: false,
-      });
+        // Render and finish the frame before capture.
+        const rendered = await renderer.render({
+          ...params,
+          maxIterations: Math.min(params.maxIterations, 300),
+          useSSAA: false,
+        });
+        if (!rendered) throw new Error('Thumbnail render was superseded');
+        gl.finish();
 
-      // Capture as data URL
-      const dataUrl = canvas.toDataURL('image/jpeg', 0.85);
+        // Capture as data URL
+        const dataUrl = canvas.toDataURL('image/jpeg', 0.85);
 
-      // Cache it
-      thumbnailCache.set(presetId, dataUrl);
-      setThumbnailUrl(dataUrl);
-
-      // Dispose renderer
-      renderer.dispose();
+        // Cache it
+        thumbnailCache.set(presetId, dataUrl);
+        setThumbnailUrl(dataUrl);
+      } finally {
+        renderer.dispose();
+      }
     } catch (error) {
       console.error('Failed to render thumbnail:', error);
     } finally {

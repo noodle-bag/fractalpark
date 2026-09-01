@@ -1,0 +1,29 @@
+{
+  "schema": "fractalpark-teaching-maintainer-approval/v1",
+  "status": "maintainer-approved",
+  "approvedAt": "2026-08-21T22:20:53+08:00",
+  "actorId": "fractalpark-maintainer",
+  "actorKind": "human-maintainer",
+  "actorRole": "maintainer",
+  "approvalPacketSha256": "a4ecee10c064a8844ff195edbd2cc15b6d179ea1b0d27f946111ce659032d09a",
+  "approvalStatement": "批准20c：同意本审批包中5个candidateSha256对应的50个teaching packages进入maintainer-approved提交；不授权转Ready、merge、Production发布或其他approvalScope.doesNotAllow事项。",
+  "maintainerResponse": "同意",
+  "aiAssistanceDisclosure": "Teaching candidates and DeepSeek/Kimi review artifacts were AI-assisted. Approval was issued by the human maintainer after the hash-bound approval packet was presented.",
+  "selectionSha256": "1ea4fff7f3c0f22d3cdae99aa06f775987a35871427b79d7005be5acd344b2fa",
+  "semanticAnchorsSha256": "9bd8ddbbbe16055eab215bd245c576e9268928980bb2e2759a77af4725f34241",
+  "scope": {
+    "allows": [
+      "commit and push the five immutable Commit 20c teaching batches",
+      "continue Commit 20d and planned Commit 21 under their existing contracts"
+    ],
+    "doesNotAllow": [
+      "mark the pull request ready",
+      "merge or auto-merge",
+      "deploy or promote Production",
+      "modify Production environment",
+      "run migrations",
+      "create a tag or Release",
+      "submit IndexNow"
+    ]
+  }
+}

@@ -1,0 +1,33 @@
+{
+  "schema": "fractalpark-teaching-locale/v1",
+  "formulaId": "2d237187-b3fd-54e2-8bf4-ef973080f389",
+  "locale": "ru",
+  "sourceRevision": "a77dc97ca3eff72c3edb9516440760af7d5fdc967d84a7f08bdace726898d79e",
+  "semanticHash": "ce72da6bf2224d3a7cd796098acb1a1efa8c0b14caeb56d0376f33539b9ff6ee",
+  "englishContentHash": "95bbf3e3498902ce18ca0c2793ee663de817df11fef948c6147b7cbf92159361",
+  "overview": "Этот раздел основан на следующих точных операциях FRM-like/1:  `init: z = 0; carrier = pixel. loop: z = z * z + carrier; horizontal = real(z); vertical = imag(z); rotation = (0, 0); horizontal > 0, vertical > 0: rotation = (0, 1); horizontal > 0, vertical < 0: rotation = (1, 0); horizontal < 0, vertical > 0: rotation = (-1, 0); horizontal < 0, vertical < 0: rotation = (0, -1); carrier = carrier + rotation * offset / z. bailout: |z| <= 4.`",
+  "sourceWalkthrough": {
+    "2d237187-b3fd-54e2-8bf4-ef973080f389:a77dc97ca3eff72c3edb9516440760af7d5fdc967d84a7f08bdace726898d79e:positive-branches": "При horizontal > 0 ветвь задаёт rotation = (0, 1) только при vertical > 0 и rotation = (1, 0) только при vertical < 0; нулевые компоненты сохраняют rotation = (0, 0).",
+    "2d237187-b3fd-54e2-8bf4-ef973080f389:a77dc97ca3eff72c3edb9516440760af7d5fdc967d84a7f08bdace726898d79e:negative-branches": "При horizontal < 0 ветвь задаёт rotation = (-1, 0) только при vertical > 0 и rotation = (0, -1) только при vertical < 0; нулевые компоненты сохраняют rotation = (0, 0).",
+    "2d237187-b3fd-54e2-8bf4-ef973080f389:a77dc97ca3eff72c3edb9516440760af7d5fdc967d84a7f08bdace726898d79e:carrier-update": "Эта аннотация выполняет `carrier = carrier + rotation * offset / z`.",
+    "2d237187-b3fd-54e2-8bf4-ef973080f389:a77dc97ca3eff72c3edb9516440760af7d5fdc967d84a7f08bdace726898d79e:bailout": "Эта аннотация выполняет `|z| <= 4`. Она завершает последовательность итераций этой формулы."
+  },
+  "syntaxFeatures": {
+    "source-sequence": "Этот признак последовательности связывает в порядке исходного кода процитированные операции, относящиеся к `rotation * offset / z`."
+  },
+  "parameterExperiment": {
+    "steps": [
+      "С закреплённым профилем сначала отрисуйте базовый результат при `offset = 0 + 0i`. Сохраняйте центр, масштаб, поворот, число итераций и остальные слоты; за один запуск меняйте только одно: `offset = 1 + 0i`. Перед новым испытанием восстанавливайте базовые значения."
+    ],
+    "expectedObservation": "В испытаниях quadrants с `offset`, `rotation` отметьте, есть ли видимое отличие от базового результата; отсутствие отличия также зафиксируйте."
+  },
+  "exercise": {
+    "prompt": "Объясните роль `rotation * offset / z` в порядке исходного кода и сравните запуски по шагам эксперимента с параметрами.",
+    "completionCheck": "Ваш ответ должен объяснить все 4 аннотированных операций, зафиксировать сравнение эксперимента и упомянуть `rotation * offset / z`."
+  },
+  "factsPresentation": {
+    "provenanceLead": "Источник: закреплённая ревизия выполнения и решение о публикации.",
+    "rightsLead": "Сведения о правах приведены в английском фактологическом разделе."
+  },
+  "contentHash": "9c865db8685d10c2436875cbf3128ed82f71aa68dc34fbd2bf3fba2df3afb7cb"
+}

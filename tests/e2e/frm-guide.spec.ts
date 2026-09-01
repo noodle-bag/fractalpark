@@ -9,8 +9,14 @@ test.describe('FRM Guide', () => {
     await expect(
       page.getByRole('heading', {
         level: 1,
-        name: 'Write Fractals with FRM',
+        name: 'Understand FRM in FractalPark',
       })
+    ).toBeVisible();
+    await expect(
+      page.getByText(/canonical FRM-like v1 Definitions power/)
+    ).toBeVisible();
+    await expect(
+      page.getByText(/Classic-compatible Editor and import path/)
     ).toBeVisible();
     await expect(page.locator('main section > div > h2')).toHaveCount(9);
     await expect(page.getByRole('table')).toContainText('Supported');
@@ -32,7 +38,7 @@ test.describe('FRM Guide', () => {
     expect(webPage).toMatchObject({
       '@context': 'https://schema.org',
       '@type': 'WebPage',
-      name: 'Write Fractals with FRM',
+      name: 'Understand FRM in FractalPark',
       url: 'https://www.fractalpark.com/en/formulas/frm',
       breadcrumb: {
         '@type': 'BreadcrumbList',
@@ -52,7 +58,7 @@ test.describe('FRM Guide', () => {
           {
             '@type': 'ListItem',
             position: 3,
-            name: 'Write Fractals with FRM',
+            name: 'Understand FRM in FractalPark',
             item: 'https://www.fractalpark.com/en/formulas/frm',
           },
         ],

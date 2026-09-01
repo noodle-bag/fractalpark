@@ -1,0 +1,2 @@
+# Published formula bodies preserve source-revision bytes, including intentional trailing blank lines.
+public/formula-library/v1/runtime/published/definitions/*.frm whitespace=-blank-at-eof

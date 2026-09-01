@@ -2,22 +2,24 @@
 
 # FractalPark
 
-FractalPark is an open-source, formula-first fractal knowledge and creation platform with growing Fractint-compatible FRM support, working to bring Fractint’s formula heritage into the modern browser.
+FractalPark is an open-source, formula-first fractal knowledge and creation platform with published formula source you can read and run, plus a distinct Classic-compatible formula editor.
 
 ![The Mandelbrot set rendered in real time by the FractalPark WebGL engine](public/images/formulas/guides/mandelbrot.jpg)
 
 **[Open Explore](https://www.fractalpark.com/en/explore) · [Browse the Formula Atlas](https://www.fractalpark.com/en/formulas) · [Read the FRM Guide](https://www.fractalpark.com/en/formulas/frm) · [Visit the Gallery](https://www.fractalpark.com/en/gallery)**
 
+Read pinned source for 534 published Standard Definitions. [Open the Standard Formula directory](https://www.fractalpark.com/en/formulas/directory).
+
 ## Available today
 
-- **Discover formulas** — Browse the Formula Atlas: 94 built-in formulas across 7 families, with 21 in-depth Formula Guides covering the math, history, and visual character of the classics.
-- **Create in the browser** — Explore and render in real time with WebGL: Mandelbrot and Julia modes for every formula, 7 transforms, 9 coloring modes, gradients, lighting, and keyframe animation.
-- **Author FRM** — Write custom formulas in the Fractint-compatible FRM language with the Guide and standalone Editor: AST validation, live GLSL preview, and clear diagnostics.
+- **Discover formulas** — Browse the Formula Atlas: 534 published Standard Definitions across 7 structural families, of which 94 also belong to the Classic collection, with 21 in-depth Formula Guides covering the math, history, and visual character of the classics.
+- **Create in the browser** — Explore and render in real time with WebGL: Mandelbrot mode across the 534 published Standard Definitions, Julia mode where supported, 7 transforms, 9 coloring modes, gradients, lighting, and keyframe animation.
+- **Learn FRM and write custom formulas** — Write custom formulas in FractalPark's tested Classic-compatible FRM subset with the Guide and standalone Editor: AST validation, live GLSL preview, and clear diagnostics.
 - **Save and share** — Save artworks and custom formulas to your private cloud with email sign-in and pick them up on any device, publish pieces to the community gallery, or create anonymously and export high-resolution PNG images up to 4× with SSAA anti-aliasing.
 
 ## Current boundaries
 
-- Growing Fractint-compatible FRM support: a practical, tested subset of the Fractint formula language runs today — not a complete Fractint reimplementation.
+- Published Standard Definitions use FRM-like v1 source. The standalone Editor uses a separate, practical Classic-compatible subset — not a complete Fractint reimplementation.
 - Creating needs no account. Saving artworks and formulas uses email one-time-code sign-in and stores them in your private cloud library; publishing is always explicit, and artworks carrying a custom formula publish its source under the MIT license.
 - The interface is available in seven languages: English, Simplified Chinese, Portuguese, Korean, Russian, Spanish, and French.
 

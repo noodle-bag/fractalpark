@@ -1,0 +1,32 @@
+{
+  "schema": "fractalpark-teaching-locale/v1",
+  "formulaId": "09288426-4968-5e78-9ab0-00607cc290bd",
+  "locale": "es",
+  "sourceRevision": "dbb90a875ab0a6e56b3210ab8021339e7f9ea19d4bc8f26f82ed22f37ff58ede",
+  "semanticHash": "807ce46c199ce20d11753c94f74ce710ad607335764e9ad485963c840d6a0f5c",
+  "englishContentHash": "cfbfffe90d61a29cb658da556e8f6b15b001f97965bd91a7bde807bfabe3361c",
+  "overview": "Esta unidad se basa para ti en las siguientes operaciones exactas de FRM-like/1:  `init: z = seed. loop: z = cosxx(sqr(z) + pixel) + pixel. bailout: |z| <= 4.`",
+  "sourceWalkthrough": {
+    "09288426-4968-5e78-9ab0-00607cc290bd:dbb90a875ab0a6e56b3210ab8021339e7f9ea19d4bc8f26f82ed22f37ff58ede:init-seed": "Esta anotación ejecuta `z = seed`.",
+    "09288426-4968-5e78-9ab0-00607cc290bd:dbb90a875ab0a6e56b3210ab8021339e7f9ea19d4bc8f26f82ed22f37ff58ede:cosxx-update": "Esta anotación ejecuta `z = cosxx(sqr(z) + pixel) + pixel`.",
+    "09288426-4968-5e78-9ab0-00607cc290bd:dbb90a875ab0a6e56b3210ab8021339e7f9ea19d4bc8f26f82ed22f37ff58ede:bailout": "Esta anotación ejecuta `|z| <= 4`. Cierra la secuencia de iteración de esta fórmula."
+  },
+  "syntaxFeatures": {
+    "source-sequence": "Esta característica de secuencia conecta, en el orden del código fuente, las operaciones citadas relacionadas con `cosxx(sqr(z) + pixel)`."
+  },
+  "parameterExperiment": {
+    "steps": [
+      "Con el perfil fijado, renderiza primero la base con `seed = 0 + 0i`. Mantén fijos el centro, el zoom, la rotación, las iteraciones y los demás slots; haz y renderiza un solo cambio cada vez: `seed = 1 + 0i`. Restaura la base antes de cada prueba nueva."
+    ],
+    "expectedObservation": "En las pruebas de `seed`, `cosxx` de birdofprey, registra si hay una diferencia visible respecto de la base; registra también cuando no haya diferencia."
+  },
+  "exercise": {
+    "prompt": "Explica el papel de `cosxx(sqr(z) + pixel)` en el orden del código fuente y compara las ejecuciones según los pasos del experimento de parámetros.",
+    "completionCheck": "Tu respuesta debe explicar las 3 operaciones anotadas, registrar la comparación del experimento y mencionar `cosxx(sqr(z) + pixel)`."
+  },
+  "factsPresentation": {
+    "provenanceLead": "Fuente: revisión de ejecución fijada y decisión de publicación.",
+    "rightsLead": "La información de derechos está en la unidad factual en inglés."
+  },
+  "contentHash": "4c36f554a319dadbebeee32339ba174c09afe5f9caacbf9917285be30fcd7bdc"
+}

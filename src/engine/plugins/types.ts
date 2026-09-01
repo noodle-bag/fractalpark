@@ -43,6 +43,19 @@ export interface FractalPlugin {
 
 export interface FormulaPlugin extends FractalPlugin {
   category: 'formula';
+  /** Immutable source fingerprint appended to the shader cache key. */
+  cacheFingerprint?: string;
+  /**
+   * Optional stateful orbit lifecycle. The shared framework stays byte-identical
+   * for every plugin that omits this descriptor; the assembler injects the
+   * reset and arbitrary-continue hooks only for the candidate-C v1 adapter.
+   */
+  orbitLifecycle?: Readonly<{
+    kind: 'frm-like-v1';
+    resetFunction: 'frmV1ResetState';
+    continueFunction: 'frmV1ShouldContinue';
+    eventFunction: 'frmV1HasEvent';
+  }>;
   /** Explicit compile-semantics contract for FRM/custom plugins. Built-ins
    * omit it and continue to follow the document renderer pipeline. */
   frmSemanticsVersion?: import('../frm/semantics-version').FrmSemanticsVersion;
@@ -90,7 +103,7 @@ export interface FormulaPlugin extends FractalPlugin {
    */
   fnDefaults?: Record<string, string>;
   supportsPower?: boolean;  // DEPRECATED: not consumed by any current consumer; Smooth capability resolves from AST/dataflow per ADR-0007. Retired in the coloring-capability slice.
-  supportsJulia?: boolean;  // default true
+  supportsJulia?: boolean;  // default false; only a current capability census row may enable editing
   family?: string;          // grouping: 'classic' | 'newton' | 'magnet' | 'phoenix' | 'exotic'
   escapeType?: 'diverge' | 'converge';  // NEW: for Newton-type formulas
   initGlsl?: string;        // GLSL for initFormula(z, c, point) — runs once before iteration loop

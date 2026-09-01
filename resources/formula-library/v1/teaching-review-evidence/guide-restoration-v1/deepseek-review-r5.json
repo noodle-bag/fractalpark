@@ -1,0 +1,19 @@
+{
+  "provider": "deepseek",
+  "requestedModel": "deepseek-chat",
+  "actualModel": "deepseek-v4-flash",
+  "finishReason": "stop",
+  "candidateSha256": "89f45d192fa6afa67c4bd08f0c8009478bce7788e7842d207b9be9dfaf47594d",
+  "reviewPackageSha256": "652afd1e6392722341242eb980a65274edf69a13a2d2bee1abff7c0f91035f89",
+  "usage": {
+    "prompt_tokens": 958,
+    "completion_tokens": 132,
+    "total_tokens": 1090,
+    "prompt_tokens_details": {
+      "cached_tokens": 0
+    },
+    "prompt_cache_hit_tokens": 0,
+    "prompt_cache_miss_tokens": 958
+  },
+  "review": "VERDICT: APPROVE  \nNO_FINDINGS  \n\n`exploré` correctly agrees with masculine `Le Mandelbox original`. The remaining `inspirée` forms modify feminine `application`/`carte`, not Mandelbox, so no incorrect agreement remains. Provided delta shows only the single content change, schema version, and revision note; no Cosh fixed-point regression. Candidate SHA `89f45d192fa6afa67c4bd08f0c8009478bce7788e7842d207b9be9dfaf47594d` is approved for repository integration subject to maintainer authorization."
+}

@@ -1,0 +1,35 @@
+{
+  "schema": "fractalpark-teaching-locale/v1",
+  "formulaId": "599a7fda-4c0e-5489-b12e-6e4179ee11f2",
+  "locale": "zh",
+  "sourceRevision": "6864baf1c6fb93ea8ce506200e19583fd0b7c1b361fb17764b661d6424762cfa",
+  "semanticHash": "a1fa3e6dd83f4cafacb8e242810e80e35de45513e75ec6cc7759d7a11f046193",
+  "englishContentHash": "90e78447859e27af456be2ff6cdbeadc31a08f9f7557e06d242347218dbc39b2",
+  "overview": "在 FRM-like/1 中，初始化执行 z = pixel。每轮处理 correction = f / fp；|z| < 0.00001 时 z = (0.00001,0)。 终止条件为 |z - zPrev| >= 0.000001。",
+  "sourceWalkthrough": {
+    "599a7fda-4c0e-5489-b12e-6e4179ee11f2:6864baf1c6fb93ea8ce506200e19583fd0b7c1b361fb17764b661d6424762cfa:init": "初始化节点执行 z = pixel。",
+    "599a7fda-4c0e-5489-b12e-6e4179ee11f2:6864baf1c6fb93ea8ce506200e19583fd0b7c1b361fb17764b661d6424762cfa:loop": "循环节点执行 correction = f / fp。",
+    "599a7fda-4c0e-5489-b12e-6e4179ee11f2:6864baf1c6fb93ea8ce506200e19583fd0b7c1b361fb17764b661d6424762cfa:branch": "分支节点执行：|z| < 0.00001 时 z = (0.00001,0)。",
+    "599a7fda-4c0e-5489-b12e-6e4179ee11f2:6864baf1c6fb93ea8ce506200e19583fd0b7c1b361fb17764b661d6424762cfa:termination": "终止节点检查 |z - zPrev| >= 0.000001。"
+  },
+  "syntaxFeatures": {
+    "sequence": "顺序展示 z = pixel、correction = f / fp 与 |z - zPrev| >= 0.000001。",
+    "branch": "分支的精确行为是：|z| < 0.00001 时 z = (0.00001,0)。"
+  },
+  "parameterExperiment": {
+    "steps": [
+      "以固定配置为基线。运行 48 次迭代，再运行 96 次迭代，保持全部控制不变，并记录比较初始小 |z| 替换后的 correction = f / fp 更新次数或终止计数是否不同。"
+    ],
+    "expectedObservation": "较大的迭代上限可能在初始化守卫之后暴露更多 correction = f / fp 更新；记录迭代计数是否不同。"
+  },
+  "exercise": {
+    "prompt": "说明 correction 的定义，以及初始化守卫用什么值替换 z。",
+    "completionCheck": "完成时必须准确点名全部4个注释，并说明 correction = f / fp 以及初始化守卫的替换值 (0.00001,0)。",
+    "hint": "correction = f / fp；初始化守卫把 z 替换为 (0.00001,0)。"
+  },
+  "factsPresentation": {
+    "provenanceLead": "来源说明见固定源记录。",
+    "rightsLead": "权利状态与发布决定见固定决定记录。"
+  },
+  "contentHash": "4c9dc015d98947eca8f23caaec8a54063823555a20b191fcc59e1b1ad19cb093"
+}

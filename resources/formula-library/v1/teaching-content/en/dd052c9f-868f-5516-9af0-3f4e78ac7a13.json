@@ -1,0 +1,85 @@
+{
+  "schema": "fractalpark-teaching-en-fact/v1",
+  "formulaId": "dd052c9f-868f-5516-9af0-3f4e78ac7a13",
+  "sourceRevision": "5e3522c53ca358df8d61d5a3b82aa0b90ff8009602b1952fb5022027f00fdd45",
+  "semanticHash": "d5933023730b2ec1a6c5c5cf8762478436fa9ccdf19311da910493d169bed0dd",
+  "overview": "newton3 is taught from its pinned FRM-like/1 definition. Follow the successive square and cube temporaries, the quotient update, and the change threshold as source operations, rather than treating an image as guaranteed. The pinned profile supplies one concrete viewing setup, not a universal visual prediction.",
+  "mathDisclosure": "exact-structured",
+  "mathSummary": "The loop computes z squared and z cubed, builds numerator = 2 * z3 + 1 and denominator = 3 * z2, then assigns z = numerator / denominator.",
+  "sourceWalkthrough": [
+    {
+      "annotationId": "dd052c9f-868f-5516-9af0-3f4e78ac7a13:5e3522c53ca358df8d61d5a3b82aa0b90ff8009602b1952fb5022027f00fdd45:initial-state",
+      "nodeId": "frm-v1:5e3522c53ca358df8d61d5a3b82aa0b90ff8009602b1952fb5022027f00fdd45:init/0",
+      "explanation": "In newton3, this node executes z = pixel."
+    },
+    {
+      "annotationId": "dd052c9f-868f-5516-9af0-3f4e78ac7a13:5e3522c53ca358df8d61d5a3b82aa0b90ff8009602b1952fb5022027f00fdd45:square",
+      "nodeId": "frm-v1:5e3522c53ca358df8d61d5a3b82aa0b90ff8009602b1952fb5022027f00fdd45:loop/0",
+      "explanation": "In newton3, this node executes z2 = z * z."
+    },
+    {
+      "annotationId": "dd052c9f-868f-5516-9af0-3f4e78ac7a13:5e3522c53ca358df8d61d5a3b82aa0b90ff8009602b1952fb5022027f00fdd45:quotient-update",
+      "nodeId": "frm-v1:5e3522c53ca358df8d61d5a3b82aa0b90ff8009602b1952fb5022027f00fdd45:loop/4",
+      "explanation": "In newton3, this node executes z = numerator / denominator."
+    },
+    {
+      "annotationId": "dd052c9f-868f-5516-9af0-3f4e78ac7a13:5e3522c53ca358df8d61d5a3b82aa0b90ff8009602b1952fb5022027f00fdd45:termination",
+      "nodeId": "frm-v1:5e3522c53ca358df8d61d5a3b82aa0b90ff8009602b1952fb5022027f00fdd45:bailout",
+      "explanation": "In newton3, this node executes |z - zPrev| >= 0.000001."
+    }
+  ],
+  "syntaxFeatures": [
+    {
+      "featureId": "state-flow",
+      "annotationIds": [
+        "dd052c9f-868f-5516-9af0-3f4e78ac7a13:5e3522c53ca358df8d61d5a3b82aa0b90ff8009602b1952fb5022027f00fdd45:initial-state",
+        "dd052c9f-868f-5516-9af0-3f4e78ac7a13:5e3522c53ca358df8d61d5a3b82aa0b90ff8009602b1952fb5022027f00fdd45:square",
+        "dd052c9f-868f-5516-9af0-3f4e78ac7a13:5e3522c53ca358df8d61d5a3b82aa0b90ff8009602b1952fb5022027f00fdd45:quotient-update"
+      ],
+      "explanation": "These annotations trace the formula-specific state flow through z = pixel; z2 = z * z; z = numerator / denominator."
+    },
+    {
+      "featureId": "stopping-test",
+      "annotationIds": [
+        "dd052c9f-868f-5516-9af0-3f4e78ac7a13:5e3522c53ca358df8d61d5a3b82aa0b90ff8009602b1952fb5022027f00fdd45:termination"
+      ],
+      "explanation": "This annotation is the stopping test, |z - zPrev| >= 0.000001, rather than a state update."
+    }
+  ],
+  "parameterExperiment": {
+    "parameterSymbols": [],
+    "steps": [
+      "Run newton3 with 48 iterations while keeping the pinned profile’s other controls fixed, and record the result.",
+      "Run newton3 at the pinned profile iteration count of 96, compare the two runs, and record whether a difference occurs."
+    ],
+    "expectedObservation": "Record whether z2 = z * z; z3 = z2 * z; numerator = 2 * z3 + 1; denominator = 3 * z2; z = numerator / denominator produces a visible-result or |z - zPrev| >= 0.000001 stopping-behavior difference from the baseline; the pinned definition does not guarantee a difference."
+  },
+  "exercise": {
+    "prompt": "Trace newton3 through its annotations, explaining the source operation z2 = z * z; z3 = z2 * z; numerator = 2 * z3 + 1; denominator = 3 * z2; z = numerator / denominator and the stopping test |z - zPrev| >= 0.000001.",
+    "completionCheck": "Your trace explains all 4 annotations for newton3, including z2 = z * z; z3 = z2 * z; numerator = 2 * z3 + 1; denominator = 3 * z2; z = numerator / denominator, and distinguishes |z - zPrev| >= 0.000001 from a state update.",
+    "answerDisclosure": "hint"
+  },
+  "facts": {
+    "provenanceStatement": "This teaching unit is grounded in runtime:5e3522c53ca358df8d61d5a3b82aa0b90ff8009602b1952fb5022027f00fdd45 and decision:dd052c9f-868f-5516-9af0-3f4e78ac7a13.",
+    "rightsStatement": "rightsStatus is project-owned; implementationBasis is project-owned; publicationDecision is publish; decisionReason is publish-project-owned-native-recipe. This statement does not make broader claims about any third-party original.",
+    "sourceIds": [
+      "runtime:5e3522c53ca358df8d61d5a3b82aa0b90ff8009602b1952fb5022027f00fdd45",
+      "decision:dd052c9f-868f-5516-9af0-3f4e78ac7a13"
+    ],
+    "licenseIds": [],
+    "claims": [
+      {
+        "text": "The pinned runtime definition supplies the operations described in this unit.",
+        "sourceIds": [
+          "runtime:5e3522c53ca358df8d61d5a3b82aa0b90ff8009602b1952fb5022027f00fdd45"
+        ]
+      },
+      {
+        "text": "The publication decision for this formula is publish.",
+        "sourceIds": [
+          "decision:dd052c9f-868f-5516-9af0-3f4e78ac7a13"
+        ]
+      }
+    ]
+  }
+}

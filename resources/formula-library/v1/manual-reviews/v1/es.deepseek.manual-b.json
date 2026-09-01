@@ -1,0 +1,29 @@
+{
+  "evidenceId": "c888195bade13e6309768b98ef7e878dac3d23deb8181871511a671182e5302b",
+  "schemaVersion": 1,
+  "locale": "es",
+  "surface": "manual-b",
+  "provider": "deepseek",
+  "requestedModel": "deepseek-chat",
+  "actualModel": "deepseek-v4-flash",
+  "finishReason": "stop",
+  "status": "approved",
+  "reviewedAt": "2026-08-21T08:18:55.864078+00:00",
+  "sourceCommit": "37320f293839812017178bb91efe7670239edfa3",
+  "sourceManualSha256": "e5168f1a0211596659314d748fa53825892a2a6f089350e636a8c0baf3903758",
+  "sourceMessageProjectionSha256": "effb295f43ad338c80f1becab42a90cbb8afd2345a79c2e014acf031ea1faaf7",
+  "targetManualSha256": "de79e8576d3516e8169eb9057478792e1b086ef19f3a7c471ba6bb3e704bed75",
+  "targetMessageProjectionSha256": "c4797689e9537fb797a129b58ad03805326b0e2798464060fb81e15a9fc74024",
+  "messagePathCount": 39,
+  "reviewText": "VERDICT: APPROVE\n\n完整覆盖第5-8节，术语、代码标识符、链接、占位符及数字格式均正确保留，无事实性、规范性或技术性缺陷。",
+  "usage": {
+    "prompt_tokens": 3991,
+    "completion_tokens": 43,
+    "total_tokens": 4034,
+    "prompt_tokens_details": {
+      "cached_tokens": 0
+    },
+    "prompt_cache_hit_tokens": 0,
+    "prompt_cache_miss_tokens": 3991
+  }
+}

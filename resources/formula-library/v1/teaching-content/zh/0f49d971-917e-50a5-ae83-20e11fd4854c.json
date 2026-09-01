@@ -1,0 +1,33 @@
+{
+  "schema": "fractalpark-teaching-locale/v1",
+  "formulaId": "0f49d971-917e-50a5-ae83-20e11fd4854c",
+  "locale": "zh",
+  "sourceRevision": "a9fa9931913aeafac8b527f31cae7b519db79c8d54829ffcea20bcb6fc9dce4d",
+  "semanticHash": "0af8be92998a0e683977cd229a71195010327ae03c66d87a8c5b97871dce6d72",
+  "englishContentHash": "0f849ac8ba8ad41ee8943e5a36d009b53faa78e773f99c8cfa6426c0af8867c5",
+  "overview": "本单元依据 FRM-like/1 的下列精确运算： `init: if ismand z = 0 else z = pixel endif; previousZ = (0, 0). loop: z2 = z * z; nextZ = z2 + c + phoenixMultiP * previousZ; previousZ = z; z = nextZ. bailout: |z| <= 256.`",
+  "sourceWalkthrough": {
+    "0f49d971-917e-50a5-ae83-20e11fd4854c:a9fa9931913aeafac8b527f31cae7b519db79c8d54829ffcea20bcb6fc9dce4d:init": "此标注执行 `if ismand: z = 0; else: z = pixel`.",
+    "0f49d971-917e-50a5-ae83-20e11fd4854c:a9fa9931913aeafac8b527f31cae7b519db79c8d54829ffcea20bcb6fc9dce4d:recurrence": "此标注执行 `nextZ = z2 + c + phoenixMultiP * previousZ`.",
+    "0f49d971-917e-50a5-ae83-20e11fd4854c:a9fa9931913aeafac8b527f31cae7b519db79c8d54829ffcea20bcb6fc9dce4d:state-shift": "此标注执行 `previousZ = z`.",
+    "0f49d971-917e-50a5-ae83-20e11fd4854c:a9fa9931913aeafac8b527f31cae7b519db79c8d54829ffcea20bcb6fc9dce4d:bailout": "此标注执行 `|z| <= 256`. 它终结本公式上方所述的迭代序列。"
+  },
+  "syntaxFeatures": {
+    "source-sequence": "该源顺序特征依次串联与 `ismand` 和 `previousZ` 相关的已引用操作。"
+  },
+  "parameterExperiment": {
+    "steps": [
+      "在固定配置下先以 `phoenixMultiP = 0.5` 渲染基线。保持中心、缩放、旋转、迭代次数和其他槽位不变，每次只做一项变更并渲染：`phoenixMultiP = 0.0`、`phoenixMultiP = 1.0`；每次新试验前恢复基线。"
+    ],
+    "expectedObservation": "针对 phoenixMulti 的 `phoenixMultiP`、`previousZ` 试验，记录相对基线是否出现可见差异；没有差异也如实记录。"
+  },
+  "exercise": {
+    "prompt": "说明 `ismand` 和 `previousZ` 在源顺序中的作用，并按照参数实验步骤比较各次运行。",
+    "completionCheck": "答案必须说明全部 4 个标注操作，记录实验比较，并提及 `ismand` 和 `previousZ`。"
+  },
+  "factsPresentation": {
+    "provenanceLead": "来源：固定运行时修订与发布决定。",
+    "rightsLead": "权利信息见英文事实单元。"
+  },
+  "contentHash": "b90ad0f5c5b3aacc87289745cf7737b0c64a156f255d4e875631e2c9f1a5a4aa"
+}

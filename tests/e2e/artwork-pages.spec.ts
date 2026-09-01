@@ -23,7 +23,7 @@ test.describe('Artwork validation pages', () => {
     await expect(page.getByRole('heading', { name: 'Artwork state' })).toBeVisible();
     await expect(page.getByRole('link', { name: 'Newton (3rd)' })).toHaveAttribute(
       'href',
-      '/en/formulas/newton-3'
+      '/en/formulas/dd052c9f-868f-5516-9af0-3f4e78ac7a13'
     );
 
     const canonical = page.locator('link[rel="canonical"]');
@@ -69,7 +69,7 @@ test.describe('Artwork validation pages', () => {
     );
     await expect(page.getByRole('link', { name: '牛顿双曲余弦' })).toHaveAttribute(
       'href',
-      '/zh/formulas/newton-cosh'
+      '/zh/formulas/a89891b1-8ccb-5d58-9fbb-05944b85ce3c'
     );
 
     await context.close();

@@ -1,0 +1,35 @@
+{
+  "schema": "fractalpark-teaching-locale/v1",
+  "formulaId": "b79313f5-2181-5013-bd21-e59a7222dce5",
+  "locale": "ru",
+  "sourceRevision": "c9f11ef69b73ea2c6489025f83e6b53cabebc1df1e399f282b8ce44e7da4b05f",
+  "semanticHash": "d5bd7f170dde390fef7522afda11fb58b09ad9c2dabc99d47c413e79e3996a50",
+  "englishContentHash": "2c12da817e0836f218bfc3d7f04aa142abb4af1c201e11618814062a28084447",
+  "overview": "В FRM-like/1 инициализация задаёт z = pixel. В цикле выполняется denom = 2*(fp*fp)-f*fpp. Завершение проверяет |z - zPrev| >= 0.000001.",
+  "sourceWalkthrough": {
+    "b79313f5-2181-5013-bd21-e59a7222dce5:c9f11ef69b73ea2c6489025f83e6b53cabebc1df1e399f282b8ce44e7da4b05f:init": "В FRM-like/1 инициализация задаёт z = pixel.",
+    "b79313f5-2181-5013-bd21-e59a7222dce5:c9f11ef69b73ea2c6489025f83e6b53cabebc1df1e399f282b8ce44e7da4b05f:loop": "Узел цикла сначала выполняет z2 = z*z; следующие узлы строят f, fp, fpp и denom = 2*(fp*fp)-f*fpp.",
+    "b79313f5-2181-5013-bd21-e59a7222dce5:c9f11ef69b73ea2c6489025f83e6b53cabebc1df1e399f282b8ce44e7da4b05f:branch": "Ветвление использует |denom|² < 1e-10 → z = z; |denom|² >= 1e-10 → z = z - numer/denom.",
+    "b79313f5-2181-5013-bd21-e59a7222dce5:c9f11ef69b73ea2c6489025f83e6b53cabebc1df1e399f282b8ce44e7da4b05f:termination": "Завершение проверяет |z - zPrev| >= 0.000001."
+  },
+  "syntaxFeatures": {
+    "sequence": "В цикле выполняется denom = 2*(fp*fp)-f*fpp.",
+    "branch": "Ветвление использует |denom|² < 1e-10 → z = z; |denom|² >= 1e-10 → z = z - numer/denom."
+  },
+  "parameterExperiment": {
+    "steps": [
+      "Используйте закреплённый профиль как базу. Выполните 48, затем 96 итераций при неизменных настройках и запишите, различаются ли denom = 2*(fp*fp)-f*fpp или |z - zPrev| >= 0.000001."
+    ],
+    "expectedObservation": "Больший предел итераций может показать дополнительные защищённые или незащищённые обновления Halley; зафиксируйте, различаются ли числа итераций."
+  },
+  "exercise": {
+    "prompt": "Опишите два исхода проверки величины Halley denom.",
+    "completionCheck": "Для завершения вы должны точно назвать все 4 аннотации и объяснить следующую деталь формулы: Подсказка: denom = 2*(fp*fp)-f*fpp.",
+    "hint": "Подсказка: denom = 2*(fp*fp)-f*fpp."
+  },
+  "factsPresentation": {
+    "provenanceLead": "Сведения о происхождении приведены в закреплённой записи источника.",
+    "rightsLead": "Статус прав и решение о публикации приведены в закреплённой записи решения."
+  },
+  "contentHash": "bb24cf0d949923861a4511b3d971ff8434994320f37c8a5e9d60adf627a42720"
+}

@@ -1,4 +1,5 @@
 import type { FormulaPlugin } from '../../types';
+import { RECOVERED_TRANSCENDENTAL_MATH_GLSL_V1 } from './recoveredTranscendentalMath';
 
 export const cosMandelbPlugin: FormulaPlugin = {
   id: 'cosMandelb',
@@ -10,9 +11,10 @@ export const cosMandelbPlugin: FormulaPlugin = {
   bailout: 65536.0,
   family: 'transcendental',
   uniforms: [],
-  glsl: `
+  glsl: `${RECOVERED_TRANSCENDENTAL_MATH_GLSL_V1}
+
 vec2 iterateStep(vec2 z, vec2 c, vec2 zPrev, vec2 point) {
-  return complexCos(z) + c;
+  return recoveredQuantize(recoveredCos(z) + c, 16.0);
 }
 `,
 };

@@ -1,0 +1,36 @@
+{
+  "schema": "fractalpark-teaching-locale/v1",
+  "formulaId": "e2456b54-ef50-5ac9-9faa-dcb576c5e774",
+  "locale": "fr",
+  "sourceRevision": "25f923b51ea1e36408f9c48e008187e67a946fc58ef634f93bf0cba216f622aa",
+  "semanticHash": "3d14554a8a35c0e2ee8fc80436926dd493babd846a9d5294bc6b58ad7580c62f",
+  "englishContentHash": "e7b4b6dd9db26d332b52d8767c96bf0b310f8354ab721d68a860b4cbcece3848",
+  "overview": "phoenix s’étudie avec sa définition épinglée FRM-like/1 : tu suis nextZ = z * z + c + phoenixP * previousZ; previousZ = z; z = nextZ, sans prendre une image pour une garantie. Le profil épinglé fournit seulement un réglage concret.",
+  "sourceWalkthrough": {
+    "e2456b54-ef50-5ac9-9faa-dcb576c5e774:25f923b51ea1e36408f9c48e008187e67a946fc58ef634f93bf0cba216f622aa:start-branch": "Dans phoenix, ce nœud exécute if ismand: z = 0; sinon z = pixel.",
+    "e2456b54-ef50-5ac9-9faa-dcb576c5e774:25f923b51ea1e36408f9c48e008187e67a946fc58ef634f93bf0cba216f622aa:memory-init": "Dans phoenix, ce nœud exécute previousZ = (0, 0).",
+    "e2456b54-ef50-5ac9-9faa-dcb576c5e774:25f923b51ea1e36408f9c48e008187e67a946fc58ef634f93bf0cba216f622aa:next-state": "Dans phoenix, ce nœud exécute nextZ = z * z + c + phoenixP * previousZ.",
+    "e2456b54-ef50-5ac9-9faa-dcb576c5e774:25f923b51ea1e36408f9c48e008187e67a946fc58ef634f93bf0cba216f622aa:termination": "Dans phoenix, ce nœud exécute |z| <= 256."
+  },
+  "syntaxFeatures": {
+    "state-flow": "Le flux d’état concret est : le choix de ismand initialise z et previousZ = (0, 0) ; puis nextZ reporte l’état précédent.",
+    "stopping-test": "Le test d’arrêt évalue seulement |z| <= 256 ; il n’affecte pas l’état."
+  },
+  "parameterExperiment": {
+    "steps": [
+      "Exécute phoenix avec le profil épinglé et note le résultat.",
+      "Change seulement phoenixP, garde les autres slots d’exécution et contrôles du profil fixes, exécute à nouveau et note s’il y a une différence."
+    ],
+    "expectedObservation": "Note si nextZ = z * z + c + phoenixP * previousZ; previousZ = z; z = nextZ modifie le résultat visible ou le test d’arrêt |z| <= 256 par rapport à la référence ; la définition ne garantit pas de différence."
+  },
+  "exercise": {
+    "prompt": "Suis les annotations de phoenix et explique comment nextZ = z * z + c + phoenixP * previousZ; previousZ = z; z = nextZ s’exécute dans les opérations indiquées.",
+    "completionCheck": "Ta réponse explique les 4 annotations, identifie nextZ = z * z + c + phoenixP * previousZ; previousZ = z; z = nextZ et distingue |z| <= 256 comme test d’arrêt plutôt que comme affectation.",
+    "hint": "Le flux d’état exécute successivement if ismand: z = 0; sinon z = pixel → previousZ = (0, 0) → nextZ = z * z + c + phoenixP * previousZ → previousZ = z → z = nextZ et transmet le résultat à l’étape suivante."
+  },
+  "factsPresentation": {
+    "provenanceLead": "Source : définition d’exécution épinglée et décision de publication.",
+    "rightsLead": "Les informations de droits suivent la décision épinglée dans l’unité anglaise."
+  },
+  "contentHash": "37ac52ba726821ea38f8e34d64a73bc775c3efcb0981faed1385ec2e762d6ebf"
+}

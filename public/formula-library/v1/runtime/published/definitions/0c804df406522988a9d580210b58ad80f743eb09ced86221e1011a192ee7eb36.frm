@@ -1,0 +1,12 @@
+; @language: frm-like/1
+; @stdlib: 1
+; @numeric-profile: standard32
+Formula_e25a768a_a075_5ecb_bb65_9271354a94e2 {
+  init:
+    carrier = pixel
+    z = (0, 0)
+  loop:
+    z = sqr(z) * z + z * (carrier - 1) - carrier
+  bailout:
+    abs(z) <= 4
+}

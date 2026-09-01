@@ -1,0 +1,35 @@
+{
+  "schema": "fractalpark-teaching-locale/v1",
+  "formulaId": "c6b5dcf4-cef5-5630-b3f6-a68b92ae75ee",
+  "locale": "pt",
+  "sourceRevision": "5aa4f9b2c35d3bded213756bb80da01f95fef7ee766779a7f02090a1116a0e9a",
+  "semanticHash": "76d9f98f4a32eecaab99814d1209a6d87f10a53909a6bbfca13a1ea43b6e4d9c",
+  "englishContentHash": "bd0a67aadd387e376fc7ddc0026164d80801c0cbdd55def4b8419bc0b0736de7",
+  "overview": "Em FRM-like/1, invertedLambda começa com se ismand, z = 0; caso contrário, z = pixel, usa oneMinusZ = (1, 0) - z no primeiro nó do laço e limita a iteração com |z| <= 256. Leia essas operações na ordem real da fonte.",
+  "sourceWalkthrough": {
+    "c6b5dcf4-cef5-5630-b3f6-a68b92ae75ee:5aa4f9b2c35d3bded213756bb80da01f95fef7ee766779a7f02090a1116a0e9a:initialization": "Em invertedLambda, o nó de inicialização executa somente: se ismand, z = 0; caso contrário, z = pixel.",
+    "c6b5dcf4-cef5-5630-b3f6-a68b92ae75ee:5aa4f9b2c35d3bded213756bb80da01f95fef7ee766779a7f02090a1116a0e9a:iteration": "Em invertedLambda, este nó do laço executa somente: oneMinusZ = (1, 0) - z.",
+    "c6b5dcf4-cef5-5630-b3f6-a68b92ae75ee:5aa4f9b2c35d3bded213756bb80da01f95fef7ee766779a7f02090a1116a0e9a:termination": "Em invertedLambda, o nó bailout testa somente: |z| <= 256."
+  },
+  "syntaxFeatures": {
+    "initialization-flow": "Em invertedLambda, a característica de inicialização focaliza a única operação se ismand, z = 0; caso contrário, z = pixel.",
+    "iteration-flow": "Em invertedLambda, a característica de iteração focaliza a única atribuição oneMinusZ = (1, 0) - z.",
+    "bailout-test": "Em invertedLambda, a característica de término focaliza a comparação |z| <= 256."
+  },
+  "parameterExperiment": {
+    "steps": [
+      "Renderize invertedLambda com a base do plano de parâmetros fixada: centro (-0.5, 0), zoom 0.4, rotação 0, e 96 iterações.",
+      "Mantenha a base fixa exceto pelas iterações, renderize uma vez com 48 iterações e compare com a base de 96."
+    ],
+    "expectedObservation": "Em invertedLambda, registre se a comparação entre 48 e 96 iterações muda algo e anote o limite da fonte |z| <= 256."
+  },
+  "exercise": {
+    "prompt": "Em invertedLambda, localize as três anotações e explique se ismand, z = 0; caso contrário, z = pixel, oneMinusZ = (1, 0) - z e |z| <= 256 e explique por que nenhuma instrução vizinha pertence à anotação do laço.",
+    "completionCheck": "Em invertedLambda, você concluiu ao listar todas as 3 chaves de anotação e explicar corretamente oneMinusZ = (1, 0) - z e |z| <= 256."
+  },
+  "factsPresentation": {
+    "provenanceLead": "A proveniência está na unidade factual inglesa.",
+    "rightsLead": "Os direitos estão na unidade factual inglesa."
+  },
+  "contentHash": "b262ef7e3fe5cae4cf15793b7efa669f4ebc27916dd3671da36b4c8850adabad"
+}

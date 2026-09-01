@@ -1,0 +1,35 @@
+{
+  "schema": "fractalpark-teaching-locale/v1",
+  "formulaId": "0a9a153b-bb4e-53df-9cdf-54fd0ad0081e",
+  "locale": "ru",
+  "sourceRevision": "0a9786849dd78c3643bae1f6de80fbc42d2e57e50e591090e67d681c81c0822e",
+  "semanticHash": "60f95642c01edfef967fd1d305e4c24747437321c32abbe847217193b9fe64eb",
+  "englishContentHash": "22eb63c262fd38ce1517d8325d7eabb007f7c9a4a66c3dcb726177f8c47fd45e",
+  "overview": "В FRM-like/1 формула ok-35 начинается с z = pixel, первый узел цикла задаёт mapped = firstMap(z), а итерацию ограничивает |z| <= real(threshold). Читайте эти операции в фактическом порядке исходника.",
+  "sourceWalkthrough": {
+    "0a9a153b-bb4e-53df-9cdf-54fd0ad0081e:0a9786849dd78c3643bae1f6de80fbc42d2e57e50e591090e67d681c81c0822e:initialization": "В ok-35, узел инициализации выполняет только: z = pixel.",
+    "0a9a153b-bb4e-53df-9cdf-54fd0ad0081e:0a9786849dd78c3643bae1f6de80fbc42d2e57e50e591090e67d681c81c0822e:iteration": "В ok-35, этот узел цикла выполняет только: mapped = firstMap(z).",
+    "0a9a153b-bb4e-53df-9cdf-54fd0ad0081e:0a9786849dd78c3643bae1f6de80fbc42d2e57e50e591090e67d681c81c0822e:termination": "В ok-35, узел bailout проверяет только: |z| <= real(threshold)."
+  },
+  "syntaxFeatures": {
+    "initialization-flow": "В ok-35, признак инициализации выделяет единственную начальную операцию z = pixel.",
+    "iteration-flow": "В ok-35, признак итерации выделяет единственное присваивание mapped = firstMap(z).",
+    "bailout-test": "В ok-35, признак завершения выделяет сравнение |z| <= real(threshold)."
+  },
+  "parameterExperiment": {
+    "steps": [
+      "Выполните рендер ok-35 с закреплённой базовой настройкой плоскости параметров и значениями по умолчанию multiplier (0, 0), thresholdOffset (0, 0), firstMap (identity), secondMap (identity).",
+      "Меняйте по одному из multiplier, thresholdOffset, firstMap, secondMap, сохраняя центр (0, 0), масштаб 0.25, поворот 0, и 96 итераций и остальные слоты неизменными, затем сравнивайте рендеры."
+    ],
+    "expectedObservation": "При каждом отдельном изменении multiplier, thresholdOffset, firstMap или secondMap отметьте, отличается ли рендеринг от базового, и соотнесите сравнение с `|z| <= real(threshold)`."
+  },
+  "exercise": {
+    "prompt": "В ok-35, найдите три аннотации и объясните z = pixel, mapped = firstMap(z) и |z| <= real(threshold) и объясните, почему соседние инструкции не относятся к аннотации цикла.",
+    "completionCheck": "В ok-35, вы завершили задание, если перечислили все 3 ключа аннотаций и точно объяснили mapped = firstMap(z) и |z| <= real(threshold)."
+  },
+  "factsPresentation": {
+    "provenanceLead": "Происхождение указано в английском фактологическом блоке.",
+    "rightsLead": "Права указаны в английском фактологическом блоке."
+  },
+  "contentHash": "3aba2d1cb602979f81bc879fee9b4c65dd86b92258f84772d9c27ffe6686bb5a"
+}

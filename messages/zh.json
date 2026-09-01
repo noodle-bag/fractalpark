@@ -256,7 +256,8 @@
       "breadcrumb": "公式",
       "eyebrow": "公式图鉴",
       "title": "公式图鉴",
-      "intro": "浏览 FractalPark 横跨七个族的全部 94 个内置公式。你可以从 canonical 视图开始探索，查看 21 个深度 Guide 档案，或通过 FRM 学习编写自己的公式。",
+      "publishedIntro": "探索 FractalPark 的 534 个已发布 Standard Definition，它们分属七个结构族，其中 94 个同时属于 Classic 集合。你可以打开 canonical Formula Record，从 21 个深度 Guide Profile 中选择一个深入学习，或了解 FRM 源码如何工作并选择相应的编写界面。",
+      "intro": "探索 FractalPark 的 534 个已发布 Standard Definition，它们分属七个结构族，其中 94 个同时属于 Classic 集合。你可以打开 canonical Formula Record，从 21 个深度 Guide Profile 中选择一个深入学习，或了解 FRM 源码如何工作并选择相应的编写界面。",
       "stats": {
         "formulas": "公式",
         "families": "公式族",
@@ -265,7 +266,7 @@
       "capabilities": {
         "eyebrow": "为探索而建",
         "title": "一份目录，多种创作路径",
-        "intro": "每个条目都来自交互式探索器共用的公式目录与已确认默认状态。",
+        "intro": "每个已发布条目都来自 Standard Library 共用的版本化 Formula Record 目录。",
         "items": {
           "realtime": {
             "title": "实时 WebGL",
@@ -277,14 +278,15 @@
           },
           "server": {
             "title": "服务端可读目录",
-            "description": "七个公式族与 94 个目标链接全部存在于初始 HTML 中，不依赖客户端搜索或筛选。"
+            "description": "534 个已发布 Formula Record 及其分类都可在服务端渲染的 HTML 中发现。"
           }
         }
       },
       "families": {
-        "eyebrow": "七个公式族",
-        "title": "选择一种数学性格",
-        "intro": "公式族按照迭代结构与视觉行为组织。各族数量直接来自当前内置公式目录。",
+        "eyebrow": "七个结构族",
+        "title": "按数学结构浏览",
+        "intro": "七个结构族恰好覆盖每个已发布公式一次。Classic 是单独的重叠集合，因此其中 94 个公式也能被快速找到。",
+        "browse": "浏览分类",
         "descriptions": {
           "classic": "二次、多项式、Julia、Multicorn 及相关逃逸时间基础公式。",
           "burning-ship": "使用绝对值折叠产生锐利船体、脊线与火焰状边界的映射。",
@@ -297,9 +299,9 @@
       },
       "frm": {
         "eyebrow": "创作自己的公式",
-        "title": "使用 FRM 学习并编写公式",
-        "description": "FRM 是 FractalPark 经过测试的文本创作方式。阅读兼容性指南，学习已通过编译检查的示例，然后在独立编辑器中编写并预览公式。",
-        "learn": "学习 FRM",
+        "title": "了解 FRM 和 Formula Editor",
+        "description": "已发布的 Standard Definition 使用固定的 FRM-like v1 源码。独立 Editor 使用 Classic-compatible 源码契约；Guide 会说明两种路径，并提供经过编译检查的 Editor 示例。",
+        "learn": "了解 FRM",
         "openEditor": "打开公式编辑器"
       },
       "guides": {
@@ -311,17 +313,21 @@
       },
       "directory": {
         "eyebrow": "完整目录",
-        "title": "全部 94 个公式",
-        "intro": "完整目录按公式族分组并由服务端输出。每个链接都以当前语言打开公式的 canonical 探索器状态。",
+        "title": "全部 534 个已发布公式",
+        "intro": "已发布目录按结构族分组并由服务端输出。每个链接都会打开公式的 canonical Formula Record。",
         "familyCount": "{count} 个公式",
         "backToFamilies": "返回公式族概览",
         "guideBadge": "Guide"
       },
       "cta": {
-        "title": "从内置公式开始，或编写自己的公式",
-        "description": "使用探索器查看内置公式；当你想自行定义迭代时，打开独立 FRM 编辑器。",
+        "title": "从公式开始，或使用 Classic-compatible Editor",
+        "description": "使用 Explorer 浏览内置公式，或打开独立 FRM Editor，使用其支持的 Classic-compatible 自定义迭代子集。",
         "explore": "打开探索器",
         "editor": "打开公式编辑器"
+      },
+      "standardDirectory": {
+        "cta": "浏览标准公式目录",
+        "hint": "当前已发布 534 个标准定义。"
       }
     },
     "guide": {
@@ -356,10 +362,28 @@
         "cta": "在探索器中再创作"
       }
     },
+    "teaching": {
+      "fallbackNotice": "请求的译文不可用，当前显示已审核的英文教学单元。此回退页面不会被索引。",
+      "sections": {
+        "overview": "教学概览",
+        "sourceWalkthrough": "源码导读",
+        "syntaxFeatures": "语法特征",
+        "parameterExperiment": "参数实验",
+        "exercise": "练习",
+        "provenance": "来源与权利"
+      },
+      "labels": {
+        "steps": "步骤",
+        "expectedObservation": "观察要点",
+        "safetyNote": "安全提示",
+        "completionCheck": "完成检查",
+        "hint": "提示"
+      }
+    },
     "frmGuide": {
-      "eyebrow": "FRM 公式语言",
-      "title": "用 FRM 编写分形公式",
-      "intro": "了解 FractalPark 经过测试的 FRM 语法子集，理解源码如何转为 GPU 着色器，并使用与编辑器完全共享的三个示例逐步写出可运行公式。",
+      "eyebrow": "FRM 语言与兼容性",
+      "title": "了解 FractalPark 中的 FRM",
+      "intro": "了解规范 FRM-like v1 Definition 如何驱动已发布的 Standard 公式，然后使用独立的 Classic-compatible Editor 示例，切勿混淆这两种源码契约。",
       "contentsLabel": "本页目录",
       "copy": {
         "copy": "复制",
@@ -370,15 +394,15 @@
         "what-is-frm": {
           "title": "什么是 FRM",
           "body": [
-            "FRM 是一种紧凑的文本格式，用来描述迭代分形。一个公式分别规定轨道的初始状态、每轮重复执行的计算，以及决定是否继续迭代的条件。",
-            "这种格式源自 Fractint 生态。公式文件让使用者不必重新构建渲染程序，也能交换和修改实验。FractalPark 将这种创作方式带入浏览器，但只说明自身经过测试的语法子集，不宣称完整兼容。"
+            "FractalPark FRM-like v1 是已发布 Standard Definition 背后的规范、类型化源码语言。一个 Definition 会固定其语言、标准库、NumericProfile、parameters、初始状态、重复执行的轨道步骤和继续迭代谓词。",
+            "Classic .frm 源自 Fractint 生态系统，仍是 Classic-compatible 独立 Editor 和导入管线使用的源码契约。FractalPark 会单独扫描和诊断该方言；Classic 源码以及 frmSemanticsVersion 1 或 2 并不是规范 FRM-like v1 的替代拼写。"
           ],
           "historyPrefix": "关于这一体系更广泛的起源与历史，可参阅",
           "historyLink": "Fractint 项目网站"
         },
         "support": {
           "title": "FractalPark 的 FRM 支持",
-          "intro": "FractalPark 会对明确限定的 FRM 子集进行词法分析、解析、校验和编译。下表区分可直接使用的语法、采用 FractalPark 语义的写法，以及当前工作流无法保真的内容。",
+          "intro": "此兼容性表描述 Classic-compatible Editor 和导入路径。规范的已发布 Standard Definition 使用单独版本化的 FRM-like v1 parser、类型化 IR、standard32 backend 和固定的 Safety Envelope。",
           "table": {
             "level": "级别",
             "meaning": "含义",
@@ -418,10 +442,10 @@
             "preprocessor": "预处理器功能",
             "rejected-constructs": "当前编译流水线拒绝的其他写法"
           },
-          "disclaimer": "这是经过测试的兼容性基线，不代表完整兼容 Fractint。编译器能力变化时，本表及其测试必须在同一项改动中同步更新。",
+          "disclaimer": "这是经过测试的 Classic 兼容性基线，并不声明完整的 Fractint 兼容性；它与 Standard 发布台账是两套彼此分离的口径。",
           "verified": {
             "title": "已验证的兼容性",
-            "intro": "这些能力统计来自版本化清单：588 个目标条目由 579 个严格 v2 通过项和 9 个有据可查的豁免项组成；另有 117 个条目按稳定原因排除。",
+            "intro": "这些 Classic 导入能力计数来自版本化兼容性清单：588 个目标条目包含 579 个 strict-v2 通过项和 9 个有文档记录的豁免；另有 117 个独立条目以固定不变的理由被排除。它们不计入已发布的 FRM-like v1 Definition。",
             "stats": {
               "target": "目标条目",
               "passed": "严格 v2 通过",
@@ -441,7 +465,7 @@
         },
         "anatomy": {
           "title": "公式结构",
-          "intro": "FractalPark FRM 由一个具名公式声明和三个明确区段组成，它们共同定义每个像素对应的状态迭代过程。",
+          "intro": "规范 FRM-like v1 与当前 Classic Editor 示例都具有命名公式以及 init、loop 和 bailout 的概念，但它们的完整语法不同。在 v1 中，语义 directive 和可选的类型化 parameters section 也是 Definition 的一部分。",
           "parts": {
             "init": "每个像素只运行一次。在这里设置轨道初值和所需的辅助变量。",
             "loop": "每轮迭代运行一次。更新 z，以及下一轮仍需使用的其他状态。",
@@ -451,7 +475,7 @@
         },
         "syntax": {
           "title": "语法指南",
-          "intro": "这门语言有意保持精简：表达式描述复数运算，语句更新轨道状态，控制流则从不同更新方式中做出选择。",
+          "intro": "两种界面都刻意保持精简。下列摘要是共享概念；请使用已发布 Formula Record 的 Source 操作查看规范 directive 和类型化 parameter，并使用 Editor diagnostics 处理 Classic 源码。",
           "topics": {
             "sections": {
               "title": "声明与区段",
@@ -481,7 +505,7 @@
         },
         "pipeline": {
           "title": "FRM → AST → GLSL 流水线",
-          "intro": "FractalPark 不会把 FRM 文本直接拼入着色器，而是让源码经过分阶段编译，从而保持语法、语义、生成代码和诊断之间的对应关系。",
+          "intro": "FractalPark 从不将源码文本直接粘贴进 shader。规范 v1 源码经由其类型化 parser 和 CPU/GLSL backend；Classic Editor 源码经由其 scanner、selected-entry frontend、canonical formula model 和 plugin compiler。",
           "steps": {
             "source": {
               "title": "FRM 源码",
@@ -508,11 +532,11 @@
               "body": "编译成功后，公式会转成渲染器和着色器组装系统共同使用的标准插件契约。"
             }
           },
-          "note": "统一的编译器契约让 Explore、独立 Editor、已保存自定义公式、示例与测试始终走同一条实现路径。"
+          "note": "每种源码契约各有一条自己的实现路径。已发布 Standard runtime 使用 FRM-like v1；独立 Editor 和当前自定义公式示例使用 Classic-compatible 路径。两者均不会悄然回退到另一方。"
         },
         "tutorials": {
           "title": "渐进式教程",
-          "intro": "三个示例从最小二次公式逐步扩展到参数和状态反馈。每段源码都直接读取共享示例注册表，并在测试中实际编译。",
+          "intro": "这些是 Classic-compatible Editor 示例，不是规范 FRM-like v1 Definition。它们从小型二次公式逐步扩展到 parameters 和有状态反馈；每个源码块均来自共享 Editor registry，并在测试期间编译。",
           "lesson": "第 {number} 课",
           "openInEditor": "在 FRM 编辑器中打开",
           "goals": {
@@ -520,7 +544,7 @@
             "parameter-drift": "重点：p1 与 p2 参数槽、复数常量，以及把 cabs(z) 作为显式模长函数。",
             "orbit-echo": "重点：用 zPrev 取得上一轮轨道状态。无需手动维护第二个状态变量，也能引入记忆反馈。"
           },
-          "editorNote": "FRM 编辑器通过稳定 ID 打开这些同样经过编译检查的示例。保存到云端公式库之前，公式源码只保留在当前标签页中，绝不会嵌入 URL。"
+          "editorNote": "独立 FRM Editor 通过稳定 ID 打开这些 Classic-compatible、经过编译检查的示例。公式源码会留在当前标签页，直到你将它保存到云库，且绝不会嵌入 URL。这不会启用规范 v1 导入或写入器。"
         },
         "diagnostics": {
           "title": "错误与诊断",
@@ -550,7 +574,7 @@
           "exploreTitle": "先在完整渲染环境中观察",
           "exploreBody": "打开 Explore，比较内置公式的行为、着色、变换、动画和导出控制，再开始编写自定义公式。",
           "exploreCta": "打开 Explore",
-          "editorNote": "使用专用 FRM 编辑器编译、预览、导入和下载公式；登录并保存到云端公式库后，再将它交给探索器。",
+          "editorNote": "使用专用 FRM Editor 完成当前的 Classic-compatible 编译、预览、导入和下载工作流。它不接受规范 FRM-like v1 源码；请从 Formula Record 检查已发布 v1 源码，并使用该 Record 的 Open 或 Remix 操作运行它。",
           "referencesTitle": "参考资料",
           "referencesIntro": "历史背景与实现细节分开链接，以明确区分 Fractint 传承和 FractalPark 当前的编译器契约。",
           "references": {
@@ -787,25 +811,25 @@
       },
       "newton-cosh": {
         "title": "双曲余弦牛顿分形",
-        "summary": "对 cosh z = 1 使用牛顿法：无穷多个等距重复的根，把平面排成一层层收敛色带。",
-        "overview": "牛顿求根法一旦取 f(z) = cosh z − 1，画面就换了脾气。它的根是所有形如 2πik（k 为整数）的值。多项式只有有限个终点；这里的根却沿虚轴等距排开，没有尽头。于是画面不只分成几块盆地，而是上下接出一层层水平收敛带。\n\n迭代式 N(z) = z − (cosh z − 1) / sinh z 是亚纯函数：除奇点外，它在复平面上都有定义。两组位置牵动轨道：cosh z − 1 的周期性根，以及分母 sinh z 的零点 z = πik。靠近后者，初值只挪一点点，最后抵达的根就可能变掉。\n\n虚方向的周期性在图上很直观：水平色带一层层重复。每条带对应根的一个周期；交接处的细竖丝，勾出盆地之间交手的位置。",
+        "summary": "对 cosh z = 1 使用牛顿法：无穷多个等距重复的二重根，把平面排成一层层收敛色带。",
+        "overview": "牛顿求根法一旦取 f(z) = cosh z − 1，画面就换了脾气。它的根是所有形如 2πik（k 为整数）的值，而且每个都是二重根。多项式只有有限个终点；这里的根却沿虚轴等距排开，没有尽头。于是画面不只分成几块盆地，而是上下接出一层层水平收敛带。\n\n修正量 (cosh z − 1) / sinh z 在避开零点时可化为 tanh(z/2)。分母 sinh z 在每个 πik 处为零：偶数倍是根，在化简后的商中可去；真正的极点和敏感奇点是奇数倍 (2k+1)πi。靠近这些奇数倍，初值的微小变化也会大幅改变步长。\n\n虚方向的周期性在图上很直观：水平色带一层层重复。每条带对应根的一个周期；交接处的细竖丝，勾出盆地之间交手的位置。",
         "imageAlt": "cosh z = 1 的牛顿分形：沿虚轴重复堆叠的水平色带与折叠边界",
         "imageCaption": "FractalPark 渲染的 cosh z = 1 牛顿分形：收敛色带沿虚轴重复，带间边界弯折为细丝。",
         "math": {
           "iteration": {
             "label": "cosh 的牛顿迭代",
-            "explanation": "牛顿法的规则是 N(z) = z − f(z) / f′(z)。这里取 f(z) = cosh z − 1、f′(z) = sinh z；每一步先算出修正量 (cosh z − 1) / sinh z，再从 z 里减去它。\n\n方程 cosh z = 1 有无穷多解：z = 2πik，k 为任意整数。它们全是单根：cosh z 在根旁线性增长，牛顿法便在附近二次收敛。远离实轴后，cosh 和 sinh 的指数增长会让修正项忽大忽小；图中的敏感边界便从这里冒出来。\n\n试试 z₀ = 0.2i。由于 i·sinh(0.2) ≈ 0.201i，cosh(0.2) ≈ 1.020，第一次修正很小，轨道很快收敛到 z = 0 处的根。再取 z₀ = 0.5 + 3.0i，它离每个根都远些。cosh 和 sinh 的大指数项会卷进修正，轨道可能跨过几个盆地边界才落定；也可能在根之间混沌地绕许多圈，最后才被某一个捕获。\n\n函数在虚方向以 2πi 为周期，牛顿映射也继承相同的周期性：N(z + 2πi) = N(z) + 2πi。图中的水平带状结构因此反复出现。"
+            "explanation": "牛顿法的规则是 N(z) = z − f(z) / f′(z)。这里取 f(z) = cosh z − 1、f′(z) = sinh z；每一步减去修正量 (cosh z − 1) / sinh z，它在 sinh z 不为零时等于 tanh(z/2)。\n\n方程 cosh z = 1 有无穷多解：z = 2πik，k 为任意整数。它们都是二重根，因此根附近的误差每一步约减半：这是线性收敛，不是二次收敛。分母在每个 πik 处为零；偶数倍是根，商在化简后可去，真正的极点是奇数倍 (2k+1)πi。\n\n试试 z₀ = 0.2i。修正量为 tanh(0.1i) = i tan(0.1) ≈ 0.1003i，所以 z₁ ≈ 0.0997i，误差明显约减半。靠近 πi 这样的奇数倍时，修正量会变得很大。实现中会钳制实部以保持数值稳定；当 |sinh(z)|² < 1e-10 时，步长保持不变。这些是数值保护，不是对未保护映射的数学断言。\n\n函数在虚方向以 2πi 为周期，牛顿映射也继承相同的周期性：N(z + 2πi) = N(z) + 2πi。图中的水平带状结构因此反复出现。"
           }
         },
-        "visualCharacteristics": "先看沿虚轴叠起的水平色带。根的一个周期对应一条带，带里的收敛图样会在上下重现。边界不走直线：它们弯折、回卷，拉出细细的竖丝，像绷紧的线。\n\n每条带里的盆地几何都和上下相似，却带着微小变形，像反复折过的缎带。冷暖交替来自配色；颜色突然断开的地方，是 sinh z 的奇点让牛顿修正失去稳定。",
+        "visualCharacteristics": "先看沿虚轴叠起的水平色带。根的一个周期对应一条带，带里的收敛图样会在上下重现。边界不走直线：它们弯折、回卷，拉出细细的竖丝，像绷紧的线。\n\n每条带里的盆地几何都和上下相似，却带着微小变形，像反复折过的缎带。冷暖交替来自配色；颜色突然断开的地方，常聚在 πi 的奇数倍附近，那里牛顿修正有真正的极点。",
         "faq": {
           "target": {
             "question": "这个迭代求解什么方程？",
-            "answer": "它寻找 cosh(z) = 1 的复数解：z = 2πik，k 为任意整数。无穷多个根沿虚轴等距排开。每个根都会拉住附近的牛顿轨道，于是水平色带不断重复。"
+            "answer": "它寻找 cosh(z) = 1 的复数解：z = 2πik，k 为任意整数。无穷多个二重根沿虚轴等距排开，它们的重复排列造就了水平色带。"
           },
           "singularities": {
             "question": "为什么有些区域非常敏感？",
-            "answer": "牛顿修正项要除以 sinh(z)，而 sinh(z) 在 z = πik（k 为整数）处为零。靠近这些点，修正量会猛增，轨道可能跳过好几层盆地边界才收敛。它们不是根，却在图中扯出细竖丝和不安分的边界区。"
+            "answer": "牛顿修正项要除以 sinh(z)，而 sinh(z) 在 z = πik（k 为整数）处为零。偶数倍是根，在化简后的商中可去；真正的极点是奇数倍 (2k+1)πi。靠近奇数倍，修正量会猛增，轨道可能跳过好几层盆地边界，并在图中扯出细竖丝和不安分的边界区。"
           }
         }
       },
@@ -896,7 +920,7 @@
         "math": {
           "iteration": {
             "label": "双曲余弦迭代",
-            "explanation": "每一步先对当前 z 求复双曲余弦，再加常数 c。cosh(z) = (eᶻ + e⁻ᶻ)/2：沿实轴指数增长，沿虚轴重复，周期为 2π。\n\n试着取虚轴上的 z = iπ/2。cosh(iπ/2) = cos(π/2) = 0，所以从这里出发、令 c = 0，轨道会停在零。只要稍稍离开虚轴，eᶻ 项就可能带来指数增长，点很快逃逸。有界初始条件窄得像一道缝，其余地方却迅速逃逸。它不像多项式那样有统一的逃逸半径，FractalPark 采用实际调优的逃逸阈值来检测发散。"
+            "explanation": "每一步先对当前 z 求复双曲余弦，再加常数 c。cosh(z) = (eᶻ + e⁻ᶻ)/2：沿实轴指数增长，沿虚轴重复，周期为 2π。\n\n试着取虚轴上的 z = iπ/2。cosh(iπ/2) = cos(π/2) = 0，所以从这里出发、令 c = 0，一步后得到 z₁ = 0。但零并不是这个映射的固定点：再下一步是 z₂ = cosh(0) = 1。只要稍稍离开虚轴，eᶻ 项就可能带来指数增长，点很快逃逸。有界初始条件窄得像一道缝，其余地方却迅速逃逸。它不像多项式那样有统一的逃逸半径，FractalPark 采用实际调优的逃逸阈值来检测发散。"
           }
         },
         "visualCharacteristics": "先看纵向重复。cosh(z) 在虚方向以 2π 为周期，精细羽片、层叠扇面和金色丝线便隔着固定距离回来一次。图像因此带着条纹般的层次，不像多项式 Mandelbrot 集那样向外放射分枝。\n\n标准渲染图里的羽片和扇面多用暖色。最密的细节挤在狭窄水平带中，那里轨道在逃逸与非逃逸的边界附近徘徊很久。往上或往下，逃逸骤然加快，图像也平静下来。",
@@ -1062,28 +1086,28 @@
       },
       "zaslavsky-map": {
         "title": "Zaslavsky 映射",
-        "summary": "一种复正弦映射：正弦扰动负责弯折，固定的 0.55 弧度旋转负责转向，c 负责平移——灵感来自 George Zaslavsky 1978 年的耗散驱策转子映射。",
-        "overview": "Zaslavsky 映射先让正弦扰动弯折轨道，再用固定复相位 e^{0.55i} 把它转过去，最后加上 c。多项式逃逸映射靠 z 的幂次增长展开；这里，周期性弯曲和持续转向才是主线。\n\n1978 年，George M. Zaslavsky 提出原始映射，用来描述耗散驱策转子：一个不断受脉冲、又因摩擦失去能量的旋转系统。经典映射使用两个实变量（作用量与角度）。FractalPark 把这个想法改写到单个复变量上：正弦给出非线性扰动，固定复乘数给出旋转，c 则让它能扫描参数并绘制逃逸时间图。\n\n复正弦沿虚轴可以无界增长，这不是简单的多项式逃逸。轨道可能先绕圈，随后散开；这种来回在画面里留下涡旋臂和同心环，配上万花筒空间变换时尤其清楚。",
+        "summary": "一种复正弦映射：0.28 倍的正弦扰动弯折轨道，固定的 0.55 弧度旋转负责转向，c 负责平移——灵感来自 George Zaslavsky 1978 年的耗散驱策转子映射。",
+        "overview": "FractalPark 实现的是 z(n+1) = exp(0.55 i) * (z(n) + 0.28 sin(z(n))) + c。正弦是对原有轨道施加的 0.28 倍扰动；固定复相位把整个扰动后的结果旋转 0.55 弧度（约 31.5°），随后 c 再平移它。\n\n1978 年，George M. Zaslavsky 提出原始映射，用来描述耗散驱策转子：一个不断受脉冲、又因摩擦失去能量的旋转系统。经典映射使用两个实变量（作用量与角度）。FractalPark 把这个想法改写为单个复变量的逃逸时间图；这不是 1978 年论文中的精确递推式。\n\n复正弦沿虚轴可以无界增长，这不是简单的多项式逃逸。轨道可能先绕圈，随后散开；这种来回在画面里留下涡旋臂和同心环，配上万花筒空间变换时尤其清楚。",
         "imageAlt": "Zaslavsky 映射：暖橙与金色的涡旋臂和曼陀罗环",
         "imageCaption": "FractalPark 渲染的 Zaslavsky 映射：同心弧线与辐射辐条组成发光的曼陀罗图案，暖橙与金色映衬深黑背景。",
         "math": {
           "iteration": {
             "label": "正弦旋转映射",
-            "explanation": "正弦先弯折 z，固定复乘数再转向，最后由 c 平移。\n\n从实轴上的点开始。令 z₀ = (0, 0)，sin(0) = 0，因此 z₁ = e^{0.55i} × 0 + c = c。此后复正弦可以无限增长：sin(a + ib) 的幅度包含 cosh(b) 项。虚部较大的点会得到很大的正弦扰动，更容易逃逸。\n\n固定旋转角 0.55 弧度（约 31.5°）不是参数，它写死在公式里。每条轨道每一步都受同样的角向扭转。涡旋就这样出现。"
+            "explanation": "FractalPark 使用 z(n+1) = exp(0.55 i) * (z(n) + 0.28 sin(z(n))) + c。正弦项是对 z 的 0.28 倍扰动，并不取代 z。固定乘数把整个扰动后的轨道逆时针旋转 0.55 弧度（约 31.5°），然后 c 再平移结果。\n\n从 z₀ = 0 开始时，sin(0)=0，因此括号中的扰动项为零；零旋转后仍为零，只剩 c，即 z₁ = c。之后复正弦可以增长：sin(a + ib) 的幅度包含 cosh(b) 项。虚部较大的点可能得到很大的正弦扰动，更容易逃逸。\n\n0.55 弧度旋转写死在公式里，用户不能调整。作为实现细节而非理想化递推的一部分，FractalPark 会把输入虚部钳制到 ±80，并将每个输出分量舍入到 1/16 网格。"
           }
         },
-        "visualCharacteristics": "配上万花筒变换后，涡旋臂和曼陀罗环格外清楚。标准渲染以同心弧线和辐射辐条围住中心；在这里，正弦扰动让轨道保持有界。\n\n标准渲染用暖橙和金色衬着深黑背景。恒定旋转把弧线带弯，正弦项在环缘留下细波纹。",
+        "visualCharacteristics": "配上万花筒变换后，涡旋臂和曼陀罗环格外清楚。标准渲染以同心弧线和辐射辐条围住一个扰动后的轨道能够保持有界的中心区域。\n\n标准渲染用暖橙和金色衬着深黑背景。恒定旋转把弧线带弯，正弦扰动在环缘留下细波纹。",
         "faq": {
           "rotation": {
             "question": "旋转从何而来？",
-            "answer": "映射把扰动后的轨道乘以单位复数 e^{0.55i}，这会将复平面逆时针旋转约 31.5°。该旋转在每次迭代中都会发生，是公式的固定组成部分，而非用户可调参数。0.55 弧度是反复试出来的经验值，视觉上涡旋最均衡。"
+            "answer": "映射先把完整的扰动后轨道 z + 0.28 sin(z) 乘以 exp(0.55 i)，使其逆时针旋转约 31.5°，再加上 c。每次迭代都会发生这一固定旋转，用户不能调整。"
           },
           "transform": {
             "question": "万花筒是公式的一部分吗？",
             "answer": "不是。万花筒是在公式迭代之外应用的可选空间变换，通过反射或复制参数平面的扇区来创造对称图案。Zaslavsky 映射本身不具有内置的反射对称性——万花筒效果是一个独立的渲染步骤，可以单独打开或关闭。"
           }
         },
-        "history": "George M. Zaslavsky（1929–2008）是一位苏联出生的数学物理学家，对动力系统混沌理论做出了奠基性贡献。他在 1978 年发表于《Physics Letters A》的论文《The Simplest Case of a Strange Attractor》中提出了如今以他命名的映射。该映射源于对耗散驱策转子——一个受周期性脉冲并有摩擦损耗的旋转系统——的频闪采样描述。\n\nZaslavsky 后来移居美国，加入纽约大学物理系和库朗数学科学研究所。他撰写了多部关于哈密顿混沌和分数动力学的专著。2007 年，他本人在 Scholarpedia 上撰写了 Zaslavsky 映射条目。\n\n经典的 Zaslavsky 映射使用两个实变量（作用量和角度）。FractalPark 的复变量变体——带有正弦扰动和固定复乘数——是一种创造性的适配，适用于逃逸时间渲染，而非原始耗散系统的直接转录。"
+        "history": "George M. Zaslavsky（1929–2008）是一位苏联出生的数学物理学家，对动力系统混沌理论做出了奠基性贡献。他在 1978 年发表于《Physics Letters A》的论文《The Simplest Case of a Strange Attractor》中提出了如今以他命名的映射。该映射源于对耗散驱策转子——一个受周期性脉冲并有摩擦损耗的旋转系统——的频闪采样描述。\n\nZaslavsky 后来移居美国，加入纽约大学物理系和库朗数学科学研究所。他撰写了多部关于哈密顿混沌和分数动力学的专著。2007 年，他本人在 Scholarpedia 上撰写了 Zaslavsky 映射条目。\n\n经典的 Zaslavsky 映射使用两个实变量（作用量和角度）。FractalPark 的复变量逃逸时间变体使用 z(n+1) = exp(0.55 i) * (z(n) + 0.28 sin(z(n))) + c；它是一种创造性的适配，而非原始耗散系统的直接转录。"
       },
       "zubieta": {
         "title": "Zubieta",
@@ -1110,6 +1134,145 @@
         },
         "history": "Zubieta 属于更广泛的\"绝对值\"分形变体家族——在二次迭代的不同阶段应用绝对值折叠操作。该家族中最著名的成员是 Burning Ship 分形，由 Michael Michelitsch 与 Otto E. Rössler 于 1992 年发现，它在平方前折叠分量。另一近亲 Buffalo 分形则在平方之后、加 c 之前折叠。\n\nZubieta 变体在平方和加 c 之后施加逐分量绝对值。与许多命名的绝对值变体相同，其确切起源难以追溯至单一的公开学术来源；这类变体在 1990–2000 年代的分形渲染社区和软件（Ultra Fractal、Fractint、XaoS）中流传，通常以在特定软件中首先实现或推广该变体的个人命名。\n\nFractalPark 的实现采用标准逐分量折叠，以 Mandelbrot 模式渲染参数平面。"
       }
+    },
+    "directory": {
+      "breadcrumbLabel": "面包屑",
+      "breadcrumbAtlas": "公式图鉴",
+      "breadcrumb": "目录",
+      "eyebrow": "标准公式目录",
+      "title": "标准公式目录",
+      "description": "按公式族浏览 FractalPark 的 {count} 个已发布标准定义。",
+      "intro": "此目录收录全部 {count} 个已发布标准定义；每个条目都具有完整、可运行的实现。",
+      "facets": {
+        "title": "按公式族浏览",
+        "family": "族",
+        "status": "发布状态",
+        "all": "全部",
+        "categoryTitle": "按类别浏览",
+        "category": "类别"
+      },
+      "family": {
+        "algebraic-power": "代数幂",
+        "transcendental": "超越函数",
+        "function-composition": "函数复合",
+        "rational-reciprocal": "有理倒数",
+        "orbit-memory": "轨道记忆",
+        "folded-absolute": "折叠绝对值",
+        "root-finding": "求根"
+      },
+      "status": {
+        "publish": "已发布",
+        "hold": "暂缓",
+        "exclude": "排除"
+      },
+      "resultCount": "{count} 个已发布定义",
+      "category": {
+        "classic": "经典"
+      },
+      "guideBadge": "指南",
+      "searchLabel": "搜索公式",
+      "searchPlaceholder": "按公式名称搜索",
+      "sortLabel": "排序",
+      "apply": "应用",
+      "sort": {
+        "nameAsc": "名称 A–Z",
+        "nameDesc": "名称 Z–A"
+      }
+    },
+    "record": {
+      "eyebrow": "公式档案",
+      "identity": "身份与来源",
+      "formulaId": "公式 ID",
+      "rightsAttribution": "权利与署名",
+      "sourceAndImplementation": "来源与当前实现",
+      "canonicalName": "规范名称",
+      "originalName": "原始名称",
+      "historicalSource": "历史来源",
+      "repository": "代码仓库",
+      "currentImplementation": "当前实现",
+      "author": "作者",
+      "originalResource": "原始资源",
+      "originalVersion": "原始版本",
+      "unconfirmed": "未确认",
+      "provenance": "来源集合",
+      "aliases": "历史别名",
+      "rights": "权利与公开范围",
+      "rightsStatus": "权利状态",
+      "rightsScope": "公开范围",
+      "canonicalLicense": "规范实现许可",
+      "decision": "发布决定",
+      "reason": "原因",
+      "basis": "实现依据",
+      "reviewed": "复核日期",
+      "leakage": "泄漏扫描",
+      "publishedSummary": "该 FractalPark 规范实现已发布并可运行。",
+      "unavailableSummary": "该身份已记录，但按当前决定不提供源码、运行、编辑或再创作入口。",
+      "source": "规范源码",
+      "language": "语言",
+      "stdlib": "标准库",
+      "profileMode": "Profile 模式",
+      "profileCenter": "Profile 中心",
+      "profileZoom": "Profile 缩放",
+      "profileIterations": "Profile 迭代次数",
+      "profileQuality": "Profile 证据等级",
+      "sourceRevision": "源码版本",
+      "semanticHash": "语义哈希",
+      "parameters": "参数",
+      "noParameters": "没有声明参数",
+      "previewAlt": "{name} 的确定性预览",
+      "previewDiagnostic": "预览等待视觉审查",
+      "previewDiagnosticBody": "确定性渲染报告了视觉异常。原图作为诊断证据保留，但不会当作已验证预览展示。",
+      "viewDiagnosticPreview": "查看诊断渲染图",
+      "openExplore": "在探索器中打开",
+      "remix": "匿名再创作",
+      "viewSource": "查看源码",
+      "downloadSource": "下载源码",
+      "takedown": "对权利或署名有异议？",
+      "takedownBody": "请附上公式 ID 和支持证据。维护者可在复核期间暂缓或撤下该实现。",
+      "rightsValues": {
+        "project-owned": "项目自有",
+        "source-declared-public-domain-assumption": "来源声明的公有领域假设",
+        "gpl3Only": "仅 GPL-3.0",
+        "no-explicit-permission": "无明确许可"
+      },
+      "scopeValues": {
+        "project-canonical-implementation": "FractalPark 规范实现",
+        "original-source-public-domain-assumption-and-project-canonical-implementation": "原始来源按公有领域假设处理；FractalPark 规范实现采用 MIT",
+        "project-independent-rewrite-only": "仅 FractalPark 独立重写实现",
+        "identity-and-provenance-metadata-only": "仅身份与来源元数据"
+      },
+      "sourceNotes": {
+        "fractalparkProjectOwned": "这是 FractalPark 项目自有实现。所链接文件是固定版本的规范 Definition。",
+        "fractintDirectAdaptation": "当前 FractalPark 实现遵循所链接 Fractint 公式的已验证语义；原始文件保留其自身的权利条件。",
+        "fractintIndependentRewrite": "历史来源为 Fractint。当前 FractalPark 实现是隔离式独立重写，不分发原始 FRM 文本。",
+        "iteratedDynamicsIndependentRewrite": "历史来源为 Fractint 后继项目 Iterated Dynamics。当前 FractalPark 实现是隔离式独立重写，不分发原始 FRM 文本。"
+      },
+      "basisValues": {
+        "project-owned": "项目自有",
+        "direct-adaptation": "直接适配",
+        "separated-independent-rewrite": "隔离式独立重写",
+        "none": "不适用"
+      },
+      "scanValues": {
+        "not-applicable": "不适用",
+        "pending": "待处理",
+        "passed": "已通过",
+        "failed": "未通过"
+      }
+    },
+    "sourceWorkspace": {
+      "title": "规范源码",
+      "readOnlyDescription": "这是经过验证的只读规范版本。Remix 会创建一份独立的可编辑分支。",
+      "previewLabel": "{name} 的规范源码预览",
+      "editorLabel": "{name} 的只读规范源码",
+      "loading": "正在加载规范源码…",
+      "unavailable": "无法加载并验证规范源码。",
+      "retry": "重试",
+      "open": "打开完整源码",
+      "workspaceDescription": "{name} 的只读规范源码。Remix 会创建独立分支。",
+      "readOnly": "只读规范版本",
+      "remix": "Remix",
+      "download": "下载 .frm"
     }
   },
   "artworks": {
@@ -1355,6 +1518,23 @@
       "active": "当前",
       "builtin": "内置公式",
       "custom": "自定义公式",
+      "standard": "标准公式库",
+      "mine": "我的公式",
+      "library": {
+        "current": "当前公式",
+        "open": "打开公式库",
+        "title": "标准公式库",
+        "description": "浏览全部 {count} 条已发布公式。只有选中后才会加载公式定义。",
+        "loading": "正在加载公式索引……",
+        "unavailable": "标准公式库暂时不可用。",
+        "selectionFailed": "无法加载该公式，当前公式已保留。",
+        "familyFilter": "按家族筛选公式",
+        "categoryFilter": "按分类筛选公式",
+        "loadMore": "加载更多",
+        "lucky": "手气不错？",
+        "resetProfile": "重置公式配置",
+        "undoFormulaChange": "撤销公式更改"
+      },
       "resolution": {
         "loading": "正在加载公式...",
         "notFound": "自定义公式「{formula}」加载失败。",
@@ -1411,6 +1591,12 @@
       },
       "family": {
         "all": "全部",
+        "algebraic-power": "代数幂",
+        "folded-absolute": "绝对值折叠",
+        "function-composition": "函数组合",
+        "orbit-memory": "轨道记忆",
+        "rational-reciprocal": "有理与倒数",
+        "root-finding": "求根",
         "classic": "经典",
         "burning-ship": "燃烧船",
         "newton": "牛顿",
@@ -1426,6 +1612,9 @@
       "position": "位置信息",
       "center": "中心",
       "zoom": "缩放",
+      "invalidNumber": "请输入有效的有限数值。",
+      "increase": "增加",
+      "decrease": "减少",
       "mode": {
         "label": "分形模式",
         "mandelbrot": "Mandelbrot 集",
@@ -1659,6 +1848,8 @@
       "loadFailed": "编辑器加载失败",
       "loadFailedDescription": "无法加载代码编辑器, 请刷新页面重试",
       "compile": "编译",
+      "apply": "应用",
+      "invalidDraft": "无效草稿——保存会保留这些源码字节和诊断，但上一次成功预览继续生效。",
       "compiling": "编译中...",
       "save": "保存",
       "saved": "已保存",
@@ -1693,13 +1884,13 @@
     "landing": {
       "heading": "FractalPark 分形公园: 浏览器里的开源分形生成器",
       "whatIsHeading": "什么是 FractalPark 分形公园?",
-      "whatIsAnswer": "FractalPark 是一个免费、开源（MIT）的分形知识与创作平台，完全在浏览器中用 WebGL 渲染：内置 {formulaCount} 个公式、兼容 Fractint 的 FRM 创作、高分辨率 PNG 导出。创作无需账号；保存作品和公式需邮箱登录，存入你的私有云端库。",
+      "whatIsAnswer": "FractalPark 是一个免费、开源（MIT）的分形知识与创作平台，完全使用浏览器中的 WebGL 渲染：{formulaCount} 个已发布的 Standard Definition，分属 {formulaFamilyCount} 个结构家族，其中 {classicFormulaCount} 个同时属于 Classic 集合；另有已发布的 FRM-like v1 源码、Classic-compatible FRM Editor 工作流和高分辨率 PNG 导出。创作无需账户；保存作品和公式需要使用电子邮件登录及私有云库。",
       "capabilitiesHeading": "核心能力",
-      "capabilitiesIntro": "{formulaCount} 个公式、{formulaFamilyCount} 个家族 · {formulaGuideCount} 篇深度公式指南 · {transformCount} 种变换 · {coloringModeCount} 种着色模式 · 可分享 URL · 最高 {maxExportScale}× PNG 导出",
+      "capabilitiesIntro": "{formulaCount} 个已发布 Standard Definition，分属 {formulaFamilyCount} 个结构家族 · 其中 {classicFormulaCount} 个同时属于 Classic 集合 · {formulaGuideCount} 篇深度公式指南 · {transformCount} 种变换 · {coloringModeCount} 种着色模式 · 可分享 URL · 最高 {maxExportScale}× PNG 导出",
       "linksHeading": "继续了解",
       "links": {
         "formulas": "公式图鉴——每个公式的数学解释、历史与在线示例",
-        "frmGuide": "FRM 指南——在浏览器中编写 Fractint 兼容公式",
+        "frmGuide": "FRM Guide — 了解已发布的 FRM-like v1 与 Classic-compatible Editor 源码",
         "drift": "Drift 沉浸播放——坐下来欣赏预设轮播",
         "about": "关于——项目事实、边界与开源信息"
       },
@@ -1716,7 +1907,7 @@
   },
   "frmEditor": {
     "title": "FRM 编辑器",
-    "description": "在浏览器中编写、编译、预览 FRM 公式，并保存到你的云端库。",
+    "description": "在浏览器中使用 FractalPark 的 Classic-compatible FRM 子集编写、编译和预览公式；将它们保存到你的云库。",
     "breadcrumb": "面包屑导航",
     "crumbGuide": "FRM 指南",
     "beta": "测试版",
@@ -1744,6 +1935,10 @@
     "replaceConfirm": "要替换当前未保存的草稿吗？",
     "leaveConfirm": "要离开编辑器并放弃未保存的草稿修改吗？",
     "saved": "已保存到你的云端公式库。",
+    "remixLoading": "正在加载精确的已发布源码和 Profile…",
+    "remixReady": "已从 {name} 创建 Remix fork。已发布的 Standard 源码保持不变。",
+    "remixUnavailable": "无法安全打开这个已发布公式进行 Remix。",
+    "invalidDraftSaved": "无效草稿已私密保存。上一个可运行 revision 继续生效。",
     "saveError": "云端公式库不可用。你的公式未保存。",
     "errors": {
       "maxCount": "已达到公式数量上限（{count} 条）。",
@@ -1786,9 +1981,9 @@
   "metadata": {
     "explore": {
       "title": "分形公园 FractalPark - 开源浏览器分形生成器",
-      "description": "开源、公式优先的分形知识与创作平台, 在浏览器中实时运行: 94 个内置公式、WebGL 实时渲染、Fractint 兼容 FRM 公式编辑、高分辨率 PNG 导出, 七语言界面.",
+      "description": "以公式为核心的开源分形知识与创作平台，运行于浏览器中：534 个已发布的 Standard Definition，分属 7 个结构家族，其中 94 个同时属于 Classic 集合；另有实时 WebGL 渲染、已发布的 FRM-like v1 源码、Classic-compatible FRM Editor 和高分辨率 PNG 导出。",
       "ogTitle": "分形公园 FractalPark - 浏览器里的开源分形艺术工具",
-      "ogDescription": "在浏览器中创作分形艺术: 94 个公式、WebGL 实时渲染、FRM 编辑、高清 PNG 导出."
+      "ogDescription": "在浏览器中用 534 个已发布的 Standard Definition 创作分形艺术：它们分属 7 个结构家族，其中 94 个同时属于 Classic 集合；另有实时 WebGL 渲染、已发布的 FRM-like v1 源码、Classic-compatible FRM Editor 和高分辨率 PNG 导出。"
     },
     "gallery": {
       "title": "我的画廊 | 个人分形收藏 - 分形公园 FractalPark",
@@ -1796,21 +1991,22 @@
     },
     "about": {
       "title": "关于 | 开源浏览器分形生成器 - 分形公园 FractalPark",
-      "description": "了解分形公园 FractalPark: 一个基于 MIT 许可证开源、可在浏览器中直接使用的 WebGL 分形生成器, 支持 94 个公式、自定义调色板和 PNG 导出.核心技术: Fractint .frm 公式编辑器, AST 到 GLSL 转译流水线, 插件化着色器架构, 完全免费开源无需安装, 支持七种语言界面."
+      "description": "FractalPark 是一个开源、以公式为核心的分形知识与创作平台，提供可阅读和运行的已发布公式源码，以及独立的 Classic-compatible 公式 editor。"
     },
     "formulaAtlas": {
-      "title": "公式图鉴 | 94 个分形公式 - 分形公园 FractalPark",
-      "description": "浏览 FractalPark 横跨七个公式族的全部 94 个公式、21 个精选 Guide 档案与 FRM 创作入口，并在 WebGL 探索器中打开 canonical 公式状态。",
-      "imageAlt": "包含 94 个内置公式的 FractalPark 公式图鉴"
+      "title": "公式图鉴 | 534 个已发布公式 - 分形公园 FractalPark",
+      "publishedDescription": "浏览七个结构族中的 534 个已发布 Standard Definition，其中 94 个同时属于 Classic 集合；探索 21 个 Guide Profile，了解 FRM 源码如何工作，并打开 canonical Formula Record。",
+      "description": "浏览七个结构族中的 534 个已发布 Standard Definition，其中 94 个同时属于 Classic 集合；探索 21 个 Guide Profile，了解 FRM 源码如何工作，并打开 canonical Formula Record。",
+      "imageAlt": "包含 534 个已发布公式的 FractalPark 公式图鉴"
     },
     "frmEditor": {
       "title": "FRM 编辑器 | FractalPark",
-      "description": "在浏览器中编写、编译、预览 FRM 公式，并保存到你的云端库。"
+      "description": "在浏览器中使用 FractalPark 的 Classic-compatible FRM 子集编写、编译和预览公式；将它们保存到你的云库。"
     },
     "frmGuide": {
-      "title": "FRM 指南 | 编写自定义分形公式 - 分形公园 FractalPark",
-      "description": "学习 FractalPark 经过测试的 FRM 语法、兼容级别、AST 到 GLSL 编译流水线、错误诊断，以及三个实际通过编译测试的自定义公式示例。",
-      "imageAlt": "FractalPark FRM 公式语言指南"
+      "title": "FRM Guide：Classic Editor 和 FRM-like v1 - FractalPark",
+      "description": "了解 FractalPark 的规范 FRM-like v1 Definition、已发布 runtime 和不同的 Classic-compatible Editor 工作流。",
+      "imageAlt": "FractalPark FRM-like v1 和 Classic-compatible 公式指南"
     },
     "drift": {
       "title": "Drift 沉浸播放 - 分形公园 FractalPark",
@@ -1821,13 +2017,13 @@
   },
   "about": {
     "title": "关于分形公园 FractalPark",
-    "aiDescription": "分形公园 FractalPark 是一个基于 MIT 许可证开源的浏览器分形艺术生成器, 使用 WebGL 进行实时 GPU 渲染.它包含 94 个内置逃逸时间分形公式（Mandelbrot、Julia、Newton、Phoenix、Magnet、McMullen、有理函数、超越函数家族）、支持 Fractint .frm 语法的自定义公式编辑器、7 种 UV 变换插件、9 种着色模式, 以及高分辨率 PNG 导出功能.使用 Next.js 16、React 19、TypeScript 5 和 Tailwind CSS 构建.渲染引擎采用插件架构, 支持动态 GLSL 着色器组装和 LRU 缓存.",
+    "aiDescription": "FractalPark 是一款采用 MIT 许可的开源浏览器分形生成器，使用 WebGL 进行实时 GPU 渲染。它具有 534 个已发布的 Standard Definition，分属 7 个结构家族，其中 94 个同时属于 Classic 集合；还有 21 篇 Formula Guide、已发布的 FRM-like v1 源码、采用 AST-to-GLSL transpilation 的独立 Classic-compatible FRM Editor、7 个 UV 变换插件、9 种着色模式、可分享 URL、供作品和公式使用的电子邮件登录云库、社区发布，以及最高 4x 的高分辨率 PNG 导出。采用 Next.js、React 和 TypeScript 构建。",
     "techStack": {
       "title": "技术栈",
       "description": "基于 Next.js、WebGL 和 TypeScript 构建.GPU 着色器驱动的实时分形渲染.",
       "frontend": "前端: Next.js 16 (App Router)、React 19、TypeScript 5、Tailwind CSS 4、shadcn/ui",
       "rendering": "渲染: WebGL 1 (GLSL 片段着色器)、插件化架构、着色器 LRU 缓存",
-      "formula": "公式系统: 自定义 Fractint .frm 解析器、CodeMirror 6 编辑器、AST 到 GLSL 转译器"
+      "formula": "Formula System：面向 Standard Definition 的已发布 FRM-like v1 parser/backend；面向自定义公式的独立 Classic-compatible CodeMirror 6 Editor 和 AST-to-GLSL 路径"
     },
     "openSource": {
       "title": "开源项目",
@@ -1843,26 +2039,26 @@
     "next": "下一个预设"
   },
   "publicProject": {
-    "tagline": "FractalPark 分形公园是一个开源、公式优先的分形知识与创作平台, 正在不断扩展 Fractint 兼容的 FRM 支持, 致力于把 Fractint 的公式遗产带入现代浏览器.",
-    "definition": "FractalPark 是一个免费、开源（MIT）的 WebGL 应用，用于探索、学习和创作分形艺术。内置 {formulaCount} 个公式（{formulaFamilyCount} 个族）、{formulaGuideCount} 篇深度公式指南、兼容 Fractint 的 FRM 语言（含指南和独立编辑器）以及社区画廊。渲染在浏览器中进行；保存作品和公式需邮箱登录，存入私有云端库。",
-    "aiDescription": "FractalPark 分形公园是基于 MIT 许可证开源的浏览器分形生成器, 使用 WebGL 实时 GPU 渲染.内置 {formulaCount} 个分形公式、{formulaFamilyCount} 个家族、{formulaGuideCount} 篇公式指南, 提供 Fractint 兼容 FRM 编辑器（AST 到 GLSL 转译）、{transformCount} 种 UV 变换插件、{coloringModeCount} 种着色模式, 支持可分享 URL、本地作品保存与最高 {maxExportScale}x 高分辨率 PNG 导出.使用 Next.js、React 和 TypeScript 构建.",
+    "tagline": "FractalPark 是一个开源、以公式为核心的分形知识与创作平台，提供可阅读和运行的已发布公式源码，以及独立的 Classic-compatible 公式 editor。",
+    "definition": "FractalPark 是一款免费、开源（MIT）的 WebGL 应用，用于探索、学习和创作分形艺术。它提供 {formulaCount} 个已发布的 Standard Definition，分属 {formulaFamilyCount} 个结构家族，其中 {classicFormulaCount} 个同时属于 Classic 集合；还有 {formulaGuideCount} 篇深度 Formula Guide、已发布的 FRM-like v1 源码、Classic-compatible 独立 FRM Editor 及社区 Gallery。渲染在浏览器中进行；保存作品和公式需要使用电子邮件登录及私有云库。",
+    "aiDescription": "FractalPark 是一款采用 MIT 许可的开源浏览器分形生成器，使用 WebGL 进行实时 GPU 渲染。它具有 {formulaCount} 个已发布的 Standard Definition，分属 {formulaFamilyCount} 个结构家族，其中 {classicFormulaCount} 个同时属于 Classic 集合；还有 {formulaGuideCount} 篇 Formula Guide、已发布的 FRM-like v1 源码、采用 AST-to-GLSL transpilation 的独立 Classic-compatible FRM Editor、{transformCount} 个 UV 变换插件、{coloringModeCount} 种着色模式、可分享 URL、供作品和公式使用的电子邮件登录云库、社区发布，以及最高 {maxExportScale}x 的高分辨率 PNG 导出。采用 Next.js、React 和 TypeScript 构建。",
     "capabilitiesHeading": "今天就能做什么",
     "capabilities": {
       "discover": {
         "title": "发现公式",
-        "summary": "浏览公式图鉴: 7 个家族共 94 个内置公式, 其中 21 篇深度公式指南讲透经典公式的数学、历史与视觉特征."
+        "summary": "浏览公式图鉴：534 个已发布的 Standard Definition 分属 7 个结构家族，其中 94 个同时属于 Classic 集合；21 篇深度公式指南讲透经典公式的数学、历史与视觉特征。"
       },
       "create": {
         "title": "在浏览器中创作",
-        "summary": "WebGL 实时探索与渲染: 每个公式都支持 Mandelbrot 与 Julia 模式, 7 种变换、9 种着色模式、渐变、光照与关键帧动画."
+        "summary": "使用 WebGL 实时探索与渲染：534 个已发布的 Standard Definition 均支持 Mandelbrot 模式，已验证的 Definition 还支持 Julia 模式；另有 7 种变换、9 种着色模式、渐变、光照与关键帧动画。"
       },
       "authorFrm": {
-        "title": "编写 FRM",
-        "summary": "用 Fractint 兼容的 FRM 语言编写自定义公式, 配套指南与独立编辑器: AST 校验、GLSL 实时预览与清晰的错误诊断."
+        "title": "学习 FRM 并编写自定义公式",
+        "summary": "通过 Guide 和独立 Editor，在 FractalPark 经过测试的 Classic-compatible FRM 子集中编写自定义公式：AST 验证、实时 GLSL 预览和清晰的诊断信息。"
       },
       "saveExport": {
         "title": "保存与分享",
-        "summary": "邮箱登录即可把作品和公式存入云端库、发布到社区画廊，也可用可分享 URL 精确还原视角，或以最高 4 倍 SSAA 抗锯齿导出高分辨率 PNG。"
+        "summary": "邮箱登录后，可把作品和自定义公式存入私有云库并在任意设备继续使用，也可将作品发布到社区画廊；无需登录也能创作，并可用最高 4 倍 SSAA 抗锯齿导出高分辨率 PNG。"
       }
     },
     "boundariesHeading": "当前边界与未来方向",
@@ -1870,7 +2066,7 @@
     "futureHeading": "未来方向",
     "boundaries": {
       "current": {
-        "0": "不断扩展的 Fractint 兼容 FRM 支持: 今天可用的是一个经过实测的 Fractint 公式语言子集——不是完整的 Fractint 复刻.",
+        "0": "已发布的 Standard Definition 使用 FRM-like v1 源码。独立 Editor 使用的是另一套实用的 Classic-compatible 子集——并非完整的 Fractint 重新实现。",
         "1": "创作无需账号。保存使用邮箱一次性验证码登录，作品和公式存入你的私有云端库；发布始终显式触发，携带自定义公式的作品会同时以 MIT 许可证公开公式源码。",
         "2": "界面支持七种语言：英文、简体中文、葡萄牙语、韩语、俄语、西班牙语和法语。"
       },

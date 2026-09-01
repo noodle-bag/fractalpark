@@ -1,0 +1,32 @@
+{
+  "schema": "fractalpark-teaching-locale/v1",
+  "formulaId": "0672aed0-1fd1-5acd-9263-a52d5680d3b4",
+  "locale": "pt",
+  "sourceRevision": "a2e5619bb8e9528ea042184634f69711d1f7522254d8e39d6060310db4663132",
+  "semanticHash": "2f8606ed369648b2fd3327a06ade9f9f82969b5734dbc9bb78bd31cf806526ec",
+  "englishContentHash": "90c1bc0aac9aa466f6f15f310cd1dff0ef6ca19053dc6f80edbc2a07c96c2008",
+  "overview": "Esta unidade se baseia nas seguintes operações exatas de FRM-like/1 para você:  `init: z = pixel; f = 1 / cosh(pixel). loop: z = fn1(z) + f. bailout: |z| <= 50.`",
+  "sourceWalkthrough": {
+    "0672aed0-1fd1-5acd-9263-a52d5680d3b4:a2e5619bb8e9528ea042184634f69711d1f7522254d8e39d6060310db4663132:fixed-addend": "Esta anotação executa `f = 1 / cosh(pixel)`.",
+    "0672aed0-1fd1-5acd-9263-a52d5680d3b4:a2e5619bb8e9528ea042184634f69711d1f7522254d8e39d6060310db4663132:loop-transform": "Esta anotação executa `z = fn1(z) + f`.",
+    "0672aed0-1fd1-5acd-9263-a52d5680d3b4:a2e5619bb8e9528ea042184634f69711d1f7522254d8e39d6060310db4663132:bailout": "Esta anotação executa `|z| <= 50`. Ela encerra a sequência de iteração desta fórmula."
+  },
+  "syntaxFeatures": {
+    "source-sequence": "Este recurso de sequência conecta, na ordem do código-fonte, as operações citadas relacionadas a `1 / cosh(pixel)`."
+  },
+  "parameterExperiment": {
+    "steps": [
+      "No perfil fixado, renderize primeiro a base com `function1 = identity`. Mantenha centro, zoom, rotação, iterações e os demais slots fixos; faça e renderize apenas uma alteração por vez: `function1 = sqr`. Restaure a base antes de cada novo teste."
+    ],
+    "expectedObservation": "Nos testes de `function1`, `1 / cosh(pixel)` em fzpfncoh, registre se há diferença visível em relação à base; registre também quando não houver diferença."
+  },
+  "exercise": {
+    "prompt": "Explique o papel de `1 / cosh(pixel)` na ordem do código-fonte e compare as execuções conforme o experimento de parâmetros.",
+    "completionCheck": "Sua resposta deve explicar todas as 3 operações anotadas, registrar a comparação do experimento e mencionar `1 / cosh(pixel)`."
+  },
+  "factsPresentation": {
+    "provenanceLead": "Fonte: revisão de execução fixada e decisão de publicação.",
+    "rightsLead": "As informações de direitos estão na unidade factual em inglês."
+  },
+  "contentHash": "c0e5fc9cbccd83f6b62c854245f8944990d7f7abcf206e15b1eac808afd3d1a2"
+}

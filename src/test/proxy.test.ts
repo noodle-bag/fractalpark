@@ -74,6 +74,29 @@ describe('proxy legacy entry redirects', () => {
     expect(response.headers.get('link')).toBeNull();
   });
 
+  it('adds noindex HTTP headers only to known held Formula Record routes', () => {
+    const held = proxy(
+      requestFor(
+        'https://www.fractalpark.com/en/formulas/00cb5763-13e1-5c93-a283-d99905acccee',
+      ),
+    );
+    expect(held.headers.get('x-robots-tag')).toBe('noindex, follow');
+
+    const published = proxy(
+      requestFor(
+        'https://www.fractalpark.com/en/formulas/00e14aa8-b766-54ea-a359-3f5d20d329b7',
+      ),
+    );
+    expect(published.headers.get('x-robots-tag')).toBeNull();
+
+    const unknown = proxy(
+      requestFor(
+        'https://www.fractalpark.com/en/formulas/aaaaaaaa-aaaa-5aaa-8aaa-aaaaaaaaaaaa',
+      ),
+    );
+    expect(unknown.headers.get('x-robots-tag')).toBeNull();
+  });
+
   it('leaves the cloud session cookie untouched on public routes (ADR 0005)', () => {
     // Auth refresh lives only inside the Auth/private Route Handlers; the
     // locale proxy performs no auth work and never rotates session cookies.

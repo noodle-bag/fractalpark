@@ -1,0 +1,35 @@
+{
+  "schema": "fractalpark-teaching-locale/v1",
+  "formulaId": "07a0afc6-ced5-5765-9314-fdb0ef593cb9",
+  "locale": "es",
+  "sourceRevision": "dce84ac5a7ee55fff27d70df826af67d386f905ee65cee65f5fa8d418e68ba27",
+  "semanticHash": "7d62c7f378c70b9fbfaeb2381d3c82383ab50a76fe5ea5cbe7fd788b451af907",
+  "englishContentHash": "698d89cd42589a9a021c5645d491bb8981449b2c531a297b45dee1f607c68f56",
+  "overview": "asinhMandelbrot se estudia con su definición fijada FRM-like/1: tú sigues z = asinh(z) + c sin tratar una imagen como garantía. El perfil fijado aporta solo una configuración concreta.",
+  "sourceWalkthrough": {
+    "07a0afc6-ced5-5765-9314-fdb0ef593cb9:dce84ac5a7ee55fff27d70df826af67d386f905ee65cee65f5fa8d418e68ba27:start-branch": "En asinhMandelbrot, este nodo ejecuta if ismand: z = 0; de otro modo z = pixel.",
+    "07a0afc6-ced5-5765-9314-fdb0ef593cb9:dce84ac5a7ee55fff27d70df826af67d386f905ee65cee65f5fa8d418e68ba27:asinh-update": "En asinhMandelbrot, este nodo ejecuta z = asinh(z) + c.",
+    "07a0afc6-ced5-5765-9314-fdb0ef593cb9:dce84ac5a7ee55fff27d70df826af67d386f905ee65cee65f5fa8d418e68ba27:termination": "En asinhMandelbrot, este nodo ejecuta |z| <= 256."
+  },
+  "syntaxFeatures": {
+    "state-flow": "El flujo de estado concreto es: la elección de ismand inicializa z antes de que asinh(z) + c lo reemplace.",
+    "stopping-test": "La prueba de parada solo evalúa |z| <= 256; no asigna el estado."
+  },
+  "parameterExperiment": {
+    "steps": [
+      "Con los demás controles del perfil fijos, ejecuta asinhMandelbrot con 48 iteraciones.",
+      "Después usa las 96 iteraciones del perfil fijado y anota si hay diferencia."
+    ],
+    "expectedObservation": "Anota si z = asinh(z) + c cambia el resultado visible o la prueba de parada |z| <= 256 frente a la línea base; la definición no garantiza una diferencia."
+  },
+  "exercise": {
+    "prompt": "Sigue las anotaciones de asinhMandelbrot y explica cómo se ejecuta z = asinh(z) + c en las operaciones señaladas.",
+    "completionCheck": "Tu respuesta explica las 3 anotaciones, señala z = asinh(z) + c y distingue |z| <= 256 como prueba de parada, no como asignación.",
+    "hint": "El flujo de estado ejecuta if ismand: z = 0; de otro modo z = pixel → z = asinh(z) + c en secuencia y entrega el resultado al paso siguiente."
+  },
+  "factsPresentation": {
+    "provenanceLead": "Fuente: definición de ejecución fijada y decisión de publicación.",
+    "rightsLead": "La información de derechos sigue la decisión fijada en la unidad en inglés."
+  },
+  "contentHash": "f3d379843d6ed3c65166d80854028aaad793b7bd31eb1f6ff2cf081536a29d66"
+}

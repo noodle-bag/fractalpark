@@ -2,15 +2,28 @@ import { readFileSync } from 'node:fs';
 import path from 'node:path';
 import { describe, expect, it, vi } from 'vitest';
 import enMessages from '../../messages/en.json';
+import esMessages from '../../messages/es.json';
+import frMessages from '../../messages/fr.json';
+import koMessages from '../../messages/ko.json';
+import ptMessages from '../../messages/pt.json';
+import ruMessages from '../../messages/ru.json';
 import zhMessages from '../../messages/zh.json';
+import restoredGuideAsset from '../../resources/formula-library/v1/teaching-restored-guide-projection.v1.json';
 import {
   PUBLISHED_FORMULA_GUIDES,
   PUBLISHED_FORMULA_GUIDE_IDS,
   formulaGuideImagePath,
+  formulaGuideLegacyPath,
   formulaGuideOpenGraphImagePath,
   formulaGuidePath,
+  getPublishedFormulaGuideFormulaId,
   getPublishedFormulaGuideBySlug,
 } from '@/content/formula-guides';
+import { PUBLISHED_TEACHING_GUIDES_V1 } from '@/content/teaching/guide-route-policy';
+import { loadFormulaRecordSeoSetsV1 } from '@/content/formula-record-seo-policy';
+import {
+  parseFormulaLocaleKeyV1,
+} from '@/content/teaching/formula-seo-policy';
 import sitemap from '@/app/sitemap';
 
 vi.mock('@/i18n/routing', () => ({
@@ -56,7 +69,7 @@ function readJpegDimensions(image: Buffer): {
 }
 
 describe('published formula guides', () => {
-  it('publishes all 21 frozen formulas in manifest order', () => {
+  it('keeps all 21 frozen legacy Guide identities in manifest order', () => {
     expect(PUBLISHED_FORMULA_GUIDE_IDS).toEqual([
       'mandelbrot',
       'lambda',
@@ -107,8 +120,14 @@ describe('published formula guides', () => {
 
   it('resolves every guide route and stable canonical image path', () => {
     for (const entry of PUBLISHED_FORMULA_GUIDES) {
+      const formulaId = getPublishedFormulaGuideFormulaId(entry);
+
       expect(getPublishedFormulaGuideBySlug(entry.slug)).toBe(entry);
-      expect(formulaGuidePath(entry)).toBe(`/formulas/${entry.slug}`);
+      expect(formulaId).toMatch(
+        /^[0-9a-f]{8}-[0-9a-f]{4}-5[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/
+      );
+      expect(formulaGuidePath(entry)).toBe(`/formulas/${formulaId}`);
+      expect(formulaGuideLegacyPath(entry)).toBe(`/formulas/${entry.slug}`);
       expect(formulaGuideImagePath(entry)).toBe(
         `/images/formulas/guides/${entry.slug}.jpg`
       );
@@ -121,14 +140,29 @@ describe('published formula guides', () => {
     expect(getPublishedFormulaGuideBySlug('frm')).toBeUndefined();
   });
 
-  it('keeps published editorial fields complete in both locales', () => {
-    for (const entry of PUBLISHED_FORMULA_GUIDES) {
-      for (const messages of [enMessages, zhMessages]) {
+  it('keeps all selected and restored Guide editorial fields complete in seven locales', () => {
+    const localeMessages = [
+      enMessages,
+      zhMessages,
+      ptMessages,
+      koMessages,
+      ruMessages,
+      esMessages,
+      frMessages,
+    ];
+    expect(PUBLISHED_TEACHING_GUIDES_V1).toHaveLength(21);
+    for (const entry of PUBLISHED_TEACHING_GUIDES_V1) {
+      for (const messages of localeMessages) {
         const content = messages.formulas.entries[entry.slug];
 
         expect(content.overview).toBeTruthy();
         expect(content.imageAlt).toBeTruthy();
         expect(content.imageCaption).toBeTruthy();
+      }
+    }
+    for (const row of restoredGuideAsset.rows) {
+      for (const messages of localeMessages) {
+        expect(messages.formulas.entries).toHaveProperty(row.guideSlug);
       }
     }
   });
@@ -153,22 +187,27 @@ describe('published formula guides', () => {
     );
   });
 
-  it('adds every published guide to the localized sitemap', () => {
+  it('includes all published Formula Records in the sitemap', () => {
     const urls = sitemap().map(({ url }) => url);
     const formulaGuideUrls = urls.filter((url) =>
       /\/(?:en|zh)\/formulas\/(?!frm$|editor$)[a-z0-9-]+$/.test(url)
     );
-    const expectedUrls = ['en', 'zh'].flatMap((locale) =>
-      PUBLISHED_FORMULA_GUIDES.map(
-        (entry) =>
-          `https://www.fractalpark.com/${locale}${formulaGuidePath(entry)}`
+    const expectedUrls = loadFormulaRecordSeoSetsV1().sitemapSet
+      .map(parseFormulaLocaleKeyV1)
+      .filter(
+        (value): value is Readonly<{ locale: string; formulaId: string }> =>
+          value !== undefined,
       )
-    );
+      .filter(({ locale }) => locale === 'en' || locale === 'zh')
+      .map(
+        ({ locale, formulaId }) =>
+          `https://www.fractalpark.com/${locale}/formulas/${formulaId}`,
+      );
 
     expect(formulaGuideUrls).toEqual(expectedUrls);
-    expect(formulaGuideUrls).toHaveLength(42);
+    expect(formulaGuideUrls).toHaveLength(1068);
     expect(urls).not.toContain(
-      'https://www.fractalpark.com/en/formulas/tricorn'
+      'https://www.fractalpark.com/en/formulas/mandelbrot'
     );
   });
 

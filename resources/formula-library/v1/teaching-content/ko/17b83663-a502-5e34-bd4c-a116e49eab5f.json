@@ -1,0 +1,33 @@
+{
+  "schema": "fractalpark-teaching-locale/v1",
+  "formulaId": "17b83663-a502-5e34-bd4c-a116e49eab5f",
+  "locale": "ko",
+  "sourceRevision": "581fbcb6400907433c24d3061ac2585a5090574f7ee6e7288bffe177432eaafa",
+  "semanticHash": "b0539f17c0e00e498da7c745374933b658189a600327bf3ec201522a0903a8e7",
+  "englishContentHash": "44b9a09b266c216f316f52535d117fd49c711b7a0e278f8fc9ef8e634368f322",
+  "localizedName": "cubic",
+  "overview": "FRM-like/1에서 cubic은 소스의 초기화, 반복, 종료 검사를 따라 실행돼요. 이름으로 규칙을 추측하지 말고 각 단계를 현재 상태에 대한 명시적 연산으로 보세요. 고정 프로필로 같은 반복 과정을 관찰할 수 있어요.",
+  "sourceWalkthrough": {
+    "17b83663-a502-5e34-bd4c-a116e49eab5f:581fbcb6400907433c24d3061ac2585a5090574f7ee6e7288bffe177432eaafa:init": "초기화 노드가 실행하는 내용: `p = pixel`",
+    "17b83663-a502-5e34-bd4c-a116e49eab5f:581fbcb6400907433c24d3061ac2585a5090574f7ee6e7288bffe177432eaafa:loop": "반복 노드가 실행하는 내용: `z = z * z * z - aa3 * z + b`",
+    "17b83663-a502-5e34-bd4c-a116e49eab5f:581fbcb6400907433c24d3061ac2585a5090574f7ee6e7288bffe177432eaafa:bailout": "종료 검사는 다음과 같아요: `|z| < test`"
+  },
+  "syntaxFeatures": {
+    "source-sequence": "이 구조는 인용된 소스 단계들을 확인 가능한 순서로 정리해요. 17b83663-a502-5e34-bd4c-a116e49eab5f:581fbcb6400907433c24d3061ac2585a5090574f7ee6e7288bffe177432eaafa:init, 17b83663-a502-5e34-bd4c-a116e49eab5f:581fbcb6400907433c24d3061ac2585a5090574f7ee6e7288bffe177432eaafa:loop, 17b83663-a502-5e34-bd4c-a116e49eab5f:581fbcb6400907433c24d3061ac2585a5090574f7ee6e7288bffe177432eaafa:bailout"
+  },
+  "parameterExperiment": {
+    "steps": [
+      "기본값에서 시작하고 한 번에 런타임 슬롯 하나만 바꾸세요: parameter1 (0, 0)→(1, 0). 매번 보이는 결과를 기록하세요."
+    ],
+    "expectedObservation": "두 실행을 비교하고 `z = z * z * z - aa3 * z + b`에서 보이는 결과와 반복 동작이 같은지 기록하세요."
+  },
+  "exercise": {
+    "prompt": "`z = z * z * z - aa3 * z + b`와 관련된 소스 주석을 찾아 초기화, 반복, 종료 검사의 순서를 설명하세요.",
+    "completionCheck": "완료하려면 `z = z * z * z - aa3 * z + b`에 인용된 주석 키 세 개를 적고 초기화, 반복, 종료 순서로 배열하세요."
+  },
+  "factsPresentation": {
+    "provenanceLead": "출처:",
+    "rightsLead": "권리:"
+  },
+  "contentHash": "784e0afcee71cf2c77e5549f6a41b54a2c989e3f730fd4a1d6712c27feab258a"
+}

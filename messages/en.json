@@ -256,7 +256,8 @@
       "breadcrumb": "Formulas",
       "eyebrow": "Formula Atlas",
       "title": "Formula Atlas",
-      "intro": "Explore FractalPark's complete catalog of 94 built-in formulas across seven families. Start with a canonical view, follow one of 21 in-depth guide profiles, or learn to write your own formula with FRM.",
+      "publishedIntro": "Explore 534 published Standard Definitions across seven structural families; 94 of them also belong to the Classic collection. Open canonical Formula Records, follow one of 21 in-depth guide profiles, or learn how FRM source works and choose the matching authoring surface.",
+      "intro": "Explore 534 published Standard Definitions across seven structural families; 94 of them also belong to the Classic collection. Open canonical Formula Records, follow one of 21 in-depth guide profiles, or learn how FRM source works and choose the matching authoring surface.",
       "stats": {
         "formulas": "Formulas",
         "families": "Families",
@@ -265,7 +266,7 @@
       "capabilities": {
         "eyebrow": "Built for exploration",
         "title": "One catalog, many ways to create",
-        "intro": "Every entry is derived from the same formula catalog and approved default state used by the interactive Explorer.",
+        "intro": "Every published entry comes from the same versioned Formula Record directory used by the Standard Library.",
         "items": {
           "realtime": {
             "title": "Real-time WebGL",
@@ -277,14 +278,15 @@
           },
           "server": {
             "title": "Server-readable directory",
-            "description": "All seven families and 94 destinations remain available in the initial HTML without client-side search or filtering."
+            "description": "All 534 published Formula Records and their categories remain discoverable in server-rendered HTML."
           }
         }
       },
       "families": {
-        "eyebrow": "Seven families",
-        "title": "Choose a mathematical character",
-        "intro": "Families organize formulas by their iteration structure and visual behavior. Counts come directly from the current built-in catalog.",
+        "eyebrow": "Seven structural families",
+        "title": "Browse by mathematical structure",
+        "intro": "Seven structural families cover every published formula exactly once. Classic is a separate overlapping collection, so its 94 formulas also remain easy to find.",
+        "browse": "Browse category",
         "descriptions": {
           "classic": "Quadratic, polynomial, Julia, multicorn, and related escape-time foundations.",
           "burning-ship": "Folded absolute-value maps with sharp hulls, ridges, and flame-like boundaries.",
@@ -297,9 +299,9 @@
       },
       "frm": {
         "eyebrow": "Create your own",
-        "title": "Learn and write formulas with FRM",
-        "description": "FRM is FractalPark's tested text-based authoring path. Read the compatibility guide, study compile-checked examples, then write and preview a formula in the standalone editor.",
-        "learn": "Learn FRM",
+        "title": "Understand FRM and the Formula Editor",
+        "description": "Published Standard Definitions use pinned FRM-like v1 source. The standalone Editor uses the Classic-compatible source contract; the Guide explains both paths and provides compile-checked Editor examples.",
+        "learn": "Understand FRM",
         "openEditor": "Open Formula Editor"
       },
       "guides": {
@@ -311,17 +313,21 @@
       },
       "directory": {
         "eyebrow": "Complete catalog",
-        "title": "All 94 formulas",
-        "intro": "The full directory is grouped by family and rendered on the server. Every link opens the formula with its canonical localized Explorer state.",
+        "title": "All 534 published formulas",
+        "intro": "The published directory is grouped by structural family and rendered on the server. Every link opens the formula's canonical Formula Record.",
         "familyCount": "{count, plural, one {# formula} other {# formulas}}",
         "backToFamilies": "Family overview",
         "guideBadge": "Guide"
       },
       "cta": {
-        "title": "Start from a formula or write your own",
-        "description": "Use the Explorer for built-in formulas, or open the standalone FRM Editor when you want to define the iteration yourself.",
+        "title": "Start from a formula or use the Classic-compatible Editor",
+        "description": "Use the Explorer for built-in formulas, or open the standalone FRM Editor for its supported Classic-compatible custom-iteration subset.",
         "explore": "Open Explorer",
         "editor": "Open Formula Editor"
+      },
+      "standardDirectory": {
+        "cta": "Browse the standard directory",
+        "hint": "534 Standard Definitions are currently published."
       }
     },
     "guide": {
@@ -356,10 +362,28 @@
         "cta": "Remix in Explorer"
       }
     },
+    "teaching": {
+      "fallbackNotice": "The reviewed English teaching unit is shown because the requested translation is unavailable. This fallback page is excluded from indexing.",
+      "sections": {
+        "overview": "Teaching overview",
+        "sourceWalkthrough": "Source walkthrough",
+        "syntaxFeatures": "Syntax features",
+        "parameterExperiment": "Parameter experiment",
+        "exercise": "Exercise",
+        "provenance": "Sources and rights"
+      },
+      "labels": {
+        "steps": "Steps",
+        "expectedObservation": "What to observe",
+        "safetyNote": "Safety note",
+        "completionCheck": "Completion check",
+        "hint": "Hint"
+      }
+    },
     "frmGuide": {
-      "eyebrow": "FRM formula language",
-      "title": "Write Fractals with FRM",
-      "intro": "Learn FractalPark's tested FRM subset, understand how source becomes a GPU shader, and build three working formulas from the same examples used by the editor.",
+      "eyebrow": "FRM language and compatibility",
+      "title": "Understand FRM in FractalPark",
+      "intro": "Learn how canonical FRM-like v1 Definitions power published Standard formulas, then use the separate Classic-compatible Editor examples without confusing the two source contracts.",
       "contentsLabel": "On this page",
       "copy": {
         "copy": "Copy",
@@ -370,15 +394,15 @@
         "what-is-frm": {
           "title": "What Is FRM",
           "body": [
-            "FRM is a compact, text-based way to describe an iterative fractal. A formula names its starting state, the calculation repeated for each orbit, and the condition that decides whether iteration continues.",
-            "The format grew out of the Fractint ecosystem, where formula files made it possible to exchange experiments without rebuilding the rendering program. FractalPark carries that authoring idea into a browser workflow while documenting its own tested subset instead of claiming complete compatibility."
+            "FractalPark FRM-like v1 is the canonical, typed source language behind published Standard Definitions. A Definition pins its language, standard library, NumericProfile, parameters, initial state, repeated orbit step, and continue-iteration predicate.",
+            "Classic .frm grew out of the Fractint ecosystem and remains the source contract used by the Classic-compatible standalone Editor and import pipeline. FractalPark scans and diagnoses that dialect separately; Classic source and frmSemanticsVersion 1 or 2 are not alternate spellings of canonical FRM-like v1."
           ],
           "historyPrefix": "For the wider project's origins and history, see the",
           "historyLink": "Fractint project site"
         },
         "support": {
           "title": "FRM Support in FractalPark",
-          "intro": "FractalPark tokenizes, parses, validates, and compiles a deliberate FRM subset. The table separates constructs that work directly, constructs with documented FractalPark semantics, and constructs the current workflow cannot preserve.",
+          "intro": "This compatibility table describes the Classic-compatible Editor and import path. Canonical published Standard Definitions use the separately versioned FRM-like v1 parser, typed IR, standard32 backend, and fixed Safety Envelope.",
           "table": {
             "level": "Level",
             "meaning": "Meaning",
@@ -418,10 +442,10 @@
             "preprocessor": "Preprocessor features",
             "rejected-constructs": "Any construct rejected by the current compile pipeline"
           },
-          "disclaimer": "This is a tested compatibility baseline, not a claim of full Fractint compatibility. When the compiler changes, this matrix and its tests must change together.",
+          "disclaimer": "This is a tested Classic compatibility baseline, not a claim of full Fractint compatibility. It is separate from the Standard publication ledger.",
           "verified": {
             "title": "Verified compatibility",
-            "intro": "These capability counts come from the versioned manifest: 588 target entries comprise 579 strict-v2 passes and 9 documented waivers; 117 separate entries are excluded with stable reasons.",
+            "intro": "These Classic-import capability counts come from the versioned compatibility manifest: 588 target entries comprise 579 strict-v2 passes and 9 documented waivers; 117 separate entries are excluded with stable reasons. They do not count published FRM-like v1 Definitions.",
             "stats": {
               "target": "Target entries",
               "passed": "Strict-v2 passes",
@@ -441,7 +465,7 @@
         },
         "anatomy": {
           "title": "Formula Anatomy",
-          "intro": "A FractalPark FRM formula has one named declaration and three explicit sections. Together they define the state transition for every pixel.",
+          "intro": "Canonical FRM-like v1 and the current Classic Editor examples share a named formula and the init, loop, and bailout ideas, but their complete grammars are different. In v1, semantic directives and an optional typed parameters section are also part of the Definition.",
           "parts": {
             "init": "Runs once for a pixel. Set the initial orbit value and any helper variables here.",
             "loop": "Runs once per iteration. Update z and any state that the next iteration needs.",
@@ -451,7 +475,7 @@
         },
         "syntax": {
           "title": "Syntax Guide",
-          "intro": "The language stays intentionally small: expressions describe complex arithmetic, statements update orbit state, and control flow selects among updates.",
+          "intro": "Both surfaces stay deliberately small. The summaries below are shared concepts; use a published Formula Record's Source action for canonical directives and typed parameters, and use the Editor diagnostics for Classic source.",
           "topics": {
             "sections": {
               "title": "Declaration and sections",
@@ -481,7 +505,7 @@
         },
         "pipeline": {
           "title": "FRM to AST to GLSL Pipeline",
-          "intro": "FractalPark does not paste FRM text into a shader. It passes source through a staged compiler so syntax, meaning, generated code, and diagnostics stay connected.",
+          "intro": "FractalPark never pastes source text into a shader. Canonical v1 source flows through its typed parser and CPU/GLSL backend; Classic Editor source flows through its scanner, selected-entry frontend, canonical formula model, and plugin compiler.",
           "steps": {
             "source": {
               "title": "FRM source",
@@ -508,11 +532,11 @@
               "body": "A successful compile becomes the same formula-plugin contract used by the renderer and shader assembly system."
             }
           },
-          "note": "The shared compiler contract keeps Explore, the standalone Editor, saved custom formulas, examples, and tests on one implementation path."
+          "note": "Each source contract has one implementation path of its own. Published Standard runtime uses FRM-like v1; the standalone Editor and current custom-formula examples use the Classic-compatible path. Neither silently falls back to the other."
         },
         "tutorials": {
           "title": "Progressive Tutorials",
-          "intro": "These examples advance from the smallest quadratic formula to parameters and stateful feedback. Each source block is taken directly from the shared example registry and compiled during tests.",
+          "intro": "These are Classic-compatible Editor examples, not canonical FRM-like v1 Definitions. They advance from a small quadratic formula to parameters and stateful feedback; every source block comes from the shared Editor registry and compiles during tests.",
           "lesson": "Lesson {number}",
           "openInEditor": "Open in FRM Editor",
           "goals": {
@@ -520,7 +544,7 @@
             "parameter-drift": "Focus: p1 and p2 parameter slots, a complex literal, and cabs(z) as an explicit magnitude function.",
             "orbit-echo": "Focus: zPrev as the previous orbit state. Feedback adds memory without introducing a second manually managed state variable."
           },
-          "editorNote": "The FRM Editor opens these same compile-checked examples by stable ID. Formula source stays in the current tab until you save it to your cloud library, and is never embedded in the URL."
+          "editorNote": "The standalone FRM Editor opens these Classic-compatible, compile-checked examples by stable ID. Formula source stays in the current tab until you save it to your cloud library and is never embedded in the URL. This does not activate canonical v1 import or writers."
         },
         "diagnostics": {
           "title": "Errors and Diagnostics",
@@ -550,7 +574,7 @@
           "exploreTitle": "See the renderer in context",
           "exploreBody": "Open Explore to compare built-in formula behavior, coloring, transforms, animation, and export controls before writing a custom formula.",
           "exploreCta": "Open Explore",
-          "editorNote": "Use the dedicated FRM Editor to compile, preview, import, and download formulas; sign in to save one to your cloud library before handing it off to Explore.",
+          "editorNote": "Use the dedicated FRM Editor for the current Classic-compatible compile, preview, import, and download workflow. It does not accept canonical FRM-like v1 source; inspect published v1 source from a Formula Record and use that Record's Open or Remix action to run it.",
           "referencesTitle": "References",
           "referencesIntro": "Historical context and implementation details are linked separately so the guide can distinguish the Fractint lineage from FractalPark's current compiler contract.",
           "references": {
@@ -787,25 +811,25 @@
       },
       "newton-cosh": {
         "title": "Newton Cosh",
-        "summary": "Newton's method applied to cosh z = 1: infinitely many evenly spaced roots turn the plane into repeating convergence bands.",
-        "overview": "Newton's usual root-finding step changes character when f(z) = cosh z − 1. Its roots are 2πik for every integer k. A polynomial gives an orbit only finitely many possible destinations; these roots keep marching along the imaginary axis at equal intervals. The fractal therefore arranges itself into bands running upward and downward, rather than settling into a few basins.\n\nThe map N(z) = z − (cosh z − 1) / sinh z is meromorphic: it works throughout the complex plane except at its singularities. Keep an eye on two repeating sets of points: the roots of cosh z − 1, and the zeros of its denominator sinh z at z = πik for integer k. Near a denominator zero, nudging the starting point can switch the root the orbit reaches.\n\nYou can see the periodicity along the imaginary axis at a glance — no math background needed. The horizontal bands repeat above and below one another, one for each period of the roots. At their joins, fine vertical threads record where one basin hands an orbit to the next.",
+        "summary": "Newton's method applied to cosh z = 1: infinitely many evenly spaced double roots turn the plane into repeating convergence bands.",
+        "overview": "Newton's usual root-finding step changes character when f(z) = cosh z − 1. Its roots are 2πik for every integer k, and each is a double root. A polynomial gives an orbit only finitely many possible destinations; these roots keep marching along the imaginary axis at equal intervals. The fractal therefore arranges itself into bands running upward and downward, rather than settling into a few basins.\n\nThe correction (cosh z − 1) / sinh z simplifies, away from zeros, to tanh(z/2). The denominator sinh z vanishes at every πik: the even multiples are the roots and are removable in the simplified quotient, while the genuine poles and sensitive singularities are the odd multiples (2k+1)πi. Near those odd multiples, a tiny change in the starting point can greatly change the step.\n\nYou can see the periodicity along the imaginary axis at a glance — no math background needed. The horizontal bands repeat above and below one another, one for each period of the roots. At their joins, fine vertical threads record where one basin hands an orbit to the next.",
         "imageAlt": "Newton fractal for cosh z = 1, with repeating horizontal bands and warped boundaries stacked along the imaginary axis",
         "imageCaption": "FractalPark’s Newton view of cosh z = 1: repeating convergence bands along the imaginary axis, separated by folded, threadlike borders.",
         "math": {
           "iteration": {
             "label": "Newton’s cosh iteration",
-            "explanation": "Newton's rule is N(z) = z − f(z) / f′(z). Here f(z) = cosh z − 1 and f′(z) = sinh z. Each step finds the correction (cosh z − 1) / sinh z, then takes it away from z.\n\nThe equation cosh z = 1 has infinitely many solutions: z = 2πik for every integer k. Each is a simple root: cosh z grows linearly close by, so Newton's method converges quadratically there. Far from the real axis, cosh and sinh grow exponentially. Their quotient may be tiny or enormous, and that is where the image's sensitive seams take shape.\n\nTry z₀ = 0.2i. Since i·sinh(0.2) ≈ 0.201i and cosh(0.2) ≈ 1.020, the first correction is small; the orbit quickly reaches the root at z = 0. Now move to z₀ = (0.5 + 3.0i), farther from every root. The correction now contains large exponential terms. The orbit can cross several basin boundaries before settling, or wander chaotically between roots for many iterations before one captures it.\n\nThe function repeats with period 2πi in the imaginary direction, and the Newton map does too: N(z + 2πi) = N(z) + 2πi. That repeated rule is the source of the horizontal banding."
+            "explanation": "Newton's rule is N(z) = z − f(z) / f′(z). Here f(z) = cosh z − 1 and f′(z) = sinh z. Each step subtracts the correction (cosh z − 1) / sinh z, which is tanh(z/2) away from the zeros of sinh z.\n\nThe equation cosh z = 1 has infinitely many solutions: z = 2πik for every integer k. Each is a double root, so nearby Newton errors are approximately halved on each step: convergence is linear, not quadratic. The denominator vanishes at every πik. At even multiples the quotient has a removable value because those points are roots; the genuine poles are the odd multiples (2k+1)πi.\n\nTry z₀ = 0.2i. The correction is tanh(0.1i) = i tan(0.1) ≈ 0.1003i, so z₁ ≈ 0.0997i: the error is visibly about halved. Near an odd multiple such as πi, the correction can become very large. In the implementation, the real component is clamped for numerical stability, and the step is left unchanged when |sinh(z)|² < 1e-10; those are safeguards, not claims about the unsafeguarded map.\n\nThe function repeats with period 2πi in the imaginary direction, and the Newton map does too: N(z + 2πi) = N(z) + 2πi. That repeated rule is the source of the horizontal banding."
           }
         },
-        "visualCharacteristics": "Start with the horizontal bands along the imaginary axis. A period of roots makes one band, and the convergence pattern returns in the next. The borders do not run straight: they bend and fold, then pull out fine vertical filaments like taut threads.\n\nWithin each band, the basin geometry resembles its neighbours, with small distortions. Think of a ribbon folded repeatedly. The warm and cool zones come from the colouring; the sharp breaks arise where singularities of sinh z destabilise the Newton correction.",
+        "visualCharacteristics": "Start with the horizontal bands along the imaginary axis. A period of roots makes one band, and the convergence pattern returns in the next. The borders do not run straight: they bend and fold, then pull out fine vertical filaments like taut threads.\n\nWithin each band, the basin geometry resembles its neighbours, with small distortions. Think of a ribbon folded repeatedly. The warm and cool zones come from the colouring; the sharp breaks gather near the odd multiples of πi, where the Newton correction has genuine poles.",
         "faq": {
           "target": {
             "question": "What equation is being solved?",
-            "answer": "It seeks the complex solutions of cosh(z) = 1: z = 2πik for every integer k. The equally spaced roots line the imaginary axis. Each draws in nearby Newton orbits, and their repeating arrangement creates the horizontal bands."
+            "answer": "It seeks the complex solutions of cosh(z) = 1: z = 2πik for every integer k. These equally spaced roots line the imaginary axis, and each is a double root. Their repeating arrangement creates the horizontal bands."
           },
           "singularities": {
             "question": "Why are some regions extremely sensitive?",
-            "answer": "The correction divides by sinh(z), which vanishes at z = πik for integer k. Close to one of these points, the correction can become huge, sending an orbit across several basin boundaries before it converges. These singularities are not roots; they pull the fine vertical filaments and unsettled border zones into view."
+            "answer": "The correction divides by sinh(z), which vanishes at z = πik for integer k. The even multiples are roots and are removable in the simplified quotient; the genuine poles are the odd multiples (2k+1)πi. Close to an odd multiple, the correction can become huge, sending an orbit across several basin boundaries and pulling fine vertical filaments and unsettled border zones into view."
           }
         }
       },
@@ -896,7 +920,7 @@
         "math": {
           "iteration": {
             "label": "Hyperbolic cosine iteration",
-            "explanation": "Each turn evaluates complex hyperbolic cosine at the current z, then adds c. The definition cosh(z) = (eᶻ + e⁻ᶻ)/2 puts exponential growth on the real axis beside imaginary-axis repetition with period 2π.\n\nTry z = iπ/2 on the imaginary axis. Since cosh(iπ/2) = cos(π/2) = 0, starting there with c = 0 leaves the recurrence at zero. Nudge the point off that axis and the eᶻ term can drive exponential growth and rapid escape. That sharp divide—bounded behavior in a narrow strip, rapid escape elsewhere—is typical of transcendental iteration. Unlike a polynomial, this map has no universal escape radius; FractalPark uses a bailout threshold chosen to detect divergence in practice."
+            "explanation": "Each turn evaluates complex hyperbolic cosine at the current z, then adds c. The definition cosh(z) = (eᶻ + e⁻ᶻ)/2 puts exponential growth on the real axis beside imaginary-axis repetition with period 2π.\n\nTry z = iπ/2 on the imaginary axis. Since cosh(iπ/2) = cos(π/2) = 0, starting there with c = 0 gives z₁ = 0 after one step. Zero is not a fixed point here: the following step gives z₂ = cosh(0) = 1. Nudge the point off that axis and the eᶻ term can drive exponential growth and rapid escape. That sharp divide—bounded behavior in a narrow strip, rapid escape elsewhere—is typical of transcendental iteration. Unlike a polynomial, this map has no universal escape radius; FractalPark uses a bailout threshold chosen to detect divergence in practice."
           }
         },
         "visualCharacteristics": "First notice the vertical repetition. Because cosh(z) repeats in the imaginary direction every 2π, fine plumes, layered fans, and gilt filaments return at regular intervals. The result is striped and tiered, far from the radial branching of polynomial Mandelbrot sets.\n\nIn the canonical rendering, plumes and fans often carry warm tones. The finest detail concentrates in narrow horizontal bands, where an orbit lingers near the boundary between escape and non-escape. Above and below, escape accelerates and the image becomes smoother.",
@@ -1062,28 +1086,28 @@
       },
       "zaslavsky-map": {
         "title": "Zaslavsky Map",
-        "summary": "A complex sine map: sine bends the orbit, a fixed 0.55-radian turn rotates it, and c shifts it—an adaptation inspired by George Zaslavsky's 1978 dissipative kicked-rotor map.",
-        "overview": "The Zaslavsky Map bends an orbit with sine, turns the result by the fixed complex phase (e^{0.55i}), then adds c. A polynomial escape map gets its character from powers of z growing larger and larger. Here the plot comes from periodic bends meeting a steady turn.\n\nIn 1978, George M. Zaslavsky introduced the original map to model a dissipative kicked rotor: a rotating body repeatedly kicked while friction drains energy. That classical map is two-dimensional, using real action-angle variables. FractalPark recasts the idea in one complex variable: sine supplies the nonlinear kick, the fixed complex multiplier supplies the turn, and c makes parameter-scanning escape-time images possible.\n\nComplex sine can grow without bound along the imaginary axis, so this is not simple polynomial escape. An orbit can circle for a while, then fly apart. That hesitation leaves swirling arms and concentric rings, especially after a kaleidoscopic spatial transform.",
+        "summary": "A complex sine map: a 0.28-weighted sine perturbation bends the orbit, a fixed 0.55-radian turn rotates it, and c shifts it—an adaptation inspired by George Zaslavsky's 1978 dissipative kicked-rotor map.",
+        "overview": "FractalPark implements z(n+1) = exp(0.55 i) * (z(n) + 0.28 sin(z(n))) + c. Sine is a 0.28-weighted perturbation of the existing orbit, then the fixed complex phase rotates the full perturbed result by 0.55 radians (about 31.5°), and c shifts it.\n\nIn 1978, George M. Zaslavsky introduced the original map to model a dissipative kicked rotor: a rotating body repeatedly kicked while friction drains energy. That classical map is two-dimensional, using real action-angle variables. FractalPark recasts the idea in one complex variable for escape-time images; it is not the exact recurrence from the 1978 paper.\n\nComplex sine can grow without bound along the imaginary axis, so this is not simple polynomial escape. An orbit can circle for a while, then fly apart. That hesitation leaves swirling arms and concentric rings, especially after a kaleidoscopic spatial transform.",
         "imageAlt": "The Zaslavsky map: swirling arms and mandala-like rings in warm orange and gold",
         "imageCaption": "The Zaslavsky map rendered by FractalPark: concentric arcs and radiating spokes form a glowing mandala in warm oranges and golds.",
         "math": {
           "iteration": {
             "label": "Sinusoidal rotation map",
-            "explanation": "Sine bends z; the fixed complex multiplier turns it; c shifts the result.\n\nStart on the real axis. For z₀ = (0, 0), sin(0) = 0, so z₁ = e^{0.55i} × 0 + c = c. After that, complex sine can grow: the magnitude of sin(a + ib) contains terms up to cosh(b). A point with a large imaginary coordinate gets a large kick from sine, and is more likely to escape.\n\nThe 0.55-radian rotation (about 31.5°) is not a parameter; it is hard-coded in the formula. Every orbit gets the same angular twist each time. Hence the swirls."
+            "explanation": "FractalPark uses z(n+1) = exp(0.55 i) * (z(n) + 0.28 sin(z(n))) + c. The sine term is a 0.28-weighted perturbation of z, not a replacement for it. The fixed multiplier rotates the whole perturbed orbit counter-clockwise by 0.55 radians (about 31.5°), then c shifts the result.\n\nFor z₀ = 0, sin(0)=0, so the parenthesized perturbed term is zero; rotating zero still gives zero, and only c remains: z₁ = c. After that, complex sine can grow: the magnitude of sin(a + ib) contains terms up to cosh(b). A point with a large imaginary coordinate can receive a large sine perturbation and is more likely to escape.\n\nThe 0.55-radian rotation is fixed in the formula, not adjustable by the user. As an implementation detail rather than part of the idealized recurrence, FractalPark clamps the input imaginary component to ±80 and rounds each output component to a 1/16 grid."
           }
         },
-        "visualCharacteristics": "Kaleidoscopic transforms make the swirling arms and mandala-like rings especially clear. The canonical image sets concentric arcs and radiating spokes around a central region where the sine perturbation keeps orbits bounded.\n\nWarm oranges and golds sit against deep black in the canonical rendering. Constant rotation curves the arms; sine puts fine ripples along the ring edges.",
+        "visualCharacteristics": "Kaleidoscopic transforms make the swirling arms and mandala-like rings especially clear. The canonical image sets concentric arcs and radiating spokes around a central region where the perturbed orbit can remain bounded.\n\nWarm oranges and golds sit against deep black in the canonical rendering. Constant rotation curves the arms; the sine perturbation puts fine ripples along the ring edges.",
         "faq": {
           "rotation": {
             "question": "Where does the rotation come from?",
-            "answer": "The map multiplies the perturbed orbit by e^{0.55i}, the unit complex number that turns the plane about 31.5° counter-clockwise. It happens on every iteration and is fixed in the formula, not adjustable by the user. The 0.55-radian value was chosen empirically for balanced swirls."
+            "answer": "The map multiplies the full perturbed orbit z + 0.28 sin(z) by exp(0.55 i), rotating it about 31.5° counter-clockwise, then adds c. It happens on every iteration and is fixed in the formula, not adjustable by the user."
           },
           "transform": {
             "question": "Is kaleidoscope part of the formula?",
             "answer": "No. Kaleidoscope is an optional spatial transform outside the iteration. It reflects or copies sectors of the parameter plane. The Zaslavsky Map has no built-in reflection symmetry; the kaleidoscope is a separate rendering step that can be switched independently."
           }
         },
-        "history": "George M. Zaslavsky (1929–2008) was a Soviet‑born mathematical physicist who made foundational contributions to the theory of dynamical chaos. He introduced the map that now bears his name in a 1978 paper titled \"The Simplest Case of a Strange Attractor,\" published in Physics Letters A. The map was derived as a stroboscopic description of a dissipative kicked rotor — a rotating system that receives periodic impulses and loses energy through friction.\n\nZaslavsky later moved to the United States, joining New York University's physics department and the Courant Institute of Mathematical Sciences. He authored several books on Hamiltonian chaos and fractional dynamics. The Scholarpedia article on the Zaslavsky map, written by Zaslavsky himself in 2007, provides an authoritative technical reference.\n\nClassical Zaslavsky maps operate on two real variables (action and angle). The complex variant used by FractalPark, with its sine perturbation and fixed complex multiplier, is a creative adaptation suitable for escape‑time rendering rather than a direct transcription of the original dissipative system."
+        "history": "George M. Zaslavsky (1929–2008) was a Soviet‑born mathematical physicist who made foundational contributions to the theory of dynamical chaos. He introduced the map that now bears his name in a 1978 paper titled \"The Simplest Case of a Strange Attractor,\" published in Physics Letters A. The map was derived as a stroboscopic description of a dissipative kicked rotor — a rotating system that receives periodic impulses and loses energy through friction.\n\nZaslavsky later moved to the United States, joining New York University's physics department and the Courant Institute of Mathematical Sciences. He authored several books on Hamiltonian chaos and fractional dynamics. The Scholarpedia article on the Zaslavsky map, written by Zaslavsky himself in 2007, provides an authoritative technical reference.\n\nClassical Zaslavsky maps operate on two real variables (action and angle). FractalPark's complex escape-time variant uses z(n+1) = exp(0.55 i) * (z(n) + 0.28 sin(z(n))) + c; it is a creative adaptation rather than a direct transcription of the original dissipative system."
       },
       "zubieta": {
         "title": "Zubieta",
@@ -1110,6 +1134,145 @@
         },
         "history": "Zubieta belongs to a broader family of \"abs\" fractal variants — maps that apply absolute-value folds at different stages of the quadratic iteration. The best-known member of this family is the Burning Ship fractal, discovered by Michael Michelitsch and Otto E. Rössler in 1992, which folds the components before squaring. The Buffalo fractal, another relative, applies the fold after squaring but before adding c.\n\nThe Zubieta variant applies the component-wise absolute value after both squaring and the addition of c. Its precise origin is difficult to pin to a single published academic source. Variants of this kind circulated among fractal-rendering communities and software packages (Ultra Fractal, Fractint, XaoS) in the 1990s and 2000s, often named after whoever first implemented or popularized them in a given program.\n\nFractalPark's implementation follows the standard component-wise fold and renders the parameter plane in Mandelbrot mode."
       }
+    },
+    "directory": {
+      "breadcrumbLabel": "Breadcrumb",
+      "breadcrumbAtlas": "Formula Atlas",
+      "breadcrumb": "Directory",
+      "eyebrow": "Standard Formula Directory",
+      "title": "Standard Formula Directory",
+      "description": "Browse FractalPark's {count} published Standard Definitions by family.",
+      "intro": "All {count} published Standard Definitions are collected here. Every listed formula has a complete runnable implementation.",
+      "facets": {
+        "title": "Browse by family",
+        "family": "Family",
+        "status": "Publication status",
+        "all": "All",
+        "categoryTitle": "Browse by category",
+        "category": "Category"
+      },
+      "family": {
+        "algebraic-power": "Algebraic power",
+        "transcendental": "Transcendental",
+        "function-composition": "Function composition",
+        "rational-reciprocal": "Rational reciprocal",
+        "orbit-memory": "Orbit memory",
+        "folded-absolute": "Folded absolute",
+        "root-finding": "Root finding"
+      },
+      "status": {
+        "publish": "Published",
+        "hold": "Held",
+        "exclude": "Excluded"
+      },
+      "resultCount": "{count} published Definitions",
+      "category": {
+        "classic": "Classic"
+      },
+      "guideBadge": "Guide",
+      "searchLabel": "Search formulas",
+      "searchPlaceholder": "Search by formula name",
+      "sortLabel": "Sort",
+      "apply": "Apply",
+      "sort": {
+        "nameAsc": "Name A–Z",
+        "nameDesc": "Name Z–A"
+      }
+    },
+    "record": {
+      "eyebrow": "Formula Record",
+      "identity": "Identity and provenance",
+      "formulaId": "Formula ID",
+      "rightsAttribution": "Rights and attribution",
+      "sourceAndImplementation": "Source and implementation",
+      "canonicalName": "Canonical name",
+      "originalName": "Original name",
+      "historicalSource": "Historical source",
+      "repository": "Repository",
+      "currentImplementation": "Current implementation",
+      "author": "Author",
+      "originalResource": "Original resource",
+      "originalVersion": "Original version",
+      "unconfirmed": "Unconfirmed",
+      "provenance": "Provenance collection",
+      "aliases": "Legacy aliases",
+      "rights": "Rights and public scope",
+      "rightsStatus": "Rights status",
+      "rightsScope": "Public scope",
+      "canonicalLicense": "Canonical implementation license",
+      "decision": "Publication decision",
+      "reason": "Reason",
+      "basis": "Implementation basis",
+      "reviewed": "Reviewed",
+      "leakage": "Leakage scan",
+      "publishedSummary": "This canonical FractalPark implementation is published and runnable.",
+      "unavailableSummary": "This identity is documented, but no source, run, edit, or remix action is available under the current decision.",
+      "source": "Canonical source",
+      "language": "Language",
+      "stdlib": "Standard library",
+      "profileMode": "Profile mode",
+      "profileCenter": "Profile center",
+      "profileZoom": "Profile zoom",
+      "profileIterations": "Profile iterations",
+      "profileQuality": "Profile evidence",
+      "sourceRevision": "Source revision",
+      "semanticHash": "Semantic hash",
+      "parameters": "Parameters",
+      "noParameters": "No declared parameters",
+      "previewAlt": "Deterministic preview of {name}",
+      "previewDiagnostic": "Preview awaiting visual review",
+      "previewDiagnosticBody": "The deterministic render reported visual anomalies. It is preserved as diagnostic evidence but is not shown as a verified preview.",
+      "viewDiagnosticPreview": "View diagnostic render",
+      "openExplore": "Open in Explorer",
+      "remix": "Remix anonymously",
+      "viewSource": "View source",
+      "downloadSource": "Download source",
+      "takedown": "Rights or attribution concern?",
+      "takedownBody": "Send the Formula ID and supporting evidence. The maintainer can hold or withdraw the implementation while the claim is reviewed.",
+      "rightsValues": {
+        "project-owned": "Project-owned",
+        "source-declared-public-domain-assumption": "Source-declared public-domain assumption",
+        "gpl3Only": "GPL-3.0-only",
+        "no-explicit-permission": "No explicit permission"
+      },
+      "scopeValues": {
+        "project-canonical-implementation": "FractalPark canonical implementation",
+        "original-source-public-domain-assumption-and-project-canonical-implementation": "Public-domain assumption for the source; MIT for FractalPark's canonical implementation",
+        "project-independent-rewrite-only": "FractalPark independent rewrite only",
+        "identity-and-provenance-metadata-only": "Identity and provenance metadata only"
+      },
+      "sourceNotes": {
+        "fractalparkProjectOwned": "This is a FractalPark project-owned implementation. The linked file is the pinned canonical Definition.",
+        "fractintDirectAdaptation": "The current FractalPark implementation follows the verified semantics of the linked Fractint formula. The original file retains its own rights terms.",
+        "fractintIndependentRewrite": "Historical source: Fractint. The current FractalPark implementation is a separated independent rewrite; the original FRM text is not redistributed.",
+        "iteratedDynamicsIndependentRewrite": "Historical source: Iterated Dynamics, a successor to Fractint. The current FractalPark implementation is a separated independent rewrite; the original FRM text is not redistributed."
+      },
+      "basisValues": {
+        "project-owned": "Project-owned",
+        "direct-adaptation": "Direct adaptation",
+        "separated-independent-rewrite": "Separated independent rewrite",
+        "none": "Not applicable"
+      },
+      "scanValues": {
+        "not-applicable": "Not applicable",
+        "pending": "Pending",
+        "passed": "Passed",
+        "failed": "Failed"
+      }
+    },
+    "sourceWorkspace": {
+      "title": "Canonical source",
+      "readOnlyDescription": "This verified canonical revision is read-only. Remix creates a separate editable fork.",
+      "previewLabel": "Canonical source preview for {name}",
+      "editorLabel": "Read-only canonical source for {name}",
+      "loading": "Loading canonical source…",
+      "unavailable": "The canonical source could not be loaded and verified.",
+      "retry": "Retry",
+      "open": "Open full source",
+      "workspaceDescription": "Read-only canonical source for {name}. Remix creates a separate fork.",
+      "readOnly": "Read-only canonical revision",
+      "remix": "Remix",
+      "download": "Download .frm"
     }
   },
   "artworks": {
@@ -1355,6 +1518,23 @@
       "active": "Active",
       "builtin": "Built-in",
       "custom": "Custom",
+      "standard": "Standard Library",
+      "mine": "My Formulas",
+      "library": {
+        "current": "Current formula",
+        "open": "Open Library",
+        "title": "Standard Formula Library",
+        "description": "Browse all {count} published formulas. Definitions load only when selected.",
+        "loading": "Loading the formula index...",
+        "unavailable": "The standard formula library is unavailable right now.",
+        "selectionFailed": "This formula could not be loaded. Your current formula was kept.",
+        "familyFilter": "Filter formulas by family",
+        "categoryFilter": "Filter formulas by category",
+        "loadMore": "Load more",
+        "lucky": "Feeling Lucky?",
+        "resetProfile": "Reset Formula Profile",
+        "undoFormulaChange": "Undo Formula Change"
+      },
       "resolution": {
         "loading": "Loading formula...",
         "notFound": "The custom formula “{formula}” could not be loaded.",
@@ -1411,6 +1591,12 @@
       },
       "family": {
         "all": "All",
+        "algebraic-power": "Algebraic Power",
+        "folded-absolute": "Folded Absolute",
+        "function-composition": "Function Composition",
+        "orbit-memory": "Orbit Memory",
+        "rational-reciprocal": "Rational & Reciprocal",
+        "root-finding": "Root Finding",
         "classic": "Classic",
         "burning-ship": "Burning Ship",
         "newton": "Newton",
@@ -1426,6 +1612,9 @@
       "position": "Position",
       "center": "Center",
       "zoom": "Zoom",
+      "invalidNumber": "Enter a valid finite number.",
+      "increase": "Increase",
+      "decrease": "Decrease",
       "mode": {
         "label": "Fractal Mode",
         "mandelbrot": "Mandelbrot",
@@ -1659,6 +1848,8 @@
       "loadFailed": "Editor failed to load",
       "loadFailedDescription": "Unable to load the code editor. Please refresh the page.",
       "compile": "Compile",
+      "apply": "Apply",
+      "invalidDraft": "Invalid Draft — saving preserves these source bytes and diagnostics, but the last successful preview remains active.",
       "compiling": "Compiling...",
       "save": "Save",
       "saved": "Saved",
@@ -1693,13 +1884,13 @@
     "landing": {
       "heading": "FractalPark: open-source fractal generator in your browser",
       "whatIsHeading": "What is FractalPark?",
-      "whatIsAnswer": "FractalPark is a free, open-source (MIT) fractal knowledge and creation platform that renders entirely in your browser with WebGL: {formulaCount} built-in formulas, Fractint-compatible FRM authoring, and high-resolution PNG export. Creating needs no account; saving artworks and formulas uses email sign-in and a private cloud library.",
+      "whatIsAnswer": "FractalPark is a free, open-source (MIT) fractal knowledge and creation platform that renders entirely in your browser with WebGL: {formulaCount} published Standard Definitions across {formulaFamilyCount} structural families, of which {classicFormulaCount} also belong to the Classic collection; published FRM-like v1 source; a Classic-compatible FRM Editor workflow; and high-resolution PNG export. Creating needs no account; saving artworks and formulas uses email sign-in and a private cloud library.",
       "capabilitiesHeading": "Core capabilities",
-      "capabilitiesIntro": "{formulaCount} formulas across {formulaFamilyCount} families · {formulaGuideCount} in-depth Formula Guides · {transformCount} transforms · {coloringModeCount} coloring modes · shareable URLs · PNG export up to {maxExportScale}×",
+      "capabilitiesIntro": "{formulaCount} published Standard Definitions across {formulaFamilyCount} structural families · of these, {classicFormulaCount} also in the Classic collection · {formulaGuideCount} in-depth Formula Guides · {transformCount} transforms · {coloringModeCount} coloring modes · shareable URLs · PNG export up to {maxExportScale}×",
       "linksHeading": "Keep exploring",
       "links": {
         "formulas": "Formula Atlas — every formula with math, history, and live examples",
-        "frmGuide": "FRM Guide — write Fractint-compatible formulas in the browser",
+        "frmGuide": "FRM Guide — understand published FRM-like v1 and Classic-compatible Editor source",
         "drift": "Drift — sit back with an immersive preset slideshow",
         "about": "About — project facts, boundaries, and open-source details"
       },
@@ -1716,7 +1907,7 @@
   },
   "frmEditor": {
     "title": "FRM Editor",
-    "description": "Write, compile, and preview FRM formulas in your browser; save them to your cloud library.",
+    "description": "Write, compile, and preview formulas from FractalPark's Classic-compatible FRM subset in your browser; save them to your cloud library.",
     "breadcrumb": "Breadcrumb",
     "crumbGuide": "FRM Guide",
     "beta": "Beta",
@@ -1743,7 +1934,11 @@
     "unknownExample": "That example is not available. Start with a blank formula instead.",
     "replaceConfirm": "Replace the current unsaved draft?",
     "leaveConfirm": "Leave this editor and discard unsaved draft changes?",
-    "saved": "Saved to your cloud library.",
+    "saved": "Saved to your cloud formula library.",
+    "remixLoading": "Loading the exact published source and Profile…",
+    "remixReady": "Remix fork ready from {name}. The published Standard source remains unchanged.",
+    "remixUnavailable": "This published formula could not be opened safely for Remix.",
+    "invalidDraftSaved": "Invalid Draft saved privately. The last runnable revision remains active.",
     "saveError": "The cloud formula library is unavailable. Your formula was not saved.",
     "errors": {
       "maxCount": "Maximum formula limit reached ({count}).",
@@ -1786,9 +1981,9 @@
   "metadata": {
     "explore": {
       "title": "FractalPark — Open-source browser fractal generator",
-      "description": "Open-source, formula-first fractal knowledge and creation platform in your browser: 94 built-in formulas, real-time WebGL rendering, Fractint-compatible FRM authoring, and high-resolution PNG export.",
+      "description": "Open-source, formula-first fractal knowledge and creation platform in your browser: 534 published Standard Definitions across 7 structural families, of which 94 also belong to the Classic collection; real-time WebGL rendering; published FRM-like v1 source; a Classic-compatible FRM Editor; and high-resolution PNG export.",
       "ogTitle": "FractalPark — Open-source fractal art in your browser",
-      "ogDescription": "Create fractal art in your browser: 94 formulas, real-time WebGL rendering, FRM authoring, high-resolution PNG export."
+      "ogDescription": "Create fractal art in your browser with 534 published Standard Definitions across 7 structural families, of which 94 also belong to the Classic collection, real-time WebGL rendering, published FRM-like v1 source, a Classic-compatible FRM Editor, and high-resolution PNG export."
     },
     "gallery": {
       "title": "My Gallery | Personal Fractal Collection - FractalPark",
@@ -1796,21 +1991,22 @@
     },
     "about": {
       "title": "About | Open Source Browser Fractal Generator - FractalPark",
-      "description": "Learn about FractalPark, an open-source MIT-licensed fractal generator that runs in the browser with WebGL, 94 formulas, custom palettes, and PNG export."
+      "description": "FractalPark is an open-source, formula-first fractal knowledge and creation platform with published formula source you can read and run, plus a distinct Classic-compatible formula editor."
     },
     "formulaAtlas": {
-      "title": "Formula Atlas | 94 Fractal Formulas - FractalPark",
-      "description": "Browse all 94 FractalPark formulas across seven families, explore 21 selected guide profiles, learn FRM, and open canonical formula states in the WebGL Explorer.",
-      "imageAlt": "FractalPark Formula Atlas with 94 built-in formulas"
+      "title": "Formula Atlas | 534 Published Formulas - FractalPark",
+      "publishedDescription": "Browse 534 published Standard Definitions across seven structural families, of which 94 also belong to the Classic collection; explore 21 guide profiles, learn how FRM source works, and open canonical Formula Records.",
+      "description": "Browse 534 published Standard Definitions across seven structural families, of which 94 also belong to the Classic collection; explore 21 guide profiles, learn how FRM source works, and open canonical Formula Records.",
+      "imageAlt": "FractalPark Formula Atlas with 534 published formulas"
     },
     "frmEditor": {
       "title": "FRM Editor | FractalPark",
-      "description": "Write, compile, and preview FRM formulas in your browser; save them to your cloud library."
+      "description": "Write, compile, and preview formulas from FractalPark's Classic-compatible FRM subset in your browser; save them to your cloud library."
     },
     "frmGuide": {
-      "title": "FRM Guide | Write Custom Fractal Formulas - FractalPark",
-      "description": "Learn FractalPark's tested FRM syntax, compatibility levels, AST-to-GLSL compiler pipeline, diagnostics, and three compile-checked custom formula examples.",
-      "imageAlt": "FractalPark FRM formula language guide"
+      "title": "FRM Guide: Classic Editor and FRM-like v1 - FractalPark",
+      "description": "Understand FractalPark's canonical FRM-like v1 Definitions, published runtime, and the distinct Classic-compatible Editor workflow.",
+      "imageAlt": "FractalPark FRM-like v1 and Classic-compatible formula guide"
     },
     "drift": {
       "title": "Drift — Immersive fractal slideshow | FractalPark",
@@ -1821,13 +2017,13 @@
   },
   "about": {
     "title": "About FractalPark",
-    "aiDescription": "FractalPark is an open-source MIT-licensed browser-based fractal art generator using WebGL for real-time GPU rendering. It features 94 built-in escape-time fractal formulas (Mandelbrot, Julia, Newton, Phoenix, Magnet, McMullen, rational, transcendental families), a custom formula editor with Fractint .frm syntax support, 7 UV transform plugins, 9 coloring modes, and high-resolution PNG export. Built with Next.js 16, React 19, TypeScript 5, and Tailwind CSS. The rendering engine uses a plugin architecture with dynamic GLSL shader assembly and LRU caching.",
+    "aiDescription": "FractalPark is an open-source MIT-licensed browser fractal generator using WebGL for real-time GPU rendering. It features 534 published Standard Definitions across 7 structural families, of which 94 also belong to the Classic collection; 21 Formula Guides; published FRM-like v1 source; a distinct Classic-compatible FRM Editor with AST-to-GLSL transpilation; 7 UV transform plugins; 9 coloring modes; shareable URLs; an email sign-in cloud library for artworks and formulas; community publishing; and high-resolution PNG export up to 4x. Built with Next.js, React, and TypeScript.",
     "techStack": {
       "title": "Technology",
       "description": "Built with Next.js, WebGL, and TypeScript. Real-time fractal rendering powered by GPU shaders.",
       "frontend": "Frontend: Next.js 16 (App Router), React 19, TypeScript 5, Tailwind CSS 4, shadcn/ui",
       "rendering": "Rendering: WebGL 1 (GLSL fragment shaders), plugin-based architecture, shader LRU cache",
-      "formula": "Formula System: Custom Fractint .frm parser, CodeMirror 6 editor, AST-to-GLSL transpiler"
+      "formula": "Formula System: published FRM-like v1 parser/backend for Standard Definitions; separate Classic-compatible CodeMirror 6 Editor and AST-to-GLSL path for custom formulas"
     },
     "openSource": {
       "title": "Open Source",
@@ -1843,22 +2039,22 @@
     "next": "Next preset"
   },
   "publicProject": {
-    "tagline": "FractalPark is an open-source, formula-first fractal knowledge and creation platform with growing Fractint-compatible FRM support, working to bring Fractint’s formula heritage into the modern browser.",
-    "definition": "FractalPark is a free, open-source (MIT) WebGL application for exploring, learning, and creating fractal art. It ships {formulaCount} built-in formulas across {formulaFamilyCount} families, {formulaGuideCount} in-depth Formula Guides, a Fractint-compatible FRM language with a Guide and standalone Editor, and a community Gallery. Rendering runs in your browser; saving works and formulas uses email sign-in and a private cloud library.",
-    "aiDescription": "FractalPark is an open-source MIT-licensed browser fractal generator using WebGL for real-time GPU rendering. It features {formulaCount} built-in fractal formulas across {formulaFamilyCount} families, {formulaGuideCount} Formula Guides, a Fractint-compatible FRM editor with AST-to-GLSL transpilation, {transformCount} UV transform plugins, {coloringModeCount} coloring modes, shareable URLs, an email sign-in cloud library for artworks and formulas, community publishing, and high-resolution PNG export up to {maxExportScale}x. Built with Next.js, React, and TypeScript.",
+    "tagline": "FractalPark is an open-source, formula-first fractal knowledge and creation platform with published formula source you can read and run, plus a distinct Classic-compatible formula editor.",
+    "definition": "FractalPark is a free, open-source (MIT) WebGL application for exploring, learning, and creating fractal art. It ships {formulaCount} published Standard Definitions across {formulaFamilyCount} structural families, of which {classicFormulaCount} also belong to the Classic collection; {formulaGuideCount} in-depth Formula Guides; published FRM-like v1 source; a Classic-compatible standalone FRM Editor; and a community Gallery. Rendering runs in your browser; saving works and formulas uses email sign-in and a private cloud library.",
+    "aiDescription": "FractalPark is an open-source MIT-licensed browser fractal generator using WebGL for real-time GPU rendering. It features {formulaCount} published Standard Definitions across {formulaFamilyCount} structural families, of which {classicFormulaCount} also belong to the Classic collection; {formulaGuideCount} Formula Guides; published FRM-like v1 source; a distinct Classic-compatible FRM Editor with AST-to-GLSL transpilation; {transformCount} UV transform plugins; {coloringModeCount} coloring modes; shareable URLs; an email sign-in cloud library for artworks and formulas; community publishing; and high-resolution PNG export up to {maxExportScale}x. Built with Next.js, React, and TypeScript.",
     "capabilitiesHeading": "What you can do today",
     "capabilities": {
       "discover": {
         "title": "Discover formulas",
-        "summary": "Browse the Formula Atlas: 94 built-in formulas across 7 families, with 21 in-depth Formula Guides covering the math, history, and visual character of the classics."
+        "summary": "Browse the Formula Atlas: 534 published Standard Definitions across 7 structural families, of which 94 also belong to the Classic collection, with 21 in-depth Formula Guides covering the math, history, and visual character of the classics."
       },
       "create": {
         "title": "Create in the browser",
-        "summary": "Explore and render in real time with WebGL: Mandelbrot and Julia modes for every formula, 7 transforms, 9 coloring modes, gradients, lighting, and keyframe animation."
+        "summary": "Explore and render in real time with WebGL: Mandelbrot mode across the 534 published Standard Definitions, Julia mode where supported, 7 transforms, 9 coloring modes, gradients, lighting, and keyframe animation."
       },
       "authorFrm": {
-        "title": "Author FRM",
-        "summary": "Write custom formulas in the Fractint-compatible FRM language with the Guide and standalone Editor: AST validation, live GLSL preview, and clear diagnostics."
+        "title": "Learn FRM and write custom formulas",
+        "summary": "Write custom formulas in FractalPark's tested Classic-compatible FRM subset with the Guide and standalone Editor: AST validation, live GLSL preview, and clear diagnostics."
       },
       "saveExport": {
         "title": "Save and share",
@@ -1870,7 +2066,7 @@
     "futureHeading": "On the roadmap",
     "boundaries": {
       "current": {
-        "0": "Growing Fractint-compatible FRM support: a practical, tested subset of the Fractint formula language runs today — not a complete Fractint reimplementation.",
+        "0": "Published Standard Definitions use FRM-like v1 source. The standalone Editor uses a separate, practical Classic-compatible subset — not a complete Fractint reimplementation.",
         "1": "Creating needs no account. Saving artworks and formulas uses email one-time-code sign-in and stores them in your private cloud library; publishing is always explicit, and artworks carrying a custom formula publish its source under the MIT license.",
         "2": "The interface is available in seven languages: English, Simplified Chinese, Portuguese, Korean, Russian, Spanish, and French."
       },

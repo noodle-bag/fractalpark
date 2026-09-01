@@ -1,0 +1,104 @@
+{
+  "schema": "fractalpark-teaching-restored-guide-projection/v1",
+  "status": "published",
+  "restoredAt": "2026-08-24T10:31:04+08:00",
+  "guideCount": 4,
+  "localeCount": 7,
+  "localeSet": [
+    "en",
+    "zh",
+    "pt",
+    "ko",
+    "ru",
+    "es",
+    "fr"
+  ],
+  "scope": {
+    "expectedCommit": "26d",
+    "teachingPackageMutation": false,
+    "reviewedTeachingPackageCount": 50,
+    "restoredCapabilities": [
+      "guide-route",
+      "guide-card",
+      "localized-editorial-content",
+      "canonical-indexing",
+      "hreflang",
+      "sitemap",
+      "learning-resource-jsonld"
+    ],
+    "forbiddenCapabilities": [
+      "teaching-package-delivery",
+      "publication-decision-mutation",
+      "rights-status-mutation",
+      "source-revision-mutation"
+    ]
+  },
+  "pins": {
+    "publicationDecisionRevision": 4,
+    "publicationDecisionSha256": "ed63d7fab46530ac61a2dfb562644b9d36c1d8f4a73128cc51c0c7fbcb625de6",
+    "publicationDecisionsContentHash": "cac35a05d2d0c219b4f5ac00f3dea5b5fbb2b9c6b2fc15ea3383ef0f62d6031d",
+    "legacyAliasesSha256": "0b966ca5f5e238b9f5fe523caa082a682cfe51d1e6affeb945d580dba72842e8",
+    "priorHeldGuideAppendixCanonicalSha256": "0118b1bc4e9957f491891258c46254106e4f5f877dbc5d7340e6b936463eb61c",
+    "restoredRuntimeRowsCanonicalSha256": "07b7ef2dc57930a3ef499f2c2c6ccdb4184b816355135028e098c0f2b8fda97f",
+    "finalReviewedCandidateSha256": "89f45d192fa6afa67c4bd08f0c8009478bce7788e7842d207b9be9dfaf47594d",
+    "reviewEvidenceSha256": "fce2d5c4d688ff0df5bead9f69b46a70adc58b7c741cd74f00539f6faea9459e",
+    "reviewEvidenceCanonicalSha256": "cf9e50b53d1686570006c5d3ec49cbd8f2fa6664b9a31e907c8734ee0fdebe54"
+  },
+  "reviewEvidencePath": "resources/formula-library/v1/teaching-review-evidence/guide-restoration-v1/review-manifest.v1.json",
+  "aiAssistanceDisclosure": "AI-assisted restoration: Codex CLI drafted isolated locale candidates; DeepSeek and Kimi independently reviewed every revision; rejected revisions and final approvals are preserved in the linked evidence directory.",
+  "localeContentCanonicalSha256": {
+    "en": "a695da2483fa3bb4889433afd9f77eeb1d6750ea7b6e05eccad679d4b72cfa09",
+    "zh": "26dcf1b41a2411a82f9c61f80838b92bfc210b513e9aab3631d7dc1be4f7de96",
+    "pt": "704ec9043f8da84304711f51a0f4eb7fc459e34034793e97828da2a0f1dbac19",
+    "ko": "30d6a413628d6b038e5b90190edb25bbe0de32624274368163b4572734711210",
+    "ru": "e4eb00ff489b72563764269fa8f6c096805cfe66481a57f314d6e956307aeeff",
+    "es": "d9d921a3c51ae1e042b1ccdf3bdb0e47cee15c600625263cfc85d979105c07ed",
+    "fr": "aecaa594a249a1b41f5668b2778f144cc9cf637b2ff8612a0acdbb9e43bc1aa3"
+  },
+  "rows": [
+    {
+      "formulaId": "201c54f3-a77a-5be0-a0a5-6f4f1998ee6d",
+      "guideSlug": "cosh-mandelbrot",
+      "displayName": "coshMandelb",
+      "primaryFamily": "transcendental",
+      "implementationBasis": "project-owned",
+      "publicationDecision": "publish",
+      "guideAvailability": "published",
+      "sourceRevision": "90d43b9c2bc9a7eda5ca6f997a1ae2dc6640f0cc12cdcc34e8c82ca0765eff12",
+      "semanticHash": "0726adb6bfb5eba7bbcbef971478685027a6336bf4a9296f668187c39daab4a3"
+    },
+    {
+      "formulaId": "22d9a008-eb14-53de-9960-11eb5d37bb8e",
+      "guideSlug": "zaslavsky-map",
+      "displayName": "zaslavskyMap",
+      "primaryFamily": "transcendental",
+      "implementationBasis": "project-owned",
+      "publicationDecision": "publish",
+      "guideAvailability": "published",
+      "sourceRevision": "fb9db2dede500db19463ee53c8d059c2e7a92651d7de472a4bedd6e7ee58a831",
+      "semanticHash": "dabc6e573e13fc60004c12150faa4bfada8b5db90b340c1b1db153927c46e21c"
+    },
+    {
+      "formulaId": "280cd3e2-865b-5c78-90b7-39b2a36d7be0",
+      "guideSlug": "mandelbox",
+      "displayName": "mandelbox",
+      "primaryFamily": "folded-absolute",
+      "implementationBasis": "project-owned",
+      "publicationDecision": "publish",
+      "guideAvailability": "published",
+      "sourceRevision": "b4677349cc60d66a5b7ad87655a89585d2bf83c7284ef949afe081e8eb294aac",
+      "semanticHash": "fff469604a4d169b4319e7cceab70ec599cdaeecdaa7d1cac4011e13d914db94"
+    },
+    {
+      "formulaId": "a89891b1-8ccb-5d58-9fbb-05944b85ce3c",
+      "guideSlug": "newton-cosh",
+      "displayName": "newtonCosh",
+      "primaryFamily": "root-finding",
+      "implementationBasis": "project-owned",
+      "publicationDecision": "publish",
+      "guideAvailability": "published",
+      "sourceRevision": "ede967e2b65d1f547af3504bab1d91071ad5f9cda0969189c5b50f3102d18dbb",
+      "semanticHash": "02f16cb98f92604f81ba4a800d05669b21dd3baf3927c78a421ead6bac908374"
+    }
+  ]
+}

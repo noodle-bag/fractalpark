@@ -1,0 +1,84 @@
+{
+  "schema": "fractalpark-teaching-en-fact/v1",
+  "formulaId": "b79313f5-2181-5013-bd21-e59a7222dce5",
+  "sourceRevision": "c9f11ef69b73ea2c6489025f83e6b53cabebc1df1e399f282b8ce44e7da4b05f",
+  "semanticHash": "d5bd7f170dde390fef7522afda11fb58b09ad9c2dabc99d47c413e79e3996a50",
+  "overview": "In FRM-like/1, halleyCubic initializes z from pixel and replaces very small |z| with (0.00001,0). The loop builds f, fp, fpp, and denom; it keeps z when denom has squared size below 1e-10, otherwise computes numer and assigns z - numer/denom. The pinned julia profile uses 96 iterations.",
+  "mathDisclosure": "exact-structured",
+  "mathSummary": "starts z from pixel; if |z| < 0.00001, sets z to (0.00001,0); repeatedly builds z2, z3, f, fp, fpp, and denom = 2*(fp*fp)-f*fpp, then keeps z when denom has squared size below 1e-10 or assigns z - numer/denom with numer = 2*(f*fp); bailout is |z - zPrev| >= 0.000001.",
+  "sourceWalkthrough": [
+    {
+      "annotationId": "b79313f5-2181-5013-bd21-e59a7222dce5:c9f11ef69b73ea2c6489025f83e6b53cabebc1df1e399f282b8ce44e7da4b05f:init",
+      "nodeId": "frm-v1:c9f11ef69b73ea2c6489025f83e6b53cabebc1df1e399f282b8ce44e7da4b05f:init/0",
+      "explanation": "Initialization: init/0 sets z from pixel."
+    },
+    {
+      "annotationId": "b79313f5-2181-5013-bd21-e59a7222dce5:c9f11ef69b73ea2c6489025f83e6b53cabebc1df1e399f282b8ce44e7da4b05f:loop",
+      "nodeId": "frm-v1:c9f11ef69b73ea2c6489025f83e6b53cabebc1df1e399f282b8ce44e7da4b05f:loop/0",
+      "explanation": "Iteration: loop/0 sets z2 = z*z; later loop nodes build f, fp, fpp, and denom."
+    },
+    {
+      "annotationId": "b79313f5-2181-5013-bd21-e59a7222dce5:c9f11ef69b73ea2c6489025f83e6b53cabebc1df1e399f282b8ce44e7da4b05f:branch",
+      "nodeId": "frm-v1:c9f11ef69b73ea2c6489025f83e6b53cabebc1df1e399f282b8ce44e7da4b05f:loop/6",
+      "explanation": "Branch: loop/6 keeps z when denom has squared size below 1e-10; otherwise its else path computes numer and assigns z - numer/denom."
+    },
+    {
+      "annotationId": "b79313f5-2181-5013-bd21-e59a7222dce5:c9f11ef69b73ea2c6489025f83e6b53cabebc1df1e399f282b8ce44e7da4b05f:termination",
+      "nodeId": "frm-v1:c9f11ef69b73ea2c6489025f83e6b53cabebc1df1e399f282b8ce44e7da4b05f:bailout",
+      "explanation": "Termination: bailout tests |z - zPrev| >= 0.000001."
+    }
+  ],
+  "syntaxFeatures": [
+    {
+      "featureId": "sequence",
+      "annotationIds": [
+        "b79313f5-2181-5013-bd21-e59a7222dce5:c9f11ef69b73ea2c6489025f83e6b53cabebc1df1e399f282b8ce44e7da4b05f:init",
+        "b79313f5-2181-5013-bd21-e59a7222dce5:c9f11ef69b73ea2c6489025f83e6b53cabebc1df1e399f282b8ce44e7da4b05f:loop",
+        "b79313f5-2181-5013-bd21-e59a7222dce5:c9f11ef69b73ea2c6489025f83e6b53cabebc1df1e399f282b8ce44e7da4b05f:termination"
+      ],
+      "explanation": "The cited annotations connect z = pixel, the first z2 construction, and the change-based bailout."
+    },
+    {
+      "featureId": "branch",
+      "annotationIds": [
+        "b79313f5-2181-5013-bd21-e59a7222dce5:c9f11ef69b73ea2c6489025f83e6b53cabebc1df1e399f282b8ce44e7da4b05f:branch"
+      ],
+      "explanation": "The cited branch keeps z for a squared denom size below 1e-10; otherwise it computes numer and assigns z - numer/denom."
+    }
+  ],
+  "parameterExperiment": {
+    "parameterSymbols": [],
+    "steps": [
+      "Use the pinned julia profile with all controls fixed. Run 48 iterations and then 96 iterations, and record whether the denom guard or the z - numer/denom update changes the observed iteration counts."
+    ],
+    "expectedObservation": "The larger cap may expose additional guarded or unguarded Halley updates; record whether the iteration counts differ."
+  },
+  "exercise": {
+    "prompt": "State the two outcomes of the Halley denom-size guard.",
+    "completionCheck": "Your response names all 4 annotations and gives both keeping z and z - numer/denom.",
+    "answerDisclosure": "hint"
+  },
+  "facts": {
+    "provenanceStatement": "This teaching unit is grounded in the pinned runtime source revision.",
+    "rightsStatement": "rightsStatus is project-owned; implementationBasis is project-owned; publicationDecision is publish; decisionReason is publish-project-owned-native-recipe. This does not make a broader claim about any third-party original.",
+    "sourceIds": [
+      "runtime:c9f11ef69b73ea2c6489025f83e6b53cabebc1df1e399f282b8ce44e7da4b05f",
+      "decision:b79313f5-2181-5013-bd21-e59a7222dce5"
+    ],
+    "licenseIds": [],
+    "claims": [
+      {
+        "text": "The pinned runtime definition supplies the operations and profile used here.",
+        "sourceIds": [
+          "runtime:c9f11ef69b73ea2c6489025f83e6b53cabebc1df1e399f282b8ce44e7da4b05f"
+        ]
+      },
+      {
+        "text": "The recorded publication decision is publish.",
+        "sourceIds": [
+          "decision:b79313f5-2181-5013-bd21-e59a7222dce5"
+        ]
+      }
+    ]
+  }
+}

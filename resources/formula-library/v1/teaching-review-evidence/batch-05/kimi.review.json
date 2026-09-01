@@ -1,0 +1,6 @@
+{
+  "verdict": "APPROVE",
+  "summary": "Reviewed all 10 formulas (ordinals 41–50) across all 7 locales (70 units). English overviews, mathSummaries, walkthroughs, syntax features, experiments and observations match the pinned FRM-like/1 definitions: nodeId citations describe the correct operations (e.g., islandofchaos loop/0 roundCount<10 branch, novaBasin loop/4 correction=f/fp, halleyCubic loop/6 denom guard, frm-d2 strict |z|<4, richard8 |z|<=50), and profile claims (parameter-plane vs julia, 96 iterations) are correct. The 48-vs-96 two-run experiments on slot-less formulas are valid varied conditions per the contract clarification; islandofchaos and aa-z-to-z experiments correctly use runtime slotNames (seed, escapeLimit, earlyTransform, numeratorTransform, denominatorTransform, threshold). Rights tokens (rightsStatus, implementationBasis, publicationDecision, decisionReason) are preserved exactly for all 10 formulas, including richard8's source-declared-public-domain-assumption/direct-adaptation, with no broader third-party claims. Locales preserve exact identifiers and code tokens, add no facts, hedge observations appropriately, and maintain required registers (pt você, ko 해요체, ru formal вы, es tú, fr tu) with no English fallback prose; localized walkthrough keysets match the English annotation subsets.",
+  "findings": [],
+  "coverageGaps": []
+}

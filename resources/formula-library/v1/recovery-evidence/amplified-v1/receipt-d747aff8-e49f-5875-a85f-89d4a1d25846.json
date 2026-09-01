@@ -1,0 +1,105 @@
+{
+  "schema": "fractalpark-b94-amplified-recovery-receipt/v1",
+  "deterministicDoubleRender": true,
+  "publicationEligible": false,
+  "publicationDecisionMutation": false,
+  "sourceBindings": {
+    "scripts/generate-amplified-recovery-evidence.ts": "53e90f4438d04374ba767ae90cbaf1d45ca9c4b7d00d91b52996ea193453902a",
+    "src/engine/formulas/v1/native-recipes-b94-recovered-amplified.ts": "7654e8a56e321535ebb4b7313a6d0bd8e523d06e3bd4b9c832dae1aedb5309aa",
+    "src/engine/formulas/v1/native-recipes-b94-held.ts": "8f4097b5dbf14d48f0066b755ab63c180d1f87daf609c64011cb849d06e6b300",
+    "src/engine/formulas/v1/provisional-profile.ts": "9ccfccfb24b5abe991d95f9ad6561e0d01499bdd95955b7a3e9a07d7c31abfe4",
+    "src/engine/formulas/v1/provisional-preview.ts": "6f018547e3d111aea53f72fa66bdf15a995c9490649237a4aee7fbadc5d648ee",
+    "src/engine/frm/frm-v1-stdlib.ts": "e7b48941d8b6307133a1718a99f7a933cdc75f8ea7a68d99449a1ad7e5e31b6c",
+    "src/engine/frm/v1-backend.ts": "076273190738b02622091bb31d0c30ef2a3fdd3edc82e573a1cebf5c541d1f67",
+    "src/engine/frm/frm-v1-glsl-prelude.ts": "c50480ff75af9e3f1dd49866ca2156e9c566a9297b448012533c9835ef66b09a",
+    "src/engine/shaders/complex-math.glsl": "0e45ee640e2c62de66c616b9cf53ee12ce0b78a59d168de0f8fadbb3335aea89",
+    "src/engine/plugins/builtins/formulas/recoveredAmplifiedMath.ts": "bb2ab08ba36533072434ffdb2d4d6c8e825338100f4c0b6425e080110ed80d04",
+    "src/engine/plugins/builtins/formulas/airshipCubic.ts": "e018e1a168b10ad6f6c00f1bde8e62a19f6fc03e5369b69b48562aa17fb1394d",
+    "src/engine/plugins/builtins/formulas/burningShipCubic.ts": "55b4be92e15dadb24c005579eca5f27272f5789a4f1dab4e3414af5bfbac6848",
+    "src/engine/plugins/builtins/formulas/burningShipQuartic.ts": "5dd4b6975ae1f941bbbe1606524beab6fc5173379dad04183435e07b97602eb7",
+    "src/engine/plugins/builtins/formulas/cubicPerpendicularMandelbrot.ts": "77192b7dbdd6208f16396aa1882f9ae6176157274c436f3834adf19e56063f2b",
+    "src/engine/plugins/builtins/formulas/mandelbox.ts": "d391513baa55a408b18d277bb8c478d99f5f581b2f6ed8ad1e29c7089aab2571",
+    "src/engine/plugins/builtins/formulas/multicorn5.ts": "76312804ab2469cb30d560a798e667b7e6ad4fdb775827fe9cb313d1149b1d0f",
+    "src/engine/plugins/builtins/formulas/newtonCosh.ts": "b8bee521870fb063c01c6ec8837392c1d37f02df01fad6c90fed0c85576810dc",
+    "src/engine/plugins/builtins/formulas/newtonExp.ts": "c84fd226ed07c6d896955f18528a2c09b62548ded23e94558bc256c77a517732",
+    "src/engine/plugins/builtins/formulas/quarticPerpendicularMandelbrot.ts": "a5ebdb4e3a4b110b47dbd5e1d69b2562ad292eb9111edf0399ab6cbb6680a1ff",
+    "src/engine/plugins/formula-catalog.ts": "14570ae82c6f1e659f7a4cfcc2318997df5080f981070c409e808cbd57bd58c2",
+    "scripts/formula-library-bulk-migration.ts": "d5f0a90e0b7a96eadfbe9c442b54216bb851b743e7ca16da4b5a6f6f9b8f01e2",
+    "resources/formula-library/v1/recovery-evidence/amplified-v1/cross-check.json": "fdee1f03d1b5112c2475711fd241a8d79dca8e086dab2600e8d577bec91419c0"
+  },
+  "row": {
+    "formulaId": "d747aff8-e49f-5875-a85f-89d4a1d25846",
+    "runtimeId": "quarticPerpendicularMandelbrot",
+    "family": "classic",
+    "failureClass": "chaotic-amplification",
+    "technicalStatus": "passed",
+    "publicationDecision": "publish",
+    "sourceRevision": "e9aa563e5c1ab3def817a357ba4d8ef52b7085cbd1ff9ffd9fb239eece7241a1",
+    "semanticHash": "b9e68bdd0377e04b7ddd311885a54475e679dea9b87ef7573fb297f9091e0556",
+    "numericRemedy": {
+      "integerPower": "binary32-left-associated-complex-multiply"
+    },
+    "crossCheck": {
+      "formulaId": "d747aff8-e49f-5875-a85f-89d4a1d25846",
+      "runtimeId": "quarticPerpendicularMandelbrot",
+      "family": "classic",
+      "ok": true,
+      "v1WebglParity": "passed",
+      "nativeCrossCheck": {
+        "ok": true,
+        "maxRelativeDelta": 0
+      },
+      "orbitPoints": 45,
+      "sourceRevision": "e9aa563e5c1ab3def817a357ba4d8ef52b7085cbd1ff9ffd9fb239eece7241a1"
+    },
+    "profile": {
+      "boundsSource": "b94-catalog",
+      "value": {
+        "schemaVersion": 1,
+        "formulaId": "d747aff8-e49f-5875-a85f-89d4a1d25846",
+        "sourceRevision": "e9aa563e5c1ab3def817a357ba4d8ef52b7085cbd1ff9ffd9fb239eece7241a1",
+        "profileRevision": "803ad61d579945e0e60ec5680ece2fbd8242e237a75f3dd36739b678fd6cb347",
+        "parameters": {},
+        "mode": "parameter-plane",
+        "view": {
+          "centerX": -0.32,
+          "centerY": 0,
+          "zoom": 0.28,
+          "rotation": 0
+        },
+        "iterations": 200,
+        "coloring": {
+          "pipelineVersion": 1,
+          "outsideColoringId": "smooth",
+          "insideColoringId": "black",
+          "smooth": true
+        },
+        "palette": {
+          "paletteId": "inferno"
+        },
+        "transform": {
+          "rotation": 0,
+          "scaleX": 1,
+          "scaleY": 1,
+          "skewX": 0,
+          "skewY": 0,
+          "offsetX": 0,
+          "offsetY": 0
+        }
+      }
+    },
+    "preview": {
+      "file": "preview-d747aff8-e49f-5875-a85f-89d4a1d25846.png",
+      "width": 96,
+      "height": 60,
+      "rawRgbaSha256": "eb6200dc771047e3064338b8d207f6bf83b494cda0f99552c697ccba43703eef",
+      "pngSha256": "a43d24bad4a1c8ecfd3f4f6f10977a1efbe4c5973c48c79cbb384c972eba736c",
+      "escapedPixels": 5410,
+      "interiorPixels": 350,
+      "nonFinitePixels": 0,
+      "uniqueColors": 195,
+      "anomalies": []
+    }
+  },
+  "contentHash": "334f735cb740e85fc79c77297751685182ef805d3c419eb907f4ad552c7e652b"
+}

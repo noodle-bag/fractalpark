@@ -1,0 +1,221 @@
+{
+  "schema": "fractalpark-formula-record-preview-gates/v1",
+  "revision": 7,
+  "publishedCount": 534,
+  "image": {
+    "format": "webp",
+    "width": 1200,
+    "height": 750,
+    "quality": 0.82,
+    "sampleWidth": 96,
+    "sampleHeight": 60
+  },
+  "renderer": {
+    "engine": "frm-like-v1-cpu-400x250-chromium-upscale",
+    "sourceWidth": 400,
+    "sourceHeight": 250,
+    "iterationCap": 16,
+    "scaler": "chromium-canvas-high-quality",
+    "encoder": "chromium-canvas-webp",
+    "workerConcurrency": 3,
+    "determinismRenders": 2
+  },
+  "profilePolicy": {
+    "schema": "fractalpark-record-preview-profile-policy/v1",
+    "revision": 6,
+    "iterationCap": 16,
+    "iterationCandidates": [16, 8, 4, 2],
+    "sourceValidationIterationCandidates": [2, 4, 8, 16],
+    "searchWidth": 16,
+    "searchHeight": 10,
+    "verificationWidth": 48,
+    "verificationHeight": 30,
+    "sourceValidationWidth": 400,
+    "sourceValidationHeight": 250,
+    "sourceValidationTrigger": "legacy-non-finite-pixels",
+    "verificationRenders": 2,
+    "searchMinimumUniqueColors": 3,
+    "verificationMinimumUniqueColors": 4,
+    "maximumNonFiniteFraction": 0,
+    "minimumEscapedFractionForBlack": 0.05,
+    "strategies": [
+      "runtime-black",
+      "runtime-orbit-average",
+      "bounded-black",
+      "bounded-orbit-average"
+    ],
+    "insideColoringIds": ["black", "record-preview-orbit-average-v1"],
+    "runtimeParameterCandidateId": "defaults",
+    "runtimeViewCandidateId": "effective-default",
+    "parameterSlotOrder": "runtime-descriptor-order",
+    "deduplicationRule": "canonical-profile-input-first-occurrence",
+    "selectionRule": "first-search-pass-then-verification-pass-then-risk-source-pass",
+    "parameterStrategies": [
+      "defaults",
+      "single-slot",
+      "same-type-all-slots",
+      "complex-function-cartesian"
+    ],
+    "realValues": [-2, -1, -0.5, 0.5, 1, 2, 4],
+    "complexValues": [
+      [1, 0],
+      [-1, 0],
+      [0.5, 0],
+      [-0.5, 0],
+      [0, 1],
+      [0.3, 0.5],
+      [2, 0],
+      [4, 0]
+    ],
+    "functionValues": ["sqr", "sin", "cos", "exp", "recip", "abs"],
+    "viewCandidates": [
+      { "id": "parameter-wide-left", "mode": "parameter-plane", "center": [-0.5, 0], "zoom": 0.4 },
+      { "id": "parameter-wide-origin", "mode": "parameter-plane", "center": [0, 0], "zoom": 0.25 },
+      { "id": "parameter-medium-origin", "mode": "parameter-plane", "center": [0, 0], "zoom": 0.5 },
+      { "id": "parameter-medium-left", "mode": "parameter-plane", "center": [-1, 0], "zoom": 0.75 },
+      { "id": "parameter-very-wide", "mode": "parameter-plane", "center": [0, 0], "zoom": 0.1 },
+      { "id": "parameter-close", "mode": "parameter-plane", "center": [0, 0], "zoom": 1 },
+      { "id": "parameter-right", "mode": "parameter-plane", "center": [1, 0], "zoom": 0.5 },
+      { "id": "parameter-up", "mode": "parameter-plane", "center": [0, 1], "zoom": 0.5 },
+      { "id": "parameter-down", "mode": "parameter-plane", "center": [0, -1], "zoom": 0.5 },
+      { "id": "root-convergence-positive", "mode": "parameter-plane", "center": [0.75, 0], "zoom": 1 },
+      { "id": "parameter-threshold-4", "mode": "parameter-plane", "center": [4, 0], "zoom": 0.25 },
+      { "id": "parameter-threshold-16", "mode": "parameter-plane", "center": [16, 0], "zoom": 0.1 },
+      { "id": "parameter-threshold-64", "mode": "parameter-plane", "center": [64, 0], "zoom": 0.04 },
+      { "id": "parameter-threshold-256", "mode": "parameter-plane", "center": [256, 0], "zoom": 0.01 },
+      { "id": "parameter-threshold-minus-4", "mode": "parameter-plane", "center": [-4, 0], "zoom": 0.25 },
+      { "id": "parameter-threshold-minus-16", "mode": "parameter-plane", "center": [-16, 0], "zoom": 0.1 },
+      { "id": "parameter-threshold-minus-64", "mode": "parameter-plane", "center": [-64, 0], "zoom": 0.04 },
+      { "id": "parameter-threshold-minus-256", "mode": "parameter-plane", "center": [-256, 0], "zoom": 0.01 },
+      { "id": "julia-a", "mode": "julia", "center": [0, 0], "zoom": 0.4, "juliaC": [-0.8, 0.156] },
+      { "id": "julia-b", "mode": "julia", "center": [0, 0], "zoom": 0.5, "juliaC": [0.285, 0.01] },
+      { "id": "julia-c", "mode": "julia", "center": [0, 0], "zoom": 0.5, "juliaC": [-0.4, 0.6] },
+      { "id": "julia-zero", "mode": "julia", "center": [0, 0], "zoom": 0.35, "juliaC": [0, 0] },
+      { "id": "julia-2", "mode": "julia", "center": [0, 0], "zoom": 0.5, "juliaC": [2, 0] },
+      { "id": "julia-minus-2", "mode": "julia", "center": [0, 0], "zoom": 0.5, "juliaC": [-2, 0] },
+      { "id": "julia-16", "mode": "julia", "center": [0, 0], "zoom": 0.5, "juliaC": [16, 0] },
+      { "id": "julia-minus-16", "mode": "julia", "center": [0, 0], "zoom": 0.5, "juliaC": [-16, 0] },
+      { "id": "julia-64", "mode": "julia", "center": [0, 0], "zoom": 0.5, "juliaC": [64, 0] }
+    ]
+  },
+  "visualBudgets": {
+    "minimumLuminanceRange": 8,
+    "minimumDistinctLuminanceValues": 4,
+    "minimumEdgeEnergy": 0.001,
+    "minimumOpaqueFraction": 1
+  },
+  "resourceBudgets": {
+    "maximumImageBytes": 262144,
+    "maximumTotalBytes": 100663296,
+    "maximumPreflightWallMs": 900000,
+    "maximumFullGenerationWallMs": 7200000,
+    "maximumProcessTreeRssBytes": 3221225472
+  },
+  "preflightRows": [
+    {
+      "lane": "normal",
+      "formulaId": "74874658-3c47-5813-869a-70e642dc0038",
+      "family": "algebraic-power"
+    },
+    {
+      "lane": "heavy",
+      "formulaId": "62423e7c-842d-5b59-b73d-03a40ec11da1",
+      "family": "algebraic-power"
+    },
+    {
+      "lane": "normal",
+      "formulaId": "a569d2c4-d397-5634-9dfe-21b2ab1a386a",
+      "family": "folded-absolute"
+    },
+    {
+      "lane": "heavy",
+      "formulaId": "743f6bbf-4cc1-5df7-8f3e-2e654ddc81ba",
+      "family": "folded-absolute"
+    },
+    {
+      "lane": "normal",
+      "formulaId": "f031c5ee-cb45-5389-80ed-1c5365a12e02",
+      "family": "function-composition"
+    },
+    {
+      "lane": "heavy",
+      "formulaId": "de8106f4-22ce-567c-a1c7-e299a8d4a878",
+      "family": "function-composition"
+    },
+    {
+      "lane": "normal",
+      "formulaId": "999adf4a-6019-56f0-89a4-c09250e9a0a2",
+      "family": "orbit-memory"
+    },
+    {
+      "lane": "heavy",
+      "formulaId": "212174eb-5344-57a9-95d4-24882df4b972",
+      "family": "orbit-memory"
+    },
+    {
+      "lane": "normal",
+      "formulaId": "9923991c-19b5-5559-8250-5eb04726f4bd",
+      "family": "rational-reciprocal"
+    },
+    {
+      "lane": "heavy",
+      "formulaId": "0ba0b082-c4b0-51d8-b981-7ca1ca25b9f3",
+      "family": "rational-reciprocal"
+    },
+    {
+      "lane": "normal",
+      "formulaId": "bb186688-4571-5725-a8ed-a17e0100dbc8",
+      "family": "root-finding"
+    },
+    {
+      "lane": "heavy",
+      "formulaId": "78e550c6-d58d-57b7-92ff-82e9ed0728f0",
+      "family": "root-finding"
+    },
+    {
+      "lane": "normal",
+      "formulaId": "fdbbc343-f4c3-5eb4-94de-f5a1d9ef2525",
+      "family": "transcendental"
+    },
+    {
+      "lane": "heavy",
+      "formulaId": "17d88272-6dbf-5622-996a-b116ea3a3fab",
+      "family": "transcendental"
+    },
+    {
+      "lane": "activated-julia",
+      "formulaId": "5d0877c0-5f84-5c3b-9466-b9f9b417cb6a",
+      "family": "function-composition"
+    },
+    {
+      "lane": "global-heavy",
+      "formulaId": "3705eb33-b86f-5ef4-9ad5-022ab076390f",
+      "family": "function-composition"
+    },
+    {
+      "lane": "record-profile-deep-override",
+      "formulaId": "06504747-8ee8-5c39-869b-8b3a992e8c24",
+      "family": "function-composition"
+    },
+    {
+      "lane": "record-profile-runtime-orbit",
+      "formulaId": "37425fb2-8542-502f-94ac-94c0ccb6e508",
+      "family": "rational-reciprocal"
+    },
+    {
+      "lane": "record-profile-bounded-orbit",
+      "formulaId": "88dd57cd-a348-55e8-983a-74c0acba57ae",
+      "family": "transcendental"
+    },
+    {
+      "lane": "record-profile-non-finite-avoidance",
+      "formulaId": "af500910-46ce-5a43-b430-c0154cc05959",
+      "family": "transcendental"
+    },
+    {
+      "lane": "record-profile-root-convergence",
+      "formulaId": "d0079630-8ed3-5379-9e37-52cb7f0f7379",
+      "family": "root-finding"
+    }
+  ]
+}

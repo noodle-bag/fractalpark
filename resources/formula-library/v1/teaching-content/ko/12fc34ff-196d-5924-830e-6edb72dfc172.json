@@ -1,0 +1,36 @@
+{
+  "schema": "fractalpark-teaching-locale/v1",
+  "formulaId": "12fc34ff-196d-5924-830e-6edb72dfc172",
+  "locale": "ko",
+  "sourceRevision": "3aec931a4991e14e53348c6d28e9fcbaf8127cad6298dafc2a8ee9e2ac8d8143",
+  "semanticHash": "a155deea383578e6e4ff5901f5c5a0adaa97b84e8c73df146732db9096cebee9",
+  "englishContentHash": "780fd1d12b9638344c5802cdcb2b61af7f8cafe3df046262af004db546d890ca",
+  "overview": "magnet1은 고정된 FRM-like/1 정의로 배워요. numerator = z + c; denominator = z - c; ratio = numerator / denominator; z = ratio * ratio를 따라가고 이미지를 보장으로 여기지 않아요. 고정 프로필은 하나의 구체적인 관찰 설정만 제공해요.",
+  "sourceWalkthrough": {
+    "12fc34ff-196d-5924-830e-6edb72dfc172:3aec931a4991e14e53348c6d28e9fcbaf8127cad6298dafc2a8ee9e2ac8d8143:start-branch": "magnet1에서 이 노드는 다음 연산을 실행해요: ismand이면 z = 0; 아니면 z = pixel.",
+    "12fc34ff-196d-5924-830e-6edb72dfc172:3aec931a4991e14e53348c6d28e9fcbaf8127cad6298dafc2a8ee9e2ac8d8143:ratio": "magnet1에서 이 노드는 다음 연산을 실행해요: ratio = numerator / denominator.",
+    "12fc34ff-196d-5924-830e-6edb72dfc172:3aec931a4991e14e53348c6d28e9fcbaf8127cad6298dafc2a8ee9e2ac8d8143:square-update": "magnet1에서 이 노드는 다음 연산을 실행해요: z = ratio * ratio.",
+    "12fc34ff-196d-5924-830e-6edb72dfc172:3aec931a4991e14e53348c6d28e9fcbaf8127cad6298dafc2a8ee9e2ac8d8143:termination": "magnet1에서 이 노드는 다음 연산을 실행해요: |z| <= 4."
+  },
+  "syntaxFeatures": {
+    "state-flow": "구체적인 상태 흐름은 ismand 선택이 z의 초기값을 정하고, 이어서 numerator와 denominator가 ratio를 만든 뒤 이를 제곱해요.",
+    "stopping-test": "종료 검사는 |z| <= 4만 판단하며 상태에 값을 대입하지 않아요."
+  },
+  "parameterExperiment": {
+    "steps": [
+      "다른 프로필 제어를 고정하고 magnet1을 48회 반복으로 실행한 결과를 기록하세요.",
+      "고정 프로필의 96회 반복 실행과 비교하여 차이를 기록하세요."
+    ],
+    "expectedObservation": "기준 실행과 비교해 numerator = z + c; denominator = z - c; ratio = numerator / denominator; z = ratio * ratio가 보이는 결과나 |z| <= 4 종료 검사에 차이를 만드는지 기록하세요. 정의가 차이를 보장하지는 않아요."
+  },
+  "exercise": {
+    "prompt": "magnet1의 주석을 추적하고 표시된 연산에서 numerator = z + c; denominator = z - c; ratio = numerator / denominator; z = ratio * ratio가 어떻게 실행되는지 설명하세요.",
+    "completionCheck": "답에는 4개 주석의 설명, numerator = z + c; denominator = z - c; ratio = numerator / denominator; z = ratio * ratio의 식별, 그리고 |z| <= 4가 대입이 아닌 종료 검사라는 구분이 있어요.",
+    "hint": "상태 흐름에서는 ismand이면: z = 0; 아니면 z = pixel → numerator = z + c → denominator = z - c → ratio = numerator / denominator → z = ratio * ratio 순서로 연산하고 결과를 다음 단계에 넘겨요."
+  },
+  "factsPresentation": {
+    "provenanceLead": "출처: 고정된 실행 정의와 공개 결정이에요.",
+    "rightsLead": "권리 정보는 영어 단원의 고정된 결정을 따라요."
+  },
+  "contentHash": "05b7ad50521465ec21bb2824ef012b9306d8b24df0ac5019e5050d47338b6614"
+}

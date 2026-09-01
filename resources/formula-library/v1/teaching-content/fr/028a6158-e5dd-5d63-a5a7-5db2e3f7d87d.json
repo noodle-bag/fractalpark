@@ -1,0 +1,35 @@
+{
+  "schema": "fractalpark-teaching-locale/v1",
+  "formulaId": "028a6158-e5dd-5d63-a5a7-5db2e3f7d87d",
+  "locale": "fr",
+  "sourceRevision": "77c461de2d9cf0bbfb4a3257fb4e83bd1f250f6f5f1c52020ff3da0ecee366d9",
+  "semanticHash": "fd88674f04392ce72cbb6d0baf06b941def420ddc8785d0b0a67752d9fe0a7f9",
+  "englishContentHash": "675a619211706eb93d24abf7610c14d84ac5a56e0343c31e687af0433a8f77c4",
+  "overview": "Dans FRM-like/1, fzppcoct commence par z = pixel, le premier nœud de boucle fait z = cosxx(z) + offset, et |z| <= 50 limite l’itération. Lis ces opérations dans l’ordre réel de la source.",
+  "sourceWalkthrough": {
+    "028a6158-e5dd-5d63-a5a7-5db2e3f7d87d:77c461de2d9cf0bbfb4a3257fb4e83bd1f250f6f5f1c52020ff3da0ecee366d9:initialization": "Dans fzppcoct, le nœud d’initialisation exécute seulement : z = pixel.",
+    "028a6158-e5dd-5d63-a5a7-5db2e3f7d87d:77c461de2d9cf0bbfb4a3257fb4e83bd1f250f6f5f1c52020ff3da0ecee366d9:iteration": "Dans fzppcoct, ce nœud de boucle exécute seulement : z = cosxx(z) + offset.",
+    "028a6158-e5dd-5d63-a5a7-5db2e3f7d87d:77c461de2d9cf0bbfb4a3257fb4e83bd1f250f6f5f1c52020ff3da0ecee366d9:termination": "Dans fzppcoct, le nœud bailout teste seulement : |z| <= 50."
+  },
+  "syntaxFeatures": {
+    "initialization-flow": "Dans fzppcoct, la caractéristique d’initialisation cible la seule opération initiale z = pixel.",
+    "iteration-flow": "Dans fzppcoct, la caractéristique d’itération cible la seule affectation z = cosxx(z) + offset.",
+    "bailout-test": "Dans fzppcoct, la caractéristique de terminaison cible la comparaison |z| <= 50."
+  },
+  "parameterExperiment": {
+    "steps": [
+      "Fais le rendu de fzppcoct avec la base du plan des paramètres fixée : centre (-0.5, 0), zoom 0.4, rotation 0, et 96 itérations.",
+      "Garde la base fixe sauf le nombre d’itérations, fais un rendu à 48 itérations et compare-le à la base de 96."
+    ],
+    "expectedObservation": "Dans fzppcoct, note si la comparaison entre 48 et 96 itérations change quelque chose et repère la limite source |z| <= 50."
+  },
+  "exercise": {
+    "prompt": "Dans fzppcoct, repère les trois annotations et explique z = pixel, z = cosxx(z) + offset et |z| <= 50 et explique pourquoi aucune instruction voisine n’appartient à l’annotation de boucle.",
+    "completionCheck": "Dans fzppcoct, tu as terminé en listant les 3 clés d’annotation et en expliquant précisément z = cosxx(z) + offset et |z| <= 50."
+  },
+  "factsPresentation": {
+    "provenanceLead": "La provenance est dans l’unité factuelle anglaise.",
+    "rightsLead": "Les droits sont dans l’unité factuelle anglaise."
+  },
+  "contentHash": "989db2c1d46b7239456f032ccc3033c3d8a29eb1fce546d4bf65baa2cc58efa2"
+}

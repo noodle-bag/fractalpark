@@ -1,0 +1,35 @@
+{
+  "schema": "fractalpark-teaching-locale/v1",
+  "formulaId": "2dd8a5a7-052a-5539-aab9-c533f7dec857",
+  "locale": "pt",
+  "sourceRevision": "6c2c19cfb9bff9d9aa0cca56cea6dc62e324e80009b931665b604726d3784e5d",
+  "semanticHash": "7f1e0790ad3270f2419b1c8db5ac3ec9d232d334c0144acf64f1f3155a2ca68e",
+  "englishContentHash": "31804c8280d33040dc47417296a01b83a4ec9dac34ba94e4477f175f74c6297f",
+  "overview": "Em FRM-like/1, magnet2 começa com se ismand, z = 0; caso contrário, z = pixel, usa z2 = z * z no primeiro nó do laço e limita a iteração com |z| <= 4. Leia essas operações na ordem real da fonte.",
+  "sourceWalkthrough": {
+    "2dd8a5a7-052a-5539-aab9-c533f7dec857:6c2c19cfb9bff9d9aa0cca56cea6dc62e324e80009b931665b604726d3784e5d:initialization": "Em magnet2, o nó de inicialização executa somente: se ismand, z = 0; caso contrário, z = pixel.",
+    "2dd8a5a7-052a-5539-aab9-c533f7dec857:6c2c19cfb9bff9d9aa0cca56cea6dc62e324e80009b931665b604726d3784e5d:iteration": "Em magnet2, este nó do laço executa somente: z2 = z * z.",
+    "2dd8a5a7-052a-5539-aab9-c533f7dec857:6c2c19cfb9bff9d9aa0cca56cea6dc62e324e80009b931665b604726d3784e5d:termination": "Em magnet2, o nó bailout testa somente: |z| <= 4."
+  },
+  "syntaxFeatures": {
+    "initialization-flow": "Em magnet2, a característica de inicialização focaliza a única operação se ismand, z = 0; caso contrário, z = pixel.",
+    "iteration-flow": "Em magnet2, a característica de iteração focaliza a única atribuição z2 = z * z.",
+    "bailout-test": "Em magnet2, a característica de término focaliza a comparação |z| <= 4."
+  },
+  "parameterExperiment": {
+    "steps": [
+      "Renderize magnet2 com a base do plano de parâmetros fixada: centro (-0.5, 0), zoom 0.4, rotação 0, e 96 iterações.",
+      "Mantenha a base fixa exceto pelas iterações, renderize uma vez com 48 iterações e compare com a base de 96."
+    ],
+    "expectedObservation": "Em magnet2, registre se a comparação entre 48 e 96 iterações muda algo e anote o limite da fonte |z| <= 4."
+  },
+  "exercise": {
+    "prompt": "Em magnet2, localize as três anotações e explique se ismand, z = 0; caso contrário, z = pixel, z2 = z * z e |z| <= 4 e explique por que nenhuma instrução vizinha pertence à anotação do laço.",
+    "completionCheck": "Em magnet2, você concluiu ao listar todas as 3 chaves de anotação e explicar corretamente z2 = z * z e |z| <= 4."
+  },
+  "factsPresentation": {
+    "provenanceLead": "A proveniência está na unidade factual inglesa.",
+    "rightsLead": "Os direitos estão na unidade factual inglesa."
+  },
+  "contentHash": "d58a5cf6d9d5f22d5f786b396d3d3da69736dfef0d4399f5f383492adc0fffc2"
+}

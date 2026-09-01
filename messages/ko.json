@@ -256,7 +256,8 @@
       "breadcrumb": "수식",
       "eyebrow": "수식 아틀라스",
       "title": "수식 아틀라스",
-      "intro": "일곱 개 패밀리에 걸친 FractalPark의 내장 수식 94개 전체 카탈로그를 둘러보세요. 표준 뷰에서 시작하거나, 심층 가이드 프로필 21개 중 하나를 따라가거나, FRM으로 나만의 수식을 작성하는 법을 배워보세요.",
+      "publishedIntro": "일곱 구조 패밀리에 속한 공개 Standard Definition 534개를 살펴보세요. 이 중 94개는 Classic 컬렉션에도 속해요. 정식 Formula Record를 열거나 심층 가이드 Profile 21개 중 하나를 따라가거나, FRM 소스의 작동 방식을 배우고 알맞은 작성 도구를 선택하세요.",
+      "intro": "일곱 구조 패밀리에 속한 공개 Standard Definition 534개를 살펴보세요. 이 중 94개는 Classic 컬렉션에도 속해요. 정식 Formula Record를 열거나 심층 가이드 Profile 21개 중 하나를 따라가거나, FRM 소스의 작동 방식을 배우고 알맞은 작성 도구를 선택하세요.",
       "stats": {
         "formulas": "수식",
         "families": "패밀리",
@@ -265,7 +266,7 @@
       "capabilities": {
         "eyebrow": "탐색을 위해 설계됨",
         "title": "하나의 카탈로그, 다양한 창작 방법",
-        "intro": "모든 항목은 인터랙티브 탐색기가 사용하는 동일한 수식 카탈로그와 승인된 기본 상태에서 파생돼요.",
+        "intro": "모든 공개 항목은 Standard Library가 사용하는 동일한 버전 관리 Formula Record 디렉터리에서 제공돼요.",
         "items": {
           "realtime": {
             "title": "실시간 WebGL",
@@ -277,14 +278,15 @@
           },
           "server": {
             "title": "서버에서 읽을 수 있는 디렉터리",
-            "description": "일곱 개 패밀리와 94개 목적지 모두가 클라이언트 측 검색이나 필터링 없이 초기 HTML에 그대로 제공돼요."
+            "description": "공개 Formula Record 534개와 그 분류를 서버 렌더링 HTML에서 모두 찾을 수 있어요."
           }
         }
       },
       "families": {
-        "eyebrow": "일곱 개 패밀리",
-        "title": "수학적 특성을 선택하세요",
-        "intro": "패밀리는 반복 구조와 시각적 특성에 따라 수식을 분류해요. 개수는 현재 내장 카탈로그에서 직접 가져와요.",
+        "eyebrow": "일곱 구조 패밀리",
+        "title": "수학적 구조로 탐색하세요",
+        "intro": "일곱 구조 패밀리는 모든 공개 수식을 정확히 한 번씩 포함해요. Classic은 별도의 중첩 컬렉션이므로 해당 수식 94개도 쉽게 찾을 수 있어요.",
+        "browse": "분류 탐색",
         "descriptions": {
           "classic": "이차, 다항식, 줄리아, 멀티콘 등 관련 이탈 시간(escape-time) 기초 수식들.",
           "burning-ship": "날카로운 선체, 능선, 불꽃 같은 경계를 가진 접힌 절댓값 맵.",
@@ -297,9 +299,9 @@
       },
       "frm": {
         "eyebrow": "직접 만들기",
-        "title": "FRM으로 수식 배우고 작성하기",
-        "description": "FRM은 FractalPark에서 검증한 텍스트 기반 저작 방식이에요. 호환성 가이드를 읽고 컴파일 검사를 통과한 예제를 살펴본 다음, 독립형 편집기에서 수식을 작성하고 미리 보세요.",
-        "learn": "FRM 배우기",
+        "title": "FRM과 Formula Editor 이해하기",
+        "description": "공개된 Standard Definition은 고정된 FRM-like v1 소스를 사용해요. 독립형 Editor는 Classic-compatible 소스 계약을 사용하며, Guide는 두 경로를 설명하고 컴파일 검사된 Editor 예제를 제공해요.",
+        "learn": "FRM 이해하기",
         "openEditor": "수식 에디터 열기"
       },
       "guides": {
@@ -311,17 +313,21 @@
       },
       "directory": {
         "eyebrow": "전체 카탈로그",
-        "title": "모든 수식 94개",
-        "intro": "전체 디렉터리는 패밀리별로 그룹화되어 서버에서 렌더링돼요. 모든 링크는 표준 지역화된 탐색기 상태로 수식을 열어요.",
+        "title": "공개 수식 534개 전체",
+        "intro": "공개 디렉터리는 구조 패밀리별로 그룹화되어 서버에서 렌더링돼요. 모든 링크는 수식의 정식 Formula Record를 열어요.",
         "familyCount": "{count, plural, one {수식 #개} other {수식 #개}}",
         "backToFamilies": "패밀리 개요",
         "guideBadge": "가이드"
       },
       "cta": {
-        "title": "수식에서 시작하거나 직접 작성하세요",
-        "description": "기본 제공 수식은 탐색기를 사용하고, 반복을 직접 정의하려면 독립형 FRM 편집기를 여세요.",
+        "title": "수식에서 시작하거나 Classic-compatible Editor 사용하기",
+        "description": "내장 수식에는 Explorer를 사용하고, 지원되는 Classic-compatible 사용자 반복 하위 집합에는 독립형 FRM Editor를 여세요.",
         "explore": "탐색기 열기",
         "editor": "수식 에디터 열기"
+      },
+      "standardDirectory": {
+        "cta": "표준 디렉터리 탐색",
+        "hint": "현재 공개된 표준 정의는 534개예요."
       }
     },
     "guide": {
@@ -356,10 +362,28 @@
         "cta": "탐색기에서 리믹스"
       }
     },
+    "teaching": {
+      "fallbackNotice": "요청한 번역을 사용할 수 없어 검토된 영어 학습 단원을 표시합니다. 이 대체 페이지는 색인에서 제외됩니다.",
+      "sections": {
+        "overview": "학습 개요",
+        "sourceWalkthrough": "소스 해설",
+        "syntaxFeatures": "구문 특징",
+        "parameterExperiment": "매개변수 실험",
+        "exercise": "연습",
+        "provenance": "출처 및 권리"
+      },
+      "labels": {
+        "steps": "단계",
+        "expectedObservation": "관찰할 내용",
+        "safetyNote": "안전 참고",
+        "completionCheck": "완료 확인",
+        "hint": "힌트"
+      }
+    },
     "frmGuide": {
-      "eyebrow": "FRM 수식 언어",
-      "title": "FRM으로 프랙탈 작성하기",
-      "intro": "FractalPark의 검증된 FRM 하위 집합을 배우고, 소스가 GPU 셰이더가 되는 과정을 이해하며, 에디터가 사용하는 동일한 예제로 작동하는 수식 세 개를 만들어 보세요.",
+      "eyebrow": "FRM 언어와 호환성",
+      "title": "FractalPark에서 FRM 이해하기",
+      "intro": "정식 FRM-like v1 Definition이 공개된 Standard 수식을 구동하는 방식을 배운 뒤, 두 소스 계약을 혼동하지 않고 별도의 Classic-compatible Editor 예제를 사용하세요.",
       "contentsLabel": "이 페이지에서",
       "copy": {
         "copy": "복사",
@@ -370,15 +394,15 @@
         "what-is-frm": {
           "title": "FRM이란 무엇인가요?",
           "body": [
-            "FRM은 반복 프랙탈을 설명하는 간결한 텍스트 기반 방식이에요. 수식은 시작 상태, 각 오빗마다 반복되는 계산, 그리고 반복을 계속할지 결정하는 조건을 정의해요.",
-            "이 형식은 렌더링 프로그램을 다시 빌드하지 않고도 실험을 교환할 수 있게 해준 수식 파일이 있는 Fractint 생태계에서 성장했어요. FractalPark은 완전한 호환성을 주장하는 대신 자체 검증된 하위 집합을 문서화하면서 그 저작 아이디어를 브라우저 워크플로우로 옮겨왔어요."
+            "FractalPark FRM-like v1은 공개된 Standard Definition의 기반이 되는 정식 타입 소스 언어예요. Definition은 언어, 표준 라이브러리, NumericProfile, 매개변수, 초기 상태, 반복 궤도 단계, 반복 계속 조건을 고정해요.",
+            "Classic .frm은 Fractint 생태계에서 발전했으며 Classic-compatible 독립형 Editor와 가져오기 파이프라인이 사용하는 소스 계약으로 남아 있어요. FractalPark은 그 방언을 별도로 스캔하고 진단해요. Classic 소스와 frmSemanticsVersion 1 또는 2는 정식 FRM-like v1의 다른 표기가 아니에요."
           ],
           "historyPrefix": "더 넓은 프로젝트의 기원과 역사에 대해서는 다음을 참조하세요:",
           "historyLink": "Fractint 프로젝트 사이트"
         },
         "support": {
           "title": "FractalPark의 FRM 지원",
-          "intro": "FractalPark은 의도적으로 설계된 FRM 하위 집합을 토큰화·파싱·검증·컴파일해요. 아래 표는 직접 작동하는 구성, 문서화된 FractalPark 의미론을 가진 구성, 현재 워크플로우가 보존할 수 없는 구성을 구분해요.",
+          "intro": "이 호환성 표는 Classic-compatible Editor와 가져오기 경로를 설명해요. 정식으로 공개된 Standard Definition은 별도로 버전이 지정된 FRM-like v1 파서, 타입 IR, standard32 백엔드, 고정된 Safety Envelope를 사용해요.",
           "table": {
             "level": "수준",
             "meaning": "의미",
@@ -418,10 +442,10 @@
             "preprocessor": "전처리기 기능",
             "rejected-constructs": "현재 컴파일 파이프라인이 거부하는 모든 구성"
           },
-          "disclaimer": "이것은 검증된 호환성 기준선이지, 완전한 Fractint 호환성을 주장하는 것은 아니에요. 컴파일러가 변경되면 이 매트릭스와 테스트도 함께 변경돼야 해요.",
+          "disclaimer": "이는 검증된 Classic 호환성 기준선이며, 완전한 Fractint 호환성을 주장하는 것은 아니에요. Standard 공개 원장과는 별개예요.",
           "verified": {
             "title": "검증된 호환성",
-            "intro": "이 기능 수는 버전이 지정된 매니페스트에서 가져왔어요. 588개의 대상 항목은 579개의 strict-v2 통과와 9개의 문서화된 면제로 구성되며, 별도의 117개 항목은 안정적인 사유와 함께 제외돼요.",
+            "intro": "이 Classic 가져오기 기능 수는 버전이 지정된 호환성 매니페스트에서 왔어요. 대상 항목 588개는 strict-v2 통과 579개와 문서화된 면제 9개로 구성되고, 별도 항목 117개는 안정적인 사유로 제외돼요. 이 수에는 공개된 FRM-like v1 Definition이 포함되지 않아요.",
             "stats": {
               "builtins": "내장 함수",
               "descriptors": "bailout 디스크립터 종류",
@@ -441,7 +465,7 @@
         },
         "anatomy": {
           "title": "수식 구조",
-          "intro": "FractalPark FRM 수식은 이름 있는 선언 하나와 세 개의 명시적 섹션으로 구성돼요. 이들이 함께 모든 픽셀의 상태 전이를 정의해요.",
+          "intro": "정식 FRM-like v1과 현재 Classic Editor 예제는 이름 있는 수식 및 init, loop, bailout 개념을 공유하지만, 완전한 문법은 달라요. v1에서는 의미론 지시문과 선택적 타입 매개변수 섹션도 Definition의 일부예요.",
           "parts": {
             "init": "픽셀당 한 번 실행돼요. 초기 오빗 값과 보조 변수를 여기서 설정하세요.",
             "loop": "반복마다 한 번 실행돼요. z와 다음 반복에 필요한 상태를 업데이트하세요.",
@@ -451,7 +475,7 @@
         },
         "syntax": {
           "title": "문법 가이드",
-          "intro": "언어는 의도적으로 작게 유지돼요: 표현식은 복소수 연산을 기술하고, 문장은 오빗 상태를 업데이트하며, 제어 흐름은 업데이트 중 하나를 선택해요.",
+          "intro": "두 표면 모두 의도적으로 작게 유지돼요. 아래 요약은 공유 개념이며, 정식 지시문과 타입 매개변수는 공개된 Formula Record의 Source 동작을 사용하고 Classic 소스에는 Editor 진단을 사용하세요.",
           "topics": {
             "sections": {
               "title": "선언과 섹션",
@@ -481,7 +505,7 @@
         },
         "pipeline": {
           "title": "FRM → AST → GLSL 파이프라인",
-          "intro": "FractalPark은 FRM 텍스트를 셰이더에 그대로 붙여넣지 않아요. 소스를 단계적 컴파일러에 통과시켜 문법, 의미, 생성 코드, 진단이 연결된 상태를 유지해요.",
+          "intro": "FractalPark은 소스 텍스트를 셰이더에 그대로 붙여넣지 않아요. 정식 v1 소스는 타입 파서와 CPU/GLSL 백엔드를 거치고, Classic Editor 소스는 스캐너, 선택 항목 프런트엔드, 정식 수식 모델, 플러그인 컴파일러를 거쳐요.",
           "steps": {
             "source": {
               "title": "FRM 소스",
@@ -508,11 +532,11 @@
               "body": "컴파일이 성공하면 렌더러와 셰이더 조립 시스템이 사용하는 동일한 수식 플러그인 계약이 돼요."
             }
           },
-          "note": "공유 컴파일러 계약은 탐색기, 독립형 에디터, 저장된 커스텀 수식, 예제, 테스트가 하나의 구현 경로를 따르게 해요."
+          "note": "각 소스 계약에는 각각 하나의 구현 경로가 있어요. 공개된 Standard 런타임은 FRM-like v1을 사용하고, 독립형 Editor와 현재 사용자 수식 예제는 Classic-compatible 경로를 사용해요. 어느 쪽도 다른 쪽으로 조용히 대체되지 않아요."
         },
         "tutorials": {
           "title": "단계별 튜토리얼",
-          "intro": "이 예제들은 가장 작은 이차 수식에서 파라미터와 상태 기반 피드백까지 점진적으로 나아가요. 각 소스 블록은 공유 예제 레지스트리에서 직접 가져오며 테스트 중에 컴파일돼요.",
+          "intro": "이 예제들은 정식 FRM-like v1 Definition이 아니라 Classic-compatible Editor 예제예요. 작은 이차 수식에서 매개변수와 상태 기반 피드백으로 진행하며, 모든 소스 블록은 공유 Editor 레지스트리에서 오고 테스트 중 컴파일돼요.",
           "lesson": "레슨 {number}",
           "openInEditor": "FRM 에디터에서 열기",
           "goals": {
@@ -520,7 +544,7 @@
             "parameter-drift": "초점: p1과 p2 파라미터 슬롯, 복소수 리터럴, 명시적 크기 함수로서의 cabs(z).",
             "orbit-echo": "초점: 이전 오빗 상태로서의 zPrev. 피드백은 수동으로 관리하는 두 번째 상태 변수를 도입하지 않고 메모리를 추가해요."
           },
-          "editorNote": "FRM 편집기는 안정적인 ID로 이와 동일한 컴파일 검사 예제를 열어요. 수식 소스는 클라우드 수식 라이브러리에 저장할 때까지 현재 탭에만 남아 있고, URL에는 절대 포함되지 않아요."
+          "editorNote": "독립형 FRM Editor는 안정적인 ID로 이 Classic-compatible 컴파일 검사 예제를 열어요. 수식 소스는 클라우드 라이브러리에 저장할 때까지 현재 탭에만 남고 URL에 포함되지 않아요. 이것은 정식 v1 가져오기나 작성기를 활성화하지 않아요."
         },
         "diagnostics": {
           "title": "오류와 진단",
@@ -550,7 +574,7 @@
           "exploreTitle": "렌더러를 실제 맥락에서 보기",
           "exploreBody": "커스텀 수식을 작성하기 전에 탐색기를 열어 내장 수식의 동작, 컬러링, 변환, 애니메이션, 내보내기 컨트롤을 비교해 보세요.",
           "exploreCta": "탐색기 열기",
-          "editorNote": "전용 FRM 편집기에서 수식을 컴파일, 미리 보기, 가져오기, 다운로드할 수 있어요. 탐색기로 넘기기 전에 로그인해서 수식 하나를 내 클라우드 수식 라이브러리에 저장하세요.",
+          "editorNote": "현재 Classic-compatible 컴파일, 미리보기, 가져오기, 다운로드 워크플로에는 전용 FRM Editor를 사용하세요. 이 Editor는 정식 FRM-like v1 소스를 받지 않아요. 공개된 v1 소스는 Formula Record에서 확인하고 해당 Record의 Open 또는 Remix 동작으로 실행하세요.",
           "referencesTitle": "참고 자료",
           "referencesIntro": "역사적 맥락과 구현 세부 사항은 별도로 링크되어, 가이드가 Fractint 계보와 FractalPark의 현재 컴파일러 계약을 구분할 수 있어요.",
           "references": {
@@ -635,31 +659,31 @@
       },
       "mandelbox": {
         "title": "Mandelbox",
-        "summary": "톰 로우(Tom Lowe)의 2010년 Mandelbox에서 영감을 받은 접기-스케일 사상이에요. 상자 반사, 방사형 접기, 스케일링이 반복 하나로 방과 벽을 만들어 내요.",
-        "overview": "대부분의 프랙탈 공식은 z² + c처럼 제곱에서 시작해요. Mandelbox는 다른 길을 택해요. 상자 접기(box fold)는 고정된 정육면체 바깥의 좌표를 다시 면 쪽으로 되돌려 보내고, 방사형(공) 접기는 원점과의 거리에 따라 점을 뒤집거나 스케일해요. 마지막으로 균일 스케일이 결과를 늘리거나 압축한 다음 c를 더해요. 이 순서를 반복하면 구조를 만드는 건 제곱이 아니라 접기예요.\n\n반사와 반전은 특정한 차원 수를 요구하지 않아서, 어떤 차원에서든 만들 수 있어요. FractalPark은 복소평면에서 동일한 접기-스케일 핵심을 유지한 2차원 변형을 그려요.\n\n이 매개변수 지도는 다항식에서 익숙한 곡선으로 부드러워지지 않아요. 날카로운 모서리의 방들, 겹겹이 쌓인 요새, 설계도에서 옮겨온 듯한 통로들을 잘라 내요. 그 경계는 닿을 수 있는 범위 안에 머무는 유계 궤도와 탈출하는 궤도를 가르고, 확대하면 톱니처럼 들쭉날쭉한 자기유사 가장자리가 더 작은 규모로 상자 모티프를 다시 보여줘요.",
+        "summary": "Tom Lowe가 2010년에 선보인 Mandelbox에서 영감을 얻은 접기와 스케일 사상이다. 상자 반사, 방사형 접기, 스케일링이 반복 하나로 방과 벽을 만들어 낸다.",
+        "overview": "대부분의 프랙탈 공식은 z² + c처럼 제곱으로 시작한다. Mandelbox는 다른 경로를 택한다. 상자 접기는 고정된 정육면체 밖의 좌표를 그 면 쪽으로 되돌려 보내고, 방사형 또는 공 접기는 원점에서의 거리에 따라 점을 반전하거나 스케일한다. 균일 스케일은 c를 더하기 전에 결과를 늘리거나 압축한다. 이 순서를 반복하면 제곱이 아니라 접기가 구조를 만든다.\n\n반사와 반전은 특정 차원 수를 요구하지 않으므로 어떤 차원에서든 이 구성을 만들 수 있다. FractalPark는 복소평면에서 같은 접기와 스케일의 핵심을 유지하는 2차원 변형을 그린다.\n\n이 매개변수 사상은 다항식에서 익숙한 곡선으로 부드러워지지 않는다. 날카로운 모서리의 방, 중첩된 요새, 설계도에서 옮겨온 듯한 통로를 만들어 낸다. 그 경계는 가까이에 머무는 유계 궤도와 탈출하는 궤도를 가른다. 확대하면 들쭉날쭉한 자기유사 가장자리에 더 작은 규모의 상자 모티프가 다시 나타난다.",
         "imageAlt": "차가운 청색 톤의 Mandelbox 2차원 지도, 날카로운 모서리의 방들과 겹겹이 쌓인 요새 같은 움푹한 공간",
         "imageCaption": "FractalPark의 Mandelbox 영감 지도: 곧은 벽, 직각 모서리, 수정 요새 내부 같은 층층의 움푹한 공간.",
         "math": {
           "iteration": {
-            "label": "Fold-and-scale iteration",
-            "explanation": "Each round puts the orbit through four moves: box fold, radial fold, scale, then a shift by c.\n\nThe box fold handles one coordinate at a time. Take a component a of z. Above 1, it reflects as a → 2 − a; below −1, as a → −2 − a. Components in [−1, 1] stay put. The outer plane folds back into the central square.\n\nNext comes the ball fold, checking the squared magnitude r² = |z|². If r² < 0.25 (|z| < 0.5), scale the point by 4 and push it away from the origin. If 0.25 ≤ r² < 1, invert it through the unit sphere: z → z/r², so a radius of m becomes 1/m. Points with r² ≥ 1 stay put. The near points move outward; the middle band turns across the unit sphere. These moves make the unsettled interface behind the Mandelbox's boxy layers.\n\nTry z₀ = (1.5, 0) with scale s = 2. The box fold reflects x = 1.5 to x = 0.5. Since r² = 0.25 falls in the middle band, the ball fold inverts it: z = z/r² = (2, 0). Scaling by 2 gives (4, 0), and adding c completes the step. Start at the origin instead and you are in the innermost band: the ball fold multiplies it by 4—still the origin—so the first iterate lands exactly on c."
+            "label": "접기와 스케일 반복",
+            "explanation": "각 반복에서 궤도는 상자 접기, 방사형 접기, 스케일, c만큼의 이동이라는 네 단계를 거친다.\n\n상자 접기는 한 번에 좌표 하나를 처리한다. z의 성분 a를 생각한다. 1보다 크면 a → 2 − a로 반사하고, −1보다 작으면 a → −2 − a로 반사한다. [−1, 1] 안의 성분은 그대로 둔다. 바깥 평면이 중앙 정사각형 쪽으로 다시 접힌다.\n\n다음은 제곱 크기 r² = |z|²를 확인하는 공 접기이다. r² < 0.25 (|z| < 0.5)이면 점을 4배로 스케일해 원점에서 멀어지게 한다. 0.25 ≤ r² < 1이면 단위구를 통해 반전한다: z → z/r². 따라서 반지름 m은 1/m이 된다. r² ≥ 1인 점은 그대로 둔다. 가까운 점은 바깥쪽으로 이동하고, 중간 띠는 단위구를 가로질러 반전한다. 이러한 움직임이 Mandelbox의 상자형 층 뒤에 있는 불안정한 경계를 만든다.\n\nz₀ = (1.5, 0), 스케일 s = 2를 예로 든다. 상자 접기는 x = 1.5를 x = 0.5로 반사한다. r² = 0.25는 중간 띠에 속하므로 공 접기는 이를 반전한다: z = z/r² = (2, 0). 2배로 스케일하면 (4, 0)이 되고, c를 더하면 단계가 완료된다. 대신 원점에서 시작하면 가장 안쪽 띠에 있게 된다. 공 접기는 이를 4배로 곱하지만 여전히 원점이므로 첫 번째 반복값은 정확히 c에 도달한다."
           }
         },
-        "visualCharacteristics": "Repeated folds produce hard-edged chambers, nested fortifications, and corridors with depth. The default parameter s = 2 gives the structure straight walls, right-angle corners, and layered recesses like the inside of a crystalline fortress.\n\nAt finer scales, the box theme returns: small copies of the overall shape appear in recesses and along boundaries, all with the same rectilinear geometry. The canonical image uses cool blues and cyans, which suit the mechanical geometry of the folds.",
+        "visualCharacteristics": "반복된 접기는 날카로운 모서리의 방, 중첩된 요새, 깊이가 있는 복도를 만들어 낸다. 기본 매개변수 s = 2는 구조에 곧은 벽, 직각 모서리, 수정 요새 내부와 같은 층층의 움푹한 공간을 부여한다.\n\n더 미세한 규모에서는 상자 주제가 되돌아온다. 전체 형태의 작은 복사본이 움푹한 공간과 경계를 따라 나타나며, 모두 같은 직선적 기하를 지닌다. 표준 이미지는 차가운 파랑과 시안을 사용하며, 이는 접기의 기계적인 기하와 어울린다.",
         "parameters": {
-          "scale": "Scale sets how strongly the folded orbit expands or reverses before c is added. A scale of 2 (the default) roughly doubles the folded value; negative values reverse direction and produce mirror-image variations."
+          "scale": "스케일은 c를 더하기 전에 접힌 궤도가 얼마나 강하게 팽창하거나 반전하는지를 정한다. 기본값인 2의 스케일은 접힌 값을 대략 두 배로 만들며, 음수 값은 방향을 반전해 거울상 변형을 만든다."
         },
         "faq": {
           "folds": {
-            "question": "What are box and ball folds?",
-            "answer": "A box fold reflects coordinates outside a fixed interval toward the origin—like folding a sheet’s edges inward. A ball fold (or sphere fold) makes a conditional inversion: points too close to the origin are pushed outward, points at an intermediate distance invert through a sphere, and distant points remain unchanged. Together they redirect the orbit at every step and make the Mandelbox’s layered geometry."
+            "question": "상자 접기와 공 접기란 무엇인가?",
+            "answer": "상자 접기는 고정된 구간 밖의 좌표를 원점 쪽으로 반사한다. 종이의 가장자리를 안쪽으로 접는 것과 같다. 공 접기 또는 구 접기는 조건부 반전을 수행한다. 원점에 너무 가까운 점은 바깥쪽으로 밀어내고, 중간 거리에 있는 점은 구를 통해 반전하며, 먼 점은 바꾸지 않는다. 두 접기는 매 단계에서 궤도의 방향을 바꾸어 Mandelbox의 층진 기하를 만든다."
           },
           "dimension": {
-            "question": "Is this the three‑dimensional Mandelbox?",
-            "answer": "No. FractalPark renders a two-dimensional map inspired by the same fold-and-scale construction. The original Mandelbox is most often explored in 3D, where the box fold reflects across a cube’s faces; here the same logic works in the complex plane with a square boundary."
+            "question": "이것이 3차원 Mandelbox인가?",
+            "answer": "아니다. FractalPark는 같은 접기와 스케일 구성에서 영감을 받은 2차원 사상을 렌더링한다. 원래 Mandelbox는 상자 접기가 정육면체의 면을 가로질러 반사하는 3D에서 가장 자주 탐구된다. 여기서는 같은 논리가 정사각형 경계를 가진 복소평면에서 작동한다."
           }
         },
-        "history": "The Mandelbox was first presented by Tom Lowe (known online as Tglad) in early 2010 on the FractalForums community. Lowe was experimenting with iterative folding operations in three dimensions — box reflections and spherical inversions — to see whether they could produce bounded, self‑similar structures analogous to the Mandelbrot set. The results were immediately recognised as a new class of fractal, and the name \"Mandelbox\" was adopted both as an homage to the Mandelbrot set and because of the boxlike shape of the set when visualised.\n\nThe discovery followed closely on the 2009 Mandelbulb by Daniel White and Paul Nylander, which had sparked renewed hobbyist interest in finding non‑trivial 3D fractals. Within months, contributors on FractalForums — including Knighty, Jesse, and others — extended the Mandelbox idea to different symmetry planes and polyhedral folds.\n\nDespite its popularity in fractal art software (Mandelbulber, Mandelbulb3D, Fragmentarium, Ultra Fractal), the Mandelbox has received relatively little formal mathematical analysis. One of the few peer‑reviewed treatments is Gregg Helt's 2018 Bridges Conference paper, which generalises the spherical inversion step to arbitrary shape inversions."
+        "history": "Mandelbox는 Tom Lowe(온라인에서는 Tglad로 알려짐)가 2010년 초 FractalForums 커뮤니티에서 처음 선보였다. Lowe는 3차원에서 상자 반사와 구면 반전이라는 반복 접기 연산을 실험하며 Mandelbrot 집합과 유사한 유계 자기유사 구조를 만들 수 있는지 살폈다. 결과는 곧 새로운 프랙탈 부류로 인정받았고, Mandelbrot 집합에 대한 경의와 시각화했을 때 나타나는 상자 같은 형태 때문에 \"Mandelbox\"라는 이름이 채택되었다.\n\n이 발견은 Daniel White와 Paul Nylander의 2009년 Mandelbulb 직후에 나왔으며, 이는 자명하지 않은 3D 프랙탈을 찾으려는 취미가들의 관심을 다시 불러일으켰다. 몇 달 안에 Knighty, Jesse 등을 포함한 FractalForums 기여자들이 Mandelbox 개념을 여러 대칭 평면과 다면체 접기로 확장했다.\n\nMandelbulber, Mandelbulb3D, Fragmentarium, Ultra Fractal 같은 프랙탈 아트 소프트웨어에서 인기가 높았지만, Mandelbox는 정식 수학 분석을 비교적 적게 받았다. 동료 심사를 거친 몇 안 되는 연구 중 하나는 구면 반전 단계를 임의의 형태 반전으로 일반화한 Gregg Helt의 2018년 Bridges Conference 논문이다."
       },
       "perpendicular-celtic": {
         "title": "Perpendicular Celtic",
@@ -787,25 +811,25 @@
       },
       "newton-cosh": {
         "title": "Newton Cosh",
-        "summary": "cosh z = 1에 뉴턴 방법을 적용한 거예요. 무한히 많은 등간격 근이 평면을 반복되는 수렴 띠로 만들어요.",
-        "overview": "뉴턴의 평범한 근 찾기 단계는 f(z) = cosh z − 1일 때 성격이 달라져요. 근은 모든 정수 k에 대해 2πik예요. 다항식은 궤도에 유한한 목적지만 제공하지만, 이 근들은 허수축을 따라 같은 간격으로 계속 나아가요. 그래서 프랙탈은 몇 개의 분지에 머물지 않고 위아래로 이어지는 띠 모양으로 배열돼요.\n\n사상 N(z) = z − (cosh z − 1) / sinh z는 유리형(meromorphic) 함수예요. 특이점을 제외한 복소평면 전체에서 정의돼요. 두 종류의 반복되는 점 집합을 눈여겨보세요. cosh z − 1의 근과, 정수 k에 대해 z = πik에서 나타나는 분모 sinh z의 영점이에요. 분모 영점 근처에서는 시작점을 살짝 움직이는 것만으로 궤도가 도달하는 근이 바뀔 수 있어요.\n\n허수축을 따라 반복되는 주기성은 수학 지식 없이도 한눈에 보여요. 수평 띠가 위아래로 서로를 반복하는데, 근의 주기마다 하나씩이에요. 띠가 만나는 자리에는 한 분지가 궤도를 다음 분지로 넘겨주는 지점을 가느다란 세로 실이 기록해요.",
-        "imageAlt": "cosh z = 1에 대한 뉴턴 프랙탈, 허수축을 따라 반복되는 수평 띠와 휘어진 경계가 쌓여 있어요",
-        "imageCaption": "FractalPark의 cosh z = 1 뉴턴 뷰: 허수축을 따라 반복되는 수렴 띠가 접힌 실 모양 경계로 나뉘어요.",
+        "summary": "cosh z = 1에 적용한 뉴턴 방법: 무한히 많은 등간격의 중근이 평면을 반복되는 수렴 띠로 만든다.",
+        "overview": "f(z) = cosh z − 1일 때 뉴턴의 일반적인 근 찾기 단계는 성격이 달라진다. 그 근은 모든 정수 k에 대해 2πik이고 각각 중근이다. 다항식에서는 궤도가 도달할 수 있는 목적지가 유한하지만, 이 근들은 허수축을 따라 같은 간격으로 끝없이 이어진다. 따라서 프랙탈은 몇 개의 분지에 머무르지 않고 위아래로 이어지는 띠를 이룬다.\n\n영점에서 벗어나면 보정량 (cosh z − 1) / sinh z는 tanh(z/2)로 간단해진다. 분모 sinh z는 모든 πik에서 0이 된다. 짝수배는 근이므로 간단해진 몫에서 제거 가능하지만, 진짜 극점과 민감한 특이점은 홀수배 (2k+1)πi이다. 이 홀수배 근처에서는 시작점의 작은 변화가 단계를 크게 바꿀 수 있다.\n\n허수축을 따른 주기성은 수학 배경 없이도 한눈에 볼 수 있다. 수평 띠는 근의 각 주기마다 위아래로 반복된다. 띠가 만나는 곳에서는 한 분지가 궤도를 다음 분지로 넘기는 위치를 가는 수직 실이 기록한다.",
+        "imageAlt": "cosh z = 1에 대한 뉴턴 프랙탈로, 허수축을 따라 반복되는 수평 띠와 휘어진 경계가 쌓여 있다",
+        "imageCaption": "FractalPark의 cosh z = 1 뉴턴 뷰: 허수축을 따라 반복되는 수렴 띠가 접힌 실 모양 경계로 나뉜다.",
         "math": {
           "iteration": {
-            "label": "Newton’s cosh iteration",
-            "explanation": "Newton's rule is N(z) = z − f(z) / f′(z). Here f(z) = cosh z − 1 and f′(z) = sinh z. Each step finds the correction (cosh z − 1) / sinh z, then takes it away from z.\n\nThe equation cosh z = 1 has infinitely many solutions: z = 2πik for every integer k. Each is a simple root: cosh z grows linearly close by, so Newton's method converges quadratically there. Far from the real axis, cosh and sinh grow exponentially. Their quotient may be tiny or enormous, and that is where the image's sensitive seams take shape.\n\nTry z₀ = 0.2i. Since i·sinh(0.2) ≈ 0.201i and cosh(0.2) ≈ 1.020, the first correction is small; the orbit quickly reaches the root at z = 0. Now move to z₀ = (0.5 + 3.0i), farther from every root. The correction now contains large exponential terms. The orbit can cross several basin boundaries before settling, or wander chaotically between roots for many iterations before one captures it.\n\nThe function repeats with period 2πi in the imaginary direction, and the Newton map does too: N(z + 2πi) = N(z) + 2πi. That repeated rule is the source of the horizontal banding."
+            "label": "cosh의 뉴턴 반복",
+            "explanation": "뉴턴 규칙은 N(z) = z − f(z) / f′(z)이다. 여기서 f(z) = cosh z − 1, f′(z) = sinh z이며, 보정량 (cosh z − 1) / sinh z를 뺀다. 이는 sinh z의 영점 밖에서 tanh(z/2)이다.\n\ncosh z = 1의 해는 모든 정수 k에 대해 z = 2πik이고 모두 중근이다. 따라서 근 근처의 오차는 매 단계 약 절반이 된다. 수렴은 이차가 아니라 선형이다. 분모는 모든 πik에서 0이지만 짝수배에서는 제거 가능하고, 진짜 극점은 홀수배 (2k+1)πi이다.\n\nz₀ = 0.2i이면 보정량은 tanh(0.1i) = i tan(0.1) ≈ 0.1003i이므로 z₁ ≈ 0.0997i이다. 오차가 약 절반이 된다. πi 같은 홀수배 근처에서는 보정량이 매우 커질 수 있다. 구현은 수치 안정성을 위해 실수 성분을 제한하고 |sinh(z)|² < 1e-10이면 단계를 그대로 둔다. 이는 수치 보호 장치일 뿐, 보호되지 않은 사상에 대한 수학적 주장이 아니다.\n\n함수와 뉴턴 사상은 허수 방향에서 2πi 주기로 반복된다: N(z + 2πi) = N(z) + 2πi."
           }
         },
-        "visualCharacteristics": "Start with the horizontal bands along the imaginary axis. A period of roots makes one band, and the convergence pattern returns in the next. The borders do not run straight: they bend and fold, then pull out fine vertical filaments like taut threads.\n\nWithin each band, the basin geometry resembles its neighbours, with small distortions. Think of a ribbon folded repeatedly. The warm and cool zones come from the colouring; the sharp breaks arise where singularities of sinh z destabilise the Newton correction.",
+        "visualCharacteristics": "허수축을 따라 수평 띠가 겹친다. 한 주기의 근이 한 띠를 만들고 다음 띠에서 수렴 무늬가 반복된다. 경계는 굽고 접히며 가는 수직 실을 만든다.\n\n각 띠의 분지 기하는 이웃과 닮아 있다. 뚜렷한 끊김은 뉴턴 보정에 진짜 극점이 있는 πi의 홀수배 근처에 모인다.",
         "faq": {
           "target": {
-            "question": "What equation is being solved?",
-            "answer": "It seeks the complex solutions of cosh(z) = 1: z = 2πik for every integer k. The equally spaced roots line the imaginary axis. Each draws in nearby Newton orbits, and their repeating arrangement creates the horizontal bands."
+            "question": "어떤 방정식을 푸는가?",
+            "answer": "cosh(z) = 1의 복소해, 즉 모든 정수 k에 대한 z = 2πik를 찾는다. 이 등간격의 중근이 허수축에 놓여 수평 띠를 만든다."
           },
           "singularities": {
-            "question": "Why are some regions extremely sensitive?",
-            "answer": "The correction divides by sinh(z), which vanishes at z = πik for integer k. Close to one of these points, the correction can become huge, sending an orbit across several basin boundaries before it converges. These singularities are not roots; they pull the fine vertical filaments and unsettled border zones into view."
+            "question": "일부 영역이 매우 민감한 이유는 무엇인가?",
+            "answer": "보정량은 sinh(z)로 나누며 이는 z = πik에서 0이다. 짝수배는 근이고 간단해진 몫에서 제거 가능하지만, 진짜 극점은 홀수배 (2k+1)πi이다. 홀수배 근처에서는 보정량이 커져 궤도가 여러 분지 경계를 건너고 가는 수직 무늬가 나타날 수 있다."
           }
         }
       },
@@ -889,28 +913,28 @@
       },
       "cosh-mandelbrot": {
         "title": "Cosh Mandelbrot",
-        "summary": "초월적 탈출 시간 사상이에요. 쌍곡코사인이 제곱을 대신하고, 세로로 반복되는 깃털과 층층의 부채가 그 자리를 차지해요.",
-        "overview": "Cosh Mandelbrot는 익숙한 다항식 단계를 벗어나요. z² + c 대신 z → cosh(z) + c를 반복해요. 제곱은 실수축 방향의 지수적 성장과 허수축 방향의 2π 반복을 가진 쌍곡코사인으로 대체돼요.\n\n복소 코사인과 쌍곡코사인은 가까운 친척이에요. 둘 다 한 방향으로는 반복되고 다른 방향으로는 끝없이 자라요. cosh(z)의 허수축 주기는 2π라서, 디테일 띠가 위아래로 자신을 되풀이해요. |Re(z)|가 크면 지수 항들이 바깥으로 치달아요. 대부분의 시작점은 빨리 탈출하고, 가느다란 띠만이 궤도를 붙잡아 여러 단계 동안 연속된 값을 유계로 유지해요.\n\n매개변수 평면은 더 이상 만델브로 집합의 심장형과 돌기처럼 보이지 않아요. 대신 부채, 금빛 깃털, 세로로 울리는 메아리를 쌓아 올려요. 탈출과 비탈출 사이의 경계는 초월 반복 자체가 그려 내며, 간단한 대수적 탈출 반지름은 존재하지 않아요.",
+        "summary": "초월적 탈출 시간 사상이다. 쌍곡코사인이 제곱을 대신하며, 세로로 반복되는 깃털과 층진 부채가 그 자리를 차지한다.",
+        "overview": "Cosh Mandelbrot는 익숙한 다항식 단계를 뒤로한다. z² + c를 반복하는 대신 z → cosh(z) + c를 반복한다. 제곱은 실수축을 따른 쌍곡코사인의 지수적 성장과 허수축을 따른 2π 반복으로 대체된다.\n\n복소 코사인과 쌍곡코사인은 가까운 친척이다. 각각 한 방향으로 반복되고 다른 방향으로 무한히 성장한다. cosh(z)의 허수축 주기는 2π이므로 세부 띠가 자기 위와 아래에서 되돌아온다. |Re(z)|가 크면 지수 항이 바깥으로 빠르게 뻗는다. 대부분의 시작점은 빠르게 탈출하며, 가느다란 띠만이 궤도를 붙잡아 연속된 값이 여러 단계 동안 유계로 남게 한다.\n\n매개변수 평면은 더 이상 Mandelbrot 집합의 심장형과 구근을 닮지 않는다. 대신 부채, 금빛 깃털, 세로 메아리를 쌓아 올린다. 탈출과 비탈출의 경계는 초월 반복 자체가 그리며, 단순한 대수적 탈출 반지름은 없다.",
         "imageAlt": "Cosh Mandelbrot 프랙탈에서 일정한 세로 간격으로 반복되는 층층의 금빛 깃털과 부채",
-        "imageCaption": "FractalPark의 Cosh Mandelbrot: 금빛 깃털과 층층의 부채가 cosh의 허수 방향 주기 2π에 맞춰 세로로 되돌아와요.",
+        "imageCaption": "FractalPark의 Cosh Mandelbrot: 금빛 깃털과 층진 부채가 cosh의 허수 방향 2π 주기에 따라 세로로 되돌아온다.",
         "math": {
           "iteration": {
-            "label": "Hyperbolic cosine iteration",
-            "explanation": "Each turn evaluates complex hyperbolic cosine at the current z, then adds c. The definition cosh(z) = (eᶻ + e⁻ᶻ)/2 puts exponential growth on the real axis beside imaginary-axis repetition with period 2π.\n\nTry z = iπ/2 on the imaginary axis. Since cosh(iπ/2) = cos(π/2) = 0, starting there with c = 0 leaves the recurrence at zero. Nudge the point off that axis and the eᶻ term can drive exponential growth and rapid escape. That sharp divide—bounded behavior in a narrow strip, rapid escape elsewhere—is typical of transcendental iteration. Unlike a polynomial, this map has no universal escape radius; FractalPark uses a bailout threshold chosen to detect divergence in practice."
+            "label": "쌍곡코사인 반복",
+            "explanation": "각 단계에서 현재 z에 복소 쌍곡코사인을 계산한 뒤 c를 더한다. 정의 cosh(z) = (eᶻ + e⁻ᶻ)/2는 실수축을 따른 지수적 성장과 2π 주기의 허수축 반복을 함께 만든다.\n\n허수축 위의 z = iπ/2를 살펴본다. cosh(iπ/2) = cos(π/2) = 0이므로 c = 0에서 그곳에서 시작하면 한 단계 뒤 z₁ = 0이 된다. 그렇다고 0이 고정점인 것은 아니다. 그다음 단계에서는 z₂ = cosh(0) = 1이 된다. 점을 그 축에서 조금 벗어나게 하면 eᶻ 항이 지수적 성장과 빠른 탈출을 유발할 수 있다. 좁은 띠 안의 유계 거동과 그 밖의 빠른 탈출이라는 이 뚜렷한 구분은 초월 반복의 전형이다. 다항식과 달리 이 사상에는 보편적인 탈출 반지름이 없으며, FractalPark는 실제로 발산을 감지하도록 선택한 탈출 임곗값을 사용한다."
           }
         },
-        "visualCharacteristics": "First notice the vertical repetition. Because cosh(z) repeats in the imaginary direction every 2π, fine plumes, layered fans, and gilt filaments return at regular intervals. The result is striped and tiered, far from the radial branching of polynomial Mandelbrot sets.\n\nIn the canonical rendering, plumes and fans often carry warm tones. The finest detail concentrates in narrow horizontal bands, where an orbit lingers near the boundary between escape and non-escape. Above and below, escape accelerates and the image becomes smoother.",
+        "visualCharacteristics": "먼저 세로 반복에 주목한다. cosh(z)는 허수 방향에서 2π마다 반복되므로 가는 깃털, 층진 부채, 금빛 필라멘트가 일정한 간격으로 되돌아온다. 결과는 줄무늬와 층을 이루며, 다항식 Mandelbrot 집합의 방사형 가지치기와 크게 다르다.\n\n표준 렌더링에서 깃털과 부채는 흔히 따뜻한 색조를 띤다. 가장 미세한 세부는 궤도가 탈출과 비탈출의 경계 근처에 오래 머무는 좁은 수평 띠에 집중된다. 그 위와 아래에서는 탈출이 빨라지고 영상이 더 매끄러워진다.",
         "faq": {
           "periodicity": {
-            "question": "Why do patterns repeat vertically?",
-            "answer": "Complex hyperbolic cosine repeats along the imaginary axis with period 2π. Because every step uses cosh(z), the orbit structure repeats too: bounded and escaping behavior returns at regular vertical intervals in the parameter plane."
+            "question": "무늬가 왜 세로로 반복되는가?",
+            "answer": "복소 쌍곡코사인은 허수축을 따라 2π 주기로 반복된다. 매 단계에서 cosh(z)를 사용하므로 궤도 구조도 반복된다. 유계 거동과 탈출 거동은 매개변수 평면에서 일정한 세로 간격으로 되돌아온다."
           },
           "growth": {
-            "question": "Why do many points escape rapidly?",
-            "answer": "Hyperbolic cosine is built from exponentials: cosh(z) = (eᶻ + e⁻ᶻ)/2. At a point with a substantial real part, the eᶻ term takes over and the orbit can grow extremely fast. There is no simple polynomial-style escape radius, so the bailout threshold is a practical computational choice."
+            "question": "많은 점이 왜 빠르게 탈출하는가?",
+            "answer": "쌍곡코사인은 지수함수로 이루어진다: cosh(z) = (eᶻ + e⁻ᶻ)/2. 실수부가 충분히 큰 점에서는 eᶻ 항이 우세해져 궤도가 매우 빠르게 성장할 수 있다. 다항식처럼 단순한 탈출 반지름은 없으므로 탈출 임곗값은 실용적인 계산 선택이다."
           }
         },
-        "history": "In 1988, Clifford A. Pickover, a computer scientist and author at IBM's Thomas J. Watson Research Center, published the short paper \"Chaotic behavior of the transcendental mapping (Z → cosh(Z) + μ)\" in The Visual Computer. He presented images of chaotic behavior produced by this transcendental function, alongside maps such as z → sin(z) + c and z → eᶻ + c.\n\nPickover’s work brought the cosh-based map into the fractal-rendering community, where it became a standard transcendental escape-time example. Earlier, mathematicians including Robert Devaney and Michał Krych had developed the broader study of transcendental complex dynamics—exponential, trigonometric, and hyperbolic families—and analyzed the dynamics of exp(z) in the 1980s."
+        "history": "1988년 IBM Thomas J. Watson Research Center의 컴퓨터 과학자이자 저술가인 Clifford A. Pickover는 The Visual Computer에 \"Chaotic behavior of the transcendental mapping (Z → cosh(Z) + μ)\"라는 짧은 논문을 발표했다. 그는 z → sin(z) + c와 z → eᶻ + c 같은 사상과 함께 이 초월 함수가 만든 혼돈 거동의 이미지를 제시했다.\n\nPickover의 작업은 cosh 기반 사상을 프랙탈 렌더링 커뮤니티에 알렸고, 그곳에서 표준적인 초월 탈출 시간 예제가 되었다. 그보다 앞서 Robert Devaney와 Michał Krych 등을 포함한 수학자들은 초월 복소 동역학의 더 넓은 연구, 즉 지수·삼각·쌍곡 함수족을 발전시키고 1980년대에 exp(z)의 동역학을 분석했다."
       },
       "buffalo": {
         "title": "Buffalo",
@@ -1062,28 +1086,28 @@
       },
       "zaslavsky-map": {
         "title": "Zaslavsky Map",
-        "summary": "복소 사인 사상이에요. 사인이 궤도를 휘게 하고, 고정된 0.55라디안 회전이 방향을 돌리며, c가 이동시켜요. 조지 자슬라프스키(George Zaslavsky)의 1978년 소산성 킥 로터 사상에서 영감을 받은 변형이에요.",
-        "overview": "Zaslavsky Map은 사인으로 궤도를 휘게 하고, 고정된 복소 위상 (e^{0.55i})만큼 결과를 회전시킨 다음 c를 더해요. 다항식 탈출 사상은 점점 커지는 z의 거듭제곱에서 성격을 얻지만, 여기서는 주기적인 휨이 꾸준한 회전을 만나는 데서 이야기가 만들어져요.\n\n1978년, 조지 M. 자슬라프스키가 소산성 킥 로터, 즉 마찰이 에너지를 빼앗는 동안 반복적으로 차여지는 회전체를 모델링하기 위해 원래 사상을 소개했어요. 그 고전적 사상은 실수 작용-각 변수를 쓰는 2차원 사상이에요. FractalPark은 그 아이디어를 하나의 복소 변수로 다시 만들었어요. 사인이 비선형 킥을, 고정된 복소 승수가 회전을 담당하고, c가 매개변수를 훑는 탈출 시간 이미지를 가능하게 해요.\n\n복소 사인은 허수축을 따라 무한히 자랄 수 있어서, 이건 단순한 다항식 탈출이 아니에요. 궤도는 잠시 원을 그리다가 흩어질 수 있어요. 그 머뭇거림이 소용돌이치는 팔과 동심원 고리를 남기는데, 특히 만화경 같은 공간 변환 후에 두드러져요.",
+        "summary": "복소 사인 사상: 0.28 가중치의 사인 섭동이 궤도를 굽히고, 고정된 0.55라디안 회전이 이를 돌리며, c가 이동시킨다 — George Zaslavsky의 1978년 소산성 킥 로터 사상에서 영감을 받은 변형이다.",
+        "overview": "FractalPark는 z(n+1) = exp(0.55 i) * (z(n) + 0.28 sin(z(n))) + c를 구현한다. 사인은 기존 궤도에 대한 0.28 가중치 섭동이고, 고정 복소 위상은 섭동된 전체 결과를 0.55라디안(약 31.5°) 회전시킨 뒤 c가 이를 이동시킨다.\n\n1978년 George M. Zaslavsky는 마찰로 에너지를 잃으면서 반복적으로 충격을 받는 회전체인 소산성 킥 로터를 모델링하기 위해 원래 사상을 도입했다. 이 고전 사상은 실수 작용-각 변수를 사용하는 2차원 사상이다. FractalPark는 이 아이디어를 탈출 시간 영상을 위한 하나의 복소 변수로 재구성했으며, 1978년 논문의 정확한 점화식은 아니다.\n\n복소 사인은 허수축을 따라 무한히 커질 수 있으므로 이는 단순한 다항식 탈출이 아니다. 궤도는 잠시 원을 그리다가 흩어질 수 있다. 이 지연은 특히 만화경 공간 변환 뒤에 소용돌이치는 팔과 동심 고리를 남긴다.",
         "imageAlt": "Zaslavsky Map: 따뜻한 주황과 금빛의 소용돌이치는 팔과 만다라 같은 고리",
-        "imageCaption": "FractalPark이 렌더링한 Zaslavsky Map: 동심원 호와 방사형 살이 따뜻한 주황과 금빛으로 빛나는 만다라를 이뤄요.",
+        "imageCaption": "FractalPark이 렌더링한 Zaslavsky Map: 동심원 호와 방사형 살이 따뜻한 주황과 금빛으로 빛나는 만다라를 이룬다.",
         "math": {
           "iteration": {
-            "label": "Sinusoidal rotation map",
-            "explanation": "Sine bends z; the fixed complex multiplier turns it; c shifts the result.\n\nStart on the real axis. For z₀ = (0, 0), sin(0) = 0, so z₁ = e^{0.55i} × 0 + c = c. After that, complex sine can grow: the magnitude of sin(a + ib) contains terms up to cosh(b). A point with a large imaginary coordinate gets a large kick from sine, and is more likely to escape.\n\nThe 0.55-radian rotation (about 31.5°) is not a parameter; it is hard-coded in the formula. Every orbit gets the same angular twist each time. Hence the swirls."
+            "label": "사인파 회전 사상",
+            "explanation": "FractalPark는 z(n+1) = exp(0.55 i) * (z(n) + 0.28 sin(z(n))) + c를 사용한다. 사인 항은 z를 대신하는 것이 아니라 z에 더해지는 0.28 가중치의 섭동이다. 고정 승수는 섭동된 전체 궤도를 반시계 방향으로 0.55라디안(약 31.5°) 회전시키고 c가 결과를 이동시킨다.\n\nz₀ = 0에서는 sin(0)=0이므로 괄호 안의 섭동 항은 0이다. 0을 회전해도 0이므로 c만 남아 z₁ = c이다. 그 뒤 복소 사인은 커질 수 있고 sin(a + ib)의 크기에는 cosh(b) 항이 들어 있다.\n\n0.55라디안 회전은 공식에 고정되어 있어 사용자가 조절할 수 없다. 이상화된 점화식의 일부가 아닌 구현 세부 사항으로서 FractalPark는 입력 허수 성분을 ±80으로 제한하고 각 출력 성분을 1/16 격자로 반올림한다."
           }
         },
-        "visualCharacteristics": "Kaleidoscopic transforms make the swirling arms and mandala-like rings especially clear. The canonical image sets concentric arcs and radiating spokes around a central region where the sine perturbation keeps orbits bounded.\n\nWarm oranges and golds sit against deep black in the canonical rendering. Constant rotation curves the arms; sine puts fine ripples along the ring edges.",
+        "visualCharacteristics": "만화경 변환은 소용돌이 팔과 만다라 같은 고리를 또렷하게 한다. 표준 이미지는 섭동된 궤도가 유계로 남을 수 있는 중심 영역 주위에 동심호와 방사형 살을 놓는다.\n\n따뜻한 주황과 금색이 깊은 검정 위에 놓인다. 일정한 회전은 팔을 굽히고 사인 섭동은 고리 가장자리에 잔물결을 만든다.",
         "faq": {
           "rotation": {
-            "question": "Where does the rotation come from?",
-            "answer": "The map multiplies the perturbed orbit by e^{0.55i}, the unit complex number that turns the plane about 31.5° counter-clockwise. It happens on every iteration and is fixed in the formula, not adjustable by the user. The 0.55-radian value was chosen empirically for balanced swirls."
+            "question": "회전은 어디에서 오는가?",
+            "answer": "사상은 섭동된 전체 궤도 z + 0.28 sin(z)에 exp(0.55 i)를 곱해 약 31.5° 반시계 방향으로 회전시킨 뒤 c를 더한다. 이는 매 반복마다 일어나며 공식에 고정되어 있고 사용자가 조절할 수 없다."
           },
           "transform": {
-            "question": "Is kaleidoscope part of the formula?",
-            "answer": "No. Kaleidoscope is an optional spatial transform outside the iteration. It reflects or copies sectors of the parameter plane. The Zaslavsky Map has no built-in reflection symmetry; the kaleidoscope is a separate rendering step that can be switched independently."
+            "question": "만화경은 공식의 일부인가?",
+            "answer": "아니다. 만화경은 반복식 밖의 선택적 공간 변환이다. 매개변수 평면의 부채꼴 영역을 반사하거나 복사한다. Zaslavsky 사상에는 내장된 반사 대칭이 없으며, 만화경은 독립적으로 켤 수 있는 별도의 렌더링 단계이다."
           }
         },
-        "history": "George M. Zaslavsky (1929–2008) was a Soviet‑born mathematical physicist who made foundational contributions to the theory of dynamical chaos. He introduced the map that now bears his name in a 1978 paper titled \"The Simplest Case of a Strange Attractor,\" published in Physics Letters A. The map was derived as a stroboscopic description of a dissipative kicked rotor — a rotating system that receives periodic impulses and loses energy through friction.\n\nZaslavsky later moved to the United States, joining New York University's physics department and the Courant Institute of Mathematical Sciences. He authored several books on Hamiltonian chaos and fractional dynamics. The Scholarpedia article on the Zaslavsky map, written by Zaslavsky himself in 2007, provides an authoritative technical reference.\n\nClassical Zaslavsky maps operate on two real variables (action and angle). The complex variant used by FractalPark, with its sine perturbation and fixed complex multiplier, is a creative adaptation suitable for escape‑time rendering rather than a direct transcription of the original dissipative system."
+        "history": "George M. Zaslavsky(1929–2008)는 소련 태생의 수리물리학자로, 동역학적 혼돈 이론에 기초적인 기여를 했다. 그는 1978년 Physics Letters A에 발표한 \"The Simplest Case of a Strange Attractor\"라는 논문에서 오늘날 자신의 이름을 딴 사상을 소개했다. 이 사상은 주기적인 충격을 받고 마찰로 에너지를 잃는 회전계인 소산성 킥 로터의 스트로보스코프 기술로부터 유도되었다.\n\nZaslavsky는 훗날 미국으로 이주하여 뉴욕대학교 물리학과와 Courant Institute of Mathematical Sciences에 합류했다. 그는 해밀토니안 혼돈과 분수 동역학에 관한 여러 책을 저술했다. Zaslavsky가 2007년에 직접 쓴 Scholarpedia의 Zaslavsky 사상 항목은 권위 있는 기술 참고 자료다.\n\n고전 Zaslavsky 사상은 두 실수 변수(작용과 각도)에서 작동한다. FractalPark의 복소 탈출 시간 변형은 z(n+1) = exp(0.55 i) * (z(n) + 0.28 sin(z(n))) + c를 사용하며, 원래 소산계의 직접 전사가 아닌 창의적 적응이다."
       },
       "zubieta": {
         "title": "Zubieta",
@@ -1110,6 +1134,145 @@
         },
         "history": "Zubieta belongs to a broader family of \"abs\" fractal variants — maps that apply absolute-value folds at different stages of the quadratic iteration. The best-known member of this family is the Burning Ship fractal, discovered by Michael Michelitsch and Otto E. Rössler in 1992, which folds the components before squaring. The Buffalo fractal, another relative, applies the fold after squaring but before adding c.\n\nThe Zubieta variant applies the component-wise absolute value after both squaring and the addition of c. Its precise origin is difficult to pin to a single published academic source. Variants of this kind circulated among fractal-rendering communities and software packages (Ultra Fractal, Fractint, XaoS) in the 1990s and 2000s, often named after whoever first implemented or popularized them in a given program.\n\nFractalPark's implementation follows the standard component-wise fold and renders the parameter plane in Mandelbrot mode."
       }
+    },
+    "directory": {
+      "breadcrumbLabel": "탐색 경로",
+      "breadcrumbAtlas": "수식 아틀라스",
+      "breadcrumb": "디렉터리",
+      "eyebrow": "표준 수식 디렉터리",
+      "title": "표준 수식 디렉터리",
+      "description": "FractalPark의 공개된 표준 정의 {count}개를 계열별로 살펴보세요.",
+      "intro": "이 디렉터리에는 공개된 표준 정의 {count}개가 모두 있어요. 모든 수식은 완전한 실행 가능 구현을 갖추고 있어요.",
+      "facets": {
+        "title": "계열별로 탐색",
+        "family": "계열",
+        "status": "게시 상태",
+        "all": "전체",
+        "categoryTitle": "카테고리별로 탐색",
+        "category": "카테고리"
+      },
+      "family": {
+        "algebraic-power": "대수적 거듭제곱",
+        "transcendental": "초월 함수",
+        "function-composition": "함수 합성",
+        "rational-reciprocal": "유리 역수",
+        "orbit-memory": "궤도 메모리",
+        "folded-absolute": "접힌 절댓값",
+        "root-finding": "근 찾기"
+      },
+      "status": {
+        "publish": "게시됨",
+        "hold": "보류",
+        "exclude": "제외"
+      },
+      "resultCount": "공개된 정의 {count}개",
+      "category": {
+        "classic": "클래식"
+      },
+      "guideBadge": "가이드",
+      "searchLabel": "수식 검색",
+      "searchPlaceholder": "수식 이름으로 검색",
+      "sortLabel": "정렬",
+      "apply": "적용",
+      "sort": {
+        "nameAsc": "이름 A–Z",
+        "nameDesc": "이름 Z–A"
+      }
+    },
+    "record": {
+      "eyebrow": "수식 레코드",
+      "identity": "식별 정보와 출처",
+      "formulaId": "수식 ID",
+      "rightsAttribution": "권리 및 저작자 표시",
+      "sourceAndImplementation": "출처 및 현재 구현",
+      "canonicalName": "표준 이름",
+      "originalName": "원래 이름",
+      "historicalSource": "역사적 출처",
+      "repository": "저장소",
+      "currentImplementation": "현재 구현",
+      "author": "작성자",
+      "originalResource": "원본 리소스",
+      "originalVersion": "원본 버전",
+      "unconfirmed": "확인되지 않음",
+      "provenance": "출처 컬렉션",
+      "aliases": "레거시 별칭",
+      "rights": "권리와 공개 범위",
+      "rightsStatus": "권리 상태",
+      "rightsScope": "공개 범위",
+      "canonicalLicense": "표준 구현 라이선스",
+      "decision": "게시 결정",
+      "reason": "사유",
+      "basis": "구현 근거",
+      "reviewed": "검토일",
+      "leakage": "유출 검사",
+      "publishedSummary": "이 FractalPark 표준 구현은 게시되어 실행할 수 있습니다.",
+      "unavailableSummary": "이 identity는 기록되어 있지만 현재 결정에 따라 소스, 실행, 편집 또는 리믹스 기능을 제공하지 않습니다.",
+      "source": "표준 소스",
+      "language": "언어",
+      "stdlib": "표준 라이브러리",
+      "profileMode": "프로필 모드",
+      "profileCenter": "프로필 중심",
+      "profileZoom": "프로필 확대",
+      "profileIterations": "프로필 반복 횟수",
+      "profileQuality": "프로필 근거",
+      "sourceRevision": "소스 리비전",
+      "semanticHash": "시맨틱 해시",
+      "parameters": "매개변수",
+      "noParameters": "선언된 매개변수 없음",
+      "previewAlt": "{name}의 결정적 미리보기",
+      "previewDiagnostic": "시각 검토 대기 중인 미리보기",
+      "previewDiagnosticBody": "결정적 렌더링에서 시각적 이상이 보고되었습니다. 진단 증거로 보존되지만 검증된 미리보기로 표시하지 않습니다.",
+      "viewDiagnosticPreview": "진단 렌더링 보기",
+      "openExplore": "탐색기에서 열기",
+      "remix": "익명으로 리믹스",
+      "viewSource": "소스 보기",
+      "downloadSource": "소스 다운로드",
+      "takedown": "권리 또는 저작자 표시에 문제가 있나요?",
+      "takedownBody": "수식 ID와 근거 자료를 보내 주세요. 검토 중에는 관리자가 구현을 보류하거나 철회할 수 있습니다.",
+      "rightsValues": {
+        "project-owned": "프로젝트 소유",
+        "source-declared-public-domain-assumption": "출처가 선언한 퍼블릭 도메인 가정",
+        "gpl3Only": "GPL-3.0 전용",
+        "no-explicit-permission": "명시적 허가 없음"
+      },
+      "scopeValues": {
+        "project-canonical-implementation": "FractalPark 표준 구현",
+        "original-source-public-domain-assumption-and-project-canonical-implementation": "원 출처는 퍼블릭 도메인 가정, FractalPark 표준 구현은 MIT",
+        "project-independent-rewrite-only": "FractalPark 독립 재작성만",
+        "identity-and-provenance-metadata-only": "식별 정보와 출처 메타데이터만"
+      },
+      "sourceNotes": {
+        "fractalparkProjectOwned": "FractalPark 프로젝트 소유 구현입니다. 연결된 파일은 고정된 정식 Definition입니다.",
+        "fractintDirectAdaptation": "현재 FractalPark 구현은 연결된 Fractint 공식의 검증된 의미를 따릅니다. 원본 파일의 권리 조건은 그대로 유지됩니다.",
+        "fractintIndependentRewrite": "역사적 출처는 Fractint입니다. 현재 FractalPark 구현은 격리된 독립 재작성본이며 원본 FRM 텍스트를 재배포하지 않습니다.",
+        "iteratedDynamicsIndependentRewrite": "역사적 출처는 Fractint의 후속 프로젝트인 Iterated Dynamics입니다. 현재 FractalPark 구현은 격리된 독립 재작성본이며 원본 FRM 텍스트를 재배포하지 않습니다."
+      },
+      "basisValues": {
+        "project-owned": "프로젝트 소유",
+        "direct-adaptation": "직접 적용",
+        "separated-independent-rewrite": "분리된 독립 재작성",
+        "none": "해당 없음"
+      },
+      "scanValues": {
+        "not-applicable": "해당 없음",
+        "pending": "대기 중",
+        "passed": "통과",
+        "failed": "실패"
+      }
+    },
+    "sourceWorkspace": {
+      "title": "표준 소스",
+      "readOnlyDescription": "검증된 표준 리비전은 읽기 전용입니다. Remix는 별도의 편집 가능한 포크를 만듭니다.",
+      "previewLabel": "{name}의 표준 소스 미리보기",
+      "editorLabel": "{name}의 읽기 전용 표준 소스",
+      "loading": "표준 소스를 불러오는 중…",
+      "unavailable": "표준 소스를 불러와 검증하지 못했습니다.",
+      "retry": "다시 시도",
+      "open": "전체 소스 열기",
+      "workspaceDescription": "{name}의 읽기 전용 표준 소스입니다. Remix는 별도의 포크를 만듭니다.",
+      "readOnly": "읽기 전용 표준 리비전",
+      "remix": "Remix",
+      "download": ".frm 다운로드"
     }
   },
   "artworks": {
@@ -1355,6 +1518,23 @@
       "active": "활성",
       "builtin": "내장",
       "custom": "커스텀",
+      "standard": "표준 라이브러리",
+      "mine": "내 수식",
+      "library": {
+        "current": "현재 수식",
+        "open": "라이브러리 열기",
+        "title": "표준 수식 라이브러리",
+        "description": "게시된 수식 {count}개를 둘러보세요. 수식 정의는 선택한 뒤에만 불러옵니다.",
+        "loading": "수식 색인을 불러오는 중...",
+        "unavailable": "지금은 표준 수식 라이브러리를 사용할 수 없어요.",
+        "selectionFailed": "이 수식을 불러오지 못했습니다. 현재 수식은 그대로 유지됩니다.",
+        "familyFilter": "계열별 수식 필터",
+        "categoryFilter": "카테고리별 수식 필터",
+        "loadMore": "더 보기",
+        "lucky": "운이 좋을까요?",
+        "resetProfile": "수식 프로필 초기화",
+        "undoFormulaChange": "수식 변경 실행 취소"
+      },
       "resolution": {
         "loading": "수식 불러오는 중...",
         "notFound": "커스텀 수식 “{formula}”을(를) 불러올 수 없었어요.",
@@ -1411,6 +1591,12 @@
       },
       "family": {
         "all": "전체",
+        "algebraic-power": "대수 거듭제곱",
+        "folded-absolute": "절댓값 접기",
+        "function-composition": "함수 합성",
+        "orbit-memory": "궤도 메모리",
+        "rational-reciprocal": "유리식과 역수",
+        "root-finding": "근 찾기",
         "classic": "클래식",
         "burning-ship": "버닝 쉽",
         "newton": "뉴턴",
@@ -1426,6 +1612,9 @@
       "position": "위치",
       "center": "중심",
       "zoom": "줌",
+      "invalidNumber": "유효한 유한 숫자를 입력하세요.",
+      "increase": "증가",
+      "decrease": "감소",
       "mode": {
         "label": "프랙탈 모드",
         "mandelbrot": "만델브로",
@@ -1659,6 +1848,8 @@
       "loadFailed": "에디터를 불러오지 못했어요",
       "loadFailedDescription": "코드 에디터를 불러올 수 없어요. 페이지를 새로고침하세요.",
       "compile": "컴파일",
+      "apply": "적용",
+      "invalidDraft": "잘못된 초안 — 저장하면 이 소스 바이트와 진단은 보존되지만 마지막으로 성공한 미리보기는 계속 활성 상태로 유지됩니다.",
       "compiling": "컴파일 중...",
       "save": "저장",
       "saved": "저장됨",
@@ -1693,13 +1884,13 @@
     "landing": {
       "heading": "FractalPark: 브라우저에서 만나는 오픈소스 프랙탈 생성기",
       "whatIsHeading": "FractalPark이란 무엇인가요?",
-      "whatIsAnswer": "FractalPark은 WebGL로 브라우저에서 완전히 렌더링되는 무료 오픈소스(MIT) 프랙탈 지식·창작 플랫폼이에요: 내장 수식 {formulaCount}개, Fractint 호환 FRM 저작, 고해상도 PNG 내보내기를 지원해요. 제작은 계정 없이 가능하고, 작품과 수식 저장은 이메일 로그인과 개인 클라우드 라이브러리를 이용해요.",
+      "whatIsAnswer": "FractalPark은 WebGL로 브라우저에서 전부 렌더링되는 무료 오픈소스(MIT) 프랙탈 지식·창작 플랫폼이에요. {formulaFamilyCount}개 구조 패밀리에 걸친 공개 Standard Definition {formulaCount}개(이 중 {classicFormulaCount}개는 Classic 컬렉션에도 속함), 공개된 FRM-like v1 소스, Classic-compatible FRM Editor 워크플로, 고해상도 PNG 내보내기를 제공해요. 제작에는 계정이 필요 없고, 작품과 수식 저장에는 이메일 로그인과 비공개 클라우드 라이브러리를 사용해요.",
       "capabilitiesHeading": "핵심 기능",
-      "capabilitiesIntro": "{formulaFamilyCount}개 패밀리에 걸친 수식 {formulaCount}개 · 심층 Formula Guide {formulaGuideCount}개 · 변환 {transformCount}개 · 컬러링 모드 {coloringModeCount}개 · 공유 가능한 URL · 최대 {maxExportScale}× PNG 내보내기",
+      "capabilitiesIntro": "{formulaFamilyCount}개 구조 패밀리에 걸친 공개 Standard Definition {formulaCount}개 · 이 중 Classic 컬렉션에도 속하는 정의 {classicFormulaCount}개 · 심층 Formula Guide {formulaGuideCount}개 · 변환 {transformCount}개 · 컬러링 모드 {coloringModeCount}개 · 공유 가능한 URL · 최대 {maxExportScale}× PNG 내보내기",
       "linksHeading": "계속 탐색하기",
       "links": {
         "formulas": "Formula Atlas — 모든 수식의 수학, 역사, 라이브 예제",
-        "frmGuide": "FRM Guide — 브라우저에서 Fractint 호환 수식 작성하기",
+        "frmGuide": "FRM Guide — 공개된 FRM-like v1과 Classic-compatible Editor 소스 이해하기",
         "drift": "Drift — 몰입형 프리셋 슬라이드쇼를 편안하게 감상하기",
         "about": "About — 프로젝트 소개, 범위, 오픈소스 상세 정보"
       },
@@ -1716,7 +1907,7 @@
   },
   "frmEditor": {
     "title": "FRM 에디터",
-    "description": "브라우저에서 FRM 수식을 작성·컴파일·미리보기하고 클라우드 라이브러리에 저장하세요.",
+    "description": "브라우저에서 FractalPark의 Classic-compatible FRM 하위 집합 수식을 작성, 컴파일, 미리보기하고 클라우드 라이브러리에 저장하세요.",
     "breadcrumb": "이동 경로",
     "crumbGuide": "FRM 가이드",
     "beta": "베타",
@@ -1743,7 +1934,11 @@
     "unknownExample": "그 예제는 사용할 수 없어요. 대신 빈 수식으로 시작하세요.",
     "replaceConfirm": "현재 저장되지 않은 초안을 교체할까요?",
     "leaveConfirm": "에디터를 나가고 저장되지 않은 초안 변경 사항을 버릴까요?",
-    "saved": "내 클라우드 수식 라이브러리에 저장했어요.",
+    "saved": "클라우드 수식 라이브러리에 저장했어요.",
+    "remixLoading": "정확한 게시 소스와 Profile을 불러오는 중…",
+    "remixReady": "{name}에서 Remix fork를 만들었습니다. 게시된 Standard 소스는 변경되지 않습니다.",
+    "remixUnavailable": "이 게시 수식을 안전하게 Remix용으로 열 수 없습니다.",
+    "invalidDraftSaved": "잘못된 초안을 비공개로 저장했습니다. 마지막 실행 가능 revision은 계속 활성 상태입니다.",
     "saveError": "클라우드 수식 라이브러리를 사용할 수 없어요. 수식이 저장되지 않았어요.",
     "errors": {
       "maxCount": "수식 최대 개수에 도달했어요 ({count}).",
@@ -1786,9 +1981,9 @@
   "metadata": {
     "explore": {
       "title": "FractalPark — 오픈소스 브라우저 프랙탈 생성기",
-      "description": "브라우저에서 만나는 오픈소스·수식 중심 프랙탈 지식·창작 플랫폼: 내장 수식 94개, 실시간 WebGL 렌더링, Fractint 호환 FRM 저작, 고해상도 PNG 내보내기.",
+      "description": "브라우저에서 실행되는 오픈소스·수식 중심 프랙탈 지식·창작 플랫폼: 7개 구조 패밀리에 걸친 공개 Standard Definition 534개(이 중 94개는 Classic 컬렉션에도 속함), 실시간 WebGL 렌더링, 공개된 FRM-like v1 소스, Classic-compatible FRM Editor, 고해상도 PNG 내보내기.",
       "ogTitle": "FractalPark — 브라우저에서 만나는 오픈소스 프랙탈 아트",
-      "ogDescription": "브라우저에서 프랙탈 아트 만들기: 수식 94개, 실시간 WebGL 렌더링, FRM 저작, 고해상도 PNG 내보내기."
+      "ogDescription": "브라우저에서 7개 구조 패밀리에 걸친 공개 Standard Definition 534개(이 중 94개는 Classic 컬렉션에도 속함), 실시간 WebGL 렌더링, 공개된 FRM-like v1 소스, Classic-compatible FRM Editor, 고해상도 PNG 내보내기로 프랙탈 아트를 만드세요."
     },
     "gallery": {
       "title": "내 갤러리 | 나만의 프랙탈 컬렉션 - FractalPark",
@@ -1796,21 +1991,22 @@
     },
     "about": {
       "title": "소개 | 오픈소스 브라우저 프랙탈 생성기 - FractalPark",
-      "description": "WebGL, 94개 수식, 커스텀 팔레트, PNG 내보내기를 갖춘 오픈소스 MIT 라이선스 브라우저 프랙탈 생성기 FractalPark을 알아보세요."
+      "description": "FractalPark은 읽고 실행할 수 있는 공개 수식 소스와 구별되는 Classic-compatible 수식 Editor를 갖춘 오픈소스 수식 중심 프랙탈 지식·창작 플랫폼이에요."
     },
     "formulaAtlas": {
-      "title": "Formula Atlas | 프랙탈 수식 94개 - FractalPark",
-      "description": "일곱 개 패밀리에 걸친 FractalPark 수식 94개를 둘러보고, 엄선된 가이드 프로필 21개를 탐색하며, FRM을 배우고, WebGL 탐색기에서 표준 수식 상태를 열어보세요.",
-      "imageAlt": "내장 수식 94개가 담긴 FractalPark Formula Atlas"
+      "title": "Formula Atlas | 공개 수식 534개 - FractalPark",
+      "publishedDescription": "일곱 구조 패밀리의 공개 Standard Definition 534개(이 중 94개는 Classic 컬렉션에도 속함)를 살펴보고, Guide Profile 21개를 탐색하며, FRM 소스의 작동 방식을 배우고 정식 Formula Record를 여세요.",
+      "description": "일곱 구조 패밀리의 공개 Standard Definition 534개(이 중 94개는 Classic 컬렉션에도 속함)를 살펴보고, Guide Profile 21개를 탐색하며, FRM 소스의 작동 방식을 배우고 정식 Formula Record를 여세요.",
+      "imageAlt": "공개 수식 534개가 담긴 FractalPark Formula Atlas"
     },
     "frmEditor": {
       "title": "FRM 에디터 | FractalPark",
-      "description": "브라우저에서 FRM 수식을 작성·컴파일·미리보기하고 클라우드 라이브러리에 저장하세요."
+      "description": "브라우저에서 FractalPark의 Classic-compatible FRM 하위 집합 수식을 작성, 컴파일, 미리보기하고 클라우드 라이브러리에 저장하세요."
     },
     "frmGuide": {
-      "title": "FRM 가이드 | 커스텀 프랙탈 수식 작성 - FractalPark",
-      "description": "FractalPark의 검증된 FRM 문법, 호환성 수준, AST-to-GLSL 컴파일러 파이프라인, 진단, 컴파일 검증된 커스텀 수식 예제 3개를 배워보세요.",
-      "imageAlt": "FractalPark FRM 수식 언어 가이드"
+      "title": "FRM Guide: Classic Editor와 FRM-like v1 - FractalPark",
+      "description": "FractalPark의 정식 FRM-like v1 Definition, 공개 런타임, 구별되는 Classic-compatible Editor 워크플로를 이해하세요.",
+      "imageAlt": "FractalPark FRM-like v1 및 Classic-compatible 수식 가이드"
     },
     "drift": {
       "title": "Drift — 몰입형 프랙탈 슬라이드쇼 | FractalPark",
@@ -1821,13 +2017,13 @@
   },
   "about": {
     "title": "FractalPark 소개",
-    "aiDescription": "FractalPark은 실시간 GPU 렌더링을 위해 WebGL을 사용하는 오픈소스 MIT 라이선스 브라우저 기반 프랙탈 아트 생성기예요. 내장 이탈 시간(escape-time) 프랙탈 수식 94개(만델브로, 줄리아, 뉴턴, 피닉스, 마그넷, 맥멀런, 유리, 초월 패밀리), Fractint .frm 문법을 지원하는 커스텀 수식 에디터, UV 변환 플러그인 7개, 컬러링 모드 9개, 고해상도 PNG 내보내기를 갖추고 있어요. Next.js 16, React 19, TypeScript 5, Tailwind CSS로 제작됐어요. 렌더링 엔진은 동적 GLSL 셰이더 조립과 LRU 캐싱을 사용하는 플러그인 아키텍처를 기반으로 해요.",
+    "aiDescription": "FractalPark은 실시간 GPU 렌더링에 WebGL을 사용하는 오픈소스 MIT 라이선스 브라우저 프랙탈 생성기예요. 7개 구조 패밀리에 걸친 공개 Standard Definition 534개(이 중 94개는 Classic 컬렉션에도 속함), Formula Guide 21개, 공개된 FRM-like v1 소스, AST-to-GLSL 트랜스파일을 갖춘 구별되는 Classic-compatible FRM Editor, UV 변환 플러그인 7개, 색칠 모드 9개, 공유 가능한 URL, 작품과 수식용 이메일 로그인 클라우드 라이브러리, 커뮤니티 게시, 최대 4x 고해상도 PNG 내보내기를 제공해요. Next.js, React, TypeScript로 제작되었어요.",
     "techStack": {
       "title": "기술 스택",
       "description": "Next.js, WebGL, TypeScript로 제작됐어요. GPU 셰이더 기반의 실시간 프랙탈 렌더링을 제공해요.",
       "frontend": "프론트엔드: Next.js 16 (App Router), React 19, TypeScript 5, Tailwind CSS 4, shadcn/ui",
       "rendering": "렌더링: WebGL 1 (GLSL 프래그먼트 셰이더), 플러그인 기반 아키텍처, 셰이더 LRU 캐시",
-      "formula": "수식 시스템: 커스텀 Fractint .frm 파서, CodeMirror 6 에디터, AST-to-GLSL 트랜스파일러"
+      "formula": "수식 시스템: Standard Definition용 공개 FRM-like v1 파서/백엔드, 사용자 수식용 별도의 Classic-compatible CodeMirror 6 Editor 및 AST-to-GLSL 경로"
     },
     "openSource": {
       "title": "오픈소스",
@@ -1843,22 +2039,22 @@
     "next": "다음 프리셋"
   },
   "publicProject": {
-    "tagline": "FractalPark은 오픈소스·수식 중심의 프랙탈 지식·창작 플랫폼으로, Fractint의 수식 유산을 현대 브라우저로 가져오기 위해 Fractint 호환 FRM 지원을 계속 확장하고 있어요.",
-    "definition": "FractalPark은 프랙탈 아트를 탐색·학습·창작하기 위한 무료 오픈소스(MIT) WebGL 애플리케이션이에요. {formulaFamilyCount}개 패밀리에 걸친 내장 수식 {formulaCount}개, 심층 Formula Guide {formulaGuideCount}개, 가이드와 독립형 에디터를 갖춘 Fractint 호환 FRM 언어, 커뮤니티 갤러리를 제공해요. 렌더링은 브라우저에서 실행되고, 작품과 수식 저장은 이메일 로그인과 개인 클라우드 라이브러리를 이용해요.",
-    "aiDescription": "FractalPark은 실시간 GPU 렌더링을 위해 WebGL을 사용하는 오픈소스 MIT 라이선스 브라우저 프랙탈 생성기예요. {formulaFamilyCount}개 패밀리에 걸친 내장 프랙탈 수식 {formulaCount}개, Formula Guide {formulaGuideCount}개, AST-to-GLSL 트랜스파일을 지원하는 Fractint 호환 FRM 에디터, UV 변환 플러그인 {transformCount}개, 컬러링 모드 {coloringModeCount}개, 공유 가능한 URL, 작품·수식용 이메일 로그인 클라우드 라이브러리, 커뮤니티 게시, 최대 {maxExportScale}배 고해상도 PNG 내보내기를 갖추고 있어요. Next.js, React, TypeScript로 제작됐어요.",
+    "tagline": "FractalPark은 읽고 실행할 수 있는 공개 수식 소스와 구별되는 Classic-compatible 수식 Editor를 갖춘 오픈소스 수식 중심 프랙탈 지식·창작 플랫폼이에요.",
+    "definition": "FractalPark은 프랙탈 아트를 탐색, 학습, 창작하는 무료 오픈소스(MIT) WebGL 애플리케이션이에요. {formulaFamilyCount}개 구조 패밀리에 걸친 공개 Standard Definition {formulaCount}개(이 중 {classicFormulaCount}개는 Classic 컬렉션에도 속함), 심층 Formula Guide {formulaGuideCount}개, 공개된 FRM-like v1 소스, Classic-compatible 독립형 FRM Editor, 커뮤니티 Gallery를 제공해요. 렌더링은 브라우저에서 실행되고 작품과 수식 저장에는 이메일 로그인과 비공개 클라우드 라이브러리를 사용해요.",
+    "aiDescription": "FractalPark은 실시간 GPU 렌더링에 WebGL을 사용하는 오픈소스 MIT 라이선스 브라우저 프랙탈 생성기예요. {formulaFamilyCount}개 구조 패밀리에 걸친 공개 Standard Definition {formulaCount}개(이 중 {classicFormulaCount}개는 Classic 컬렉션에도 속함), Formula Guide {formulaGuideCount}개, 공개된 FRM-like v1 소스, AST-to-GLSL 트랜스파일을 갖춘 구별되는 Classic-compatible FRM Editor, UV 변환 플러그인 {transformCount}개, 색칠 모드 {coloringModeCount}개, 공유 가능한 URL, 작품과 수식용 이메일 로그인 클라우드 라이브러리, 커뮤니티 게시, 최대 {maxExportScale}x 고해상도 PNG 내보내기를 제공해요. Next.js, React, TypeScript로 제작되었어요.",
     "capabilitiesHeading": "지금 할 수 있는 것",
     "capabilities": {
       "discover": {
         "title": "수식 탐색",
-        "summary": "Formula Atlas를 둘러보세요: 7개 패밀리에 걸친 내장 수식 94개와, 고전 수식들의 수학·역사·시각적 특징을 다루는 심층 Formula Guide 21개가 있어요."
+        "summary": "Formula Atlas를 둘러보세요: 7개 구조 패밀리에 걸친 공개 Standard Definition 534개(이 중 94개는 Classic 컬렉션에도 속함), 그리고 고전 수식의 수학·역사·시각적 특징을 다루는 심층 Formula Guide 21개가 있어요."
       },
       "create": {
         "title": "브라우저에서 창작",
-        "summary": "WebGL로 실시간 탐색과 렌더링을 즐겨보세요: 모든 수식의 만델브로·줄리아 모드, 변환 7개, 컬러링 모드 9개, 그라디언트, 조명, 키프레임 애니메이션을 지원해요."
+        "summary": "WebGL로 실시간 탐색과 렌더링을 즐겨보세요: 공개 Standard Definition 534개 전체의 Mandelbrot 모드, 지원되는 Definition의 Julia 모드, 변환 7개, 컬러링 모드 9개, 그라디언트, 조명, 키프레임 애니메이션을 지원해요."
       },
       "authorFrm": {
-        "title": "FRM 저작",
-        "summary": "가이드와 독립형 에디터로 Fractint 호환 FRM 언어를 사용해 커스텀 수식을 작성하세요: AST 검증, 실시간 GLSL 미리보기, 명확한 진단을 제공해요."
+        "title": "FRM 배우기와 사용자 수식 작성하기",
+        "summary": "Guide와 독립형 Editor로 FractalPark의 검증된 Classic-compatible FRM 하위 집합에서 사용자 수식을 작성하세요. AST 검증, 실시간 GLSL 미리보기, 명확한 진단을 제공해요."
       },
       "saveExport": {
         "title": "저장하고 공유",
@@ -1870,7 +2066,7 @@
     "futureHeading": "로드맵에 있음",
     "boundaries": {
       "current": {
-        "0": "확장 중인 Fractint 호환 FRM 지원: Fractint 수식 언어의 실용적이고 검증된 하위 집합이 현재 실행돼요 — 완전한 Fractint 재구현은 아니에요.",
+        "0": "공개된 Standard Definition은 FRM-like v1 소스를 사용해요. 독립형 Editor는 별도의 실용적인 Classic-compatible 하위 집합을 사용하며, 완전한 Fractint 재구현이 아니에요.",
         "1": "제작은 계정이 필요 없어요. 작품과 수식 저장은 이메일 일회용 코드 로그인을 사용해 개인 클라우드 라이브러리에 보관해요. 게시는 항상 명시적이며, 커스텀 수식이 포함된 작품은 그 소스를 MIT 라이선스로 게시해요.",
         "2": "인터페이스는 영어, 중국어 간체, 포르투갈어, 한국어, 러시아어, 스페인어, 프랑스어의 일곱 가지 언어로 제공돼요."
       },

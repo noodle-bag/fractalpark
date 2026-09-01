@@ -1,0 +1,39 @@
+{
+  "schema": "fractalpark-teaching-locale/v1",
+  "formulaId": "0109434e-e9cc-5d80-ad3f-d25ec62cbfda",
+  "locale": "zh",
+  "sourceRevision": "41794347e36147808476dcb16e41d7bdbf24b94327ce2f0bf13fd67a1cf1901f",
+  "semanticHash": "d26f1d44391d40c073dbec81bde9b52fe1fbf4e6235750ea29e9de422955fcd8",
+  "englishContentHash": "c88a2faa701905966d39f5f3d225e0d8243056cfe486cfd081eebb33b3a5a15c",
+  "overview": "jm_18 按固定的 FRM-like/1 定义学习：请追踪 z = pixel; t = p1 + 4; 然后 z = fn1(z) * pixel * fn2(fn3(z) * pixel)，而不要把图像当作保证。固定配置只提供一个具体观察设置。",
+  "sourceWalkthrough": {
+    "0109434e-e9cc-5d80-ad3f-d25ec62cbfda:41794347e36147808476dcb16e41d7bdbf24b94327ce2f0bf13fd67a1cf1901f:initial-state": "在 jm_18，此节点执行 z = pixel。",
+    "0109434e-e9cc-5d80-ad3f-d25ec62cbfda:41794347e36147808476dcb16e41d7bdbf24b94327ce2f0bf13fd67a1cf1901f:threshold-init": "在 jm_18，此节点执行 t = p1 + 4。",
+    "0109434e-e9cc-5d80-ad3f-d25ec62cbfda:41794347e36147808476dcb16e41d7bdbf24b94327ce2f0bf13fd67a1cf1901f:function-update": "在 jm_18，此节点执行 z = fn1(z) * pixel * fn2(fn3(z) * pixel)。",
+    "0109434e-e9cc-5d80-ad3f-d25ec62cbfda:41794347e36147808476dcb16e41d7bdbf24b94327ce2f0bf13fd67a1cf1901f:termination": "在 jm_18，此节点执行 |z| <= t。"
+  },
+  "syntaxFeatures": {
+    "state-flow": "状态流具体为：z 以 pixel 为初值，t 以 p1 + 4 为初值，随后执行嵌套函数更新。",
+    "stopping-test": "停止测试只判断 |z| <= t，不会给状态变量赋值。"
+  },
+  "parameterExperiment": {
+    "steps": [
+      "先按固定配置 运行 jm_18 并记录结果。",
+      "只改变 parameter1，其余 运行时槽位和配置项保持固定后再次运行，并记录是否有差异。",
+      "只改变 function1，其余 运行时槽位和配置项保持固定后再次运行，并记录是否有差异。",
+      "只改变 function2，其余 运行时槽位和配置项保持固定后再次运行，并记录是否有差异。",
+      "只改变 function3，其余 运行时槽位和配置项保持固定后再次运行，并记录是否有差异。"
+    ],
+    "expectedObservation": "记录 z = pixel; t = p1 + 4; 然后 z = fn1(z) * pixel * fn2(fn3(z) * pixel) 相比基线是否改变可见结果或 |z| <= t 的停止判断；源定义不保证差异。"
+  },
+  "exercise": {
+    "prompt": "追踪 jm_18 的标注，并说明 z = pixel; t = p1 + 4; 然后 z = fn1(z) * pixel * fn2(fn3(z) * pixel) 在每个相关操作中如何执行。",
+    "completionCheck": "答案准确解释全部 4 个标注，指出 z = pixel; t = p1 + 4; 然后 z = fn1(z) * pixel * fn2(fn3(z) * pixel)，并将 |z| <= t 识别为停止测试而非状态赋值。",
+    "hint": "状态流按顺序执行 z = pixel → t = p1 + 4 → z = fn1(z) * pixel * fn2(fn3(z) * pixel)，其结果供下一步使用。"
+  },
+  "factsPresentation": {
+    "provenanceLead": "来源：固定的运行时定义与发布决定。",
+    "rightsLead": "权利信息见英文事实单元的固定决定。"
+  },
+  "contentHash": "d8ee7e72692a430a6aab8a0cd0c34a9c0155f340029f67520d281daea80295e1"
+}

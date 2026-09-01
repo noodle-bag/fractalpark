@@ -1,0 +1,33 @@
+{
+  "schema": "fractalpark-teaching-locale/v1",
+  "formulaId": "75e70076-b422-5535-b3c9-c484fbf879e6",
+  "locale": "pt",
+  "sourceRevision": "be9ade0f6d4b272ca864da504bb66a6abab234322112686e72e1624353ce11ec",
+  "semanticHash": "2d2612cf6d0532accadd7fe047298eff9503b8ff553e32c1a87dfe3ac3c2469f",
+  "englishContentHash": "d9ce80f39061c879038b92a392a9d3785eaaba6b3e70b88d73dcd47383fa4d14",
+  "overview": "Em FRM-like/1, a inicialização faz z = pixel. Em cada iteração, o nó executa z2 = z*z; z3 = z2*z; z4 = z2*z2; z = numerator/denominator. O término testa |z - zPrev| >= 0.000001.",
+  "sourceWalkthrough": {
+    "75e70076-b422-5535-b3c9-c484fbf879e6:be9ade0f6d4b272ca864da504bb66a6abab234322112686e72e1624353ce11ec:init": "Em FRM-like/1, a inicialização faz z = pixel.",
+    "75e70076-b422-5535-b3c9-c484fbf879e6:be9ade0f6d4b272ca864da504bb66a6abab234322112686e72e1624353ce11ec:loop": "Em cada iteração, o nó executa z2 = z*z; z3 = z2*z; z4 = z2*z2; z = numerator/denominator.",
+    "75e70076-b422-5535-b3c9-c484fbf879e6:be9ade0f6d4b272ca864da504bb66a6abab234322112686e72e1624353ce11ec:termination": "O término testa |z - zPrev| >= 0.000001."
+  },
+  "syntaxFeatures": {
+    "sequence": "Em cada iteração, o nó executa z2 = z*z; z3 = z2*z; z4 = z2*z2; z = numerator/denominator."
+  },
+  "parameterExperiment": {
+    "steps": [
+      "Use o perfil fixo como base. Execute 48 e depois 96 iterações, mantendo todos os controles fixos, e registre se z2 = z*z; z3 = z2*z; z4 = z2*z2; z = numerator/denominator ou |z - zPrev| >= 0.000001 diferem."
+    ],
+    "expectedObservation": "O limite maior pode expor mais aplicações da atualização z = numerator/denominator; registre se as contagens de iteração diferem."
+  },
+  "exercise": {
+    "prompt": "Explique z2 = z*z; z3 = z2*z; z4 = z2*z2; z = numerator/denominator.",
+    "completionCheck": "Para concluir, você deve nomear exatamente as 3 anotações e explicar este detalhe da fórmula: Dica: z2 = z*z; z3 = z2*z; z4 = z2*z2; z = numerator/denominator.",
+    "hint": "Dica: z2 = z*z; z3 = z2*z; z4 = z2*z2; z = numerator/denominator."
+  },
+  "factsPresentation": {
+    "provenanceLead": "A proveniência está no registro de fonte fixado.",
+    "rightsLead": "O status de direitos e a decisão de publicação estão no registro de decisão fixado."
+  },
+  "contentHash": "913151c52a8b892f9edbdfad9ea78ebdfe9b0ff38bc63e60444222b8691d18dd"
+}

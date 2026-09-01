@@ -45,7 +45,7 @@ describe('FractalRenderer', () => {
       expect(formula?.bailout).toBe(65536);
       // escapeType is undefined for mandelbrot (defaults to diverge behavior)
       expect(formula?.escapeType ?? 'diverge').toBe('diverge');
-      expect(formula?.supportsJulia).toBe(true);
+      expect(formula?.supportsJulia).toBe(false);
     });
 
     it('should have Newton formulas with converge escape type', () => {

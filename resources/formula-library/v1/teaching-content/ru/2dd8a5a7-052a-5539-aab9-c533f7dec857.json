@@ -1,0 +1,35 @@
+{
+  "schema": "fractalpark-teaching-locale/v1",
+  "formulaId": "2dd8a5a7-052a-5539-aab9-c533f7dec857",
+  "locale": "ru",
+  "sourceRevision": "6c2c19cfb9bff9d9aa0cca56cea6dc62e324e80009b931665b604726d3784e5d",
+  "semanticHash": "7f1e0790ad3270f2419b1c8db5ac3ec9d232d334c0144acf64f1f3155a2ca68e",
+  "englishContentHash": "31804c8280d33040dc47417296a01b83a4ec9dac34ba94e4477f175f74c6297f",
+  "overview": "В FRM-like/1 формула magnet2 начинается с если ismand, то z = 0; иначе z = pixel, первый узел цикла задаёт z2 = z * z, а итерацию ограничивает |z| <= 4. Читайте эти операции в фактическом порядке исходника.",
+  "sourceWalkthrough": {
+    "2dd8a5a7-052a-5539-aab9-c533f7dec857:6c2c19cfb9bff9d9aa0cca56cea6dc62e324e80009b931665b604726d3784e5d:initialization": "В magnet2, узел инициализации выполняет только: если ismand, то z = 0; иначе z = pixel.",
+    "2dd8a5a7-052a-5539-aab9-c533f7dec857:6c2c19cfb9bff9d9aa0cca56cea6dc62e324e80009b931665b604726d3784e5d:iteration": "В magnet2, этот узел цикла выполняет только: z2 = z * z.",
+    "2dd8a5a7-052a-5539-aab9-c533f7dec857:6c2c19cfb9bff9d9aa0cca56cea6dc62e324e80009b931665b604726d3784e5d:termination": "В magnet2, узел bailout проверяет только: |z| <= 4."
+  },
+  "syntaxFeatures": {
+    "initialization-flow": "В magnet2, признак инициализации выделяет единственную начальную операцию если ismand, то z = 0; иначе z = pixel.",
+    "iteration-flow": "В magnet2, признак итерации выделяет единственное присваивание z2 = z * z.",
+    "bailout-test": "В magnet2, признак завершения выделяет сравнение |z| <= 4."
+  },
+  "parameterExperiment": {
+    "steps": [
+      "Выполните рендер magnet2 с закреплённой базой плоскости параметров: центр (-0.5, 0), масштаб 0.4, поворот 0, и 96 итераций.",
+      "Не меняя базу, кроме числа итераций, выполните один рендер с 48 итерациями и сравните его с базой в 96 итераций."
+    ],
+    "expectedObservation": "В magnet2, запишите, меняется ли что-либо при сравнении 48 и 96 итераций, и отметьте ограничение исходника |z| <= 4."
+  },
+  "exercise": {
+    "prompt": "В magnet2, найдите три аннотации и объясните если ismand, то z = 0; иначе z = pixel, z2 = z * z и |z| <= 4 и объясните, почему соседние инструкции не относятся к аннотации цикла.",
+    "completionCheck": "В magnet2, вы завершили задание, если перечислили все 3 ключа аннотаций и точно объяснили z2 = z * z и |z| <= 4."
+  },
+  "factsPresentation": {
+    "provenanceLead": "Происхождение указано в английском фактологическом блоке.",
+    "rightsLead": "Права указаны в английском фактологическом блоке."
+  },
+  "contentHash": "3b934f931e5c4cf42702711e7f1c3447b94e637b11268cffac402d615e9d925c"
+}

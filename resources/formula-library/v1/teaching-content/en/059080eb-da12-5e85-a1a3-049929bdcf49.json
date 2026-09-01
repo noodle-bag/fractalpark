@@ -1,0 +1,79 @@
+{
+  "schema": "fractalpark-teaching-en-fact/v1",
+  "formulaId": "059080eb-da12-5e85-a1a3-049929bdcf49",
+  "sourceRevision": "ef31384c340c3899555f3de5048b4c9863b397c767e8ed72cae190d600f3ea48",
+  "semanticHash": "45f7a65ad99eb0a0b301fa2853808a2b9fc0c81ab14a8cd8f7eaab8335c61b12",
+  "overview": "rcl_pick10 is taught from its pinned FRM-like/1 definition. Follow the division by pixel, the subtraction of pixel times sqr(z), and the strict limit 8 as source operations, rather than treating an image as guaranteed. The pinned mechanical profile supplies one concrete viewing setup, not a universal visual prediction.",
+  "mathDisclosure": "exact-structured",
+  "mathSummary": "The loop assigns z = z / pixel - pixel * sqr(z): it divides the current z by pixel, subtracts pixel times sqr(z), and stores the result in z.",
+  "sourceWalkthrough": [
+    {
+      "annotationId": "059080eb-da12-5e85-a1a3-049929bdcf49:ef31384c340c3899555f3de5048b4c9863b397c767e8ed72cae190d600f3ea48:initial-state",
+      "nodeId": "frm-v1:ef31384c340c3899555f3de5048b4c9863b397c767e8ed72cae190d600f3ea48:init/0",
+      "explanation": "In rcl_pick10, this node executes z = pixel."
+    },
+    {
+      "annotationId": "059080eb-da12-5e85-a1a3-049929bdcf49:ef31384c340c3899555f3de5048b4c9863b397c767e8ed72cae190d600f3ea48:division-and-square-update",
+      "nodeId": "frm-v1:ef31384c340c3899555f3de5048b4c9863b397c767e8ed72cae190d600f3ea48:loop/0",
+      "explanation": "In rcl_pick10, this node executes z = z / pixel - pixel * sqr(z)."
+    },
+    {
+      "annotationId": "059080eb-da12-5e85-a1a3-049929bdcf49:ef31384c340c3899555f3de5048b4c9863b397c767e8ed72cae190d600f3ea48:termination",
+      "nodeId": "frm-v1:ef31384c340c3899555f3de5048b4c9863b397c767e8ed72cae190d600f3ea48:bailout",
+      "explanation": "In rcl_pick10, this node executes |z| < 8."
+    }
+  ],
+  "syntaxFeatures": [
+    {
+      "featureId": "state-flow",
+      "annotationIds": [
+        "059080eb-da12-5e85-a1a3-049929bdcf49:ef31384c340c3899555f3de5048b4c9863b397c767e8ed72cae190d600f3ea48:initial-state",
+        "059080eb-da12-5e85-a1a3-049929bdcf49:ef31384c340c3899555f3de5048b4c9863b397c767e8ed72cae190d600f3ea48:division-and-square-update"
+      ],
+      "explanation": "These annotations trace the formula-specific state flow: z = pixel; z = z / pixel - pixel * sqr(z)."
+    },
+    {
+      "featureId": "stopping-test",
+      "annotationIds": [
+        "059080eb-da12-5e85-a1a3-049929bdcf49:ef31384c340c3899555f3de5048b4c9863b397c767e8ed72cae190d600f3ea48:termination"
+      ],
+      "explanation": "This annotation is the stopping test, |z| < 8, rather than a state update."
+    }
+  ],
+  "parameterExperiment": {
+    "parameterSymbols": [],
+    "steps": [
+      "Run rcl_pick10 with 64 iterations while keeping the pinned profile’s other controls fixed, and record the result.",
+      "Run rcl_pick10 at the pinned profile iteration count of 128, compare the two runs, and record whether a difference occurs."
+    ],
+    "expectedObservation": "Record whether z = z / pixel - pixel * sqr(z) produces a visible-result or |z| < 8 stopping-behavior difference from the baseline; the pinned definition does not guarantee a difference."
+  },
+  "exercise": {
+    "prompt": "Trace rcl_pick10 through its annotations, explaining the source operation z = z / pixel - pixel * sqr(z) and the stopping test |z| < 8.",
+    "completionCheck": "Your trace explains all 3 annotations for rcl_pick10, including z = z / pixel - pixel * sqr(z), and distinguishes |z| < 8 from a state update.",
+    "answerDisclosure": "hint"
+  },
+  "facts": {
+    "provenanceStatement": "This teaching unit is grounded in runtime:ef31384c340c3899555f3de5048b4c9863b397c767e8ed72cae190d600f3ea48 and decision:059080eb-da12-5e85-a1a3-049929bdcf49.",
+    "rightsStatement": "rightsStatus is no-explicit-permission; implementationBasis is separated-independent-rewrite; publicationDecision is publish; decisionReason is publish-cleanroom-independent-rewrite-full-chain-green. This statement does not make broader claims about any third-party original.",
+    "sourceIds": [
+      "runtime:ef31384c340c3899555f3de5048b4c9863b397c767e8ed72cae190d600f3ea48",
+      "decision:059080eb-da12-5e85-a1a3-049929bdcf49"
+    ],
+    "licenseIds": [],
+    "claims": [
+      {
+        "text": "The pinned runtime definition supplies the operations described in this unit.",
+        "sourceIds": [
+          "runtime:ef31384c340c3899555f3de5048b4c9863b397c767e8ed72cae190d600f3ea48"
+        ]
+      },
+      {
+        "text": "The publication decision for this formula is publish.",
+        "sourceIds": [
+          "decision:059080eb-da12-5e85-a1a3-049929bdcf49"
+        ]
+      }
+    ]
+  }
+}

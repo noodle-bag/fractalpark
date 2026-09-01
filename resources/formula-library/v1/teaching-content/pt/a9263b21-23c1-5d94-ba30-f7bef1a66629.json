@@ -1,0 +1,35 @@
+{
+  "schema": "fractalpark-teaching-locale/v1",
+  "formulaId": "a9263b21-23c1-5d94-ba30-f7bef1a66629",
+  "locale": "pt",
+  "sourceRevision": "bf1462942af10c52a5adbecf8856b4e34a8a5110637c84fa613728b76a1d6b4a",
+  "semanticHash": "f170562c56a5af50f20613a53ad362101ca5c82901b219a828ce640149d25f6a",
+  "englishContentHash": "a7d280a201d8754b7f1495c21ded116d9bcba534b3095187f237a962cfe235a7",
+  "overview": "Em FRM-like/1, spider começa com se ismand, z = 0; caso contrário, z = pixel, usa z2 = z * z no primeiro nó do laço e limita a iteração com |z| <= 256. Leia essas operações na ordem real da fonte.",
+  "sourceWalkthrough": {
+    "a9263b21-23c1-5d94-ba30-f7bef1a66629:bf1462942af10c52a5adbecf8856b4e34a8a5110637c84fa613728b76a1d6b4a:initialization": "Em spider, o nó de inicialização executa somente: se ismand, z = 0; caso contrário, z = pixel.",
+    "a9263b21-23c1-5d94-ba30-f7bef1a66629:bf1462942af10c52a5adbecf8856b4e34a8a5110637c84fa613728b76a1d6b4a:iteration": "Em spider, este nó do laço executa somente: z2 = z * z.",
+    "a9263b21-23c1-5d94-ba30-f7bef1a66629:bf1462942af10c52a5adbecf8856b4e34a8a5110637c84fa613728b76a1d6b4a:termination": "Em spider, o nó bailout testa somente: |z| <= 256."
+  },
+  "syntaxFeatures": {
+    "initialization-flow": "Em spider, a característica de inicialização focaliza a única operação se ismand, z = 0; caso contrário, z = pixel.",
+    "iteration-flow": "Em spider, a característica de iteração focaliza a única atribuição z2 = z * z.",
+    "bailout-test": "Em spider, a característica de término focaliza a comparação |z| <= 256."
+  },
+  "parameterExperiment": {
+    "steps": [
+      "Renderize spider com a base do plano de parâmetros fixada: centro (0, 0), zoom 0.25, rotação 0, e 96 iterações.",
+      "Mantenha a base fixa exceto pelas iterações, renderize uma vez com 48 iterações e compare com a base de 96."
+    ],
+    "expectedObservation": "Em spider, registre se a comparação entre 48 e 96 iterações muda algo e anote o limite da fonte |z| <= 256."
+  },
+  "exercise": {
+    "prompt": "Em spider, localize as três anotações e explique se ismand, z = 0; caso contrário, z = pixel, z2 = z * z e |z| <= 256 e explique por que nenhuma instrução vizinha pertence à anotação do laço.",
+    "completionCheck": "Em spider, você concluiu ao listar todas as 3 chaves de anotação e explicar corretamente z2 = z * z e |z| <= 256."
+  },
+  "factsPresentation": {
+    "provenanceLead": "A proveniência está na unidade factual inglesa.",
+    "rightsLead": "Os direitos estão na unidade factual inglesa."
+  },
+  "contentHash": "51a9677c0e232079364c1e29385563a25fa317f50315eb278c3108244cca0cda"
+}

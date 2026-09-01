@@ -69,6 +69,30 @@ describe('myfrac cli explore commands', () => {
     expect(first.data.items[0].targetTags.structural).toContain('clear-structure');
   });
 
+  it('fails closed when requireJulia has no authority-eligible canonical candidate', () => {
+    const config = {
+      id: 'campaign-require-julia',
+      seedSources: [{ type: 'document', path: '__in-memory__' }],
+      budget: { candidateCount: 1, shardCount: 1 },
+      mutation: {
+        deterministicSeed: 17,
+        strategies: ['bounds-jitter'],
+      },
+      constraints: { requireJulia: true },
+    };
+
+    try {
+      exploreMutate({ document: { ...baseDocument, formula: { ...baseDocument.formula, isJulia: true } }, config });
+      throw new Error('expected-constraint-failure');
+    } catch (error) {
+      expect(error).toMatchObject({
+        code: 'CONSTRAINT_UNSATISFIED',
+        exitCode: 2,
+        details: { constraint: 'requireJulia', reason: 'authority-ineligible' },
+      });
+    }
+  });
+
   it('writes manifest and merged candidates for explore batch', () => {
     const outputDir = makeTempDir();
     const config = {

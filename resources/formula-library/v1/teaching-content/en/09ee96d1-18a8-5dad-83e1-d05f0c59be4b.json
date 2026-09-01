@@ -1,0 +1,72 @@
+{
+  "schema": "fractalpark-teaching-en-fact/v1",
+  "formulaId": "09ee96d1-18a8-5dad-83e1-d05f0c59be4b",
+  "sourceRevision": "ab0bdc1929dee1daeb9486d7b1fd885a6644367232854694fa88908eb4e6c0ce",
+  "semanticHash": "061df18cf898a0a049d63cd5f6cf087a28ac7f830bb9694e954c1aaae0b29851",
+  "overview": "chebyshev2 is presented from its pinned FRM-like/1 source rather than from its name. The source supplies an initialization block, a loop block, and a bailout test; the pinned profile uses mode parameter-plane; center (-0.5, 0); zoom 0.4; rotation 0; iterations 96. Follow the cited operations to compare repeated runs.",
+  "mathDisclosure": "exact-structured",
+  "mathSummary": "The source is structured as init, loop, and bailout blocks. Its loop operations are z = 2 * (z * z) - (1, 0) + c.",
+  "sourceWalkthrough": [
+    {
+      "annotationId": "09ee96d1-18a8-5dad-83e1-d05f0c59be4b:ab0bdc1929dee1daeb9486d7b1fd885a6644367232854694fa88908eb4e6c0ce:init",
+      "nodeId": "frm-v1:ab0bdc1929dee1daeb9486d7b1fd885a6644367232854694fa88908eb4e6c0ce:init/0",
+      "explanation": "The init source node begins with `if ismand`; it establishes the starting path before the loop."
+    },
+    {
+      "annotationId": "09ee96d1-18a8-5dad-83e1-d05f0c59be4b:ab0bdc1929dee1daeb9486d7b1fd885a6644367232854694fa88908eb4e6c0ce:loop",
+      "nodeId": "frm-v1:ab0bdc1929dee1daeb9486d7b1fd885a6644367232854694fa88908eb4e6c0ce:loop/0",
+      "explanation": "The loop source node executes `z = 2 * (z * z) - (1, 0) + c` on each pass."
+    },
+    {
+      "annotationId": "09ee96d1-18a8-5dad-83e1-d05f0c59be4b:ab0bdc1929dee1daeb9486d7b1fd885a6644367232854694fa88908eb4e6c0ce:bailout",
+      "nodeId": "frm-v1:ab0bdc1929dee1daeb9486d7b1fd885a6644367232854694fa88908eb4e6c0ce:bailout",
+      "explanation": "The bailout source node tests `|z| <= 256`; the iteration continues while that condition holds."
+    }
+  ],
+  "syntaxFeatures": [
+    {
+      "featureId": "source-sequence",
+      "annotationIds": [
+        "09ee96d1-18a8-5dad-83e1-d05f0c59be4b:ab0bdc1929dee1daeb9486d7b1fd885a6644367232854694fa88908eb4e6c0ce:init",
+        "09ee96d1-18a8-5dad-83e1-d05f0c59be4b:ab0bdc1929dee1daeb9486d7b1fd885a6644367232854694fa88908eb4e6c0ce:loop",
+        "09ee96d1-18a8-5dad-83e1-d05f0c59be4b:ab0bdc1929dee1daeb9486d7b1fd885a6644367232854694fa88908eb4e6c0ce:bailout"
+      ],
+      "explanation": "The cited source nodes for chebyshev2—`if ismand`, `z = 2 * (z * z) - (1, 0) + c`, and `|z| <= 256`—form its source-ordered path from setup through update to termination."
+    }
+  ],
+  "parameterExperiment": {
+    "parameterSymbols": [],
+    "steps": [
+      "Use the pinned profile (mode parameter-plane; center (-0.5, 0); zoom 0.4; rotation 0; iterations 96). Run it once and record the visible result, then repeat with the same profile."
+    ],
+    "expectedObservation": "Compare the chebyshev2 runs and record whether `z = 2 * (z * z) - (1, 0) + c` has matching visible results and iteration behavior."
+  },
+  "exercise": {
+    "prompt": "Use the cited annotations for chebyshev2—`if ismand`, `z = 2 * (z * z) - (1, 0) + c`, and `|z| <= 256`—to describe the source order.",
+    "completionCheck": "Your response lists the 3 cited annotation IDs and orders chebyshev2’s `if ismand`, `z = 2 * (z * z) - (1, 0) + c`, and `|z| <= 256` from initialization through loop to termination.",
+    "answerDisclosure": "none"
+  },
+  "facts": {
+    "provenanceStatement": "Grounded in the pinned runtime source revision ab0bdc1929dee1daeb9486d7b1fd885a6644367232854694fa88908eb4e6c0ce and its semantic anchors.",
+    "rightsStatement": "rightsStatus: project-owned; implementationBasis: project-owned; publicationDecision: publish; decisionReason: publish-project-owned-native-recipe. This does not make any broader claim about a third-party original.",
+    "sourceIds": [
+      "runtime:ab0bdc1929dee1daeb9486d7b1fd885a6644367232854694fa88908eb4e6c0ce",
+      "decision:09ee96d1-18a8-5dad-83e1-d05f0c59be4b"
+    ],
+    "licenseIds": [],
+    "claims": [
+      {
+        "text": "The runtime profile specifies mode parameter-plane; center (-0.5, 0); zoom 0.4; rotation 0; iterations 96.",
+        "sourceIds": [
+          "runtime:ab0bdc1929dee1daeb9486d7b1fd885a6644367232854694fa88908eb4e6c0ce"
+        ]
+      },
+      {
+        "text": "The publication record states publish with reason publish-project-owned-native-recipe.",
+        "sourceIds": [
+          "decision:09ee96d1-18a8-5dad-83e1-d05f0c59be4b"
+        ]
+      }
+    ]
+  }
+}

@@ -1,0 +1,36 @@
+{
+  "schema": "fractalpark-teaching-locale/v1",
+  "formulaId": "2ab193f5-4919-5e5c-a9fb-c1a0e3f5eb02",
+  "locale": "es",
+  "sourceRevision": "cfef49944d8f9bd8f2ee91b2d4ab4f9b30ad66475a6f783f52bb91a7a36b1617",
+  "semanticHash": "66120f8c30ea579f64ef57e054eb33b08e9c00eeed9c33c9cecc1e6bba600898",
+  "englishContentHash": "01cf3e2d82e2a9fd405ea6049d5131f2dd13253e0195e0783ac932c11993f620",
+  "overview": "burningShip se estudia con su definición fijada FRM-like/1: tú sigues a = abs(z); cuando power == 2, z se reconstruye a partir de real(a) e imag(a) antes de z = z + c, de otro modo z = a ^ power + c sin tratar una imagen como garantía. El perfil fijado aporta solo una configuración concreta.",
+  "sourceWalkthrough": {
+    "2ab193f5-4919-5e5c-a9fb-c1a0e3f5eb02:cfef49944d8f9bd8f2ee91b2d4ab4f9b30ad66475a6f783f52bb91a7a36b1617:start-branch": "En burningShip, este nodo ejecuta if ismand: z = 0; de otro modo z = pixel.",
+    "2ab193f5-4919-5e5c-a9fb-c1a0e3f5eb02:cfef49944d8f9bd8f2ee91b2d4ab4f9b30ad66475a6f783f52bb91a7a36b1617:absolute-value": "En burningShip, este nodo ejecuta a = abs(z).",
+    "2ab193f5-4919-5e5c-a9fb-c1a0e3f5eb02:cfef49944d8f9bd8f2ee91b2d4ab4f9b30ad66475a6f783f52bb91a7a36b1617:power-branch": "En burningShip, este nodo ejecuta: si power == 2, real(z) = real(a) * real(a) - imag(a) * imag(a); imag(z) = 2 * real(a) * imag(a); después z = z + c; de otro modo z = a ^ power + c.",
+    "2ab193f5-4919-5e5c-a9fb-c1a0e3f5eb02:cfef49944d8f9bd8f2ee91b2d4ab4f9b30ad66475a6f783f52bb91a7a36b1617:termination": "En burningShip, este nodo ejecuta |z| <= 256."
+  },
+  "syntaxFeatures": {
+    "state-flow": "El flujo de estado concreto es: la elección de ismand inicializa z; abs(z) se convierte en a; después, la rama de power reconstruye z.",
+    "stopping-test": "La prueba de parada solo evalúa |z| <= 256; no asigna el estado."
+  },
+  "parameterExperiment": {
+    "steps": [
+      "Ejecuta burningShip con el perfil fijado y anota el resultado.",
+      "Cambia solo power, mantén fijas las demás ranuras de ejecución y los controles del perfil, ejecuta otra vez y anota si hay diferencia."
+    ],
+    "expectedObservation": "Anota si a = abs(z); cuando power == 2, z se reconstruye a partir de real(a) e imag(a) antes de z = z + c, de otro modo z = a ^ power + c cambia el resultado visible o la prueba de parada |z| <= 256 frente a la línea base; la definición no garantiza una diferencia."
+  },
+  "exercise": {
+    "prompt": "Sigue las anotaciones de burningShip y explica cómo se ejecuta a = abs(z); cuando power == 2, z se reconstruye a partir de real(a) e imag(a) antes de z = z + c, de otro modo z = a ^ power + c en las operaciones señaladas.",
+    "completionCheck": "Tu respuesta explica las 4 anotaciones, señala a = abs(z); cuando power == 2, z se reconstruye a partir de real(a) e imag(a) antes de z = z + c, de otro modo z = a ^ power + c y distingue |z| <= 256 como prueba de parada, no como asignación.",
+    "hint": "El flujo de estado ejecuta if ismand: z = 0; de otro modo z = pixel → a = abs(z) → si power == 2, z se reconstruye a partir de los componentes de a y se suma c; de otro modo z = a ^ power + c en secuencia y entrega el resultado al paso siguiente."
+  },
+  "factsPresentation": {
+    "provenanceLead": "Fuente: definición de ejecución fijada y decisión de publicación.",
+    "rightsLead": "La información de derechos sigue la decisión fijada en la unidad en inglés."
+  },
+  "contentHash": "d382a9aa0f3ed6a5ad9e0e88823048498931a50ba7e3aa04e677e71089c072cf"
+}

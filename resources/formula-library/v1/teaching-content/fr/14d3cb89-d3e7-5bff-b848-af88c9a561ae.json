@@ -1,0 +1,33 @@
+{
+  "schema": "fractalpark-teaching-locale/v1",
+  "formulaId": "14d3cb89-d3e7-5bff-b848-af88c9a561ae",
+  "locale": "fr",
+  "sourceRevision": "459d2a30210e9171b03fb5d7480eeeb22db0051d977a6dc000d39886924a66eb",
+  "semanticHash": "2ed2266b921e3c3ac6a495eec3da1ff79cc2dcd492e42d068ee21196337eb60f",
+  "englishContentHash": "3a658953f1970acadb7cc2ac012f462da0d3881b3577ddec29283d52015c16d5",
+  "overview": "Cette unité repose pour toi sur les opérations exactes suivantes de FRM-like/1 :  `init: cclassic = c; x = 1 / pixel; z = x; cclassic = fn1(z). loop: z = (x + cclassic) * (x - cclassic); x = fn2(z). bailout: |z| <= 3.`",
+  "sourceWalkthrough": {
+    "14d3cb89-d3e7-5bff-b848-af88c9a561ae:459d2a30210e9171b03fb5d7480eeeb22db0051d977a6dc000d39886924a66eb:init-transform": "Cette annotation exécute `cclassic = fn1(z)`.",
+    "14d3cb89-d3e7-5bff-b848-af88c9a561ae:459d2a30210e9171b03fb5d7480eeeb22db0051d977a6dc000d39886924a66eb:product": "Cette annotation exécute `z = (x + cclassic) * (x - cclassic)`.",
+    "14d3cb89-d3e7-5bff-b848-af88c9a561ae:459d2a30210e9171b03fb5d7480eeeb22db0051d977a6dc000d39886924a66eb:x-update": "Cette annotation exécute `x = fn2(z)`.",
+    "14d3cb89-d3e7-5bff-b848-af88c9a561ae:459d2a30210e9171b03fb5d7480eeeb22db0051d977a6dc000d39886924a66eb:bailout": "Cette annotation exécute `|z| <= 3`. Elle termine la séquence d’itération de cette formule."
+  },
+  "syntaxFeatures": {
+    "source-sequence": "Cette caractéristique de séquence relie, dans l’ordre du code source, les opérations citées liées à `(x + cclassic) * (x - cclassic)`."
+  },
+  "parameterExperiment": {
+    "steps": [
+      "Avec le profil fixé, effectue d’abord le rendu de référence avec `function1 = identity`, `function2 = identity`. Garde le centre, le zoom, la rotation, les itérations et les autres slots fixes ; ne fais et ne rends qu’une modification à la fois : `function1 = sqr`, `function2 = sqr`. Rétablis la référence avant chaque nouvel essai."
+    ],
+    "expectedObservation": "Dans les essais de bali portant sur `function1`, `function2`, note s’il existe une différence visible par rapport à la référence ; note aussi l’absence de différence."
+  },
+  "exercise": {
+    "prompt": "Explique le rôle de `(x + cclassic) * (x - cclassic)` dans l’ordre du code source et compare les exécutions selon les étapes de l’expérience sur les paramètres.",
+    "completionCheck": "Ta réponse doit expliquer les 4 opérations annotées, noter la comparaison de l’expérience et mentionner `(x + cclassic) * (x - cclassic)`."
+  },
+  "factsPresentation": {
+    "provenanceLead": "Source : révision d’exécution fixée et décision de publication.",
+    "rightsLead": "Les informations de droits figurent dans l’unité factuelle anglaise."
+  },
+  "contentHash": "a2ed0e53803f815a95c4170f996321ee9fbb479539f2a8d623cad342637b37dd"
+}

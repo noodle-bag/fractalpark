@@ -1,0 +1,35 @@
+{
+  "schema": "fractalpark-teaching-locale/v1",
+  "formulaId": "da95ae4b-d401-5eb0-862c-7d977c328fad",
+  "locale": "ru",
+  "sourceRevision": "c0fdb8fb46828947defe52dd82bdabd45a1a8baeb32278ae649b7231e647bf2f",
+  "semanticHash": "6ecfdd7558b795aaff0dc5bf3609c3c580e4ef18af90fbe45686a204d2dd9443",
+  "englishContentHash": "e06f064d9449516b1d9c94f02c1960cc348557decee4c593baccf30e9bb0bf78",
+  "overview": "В FRM-like/1 формула jm_27 начинается с z = pixel, первый узел цикла задаёт sqrz = fn1(z), а итерацию ограничивает |z| <= t. Читайте эти операции в фактическом порядке исходника.",
+  "sourceWalkthrough": {
+    "da95ae4b-d401-5eb0-862c-7d977c328fad:c0fdb8fb46828947defe52dd82bdabd45a1a8baeb32278ae649b7231e647bf2f:initialization": "В jm_27, узел инициализации выполняет только: z = pixel.",
+    "da95ae4b-d401-5eb0-862c-7d977c328fad:c0fdb8fb46828947defe52dd82bdabd45a1a8baeb32278ae649b7231e647bf2f:iteration": "В jm_27, этот узел цикла выполняет только: sqrz = fn1(z).",
+    "da95ae4b-d401-5eb0-862c-7d977c328fad:c0fdb8fb46828947defe52dd82bdabd45a1a8baeb32278ae649b7231e647bf2f:termination": "В jm_27, узел bailout проверяет только: |z| <= t."
+  },
+  "syntaxFeatures": {
+    "initialization-flow": "В jm_27, признак инициализации выделяет единственную начальную операцию z = pixel.",
+    "iteration-flow": "В jm_27, признак итерации выделяет единственное присваивание sqrz = fn1(z).",
+    "bailout-test": "В jm_27, признак завершения выделяет сравнение |z| <= t."
+  },
+  "parameterExperiment": {
+    "steps": [
+      "Выполните рендер jm_27 с закреплённой базовой настройкой плоскости параметров и значениями по умолчанию parameter1 (0, 0), function1 (identity).",
+      "Меняйте по одному из parameter1, function1, сохраняя центр (0, 0), масштаб 0.25, поворот 0, и 96 итераций и остальные слоты неизменными, затем сравнивайте рендеры."
+    ],
+    "expectedObservation": "При каждом отдельном изменении parameter1 или function1 отметьте, отличается ли рендеринг от базового, и соотнесите сравнение с `|z| <= t`."
+  },
+  "exercise": {
+    "prompt": "В jm_27, найдите три аннотации и объясните z = pixel, sqrz = fn1(z) и |z| <= t и объясните, почему соседние инструкции не относятся к аннотации цикла.",
+    "completionCheck": "В jm_27, вы завершили задание, если перечислили все 3 ключа аннотаций и точно объяснили sqrz = fn1(z) и |z| <= t."
+  },
+  "factsPresentation": {
+    "provenanceLead": "Происхождение указано в английском фактологическом блоке.",
+    "rightsLead": "Права указаны в английском фактологическом блоке."
+  },
+  "contentHash": "375db1e913719a5f13c8469e7b1392a54639530230571b6958c263a42a8bc482"
+}

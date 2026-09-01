@@ -1,0 +1,36 @@
+{
+  "schema": "fractalpark-teaching-locale/v1",
+  "formulaId": "e2456b54-ef50-5ac9-9faa-dcb576c5e774",
+  "locale": "pt",
+  "sourceRevision": "25f923b51ea1e36408f9c48e008187e67a946fc58ef634f93bf0cba216f622aa",
+  "semanticHash": "3d14554a8a35c0e2ee8fc80436926dd493babd846a9d5294bc6b58ad7580c62f",
+  "englishContentHash": "e7b4b6dd9db26d332b52d8767c96bf0b310f8354ab721d68a860b4cbcece3848",
+  "overview": "phoenix é estudada pela definição fixa FRM-like/1: você acompanha nextZ = z * z + c + phoenixP * previousZ; previousZ = z; z = nextZ, sem tomar uma imagem como garantia. O perfil fixo oferece apenas uma configuração concreta.",
+  "sourceWalkthrough": {
+    "e2456b54-ef50-5ac9-9faa-dcb576c5e774:25f923b51ea1e36408f9c48e008187e67a946fc58ef634f93bf0cba216f622aa:start-branch": "Em phoenix, este nó executa if ismand: z = 0; caso contrário z = pixel.",
+    "e2456b54-ef50-5ac9-9faa-dcb576c5e774:25f923b51ea1e36408f9c48e008187e67a946fc58ef634f93bf0cba216f622aa:memory-init": "Em phoenix, este nó executa previousZ = (0, 0).",
+    "e2456b54-ef50-5ac9-9faa-dcb576c5e774:25f923b51ea1e36408f9c48e008187e67a946fc58ef634f93bf0cba216f622aa:next-state": "Em phoenix, este nó executa nextZ = z * z + c + phoenixP * previousZ.",
+    "e2456b54-ef50-5ac9-9faa-dcb576c5e774:25f923b51ea1e36408f9c48e008187e67a946fc58ef634f93bf0cba216f622aa:termination": "Em phoenix, este nó executa |z| <= 256."
+  },
+  "syntaxFeatures": {
+    "state-flow": "O fluxo de estado específico é: a escolha de ismand inicializa z e previousZ = (0, 0); em seguida, nextZ carrega o estado anterior.",
+    "stopping-test": "O teste de parada verifica apenas |z| <= 256; ele não atribui um valor ao estado."
+  },
+  "parameterExperiment": {
+    "steps": [
+      "Execute phoenix no perfil fixo e registre o resultado.",
+      "Mude somente phoenixP, mantenha os demais slots de execução e controles do perfil fixos, execute novamente e registre se há diferença."
+    ],
+    "expectedObservation": "Registre se nextZ = z * z + c + phoenixP * previousZ; previousZ = z; z = nextZ muda o resultado visível ou o teste de parada |z| <= 256 em relação à linha de base; a definição não garante diferença."
+  },
+  "exercise": {
+    "prompt": "Rastreie as anotações de phoenix e explique como nextZ = z * z + c + phoenixP * previousZ; previousZ = z; z = nextZ é executado nas operações indicadas.",
+    "completionCheck": "Sua resposta explica as 4 anotações, identifica nextZ = z * z + c + phoenixP * previousZ; previousZ = z; z = nextZ e trata |z| <= 256 como teste de parada, não como atribuição.",
+    "hint": "O fluxo de estado executa if ismand: z = 0; caso contrário z = pixel → previousZ = (0, 0) → nextZ = z * z + c + phoenixP * previousZ → previousZ = z → z = nextZ em sequência, fornecendo o resultado à etapa seguinte."
+  },
+  "factsPresentation": {
+    "provenanceLead": "Fonte: definição de execução fixada e decisão de publicação.",
+    "rightsLead": "As informações de direitos seguem a decisão fixada na unidade em inglês."
+  },
+  "contentHash": "74c7e059cc2165aa0036399d466c5882b6977aec4be4418d4cc53c2a2578c720"
+}

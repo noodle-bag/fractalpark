@@ -23,19 +23,120 @@ import { SITE } from '@/lib/site';
 const baseUrl = SITE.url;
 const ogImage = `${baseUrl}${SITE.ogImage}`;
 
+const JSON_LD_LANGUAGE_BY_LOCALE: Readonly<Record<string, string>> = Object.freeze({
+  en: 'en',
+  zh: 'zh-CN',
+  pt: 'pt-BR',
+  ko: 'ko-KR',
+  ru: 'ru-RU',
+  es: 'es-ES',
+  fr: 'fr-FR',
+});
+
 /** BCP 47 language tags for JSON-LD `inLanguage`, derived from routing. */
 const IN_LANGUAGE: readonly string[] = routing.locales.map((locale) => {
-  const map: Record<string, string> = {
-    en: 'en',
-    zh: 'zh-CN',
-    pt: 'pt-BR',
-    ko: 'ko-KR',
-    ru: 'ru-RU',
-    es: 'es-ES',
-    fr: 'fr-FR',
-  };
-  return map[locale] ?? locale;
+  return JSON_LD_LANGUAGE_BY_LOCALE[locale] ?? locale;
 });
+
+export interface FormulaTeachingJsonLdOptionsV1 {
+  readonly url: string;
+  readonly locale: string;
+  readonly formulaId: string;
+  readonly canonicalName: string;
+  readonly name: string;
+  readonly description: string;
+  readonly image?: Readonly<{ url: string; width: number; height: number }>;
+  readonly breadcrumb?: object;
+}
+
+export function buildFormulaTeachingJsonLdV1(
+  options: FormulaTeachingJsonLdOptionsV1,
+) {
+  return {
+    '@context': 'https://schema.org',
+    '@type': ['WebPage', 'LearningResource'],
+    '@id': `${options.url}#learning-resource`,
+    url: options.url,
+    name: options.name,
+    description: options.description,
+    inLanguage: JSON_LD_LANGUAGE_BY_LOCALE[options.locale] ?? options.locale,
+    learningResourceType: 'Interactive formula guide',
+    educationalUse: 'instruction',
+    isPartOf: { '@id': `${baseUrl}/#website` },
+    about: {
+      '@type': 'Thing',
+      identifier: options.formulaId,
+      name: options.canonicalName,
+    },
+    license: PUBLIC_PROJECT.license.url,
+    provider: {
+      '@type': 'Organization',
+      '@id': `${baseUrl}/#organization`,
+      name: `${SITE.name} Project`,
+      url: baseUrl,
+    },
+    ...(options.image
+      ? {
+          primaryImageOfPage: {
+            '@type': 'ImageObject',
+            ...options.image,
+          },
+        }
+      : {}),
+    ...(options.breadcrumb ? { breadcrumb: options.breadcrumb } : {}),
+  } as const;
+}
+
+export interface FormulaRecordJsonLdOptionsV1 {
+  readonly url: string;
+  readonly directoryUrl: string;
+  readonly locale: string;
+  readonly formulaId: string;
+  readonly canonicalName: string;
+  readonly name: string;
+  readonly description: string;
+  readonly image: Readonly<{ url: string; width: number; height: number }>;
+}
+
+export function buildFormulaRecordJsonLdV1(
+  options: FormulaRecordJsonLdOptionsV1,
+) {
+  const formulaEntityId = `${options.url}#formula`;
+  return {
+    '@context': 'https://schema.org',
+    '@graph': [
+      {
+        '@type': 'WebPage',
+        '@id': `${options.url}#webpage`,
+        url: options.url,
+        name: options.name,
+        description: options.description,
+        inLanguage: JSON_LD_LANGUAGE_BY_LOCALE[options.locale] ?? options.locale,
+        isPartOf: { '@id': `${baseUrl}/#website` },
+        mainEntity: { '@id': formulaEntityId },
+        primaryImageOfPage: {
+          '@type': 'ImageObject',
+          ...options.image,
+        },
+      },
+      {
+        '@type': 'DefinedTerm',
+        '@id': formulaEntityId,
+        name: options.canonicalName,
+        termCode: options.formulaId,
+        image: {
+          '@type': 'ImageObject',
+          ...options.image,
+        },
+        inDefinedTermSet: {
+          '@type': 'DefinedTermSet',
+          '@id': `${options.directoryUrl}#formula-directory`,
+          url: options.directoryUrl,
+        },
+      },
+    ],
+  } as const;
+}
 
 /**
  * WebSite schema — emitted on every page via [locale]/layout.tsx.
@@ -97,16 +198,16 @@ export function buildSoftwareApplicationJsonLd(
     isAccessibleForFree: true,
     inLanguage: IN_LANGUAGE,
     featureList: [
-      `${facts.formulaCount} GLSL fractal formulas across ${facts.formulaFamilyCount} families (Classic, Burning Ship, Newton, Phoenix, Transcendental, Magnet, Exotic)`,
-      'Mandelbrot and Julia modes for every formula',
+      `${facts.formulaCount} published Standard Definitions across ${facts.formulaFamilyCount} structural families, of which ${facts.classicFormulaCount} also belong to the Classic collection`,
+      `Mandelbrot mode across the ${facts.formulaCount} published Standard Definitions; Julia mode where supported`,
       'Real-time WebGL rendering',
       `${facts.coloringModeCount} coloring modes including smooth iteration, orbit traps, and custom gradients`,
       `${facts.transformCount} UV transform plugins`,
-      'Fractint-compatible FRM formula language with a Guide and standalone Editor',
+      'A distinct Editor for the tested Classic-compatible FRM subset, with a Guide',
       `${facts.formulaGuideCount} in-depth Formula Guides`,
       `High-resolution PNG export up to ${facts.maxExportScale}× with SSAA anti-aliasing`,
       'Shareable URLs that encode the exact view and parameters',
-      'Local on-device artwork storage; no account required',
+      'Create without an account; save artworks and custom formulas to a private cloud library with email sign-in',
       'Interface available in seven languages (English, Simplified Chinese, Portuguese, Korean, Russian, Spanish, French)',
     ],
     offers: {

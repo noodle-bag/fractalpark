@@ -1,0 +1,36 @@
+{
+  "schema": "fractalpark-teaching-locale/v1",
+  "formulaId": "dd052c9f-868f-5516-9af0-3f4e78ac7a13",
+  "locale": "ru",
+  "sourceRevision": "5e3522c53ca358df8d61d5a3b82aa0b90ff8009602b1952fb5022027f00fdd45",
+  "semanticHash": "d5933023730b2ec1a6c5c5cf8762478436fa9ccdf19311da910493d169bed0dd",
+  "englishContentHash": "0de1ccb97e10d1cd8d728f52e0247588fd9f5aac85560823c91225f73ea44e05",
+  "overview": "newton3 изучается по закреплённому определению FRM-like/1: вы прослеживаете z2 = z * z; z3 = z2 * z; numerator = 2 * z3 + 1; denominator = 3 * z2; z = numerator / denominator, не считая изображение гарантированным. Закреплённый профиль задаёт лишь одну конкретную настройку наблюдения.",
+  "sourceWalkthrough": {
+    "dd052c9f-868f-5516-9af0-3f4e78ac7a13:5e3522c53ca358df8d61d5a3b82aa0b90ff8009602b1952fb5022027f00fdd45:initial-state": "В newton3, этот узел выполняет z = pixel.",
+    "dd052c9f-868f-5516-9af0-3f4e78ac7a13:5e3522c53ca358df8d61d5a3b82aa0b90ff8009602b1952fb5022027f00fdd45:square": "В newton3, этот узел выполняет z2 = z * z.",
+    "dd052c9f-868f-5516-9af0-3f4e78ac7a13:5e3522c53ca358df8d61d5a3b82aa0b90ff8009602b1952fb5022027f00fdd45:quotient-update": "В newton3, этот узел выполняет z = numerator / denominator.",
+    "dd052c9f-868f-5516-9af0-3f4e78ac7a13:5e3522c53ca358df8d61d5a3b82aa0b90ff8009602b1952fb5022027f00fdd45:termination": "В newton3, этот узел выполняет |z - zPrev| >= 0.000001."
+  },
+  "syntaxFeatures": {
+    "state-flow": "Конкретный поток состояния: z начинается с pixel, затем z2 и z3 используются для numerator / denominator.",
+    "stopping-test": "Проверка остановки оценивает только |z - zPrev| >= 0.000001; она не присваивает состояние."
+  },
+  "parameterExperiment": {
+    "steps": [
+      "Не меняя остальные настройки профиля, запустите newton3 с 48 итерациями.",
+      "Затем используйте 96 итераций закреплённого профиля и запишите различие."
+    ],
+    "expectedObservation": "Запишите, меняет ли z2 = z * z; z3 = z2 * z; numerator = 2 * z3 + 1; denominator = 3 * z2; z = numerator / denominator видимый результат или проверку остановки |z - zPrev| >= 0.000001 относительно базового запуска; определение не гарантирует различие."
+  },
+  "exercise": {
+    "prompt": "Проследите аннотации newton3 и объясните, как z2 = z * z; z3 = z2 * z; numerator = 2 * z3 + 1; denominator = 3 * z2; z = numerator / denominator выполняется в отмеченных операциях.",
+    "completionCheck": "Ваш ответ объясняет все 4 аннотации, указывает z2 = z * z; z3 = z2 * z; numerator = 2 * z3 + 1; denominator = 3 * z2; z = numerator / denominator и отличает |z - zPrev| >= 0.000001 как проверку остановки от присваивания.",
+    "hint": "Поток состояния последовательно выполняет z = pixel → z2 = z * z → z3 = z2 * z → numerator = 2 * z3 + 1 → denominator = 3 * z2 → z = numerator / denominator и передаёт результат следующему шагу."
+  },
+  "factsPresentation": {
+    "provenanceLead": "Источник: закреплённое определение выполнения и решение о публикации.",
+    "rightsLead": "Сведения о правах следуют закреплённому решению в английском разделе."
+  },
+  "contentHash": "d9b1a4f8738070f769c4415e8b2591664be68ab35ff920de2f65007672cb3bf0"
+}
