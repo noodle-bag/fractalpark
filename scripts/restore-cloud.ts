@@ -47,6 +47,13 @@ interface Row {
   [key: string]: unknown;
 }
 
+interface FormulaHeadUpdate {
+  id: string;
+  ownerId: string;
+  editableHeadRevisionId: string | null;
+  activeRunnableRevisionId: string | null;
+}
+
 function load(name: string): Row[] {
   return JSON.parse(readFileSync(join(IN as string, `${name}.json`), 'utf8')) as Row[];
 }
@@ -54,7 +61,7 @@ function load(name: string): Row[] {
 // Refuse to restore from a corrupted or truncated export: every payload
 // file must hash to its manifest entry (review: restore previously trusted
 // the files blindly).
-function verifyManifest(): void {
+function verifyManifest(): Set<string> {
   const manifest = JSON.parse(readFileSync(join(IN as string, 'manifest.json'), 'utf8')) as {
     files: Record<string, { rows: number; sha256: string }>;
   };
@@ -65,7 +72,9 @@ function verifyManifest(): void {
       throw new Error(`manifest checksum mismatch for ${name}.json — export is corrupt, aborting`);
     }
   }
-  console.log(`manifest verified (${Object.keys(manifest.files).length} files)`);
+  const files = new Set(Object.keys(manifest.files));
+  console.log(`manifest verified (${files.size} files)`);
+  return files;
 }
 
 async function adminCreateUser(email: string): Promise<{ id: string; existed: boolean }> {
@@ -126,6 +135,72 @@ async function postgrestCount(table: string): Promise<number> {
   return Number(contentRange.split('/')[1] ?? 0);
 }
 
+async function restoreFormulaRevision(revision: Row): Promise<void> {
+  const res = await fetch(
+    `${SUPABASE_URL}/rest/v1/rpc/fractalpark_custom_formula_restore_revision`,
+    {
+      method: 'POST',
+      headers: {
+        apikey: SERVICE_KEY as string,
+        authorization: `Bearer ${SERVICE_KEY}`,
+        'content-type': 'application/json',
+      },
+      body: JSON.stringify({ p_revision: revision }),
+    },
+  );
+  if (!res.ok) {
+    throw new Error(
+      `restore custom formula revision -> ${res.status}: ${(await res.text()).slice(0, 300)}`,
+    );
+  }
+  const restored = (await res.json()) as Row;
+  if (
+    restored.id !== revision.id ||
+    restored.formula_id !== revision.formula_id ||
+    restored.owner_id !== revision.owner_id ||
+    restored.revision !== revision.revision
+  ) {
+    throw new Error(
+      `restore custom formula revision -> representation mismatch for ${String(revision.id)}`,
+    );
+  }
+}
+
+async function restoreFormulaHead(update: FormulaHeadUpdate): Promise<void> {
+  const res = await fetch(
+    `${SUPABASE_URL}/rest/v1/rpc/fractalpark_custom_formula_restore_heads`,
+    {
+      method: 'POST',
+      headers: {
+        apikey: SERVICE_KEY as string,
+        authorization: `Bearer ${SERVICE_KEY}`,
+        'content-type': 'application/json',
+      },
+      body: JSON.stringify({
+        p_formula_id: update.id,
+        p_owner_id: update.ownerId,
+        p_editable_head_revision_id: update.editableHeadRevisionId,
+        p_active_runnable_revision_id: update.activeRunnableRevisionId,
+      }),
+    },
+  );
+  if (!res.ok) {
+    throw new Error(
+      `restore custom formula heads -> ${res.status}: ${(await res.text()).slice(0, 300)}`,
+    );
+  }
+  const row = (await res.json()) as Row;
+  if (
+    row.id !== update.id ||
+    row.editable_head_revision_id !== update.editableHeadRevisionId ||
+    row.active_runnable_revision_id !== update.activeRunnableRevisionId
+  ) {
+    throw new Error(
+      `restore custom formula heads -> representation mismatch for ${update.id}`,
+    );
+  }
+}
+
 function remapRows(rows: Row[], remap: Map<string, string>): Row[] {
   return rows.map((row) => {
     const copy = { ...row };
@@ -139,8 +214,49 @@ function remapRows(rows: Row[], remap: Map<string, string>): Row[] {
   });
 }
 
+function stageFormulaHeads(rows: Row[]): {
+  insertRows: Row[];
+  headUpdates: FormulaHeadUpdate[];
+} {
+  const headUpdates = rows.map((row) => {
+    const id = row.id;
+    const ownerId = row.owner_id;
+    const editable = row.editable_head_revision_id ?? null;
+    const active = row.active_runnable_revision_id ?? null;
+    if (
+      typeof id !== 'string' ||
+      typeof ownerId !== 'string' ||
+      (editable !== null && typeof editable !== 'string') ||
+      (active !== null && typeof active !== 'string')
+    ) {
+      throw new Error('invalid custom formula head identity in backup');
+    }
+    return {
+      id,
+      ownerId,
+      editableHeadRevisionId: editable,
+      activeRunnableRevisionId: active,
+    };
+  });
+  const insertRows = rows.map((row) => ({
+    ...row,
+    editable_head_revision_id: null,
+    active_runnable_revision_id: null,
+  }));
+  return { insertRows, headUpdates };
+}
+
 async function main(): Promise<void> {
-  verifyManifest();
+  const backupFiles = verifyManifest();
+  const migrationVersions = new Set(
+    load('schema_migrations').map((row) => String(row.version)),
+  );
+  const lifecycleSchemaPresent = migrationVersions.has('20260816090000');
+  if (lifecycleSchemaPresent && !backupFiles.has('custom_formula_revisions')) {
+    throw new Error(
+      'backup includes the formula lifecycle migration but omits custom_formula_revisions.json',
+    );
+  }
   const authUsers = load('auth_users');
   const remap = new Map<string, string>();
   console.log(`auth identities: ${authUsers.length}`);
@@ -156,27 +272,55 @@ async function main(): Promise<void> {
       }
     }
   }
-  writeFileSync(
-    join(IN as string, DRY_RUN ? 'uuid-remap.dryrun.json' : 'uuid-remap.json'),
-    JSON.stringify(Object.fromEntries(remap), null, 2),
-  );
-  console.log(`uuid remap: ${remap.size} identities re-keyed`);
+  if (DRY_RUN) {
+    console.log(
+      'uuid remap: unavailable in dry run; target identities are not queried or created',
+    );
+  } else {
+    writeFileSync(
+      join(IN as string, 'uuid-remap.json'),
+      JSON.stringify(Object.fromEntries(remap), null, 2),
+    );
+    console.log(`uuid remap: ${remap.size} identities re-keyed`);
+  }
 
-  // FK order: profiles -> drafts -> publications -> operations -> jobs.
+  // FK order: profiles -> drafts -> formulas -> formula revisions ->
+  // publications -> operations -> jobs.
   // remapRows rewrites every auth-user reference (owner_id, user_id, and
   // the defensive created_by/updated_by/owner variants) through the map.
   const order = [
     'profiles',
     'artwork_drafts',
     'custom_formulas',
+    'custom_formula_revisions',
     'artwork_publications',
     'artwork_operations',
     'resource_cleanup_jobs',
   ] as const;
+  let formulaHeadUpdates: FormulaHeadUpdate[] = [];
   for (const table of order) {
-    const rows = remapRows(load(table), remap);
+    // Pre-v0.4.19 snapshots predate this table and remain valid recovery
+    // sources. Once the lifecycle migration is present, the guard above makes
+    // the revisions payload mandatory rather than silently treating data loss
+    // as an old-format backup.
+    if (table === 'custom_formula_revisions' && !backupFiles.has(table)) {
+      console.log('skip custom_formula_revisions: pre-lifecycle backup');
+      continue;
+    }
+    let rows = remapRows(load(table), remap);
+    if (table === 'custom_formulas') {
+      const staged = stageFormulaHeads(rows);
+      rows = staged.insertRows;
+      formulaHeadUpdates = staged.headUpdates;
+    }
     if (!DRY_RUN) {
-      await postgrestInsert(table, rows);
+      if (table === 'custom_formula_revisions') {
+        for (const revision of rows) {
+          await restoreFormulaRevision(revision);
+        }
+      } else {
+        await postgrestInsert(table, rows);
+      }
     }
     const expected = rows.length;
     const actual = DRY_RUN ? expected : await postgrestCount(table);
@@ -189,6 +333,19 @@ async function main(): Promise<void> {
     );
     if (!ok) process.exitCode = 1;
   }
+  const nonNullHeadUpdates = formulaHeadUpdates.filter(
+    (update) =>
+      update.editableHeadRevisionId !== null ||
+      update.activeRunnableRevisionId !== null,
+  );
+  if (!DRY_RUN) {
+    for (const update of nonNullHeadUpdates) {
+      await restoreFormulaHead(update);
+    }
+  }
+  console.log(
+    `formula head pointers: ${nonNullHeadUpdates.length} restored${DRY_RUN ? ' (dry run)' : ''}`,
+  );
   if (DRY_RUN) {
     console.log('\ndry run: no writes performed');
     return;

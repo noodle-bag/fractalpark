@@ -10,7 +10,7 @@ single point of failure.
 |---|---|---|
 | Schema, RLS, RPCs, triggers, grants, storage buckets | `supabase/migrations/` in the repo | Migration replay (`db push`) |
 | Migration history (what was applied when) | repo + `supabase_migrations.schema_migrations` | Repo is source of truth; platform history is informational |
-| Durable rows: `profiles`, `artwork_drafts`, `artwork_publications`, `artwork_operations`, `resource_cleanup_jobs` | Postgres `public` | Platform backup **and** logical export |
+| Durable rows: `profiles`, `artwork_drafts`, `custom_formulas`, `custom_formula_revisions`, `artwork_publications`, `artwork_operations`, `resource_cleanup_jobs` | Postgres `public` | Platform backup **and** logical export |
 | Auth identities (id ↔ email) | GoTrue `auth.users` | Platform backup (full fidelity); logical export keeps the id↔email map for UUID remap |
 | Storage objects (draft/publication thumbnails) | Storage buckets | Platform backup; logical export keeps the object manifest (path/size/mtime) |
 | `rate_limit_counters` | Postgres | **Deliberately excluded** — ephemeral; restoring it would only resurrect stale limits |
@@ -42,8 +42,9 @@ SUPABASE_ACCESS_TOKEN=$(cat ~/.hermes/credentials/supabase-access-token) \
   --ref <project-ref> --out backups/$(date +%Y%m%d-%H%M)-staging
 ```
 
-Output: one JSON per table (`profiles`, `artwork_drafts`,
-`artwork_publications`, `artwork_operations`, `resource_cleanup_jobs`),
+Output: one JSON per table (`profiles`, `artwork_drafts`, `custom_formulas`,
+`custom_formula_revisions`, `artwork_publications`, `artwork_operations`,
+`resource_cleanup_jobs`),
 `auth_users.json` (id↔email map only — never credentials), one
 `storage_<bucket>.json` manifest per bucket, `schema_migrations.json`, and
 `manifest.json` with row counts and a sha256 per file. Verify the manifest
@@ -64,15 +65,33 @@ key) and re-upload verbatim after.
 ```bash
 SUPABASE_URL=http://127.0.0.1:54321 SUPABASE_SERVICE_ROLE_KEY=... \
   node --import tsx scripts/restore-cloud.ts --in backups/<dir>
-# Add --dry-run first on any real target: prints the remap plan, writes nothing.
+# Add --dry-run first: validates the manifest and prints the row plan without
+# querying or mutating the target. UUID remaps are known only during restore.
 ```
 
-The script imports auth identities first (GoTrue admin; passwordless
+Dry-run does not contact the target or write a remap file. A real restore
+imports auth identities first (GoTrue admin; passwordless
 project — users sign in with a fresh OTP afterwards), emits
 `uuid-remap.json` for every identity that was re-keyed, and rewrites every
 `owner_id`/`user_id`/`created_by` reference through the remap before
 inserting rows in FK order. It finishes with per-table row counts
 (backup vs target).
+
+Formula lifecycle rows use a two-phase restore because formulas and revisions
+form a circular foreign-key graph. The first phase inserts formulas with both
+head pointers cleared, then inserts revisions; the second phase restores each
+formula's head pointers and requires an exact returned representation. The
+database runnable-head trigger remains enabled throughout.
+
+The revision table grants `service_role` only `SELECT` for backup. It grants
+neither direct `INSERT`, `UPDATE`, nor `DELETE`; restore inserts each ordered
+revision through the narrow restore RPC, and normal application lifecycle
+writes continue through the gated writer RPC.
+
+Snapshots created before migration `20260816090000` legitimately omit
+`custom_formula_revisions.json` and remain restorable. Once that migration
+appears in `schema_migrations.json`, the restore treats a missing revisions
+payload as corruption and aborts rather than silently losing lifecycle data.
 
 4. Verify: `npm run db:preflight -- --local` (or `--linked`), the row
    counts printed by the restore, and one OTP login smoke per restored

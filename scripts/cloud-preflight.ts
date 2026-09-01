@@ -26,6 +26,8 @@ import { execFileSync } from 'node:child_process';
 import { readdirSync } from 'node:fs';
 import { join } from 'node:path';
 
+import { parseAppliedMigrationVersions } from './cloud-migration-parity';
+
 import { CLOUD_SERVER_ONLY_VARIABLES } from '../src/lib/cloud/config';
 
 const REQUIRED_WHEN_ENABLED = [
@@ -127,18 +129,11 @@ function checkSchemaParity(target: 'local' | 'linked'): boolean {
       .join('\n'),
   );
 
-  // The CLI table merges repo files into the output: the Local column is the
-  // version of every migration FILE, the Remote column is the version
-  // actually APPLIED on the target database (empty when unapplied). Only the
-  // Remote column may count as "applied" — trusting the Local column makes
-  // drift undetectable (verified against CLI 2.111.0).
-  const appliedVersions = new Set<string>();
-  for (const line of out.split('\n')) {
-    const row = line.match(/`([^`]*)`\s*\|\s*`([^`]*)`/);
-    if (!row) continue;
-    const applied = row[2].trim();
-    if (/^\d{14}$/.test(applied)) appliedVersions.add(applied);
-  }
+  // CLI 2.111.0 can return either its historical backtick table or a wrapper
+  // JSON payload. Both formats merge repo files and applied history; only the
+  // Remote field/column may count as applied. Trusting Local makes drift
+  // undetectable.
+  const appliedVersions = parseAppliedMigrationVersions(out);
   const missing = repoVersions.filter((v) => !appliedVersions.has(v));
   const extra = [...appliedVersions].filter((v) => !repoVersions.includes(v));
   if (missing.length > 0) {

@@ -3,8 +3,9 @@
  * byte the web creation loop owns, in a form a fresh project can re-ingest.
  *
  * What is exported (per docs/runbooks/cloud-backup-recovery.md):
- *  - public.profiles, artwork_drafts, artwork_publications,
- *    artwork_operations, resource_cleanup_jobs
+ *  - public.profiles, artwork_drafts, custom_formulas,
+ *    custom_formula_revisions, artwork_publications, artwork_operations,
+ *    resource_cleanup_jobs
  *                                   (durable rows, original ids preserved)
  *  - auth identities          (id <-> email map for the UUID-remap path;
  *    credentials themselves only ever live in platform backups)
@@ -56,6 +57,7 @@ const TABLES: ReadonlyArray<readonly [table: string, orderBy: string]> = [
   ['profiles', 'user_id'],
   ['artwork_drafts', 'id'],
   ['custom_formulas', 'id'],
+  ['custom_formula_revisions', 'formula_id, revision'],
   ['artwork_publications', 'id'],
   ['artwork_operations', 'id'],
   // The cleanup-job audit trail is durable history; rate_limit_counters is
@@ -94,15 +96,22 @@ async function postgrestTable(table: string, orderBy: string): Promise<BackupRow
   const { url, key } = postgrestConfig();
   const rows: BackupRow[] = [];
   const PAGE = 1000;
+  const order = orderBy
+    .split(',')
+    .map((column) => `${column.trim()}.asc`)
+    .join(',');
   for (;;) {
-    const res = await fetch(`${url}/rest/v1/${table}?select=*&order=${orderBy}.asc`, {
+    const res = await fetch(
+      `${url}/rest/v1/${table}?select=*&order=${encodeURIComponent(order)}`,
+      {
       headers: {
         apikey: key,
         authorization: `Bearer ${key}`,
         'range-unit': 'items',
         range: `${rows.length}-${rows.length + PAGE - 1}`,
       },
-    });
+      },
+    );
     if (!res.ok) throw new Error(`postgrest ${table} -> ${res.status}`);
     const batch = (await res.json()) as BackupRow[];
     rows.push(...batch);
@@ -197,10 +206,10 @@ async function managementSql<T>(sql: string): Promise<T[]> {
   return (await res.json()) as T[];
 }
 
-async function managementTable(table: string): Promise<BackupRow[]> {
-  return managementSql<BackupRow>(`select row_to_json(t) as row from public.${table} t`).then((rows) =>
-    rows.map((r) => r.row as BackupRow),
-  );
+async function managementTable(table: string, orderBy: string): Promise<BackupRow[]> {
+  return managementSql<BackupRow>(
+    `select row_to_json(t) as row from (select * from public.${table} order by ${orderBy}) t`,
+  ).then((rows) => rows.map((r) => r.row as BackupRow));
 }
 
 async function managementAuthUsers(): Promise<BackupRow[]> {
@@ -217,7 +226,7 @@ async function managementStorageList(bucket: string): Promise<BackupRow[]> {
 
 async function managementMigrations(): Promise<BackupRow[]> {
   return managementSql<BackupRow>(
-    `select row_to_json(t) as row from supabase_migrations.schema_migrations t`,
+    `select row_to_json(t) as row from (select * from supabase_migrations.schema_migrations order by version) t`,
   ).then((rows) => rows.map((r) => r.row as BackupRow));
 }
 
@@ -244,7 +253,9 @@ async function main(): Promise<void> {
 
   for (const [table, orderBy] of TABLES) {
     await dump(table, () =>
-      MODE === 'management' ? managementTable(table) : postgrestTable(table, orderBy),
+      MODE === 'management'
+        ? managementTable(table, orderBy)
+        : postgrestTable(table, orderBy),
     );
   }
   await dump('auth_users', () => (MODE === 'management' ? managementAuthUsers() : postgrestAuthUsers()));
