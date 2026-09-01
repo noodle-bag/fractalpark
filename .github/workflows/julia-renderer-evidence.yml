@@ -18,7 +18,10 @@ on:
       - "src/test/julia-*.test.ts"
       - "scripts/build-julia-*.ts"
       - "scripts/run-julia-tier2-webgl-worker.ts"
+      - "scripts/run-julia-tier2-webgl-worker-v2.ts"
+      - "scripts/run-julia-classic-regression-tier2-webgl-worker-v1.ts"
       - "scripts/verify-julia-tier2-webgl.ts"
+      - "scripts/verify-julia-activation-webgl1-release.ts"
       - "package.json"
       - "package-lock.json"
       - "tsconfig.json"
@@ -27,6 +30,9 @@ on:
 
 permissions:
   contents: read
+
+env:
+  FRACTALPARK_RELEASE_CANDIDATE_SHA: ${{ github.event.pull_request.head.sha || github.sha }}
 
 jobs:
   julia-renderer-evidence:
@@ -79,3 +85,61 @@ jobs:
           path: /tmp/julia-renderer-reports
       - run: npx tsx scripts/build-julia-renderer-evidence.ts /tmp/julia-renderer-reports
       - run: npx tsx scripts/build-julia-final-capability-census.ts
+
+  julia-activation-webgl1-release:
+    runs-on: ubuntu-latest
+    timeout-minutes: 120
+    strategy:
+      fail-fast: false
+      matrix:
+        shard:
+          - { lane: main, start: 0, count: 45 }
+          - { lane: main, start: 45, count: 45 }
+          - { lane: main, start: 90, count: 45 }
+          - { lane: main, start: 135, count: 44 }
+          - { lane: corrective, start: 0, count: 7 }
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ env.FRACTALPARK_RELEASE_CANDIDATE_SHA }}
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+      - run: npm ci
+      - run: npx playwright install --with-deps chromium
+      - name: Verify exact activation partition
+        run: npx tsx scripts/verify-julia-activation-webgl1-release.ts
+      - name: Run Julia activation WebGL1 release shard
+        run: >-
+          npx tsx scripts/verify-julia-activation-webgl1-release.ts
+          --lane=${{ matrix.shard.lane }}
+          --start=${{ matrix.shard.start }}
+          --limit=${{ matrix.shard.count }}
+          --report=/tmp/julia-activation-webgl1-${{ matrix.shard.lane }}-${{ matrix.shard.start }}.json
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: julia-activation-webgl1-${{ matrix.shard.lane }}-${{ matrix.shard.start }}
+          path: /tmp/julia-activation-webgl1-${{ matrix.shard.lane }}-${{ matrix.shard.start }}.json
+          if-no-files-found: error
+
+  julia-activation-webgl1-coverage:
+    needs: julia-activation-webgl1-release
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ env.FRACTALPARK_RELEASE_CANDIDATE_SHA }}
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+      - run: npm ci
+      - uses: actions/download-artifact@v4
+        with:
+          pattern: julia-activation-webgl1-*
+          path: /tmp/julia-activation-webgl1-reports
+      - run: >-
+          npx tsx scripts/verify-julia-activation-webgl1-release.ts
+          --verify-report-dir=/tmp/julia-activation-webgl1-reports

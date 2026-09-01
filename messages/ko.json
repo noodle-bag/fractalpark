@@ -256,8 +256,8 @@
       "breadcrumb": "수식",
       "eyebrow": "수식 아틀라스",
       "title": "수식 아틀라스",
-      "publishedIntro": "일곱 구조 패밀리에 속한 공개 Standard Definition 534개를 살펴보세요. Classic은 이들과 겹치는 수식 94개의 컬렉션이에요. 정식 Formula Record를 열거나 심층 가이드 Profile 21개 중 하나를 따라가거나, FRM 소스의 작동 방식을 배우고 알맞은 작성 도구를 선택하세요.",
-      "intro": "일곱 패밀리에 걸친 FractalPark 내장 Explorer 수식 94개를 살펴보세요. 정식 뷰에서 시작하거나 심층 가이드 Profile 21개 중 하나를 따라가거나, FRM 소스의 작동 방식을 배우고 알맞은 작성 도구를 선택하세요.",
+      "publishedIntro": "일곱 구조 패밀리에 속한 공개 Standard Definition 534개를 살펴보세요. 이 중 94개는 Classic 컬렉션에도 속해요. 정식 Formula Record를 열거나 심층 가이드 Profile 21개 중 하나를 따라가거나, FRM 소스의 작동 방식을 배우고 알맞은 작성 도구를 선택하세요.",
+      "intro": "일곱 구조 패밀리에 속한 공개 Standard Definition 534개를 살펴보세요. 이 중 94개는 Classic 컬렉션에도 속해요. 정식 Formula Record를 열거나 심층 가이드 Profile 21개 중 하나를 따라가거나, FRM 소스의 작동 방식을 배우고 알맞은 작성 도구를 선택하세요.",
       "stats": {
         "formulas": "수식",
         "families": "패밀리",
@@ -1884,9 +1884,9 @@
     "landing": {
       "heading": "FractalPark: 브라우저에서 만나는 오픈소스 프랙탈 생성기",
       "whatIsHeading": "FractalPark이란 무엇인가요?",
-      "whatIsAnswer": "FractalPark은 WebGL로 브라우저에서 전부 렌더링되는 무료 오픈소스(MIT) 프랙탈 지식·창작 플랫폼이에요. 내장 수식 {formulaCount}개, 공개된 FRM-like v1 소스, Classic-compatible FRM Editor 워크플로, 고해상도 PNG 내보내기를 제공해요. 제작에는 계정이 필요 없고, 작품과 수식 저장에는 이메일 로그인과 비공개 클라우드 라이브러리를 사용해요.",
+      "whatIsAnswer": "FractalPark은 WebGL로 브라우저에서 전부 렌더링되는 무료 오픈소스(MIT) 프랙탈 지식·창작 플랫폼이에요. {formulaFamilyCount}개 구조 패밀리에 걸친 공개 Standard Definition {formulaCount}개(이 중 {classicFormulaCount}개는 Classic 컬렉션에도 속함), 공개된 FRM-like v1 소스, Classic-compatible FRM Editor 워크플로, 고해상도 PNG 내보내기를 제공해요. 제작에는 계정이 필요 없고, 작품과 수식 저장에는 이메일 로그인과 비공개 클라우드 라이브러리를 사용해요.",
       "capabilitiesHeading": "핵심 기능",
-      "capabilitiesIntro": "{formulaFamilyCount}개 패밀리에 걸친 수식 {formulaCount}개 · 심층 Formula Guide {formulaGuideCount}개 · 변환 {transformCount}개 · 컬러링 모드 {coloringModeCount}개 · 공유 가능한 URL · 최대 {maxExportScale}× PNG 내보내기",
+      "capabilitiesIntro": "{formulaFamilyCount}개 구조 패밀리에 걸친 공개 Standard Definition {formulaCount}개 · 이 중 Classic 컬렉션에도 속하는 정의 {classicFormulaCount}개 · 심층 Formula Guide {formulaGuideCount}개 · 변환 {transformCount}개 · 컬러링 모드 {coloringModeCount}개 · 공유 가능한 URL · 최대 {maxExportScale}× PNG 내보내기",
       "linksHeading": "계속 탐색하기",
       "links": {
         "formulas": "Formula Atlas — 모든 수식의 수학, 역사, 라이브 예제",
@@ -1981,9 +1981,9 @@
   "metadata": {
     "explore": {
       "title": "FractalPark — 오픈소스 브라우저 프랙탈 생성기",
-      "description": "브라우저에서 실행되는 오픈소스·수식 중심 프랙탈 지식·창작 플랫폼: 내장 수식 94개, 실시간 WebGL 렌더링, 공개된 FRM-like v1 소스, Classic-compatible FRM Editor, 고해상도 PNG 내보내기.",
+      "description": "브라우저에서 실행되는 오픈소스·수식 중심 프랙탈 지식·창작 플랫폼: 7개 구조 패밀리에 걸친 공개 Standard Definition 534개(이 중 94개는 Classic 컬렉션에도 속함), 실시간 WebGL 렌더링, 공개된 FRM-like v1 소스, Classic-compatible FRM Editor, 고해상도 PNG 내보내기.",
       "ogTitle": "FractalPark — 브라우저에서 만나는 오픈소스 프랙탈 아트",
-      "ogDescription": "브라우저에서 프랙탈 아트를 만드세요: 수식 94개, 실시간 WebGL 렌더링, 공개된 FRM-like v1 소스, Classic-compatible FRM Editor, 고해상도 PNG 내보내기."
+      "ogDescription": "브라우저에서 7개 구조 패밀리에 걸친 공개 Standard Definition 534개(이 중 94개는 Classic 컬렉션에도 속함), 실시간 WebGL 렌더링, 공개된 FRM-like v1 소스, Classic-compatible FRM Editor, 고해상도 PNG 내보내기로 프랙탈 아트를 만드세요."
     },
     "gallery": {
       "title": "내 갤러리 | 나만의 프랙탈 컬렉션 - FractalPark",
@@ -1991,12 +1991,12 @@
     },
     "about": {
       "title": "소개 | 오픈소스 브라우저 프랙탈 생성기 - FractalPark",
-      "description": "WebGL, 94개 수식, 커스텀 팔레트, PNG 내보내기를 갖춘 오픈소스 MIT 라이선스 브라우저 프랙탈 생성기 FractalPark을 알아보세요."
+      "description": "FractalPark은 읽고 실행할 수 있는 공개 수식 소스와 구별되는 Classic-compatible 수식 Editor를 갖춘 오픈소스 수식 중심 프랙탈 지식·창작 플랫폼이에요."
     },
     "formulaAtlas": {
       "title": "Formula Atlas | 공개 수식 534개 - FractalPark",
-      "publishedDescription": "일곱 구조 패밀리의 공개 Standard Definition 534개와 중첩된 Classic 컬렉션을 살펴보고, Guide Profile 21개를 탐색하며, FRM 소스의 작동 방식을 배우고 정식 Formula Record를 여세요.",
-      "description": "일곱 패밀리의 FractalPark 수식 94개를 모두 살펴보고, 엄선된 Guide Profile 21개를 탐색하며, FRM 소스의 작동 방식을 배우고 WebGL Explorer에서 정식 수식 상태를 여세요.",
+      "publishedDescription": "일곱 구조 패밀리의 공개 Standard Definition 534개(이 중 94개는 Classic 컬렉션에도 속함)를 살펴보고, Guide Profile 21개를 탐색하며, FRM 소스의 작동 방식을 배우고 정식 Formula Record를 여세요.",
+      "description": "일곱 구조 패밀리의 공개 Standard Definition 534개(이 중 94개는 Classic 컬렉션에도 속함)를 살펴보고, Guide Profile 21개를 탐색하며, FRM 소스의 작동 방식을 배우고 정식 Formula Record를 여세요.",
       "imageAlt": "공개 수식 534개가 담긴 FractalPark Formula Atlas"
     },
     "frmEditor": {
@@ -2017,7 +2017,7 @@
   },
   "about": {
     "title": "FractalPark 소개",
-    "aiDescription": "FractalPark은 실시간 GPU 렌더링에 WebGL을 사용하는 오픈소스 MIT 라이선스 브라우저 기반 프랙탈 아트 생성기예요. 내장 escape-time 수식 94개, 고정된 FRM-like v1 소스를 가진 공개된 Standard Definition 534개, 별도의 Classic-compatible 사용자 수식 Editor, UV 변환 플러그인 7개, 색칠 모드 9개, 고해상도 PNG 내보내기를 갖춰요. Next.js 16, React 19, TypeScript 5, Tailwind CSS로 제작되었고, 렌더링 엔진은 플러그인 기반 동적 GLSL 조립과 LRU 캐싱을 사용해요.",
+    "aiDescription": "FractalPark은 실시간 GPU 렌더링에 WebGL을 사용하는 오픈소스 MIT 라이선스 브라우저 프랙탈 생성기예요. 7개 구조 패밀리에 걸친 공개 Standard Definition 534개(이 중 94개는 Classic 컬렉션에도 속함), Formula Guide 21개, 공개된 FRM-like v1 소스, AST-to-GLSL 트랜스파일을 갖춘 구별되는 Classic-compatible FRM Editor, UV 변환 플러그인 7개, 색칠 모드 9개, 공유 가능한 URL, 작품과 수식용 이메일 로그인 클라우드 라이브러리, 커뮤니티 게시, 최대 4x 고해상도 PNG 내보내기를 제공해요. Next.js, React, TypeScript로 제작되었어요.",
     "techStack": {
       "title": "기술 스택",
       "description": "Next.js, WebGL, TypeScript로 제작됐어요. GPU 셰이더 기반의 실시간 프랙탈 렌더링을 제공해요.",
@@ -2040,17 +2040,17 @@
   },
   "publicProject": {
     "tagline": "FractalPark은 읽고 실행할 수 있는 공개 수식 소스와 구별되는 Classic-compatible 수식 Editor를 갖춘 오픈소스 수식 중심 프랙탈 지식·창작 플랫폼이에요.",
-    "definition": "FractalPark은 프랙탈 아트를 탐색, 학습, 창작하는 무료 오픈소스(MIT) WebGL 애플리케이션이에요. 내장 수식 {formulaCount}개를 {formulaFamilyCount}개 패밀리에 걸쳐 제공하고, 심층 Formula Guide {formulaGuideCount}개, 공개된 FRM-like v1 소스, Classic-compatible 독립형 FRM Editor, 커뮤니티 Gallery를 제공해요. 렌더링은 브라우저에서 실행되고 작품과 수식 저장에는 이메일 로그인과 비공개 클라우드 라이브러리를 사용해요.",
-    "aiDescription": "FractalPark은 실시간 GPU 렌더링에 WebGL을 사용하는 오픈소스 MIT 라이선스 브라우저 프랙탈 생성기예요. 내장 프랙탈 수식 {formulaCount}개를 {formulaFamilyCount}개 패밀리에 걸쳐 제공하고, Formula Guide {formulaGuideCount}개, 공개된 FRM-like v1 소스, AST-to-GLSL 트랜스파일을 갖춘 구별되는 Classic-compatible FRM Editor, UV 변환 플러그인 {transformCount}개, 색칠 모드 {coloringModeCount}개, 공유 가능한 URL, 작품과 수식용 이메일 로그인 클라우드 라이브러리, 커뮤니티 게시, 최대 {maxExportScale}x 고해상도 PNG 내보내기를 제공해요. Next.js, React, TypeScript로 제작되었어요.",
+    "definition": "FractalPark은 프랙탈 아트를 탐색, 학습, 창작하는 무료 오픈소스(MIT) WebGL 애플리케이션이에요. {formulaFamilyCount}개 구조 패밀리에 걸친 공개 Standard Definition {formulaCount}개(이 중 {classicFormulaCount}개는 Classic 컬렉션에도 속함), 심층 Formula Guide {formulaGuideCount}개, 공개된 FRM-like v1 소스, Classic-compatible 독립형 FRM Editor, 커뮤니티 Gallery를 제공해요. 렌더링은 브라우저에서 실행되고 작품과 수식 저장에는 이메일 로그인과 비공개 클라우드 라이브러리를 사용해요.",
+    "aiDescription": "FractalPark은 실시간 GPU 렌더링에 WebGL을 사용하는 오픈소스 MIT 라이선스 브라우저 프랙탈 생성기예요. {formulaFamilyCount}개 구조 패밀리에 걸친 공개 Standard Definition {formulaCount}개(이 중 {classicFormulaCount}개는 Classic 컬렉션에도 속함), Formula Guide {formulaGuideCount}개, 공개된 FRM-like v1 소스, AST-to-GLSL 트랜스파일을 갖춘 구별되는 Classic-compatible FRM Editor, UV 변환 플러그인 {transformCount}개, 색칠 모드 {coloringModeCount}개, 공유 가능한 URL, 작품과 수식용 이메일 로그인 클라우드 라이브러리, 커뮤니티 게시, 최대 {maxExportScale}x 고해상도 PNG 내보내기를 제공해요. Next.js, React, TypeScript로 제작되었어요.",
     "capabilitiesHeading": "지금 할 수 있는 것",
     "capabilities": {
       "discover": {
         "title": "수식 탐색",
-        "summary": "Formula Atlas를 둘러보세요: 7개 패밀리에 걸친 내장 수식 94개와, 고전 수식들의 수학·역사·시각적 특징을 다루는 심층 Formula Guide 21개가 있어요."
+        "summary": "Formula Atlas를 둘러보세요: 7개 구조 패밀리에 걸친 공개 Standard Definition 534개(이 중 94개는 Classic 컬렉션에도 속함), 그리고 고전 수식의 수학·역사·시각적 특징을 다루는 심층 Formula Guide 21개가 있어요."
       },
       "create": {
         "title": "브라우저에서 창작",
-        "summary": "WebGL로 실시간 탐색과 렌더링을 즐겨보세요: 모든 수식의 만델브로·줄리아 모드, 변환 7개, 컬러링 모드 9개, 그라디언트, 조명, 키프레임 애니메이션을 지원해요."
+        "summary": "WebGL로 실시간 탐색과 렌더링을 즐겨보세요: 공개 Standard Definition 534개 전체의 Mandelbrot 모드, 지원되는 Definition의 Julia 모드, 변환 7개, 컬러링 모드 9개, 그라디언트, 조명, 키프레임 애니메이션을 지원해요."
       },
       "authorFrm": {
         "title": "FRM 배우기와 사용자 수식 작성하기",

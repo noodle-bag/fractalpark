@@ -1,5 +1,27 @@
 # Changelog
 
+## 0.4.19 - Unreleased
+
+Unified Formula Library: FractalPark now publishes a source-readable Standard catalog while keeping the existing Classic runtime as an explicit overlapping collection rather than the public total.
+
+### Added
+
+- Added 534 published Standard Definitions with pinned FRM-like v1 source, default Profiles, Record pages, and deterministic previews; unavailable catalog identities expose no runnable action.
+- Added the Formula Atlas and server-rendered directory with exact category membership, 21 in-depth Guides, seven-locale Record metadata, canonical URLs, hreflang, JSON-LD, and sitemap coverage for the published set.
+- Added source/remix workspaces, lazy runtime loading, Julia activation behind fail-closed release verification, and cloud-backed Mine formula lifecycle paths behind fail-closed writer gates.
+- Added release-grade publication-isolation, source-derived Record image, performance, rights, rollback-floor, Guide/SEO, old-URL, and Julia verification gates.
+
+### Changed
+
+- Public product facts now distinguish all 534 published Standard Definitions from the overlapping 94-formula Classic collection instead of presenting Classic as the complete catalog.
+- Formula discovery, Record navigation, Guide routing, source actions, and published-library selection now share the same revision-4 publication decision ledger.
+- Record previews now cover all 534 published Definitions; 43 accepted deviations remain explicitly policy-bound instead of being hidden or relabeled as anomaly-free.
+
+### Fixed
+
+- Restored four held Guide identities only after source, runtime, preview, route, SEO, localization, and maintainer-review closure, bringing the public Guide count to 21 without exposing held content.
+- Closed stale source-binding and rollback-evidence hashes after the final CI/release workflow wiring while preserving real-device, screen-reader, and deployed rollback evidence as fail-closed release requirements.
+
 ## 0.4.18 - 2026-08-14
 
 Trusted classic FRM compatibility: one versioned compiler path now preserves existing v1 visuals while making strict v2 semantics explicit, inspectable, and reversible.

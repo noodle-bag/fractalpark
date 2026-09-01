@@ -2,6 +2,12 @@ import { readFileSync } from 'node:fs';
 import { join } from 'node:path';
 import { describe, expect, it } from 'vitest';
 
+import { PUBLIC_PROJECT } from '@/content/public-project';
+import {
+  CLASSIC_FORMULA_COUNT_V1,
+  PUBLISHED_FORMULA_DIRECTORY_COUNT_V1,
+  PUBLISHED_FORMULA_GUIDE_COUNT_V1,
+} from '@/content/published-formula-directory';
 import { SITE } from '@/lib/site';
 
 interface PackageMetadata {
@@ -21,12 +27,25 @@ describe('release-candidate version facts', () => {
     const lock = readJson<LockMetadata>('package-lock.json');
     const changelog = readFileSync(join(process.cwd(), 'CHANGELOG.md'), 'utf8');
 
-    expect(pkg.version).toBe('0.4.18');
+    expect(pkg.version).toBe('0.4.19');
     expect(lock.version).toBe(pkg.version);
     expect(lock.packages['']?.version).toBe(pkg.version);
     expect(SITE.version).toBe(pkg.version);
     expect(changelog).toMatch(
       new RegExp(`^## ${pkg.version.replace(/\./g, '\\.')}(?: -|$)`, 'm'),
+    );
+  });
+
+  it('publishes the exact Standard, Classic, and Guide facts without collapsing them', () => {
+    expect(SITE.formulaCount).toBe(PUBLISHED_FORMULA_DIRECTORY_COUNT_V1);
+    expect(PUBLIC_PROJECT.facts.formulaCount).toBe(
+      PUBLISHED_FORMULA_DIRECTORY_COUNT_V1,
+    );
+    expect(PUBLIC_PROJECT.facts.classicFormulaCount).toBe(
+      CLASSIC_FORMULA_COUNT_V1,
+    );
+    expect(PUBLIC_PROJECT.facts.formulaGuideCount).toBe(
+      PUBLISHED_FORMULA_GUIDE_COUNT_V1,
     );
   });
 

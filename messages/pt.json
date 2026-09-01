@@ -256,8 +256,8 @@
       "breadcrumb": "Fórmulas",
       "eyebrow": "Atlas de Fórmulas",
       "title": "Atlas de Fórmulas",
-      "publishedIntro": "Explore 534 Standard Definitions publicadas em sete famílias estruturais, com Classic como uma coleção sobreposta de 94 fórmulas. Abra Formula Records canônicos, siga um dos 21 perfis de guia aprofundados ou aprenda como funciona o código-fonte FRM e escolha a superfície de autoria correspondente.",
-      "intro": "Explore as 94 fórmulas integradas do Explorer do FractalPark em sete famílias. Comece com uma visualização canônica, siga um dos 21 perfis de guia aprofundados ou aprenda como funciona o código-fonte FRM e escolha a superfície de autoria correspondente.",
+      "publishedIntro": "Explore 534 definições padrão publicadas em sete famílias estruturais; 94 delas também pertencem à coleção Classic. Abra Formula Records canônicos, siga um dos 21 perfis de guia aprofundados ou aprenda como funciona o código-fonte FRM e escolha a superfície de autoria correspondente.",
+      "intro": "Explore 534 definições padrão publicadas em sete famílias estruturais; 94 delas também pertencem à coleção Classic. Abra Formula Records canônicos, siga um dos 21 perfis de guia aprofundados ou aprenda como funciona o código-fonte FRM e escolha a superfície de autoria correspondente.",
       "stats": {
         "formulas": "Fórmulas",
         "families": "Famílias",
@@ -1884,9 +1884,9 @@
     "landing": {
       "heading": "FractalPark: gerador de fractais open-source no seu navegador",
       "whatIsHeading": "O que é o FractalPark?",
-      "whatIsAnswer": "FractalPark é uma plataforma gratuita, open-source (MIT), de conhecimento e criação de fractais que renderiza inteiramente no seu navegador com WebGL: {formulaCount} fórmulas integradas, código-fonte FRM-like v1 publicado, um fluxo de trabalho do Editor FRM compatível com Classic e exportação de PNG em alta resolução. Criar não exige conta; salvar obras e fórmulas usa login por e-mail e uma biblioteca privada na nuvem.",
+      "whatIsAnswer": "FractalPark é uma plataforma gratuita e open-source (MIT) de conhecimento e criação de fractais que renderiza inteiramente no seu navegador com WebGL: {formulaCount} definições padrão publicadas em {formulaFamilyCount} famílias estruturais, das quais {classicFormulaCount} também pertencem à coleção Classic; código-fonte FRM-like v1 publicado; um fluxo de trabalho do Editor FRM compatível com Classic; e exportação de PNG em alta resolução. Criar não exige conta; salvar obras e fórmulas usa login por e-mail e uma biblioteca privada na nuvem.",
       "capabilitiesHeading": "Principais recursos",
-      "capabilitiesIntro": "{formulaCount} fórmulas em {formulaFamilyCount} famílias · {formulaGuideCount} Guias de Fórmulas aprofundados · {transformCount} transformações · {coloringModeCount} modos de coloração · URLs compartilháveis · exportação de PNG de até {maxExportScale}×",
+      "capabilitiesIntro": "{formulaCount} definições padrão publicadas em {formulaFamilyCount} famílias estruturais · destas, {classicFormulaCount} também pertencem à coleção Classic · {formulaGuideCount} Guias de Fórmulas aprofundados · {transformCount} transformações · {coloringModeCount} modos de coloração · URLs compartilháveis · exportação de PNG de até {maxExportScale}×",
       "linksHeading": "Continue explorando",
       "links": {
         "formulas": "Atlas de Fórmulas — todas as fórmulas com matemática, história e exemplos ao vivo",
@@ -1981,9 +1981,9 @@
   "metadata": {
     "explore": {
       "title": "FractalPark — Gerador de fractais open-source no navegador",
-      "description": "Plataforma open-source de conhecimento e criação de fractais no seu navegador, com fórmulas em primeiro lugar: 94 fórmulas integradas, renderização WebGL em tempo real, código-fonte FRM-like v1 publicado, um Editor FRM compatível com Classic e exportação de PNG em alta resolução.",
+      "description": "Plataforma open-source de conhecimento e criação de fractais no seu navegador, com fórmulas em primeiro lugar: 534 definições padrão publicadas em 7 famílias estruturais, das quais 94 também pertencem à coleção Classic; renderização WebGL em tempo real; código-fonte FRM-like v1 publicado; um Editor FRM compatível com Classic; e exportação de PNG em alta resolução.",
       "ogTitle": "FractalPark — Arte fractal open-source no seu navegador",
-      "ogDescription": "Crie arte fractal no seu navegador: 94 fórmulas, renderização WebGL em tempo real, código-fonte FRM-like v1 publicado, um Editor FRM compatível com Classic e exportação de PNG em alta resolução."
+      "ogDescription": "Crie arte fractal no seu navegador com 534 definições padrão publicadas em 7 famílias estruturais, das quais 94 também pertencem à coleção Classic, renderização WebGL em tempo real, código-fonte FRM-like v1 publicado, um Editor FRM compatível com Classic e exportação de PNG em alta resolução."
     },
     "gallery": {
       "title": "Minha Galeria | Coleção Pessoal de Fractais - FractalPark",
@@ -1991,12 +1991,12 @@
     },
     "about": {
       "title": "Sobre | Gerador de Fractais Open Source no Navegador - FractalPark",
-      "description": "Conheça o FractalPark, um gerador de fractais open-source licenciado sob MIT que roda no navegador com WebGL, 94 fórmulas, paletas personalizadas e exportação de PNG."
+      "description": "FractalPark é uma plataforma open-source de conhecimento e criação de fractais, com fórmulas em primeiro lugar e código-fonte de fórmulas publicado que você pode ler e executar, além de um editor de fórmulas distinto compatível com Classic."
     },
     "formulaAtlas": {
       "title": "Atlas de Fórmulas | 534 Fórmulas Publicadas - FractalPark",
-      "publishedDescription": "Navegue por 534 Standard Definitions publicadas em sete famílias estruturais e pela coleção Classic sobreposta, explore 21 perfis de guia, aprenda como funciona o código-fonte FRM e abra Formula Records canônicos.",
-      "description": "Navegue pelas 94 fórmulas do FractalPark em sete famílias, explore 21 perfis de guia selecionados, aprenda como funciona o código-fonte FRM e abra estados canônicos de fórmulas no Explorer WebGL.",
+      "publishedDescription": "Navegue por 534 definições padrão publicadas em sete famílias estruturais, das quais 94 também pertencem à coleção Classic; explore 21 perfis de guia, aprenda como funciona o código-fonte FRM e abra Formula Records canônicos.",
+      "description": "Navegue por 534 definições padrão publicadas em sete famílias estruturais, das quais 94 também pertencem à coleção Classic; explore 21 perfis de guia, aprenda como funciona o código-fonte FRM e abra Formula Records canônicos.",
       "imageAlt": "Atlas de Fórmulas do FractalPark com 534 fórmulas publicadas"
     },
     "frmEditor": {
@@ -2017,7 +2017,7 @@
   },
   "about": {
     "title": "Sobre o FractalPark",
-    "aiDescription": "FractalPark é um gerador de arte fractal open-source, licenciado sob MIT e baseado em navegador, que usa WebGL para renderização em tempo real na GPU. Ele inclui 94 fórmulas integradas de tempo de escape, 534 Standard Definition publicadas com código-fonte FRM-like v1 fixado, um Editor separado de fórmulas personalizadas compatível com Classic, 7 plugins de transformação UV, 9 modos de coloração e exportação de PNG em alta resolução. Construído com Next.js 16, React 19, TypeScript 5 e Tailwind CSS, seu mecanismo de renderização usa montagem GLSL dinâmica baseada em plugins e cache LRU.",
+    "aiDescription": "FractalPark é um gerador de fractais open-source, licenciado sob MIT e baseado em navegador, que usa WebGL para renderização em tempo real na GPU. Ele inclui 534 definições padrão publicadas em 7 famílias estruturais, das quais 94 também pertencem à coleção Classic; 21 Guias de Fórmulas; código-fonte FRM-like v1 publicado; um Editor FRM distinto compatível com Classic com transpilação de AST para GLSL; 7 plugins de transformação UV; 9 modos de coloração; URLs compartilháveis; uma biblioteca na nuvem com login por e-mail para obras e fórmulas; publicação na comunidade; e exportação de PNG em alta resolução de até 4x. Construído com Next.js, React e TypeScript.",
     "techStack": {
       "title": "Tecnologia",
       "description": "Construído com Next.js, WebGL e TypeScript. Renderização de fractais em tempo real alimentada por shaders de GPU.",
@@ -2040,17 +2040,17 @@
   },
   "publicProject": {
     "tagline": "FractalPark é uma plataforma open-source de conhecimento e criação de fractais, com fórmulas em primeiro lugar e código-fonte de fórmulas publicado que você pode ler e executar, além de um editor de fórmulas distinto compatível com Classic.",
-    "definition": "FractalPark é um aplicativo WebGL gratuito e open-source (MIT) para explorar, aprender e criar arte fractal. Ele oferece {formulaCount} fórmulas integradas em {formulaFamilyCount} famílias, {formulaGuideCount} Guias de Fórmulas aprofundados, código-fonte FRM-like v1 publicado, um Editor FRM independente compatível com Classic e uma Galeria da comunidade. A renderização é executada no seu navegador; salvar obras e fórmulas usa login por e-mail e uma biblioteca privada na nuvem.",
-    "aiDescription": "FractalPark é um gerador de fractais open-source, licenciado sob MIT e baseado em navegador, que usa WebGL para renderização em tempo real na GPU. Ele inclui {formulaCount} fórmulas de fractais integradas em {formulaFamilyCount} famílias, {formulaGuideCount} Guias de Fórmulas, código-fonte FRM-like v1 publicado, um Editor FRM distinto compatível com Classic com transpilação de AST para GLSL, {transformCount} plugins de transformação UV, {coloringModeCount} modos de coloração, URLs compartilháveis, uma biblioteca na nuvem com login por e-mail para obras e fórmulas, publicação na comunidade e exportação de PNG em alta resolução de até {maxExportScale}x. Construído com Next.js, React e TypeScript.",
+    "definition": "FractalPark é um aplicativo WebGL gratuito e open-source (MIT) para explorar, aprender e criar arte fractal. Ele oferece {formulaCount} definições padrão publicadas em {formulaFamilyCount} famílias estruturais, das quais {classicFormulaCount} também pertencem à coleção Classic; {formulaGuideCount} Guias de Fórmulas aprofundados; código-fonte FRM-like v1 publicado; um Editor FRM independente compatível com Classic; e uma Galeria da comunidade. A renderização é executada no seu navegador; salvar obras e fórmulas usa login por e-mail e uma biblioteca privada na nuvem.",
+    "aiDescription": "FractalPark é um gerador de fractais open-source, licenciado sob MIT e baseado em navegador, que usa WebGL para renderização em tempo real na GPU. Ele inclui {formulaCount} definições padrão publicadas em {formulaFamilyCount} famílias estruturais, das quais {classicFormulaCount} também pertencem à coleção Classic; {formulaGuideCount} Guias de Fórmulas; código-fonte FRM-like v1 publicado; um Editor FRM distinto compatível com Classic com transpilação de AST para GLSL; {transformCount} plugins de transformação UV; {coloringModeCount} modos de coloração; URLs compartilháveis; uma biblioteca na nuvem com login por e-mail para obras e fórmulas; publicação na comunidade; e exportação de PNG em alta resolução de até {maxExportScale}x. Construído com Next.js, React e TypeScript.",
     "capabilitiesHeading": "O que você pode fazer hoje",
     "capabilities": {
       "discover": {
         "title": "Descubra fórmulas",
-        "summary": "Navegue pelo Atlas de Fórmulas: 94 fórmulas integradas em 7 famílias, com 21 Guias de Fórmulas aprofundados cobrindo a matemática, a história e o caráter visual dos clássicos."
+        "summary": "Navegue pelo Atlas de Fórmulas: 534 definições padrão publicadas em 7 famílias estruturais, das quais 94 também pertencem à coleção Classic, com 21 Guias de Fórmulas aprofundados sobre a matemática, a história e o caráter visual dos clássicos."
       },
       "create": {
         "title": "Crie no navegador",
-        "summary": "Explore e renderize em tempo real com WebGL: modos Mandelbrot e Julia para todas as fórmulas, 7 transformações, 9 modos de coloração, gradientes, iluminação e animação por keyframes."
+        "summary": "Explore e renderize em tempo real com WebGL: modo Mandelbrot para as 534 definições padrão publicadas, modo Julia quando compatível, 7 transformações, 9 modos de coloração, gradientes, iluminação e animação por keyframes."
       },
       "authorFrm": {
         "title": "Aprenda FRM e escreva fórmulas personalizadas",

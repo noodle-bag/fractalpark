@@ -6,14 +6,14 @@
     "resources/formula-library/v1/record-preview-gates.v1.json": "c13fed3f9373fde38080772e87560d62017356661170638cb16aeb3600989030",
     "public/formula-library/v1/runtime/published/index.json": "e912b1cb4ad884a6a021fd0d2683495e8ea61911d05c4135fbecaa335cade742",
     "resources/formula-library/v1/julia-runtime-activation.v1.json": "0aaf7e38ea019884bcc21a64d8fce2ffe9e835bc4a4ccd19ee3fdc872230e1d8",
-    "resources/formula-library/v1/record-preview-profiles.v1.json": "a638c0e140b9e623837ef8673d9ee48ba4569f2ed2738ef50acbf7382d75bee7",
+    "resources/formula-library/v1/record-preview-profiles.v1.json": "3e0878512e72aca34ba1c7518f2313e968f6c48ed068ff9d56a6f62e194ae4ec",
     "scripts/generate-formula-record-masters.ts": "14c5e3053f1257c28dd27b6c3d2cbfe6697087b017f0ed27b47a6bc5405aaf71",
     "scripts/run-formula-record-masters.ts": "59afbfd8275295fd2e48bd94418162e030bd98de7df645c354f4a13dafd32522",
     "src/engine/formulas/v1/published-adapter.ts": "a45251017b75ac9ab13357f1f39876a4619cd0e2906d390fc73b898d4f01c3dc",
     "src/engine/formulas/v1/julia-runtime-activation-v1.ts": "d34869164818c35e327ace30ac76fdf50f2a720c66440b081d962c4c54778b19",
     "src/engine/formulas/v1/record-preview-renderer.ts": "ed809591337300a18a3f2c72e3139559bf724963eeb03131f4b329fc39608d87",
     "src/engine/frm/v1-backend.ts": "076273190738b02622091bb31d0c30ef2a3fdd3edc82e573a1cebf5c541d1f67",
-    "package-lock.json": "e0b2fc48bafca283ed7a9c76dc821859d448632681d83af4882bdcf280ea1045"
+    "package-lock.json": "c7fb57104902f454d6dc1c29e776eebab2c19a26d98dc2253fef84058a033168"
   },
   "profileArtifactContentHash": "434071e7c6bee7b583b7c6fce45a3f9ed05a643b7cf80ca58aac9b0a52c39a5f",
   "browserVersion": "145.0.7632.6",

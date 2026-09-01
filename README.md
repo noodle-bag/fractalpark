@@ -12,8 +12,8 @@ Read pinned source for 534 published Standard Definitions. [Open the Standard Fo
 
 ## Available today
 
-- **Discover formulas** — Browse the Formula Atlas: 94 built-in formulas across 7 families, with 21 in-depth Formula Guides covering the math, history, and visual character of the classics.
-- **Create in the browser** — Explore and render in real time with WebGL: Mandelbrot and Julia modes for every formula, 7 transforms, 9 coloring modes, gradients, lighting, and keyframe animation.
+- **Discover formulas** — Browse the Formula Atlas: 534 published Standard Definitions across 7 structural families, of which 94 also belong to the Classic collection, with 21 in-depth Formula Guides covering the math, history, and visual character of the classics.
+- **Create in the browser** — Explore and render in real time with WebGL: Mandelbrot mode across the 534 published Standard Definitions, Julia mode where supported, 7 transforms, 9 coloring modes, gradients, lighting, and keyframe animation.
 - **Learn FRM and write custom formulas** — Write custom formulas in FractalPark's tested Classic-compatible FRM subset with the Guide and standalone Editor: AST validation, live GLSL preview, and clear diagnostics.
 - **Save and share** — Save artworks and custom formulas to your private cloud with email sign-in and pick them up on any device, publish pieces to the community gallery, or create anonymously and export high-resolution PNG images up to 4× with SSAA anti-aliasing.
 

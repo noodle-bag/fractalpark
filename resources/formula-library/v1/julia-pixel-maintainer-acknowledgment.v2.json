@@ -1,0 +1,115 @@
+{
+  "schema": "fractalpark-julia-pixel-maintainer-acknowledgment/v1",
+  "revision": 1,
+  "authority": {
+    "authorityState": "sealed",
+    "supersededBy": null,
+    "withdrawnBy": null
+  },
+  "status": "maintainer-approved",
+  "approvedAt": "2026-09-01T12:54:12+08:00",
+  "actorId": "fractalpark-maintainer",
+  "actorKind": "human-maintainer",
+  "actorRole": "maintainer",
+  "decision": "accept-v0.4.19-residual-boundary",
+  "targetVersion": "0.4.19",
+  "finalCensusContentHash": "054d97a7766dfbbbd890b53fa483a688662aac7e3c9e43e6adc7996ba31e33e6",
+  "predecessorAuthorityManifestContentHash": "95ddca1433c4e891064cfa4298d71012b07d5eadb9c60bfc705ba04645ac87f4",
+  "predecessorHandoffContentHash": "b28dceaa3d1f074647f92b23269f272c998654b39197a3118af400c23f305821",
+  "predecessorAuditContentHash": "0d4c6f4c3bd2a5256b795200426a24d0e31655a7e7a4897a12ffacb80d34f844",
+  "supportedClassicRowSetDigest": "e6b3eb7576cd9d752492b6e4f6e1017744d560ff1b3de1709c2ca3d29b669b96",
+  "supportedClassicRowCount": 195,
+  "regressionSetDigest": "edabd82d9fdc83d1173a01666fc1ed2a13a8039a193bfefe376a0ee96f8b236e",
+  "regressionCount": 11,
+  "acceptedResidualRows": [
+    {
+      "formulaId": "0beb26b1-80e9-5902-9c1c-99eeba6a9465",
+      "modeClass": "generalized-two-plane",
+      "finalStatus": "held",
+      "remediationLane": "identity-review"
+    },
+    {
+      "formulaId": "17eea2ca-49cc-5b0b-9608-28694fcde4eb",
+      "modeClass": "undetermined",
+      "finalStatus": "held",
+      "remediationLane": "identity-review"
+    },
+    {
+      "formulaId": "1bb379a2-3588-53f8-a3ab-e52021c78054",
+      "modeClass": "classic-julia",
+      "finalStatus": "blocked",
+      "remediationLane": "renderer-diagnosis"
+    },
+    {
+      "formulaId": "2037d212-b1c4-59f4-a773-90b627b1d7df",
+      "modeClass": "generalized-two-plane",
+      "finalStatus": "held",
+      "remediationLane": "identity-review"
+    },
+    {
+      "formulaId": "3d5c83f1-a31b-55d3-b0a9-c17cb5737d5e",
+      "modeClass": "generalized-two-plane",
+      "finalStatus": "held",
+      "remediationLane": "identity-review"
+    },
+    {
+      "formulaId": "573d8cb0-13e5-51e6-880d-a7c4fb4f5321",
+      "modeClass": "classic-julia",
+      "finalStatus": "blocked",
+      "remediationLane": "renderer-diagnosis"
+    },
+    {
+      "formulaId": "bcfe3aa5-28c4-5b45-b5db-44b29ef8055d",
+      "modeClass": "generalized-two-plane",
+      "finalStatus": "held",
+      "remediationLane": "identity-review"
+    },
+    {
+      "formulaId": "d81aaac8-9440-5241-95ab-5791f8fbb141",
+      "modeClass": "generalized-two-plane",
+      "finalStatus": "held",
+      "remediationLane": "identity-review"
+    },
+    {
+      "formulaId": "d8ed1025-8ccf-5424-b161-df178a36a0fa",
+      "modeClass": "generalized-two-plane",
+      "finalStatus": "held",
+      "remediationLane": "identity-review"
+    },
+    {
+      "formulaId": "da1b12b4-9d7d-5d69-b744-385ae5e4b577",
+      "modeClass": "generalized-two-plane",
+      "finalStatus": "held",
+      "remediationLane": "identity-review"
+    },
+    {
+      "formulaId": "fedcfb68-071a-5b21-9552-ac641af3ecce",
+      "modeClass": "generalized-two-plane",
+      "finalStatus": "held",
+      "remediationLane": "identity-review"
+    }
+  ],
+  "approvalStatement": "确认 current-candidate source rebind 后 exact-195 supported 与 exact-11 residual 的成员、状态和 digest 均未改变；只重绑 current source-closed final census，不授权执行激活、merge、部署或 Release。",
+  "residualDispositionResponse": "不弄了，跳过这11个",
+  "maintainerResponse": "签发新的 v2 acknowledgment：接受相同的 exact-195 / exact-11 边界，只重绑当前 source-closed final census；不授权激活、merge、部署或 Release",
+  "trustModel": {
+    "authorityRoot": "repository-governed-human-maintainer-decision",
+    "identityAssurance": "approval-observed-in-authenticated-project-session",
+    "cryptographicSignature": "not-provided-by-project-policy",
+    "threatBoundary": "detects stale or substituted receipt bytes; repository-maintainer compromise is out of scope"
+  },
+  "aiAssistanceDisclosure": "This source-rebound acknowledgment receipt and its machine closure were drafted with AI assistance by Ellie; the unchanged exact-195/exact-11 boundary and the limited rebind scope were explicitly approved by the human maintainer.",
+  "scope": {
+    "allows": [
+      "seal and commit/push the v0.4.19 source-rebound acknowledgment closure within Draft PR #20",
+      "preserve activation-eligible evidence for only the exact-195 supported classic rows, subject to separate activation authorization"
+    ],
+    "doesNotAllow": [
+      "change any formula membership, status, source, profile, renderer result, or residual disposition",
+      "execute activation or wire runtime/UI activation",
+      "mark the pull request ready, merge, or auto-merge",
+      "deploy or promote Production, run migrations, create a tag or Release, or submit IndexNow"
+    ]
+  },
+  "contentHash": "60adcbd55b0e360f5b743ddc3883fa681a93394d030f4176baa37fbf096cc4e2"
+}

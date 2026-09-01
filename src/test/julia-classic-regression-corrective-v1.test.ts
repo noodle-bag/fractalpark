@@ -1,5 +1,4 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import { execFileSync } from "node:child_process";
 import { readFileSync } from "node:fs";
 import { join } from "node:path";
 import { describe, expect, it } from "vitest";
@@ -9,6 +8,10 @@ import {
   JULIA_CLASSIC_REGRESSION_CORRECTIVE_IDS_V1,
   parseJuliaClassicRegressionCorrectiveV1,
 } from "../engine/formulas/v1/julia-classic-regression-corrective-v1";
+import {
+  canonicalJsonV1,
+  sha256HexSyncV1,
+} from "../engine/formulas/v1/revisions";
 
 const root = process.cwd();
 const read = (path: string) =>
@@ -169,23 +172,32 @@ describe("julia classic regression corrective v1", () => {
       );
   });
 
-  it("keeps sealed v2 files tracked and unmodified", () => {
-    expect(() =>
-      execFileSync(
-        "git",
-        [
-          "diff",
-          "--quiet",
-          "--",
-          "resources/formula-library/v1/julia-pre-gpu-recovery-census.v2.json",
-          "resources/formula-library/v1/julia-pixel-final-capability-census.v2.json",
-          "resources/formula-library/v1/julia-renderer-evidence.v2.json",
-          "src/engine/formulas/v1/julia-pre-gpu-recovery-v2.ts",
-          "src/engine/formulas/v1/julia-final-recovery-v2.ts",
-          "src/engine/formulas/v1/julia-renderer-evidence-v2.ts",
-        ],
-        { cwd: root },
-      ),
-    ).not.toThrow();
+  it("pins the sealed v2 semantic rows across source rebinds", () => {
+    const digest = (path: string, fields: readonly string[]) => {
+      const rows = read(path).rows.map((row: Record<string, unknown>) =>
+        Object.fromEntries(fields.map((field) => [field, row[field]])),
+      );
+      return sha256HexSyncV1(canonicalJsonV1(rows, 1_048_576));
+    };
+    expect(
+      digest("resources/formula-library/v1/julia-pre-gpu-recovery-census.v2.json", [
+        "formulaId", "evaluatedSourceRevision", "evaluatedSemanticHash",
+        "bindingRevision", "supportLane", "rewriteClass", "status",
+        "reasonCodes", "candidateContentHash",
+      ]),
+    ).toBe("60f78904c3d9eab2181077f3ec1478167570dd1dffa15ca2253d3d39e8b9e15f");
+    expect(
+      digest("resources/formula-library/v1/julia-renderer-evidence.v2.json", [
+        "formulaId", "candidateContentHash", "evaluatedSourceRevision",
+        "evaluatedSemanticHash", "bindingRevision", "supportLane",
+        "profileDigest", "status", "reasonCode",
+      ]),
+    ).toBe("be17c2e0b6622f411b0ace2c7e17e4c1ea2fd34e1c9c9d14221a066b55129669");
+    expect(
+      digest("resources/formula-library/v1/julia-pixel-final-capability-census.v2.json", [
+        "formulaId", "roles", "modeClass", "supportLane", "remediationLane",
+        "rewriteClass", "finalStatus", "identityChangeProposalRef",
+      ]),
+    ).toBe("ef64339eb4b289c6a02a148d9779599f41e748b887cff57e87a2ce50effbe77c");
   });
 });

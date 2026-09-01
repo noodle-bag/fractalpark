@@ -81,7 +81,7 @@ const BINDING_SCHEMA = "fractalpark-julia-binding-revision/v1";
 const EXPECTED_ROW_MAP_CONTENT_HASH =
   "4422b87a471ed33134c8af448fe393d39fd5c05466a0bea76e22a09ce6d3f480";
 const EXPECTED_AUTHORITY_CONTENT_HASH =
-  "ed34606d0f7dea0cfe8f65e92a3edaac3d391c15bf094e764487d2caebb179c0";
+  "fa531a2d830999c9585d4713ef0860d8f2e74c458b6daede69a4d9e7b80d3d19";
 const EXPECTED_SOURCE_BINDING_PATHS = [
   "package-lock.json",
   "package.json",

@@ -256,8 +256,8 @@
       "breadcrumb": "公式",
       "eyebrow": "公式图鉴",
       "title": "公式图鉴",
-      "publishedIntro": "探索 FractalPark 的 534 个已发布 Standard Definition，它们分属七个结构族，Classic 则是其中相互重叠的 94 个公式集合。你可以打开 canonical Formula Record，从 21 个深度 Guide Profile 中选择一个深入学习，或了解 FRM 源码如何工作并选择相应的编写界面。",
-      "intro": "探索 FractalPark 的 94 个内置 Explorer 公式，它们分属七个家族。你可以从规范视图开始，从 21 个深度 Guide Profile 中选择一个深入学习，或了解 FRM 源码如何工作并选择相应的编写界面。",
+      "publishedIntro": "探索 FractalPark 的 534 个已发布 Standard Definition，它们分属七个结构族，其中 94 个同时属于 Classic 集合。你可以打开 canonical Formula Record，从 21 个深度 Guide Profile 中选择一个深入学习，或了解 FRM 源码如何工作并选择相应的编写界面。",
+      "intro": "探索 FractalPark 的 534 个已发布 Standard Definition，它们分属七个结构族，其中 94 个同时属于 Classic 集合。你可以打开 canonical Formula Record，从 21 个深度 Guide Profile 中选择一个深入学习，或了解 FRM 源码如何工作并选择相应的编写界面。",
       "stats": {
         "formulas": "公式",
         "families": "公式族",
@@ -1884,9 +1884,9 @@
     "landing": {
       "heading": "FractalPark 分形公园: 浏览器里的开源分形生成器",
       "whatIsHeading": "什么是 FractalPark 分形公园?",
-      "whatIsAnswer": "FractalPark 是一个免费、开源（MIT）的分形知识与创作平台，完全使用浏览器中的 WebGL 渲染：{formulaCount} 个内置公式、已发布的 FRM-like v1 源码、Classic-compatible FRM Editor 工作流和高分辨率 PNG 导出。创作无需账户；保存作品和公式需要使用电子邮件登录及私有云库。",
+      "whatIsAnswer": "FractalPark 是一个免费、开源（MIT）的分形知识与创作平台，完全使用浏览器中的 WebGL 渲染：{formulaCount} 个已发布的 Standard Definition，分属 {formulaFamilyCount} 个结构家族，其中 {classicFormulaCount} 个同时属于 Classic 集合；另有已发布的 FRM-like v1 源码、Classic-compatible FRM Editor 工作流和高分辨率 PNG 导出。创作无需账户；保存作品和公式需要使用电子邮件登录及私有云库。",
       "capabilitiesHeading": "核心能力",
-      "capabilitiesIntro": "{formulaCount} 个公式、{formulaFamilyCount} 个家族 · {formulaGuideCount} 篇深度公式指南 · {transformCount} 种变换 · {coloringModeCount} 种着色模式 · 可分享 URL · 最高 {maxExportScale}× PNG 导出",
+      "capabilitiesIntro": "{formulaCount} 个已发布 Standard Definition，分属 {formulaFamilyCount} 个结构家族 · 其中 {classicFormulaCount} 个同时属于 Classic 集合 · {formulaGuideCount} 篇深度公式指南 · {transformCount} 种变换 · {coloringModeCount} 种着色模式 · 可分享 URL · 最高 {maxExportScale}× PNG 导出",
       "linksHeading": "继续了解",
       "links": {
         "formulas": "公式图鉴——每个公式的数学解释、历史与在线示例",
@@ -1981,9 +1981,9 @@
   "metadata": {
     "explore": {
       "title": "分形公园 FractalPark - 开源浏览器分形生成器",
-      "description": "以公式为核心的开源分形知识与创作平台，运行于浏览器中：94 个内置公式、实时 WebGL 渲染、已发布的 FRM-like v1 源码、Classic-compatible FRM Editor 和高分辨率 PNG 导出。",
+      "description": "以公式为核心的开源分形知识与创作平台，运行于浏览器中：534 个已发布的 Standard Definition，分属 7 个结构家族，其中 94 个同时属于 Classic 集合；另有实时 WebGL 渲染、已发布的 FRM-like v1 源码、Classic-compatible FRM Editor 和高分辨率 PNG 导出。",
       "ogTitle": "分形公园 FractalPark - 浏览器里的开源分形艺术工具",
-      "ogDescription": "在浏览器中创作分形艺术：94 个公式、实时 WebGL 渲染、已发布的 FRM-like v1 源码、Classic-compatible FRM Editor 和高分辨率 PNG 导出。"
+      "ogDescription": "在浏览器中用 534 个已发布的 Standard Definition 创作分形艺术：它们分属 7 个结构家族，其中 94 个同时属于 Classic 集合；另有实时 WebGL 渲染、已发布的 FRM-like v1 源码、Classic-compatible FRM Editor 和高分辨率 PNG 导出。"
     },
     "gallery": {
       "title": "我的画廊 | 个人分形收藏 - 分形公园 FractalPark",
@@ -1991,12 +1991,12 @@
     },
     "about": {
       "title": "关于 | 开源浏览器分形生成器 - 分形公园 FractalPark",
-      "description": "了解分形公园 FractalPark: 一个基于 MIT 许可证开源、可在浏览器中直接使用的 WebGL 分形生成器, 支持 94 个公式、自定义调色板和 PNG 导出.核心技术: Fractint .frm 公式编辑器, AST 到 GLSL 转译流水线, 插件化着色器架构, 完全免费开源无需安装, 支持七种语言界面."
+      "description": "FractalPark 是一个开源、以公式为核心的分形知识与创作平台，提供可阅读和运行的已发布公式源码，以及独立的 Classic-compatible 公式 editor。"
     },
     "formulaAtlas": {
       "title": "公式图鉴 | 534 个已发布公式 - 分形公园 FractalPark",
-      "publishedDescription": "浏览七个结构族中的 534 个已发布 Standard Definition 与重叠的 Classic 集合，探索 21 个 Guide Profile，了解 FRM 源码如何工作，并打开 canonical Formula Record。",
-      "description": "浏览 FractalPark 七个家族中的全部 94 个公式，探索 21 个精选 Guide Profile，了解 FRM 源码如何工作，并在 WebGL Explorer 中打开规范公式状态。",
+      "publishedDescription": "浏览七个结构族中的 534 个已发布 Standard Definition，其中 94 个同时属于 Classic 集合；探索 21 个 Guide Profile，了解 FRM 源码如何工作，并打开 canonical Formula Record。",
+      "description": "浏览七个结构族中的 534 个已发布 Standard Definition，其中 94 个同时属于 Classic 集合；探索 21 个 Guide Profile，了解 FRM 源码如何工作，并打开 canonical Formula Record。",
       "imageAlt": "包含 534 个已发布公式的 FractalPark 公式图鉴"
     },
     "frmEditor": {
@@ -2017,7 +2017,7 @@
   },
   "about": {
     "title": "关于分形公园 FractalPark",
-    "aiDescription": "FractalPark 是一款采用 MIT 许可的开源浏览器分形艺术生成器，使用 WebGL 进行实时 GPU 渲染。它具有 94 个内置逃逸时间公式、534 个使用固定 FRM-like v1 源码的已发布 Standard Definition、独立的 Classic-compatible 自定义公式 Editor、7 个 UV 变换插件、9 种着色模式和高分辨率 PNG 导出。采用 Next.js 16、React 19、TypeScript 5 和 Tailwind CSS 构建，其渲染引擎使用基于 plugin 的动态 GLSL assembly 和 LRU caching。",
+    "aiDescription": "FractalPark 是一款采用 MIT 许可的开源浏览器分形生成器，使用 WebGL 进行实时 GPU 渲染。它具有 534 个已发布的 Standard Definition，分属 7 个结构家族，其中 94 个同时属于 Classic 集合；还有 21 篇 Formula Guide、已发布的 FRM-like v1 源码、采用 AST-to-GLSL transpilation 的独立 Classic-compatible FRM Editor、7 个 UV 变换插件、9 种着色模式、可分享 URL、供作品和公式使用的电子邮件登录云库、社区发布，以及最高 4x 的高分辨率 PNG 导出。采用 Next.js、React 和 TypeScript 构建。",
     "techStack": {
       "title": "技术栈",
       "description": "基于 Next.js、WebGL 和 TypeScript 构建.GPU 着色器驱动的实时分形渲染.",
@@ -2040,17 +2040,17 @@
   },
   "publicProject": {
     "tagline": "FractalPark 是一个开源、以公式为核心的分形知识与创作平台，提供可阅读和运行的已发布公式源码，以及独立的 Classic-compatible 公式 editor。",
-    "definition": "FractalPark 是一款免费、开源（MIT）的 WebGL 应用，用于探索、学习和创作分形艺术。它提供 {formulaCount} 个内置公式，横跨 {formulaFamilyCount} 个家族；还有 {formulaGuideCount} 篇深度 Formula Guide、已发布的 FRM-like v1 源码、Classic-compatible 独立 FRM Editor 及社区 Gallery。渲染在浏览器中进行；保存作品和公式需要使用电子邮件登录及私有云库。",
-    "aiDescription": "FractalPark 是一款采用 MIT 许可的开源浏览器分形生成器，使用 WebGL 进行实时 GPU 渲染。它具有 {formulaCount} 个内置分形公式，横跨 {formulaFamilyCount} 个家族；还有 {formulaGuideCount} 篇 Formula Guide、已发布的 FRM-like v1 源码、采用 AST-to-GLSL transpilation 的独立 Classic-compatible FRM Editor、{transformCount} 个 UV 变换插件、{coloringModeCount} 种着色模式、可分享 URL、供作品和公式使用的电子邮件登录云库、社区发布，以及最高 {maxExportScale}x 的高分辨率 PNG 导出。采用 Next.js、React 和 TypeScript 构建。",
+    "definition": "FractalPark 是一款免费、开源（MIT）的 WebGL 应用，用于探索、学习和创作分形艺术。它提供 {formulaCount} 个已发布的 Standard Definition，分属 {formulaFamilyCount} 个结构家族，其中 {classicFormulaCount} 个同时属于 Classic 集合；还有 {formulaGuideCount} 篇深度 Formula Guide、已发布的 FRM-like v1 源码、Classic-compatible 独立 FRM Editor 及社区 Gallery。渲染在浏览器中进行；保存作品和公式需要使用电子邮件登录及私有云库。",
+    "aiDescription": "FractalPark 是一款采用 MIT 许可的开源浏览器分形生成器，使用 WebGL 进行实时 GPU 渲染。它具有 {formulaCount} 个已发布的 Standard Definition，分属 {formulaFamilyCount} 个结构家族，其中 {classicFormulaCount} 个同时属于 Classic 集合；还有 {formulaGuideCount} 篇 Formula Guide、已发布的 FRM-like v1 源码、采用 AST-to-GLSL transpilation 的独立 Classic-compatible FRM Editor、{transformCount} 个 UV 变换插件、{coloringModeCount} 种着色模式、可分享 URL、供作品和公式使用的电子邮件登录云库、社区发布，以及最高 {maxExportScale}x 的高分辨率 PNG 导出。采用 Next.js、React 和 TypeScript 构建。",
     "capabilitiesHeading": "今天就能做什么",
     "capabilities": {
       "discover": {
         "title": "发现公式",
-        "summary": "浏览公式图鉴: 7 个家族共 94 个内置公式, 其中 21 篇深度公式指南讲透经典公式的数学、历史与视觉特征."
+        "summary": "浏览公式图鉴：534 个已发布的 Standard Definition 分属 7 个结构家族，其中 94 个同时属于 Classic 集合；21 篇深度公式指南讲透经典公式的数学、历史与视觉特征。"
       },
       "create": {
         "title": "在浏览器中创作",
-        "summary": "WebGL 实时探索与渲染: 每个公式都支持 Mandelbrot 与 Julia 模式, 7 种变换、9 种着色模式、渐变、光照与关键帧动画."
+        "summary": "使用 WebGL 实时探索与渲染：534 个已发布的 Standard Definition 均支持 Mandelbrot 模式，已验证的 Definition 还支持 Julia 模式；另有 7 种变换、9 种着色模式、渐变、光照与关键帧动画。"
       },
       "authorFrm": {
         "title": "学习 FRM 并编写自定义公式",
@@ -2058,7 +2058,7 @@
       },
       "saveExport": {
         "title": "保存与分享",
-        "summary": "邮箱登录即可把作品和公式存入云端库、发布到社区画廊，也可用可分享 URL 精确还原视角，或以最高 4 倍 SSAA 抗锯齿导出高分辨率 PNG。"
+        "summary": "邮箱登录后，可把作品和自定义公式存入私有云库并在任意设备继续使用，也可将作品发布到社区画廊；无需登录也能创作，并可用最高 4 倍 SSAA 抗锯齿导出高分辨率 PNG。"
       }
     },
     "boundariesHeading": "当前边界与未来方向",

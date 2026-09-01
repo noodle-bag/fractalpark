@@ -16,22 +16,22 @@
     "physicalDeviceSampleCount": 0,
     "crossDeviceGuarantee": false
   },
-  "preGpuContentHash": "bd272c801ec22f7709bcc32213e72ec7402369804fa14df0209dd165dd804fe8",
+  "preGpuContentHash": "40698dbca2ac0e9454f29a9361d93d3734a860f0d0929bca22b7c45984f1a825",
   "preGpuRowMapContentHash": "4422b87a471ed33134c8af448fe393d39fd5c05466a0bea76e22a09ce6d3f480",
   "integrationWitnessFormulaIds": [
     "00e14aa8-b766-54ea-a359-3f5d20d329b7"
   ],
   "integrationWitnessCount": 1,
   "sourceBindings": {
-    "package-lock.json": "e0b2fc48bafca283ed7a9c76dc821859d448632681d83af4882bdcf280ea1045",
-    "package.json": "2c70ea6b29609393f890b27a59a0c0ea66b2e7a64304c71735a5be1b91fdcaf2",
+    "package-lock.json": "c7fb57104902f454d6dc1c29e776eebab2c19a26d98dc2253fef84058a033168",
+    "package.json": "852c7b8eb594c0a4b54b947ed7712a32f69907234124ddccf7e2cce46cab268f",
     "public/formula-library/v1/runtime/published/index.json": "e912b1cb4ad884a6a021fd0d2683495e8ea61911d05c4135fbecaa335cade742",
-    "resources/formula-library/v1/julia-pre-gpu-capability-census.v1.json": "07ecec1dcb445d34071d2ae3e98a8500e80384ce85b348ff0d52e932666c4c01",
+    "resources/formula-library/v1/julia-pre-gpu-capability-census.v1.json": "b05313475183083daca940d6de05331521450b217be3e22c8e7992a1968795e2",
     "scripts/run-julia-tier2-webgl-worker.ts": "cf589b3fccb740e763cdc0f1b737da8ac40d60359c69a4c9a3cff042c2163cc7",
     "scripts/verify-julia-tier2-webgl.ts": "46417329a2891d949086c0ab99fa3b6fba089611e2427bb6adb49e97dbf06669",
     "scripts/build-julia-renderer-evidence.ts": "0a6a7b2d6e2003c9216526a9e5066364a33cf7541a4243f46738b1bf268b409b",
     "src/engine/formulas/v1/julia-renderer-evidence.ts": "78fa6cf52543ab5b4a20496308388d0aaec1ced96d5813be2ebcb1f9d496802c",
-    "src/engine/formulas/v1/julia-pre-gpu-capability.ts": "8ecc5a6c8f8b9dca0ea93c9b8f3fe1f6d57a5662cd02128bbb78078b1b5e09bc",
+    "src/engine/formulas/v1/julia-pre-gpu-capability.ts": "8a50a69ec05aaaeed5ab59b1c4f7a8755f614bd6a1dea971f4d362b9217958a2",
     "src/engine/formulas/v1/published-adapter.ts": "a45251017b75ac9ab13357f1f39876a4619cd0e2906d390fc73b898d4f01c3dc",
     "src/engine/formulas/v1/published-runtime.ts": "ab87434d19df080aa38661492fc92fc32033408ca363a0754379cc8ff1de8f16",
     "src/engine/formulas/v1/revisions.ts": "7a457e21bc6c5d539b23ef1dc6581fc05d3578434b1c47c1a0061518abab4397",
@@ -3574,5 +3574,5 @@
       "relativeTolerance": 0.005
     }
   ],
-  "contentHash": "650e19ec8915fec8ffe4b690411c3e28305ae12ce1766115f8f01cccda186db2"
+  "contentHash": "6fa8d8160016433023bf20f1a968549b24630fa6a3a790cfdf56b33bb5622566"
 }

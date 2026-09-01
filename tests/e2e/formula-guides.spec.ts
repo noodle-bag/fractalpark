@@ -275,18 +275,18 @@ test.describe('Formula guides', () => {
     await context.close();
   });
 
-  test('renders held rights and reason facts with zero runnable actions', async ({
-    page,
-  }) => {
+  test('keeps unavailable identities private and inert', async ({ page }) => {
     const formulaId = '0e0fa64e-9005-52e3-b9aa-83e73b933dfe';
     await page.goto(`/en/formulas/${formulaId}`);
 
-    await expect(page.getByTestId('formula-record')).toHaveAttribute(
-      'data-formula-record-availability',
-      'hold'
-    );
-    await expect(page.getByText('held-license-gpl-3.0-only')).toBeVisible();
-    await expect(page.getByText('GPL-3.0-only', { exact: true })).toBeVisible();
+    await expect(page.getByRole('heading', { name: 'newducks' })).toBeVisible();
+    await expect(
+      page.getByText(
+        'This identity is documented, but no source, run, edit, or remix action is available under the current decision.',
+      ),
+    ).toBeVisible();
+    await expect(page.getByText('held-license-gpl-3.0-only')).toHaveCount(0);
+    await expect(page.getByText('GPL-3.0-only', { exact: true })).toHaveCount(0);
     await expect(page.getByRole('link', { name: 'Open in Explorer' })).toHaveCount(0);
     await expect(page.getByRole('link', { name: 'Remix anonymously' })).toHaveCount(0);
     await expect(page.getByRole('link', { name: 'View source' })).toHaveCount(0);

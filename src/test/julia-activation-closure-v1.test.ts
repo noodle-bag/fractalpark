@@ -37,7 +37,7 @@ const inputs = () => ({
   predecessorAuthority: read("julia-pixel-final-authority-manifest.v3.json"),
   predecessorHandoff: read("julia-pixel-activation-handoff.v3.json"),
   finalAudit: read("julia-pixel-final-recovery-audit.v3.json"),
-  acknowledgment: read("julia-pixel-maintainer-acknowledgment.v1.json"),
+  acknowledgment: read("julia-pixel-maintainer-acknowledgment.v2.json"),
   successorAuthority: read("julia-pixel-final-authority-manifest.v4.json"),
   successorHandoff: read("julia-pixel-activation-handoff.v4.json"),
   predecessorSourceContents: contents(JULIA_FINAL_RECOVERY_V4_SOURCE_BINDING_PATHS),
@@ -104,6 +104,11 @@ describe("julia activation closure v1", () => {
   });
 
   it("rejects forged or scope-mutated acknowledgment receipts", () => {
+    expect(
+      parseJuliaMaintainerAcknowledgmentV1(
+        read("julia-pixel-maintainer-acknowledgment.v1.json"),
+      ).ok,
+    ).toBe(false);
     const mutations = [
       (value: any) => (value.actorId = "not-the-maintainer"),
       (value: any) => (value.acceptedResidualRows[0].finalStatus = "blocked"),
@@ -187,13 +192,13 @@ describe("julia activation closure v1", () => {
   it("pins all protected predecessor bytes to fixed SHA-256 values", () => {
     const expected = {
       "resources/formula-library/v1/julia-pixel-final-capability-census.v4.json":
-        "b66df89bbdd5b1d0a6ed53ff5c1cb023d38ce03fec6dce80c5a2ba673eaaa52a",
+        "18ee3fbd7cc8ba456e6360bf84e2b4aa3a50f40518b05e376b034442ce2bdf4a",
       "resources/formula-library/v1/julia-pixel-final-authority-manifest.v3.json":
-        "e1b3fde7677a359d8159ae9dc2ed494ea238397dc604dc14f5ae248ad4a35930",
+        "957ae8094979f52e326e07b09fd4a2e85a2746cd393ae567d67dd7ec5d7b36ee",
       "resources/formula-library/v1/julia-pixel-activation-handoff.v3.json":
-        "ac4d4b788fccba92f1b0904f52dd1f2c1acb18163a3881a86281532b3b5edc15",
+        "08cf80a3b2ca8812f3143d84fdac448e230e52929b121a9a49519c3d3c227fb7",
       "resources/formula-library/v1/julia-pixel-final-recovery-audit.v3.json":
-        "5c5f0b8679708b75f54313f2cef495e8e3807201a5b21682bf605b8f74c38296",
+        "1cdddf4e590cf48ab85c701bc7a260542ace765738029d40590f3de5a496fdf6",
       "src/engine/formulas/v1/julia-final-recovery-v4.ts":
         "e93a570b806bb9316b56d1fd734dcb9344af75ae23d4f6536276e015e6da7f4f",
     };

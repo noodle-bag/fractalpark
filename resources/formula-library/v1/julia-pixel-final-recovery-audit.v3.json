@@ -6,14 +6,14 @@
     "supersededBy": null,
     "withdrawnBy": null
   },
-  "baselineContentHash": "1de7daa2195d9737e72135f7f4251c5d08e800060e459b4170825294427f36a0",
-  "predecessorContentHash": "696debfa2e37af1197002e9189a86269e5c90e50c349667042be69042bdbe6b0",
-  "predecessorAuditContentHash": "e5c773c16fc1a8a13910126677c4391eef057e6d72b3db6374c6f28a5cadcae0",
-  "contractContentHash": "4b60e659e9fc621f80525e0b2c7e6b9d2b3432acd0d64cdba898939a8ee1d91e",
-  "adjudicationContentHash": "6b294140d308bbb443622e70c7e8cae5d2deb4a78ba14a4a40fdc246205f2f79",
-  "finalCensusContentHash": "609f8067ebaa1b263dd8c65ce9ad0b366b8724c54ee2755212eb4b7f03d022d1",
-  "authorityManifestContentHash": "1551df0b58db6dec5918da98564d6c2b1bfc983a9ef51d760d023e8fa54ed4d3",
-  "activationHandoffContentHash": "b9f83c8d4036015155ad62552de0843efa823b89ed6da7c2c1e6c76d2c407af9",
+  "baselineContentHash": "b042f8dd2ad8833d824dfd965447d6f3567c3c3c2989c3b8e646526b850630ea",
+  "predecessorContentHash": "ec239762e44338bab8dcabf3d3c00c51b825194cc463c44dc62a41e1a845a572",
+  "predecessorAuditContentHash": "f0a2b93661289ea5688f4fd6de0b5970a13ebe3508a34fa3a9ccaacf07d7304b",
+  "contractContentHash": "528c21d17dfb6cf44c770df401ae0d7b2674bf92bed35f3e9eb66c949627bec3",
+  "adjudicationContentHash": "134c54ff39432650a5066fc184a7ce8b085652bdf3eb471f6919ae4ed24646c0",
+  "finalCensusContentHash": "054d97a7766dfbbbd890b53fa483a688662aac7e3c9e43e6adc7996ba31e33e6",
+  "authorityManifestContentHash": "95ddca1433c4e891064cfa4298d71012b07d5eadb9c60bfc705ba04645ac87f4",
+  "activationHandoffContentHash": "b28dceaa3d1f074647f92b23269f272c998654b39197a3118af400c23f305821",
   "statusCounts": {
     "supported": 195,
     "held": 151,
@@ -645,20 +645,20 @@
     "f7a06a52-361c-598f-bf99-5e55a0047f1f"
   ],
   "sourceBindings": {
-    "resources/formula-library/v1/julia-final-capability-census.v1.json": "743804158706e995fba37a2661771deb12662d3aa47a63e4334d952c5f12cb2b",
-    "resources/formula-library/v1/julia-pixel-final-capability-census.v3.json": "11cbae90c116f414f0b39536a32de2b79a861c1304221b3b13dfa73b0b650013",
-    "resources/formula-library/v1/julia-pixel-final-recovery-audit.v2.json": "a0e07cb433acd734edba348ff86d7f2a163d89def696cd6ab22dea0ff978eb56",
-    "resources/formula-library/v1/julia-pixel-recovery-contract.v1.json": "fda21751a9cc1158e11e646e575824fb8d49f88556dbddb42fab137816979d14",
-    "resources/formula-library/v1/julia-mutable-state-adjudication.v1.json": "d32d0ddd9eeb706bcb7673884b371d43934f97a1cdbec7888459e0da7755e80a",
+    "resources/formula-library/v1/julia-final-capability-census.v1.json": "eb6f8ad1f4d2a26f467abb86de84f9d865c9c85e5e823657013b0a2d6e47fc20",
+    "resources/formula-library/v1/julia-pixel-final-capability-census.v3.json": "db14973560e947d4ca76bd2c8e33898c0fc6d9dc1539c208146fba6da844e58a",
+    "resources/formula-library/v1/julia-pixel-final-recovery-audit.v2.json": "a72bc2424f3ce070bd879bb416ce3e112059656beb8d1ab67be595c4745d4664",
+    "resources/formula-library/v1/julia-pixel-recovery-contract.v1.json": "f03cf73047c37ed0baf7b61f615aef7cf316ba11a7f173c28c224fc14ec2634c",
+    "resources/formula-library/v1/julia-mutable-state-adjudication.v1.json": "0ab767e6d6408dc78c372dce0a4ab24dd61dbd9c55cc322685df7d912957d680",
     "scripts/build-julia-final-recovery-v4.ts": "9d4e0ffd17c00f77605edb3afa0af6b0e5676046cff0e52b3d2c6cfb5461b4c0",
     "scripts/verify-julia-final-recovery-v4.ts": "690463a34fa33cce4ac5fcd3817ec15599ac1f6eb0a1b2aed35984b9bcfb2da4",
     "src/engine/formulas/v1/julia-final-recovery-v4.ts": "e93a570b806bb9316b56d1fd734dcb9344af75ae23d4f6536276e015e6da7f4f",
-    "src/test/julia-final-recovery-v4.test.ts": "2dd3bda127e93dae8455b874513bb66710eb83972078dce185fd18238a33e10e",
+    "src/test/julia-final-recovery-v4.test.ts": "84df6b195f2229ce52e6d96603731f963c2bcc467df072fe0515e796bf949c47",
     "src/engine/formulas/v1/revisions.ts": "7a457e21bc6c5d539b23ef1dc6581fc05d3578434b1c47c1a0061518abab4397",
     "src/engine/formulas/v1/julia-final-capability.ts": "d61201326636ad2ad74e60c26ccd5dc7102a6db3434426dcc1047e551269b3eb",
-    "src/engine/formulas/v1/julia-pixel-recovery-contract.ts": "918dfb3807889ff2acfeb07ba782ca045758e4faf23ca40c70f30197b382df66",
+    "src/engine/formulas/v1/julia-pixel-recovery-contract.ts": "731723e25f3cea45ee1d21da39e951cbc66a56498d8df4324ac51fb315e17bc0",
     "src/engine/formulas/v1/julia-final-recovery-v3.ts": "ca6f359e7977a9570d36cfc055d85fb676c6ecb51b715a7c4b16f72ae56bdd4e",
     "src/engine/formulas/v1/julia-mutable-state-adjudication-v1.ts": "90ae1a5f355220c56bf7b3cec6dd3298a5d2c231115eef588481ce5fbaa7906b"
   },
-  "contentHash": "8a2fbf84eb1377972d7b79927ed2e776f28b4895fcc86f5d12a32dca5be89762"
+  "contentHash": "0d4c6f4c3bd2a5256b795200426a24d0e31655a7e7a4897a12ffacb80d34f844"
 }

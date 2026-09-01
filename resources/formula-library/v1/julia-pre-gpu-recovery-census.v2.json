@@ -8,14 +8,14 @@
     "withdrawnBy": null
   },
   "activationStatus": "inactive-evidence-only",
-  "contractContentHash": "4b60e659e9fc621f80525e0b2c7e6b9d2b3432acd0d64cdba898939a8ee1d91e",
+  "contractContentHash": "528c21d17dfb6cf44c770df401ae0d7b2674bf92bed35f3e9eb66c949627bec3",
   "runtimeIndexCanonicalSha256": "362f327b260f38ceb1d9afd7dc619d4ef010f8365ee84a8673ba1df6285fc3f5",
   "parameterAuthorityContentHash": "a038887d22fe4868d17cfeed6b7033437cc782469ac7f0cef03172c7ae9b50e5",
   "recoveryCandidatesContentHash": "173a13fc29f0e6d43d4ab8a026a5d296e3fdb8275bcccb5affa1c91cece138f4",
   "failureDiagnosisManifestContentHash": "7d02687cc7a1bbf714af6da97f7f99cd55d07e1a9b6e2367edda095219409785",
   "sourceBindings": {
-    "package-lock.json": "e0b2fc48bafca283ed7a9c76dc821859d448632681d83af4882bdcf280ea1045",
-    "package.json": "2c70ea6b29609393f890b27a59a0c0ea66b2e7a64304c71735a5be1b91fdcaf2",
+    "package-lock.json": "c7fb57104902f454d6dc1c29e776eebab2c19a26d98dc2253fef84058a033168",
+    "package.json": "852c7b8eb594c0a4b54b947ed7712a32f69907234124ddccf7e2cce46cab268f",
     "public/formula-library/v1/runtime/published/definitions/01058522dac48f2278d74a3e8a06b4c18e6d2589a3ccda69565dad37c325298d.frm": "01058522dac48f2278d74a3e8a06b4c18e6d2589a3ccda69565dad37c325298d",
     "public/formula-library/v1/runtime/published/definitions/0142e2d8a30cf2d6ea178a090f6287f6cdaa919b3eec6a2739d3a9661f711b9c.frm": "0142e2d8a30cf2d6ea178a090f6287f6cdaa919b3eec6a2739d3a9661f711b9c",
     "public/formula-library/v1/runtime/published/definitions/01ddbf88d0aeb66890a385746116aec8cc3c7f98fbb14079f9c667f0c0565bae.frm": "01ddbf88d0aeb66890a385746116aec8cc3c7f98fbb14079f9c667f0c0565bae",
@@ -259,7 +259,7 @@
     "public/formula-library/v1/runtime/published/definitions/fe34a0d02f2dd9bb44a662ae81932aef98ffa0863baaf048f89ec49482bfda7d.frm": "fe34a0d02f2dd9bb44a662ae81932aef98ffa0863baaf048f89ec49482bfda7d",
     "public/formula-library/v1/runtime/published/definitions/feb96948077dd253e8f9cd2b34495db6c4636a7fd5552996c966f69875ccc372.frm": "feb96948077dd253e8f9cd2b34495db6c4636a7fd5552996c966f69875ccc372",
     "public/formula-library/v1/runtime/published/index.json": "e912b1cb4ad884a6a021fd0d2683495e8ea61911d05c4135fbecaa335cade742",
-    "resources/formula-library/v1/julia-existing-system-c-evidence.v1.json": "2e38fe3657b765b3c5d6ebd8cf2bc5f05e3997f900c7e238ef2f9834f8bcba4f",
+    "resources/formula-library/v1/julia-existing-system-c-evidence.v1.json": "18e41da9bd349469675357e051104901b1c2a308fbfc95fbfc726656dce90e17",
     "resources/formula-library/v1/julia-parameter-authority.v1.json": "df0045242a7484fc0f97c77e3c6546aa2f864022ddca262304a9ea5668179bc5",
     "resources/formula-library/v1/julia-pixel-recovery-candidates.v1.json": "0364034bf97b3cf17943865437cd692cfd74563f60b4d987778578d7ae0dcd4c",
     "resources/formula-library/v1/julia-pixel-recovery-candidates/definitions/00134f5dd062fa048d91e09a44dbf767e3123201feec420b01be0c214d83840e.frm": "00134f5dd062fa048d91e09a44dbf767e3123201feec420b01be0c214d83840e",
@@ -421,14 +421,14 @@
     "resources/formula-library/v1/julia-pixel-recovery-candidates/definitions/faf7bb242a03b6f4b01b834a6d21618bf3910e6580a880d37fae97ee38e39fd7.frm": "faf7bb242a03b6f4b01b834a6d21618bf3910e6580a880d37fae97ee38e39fd7",
     "resources/formula-library/v1/julia-pixel-recovery-candidates/definitions/fc31fb9c433d3fbdabd7de6ea3d056871f3784966d904027cb203c3e5a2436c1.frm": "fc31fb9c433d3fbdabd7de6ea3d056871f3784966d904027cb203c3e5a2436c1",
     "resources/formula-library/v1/julia-pixel-recovery-candidates/definitions/fd5e06ad5ab04e1a0351b5cb00dfa96e6fb35053a4bffe7f61be63db9c75a654.frm": "fd5e06ad5ab04e1a0351b5cb00dfa96e6fb35053a4bffe7f61be63db9c75a654",
-    "resources/formula-library/v1/julia-pixel-recovery-contract.v1.json": "fda21751a9cc1158e11e646e575824fb8d49f88556dbddb42fab137816979d14",
+    "resources/formula-library/v1/julia-pixel-recovery-contract.v1.json": "f03cf73047c37ed0baf7b61f615aef7cf316ba11a7f173c28c224fc14ec2634c",
     "scripts/build-julia-pre-gpu-recovery-v2.ts": "a30b9ce1c9acf2a37aa09e40a426f9ed55912f98084a2ab0cbf7f0dc566b283b",
     "scripts/verify-julia-pre-gpu-recovery-v2.ts": "d5eee389d4ac5da8056ffde1c667cf01cfccfec345bb84780cf49e4af2c8a254",
     "src/engine/formulas/v1/julia-binding.ts": "0a645ff7e53c3fcd7c8daee5f6b252df03c2af1c809541edb3727d9da451e40c",
     "src/engine/formulas/v1/julia-cpu-harness.ts": "1d61d82de4df6dab11e5fd12544dca00ea181132871b4941ca4cc0fdf2e7200f",
     "src/engine/formulas/v1/julia-parameter-authority.ts": "6f4901f1404e72f3cf59afd308e46670dd8b4a37044653b1e53efbc9c59a5e61",
     "src/engine/formulas/v1/julia-pixel-recovery-candidates.ts": "84601fec46d98e3c102ad8dbae94b2c4f12ba25bcdd60108eb96f3ac6f13579c",
-    "src/engine/formulas/v1/julia-pixel-recovery-contract.ts": "918dfb3807889ff2acfeb07ba782ca045758e4faf23ca40c70f30197b382df66",
+    "src/engine/formulas/v1/julia-pixel-recovery-contract.ts": "731723e25f3cea45ee1d21da39e951cbc66a56498d8df4324ac51fb315e17bc0",
     "src/engine/formulas/v1/julia-pre-gpu-recovery-v2.ts": "6317f92a42a8b3fee3045a51e33cb2e5150558de95997173b877b50f02fa574d",
     "src/engine/formulas/v1/publication-decisions.ts": "3823598f929bca36846599b316bfff3f7b9ce0f9faafa89bf7a7b517e7eb77b3",
     "src/engine/formulas/v1/published-runtime.ts": "ab87434d19df080aa38661492fc92fc32033408ca363a0754379cc8ff1de8f16",
@@ -10248,5 +10248,5 @@
       "rowReceipt": "9faca6c67f1bd1bb4333a5b10cf14cdec016509d50ebff9581cfbc2c0b47d0bf"
     }
   ],
-  "contentHash": "cc649f8358788866f45fc3d1c2538e5716f18b17e1203e89d3bf6d8303a71610"
+  "contentHash": "6506a55afabba49069646d96446eb6e65ad5b1f6c125a884c29c0d922645595a"
 }

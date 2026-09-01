@@ -9,7 +9,7 @@ import censusAsset from "../resources/formula-library/v1/julia-pixel-final-capab
 import predecessorAuthorityAsset from "../resources/formula-library/v1/julia-pixel-final-authority-manifest.v3.json";
 import predecessorHandoffAsset from "../resources/formula-library/v1/julia-pixel-activation-handoff.v3.json";
 import finalAuditAsset from "../resources/formula-library/v1/julia-pixel-final-recovery-audit.v3.json";
-import acknowledgmentAsset from "../resources/formula-library/v1/julia-pixel-maintainer-acknowledgment.v1.json";
+import acknowledgmentAsset from "../resources/formula-library/v1/julia-pixel-maintainer-acknowledgment.v2.json";
 import {
   JULIA_ACTIVATION_CLOSURE_AUTHORITY_SCHEMA_V4,
   JULIA_ACTIVATION_CLOSURE_CONSUMER_PREDICATE_V1,

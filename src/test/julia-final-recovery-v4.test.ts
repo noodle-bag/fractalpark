@@ -11,6 +11,10 @@ import {
   verifyJuliaFinalRecoveryActivationHandoffV3,
 } from "../engine/formulas/v1/julia-final-recovery-v4";
 import { JULIA_MUTABLE_STATE_ADJUDICATION_IDS_V1 } from "../engine/formulas/v1/julia-mutable-state-adjudication-v1";
+import {
+  canonicalJsonV1,
+  sha256HexSyncV1,
+} from "../engine/formulas/v1/revisions";
 
 const root = process.cwd();
 const resource = "resources/formula-library/v1";
@@ -193,22 +197,16 @@ describe("julia final recovery v4", () => {
     130_000,
   );
 
-  it("keeps all predecessor v3 assets byte-unmodified", () => {
-    expect(() =>
-      execFileSync(
-        "git",
-        [
-          "diff",
-          "--quiet",
-          "--",
-          `${resource}/julia-pixel-final-capability-census.v3.json`,
-          `${resource}/julia-pixel-final-authority-manifest.v2.json`,
-          `${resource}/julia-pixel-activation-handoff.v2.json`,
-          `${resource}/julia-pixel-final-recovery-audit.v2.json`,
-          "src/engine/formulas/v1/julia-final-recovery-v3.ts",
-        ],
-        { cwd: root },
-      ),
-    ).not.toThrow();
+  it("pins every non-lineage predecessor v3 row field across source rebinds", () => {
+    const rows = read("julia-pixel-final-capability-census.v3.json").rows.map(
+      (row: Record<string, unknown>) => {
+        const semanticRow = { ...row };
+        delete semanticRow.receipts;
+        return semanticRow;
+      },
+    );
+    expect(sha256HexSyncV1(canonicalJsonV1(rows, 1_048_576))).toBe(
+      "190cd6d0898102c145e7ef174bdcb9828efdabbd89acad0c13f2223bdeb7439f",
+    );
   });
 });

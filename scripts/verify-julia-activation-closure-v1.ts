@@ -9,7 +9,7 @@ import censusAsset from "../resources/formula-library/v1/julia-pixel-final-capab
 import predecessorAuthorityAsset from "../resources/formula-library/v1/julia-pixel-final-authority-manifest.v3.json";
 import predecessorHandoffAsset from "../resources/formula-library/v1/julia-pixel-activation-handoff.v3.json";
 import finalAuditAsset from "../resources/formula-library/v1/julia-pixel-final-recovery-audit.v3.json";
-import acknowledgmentAsset from "../resources/formula-library/v1/julia-pixel-maintainer-acknowledgment.v1.json";
+import acknowledgmentAsset from "../resources/formula-library/v1/julia-pixel-maintainer-acknowledgment.v2.json";
 import successorAuthorityAsset from "../resources/formula-library/v1/julia-pixel-final-authority-manifest.v4.json";
 import successorHandoffAsset from "../resources/formula-library/v1/julia-pixel-activation-handoff.v4.json";
 import { parseJuliaFinalCapabilityCensusV1 } from "../src/engine/formulas/v1/julia-final-capability";
@@ -31,7 +31,7 @@ const sourcePaths = Object.freeze([
   "resources/formula-library/v1/julia-pixel-activation-handoff.v3.json",
   "resources/formula-library/v1/julia-pixel-final-recovery-audit.v3.json",
   "resources/formula-library/v1/julia-pixel-recovery-contract.v1.json",
-  "resources/formula-library/v1/julia-pixel-maintainer-acknowledgment.v1.json",
+  "resources/formula-library/v1/julia-pixel-maintainer-acknowledgment.v2.json",
   "scripts/build-julia-activation-closure-v1.ts",
   "scripts/verify-julia-activation-closure-v1.ts",
   "src/engine/formulas/v1/julia-activation-closure-v1.ts",
@@ -43,24 +43,23 @@ const sourcePaths = Object.freeze([
 ] as const);
 const pinnedPredecessorSha256 = Object.freeze({
   "resources/formula-library/v1/julia-pixel-final-capability-census.v4.json":
-    "b66df89bbdd5b1d0a6ed53ff5c1cb023d38ce03fec6dce80c5a2ba673eaaa52a",
+    "18ee3fbd7cc8ba456e6360bf84e2b4aa3a50f40518b05e376b034442ce2bdf4a",
   "resources/formula-library/v1/julia-pixel-final-authority-manifest.v3.json":
-    "e1b3fde7677a359d8159ae9dc2ed494ea238397dc604dc14f5ae248ad4a35930",
+    "957ae8094979f52e326e07b09fd4a2e85a2746cd393ae567d67dd7ec5d7b36ee",
   "resources/formula-library/v1/julia-pixel-activation-handoff.v3.json":
-    "ac4d4b788fccba92f1b0904f52dd1f2c1acb18163a3881a86281532b3b5edc15",
+    "08cf80a3b2ca8812f3143d84fdac448e230e52929b121a9a49519c3d3c227fb7",
   "resources/formula-library/v1/julia-pixel-final-recovery-audit.v3.json":
-    "5c5f0b8679708b75f54313f2cef495e8e3807201a5b21682bf605b8f74c38296",
+    "1cdddf4e590cf48ab85c701bc7a260542ace765738029d40590f3de5a496fdf6",
   "src/engine/formulas/v1/julia-final-recovery-v4.ts":
     "e93a570b806bb9316b56d1fd734dcb9344af75ae23d4f6536276e015e6da7f4f",
 } as const);
 const allows = Object.freeze([
-  "seal and commit/push the v0.4.19 acknowledgment closure within Draft PR #20",
-  "make only the exact-195 supported classic rows activation-eligible for a separately authorized 29h",
+  "seal and commit/push the v0.4.19 source-rebound acknowledgment closure within Draft PR #20",
+  "preserve activation-eligible evidence for only the exact-195 supported classic rows, subject to separate activation authorization",
 ] as const);
 const doesNotAllow = Object.freeze([
-  "mutate the sealed final v4 census or any formula, source, profile, renderer, or evidence row",
-  "promote or conceal any exact-11 residual row",
-  "execute 29h or wire runtime/UI activation",
+  "change any formula membership, status, source, profile, renderer result, or residual disposition",
+  "execute activation or wire runtime/UI activation",
   "mark the pull request ready, merge, or auto-merge",
   "deploy or promote Production, run migrations, create a tag or Release, or submit IndexNow",
 ] as const);
@@ -213,7 +212,7 @@ function main(): void {
   ]) && acknowledgment.schema === "fractalpark-julia-pixel-maintainer-acknowledgment/v1" &&
     acknowledgment.revision === 1 && seal(acknowledgment.authority) &&
     acknowledgment.status === "maintainer-approved" &&
-    acknowledgment.approvedAt === "2026-08-28T18:47:11+08:00" &&
+    acknowledgment.approvedAt === "2026-09-01T12:54:12+08:00" &&
     acknowledgment.actorId === "fractalpark-maintainer" &&
     acknowledgment.actorKind === "human-maintainer" && acknowledgment.actorRole === "maintainer" &&
     acknowledgment.decision === "accept-v0.4.19-residual-boundary" &&
@@ -229,12 +228,13 @@ function main(): void {
     acknowledgment.regressionCount === regressions.length &&
     same(acknowledgment.acceptedResidualRows, acceptedResidualRows), "ack-lineage");
   assert(acknowledgment.approvalStatement ===
-    "接受 final v4 中 exact-11 residual 在 v0.4.19 保持 held/blocked；允许生成 activation-eligible handoff 供后续单独授权的 29h 使用；不改变 final census、不恢复 residual、不执行 29h 或任何外部发布动作。" &&
+    "确认 current-candidate source rebind 后 exact-195 supported 与 exact-11 residual 的成员、状态和 digest 均未改变；只重绑 current source-closed final census，不授权执行激活、merge、部署或 Release。" &&
     acknowledgment.residualDispositionResponse === "不弄了，跳过这11个" &&
-    acknowledgment.maintainerResponse === "确认路线一，并启动 handoff closure" &&
+    acknowledgment.maintainerResponse ===
+      "签发新的 v2 acknowledgment：接受相同的 exact-195 / exact-11 边界，只重绑当前 source-closed final census；不授权激活、merge、部署或 Release" &&
     same(acknowledgment.trustModel, trustModel) &&
     acknowledgment.aiAssistanceDisclosure ===
-      "This acknowledgment receipt and its machine closure were drafted with AI assistance by Ellie; the residual disposition, route selection, and permission to start this closure were explicitly approved by the human maintainer.",
+      "This source-rebound acknowledgment receipt and its machine closure were drafted with AI assistance by Ellie; the unchanged exact-195/exact-11 boundary and the limited rebind scope were explicitly approved by the human maintainer.",
   "ack-decision");
   assert(plain(acknowledgment.scope) && exact(acknowledgment.scope, ["allows", "doesNotAllow"]) &&
     Array.isArray(acknowledgment.scope.allows) && dense(acknowledgment.scope.allows) &&

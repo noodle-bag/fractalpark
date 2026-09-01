@@ -179,6 +179,40 @@ const protectedTokens = [
   "Remix",
   "Open",
 ] as const;
+
+// The manual always enforces the complete protected set. Message prose may
+// translate only these path-scoped ordinary-language uses; action labels such
+// as `Open` in the Editor note remain protected.
+const translatableMessageTokens = {
+  Open: new Set([
+    "formulas.index.intro",
+  ]),
+  Standard: new Set([
+    "formulas.index.intro",
+    "formulas.index.frm.description",
+    "formulas.frmGuide.intro",
+    "formulas.frmGuide.sections.what-is-frm.body.0",
+    "formulas.frmGuide.sections.support.intro",
+    "formulas.frmGuide.sections.support.disclaimer",
+    "formulas.frmGuide.sections.pipeline.note",
+    "explore.landing.whatIsAnswer",
+    "metadata.explore.description",
+    "metadata.explore.ogDescription",
+    "metadata.formulaAtlas.description",
+    "about.aiDescription",
+    "about.techStack.formula",
+    "publicProject.definition",
+    "publicProject.aiDescription",
+    "publicProject.boundaries.current.0",
+  ]),
+} as const;
+const protectedMessageTokens = (messagePath: string) =>
+  protectedTokens.filter((token) =>
+    token !== "Open" && token !== "Standard"
+      ? true
+      : !translatableMessageTokens[token].has(messagePath),
+  );
+
 const protectedCount = (value: string, token: string): number => {
   if (token.startsWith(".")) return value.split(token).length - 1;
   const boundary = token === "Open" ? "A-Za-z0-9_-" : "A-Za-z0-9_";
@@ -465,7 +499,7 @@ describe("FRM-like v1 localized message projection parity", () => {
         expect(numericValues(`## 1. X\n${translatedText}`, locale)).toEqual(
           numericValues(`## 1. X\n${sourceText}`, "en"),
         );
-        for (const token of protectedTokens) {
+        for (const token of protectedMessageTokens(messagePath)) {
           expect(protectedCount(translatedText, token)).toBeGreaterThanOrEqual(
             protectedCount(sourceText, token),
           );

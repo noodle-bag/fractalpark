@@ -545,9 +545,9 @@
     ],
     "orderedFormulaIdsDigest": "751f7cdec829a548dfac84b08c3e6441acd528347343522c0748385729cf3d39",
     "liveCensusContentHash": "e079815c5e8f865608dc6ec52121bbbe47857f2c2ecb9000080602ab5e54f197",
-    "preGpuContentHash": "bd272c801ec22f7709bcc32213e72ec7402369804fa14df0209dd165dd804fe8",
-    "rendererEvidenceContentHash": "650e19ec8915fec8ffe4b690411c3e28305ae12ce1766115f8f01cccda186db2",
-    "finalCensusV1ContentHash": "1de7daa2195d9737e72135f7f4251c5d08e800060e459b4170825294427f36a0"
+    "preGpuContentHash": "40698dbca2ac0e9454f29a9361d93d3734a860f0d0929bca22b7c45984f1a825",
+    "rendererEvidenceContentHash": "6fa8d8160016433023bf20f1a968549b24630fa6a3a790cfdf56b33bb5622566",
+    "finalCensusV1ContentHash": "b042f8dd2ad8833d824dfd965447d6f3567c3c3c2989c3b8e646526b850630ea"
   },
   "dimensions": {
     "roles": [
@@ -877,13 +877,13 @@
   },
   "sourceBindings": {
     "docs/specs/julia-pixel-two-plane-introduction-workflow-v1.md": "7ecc4da9c390f03ce0c9f43c97b5044c92627026dec85e0612d0ab1d44df3c0c",
-    "package-lock.json": "e0b2fc48bafca283ed7a9c76dc821859d448632681d83af4882bdcf280ea1045",
-    "package.json": "2c70ea6b29609393f890b27a59a0c0ea66b2e7a64304c71735a5be1b91fdcaf2",
+    "package-lock.json": "c7fb57104902f454d6dc1c29e776eebab2c19a26d98dc2253fef84058a033168",
+    "package.json": "852c7b8eb594c0a4b54b947ed7712a32f69907234124ddccf7e2cce46cab268f",
     "public/formula-library/v1/runtime/published/index.json": "e912b1cb4ad884a6a021fd0d2683495e8ea61911d05c4135fbecaa335cade742",
     "resources/formula-library/v1/julia-capability-census.v1.json": "93a57236600f9738dc854f53c6ee59e180d327d87b0995482c609355d70ab8f6",
-    "resources/formula-library/v1/julia-pre-gpu-capability-census.v1.json": "07ecec1dcb445d34071d2ae3e98a8500e80384ce85b348ff0d52e932666c4c01",
-    "resources/formula-library/v1/julia-renderer-evidence.v1.json": "8b21e7bc1f99ca940e0b3c6a292a33e97bc8ad8466a8555aa4b6dd725150b48d",
-    "resources/formula-library/v1/julia-final-capability-census.v1.json": "743804158706e995fba37a2661771deb12662d3aa47a63e4334d952c5f12cb2b",
+    "resources/formula-library/v1/julia-pre-gpu-capability-census.v1.json": "b05313475183083daca940d6de05331521450b217be3e22c8e7992a1968795e2",
+    "resources/formula-library/v1/julia-renderer-evidence.v1.json": "d3471e6237a1946b5e0ed770cb41d5de54ba4a02112e3edcb782c78d9d8e1d0b",
+    "resources/formula-library/v1/julia-final-capability-census.v1.json": "eb6f8ad1f4d2a26f467abb86de84f9d865c9c85e5e823657013b0a2d6e47fc20",
     "scripts/build-julia-pixel-recovery-contract.ts": "d89db2f968fc529ced6417714c3dd9c5b5d132aced4c3ee9ec444796aaabcb4e",
     "scripts/generate-julia-pixel-blind-holdout.ts": "470fc796b96af1f7f03fe96b582b86561c5dc31e1a48ade4cb107ea8bd52d3aa",
     "scripts/seal-julia-pixel-blind-holdout-state.ts": "a4b3b02b6aa8f08eea86ee1057d22a41b2d2957b97b8c72a81b3d854d80db461",
@@ -895,10 +895,10 @@
     "src/engine/formulas/v1/julia-cpu-harness.ts": "1d61d82de4df6dab11e5fd12544dca00ea181132871b4941ca4cc0fdf2e7200f",
     "src/engine/formulas/v1/julia-renderer-evidence.ts": "78fa6cf52543ab5b4a20496308388d0aaec1ced96d5813be2ebcb1f9d496802c",
     "src/engine/formulas/v1/julia-pixel-changed-region.ts": "0f48838ff8db6184ca26470d3ff7c27717cfcf82891d7aebc300f3a52d582d9b",
-    "src/engine/formulas/v1/julia-pixel-recovery-contract.ts": "918dfb3807889ff2acfeb07ba782ca045758e4faf23ca40c70f30197b382df66",
+    "src/engine/formulas/v1/julia-pixel-recovery-contract.ts": "731723e25f3cea45ee1d21da39e951cbc66a56498d8df4324ac51fb315e17bc0",
     "src/engine/formulas/v1/revisions.ts": "7a457e21bc6c5d539b23ef1dc6581fc05d3578434b1c47c1a0061518abab4397",
     "src/test/fixtures/julia-pixel-recovery-v1.ts": "8be694c4bb636e4d78c7db591058ee78ba2b1db26ce3f5aabe04739b8ce9a9d5",
     "tsconfig.json": "fb2eecd42de1a9b1a91dc012edb40f2cacddf595862fc3227f8439930364bb8c"
   },
-  "contentHash": "4b60e659e9fc621f80525e0b2c7e6b9d2b3432acd0d64cdba898939a8ee1d91e"
+  "contentHash": "528c21d17dfb6cf44c770df401ae0d7b2674bf92bed35f3e9eb66c949627bec3"
 }

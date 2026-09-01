@@ -155,7 +155,7 @@ export async function TeachingContentPanel({
           id="teaching-provenance"
           title={t('sections.provenance')}
         >
-          <div className="space-y-3 rounded-xl border bg-muted/20 p-5 text-sm leading-6 text-muted-foreground sm:p-6">
+          <div className="space-y-3 break-words rounded-xl border bg-muted/20 p-5 text-sm leading-6 text-muted-foreground sm:p-6">
             <p>
               {localized?.factsPresentation.provenanceLead ??
                 english.facts.provenanceStatement}

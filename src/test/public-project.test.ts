@@ -2,6 +2,10 @@ import { describe, expect, it } from 'vitest';
 import { readFileSync } from 'node:fs';
 import { join } from 'node:path';
 import { PUBLIC_PROJECT } from '@/content/public-project';
+import {
+  CLASSIC_FORMULA_COUNT_V1,
+  PUBLISHED_FORMULA_DIRECTORY_COUNT_V1,
+} from '@/content/published-formula-directory';
 import { PUBLISHED_FORMULA_GUIDES } from '@/content/formula-guides';
 import { FORMULA_CATALOG } from '@/engine/plugins/formula-catalog';
 import { pluginRegistry } from '@/engine/plugins/registry';
@@ -46,7 +50,9 @@ const presetsFile = JSON.parse(
 describe('public-project contract facts', () => {
   it('match the real engine and content numbers', () => {
     const { facts } = PUBLIC_PROJECT;
-    expect(FORMULA_CATALOG.length).toBe(facts.formulaCount);
+    expect(facts.formulaCount).toBe(PUBLISHED_FORMULA_DIRECTORY_COUNT_V1);
+    expect(facts.classicFormulaCount).toBe(CLASSIC_FORMULA_COUNT_V1);
+    expect(FORMULA_CATALOG.length).toBe(facts.classicFormulaCount);
     expect(PUBLISHED_FORMULA_GUIDES.length).toBe(facts.formulaGuideCount);
     expect(presetsFile.presets.length).toBe(facts.galleryPresetCount);
 
@@ -55,7 +61,7 @@ describe('public-project contract facts', () => {
       pluginRegistry.listInsideColoring().length;
     expect(coloringCount).toBe(facts.coloringModeCount);
     expect(pluginRegistry.listTransforms().length).toBe(facts.transformCount);
-    expect(pluginRegistry.listFormulas().length).toBe(facts.formulaCount);
+    expect(pluginRegistry.listFormulas().length).toBe(facts.classicFormulaCount);
   });
 
   it('uses the approved single-sentence positioning', () => {

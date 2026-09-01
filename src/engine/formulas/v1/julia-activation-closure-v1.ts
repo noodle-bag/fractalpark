@@ -23,12 +23,18 @@ export const JULIA_ACTIVATION_CLOSURE_HANDOFF_SCHEMA_V4 =
   "fractalpark-julia-pixel-activation-handoff/v4" as const;
 export const JULIA_ACTIVATION_CLOSURE_APPROVED_AT_V1 =
   "2026-08-28T18:47:11+08:00" as const;
+export const JULIA_ACTIVATION_CLOSURE_APPROVED_AT_V2 =
+  "2026-09-01T12:54:12+08:00" as const;
 export const JULIA_ACTIVATION_CLOSURE_RESIDUAL_RESPONSE_V1 =
   "不弄了，跳过这11个" as const;
 export const JULIA_ACTIVATION_CLOSURE_MAINTAINER_RESPONSE_V1 =
   "确认路线一，并启动 handoff closure" as const;
+export const JULIA_ACTIVATION_CLOSURE_MAINTAINER_RESPONSE_V2 =
+  "签发新的 v2 acknowledgment：接受相同的 exact-195 / exact-11 边界，只重绑当前 source-closed final census；不授权激活、merge、部署或 Release" as const;
 export const JULIA_ACTIVATION_CLOSURE_APPROVAL_STATEMENT_V1 =
   "接受 final v4 中 exact-11 residual 在 v0.4.19 保持 held/blocked；允许生成 activation-eligible handoff 供后续单独授权的 29h 使用；不改变 final census、不恢复 residual、不执行 29h 或任何外部发布动作。" as const;
+export const JULIA_ACTIVATION_CLOSURE_APPROVAL_STATEMENT_V2 =
+  "确认 current-candidate source rebind 后 exact-195 supported 与 exact-11 residual 的成员、状态和 digest 均未改变；只重绑 current source-closed final census，不授权执行激活、merge、部署或 Release。" as const;
 export const JULIA_ACTIVATION_CLOSURE_TRUST_MODEL_V1 = Object.freeze({
   authorityRoot: "repository-governed-human-maintainer-decision",
   identityAssurance: "approval-observed-in-authenticated-project-session",
@@ -38,6 +44,8 @@ export const JULIA_ACTIVATION_CLOSURE_TRUST_MODEL_V1 = Object.freeze({
 } as const);
 export const JULIA_ACTIVATION_CLOSURE_AI_DISCLOSURE_V1 =
   "This acknowledgment receipt and its machine closure were drafted with AI assistance by Ellie; the residual disposition, route selection, and permission to start this closure were explicitly approved by the human maintainer." as const;
+export const JULIA_ACTIVATION_CLOSURE_AI_DISCLOSURE_V2 =
+  "This source-rebound acknowledgment receipt and its machine closure were drafted with AI assistance by Ellie; the unchanged exact-195/exact-11 boundary and the limited rebind scope were explicitly approved by the human maintainer." as const;
 export const JULIA_ACTIVATION_CLOSURE_CONSUMER_PREDICATE_V1 =
   "modeClass=classic-julia AND finalStatus=supported AND requiredReceipts=pass" as const;
 
@@ -45,10 +53,20 @@ export const JULIA_ACTIVATION_CLOSURE_ALLOWS_V1 = Object.freeze([
   "seal and commit/push the v0.4.19 acknowledgment closure within Draft PR #20",
   "make only the exact-195 supported classic rows activation-eligible for a separately authorized 29h",
 ] as const);
+export const JULIA_ACTIVATION_CLOSURE_ALLOWS_V2 = Object.freeze([
+  "seal and commit/push the v0.4.19 source-rebound acknowledgment closure within Draft PR #20",
+  "preserve activation-eligible evidence for only the exact-195 supported classic rows, subject to separate activation authorization",
+] as const);
 export const JULIA_ACTIVATION_CLOSURE_EXCLUSIONS_V1 = Object.freeze([
   "mutate the sealed final v4 census or any formula, source, profile, renderer, or evidence row",
   "promote or conceal any exact-11 residual row",
   "execute 29h or wire runtime/UI activation",
+  "mark the pull request ready, merge, or auto-merge",
+  "deploy or promote Production, run migrations, create a tag or Release, or submit IndexNow",
+] as const);
+export const JULIA_ACTIVATION_CLOSURE_EXCLUSIONS_V2 = Object.freeze([
+  "change any formula membership, status, source, profile, renderer result, or residual disposition",
+  "execute activation or wire runtime/UI activation",
   "mark the pull request ready, merge, or auto-merge",
   "deploy or promote Production, run migrations, create a tag or Release, or submit IndexNow",
 ] as const);
@@ -60,7 +78,7 @@ export const JULIA_ACTIVATION_CLOSURE_SOURCE_BINDING_PATHS_V1 = Object.freeze([
   "resources/formula-library/v1/julia-pixel-activation-handoff.v3.json",
   "resources/formula-library/v1/julia-pixel-final-recovery-audit.v3.json",
   "resources/formula-library/v1/julia-pixel-recovery-contract.v1.json",
-  "resources/formula-library/v1/julia-pixel-maintainer-acknowledgment.v1.json",
+  "resources/formula-library/v1/julia-pixel-maintainer-acknowledgment.v2.json",
   "scripts/build-julia-activation-closure-v1.ts",
   "scripts/verify-julia-activation-closure-v1.ts",
   "src/engine/formulas/v1/julia-activation-closure-v1.ts",
@@ -92,7 +110,9 @@ export interface JuliaMaintainerAcknowledgmentV1 {
     readonly withdrawnBy: null;
   }>;
   readonly status: "maintainer-approved";
-  readonly approvedAt: typeof JULIA_ACTIVATION_CLOSURE_APPROVED_AT_V1;
+  readonly approvedAt:
+    | typeof JULIA_ACTIVATION_CLOSURE_APPROVED_AT_V1
+    | typeof JULIA_ACTIVATION_CLOSURE_APPROVED_AT_V2;
   readonly actorId: "fractalpark-maintainer";
   readonly actorKind: "human-maintainer";
   readonly actorRole: "maintainer";
@@ -107,15 +127,25 @@ export interface JuliaMaintainerAcknowledgmentV1 {
   readonly regressionSetDigest: string;
   readonly regressionCount: 11;
   readonly acceptedResidualRows: readonly JuliaAcceptedResidualRowV1[];
-  readonly approvalStatement: typeof JULIA_ACTIVATION_CLOSURE_APPROVAL_STATEMENT_V1;
+  readonly approvalStatement:
+    | typeof JULIA_ACTIVATION_CLOSURE_APPROVAL_STATEMENT_V1
+    | typeof JULIA_ACTIVATION_CLOSURE_APPROVAL_STATEMENT_V2;
   readonly residualDispositionResponse:
     typeof JULIA_ACTIVATION_CLOSURE_RESIDUAL_RESPONSE_V1;
-  readonly maintainerResponse: typeof JULIA_ACTIVATION_CLOSURE_MAINTAINER_RESPONSE_V1;
+  readonly maintainerResponse:
+    | typeof JULIA_ACTIVATION_CLOSURE_MAINTAINER_RESPONSE_V1
+    | typeof JULIA_ACTIVATION_CLOSURE_MAINTAINER_RESPONSE_V2;
   readonly trustModel: typeof JULIA_ACTIVATION_CLOSURE_TRUST_MODEL_V1;
-  readonly aiAssistanceDisclosure: typeof JULIA_ACTIVATION_CLOSURE_AI_DISCLOSURE_V1;
+  readonly aiAssistanceDisclosure:
+    | typeof JULIA_ACTIVATION_CLOSURE_AI_DISCLOSURE_V1
+    | typeof JULIA_ACTIVATION_CLOSURE_AI_DISCLOSURE_V2;
   readonly scope: Readonly<{
-    readonly allows: typeof JULIA_ACTIVATION_CLOSURE_ALLOWS_V1;
-    readonly doesNotAllow: typeof JULIA_ACTIVATION_CLOSURE_EXCLUSIONS_V1;
+    readonly allows:
+      | typeof JULIA_ACTIVATION_CLOSURE_ALLOWS_V1
+      | typeof JULIA_ACTIVATION_CLOSURE_ALLOWS_V2;
+    readonly doesNotAllow:
+      | typeof JULIA_ACTIVATION_CLOSURE_EXCLUSIONS_V1
+      | typeof JULIA_ACTIVATION_CLOSURE_EXCLUSIONS_V2;
   }>;
   readonly contentHash: string;
 }
@@ -243,7 +273,6 @@ export function parseJuliaMaintainerAcknowledgmentV1(
       "acceptedResidualRows", "approvalStatement", "residualDispositionResponse",
       "maintainerResponse", "trustModel", "aiAssistanceDisclosure", "scope", "contentHash",
     ]) || input.status !== "maintainer-approved" ||
-      input.approvedAt !== JULIA_ACTIVATION_CLOSURE_APPROVED_AT_V1 ||
       input.actorId !== "fractalpark-maintainer" || input.actorKind !== "human-maintainer" ||
       input.actorRole !== "maintainer" ||
       input.decision !== "accept-v0.4.19-residual-boundary" ||
@@ -256,16 +285,21 @@ export function parseJuliaMaintainerAcknowledgmentV1(
         input.regressionSetDigest,
       ].every(hash) || input.supportedClassicRowCount !== 195 ||
       input.regressionCount !== 11 || !residualRows(input.acceptedResidualRows) ||
-      input.approvalStatement !== JULIA_ACTIVATION_CLOSURE_APPROVAL_STATEMENT_V1 ||
       input.residualDispositionResponse !== JULIA_ACTIVATION_CLOSURE_RESIDUAL_RESPONSE_V1 ||
-      input.maintainerResponse !== JULIA_ACTIVATION_CLOSURE_MAINTAINER_RESPONSE_V1 ||
       !same(input.trustModel, JULIA_ACTIVATION_CLOSURE_TRUST_MODEL_V1) ||
-      input.aiAssistanceDisclosure !== JULIA_ACTIVATION_CLOSURE_AI_DISCLOSURE_V1 ||
       !plain(input.scope) || !exact(input.scope, ["allows", "doesNotAllow"]) ||
       !Array.isArray(input.scope.allows) || !dense(input.scope.allows) ||
-      !Array.isArray(input.scope.doesNotAllow) || !dense(input.scope.doesNotAllow) ||
-      !same(input.scope.allows, JULIA_ACTIVATION_CLOSURE_ALLOWS_V1) ||
-      !same(input.scope.doesNotAllow, JULIA_ACTIVATION_CLOSURE_EXCLUSIONS_V1)) throw Error();
+      !Array.isArray(input.scope.doesNotAllow) || !dense(input.scope.doesNotAllow)) {
+      throw Error();
+    }
+    const sourceReboundDecision =
+      input.approvedAt === JULIA_ACTIVATION_CLOSURE_APPROVED_AT_V2 &&
+      input.approvalStatement === JULIA_ACTIVATION_CLOSURE_APPROVAL_STATEMENT_V2 &&
+      input.maintainerResponse === JULIA_ACTIVATION_CLOSURE_MAINTAINER_RESPONSE_V2 &&
+      input.aiAssistanceDisclosure === JULIA_ACTIVATION_CLOSURE_AI_DISCLOSURE_V2 &&
+      same(input.scope.allows, JULIA_ACTIVATION_CLOSURE_ALLOWS_V2) &&
+      same(input.scope.doesNotAllow, JULIA_ACTIVATION_CLOSURE_EXCLUSIONS_V2);
+    if (!sourceReboundDecision) throw Error();
     return {
       ok: true,
       value: frozen(input as unknown as JuliaMaintainerAcknowledgmentV1),

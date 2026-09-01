@@ -27,12 +27,22 @@ describe('SoftwareApplication JSON-LD builder', () => {
   it('draws feature facts from the public-project contract', () => {
     const { facts } = PUBLIC_PROJECT;
     const features = buildSoftwareApplicationJsonLd().featureList.join('\n');
-    expect(features).toContain(`${facts.formulaCount} GLSL fractal formulas`);
+    expect(features).toContain(
+      `${facts.formulaCount} published Standard Definitions`,
+    );
+    expect(features).toContain(
+      `${facts.classicFormulaCount} also belong to the Classic collection`,
+    );
+    expect(features).toContain('Julia mode where supported');
     expect(features).toContain(`${facts.coloringModeCount} coloring modes`);
     expect(features).toContain(`${facts.transformCount} UV transform plugins`);
     expect(features).toContain(`${facts.formulaGuideCount} in-depth Formula Guides`);
     expect(features).toContain(`${facts.maxExportScale}×`);
+    expect(features).toContain('tested Classic-compatible FRM subset');
+    expect(features).toContain('private cloud library with email sign-in');
     expect(features).not.toMatch(/\b7 coloring modes\b/);
+    expect(features).not.toContain('Fractint-compatible FRM formula language');
+    expect(features).not.toContain('Local on-device artwork storage');
   });
 
   it('defaults to the approved tagline and accepts localized descriptions', () => {

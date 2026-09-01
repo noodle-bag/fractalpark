@@ -1168,7 +1168,10 @@ PersistentLocal {
       'standalone Editor uses the Classic-compatible source contract'
     );
     expect(enMessages.formulas.index.intro).toContain(
-      "FractalPark's 94 built-in Explorer formulas"
+      '534 published Standard Definitions'
+    );
+    expect(enMessages.formulas.index.intro).toContain(
+      '94 of them also belong to the Classic collection'
     );
     expect(enMessages.formulas.index.publishedIntro).toContain(
       '534 published Standard Definitions'
@@ -1199,10 +1202,13 @@ PersistentLocal {
       'Classic-compatible FRM subset'
     );
     expect(enMessages.about.aiDescription).toContain(
-      '534 published Standard Definitions with pinned FRM-like v1 source'
+      '534 published Standard Definitions across 7 structural families'
     );
     expect(enMessages.about.aiDescription).toContain(
-      'separate Classic-compatible custom formula Editor'
+      'published FRM-like v1 source'
+    );
+    expect(enMessages.about.aiDescription).toContain(
+      'distinct Classic-compatible FRM Editor'
     );
     expect(enMessages.about.techStack.formula).toContain(
       'published FRM-like v1 parser/backend'

@@ -443,31 +443,31 @@
     "currentProjection": {
       "en": {
         "manualSha256": "fd5e22761fef599ee113e803b59aa9f157f3e39e591c0a86aeeb804713139921",
-        "messageProjectionSha256": "0bbaeecdcf82e4241d93818f41ee75ceb3f37f04bbc96e9eb2994738d3c18804"
+        "messageProjectionSha256": "5808cb7b30f509770ea2af0693a0a9c0e5a25b7af770fe794a84b998b57933d1"
       },
       "zh": {
         "manualSha256": "8182f36d116d228cec65deb056ca53dbcecd1207d3e2c6fda75b6de78047d84d",
-        "messageProjectionSha256": "c0f06d7e7fb6834ac63192c73e919149cfcc5c3639fdc58434094101ae9f99ea"
+        "messageProjectionSha256": "23e34f6f73bed7151258925c4431a1739399da8c49e5a9b9f359c0bc70eeae60"
       },
       "pt": {
         "manualSha256": "d4d8c6adf4e6792300e2008dd70927966c1800c83c41a2b6d5d3d72aabb2484f",
-        "messageProjectionSha256": "d63ffff114892f0b5d99d4a13dab1ed55e54139cd92405f5f90e63b5eef6eeb3"
+        "messageProjectionSha256": "dda6eae6c95a563edfb70c9aff73e16fc2b35f4234eb8a3f8302eb53ff23d114"
       },
       "ko": {
         "manualSha256": "3f6890a7b90ae987831e4cfebe12443e25f87048fdd186f34251f9f80215af3c",
-        "messageProjectionSha256": "2b6db58785bbbfb2e8db62342c47effe7120b03e82e06576fe4a89e33b2d073b"
+        "messageProjectionSha256": "77f457121baa0658d892b9e284cee6b7e82a2890888ed7fd3a9a0f9dc8d57d9a"
       },
       "ru": {
         "manualSha256": "31ba0f76d64223cb018194d5472d0112f3163475fec6594f3c755cd822b33864",
-        "messageProjectionSha256": "113bb22edd884825daf9d87777b1cfd1603977bb8f6f9538a40e6774edd951db"
+        "messageProjectionSha256": "dea0c3cb93bb7539d6bed323bf6d4430fb4db2bf32106392f05ae3cac3a5178f"
       },
       "es": {
         "manualSha256": "f7ee2d056bdf4983637bf18f92ecbd670a3b05f57cd3c69964bf9c964dfc63a3",
-        "messageProjectionSha256": "3182fefa5c0b906c0ae46640fcc27223a238fe18363c12aad8df50a787f9a20f"
+        "messageProjectionSha256": "e15ce26ab08555b2fbb5a75882d3bc2aa83c0e6b8b9c0e9e95381eab208a9588"
       },
       "fr": {
         "manualSha256": "24bc7db00ae39628004905a73c933da824c021eee9d1de3e3a8578ec92305627",
-        "messageProjectionSha256": "eb4c85bbcc48d0cc6c865d859417c9e765ed480598d4f973c2dceee528cfb551"
+        "messageProjectionSha256": "27c790161fc47716095d7c042f45a19d5637bf98b55acb672b3083635750b89a"
       }
     },
     "contentRowsChanged": false,
