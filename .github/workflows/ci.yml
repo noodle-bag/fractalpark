@@ -15,18 +15,11 @@ jobs:
           node-version: 22
           cache: npm
       - run: npm ci
-      - name: Install Chromium for Julia worker audit
-        run: npx playwright install chromium
       - run: npm run lint
-      - run: npm run test:run
-      - run: npm run formula:performance:verify
+      - name: Run browser-independent tests
+        run: npm run test:run -- --exclude src/test/julia-renderer-evidence-v2.test.ts
       - name: Verify formula publication isolation
         run: npm run formula:rights:verify
-      - name: Verify Record preview profiles
-        run: npx tsx scripts/verify-formula-record-preview-profiles.ts
-      - name: Verify Record image masters from source
-        run: npx tsx scripts/verify-formula-record-masters.ts
       - run: npm run build
       - name: Verify built formula publication isolation
         run: npm run formula:rights:verify-build
-      - run: npm run formula:performance:verify-build

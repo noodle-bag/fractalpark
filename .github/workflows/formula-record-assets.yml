@@ -1,0 +1,52 @@
+name: Formula Record Assets
+
+on:
+  pull_request:
+    paths:
+      - "public/formula-library/v1/previews/**"
+      - "public/formula-library/v1/record-previews/**"
+      - "public/formula-library/v1/runtime/published/**"
+      - "resources/formula-library/**"
+      - "src/engine/**"
+      - "src/lib/formula-records.ts"
+      - "scripts/*formula-record-preview*"
+      - "scripts/*formula-record-masters*"
+      - "package.json"
+      - "package-lock.json"
+      - ".github/workflows/formula-record-assets.yml"
+  push:
+    branches: [main]
+    paths:
+      - "public/formula-library/v1/previews/**"
+      - "public/formula-library/v1/record-previews/**"
+      - "public/formula-library/v1/runtime/published/**"
+      - "resources/formula-library/**"
+      - "src/engine/**"
+      - "src/lib/formula-records.ts"
+      - "scripts/*formula-record-preview*"
+      - "scripts/*formula-record-masters*"
+      - "package.json"
+      - "package-lock.json"
+      - ".github/workflows/formula-record-assets.yml"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  formula-record-assets:
+    runs-on: ubuntu-latest
+    timeout-minutes: 120
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+      - run: npm ci
+      - name: Install Chromium
+        run: npx playwright install chromium
+      - name: Verify Record preview profiles
+        run: npx tsx scripts/verify-formula-record-preview-profiles.ts
+      - name: Verify Record image masters from source
+        run: npx tsx scripts/verify-formula-record-masters.ts

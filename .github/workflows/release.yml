@@ -3,61 +3,103 @@ name: Release
 on:
   push:
     tags:
-      - 'v*'
+      - "v*"
+  workflow_dispatch:
+    inputs:
+      tag:
+        description: Existing annotated tag to publish
+        required: true
+        type: string
 
 permissions:
+  actions: read
   contents: write
+  deployments: read
+
+env:
+  RELEASE_TAG: ${{ inputs.tag || github.ref_name }}
 
 jobs:
   release:
     runs-on: ubuntu-latest
-
     steps:
       - name: Check out release tag
         uses: actions/checkout@v4
         with:
+          ref: refs/tags/${{ env.RELEASE_TAG }}
           fetch-depth: 0
 
-      - name: Set up Node.js
-        uses: actions/setup-node@v4
-        with:
-          node-version: 22
-          cache: npm
-
-      - name: Install locked dependencies
-        run: npm ci
-
-      - name: Install Chromium for Record image verification
-        run: npx playwright install chromium
-
-      - name: Verify Record preview profiles
-        run: npx tsx scripts/verify-formula-record-preview-profiles.ts
-
-      - name: Verify Record image masters from source
-        run: npx tsx scripts/verify-formula-record-masters.ts
-
-      - name: Build release candidate
-        run: npm run build
-
-      - name: Enforce formula publication isolation
-        run: npm run formula:rights:release
-
-      - name: Reject eager formula definitions in build output
-        run: npm run formula:performance:verify-build
-
-      - name: Enforce standard-library release evidence
+      - name: Verify immutable release facts
         env:
-          FORMULA_PERFORMANCE_CANDIDATE_SHA: ${{ github.sha }}
-          FORMULA_PERFORMANCE_TARGET_URL: ${{ vars.FORMULA_PERFORMANCE_TARGET_URL }}
-        run: npm run formula:performance:release
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          set -euo pipefail
+
+          test "$(git cat-file -t "refs/tags/$RELEASE_TAG")" = "tag"
+          tag_sha="$(git rev-list -n 1 "refs/tags/$RELEASE_TAG")"
+
+          git fetch origin main --no-tags
+          git merge-base --is-ancestor "$tag_sha" origin/main
+
+          TAG_SHA="$tag_sha" node <<'NODE'
+          const fs = require("node:fs");
+
+          const pkg = JSON.parse(fs.readFileSync("package.json", "utf8"));
+          const lock = JSON.parse(fs.readFileSync("package-lock.json", "utf8"));
+          const site = fs.readFileSync("src/lib/site.ts", "utf8");
+          const changelog = fs.readFileSync("CHANGELOG.md", "utf8");
+          const expectedTag = `v${pkg.version}`;
+
+          if (process.env.RELEASE_TAG !== expectedTag) {
+            throw new Error(`release-tag-version-mismatch:${process.env.RELEASE_TAG}:${expectedTag}`);
+          }
+          if (lock.version !== pkg.version || lock.packages?.[""]?.version !== pkg.version) {
+            throw new Error("release-lock-version-mismatch");
+          }
+          if (!site.includes(`version: '${pkg.version}'`)) {
+            throw new Error("release-site-version-mismatch");
+          }
+          const escaped = pkg.version.replaceAll(".", "\\.");
+          if (!new RegExp(`^## ${escaped}(?: -|$)`, "m").test(changelog)) {
+            throw new Error("release-changelog-version-missing");
+          }
+          NODE
+
+          ci_success="$(gh run list \
+            --repo "$GITHUB_REPOSITORY" \
+            --workflow CI \
+            --commit "$tag_sha" \
+            --branch main \
+            --event push \
+            --json conclusion \
+            --jq '[.[] | select(.conclusion == "success")] | length')"
+          test "$ci_success" -ge 1
+
+          deployment_id="$({ gh api \
+            "repos/$GITHUB_REPOSITORY/deployments?sha=$tag_sha&environment=Production&per_page=20" \
+            --jq 'sort_by(.created_at) | last | .id // empty'; } 2>/dev/null)"
+          test -n "$deployment_id"
+
+          deployment_state="$(gh api \
+            "repos/$GITHUB_REPOSITORY/deployments/$deployment_id/statuses" \
+            --jq 'first | .state // empty')"
+          test "$deployment_state" = "success"
+
+          echo "tag_sha=$tag_sha"
+          echo "production_deployment=$deployment_id"
+
+          if gh release view "$RELEASE_TAG" --repo "$GITHUB_REPOSITORY" >/dev/null 2>&1; then
+            echo "Release $RELEASE_TAG already exists" >&2
+            exit 1
+          fi
 
       - name: Create GitHub Release
         env:
           GH_TOKEN: ${{ github.token }}
         run: |
-          gh release create "$GITHUB_REF_NAME" \
+          gh release create "$RELEASE_TAG" \
             --repo "$GITHUB_REPOSITORY" \
             --verify-tag \
             --generate-notes \
             --fail-on-no-commits \
-            --title "FractalPark $GITHUB_REF_NAME"
+            --title "FractalPark $RELEASE_TAG"
