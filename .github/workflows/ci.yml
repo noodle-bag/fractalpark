@@ -16,7 +16,8 @@ jobs:
           cache: npm
       - run: npm ci
       - run: npm run lint
-      - run: npm run test:run
+      - name: Run browser-independent tests
+        run: npm run test:run -- --exclude src/test/julia-renderer-evidence-v2.test.ts
       - name: Verify formula publication isolation
         run: npm run formula:rights:verify
       - run: npm run build

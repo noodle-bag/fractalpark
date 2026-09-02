@@ -17,6 +17,7 @@ on:
       - "src/engine/shaders/**"
       - "src/test/julia-*.test.ts"
       - "scripts/build-julia-*.ts"
+      - "scripts/lib/julia-*.ts"
       - "scripts/run-julia-tier2-webgl-worker.ts"
       - "scripts/run-julia-tier2-webgl-worker-v2.ts"
       - "scripts/run-julia-classic-regression-tier2-webgl-worker-v1.ts"
@@ -25,6 +26,9 @@ on:
       - "package.json"
       - "package-lock.json"
       - "tsconfig.json"
+      - "vitest.config.ts"
+      - "src/test/setup.ts"
+      - ".github/workflows/ci.yml"
       - ".github/workflows/julia-renderer-evidence.yml"
   workflow_dispatch:
 
@@ -54,6 +58,8 @@ jobs:
           cache: npm
       - run: npm ci
       - run: npx playwright install --with-deps chromium
+      - name: Verify Julia renderer evidence bindings
+        run: npm run test:run -- src/test/julia-renderer-evidence-v2.test.ts
       - run: npm run formula:julia-pre-gpu
       - name: Run Julia Tier 2 renderer shard
         run: >-

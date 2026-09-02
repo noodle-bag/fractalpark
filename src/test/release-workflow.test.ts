@@ -13,13 +13,32 @@ describe('release workflow boundaries', () => {
     const ci = readWorkflow('ci.yml');
 
     expect(ci).toContain('npm run lint');
-    expect(ci).toContain('npm run test:run');
+    expect(ci).toContain(
+      'npm run test:run -- --exclude src/test/julia-renderer-evidence-v2.test.ts',
+    );
     expect(ci).toContain('npm run build');
     expect(ci).toContain('npm run formula:rights:verify-build');
     expect(ci).not.toContain('verify-formula-record-preview-profiles');
     expect(ci).not.toContain('verify-formula-record-masters');
     expect(ci).not.toContain('formula:performance:verify');
     expect(ci).not.toContain('playwright install');
+
+    const julia = readWorkflow('julia-renderer-evidence.yml');
+    expect(julia).toContain('npx playwright install --with-deps chromium');
+    expect(julia).toContain(
+      'npm run test:run -- src/test/julia-renderer-evidence-v2.test.ts',
+    );
+    const juliaOwnedInputs = [
+      'src/test/julia-*.test.ts',
+      'scripts/lib/julia-*.ts',
+      'src/test/setup.ts',
+      'vitest.config.ts',
+      '.github/workflows/ci.yml',
+      '.github/workflows/julia-renderer-evidence.yml',
+    ];
+    for (const inputPath of juliaOwnedInputs) {
+      expect(julia).toContain(`"${inputPath}"`);
+    }
   });
 
   it('runs heavyweight Record verification only in its path-filtered workflow', () => {
