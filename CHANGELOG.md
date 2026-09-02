@@ -1,6 +1,6 @@
 # Changelog
 
-## 0.4.19 - Unreleased
+## 0.4.19 - 2026-09-02
 
 Unified Formula Library: FractalPark now publishes a source-readable Standard catalog while keeping the existing Classic runtime as an explicit overlapping collection rather than the public total.
 
