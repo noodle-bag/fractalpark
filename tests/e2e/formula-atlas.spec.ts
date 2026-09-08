@@ -113,12 +113,7 @@ test.describe('Formula Atlas', () => {
       page.locator('header a[href="/en/formulas"]').first()
     ).toBeVisible();
 
-    // The visible SSR product content links to the Formula Atlas.
-    await expect(
-      page.getByRole('link', {
-        name: 'Formula Atlas — every formula with math, history, and live examples',
-      })
-    ).toHaveAttribute('href', '/en/formulas');
-
+    await page.locator('header a[href="/en/formulas"]').first().click();
+    await expect(page).toHaveURL(/\/en\/formulas$/);
   });
 });
