@@ -83,6 +83,7 @@ function ExploreClient({ posterImage }: { posterImage?: string }) {
   const t = useTranslations('explore');
   const searchParams = useSearchParams();
   const router = useRouter();
+  const needsEntryDefaultRef = useRef(searchParams.size === 0);
   const initialHandoffIntentRef = useRef(
     parseEditorToExploreIntent(new URLSearchParams(searchParams.toString()))
   );
@@ -776,7 +777,7 @@ function ExploreClient({ posterImage }: { posterImage?: string }) {
     beforeApply: PublishedFormulaBeforeApply | undefined,
     options: {
       forceProfile?: boolean;
-      source: 'published-library' | 'feeling-lucky' | 'profile-reset';
+      source: 'published-library' | 'feeling-lucky' | 'profile-reset' | 'entry-default';
     },
     generation: number,
   ): Promise<PublishedFormulaSelectionResult> => {
@@ -813,15 +814,20 @@ function ExploreClient({ posterImage }: { posterImage?: string }) {
           formulaParams: getFormulaUniformDefaults(artifact.plugin),
           profile: resolveActivatedPublishedFormulaDefaultProfileV1(row),
         });
-        trackEvent('change_formula', {
-          formula: formulaId,
-          source: options.source,
-        });
+        if (options.source === 'entry-default') {
+          clearPublishedFormulaSelectionUndo();
+        } else {
+          trackEvent('change_formula', {
+            formula: formulaId,
+            source: options.source,
+          });
+        }
       },
       beforeApply,
     );
   }, [
     applyPublishedFormulaSelection,
+    clearPublishedFormulaSelectionUndo,
     clearHandoffFailure,
     document.formula.formulaId,
     publishedDescriptor,
@@ -837,6 +843,26 @@ function ExploreClient({ posterImage }: { posterImage?: string }) {
       }, generation)
     )
   ), [runPublishedFormulaAction, selectPublishedFormula]);
+
+  useEffect(() => {
+    if (!needsEntryDefaultRef.current) return;
+    let active = true;
+    // Defer ownership until after the Strict Mode setup/cleanup probe.
+    queueMicrotask(() => {
+      if (!active || !needsEntryDefaultRef.current) return;
+      needsEntryDefaultRef.current = false;
+      void runPublishedFormulaAction(async (generation) => {
+        const clientResult = await getPublishedFormulaLibraryClient();
+        if (!clientResult.ok) return clientResult;
+        const row = clientResult.value.resolveRuntimeAlias('mandelbrot');
+        if (!row) return { ok: false, code: 'formula-not-published' };
+        return selectPublishedFormula(row.formulaId, undefined, {
+          source: 'entry-default',
+        }, generation);
+      });
+    });
+    return () => { active = false; };
+  }, [runPublishedFormulaAction, selectPublishedFormula]);
 
   useEffect(() => {
     const currentParams = new URLSearchParams(searchParams.toString());
