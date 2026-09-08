@@ -15,6 +15,11 @@ import {
 } from '@/lib/fractal-file';
 import documentV2 from './fixtures/documents/document-v2.json';
 import envelopeV1 from './fixtures/documents/envelope-v1.json';
+import {
+  HELD_STANDARD_FORMULA_ID,
+  PUBLISHED_JULIA_KEYFRAME_FORMULA_ID,
+  publishedJuliaKeyframeDocument,
+} from './fixtures/cloud-save-julia-keyframes';
 
 const CURRENT_DOCUMENT = documentV2 as unknown as FractalDocument;
 const PORTABLE_ENVELOPE = envelopeV1 as unknown as FractalDocumentEnvelopeV1;
@@ -110,6 +115,76 @@ describe('fractal project files', () => {
     });
     if (!result.success) return;
     expect(result.value.assets).toBeUndefined();
+  });
+
+  it('preserves the reported published Julia keyframe artwork without a portable asset', async () => {
+    const document = publishedJuliaKeyframeDocument();
+    const result = await createFractalDocumentEnvelope(document, []);
+
+    expect(result.success).toBe(true);
+    if (!result.success) return;
+    expect(result.value.assets).toBeUndefined();
+    expect(result.value.document).toMatchObject({
+      formula: {
+        formulaId: PUBLISHED_JULIA_KEYFRAME_FORMULA_ID,
+        isJulia: true,
+        juliaC: [-0.118506, 0.925781],
+      },
+      animation: {
+        viewKeyframes: [
+          {
+            id: 'url-kf-0',
+            bounds: {
+              centerX: -0.0771952845,
+              centerY: 0.2354508236,
+              zoom: 0.37,
+              rotation: 0,
+            },
+          },
+          {
+            id: 'url-kf-1',
+            bounds: {
+              centerX: -0.000007988,
+              centerY: 0.4206591613,
+              zoom: 8964.18,
+              rotation: 0,
+            },
+          },
+        ],
+      },
+    });
+
+    const serialized = serializeFractalProject(result.value);
+    expect(serialized.success).toBe(true);
+    if (!serialized.success) return;
+    const parsed = parseFractalProjectJson(serialized.value);
+    expect(parsed).toMatchObject({
+      success: true,
+      value: {
+        mode: 'editable',
+        envelope: { document: result.value.document },
+      },
+    });
+
+    const prepared = await prepareFractalProjectImport(result.value, []);
+    expect(prepared).toMatchObject({
+      success: true,
+      value: {
+        document: result.value.document,
+        formulasToAdd: [],
+        reusedFormulaIds: [],
+      },
+    });
+  });
+
+  it('does not treat a held Standard formula as public', async () => {
+    const document = publishedJuliaKeyframeDocument();
+    document.formula.formulaId = HELD_STANDARD_FORMULA_ID;
+
+    expect(await createFractalDocumentEnvelope(document, [])).toMatchObject({
+      success: false,
+      errors: [{ code: 'missing-formula-asset' }],
+    });
   });
 
   it('preserves Remix provenance through project serialization', async () => {

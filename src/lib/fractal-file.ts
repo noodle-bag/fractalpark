@@ -15,10 +15,15 @@ import {
   resolveFrmSemanticsVersion,
   type FrmSemanticsVersion,
 } from '@/engine/frm/semantics-version';
+import { isPublishedFormulaId } from '@/lib/public-formula';
 
 export const FRACTAL_PROJECT_FILE_MAX_BYTES = 1024 * 1024;
 export const PORTABLE_FORMULA_SOURCE_MAX_BYTES = 256 * 1024;
 const BUILTIN_FORMULA_IDS = new Set(FORMULA_CATALOG.map((formula) => formula.id));
+
+function isPublicFormulaId(formulaId: string): boolean {
+  return BUILTIN_FORMULA_IDS.has(formulaId) || isPublishedFormulaId(formulaId);
+}
 
 export type FractalProjectErrorCode =
   | 'invalid-json'
@@ -188,7 +193,7 @@ export async function createFractalDocumentEnvelope(
   const formulaId = document.formula.formulaId;
   const localFormula = localFormulas.find((formula) => formula.id === formulaId);
 
-  if (BUILTIN_FORMULA_IDS.has(formulaId)) {
+  if (isPublicFormulaId(formulaId)) {
     return {
       success: true,
       value: {
@@ -299,7 +304,7 @@ export async function prepareFractalProjectImport(
   const formulaReference = normalizedEnvelope.document.assets?.formula;
   const documentFormulaId = normalizedEnvelope.document.formula.formulaId;
 
-  if (!formulaReference && !BUILTIN_FORMULA_IDS.has(documentFormulaId)) {
+  if (!formulaReference && !isPublicFormulaId(documentFormulaId)) {
     return failure(
       'missing-formula-asset',
       `Custom formula source is unavailable for ${documentFormulaId}.`,

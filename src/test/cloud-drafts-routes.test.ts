@@ -4,6 +4,10 @@ import { DELETE as draftDELETE, GET as draftGET, PATCH as draftPATCH } from '@/a
 import { GET as draftsGET, POST as draftsPOST } from '@/app/api/creation/drafts/route';
 import { DEFAULT_FRACTAL_DOCUMENT } from '@/engine/document';
 import { sealSession } from '@/lib/cloud/session';
+import {
+  PUBLISHED_JULIA_KEYFRAME_FORMULA_ID,
+  publishedJuliaKeyframeDocument,
+} from './fixtures/cloud-save-julia-keyframes';
 
 const SUPABASE_URL = 'https://project.example.supabase.co';
 const USER_ID = '11111111-2222-3333-4444-555555555555';
@@ -298,6 +302,37 @@ describe('POST /api/creation/drafts', () => {
     // The envelope arrives canonically serialized (sorted keys), not client-shaped.
     const keys = Object.keys(args.p_envelope.document.coloring).sort();
     expect(Object.keys(args.p_envelope.document.coloring)).toEqual(keys);
+  });
+
+  it('creates the reported published Julia keyframe draft intact', async () => {
+    const document = publishedJuliaKeyframeDocument();
+    const res = await draftsPOST(
+      postJson(
+        '/api/creation/drafts',
+        {
+          envelope: { envelopeVersion: 1, document },
+          remixSourceType: 'formula',
+          remixSourceId: PUBLISHED_JULIA_KEYFRAME_FORMULA_ID,
+        },
+        AUTH_HEADERS(),
+      ),
+    );
+
+    expect(res.status).toBe(201);
+    const rpcCall = fetchCalls.find((call) =>
+      call.url.includes('rpc/fractalpark_draft_create'),
+    );
+    expect(rpcCall).toBeDefined();
+    const args = JSON.parse(rpcCall!.body as string);
+    expect(args.p_remix_source_id).toBe(PUBLISHED_JULIA_KEYFRAME_FORMULA_ID);
+    expect(args.p_envelope.document.formula).toMatchObject({
+      formulaId: PUBLISHED_JULIA_KEYFRAME_FORMULA_ID,
+      isJulia: true,
+      juliaC: [-0.118506, 0.925781],
+    });
+    expect(args.p_envelope.document.animation.viewKeyframes).toEqual(
+      document.animation?.viewKeyframes,
+    );
   });
 
   it('returns the original create result and deletes the replay upload', async () => {

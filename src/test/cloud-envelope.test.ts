@@ -9,6 +9,11 @@ import {
   resolveRegistrySource,
   validateCloudEnvelopeV1,
 } from '@/lib/cloud/envelope';
+import {
+  HELD_STANDARD_FORMULA_ID,
+  PUBLISHED_JULIA_KEYFRAME_FORMULA_ID,
+  publishedJuliaKeyframeDocument,
+} from './fixtures/cloud-save-julia-keyframes';
 
 function envelopeOf(document: Partial<FractalDocument> = {}, extras: Record<string, unknown> = {}) {
   return {
@@ -45,6 +50,27 @@ describe('validateCloudEnvelopeV1', () => {
     });
   });
 
+  it('accepts the reported published Julia keyframe artwork', () => {
+    const input = envelopeOf(publishedJuliaKeyframeDocument());
+    const result = validateCloudEnvelopeV1(input, inputBytes(input));
+
+    expect(result).toMatchObject({
+      ok: true,
+      value: { hasPortableFormulas: false },
+    });
+    if (!result.ok) return;
+    expect(JSON.parse(result.value.canonicalJson)).toMatchObject({
+      document: {
+        formula: {
+          formulaId: PUBLISHED_JULIA_KEYFRAME_FORMULA_ID,
+          isJulia: true,
+          juliaC: [-0.118506, 0.925781],
+        },
+        animation: { viewKeyframes: [{ id: 'url-kf-0' }, { id: 'url-kf-1' }] },
+      },
+    });
+  });
+
   it('rejects over-cap input before parsing', () => {
     const result = validateCloudEnvelopeV1({}, 1_048_577);
     expect(result.ok).toBe(false);
@@ -60,6 +86,15 @@ describe('validateCloudEnvelopeV1', () => {
   it('rejects unknown runtime entities from every allowlist', () => {
     const badFormula = envelopeOf({ formula: { ...DEFAULT_FRACTAL_DOCUMENT.formula, formulaId: 'no-such-formula' } });
     expect(validateCloudEnvelopeV1(badFormula, inputBytes(badFormula)).ok).toBe(false);
+    const heldFormula = envelopeOf({
+      formula: {
+        ...DEFAULT_FRACTAL_DOCUMENT.formula,
+        formulaId: HELD_STANDARD_FORMULA_ID,
+      },
+    });
+    expect(
+      validateCloudEnvelopeV1(heldFormula, inputBytes(heldFormula)).ok,
+    ).toBe(false);
     const badColoring = envelopeOf({
       coloring: { ...DEFAULT_FRACTAL_DOCUMENT.coloring, outsideColoringId: 'no-such-coloring' },
     });
@@ -132,6 +167,20 @@ describe('validateCloudEnvelopeV1', () => {
       { assets: { formulas: [{ ...goodAsset, id: 'mandelbrot' }] } },
     );
     expect(validateCloudEnvelopeV1(builtinShadow, inputBytes(builtinShadow)).ok).toBe(false);
+
+    const publishedShadow = envelopeOf(
+      {},
+      {
+        assets: {
+          formulas: [
+            { ...goodAsset, id: PUBLISHED_JULIA_KEYFRAME_FORMULA_ID },
+          ],
+        },
+      },
+    );
+    expect(
+      validateCloudEnvelopeV1(publishedShadow, inputBytes(publishedShadow)).ok,
+    ).toBe(false);
 
     const badHash = envelopeOf({}, { assets: { formulas: [{ ...goodAsset, hash: '0'.repeat(64) }] } });
     expect(validateCloudEnvelopeV1(badHash, inputBytes(badHash)).ok).toBe(false);
@@ -213,8 +262,14 @@ describe('canonicalStringify', () => {
 });
 
 describe('resolveRegistrySource', () => {
-  it('resolves builtin formulas and gallery presets, rejects unknown ids', () => {
+  it('resolves public formulas and gallery presets, rejects unknown ids', () => {
     expect(resolveRegistrySource('formula', 'mandelbrot')).toBe(true);
+    expect(
+      resolveRegistrySource('formula', PUBLISHED_JULIA_KEYFRAME_FORMULA_ID),
+    ).toBe(true);
+    expect(resolveRegistrySource('formula', HELD_STANDARD_FORMULA_ID)).toBe(
+      false,
+    );
     expect(resolveRegistrySource('formula', 'no-such-formula')).toBe(false);
     expect(resolveRegistrySource('preset', 'preset-newton-deep-spiral')).toBe(true);
     expect(resolveRegistrySource('preset', 'preset-nope')).toBe(false);
