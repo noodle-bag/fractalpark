@@ -1,19 +1,16 @@
 'use client';
 
 import Image from 'next/image';
-import { lazy, Suspense, useEffect, useRef, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { flushSync } from 'react-dom';
 import { Maximize2, Minimize2, Pause, Play } from 'lucide-react';
+import PublishedArtworkCanvas from '@/components/fractal/PublishedArtworkCanvas';
 import type { PublishedArtworkPlayback } from '@/lib/published-artworks';
 import {
   PLAYBACK_CONTROL_BAR_CLASS,
   PLAYBACK_CONTROL_BUTTON_CLASS,
 } from '@/components/fractal/playback-controls';
 import { Button } from '@/components/ui/button';
-
-const AnimatedFractalCanvas = lazy(
-  () => import('@/components/fractal/AnimatedFractalCanvas')
-);
 
 interface ArtworkViewerProps {
   artwork: PublishedArtworkPlayback;
@@ -100,14 +97,12 @@ export function ArtworkViewer({
           />
           {!isOpen ? (
             <div className="pointer-events-none absolute inset-0">
-              <Suspense fallback={null}>
-                <AnimatedFractalCanvas
-                  params={artwork.params}
-                  keyframes={artwork.animation.keyframes}
-                  dprScale={0.75}
-                  className="h-full w-full"
-                />
-              </Suspense>
+              <PublishedArtworkCanvas
+                artwork={artwork}
+                keyframes={artwork.animation.keyframes}
+                dprScale={0.75}
+                className="h-full w-full"
+              />
             </div>
           ) : null}
         </div>
@@ -140,16 +135,14 @@ export function ArtworkViewer({
           />
 
           <div className="pointer-events-none absolute inset-0">
-            <Suspense fallback={null}>
-              <AnimatedFractalCanvas
-                params={artwork.params}
-                keyframes={artwork.animation.keyframes}
-                dprScale={0.75}
-                paused={isPaused}
-                resetOnStop={false}
-                className="h-full w-full"
-              />
-            </Suspense>
+            <PublishedArtworkCanvas
+              artwork={artwork}
+              keyframes={artwork.animation.keyframes}
+              dprScale={0.75}
+              paused={isPaused}
+              resetOnStop={false}
+              className="h-full w-full"
+            />
           </div>
 
           <div className="absolute bottom-4 left-0 right-0 flex flex-col items-center gap-3 px-4">

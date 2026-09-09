@@ -1,8 +1,9 @@
 'use client';
 
-import { lazy, Suspense, useMemo, useState } from 'react';
+import { useMemo, useState } from 'react';
 import Image from 'next/image';
 import Link from 'next/link';
+import PublishedArtworkCanvas from '@/components/fractal/PublishedArtworkCanvas';
 import {
   buildPublishedArtworkPlayback,
   type PublishedArtwork,
@@ -11,10 +12,6 @@ import {
   GALLERY_CARD_LINK_CLASS,
   GALLERY_PREVIEW_FRAME_CLASS,
 } from './gallery-card-styles';
-
-const AnimatedFractalCanvas = lazy(
-  () => import('@/components/fractal/AnimatedFractalCanvas')
-);
 
 interface PublishedArtworkCardProps {
   artwork: PublishedArtwork;
@@ -62,14 +59,12 @@ export function PublishedArtworkCard({
           )}
           {isHovered && hasAnimation ? (
             <div className="pointer-events-none absolute inset-0">
-              <Suspense fallback={null}>
-                <AnimatedFractalCanvas
-                  params={playback.params}
-                  keyframes={playback.animation.keyframes}
-                  dprScale={0.5}
-                  className="h-full w-full"
-                />
-              </Suspense>
+              <PublishedArtworkCanvas
+                artwork={playback}
+                keyframes={playback.animation.keyframes}
+                dprScale={0.5}
+                className="h-full w-full"
+              />
             </div>
           ) : null}
         </div>

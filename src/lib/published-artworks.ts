@@ -4,7 +4,10 @@ import {
   type ArtworkContentEntry,
 } from '@/content/artwork-manifest';
 import type { FractalDocument } from '@/engine/document';
-import { documentToRuntimeParams } from '@/engine/document-adapter';
+import {
+  documentToRuntimeParams,
+  projectDocumentToRuntimeParams,
+} from '@/engine/document-adapter';
 import type { FractalParams, Keyframe } from '@/engine/types';
 import {
   buildCanonicalPresetDocument,
@@ -30,6 +33,9 @@ export interface PublishedArtworkPlayback {
   name: string;
   thumbnail?: string;
   params: FractalParams;
+  runtimeFormula?: {
+    runtimeId: string;
+  };
   animation: { keyframes: Keyframe[] };
 }
 
@@ -60,11 +66,20 @@ export function buildPublishedArtwork(
 export function buildPublishedArtworkPlayback(
   artwork: PublishedArtwork
 ): PublishedArtworkPlayback {
+  const persistedParams = projectDocumentToRuntimeParams(artwork.document);
+
   return {
     id: artwork.presetId,
     name: artwork.name,
     thumbnail: artwork.thumbnail,
     params: documentToRuntimeParams(artwork.document),
+    ...(persistedParams.isJulia
+      ? {
+          runtimeFormula: {
+            runtimeId: artwork.document.formula.formulaId,
+          },
+        }
+      : {}),
     animation: {
       keyframes: buildPresetPlaybackKeyframes(
         artwork.document,

@@ -99,6 +99,14 @@ drift remains as a fallback for presets without explicit keyframes, it must be
 produced by one shared playback projection and must not modify the canonical
 document, poster, thumbnail, or Remix state.
 
+Published Julia playback resolves a legacy runtime ID through the validated
+public formula directory, loads the exact published formula revision, and
+enables Julia only when that revision appears in the runtime activation
+authority. Missing, stale, unsupported, fetch-failed, or compile-failed
+formulas keep the static published image visible and must not mount a
+parameter-plane canvas as a substitute. Drift excludes authority-denied live
+entries from its pool and advances past later fetch or compile failures.
+
 ### Custom formulas
 
 The FRM Editor and Explore use the same persisted custom-formula record,
@@ -148,6 +156,8 @@ is not the canonical model for new published preset or persistence work.
 - Gallery cards retain their static published images for SSR, no-JavaScript,
   touch, non-animated presets, and WebGL failure. Hover-capable pointers may
   lazy-load only the currently hovered animated preset.
+- Julia canvases use instance-local published formula plugins. They do not
+  register formula source globally or mutate the user's Explore session.
 - Published artwork pages automatically play the current artwork after
   hydration, both inline and after View Fullscreen. The page has no separate
   Play action; fullscreen keeps Pause/Resume and Exit controls.
