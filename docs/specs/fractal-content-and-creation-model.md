@@ -92,10 +92,12 @@ The exact TypeScript name may follow nearby conventions, but there must be
 one implementation and one validation path.
 
 The canonical static composition comes from the preset's current view.
-Animation keyframes affect playback only. If a generated drift remains as a
-fallback for presets without explicit keyframes, it must be produced by one
-shared playback projection and must not modify the canonical document,
-poster, thumbnail, or Remix state.
+Animation keyframes affect playback only. The shared playback projection must
+cyclically anchor explicit keyframes so playback at `t=0` uses that canonical
+static composition without changing the closed animation path. If a generated
+drift remains as a fallback for presets without explicit keyframes, it must be
+produced by one shared playback projection and must not modify the canonical
+document, poster, thumbnail, or Remix state.
 
 ### Custom formulas
 

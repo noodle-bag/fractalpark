@@ -7,6 +7,7 @@ import {
 import {
   buildCanonicalPresetDocument,
   buildFractalParamsFromPresetQuery,
+  buildPresetPlaybackKeyframes,
   builtinPresetConfigToExploreHref,
   parseGalleryPresetsFile,
 } from '@/lib/gallery-presets';
@@ -16,6 +17,12 @@ import {
   buildPublishedArtworkPlayback,
 } from '@/lib/published-artworks';
 import { documentToExploreHref, fractalParamsToHref } from '@/lib/url-params';
+
+function cycleEdges(ids: string[]): string[] {
+  return ids
+    .map((id, index) => `${id}->${ids[(index + 1) % ids.length]}`)
+    .sort();
+}
 
 describe('fractal content model', () => {
   it('preserves saved Julia intent while fail-closing legacy presets at runtime', () => {
@@ -85,5 +92,53 @@ describe('fractal content model', () => {
     expect(playback.id).toBe(artwork.presetId);
     expect(playback.params).toEqual(documentToRuntimeParams(artwork.document));
     expect(playback.animation.keyframes.length).toBeGreaterThanOrEqual(2);
+  });
+
+  it('starts every published animation from its canonical static composition', () => {
+    const configs = parseGalleryPresetsFile(presetsFile).presets;
+    const alreadyAligned: string[] = [];
+    const reanchored: string[] = [];
+
+    for (const config of configs) {
+      const document = buildCanonicalPresetDocument(config);
+      const sourceKeyframes = document.animation?.viewKeyframes;
+      expect(sourceKeyframes?.length, config.id).toBeGreaterThanOrEqual(2);
+
+      const playbackKeyframes = buildPresetPlaybackKeyframes(document, config.id);
+      expect(playbackKeyframes[0].bounds, config.id).toEqual(document.scene.bounds);
+      expect(cycleEdges(playbackKeyframes.map(({ id }) => id)), config.id).toEqual(
+        cycleEdges(sourceKeyframes!.map(({ id }) => id))
+      );
+
+      if (playbackKeyframes[0].id === sourceKeyframes![0].id) {
+        alreadyAligned.push(config.id);
+      } else {
+        reanchored.push(config.id);
+      }
+    }
+
+    expect(alreadyAligned).toEqual([
+      'preset-burning-ship-cinder-rift',
+      'preset-mandelbox-cobalt-bastion',
+    ]);
+    expect(reanchored).toHaveLength(24);
+  });
+
+  it('rejects explicit playback that cannot start from the static composition', () => {
+    const config = parseGalleryPresetsFile(presetsFile).presets[0];
+    const document = buildCanonicalPresetDocument(config);
+    const mismatched = {
+      ...document,
+      scene: {
+        bounds: {
+          ...document.scene.bounds,
+          centerX: document.scene.bounds.centerX + 1,
+        },
+      },
+    };
+
+    expect(() => buildPresetPlaybackKeyframes(mismatched, config.id)).toThrow(
+      `Preset "${config.id}" current view must match an animation keyframe`
+    );
   });
 });
