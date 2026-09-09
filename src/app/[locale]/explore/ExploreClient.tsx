@@ -3,7 +3,7 @@
 import { useState, useCallback, useRef, useEffect, useMemo } from 'react';
 import { useSearchParams, useRouter } from 'next/navigation';
 import { useLocale, useTranslations } from 'next-intl';
-import FractalCanvas from '@/components/fractal/FractalCanvas';
+import ExploreWorkerFractalCanvas from '@/components/fractal/ExploreWorkerFractalCanvas';
 import { FormulaPanel } from '@/components/fractal/FormulaPanel';
 import { ColoringPanel } from '@/components/fractal/ColoringPanel';
 import { TransformPanel } from '@/components/fractal/TransformPanel';
@@ -1128,7 +1128,7 @@ function ExploreClient({ posterImage }: { posterImage?: string }) {
           </div>
         )}
         {isFormulaReady && !isPreviewPlaying && (
-          <FractalCanvas
+          <ExploreWorkerFractalCanvas
             paletteIndex={paletteIndex}
             maxIterations={effectiveIterations}
             bounds={bounds}

@@ -18,7 +18,7 @@ import type {
   ViewBounds,
 } from '@/engine/types';
 
-interface FractalCanvasProps {
+export interface FractalCanvasProps {
   paletteIndex: number;
   maxIterations: number;
   bounds: ViewBounds;
