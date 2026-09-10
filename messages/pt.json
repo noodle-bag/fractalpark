@@ -1790,6 +1790,9 @@
       "polarAngleScale": "Escala de Ângulo",
       "polarRadiusScale": "Escala de Raio",
       "sphericalAmount": "Intensidade Esférica",
+      "mandelboxScale": "Escala do Mandelbox",
+      "phoenixP": "Parâmetro do Phoenix",
+      "phoenixMultiP": "Parâmetro do Multi-Phoenix",
       "ringsP": "Parâmetro dos Anéis",
       "animation": {
         "title": "Animação",

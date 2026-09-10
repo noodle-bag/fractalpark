@@ -1790,6 +1790,9 @@
       "polarAngleScale": "Масштаб угла",
       "polarRadiusScale": "Масштаб радиуса",
       "sphericalAmount": "Степень сферичности",
+      "mandelboxScale": "Масштаб Mandelbox",
+      "phoenixP": "Параметр Phoenix",
+      "phoenixMultiP": "Параметр Multi-Phoenix",
       "ringsP": "Параметр колец",
       "animation": {
         "title": "Анимация",

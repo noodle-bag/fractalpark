@@ -101,7 +101,11 @@ describe('public Formula Record v1', () => {
             record.defaultProfile.mode === 'julia'
         )
         .map((record) => record.formulaId)
-    ).toEqual([SUPPORTED_JULIA_PROFILE_ID]);
+    ).toEqual([
+      '3edbea29-956a-5900-9aa7-02ccc2183016',
+      SUPPORTED_JULIA_PROFILE_ID,
+      '62098934-def3-527a-ac43-2c80449c9848',
+    ]);
 
     for (const record of published) {
       expect(record.availability).toBe('published');

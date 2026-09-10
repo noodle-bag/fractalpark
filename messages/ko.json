@@ -1790,6 +1790,9 @@
       "polarAngleScale": "각도 배율",
       "polarRadiusScale": "반지름 배율",
       "sphericalAmount": "구면 강도",
+      "mandelboxScale": "Mandelbox 배율",
+      "phoenixP": "Phoenix 파라미터",
+      "phoenixMultiP": "Multi-Phoenix 파라미터",
       "ringsP": "링 파라미터",
       "animation": {
         "title": "애니메이션",

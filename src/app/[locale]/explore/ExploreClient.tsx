@@ -61,6 +61,7 @@ import {
 } from '@/engine/formulas/v1';
 import { getPublishedFormulaLibraryClient } from '@/lib/published-formula-library';
 import { partitionPublishedFormulaParams } from '@/lib/published-formula-params';
+import { resolveRecoveredPublishedRenderingPluginV1 } from '@/engine/formulas/v1/recovered-quantization-rendering-v1';
 import {
   PublishedFormulaActionCoordinator,
   PublishedFormulaSelectionCoordinator,
@@ -414,7 +415,8 @@ function ExploreClient({ posterImage }: { posterImage?: string }) {
         !publishedRestoreAction.isCurrent(restoreGeneration) ||
         !clientResult.ok
       ) return;
-      if (!clientResult.value.get(target)) return;
+      const row = clientResult.value.get(target);
+      if (!row) return;
 
       await publishedRestore.select(
         target,
@@ -445,7 +447,12 @@ function ExploreClient({ posterImage }: { posterImage?: string }) {
               )?.uniforms,
             },
           );
-          pluginRegistry.register(artifact.plugin);
+          pluginRegistry.register(
+            resolveRecoveredPublishedRenderingPluginV1(
+              artifact.plugin,
+              pluginRegistry.getFormula(row.displayName),
+            ),
+          );
           replacePluginParamDomains(restoredParams);
           setPublishedDescriptor(artifact.descriptor);
           setFormulaResolution(
@@ -807,11 +814,16 @@ function ExploreClient({ posterImage }: { posterImage?: string }) {
       clientResult.value,
       (artifact) => {
         clearHandoffFailure();
-        pluginRegistry.register(artifact.plugin);
+        registerBuiltins({ quiet: true });
+        const renderingPlugin = resolveRecoveredPublishedRenderingPluginV1(
+          artifact.plugin,
+          pluginRegistry.getFormula(row.displayName),
+        );
+        pluginRegistry.register(renderingPlugin);
         setPublishedDescriptor(artifact.descriptor);
         applyPublishedFormulaSelection({
           formulaId,
-          formulaParams: getFormulaUniformDefaults(artifact.plugin),
+          formulaParams: getFormulaUniformDefaults(renderingPlugin),
           profile: resolveActivatedPublishedFormulaDefaultProfileV1(row),
         });
         if (options.source === 'entry-default') {

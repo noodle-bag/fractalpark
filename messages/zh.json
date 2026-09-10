@@ -1790,6 +1790,9 @@
       "polarAngleScale": "角度缩放",
       "polarRadiusScale": "半径缩放",
       "sphericalAmount": "球面强度",
+      "mandelboxScale": "Mandelbox 缩放",
+      "phoenixP": "Phoenix 参数",
+      "phoenixMultiP": "多重 Phoenix 参数",
       "ringsP": "环形参数",
       "animation": {
         "title": "动画",

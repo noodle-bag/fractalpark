@@ -494,7 +494,11 @@ interface FormulaUniformControlProps {
 
 function getFormulaUniformLabel(descriptor: PluginUniformDescriptor, t: ReturnType<typeof useTranslations>): string {
   if (descriptor.label) {
-    return t(descriptor.label);
+    return t(
+      descriptor.label.startsWith('explore.')
+        ? descriptor.label.slice('explore.'.length)
+        : descriptor.label,
+    );
   }
 
   return descriptor.name.startsWith('u_') ? descriptor.name.slice(2) : descriptor.name;

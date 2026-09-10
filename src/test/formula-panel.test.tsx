@@ -123,7 +123,7 @@ bailout:
     );
 
     expect(screen.getByText('controls.formulaParameters')).toBeInTheDocument();
-    expect(screen.getByText('explore.controls.phoenixP')).toBeInTheDocument();
+    expect(screen.getByText('controls.phoenixP')).toBeInTheDocument();
     expect(screen.getByRole('slider')).toBeInTheDocument();
   });
 

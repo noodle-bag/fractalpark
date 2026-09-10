@@ -5,6 +5,7 @@ import type {
   PublishedFormulaRuntimeIndexRowV1,
 } from "./published-runtime";
 import { canonicalJsonV1, sha256HexSyncV1 } from "./revisions";
+import { resolveCorrectedPublishedDefaultProfileV1 } from "./published-default-profile-corrections-v1";
 
 const UUID_V5 =
   /^[a-f0-9]{8}-[a-f0-9]{4}-5[a-f0-9]{3}-[89ab][a-f0-9]{3}-[a-f0-9]{12}$/;
@@ -271,21 +272,22 @@ export function resolveJuliaRuntimeCapabilityV1(
 export function resolveActivatedPublishedFormulaDefaultProfileV1(
   row: PublishedFormulaRuntimeIndexRowV1,
 ): PublishedFormulaProfileV1 {
+  const profile = resolveCorrectedPublishedDefaultProfileV1(row);
   const capability = resolveJuliaRuntimeCapabilityV1(
     row.formulaId,
     row.sourceRevision,
   );
-  if (row.profile.mode !== "julia" || capability.supportsEditing)
-    return row.profile;
+  if (profile.mode !== "julia" || capability.supportsEditing)
+    return profile;
   return Object.freeze({
-    schema: row.profile.schema,
-    quality: row.profile.quality,
+    schema: profile.schema,
+    quality: profile.quality,
     mode: "parameter-plane" as const,
-    center: row.profile.center,
-    zoom: row.profile.zoom,
-    rotation: row.profile.rotation,
-    iterations: row.profile.iterations,
-    ...(row.profile.probe ? { probe: row.profile.probe } : {}),
+    center: profile.center,
+    zoom: profile.zoom,
+    rotation: profile.rotation,
+    iterations: profile.iterations,
+    ...(profile.probe ? { probe: profile.probe } : {}),
   });
 }
 
