@@ -18,6 +18,7 @@ import {
 import { validateFormulaPublication } from '@/lib/cloud/formula-publish';
 import { MIT_LICENSE_URL } from '@/lib/mit-license';
 import { cache } from 'react';
+import { ContentViewTracker } from '@/components/analytics/ContentAnalytics';
 
 export const dynamic = 'force-dynamic';
 
@@ -89,6 +90,10 @@ export default async function CommunityArtworkPage({ params }: PageProps) {
 
   return (
     <main className="mx-auto max-w-3xl px-4 py-10 sm:px-6">
+      <ContentViewTracker
+        eventName="community_artwork_viewed"
+        eventParams={{ publication_id: publication.id, locale }}
+      />
       <script type="application/ld+json">{renderJsonLd(jsonLd)}</script>
       <nav className="text-sm text-muted-foreground">
         <Link href="/gallery?view=community" className="hover:underline">

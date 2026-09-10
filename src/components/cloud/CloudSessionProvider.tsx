@@ -10,7 +10,7 @@
  */
 
 import { createContext, useCallback, useContext, useEffect, useMemo, useRef, useState } from 'react';
-import { useTranslations } from 'next-intl';
+import { useLocale, useTranslations } from 'next-intl';
 
 import { CloudClientError, getSession, logout, requestOtp, verifyOtp } from '@/lib/cloud/client';
 import { Button } from '@/components/ui/button';
@@ -23,6 +23,7 @@ import {
 } from '@/components/ui/dialog';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
+import { trackEvent } from '@/components/analytics/PageViewTracker';
 
 export type CloudSessionState =
   | { status: 'loading' }
@@ -58,6 +59,7 @@ function OtpDialog({ open, onClose, onVerified }: {
   onVerified: (userId: string) => void;
 }) {
   const t = useTranslations('cloud.otp');
+  const locale = useLocale();
   const [phase, setPhase] = useState<OtpPhase>('email');
   const [email, setEmail] = useState('');
   const [code, setCode] = useState('');
@@ -103,19 +105,21 @@ function OtpDialog({ open, onClose, onVerified }: {
     setError(null);
     try {
       await requestOtp(email.trim());
+      trackEvent('auth_otp_requested', { locale });
       setPhase('code');
     } catch (errorValue) {
       setError(errorMessage(errorValue));
     } finally {
       setPending(false);
     }
-  }, [email, errorMessage]);
+  }, [email, errorMessage, locale]);
 
   const submitCode = useCallback(async () => {
     setPending(true);
     setError(null);
     try {
       const session = await verifyOtp(email.trim(), code.trim());
+      trackEvent('auth_otp_verified', { locale });
       onVerified(session.userId);
       reset();
     } catch (errorValue) {
@@ -123,7 +127,7 @@ function OtpDialog({ open, onClose, onVerified }: {
     } finally {
       setPending(false);
     }
-  }, [code, email, errorMessage, onVerified, reset]);
+  }, [code, email, errorMessage, locale, onVerified, reset]);
 
   return (
     <Dialog open={open} onOpenChange={(next) => { if (!next) close(); }}>

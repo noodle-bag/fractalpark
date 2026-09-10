@@ -36,6 +36,7 @@ import {
 } from '@/lib/cloud/client';
 import { PublishDialog } from './PublishDialog';
 import { HTML_LANG, type SupportedLocale } from '@/i18n/supported-locales';
+import { trackEvent } from '@/components/analytics/PageViewTracker';
 
 const ERROR_KEYS = new Set([
   'unavailable',
@@ -106,7 +107,8 @@ export function MyWorksCloud() {
       setBusyId(publicationId);
       setError(null);
       try {
-        await withdrawPublication(publicationId);
+        const result = await withdrawPublication(publicationId);
+        if (!result.replayed) trackEvent('publication_withdrawn');
         await refreshDrafts();
       } catch (value) {
         setError(value instanceof CloudClientError ? value.code : 'unavailable');

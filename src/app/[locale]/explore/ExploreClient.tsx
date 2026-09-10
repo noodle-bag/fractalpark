@@ -22,7 +22,11 @@ import { useCloudSession } from '@/components/cloud/CloudSessionProvider';
 import { resolveCustomFormula } from '@/lib/formula-resolver';
 import AnimatedFractalCanvas from '@/components/fractal/AnimatedFractalCanvas';
 import { AlertTriangle, ChevronDown, ChevronUp } from 'lucide-react';
-import { DEFAULT_FRACTAL_DOCUMENT } from '@/engine/document';
+import {
+  DEFAULT_FRACTAL_DOCUMENT,
+  type FractalDocument,
+} from '@/engine/document';
+import { normalizeFractalDocument } from '@/engine/document-migrate';
 import type { FormulaSelectionRequest } from '@/engine/frm/authoring';
 import { getDefaultBounds } from '@/engine/plugins/formula-catalog';
 import type { PluginParamRecord, PluginParamValue } from '@/engine/types';
@@ -33,6 +37,7 @@ import {
 import { captureThumbnail } from '@/lib/capture-thumbnail';
 import { readFractalDocumentEnvelope } from '@/engine/document-envelope';
 import { consumeRemixHandoff } from '@/lib/remix-handoff';
+import { parseRemixSource } from '@/lib/remix-source';
 import {
   parseEditorToExploreIntent,
   stripEditorToExploreIntent,
@@ -63,6 +68,14 @@ import { getPublishedFormulaLibraryClient } from '@/lib/published-formula-librar
 import { partitionPublishedFormulaParams } from '@/lib/published-formula-params';
 import { resolveRecoveredPublishedRenderingPluginV1 } from '@/engine/formulas/v1/recovered-quantization-rendering-v1';
 import {
+  analyticsValuesEqual,
+  CreatorAnalyticsSession,
+  resolveCreatorRemixSource,
+  type CreatorChangeAttribution,
+  type CreatorChangeType,
+  type CreatorRemixSource,
+} from '@/lib/creator-analytics';
+import {
   PublishedFormulaActionCoordinator,
   PublishedFormulaSelectionCoordinator,
   pickPublishedFormulaLuckyRow,
@@ -79,6 +92,22 @@ type ExploreFormulaResolution =
       errors: string[];
     };
 
+const NORMALIZED_DEFAULT_FRACTAL_DOCUMENT = normalizeFractalDocument(
+  DEFAULT_FRACTAL_DOCUMENT,
+);
+
+function creatorDocumentState(document: FractalDocument) {
+  return {
+    scene: document.scene,
+    formula: document.formula,
+    coloring: document.coloring,
+    transform: document.transform,
+    render: document.render,
+    animation: document.animation,
+    assets: document.assets,
+  };
+}
+
 function ExploreClient({ posterImage }: { posterImage?: string }) {
   const locale = useLocale();
   const t = useTranslations('explore');
@@ -88,6 +117,12 @@ function ExploreClient({ posterImage }: { posterImage?: string }) {
   const initialHandoffIntentRef = useRef(
     parseEditorToExploreIntent(new URLSearchParams(searchParams.toString()))
   );
+  const [pendingRemixCompletion, setPendingRemixCompletion] =
+    useState<CreatorRemixSource | null>(
+      resolveCreatorRemixSource(
+        parseRemixSource(new URLSearchParams(searchParams.toString())),
+      ),
+    );
   const initializedRef = useRef(false);
   const handoffConsumedRef = useRef<string | null>(null);
   const publishedHandoffConsumedRef = useRef<string | null>(null);
@@ -100,6 +135,18 @@ function ExploreClient({ posterImage }: { posterImage?: string }) {
   const publishedRestoreActionRef = useRef(new PublishedFormulaActionCoordinator());
   const publishedSelectionRef = useRef(new PublishedFormulaSelectionCoordinator());
   const publishedRestoreRef = useRef(new PublishedFormulaSelectionCoordinator());
+  const creatorAnalyticsRef = useRef<CreatorAnalyticsSession | null>(null);
+  creatorAnalyticsRef.current ??= new CreatorAnalyticsSession();
+  const [renderAttribution, setRenderAttribution] =
+    useState<CreatorChangeAttribution | null>(null);
+  const markCreatorChange = useCallback((changeType: CreatorChangeType) => {
+    const attribution = creatorAnalyticsRef.current!.noteChange(changeType);
+    setRenderAttribution(attribution);
+  }, []);
+  const clearPendingCreatorChange = useCallback(() => {
+    creatorAnalyticsRef.current!.clearPendingChange();
+    setRenderAttribution(null);
+  }, []);
   const cancelPublishedFormulaActions = useCallback(() => {
     publishedActionRef.current.cancel();
     publishedSelectionRef.current.cancel();
@@ -201,7 +248,7 @@ function ExploreClient({ posterImage }: { posterImage?: string }) {
     return Math.min(2000, maxIterations + extra);
   }, [adaptiveIterations, maxIterations, bounds.zoom]);
 
-  // Mark as initialized after first render
+  // URL projection starts only after the first client commit.
   useEffect(() => {
     initializedRef.current = true;
   }, []);
@@ -607,6 +654,10 @@ function ExploreClient({ posterImage }: { posterImage?: string }) {
         frmSemanticsVersion: asset.frmSemanticsVersion,
       });
     }
+    setPendingRemixCompletion(resolveCreatorRemixSource({
+      type: 'publication',
+      id: handoff.publicationId,
+    }));
     cloudDraft.setPendingRemixSource({ type: 'publication', id: handoff.publicationId });
     handleLoadDocument(read.envelope.document);
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -636,9 +687,10 @@ function ExploreClient({ posterImage }: { posterImage?: string }) {
 
   const handleLoadDocument = useCallback((nextDocument: typeof document) => {
     clearHandoffFailure();
+    clearPendingCreatorChange();
     setIsPreviewPlaying(false);
     loadFromDocument(nextDocument);
-  }, [clearHandoffFailure, loadFromDocument]);
+  }, [clearHandoffFailure, clearPendingCreatorChange, loadFromDocument]);
 
   // `?draft=` cloud session load: waits for the session probe, then loads
   // the draft and registers its formula assets in memory so the referenced
@@ -694,8 +746,22 @@ function ExploreClient({ posterImage }: { posterImage?: string }) {
     // one that was just on screen (review follow-up).
     cloudDraft.clearIdentity();
     if (draftParam) pinDraftParam(null);
+    const changesRendering = !analyticsValuesEqual(
+      creatorDocumentState(document),
+      creatorDocumentState(NORMALIZED_DEFAULT_FRACTAL_DOCUMENT),
+    );
     handleLoadDocument(DEFAULT_FRACTAL_DOCUMENT);
-  }, [cloudDraft, draftParam, handleLoadDocument, pinDraftParam]);
+    if (changesRendering) {
+      markCreatorChange('reset');
+    }
+  }, [
+    cloudDraft,
+    document,
+    draftParam,
+    handleLoadDocument,
+    markCreatorChange,
+    pinDraftParam,
+  ]);
 
   const getCanvas = useCallback(() => canvasElRef.current, []);
 
@@ -710,6 +776,8 @@ function ExploreClient({ posterImage }: { posterImage?: string }) {
 
   const handleJuliaModeChange = useCallback((julia: boolean) => {
     if (julia && !canEditJulia) return;
+    if (julia === isJulia) return;
+    markCreatorChange('julia');
     updateFormula({ isJulia: julia });
     trackEvent('julia_mode_toggle', { mode: julia ? 'julia' : 'mandelbrot' });
     if (julia) {
@@ -717,14 +785,25 @@ function ExploreClient({ posterImage }: { posterImage?: string }) {
     } else {
       updateBounds(DEFAULT_FRACTAL_DOCUMENT.scene.bounds);
     }
-  }, [bounds.rotation, canEditJulia, updateBounds, updateFormula]);
+  }, [
+    bounds.rotation,
+    canEditJulia,
+    isJulia,
+    markCreatorChange,
+    updateBounds,
+    updateFormula,
+  ]);
 
   const handleRotationChange = useCallback((rotation: number) => {
+    if (rotation === bounds.rotation) return;
+    markCreatorChange('viewport');
     updateBounds({ ...bounds, rotation });
-  }, [bounds, updateBounds]);
+  }, [bounds, markCreatorChange, updateBounds]);
 
   const handleCanvasPointSelect = useCallback((point: [number, number]) => {
     if (!canEditJulia) return;
+    if (isJulia && analyticsValuesEqual(point, juliaC)) return;
+    markCreatorChange('julia');
     updateFormula({ juliaC: point, isJulia: true });
     if (pickToastTimerRef.current) clearTimeout(pickToastTimerRef.current);
     setPickToast(
@@ -736,7 +815,7 @@ function ExploreClient({ posterImage }: { posterImage?: string }) {
     pickToastTimerRef.current = setTimeout(() => {
       setPickToast(null);
     }, 2200);
-  }, [canEditJulia, t, updateFormula]);
+  }, [canEditJulia, isJulia, juliaC, markCreatorChange, t, updateFormula]);
 
   useEffect(() => {
     isExploreMountedRef.current = true;
@@ -764,20 +843,49 @@ function ExploreClient({ posterImage }: { posterImage?: string }) {
 
   const handleCanvasReady = useCallback((canvas: HTMLCanvasElement) => {
     canvasElRef.current = canvas;
-    // Track first render complete (new user activation signal)
-    if (!initializedRef.current) {
-      trackEvent('first_render_complete', { page: 'explore' });
-    }
   }, []);
+
+  const handleCanvasRenderComplete = useCallback((
+    attribution: CreatorChangeAttribution | null,
+    remixSource: CreatorRemixSource | null,
+  ) => {
+    creatorAnalyticsRef.current!.renderComplete(attribution);
+    if (remixSource) {
+      creatorAnalyticsRef.current!.completeRenderedRemix(remixSource);
+      setPendingRemixCompletion((current) => (
+        current?.type === remixSource.type && current.id === remixSource.id
+          ? null
+          : current
+      ));
+    }
+    if (!attribution) return;
+    setRenderAttribution((current) =>
+      current?.changeId === attribution.changeId ? null : current
+    );
+  }, []);
+
+  const handleUserBoundsChange = useCallback((nextBounds: typeof bounds) => {
+    if (analyticsValuesEqual(nextBounds, bounds)) return;
+    markCreatorChange('viewport');
+    updateBounds(nextBounds);
+  }, [bounds, markCreatorChange, updateBounds]);
 
   // Handle formula change - reset to formula's default bounds
   const handleFormulaChange = useCallback((newFormula: string) => {
+    if (newFormula === formula) return;
     cancelPublishedFormulaActions();
     setPublishedDescriptor(null);
     clearHandoffFailure();
+    markCreatorChange('formula');
     selectBuiltInFormula(newFormula);
     trackEvent('change_formula', { formula: newFormula });
-  }, [cancelPublishedFormulaActions, clearHandoffFailure, selectBuiltInFormula]);
+  }, [
+    cancelPublishedFormulaActions,
+    clearHandoffFailure,
+    formula,
+    markCreatorChange,
+    selectBuiltInFormula,
+  ]);
 
   const selectPublishedFormula = useCallback(async (
     formulaId: string,
@@ -821,6 +929,9 @@ function ExploreClient({ posterImage }: { posterImage?: string }) {
         );
         pluginRegistry.register(renderingPlugin);
         setPublishedDescriptor(artifact.descriptor);
+        if (options.source !== 'entry-default') {
+          markCreatorChange('formula');
+        }
         applyPublishedFormulaSelection({
           formulaId,
           formulaParams: getFormulaUniformDefaults(renderingPlugin),
@@ -842,6 +953,7 @@ function ExploreClient({ posterImage }: { posterImage?: string }) {
     clearPublishedFormulaSelectionUndo,
     clearHandoffFailure,
     document.formula.formulaId,
+    markCreatorChange,
     publishedDescriptor,
   ]);
 
@@ -937,13 +1049,23 @@ function ExploreClient({ posterImage }: { posterImage?: string }) {
   ]);
 
   const handleUndoPublishedFormulaSelection = useCallback(() => {
+    if (!canUndoPublishedFormulaSelection) return;
     cancelPublishedFormulaActions();
     clearHandoffFailure();
+    markCreatorChange('formula');
     undoPublishedFormulaSelection();
     trackEvent('undo_formula_change', { source: 'published-library' });
-  }, [cancelPublishedFormulaActions, clearHandoffFailure, undoPublishedFormulaSelection]);
+  }, [
+    cancelPublishedFormulaActions,
+    canUndoPublishedFormulaSelection,
+    clearHandoffFailure,
+    markCreatorChange,
+    undoPublishedFormulaSelection,
+  ]);
 
   const handleFormulaParamChange = useCallback((name: string, value: PluginParamValue) => {
+    if (analyticsValuesEqual(document.formula.params?.formula?.[name], value)) return;
+    markCreatorChange('formula_parameter');
     updateFormula({
       params: {
         formula: {
@@ -952,14 +1074,30 @@ function ExploreClient({ posterImage }: { posterImage?: string }) {
         },
       },
     });
-  }, [document.formula.params?.formula, updateFormula]);
+  }, [document.formula.params?.formula, markCreatorChange, updateFormula]);
 
   const handleCustomFormulaSelect = useCallback((selection: FormulaSelectionRequest) => {
+    const targetBounds = selection.experienceHint?.bounds ?? getDefaultBounds(selection.formulaId);
+    const coloringPatch = selection.experienceHint?.coloring
+      ? { customGradient: null, ...selection.experienceHint.coloring }
+      : null;
+    const coloringChanges = coloringPatch
+      ? Object.entries(coloringPatch).some(([key, value]) => !analyticsValuesEqual(
+          document.coloring[key as keyof typeof document.coloring],
+          value,
+        ))
+      : false;
+    if (
+      selection.formulaId === document.formula.formulaId &&
+      analyticsValuesEqual(targetBounds, bounds) &&
+      !coloringChanges
+    ) return;
     cancelPublishedFormulaActions();
     clearPublishedFormulaSelectionUndo();
     setPublishedDescriptor(null);
     clearHandoffFailure();
     const plugin = pluginRegistry.getFormula(selection.formulaId);
+    markCreatorChange('formula');
     updateFormula({
       formulaId: selection.formulaId,
       // Seed descriptor defaults only when SWITCHING formulas — a re-select
@@ -970,7 +1108,6 @@ function ExploreClient({ posterImage }: { posterImage?: string }) {
         : { params: { formula: plugin ? getFormulaUniformDefaults(plugin) : {} } }),
     });
 
-    const targetBounds = selection.experienceHint?.bounds ?? getDefaultBounds(selection.formulaId);
     updateBounds(targetBounds);
 
     if (selection.experienceHint?.coloring) {
@@ -983,7 +1120,9 @@ function ExploreClient({ posterImage }: { posterImage?: string }) {
     cancelPublishedFormulaActions,
     clearHandoffFailure,
     clearPublishedFormulaSelectionUndo,
-    document.formula.formulaId,
+    bounds,
+    document,
+    markCreatorChange,
     updateBounds,
     updateColoring,
     updateFormula,
@@ -991,10 +1130,14 @@ function ExploreClient({ posterImage }: { posterImage?: string }) {
 
   // Handle transform change
   const handleTransformChange = useCallback((newTransform: string) => {
+    if (newTransform === transformId) return;
+    markCreatorChange('transform');
     updateTransform({ transformId: newTransform });
-  }, [updateTransform]);
+  }, [markCreatorChange, transformId, updateTransform]);
 
   const handleTransformParamChange = useCallback((name: string, value: number) => {
+    if (analyticsValuesEqual(document.transform.params?.transform?.[name], value)) return;
+    markCreatorChange('transform');
     updateTransform({
       params: {
         transform: {
@@ -1003,9 +1146,14 @@ function ExploreClient({ posterImage }: { posterImage?: string }) {
         },
       },
     });
-  }, [document.transform.params?.transform, updateTransform]);
+  }, [document.transform.params?.transform, markCreatorChange, updateTransform]);
 
   const handleTransformParamsChange = useCallback((params: PluginParamRecord) => {
+    const current = document.transform.params?.transform ?? {};
+    if (Object.entries(params).every(([key, value]) => (
+      analyticsValuesEqual(current[key], value)
+    ))) return;
+    markCreatorChange('transform');
     updateTransform({
       params: {
         transform: {
@@ -1014,7 +1162,76 @@ function ExploreClient({ posterImage }: { posterImage?: string }) {
         },
       },
     });
-  }, [document.transform.params?.transform, updateTransform]);
+  }, [document.transform.params?.transform, markCreatorChange, updateTransform]);
+
+  const handleJuliaCChange = useCallback((value: [number, number]) => {
+    if (analyticsValuesEqual(value, juliaC)) return;
+    markCreatorChange('julia');
+    updateFormula({ juliaC: value });
+  }, [juliaC, markCreatorChange, updateFormula]);
+
+  const handlePaletteChange = useCallback((paletteIndex: number) => {
+    if (paletteIndex === runtimeParams.paletteIndex) return;
+    markCreatorChange('coloring');
+    updateColoring({ paletteIndex });
+  }, [markCreatorChange, runtimeParams.paletteIndex, updateColoring]);
+
+  const handleOutsideColoringChange = useCallback((outsideColoringId: typeof outsideColoring) => {
+    if (outsideColoringId === outsideColoring) return;
+    markCreatorChange('coloring');
+    updateColoring({ outsideColoringId });
+  }, [markCreatorChange, outsideColoring, updateColoring]);
+
+  const handleInsideColoringChange = useCallback((insideColoringId: typeof insideColoring) => {
+    if (insideColoringId === insideColoring) return;
+    markCreatorChange('coloring');
+    updateColoring({ insideColoringId });
+  }, [insideColoring, markCreatorChange, updateColoring]);
+
+  const handleOrbitTrapChange = useCallback((nextOrbitTrap: typeof orbitTrap) => {
+    if (analyticsValuesEqual(nextOrbitTrap, orbitTrap)) return;
+    markCreatorChange('coloring');
+    updateColoring({ orbitTrap: nextOrbitTrap });
+  }, [markCreatorChange, orbitTrap, updateColoring]);
+
+  const handleGradientChange = useCallback((nextGradient: typeof customGradient) => {
+    if (analyticsValuesEqual(nextGradient, customGradient)) return;
+    markCreatorChange('coloring');
+    updateColoring({ customGradient: nextGradient });
+  }, [customGradient, markCreatorChange, updateColoring]);
+
+  const handleIterationsChange = useCallback((maxIterations: number) => {
+    if (maxIterations === runtimeParams.maxIterations) return;
+    markCreatorChange('render_quality');
+    updateRender({ maxIterations });
+  }, [markCreatorChange, runtimeParams.maxIterations, updateRender]);
+
+  const handleUseSSAAChange = useCallback((useSSAA: boolean) => {
+    if (useSSAA === runtimeParams.useSSAA) return;
+    markCreatorChange('render_quality');
+    updateRender({ useSSAA });
+  }, [markCreatorChange, runtimeParams.useSSAA, updateRender]);
+
+  const handleAdaptiveIterationsChange = useCallback((adaptiveIterations: boolean) => {
+    if (adaptiveIterations === runtimeParams.adaptiveIterations) return;
+    markCreatorChange('render_quality');
+    updateRender({ adaptiveIterations });
+  }, [markCreatorChange, runtimeParams.adaptiveIterations, updateRender]);
+
+  const handleLightingChange = useCallback((nextLighting: typeof lighting) => {
+    if (analyticsValuesEqual(nextLighting, lighting)) return;
+    markCreatorChange('coloring');
+    updateColoring({ lighting: nextLighting });
+  }, [lighting, markCreatorChange, updateColoring]);
+
+  const handleKeyframesChange = useCallback((nextKeyframes: typeof keyframes) => {
+    if (analyticsValuesEqual(nextKeyframes, keyframes)) return;
+    markCreatorChange('keyframe');
+    if (nextKeyframes.length > keyframes.length) {
+      trackEvent('add_keyframe', { count: nextKeyframes.length });
+    }
+    updateAnimation({ viewKeyframes: nextKeyframes });
+  }, [keyframes, markCreatorChange, updateAnimation]);
 
   const activeResolution = handoffError ?? formulaResolution;
   const isHandoffPending = Boolean(handoffTargetId);
@@ -1158,11 +1375,14 @@ function ExploreClient({ posterImage }: { posterImage?: string }) {
             pipelineVersion={explorePipelineVersion}
             lighting={lighting}
             customGradient={customGradient}
-            onBoundsChange={updateBounds}
+            onBoundsChange={handleUserBoundsChange}
             onPointSelect={
               isJulia || !canEditJulia ? undefined : handleCanvasPointSelect
             }
             onCanvasReady={handleCanvasReady}
+            renderAttribution={renderAttribution}
+            renderRemixSource={pendingRemixCompletion}
+            onRenderComplete={handleCanvasRenderComplete}
           />
         )}
         {isFormulaReady && isPreviewPlaying && (
@@ -1292,7 +1512,7 @@ function ExploreClient({ posterImage }: { posterImage?: string }) {
                 currentBounds={bounds}
                 pluginParams={document.formula.params?.formula}
                 onJuliaModeChange={handleJuliaModeChange}
-                onJuliaCChange={(value) => updateFormula({ juliaC: value })}
+                onJuliaCChange={handleJuliaCChange}
                 currentFormula={formula}
                 publishedDescriptor={publishedDescriptor}
                 onFormulaChange={handleFormulaChange}
@@ -1318,11 +1538,11 @@ function ExploreClient({ posterImage }: { posterImage?: string }) {
                 effectiveSmoothMethod={resolveEffectiveSmoothMethod(
                   pluginRegistry.getFormula(formula) ?? {},
                 )}
-                onPaletteChange={(index) => updateColoring({ paletteIndex: index })}
-                onOutsideColoringChange={(mode) => updateColoring({ outsideColoringId: mode })}
-                onInsideColoringChange={(mode) => updateColoring({ insideColoringId: mode })}
-                onOrbitTrapChange={(trap) => updateColoring({ orbitTrap: trap })}
-                onGradientChange={(gradient) => updateColoring({ customGradient: gradient })}
+                onPaletteChange={handlePaletteChange}
+                onOutsideColoringChange={handleOutsideColoringChange}
+                onInsideColoringChange={handleInsideColoringChange}
+                onOrbitTrapChange={handleOrbitTrapChange}
+                onGradientChange={handleGradientChange}
               />
             </TabsContent>
 
@@ -1344,10 +1564,10 @@ function ExploreClient({ posterImage }: { posterImage?: string }) {
                 useSSAA={useSSAA}
                 adaptiveIterations={adaptiveIterations}
                 lighting={lighting}
-                onIterationsChange={(value) => updateRender({ maxIterations: value })}
-                onUseSSAAChange={(enabled) => updateRender({ useSSAA: enabled })}
-                onAdaptiveIterationsChange={(enabled) => updateRender({ adaptiveIterations: enabled })}
-                onLightingChange={(nextLighting) => updateColoring({ lighting: nextLighting })}
+                onIterationsChange={handleIterationsChange}
+                onUseSSAAChange={handleUseSSAAChange}
+                onAdaptiveIterationsChange={handleAdaptiveIterationsChange}
+                onLightingChange={handleLightingChange}
               />
             </TabsContent>
 
@@ -1355,15 +1575,10 @@ function ExploreClient({ posterImage }: { posterImage?: string }) {
               <AnimationPanel
                 keyframes={keyframes}
                 bounds={bounds}
-                onKeyframesChange={(nextKeyframes) => {
-                  if (nextKeyframes.length > keyframes.length) {
-                    trackEvent('add_keyframe', { count: nextKeyframes.length });
-                  }
-                  updateAnimation({ viewKeyframes: nextKeyframes });
-                }}
+                onKeyframesChange={handleKeyframesChange}
                 onPreviewToggle={setIsPreviewPlaying}
                 isPreviewPlaying={isPreviewPlaying}
-                onBoundsChange={updateBounds}
+                onBoundsChange={handleUserBoundsChange}
               />
             </TabsContent>
           </Tabs>

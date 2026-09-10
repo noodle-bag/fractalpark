@@ -17,6 +17,7 @@ import {
   verifyAccountDeletion,
   CloudClientError,
 } from '@/lib/cloud/client';
+import { trackEvent } from '@/components/analytics/PageViewTracker';
 
 type Stage = 'idle' | 'code' | 'confirm' | 'done';
 
@@ -54,6 +55,7 @@ export default function AccountDeletion() {
   const verifyCode = () =>
     run(async () => {
       const proof = await verifyAccountDeletion(code.trim());
+      trackEvent('account_deletion_started');
       setOperationId(proof.operationId);
       setStage('confirm');
     });

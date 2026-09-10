@@ -36,6 +36,8 @@ import {
 } from '@/components/ui/dialog';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
+import { trackEvent } from '@/components/analytics/PageViewTracker';
+import { trackBackupEmailResult } from '@/lib/cloud-analytics';
 
 interface PublishDialogProps {
   draft: CloudDraftSummary | null;
@@ -101,7 +103,7 @@ export function PublishDialog({ draft, onClose, onPublished }: PublishDialogProp
         const profile = await setDisplayName(displayName);
         if (!profile.displayName) throw new CloudClientError('validation_failed');
       }
-      await publishDraft(draft.id, {
+      const result = await publishDraft(draft.id, {
         expectedRevision: draft.revision,
         title,
         description,
@@ -110,6 +112,10 @@ export function PublishDialog({ draft, onClose, onPublished }: PublishDialogProp
           ? { formulaSourceAttestationVersion: FORMULA_SOURCE_ATTESTATION_VERSION }
           : {}),
       });
+      if (!result.replayed) {
+        trackEvent('artwork_published');
+        trackBackupEmailResult(result.backupEmailStatus);
+      }
       setPending(false);
       onPublished();
     } catch (value) {

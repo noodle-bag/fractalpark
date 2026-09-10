@@ -5,8 +5,21 @@ import { useTranslations } from 'next-intl';
 import { Loader2 } from 'lucide-react';
 import { useCanvasInteraction } from '@/hooks/useCanvasInteraction';
 import { useFractalRenderWorker } from '@/hooks/useFractalRenderWorker';
+import type {
+  CreatorChangeAttribution,
+  CreatorRemixSource,
+} from '@/lib/creator-analytics';
 import type { FractalCanvasProps } from './FractalCanvas';
 import type { FractalParams } from '@/engine/types';
+
+interface ExploreWorkerFractalCanvasProps extends FractalCanvasProps {
+  renderAttribution?: CreatorChangeAttribution | null;
+  renderRemixSource?: CreatorRemixSource | null;
+  onRenderComplete?: (
+    attribution: CreatorChangeAttribution | null,
+    remixSource: CreatorRemixSource | null,
+  ) => void;
+}
 
 export default function ExploreWorkerFractalCanvas({
   paletteIndex,
@@ -29,12 +42,22 @@ export default function ExploreWorkerFractalCanvas({
   onBoundsChange,
   onPointSelect,
   onCanvasReady,
-}: FractalCanvasProps) {
+  renderAttribution = null,
+  renderRemixSource = null,
+  onRenderComplete,
+}: ExploreWorkerFractalCanvasProps) {
   const t = useTranslations('explore.formula.resolution');
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const paramsRef = useRef<FractalParams | null>(null);
+  const renderAttributionRef = useRef<CreatorChangeAttribution | null>(null);
+  const renderRemixSourceRef = useRef<CreatorRemixSource | null>(null);
   const renderGenerationRef = useRef(0);
   const { render } = useFractalRenderWorker();
+
+  useEffect(() => {
+    renderAttributionRef.current = renderAttribution;
+    renderRemixSourceRef.current = renderRemixSource;
+  }, [renderAttribution, renderRemixSource]);
 
   useCanvasInteraction(canvasRef, {
     onBoundsChange: onBoundsChange ?? (() => {}),
@@ -61,7 +84,11 @@ export default function ExploreWorkerFractalCanvas({
     return { width, height, resized };
   }, []);
 
-  const renderLatest = useCallback((params: FractalParams) => {
+  const renderLatest = useCallback((
+    params: FractalParams,
+    attribution: CreatorChangeAttribution | null,
+    remixSource: CreatorRemixSource | null,
+  ) => {
     const canvas = canvasRef.current;
     const size = resize();
     if (!canvas || !size) return;
@@ -92,6 +119,7 @@ export default function ExploreWorkerFractalCanvas({
         canvas.dataset.renderStatus = 'ready';
         canvas.dataset.renderedFormulaId = frame.formulaId;
         canvas.setAttribute('aria-busy', 'false');
+        onRenderComplete?.(attribution, remixSource);
       })
       .catch((error: unknown) => {
         if (
@@ -101,7 +129,7 @@ export default function ExploreWorkerFractalCanvas({
         canvas.dataset.renderStatus = 'error';
         canvas.setAttribute('aria-busy', 'false');
       });
-  }, [render, resize]);
+  }, [onRenderComplete, render, resize]);
 
   useEffect(() => {
     const params: FractalParams = {
@@ -124,7 +152,11 @@ export default function ExploreWorkerFractalCanvas({
       customGradient,
     };
     paramsRef.current = params;
-    renderLatest(params);
+    renderLatest(
+      params,
+      renderAttributionRef.current,
+      renderRemixSourceRef.current,
+    );
   }, [
     adaptiveIterations,
     bounds,
@@ -149,7 +181,13 @@ export default function ExploreWorkerFractalCanvas({
   useEffect(() => {
     const observer = new ResizeObserver(() => {
       const params = paramsRef.current;
-      if (params && resize()?.resized) renderLatest(params);
+      if (params && resize()?.resized) {
+        renderLatest(
+          params,
+          renderAttributionRef.current,
+          renderRemixSourceRef.current,
+        );
+      }
     });
     const canvas = canvasRef.current;
     if (canvas) observer.observe(canvas);

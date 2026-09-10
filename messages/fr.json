@@ -2087,19 +2087,26 @@
       "gallery": "Visiter la galerie"
     }
   },
+  "analyticsConsent": {
+    "title": "Analyse d’usage facultative",
+    "description": "Autorisez Google Analytics avec une collecte limitée afin de nous aider à comprendre les fonctions utiles de FractalPark. Aucun identifiant de compte, e-mail, titre, code source de formule ou contenu d’œuvre n’est envoyé. Le refus ne limite aucune fonction.",
+    "accept": "Autoriser l’analyse",
+    "decline": "Refuser",
+    "settings": "Réglages d’analyse"
+  },
   "legal": {
     "privacy": {
       "title": "Politique de confidentialité",
-      "updated": "Dernière mise à jour : 3 août 2026",
+      "updated": "Dernière mise à jour : 10 septembre 2026",
       "intro": "FractalPark est un explorateur d'art fractal open source. Tu peux parcourir, créer et enregistrer des œuvres sur ton propre appareil sans rien nous communiquer. Un compte n'est nécessaire que lorsque tu choisis de conserver des brouillons cloud ou de publier dans la Communauté. Cette page indique précisément ce qu'un compte touche — et ce qu'il ne touche jamais.",
       "s1h": "Ce qu'un compte stocke",
       "s1b": "Ton adresse e-mail, utilisée uniquement pour te connecter avec des codes à usage unique. Il n'y a pas de mot de passe.\n\nUn nom d'affichage que tu choisis. Il reste privé jusqu'à ce que tu publies ; les œuvres publiées l'affichent comme ligne de mention.\n\nTes brouillons cloud (privés) et tes œuvres publiées (publiques), y compris les paramètres dont un remix a besoin.",
       "s2h": "Ce que nous ne collectons jamais",
-      "s2b": "Pas de mots de passe — les codes de connexion sont envoyés à ton e-mail et expirent.\n\nPas de traceurs publicitaires, pas de cookies de profilage intersites, pas de vente ni de partage de données personnelles avec des courtiers en données.\n\nLes analyses ne contiennent jamais ton e-mail, ton adresse IP, les titres de tes œuvres, le contenu de tes brouillons ni aucun identifiant qui pourrait t'identifier.",
+      "s2b": "Pas de mots de passe — les codes de connexion sont envoyés par e-mail et expirent.\n\nPas de traceurs publicitaires ni de profilage intersites ; aucune vente ou transmission de données personnelles à des courtiers.\n\nLes événements produit ne contiennent ni identifiant de compte, ni e-mail, ni titre, ni source de formule, ni brouillon ou contenu d’œuvre.",
       "s3h": "Cookies",
-      "s3b": "Deux, et les deux sont anodins. Un cookie de session chiffré HttpOnly te maintient connecté ; un petit cookie NEXT_LOCALE mémorise ta langue. Aucun des deux n'est lisible par d'autres sites. Le cookie de session est supprimé lorsque tu te déconnectes ou supprimes ton compte ; le cookie de langue reste jusqu'à ce que tu effaces les données de ton navigateur.",
+      "s3b": "Un cookie de session chiffré HttpOnly maintient la connexion et un petit cookie NEXT_LOCALE mémorise la langue. Si Google Analytics est autorisé, il crée aussi des cookies internes _ga avec un identifiant pseudonyme du navigateur. Le refus empêche ces cookies et le retrait du consentement les supprime.",
       "s4h": "Analyses",
-      "s4b": "Nous utilisons des analyses d'utilisation agrégées et respectueuses de la vie privée pour comprendre quelles fonctionnalités aident les gens (par exemple : une publication réussie, un guide ouvert). Les événements suivent un schéma fixe qui interdit les e-mails, les adresses IP, les titres et le contenu des œuvres.",
+      "s4b": "Vercel Analytics mesure le trafic de base sans cookies. Google Analytics est facultatif et ne se charge qu’après votre autorisation. Des rapports agrégés indiquent si des fonctions comme le rendu, l’enregistrement ou la publication aboutissent. Le schéma exclut identifiants de compte, e-mails, titres, source des formules, identifiants privés et contenu des œuvres. Ces prestataires peuvent traiter les données réseau et appareil nécessaires à l’analyse ; les signaux publicitaires sont désactivés. Le choix Google Analytics reste modifiable dans Réglages d’analyse.",
       "s5h": "Les e-mails que nous envoyons",
       "s5b": "Les codes de connexion, toujours.\n\nLes e-mails de sauvegarde des œuvres, uniquement si tu les actives. Ils sont désactivés par défaut. Un e-mail de sauvegarde contient la configuration complète de ton œuvre en pièce jointe ; l'e-mail n'est pas un stockage chiffré et nous ne pouvons pas retirer une pièce jointe une fois qu'elle a été envoyée. La page de réglages le répète avant que tu l'actives.",
       "s6h": "Brouillons privés, œuvres publiques",

@@ -1,15 +1,21 @@
 import { StrictMode } from 'react';
 import { fireEvent, render, waitFor } from '@testing-library/react';
-import { afterEach, describe, expect, it, vi } from 'vitest';
+import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 import {
   ContentViewTracker,
   TrackedContentLink,
 } from '@/components/analytics/ContentAnalytics';
 import { CopyPageLinkButton } from '@/components/artwork/CopyPageLinkButton';
+import { writeAnalyticsConsent } from '@/lib/analytics-consent';
 
 describe('content analytics', () => {
+  beforeEach(() => {
+    window.__fractalparkAnalyticsConsent = true;
+  });
+
   afterEach(() => {
     window.gtag = undefined;
+    window.__fractalparkAnalyticsConsent = undefined;
   });
 
   it('sends a content view once when Strict Mode replays effects', () => {
@@ -25,10 +31,12 @@ describe('content analytics', () => {
     );
 
     expect(window.gtag).toHaveBeenCalledTimes(1);
-    expect(window.gtag).toHaveBeenCalledWith('event', 'view_formula', {
+    expect(window.gtag).toHaveBeenCalledWith('event', 'view_formula', expect.objectContaining({
       formula_id: 'mandelbrot',
       locale: 'en',
-    });
+      traffic_class: 'development',
+      traffic_type: 'internal',
+    }));
   });
 
   it('sends another view when a preserved route component changes identity', () => {
@@ -48,10 +56,31 @@ describe('content analytics', () => {
     );
 
     expect(window.gtag).toHaveBeenCalledTimes(2);
-    expect(window.gtag).toHaveBeenLastCalledWith('event', 'view_formula', {
+    expect(window.gtag).toHaveBeenLastCalledWith('event', 'view_formula', expect.objectContaining({
       formula_id: 'tricorn',
       locale: 'en',
-    });
+    }));
+  });
+
+  it('keeps a mounted content view pending until consent is granted', async () => {
+    window.__fractalparkAnalyticsConsent = false;
+    window.gtag = vi.fn();
+    window.__fractalparkConfigureAnalytics = vi.fn();
+    render(
+      <ContentViewTracker
+        eventName="community_artwork_viewed"
+        eventParams={{ publication_id: 'publication-1', locale: 'en' }}
+      />,
+    );
+
+    expect(window.gtag).not.toHaveBeenCalled();
+    writeAnalyticsConsent('granted');
+
+    await waitFor(() => expect(window.gtag).toHaveBeenCalledWith(
+      'event',
+      'community_artwork_viewed',
+      expect.objectContaining({ publication_id: 'publication-1' }),
+    ));
   });
 
   it('sends each deliberate tracked-link activation without blocking it', () => {
@@ -75,10 +104,10 @@ describe('content analytics', () => {
 
     expect(handleClick).toHaveBeenCalledTimes(2);
     expect(window.gtag).toHaveBeenCalledTimes(2);
-    expect(window.gtag).toHaveBeenLastCalledWith('event', 'start_remix', {
+    expect(window.gtag).toHaveBeenLastCalledWith('event', 'start_remix', expect.objectContaining({
       source_type: 'formula',
       source_id: 'mandelbrot',
-    });
+    }));
   });
 
   it('tracks Copy page link only after the clipboard succeeds', async () => {
@@ -96,9 +125,9 @@ describe('content analytics', () => {
     fireEvent.click(getByRole('button', { name: 'Copy' }));
 
     await waitFor(() => expect(writeText).toHaveBeenCalledTimes(1));
-    expect(window.gtag).toHaveBeenCalledWith('event', 'copy_page_link', {
+    expect(window.gtag).toHaveBeenCalledWith('event', 'copy_page_link', expect.objectContaining({
       preset_id: 'preset-test',
-    });
+    }));
   });
 
   it('does not track a failed Copy page link action', async () => {

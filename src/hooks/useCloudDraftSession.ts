@@ -19,6 +19,8 @@ import {
 import { CloudClientError, createDraft, getDraft, updateDraft } from '@/lib/cloud/client';
 import { createFractalDocumentEnvelope } from '@/lib/fractal-file';
 import type { LocalFormulaAsset } from '@/lib/fractal-file';
+import { trackEvent } from '@/components/analytics/PageViewTracker';
+import { trackBackupEmailResult } from '@/lib/cloud-analytics';
 
 export interface CloudDraftIdentity {
   id: string;
@@ -148,6 +150,10 @@ export function useCloudDraftSession() {
           setIdentity(next);
           setDraftTitle(input.name);
           setSavePhase('saved');
+          if (!result.replayed) {
+            trackEvent('cloud_draft_saved', { is_first_save: true });
+            trackBackupEmailResult(result.backupEmailStatus);
+          }
           return { ok: true, identity: next };
         }
         const result = await updateDraft(currentIdentity.id, {
@@ -159,12 +165,17 @@ export function useCloudDraftSession() {
         setIdentity(next);
         setDraftTitle(input.name);
         setSavePhase('saved');
+        if (!result.replayed) {
+          trackEvent('cloud_draft_saved', { is_first_save: false });
+          trackBackupEmailResult(result.backupEmailStatus);
+        }
         return { ok: true, identity: next };
       } catch (error) {
         if (error instanceof CloudClientError) {
           switch (error.code) {
             case 'revision_conflict':
               setSavePhase('conflict');
+              trackEvent('cloud_draft_conflict');
               return { ok: false, phase: 'conflict' };
             case 'quota_exceeded':
               setSavePhase('quota');

@@ -593,7 +593,7 @@ export function FormulaEditor({
         return;
       }
 
-      trackEvent('custom_formula_save', { name });
+      trackEvent('custom_formula_save', { formula_kind: 'custom' });
 
       toast({
         title: t('saved'),

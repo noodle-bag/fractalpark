@@ -23,7 +23,6 @@ import {
   listCommunity,
   type CommunityListItem,
 } from '@/lib/cloud/client';
-import { trackEvent } from '@/components/analytics/PageViewTracker';
 import { HTML_LANG, type SupportedLocale } from '@/i18n/supported-locales';
 
 export function CommunityGrid() {
@@ -75,7 +74,6 @@ export function CommunityGrid() {
           <article key={item.id}>
             <Link
               href={`/gallery/community/${item.id}`}
-              onClick={() => trackEvent('community_artwork_viewed', { publication_id: item.id })}
               className={GALLERY_CARD_LINK_CLASS}
             >
               <div className={GALLERY_PREVIEW_FRAME_CLASS}>

@@ -2087,19 +2087,26 @@
       "gallery": "Visit the Gallery"
     }
   },
+  "analyticsConsent": {
+    "title": "Optional usage analytics",
+    "description": "Allow privacy-limited Google Analytics to help us understand which FractalPark features are useful. We do not send account IDs, emails, titles, formula source, or artwork content. You can decline and still use every feature.",
+    "accept": "Allow analytics",
+    "decline": "Decline",
+    "settings": "Analytics settings"
+  },
   "legal": {
     "privacy": {
       "title": "Privacy Policy",
-      "updated": "Last updated: August 3, 2026",
+      "updated": "Last updated: September 10, 2026",
       "intro": "FractalPark is an open-source fractal art explorer. You can browse, create, and save artworks on your own device without telling us anything. An account is only needed when you choose to keep cloud drafts or publish to the Community. This page says exactly what an account touches — and what it never does.",
       "s1h": "What an account stores",
       "s1b": "Your email address, used only to sign you in with one-time codes. There is no password.\n\nA display name you choose. It is private until you publish; published works show it as the attribution line.\n\nYour cloud drafts (private) and your published artworks (public), including the parameters a remix needs.",
       "s2h": "What we never collect",
-      "s2b": "No passwords — sign-in codes go to your email and expire.\n\nNo advertising trackers, no cross-site profiling cookies, no sale or sharing of personal data with data brokers.\n\nAnalytics never carry your email, IP address, artwork titles, draft contents, or any identifier that points back at you.",
+      "s2b": "No passwords — sign-in codes go to your email and expire.\n\nNo advertising trackers, no cross-site profiling, and no sale or sharing of personal data with data brokers.\n\nProduct analytics never carry your account ID, email, artwork titles, formula source, draft contents, or artwork content.",
       "s3h": "Cookies",
-      "s3b": "Two, both boring. An encrypted, HttpOnly session cookie keeps you signed in; a small NEXT_LOCALE cookie remembers your language. Neither is readable by other sites. The session cookie is deleted when you sign out or delete your account; the locale cookie stays until you clear your browser data.",
+      "s3b": "An encrypted, HttpOnly session cookie keeps you signed in, and a small NEXT_LOCALE cookie remembers your language. If you allow Google Analytics, it also sets first-party _ga cookies containing a pseudonymous browser identifier. Declining analytics prevents those cookies; withdrawing consent removes them.",
       "s4h": "Analytics",
-      "s4b": "We use aggregate, privacy-limited usage analytics to understand which features help people (for example: a publish succeeded, a guide was opened). Events follow a fixed schema that forbids emails, IPs, titles, and artwork content.",
+      "s4b": "Vercel Analytics measures basic site traffic without cookies. Google Analytics is optional and loads only after you allow it. We use aggregate reports to understand whether features work (for example, whether a render, save, or publish completed). Events follow a fixed schema that excludes account IDs, emails, titles, formula source, private record IDs, and artwork content. These providers may process network and device data needed to provide analytics; advertising signals are disabled. You can change your Google Analytics choice from Analytics settings.",
       "s5h": "Email we send",
       "s5b": "Sign-in codes, always.\n\nArtwork backup emails, only if you turn them on. They are off by default. A backup email carries your artwork's complete configuration as an attachment; email is not encrypted storage, and we cannot retract an attachment once delivered. The setting page says this again before you enable it.",
       "s6h": "Private drafts, public works",

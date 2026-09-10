@@ -3,7 +3,7 @@
 - Status: Accepted
 - Date: 2026-07-26
 - Target release: FractalPark v0.4.13
-- Extended in: FractalPark v0.4.15
+- Extended in: FractalPark v0.4.15 and v0.4.20
 - Scope: FractalPark first-party product analytics
 
 ## Purpose
@@ -22,7 +22,7 @@ and deduplication. Analytics never owns product state or provenance.
 - Existing event names are not renamed in v0.4.13.
 - New IDs use authoritative formula or preset IDs, not localized labels or
   public slugs.
-- `locale` is `en` or `zh`.
+- `locale` is one of the application's supported locale codes.
 - Boolean, numeric, and enum properties are sent as their native types.
 - Optional properties are omitted rather than sent as empty strings.
 - FRM source, imported file contents, rendered image data, full Explore query
@@ -30,6 +30,11 @@ and deduplication. Analytics never owns product state or provenance.
   not be added to new events.
 - Event helpers must be no-ops when analytics is unavailable and cannot block
   navigation, rendering, saving, copying, or export.
+- Google Analytics loads and events are sent only after explicit consent.
+  Declining analytics does not affect product behavior. Consent can be changed
+  from the persistent Analytics settings control.
+- Analytics uses GA's pseudonymous browser/device identity only. FractalPark
+  never sets GA `user_id` and never joins analytics to a cloud account.
 
 ## Page Views
 
@@ -73,7 +78,8 @@ Sent once after hydration of a canonical published artwork page.
 
 | Property | Type | Required |
 |---|---|---|
-| `preset_id` | published preset ID | yes |
+| `preset_id` | published preset ID | exactly one source ID |
+| `publication_id` | public community publication ID | exactly one source ID |
 | `locale` | `en` or `zh` | yes |
 
 Redirect routes do not emit the event. The canonical destination emits it
@@ -163,6 +169,102 @@ Content-view deduplication follows the same Strict Mode guard as the v0.4.13
 content events. Operation events fire once per completed server operation;
 retries and idempotent replays do not re-emit.
 
+## v0.4.20 Weekly Active Creator Events
+
+A weekly active creator (WAC) is a unique consenting external browser/device
+that completes this
+ordered sequence within one Asia/Shanghai natural week:
+
+```text
+successful Explore render -> user-originated meaningful change
+  -> successful render caused by that change
+```
+
+Saving, exporting, sharing, publishing, or Remix is not required for WAC.
+Those actions remain independent downstream value signals.
+
+| Event | Trigger | Properties |
+|---|---|---|
+| `creator_change` | A supported user control makes a meaningful Explore change | `surface: 'explore'`, `change_id`, `change_type`, traffic properties |
+| `creator_render_complete` | A frame is successfully drawn to the visible Explore canvas | `surface: 'explore'`, `render_phase`; post-change renders also include `change_id` and `change_type`; traffic properties |
+| `creator_loop_complete` | The first post-baseline render attributable to the latest user change succeeds | `surface: 'explore'`, `change_id`, `change_type`, traffic properties |
+| `remix_complete` | A Remix produces an editable cloud draft or a frame drawn in Explore | `source_type`, `source_id`, `completion_surface`, traffic properties |
+
+`change_type` is one of `formula`, `formula_parameter`, `viewport`,
+`coloring`, `julia`, `transform`, `keyframe`, `render_quality`, or `reset`.
+`change_id` is an in-memory page-session sequence number, not a user or
+document identifier.
+
+Initial state construction, hydration, URL or document restore, migration,
+canvas resize, preview playback, and failed, cancelled, or superseded renders
+do not close the creator loop. A change made before the first successful
+render cannot establish WAC; a later user change and successful render are
+required. `creator_loop_complete` emits at most once per Shanghai week per
+Explore mount. A tab left open across a week boundary must establish a new
+baseline before it can complete the new week's loop. GA4 `totalUsers`
+performs pseudonymous browser/device deduplication across tabs and sessions.
+It does not represent an authenticated person and may count one person more
+than once across browsers, devices, or cleared cookies.
+
+`first_render_complete` now shares the authoritative render boundary: it is
+sent after the first worker frame is drawn to the visible canvas, not when the
+canvas element mounts.
+
+`remix_complete` is distinct from `start_remix` and
+`community_remix_started`. `source_type` is `formula`, `preset`, or
+`publication`; `completion_surface` is `explore_render` or `cloud_draft`.
+Formula and preset IDs and public publication IDs are allowed, but envelopes,
+draft IDs, titles, source code, and document state are not.
+
+### Traffic classification
+
+Every v0.4.20 event includes:
+
+| Property | Values | Meaning |
+|---|---|---|
+| `traffic_class` | `external`, `internal`, `automation`, `development` | Explicit reporting class |
+| `traffic_type` | `external`, `internal` | GA4-compatible internal-traffic marker |
+
+Non-production hostnames are `development`; WebDriver sessions are
+`automation`. A maintainer can mark the current production browser profile as
+internal with:
+
+```js
+localStorage.setItem('fractalpark.analytics.traffic-class', 'internal')
+```
+
+The GA4 property must define an event-scoped custom dimension named
+`traffic_class` whose event parameter is also `traffic_class`. The WAC report
+filters that dimension to `external`; the GA4 internal-data filter remains a
+second guard. Do not activate a permanent exclusion filter before testing it
+in GA4's testing state.
+
+The production GA bootstrap sets both traffic properties globally, and the
+shared event helper also attaches them explicitly to every custom event. This
+keeps save, export, project download, copy-link, publish, Remix, and WAC events
+on the same exclusion contract.
+
+### Weekly report
+
+The GA4 property time zone must be `Asia/Shanghai`. With a short-lived access
+token that can read both the Analytics Admin and Data APIs, run:
+
+```bash
+GA4_PROPERTY_ID=123456789 GA4_ACCESS_TOKEN=... \
+  node --import tsx scripts/query-ga4-wac.ts
+```
+
+The command defaults to the previous complete Monday-through-Sunday week. An
+explicit full week can be supplied with `-- --start=2026-08-31
+--end=2026-09-06`. It rejects partial weeks and a property with a different
+time zone, then queries `totalUsers` by `isoYearIsoWeek` for
+`creator_loop_complete`, production hostnames, and external traffic only.
+
+Before accepting the first weekly result, verify in GA4 DebugView or Realtime
+that initial render emits no loop completion, a supported change followed by
+a successful render emits one completion, and resize, restore, failure, and
+automation cases remain excluded.
+
 ## Deduplication
 
 Content view events use a module or component guard keyed by canonical route
@@ -180,16 +282,16 @@ unchanged unless a lifecycle note explicitly removes the associated UI.
 
 | Event | Current trigger | Properties | Lifecycle |
 |---|---|---|---|
-| `first_render_complete` | First Explore canvas-ready callback | `page: 'explore'` | active |
+| `first_render_complete` | First worker frame successfully drawn to the visible Explore canvas | `page: 'explore'`, traffic properties | active; lifecycle corrected in v0.4.20 |
 | `change_formula` | Select a built-in formula in Explore | `formula` | active |
 | `julia_mode_toggle` | Toggle formula mode | `mode`: `julia` or `mandelbrot` | active |
 | `add_keyframe` | Increase view-keyframe count | `count` | active |
-| `save_fractal` | Successful local artwork save | `formula`, `document_version`, `formula_kind` | active |
-| `export_fractal` | Successful PNG export | `scale`, `ssaa`, `formula`, `document_version`, `formula_kind` | active |
-| `project_download` | Successful project download | `formula`, `file_size_bucket`, `document_version`, `formula_kind` | active |
-| `project_import` | Successful project import | `formula`, `custom_formula_count`, `file_size_bucket`, `document_version`, `formula_kind` | active |
-| `project_import_failed` | Rejected or failed project import | `error_code`, `file_size_bucket`, `document_version`, `formula_kind` | active |
-| `custom_formula_save` | Successful custom-formula save | `name` | legacy active; do not add source text |
+| `save_fractal` | Successful cloud draft save | `document_version`, `formula_kind`, optional built-in `formula` | active |
+| `export_fractal` | Successful PNG export | `scale`, `ssaa`, `document_version`, `formula_kind`, optional built-in `formula` | active |
+| `project_download` | Successful project download | `file_size_bucket`, `document_version`, `formula_kind`, optional built-in `formula` | active |
+| `project_import` | Successful project import | `custom_formula_count`, `file_size_bucket`, `document_version`, `formula_kind`, optional built-in `formula` | active |
+| `project_import_failed` | Rejected or failed project import | `error_code`, `file_size_bucket`, `document_version`, `formula_kind`, optional built-in `formula` | active |
+| `custom_formula_save` | Successful custom-formula save | `formula_kind: 'custom'` | active; arbitrary names and source text are forbidden |
 | `error_webgl_unsupported` | WebGL capability failure | `page` | active |
 | `open_from_gallery` | Current Gallery card activation | `is_builtin` | replace for published cards when they navigate to artwork pages |
 | `star_fractal` | Current Gallery star toggle | `source: 'gallery'` | deprecated; stop sending when Gallery star UI is removed |
@@ -205,8 +307,9 @@ over-1-mib
 ```
 
 `formula_kind` is `builtin` or `custom`. `document_version` is numeric.
-Existing property names such as `formula` are retained for historical
-continuity; new content events use the more explicit `formula_id`.
+The legacy `formula` property is sent only for allowlisted built-in formulas.
+It is omitted for custom/private formulas. New content events use the more
+explicit `formula_id`.
 
 ## Event Ownership and Implementation
 
@@ -257,9 +360,20 @@ Automated or browser tests must prove:
 - successful and failed Copy link paths have the documented behavior;
 - removed Gallery star and fullscreen UI no longer sends deprecated events;
 - analytics unavailability does not change the user-visible action result;
+- no Google Analytics request or cookie is created before consent, declining
+  keeps all product behavior available, and withdrawing consent removes GA
+  cookies and stops later events;
 - no new payload contains source code, a render-state query, or local
   identifiers;
 - no v0.4.15 payload contains an email, IP, cookie, token, envelope,
   attachment, private draft title, or cloud record ID other than the public
   `publication_id`;
 - cloud events are inert while the feature switch is off.
+- no-op control callbacks do not create pending creator attribution, while a
+  non-no-op Reset does;
+- the first successful render establishes a baseline without completing WAC;
+- only a later supported user change followed by its successful render emits
+  one `creator_loop_complete` per Shanghai week per Explore mount;
+- resize, restore, failed, cancelled, superseded, internal, automation, and
+  development traffic do not enter the external WAC result;
+- the WAC query accepts exactly one complete Asia/Shanghai natural week.
