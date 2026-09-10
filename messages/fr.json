@@ -1615,6 +1615,33 @@
       "invalidNumber": "Saisissez un nombre fini valide.",
       "increase": "Augmenter",
       "decrease": "Diminuer",
+      "complexPlane": "Plan du paramètre",
+      "parameterInteraction": {
+        "plane": "Glisser dans le plan",
+        "polar": "Module et angle",
+        "real": "Ajuster la valeur",
+        "pair": "Ajuster les composantes",
+        "times": "Itérations de déclenchement",
+        "narrow": "Réduire la plage",
+        "widen": "Élargir la plage",
+        "showCurrent": "Afficher la valeur actuelle",
+        "magnitude": "Module",
+        "angle": "Angle (°)",
+        "constant": "Constante",
+        "feedback": "Coefficient de rétroaction",
+        "firstTrigger": "Premier déclenchement",
+        "secondTrigger": "Second déclenchement",
+        "realOnly": "Seule la partie réelle affecte le résultat.",
+        "windowHint": "La plage sert à explorer. Tu peux saisir des valeurs exactes ci-dessous.",
+        "hints": {
+          "feedback": "La partie réelle définit la constante ; la partie imaginaire définit la rétroaction.",
+          "seedLimit": "Les deux composantes définissent la valeur initiale ; la partie réelle définit aussi le seuil d’échappement.",
+          "thresholdPair": "Les deux composantes modifient le seuil d’échappement par Re((p + 4)²).",
+          "coupled": "Ce paramètre modifie le coefficient de l’orbite et le seuil d’échappement.",
+          "exponent": "Les deux composantes affectent l’initialisation ; les puissances de l’itération utilisent uniquement la partie réelle."
+        }
+      },
+      "resetComplex": "Réinitialiser à zéro",
       "mode": {
         "label": "Mode fractal",
         "mandelbrot": "Mandelbrot",

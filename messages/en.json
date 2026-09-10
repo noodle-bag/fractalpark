@@ -1615,6 +1615,33 @@
       "invalidNumber": "Enter a valid finite number.",
       "increase": "Increase",
       "decrease": "Decrease",
+      "complexPlane": "Parameter plane",
+      "parameterInteraction": {
+        "plane": "Drag on a plane",
+        "polar": "Magnitude and angle",
+        "real": "Adjust value",
+        "pair": "Adjust components",
+        "times": "Trigger iterations",
+        "narrow": "Narrow",
+        "widen": "Widen",
+        "showCurrent": "Show current value",
+        "magnitude": "Magnitude",
+        "angle": "Angle (°)",
+        "constant": "Constant",
+        "feedback": "Feedback coefficient",
+        "firstTrigger": "First trigger",
+        "secondTrigger": "Second trigger",
+        "realOnly": "Only the real component affects the result.",
+        "windowHint": "The range is an exploration window. Exact input is available below.",
+        "hints": {
+          "feedback": "The real component sets the constant; the imaginary component sets feedback.",
+          "seedLimit": "Both components set the starting value; the real component also sets the escape threshold.",
+          "thresholdPair": "Both components change the escape threshold through Re((p + 4)²).",
+          "coupled": "This parameter changes both the orbit coefficient and the escape threshold.",
+          "exponent": "Both components affect initialization; iteration powers use only the real component."
+        }
+      },
+      "resetComplex": "Reset to zero",
       "mode": {
         "label": "Fractal Mode",
         "mandelbrot": "Mandelbrot",

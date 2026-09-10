@@ -1615,6 +1615,33 @@
       "invalidNumber": "유효한 유한 숫자를 입력하세요.",
       "increase": "증가",
       "decrease": "감소",
+      "complexPlane": "매개변수 평면",
+      "parameterInteraction": {
+        "plane": "평면에서 드래그",
+        "polar": "크기와 각도",
+        "real": "값 조절",
+        "pair": "성분별 조절",
+        "times": "실행할 반복 횟수",
+        "narrow": "범위 축소",
+        "widen": "범위 확대",
+        "showCurrent": "현재 값 보기",
+        "magnitude": "크기",
+        "angle": "각도 (°)",
+        "constant": "상수",
+        "feedback": "피드백 계수",
+        "firstTrigger": "첫 번째 실행",
+        "secondTrigger": "두 번째 실행",
+        "realOnly": "실수부만 결과에 영향을 줘요.",
+        "windowHint": "이 범위는 탐색용이에요. 아래에서 정확한 값을 입력할 수 있어요.",
+        "hints": {
+          "feedback": "실수부는 상수를, 허수부는 피드백 계수를 정해요.",
+          "seedLimit": "두 성분은 초깃값을 정하고, 실수부는 탈출 임계값도 정해요.",
+          "thresholdPair": "두 성분은 Re((p + 4)²)를 통해 탈출 임계값을 바꿔요.",
+          "coupled": "이 매개변수는 궤도 계수와 탈출 임계값을 함께 바꿔요.",
+          "exponent": "두 성분은 초기화에 영향을 주고, 반복 계산의 지수에는 실수부만 사용해요."
+        }
+      },
+      "resetComplex": "0으로 재설정",
       "mode": {
         "label": "프랙탈 모드",
         "mandelbrot": "만델브로",

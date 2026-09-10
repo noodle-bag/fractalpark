@@ -1615,6 +1615,33 @@
       "invalidNumber": "请输入有效的有限数值。",
       "increase": "增加",
       "decrease": "减少",
+      "complexPlane": "参数平面",
+      "parameterInteraction": {
+        "plane": "平面拖拽",
+        "polar": "幅度与角度",
+        "real": "调节数值",
+        "pair": "分别调节分量",
+        "times": "触发迭代次数",
+        "narrow": "缩小范围",
+        "widen": "扩大范围",
+        "showCurrent": "定位当前值",
+        "magnitude": "幅度",
+        "angle": "角度（°）",
+        "constant": "常量",
+        "feedback": "反馈系数",
+        "firstTrigger": "第一次触发",
+        "secondTrigger": "第二次触发",
+        "realOnly": "只有实部影响结果。",
+        "windowHint": "此范围仅用于便捷探索，下方可精确输入。",
+        "hints": {
+          "feedback": "实部设置常量，虚部设置反馈系数。",
+          "seedLimit": "两个分量共同设置初始值，实部还设置逃逸阈值。",
+          "thresholdPair": "两个分量通过 Re((p + 4)²) 改变逃逸阈值。",
+          "coupled": "此参数同时改变轨道系数和逃逸阈值。",
+          "exponent": "两个分量影响初始化；迭代中的幂指数只使用实部。"
+        }
+      },
+      "resetComplex": "重置为零",
       "mode": {
         "label": "分形模式",
         "mandelbrot": "Mandelbrot 集",

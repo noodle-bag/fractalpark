@@ -1615,6 +1615,33 @@
       "invalidNumber": "Introduce un número finito válido.",
       "increase": "Aumentar",
       "decrease": "Disminuir",
+      "complexPlane": "Plano del parámetro",
+      "parameterInteraction": {
+        "plane": "Arrastrar en el plano",
+        "polar": "Magnitud y ángulo",
+        "real": "Ajustar valor",
+        "pair": "Ajustar componentes",
+        "times": "Iteraciones de activación",
+        "narrow": "Reducir rango",
+        "widen": "Ampliar rango",
+        "showCurrent": "Mostrar valor actual",
+        "magnitude": "Magnitud",
+        "angle": "Ángulo (°)",
+        "constant": "Constante",
+        "feedback": "Coeficiente de realimentación",
+        "firstTrigger": "Primera activación",
+        "secondTrigger": "Segunda activación",
+        "realOnly": "Solo la componente real afecta al resultado.",
+        "windowHint": "El rango es una ventana de exploración. Puedes introducir valores exactos abajo.",
+        "hints": {
+          "feedback": "La componente real define la constante; la imaginaria define la realimentación.",
+          "seedLimit": "Ambas componentes definen el valor inicial; la real también define el umbral de escape.",
+          "thresholdPair": "Ambas componentes modifican el umbral de escape mediante Re((p + 4)²).",
+          "coupled": "Este parámetro modifica el coeficiente de la órbita y el umbral de escape.",
+          "exponent": "Ambas componentes afectan a la inicialización; las potencias de la iteración solo usan la componente real."
+        }
+      },
+      "resetComplex": "Restablecer a cero",
       "mode": {
         "label": "Modo de fractal",
         "mandelbrot": "Mandelbrot",

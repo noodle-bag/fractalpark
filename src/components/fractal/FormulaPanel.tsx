@@ -14,6 +14,7 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@
 import { FormulaTab } from './FormulaTab';
 import { FormulaNumberDraftInput } from './FormulaNumberDraftInput';
 import { JuliaPicker } from './JuliaPicker';
+import { ParameterExplorationControl, ParameterRangeControl } from './ParameterExplorationControl';
 import type { FormulaSelectionRequest } from '@/engine/frm/authoring';
 import type {
   PublishedFormulaDescriptorV1,
@@ -24,6 +25,8 @@ import type {
   PublishedFormulaBeforeApply,
   PublishedFormulaSelectionResult,
 } from '@/lib/published-formula-selection';
+import { resolvePublishedFormulaPlanarControl } from '@/lib/published-formula-planar-controls';
+import { resolveParameterInteraction } from '@/lib/published-parameter-interactions';
 
 interface FormulaPanelProps {
   isJulia: boolean;
@@ -110,7 +113,14 @@ export function FormulaPanel({
               {t('controls.juliaC.label')}
             </span>
 
-            <JuliaPicker value={juliaC} onChange={onJuliaCChange} size={160} />
+            <JuliaPicker
+              value={juliaC}
+              onChange={onJuliaCChange}
+              ariaLabel={t('controls.juliaC.label')}
+              realLabel={t('controls.complexReal')}
+              imaginaryLabel={t('controls.complexImaginary')}
+              size={160}
+            />
 
             <div className="grid grid-cols-2 gap-2">
               <div className="space-y-1">
@@ -178,6 +188,7 @@ export function FormulaPanel({
               {activePublishedDescriptor.parameters.map((parameter) => (
                 <PublishedFormulaParameterControl
                   key={parameter.uniformName}
+                  formulaId={activePublishedDescriptor.formulaId}
                   parameter={parameter}
                   value={pluginParams?.[parameter.uniformName]}
                   onChange={onFormulaParamChange}
@@ -246,7 +257,9 @@ interface FormulaComplexDraftInputsProps {
   imaginaryId?: string;
   min?: number;
   max?: number;
+  step?: number;
   showCoordinateLabels?: boolean;
+  realOnly?: boolean;
   onCommit: (value: [number, number]) => void;
   t: ReturnType<typeof useTranslations>;
 }
@@ -302,7 +315,9 @@ function FormulaComplexDraftInputs({
   imaginaryId,
   min,
   max,
+  step,
   showCoordinateLabels = false,
+  realOnly = false,
   onCommit,
   t,
 }: FormulaComplexDraftInputsProps) {
@@ -345,6 +360,7 @@ function FormulaComplexDraftInputs({
       value={draftState.displayValue[0]}
       min={min}
       max={max}
+      step={step}
       onCommit={(next) => commitCoordinate(0, next)}
       invalidMessage={t('controls.invalidNumber')}
       increaseLabel={t('controls.increase')}
@@ -359,6 +375,7 @@ function FormulaComplexDraftInputs({
       value={draftState.displayValue[1]}
       min={min}
       max={max}
+      step={step}
       onCommit={(next) => commitCoordinate(1, next)}
       invalidMessage={t('controls.invalidNumber')}
       increaseLabel={t('controls.increase')}
@@ -367,6 +384,13 @@ function FormulaComplexDraftInputs({
     />
   );
 
+  if (realOnly) return <>
+    {realInput}
+    <details className="text-xs text-muted-foreground">
+      <summary className="cursor-pointer">{t('controls.complexImaginary')} — {t('controls.parameterInteraction.realOnly')}</summary>
+      <div className="pt-2">{imaginaryInput}</div>
+    </details>
+  </>;
   if (!showCoordinateLabels) return <>{realInput}{imaginaryInput}</>;
 
   return (
@@ -388,6 +412,7 @@ function FormulaComplexDraftInputs({
 }
 
 interface PublishedFormulaParameterControlProps {
+  formulaId: string;
   parameter: PublishedFormulaParameterDescriptorV1;
   value?: PluginParamValue;
   onChange: (name: string, value: PluginParamValue) => void;
@@ -395,6 +420,7 @@ interface PublishedFormulaParameterControlProps {
 }
 
 function PublishedFormulaParameterControl({
+  formulaId,
   parameter,
   value,
   onChange,
@@ -439,10 +465,24 @@ function PublishedFormulaParameterControl({
     const resolved = Array.isArray(value)
       ? [Number(value[0] ?? 0), Number(value[1] ?? 0)] as [number, number]
       : fallback;
+    const planarControl = resolvePublishedFormulaPlanarControl(formulaId, parameter);
+    const interaction = resolveParameterInteraction(formulaId, parameter);
     return (
       <div className="space-y-2">
         <span className="text-sm font-medium leading-none">{parameter.slotName}</span>
-        <div className="grid grid-cols-2 gap-2">
+        {interaction && (
+          <ParameterExplorationControl
+            key={`${formulaId}:${parameter.slotName}`}
+            value={resolved}
+            onChange={(next) => onChange(parameter.uniformName, next)}
+            kind={interaction.kind}
+            hint={interaction.hint}
+            integer={interaction.integer}
+            label={parameter.slotName}
+            initiallyOpen={!!planarControl || interaction.kind === 'real'}
+          />
+        )}
+        <div className={`grid gap-2 ${interaction?.kind === 'real' ? 'grid-cols-1' : 'grid-cols-2'}`}>
           <FormulaComplexDraftInputs
             value={resolved}
             slotName={parameter.slotName}
@@ -450,6 +490,8 @@ function PublishedFormulaParameterControl({
             imaginaryId={`published-${parameter.uniformName}-im`}
             min={parameter.hardDomain?.[0]}
             max={parameter.hardDomain?.[1]}
+            step={interaction?.integer ? 1 : planarControl?.step}
+            realOnly={interaction?.kind === 'real'}
             onCommit={(next) => onChange(parameter.uniformName, next)}
             t={t}
           />
@@ -481,6 +523,16 @@ function PublishedFormulaParameterControl({
         decreaseLabel={t('controls.decrease')}
         className="h-8"
       />
+      <ParameterRangeControl
+        key={`${formulaId}:${parameter.slotName}`}
+        value={resolved}
+        onChange={(next) => onChange(parameter.uniformName, [next, 0])}
+        label={parameter.slotName}
+        domain={parameter.hardDomain}
+      />
+      {!parameter.hardDomain && <p className="text-xs text-muted-foreground">
+        {t('controls.parameterInteraction.windowHint')}
+      </p>}
     </div>
   );
 }

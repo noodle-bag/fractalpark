@@ -6,12 +6,14 @@ import { compileClassicFrmEntry, compileFrm } from '@/engine/frm/compile';
 import { pluginRegistry } from '@/engine/plugins/registry';
 import type { FormulaPlugin } from '@/engine/plugins/types';
 import { FormulaPanel } from '@/components/fractal/FormulaPanel';
+import { PSEUDOLAMBDA_FORMULA_ID } from '@/lib/published-formula-planar-controls';
 
 const SUPPORTED_JULIA_ROW = activationAsset.rows[0]!;
 
 vi.mock('next-intl', () => ({
   useLocale: () => 'en',
-  useTranslations: () => ((key: string) => key),
+  useTranslations: (namespace: string) => ((key: string) =>
+    namespace.startsWith('explore.') ? `${namespace.slice(8)}.${key}` : key),
 }));
 
 describe('FormulaPanel', () => {
@@ -221,7 +223,7 @@ bailout:
     );
     const { rerender } = render(renderPanel());
 
-    const scale = screen.getByLabelText('scale');
+    const scale = screen.getByRole('spinbutton', { name: 'scale' });
     const offsetReal = screen.getByLabelText('offset controls.complexReal');
     const offsetImaginary = screen.getByLabelText('offset controls.complexImaginary');
     expect(scale).toHaveValue('0.25');
@@ -268,5 +270,56 @@ bailout:
     fireEvent.click(screen.getByRole('combobox', { name: 'fn1' }));
     fireEvent.click(await screen.findByRole('option', { name: 'identity' }));
     expect(onFormulaParamChange).toHaveBeenCalledWith('u_frm_fn1', 0);
+  });
+
+  it('opens the reviewed pseudolambda planar controls with precise input', () => {
+    const onFormulaParamChange = vi.fn();
+    render(
+      <FormulaPanel
+        isJulia={false}
+        juliaC={[-0.7, 0.27]}
+        currentFormula={PSEUDOLAMBDA_FORMULA_ID}
+        currentBounds={{ centerX: -0.5, centerY: 0, zoom: 0.4, rotation: 0 }}
+        pluginParams={{
+          frmV1_rate: [0, -0.3],
+          frmV1_offset: [1.6, 0],
+        }}
+        publishedDescriptor={{
+          schema: 'fractalpark-published-formula-descriptor/v1',
+          formulaId: PSEUDOLAMBDA_FORMULA_ID,
+          sourceRevision: 'a'.repeat(64),
+          semanticHash: 'b'.repeat(64),
+          parameters: [
+            {
+              slotName: 'rate',
+              type: 'complex',
+              default: [0, 0],
+              uniformName: 'frmV1_rate',
+            },
+            {
+              slotName: 'offset',
+              type: 'complex',
+              default: [0, 0],
+              uniformName: 'frmV1_offset',
+            },
+          ],
+        }}
+        onJuliaModeChange={() => {}}
+        onJuliaCChange={() => {}}
+        onFormulaChange={() => {}}
+        onFormulaParamChange={onFormulaParamChange}
+      />,
+    );
+
+    const ratePlane = screen.getByRole('group', { name: 'rate controls.complexPlane' });
+    expect(screen.getByRole('group', { name: 'offset controls.complexPlane' })).toBeInTheDocument();
+    expect(screen.getByLabelText('rate controls.complexReal')).toHaveAttribute('step', '0.01');
+    expect(screen.getByLabelText('offset controls.complexReal')).toHaveValue('1.6');
+
+    fireEvent.keyDown(ratePlane, { key: 'ArrowDown' });
+    expect(onFormulaParamChange).toHaveBeenCalledWith('frmV1_rate', [0, -0.31]);
+
+    fireEvent.click(screen.getByRole('button', { name: 'offset controls.resetComplex' }));
+    expect(onFormulaParamChange).toHaveBeenCalledWith('frmV1_offset', [0, 0]);
   });
 });
