@@ -83,11 +83,11 @@ describe('document adapter', () => {
     expect(persistedProjection).toEqual(runtime);
 
     const rendererProjection = documentToRuntimeParams(doc);
-    expect(rendererProjection).toEqual({ ...runtime, isJulia: false });
+    expect(rendererProjection).toEqual(runtime);
     expect(resolveEffectiveJuliaStateV1(doc)).toEqual({
       persistedIntent: true,
-      effective: false,
-      reason: 'non-canonical',
+      effective: true,
+      reason: 'active',
     });
     expect(doc.formula.isJulia).toBe(true);
     expect(doc.formula.juliaC).toEqual([-0.62, 0.41]);

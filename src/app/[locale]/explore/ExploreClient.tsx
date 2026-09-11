@@ -54,8 +54,9 @@ import {
 import { pluginRegistry } from '@/engine/plugins/registry';
 import {
   resolveActivatedPublishedFormulaDefaultProfileV1,
-  resolveJuliaRuntimeCapabilityV1,
 } from '@/engine/formulas/v1/julia-runtime-activation-v1';
+import { resolveFormulaRuntimeCapabilityV1 } from '@/engine/formulas/v1/formula-runtime-capability-v1';
+import { bindPublishedRenderingSourceV1 } from '@/engine/formulas/v1/published-rendering-source-v1';
 import { registerBuiltins } from '@/engine/plugins/builtins';
 import { resolveEffectiveSmoothMethod } from '@/engine/frm/smooth-capability';
 import { resolveRendererPipelineVersion } from '@/engine/frm/semantics-version';
@@ -197,9 +198,9 @@ function ExploreClient({ posterImage }: { posterImage?: string }) {
     customGradient,
   } = runtimeParams;
   const currentFormulaPlugin = pluginRegistry.getFormula(formula);
-  const canEditJulia = resolveJuliaRuntimeCapabilityV1(
+  const canEditJulia = resolveFormulaRuntimeCapabilityV1(
     formula,
-    currentFormulaPlugin?.cacheFingerprint,
+    currentFormulaPlugin,
   ).supportsEditing;
   const [pickToast, setPickToast] = useState<string | null>(null);
   const keyframes = useMemo(
@@ -496,7 +497,7 @@ function ExploreClient({ posterImage }: { posterImage?: string }) {
           );
           pluginRegistry.register(
             resolveRecoveredPublishedRenderingPluginV1(
-              artifact.plugin,
+              bindPublishedRenderingSourceV1(artifact),
               pluginRegistry.getFormula(row.displayName),
             ),
           );
@@ -924,7 +925,7 @@ function ExploreClient({ posterImage }: { posterImage?: string }) {
         clearHandoffFailure();
         registerBuiltins({ quiet: true });
         const renderingPlugin = resolveRecoveredPublishedRenderingPluginV1(
-          artifact.plugin,
+          bindPublishedRenderingSourceV1(artifact),
           pluginRegistry.getFormula(row.displayName),
         );
         pluginRegistry.register(renderingPlugin);

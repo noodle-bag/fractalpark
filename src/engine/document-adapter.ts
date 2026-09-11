@@ -1,8 +1,8 @@
 import { pluginRegistry } from './plugins/registry';
 import {
-  resolveJuliaRuntimeCapabilityV1,
   type JuliaRuntimeCapabilityResolutionV1,
 } from './formulas/v1/julia-runtime-activation-v1';
+import { resolveFormulaRuntimeCapabilityV1 } from './formulas/v1/formula-runtime-capability-v1';
 import type { FractalParams, KeyframeAnimation, PluginParamRecord, PluginParamValue } from './types';
 import type { FractalUrlState } from '@/lib/url-params';
 import {
@@ -192,9 +192,9 @@ export function resolveEffectiveJuliaStateV1(
       reason: 'missing' as const,
     });
   }
-  const capability = resolveJuliaRuntimeCapabilityV1(
+  const capability = resolveFormulaRuntimeCapabilityV1(
     doc.formula.formulaId,
-    plugin.cacheFingerprint,
+    plugin,
   );
   return Object.freeze({
     persistedIntent: true,

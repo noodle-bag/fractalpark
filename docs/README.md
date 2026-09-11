@@ -5,6 +5,10 @@ govern FractalPark development.
 
 ## Specifications
 
+- [Formula Runtime Identity Compatibility v1](specs/formula-runtime-identity-v1.md)
+  separates source qualification from shader caching while preserving native
+  artwork rendering and parameter contracts.
+
 - [Fractal Document v2 and Envelope v1](specs/fractal-document-v2.md) defines
   the durable artwork and portable project formats.
 - [Fractal Content and Creation Model](specs/fractal-content-and-creation-model.md)

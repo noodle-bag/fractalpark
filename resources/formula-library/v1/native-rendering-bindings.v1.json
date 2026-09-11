@@ -1,0 +1,471 @@
+{
+  "schema": "fractalpark-native-rendering-bindings/v1",
+  "rows": [
+    {
+      "runtimeId": "acoshJulia",
+      "formulaId": "c09b9dec-60a6-5a26-8f03-d5ea40f0d49b",
+      "sourceRevision": "4788720325f40f284ca8126f3bffda0f3c3abad0702b49bbebf81ce2a4f2f68d",
+      "nativeFingerprint": "7834a6a5160aa018e905dc0121139575e53e9bae4924ca10481ad728fac67545"
+    },
+    {
+      "runtimeId": "acoshMandelbrot",
+      "formulaId": "cb9f75de-2acb-563b-9090-f58f17e65f92",
+      "sourceRevision": "15e9e1fe969445d456a619767b333ee3d664f1ed11db98d853d89cd1c674beca",
+      "nativeFingerprint": "e5d60b330a3bf9eccc5a6eedd51f24c759a02abedece8d0b604c377b31b55f7b"
+    },
+    {
+      "runtimeId": "airship",
+      "formulaId": "38c3b212-c33b-5dd3-aae5-a514fc7e37e3",
+      "sourceRevision": "824eda8dc180b39ab6c7e32f187530e1c35edeaec7db3f9d00c7a7acef78df63",
+      "nativeFingerprint": "23cd76f2d6a41c9003ca9b31ee7239ca19a751586c09e02d184f02eb9fdb4c93"
+    },
+    {
+      "runtimeId": "airshipCubic",
+      "formulaId": "42b369a5-2873-50e9-8684-cad5e60630ff",
+      "sourceRevision": "67d0d96182f217e37faab85d6b7e3cf28bd9e959348589957ff49a4f5436f049",
+      "nativeFingerprint": "fb794a5b686cc531e3a10ed06b7ad3812f4c4b0d19de0774a7a8382c2d7c120f"
+    },
+    {
+      "runtimeId": "asinhJulia",
+      "formulaId": "b6ccba60-aba6-5136-9c92-679ae55ba5ce",
+      "sourceRevision": "3857ea8d4ca78064e6f19198f16e21954bd654f63f1d12ee923836709196d3a5",
+      "nativeFingerprint": "83d658b041b24fc64a8ea5b9678027c4d6913d323e5fd92a013588d0da7a183f"
+    },
+    {
+      "runtimeId": "asinhMandelbrot",
+      "formulaId": "07a0afc6-ced5-5765-9314-fdb0ef593cb9",
+      "sourceRevision": "dce84ac5a7ee55fff27d70df826af67d386f905ee65cee65f5fa8d418e68ba27",
+      "nativeFingerprint": "c8026d261e9c15892376f7c76d86b029542c6e7cabadb1aac0ed4ae06ddab2c1"
+    },
+    {
+      "runtimeId": "atanhJulia",
+      "formulaId": "88dd57cd-a348-55e8-983a-74c0acba57ae",
+      "sourceRevision": "1afe2c3b50115c812e5adefc0a74020b2fd1eef286fcbe7d3a724944bfe04240",
+      "nativeFingerprint": "5eed14e300bbc416cfedbc46f60125bc19b362c4e7dbc9e256455c90d590f068"
+    },
+    {
+      "runtimeId": "atanhMandelbrot",
+      "formulaId": "ecee6e9d-a5c9-5b29-be39-edbe00e73c50",
+      "sourceRevision": "4d5153905d6fb7405991db7488ce8b225586f8bfb7c012a3c07b528cb28ba5b6",
+      "nativeFingerprint": "3fceccc4746aef01db5dc4978c9e339317c3e1d6c1260c5f3c3214c5a50495da"
+    },
+    {
+      "runtimeId": "biomorph",
+      "formulaId": "34fcff23-f75a-539c-9102-181945abee60",
+      "sourceRevision": "3a9b6d2563e6a85164ff6070013ad037a61764451d644340116ed47d3e1b5381",
+      "nativeFingerprint": "2ebfebe7fef29fd4a967fd67f14252a24f9c05538db7730c09a7a290f282f105"
+    },
+    {
+      "runtimeId": "buffalo",
+      "formulaId": "a569d2c4-d397-5634-9dfe-21b2ab1a386a",
+      "sourceRevision": "b7dd588e3cf8c70a1ec52801a03b6ee1b6980009c0725f8a32ecfa8fe1a6dfad",
+      "nativeFingerprint": "04659037514d691025862f9e3f5b05a1610795224e43794a6bbc9768ab46399a"
+    },
+    {
+      "runtimeId": "burningShip",
+      "formulaId": "2ab193f5-4919-5e5c-a9fb-c1a0e3f5eb02",
+      "sourceRevision": "cfef49944d8f9bd8f2ee91b2d4ab4f9b30ad66475a6f783f52bb91a7a36b1617",
+      "nativeFingerprint": "240c717306f0d17e9bfbaf8d402826a520316e77700cdc3b9a2737b80cbd66a4"
+    },
+    {
+      "runtimeId": "burningShipCubic",
+      "formulaId": "465a5b03-469d-59b3-8564-45af7564e37a",
+      "sourceRevision": "590db3453ca43c558e7b8c955e661b5ec68951b6afbb7feb3a07d0aa474a5910",
+      "nativeFingerprint": "0aea1f529c57409bcefd84af1fb60415a542a37a0e20bc72f734301acd15c825"
+    },
+    {
+      "runtimeId": "burningShipImag",
+      "formulaId": "33236fd9-4bd1-539b-961a-7b95ab92a1e0",
+      "sourceRevision": "8b784f29c0e46b55e45eb6406c4fae4e01ef3cd876844c2749eeea4acdf1bd0a",
+      "nativeFingerprint": "38ade43fd274876b0f1cd9b55bc1e0a75ea3651a53e589d91c018e305a8a6311"
+    },
+    {
+      "runtimeId": "burningShipQuartic",
+      "formulaId": "46acfdeb-2dac-59c9-a94a-fd4809420dc2",
+      "sourceRevision": "c0c320f05c5531b4e17bf96b47e87114374914b52151576ed9854fa35e60c8d4",
+      "nativeFingerprint": "686e0cb76bd3970dc72141db5c72685383f2389e28f8be6c9275cf15f213fd3b"
+    },
+    {
+      "runtimeId": "cactus",
+      "formulaId": "a3ab1c2f-5940-51d3-8c13-58f7feeb084b",
+      "sourceRevision": "a40c549ceff1450e3827f366d47cb83b7c531c20469f3c9a8c88082639f0b7d1",
+      "nativeFingerprint": "8b3505703cba570308ce858ce387248ee6eed2643f36925d94909e4b98f06977"
+    },
+    {
+      "runtimeId": "celticBurningShip",
+      "formulaId": "8f661407-f2c9-57e5-8c01-9b63a3cd0493",
+      "sourceRevision": "ccf0789e752a08f4dcc10feba172e7132287c4716c55a2ac86cb5df98015e014",
+      "nativeFingerprint": "e41937bd3e6340d7f1eaf54442b3dc481950f9e5f2174fe3483af3a852f4bdeb"
+    },
+    {
+      "runtimeId": "celticMandelbar",
+      "formulaId": "06223e69-6d8c-50ba-8e5d-b630d342d910",
+      "sourceRevision": "6fd1272cca8d356da5f0c49cbbb4278f0e5d727cefab5ad1daefa83fb4c1f3ce",
+      "nativeFingerprint": "ffc203f9d2a0f758a287adbec95f19d7f5c55c704370fb6f9d330edb610333d2"
+    },
+    {
+      "runtimeId": "celticMandelbrot",
+      "formulaId": "4536f1e3-1f15-5b7e-8e58-68ea3b63d4fb",
+      "sourceRevision": "18a51ec5ab4c5e47bdd687cf36595663437d8341dedda7e3965751f5e8001d82",
+      "nativeFingerprint": "e1f792fc8263e2be2314ad6c66a94d0b5032310bf0e3d54fbfb5b72306444efa"
+    },
+    {
+      "runtimeId": "chebyshev2",
+      "formulaId": "09ee96d1-18a8-5dad-83e1-d05f0c59be4b",
+      "sourceRevision": "ab0bdc1929dee1daeb9486d7b1fd885a6644367232854694fa88908eb4e6c0ce",
+      "nativeFingerprint": "09a2b13aabde14eb7fd1804c6be2718084f611049852c4b7d9284182552d3670"
+    },
+    {
+      "runtimeId": "chebyshev3",
+      "formulaId": "e1220621-19f8-54ef-ad36-4220b5d7fedc",
+      "sourceRevision": "4f4c9c6798374a9eb0ef22bf6997229a1c44de9ed2770d544014b916f6c836d8",
+      "nativeFingerprint": "2e3fc33f414398f34e441b57fcee7970ddcd50954357f16eaea6cb86315ad96f"
+    },
+    {
+      "runtimeId": "chebyshev4",
+      "formulaId": "18d30091-ce1c-5b10-b214-37eb4337df83",
+      "sourceRevision": "5fc275e31b93767b2ba03c07ee856b9f362233f80497d4fbf275a9424c880ef0",
+      "nativeFingerprint": "09f73a437d6e4b0bbfb593e0c20bfa3b6644b748f38b415fec54320a449fe055"
+    },
+    {
+      "runtimeId": "chebyshev5",
+      "formulaId": "34f41a82-3ede-5eda-8c1c-67962c37366b",
+      "sourceRevision": "3659c6747e09ecf73bf1ed558c9c7592250b0ef82fde8a8915bccb35a443436b",
+      "nativeFingerprint": "433eabccd32a70251469149a5e831f0c5c74baa61b5888a6cdf60ef85fda0530"
+    },
+    {
+      "runtimeId": "circleInversion",
+      "formulaId": "6c1385a9-2d23-5816-90d1-2752905fc353",
+      "sourceRevision": "decba7b7f3d2b3e121f53906a98d62d32743da89d72ea79c2aa1ebd5f5aa2e37",
+      "nativeFingerprint": "62fca1e654af55861874df1cc0e4badb4334d0ab77297fb111d0915a5de8914c"
+    },
+    {
+      "runtimeId": "collatz",
+      "formulaId": "8eb342fe-8a05-524e-8b98-35cdc8af5be3",
+      "sourceRevision": "9f102aa122c2f49ca1ec0ad883ddcb51dd58a92e86501ba081f22fab82fe0410",
+      "nativeFingerprint": "b81e3babb29a36a93facc3ace85f1da4393a46dc8833e4754a25be525397005c",
+      "refinedFingerprint": "80952966e7806eafe33ab57a43610882f238fb3580f204a990ec3faae4864cd8"
+    },
+    {
+      "runtimeId": "coshJulia",
+      "formulaId": "62098934-def3-527a-ac43-2c80449c9848",
+      "sourceRevision": "826c473c5cdf710c5273c29a219eaf17ffc9117c74eb03282a51f9501eb9342c",
+      "nativeFingerprint": "c5e4e0c556c8971b06621219c758500b38c146dd60acf62046ccd05bd1ca78e0",
+      "refinedFingerprint": "06eed0058cf9f8c1cc32d1a3d8d2ef2371a4b4f49892b1abbc8946ec4fb2297b"
+    },
+    {
+      "runtimeId": "coshMandelb",
+      "formulaId": "201c54f3-a77a-5be0-a0a5-6f4f1998ee6d",
+      "sourceRevision": "90d43b9c2bc9a7eda5ca6f997a1ae2dc6640f0cc12cdcc34e8c82ca0765eff12",
+      "nativeFingerprint": "ea1e01d27711c7aecc4ac61b488f369b0f98e63943425fe9fd16cba78dd6e80e",
+      "refinedFingerprint": "63794ccf6910d02993d6748055ba74472a45ad23bbd260912f9d5fe10289c249"
+    },
+    {
+      "runtimeId": "coshSinh",
+      "formulaId": "d89f722f-35fe-587a-bee9-efdf05885728",
+      "sourceRevision": "f05366105906d0524885fafa45e4b11808d37b0c7de3ef287da876b972df653a",
+      "nativeFingerprint": "c1b123f43e7d13e71c0c87138f9ea5673b834f2f34f4cce6052f3d9855c6a47b",
+      "refinedFingerprint": "cb5a0a716102a700442fc519a5e747f45a86235fb724abf48267aa98a8fcc914"
+    },
+    {
+      "runtimeId": "cosJulia",
+      "formulaId": "3edbea29-956a-5900-9aa7-02ccc2183016",
+      "sourceRevision": "75cc7f04fc69d74294c3ed9dcd5271585a6d186311dd10a906e781958cb46870",
+      "nativeFingerprint": "9896bbe6b598ee7dde4277fee90ceb8cc57318b1b3dfb89b0b7a462a86cfc375",
+      "refinedFingerprint": "81e3d24463c0303e85540bfbbdb599c5be362a11ec1107f43c639ced3ca3f40f"
+    },
+    {
+      "runtimeId": "cosMandelb",
+      "formulaId": "9f301c01-13fa-57b4-a3b2-99add821bfb0",
+      "sourceRevision": "df2d4387d714cd91b67a6c019af286fad376b27ee36e6ec038ba44c301f64c25",
+      "nativeFingerprint": "43e6e4bd463167bfe0f6bd3c1ee12178bdb0b57ac6ccf02a7fa78af0b69300c7",
+      "refinedFingerprint": "d6694dfee8bea2cf06227f3d67a132402bd4dcf8e2583d628e445d34b7f5447d"
+    },
+    {
+      "runtimeId": "cothJulia",
+      "formulaId": "8f9eb07a-b405-5d9c-8b6a-9447ad7165b0",
+      "sourceRevision": "62dbe6e2d3a50b62da0ac3e58b7f0d86a36f196cc593d21dac783a04426d6194",
+      "nativeFingerprint": "7c5e5b017abf1e89eda28bd1115a2dc30cc790dcdf30861249c4cdc028b96ca3"
+    },
+    {
+      "runtimeId": "cothMandelbrot",
+      "formulaId": "ebe7d5f6-7f65-50cc-b03b-f208d78c955a",
+      "sourceRevision": "2df46891cf4701d035aad8979ee2dfbcb991f6c66802bdfdb27c0cc79c9af9dc",
+      "nativeFingerprint": "87510c8650d2703f3c184ccf4cb384d8c7b8f9d2291e9ab8513ea847e4012fc4"
+    },
+    {
+      "runtimeId": "cubicMandelbrot",
+      "formulaId": "34fcff23-f75a-539c-9102-181945abee60",
+      "sourceRevision": "3a9b6d2563e6a85164ff6070013ad037a61764451d644340116ed47d3e1b5381",
+      "nativeFingerprint": "5f6f00b9f9b2343fc055df4f6d6a6c0301ccc5fc5c59c8f70de808a2100703c1"
+    },
+    {
+      "runtimeId": "cubicPerpendicularMandelbrot",
+      "formulaId": "e375f423-dfa4-54bf-9d56-c41215f4f72a",
+      "sourceRevision": "10f7accf02bbb79e4e7df8120ed2d02ea8b5a922fe780006c693da9a4ebe013d",
+      "nativeFingerprint": "429a85054ebedfc32045f49da9e6d80536c9e7bc8e47ad124c9c618b6aa3c6ba"
+    },
+    {
+      "runtimeId": "frothyBasin",
+      "formulaId": "56935004-bdb8-5682-974f-3821cd422965",
+      "sourceRevision": "5e913f2f48004cf2e75a308428500639b2d50a3c12ed001e9c9cbc83f92f42d2",
+      "nativeFingerprint": "7cd8cba5f3c3bccdc77c4318d6af81e0c09259f4288de4ed7ea17316fdf4f3e5"
+    },
+    {
+      "runtimeId": "heart",
+      "formulaId": "4536f1e3-1f15-5b7e-8e58-68ea3b63d4fb",
+      "sourceRevision": "18a51ec5ab4c5e47bdd687cf36595663437d8341dedda7e3965751f5e8001d82",
+      "nativeFingerprint": "13ade254f5b107e52a90622ae791b89c92fa1459c49bb9bccfc323e4610deaf1"
+    },
+    {
+      "runtimeId": "invertedLambda",
+      "formulaId": "c6b5dcf4-cef5-5630-b3f6-a68b92ae75ee",
+      "sourceRevision": "5aa4f9b2c35d3bded213756bb80da01f95fef7ee766779a7f02090a1116a0e9a",
+      "nativeFingerprint": "de5ed588d2fcf782d15f2677224c8cfa0deec46c55c5df250428df0cada04237"
+    },
+    {
+      "runtimeId": "lambda",
+      "formulaId": "c1c898f3-c9a3-583d-9a0a-d09968ba0db3",
+      "sourceRevision": "a265807bb53747d256b0cbfee89991527a72e8bb9ceac9a41888c3ad1419448e",
+      "nativeFingerprint": "c356c8595210327e81e1618c9c20da04417fc5913eb86f4bed998aaed6b051ac"
+    },
+    {
+      "runtimeId": "logistic",
+      "formulaId": "2daea798-a058-5b4c-ada8-1712c475fadf",
+      "sourceRevision": "0ec0a7f7fc2d2433aec56bf952eb9a89bea48f2bd5c4776c472f7548eb422f83",
+      "nativeFingerprint": "d08a6d7b8a10d736a20c5f03983a2811d3fc47ce4c00844f2069c3febd7fac9d"
+    },
+    {
+      "runtimeId": "logJulia",
+      "formulaId": "d93a2f0f-7208-5019-ad82-7a1d319a4412",
+      "sourceRevision": "8c3c844e1684a8cde9d26c89688595ee9c85e63fb540ca5752b2e2de49eedf91",
+      "nativeFingerprint": "3ce126a2b449705313897cba7482ec7ddc3b0d1d00585cba488bc98692202573"
+    },
+    {
+      "runtimeId": "magnet2",
+      "formulaId": "2dd8a5a7-052a-5539-aab9-c533f7dec857",
+      "sourceRevision": "6c2c19cfb9bff9d9aa0cca56cea6dc62e324e80009b931665b604726d3784e5d",
+      "nativeFingerprint": "dd4901edc14bec15a980d96b6238422344668f5b7d2abec139b1bd2dc272f275"
+    },
+    {
+      "runtimeId": "mandelbox",
+      "formulaId": "280cd3e2-865b-5c78-90b7-39b2a36d7be0",
+      "sourceRevision": "b4677349cc60d66a5b7ad87655a89585d2bf83c7284ef949afe081e8eb294aac",
+      "nativeFingerprint": "930abb894aff9625aa866bbb7397d751b3695ded906bcd228939c31ce1983fd6",
+      "refinedFingerprint": "514942a00fe7c94e816d420ab3d28077c5d61ade184eff82f246adbb475d70bd"
+    },
+    {
+      "runtimeId": "mandelbrot",
+      "formulaId": "00e14aa8-b766-54ea-a359-3f5d20d329b7",
+      "sourceRevision": "e4d2259a5dd3fe7b3af646514a4313e83efcc80e887e04c07b7469bb27a66b90",
+      "nativeFingerprint": "c351c169f1d5df7c26fe197cf5f17473c4f3f98963b6116491154f9a47dde0c7"
+    },
+    {
+      "runtimeId": "manowar",
+      "formulaId": "ca206908-8323-5ef9-979b-c80575765e63",
+      "sourceRevision": "8e7b7ec8823dd032017038ead294ae8e204dc43cc1a24b5709402af1ef075d2b",
+      "nativeFingerprint": "516f4511415c8d28d3fbc72d047b9445a2ef4a34e12fb8d4828a572f8ed43b32"
+    },
+    {
+      "runtimeId": "mcMullen23",
+      "formulaId": "cc40b50c-d3ff-54f0-b4ea-98bdf0fd0096",
+      "sourceRevision": "37a6c61666fd5bf3e2bdef96849dc27a10bd58d152e6a161005ab6e565f12ce0",
+      "nativeFingerprint": "e33673eaf1abf69116a534e3b2c4bc003b21154d416d946ec53c6470139c521b"
+    },
+    {
+      "runtimeId": "mcMullen32",
+      "formulaId": "9577c6c0-3a56-5a17-bea5-0ad2d6ea7e08",
+      "sourceRevision": "fb8c0f2d92c13fa06f201a8d72caf26cf4371f4e951fc2c5719d2a598d170566",
+      "nativeFingerprint": "beb02fdbc1c6016cb12f14b79db7c07a6d90b936562e8705d465cafe9d8c9165"
+    },
+    {
+      "runtimeId": "mcMullen34",
+      "formulaId": "48a9aa85-f5d4-5f9a-b640-89e93890a8ad",
+      "sourceRevision": "ef6a9ee325473be1beadbbc91f6aa28773271649a751e12044d03d1faa0c41b3",
+      "nativeFingerprint": "f10ef737a85a0b8e914417d19443c9bdbb4e91ac3c21cfe20b700caa8536da5d"
+    },
+    {
+      "runtimeId": "multicorn4",
+      "formulaId": "b9a54802-21b4-5cb9-8b8f-e4afc3c99f3b",
+      "sourceRevision": "d6aed2ec300e8c2a94dd291096ddc56d357c4271c225c8e266ef6256cd2b4fcb",
+      "nativeFingerprint": "8928d08f42ceabe409cd07903530e6cdafd95ba92d78c3be4de86c5779ec1309"
+    },
+    {
+      "runtimeId": "multicorn5",
+      "formulaId": "ed671b4c-a04c-5545-ad0c-a73727761ce8",
+      "sourceRevision": "46472f355f4ed06661a7e8cc666c73d3037e394e4be8fe56abe43e9b9c7c303a",
+      "nativeFingerprint": "2c25e08040922828804e7391c4253e543e1ac26a4fecf59d6103c2aae5b06437"
+    },
+    {
+      "runtimeId": "multicorn6",
+      "formulaId": "a69bc250-315d-5a74-9109-d23a820974e5",
+      "sourceRevision": "99df8d1a5ac5a7dda5b7744a6776a4fac8a05e769351b8f4b351163c0f4e8dae",
+      "nativeFingerprint": "935d373ef5328bba386810c915a348cc1ac1d3122c75a8d24edc2ad37d841d62"
+    },
+    {
+      "runtimeId": "multicorn7",
+      "formulaId": "f58059ef-67f2-58a4-bac0-bdb1d8608cc0",
+      "sourceRevision": "fcf3406ffb7f4abe696c7d98c1fe2673a32420ed31698337404376096bf28b96",
+      "nativeFingerprint": "fcd51fddf622d16e657d4a123e3022ed12d2c3c05760ed8ba74a960868abc2ec"
+    },
+    {
+      "runtimeId": "novaSine",
+      "formulaId": "0df5ac6e-d97e-55db-b624-96c310af07dd",
+      "sourceRevision": "bb7d3fd03ddb3b27f66b28fea82cdfa4da6c88cf15a23c6da8fe27a8adf1e34e",
+      "nativeFingerprint": "b0de3eb119cd21b845ae5a24e7f893c91866cff494ffd051bcb5530c84781bc4"
+    },
+    {
+      "runtimeId": "perpendicularBurningShip",
+      "formulaId": "42d4c442-040b-59be-892f-1f10c8e47cb6",
+      "sourceRevision": "a5276054252d440fc11576d9500641d4eb4139bf9e4ca4233dee774813568b85",
+      "nativeFingerprint": "61068e4ecc36955f7505f6988e66f830ab1485016218f2b36385428f8b7327c2"
+    },
+    {
+      "runtimeId": "perpendicularCeltic",
+      "formulaId": "627c38a8-8f4d-548f-a5a6-dd9f215adf60",
+      "sourceRevision": "01058522dac48f2278d74a3e8a06b4c18e6d2589a3ccda69565dad37c325298d",
+      "nativeFingerprint": "10cb13ca5d3f3aa19f606e9ba28eeba3b0ebc11dd1ff847cdac55c6cb67ae9c4"
+    },
+    {
+      "runtimeId": "perpendicularCelticBurningShip",
+      "formulaId": "8f661407-f2c9-57e5-8c01-9b63a3cd0493",
+      "sourceRevision": "ccf0789e752a08f4dcc10feba172e7132287c4716c55a2ac86cb5df98015e014",
+      "nativeFingerprint": "ec96e8af4e04349ac4ff8cdc7dd80e3c814fa8f4a0b683043199a02ab204d249"
+    },
+    {
+      "runtimeId": "perpendicularMandelbrot",
+      "formulaId": "d01f1a01-6e77-5a24-8593-a7009e1c3ea3",
+      "sourceRevision": "c4f8d250a6b7cf0925639e5cc6232b7518ae83dc70a6791cdb8e279b75b2f881",
+      "nativeFingerprint": "d3385a1b7b2c04383eaa5fd0c7a0620d3981d57ebe550aa2c5bc3e378b1b9ab1"
+    },
+    {
+      "runtimeId": "perpendicularTricorn",
+      "formulaId": "3a83800c-4a44-5e61-9651-d3d5adb71213",
+      "sourceRevision": "12a2fd990373fc6f7467674871cbd2c82c78ec9b8354a805b442ef4c6ef58b06",
+      "nativeFingerprint": "136f1efda39eef4bf4f79b8fef3b9ebb82400c96adb8ad0fdd45e5a9eb02381b"
+    },
+    {
+      "runtimeId": "phoenix",
+      "formulaId": "e2456b54-ef50-5ac9-9faa-dcb576c5e774",
+      "sourceRevision": "25f923b51ea1e36408f9c48e008187e67a946fc58ef634f93bf0cba216f622aa",
+      "nativeFingerprint": "da74e4f798ee32e302b987e27839e7894b4a863d72e5350941ff874585af071d"
+    },
+    {
+      "runtimeId": "phoenixMulti",
+      "formulaId": "0f49d971-917e-50a5-ae83-20e11fd4854c",
+      "sourceRevision": "a9fa9931913aeafac8b527f31cae7b519db79c8d54829ffcea20bcb6fc9dce4d",
+      "nativeFingerprint": "9f022d92f259b74ea2c5a248dd537f54063b8c126bb8c9c1f2954e4644fa93b0"
+    },
+    {
+      "runtimeId": "quadJulia",
+      "formulaId": "1768f194-bdc1-5881-b269-a58730967c2c",
+      "sourceRevision": "d8e2c1950f3a30b27d380c3132e6a62ebe287cd26cd24c3dbc28dfd47ad784ed",
+      "nativeFingerprint": "276a34c4b61d4434ed7a208697c4547170fdb8ba510e9e7502cc0d3503102cdc"
+    },
+    {
+      "runtimeId": "quarticMandelbrot",
+      "formulaId": "1768f194-bdc1-5881-b269-a58730967c2c",
+      "sourceRevision": "d8e2c1950f3a30b27d380c3132e6a62ebe287cd26cd24c3dbc28dfd47ad784ed",
+      "nativeFingerprint": "375711cba614ed283cf81cdb29c2f6296fd6655e8454d4737c5b1245a596acb7"
+    },
+    {
+      "runtimeId": "quarticPerpendicularMandelbrot",
+      "formulaId": "d747aff8-e49f-5875-a85f-89d4a1d25846",
+      "sourceRevision": "e9aa563e5c1ab3def817a357ba4d8ef52b7085cbd1ff9ffd9fb239eece7241a1",
+      "nativeFingerprint": "d39fda629c3a1464471d5e317162d0f8db78398faea974203ade816712e2f7ff"
+    },
+    {
+      "runtimeId": "rationalMap1",
+      "formulaId": "37425fb2-8542-502f-94ac-94c0ccb6e508",
+      "sourceRevision": "69a7d072638f6981ee8e06c85d03831c9a53fb549337605eb35bb3cdf1db4e10",
+      "nativeFingerprint": "f27cf7f7d4929e79f38014093e2a3b265890ed59eb502b679edfd5978fbed53a"
+    },
+    {
+      "runtimeId": "rationalMap2",
+      "formulaId": "b0bf5217-893a-5a0f-9a46-5e5ce89223c3",
+      "sourceRevision": "422c91b1c26c90c5e193b72e416ea4f8ddb2849b72301512727135a745a6d69a",
+      "nativeFingerprint": "ed7c8c716d9c8a4411a2595cb1b5b82026ba4f218eb4fb54e4fa3714f729dec4"
+    },
+    {
+      "runtimeId": "reciprocalCubic",
+      "formulaId": "35a7e33c-fcba-5a81-ba80-8eab6d59925c",
+      "sourceRevision": "69272fec1fe79de794f32c7d677f215e956beb2926b63adfc2a5b069f5621cfe",
+      "nativeFingerprint": "dc97d79f2d6ec98a8655c95df14bb007783fe5f05d8ef43400aa9f3906b35e03"
+    },
+    {
+      "runtimeId": "reciprocalQuadratic",
+      "formulaId": "2edf64a9-157c-57d7-8894-1f4781bc4f8c",
+      "sourceRevision": "37344c3bc7fc90852e94c7b74ec99df5400c6332e8ca9bdad5e5c8ff3b51e688",
+      "nativeFingerprint": "e68179897c401ab8842b9d1fcc13e59c2cbb52d65faa0e1166926354b499ccb3"
+    },
+    {
+      "runtimeId": "rings",
+      "formulaId": "d848b143-1bb8-524e-b716-f0dd41a836df",
+      "sourceRevision": "5ce01ae7c092860aabda2683065abad88ca3d319b5a1c7427e7e3218860acd7f",
+      "nativeFingerprint": "de28650f961e2b12db40ccdb867651ae1447edce26edbb98ba1c3429331dba81"
+    },
+    {
+      "runtimeId": "simonBrot",
+      "formulaId": "d09224e0-8712-5ec3-bc1a-e951b3d42ca9",
+      "sourceRevision": "4df8ff51b736f17773ebb3767c9e73e9414bc69d3e00779f2aa3547586e4c23f",
+      "nativeFingerprint": "f62bb5178f0770f7af267f5bcbbde10a53eab231f8e0a7c63c3af7c7a3c71a4f"
+    },
+    {
+      "runtimeId": "sineJulia",
+      "formulaId": "9693612f-d5c2-5d77-9058-58ee16e14b4b",
+      "sourceRevision": "7cff43d492398231de0ad3df0d14557c9ec8b13683c1d091b18213978afd74af",
+      "nativeFingerprint": "d52851a0c0f3795c8491b490b11ccb5dda1b669bbbc2b22a18048b0104029fab"
+    },
+    {
+      "runtimeId": "sineMandelb",
+      "formulaId": "beeb4aec-91cd-5d01-83bb-0b98ca851e79",
+      "sourceRevision": "082b4f74a9e2798f67c8d2a61cb29cdc92e6e9f67f6b46c80bcf7af415a61a0b",
+      "nativeFingerprint": "715b1a0a2a6eca66794ca3592cfda5996296a7069a7267345ea5534f01d6d073",
+      "refinedFingerprint": "e2be8aeabdcd29c63ad1c5fe1072c56b6377b2f3ba3a9b21fd828880311e6e9b"
+    },
+    {
+      "runtimeId": "sinhJulia",
+      "formulaId": "9b437c43-72bc-51a3-8b61-227f916d724c",
+      "sourceRevision": "03da48b632c5d4144486ea1c56255bf4c908cd5e5f20ef4fbec1806d4bac6964",
+      "nativeFingerprint": "9d9deeca190fdc1d903a29b806538f36fbbe54023a96819454f0696ea828c7f8"
+    },
+    {
+      "runtimeId": "sinhMandelb",
+      "formulaId": "190fa538-89c9-590f-8170-34b3c570fc5d",
+      "sourceRevision": "4070d643142a8bac0a93df5f50b3bd47671076d603cf06e041aaa67035e806ce",
+      "nativeFingerprint": "eba0f7052947d78f634cf9243dff42fa7f2e4e803a9bcde93e71b0d84692ce6f",
+      "refinedFingerprint": "2e7cf10396e5da0674898616f1ef43fd70c52607329821f8bb96f1c16b458eb4"
+    },
+    {
+      "runtimeId": "spider",
+      "formulaId": "a9263b21-23c1-5d94-ba30-f7bef1a66629",
+      "sourceRevision": "bf1462942af10c52a5adbecf8856b4e34a8a5110637c84fa613728b76a1d6b4a",
+      "nativeFingerprint": "4052e4af13f4f3f8e400cf1f3d248f09426cbdac76bea09a83e9d36829e20557"
+    },
+    {
+      "runtimeId": "tanJulia",
+      "formulaId": "d541fbeb-4dcc-5fc9-9b88-116bb28bf327",
+      "sourceRevision": "f892ebc14d4ae2437f5858f1c79d466b2c320024c6318e53dff1baabbfbd78d4",
+      "nativeFingerprint": "fea78cceea2cd99a31c0a6859fb2c6b1e8cc6abb9288fd2a31ce92e6a41e6db1"
+    },
+    {
+      "runtimeId": "tricorn",
+      "formulaId": "27a3da95-a9e6-5fc2-81af-d5e9076fc8fa",
+      "sourceRevision": "a5b8caea9b95b304fdd8e805ed00e480d9d9e69ce17f72f554835ffde095b228",
+      "nativeFingerprint": "f2824afb914d281971aef6a6d52afe23d7950b225f276373bb00ea525e93b362"
+    },
+    {
+      "runtimeId": "zaslavskyMap",
+      "formulaId": "22d9a008-eb14-53de-9960-11eb5d37bb8e",
+      "sourceRevision": "fb9db2dede500db19463ee53c8d059c2e7a92651d7de472a4bedd6e7ee58a831",
+      "nativeFingerprint": "99f61fc668c8eb7e83b20eb359bc45b7bceb86b5a6102aef632cb1774518c4d0",
+      "refinedFingerprint": "f8806591355da2bfa94ee49e2ced539858f565ac8df848317eed323e8cb99f0e"
+    },
+    {
+      "runtimeId": "zubieta",
+      "formulaId": "e435bbb6-d866-5876-9f16-f04fbe61ff2b",
+      "sourceRevision": "04817a2a54e195117685266ac9b569e294050cd4617bf3df518390c17ca0cf5f",
+      "nativeFingerprint": "6ef83a19713b1ede652648b3188ba554f54be84e9856a6ea5973977892b82889"
+    }
+  ]
+}

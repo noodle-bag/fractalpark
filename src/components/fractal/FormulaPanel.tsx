@@ -3,7 +3,7 @@
 import { useEffect, useRef, useState } from 'react';
 import { useTranslations } from 'next-intl';
 import { pluginRegistry } from '@/engine/plugins/registry';
-import { resolveJuliaRuntimeCapabilityV1 } from '@/engine/formulas/v1/julia-runtime-activation-v1';
+import { resolveFormulaRuntimeCapabilityV1 } from '@/engine/formulas/v1/formula-runtime-capability-v1';
 import { FN_SLOT_OPTIONS, isFnSlotName } from '@/engine/frm/builtins';
 import type { PluginUniformDescriptor } from '@/engine/plugins/types';
 import { Switch } from '@/components/ui/switch';
@@ -74,9 +74,9 @@ export function FormulaPanel({
 }: FormulaPanelProps) {
   const t = useTranslations('explore');
   const formulaPlugin = pluginRegistry.getFormula(currentFormula);
-  const canEditJulia = resolveJuliaRuntimeCapabilityV1(
+  const canEditJulia = resolveFormulaRuntimeCapabilityV1(
     currentFormula,
-    formulaPlugin?.cacheFingerprint,
+    formulaPlugin,
   ).supportsEditing;
   const editableUniforms = (formulaPlugin?.uniforms ?? []).filter(
     (descriptor) => descriptor.type === 'float' || descriptor.type === 'int' || descriptor.type === 'vec2'

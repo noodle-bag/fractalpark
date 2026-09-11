@@ -10,6 +10,7 @@ import type {
   PublishedFormulaRuntimeIndexRowV1,
 } from '@/engine/formulas/v1';
 import type { FormulaPlugin } from '@/engine/plugins/types';
+import { registerBuiltins } from '@/engine/plugins/builtins';
 import {
   resolvePublishedArtworkRuntime,
   resolvePublishedArtworkRuntimeAvailability,
@@ -96,6 +97,25 @@ function libraryLoader() {
 }
 
 describe('published artwork runtime', () => {
+  it('keeps all preset playback outputs identical when legacy Julia qualification is restored', async () => {
+    registerBuiltins({ quiet: true });
+    const { loader } = libraryLoader();
+    let restored = 0;
+    for (const artwork of buildPublishedArtworkCollection(presetsFile, 'en')) {
+      const playback = buildPublishedArtworkPlayback(artwork);
+      if (playback.params.isJulia) restored++;
+      const beforeIdentityRepair = {
+        ...playback,
+        params: { ...playback.params, isJulia: false },
+      };
+      const before = await resolvePublishedArtworkRuntime(beforeIdentityRepair, loader);
+      const after = await resolvePublishedArtworkRuntime(playback, loader);
+      expect(after, artwork.presetId).toEqual(before);
+      expect(playback.animation.keyframes).toEqual(beforeIdentityRepair.animation.keyframes);
+    }
+    expect(restored).toBe(18);
+  });
+
   it('keeps built-in parameter-plane playback on the synchronous safe path', async () => {
     const playback = buildPublishedArtworkPlayback(
       buildPublishedArtworkCollection(presetsFile, 'en')[0],

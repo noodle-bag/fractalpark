@@ -1,4 +1,5 @@
 import type { FormulaPlugin } from '../../plugins/types';
+import { publishedRenderingSourceRevisionV1 } from './published-rendering-source-v1';
 
 const RECOVERED_QUANTIZATION_FORMULA_IDS_V1 = new Set([
   '17d88272-6dbf-5622-996a-b116ea3a3fab',
@@ -48,7 +49,8 @@ export function resolveRecoveredPublishedRenderingPluginV1(
     id: plugin.id,
     name: plugin.name,
     source: plugin.source,
-    supportsJulia: plugin.supportsJulia,
+    supportsJulia: false,
+    sourceRevision: publishedRenderingSourceRevisionV1(plugin),
     glsl,
     cacheFingerprint: `${plugin.cacheFingerprint ?? plugin.id}:render-${RECOVERED_QUANTIZATION_RENDERING_REVISION_V1}`,
   });
