@@ -25,7 +25,7 @@ test.describe('formula runtime identity', () => {
     });
   }
 
-  test('restores the reviewed q1024 Julia control and keeps unsupported formulas closed', async ({ page }) => {
+  test('restores the reviewed Mandelbox Julia control and keeps unsupported formulas closed', async ({ page }) => {
     await page.goto('/en/explore?fm=280cd3e2-865b-5c78-90b7-39b2a36d7be0&julia=1&jre=2&jim=-2');
     await expect(page.locator('#julia-mode')).toBeChecked({ timeout: 45_000 });
     await expect(page.locator('#julia-re')).toHaveValue('2');

@@ -252,7 +252,7 @@
       "formulaId": "280cd3e2-865b-5c78-90b7-39b2a36d7be0",
       "sourceRevision": "b4677349cc60d66a5b7ad87655a89585d2bf83c7284ef949afe081e8eb294aac",
       "nativeFingerprint": "930abb894aff9625aa866bbb7397d751b3695ded906bcd228939c31ce1983fd6",
-      "refinedFingerprint": "514942a00fe7c94e816d420ab3d28077c5d61ade184eff82f246adbb475d70bd"
+      "refinedFingerprint": "9549b0ebd02741f293708d6f6496bee9123efffa213fdb0f2af8de1cc8fd0bf7"
     },
     {
       "runtimeId": "mandelbrot",

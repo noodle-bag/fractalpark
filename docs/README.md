@@ -5,6 +5,11 @@ govern FractalPark development.
 
 ## Specifications
 
+- [Formula Parameters and Mode Semantics v1](specs/formula-parameters-and-mode-semantics-v1.md)
+  governs parameter ownership, Julia versus coordinate controls, typed runtime
+  bindings, precise input, and cross-surface verification. Read it alongside
+  runtime identity compatibility before changing controls or execution adapters.
+
 - [Formula Runtime Identity Compatibility v1](specs/formula-runtime-identity-v1.md)
   separates source qualification from shader caching while preserving native
   artwork rendering and parameter contracts.

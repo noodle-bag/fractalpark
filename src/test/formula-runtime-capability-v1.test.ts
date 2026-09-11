@@ -65,7 +65,7 @@ describe('formula runtime identity compatibility', () => {
     expect(resolveFormulaRuntimeCapabilityV1(plugin.id, missing).supportsRuntime).toBe(false);
   });
 
-  it('restores all ten exact q1024 variants without accepting arbitrary renderer changes', async () => {
+  it('restores all ten reviewed variants without accepting arbitrary renderer changes', async () => {
     const refined = bindings.rows.filter(row => row.refinedFingerprint);
     expect(refined).toHaveLength(10);
     for (const row of refined) {

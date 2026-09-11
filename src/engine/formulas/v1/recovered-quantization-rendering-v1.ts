@@ -1,5 +1,10 @@
 import type { FormulaPlugin } from '../../plugins/types';
 import { publishedRenderingSourceRevisionV1 } from './published-rendering-source-v1';
+import bindings from '../../../../resources/formula-library/v1/native-rendering-bindings.v1.json';
+import { renderingImplementationFingerprintV1 } from './rendering-implementation-fingerprint-v1';
+
+const MANDELBOX_ID = '280cd3e2-865b-5c78-90b7-39b2a36d7be0';
+const mandelboxBinding = bindings.rows.find(row => row.runtimeId === 'mandelbox')!;
 
 const RECOVERED_QUANTIZATION_FORMULA_IDS_V1 = new Set([
   '17d88272-6dbf-5622-996a-b116ea3a3fab',
@@ -42,7 +47,35 @@ export function resolveRecoveredPublishedRenderingPluginV1(
 ): FormulaPlugin {
   if (!RECOVERED_QUANTIZATION_FORMULA_IDS_V1.has(plugin.id)) return plugin;
   const renderingBase = nativePlugin ?? plugin;
-  const glsl = refineRecoveredQuantizationGlslV1(plugin.id, renderingBase.glsl);
+  let glsl = refineRecoveredQuantizationGlslV1(plugin.id, renderingBase.glsl);
+  let uniforms = renderingBase.uniforms;
+  let parameterRevision = '';
+  let renderingRevision: string = RECOVERED_QUANTIZATION_RENDERING_REVISION_V1;
+  if (plugin.id === MANDELBOX_ID && nativePlugin) {
+    const uniform = plugin.uniforms[0];
+    if (
+      publishedRenderingSourceRevisionV1(plugin) !== mandelboxBinding.sourceRevision
+      || nativePlugin.id !== 'mandelbox'
+      || renderingImplementationFingerprintV1(nativePlugin) !== mandelboxBinding.nativeFingerprint
+      || plugin.uniforms.length !== 1
+      || uniform?.name !== 'frmV1_mandelboxScale'
+      || uniform.type !== 'vec2'
+      || !Array.isArray(uniform.default)
+      || uniform.default.length !== 2
+      || uniform.default[0] !== 2 || uniform.default[1] !== 0
+      || uniform.min !== -3 || uniform.max !== 3
+    ) throw new Error('recovered-rendering-parameter-contract-mismatch');
+    // Only this exact reviewed native implementation removes orbit rounding.
+    // Preserve its fold arithmetic, lifecycle and coloring, and read the
+    // published real parameter encoded as vec2(value, 0).
+    glsl = nativePlugin.glsl.replace(
+      'recoveredAmplifiedQuantize(u_mandelboxScale * z + c, 16.0)',
+      'u_mandelboxScale * z + c',
+    ).replace(/\bu_mandelboxScale\b/g, '(frmV1_mandelboxScale.x)');
+    renderingRevision = 'mandelbox-unquantized-v1';
+    uniforms = plugin.uniforms;
+    parameterRevision = ':parameters-v1';
+  }
   if (glsl === renderingBase.glsl) return plugin;
   return Object.freeze({
     ...renderingBase,
@@ -51,7 +84,8 @@ export function resolveRecoveredPublishedRenderingPluginV1(
     source: plugin.source,
     supportsJulia: false,
     sourceRevision: publishedRenderingSourceRevisionV1(plugin),
+    uniforms,
     glsl,
-    cacheFingerprint: `${plugin.cacheFingerprint ?? plugin.id}:render-${RECOVERED_QUANTIZATION_RENDERING_REVISION_V1}`,
+    cacheFingerprint: `${plugin.cacheFingerprint ?? plugin.id}:render-${renderingRevision}${parameterRevision}`,
   });
 }

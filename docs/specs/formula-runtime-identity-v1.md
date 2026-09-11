@@ -1,5 +1,8 @@
 # Formula runtime identity compatibility v1
 
+Parameter ownership, input, and mode semantics are defined by
+[Formula Parameters and Mode Semantics v1](formula-parameters-and-mode-semantics-v1.md).
+
 This application-boundary contract preserves existing artwork identifiers,
 native rendering, parameters, and coloring while resolving Julia capability.
 It does not introduce user-selectable implementation versions or migrate saved
@@ -15,7 +18,7 @@ documents. The immutable published activation set is not widened.
   and smoothing semantics. Changed implementations fail closed until their
   compatibility checks and binding are reviewed together. Names and shader
   cache keys are not execution semantics.
-- Existing q1024 variants additionally require their exact refined fingerprint
+- Reviewed rendering variants additionally require their exact refined fingerprint
   and published source revision. Their qualification does not authorize a new
   quantization scale or an arbitrary rendering override.
 - The renderer receives the existing plugin and parameter values unchanged.
@@ -25,7 +28,7 @@ documents. The immutable published activation set is not widened.
   disabled. Persisted Julia intent and constants continue to round-trip.
 
 Regression coverage must bind the alias directory, current activation, native
-execution fingerprints, q1024 fingerprints, unchanged persistence, cache/source
+execution fingerprints, reviewed variant fingerprints, unchanged persistence, cache/source
 invalidation, and mutation rejection. Browser checks exercise Julia edits and
 reload through the production renderer; preset playback retains its existing
 canonical loading path and frame-zero contract. Fingerprint equality is a
@@ -118,3 +121,109 @@ the original source and the selected mode to an independently seeded original
 orbit, exercises coefficient/seed sensitivity and every individual function
 option, and verifies capability, project round-trips, WebGL and UI restoration.
 The frozen activation census and language/compiler contracts are unchanged.
+
+## Rendering implementation change contract
+
+These requirements govern future rendering changes; they do not certify that
+all existing recovered-formula paths comply. Identity qualification alone is
+not rendering compatibility. Capability resolution remains separate from any
+explicitly reviewed parameter adapter; it must not perform hidden conversion.
+
+### R1. Classify the change
+
+Before replacing a plugin, review its initialization, complete mutable state,
+uniform names/types/defaults, iteration order, numeric guards, quantization,
+approximate functions, bailout/event timing, smoothing, and shader cache keys.
+Changing orbit rounding is a numerical change even if described as higher
+quality. Keeping source identity unchanged does not establish equivalence.
+New execution fingerprints require corresponding compatibility review; do not
+rewrite sealed source or evidence bytes to make a changed implementation pass.
+
+### R2. Follow all consumers
+
+Review Explore selection and restoration, Gallery hover, artwork detail playback,
+Drift, formula previews, Worker rendering, export, and asset generation. For each
+affected path, establish the execution revision, effective parameters, mode,
+numeric policy, and fallback behavior. Record unaffected paths with a reason.
+No second resolver architecture is required: use named existing boundaries and
+shared adapters where appropriate. Equivalent inputs must not silently select
+different mathematics because they enter through different pages.
+
+Resolution, DPR, antialiasing, and display treatment can differ intentionally;
+state those differences when comparing images. Gallery retaining a static image
+on unavailable Julia playback is not permission to render another plane instead.
+
+### R3. Prove interface behavior before visual improvement
+
+Test the real descriptor-to-selected-plugin mapping, including explicit
+name/type conversion and current/default values. Use a nondegenerate Mandelbox
+scale witness and a Julia constant witness; assert delivered uniform values and
+resulting computation. Exercise save/reload, mode exit, legacy native input,
+canonical input, and unknown/stale rejection. A cache-key or GLSL-string test
+alone cannot establish that a user's parameter edit reaches rendering.
+
+### R4. Numerical and visual evidence
+
+Freeze source/execution revisions, viewport, backing dimensions, DPR, camera,
+parameters, Julia constant, iterations, bailout, coloring, transforms, frame time,
+browser/GPU, and sampling settings. Change one suspected cause at a time:
+quantization, math approximation, termination policy, then sampling/display.
+Compare default and deep-zoom compositions and animation times
+`0`, `0.25`, `0.5`, `0.75`, and `1`. Preview must match frame zero under matching
+render settings. Inspect orbit/terminal evidence as well as color output.
+
+Use deterministic same-environment baselines, explicit justified tolerances,
+unaffected formula controls, and visual review. Neither cross-GPU pixel equality
+nor an arbitrary blur/noise threshold is a universal correctness criterion.
+Record latency and mobile responsiveness so image improvement cannot silently
+remove usability. A default-view pass does not certify deep zoom or all devices.
+
+### R5. Compatibility and enforcement limits
+
+List affected presets and ordinary/Julia saved-artwork behavior before choosing
+a numerical policy. Do not silently rewrite their parameters, composition,
+keyframes, or static assets. Asset regeneration and identity/schema migration
+require separate approval. Neither q1024 nor removal of rounding is pre-approved
+by this contract. Any approved exception must identify its scope, rationale,
+evidence, and compatibility consequences rather than use a global waiver.
+
+`src/test/recovered-quantization-rendering-v1.test.ts` checks adapter/cache
+behavior, the published interfaces of all thirteen refined formulas, and
+Mandelbox mismatch rejection. `tests/e2e/recovered-parameters.spec.ts` checks
+Mandelbox uniform delivery, unquantized-native equivalence, parameter/Julia sensitivity,
+Worker editing, reload, mode exit, and tiled export. This is not the full
+numerical/interface contract above.
+`src/test/published-artwork-runtime.test.ts` is a playback-boundary starting point,
+not proof of equivalent recovered-formula output across every surface. Required
+regressions must first expose the faulty baseline, then pass the repaired path.
+The interface audit, fixed-frame comparisons, and reviewed numerical policy
+remain implementation work; this documentation does not install a new CI gate.
+
+### Reviewed Mandelbox parameter adapter
+
+The published Mandelbox adapter reads the existing real parameter as
+`frmV1_mandelboxScale.x` from the compiler's `vec2(value, 0)` representation.
+It retains native fold arithmetic, bailout, and lifecycle; native-ID artwork
+continues to read `u_mandelboxScale` as a float. The adapter requires the exact
+reviewed native implementation, published source revision, and parameter interface.
+Its cache revision includes `parameters-v1`, and its exact refined fingerprint
+is bound separately from the unchanged native fingerprint. This repairs the
+previously ignored published edit; saved nondefault published values can now
+change the rendered image.
+
+### Reviewed Mandelbox orbit-rounding exception
+
+Only the exact Mandelbox native-derived Explore adapter removes the final
+orbit-rounding call. Its cache revision is `mandelbox-unquantized-v1:parameters-v1`;
+the reviewed refined fingerprint changes, but the native fingerprint and sealed
+published Definition do not. Initialization, pre-step escape checks, smoothing,
+orbit statistics, and the descriptor-owned parameter interface remain intact.
+The other twelve recovered adapters retain q1024; the shared quantization helper,
+compiler, and renderer framework are unchanged.
+
+This exception addresses detail loss in deep zoom. Reopening published-ID artwork
+through this Explore adapter can change detail and local colors without changing
+stored parameters. It adds no version selector or document migration. Canonical
+Gallery playback, native-ID execution, and generated assets are not changed;
+cross-surface numerical alignment remains incomplete. Same-device reference
+comparisons are not a guarantee of cross-GPU pixel equality or all-domain parity.
