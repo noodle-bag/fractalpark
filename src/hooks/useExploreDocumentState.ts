@@ -17,6 +17,7 @@ import { migrateFractalDocument, normalizeFractalDocument } from '@/engine/docum
 import type { PublishedFormulaProfileV1 } from '@/engine/formulas/v1';
 import type { FractalParams, PluginParamRecord } from '@/engine/types';
 import { applyFormulaSelectionDefaults } from '@/lib/formula-documents';
+import { applyPublishedFormulaProfile } from '@/lib/published-formula-profile';
 import { applyRemixSource, parseRemixSource } from '@/lib/remix-source';
 import { decodeParams } from '@/lib/url-params';
 
@@ -278,33 +279,7 @@ export function useExploreDocumentState(
     (selection: PublishedFormulaDocumentSelection) => {
       setHistoryState((previous) => {
         const current = previous.document;
-        const formulaParams = cleanPluginParams(selection.formulaParams);
-        const juliaC: [number, number] = selection.profile.juliaC
-          ? [selection.profile.juliaC[0], selection.profile.juliaC[1]]
-          : current.formula.juliaC;
-        const next = normalizeFractalDocument({
-          ...current,
-          scene: {
-            ...current.scene,
-            bounds: {
-              centerX: selection.profile.center[0],
-              centerY: selection.profile.center[1],
-              zoom: selection.profile.zoom,
-              rotation: selection.profile.rotation,
-            },
-          },
-          formula: {
-            ...current.formula,
-            formulaId: selection.formulaId,
-            isJulia: selection.profile.mode === 'julia',
-            juliaC,
-            params: formulaParams ? { formula: formulaParams } : undefined,
-          },
-          render: {
-            ...current.render,
-            maxIterations: selection.profile.iterations,
-          },
-        });
+        const next = applyPublishedFormulaProfile(current, selection);
         return {
           document: next,
           publishedFormulaUndo: current,

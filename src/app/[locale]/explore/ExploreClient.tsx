@@ -26,7 +26,6 @@ import {
   DEFAULT_FRACTAL_DOCUMENT,
   type FractalDocument,
 } from '@/engine/document';
-import { normalizeFractalDocument } from '@/engine/document-migrate';
 import type { FormulaSelectionRequest } from '@/engine/frm/authoring';
 import { getDefaultBounds } from '@/engine/plugins/formula-catalog';
 import type { PluginParamRecord, PluginParamValue } from '@/engine/types';
@@ -61,6 +60,7 @@ import { registerBuiltins } from '@/engine/plugins/builtins';
 import { resolveEffectiveSmoothMethod } from '@/engine/frm/smooth-capability';
 import { resolveRendererPipelineVersion } from '@/engine/frm/semantics-version';
 import { getFormulaUniformDefaults } from '@/lib/formula-documents';
+import { applyPublishedFormulaProfile } from '@/lib/published-formula-profile';
 import {
   isStandardFormulaIdV1,
   type PublishedFormulaDescriptorV1,
@@ -93,9 +93,6 @@ type ExploreFormulaResolution =
       errors: string[];
     };
 
-const NORMALIZED_DEFAULT_FRACTAL_DOCUMENT = normalizeFractalDocument(
-  DEFAULT_FRACTAL_DOCUMENT,
-);
 const EMPTY_PLUGIN_PARAMS: PluginParamRecord = {};
 
 function creatorDocumentState(document: FractalDocument) {
@@ -113,6 +110,7 @@ function creatorDocumentState(document: FractalDocument) {
 function ExploreClient({ posterImage }: { posterImage?: string }) {
   const locale = useLocale();
   const t = useTranslations('explore');
+  const [resetFailed, setResetFailed] = useState(false);
   const searchParams = useSearchParams();
   const router = useRouter();
   const needsEntryDefaultRef = useRef(searchParams.size === 0);
@@ -150,6 +148,7 @@ function ExploreClient({ posterImage }: { posterImage?: string }) {
     setRenderAttribution(null);
   }, []);
   const cancelPublishedFormulaActions = useCallback(() => {
+    setResetFailed(false);
     publishedActionRef.current.cancel();
     publishedSelectionRef.current.cancel();
     publishedRestoreActionRef.current.cancel();
@@ -743,28 +742,6 @@ function ExploreClient({ posterImage }: { posterImage?: string }) {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [cloudSessionState.status]);
 
-  const handleResetView = useCallback(() => {
-    // Reset means a fresh canvas — the draft session ends with it, so a
-    // later save creates a new draft instead of silently overwriting the
-    // one that was just on screen (review follow-up).
-    cloudDraft.clearIdentity();
-    if (draftParam) pinDraftParam(null);
-    const changesRendering = !analyticsValuesEqual(
-      creatorDocumentState(document),
-      creatorDocumentState(NORMALIZED_DEFAULT_FRACTAL_DOCUMENT),
-    );
-    handleLoadDocument(DEFAULT_FRACTAL_DOCUMENT);
-    if (changesRendering) {
-      markCreatorChange('reset');
-    }
-  }, [
-    cloudDraft,
-    document,
-    draftParam,
-    handleLoadDocument,
-    markCreatorChange,
-    pinDraftParam,
-  ]);
 
   const getCanvas = useCallback(() => {
     const canvas = canvasElRef.current;
@@ -905,7 +882,7 @@ function ExploreClient({ posterImage }: { posterImage?: string }) {
     beforeApply: PublishedFormulaBeforeApply | undefined,
     options: {
       forceProfile?: boolean;
-      source: 'published-library' | 'feeling-lucky' | 'profile-reset' | 'entry-default';
+      source: 'published-library' | 'feeling-lucky' | 'profile-reset' | 'entry-default' | 'artwork-reset';
     },
     generation: number,
   ): Promise<PublishedFormulaSelectionResult> => {
@@ -942,6 +919,19 @@ function ExploreClient({ posterImage }: { posterImage?: string }) {
         );
         pluginRegistry.register(renderingPlugin);
         setPublishedDescriptor(artifact.descriptor);
+        if (options.source === 'artwork-reset') {
+          const next = applyPublishedFormulaProfile(DEFAULT_FRACTAL_DOCUMENT, {
+            formulaId,
+            formulaParams: getFormulaUniformDefaults(renderingPlugin),
+            profile: resolveActivatedPublishedFormulaDefaultProfileV1(row),
+          });
+          const changesRendering = !analyticsValuesEqual(creatorDocumentState(document), creatorDocumentState(next));
+          cloudDraft.clearIdentity();
+          if (draftParam) pinDraftParam(null);
+          handleLoadDocument(next);
+          if (changesRendering) markCreatorChange('reset');
+          return;
+        }
         if (options.source !== 'entry-default') {
           markCreatorChange('formula');
         }
@@ -963,9 +953,13 @@ function ExploreClient({ posterImage }: { posterImage?: string }) {
     );
   }, [
     applyPublishedFormulaSelection,
+    cloudDraft,
+    document,
+    draftParam,
+    handleLoadDocument,
+    pinDraftParam,
     clearPublishedFormulaSelectionUndo,
     clearHandoffFailure,
-    document.formula.formulaId,
     markCreatorChange,
     publishedDescriptor,
   ]);
@@ -980,6 +974,23 @@ function ExploreClient({ posterImage }: { posterImage?: string }) {
       }, generation)
     )
   ), [runPublishedFormulaAction, selectPublishedFormula]);
+
+  const handleResetView = useCallback(() => {
+    needsEntryDefaultRef.current = false;
+    void runPublishedFormulaAction(async (generation) => {
+      const client = await getPublishedFormulaLibraryClient();
+      if (!client.ok) return client;
+      const row = client.value.resolveRuntimeAlias('mandelbrot');
+      if (!row) return { ok: false, code: 'formula-not-published' };
+      return selectPublishedFormula(row.formulaId, undefined, {
+        source: 'artwork-reset', forceProfile: true,
+      }, generation);
+    }).then(result => {
+      if (!result.ok && result.code !== 'selection-superseded') {
+        setResetFailed(true);
+      }
+    }).catch(() => setResetFailed(true));
+  }, [runPublishedFormulaAction, selectPublishedFormula]);
 
   useEffect(() => {
     if (!needsEntryDefaultRef.current) return;
@@ -1318,6 +1329,11 @@ function ExploreClient({ posterImage }: { posterImage?: string }) {
             probing or an authenticated fetch in flight) — a resolved
             anonymous/unavailable session shows guidance instead of a
             permanent spinner (review blocking). */}
+        {resetFailed && (
+          <div role="alert" className="absolute bottom-3 left-3 z-30 max-w-sm rounded-md border border-amber-400/40 bg-amber-950/85 px-3 py-2 text-xs text-amber-100">
+            {t('formula.library.selectionFailed')}
+          </div>
+        )}
         {(cloudDraft.loadState === 'loading' ||
           (draftParam !== null &&
             cloudDraft.identity === null &&

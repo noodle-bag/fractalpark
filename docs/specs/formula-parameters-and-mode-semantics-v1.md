@@ -118,6 +118,17 @@ promise both repaired behavior and preservation of every formerly incorrect
 image. Changes require the rendering review in the runtime identity contract;
 no automatic migration, version-switch button, or mass asset regeneration follows.
 
+### Reset Artwork
+
+The explicit Reset Artwork action loads the same published Mandelbrot alias and
+profile as a fresh Explore entry, including its editable power parameter. Apply
+that profile to the default document, not the previous artwork. Install the
+loaded plugin and reset the document atomically through the existing selection
+coordinator. Clear draft identity only on successful application; a failed or
+superseded load must preserve the current artwork. Reset retains the existing
+animation-stop and history-clearing behavior. A repeated reset of the same
+render state must not emit a new creator-change event.
+
 ## Verification and coverage inventory
 
 Existing test files are starting points, not proof of full conformance:

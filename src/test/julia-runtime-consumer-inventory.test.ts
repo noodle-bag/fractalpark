@@ -54,9 +54,9 @@ describe("Julia runtime consumer inventory", () => {
       "src/content/published-formula-directory.ts",
       "src/engine/document-adapter.ts",
       "src/engine/document-v3.ts",
-      "src/hooks/useExploreDocumentState.ts",
       "src/lib/cloud/envelope.ts",
       "src/lib/frm-semantics-comparison.ts",
+      "src/lib/published-formula-profile.ts",
     ]);
   });
 

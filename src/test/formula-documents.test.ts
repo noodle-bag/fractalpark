@@ -13,11 +13,31 @@ import {
   buildFormulaDefaultDocument,
   getFormulaUniformDefaults,
 } from '@/lib/formula-documents';
+import { applyPublishedFormulaProfile } from '@/lib/published-formula-profile';
 import { decodeParams, documentToExploreHref } from '@/lib/url-params';
 
 describe('formula documents', () => {
   beforeAll(() => {
     registerBuiltins({ quiet: true });
+  });
+
+  it('projects a fresh published artwork without carrying old parameters or mutating defaults', () => {
+    const before = structuredClone(DEFAULT_FRACTAL_DOCUMENT);
+    const next = applyPublishedFormulaProfile(DEFAULT_FRACTAL_DOCUMENT, {
+      formulaId: '00e14aa8-b766-54ea-a359-3f5d20d329b7',
+      formulaParams: { frmV1_power: [2, 0] },
+      profile: { schema: 'fractalpark-published-formula-profile/v1', quality: 'mechanical',
+        mode: 'parameter-plane', center: [-0.5, 0], zoom: 0.4, rotation: 0, iterations: 96,
+      },
+    });
+    expect(next.formula.formulaId).toBe('00e14aa8-b766-54ea-a359-3f5d20d329b7');
+    expect(next.formula.params).toEqual({ formula: { frmV1_power: [2, 0] } });
+    expect(next.formula.isJulia).toBe(false);
+    expect(next.scene.bounds).toEqual({ centerX: -0.5, centerY: 0, zoom: 0.4, rotation: 0 });
+    expect(next.render.maxIterations).toBe(96);
+    expect(next.animation).toBeUndefined();
+    expect(next.coloring).toEqual(normalizeFractalDocument(before).coloring);
+    expect(DEFAULT_FRACTAL_DOCUMENT).toEqual(before);
   });
 
   it('builds a deterministic canonical document from catalog defaults', () => {
