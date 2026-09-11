@@ -95,6 +95,49 @@ bailout:
     expect(onJuliaModeChange).not.toHaveBeenCalled();
   });
 
+  it('shares soft-window and exact draft editing for Julia without changing ordinary parameters', () => {
+    const onJuliaCChange = vi.fn();
+    const onFormulaParamChange = vi.fn();
+    const props = {
+      isJulia: true,
+      juliaC: [12.345678901, -7] as [number, number],
+      currentFormula: 'mandelbrot',
+      currentBounds: { centerX: 0, centerY: 0, zoom: 0.4, rotation: 0 },
+      onJuliaModeChange: vi.fn(),
+      onJuliaCChange,
+      onFormulaChange: vi.fn(),
+      onFormulaParamChange,
+    };
+    const { rerender } = render(<FormulaPanel {...props} />);
+    const real = screen.getByRole('spinbutton', { name: 'controls.juliaC.label controls.complexReal' });
+    expect(real).toHaveValue('12.345678901');
+    expect(real).not.toHaveAttribute('min');
+    expect(real).not.toHaveAttribute('max');
+    for (const action of ['narrow', 'widen', 'showCurrent']) {
+      fireEvent.click(screen.getByRole('button', { name: `controls.parameterInteraction.${action}` }));
+    }
+    expect(onJuliaCChange).not.toHaveBeenCalled();
+    fireEvent.change(real, { target: { value: '1e-' } });
+    expect(onJuliaCChange).not.toHaveBeenCalled();
+    fireEvent.keyDown(real, { key: 'Enter' });
+    expect(real).toHaveValue('12.345678901');
+    expect(real).toHaveAttribute('aria-invalid', 'true');
+    fireEvent.change(real, { target: { value: '23.4567890123' } });
+    fireEvent.keyDown(real, { key: 'Enter' });
+    expect(onJuliaCChange).toHaveBeenLastCalledWith([23.4567890123, -7]);
+    fireEvent.blur(real);
+    expect(onJuliaCChange).toHaveBeenCalledTimes(1);
+    rerender(<FormulaPanel {...props} juliaC={[-9.87654321, 8.123456789]} />);
+    expect(real).toHaveValue('-9.87654321');
+    const plane = screen.getByRole('group', { name: 'controls.juliaC.label controls.complexPlane' });
+    fireEvent.keyDown(plane, { key: 'ArrowRight' });
+    expect(onJuliaCChange).toHaveBeenLastCalledWith([-9.86654321, 8.123456789]);
+    fireEvent.click(screen.getByRole('button', { name: 'controls.juliaC.label controls.resetComplex' }));
+    expect(onJuliaCChange).toHaveBeenLastCalledWith([0, 0]);
+    expect(onFormulaParamChange).not.toHaveBeenCalled();
+    expect(props.onJuliaModeChange).not.toHaveBeenCalled();
+  });
+
   it('renders builtin formula sliders from plugin descriptors', () => {
     render(
       <FormulaPanel

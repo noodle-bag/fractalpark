@@ -8,12 +8,10 @@ import { FN_SLOT_OPTIONS, isFnSlotName } from '@/engine/frm/builtins';
 import type { PluginUniformDescriptor } from '@/engine/plugins/types';
 import { Switch } from '@/components/ui/switch';
 import { Label } from '@/components/ui/label';
-import { Input } from '@/components/ui/input';
 import { Slider } from '@/components/ui/slider';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { FormulaTab } from './FormulaTab';
 import { FormulaNumberDraftInput } from './FormulaNumberDraftInput';
-import { JuliaPicker } from './JuliaPicker';
 import { ParameterExplorationControl, ParameterRangeControl } from './ParameterExplorationControl';
 import type { FormulaSelectionRequest } from '@/engine/frm/authoring';
 import type {
@@ -123,49 +121,19 @@ export function FormulaPanel({
               {t('controls.juliaC.label')}
             </span>
 
-            <JuliaPicker
+            <FormulaComplexEditor
+              key={currentFormula}
               value={juliaC}
-              onChange={onJuliaCChange}
-              ariaLabel={t('controls.juliaC.label')}
-              realLabel={t('controls.complexReal')}
-              imaginaryLabel={t('controls.complexImaginary')}
-              size={160}
+              onCommit={onJuliaCChange}
+              slotName={t('controls.juliaC.label')}
+              realId="julia-re"
+              imaginaryId="julia-im"
+              step={0.01}
+              showCoordinateLabels
+              interaction={{ kind: 'plane' }}
+              initiallyOpen
+              t={t}
             />
-
-            <div className="grid grid-cols-2 gap-2">
-              <div className="space-y-1">
-                <Label htmlFor="julia-re" className="text-xs text-muted-foreground">Re</Label>
-                <Input
-                  id="julia-re"
-                  type="number"
-                  step="0.01"
-                  min="-2"
-                  max="2"
-                  value={juliaC[0]}
-                  onChange={(e) => {
-                    const val = parseFloat(e.target.value);
-                    if (!Number.isNaN(val)) onJuliaCChange([val, juliaC[1]]);
-                  }}
-                  className="h-8 font-mono text-sm"
-                />
-              </div>
-              <div className="space-y-1">
-                <Label htmlFor="julia-im" className="text-xs text-muted-foreground">Im</Label>
-                <Input
-                  id="julia-im"
-                  type="number"
-                  step="0.01"
-                  min="-2"
-                  max="2"
-                  value={juliaC[1]}
-                  onChange={(e) => {
-                    const val = parseFloat(e.target.value);
-                    if (!Number.isNaN(val)) onJuliaCChange([juliaC[0], val]);
-                  }}
-                  className="h-8 font-mono text-sm"
-                />
-              </div>
-            </div>
             </div>
           )}
         </div>
@@ -300,15 +268,10 @@ function CoordinateParameterControl({ pluginParams, onChange, t, dynamical = fal
       </Select>
       <p className="text-xs text-muted-foreground">{t(dynamical ? 'controls.coordinateParameter.dynamicalHint' : 'controls.coordinateParameter.hint')}</p>
       {fixed && (
-        <>
-          <ParameterExplorationControl value={value} kind="plane" label={label} initiallyOpen
-            onChange={next => onChange(COORDINATE_VALUE_UNIFORM, next)} />
-          <div className="grid grid-cols-2 gap-2">
-            <FormulaComplexDraftInputs value={value} slotName={label}
-              realId="coordinate-value-re" imaginaryId="coordinate-value-im"
-              onCommit={next => onChange(COORDINATE_VALUE_UNIFORM, next)} t={t} />
-          </div>
-        </>
+        <FormulaComplexEditor value={value} slotName={label}
+          realId="coordinate-value-re" imaginaryId="coordinate-value-im"
+          interaction={{ kind: 'plane' }} initiallyOpen
+          onCommit={next => onChange(COORDINATE_VALUE_UNIFORM, next)} t={t} />
       )}
     </div>
   );
@@ -326,6 +289,34 @@ interface FormulaComplexDraftInputsProps {
   realOnly?: boolean;
   onCommit: (value: [number, number]) => void;
   t: ReturnType<typeof useTranslations>;
+}
+
+function FormulaComplexEditor({
+  interaction,
+  initiallyOpen,
+  ...inputs
+}: FormulaComplexDraftInputsProps & {
+  interaction?: NonNullable<ReturnType<typeof resolveParameterInteraction>>;
+  initiallyOpen?: boolean;
+}) {
+  return (
+    <div className="space-y-2">
+      {interaction && (
+        <ParameterExplorationControl
+          value={inputs.value}
+          onChange={inputs.onCommit}
+          kind={interaction.kind}
+          hint={interaction.hint}
+          integer={interaction.integer}
+          label={inputs.slotName}
+          initiallyOpen={initiallyOpen}
+        />
+      )}
+      <div className={`grid gap-2 ${inputs.realOnly ? 'grid-cols-1' : 'grid-cols-2'}`}>
+        <FormulaComplexDraftInputs {...inputs} />
+      </div>
+    </div>
+  );
 }
 
 function formulaComplexValuesEqual(
@@ -534,32 +525,21 @@ function PublishedFormulaParameterControl({
     return (
       <div className="space-y-2">
         <span className="text-sm font-medium leading-none">{parameter.slotName}</span>
-        {interaction && (
-          <ParameterExplorationControl
-            key={`${formulaId}:${parameter.slotName}`}
-            value={resolved}
-            onChange={(next) => onChange(parameter.uniformName, next)}
-            kind={interaction.kind}
-            hint={interaction.hint}
-            integer={interaction.integer}
-            label={parameter.slotName}
-            initiallyOpen={!!planarControl || interaction.kind === 'real'}
-          />
-        )}
-        <div className={`grid gap-2 ${interaction?.kind === 'real' ? 'grid-cols-1' : 'grid-cols-2'}`}>
-          <FormulaComplexDraftInputs
-            value={resolved}
-            slotName={parameter.slotName}
-            realId={`published-${parameter.uniformName}-re`}
-            imaginaryId={`published-${parameter.uniformName}-im`}
-            min={parameter.hardDomain?.[0]}
-            max={parameter.hardDomain?.[1]}
-            step={interaction?.integer ? 1 : planarControl?.step}
-            realOnly={interaction?.kind === 'real'}
-            onCommit={(next) => onChange(parameter.uniformName, next)}
-            t={t}
-          />
-        </div>
+        <FormulaComplexEditor
+          key={`${formulaId}:${parameter.slotName}`}
+          interaction={interaction ?? undefined}
+          initiallyOpen={!!planarControl || interaction?.kind === 'real'}
+          value={resolved}
+          slotName={parameter.slotName}
+          realId={`published-${parameter.uniformName}-re`}
+          imaginaryId={`published-${parameter.uniformName}-im`}
+          min={parameter.hardDomain?.[0]}
+          max={parameter.hardDomain?.[1]}
+          step={interaction?.integer ? 1 : planarControl?.step}
+          realOnly={interaction?.kind === 'real'}
+          onCommit={(next) => onChange(parameter.uniformName, next)}
+          t={t}
+        />
       </div>
     );
   }
@@ -706,19 +686,17 @@ function FormulaComplexInput({
       <label className="text-sm font-medium leading-none">
         {getFormulaUniformLabel(descriptor, t)}
       </label>
-      <div className="grid grid-cols-2 gap-2">
-        <FormulaComplexDraftInputs
-          value={resolvedValue}
-          slotName={getFormulaUniformLabel(descriptor, t)}
-          realId={`${descriptor.name}-re`}
-          imaginaryId={`${descriptor.name}-im`}
-          min={descriptor.min}
-          max={descriptor.max}
-          showCoordinateLabels
-          onCommit={(next) => onChange(descriptor.name, next)}
-          t={t}
-        />
-      </div>
+      <FormulaComplexEditor
+        value={resolvedValue}
+        slotName={getFormulaUniformLabel(descriptor, t)}
+        realId={`${descriptor.name}-re`}
+        imaginaryId={`${descriptor.name}-im`}
+        min={descriptor.min}
+        max={descriptor.max}
+        showCoordinateLabels
+        onCommit={(next) => onChange(descriptor.name, next)}
+        t={t}
+      />
     </div>
   );
 }
