@@ -11,6 +11,7 @@ import { normalizePublishedFormulaParams } from '@/lib/published-formula-params'
 import { reviewedNativeOriginalV1 } from '@/engine/formulas/v1/reviewed-native-rendering-v1';
 import { resolveRecoveredPublishedRenderingPluginV1 } from '@/engine/formulas/v1/recovered-quantization-rendering-v1';
 import { bindPublishedRenderingSourceV1 } from '@/engine/formulas/v1/published-rendering-source-v1';
+import { getReviewedNewtonRenderingV1 } from '@/engine/formulas/v1/reviewed-newton-rendering-v1';
 import {
   getPublishedFormulaLibraryClient,
   type PublishedFormulaLibraryClient,
@@ -182,9 +183,10 @@ export async function resolvePublishedArtworkRuntime(
   loadLibrary: PublishedArtworkLibraryLoader = getPublishedFormulaLibraryClient,
 ): Promise<PublishedArtworkRuntimeResolution> {
   if (!playback.runtimeFormula) {
+    const formulaPlugin = getReviewedNewtonRenderingV1(playback.params.formula);
     return {
       ok: true,
-      value: { params: playback.params },
+      value: { params: playback.params, ...(formulaPlugin ? { formulaPlugin } : {}) },
     };
   }
 

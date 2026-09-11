@@ -10,6 +10,7 @@ import {
 } from '@/engine/frm/semantics-version';
 import { registerBuiltins } from '@/engine/plugins/builtins';
 import { resolveReviewedNativeRenderingV1 } from '@/engine/formulas/v1/reviewed-native-rendering-v1';
+import { resolveReviewedNewtonNativeRenderingV1 } from '@/engine/formulas/v1/reviewed-newton-rendering-v1';
 import { getFormulaMetadata } from '@/engine/plugins/formula-catalog';
 import { pluginRegistry } from '@/engine/plugins/registry';
 import type { FormulaPlugin } from '@/engine/plugins/types';
@@ -215,7 +216,7 @@ export function resolveFormulaReference(
       ]);
     }
 
-    const renderingPlugin = resolveReviewedNativeRenderingV1(plugin);
+    const renderingPlugin = resolveReviewedNewtonNativeRenderingV1(resolveReviewedNativeRenderingV1(plugin));
     if (renderingPlugin !== plugin) pluginRegistry.register(renderingPlugin);
     return {
       success: true,

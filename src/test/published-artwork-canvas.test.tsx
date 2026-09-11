@@ -12,11 +12,12 @@ vi.mock('@/lib/published-artwork-runtime', () => ({
 }));
 
 vi.mock('@/components/fractal/AnimatedFractalCanvas', () => ({
-  default: ({ params }: { params: FractalParams }) => (
+  default: ({ params, formulaPlugin }: { params: FractalParams; formulaPlugin?: FormulaPlugin }) => (
     <div
       data-testid="animated-fractal-canvas"
       data-formula={params.formula}
       data-julia={String(params.isJulia)}
+      data-rendering={formulaPlugin?.cacheFingerprint}
     />
   ),
 }));
@@ -103,6 +104,12 @@ describe('PublishedArtworkCanvas', () => {
         'canonical-lambda',
       );
     });
+  });
+
+  it('uses the reviewed Newton math for synchronous artwork playback', async () => {
+    render(<PublishedArtworkCanvas artwork={{ params: { ...BUILTIN_PARAMS, formula: 'newtonCosh' } }} />);
+    expect(await screen.findByTestId('animated-fractal-canvas')).toHaveAttribute('data-rendering', 'newtonCosh:render-builtin-hyperbolic-v1');
+    expect(resolveRuntime).not.toHaveBeenCalled();
   });
 
   it('keeps the static parent image exposed when Julia resolution fails', async () => {

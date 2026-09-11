@@ -6,6 +6,7 @@ import type { AnimatedFractalCanvasProps } from '@/components/fractal/AnimatedFr
 import type { FormulaPlugin } from '@/engine/plugins/types';
 import type { FractalParams, ViewBounds } from '@/engine/types';
 import type { PublishedArtworkPlayback } from '@/lib/published-artworks';
+import { getReviewedNewtonRenderingV1 } from '@/engine/formulas/v1/reviewed-newton-rendering-v1';
 
 const AnimatedFractalCanvas = lazy(
   () => import('@/components/fractal/AnimatedFractalCanvas'),
@@ -89,7 +90,7 @@ export default function PublishedArtworkCanvas({
     ? resolved?.key === runtimeKey
       ? resolved
       : null
-    : { key: 'builtin', params: artwork.params };
+    : { key: 'builtin', params: artwork.params, formulaPlugin: getReviewedNewtonRenderingV1(artwork.params.formula) };
   if (!runtime) return null;
 
   return (

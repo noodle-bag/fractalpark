@@ -153,6 +153,15 @@ all existing recovered-formula paths comply. Identity qualification alone is
 not rendering compatibility. Capability resolution remains separate from any
 explicitly reviewed parameter adapter; it must not perform hidden conversion.
 
+Newton Cosh has a separate exact-source application correction. Its reviewed
+native implementation uses the shared built-in sinh/cosh functions instead of
+the recovered polynomial approximations. Initial state, clamping, denominator
+guard, convergence epsilon/timing, and iteration coloring remain unchanged.
+The correction is shared by native/published Explore and published-artwork
+playback; it does not qualify Julia or change frozen Definitions, native modules,
+presets or assets. Same-input historical comparisons must isolate math from
+antialiasing and convergence before accepting further numeric changes.
+
 ### R1. Classify the change
 
 Before replacing a plugin, review its initialization, complete mutable state,

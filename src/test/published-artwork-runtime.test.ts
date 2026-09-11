@@ -101,6 +101,18 @@ function libraryLoader() {
 }
 
 describe('published artwork runtime', () => {
+  it('uses the same reviewed Newton correction without loading a Julia artifact', async () => {
+    const playback = buildPublishedArtworkCollection(presetsFile, 'en')
+      .map(buildPublishedArtworkPlayback).find(row => row.name === 'Ember Meridian')!;
+    const load = vi.fn<PublishedArtworkLibraryLoader>();
+    const result = await resolvePublishedArtworkRuntime(playback, load);
+    expect(result.ok).toBe(true);
+    if (!result.ok) return;
+    expect(result.value.params).toBe(playback.params);
+    expect(result.value.formulaPlugin?.cacheFingerprint).toBe('newtonCosh:render-builtin-hyperbolic-v1');
+    expect(result.value.params.isJulia).toBe(false);
+    expect(load).not.toHaveBeenCalled();
+  });
   it('keeps all preset playback outputs identical when legacy Julia qualification is restored', async () => {
     registerBuiltins({ quiet: true });
     const { loader } = libraryLoader();

@@ -6,6 +6,7 @@ const artworks = [
   ['Cobalt Bastion', 'mandelbox-cobalt-bastion', 'mandelbox'],
   ['Gilded Plumes', 'cosh-mandelbrot-gilded-plumes', 'coshMandelb'],
   ['Penitent Mandala', ARTWORK_CONTENT_MANIFEST.find(row => row.presetId === 'preset-zaslavsky-penitent-mandala')!.slug, 'zaslavskyMap'],
+  ['Ember Meridian', 'newton-cosh-ember-meridian', 'newtonCosh'],
 ];
 const pixels = async (canvas: Locator) => createHash('sha256').update(
   await canvas.evaluate(node => (node as HTMLCanvasElement).toDataURL()),
@@ -42,7 +43,8 @@ for (const width of [390, 1000]) {
       const explore = page.getByTestId('fractal-canvas');
       await expect(explore).toHaveAttribute('data-render-status', 'ready', { timeout: 45_000 });
       await expect(page.getByTestId('explore-root')).toHaveAttribute('data-formula-id', formula);
-      await expect(page.locator('#julia-mode')).toBeChecked();
+      if (formula === 'newtonCosh') await expect(page.locator('#julia-mode')).toHaveCount(0);
+      else await expect(page.locator('#julia-mode')).toBeChecked();
       const initial = await pixels(explore);
       await page.reload();
       await expect(explore).toHaveAttribute('data-render-status', 'ready', { timeout: 45_000 });

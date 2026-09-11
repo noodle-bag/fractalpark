@@ -3,6 +3,7 @@ import { publishedRenderingSourceRevisionV1 } from './published-rendering-source
 import bindings from '../../../../resources/formula-library/v1/native-rendering-bindings.v1.json';
 import { renderingImplementationFingerprintV1 } from './rendering-implementation-fingerprint-v1';
 import { reviewedNativeOriginalV1, unquantizedNativeGlslV1 } from './reviewed-native-rendering-v1';
+import { resolveReviewedNewtonPublishedRenderingV1 } from './reviewed-newton-rendering-v1';
 
 const MANDELBOX_ID = '280cd3e2-865b-5c78-90b7-39b2a36d7be0';
 const mandelboxBinding = bindings.rows.find(row => row.runtimeId === 'mandelbox')!;
@@ -46,7 +47,7 @@ export function resolveRecoveredPublishedRenderingPluginV1(
   plugin: FormulaPlugin,
   nativePlugin?: FormulaPlugin,
 ): FormulaPlugin {
-  if (!RECOVERED_QUANTIZATION_FORMULA_IDS_V1.has(plugin.id)) return plugin;
+  if (!RECOVERED_QUANTIZATION_FORMULA_IDS_V1.has(plugin.id)) return resolveReviewedNewtonPublishedRenderingV1(plugin, nativePlugin);
   const binding = bindings.rows.find(row => row.formulaId === plugin.id);
   const original = binding && reviewedNativeOriginalV1(binding.runtimeId);
   if (original && binding && nativePlugin) {
