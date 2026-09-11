@@ -158,7 +158,8 @@
       "formulaId": "201c54f3-a77a-5be0-a0a5-6f4f1998ee6d",
       "sourceRevision": "90d43b9c2bc9a7eda5ca6f997a1ae2dc6640f0cc12cdcc34e8c82ca0765eff12",
       "nativeFingerprint": "ea1e01d27711c7aecc4ac61b488f369b0f98e63943425fe9fd16cba78dd6e80e",
-      "refinedFingerprint": "63794ccf6910d02993d6748055ba74472a45ad23bbd260912f9d5fe10289c249"
+      "applicationNativeFingerprint": "4c16412cb7586c084f0883a0d2a981993548124f68603de3572287d65c871f1e",
+      "refinedFingerprint": "4c16412cb7586c084f0883a0d2a981993548124f68603de3572287d65c871f1e"
     },
     {
       "runtimeId": "coshSinh",
@@ -252,6 +253,7 @@
       "formulaId": "280cd3e2-865b-5c78-90b7-39b2a36d7be0",
       "sourceRevision": "b4677349cc60d66a5b7ad87655a89585d2bf83c7284ef949afe081e8eb294aac",
       "nativeFingerprint": "930abb894aff9625aa866bbb7397d751b3695ded906bcd228939c31ce1983fd6",
+      "applicationNativeFingerprint": "17206fc690c47c8b5f3e12246e0a39db2a4be5271abc2a2800252209d3e39686",
       "refinedFingerprint": "9549b0ebd02741f293708d6f6496bee9123efffa213fdb0f2af8de1cc8fd0bf7"
     },
     {
@@ -459,7 +461,8 @@
       "formulaId": "22d9a008-eb14-53de-9960-11eb5d37bb8e",
       "sourceRevision": "fb9db2dede500db19463ee53c8d059c2e7a92651d7de472a4bedd6e7ee58a831",
       "nativeFingerprint": "99f61fc668c8eb7e83b20eb359bc45b7bceb86b5a6102aef632cb1774518c4d0",
-      "refinedFingerprint": "f8806591355da2bfa94ee49e2ced539858f565ac8df848317eed323e8cb99f0e"
+      "applicationNativeFingerprint": "f74571d6b07f2823a6f1aceca13c5928bdc51421a7f3d9e46913b10b22e6a9e7",
+      "refinedFingerprint": "f74571d6b07f2823a6f1aceca13c5928bdc51421a7f3d9e46913b10b22e6a9e7"
     },
     {
       "runtimeId": "zubieta",

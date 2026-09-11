@@ -124,6 +124,30 @@ The frozen activation census and language/compiler contracts are unchanged.
 
 ## Rendering implementation change contract
 
+### Reviewed application rendering exception
+
+Mandelbox, coshMandelb, and zaslavskyMap remove only their explicit orbit-rounding
+calls in application rendering. Their native initialization, approximations,
+escape timing, smoothing, and coloring remain unchanged. Published Mandelbox
+reads the real component of its published scale uniform; legacy native artwork
+keeps its existing scalar uniform and ID. Native projections require the exact
+`applicationNativeFingerprint`; published projections require the exact source,
+native implementation, parameter interface, and `refinedFingerprint`.
+
+Explore's existing resolver registers the reviewed native projection; its Worker
+snapshot and export therefore use the same implementation. Published selection
+and restoration use the existing shared adapter. Gallery hover, detail, and Drift
+reuse it only after their existing canonical authority and Julia eligibility
+checks. Unsupported playback remains unavailable. This is a numerical correction,
+not a claim of equivalence to previously quantized pixels or canonical lifecycle.
+
+Frozen Definitions, native source modules, generated images, CLI/raw-source
+rendering and asset-generation inputs are not rewritten. Existing JPGs may differ
+from corrected live output and require separate visual acceptance and asset
+authorization. Other formulas retain their existing rendering policy. Regression
+coverage compares both modes and keyframes through the actual playback resolver,
+native Explore registration, and tiled renderer under equal sampling settings.
+
 These requirements govern future rendering changes; they do not certify that
 all existing recovered-formula paths comply. Identity qualification alone is
 not rendering compatibility. Capability resolution remains separate from any

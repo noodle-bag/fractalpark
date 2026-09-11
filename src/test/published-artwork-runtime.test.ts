@@ -11,6 +11,7 @@ import type {
 } from '@/engine/formulas/v1';
 import type { FormulaPlugin } from '@/engine/plugins/types';
 import { registerBuiltins } from '@/engine/plugins/builtins';
+import { compilePublishedFormulaPluginV1 } from '@/engine/formulas/v1/published-adapter';
 import {
   resolvePublishedArtworkRuntime,
   resolvePublishedArtworkRuntimeAvailability,
@@ -78,6 +79,9 @@ function artifactFor(
 function libraryLoader() {
   const load = vi.fn(async (formulaId: string) => {
     const row = rowByFormulaId.get(formulaId);
+    if (row && ['mandelbox', 'coshMandelb', 'zaslavskyMap'].includes(row.displayName)) {
+      return compilePublishedFormulaPluginV1({ ...row, source: readFileSync(join(RUNTIME_ROOT, row.definitionPath), 'utf8') });
+    }
     return row
       ? { ok: true as const, value: artifactFor(row) }
       : { ok: false as const, code: 'formula-not-published' as const };

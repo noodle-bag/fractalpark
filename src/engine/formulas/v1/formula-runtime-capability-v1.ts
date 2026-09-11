@@ -32,7 +32,9 @@ export function resolveFormulaRuntimeCapabilityV1(
   }
   const native = plugin.source === 'builtin' ? nativeById.get(formulaId) : undefined;
   if (native) {
-    const revision = renderingImplementationFingerprintV1(plugin) === native.nativeFingerprint
+    const fingerprint = renderingImplementationFingerprintV1(plugin);
+    const revision = (fingerprint === native.nativeFingerprint
+      || ('applicationNativeFingerprint' in native && fingerprint === native.applicationNativeFingerprint))
       ? native.sourceRevision
       : undefined;
     return resolveJuliaRuntimeCapabilityV1(native.formulaId, revision);

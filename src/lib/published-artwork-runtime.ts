@@ -8,6 +8,9 @@ import { hasCoordinateParametersV1, publishedCoordinateExecutionRevisionV1 } fro
 import type { FormulaPlugin } from '@/engine/plugins/types';
 import type { FractalParams, PluginParamRecord } from '@/engine/types';
 import { normalizePublishedFormulaParams } from '@/lib/published-formula-params';
+import { reviewedNativeOriginalV1 } from '@/engine/formulas/v1/reviewed-native-rendering-v1';
+import { resolveRecoveredPublishedRenderingPluginV1 } from '@/engine/formulas/v1/recovered-quantization-rendering-v1';
+import { bindPublishedRenderingSourceV1 } from '@/engine/formulas/v1/published-rendering-source-v1';
 import {
   getPublishedFormulaLibraryClient,
   type PublishedFormulaLibraryClient,
@@ -209,11 +212,23 @@ export async function resolvePublishedArtworkRuntime(
     return { ok: false, reason: 'formula-authority-mismatch' };
   }
 
+  let renderingPlugin = plugin;
+  const original = reviewedNativeOriginalV1(playback.runtimeFormula.runtimeId);
+  if (original) {
+    try {
+      renderingPlugin = resolveRecoveredPublishedRenderingPluginV1(
+        bindPublishedRenderingSourceV1(loaded.value), original,
+      );
+    } catch {
+      return { ok: false, reason: 'formula-authority-mismatch' };
+    }
+  }
+
   return {
     ok: true,
     value: {
       params: canonicalRuntimeParams(playback, loaded.value),
-      formulaPlugin: plugin,
+      formulaPlugin: renderingPlugin,
     },
   };
 }

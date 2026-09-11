@@ -10,6 +10,8 @@ import { pluginRegistry } from '@/engine/plugins/registry';
 import { compilePublishedFormulaPluginV1 } from '@/engine/formulas/v1/published-adapter';
 import { bindPublishedRenderingSourceV1 } from '@/engine/formulas/v1/published-rendering-source-v1';
 import { refineRecoveredQuantizationGlslV1 } from '@/engine/formulas/v1/recovered-quantization-rendering-v1';
+import { reviewedNativeOriginalV1, resolveReviewedNativeRenderingV1, unquantizedNativeGlslV1 } from '@/engine/formulas/v1/reviewed-native-rendering-v1';
+import { resolveFormulaRuntimeCapabilityV1 } from '@/engine/formulas/v1/formula-runtime-capability-v1';
 
 async function published(name: string) {
   const row = runtime.rows.find(row => row.displayName === name)!;
@@ -46,7 +48,7 @@ describe('recovered quantization rendering correction v1', () => {
       const source = await published(row.displayName);
       const corrected = resolveRecoveredPublishedRenderingPluginV1(source, native);
       expect(corrected.uniforms, row.displayName).toEqual(source.uniforms);
-      if (row.displayName !== 'mandelbox') {
+      if (!reviewedNativeOriginalV1(row.displayName)) {
         expect(corrected.glsl).toBe(refineRecoveredQuantizationGlslV1(row.formulaId, native.glsl));
         expect(corrected.cacheFingerprint).toBe(`${source.cacheFingerprint}:render-q1024`);
       }
@@ -93,8 +95,8 @@ describe('recovered quantization rendering correction v1', () => {
     expect(source.orbitLifecycle?.kind).toBe('frm-like-v1');
   });
 
-  it('refines an affected published plugin and fingerprints the shader cache', () => {
-    const source = plugin('22d9a008-eb14-53de-9960-11eb5d37bb8e');
+  it('refines another affected published plugin and fingerprints the shader cache', () => {
+    const source = plugin('17d88272-6dbf-5622-996a-b116ea3a3fab');
     const native = {
       ...plugin('zaslavskyMap'),
       glsl: 'for (int index = 0; index < 16; index++) {}\nnative recoveredQuantize(z, 16.0);',
@@ -117,5 +119,30 @@ describe('recovered quantization rendering correction v1', () => {
   it('preserves unrelated plugins by identity', () => {
     const source = plugin('00e14aa8-b766-54ea-a359-3f5d20d329b7');
     expect(resolveRecoveredPublishedRenderingPluginV1(source)).toBe(source);
+    expect(resolveReviewedNativeRenderingV1(source)).toBe(source);
+    const original = reviewedNativeOriginalV1('coshMandelb')!;
+    const unknown = { ...original, id: 'unreviewed' };
+    expect(resolveReviewedNativeRenderingV1(unknown)).toBe(unknown);
+    const changed = { ...original, glsl: original.glsl + '\n' };
+    expect(resolveReviewedNativeRenderingV1(changed)).toBe(changed);
+  });
+
+  it.each(['mandelbox', 'coshMandelb', 'zaslavskyMap'])('binds both application paths without mutating %s', async id => {
+    const original = reviewedNativeOriginalV1(id)!;
+    const native = resolveReviewedNativeRenderingV1(original);
+    const source = await published(id);
+    const canonical = resolveRecoveredPublishedRenderingPluginV1(source, native);
+    expect(native.glsl).toBe(unquantizedNativeGlslV1(original));
+    expect(canonical.glsl).toBe(id === 'mandelbox'
+      ? native.glsl.replace(/\bu_mandelboxScale\b/g, '(frmV1_mandelboxScale.x)') : native.glsl);
+    expect(resolveFormulaRuntimeCapabilityV1(native.id, native).supportsRuntime).toBe(true);
+    expect(resolveFormulaRuntimeCapabilityV1(canonical.id, canonical).supportsRuntime).toBe(true);
+    expect(resolveFormulaRuntimeCapabilityV1(native.id, { ...native, glsl: native.glsl + '\n' }).supportsRuntime).toBe(false);
+    expect(resolveReviewedNativeRenderingV1(native)).toBe(native);
+    expect(original.glsl).toContain(', 16.0)');
+    expect(native.uniforms).toEqual(original.uniforms);
+    expect(native.bailout).toBe(original.bailout);
+    expect(native.orbitLifecycle).toBe(original.orbitLifecycle);
+    expect(() => resolveRecoveredPublishedRenderingPluginV1({ ...source, sourceRevision: 'invalid' }, native)).toThrow();
   });
 });

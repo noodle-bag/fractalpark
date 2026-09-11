@@ -2,6 +2,7 @@ import type { FormulaPlugin } from '../../plugins/types';
 import { publishedRenderingSourceRevisionV1 } from './published-rendering-source-v1';
 import bindings from '../../../../resources/formula-library/v1/native-rendering-bindings.v1.json';
 import { renderingImplementationFingerprintV1 } from './rendering-implementation-fingerprint-v1';
+import { reviewedNativeOriginalV1, unquantizedNativeGlslV1 } from './reviewed-native-rendering-v1';
 
 const MANDELBOX_ID = '280cd3e2-865b-5c78-90b7-39b2a36d7be0';
 const mandelboxBinding = bindings.rows.find(row => row.runtimeId === 'mandelbox')!;
@@ -46,11 +47,29 @@ export function resolveRecoveredPublishedRenderingPluginV1(
   nativePlugin?: FormulaPlugin,
 ): FormulaPlugin {
   if (!RECOVERED_QUANTIZATION_FORMULA_IDS_V1.has(plugin.id)) return plugin;
+  const binding = bindings.rows.find(row => row.formulaId === plugin.id);
+  const original = binding && reviewedNativeOriginalV1(binding.runtimeId);
+  if (original && binding && nativePlugin) {
+    const nativeFingerprint = renderingImplementationFingerprintV1(nativePlugin);
+    const projectedFingerprint = renderingImplementationFingerprintV1({ ...original, glsl: unquantizedNativeGlslV1(original) });
+    if (plugin.source !== 'frm' || nativePlugin.source !== 'builtin' || nativePlugin.id !== original.id
+      || (nativeFingerprint !== binding.nativeFingerprint && nativeFingerprint !== projectedFingerprint)) {
+      throw new Error('recovered-rendering-parameter-contract-mismatch');
+    }
+    nativePlugin = original;
+  }
   const renderingBase = nativePlugin ?? plugin;
   let glsl = refineRecoveredQuantizationGlslV1(plugin.id, renderingBase.glsl);
   let uniforms = renderingBase.uniforms;
   let parameterRevision = '';
   let renderingRevision: string = RECOVERED_QUANTIZATION_RENDERING_REVISION_V1;
+  if (original && binding && nativePlugin && plugin.id !== MANDELBOX_ID) {
+    if (publishedRenderingSourceRevisionV1(plugin) !== binding.sourceRevision || plugin.uniforms.length !== 0) {
+      throw new Error('recovered-rendering-parameter-contract-mismatch');
+    }
+    glsl = unquantizedNativeGlslV1(original);
+    renderingRevision = 'unquantized-v1';
+  }
   if (plugin.id === MANDELBOX_ID && nativePlugin) {
     const uniform = plugin.uniforms[0];
     if (
