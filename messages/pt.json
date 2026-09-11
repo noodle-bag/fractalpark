@@ -1521,6 +1521,7 @@
       "standard": "Biblioteca padrão",
       "mine": "Minhas fórmulas",
       "library": {
+        "details": "Ver detalhes de {name}",
         "current": "Fórmula atual",
         "open": "Abrir biblioteca",
         "title": "Biblioteca de fórmulas padrão",

@@ -1,8 +1,8 @@
 'use client';
 
-import { useMemo, useRef, useState } from 'react';
-import { Dices, Library, Loader2 } from 'lucide-react';
-import { useTranslations } from 'next-intl';
+import { useEffect, useMemo, useRef, useState } from 'react';
+import { ArrowRight, Dices, Library, Loader2 } from 'lucide-react';
+import { useLocale, useTranslations } from 'next-intl';
 
 import { Button } from '@/components/ui/button';
 import { ExploreCanonicalSourceWorkspace } from '@/components/formulas/ExploreCanonicalSourceWorkspace';
@@ -25,7 +25,9 @@ import {
   PUBLISHED_FORMULA_LIBRARY_DEFAULT_CATEGORY,
   PUBLISHED_FORMULA_LIBRARY_PAGE_SIZE,
   type PublishedFormulaLibraryClientResult,
+  type PublishedFormulaLibraryClient,
 } from '@/lib/published-formula-library';
+import { resolveExploreFormulaIdentity } from '@/lib/explore-formula-identity';
 import type {
   PublishedFormulaBeforeApply,
   PublishedFormulaSelectionResult,
@@ -63,6 +65,17 @@ export function PublishedFormulaLibrary({
   loadClient = getPublishedFormulaLibraryClient,
 }: PublishedFormulaLibraryProps) {
   const t = useTranslations('explore');
+  const locale = useLocale();
+  const [identityClient, setIdentityClient] = useState<PublishedFormulaLibraryClient>();
+  useEffect(() => {
+    let active = true;
+    void loadClient().then(result => {
+      if (active) setIdentityClient(result.ok ? result.value : undefined);
+    }).catch(() => {
+      if (active) setIdentityClient(undefined);
+    });
+    return () => { active = false; };
+  }, [loadClient]);
   const [open, setOpen] = useState(false);
   const [rows, setRows] = useState<readonly PublishedFormulaDirectoryRowV1[]>([]);
   const [loading, setLoading] = useState(false);
@@ -87,7 +100,8 @@ export function PublishedFormulaLibrary({
     [rows, selectedCategory],
   );
   const visibleRows = filteredRows.slice(0, visibleCount);
-  const activeFormulaName = currentFormulaName(currentFormula, t);
+  const identity = identityClient && resolveExploreFormulaIdentity(currentFormula, identityClient);
+  const activeFormulaName = identity?.displayName ?? currentFormulaName(currentFormula, t);
 
   const changeCategory = (
     category: PublishedFormulaDirectoryCategoryV1 | 'all',
@@ -175,13 +189,25 @@ export function PublishedFormulaLibrary({
         <p className="text-xs font-medium uppercase tracking-wider text-muted-foreground">
           {t('formula.library.current')}
         </p>
-        <p
-          className="break-words text-sm font-medium"
-          data-formula-id={currentFormula}
-          data-testid="published-formula-current"
-        >
-          {activeFormulaName}
-        </p>
+        <div className="flex min-w-0 items-start gap-1">
+          <p
+            className="min-w-0 break-words text-sm font-medium [overflow-wrap:anywhere]"
+            data-formula-id={currentFormula}
+            data-testid="published-formula-current"
+          >
+            {activeFormulaName}
+          </p>
+          {identity && (
+            <a
+              href={`/${locale}${identity.canonicalPath}`}
+              aria-label={t('formula.library.details', { name: activeFormulaName })}
+              title={t('formula.library.details', { name: activeFormulaName })}
+              className="inline-flex h-8 w-8 shrink-0 items-center justify-center rounded-md text-muted-foreground hover:bg-accent hover:text-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
+            >
+              <ArrowRight className="h-4 w-4" aria-hidden="true" />
+            </a>
+          )}
+        </div>
       </div>
 
       <ExploreCanonicalSourceWorkspace

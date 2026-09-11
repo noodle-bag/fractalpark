@@ -137,6 +137,15 @@ formula pages with FRM examples, About, and the Explore custom-formula area
 may link to it contextually. Explore remains the primary full creation
 surface.
 
+Explore's current-formula label joins the published directory identity to a
+minimal projection of Formula Record provenance. Classic collection members
+use `classic-<canonical name>`; other entries use their reviewed source project
+(such as `fractint` or `iterated-dynamics`). Compiler format is not provenance.
+The adjacent accessible detail link uses the same resolved identity and current
+locale. Unknown/custom identities and unavailable catalog data retain a plain
+fallback name without an invented public destination. This presentation never
+changes the selected runtime, parameters, or saved artwork identity.
+
 ### Formula Atlas page order
 
 The Atlas landing page renders these server-readable sections:

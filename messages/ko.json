@@ -1521,6 +1521,7 @@
       "standard": "표준 라이브러리",
       "mine": "내 수식",
       "library": {
+        "details": "{name} 공식 상세 보기",
         "current": "현재 수식",
         "open": "라이브러리 열기",
         "title": "표준 수식 라이브러리",

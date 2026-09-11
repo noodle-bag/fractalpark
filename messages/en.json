@@ -1521,6 +1521,7 @@
       "standard": "Standard Library",
       "mine": "My Formulas",
       "library": {
+        "details": "View details for {name}",
         "current": "Current formula",
         "open": "Open Library",
         "title": "Standard Formula Library",

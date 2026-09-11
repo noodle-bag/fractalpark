@@ -1521,6 +1521,7 @@
       "standard": "标准公式库",
       "mine": "我的公式",
       "library": {
+        "details": "查看 {name} 的公式详情",
         "current": "当前公式",
         "open": "打开公式库",
         "title": "标准公式库",
