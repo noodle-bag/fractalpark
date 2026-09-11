@@ -11,6 +11,8 @@ import {
   PLAYBACK_CONTROL_BUTTON_CLASS,
 } from '@/components/fractal/playback-controls';
 import { Button } from '@/components/ui/button';
+import { useTranslations } from 'next-intl';
+import { usePublishedArtworkAvailability } from '@/hooks/usePublishedArtworkAvailability';
 
 interface ArtworkViewerProps {
   artwork: PublishedArtworkPlayback;
@@ -32,6 +34,11 @@ export function ArtworkViewer({
   const [isOpen, setIsOpen] = useState(false);
   const [isPaused, setIsPaused] = useState(false);
   const dialogRef = useRef<HTMLDivElement>(null);
+  const { availability, onUnavailable } = usePublishedArtworkAvailability(artwork);
+  const t = useTranslations('artworks.page.viewer');
+  const unavailable = availability?.available === false;
+  const unavailableMessage = unavailable
+    ? t(availability.reason === 'julia-unsupported' ? 'juliaUnavailable' : 'loadUnavailable') : null;
 
   useEffect(() => {
     if (!isOpen) return;
@@ -95,17 +102,19 @@ export function ArtworkViewer({
             className="object-cover"
             sizes="(min-width: 1280px) 1152px, (min-width: 768px) calc(100vw - 64px), calc(100vw - 40px)"
           />
-          {!isOpen ? (
+          {!isOpen && !unavailable ? (
             <div className="pointer-events-none absolute inset-0">
               <PublishedArtworkCanvas
                 artwork={artwork}
                 keyframes={artwork.animation.keyframes}
                 dprScale={0.75}
                 className="h-full w-full"
+                onUnavailable={onUnavailable}
               />
             </div>
           ) : null}
         </div>
+        {unavailableMessage && <figcaption role="status" className="mt-3 text-sm text-muted-foreground">{unavailableMessage}</figcaption>}
         <div className="mt-4 flex flex-wrap gap-3">
           <Button type="button" variant="outline" onClick={openViewer}>
             <Maximize2 aria-hidden />
@@ -134,7 +143,7 @@ export function ArtworkViewer({
             sizes="100vw"
           />
 
-          <div className="pointer-events-none absolute inset-0">
+          {!unavailable && <div className="pointer-events-none absolute inset-0">
             <PublishedArtworkCanvas
               artwork={artwork}
               keyframes={artwork.animation.keyframes}
@@ -142,12 +151,13 @@ export function ArtworkViewer({
               paused={isPaused}
               resetOnStop={false}
               className="h-full w-full"
+              onUnavailable={onUnavailable}
             />
-          </div>
+          </div>}
 
           <div className="absolute bottom-4 left-0 right-0 flex flex-col items-center gap-3 px-4">
             <div className={PLAYBACK_CONTROL_BAR_CLASS}>
-              <button
+              {availability?.available && <button
                 type="button"
                 className={PLAYBACK_CONTROL_BUTTON_CLASS}
                 aria-label={isPaused ? labels.resume : labels.pause}
@@ -158,7 +168,7 @@ export function ArtworkViewer({
                 }}
               >
                 {isPaused ? <Play className="h-4 w-4" /> : <Pause className="h-4 w-4" />}
-              </button>
+              </button>}
               <button
                 type="button"
                 className={PLAYBACK_CONTROL_BUTTON_CLASS}
@@ -172,6 +182,7 @@ export function ArtworkViewer({
                 <Minimize2 className="h-4 w-4" />
               </button>
             </div>
+            {unavailableMessage && <p role="status" className="max-w-xl rounded-md bg-black/80 px-3 py-2 text-center text-sm text-white">{unavailableMessage}</p>}
             <p className="text-sm text-white/60">{labels.closeHint}</p>
           </div>
         </div>

@@ -186,6 +186,13 @@ Resolution, DPR, antialiasing, and display treatment can differ intentionally;
 state those differences when comparing images. Gallery retaining a static image
 on unavailable Julia playback is not permission to render another plane instead.
 
+Gallery cards and artwork detail/fullscreen disclose unavailable playback while
+retaining the saved image. Unsupported Julia and loading failures have distinct
+localized explanations. Unavailable fullscreen playback has no pause/resume
+control. UI availability and Drift eligibility reuse the same resolver; a late
+qualification result cannot erase a real rendering-load failure or apply to a
+different artwork. No fallback silently enables Julia or substitutes another plane.
+
 ### R3. Prove interface behavior before visual improvement
 
 Test the real descriptor-to-selected-plugin mapping, including explicit

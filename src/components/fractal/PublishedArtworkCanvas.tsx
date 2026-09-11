@@ -7,6 +7,7 @@ import type { FormulaPlugin } from '@/engine/plugins/types';
 import type { FractalParams, ViewBounds } from '@/engine/types';
 import type { PublishedArtworkPlayback } from '@/lib/published-artworks';
 import { getReviewedNewtonRenderingV1 } from '@/engine/formulas/v1/reviewed-newton-rendering-v1';
+import type { PublishedArtworkRuntimeFailure } from '@/lib/published-artwork-runtime';
 
 const AnimatedFractalCanvas = lazy(
   () => import('@/components/fractal/AnimatedFractalCanvas'),
@@ -20,7 +21,7 @@ type CanvasProps = Omit<
 interface PublishedArtworkCanvasProps extends CanvasProps {
   artwork: Pick<PublishedArtworkPlayback, 'params' | 'runtimeFormula'>;
   bounds?: ViewBounds;
-  onUnavailable?: () => void;
+  onUnavailable?: (reason: PublishedArtworkRuntimeFailure) => void;
 }
 
 interface ResolvedRuntime {
@@ -37,7 +38,7 @@ export default function PublishedArtworkCanvas({
 }: PublishedArtworkCanvasProps) {
   const runtimeKey = artwork.runtimeFormula?.runtimeId;
   const [resolved, setResolved] = useState<ResolvedRuntime | null>(null);
-  const [unavailableKey, setUnavailableKey] = useState<string | null>(null);
+  const [unavailable, setUnavailable] = useState<{ key: string; reason: PublishedArtworkRuntimeFailure } | null>(null);
   const reportedUnavailableRef = useRef<string | null>(null);
 
   useEffect(() => {
@@ -57,15 +58,15 @@ export default function PublishedArtworkCanvas({
             params: result.value.params,
             formulaPlugin: result.value.formulaPlugin,
           });
-          setUnavailableKey(null);
+          setUnavailable(null);
           return;
         }
         setResolved(null);
-        setUnavailableKey(runtimeKey);
+        setUnavailable({ key: runtimeKey, reason: result.reason });
       }, () => {
         if (!active) return;
         setResolved(null);
-        setUnavailableKey(runtimeKey);
+        setUnavailable({ key: runtimeKey, reason: 'formula-load-failed' });
       });
 
     return () => {
@@ -76,15 +77,15 @@ export default function PublishedArtworkCanvas({
   useEffect(() => {
     if (
       !runtimeKey ||
-      unavailableKey !== runtimeKey ||
+      unavailable?.key !== runtimeKey ||
       !onUnavailable ||
       reportedUnavailableRef.current === runtimeKey
     ) {
       return;
     }
     reportedUnavailableRef.current = runtimeKey;
-    onUnavailable();
-  }, [onUnavailable, runtimeKey, unavailableKey]);
+    onUnavailable(unavailable.reason);
+  }, [onUnavailable, runtimeKey, unavailable]);
 
   const runtime = runtimeKey
     ? resolved?.key === runtimeKey

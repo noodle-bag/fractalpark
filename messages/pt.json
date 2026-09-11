@@ -1294,6 +1294,8 @@
       "related": "Obras relacionadas",
       "customGradient": "Gradiente personalizado",
       "viewer": {
+        "juliaUnavailable": "Esta fórmula não oferece animação Julia. Exibindo a imagem salva.",
+        "loadUnavailable": "Não foi possível carregar a animação. Exibindo a imagem salva.",
         "viewFullscreen": "Ver em tela cheia",
         "resume": "Retomar animação",
         "pause": "Pausar animação",

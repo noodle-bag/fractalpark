@@ -1294,6 +1294,8 @@
       "related": "Œuvres associées",
       "customGradient": "Dégradé personnalisé",
       "viewer": {
+        "juliaUnavailable": "Cette formule ne prend pas en charge l’animation Julia. L’image enregistrée est affichée.",
+        "loadUnavailable": "L’animation n’a pas pu être chargée. L’image enregistrée est affichée.",
         "viewFullscreen": "Voir en plein écran",
         "resume": "Reprendre l'animation",
         "pause": "Mettre en pause l'animation",

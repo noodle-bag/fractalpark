@@ -1294,6 +1294,8 @@
       "related": "Related artworks",
       "customGradient": "Custom gradient",
       "viewer": {
+        "juliaUnavailable": "This formula does not support Julia animation. Showing the saved image.",
+        "loadUnavailable": "Animation could not be loaded. Showing the saved image.",
         "viewFullscreen": "View fullscreen",
         "resume": "Resume animation",
         "pause": "Pause animation",

@@ -130,6 +130,7 @@ describe('PublishedArtworkCanvas', () => {
     );
 
     await waitFor(() => expect(onUnavailable).toHaveBeenCalledOnce());
+    expect(onUnavailable).toHaveBeenCalledWith('julia-unsupported');
     expect(screen.queryByTestId('animated-fractal-canvas')).toBeNull();
   });
 });

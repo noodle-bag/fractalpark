@@ -1294,6 +1294,8 @@
       "related": "相关作品",
       "customGradient": "自定义渐变",
       "viewer": {
+        "juliaUnavailable": "此公式暂不支持 Julia 动画，当前显示已保存的静态图像。",
+        "loadUnavailable": "动画暂时无法加载，当前显示已保存的静态图像。",
         "viewFullscreen": "全屏查看",
         "resume": "继续播放动画",
         "pause": "暂停动画",
