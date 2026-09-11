@@ -10,6 +10,7 @@ import {
   type PublishedFormulaRuntimeResultV1,
   type PublishedFormulaPluginArtifactV1,
 } from "@/engine/formulas/v1";
+import { applyPublishedCoordinateParametersV1 } from '@/engine/formulas/v1/published-coordinate-parameters-v1';
 import {
   PUBLISHED_FORMULA_DIRECTORY_CATEGORIES_V1,
   PUBLISHED_FORMULA_DIRECTORY_CONTENT_HASH_V1,
@@ -374,8 +375,9 @@ export async function createPublishedFormulaLibraryClient(
         const formulaId = directory.runtimeAliasFormulaIds[runtimeId];
         return formulaId ? loader.get(formulaId) : undefined;
       },
-      load(formulaId: string, signal?: AbortSignal) {
-        return loader.load(formulaId, signal);
+      async load(formulaId: string, signal?: AbortSignal) {
+        const loaded = await loader.load(formulaId, signal);
+        return loaded.ok ? applyPublishedCoordinateParametersV1(loaded.value) : loaded;
       },
       loadSource(reference: PublishedFormulaSourceReferenceV1, signal?: AbortSignal) {
         const row = loader.get(reference.formulaId);

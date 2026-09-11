@@ -1,5 +1,6 @@
 import type { FormulaPlugin } from '../../plugins/types';
 import type { PublishedFormulaPluginArtifactV1 } from './published-adapter';
+import { publishedCoordinateExecutionRevisionV1 } from './published-coordinate-parameters-v1';
 
 export interface PublishedRenderingPluginV1 extends FormulaPlugin {
   /** Validated Definition identity, not the shader program cache key. */
@@ -16,7 +17,8 @@ export function bindPublishedRenderingSourceV1(
   artifact: PublishedFormulaPluginArtifactV1,
 ): PublishedRenderingPluginV1 {
   const { plugin, descriptor } = artifact;
-  if (plugin.id !== descriptor.formulaId || plugin.cacheFingerprint !== descriptor.sourceRevision) {
+  const executionRevision = publishedCoordinateExecutionRevisionV1(artifact) ?? descriptor.sourceRevision;
+  if (plugin.id !== descriptor.formulaId || plugin.cacheFingerprint !== executionRevision) {
     throw new Error('published-rendering-source-mismatch');
   }
   return Object.freeze({ ...plugin, sourceRevision: descriptor.sourceRevision });

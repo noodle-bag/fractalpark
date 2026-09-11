@@ -27,6 +27,12 @@ import type {
 } from '@/lib/published-formula-selection';
 import { resolvePublishedFormulaPlanarControl } from '@/lib/published-formula-planar-controls';
 import { resolveParameterInteraction } from '@/lib/published-parameter-interactions';
+import {
+  COORDINATE_SOURCE_UNIFORM,
+  COORDINATE_VALUE_UNIFORM,
+  hasCoordinateParametersV1,
+  fixedSeedModeV1,
+} from '@/engine/formulas/v1/published-coordinate-parameters-v1';
 
 interface FormulaPanelProps {
   isJulia: boolean;
@@ -84,6 +90,10 @@ export function FormulaPanel({
   const activePublishedDescriptor = publishedDescriptor?.formulaId === currentFormula
     ? publishedDescriptor
     : null;
+  const fixedSeedJulia = fixedSeedModeV1(currentFormula, activePublishedDescriptor?.sourceRevision) === 'julia';
+  const coordinateParameters = activePublishedDescriptor
+    && hasCoordinateParametersV1(currentFormula, activePublishedDescriptor.sourceRevision)
+    && activePublishedDescriptor.parameters.some(parameter => parameter.uniformName === COORDINATE_SOURCE_UNIFORM);
 
   return (
     <div className="space-y-4">
@@ -95,7 +105,7 @@ export function FormulaPanel({
           </Label>
           <div className="flex items-center gap-2">
             <span className="rainbow-text text-xs font-semibold">
-              {isJulia ? t('controls.mode.julia') : t('controls.mode.mandelbrot')}
+              {isJulia ? t('controls.mode.julia') : t(fixedSeedJulia ? 'controls.coordinateParameter.parameterPlane' : 'controls.mode.mandelbrot')}
             </span>
             <Switch id="julia-mode" checked={isJulia} onCheckedChange={onJuliaModeChange} />
           </div>
@@ -103,7 +113,7 @@ export function FormulaPanel({
 
         {!isJulia && (
           <p className="text-xs text-muted-foreground">
-            {t('controls.juliaC.pickHint')}
+            {t(fixedSeedJulia ? 'controls.coordinateParameter.juliaHint' : 'controls.juliaC.pickHint')}
           </p>
         )}
 
@@ -185,7 +195,19 @@ export function FormulaPanel({
         {activePublishedDescriptor ? (
           activePublishedDescriptor.parameters.length > 0 ? (
             <div className="space-y-4">
-              {activePublishedDescriptor.parameters.map((parameter) => (
+              {coordinateParameters && (
+                <CoordinateParameterControl
+                  key={currentFormula}
+                  dynamical={fixedSeedModeV1(currentFormula, activePublishedDescriptor.sourceRevision) === 'dynamical'}
+                  pluginParams={pluginParams}
+                  onChange={onFormulaParamChange}
+                  t={t}
+                />
+              )}
+              {activePublishedDescriptor.parameters.filter(parameter => !coordinateParameters || (
+                parameter.uniformName !== COORDINATE_SOURCE_UNIFORM
+                && parameter.uniformName !== COORDINATE_VALUE_UNIFORM
+              )).map((parameter) => (
                 <PublishedFormulaParameterControl
                   key={parameter.uniformName}
                   formulaId={activePublishedDescriptor.formulaId}
@@ -246,6 +268,48 @@ export function FormulaPanel({
           </p>
         )}
       </div>
+    </div>
+  );
+}
+
+function CoordinateParameterControl({ pluginParams, onChange, t, dynamical = false }: {
+  dynamical?: boolean;
+  pluginParams?: PluginParamRecord;
+  onChange: (name: string, value: PluginParamValue) => void;
+  t: ReturnType<typeof useTranslations>;
+}) {
+  const source = pluginParams?.[COORDINATE_SOURCE_UNIFORM];
+  const fixed = (Array.isArray(source) ? source[0] : source) === 1;
+  const stored = pluginParams?.[COORDINATE_VALUE_UNIFORM];
+  const value: [number, number] = Array.isArray(stored)
+    ? [Number(stored[0] ?? 0), Number(stored[1] ?? 0)] : [0, 0];
+  const label = t('controls.coordinateParameter.value');
+  return (
+    <div className="space-y-3">
+      <Label htmlFor="coordinate-source">{t('controls.coordinateParameter.source')}</Label>
+      <Select value={fixed ? 'fixed' : 'canvas'} onValueChange={next => {
+        onChange(COORDINATE_SOURCE_UNIFORM, [next === 'fixed' ? 1 : 0, 0]);
+      }}>
+        <SelectTrigger id="coordinate-source" aria-label={t('controls.coordinateParameter.source')}>
+          <SelectValue />
+        </SelectTrigger>
+        <SelectContent>
+          <SelectItem value="canvas">{t('controls.coordinateParameter.canvas')}</SelectItem>
+          <SelectItem value="fixed">{t(dynamical ? 'controls.coordinateParameter.dynamical' : 'controls.coordinateParameter.fixed')}</SelectItem>
+        </SelectContent>
+      </Select>
+      <p className="text-xs text-muted-foreground">{t(dynamical ? 'controls.coordinateParameter.dynamicalHint' : 'controls.coordinateParameter.hint')}</p>
+      {fixed && (
+        <>
+          <ParameterExplorationControl value={value} kind="plane" label={label} initiallyOpen
+            onChange={next => onChange(COORDINATE_VALUE_UNIFORM, next)} />
+          <div className="grid grid-cols-2 gap-2">
+            <FormulaComplexDraftInputs value={value} slotName={label}
+              realId="coordinate-value-re" imaginaryId="coordinate-value-im"
+              onCommit={next => onChange(COORDINATE_VALUE_UNIFORM, next)} t={t} />
+          </div>
+        </>
+      )}
     </div>
   );
 }

@@ -4,6 +4,7 @@ import type {
   PublishedFormulaRuntimeResultV1,
 } from '@/engine/formulas/v1';
 import { resolveJuliaRuntimeCapabilityV1 } from '@/engine/formulas/v1/julia-runtime-activation-v1';
+import { hasCoordinateParametersV1, publishedCoordinateExecutionRevisionV1 } from '@/engine/formulas/v1/published-coordinate-parameters-v1';
 import type { FormulaPlugin } from '@/engine/plugins/types';
 import type { FractalParams, PluginParamRecord } from '@/engine/types';
 import { normalizePublishedFormulaParams } from '@/lib/published-formula-params';
@@ -94,7 +95,7 @@ async function resolveCanonicalRuntimeTarget(
     row.formulaId,
     row.sourceRevision,
   );
-  if (!capability.supportsRuntime) {
+  if (!capability.supportsRuntime || hasCoordinateParametersV1(row.formulaId, row.sourceRevision)) {
     return { ok: false, reason: 'julia-unsupported' };
   }
 
@@ -200,7 +201,7 @@ export async function resolvePublishedArtworkRuntime(
   const { plugin } = loaded.value;
   if (
     plugin.id !== target.value.row.formulaId ||
-    plugin.cacheFingerprint !== target.value.row.sourceRevision ||
+    plugin.cacheFingerprint !== (publishedCoordinateExecutionRevisionV1(loaded.value) ?? target.value.row.sourceRevision) ||
     loaded.value.descriptor.formulaId !== target.value.row.formulaId ||
     loaded.value.descriptor.sourceRevision !== target.value.row.sourceRevision ||
     loaded.value.descriptor.semanticHash !== target.value.row.semanticHash

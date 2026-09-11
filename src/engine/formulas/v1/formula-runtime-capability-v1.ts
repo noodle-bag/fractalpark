@@ -6,6 +6,7 @@ import {
 } from './julia-runtime-activation-v1';
 import { renderingImplementationFingerprintV1 } from './rendering-implementation-fingerprint-v1';
 import { publishedRenderingSourceRevisionV1 } from './published-rendering-source-v1';
+import { hasCoordinateParametersV1 } from './published-coordinate-parameters-v1';
 
 const nativeById = new Map(bindings.rows.map(row => [row.runtimeId, row]));
 const refinedById = new Map(
@@ -23,6 +24,11 @@ export function resolveFormulaRuntimeCapabilityV1(
 ): JuliaRuntimeCapabilityResolutionV1 {
   if (!plugin || plugin.id !== formulaId) {
     return resolveJuliaRuntimeCapabilityV1(formulaId, undefined);
+  }
+  // These inputs are exposed as ordinary coordinate parameters. Historical
+  // activation does not make their previously inert Julia switch meaningful.
+  if (hasCoordinateParametersV1(formulaId, publishedRenderingSourceRevisionV1(plugin))) {
+    return { status: 'unsupported', reason: 'unsupported', supportsEditing: false, supportsRuntime: false };
   }
   const native = plugin.source === 'builtin' ? nativeById.get(formulaId) : undefined;
   if (native) {

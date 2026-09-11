@@ -1802,6 +1802,17 @@
         "label": "旋转"
       },
       "formulaParameters": "公式参数",
+      "coordinateParameter": {
+        "source": "坐标来源",
+        "canvas": "跟随画布坐标",
+        "fixed": "固定参数",
+        "value": "坐标参数",
+        "hint": "控制递推中使用的坐标。初始点仍跟随画布，其他公式参数保持独立。",
+        "dynamical": "动力平面（固定参数）",
+        "dynamicalHint": "固定递推坐标，并以画布坐标为初始点。这属于参数探索，不代表传统 Julia；切回后恢复原始初值。",
+        "juliaHint": "Julia 固定系数坐标，并以画布坐标为初始点；保留原有系数变换和退出规则。",
+        "parameterPlane": "参数平面"
+      },
       "formulaNoParameters": "该公式使用内置默认参数, 无需额外调节.",
       "complexReal": "实部",
       "complexImaginary": "虚部",

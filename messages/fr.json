@@ -1802,6 +1802,17 @@
         "label": "Rotation"
       },
       "formulaParameters": "Paramètres de la formule",
+      "coordinateParameter": {
+        "source": "Source des coordonnées",
+        "canvas": "Suivre les coordonnées du canevas",
+        "fixed": "Paramètre fixe",
+        "value": "Paramètre de coordonnées",
+        "hint": "Contrôle la coordonnée utilisée dans la récurrence. Le point initial suit le canevas ; les autres paramètres restent indépendants.",
+        "dynamical": "Plan dynamique (paramètre fixe)",
+        "dynamicalHint": "Fixe la coordonnée de récurrence et utilise le canevas comme points initiaux. Il s’agit d’exploration de paramètres, pas nécessairement de Julia classique ; revenir restaure l’état initial d’origine.",
+        "juliaHint": "Julia fixe la coordonnée du coefficient et utilise le canevas comme points initiaux. Les transformations et règles d’échappement d’origine sont conservées.",
+        "parameterPlane": "Plan des paramètres"
+      },
       "formulaNoParameters": "Cette formule utilise ses valeurs par défaut intégrées et n'a pas besoin de contrôles supplémentaires.",
       "complexReal": "Re",
       "complexImaginary": "Im",

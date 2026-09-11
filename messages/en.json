@@ -1802,6 +1802,17 @@
         "label": "Rotation"
       },
       "formulaParameters": "Formula Parameters",
+      "coordinateParameter": {
+        "source": "Coordinate source",
+        "canvas": "Follow canvas coordinates",
+        "fixed": "Fixed parameter",
+        "value": "Coordinate parameter",
+        "hint": "Controls the coordinate used in the recurrence. The initial point still follows the canvas; other formula parameters stay independent.",
+        "dynamical": "Dynamical plane (fixed parameter)",
+        "dynamicalHint": "Fixes the recurrence coordinate and uses the canvas as initial points. This is parameter exploration, not a classical Julia claim; switching back restores the original initial state.",
+        "juliaHint": "Julia fixes the coefficient coordinate and uses the canvas as initial points. Existing coefficient transforms and escape rules are retained.",
+        "parameterPlane": "Parameter plane"
+      },
       "formulaNoParameters": "This formula uses its built-in defaults and does not need extra controls.",
       "complexReal": "Re",
       "complexImaginary": "Im",

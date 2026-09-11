@@ -1802,6 +1802,17 @@
         "label": "회전"
       },
       "formulaParameters": "수식 파라미터",
+      "coordinateParameter": {
+        "source": "좌표 소스",
+        "canvas": "캔버스 좌표 따르기",
+        "fixed": "고정 매개변수",
+        "value": "좌표 매개변수",
+        "hint": "반복식에 사용할 좌표를 지정합니다. 초기점은 계속 캔버스 좌표를 따르며 다른 매개변수는 독립적으로 유지됩니다.",
+        "dynamical": "동역학 평면 (고정 매개변수)",
+        "dynamicalHint": "반복 좌표를 고정하고 캔버스 좌표를 초기점으로 사용합니다. 전통적 Julia가 아닌 매개변수 탐색이며, 돌아가면 원래 초기 상태가 복원됩니다.",
+        "juliaHint": "Julia는 계수 좌표를 고정하고 캔버스 좌표를 초기점으로 사용합니다. 기존 계수 변환과 탈출 규칙은 유지됩니다.",
+        "parameterPlane": "매개변수 평면"
+      },
       "formulaNoParameters": "이 수식은 내장 기본값을 사용하므로 추가 컨트롤이 필요 없어요.",
       "complexReal": "Re",
       "complexImaginary": "Im",

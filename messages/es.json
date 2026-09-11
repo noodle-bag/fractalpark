@@ -1802,6 +1802,17 @@
         "label": "Rotación"
       },
       "formulaParameters": "Parámetros de la fórmula",
+      "coordinateParameter": {
+        "source": "Origen de coordenadas",
+        "canvas": "Seguir las coordenadas del lienzo",
+        "fixed": "Parámetro fijo",
+        "value": "Parámetro de coordenadas",
+        "hint": "Controla la coordenada de la recurrencia. El punto inicial sigue el lienzo; los demás parámetros permanecen independientes.",
+        "dynamical": "Plano dinámico (parámetro fijo)",
+        "dynamicalHint": "Fija la coordenada de recurrencia y usa el lienzo como puntos iniciales. Es exploración de parámetros, no una afirmación de Julia clásica; al volver se restaura el estado inicial original.",
+        "juliaHint": "Julia fija la coordenada del coeficiente y usa el lienzo como puntos iniciales. Se conservan las transformaciones y reglas de escape originales.",
+        "parameterPlane": "Plano de parámetros"
+      },
       "formulaNoParameters": "Esta fórmula usa sus valores predeterminados integrados y no necesita controles adicionales.",
       "complexReal": "Re",
       "complexImaginary": "Im",

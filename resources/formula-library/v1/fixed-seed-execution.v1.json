@@ -1,0 +1,141 @@
+{
+  "schema": "fractalpark-fixed-seed-execution/v1",
+  "revision": 1,
+  "rows": [
+    {
+      "formulaId": "28c77140-c5f9-557a-93d7-cac12cf08e63",
+      "mode": "julia",
+      "baselineSourceRevision": "a744e912475c8b107645f6454bf76436bab3ecdd5e569fec6d36990841e9105d",
+      "baselineSemanticHash": "19b587a738032c1bfba94b643a76d6bea51d93278a9931a3605f49ebf19fa740",
+      "sourceRevision": "cd8bf3a7e30062b996a3e86622e5e6fa1b11546ebd77f1283b16be61a7008563",
+      "semanticHash": "9804409504b567017c364ae2d41a0a751ac8ed4ee4c7ac3dad37d5296a44786d",
+      "source": "; @language: frm-like/1\n; @stdlib: 1\n; @numeric-profile: standard32\n; @classic-guards: hyperbolic-clamp\nFormula_28c77140_c5f9_557a_93d7_cac12cf08e63 {\n  init:\n    orbitPixel = pixel\n    if !ismand\n      orbitPixel = c\n      sinusoid = sin(orbitPixel)\n      z = pixel\n    else\n      sinusoid = sin(pixel)\n      z = (0, 0)\n    endif\n  loop:\n    z = z * z + sinusoid\n  bailout:\n    |z| < 4\n}"
+    },
+    {
+      "formulaId": "2f0a0f01-53ee-585e-b2bd-6179a0413df1",
+      "mode": "julia",
+      "baselineSourceRevision": "07bbe1018c16f6ab490a8b555300c0fa55a43dee3c99d3e65d5cac54b5de1faa",
+      "baselineSemanticHash": "21bb410c8c94c31b1a7e627daf52254b606642ab00d89cf85b6d993877175ae4",
+      "sourceRevision": "a04b0a4efbbd4074680574b7f6a4f1776c8f2b2d2758dd67153da6bd3c187192",
+      "semanticHash": "a341c8e84a9b59066e89fe89686bcd5d1551990685a1b8e0aa1ae5b1e723d08a",
+      "source": "; @language: frm-like/1\n; @stdlib: 1\n; @numeric-profile: standard32\nFormula_2f0a0f01_53ee_585e_b2bd_6179a0413df1 {\n  init:\n    orbitPixel = pixel\n    if !ismand\n      orbitPixel = c\n      pointValue = orbitPixel\n      z = pixel\n    else\n      pointValue = pixel\n      z = (0, 0)\n    endif\n  loop:\n    z = z * z * z + z * (pointValue - 1) - pointValue\n  bailout:\n    |z| <= 4\n}"
+    },
+    {
+      "formulaId": "31680a23-4d7e-5844-a598-9682609d0ade",
+      "mode": "dynamical",
+      "baselineSourceRevision": "f462266155c7de5023d760f8a4a3d458125a0714533a95e0e971bb15232f25da",
+      "baselineSemanticHash": "cad1c592a91f98b8e2690335541e2a50318a8857c6e99061f2d5c6089557b6a2",
+      "sourceRevision": "f757c7322ee872a6bf22291e7d7be03efca7808c6623c6207d663c7fe3f3c832",
+      "semanticHash": "1e776c7ec0b516538cfd6ea438c24e7940cb3ceebe876f12c150194e75b85be7",
+      "source": "; @language: frm-like/1\n; @stdlib: 1\n; @numeric-profile: standard32\n; @classic-guards: zero-division\nFormula_31680a23_4d7e_5844_a598_9682609d0ade {\n  parameters:\n    pixelSource: real = 0 domain [0, 1]\n    pixelConstant: complex = (0, 0)\n  init:\n    orbitPixel = pixel\n    if pixelSource == 1\n      orbitPixel = pixelConstant\n      z = pixel\n    else\n      z = (0, 0)\n    endif\n  loop:\n    z = 1 / flip(sqr(z) + orbitPixel)\n  bailout:\n    |z| <= 4\n}"
+    },
+    {
+      "formulaId": "34325634-553e-5841-9ae0-bcb17954060c",
+      "mode": "julia",
+      "baselineSourceRevision": "369d52f4967fc2b5734208ca08ec3b490b5a6b18a4869cb02009b679ea9376ea",
+      "baselineSemanticHash": "1bf0dc87c8b869fa7fc6f41b196f0a42ece0e7157d6d6a54fe7939b24cad1877",
+      "sourceRevision": "fc92f1fd64288afd42ebaf892840439bbfb11325ec776e8466401dd40a31c41f",
+      "semanticHash": "ced34c93be99fdfdbe84a0f23ef37af448f026f539eb9e5a7b7be0a0567ca61e",
+      "source": "; @language: frm-like/1\n; @stdlib: 1\n; @numeric-profile: standard32\nFormula_34325634_553e_5841_9ae0_bcb17954060c {\n  init:\n    orbitPixel = pixel\n    if !ismand\n      orbitPixel = c\n      pointValue = orbitPixel\n      z = pixel\n    else\n      pointValue = pixel\n      z = (0, 0)\n    endif\n  loop:\n    z = sqr(z) + pointValue\n  bailout:\n    |z| < 4\n}"
+    },
+    {
+      "formulaId": "550b2811-b28e-552d-af2c-07deea1f019f",
+      "mode": "julia",
+      "baselineSourceRevision": "7ffd97dbb441714329af81885f6db4c283b3764e018f4924ea0fee9be3554acc",
+      "baselineSemanticHash": "beb08a3417d30ccc0387196f4194e9b5a1083f6ab288f5aca30f8433eab551d3",
+      "sourceRevision": "ce63406701325e8dad81921e4bb568c12c9b01b037a4cfdbf4113d5133a5bfc9",
+      "semanticHash": "1b92d232fa3e8b62f5858fef4f85293bdf653f3343337bd75146918adbcdb517",
+      "source": "; @language: frm-like/1\n; @stdlib: 1\n; @numeric-profile: standard32\nFormula_550b2811_b28e_552d_af2c_07deea1f019f {\n  init:\n    orbitPixel = pixel\n    if !ismand\n      orbitPixel = c\n      q = orbitPixel\n      z = pixel\n    else\n      q = pixel\n      z = (0, 0)\n    endif\n  loop:\n    z = sqr(z) * z * z * (q - 1) - q\n  bailout:\n    |z| <= 4\n}"
+    },
+    {
+      "formulaId": "6df24dea-4668-5590-b251-c9bf208aa45d",
+      "mode": "julia",
+      "baselineSourceRevision": "85f8f96c5c8c6184ff3cb2b522c698680b18439a7388d9f000b52cad1d055cad",
+      "baselineSemanticHash": "61d0da7c042e1f1334328958149859b117fef50df636f706bf5f0663660c51ce",
+      "sourceRevision": "f7da97f0c96931e508d9b21509ec656090dda5e7d95b25df98df0593def74c39",
+      "semanticHash": "6c59da29c17767bbcd2ea205ad69ab716736807eb3de569824870eee95203e0b",
+      "source": "; @language: frm-like/1\n; @stdlib: 1\n; @numeric-profile: standard32\nFormula_6df24dea_4668_5590_b251_c9bf208aa45d {\n  init:\n    orbitPixel = pixel\n    if !ismand\n      orbitPixel = c\n      x = real(orbitPixel)\n      y = imag(orbitPixel)\n      orbitConstant = x * (cos(y) + x * sin(y))\n      z = pixel\n    else\n      x = real(pixel)\n      y = imag(pixel)\n      orbitConstant = x * (cos(y) + x * sin(y))\n      z = 0\n    endif\n  loop:\n    z = sqr(z) + orbitConstant\n  bailout:\n    |z| < 4\n}"
+    },
+    {
+      "formulaId": "74a7ad74-f5bd-5e11-8c33-5887487d5180",
+      "mode": "dynamical",
+      "baselineSourceRevision": "cca21bd01e502fd7f95c53fc8a2689d743dfd7de762add84d51bef47c157710c",
+      "baselineSemanticHash": "314a785f84c4f8f4a2398796ab7b393cc06281b0cd3bd81a9d91ebd1ee604cff",
+      "sourceRevision": "2d60c20e129145fb6111f68ac8c6e367117247a09ba2b9f516b8ffb7c90c68a1",
+      "semanticHash": "c7991922a7ff3c4264f9eb39a149c6b80b256e40b2cf80603f09f734abaace05",
+      "source": "; @language: frm-like/1\n; @stdlib: 1\n; @numeric-profile: standard32\nFormula_74a7ad74_f5bd_5e11_8c33_5887487d5180 {\n  parameters:\n    pixelSource: real = 0 domain [0, 1]\n    pixelConstant: complex = (0, 0)\n  init:\n    orbitPixel = pixel\n    if pixelSource == 1\n      orbitPixel = pixelConstant\n      z = pixel\n    else\n      z = (0, 0)\n    endif\n  loop:\n    z = flip(sqr(z) + orbitPixel)\n  bailout:\n    |z| <= 4\n}"
+    },
+    {
+      "formulaId": "962d33f0-f95b-58db-9450-47088ecc26ac",
+      "mode": "julia",
+      "baselineSourceRevision": "a23d1a7e62f4c5ca9e1cbc9c3b492687735bf8f02ca78105675cd5ea02b29aac",
+      "baselineSemanticHash": "db1857c89a9c8bb8e4df913b171bdb10027472c51f8d1fb1ef855c15d0d857cf",
+      "sourceRevision": "85d8bee6a64567391cac9e5a19c65198c092461e70eedd6b52f1cc84abf0406a",
+      "semanticHash": "e11be9b3243c0bb6559463bae66537b7da82d0d39a258184e1dd71682bedce42",
+      "source": "; @language: frm-like/1\n; @stdlib: 1\n; @numeric-profile: standard32\nFormula_962d33f0_f95b_58db_9450_47088ecc26ac {\n  parameters:\n    transform: function = identity classic fn1\n  init:\n    orbitPixel = pixel\n    if !ismand\n      orbitPixel = c\n      q = transform(orbitPixel)\n      z = pixel\n    else\n      q = transform(pixel)\n      z = (0, 0)\n    endif\n  loop:\n    z = sqr(z) * z + z * (q - 1) - q\n  bailout:\n    |z| <= 4\n}"
+    },
+    {
+      "formulaId": "ae504daa-09cc-5a59-8052-c91b9535ff24",
+      "mode": "julia",
+      "baselineSourceRevision": "5223c436a2485552134d951c720b2d52e767ad22fa1e81fe8aed5ee019c1dabd",
+      "baselineSemanticHash": "ce41324ae2d43f240f7428b703665259ec95c9a952c6a05efcbf3dc26b010c5a",
+      "sourceRevision": "25467b3cc76ad5cfca1a56c41acd49c7eb3c561a1175181cdf18fda1841ae0f9",
+      "semanticHash": "b019ce019f0e375073abcb2799f93650cce91c7b74f7e6e91474d1a4ef23c09c",
+      "source": "; @language: frm-like/1\n; @stdlib: 1\n; @numeric-profile: standard32\nFormula_ae504daa_09cc_5a59_8052_c91b9535ff24 {\n  init:\n    orbitPixel = pixel\n    if !ismand\n      orbitPixel = c\n      carrier = orbitPixel\n      z = pixel\n    else\n      carrier = pixel\n      z = (0, 0)\n    endif\n  loop:\n    z = sqr(z) + carrier\n  bailout:\n    |z| < 4\n}"
+    },
+    {
+      "formulaId": "c04cedf4-32ec-5b61-b2da-f8bf988e05e0",
+      "mode": "julia",
+      "baselineSourceRevision": "01ddbf88d0aeb66890a385746116aec8cc3c7f98fbb14079f9c667f0c0565bae",
+      "baselineSemanticHash": "b503591909582241799049d8460b1fbb4124673d1ab65dd6e3984ff37aaac316",
+      "sourceRevision": "3fe95ae9c82fc8d8f2c85a3ee5cfef184ad52524d52af5ea33b24848d60f8c31",
+      "semanticHash": "51765bcff02a528c5fede5acb84ddd2f654da5948ce28dd2d67f17012e7bcc03",
+      "source": "; @language: frm-like/1\n; @stdlib: 1\n; @numeric-profile: standard32\nFormula_c04cedf4_32ec_5b61_b2da_f8bf988e05e0 {\n  init:\n    orbitPixel = pixel\n    if !ismand\n      orbitPixel = c\n      carrier = orbitPixel\n      z = pixel\n    else\n      carrier = pixel\n      z = (0, 0)\n    endif\n  loop:\n    z = z * (sqr(z) + (carrier - 1)) - carrier\n  bailout:\n    |z| <= 4\n}"
+    },
+    {
+      "formulaId": "cefe7738-0e8a-547f-ac85-ac3db2529907",
+      "mode": "dynamical",
+      "baselineSourceRevision": "5b048da1df47860eb8f4f48929360b87cdd535695c7450a4d8aa56fc6ff64262",
+      "baselineSemanticHash": "2dcbdfddacc277de0df0ea7ed4df548a912bb5062a160ae0fa378713c4e035b9",
+      "sourceRevision": "253b7832e63c36cf3989ce7592b3c8f29f61ecfada902bbd5623956c63293e23",
+      "semanticHash": "1bc31495eab1a863695c1cb4e4e8034c94fe5ee6352122e8f6a924b2d4ef348a",
+      "source": "; @language: frm-like/1\n; @stdlib: 1\n; @numeric-profile: standard32\nFormula_cefe7738_0e8a_547f_ac85_ac3db2529907 {\n  parameters:\n    offset: complex = (0, 0) classic p1\n    pixelSource: real = 0 domain [0, 1]\n    pixelConstant: complex = (0, 0)\n  init:\n    orbitPixel = pixel\n    if pixelSource == 1\n      orbitPixel = pixelConstant\n      carrier = orbitPixel\n      z = pixel\n    else\n      carrier = pixel\n      z = (0.5, 0)\n    endif\n  loop:\n    xCoord = real(z)\n    yCoord = imag(z)\n    nextX = -carrier * (xCoord - xCoord * xCoord + yCoord * yCoord) + offset\n    twist = -carrier * (yCoord - 2 * xCoord * yCoord)\n    z = nextX + flip(twist)\n  bailout:\n    |z| <= 100\n}"
+    },
+    {
+      "formulaId": "d170fae4-0295-5149-84e8-acf7254c7162",
+      "mode": "dynamical",
+      "baselineSourceRevision": "15867fb8b4912c69f9aa8cf6d847735561cedfd336215b599fd4b925b0ef62db",
+      "baselineSemanticHash": "5ec106c522892c542c034f607562b39469e790301e872cbebea8caedbb4612a7",
+      "sourceRevision": "0c79aa5cf9aa72cc02d2c5691e13a47971acedcb603020794ddae83f42561cdf",
+      "semanticHash": "788ee137a3a04d056b48279cd26dd5132876a31e4dcbb046b1e9de835b12737c",
+      "source": "; @language: frm-like/1\n; @stdlib: 1\n; @numeric-profile: standard32\nFormula_d170fae4_0295_5149_84e8_acf7254c7162 {\n  parameters:\n    pixelSource: real = 0 domain [0, 1]\n    pixelConstant: complex = (0, 0)\n  init:\n    orbitPixel = pixel\n    if pixelSource == 1\n      orbitPixel = pixelConstant\n      seed = orbitPixel\n      z = pixel\n    else\n      seed = pixel\n      z = (0, 0)\n    endif\n  loop:\n    xCoord = real(z)\n    yCoord = imag(z)\n    squarePart = xCoord * xCoord - yCoord * yCoord\n    crossPart = 2 * xCoord * yCoord\n    z = squarePart + crossPart + seed\n  bailout:\n    |z| < 4\n}"
+    },
+    {
+      "formulaId": "ded18937-1f80-5248-a6f2-be82db2b676e",
+      "mode": "dynamical",
+      "baselineSourceRevision": "79e053af6ebab0241c66bce7e9824bbdb204f763dcdfdd6ac7e5bac09d555a39",
+      "baselineSemanticHash": "bf423b66e6e57b352d13e0cd150b3e09b35c45879cd95f75bf46a12d19cea320",
+      "sourceRevision": "6519114bf78398fdc6387862b45f9e230eb29ff50fc526bb34fba5da4e3cdf3a",
+      "semanticHash": "78eeea0b13f56e6728795eefcb928ff2a9133854ac4f0a90d10be8effa592f2c",
+      "source": "; @language: frm-like/1\n; @stdlib: 1\n; @numeric-profile: standard32\n; @classic-guards: zero-division\nFormula_ded18937_1f80_5248_a6f2_be82db2b676e {\n  parameters:\n    transform: function = identity classic fn1\n    pixelSource: real = 0 domain [0, 1]\n    pixelConstant: complex = (0, 0)\n  init:\n    orbitPixel = pixel\n    if pixelSource == 1\n      orbitPixel = pixelConstant\n      z = pixel\n    else\n      z = 0.5\n    endif\n  loop:\n    z = z * orbitPixel - orbitPixel / transform(z)\n  bailout:\n    |z| < 8\n}"
+    },
+    {
+      "formulaId": "e25a768a-a075-5ecb-bb65-9271354a94e2",
+      "mode": "dynamical",
+      "baselineSourceRevision": "0c804df406522988a9d580210b58ad80f743eb09ced86221e1011a192ee7eb36",
+      "baselineSemanticHash": "fc714601f91cf7d1e73ba6f5770dda1241804e9dde95f501b3d6f2b9b4432eee",
+      "sourceRevision": "dedcc41c94197b8c58bdef04f12a2a24aea477e83bf1cfb1010546c0e849d37e",
+      "semanticHash": "c84879d5fd6708e061b0417e0005caa69a1273710f873a70a2096138123e1d36",
+      "source": "; @language: frm-like/1\n; @stdlib: 1\n; @numeric-profile: standard32\nFormula_e25a768a_a075_5ecb_bb65_9271354a94e2 {\n  parameters:\n    pixelSource: real = 0 domain [0, 1]\n    pixelConstant: complex = (0, 0)\n  init:\n    orbitPixel = pixel\n    if pixelSource == 1\n      orbitPixel = pixelConstant\n      carrier = orbitPixel\n      z = pixel\n    else\n      carrier = pixel\n      z = (0, 0)\n    endif\n  loop:\n    z = sqr(z) * z + z * (carrier - 1) - carrier\n  bailout:\n    abs(z) <= 4\n}"
+    },
+    {
+      "formulaId": "fd6c2fac-31db-55f1-9d93-726bd261671d",
+      "mode": "dynamical",
+      "baselineSourceRevision": "da1f561fb7db0d001bc9018b144cf4bf2aaef4f2d7b5cff7516699177895d559",
+      "baselineSemanticHash": "635c1b2cc7fecfdee224b6dea40c62914c9d26e6947c3dc862a3a529825f577c",
+      "sourceRevision": "e412999e758cdaa7992ac14dc0b52ee7196dbc0fc831b23335949c73174b06e1",
+      "semanticHash": "4f4b4c2d2c58e70f2fd83725f03f92454d8a23e8034d10c5f47122bb116db08d",
+      "source": "; @language: frm-like/1\n; @stdlib: 1\n; @numeric-profile: standard32\nFormula_fd6c2fac_31db_55f1_9d93_726bd261671d {\n  parameters:\n    parameter1: complex = (0, 0) classic p1\n    pixelSource: real = 0 domain [0, 1]\n    pixelConstant: complex = (0, 0)\n  init:\n    orbitPixel = pixel\n    if pixelSource == 1\n      orbitPixel = pixelConstant\n      z = pixel\n      x = |z|\n    else\n      z = p1\n      x = |z|\n    endif\n  loop:\n    if 0.9999999999 < x\n      z = cosh(z) + orbitPixel\n    endif\n    z = sqr(z) + orbitPixel\n    x = |z|\n  bailout:\n    x <= 4\n}"
+    }
+  ]
+}

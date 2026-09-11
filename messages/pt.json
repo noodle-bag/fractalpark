@@ -1802,6 +1802,17 @@
         "label": "Rotação"
       },
       "formulaParameters": "Parâmetros da Fórmula",
+      "coordinateParameter": {
+        "source": "Origem das coordenadas",
+        "canvas": "Seguir as coordenadas da tela",
+        "fixed": "Parâmetro fixo",
+        "value": "Parâmetro de coordenadas",
+        "hint": "Controla a coordenada usada na recorrência. O ponto inicial acompanha a tela; os outros parâmetros permanecem independentes.",
+        "dynamical": "Plano dinâmico (parâmetro fixo)",
+        "dynamicalHint": "Fixa a coordenada de recorrência e usa a tela como pontos iniciais. É exploração de parâmetros, não uma afirmação de Julia clássica; voltar restaura o estado inicial original.",
+        "juliaHint": "Julia fixa a coordenada do coeficiente e usa a tela como pontos iniciais. As transformações e regras de escape originais são mantidas.",
+        "parameterPlane": "Plano de parâmetros"
+      },
       "formulaNoParameters": "Esta fórmula usa seus padrões integrados e não precisa de controles extras.",
       "complexReal": "Re",
       "complexImaginary": "Im",
