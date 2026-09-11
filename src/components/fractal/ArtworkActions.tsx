@@ -39,6 +39,7 @@ import {
 } from '@/hooks/useArtworkActions';
 
 interface ArtworkActionsProps {
+  frameReady?: boolean;
   status: ArtworkActionStatus;
   cloudPhase?: CloudSyncPhase;
   /** Prefilled save-dialog name — the current draft title, or a fallback. */
@@ -65,6 +66,7 @@ const ACTION_ICONS = {
 } satisfies Record<ArtworkOperation, typeof Save>;
 
 export function ArtworkActions({
+  frameReady = true,
   status,
   cloudPhase = 'idle',
   defaultSaveName,
@@ -113,12 +115,12 @@ export function ArtworkActions({
   };
 
   const submitSave = async () => {
-    if (!saveName.trim() || pending) return;
+    if (!saveName.trim() || pending || !frameReady) return;
     if (await onSave(saveName.trim())) setSaveOpen(false);
   };
 
   const submitExport = async () => {
-    if (pending) return;
+    if (pending || !frameReady) return;
     if (await onExport(exportScale, exportQuality)) setExportOpen(false);
   };
 
@@ -140,6 +142,7 @@ export function ArtworkActions({
           <ActionButton
             label={t('save.label')}
             operation="save"
+            disabled={!frameReady}
             status={status}
             onClick={() => {
               setSaveName(defaultSaveName);
@@ -162,6 +165,7 @@ export function ArtworkActions({
           <ActionButton
             label={t('export.label')}
             operation="export"
+            disabled={!frameReady}
             status={status}
             onClick={() => {
               setExportOpen(true);
@@ -230,7 +234,7 @@ export function ArtworkActions({
                 <button
                   type="button"
                   onClick={onConflictSaveAsNew}
-                  disabled={conflictBusy}
+                  disabled={conflictBusy || !frameReady}
                   className="rounded border border-white/25 px-2 py-1 text-[11px] hover:bg-white/10 disabled:opacity-50"
                 >
                   {t('conflict.saveAsNew')}
@@ -296,7 +300,7 @@ export function ArtworkActions({
             <Button variant="outline" onClick={() => setSaveOpen(false)}>
               {t('common.cancel')}
             </Button>
-            <Button disabled={pending || !saveName.trim()} onClick={submitSave}>
+            <Button disabled={pending || !frameReady || !saveName.trim()} onClick={submitSave}>
               {pending ? t('save.pending') : t('save.confirm')}
             </Button>
           </DialogFooter>
@@ -334,7 +338,7 @@ export function ArtworkActions({
             <Button variant="outline" onClick={() => setExportOpen(false)}>
               {t('common.cancel')}
             </Button>
-            <Button disabled={pending} onClick={submitExport}>
+            <Button disabled={pending || !frameReady} onClick={submitExport}>
               {pending ? t('export.pending') : t('export.confirm')}
             </Button>
           </DialogFooter>
@@ -345,11 +349,13 @@ export function ArtworkActions({
 }
 
 function ActionButton({
+  disabled = false,
   label,
   operation,
   status,
   onClick,
 }: {
+  disabled?: boolean;
   label: string;
   operation: ArtworkOperation;
   status: ArtworkActionStatus;
@@ -363,7 +369,7 @@ function ActionButton({
       type="button"
       variant="ghost"
       size="icon"
-      disabled={status.phase === 'pending'}
+      disabled={disabled || status.phase === 'pending'}
       className="size-11 text-white hover:bg-white/15 hover:text-white"
       onClick={onClick}
       aria-label={label}

@@ -14,10 +14,12 @@ export function useFractalRenderWorker() {
     return clientRef.current.render(request);
   }, []);
 
+  const cancel = useCallback(() => clientRef.current?.cancelPending(), []);
+
   useEffect(() => () => {
     clientRef.current?.dispose();
     clientRef.current = null;
   }, []);
 
-  return { render };
+  return { render, cancel };
 }

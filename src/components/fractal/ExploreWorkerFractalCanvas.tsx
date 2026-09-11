@@ -1,6 +1,6 @@
 'use client';
 
-import { useCallback, useEffect, useRef } from 'react';
+import { useCallback, useEffect, useLayoutEffect, useRef } from 'react';
 import { useTranslations } from 'next-intl';
 import { Loader2 } from 'lucide-react';
 import { useCanvasInteraction } from '@/hooks/useCanvasInteraction';
@@ -10,9 +10,13 @@ import type {
   CreatorRemixSource,
 } from '@/lib/creator-analytics';
 import type { FractalCanvasProps } from './FractalCanvas';
-import type { FractalParams } from '@/engine/types';
+import type { FractalParams, PluginParamRecord } from '@/engine/types';
+
+const EMPTY_PLUGIN_PARAMS: PluginParamRecord = {};
 
 interface ExploreWorkerFractalCanvasProps extends FractalCanvasProps {
+  renderEnabled?: boolean;
+  onFrameReadyChange?: (ready: boolean) => void;
   renderAttribution?: CreatorChangeAttribution | null;
   renderRemixSource?: CreatorRemixSource | null;
   onRenderComplete?: (
@@ -33,7 +37,7 @@ export default function ExploreWorkerFractalCanvas({
   insideColoring,
   orbitTrap,
   transformId = 'none',
-  pluginParams = {},
+  pluginParams = EMPTY_PLUGIN_PARAMS,
   useSSAA,
   adaptiveIterations,
   pipelineVersion = 1,
@@ -42,6 +46,8 @@ export default function ExploreWorkerFractalCanvas({
   onBoundsChange,
   onPointSelect,
   onCanvasReady,
+  renderEnabled = true,
+  onFrameReadyChange,
   renderAttribution = null,
   renderRemixSource = null,
   onRenderComplete,
@@ -52,17 +58,24 @@ export default function ExploreWorkerFractalCanvas({
   const renderAttributionRef = useRef<CreatorChangeAttribution | null>(null);
   const renderRemixSourceRef = useRef<CreatorRemixSource | null>(null);
   const renderGenerationRef = useRef(0);
-  const { render } = useFractalRenderWorker();
+  const requestedSizeRef = useRef({ width: 0, height: 0 });
+  const { render, cancel } = useFractalRenderWorker();
+  const cancelRender = useCallback(() => {
+    ++renderGenerationRef.current;
+    cancel();
+  }, [cancel]);
 
-  useEffect(() => {
+  useLayoutEffect(() => {
     renderAttributionRef.current = renderAttribution;
     renderRemixSourceRef.current = renderRemixSource;
   }, [renderAttribution, renderRemixSource]);
 
   useCanvasInteraction(canvasRef, {
-    onBoundsChange: onBoundsChange ?? (() => {}),
+    onBoundsChange: useCallback((nextBounds) => {
+      if (renderEnabled) onBoundsChange?.(nextBounds);
+    }, [onBoundsChange, renderEnabled]),
     initialBounds: bounds,
-    onPointSelect,
+    onPointSelect: renderEnabled ? onPointSelect : undefined,
   });
 
   useEffect(() => {
@@ -76,11 +89,10 @@ export default function ExploreWorkerFractalCanvas({
     const dpr = window.devicePixelRatio || 1;
     const width = Math.max(1, Math.round(rect.width * dpr));
     const height = Math.max(1, Math.round(rect.height * dpr));
-    const resized = canvas.width !== width || canvas.height !== height;
-    if (resized) {
-      canvas.width = width;
-      canvas.height = height;
-    }
+    // Keep the backing pixels until their replacement is ready. CSS scales
+    // the last good frame while a new viewport size is being rendered.
+    const resized = requestedSizeRef.current.width !== width || requestedSizeRef.current.height !== height;
+    requestedSizeRef.current = { width, height };
     return { width, height, resized };
   }, []);
 
@@ -96,7 +108,7 @@ export default function ExploreWorkerFractalCanvas({
     const generation = ++renderGenerationRef.current;
     canvas.dataset.renderStatus = 'pending';
     canvas.setAttribute('aria-busy', 'true');
-    delete canvas.dataset.renderedFormulaId;
+    onFrameReadyChange?.(false);
 
     void render({
       generation,
@@ -114,11 +126,17 @@ export default function ExploreWorkerFractalCanvas({
           frame.bitmap.close();
           throw new Error('2D canvas is not supported on this device');
         }
-        context.drawImage(frame.bitmap, 0, 0, canvas.width, canvas.height);
-        frame.bitmap.close();
+        try {
+          if (canvas.width !== size.width) canvas.width = size.width;
+          if (canvas.height !== size.height) canvas.height = size.height;
+          context.drawImage(frame.bitmap, 0, 0, size.width, size.height);
+        } finally {
+          frame.bitmap.close();
+        }
         canvas.dataset.renderStatus = 'ready';
         canvas.dataset.renderedFormulaId = frame.formulaId;
         canvas.setAttribute('aria-busy', 'false');
+        onFrameReadyChange?.(true);
         onRenderComplete?.(attribution, remixSource);
       })
       .catch((error: unknown) => {
@@ -129,9 +147,18 @@ export default function ExploreWorkerFractalCanvas({
         canvas.dataset.renderStatus = 'error';
         canvas.setAttribute('aria-busy', 'false');
       });
-  }, [onRenderComplete, render, resize]);
+  }, [onFrameReadyChange, onRenderComplete, render, resize]);
 
-  useEffect(() => {
+  useLayoutEffect(() => {
+    if (!renderEnabled) {
+      paramsRef.current = null;
+      if (canvasRef.current) {
+        canvasRef.current.dataset.renderStatus = 'pending';
+        canvasRef.current.setAttribute('aria-busy', 'true');
+      }
+      onFrameReadyChange?.(false);
+      return;
+    }
     const params: FractalParams = {
       maxIterations,
       paletteIndex,
@@ -157,7 +184,11 @@ export default function ExploreWorkerFractalCanvas({
       renderAttributionRef.current,
       renderRemixSourceRef.current,
     );
+    return cancelRender;
   }, [
+    cancelRender,
+    renderEnabled,
+    onFrameReadyChange,
     adaptiveIterations,
     bounds,
     customGradient,
@@ -207,6 +238,9 @@ export default function ExploreWorkerFractalCanvas({
       <div role="status" className="pointer-events-none absolute left-3 top-3 hidden items-center gap-2 rounded-md bg-background/90 px-3 py-2 text-sm peer-data-[render-status=pending]:flex">
         <Loader2 className="h-4 w-4 animate-spin" aria-hidden="true" />
         {t('loading')}
+      </div>
+      <div role="alert" className="pointer-events-none absolute bottom-3 left-3 hidden rounded-md bg-background/90 px-3 py-2 text-sm peer-data-[render-status=error]:block">
+        {t('unavailable', { formula })}
       </div>
     </div>
   );

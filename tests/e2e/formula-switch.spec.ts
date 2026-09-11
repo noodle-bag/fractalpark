@@ -184,7 +184,8 @@ test.describe('Published Formula Library', () => {
     await page.route(`**/${ROLLBACK_REPRESENTATIVE.definitionPath}`, async (route) => {
       await route.fulfill({ status: 503, contentType: 'text/plain', body: 'unavailable' });
     });
-    await page.goto('/en/explore');
+    // Pin the starting artwork; the empty-entry default is tested separately.
+    await page.goto('/en/explore?fm=m');
     await waitForFractalCanvasReady(page);
     const canvas = page.locator('[data-testid="fractal-canvas"]');
     await expect(canvas).toHaveAttribute('data-render-status', 'ready', {
@@ -420,9 +421,9 @@ test.describe('Published Formula Library', () => {
 
     await page.goto(craftedHref(1.5));
     await waitForFractalCanvasReady(page);
-    await expect(
-      page.getByText(HARD_DOMAIN_REPRESENTATIVE.displayName, { exact: true }),
-    ).toBeVisible({ timeout: 60_000 });
+    await expect(page.getByTestId('explore-root')).toHaveAttribute(
+      'data-formula-id', HARD_DOMAIN_REPRESENTATIVE.formulaId,
+    );
     await expect(page.getByRole('spinbutton', { name: 'phoenixMultiP' })).toHaveValue('0.5');
     await expect.poll(
       () => {
@@ -457,9 +458,9 @@ test.describe('Published Formula Library', () => {
     await page.goBack();
     await expect(page).toHaveURL(/\/en\/explore\?/, { timeout: 60_000 });
     await waitForFractalCanvasReady(page);
-    await expect(
-      page.getByText(HARD_DOMAIN_REPRESENTATIVE.displayName, { exact: true }),
-    ).toBeVisible({ timeout: 60_000 });
+    await expect(page.getByTestId('explore-root')).toHaveAttribute(
+      'data-formula-id', HARD_DOMAIN_REPRESENTATIVE.formulaId,
+    );
     await expect(page.getByRole('spinbutton', { name: 'phoenixMultiP' })).toHaveValue('0.5');
     await expect.poll(
       () => new URL(page.url()).searchParams.get('pp'),

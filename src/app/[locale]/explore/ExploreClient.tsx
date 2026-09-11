@@ -96,6 +96,7 @@ type ExploreFormulaResolution =
 const NORMALIZED_DEFAULT_FRACTAL_DOCUMENT = normalizeFractalDocument(
   DEFAULT_FRACTAL_DOCUMENT,
 );
+const EMPTY_PLUGIN_PARAMS: PluginParamRecord = {};
 
 function creatorDocumentState(document: FractalDocument) {
   return {
@@ -190,7 +191,7 @@ function ExploreClient({ posterImage }: { posterImage?: string }) {
     outsideColoring,
     insideColoring,
     transformId,
-    pluginParams = {},
+    pluginParams = EMPTY_PLUGIN_PARAMS,
     orbitTrap,
     useSSAA,
     adaptiveIterations,
@@ -234,6 +235,7 @@ function ExploreClient({ posterImage }: { posterImage?: string }) {
       };
     });
   const canvasElRef = useRef<HTMLCanvasElement | null>(null);
+  const [isFrameReady, setIsFrameReady] = useState(false);
   const pickToastTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
 
   // Cloud surfaces hoist above every consumer effect (deps evaluate at
@@ -764,7 +766,17 @@ function ExploreClient({ posterImage }: { posterImage?: string }) {
     pinDraftParam,
   ]);
 
-  const getCanvas = useCallback(() => canvasElRef.current, []);
+  const getCanvas = useCallback(() => {
+    const canvas = canvasElRef.current;
+    return canvas?.isConnected &&
+      publishedActionPendingCount === 0 &&
+      !handoffTargetId && !handoffError &&
+      formulaResolution?.success === true &&
+      formulaResolution.formulaId === formula &&
+      canvas.dataset.renderStatus === 'ready' &&
+      canvas.dataset.renderedFormulaId === formula
+      ? canvas : null;
+  }, [formula, formulaResolution, handoffError, handoffTargetId, publishedActionPendingCount]);
 
   const artworkActions = useArtworkActions({
     document,
@@ -1357,8 +1369,10 @@ function ExploreClient({ posterImage }: { posterImage?: string }) {
             {cloudDraft.draftTitle}
           </div>
         )}
-        {isFormulaReady && !isPreviewPlaying && (
+        {!isPreviewPlaying && (
           <ExploreWorkerFractalCanvas
+            renderEnabled={isFormulaReady && publishedActionPendingCount === 0}
+            onFrameReadyChange={setIsFrameReady}
             paletteIndex={paletteIndex}
             maxIterations={effectiveIterations}
             bounds={bounds}
@@ -1411,7 +1425,7 @@ function ExploreClient({ posterImage }: { posterImage?: string }) {
           />
         )}
         {!isFormulaReady && (
-          <div className="flex h-full w-full items-center justify-center bg-neutral-950 p-8 text-center text-neutral-200">
+          <div role="status" className="pointer-events-none absolute bottom-3 left-3 right-3 flex justify-center rounded-md bg-neutral-950/85 p-3 text-center text-neutral-200">
             <div className="max-w-md">
               {activeResolution && !activeResolution.success && (
                 <AlertTriangle className="mx-auto mb-3 h-6 w-6 text-amber-400" />
@@ -1426,14 +1440,15 @@ function ExploreClient({ posterImage }: { posterImage?: string }) {
           </div>
         )}
         <ArtworkActions
+          frameReady={isFormulaReady && publishedActionPendingCount === 0 && !isPreviewPlaying && isFrameReady}
           status={artworkActions.status}
           cloudPhase={artworkActions.cloudPhase}
           defaultSaveName={cloudDraft.draftTitle ?? 'Untitled'}
           onClearStatus={artworkActions.clearStatus}
-          onSave={artworkActions.save}
+          onSave={async (name) => getCanvas() ? artworkActions.save(name) : false}
           onDownload={artworkActions.download}
           onImport={artworkActions.importFile}
-          onExport={artworkActions.exportPng}
+          onExport={async (scale, ssaa) => getCanvas() ? artworkActions.exportPng(scale, ssaa) : false}
           onReset={handleResetView}
           onConflictReload={() => {
             // Reload discards the in-memory edits that conflicted — confirm
@@ -1457,15 +1472,15 @@ function ExploreClient({ posterImage }: { posterImage?: string }) {
             });
           }}
           onConflictSaveAsNew={() => {
-            if (conflictBusy) return;
+            const canvas = getCanvas();
+            if (conflictBusy || !canvas) return;
             setConflictBusy(true);
             const name = cloudDraft.draftTitle ?? 'Untitled';
-            const canvas = getCanvas();
             void cloudDraft
               .saveAsNewDraft({
                 name,
                 document,
-                thumbnail: canvas ? captureThumbnail(canvas) : '',
+                thumbnail: captureThumbnail(canvas),
                 formulaAssets: readEffectiveFormulaAssets(document.formula.formulaId),
               })
               .then((result) => {

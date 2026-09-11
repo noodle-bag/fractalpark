@@ -143,7 +143,7 @@ export class FractalRenderWorkerClient {
     pending.resolve(response);
   }
 
-  private cancelPending(): void {
+  cancelPending(): void {
     if (!this.pending) return;
     const pending = this.pending;
     this.pending = null;
