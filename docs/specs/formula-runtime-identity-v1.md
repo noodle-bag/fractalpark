@@ -196,6 +196,11 @@ Compare default and deep-zoom compositions and animation times
 `0`, `0.25`, `0.5`, `0.75`, and `1`. Preview must match frame zero under matching
 render settings. Inspect orbit/terminal evidence as well as color output.
 
+Animation endpoints retain the stored camera values, including negative rotation,
+rather than applying angle normalization or logarithmic round-trips. Equivalent
+angles can produce different GPU pixels. The existing minimum-zoom guard remains;
+interior interpolation and timeline durations are unchanged.
+
 Use deterministic same-environment baselines, explicit justified tolerances,
 unaffected formula controls, and visual review. Neither cross-GPU pixel equality
 nor an arbitrary blur/noise threshold is a universal correctness criterion.

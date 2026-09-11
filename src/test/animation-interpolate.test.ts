@@ -320,6 +320,16 @@ describe('animation interpolate engine', () => {
   });
 
   describe('interpolateAtTime', () => {
+    it('preserves negative rotation and camera bits at frame zero and loop return', () => {
+      const first = { centerX: 0.9023018956, centerY: -2.1732329336, zoom: 0.59, rotation: -2.87 };
+      const last = { ...first, zoom: 270.31, rotation: -2.1 };
+      const timeline = buildTimeline([{ id: 'a', bounds: first }, { id: 'b', bounds: last }]);
+      const duration = totalDuration(timeline);
+      expect(interpolateAtTime(timeline, duration, 0)).toEqual(first);
+      expect(interpolateAtTime(timeline, duration, duration)).toEqual(first);
+      expect(interpolateAtTime(timeline, duration, timeline[1].startOffset)).toEqual(last);
+      expect(interpolateAtTime(timeline, duration, 0)).not.toBe(first);
+    });
     // Use keyframes that do NOT trigger midpoint insertion, so segment
     // indices are predictable for the assertions below.
     // k1→k2: displacement=√(0.01²+0.01²)≈0.014, toViewportWidth=2/100=0.02, ratio≈0.7 < 20 ✓

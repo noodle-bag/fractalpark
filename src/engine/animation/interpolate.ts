@@ -255,7 +255,8 @@ export function interpolateAtTime(
   }
 
   // Normalize time to loop
-  const normalizedTime = ((time % totalDur) + totalDur) % totalDur;
+  const loopTime = time % totalDur;
+  const normalizedTime = loopTime < 0 ? loopTime + totalDur : loopTime;
 
   // Find which segment we're in
   let segment: TimelineSegment | null = null;
@@ -275,6 +276,13 @@ export function interpolateAtTime(
   // Calculate local t within segment (0-1)
   const localTime = normalizedTime - segment.startOffset;
   const t = Math.max(0, Math.min(1, localTime / segment.duration));
+
+  // Equivalent rotations and log/exp round-trips need not produce identical
+  // GPU pixels. Preserve the exact keyframe at an endpoint, including frame 0.
+  if (t === 0 || t === 1) {
+    const endpoint = t === 0 ? segment.from : segment.to;
+    return { ...endpoint, zoom: Math.max(endpoint.zoom, 1e-6), rotation: endpoint.rotation ?? 0 };
+  }
 
   // Zoom uses logarithmic interpolation
   const zoom = logZoomLerp(segment.from.zoom, segment.to.zoom, t);

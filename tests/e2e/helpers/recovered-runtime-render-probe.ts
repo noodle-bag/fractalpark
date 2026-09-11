@@ -4,6 +4,7 @@ import { resolveFormulaReference } from '@/lib/formula-resolver';
 import { resolvePublishedArtworkRuntime } from '@/lib/published-artwork-runtime';
 import { buildPublishedArtworkCollection, buildPublishedArtworkPlayback } from '@/lib/published-artworks';
 import presets from '../../../public/gallery-presets.json';
+import { buildTimeline, totalDuration, interpolateAtTime } from '@/engine/animation/interpolate';
 
 export async function probe(name: string) {
   registerBuiltins({ quiet: true });
@@ -19,10 +20,11 @@ export async function probe(name: string) {
   if (!gl) throw new Error('webgl-unavailable');
   const native = new FractalRenderer(gl);
   const published = new FractalRenderer(gl, { formulaPlugin: gallery.value.formulaPlugin });
-  const draw = async (canonical: boolean, isJulia: boolean, index: number, tiled = false) => {
+  const draw = async (canonical: boolean, isJulia: boolean, index: number, tiled = false,
+    bounds = playback.animation.keyframes[index].bounds) => {
     const base = canonical ? gallery.value.params : playback.params;
     const params = { ...base, formula: canonical ? base.formula : explore.plugin.id,
-      isJulia, bounds: playback.animation.keyframes[index].bounds,
+      isJulia, bounds,
       maxIterations: 200, adaptiveIterations: false, useSSAA: false,
       ...(tiled ? { _tileInfo: { fullWidth: 160, fullHeight: 100, offsetX: 0, offsetY: 0 } } : {}),
     };
@@ -42,7 +44,30 @@ export async function probe(name: string) {
         differencesByMode.push(differences(frame, await draw(true, isJulia, index, true)));
       }
     }
-    return { differencesByMode, png: canvas.toDataURL() };
+    const timeline = buildTimeline(playback.animation.keyframes);
+    const duration = totalDuration(timeline);
+    const frames = [];
+    let frameZero: Uint8Array | undefined;
+    for (const time of [0, 0.25, 0.5, 0.75, 1]) {
+      const bounds = interpolateAtTime(timeline, duration, duration * time);
+      const start = performance.now();
+      const pixels = await draw(true, true, 0, false, bounds);
+      const ms = performance.now() - start;
+      if (time === 0) frameZero = pixels;
+      const png = canvas.toDataURL();
+      const colors = new Set<number>();
+      for (let index = 0; index < pixels.length; index += 4) {
+        colors.add((pixels[index] << 16) | (pixels[index + 1] << 8) | pixels[index + 2]);
+      }
+      frames.push({ time, ms, colors: colors.size, png,
+        crossPathDifference: differences(pixels, await draw(false, true, 0, false, bounds)),
+        repeatDifference: differences(pixels, await draw(true, true, 0, false, bounds)),
+      });
+    }
+    return { differencesByMode, frames,
+      previewDifference: differences(frameZero!, await draw(true, true, 0, false, playback.params.bounds)),
+      png: canvas.toDataURL(),
+    };
   } finally {
     native.dispose(); published.dispose();
     gl.getExtension('WEBGL_lose_context')?.loseContext();
