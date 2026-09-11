@@ -107,6 +107,8 @@ describe("PublishedFormulaLibrary", () => {
     const { rerender } = render(<PublishedFormulaLibrary currentFormula="mandelbrot" loadClient={loadClient} onSelect={onSelect} />);
     await waitFor(() => expect(screen.getByTestId('published-formula-current')).toHaveTextContent('classic-mandelbrot'));
     expect(screen.getByRole('link', { name: 'formula.library.details' })).toHaveAttribute('href', '/en/formulas/00e14aa8-b766-54ea-a359-3f5d20d329b7');
+    expect(screen.getByRole('link', { name: 'formula.library.details' })).toHaveClass('h-5', 'w-5');
+    expect(screen.getByTestId('published-formula-current')).toHaveClass('leading-5');
     rerender(<PublishedFormulaLibrary currentFormula="fd4db987-1bd3-5ab0-983f-9a9bb01d0304" loadClient={loadClient} onSelect={onSelect} />);
     expect(screen.getByTestId('published-formula-current')).toHaveTextContent('fractint-fatso');
     expect(screen.getByRole('link', { name: 'formula.library.details' })).toHaveAttribute('href', '/en/formulas/fd4db987-1bd3-5ab0-983f-9a9bb01d0304');

@@ -191,7 +191,7 @@ export function PublishedFormulaLibrary({
         </p>
         <div className="flex min-w-0 items-start gap-1">
           <p
-            className="min-w-0 break-words text-sm font-medium [overflow-wrap:anywhere]"
+            className="min-w-0 break-words text-sm leading-5 font-medium [overflow-wrap:anywhere]"
             data-formula-id={currentFormula}
             data-testid="published-formula-current"
           >
@@ -202,7 +202,7 @@ export function PublishedFormulaLibrary({
               href={`/${locale}${identity.canonicalPath}`}
               aria-label={t('formula.library.details', { name: activeFormulaName })}
               title={t('formula.library.details', { name: activeFormulaName })}
-              className="inline-flex h-8 w-8 shrink-0 items-center justify-center rounded-md text-muted-foreground hover:bg-accent hover:text-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
+              className="inline-flex h-5 w-5 shrink-0 items-center justify-center rounded-md text-muted-foreground hover:bg-accent hover:text-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
             >
               <ArrowRight className="h-4 w-4" aria-hidden="true" />
             </a>
