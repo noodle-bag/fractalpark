@@ -1,6 +1,6 @@
 # Changelog
 
-## 0.4.20 - Unreleased
+## 0.4.20 - 2026-09-12
 
 More reliable exploration and parameter editing, with clearer formula identities and consistent artwork playback.
 
