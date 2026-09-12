@@ -1,5 +1,42 @@
 # Changelog
 
+## 0.4.20 - Unreleased
+
+More reliable exploration and parameter editing, with clearer formula identities and consistent artwork playback.
+
+### Added
+
+- Added semantic parameter controls for reviewed complex and real parameters, including plane, magnitude/angle, scalar, independent-component, and count controls while retaining precise numeric input and existing stored values.
+- Added formula-origin labels and localized links from Explore to published formula details.
+- Added consent-aware creation analytics that distinguish successful user edits from initialization, restoration, automatic playback, failed rendering, and internal traffic.
+- Added parameter/mode and rendering-identity contracts with regression coverage for typed bindings, old artwork identities, first frames, and cross-surface rendering.
+
+### Fixed
+
+- Fixed saving artwork that combines supported Julia mode and animation keyframes without losing its published formula identity.
+- Aligned empty Explore and Reset Artwork with the adjustable-power Classic Mandelbrot, preserving explicit artwork state and keeping the previous artwork when reset loading fails.
+- Removed unrelated introductory content from Explore's creation interface.
+- Kept the last successfully rendered canvas visible during formula selection, with cancellable background compilation and protection against stale results; capture actions wait for a matching static frame.
+- Separated verified Julia controls from ordinary formula and coordinate parameters, restored reviewed legacy formula bindings, and reused the complex editor without removing precise input.
+- Restored detail in reviewed Mandelbox, Cosh Mandelbrot, and Zaslavsky Map rendering paths and corrected Mandelbox parameter bindings across supported consumers.
+- Restored Newton Cosh's reviewed hyperbolic-function calculation without changing its convergence threshold or enabling Julia mode.
+- Preserved exact camera values at animation keyframe endpoints, including the initial frame, and aligned supported Gallery playback with canonical Julia runtime qualification.
+- Explained unsupported Julia playback and loading failures in all seven locales while retaining the saved image and hiding unavailable fullscreen playback controls.
+
+### Changed
+
+- Separated source qualification from render-cache identity while preserving existing artwork IDs and parameter formats.
+- Kept heavyweight formula-asset verification path-scoped and made release checks validate immutable delivery facts before publication.
+
+### Removed
+
+- Removed the unused Clarity integration.
+
+### Compatibility notes
+
+- Magnet Copper Spores remains a static artwork because its Julia runtime is not enabled; no parameter-plane animation is substituted.
+- Corrected rendering can change details and local colors in affected artworks. Saved compositions and Gallery image assets are unchanged; pixel equality across different sampling settings or GPUs is not guaranteed.
+
 ## 0.4.19 - 2026-09-02
 
 Unified Formula Library: FractalPark now publishes a source-readable Standard catalog while keeping the existing Classic runtime as an explicit overlapping collection rather than the public total.

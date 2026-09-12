@@ -87,7 +87,7 @@ test.describe('shared canonical source workspace', () => {
     await expect(page.getByTestId('fractal-canvas')).toBeVisible({ timeout: 30_000 });
 
     await editor.click();
-    await page.keyboard.press('Control+A');
+    await page.keyboard.press('ControlOrMeta+A');
     await page.keyboard.insertText('not canonical');
     await expect(page.getByTestId('formula-invalid-draft')).toBeVisible({
       timeout: 15_000,

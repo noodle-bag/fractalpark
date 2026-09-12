@@ -1,4 +1,5 @@
 import { readFileSync } from "node:fs";
+import { readHistoricalJuliaSourceInput } from "./fixtures/historical-julia-source-inputs";
 import { join } from "node:path";
 
 import { describe, expect, it } from "vitest";
@@ -274,7 +275,7 @@ function expectedSlotResolution(attempts: readonly SlotAttempt[]) {
 }
 
 describe("parameter-binding Julia Tier 0-1 evidence", () => {
-  it("freezes the exact 534-row decision surface without promoting the live census", () => {
+  it("freezes the exact historical 534-row decision surface without promoting the live census", () => {
     expect(artifact).toMatchObject({
       schema: "fractalpark-julia-parameter-binding-evidence/v1",
       revision: 1,
@@ -325,7 +326,7 @@ describe("parameter-binding Julia Tier 0-1 evidence", () => {
     );
     for (const relativePath of EXPECTED_SOURCE_BINDING_PATHS) {
       expect(artifact.sourceBindings[relativePath]).toBe(
-        sha256HexSyncV1(readFileSync(join(ROOT, relativePath), "utf8")),
+        sha256HexSyncV1(readHistoricalJuliaSourceInput(relativePath)),
       );
     }
     const unhashed = structuredClone(artifact) as EvidenceAsset;

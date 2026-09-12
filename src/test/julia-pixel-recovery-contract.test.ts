@@ -1,4 +1,5 @@
 import { createHash } from "node:crypto";
+import { readHistoricalJuliaSourceInput } from "./fixtures/historical-julia-source-inputs";
 import {
   chmodSync,
   mkdirSync,
@@ -778,10 +779,10 @@ describe("Julia / Pixel recovery fixtures and isolation", () => {
     }
   });
 
-  it("preserves every bound 29g/live source byte and remains outside public barrels", () => {
+  it("preserves historical package inputs and every bound 29g/live source byte outside public barrels", () => {
     for (const [path, expectedDigest] of Object.entries(contractAsset.sourceBindings)) {
       const actual = createHash("sha256")
-        .update(readFileSync(join(ROOT, path)))
+        .update(readHistoricalJuliaSourceInput(path))
         .digest("hex");
       expect(actual).toBe(expectedDigest);
     }

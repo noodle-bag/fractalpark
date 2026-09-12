@@ -1,4 +1,5 @@
 import { readFileSync, readdirSync } from "node:fs";
+import { readHistoricalJuliaSourceInput } from "./fixtures/historical-julia-source-inputs";
 import { join } from "node:path";
 
 import { describe, expect, it } from "vitest";
@@ -256,7 +257,7 @@ function bindingRevision(
 }
 
 describe("Julia source-split Tier 0-1 evidence", () => {
-  it("freezes the exact 534-row isolated candidate surface", () => {
+  it("freezes the exact historical 534-row isolated candidate surface", () => {
     expect(artifact).toMatchObject({
       schema: "fractalpark-julia-source-split-evidence/v1",
       revision: 1,
@@ -315,7 +316,7 @@ describe("Julia source-split Tier 0-1 evidence", () => {
     );
     for (const relativePath of EXPECTED_SOURCE_BINDING_PATHS)
       expect(artifact.sourceBindings[relativePath]).toBe(
-        sha256HexSyncV1(readFileSync(join(ROOT, relativePath), "utf8")),
+        sha256HexSyncV1(readHistoricalJuliaSourceInput(relativePath)),
       );
     const unhashed = structuredClone(artifact) as EvidenceAsset;
     delete (unhashed as Partial<EvidenceAsset>).contentHash;

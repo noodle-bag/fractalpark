@@ -24,7 +24,7 @@ import {
   type PublishedFormulaProfileV1,
   type PublishedFormulaRuntimeIndexRowV1,
 } from '@/engine/formulas/v1';
-import { resolveActivatedPublishedFormulaDefaultProfileV1 } from '@/engine/formulas/v1/julia-runtime-activation-v1';
+import { resolveApplicationPublishedDefaultProfileV1 } from '@/engine/formulas/v1/published-default-profile-corrections-v1';
 import type { FormulaIdV1 } from '@/engine/formulas/v1/types';
 import { buildPublishedFormulaRemixHref } from '@/lib/published-formula-remix';
 import {
@@ -382,7 +382,7 @@ export function buildFormulaRecordV1(
     availability: 'published' as const,
     historicalSource,
     source,
-    defaultProfile: resolveActivatedPublishedFormulaDefaultProfileV1(runtime),
+    defaultProfile: resolveApplicationPublishedDefaultProfileV1(runtime),
     preview: Object.freeze({
       src: `/formula-library/v1/record-previews/${masterPreview.file}`,
       fallbackSrc: `/formula-library/v1/previews/${fallbackPreview.file}`,

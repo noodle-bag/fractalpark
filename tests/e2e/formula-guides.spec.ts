@@ -216,7 +216,7 @@ test.describe('Formula guides', () => {
     ).toEqual(new Set([guidePath('zh', 'mandelbrot')]));
   });
 
-  test('serves the canonical long tail as noindex and rejects unknown IDs', async ({
+  test('serves published Records as indexable and rejects unknown IDs', async ({
     request,
   }) => {
     const response = await request.get(
@@ -224,8 +224,10 @@ test.describe('Formula guides', () => {
     );
 
     expect(response.status()).toBe(200);
-    expect(await response.text()).toContain(
-      'name="robots" content="noindex, follow"'
+    const html = await response.text();
+    expect(html).not.toMatch(/<meta\b[^>]*name="robots"[^>]*content="[^"]*noindex/);
+    expect(html).toContain(
+      'rel="canonical" href="https://www.fractalpark.com/en/formulas/1cd7a16f-0474-5b8f-a974-e122ea893769"'
     );
 
     const unknown = await request.get(

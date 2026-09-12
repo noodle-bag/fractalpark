@@ -124,6 +124,36 @@ The frozen activation census and language/compiler contracts are unchanged.
 
 ## Rendering implementation change contract
 
+### Application defaults and sealed Record preview inputs
+
+The thirteen reviewed default Profile corrections belong to application
+initialization. Explore selection, Formula Record Open, and Remix use
+`resolveApplicationPublishedDefaultProfileV1`, which applies the corrections
+and then the unchanged exact-source Julia eligibility gate. Existing saved
+artworks, parameters, keyframes and rendering adapters are not rewritten.
+
+Record asset generators retain `resolveActivatedPublishedFormulaDefaultProfileV1`
+and their sealed input Profiles. The independent verifiers retain their own
+Profile derivation. All 534 asset defaults MUST match the sealed input hashes;
+all application defaults MUST retain the reviewed pre-separation values.
+The thirteen application/asset differences are intentional initialization
+differences, not permission to render the same artwork differently by surface.
+Static Record images are not claimed to equal the corrected application's
+initial canvas. No generated image or evidence envelope is rewritten by this
+separation, and Julia eligibility is not expanded.
+
+The two Record preview verifiers MAY accept the exact reviewed 0.4.19-to-0.4.20
+root-version-only lockfile transition. They MUST authenticate the entire current
+package/lock pair, reconstruct only the three root version values, and verify
+the original raw hashes. Every other declared binding MUST match current bytes,
+and binding sets, self hashes, Profile selection, source rendering, image
+encoding and browser-version checks remain enforced. Acceptance is logged as
+metadata compatibility, never as a fresh measurement or asset regeneration.
+Unknown versions, dependencies, scripts, source changes and extra/missing
+bindings fail closed. This Record-only rule does not renew Julia activation,
+performance, device or rollback evidence and does not reuse the historical
+Julia test fixture in a verifier.
+
 ### Reviewed application rendering exception
 
 Mandelbox, coshMandelb, and zaslavskyMap remove only their explicit orbit-rounding

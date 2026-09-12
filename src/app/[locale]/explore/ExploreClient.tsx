@@ -52,8 +52,8 @@ import {
 } from '@/lib/formula-resolver';
 import { pluginRegistry } from '@/engine/plugins/registry';
 import {
-  resolveActivatedPublishedFormulaDefaultProfileV1,
-} from '@/engine/formulas/v1/julia-runtime-activation-v1';
+  resolveApplicationPublishedDefaultProfileV1,
+} from '@/engine/formulas/v1/published-default-profile-corrections-v1';
 import { resolveFormulaRuntimeCapabilityV1 } from '@/engine/formulas/v1/formula-runtime-capability-v1';
 import { bindPublishedRenderingSourceV1 } from '@/engine/formulas/v1/published-rendering-source-v1';
 import { registerBuiltins } from '@/engine/plugins/builtins';
@@ -923,7 +923,7 @@ function ExploreClient({ posterImage }: { posterImage?: string }) {
           const next = applyPublishedFormulaProfile(DEFAULT_FRACTAL_DOCUMENT, {
             formulaId,
             formulaParams: getFormulaUniformDefaults(renderingPlugin),
-            profile: resolveActivatedPublishedFormulaDefaultProfileV1(row),
+            profile: resolveApplicationPublishedDefaultProfileV1(row),
           });
           const changesRendering = !analyticsValuesEqual(creatorDocumentState(document), creatorDocumentState(next));
           cloudDraft.clearIdentity();
@@ -938,7 +938,7 @@ function ExploreClient({ posterImage }: { posterImage?: string }) {
         applyPublishedFormulaSelection({
           formulaId,
           formulaParams: getFormulaUniformDefaults(renderingPlugin),
-          profile: resolveActivatedPublishedFormulaDefaultProfileV1(row),
+          profile: resolveApplicationPublishedDefaultProfileV1(row),
         });
         if (options.source === 'entry-default') {
           clearPublishedFormulaSelectionUndo();

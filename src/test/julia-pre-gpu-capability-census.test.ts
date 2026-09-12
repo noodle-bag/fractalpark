@@ -1,4 +1,5 @@
 import { readFileSync, readdirSync } from "node:fs";
+import { readHistoricalJuliaSourceInput } from "./fixtures/historical-julia-source-inputs";
 import { join } from "node:path";
 
 import { describe, expect, it } from "vitest";
@@ -408,13 +409,13 @@ describe("Julia pre-GPU capability closure", () => {
     }
   });
 
-  it("binds every declared source and verifies the self hash", () => {
+  it("binds historical package inputs and every unchanged source, and verifies the self hash", () => {
     expect(Object.keys(artifact.sourceBindings).sort()).toEqual(
       [...EXPECTED_SOURCE_BINDING_PATHS].sort(),
     );
     for (const relativePath of EXPECTED_SOURCE_BINDING_PATHS) {
       expect(artifact.sourceBindings[relativePath], relativePath).toBe(
-        sha256HexSyncV1(readFileSync(join(ROOT, relativePath), "utf8")),
+        sha256HexSyncV1(readHistoricalJuliaSourceInput(relativePath)),
       );
     }
     const content = Object.fromEntries(

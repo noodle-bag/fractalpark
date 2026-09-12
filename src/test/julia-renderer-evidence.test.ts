@@ -1,6 +1,5 @@
 import { createHash } from "node:crypto";
-import { readFileSync } from "node:fs";
-import { join } from "node:path";
+import { readHistoricalJuliaSourceInput } from "./fixtures/historical-julia-source-inputs";
 
 import { describe, expect, it } from "vitest";
 
@@ -28,11 +27,9 @@ import {
   sha256HexSyncV1,
 } from "../engine/formulas/v1/revisions";
 
-const ROOT = process.cwd();
-
 function sha256(relativePath: string): string {
   return createHash("sha256")
-    .update(readFileSync(join(ROOT, relativePath), "utf8"))
+    .update(readHistoricalJuliaSourceInput(relativePath))
     .digest("hex");
 }
 
@@ -118,7 +115,7 @@ describe("Julia renderer evidence closure", () => {
     }
   });
 
-  it("binds renderer evidence to every declared source input", () => {
+  it("binds renderer evidence to historical package inputs and every unchanged source", () => {
     const parsed = parseJuliaRendererEvidenceV1(rendererAsset);
     expect(parsed.ok).toBe(true);
     if (!parsed.ok) return;
@@ -259,7 +256,7 @@ describe("Julia final capability census", () => {
     }
   });
 
-  it("binds final census to every declared source input", () => {
+  it("binds final census to historical package inputs and every unchanged source", () => {
     const parsed = parseJuliaFinalCapabilityCensusV1(finalAsset);
     expect(parsed.ok).toBe(true);
     if (!parsed.ok) return;

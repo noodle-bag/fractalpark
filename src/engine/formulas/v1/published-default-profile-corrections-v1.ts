@@ -2,6 +2,7 @@ import type {
   PublishedFormulaProfileV1,
   PublishedFormulaRuntimeIndexRowV1,
 } from './published-runtime';
+import { resolveActivatedPublishedFormulaDefaultProfileV1 } from './julia-runtime-activation-v1';
 
 type CorrectedProfile = Omit<
   PublishedFormulaProfileV1,
@@ -64,5 +65,15 @@ export function resolveCorrectedPublishedDefaultProfileV1(
     schema: row.profile.schema,
     quality: row.profile.quality,
     ...correction,
+  });
+}
+
+/** Application initialization only; sealed Record assets keep their own inputs. */
+export function resolveApplicationPublishedDefaultProfileV1(
+  row: PublishedFormulaRuntimeIndexRowV1,
+): PublishedFormulaProfileV1 {
+  return resolveActivatedPublishedFormulaDefaultProfileV1({
+    ...row,
+    profile: resolveCorrectedPublishedDefaultProfileV1(row),
   });
 }

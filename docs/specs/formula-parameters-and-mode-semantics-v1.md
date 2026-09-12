@@ -131,6 +131,31 @@ render state must not emit a new creator-change event.
 
 ## Verification and coverage inventory
 
+### Historical evidence versus current release inputs
+
+Historical Julia regression tests MAY reconstruct the exact sealed package
+inputs for the reviewed 0.4.19-to-0.4.20 metadata-only transition. The complete
+current package/lock pair MUST match independently pinned hashes before changing
+only `package.version`, `lock.version`, and `lock.packages[""].version`; the
+reconstructed raw bytes MUST match the original sealed hashes. No JSON
+normalization, blanket version stripping, dependency exemption, or unknown
+version transition is allowed. Every other bound input remains byte-exact.
+
+This test-only reconstruction MUST NOT enter runtime consumers, generators,
+independent current-source verifiers, or release qualification. Historical
+assets and their hashes remain unchanged. The historical review-pending handoff
+still rejects activation, and unmodified current inputs still fail its original
+source-binding check. These tests do not renew Record previews, performance,
+device measurements, or approval receipts for the current candidate.
+
+Coverage: `historical-julia-source-inputs.test.ts` rejects dependency, lock
+integrity, scripts, engines, extra fields, mixed/unknown versions, and raw-byte
+tampering; `julia-final-recovery-v2.test.ts` retains both historical
+review-pending and current-source rejection cases. Future input changes require
+review, not an automatic update of the pinned hashes.
+
+### Application coverage
+
 Existing test files are starting points, not proof of full conformance:
 
 | Requirement | Existing coverage to extend | Required additional evidence |
