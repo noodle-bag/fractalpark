@@ -22,6 +22,7 @@ More reliable exploration and parameter editing, with clearer formula identities
 - Restored Newton Cosh's reviewed hyperbolic-function calculation without changing its convergence threshold or enabling Julia mode.
 - Preserved exact camera values at animation keyframe endpoints, including the initial frame, and aligned supported Gallery playback with canonical Julia runtime qualification.
 - Explained unsupported Julia playback and loading failures in all seven locales while retaining the saved image and hiding unavailable fullscreen playback controls.
+- Canonicalized the editable Mine copy created by a published Full Source Remix while preserving the exact published source revision as immutable lineage, so unchanged published formulas can be applied without weakening the Safety Envelope.
 
 ### Changed
 
