@@ -2,7 +2,11 @@ import { DEFAULT_FRACTAL_DOCUMENT } from '@/engine/document';
 import type { FormulaExperienceHint } from '@/engine/frm/authoring';
 import type { CompileResult } from '@/engine/frm/compile';
 import type { EditorError } from '@/engine/frm/codemirror-lint';
-import { hashFrmLikeV1, parseFrmLikeV1 } from '@/engine/frm/v1';
+import {
+  canonicalizeFrmLikeV1,
+  hashFrmLikeV1,
+  parseFrmLikeV1,
+} from '@/engine/frm/v1';
 import { compilePublishedFormulaPluginV1 } from '@/engine/formulas/v1/published-adapter';
 import {
   hashProfileRevisionV1,
@@ -228,6 +232,29 @@ export async function createFrozenPublishedFormulaRemixV1(input: {
   ) {
     throw new Error('Published Remix source authority does not match.');
   }
+  const parsedSource = parseFrmLikeV1(input.source.source);
+  if (!parsedSource.ok) {
+    throw new Error('Published Remix source is invalid.');
+  }
+  const sourceHashes = await hashFrmLikeV1(
+    input.source.source,
+    parsedSource.ir,
+  );
+  if (
+    sourceHashes.sourceRevision !== input.row.sourceRevision ||
+    sourceHashes.semanticHash !== input.row.semanticHash
+  ) {
+    throw new Error('Published Remix source authority does not match.');
+  }
+  const canonicalSource = canonicalizeFrmLikeV1(parsedSource.ir);
+  const canonicalParsed = parseFrmLikeV1(canonicalSource);
+  if (!canonicalParsed.ok) {
+    throw new Error('Published Remix canonical source is invalid.');
+  }
+  const canonicalHashes = await hashFrmLikeV1(canonicalSource, canonicalParsed.ir);
+  if (canonicalHashes.semanticHash !== input.row.semanticHash) {
+    throw new Error('Published Remix canonical source changed semantics.');
+  }
   const parentFormulaId = input.row.formulaId as FormulaIdV1;
   const parentSourceRevision = input.row.sourceRevision as FormulaRevisionV1;
   const defaultProfile = resolveApplicationPublishedDefaultProfileV1(input.row);
@@ -248,7 +275,7 @@ export async function createFrozenPublishedFormulaRemixV1(input: {
     parentProfileRevision: parentProfile.profileRevision,
     displayName: input.row.displayName,
     family: input.row.family,
-    source: input.source.source,
+    source: canonicalSource,
     experienceHint: Object.freeze({
       bounds: Object.freeze({
         centerX: defaultProfile.center[0],

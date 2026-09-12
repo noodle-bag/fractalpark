@@ -109,6 +109,14 @@ entries from its pool and advances past later fetch or compile failures.
 
 ### Custom formulas
 
+A Full Source Remix reads and verifies the exact pinned published Definition,
+then creates a separate Mine authoring identity whose initial editable source is
+the canonical FRM-like writer form. Parent provenance retains the published
+formula ID and exact source/Profile revisions. This conversion is a named
+published-reader-to-Mine-writer boundary: it does not mutate the published
+Definition, and it does not weaken the fail-closed Apply gate for subsequent
+user edits.
+
 The FRM Editor and Explore use the same persisted custom-formula record,
 compiler, plugin registration, cache invalidation, and experience-hint
 handling. The Editor must not create a second storage key or a second compiler
