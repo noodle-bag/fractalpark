@@ -90,7 +90,10 @@ jobs:
         with:
           pattern: julia-renderer-*
           path: /tmp/julia-renderer-reports
-      - run: npx tsx scripts/build-julia-renderer-evidence.ts /tmp/julia-renderer-reports
+      - name: Verify Julia renderer release evidence
+        run: >-
+          npx tsx scripts/verify-julia-renderer-release-evidence.ts
+          /tmp/julia-renderer-reports
       - run: npx tsx scripts/build-julia-final-capability-census.ts
 
   julia-activation-webgl1-release:

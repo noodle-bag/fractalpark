@@ -155,6 +155,9 @@ fields, require every executable source binding to remain byte-exact, and reject
 unknown versions or any other change. It MUST NOT run the historical generator,
 rewrite the sealed asset, or claim renewed renderer, performance, or device
 evidence. Renderer evidence still has to run against the exact release candidate.
+Its release verifier MAY compare freshly verified renderer rows with the sealed
+artifact using the same version-specific binding transition, but every renderer
+row and every non-package source binding MUST remain exact.
 
 Coverage: `historical-julia-source-inputs.test.ts` rejects dependency, lock
 integrity, scripts, engines, extra fields, mixed/unknown versions, and raw-byte
