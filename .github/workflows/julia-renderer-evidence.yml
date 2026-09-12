@@ -94,7 +94,8 @@ jobs:
         run: >-
           npx tsx scripts/verify-julia-renderer-release-evidence.ts
           /tmp/julia-renderer-reports
-      - run: npx tsx scripts/build-julia-final-capability-census.ts
+      - name: Verify Julia final capability release census
+        run: npx tsx scripts/verify-julia-final-capability-release.ts
 
   julia-activation-webgl1-release:
     runs-on: ubuntu-latest
