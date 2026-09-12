@@ -49,7 +49,7 @@ function reconstructSealedPackageInputs(
  * Qualifies the exact 0.4.20 metadata-only package transition for a sealed
  * pre-GPU authority. This does not regenerate or renew the historical asset.
  */
-export function matchesJuliaPreGpuReleaseSourceBindings(
+export function matchesSealedJuliaReleaseSourceBindings(
   bound: unknown,
   current: Readonly<Record<string, string>>,
   packageJson: string,
@@ -87,3 +87,6 @@ export function matchesJuliaPreGpuReleaseSourceBindings(
 
   return reconstructSealedPackageInputs(packageJson, lockJson) !== null;
 }
+
+export const matchesJuliaPreGpuReleaseSourceBindings =
+  matchesSealedJuliaReleaseSourceBindings;
