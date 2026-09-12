@@ -672,6 +672,16 @@ A comment, formatting, line-ending, terminal-LF, or formula-header edit may alte
 Definition bodies are pinned and verified byte-for-byte; this contract does not
 claim that every existing body is byte-identical to the gated writer form.
 
+When a pinned published Definition is remixed into a new Mine authoring
+identity, the handoff MUST first verify the exact published `sourceRevision` and
+`semanticHash`, then derive the editable Mine source with
+`canonicalizeFrmLikeV1(ir)`. The Remix lineage MUST retain the original
+published source revision; persisting the derived Mine source assigns that
+editable head its own revision. Implementations MUST NOT rewrite the published
+Definition or normalize user edits inside the Safety Envelope. Invalid,
+authority-mismatched, semantically changed, or non-canonical user input remains
+fail-closed.
+
 A conforming implementation MUST pass, at minimum:
 
 1. pinned Definition source -> typed IR -> canonical formatter form -> identical
@@ -693,8 +703,10 @@ not language privileges: every executable Definition uses this same contract.
 
 Published Standard source can be viewed and downloaded from its Formula Record.
 Open and anonymous Remix consume the pinned Definition and Profile through the
-published runtime. A diagnostic preview is evidence about preview generation,
-not proof that language conformance failed.
+published runtime. The new Mine editing copy follows the canonical handoff above
+while its parent lineage continues to identify the exact pinned bytes. A
+diagnostic preview is evidence about preview generation, not proof that language
+conformance failed.
 
 The standalone FRM Editor remains a Classic-compatible authoring surface. Its
 examples and `frmSemanticsVersion` controls are governed by the legacy

@@ -207,6 +207,8 @@ export interface DraftWriteResult {
   draftId: string;
   revision: number;
   envelope?: unknown;
+  replayed?: boolean;
+  backupEmailStatus?: import('@/lib/cloud-analytics').BackupEmailStatus;
 }
 
 export async function createDraft(input: {
@@ -349,6 +351,7 @@ export interface PublishResult {
   thumbnailStatus: 'pending';
   publishedAt: string;
   replayed?: boolean;
+  backupEmailStatus?: import('@/lib/cloud-analytics').BackupEmailStatus;
 }
 
 export async function publishDraft(draftId: string, input: PublishInput): Promise<PublishResult> {

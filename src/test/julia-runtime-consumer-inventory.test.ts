@@ -54,9 +54,9 @@ describe("Julia runtime consumer inventory", () => {
       "src/content/published-formula-directory.ts",
       "src/engine/document-adapter.ts",
       "src/engine/document-v3.ts",
-      "src/hooks/useExploreDocumentState.ts",
       "src/lib/cloud/envelope.ts",
       "src/lib/frm-semantics-comparison.ts",
+      "src/lib/published-formula-profile.ts",
     ]);
   });
 
@@ -69,8 +69,12 @@ describe("Julia runtime consumer inventory", () => {
       "src/engine/formulas/v1/published-runtime.ts",
     ]);
     expect(filesMatching(/resolveActivatedPublishedFormulaDefaultProfileV1/)).toEqual([
-      "src/app/[locale]/explore/ExploreClient.tsx",
       "src/engine/formulas/v1/julia-runtime-activation-v1.ts",
+      "src/engine/formulas/v1/published-default-profile-corrections-v1.ts",
+    ]);
+    expect(filesMatching(/resolveApplicationPublishedDefaultProfileV1/)).toEqual([
+      "src/app/[locale]/explore/ExploreClient.tsx",
+      "src/engine/formulas/v1/published-default-profile-corrections-v1.ts",
       "src/lib/formula-records.ts",
       "src/lib/published-formula-remix.ts",
     ]);

@@ -10,6 +10,7 @@ import { join, resolve, sep } from 'node:path';
 import { Worker, isMainThread, parentPort, workerData } from 'node:worker_threads';
 
 import { chromium } from 'playwright';
+import { matchesRecordPreviewSourceBindings } from './lib/record-preview-source-bindings';
 
 import { compilePublishedFormulaPluginV1 } from '../src/engine/formulas/v1/published-adapter';
 import { renderRecordPreviewV1 } from '../src/engine/formulas/v1/record-preview-renderer';
@@ -64,6 +65,18 @@ const sourcePaths = [
   qualityScanArtifactPath,
   'resources/formula-library/v1/record-preview-accepted-deviations.v1.json',
   ...scanSourcePaths.slice(4),
+] as const;
+const profileSourcePaths = [
+  'resources/formula-library/v1/record-preview-gates.v1.json',
+  'public/formula-library/v1/runtime/published/index.json',
+  'public/formula-library/v1/previews/manifest.json',
+  'resources/formula-library/v1/julia-runtime-activation.v1.json',
+  'scripts/generate-formula-record-preview-profiles.ts',
+  'src/engine/formulas/v1/published-adapter.ts',
+  'src/engine/formulas/v1/julia-runtime-activation-v1.ts',
+  'src/engine/formulas/v1/record-preview-renderer.ts',
+  'src/engine/frm/v1-backend.ts',
+  'package-lock.json',
 ] as const;
 
 type JsonRecord = Record<string, unknown>;
@@ -561,9 +574,9 @@ function verifyRecordPreviewProfiles(): void {
       recordPreviewProfiles.rows.every(
         (profile, index) => profile.formulaId === sortedRuntime[index]!.formulaId,
       ) &&
-      Object.entries(recordPreviewProfiles.sourceBindings).every(
-        ([path, digest]) =>
-          existsSync(join(root, path)) && sha256(readFileSync(join(root, path))) === digest,
+      matchesRecordPreviewSourceBindings(
+        recordPreviewProfiles.sourceBindings,
+        bindingsFor(profileSourcePaths),
       ),
     'record-preview-profiles-invalid',
   );
@@ -644,7 +657,7 @@ function verifyAcceptedDeviations(): void {
     scan.schema === 'fractalpark-formula-record-preview-quality-scan/v1' &&
       scan.revision === 1 &&
       scan.status === 'fail' &&
-      canonicalJson(scan.sourceBindings) === canonicalJson(expectedScanBindings()) &&
+      matchesRecordPreviewSourceBindings(scan.sourceBindings, expectedScanBindings()) &&
       scan.profileArtifactContentHash === recordPreviewProfiles.contentHash &&
       scan.rowCount === gates.publishedCount &&
       scan.passedCount === gates.publishedCount - acceptedDeviations.acceptedCount &&
@@ -699,7 +712,7 @@ function verifyPreflight(): void {
       Array.isArray(raw.rows) &&
       raw.rows.length === 21 &&
       raw.acceptedDeviationRows === 0 &&
-      canonicalJson(raw.sourceBindings) === canonicalJson(expectedBindings()) &&
+      matchesRecordPreviewSourceBindings(raw.sourceBindings, expectedBindings()) &&
       raw.renderer === gates.renderer.engine &&
       raw.encoder ===
         `${gates.renderer.encoder}-q${String(gates.image.quality)}` &&
@@ -755,7 +768,7 @@ function verifyManifest(): { manifest: JsonRecord; rows: ManifestRow[] } {
       Array.isArray(raw.rows) &&
       raw.rows.length === gates.publishedCount &&
       raw.acceptedDeviationRows === acceptedDeviations.acceptedCount &&
-      canonicalJson(raw.sourceBindings) === canonicalJson(expectedBindings()) &&
+      matchesRecordPreviewSourceBindings(raw.sourceBindings, expectedBindings()) &&
       raw.renderer === gates.renderer.engine &&
       raw.encoder ===
         `${gates.renderer.encoder}-q${String(gates.image.quality)}` &&

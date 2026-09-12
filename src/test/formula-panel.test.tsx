@@ -1,17 +1,16 @@
-import activationAsset from '../../resources/formula-library/v1/julia-runtime-activation.v1.json';
 import { beforeAll, describe, expect, it, vi } from 'vitest';
 import { fireEvent, render, screen } from '@testing-library/react';
 import { registerBuiltins } from '@/engine/plugins/builtins/index';
 import { compileClassicFrmEntry, compileFrm } from '@/engine/frm/compile';
 import { pluginRegistry } from '@/engine/plugins/registry';
-import type { FormulaPlugin } from '@/engine/plugins/types';
 import { FormulaPanel } from '@/components/fractal/FormulaPanel';
+import { PSEUDOLAMBDA_FORMULA_ID } from '@/lib/published-formula-planar-controls';
 
-const SUPPORTED_JULIA_ROW = activationAsset.rows[0]!;
 
 vi.mock('next-intl', () => ({
   useLocale: () => 'en',
-  useTranslations: () => ((key: string) => key),
+  useTranslations: (namespace: string) => ((key: string) =>
+    namespace.startsWith('explore.') ? `${namespace.slice(8)}.${key}` : key),
 }));
 
 describe('FormulaPanel', () => {
@@ -26,17 +25,6 @@ describe('FormulaPanel', () => {
     HTMLElement.prototype.scrollIntoView = vi.fn();
 
     registerBuiltins();
-    const legacyMandelbrot = pluginRegistry.getFormula('mandelbrot');
-    if (legacyMandelbrot) {
-      const supportedJuliaPlugin: FormulaPlugin = {
-        ...legacyMandelbrot,
-        id: SUPPORTED_JULIA_ROW.formulaId,
-        name: 'Test Supported Julia',
-        cacheFingerprint: SUPPORTED_JULIA_ROW.sourceRevision,
-        supportsJulia: true,
-      };
-      pluginRegistry.register(supportedJuliaPlugin);
-    }
     const compiled = compileFrm(`FnSlotWeave {
 init:
   z = pixel
@@ -63,7 +51,7 @@ bailout:
   it('highlights both formula modes without changing the switch semantics', () => {
     const props = {
       juliaC: [-0.7, 0.27] as [number, number],
-      currentFormula: SUPPORTED_JULIA_ROW.formulaId,
+      currentFormula: 'mandelbrot',
       currentBounds: { centerX: -0.5, centerY: 0, zoom: 0.4, rotation: 0 },
       onJuliaModeChange: () => {},
       onJuliaCChange: () => {},
@@ -93,7 +81,7 @@ bailout:
       <FormulaPanel
         isJulia
         juliaC={[-0.62, 0.41]}
-        currentFormula="mandelbrot"
+        currentFormula="magnet1"
         currentBounds={{ centerX: 0, centerY: 0, zoom: 0.4, rotation: 0 }}
         onJuliaModeChange={onJuliaModeChange}
         onJuliaCChange={() => {}}
@@ -105,6 +93,49 @@ bailout:
     expect(screen.queryByRole('switch')).not.toBeInTheDocument();
     expect(screen.queryByText('controls.juliaC.label')).not.toBeInTheDocument();
     expect(onJuliaModeChange).not.toHaveBeenCalled();
+  });
+
+  it('shares soft-window and exact draft editing for Julia without changing ordinary parameters', () => {
+    const onJuliaCChange = vi.fn();
+    const onFormulaParamChange = vi.fn();
+    const props = {
+      isJulia: true,
+      juliaC: [12.345678901, -7] as [number, number],
+      currentFormula: 'mandelbrot',
+      currentBounds: { centerX: 0, centerY: 0, zoom: 0.4, rotation: 0 },
+      onJuliaModeChange: vi.fn(),
+      onJuliaCChange,
+      onFormulaChange: vi.fn(),
+      onFormulaParamChange,
+    };
+    const { rerender } = render(<FormulaPanel {...props} />);
+    const real = screen.getByRole('spinbutton', { name: 'controls.juliaC.label controls.complexReal' });
+    expect(real).toHaveValue('12.345678901');
+    expect(real).not.toHaveAttribute('min');
+    expect(real).not.toHaveAttribute('max');
+    for (const action of ['narrow', 'widen', 'showCurrent']) {
+      fireEvent.click(screen.getByRole('button', { name: `controls.parameterInteraction.${action}` }));
+    }
+    expect(onJuliaCChange).not.toHaveBeenCalled();
+    fireEvent.change(real, { target: { value: '1e-' } });
+    expect(onJuliaCChange).not.toHaveBeenCalled();
+    fireEvent.keyDown(real, { key: 'Enter' });
+    expect(real).toHaveValue('12.345678901');
+    expect(real).toHaveAttribute('aria-invalid', 'true');
+    fireEvent.change(real, { target: { value: '23.4567890123' } });
+    fireEvent.keyDown(real, { key: 'Enter' });
+    expect(onJuliaCChange).toHaveBeenLastCalledWith([23.4567890123, -7]);
+    fireEvent.blur(real);
+    expect(onJuliaCChange).toHaveBeenCalledTimes(1);
+    rerender(<FormulaPanel {...props} juliaC={[-9.87654321, 8.123456789]} />);
+    expect(real).toHaveValue('-9.87654321');
+    const plane = screen.getByRole('group', { name: 'controls.juliaC.label controls.complexPlane' });
+    fireEvent.keyDown(plane, { key: 'ArrowRight' });
+    expect(onJuliaCChange).toHaveBeenLastCalledWith([-9.86654321, 8.123456789]);
+    fireEvent.click(screen.getByRole('button', { name: 'controls.juliaC.label controls.resetComplex' }));
+    expect(onJuliaCChange).toHaveBeenLastCalledWith([0, 0]);
+    expect(onFormulaParamChange).not.toHaveBeenCalled();
+    expect(props.onJuliaModeChange).not.toHaveBeenCalled();
   });
 
   it('renders builtin formula sliders from plugin descriptors', () => {
@@ -123,7 +154,7 @@ bailout:
     );
 
     expect(screen.getByText('controls.formulaParameters')).toBeInTheDocument();
-    expect(screen.getByText('explore.controls.phoenixP')).toBeInTheDocument();
+    expect(screen.getByText('controls.phoenixP')).toBeInTheDocument();
     expect(screen.getByRole('slider')).toBeInTheDocument();
   });
 
@@ -221,7 +252,7 @@ bailout:
     );
     const { rerender } = render(renderPanel());
 
-    const scale = screen.getByLabelText('scale');
+    const scale = screen.getByRole('spinbutton', { name: 'scale' });
     const offsetReal = screen.getByLabelText('offset controls.complexReal');
     const offsetImaginary = screen.getByLabelText('offset controls.complexImaginary');
     expect(scale).toHaveValue('0.25');
@@ -268,5 +299,56 @@ bailout:
     fireEvent.click(screen.getByRole('combobox', { name: 'fn1' }));
     fireEvent.click(await screen.findByRole('option', { name: 'identity' }));
     expect(onFormulaParamChange).toHaveBeenCalledWith('u_frm_fn1', 0);
+  });
+
+  it('opens the reviewed pseudolambda planar controls with precise input', () => {
+    const onFormulaParamChange = vi.fn();
+    render(
+      <FormulaPanel
+        isJulia={false}
+        juliaC={[-0.7, 0.27]}
+        currentFormula={PSEUDOLAMBDA_FORMULA_ID}
+        currentBounds={{ centerX: -0.5, centerY: 0, zoom: 0.4, rotation: 0 }}
+        pluginParams={{
+          frmV1_rate: [0, -0.3],
+          frmV1_offset: [1.6, 0],
+        }}
+        publishedDescriptor={{
+          schema: 'fractalpark-published-formula-descriptor/v1',
+          formulaId: PSEUDOLAMBDA_FORMULA_ID,
+          sourceRevision: 'a'.repeat(64),
+          semanticHash: 'b'.repeat(64),
+          parameters: [
+            {
+              slotName: 'rate',
+              type: 'complex',
+              default: [0, 0],
+              uniformName: 'frmV1_rate',
+            },
+            {
+              slotName: 'offset',
+              type: 'complex',
+              default: [0, 0],
+              uniformName: 'frmV1_offset',
+            },
+          ],
+        }}
+        onJuliaModeChange={() => {}}
+        onJuliaCChange={() => {}}
+        onFormulaChange={() => {}}
+        onFormulaParamChange={onFormulaParamChange}
+      />,
+    );
+
+    const ratePlane = screen.getByRole('group', { name: 'rate controls.complexPlane' });
+    expect(screen.getByRole('group', { name: 'offset controls.complexPlane' })).toBeInTheDocument();
+    expect(screen.getByLabelText('rate controls.complexReal')).toHaveAttribute('step', '0.01');
+    expect(screen.getByLabelText('offset controls.complexReal')).toHaveValue('1.6');
+
+    fireEvent.keyDown(ratePlane, { key: 'ArrowDown' });
+    expect(onFormulaParamChange).toHaveBeenCalledWith('frmV1_rate', [0, -0.31]);
+
+    fireEvent.click(screen.getByRole('button', { name: 'offset controls.resetComplex' }));
+    expect(onFormulaParamChange).toHaveBeenCalledWith('frmV1_offset', [0, 0]);
   });
 });

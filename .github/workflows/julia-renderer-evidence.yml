@@ -60,7 +60,8 @@ jobs:
       - run: npx playwright install --with-deps chromium
       - name: Verify Julia renderer evidence bindings
         run: npm run test:run -- src/test/julia-renderer-evidence-v2.test.ts
-      - run: npm run formula:julia-pre-gpu
+      - name: Qualify Julia pre-GPU release inputs
+        run: npx tsx scripts/verify-julia-pre-gpu-release-inputs.ts
       - name: Run Julia Tier 2 renderer shard
         run: >-
           npx tsx scripts/verify-julia-tier2-webgl.ts

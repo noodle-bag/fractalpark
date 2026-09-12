@@ -15,6 +15,7 @@ interface FormulaNumberDraftInputProps {
   value: number;
   min?: number;
   max?: number;
+  step?: number;
   onCommit: (value: number) => void;
   invalidMessage: string;
   increaseLabel: string;
@@ -40,8 +41,8 @@ function clampFormulaNumber(value: number, min?: number, max?: number): number {
   return Object.is(bounded, -0) ? 0 : bounded;
 }
 
-function stepFormulaNumber(value: number, direction: -1 | 1): number {
-  const stepped = value + direction * DEFAULT_FORMULA_NUMBER_STEP;
+function stepFormulaNumber(value: number, direction: -1 | 1, step: number): number {
+  const stepped = value + direction * step;
   const normalized = Number(stepped.toFixed(12));
   return Object.is(normalized, -0) ? 0 : normalized;
 }
@@ -52,6 +53,7 @@ export function FormulaNumberDraftInput({
   value,
   min,
   max,
+  step = DEFAULT_FORMULA_NUMBER_STEP,
   onCommit,
   invalidMessage,
   increaseLabel,
@@ -100,7 +102,7 @@ export function FormulaNumberDraftInput({
   const commitStep = (direction: -1 | 1) => {
     const parsed = parseFormulaNumberDraft(draft);
     const base = parsed ?? legalValue.current;
-    commitValue(stepFormulaNumber(base, direction));
+    commitValue(stepFormulaNumber(base, direction, step));
   };
 
   const parsedDraft = parseFormulaNumberDraft(draft);
@@ -114,7 +116,7 @@ export function FormulaNumberDraftInput({
           type="text"
           inputMode="decimal"
           role="spinbutton"
-          step={DEFAULT_FORMULA_NUMBER_STEP}
+          step={step}
           min={min}
           max={max}
           value={draft}

@@ -1,4 +1,5 @@
 import { readFileSync } from "node:fs";
+import { readHistoricalJuliaSourceInput } from "./fixtures/historical-julia-source-inputs";
 import { join } from "node:path";
 
 import { describe, expect, it } from "vitest";
@@ -159,7 +160,7 @@ function bindingRevision(row: EvidenceRow): string {
 }
 
 describe("existing-system-c Julia Tier 0-1 evidence", () => {
-  it("freezes an exact pre-GPU fixture without promoting the live census", () => {
+  it("freezes an exact historical pre-GPU fixture without promoting the live census", () => {
     expect(artifact).toMatchObject({
       schema: "fractalpark-julia-existing-system-c-evidence/v1",
       revision: 1,
@@ -184,7 +185,7 @@ describe("existing-system-c Julia Tier 0-1 evidence", () => {
     );
     for (const relativePath of EXPECTED_SOURCE_BINDING_PATHS) {
       expect(artifact.sourceBindings[relativePath]).toBe(
-        sha256HexSyncV1(readFileSync(join(ROOT, relativePath), "utf8")),
+        sha256HexSyncV1(readHistoricalJuliaSourceInput(relativePath)),
       );
     }
     expect(new Set(artifact.rows.map((row) => row.formulaId)).size).toBe(76);

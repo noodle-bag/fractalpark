@@ -148,7 +148,13 @@ export async function PATCH(request: Request, context: RouteContext): Promise<Re
           });
       return jsonOk(
         request,
-        { draftId: result.draftId, revision: result.revision, envelope: result.envelope, backupEmailStatus },
+        {
+          draftId: result.draftId,
+          revision: result.revision,
+          envelope: result.envelope,
+          replayed: result.replayed,
+          backupEmailStatus,
+        },
         200,
         rotationHeaders(rotatedSetCookie),
       );

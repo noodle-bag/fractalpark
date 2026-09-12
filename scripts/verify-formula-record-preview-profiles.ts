@@ -1,6 +1,7 @@
 import { createHash } from 'node:crypto';
 import { existsSync, readFileSync } from 'node:fs';
 import { join } from 'node:path';
+import { matchesRecordPreviewSourceBindings } from './lib/record-preview-source-bindings';
 
 import activationAsset from '../resources/formula-library/v1/julia-runtime-activation.v1.json';
 import gatesAsset from '../resources/formula-library/v1/record-preview-gates.v1.json';
@@ -734,8 +735,7 @@ async function main(): Promise<void> {
       typeof raw.contentHash === 'string' &&
       raw.contentHash === sha256(canonicalJson(unsigned)) &&
       raw.policySha256 === sha256(canonicalJson(gates.profilePolicy)) &&
-      canonicalJson(raw.sourceBindings) ===
-        canonicalJson(expectedSourceBindings()) &&
+      matchesRecordPreviewSourceBindings(raw.sourceBindings, expectedSourceBindings()) &&
       Array.isArray(raw.rows) &&
       raw.rows.length === gates.publishedCount &&
       isRecord(raw.summary),

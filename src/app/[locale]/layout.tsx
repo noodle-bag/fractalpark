@@ -1,5 +1,4 @@
 import type { Metadata } from 'next';
-import Script from 'next/script';
 import { notFound } from 'next/navigation';
 import { NextIntlClientProvider } from 'next-intl';
 import { getMessages, getTranslations, setRequestLocale } from 'next-intl/server';
@@ -7,6 +6,7 @@ import { Analytics } from '@vercel/analytics/next';
 import { SpeedInsights } from '@vercel/speed-insights/next';
 import { GoogleAnalytics } from '@/components/analytics/GoogleAnalytics';
 import { PageViewTracker } from '@/components/analytics/PageViewTracker';
+import { AnalyticsConsent } from '@/components/analytics/AnalyticsConsent';
 import { CloudSessionProvider } from '@/components/cloud/CloudSessionProvider';
 import { LayoutProvider } from '@/components/layout/LayoutContext';
 import LayoutShell from '@/components/layout/LayoutShell';
@@ -94,18 +94,14 @@ export default async function LocaleLayout({
           type="application/ld+json"
           dangerouslySetInnerHTML={{ __html: renderJsonLd(websiteJsonLd) }}
         />
-        <Script id="microsoft-clarity" strategy="afterInteractive">
-          {`(function(c,l,a,r,i,t,y){
-              c[a]=c[a]||function(){(c[a].q=c[a].q||[]).push(arguments)};
-              t=l.createElement(r);t.async=1;t.src="https://www.clarity.ms/tag/"+i;
-              y=l.getElementsByTagName(r)[0];y.parentNode.insertBefore(t,y);
-          })(window, document, "clarity", "script", "xewn83hqvo");`}
-        </Script>
         <NextIntlClientProvider messages={messages}>
           <LayoutProvider>
             <CloudSessionProvider>
               <LayoutShell>{children}</LayoutShell>
             </CloudSessionProvider>
+            <AnalyticsConsent
+              enabled={Boolean(process.env.NEXT_PUBLIC_GA_MEASUREMENT_ID)}
+            />
           </LayoutProvider>
         </NextIntlClientProvider>
         <GoogleAnalytics />

@@ -12,6 +12,7 @@ import type { PublishedFormulaSelectionResult } from "@/lib/published-formula-se
 import type { FormulaIdV1 } from "@/engine/formulas/v1";
 import type { PublishedFormulaDirectoryRowV1 } from "@/content/published-formula-directory";
 import type { PublishedFormulaDirectoryFamilyV1 } from "@/content/formula-directory-categories";
+import directory from '../../public/formula-library/v1/directory/index.json';
 
 vi.mock("next-intl", () => ({
   useLocale: () => "en",
@@ -92,6 +93,39 @@ function successfulClient(value = client()): () => Promise<PublishedFormulaLibra
 afterEach(cleanup);
 
 describe("PublishedFormulaLibrary", () => {
+  it('updates the identity without leaving a stale public link on a custom formula', async () => {
+    const value = client();
+    const loadClient = successfulClient({
+      ...value,
+      directory: {
+        ...value.directory,
+        rows: directory.rows as unknown as PublishedFormulaDirectoryRowV1[],
+        runtimeAliasFormulaIds: Object.fromEntries(directory.runtimeAliases.map(row => [row.runtimeId, row.canonicalFormulaId])),
+      },
+    });
+    const onSelect = vi.fn(async (): Promise<PublishedFormulaSelectionResult> => ({ ok: true }));
+    const { rerender } = render(<PublishedFormulaLibrary currentFormula="mandelbrot" loadClient={loadClient} onSelect={onSelect} />);
+    await waitFor(() => expect(screen.getByTestId('published-formula-current')).toHaveTextContent('classic-mandelbrot'));
+    expect(screen.getByRole('link', { name: 'formula.library.details' })).toHaveAttribute('href', '/en/formulas/00e14aa8-b766-54ea-a359-3f5d20d329b7');
+    expect(screen.getByRole('link', { name: 'formula.library.details' })).toHaveClass('h-5', 'w-5');
+    expect(screen.getByTestId('published-formula-current')).toHaveClass('leading-5');
+    rerender(<PublishedFormulaLibrary currentFormula="fd4db987-1bd3-5ab0-983f-9a9bb01d0304" loadClient={loadClient} onSelect={onSelect} />);
+    expect(screen.getByTestId('published-formula-current')).toHaveTextContent('fractint-fatso');
+    expect(screen.getByRole('link', { name: 'formula.library.details' })).toHaveAttribute('href', '/en/formulas/fd4db987-1bd3-5ab0-983f-9a9bb01d0304');
+    rerender(<PublishedFormulaLibrary currentFormula="custom-fatso" loadClient={loadClient} onSelect={onSelect} />);
+    expect(screen.getByTestId('published-formula-current')).toHaveTextContent('custom-fatso');
+    expect(screen.queryByRole('link', { name: 'formula.library.details' })).not.toBeInTheDocument();
+    expect(onSelect).not.toHaveBeenCalled();
+  });
+
+  it('keeps an unverified identity unlinked when the catalog is unavailable', async () => {
+    const loadClient = vi.fn(async (): Promise<PublishedFormulaLibraryClientResult> => ({ ok: false, code: 'library-unavailable' }));
+    render(<PublishedFormulaLibrary currentFormula="unknown-frm" loadClient={loadClient} onSelect={vi.fn()} />);
+    await waitFor(() => expect(loadClient).toHaveBeenCalled());
+    expect(screen.getByTestId('published-formula-current')).toHaveTextContent('unknown-frm');
+    expect(screen.queryByRole('link', { name: 'formula.library.details' })).not.toBeInTheDocument();
+  });
+
   it("opens on Classic 94 and exposes All plus the seven structure categories", async () => {
     render(
       <PublishedFormulaLibrary

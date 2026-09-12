@@ -92,12 +92,30 @@ The exact TypeScript name may follow nearby conventions, but there must be
 one implementation and one validation path.
 
 The canonical static composition comes from the preset's current view.
-Animation keyframes affect playback only. If a generated drift remains as a
-fallback for presets without explicit keyframes, it must be produced by one
-shared playback projection and must not modify the canonical document,
-poster, thumbnail, or Remix state.
+Animation keyframes affect playback only. The shared playback projection must
+cyclically anchor explicit keyframes so playback at `t=0` uses that canonical
+static composition without changing the closed animation path. If a generated
+drift remains as a fallback for presets without explicit keyframes, it must be
+produced by one shared playback projection and must not modify the canonical
+document, poster, thumbnail, or Remix state.
+
+Published Julia playback resolves a legacy runtime ID through the validated
+public formula directory, loads the exact published formula revision, and
+enables Julia only when that revision appears in the runtime activation
+authority. Missing, stale, unsupported, fetch-failed, or compile-failed
+formulas keep the static published image visible and must not mount a
+parameter-plane canvas as a substitute. Drift excludes authority-denied live
+entries from its pool and advances past later fetch or compile failures.
 
 ### Custom formulas
+
+A Full Source Remix reads and verifies the exact pinned published Definition,
+then creates a separate Mine authoring identity whose initial editable source is
+the canonical FRM-like writer form. Parent provenance retains the published
+formula ID and exact source/Profile revisions. This conversion is a named
+published-reader-to-Mine-writer boundary: it does not mutate the published
+Definition, and it does not weaken the fail-closed Apply gate for subsequent
+user edits.
 
 The FRM Editor and Explore use the same persisted custom-formula record,
 compiler, plugin registration, cache invalidation, and experience-hint
@@ -146,6 +164,8 @@ is not the canonical model for new published preset or persistence work.
 - Gallery cards retain their static published images for SSR, no-JavaScript,
   touch, non-animated presets, and WebGL failure. Hover-capable pointers may
   lazy-load only the currently hovered animated preset.
+- Julia canvases use instance-local published formula plugins. They do not
+  register formula source globally or mutate the user's Explore session.
 - Published artwork pages automatically play the current artwork after
   hydration, both inline and after View Fullscreen. The page has no separate
   Play action; fullscreen keeps Pause/Resume and Exit controls.

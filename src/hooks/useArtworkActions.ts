@@ -163,7 +163,6 @@ export function useArtworkActions({
       if (result.ok) {
         setCloudPhase('synced');
         trackEvent('save_fractal', {
-          formula: document.formula.formulaId,
           ...getArtworkAnalyticsContext(document),
         });
         if (!hadIdentity) onDraftCreated?.(result.identity);
@@ -231,7 +230,6 @@ export function useArtworkActions({
         createFractalProjectFilename(document.metadata?.name)
       );
       trackEvent('project_download', {
-        formula: document.formula.formulaId,
         file_size_bucket: getProjectFileSizeBucket(
           new TextEncoder().encode(serialized.value).byteLength
         ),
@@ -297,7 +295,6 @@ export function useArtworkActions({
         }
       }
       trackEvent('project_import', {
-        formula: parsed.value.envelope.document.formula.formulaId,
         custom_formula_count: parsed.value.envelope.assets?.formulas?.length ?? 0,
         file_size_bucket: getProjectFileSizeBucket(file.size),
         ...getArtworkAnalyticsContext(parsed.value.envelope.document),
@@ -331,7 +328,6 @@ export function useArtworkActions({
       trackEvent('export_fractal', {
         scale,
         ssaa: ssaaLevel,
-        formula: document.formula.formulaId,
         ...getArtworkAnalyticsContext(document),
       });
       succeed('export');

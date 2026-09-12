@@ -1,6 +1,8 @@
 'use client';
 
 import { useCallback, useRef, useEffect } from 'react';
+import { useTranslations } from 'next-intl';
+import { Loader2 } from 'lucide-react';
 import { useWebGL } from '@/hooks/useWebGL';
 import { useFractalRenderer } from '@/hooks/useFractalRenderer';
 import { useCanvasInteraction } from '@/hooks/useCanvasInteraction';
@@ -16,7 +18,7 @@ import type {
   ViewBounds,
 } from '@/engine/types';
 
-interface FractalCanvasProps {
+export interface FractalCanvasProps {
   paletteIndex: number;
   maxIterations: number;
   bounds: ViewBounds;
@@ -62,6 +64,7 @@ export default function FractalCanvas({
   onPointSelect,
   onCanvasReady,
 }: FractalCanvasProps) {
+  const t = useTranslations('explore.formula.resolution');
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const { glRef, isContextLost, error, resize } = useWebGL(canvasRef);
   const { render, rendererRef } = useFractalRenderer(glRef);
@@ -86,6 +89,7 @@ export default function FractalCanvas({
       const generation = ++renderGenerationRef.current;
       if (canvas) {
         canvas.dataset.renderStatus = 'pending';
+        canvas.setAttribute('aria-busy', 'true');
         delete canvas.dataset.renderedFormulaId;
       }
       void render(params)
@@ -97,11 +101,13 @@ export default function FractalCanvas({
           )
             return;
           canvas.dataset.renderStatus = 'ready';
+          canvas.setAttribute('aria-busy', 'false');
           canvas.dataset.renderedFormulaId = String(params.formula);
         })
         .catch(() => {
           if (generation !== renderGenerationRef.current || !canvas) return;
           canvas.dataset.renderStatus = 'error';
+          canvas.setAttribute('aria-busy', 'false');
         });
     },
     [render],
@@ -185,9 +191,16 @@ export default function FractalCanvas({
       <canvas
         ref={canvasRef}
         data-testid="fractal-canvas"
-        className="h-full w-full cursor-grab rounded-lg active:cursor-grabbing"
+        className="peer h-full w-full cursor-grab rounded-lg active:cursor-grabbing"
         style={{ touchAction: 'none' }}
       />
+
+      {!isContextLost && (
+        <div role="status" className="pointer-events-none absolute left-3 top-3 hidden items-center gap-2 rounded-md bg-background/90 px-3 py-2 text-sm peer-data-[render-status=pending]:flex">
+          <Loader2 className="h-4 w-4 animate-spin" aria-hidden="true" />
+          {t('loading')}
+        </div>
+      )}
 
       {isContextLost && (
         <div className="absolute inset-0 flex items-center justify-center rounded-lg bg-black/50">

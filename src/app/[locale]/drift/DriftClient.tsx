@@ -1,8 +1,9 @@
 'use client';
 
-import { useEffect, useState, lazy, Suspense, useCallback, useMemo } from 'react';
+import { useEffect, useState, useCallback, useMemo } from 'react';
 import { useTranslations } from 'next-intl';
 import { Pause, Play, SkipBack, SkipForward } from 'lucide-react';
+import PublishedArtworkCanvas from '@/components/fractal/PublishedArtworkCanvas';
 import { useLayout } from '@/components/layout/LayoutContext';
 import {
   useFractalSlideshow,
@@ -11,14 +12,13 @@ import {
 import {
   buildPublishedArtworkPlayback,
   type PublishedArtwork,
+  type PublishedArtworkPlayback,
 } from '@/lib/published-artworks';
+import { resolvePublishedArtworkRuntimeAvailability } from '@/lib/published-artwork-runtime';
 import {
   PLAYBACK_CONTROL_BAR_CLASS,
   PLAYBACK_CONTROL_BUTTON_CLASS,
 } from '@/components/fractal/playback-controls';
-
-// Lazy load AnimatedFractalCanvas to reduce initial bundle
-const AnimatedFractalCanvas = lazy(() => import('@/components/fractal/AnimatedFractalCanvas'));
 
 /**
  * Shuffle array using Fisher-Yates algorithm
@@ -44,7 +44,26 @@ function useDriftArtworks(artworks: PublishedArtwork[]): SlideshowArtwork[] {
   const [shuffledArtworks, setShuffledArtworks] = useState<SlideshowArtwork[]>([]);
 
   useEffect(() => {
-    setShuffledArtworks(shuffleArray(playbackArtworks));
+    let active = true;
+    void Promise.all(
+      playbackArtworks.map(async (artwork) => ({
+        artwork,
+        availability: await resolvePublishedArtworkRuntimeAvailability(artwork),
+      })),
+    ).then((resolved) => {
+      if (!active) return;
+      setShuffledArtworks(
+        shuffleArray(
+          resolved
+            .filter(({ availability }) => availability.available)
+            .map(({ artwork }) => artwork),
+        ),
+      );
+    });
+
+    return () => {
+      active = false;
+    };
   }, [playbackArtworks]);
 
   return shuffledArtworks;
@@ -151,19 +170,19 @@ function DriftSlideshow({ artworks, isPaused, onTogglePause }: DriftSlideshowPro
             backgroundSize: 'cover',
           }}
         >
-          <Suspense fallback={null}>
-            <AnimatedFractalCanvas
-              params={{ ...fractalA.params, bounds: boundsA }}
-              keyframes={fractalA.animation?.keyframes}
-              dprScale={dprScale}
-              active={activeA && !isPaused}
-              resetOnStop={false}
-              maxIterationsClamp={300}
-              className="w-full h-full"
-              onLoopComplete={loopA}
-              onFrame={setBoundsA}
-            />
-          </Suspense>
+          <PublishedArtworkCanvas
+            artwork={fractalA as PublishedArtworkPlayback}
+            bounds={boundsA}
+            keyframes={fractalA.animation?.keyframes}
+            dprScale={dprScale}
+            active={activeA && !isPaused}
+            resetOnStop={false}
+            maxIterationsClamp={300}
+            className="w-full h-full"
+            onLoopComplete={loopA}
+            onFrame={setBoundsA}
+            onUnavailable={loopA}
+          />
         </div>
       )}
 
@@ -171,21 +190,28 @@ function DriftSlideshow({ artworks, isPaused, onTogglePause }: DriftSlideshowPro
       {fractalB && (
         <div
           className="absolute inset-0 pointer-events-none"
-          style={{ opacity: opacityB, transition: transitionStyle, zIndex: 1 }}
+          style={{
+            opacity: opacityB,
+            transition: transitionStyle,
+            zIndex: 1,
+            backgroundImage: fractalB.thumbnail ? `url("${fractalB.thumbnail}")` : undefined,
+            backgroundPosition: 'center',
+            backgroundSize: 'cover',
+          }}
         >
-          <Suspense fallback={null}>
-            <AnimatedFractalCanvas
-              params={{ ...fractalB.params, bounds: boundsB }}
-              keyframes={fractalB.animation?.keyframes}
-              dprScale={dprScale}
-              active={activeB && !isPaused}
-              resetOnStop={false}
-              maxIterationsClamp={300}
-              className="w-full h-full"
-              onLoopComplete={loopB}
-              onFrame={setBoundsB}
-            />
-          </Suspense>
+          <PublishedArtworkCanvas
+            artwork={fractalB as PublishedArtworkPlayback}
+            bounds={boundsB}
+            keyframes={fractalB.animation?.keyframes}
+            dprScale={dprScale}
+            active={activeB && !isPaused}
+            resetOnStop={false}
+            maxIterationsClamp={300}
+            className="w-full h-full"
+            onLoopComplete={loopB}
+            onFrame={setBoundsB}
+            onUnavailable={loopB}
+          />
         </div>
       )}
 

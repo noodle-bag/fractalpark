@@ -3,6 +3,7 @@ import { expect, test } from '@playwright/test';
 const PUBLISHED_FORMULA_ID = '00e14aa8-b766-54ea-a359-3f5d20d329b7';
 const FRACTINT_FORMULA_ID = '0109434e-e9cc-5d80-ad3f-d25ec62cbfda';
 const HELD_FORMULA_ID = '00cb5763-13e1-5c93-a283-d99905acccee';
+const TOBEYWINEGLASS_ID = '3832742e-41f6-5d14-8749-a4955ab123fb';
 const DEFINITION_PATH = '/formula-library/v1/runtime/published/definitions/';
 
 test.describe('shared canonical source workspace', () => {
@@ -87,7 +88,7 @@ test.describe('shared canonical source workspace', () => {
     await expect(page.getByTestId('fractal-canvas')).toBeVisible({ timeout: 30_000 });
 
     await editor.click();
-    await page.keyboard.press('Control+A');
+    await page.keyboard.press('ControlOrMeta+A');
     await page.keyboard.insertText('not canonical');
     await expect(page.getByTestId('formula-invalid-draft')).toBeVisible({
       timeout: 15_000,
@@ -103,6 +104,37 @@ test.describe('shared canonical source workspace', () => {
     const chunks: Buffer[] = [];
     for await (const chunk of stream) chunks.push(Buffer.from(chunk));
     expect(Buffer.concat(chunks).toString('utf8')).toBe('not canonical');
+  });
+
+  test('applies an untouched tobeywineglass Remix in canonical Mine form', async ({
+    page,
+  }) => {
+    await page.goto(`/en/formulas/${TOBEYWINEGLASS_ID}`);
+    await page
+      .getByTestId('canonical-source-workspace')
+      .getByRole('link', { name: 'Remix' })
+      .click();
+    await page.waitForURL(
+      (url) =>
+        url.pathname === '/en/formulas/editor' &&
+        !url.searchParams.has('open') &&
+        !url.searchParams.has('formula') &&
+        !url.searchParams.has('intent'),
+    );
+
+    await expect(page.locator('.cm-content')).toHaveAttribute(
+      'contenteditable',
+      'true',
+      { timeout: 30_000 },
+    );
+    const apply = page.getByRole('button', { name: 'Apply', exact: true });
+    await expect(apply).toBeEnabled({ timeout: 30_000 });
+    await apply.click();
+    await expect(page.getByText('Compile Successful').first()).toBeVisible();
+    await expect(page.getByTestId('fractal-canvas')).toBeVisible({
+      timeout: 30_000,
+    });
+    await page.close({ runBeforeUnload: false });
   });
 
   test('renders the same full editor inline on published Records and requests no held source', async ({

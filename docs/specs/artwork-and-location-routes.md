@@ -126,7 +126,12 @@ legacy preset query.
   and image generation consume this Document or the published projection.
 - The current preset view is the static composition. Keyframes affect
   playback only and never replace the thumbnail, Hero, poster, or Remix
-  starting state.
+  starting state. The playback projection cyclically anchors explicit
+  keyframes so its `t=0` frame equals this static composition.
+- A Julia playback enhancement resolves the preset's legacy runtime ID to an
+  exact canonical published formula revision and passes the activation gate.
+  Resolution, authority, fetch, or compile failure leaves the static image in
+  place; playback never substitutes a parameter-plane rendering.
 
 Direct preset-query parsing in page components or image scripts is
 prohibited.

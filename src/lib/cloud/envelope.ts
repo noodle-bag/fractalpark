@@ -17,6 +17,7 @@ import type { FractalDocument } from '@/engine/document';
 import { PALETTES } from '@/engine/palettes';
 import { registerBuiltins } from '@/engine/plugins/builtins';
 import { pluginRegistry } from '@/engine/plugins/registry';
+import { isPublishedFormulaId } from '@/lib/public-formula';
 
 import presetsFile from '../../../public/gallery-presets.json';
 
@@ -166,19 +167,27 @@ export function validateCloudEnvelopeV1(input: unknown, inputBytes: number): Clo
   const doc = read.envelope.document;
   const formulas = read.envelope.assets?.formulas ?? [];
 
-  // Built-ins resolve against the runtime registry. A custom formula is
-  // allowed only when the portable envelope carries the exact referenced
-  // asset; unknown bare ids must not enter cloud storage. Embedded assets may
-  // never shadow a built-in id, even when they are not currently referenced.
-  const formulaIsBuiltin = pluginRegistry.hasFormula(doc.formula.formulaId);
+  // Public formulas resolve against either the runtime registry or the frozen
+  // publication ledger. A custom formula is allowed only when the portable
+  // envelope carries the exact referenced asset; unknown bare ids must not
+  // enter cloud storage. Embedded assets may never shadow a public formula,
+  // even when they are not currently referenced.
+  const formulaIsPublic =
+    pluginRegistry.hasFormula(doc.formula.formulaId) ||
+    isPublishedFormulaId(doc.formula.formulaId);
   const formulaHasPortableAsset = formulas.some(
     (asset) => asset.id === doc.formula.formulaId,
   );
-  if (!formulaIsBuiltin && !formulaHasPortableAsset) {
+  if (!formulaIsPublic && !formulaHasPortableAsset) {
     return reject('Unknown formula.');
   }
-  if (formulas.some((asset) => pluginRegistry.hasFormula(asset.id))) {
-    return reject('Formula asset conflicts with a built-in formula.');
+  if (
+    formulas.some(
+      (asset) =>
+        pluginRegistry.hasFormula(asset.id) || isPublishedFormulaId(asset.id),
+    )
+  ) {
+    return reject('Formula asset conflicts with a public formula.');
   }
   // All other runtime entities remain strict registry allowlists.
   if (!pluginRegistry.hasOutsideColoring(doc.coloring.outsideColoringId)) {
@@ -374,7 +383,7 @@ export function validateCloudEnvelopeV1(input: unknown, inputBytes: number): Clo
 export function resolveRegistrySource(type: 'formula' | 'preset', id: string): boolean {
   ensureBuiltinPlugins();
   if (type === 'formula') {
-    return pluginRegistry.hasFormula(id);
+    return pluginRegistry.hasFormula(id) || isPublishedFormulaId(id);
   }
   return presetsFile.presets.some((preset) => preset.id === id);
 }

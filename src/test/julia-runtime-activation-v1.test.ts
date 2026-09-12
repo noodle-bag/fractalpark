@@ -25,6 +25,7 @@ import { compilePublishedFormulaPluginV1 } from "@/engine/formulas/v1/published-
 import { registerBuiltins } from "@/engine/plugins/builtins";
 import { pluginRegistry } from "@/engine/plugins/registry";
 import type { FormulaPlugin } from "@/engine/plugins/types";
+import { bindPublishedRenderingSourceV1, type PublishedRenderingPluginV1 } from '@/engine/formulas/v1/published-rendering-source-v1';
 
 type RuntimeRow = (typeof runtimeIndexAsset.rows)[number];
 
@@ -62,7 +63,7 @@ async function compileSupportedPlugin(): Promise<{
     source,
   });
   if (!compiled.ok) throw new Error(compiled.code);
-  return { row, plugin: compiled.value.plugin };
+  return { row, plugin: bindPublishedRenderingSourceV1(compiled.value) };
 }
 
 describe("Julia runtime activation v1", () => {
@@ -199,8 +200,9 @@ describe("Julia runtime activation v1", () => {
     });
     expect(documentToRuntimeParams(supportedDocument).isJulia).toBe(true);
 
-    const stalePlugin: FormulaPlugin = Object.freeze({
+    const stalePlugin: PublishedRenderingPluginV1 = Object.freeze({
       ...plugin,
+      sourceRevision: "0".repeat(64),
       cacheFingerprint: "0".repeat(64),
       supportsJulia: true,
     });
@@ -239,14 +241,17 @@ describe("Julia runtime activation v1", () => {
     pluginRegistry.unregister("formula", unsupported.formulaId);
   });
 
-  it("keeps every legacy built-in and alias fail closed", () => {
+  it("restores only the reviewed native bindings without changing persisted identity", () => {
     const builtins = pluginRegistry.listFormulas().filter((plugin) => plugin.source === "builtin");
     expect(builtins).toHaveLength(94);
     expect(builtins.every((plugin) => plugin.supportsJulia === false)).toBe(true);
+    let supported = 0;
     for (const plugin of builtins) {
       const document = documentFor(plugin.id);
-      expect(documentToRuntimeParams(document).isJulia).toBe(false);
+      if (documentToRuntimeParams(document).isJulia) supported++;
       expect(document.formula.isJulia).toBe(true);
+      expect(document.formula.formulaId).toBe(plugin.id);
     }
+    expect(supported).toBe(76);
   });
 });

@@ -212,13 +212,39 @@ export function buildPresetPlaybackKeyframes(
 ): Keyframe[] {
   const explicitKeyframes = document.animation?.viewKeyframes;
   if (explicitKeyframes && explicitKeyframes.length >= 2) {
-    return explicitKeyframes;
+    const initialFrameIndex = explicitKeyframes.findIndex((keyframe) =>
+      viewBoundsEqual(keyframe.bounds, document.scene.bounds)
+    );
+
+    if (initialFrameIndex < 0) {
+      throw new Error(
+        `Preset "${presetId}" current view must match an animation keyframe`
+      );
+    }
+
+    if (initialFrameIndex === 0) {
+      return explicitKeyframes;
+    }
+
+    return [
+      ...explicitKeyframes.slice(initialFrameIndex),
+      ...explicitKeyframes.slice(0, initialFrameIndex),
+    ];
   }
 
   return generateDriftKeyframes(
     documentToRuntimeParams(document),
     presetId
   ).keyframes;
+}
+
+function viewBoundsEqual(left: ViewBounds, right: ViewBounds): boolean {
+  return (
+    left.centerX === right.centerX &&
+    left.centerY === right.centerY &&
+    left.zoom === right.zoom &&
+    (left.rotation ?? 0) === (right.rotation ?? 0)
+  );
 }
 
 function parsePresetConfig(config: GalleryPresetConfig): GalleryPreset {

@@ -18,6 +18,7 @@ describe('artwork analytics', () => {
     expect(getArtworkAnalyticsContext(builtin)).toEqual({
       document_version: 2,
       formula_kind: 'builtin',
+      formula: 'mandelbrot',
     });
     expect(getArtworkAnalyticsContext(custom)).toEqual({
       document_version: 2,

@@ -82,7 +82,7 @@ describe('myfrac cli explore commands', () => {
     };
 
     try {
-      exploreMutate({ document: { ...baseDocument, formula: { ...baseDocument.formula, isJulia: true } }, config });
+      exploreMutate({ document: { ...baseDocument, formula: { ...baseDocument.formula, formulaId: 'magnet1', isJulia: true } }, config });
       throw new Error('expected-constraint-failure');
     } catch (error) {
       expect(error).toMatchObject({

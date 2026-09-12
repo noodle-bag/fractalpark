@@ -1,8 +1,11 @@
 'use client';
 
-import { lazy, Suspense, useMemo, useState } from 'react';
+import { useMemo, useState } from 'react';
+import { useTranslations } from 'next-intl';
+import { usePublishedArtworkAvailability } from '@/hooks/usePublishedArtworkAvailability';
 import Image from 'next/image';
 import Link from 'next/link';
+import PublishedArtworkCanvas from '@/components/fractal/PublishedArtworkCanvas';
 import {
   buildPublishedArtworkPlayback,
   type PublishedArtwork,
@@ -11,10 +14,6 @@ import {
   GALLERY_CARD_LINK_CLASS,
   GALLERY_PREVIEW_FRAME_CLASS,
 } from './gallery-card-styles';
-
-const AnimatedFractalCanvas = lazy(
-  () => import('@/components/fractal/AnimatedFractalCanvas')
-);
 
 interface PublishedArtworkCardProps {
   artwork: PublishedArtwork;
@@ -33,6 +32,9 @@ export function PublishedArtworkCard({
     [artwork]
   );
   const hasAnimation = playback.animation.keyframes.length >= 2;
+  const { availability, onUnavailable } = usePublishedArtworkAvailability(playback);
+  const t = useTranslations('artworks.page.viewer');
+  const unavailable = availability?.available === false;
 
   return (
     <article>
@@ -60,16 +62,15 @@ export function PublishedArtworkCard({
           ) : (
             <div className="h-full w-full bg-gradient-to-br from-slate-800 via-slate-700 to-slate-600" />
           )}
-          {isHovered && hasAnimation ? (
+          {isHovered && hasAnimation && !unavailable ? (
             <div className="pointer-events-none absolute inset-0">
-              <Suspense fallback={null}>
-                <AnimatedFractalCanvas
-                  params={playback.params}
-                  keyframes={playback.animation.keyframes}
-                  dprScale={0.5}
-                  className="h-full w-full"
-                />
-              </Suspense>
+              <PublishedArtworkCanvas
+                artwork={playback}
+                keyframes={playback.animation.keyframes}
+                dprScale={0.5}
+                className="h-full w-full"
+                onUnavailable={onUnavailable}
+              />
             </div>
           ) : null}
         </div>
@@ -77,6 +78,11 @@ export function PublishedArtworkCard({
           {artwork.name}
         </h2>
       </Link>
+      {unavailable && (
+        <p role="status" className="mt-2 text-xs leading-relaxed text-muted-foreground">
+          {t(availability.reason === 'julia-unsupported' ? 'juliaUnavailable' : 'loadUnavailable')}
+        </p>
+      )}
     </article>
   );
 }

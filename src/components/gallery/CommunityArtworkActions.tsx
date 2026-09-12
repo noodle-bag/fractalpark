@@ -17,6 +17,7 @@ import { useCloudSession } from '@/components/cloud/CloudSessionProvider';
 import { stashRemixHandoff } from '@/lib/remix-handoff';
 import { CloudClientError, createDraft, getCommunityPublication } from '@/lib/cloud/client';
 import { trackEvent } from '@/components/analytics/PageViewTracker';
+import { trackBackupEmailResult } from '@/lib/cloud-analytics';
 
 interface CommunityArtworkActionsProps {
   publicationId: string;
@@ -41,7 +42,7 @@ export function CommunityArtworkActions({
     setBusy(true);
     setError(null);
     try {
-      trackEvent('community_remix_started', { source: 'community_page' });
+      trackEvent('community_remix_started', { publication_id: publicationId });
       const detail = await getCommunityPublication(publicationId);
       if (state.status === 'authenticated') {
         // Server creates the draft with the frozen envelope and the
@@ -50,6 +51,15 @@ export function CommunityArtworkActions({
           envelope: detail.envelope,
           remixSourceType: 'publication',
           remixSourceId: publicationId,
+        });
+        if (!created.replayed) {
+          trackEvent('cloud_draft_saved', { is_first_save: true });
+          trackBackupEmailResult(created.backupEmailStatus);
+        }
+        trackEvent('remix_complete', {
+          source_type: 'publication',
+          source_id: publicationId,
+          completion_surface: 'cloud_draft',
         });
         router.push(`/${locale}/explore?draft=${encodeURIComponent(created.draftId)}`);
         return;
@@ -71,12 +81,13 @@ export function CommunityArtworkActions({
   const copyLink = useCallback(async () => {
     try {
       await navigator.clipboard.writeText(pageUrl);
+      trackEvent('copy_page_link', { publication_id: publicationId });
       setCopied(true);
       window.setTimeout(() => setCopied(false), 2000);
     } catch {
       // Clipboard unavailable (permissions); the URL stays visible anyway.
     }
-  }, [pageUrl]);
+  }, [pageUrl, publicationId]);
 
   return (
     <div className="mt-8 flex flex-wrap items-center gap-3">

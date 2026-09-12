@@ -5,7 +5,7 @@ import { registerBuiltins } from '@/engine/plugins/builtins';
 import { FORMULA_CATALOG, type FormulaMetadata } from '@/engine/plugins/formula-catalog';
 import type { FractalDocument } from '@/engine/document';
 import { migrateFractalDocument } from '@/engine/document-migrate';
-import { resolveJuliaRuntimeCapabilityV1 } from '@/engine/formulas/v1/julia-runtime-activation-v1';
+import { resolveFormulaRuntimeCapabilityV1 } from '@/engine/formulas/v1/formula-runtime-capability-v1';
 import { pluginRegistry } from '@/engine/plugins/registry';
 import { PALETTES } from '@/engine/palettes';
 import { SITE } from '@/lib/site';
@@ -547,9 +547,9 @@ function applyPluginParamPerturb(document: FractalDocument, rng: () => number, s
 
 function formulaSupportsJulia(formulaId: string): boolean {
   const plugin = pluginRegistry.getFormula(formulaId);
-  return resolveJuliaRuntimeCapabilityV1(
+  return resolveFormulaRuntimeCapabilityV1(
     formulaId,
-    plugin?.cacheFingerprint,
+    plugin,
   ).supportsRuntime;
 }
 

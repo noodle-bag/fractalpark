@@ -1294,6 +1294,8 @@
       "related": "Obras relacionadas",
       "customGradient": "Gradiente personalizado",
       "viewer": {
+        "juliaUnavailable": "Esta fórmula não oferece animação Julia. Exibindo a imagem salva.",
+        "loadUnavailable": "Não foi possível carregar a animação. Exibindo a imagem salva.",
         "viewFullscreen": "Ver em tela cheia",
         "resume": "Retomar animação",
         "pause": "Pausar animação",
@@ -1521,6 +1523,7 @@
       "standard": "Biblioteca padrão",
       "mine": "Minhas fórmulas",
       "library": {
+        "details": "Ver detalhes de {name}",
         "current": "Fórmula atual",
         "open": "Abrir biblioteca",
         "title": "Biblioteca de fórmulas padrão",
@@ -1615,6 +1618,33 @@
       "invalidNumber": "Insira um número finito válido.",
       "increase": "Aumentar",
       "decrease": "Diminuir",
+      "complexPlane": "Plano do parâmetro",
+      "parameterInteraction": {
+        "plane": "Arrastar no plano",
+        "polar": "Módulo e ângulo",
+        "real": "Ajustar valor",
+        "pair": "Ajustar componentes",
+        "times": "Iterações de ativação",
+        "narrow": "Reduzir intervalo",
+        "widen": "Ampliar intervalo",
+        "showCurrent": "Mostrar valor atual",
+        "magnitude": "Módulo",
+        "angle": "Ângulo (°)",
+        "constant": "Constante",
+        "feedback": "Coeficiente de realimentação",
+        "firstTrigger": "Primeira ativação",
+        "secondTrigger": "Segunda ativação",
+        "realOnly": "Somente a parte real afeta o resultado.",
+        "windowHint": "O intervalo é uma janela de exploração. Você pode inserir valores exatos abaixo.",
+        "hints": {
+          "feedback": "A parte real define a constante; a imaginária define a realimentação.",
+          "seedLimit": "Ambas as componentes definem o valor inicial; a real também define o limite de escape.",
+          "thresholdPair": "Ambas as componentes alteram o limite de escape por Re((p + 4)²).",
+          "coupled": "Este parâmetro altera o coeficiente da órbita e o limite de escape.",
+          "exponent": "Ambas as componentes afetam a inicialização; as potências da iteração usam apenas a parte real."
+        }
+      },
+      "resetComplex": "Redefinir para zero",
       "mode": {
         "label": "Modo Fractal",
         "mandelbrot": "Mandelbrot",
@@ -1775,6 +1805,17 @@
         "label": "Rotação"
       },
       "formulaParameters": "Parâmetros da Fórmula",
+      "coordinateParameter": {
+        "source": "Origem das coordenadas",
+        "canvas": "Seguir as coordenadas da tela",
+        "fixed": "Parâmetro fixo",
+        "value": "Parâmetro de coordenadas",
+        "hint": "Controla a coordenada usada na recorrência. O ponto inicial acompanha a tela; os outros parâmetros permanecem independentes.",
+        "dynamical": "Plano dinâmico (parâmetro fixo)",
+        "dynamicalHint": "Fixa a coordenada de recorrência e usa a tela como pontos iniciais. É exploração de parâmetros, não uma afirmação de Julia clássica; voltar restaura o estado inicial original.",
+        "juliaHint": "Julia fixa a coordenada do coeficiente e usa a tela como pontos iniciais. As transformações e regras de escape originais são mantidas.",
+        "parameterPlane": "Plano de parâmetros"
+      },
       "formulaNoParameters": "Esta fórmula usa seus padrões integrados e não precisa de controles extras.",
       "complexReal": "Re",
       "complexImaginary": "Im",
@@ -1790,6 +1831,9 @@
       "polarAngleScale": "Escala de Ângulo",
       "polarRadiusScale": "Escala de Raio",
       "sphericalAmount": "Intensidade Esférica",
+      "mandelboxScale": "Escala do Mandelbox",
+      "phoenixP": "Parâmetro do Phoenix",
+      "phoenixMultiP": "Parâmetro do Multi-Phoenix",
       "ringsP": "Parâmetro dos Anéis",
       "animation": {
         "title": "Animação",
@@ -2084,19 +2128,26 @@
       "gallery": "Visitar a Galeria"
     }
   },
+  "analyticsConsent": {
+    "title": "Análise de uso opcional",
+    "description": "Permita o Google Analytics com privacidade limitada para entendermos quais recursos do FractalPark são úteis. Não enviamos IDs de conta, e-mails, títulos, código-fonte de fórmulas nem conteúdo de obras. Recusar não limita nenhum recurso.",
+    "accept": "Permitir análise",
+    "decline": "Recusar",
+    "settings": "Configurações de análise"
+  },
   "legal": {
     "privacy": {
       "title": "Política de Privacidade",
-      "updated": "Última atualização: 3 de agosto de 2026",
+      "updated": "Última atualização: 10 de setembro de 2026",
       "intro": "O FractalPark é um explorador open-source de arte fractal. Você pode navegar, criar e salvar obras no seu próprio dispositivo sem nos informar nada. Uma conta só é necessária quando você opta por manter rascunhos na nuvem ou publicar na Comunidade. Esta página diz exatamente o que uma conta toca — e o que ela nunca toca.",
       "s1h": "O que uma conta armazena",
       "s1b": "Seu endereço de e-mail, usado apenas para fazer login com códigos de uso único. Não há senha.\n\nUm nome de exibição que você escolhe. Ele é privado até você publicar; obras publicadas o exibem como linha de atribuição.\n\nSeus rascunhos na nuvem (privados) e suas obras publicadas (públicas), incluindo os parâmetros de que um remix precisa.",
       "s2h": "O que nunca coletamos",
-      "s2b": "Sem senhas — os códigos de login vão para o seu e-mail e expiram.\n\nSem rastreadores de publicidade, sem cookies de perfilamento entre sites, sem venda ou compartilhamento de dados pessoais com corretores de dados.\n\nA análise de uso nunca carrega seu e-mail, endereço IP, títulos de obras, conteúdo de rascunhos ou qualquer identificador que aponte de volta para você.",
+      "s2b": "Sem senhas — os códigos de login vão para o seu e-mail e expiram.\n\nSem rastreadores de publicidade, sem perfilamento entre sites e sem venda ou compartilhamento de dados pessoais com corretores de dados.\n\nOs eventos de produto não levam ID de conta, e-mail, títulos, código-fonte de fórmulas, conteúdo de rascunhos ou de obras.",
       "s3h": "Cookies",
-      "s3b": "Dois, ambos inofensivos. Um cookie de sessão criptografado e HttpOnly mantém você conectado; um pequeno cookie NEXT_LOCALE lembra seu idioma. Nenhum deles pode ser lido por outros sites. O cookie de sessão é excluído quando você sai ou exclui sua conta; o cookie de idioma permanece até você limpar os dados do navegador.",
+      "s3b": "Um cookie de sessão criptografado e HttpOnly mantém você conectado, e um pequeno cookie NEXT_LOCALE lembra seu idioma. Se você permitir o Google Analytics, ele também define cookies próprios _ga com um identificador pseudônimo do navegador. Recusar impede esses cookies; retirar o consentimento os remove.",
       "s4h": "Análise de uso",
-      "s4b": "Usamos análises de uso agregadas e limitadas por privacidade para entender quais recursos ajudam as pessoas (por exemplo: uma publicação foi concluída, um guia foi aberto). Os eventos seguem um esquema fixo que proíbe e-mails, IPs, títulos e conteúdo de obras.",
+      "s4b": "O Vercel Analytics mede o tráfego básico sem cookies. O Google Analytics é opcional e só carrega após sua permissão. Usamos relatórios agregados para saber se recursos como renderizar, salvar e publicar foram concluídos. O esquema exclui IDs de conta, e-mails, títulos, código-fonte de fórmulas, IDs privados e conteúdo de obras. Esses provedores podem processar dados de rede e dispositivo necessários ao serviço; sinais de publicidade ficam desativados. Você pode mudar a escolha do Google Analytics em Configurações de análise.",
       "s5h": "E-mails que enviamos",
       "s5b": "Códigos de login, sempre.\n\nE-mails de backup de obras, apenas se você os ativar. Eles vêm desativados por padrão. Um e-mail de backup carrega a configuração completa da sua obra como anexo; e-mail não é armazenamento criptografado, e não podemos retirar um anexo depois de enviado. A página de configurações avisa isso novamente antes de você ativá-lo.",
       "s6h": "Rascunhos privados, obras públicas",

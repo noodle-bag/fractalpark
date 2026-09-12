@@ -122,7 +122,13 @@ export async function POST(request: Request): Promise<Response> {
           });
       return jsonOk(
         request,
-        { draftId: result.draftId, revision: result.revision, envelope: result.envelope, backupEmailStatus },
+        {
+          draftId: result.draftId,
+          revision: result.revision,
+          envelope: result.envelope,
+          replayed: result.replayed,
+          backupEmailStatus,
+        },
         status,
         rotationHeaders(rotatedSetCookie),
       );

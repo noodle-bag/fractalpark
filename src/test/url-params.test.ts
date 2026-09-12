@@ -2,8 +2,10 @@ import { beforeAll, describe, expect, it } from 'vitest';
 import { registerBuiltins } from '@/engine/plugins/builtins/index';
 import { compileFrm } from '@/engine/frm/compile';
 import { pluginRegistry } from '@/engine/plugins/registry';
+import type { FormulaPlugin } from '@/engine/plugins/types';
 import { runtimeParamsToDocument } from '@/engine/document-adapter';
 import { decodeParams, documentToExploreHref, documentToUrlState, encodeParams } from '@/lib/url-params';
+import { PSEUDOLAMBDA_FORMULA_ID } from '@/lib/published-formula-planar-controls';
 
 describe('url params m3 protocol', () => {
   beforeAll(() => {
@@ -18,6 +20,19 @@ bailout:
 }`, 'custom-fn-slot-weave');
     if (compiled.success && compiled.plugin) {
       pluginRegistry.register(compiled.plugin);
+    }
+    const base = pluginRegistry.getFormula('mandelbrot');
+    if (base) {
+      const pseudolambda: FormulaPlugin = {
+        ...base,
+        id: PSEUDOLAMBDA_FORMULA_ID,
+        name: 'pseudolambda',
+        uniforms: [
+          { name: 'frmV1_rate', type: 'vec2', default: [0, 0] },
+          { name: 'frmV1_offset', type: 'vec2', default: [0, 0] },
+        ],
+      };
+      pluginRegistry.register(pseudolambda);
     }
   });
 
@@ -177,6 +192,21 @@ bailout:
     expect(decoded.pluginParams).toEqual({
       u_fn1: 3,
       u_p1: [0.25, -0.1],
+    });
+  });
+
+  it('preserves pseudolambda planar values through pp encoding', () => {
+    const encoded = encodeParams({
+      formula: PSEUDOLAMBDA_FORMULA_ID,
+      pluginParams: {
+        frmV1_rate: [0, -0.3],
+        frmV1_offset: [1.6, 0],
+      },
+    });
+
+    expect(decodeParams(encoded).pluginParams).toEqual({
+      frmV1_rate: [0, -0.3],
+      frmV1_offset: [1.6, 0],
     });
   });
 

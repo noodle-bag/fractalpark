@@ -1,12 +1,14 @@
 import { expect, test } from '@playwright/test';
+import { HTML_LANG, SUPPORTED_LOCALES } from '../../src/i18n/supported-locales';
+import { PUBLIC_PROJECT } from '../../src/content/public-project';
 
 /**
  * Explore landing contract (Slice 2.1):
  * - `/`, `/en`, `/zh` migrate to the canonical Explore landing via a single
  *   explicit HTTP 301 with the query string preserved;
  * - the landing owns product metadata, the shared SoftwareApplication
- *   JSON-LD, a localized `<html lang>`, a static poster, and visible SSR
- *   product content that stays readable without JavaScript;
+ *   JSON-LD, a localized `<html lang>`, and a static poster without
+ *   appending product marketing content below the workspace;
  * - sitemap/robots/llms expose only canonical indexable URLs on the www host.
  */
 
@@ -108,70 +110,76 @@ test.describe('Explore landing document', () => {
     );
     expect(software).toBeDefined();
     expect(software['@id']).toBe('https://www.fractalpark.com/#software');
-    expect(software.featureList.join(' ')).toContain('94 GLSL fractal formulas');
+    expect(software.featureList.join(' ')).toContain(
+      `${PUBLIC_PROJECT.facts.formulaCount} published Standard Definitions`
+    );
     expect(software.featureList.join(' ')).toContain('9 coloring modes');
     expect(software.license).toBe('https://opensource.org/license/mit');
   });
 
-  test('keeps the landing readable without JavaScript', async ({ browser }) => {
-    const context = await browser.newContext({ javaScriptEnabled: false });
-    const page = await context.newPage();
-    await page.goto('/en/explore');
-
-    // Exactly one visible H1 with the product statement.
-    await expect(page.locator('h1')).toHaveCount(1);
-    await expect(page.locator('h1')).toContainText(
-      'FractalPark: open-source fractal generator in your browser'
-    );
-
-    // Direct answer, capability summary, and descriptive links.
-    await expect(
-      page.getByRole('heading', { name: 'What is FractalPark?' })
-    ).toBeVisible();
-    await expect(page.getByText(/94 built-in formulas/)).toBeVisible();
-    await expect(
-      page.getByRole('link', { name: /Formula Atlas — every formula/ })
-    ).toHaveAttribute('href', '/en/formulas');
-    await expect(
-      page.getByRole('link', { name: /FRM Guide — write Fractint/ })
-    ).toHaveAttribute('href', '/en/formulas/frm');
-    await expect(
-      page.getByRole('link', { name: /Drift — sit back/ })
-    ).toHaveAttribute('href', '/en/drift');
-    await expect(
-      page.getByRole('link', { name: /About — project facts/ })
-    ).toHaveAttribute('href', '/en/about');
-
-    // Static poster with fixed dimensions and descriptive alt.
-    const poster = page.getByRole('img', {
-      name: 'Static preview of a Mandelbrot fractal rendered by FractalPark',
+  for (const locale of SUPPORTED_LOCALES) {
+    test(`${locale}: preserves the no-JavaScript document without landing prose`, async ({
+      browser,
+      baseURL,
+    }) => {
+      const context = await browser.newContext({ javaScriptEnabled: false, baseURL });
+      try {
+        const page = await context.newPage();
+        await page.goto(`/${locale}/explore`);
+        await expect(page.locator('html')).toHaveAttribute('lang', HTML_LANG[locale]);
+        await expect(page.locator('#explore-landing-heading')).toHaveCount(0);
+        await expect(page.locator('main section')).toHaveCount(0);
+        await expect(page.locator('link[rel="canonical"]')).toHaveAttribute(
+          'href', `https://www.fractalpark.com/${locale}/explore`
+        );
+        await expect(page.locator('meta[name="description"]')).toHaveAttribute('content', /\S/);
+        await expect(page.locator('meta[property="og:description"]')).toHaveAttribute('content', /\S/);
+        const schemas = await page.locator('script[type="application/ld+json"]').allTextContents();
+        expect(schemas.map((text) => JSON.parse(text))).toContainEqual(
+          expect.objectContaining({ '@type': 'SoftwareApplication', '@id': 'https://www.fractalpark.com/#software' })
+        );
+        const poster = page.locator(`main img[src="${PUBLIC_PROJECT.heroImage.src}"]`).first();
+        await expect(poster).toBeVisible();
+        await expect(poster).toHaveAttribute('alt', /\S/);
+        await expect(poster).toHaveAttribute('width', String(PUBLIC_PROJECT.heroImage.width));
+        await expect(poster).toHaveAttribute('height', String(PUBLIC_PROJECT.heroImage.height));
+      } finally {
+        await context.close();
+      }
     });
-    await expect(poster).toBeVisible();
-    await expect(poster).toHaveAttribute('width', '1200');
-    await expect(poster).toHaveAttribute('height', '750');
-    await expect(poster).toHaveAttribute(
-      'src',
-      '/images/formulas/guides/mandelbrot.jpg'
-    );
 
-    await context.close();
-  });
-
-  test('keeps the Chinese landing localized without JavaScript', async ({
-    browser,
-  }) => {
-    const context = await browser.newContext({ javaScriptEnabled: false });
-    const page = await context.newPage();
-    await page.goto('/zh/explore');
-
-    await expect(page.locator('html')).toHaveAttribute('lang', 'zh-CN');
-    await expect(page.locator('h1')).toHaveCount(1);
-    await expect(page.locator('h1')).toContainText('分形公园');
-    await expect(page.getByText(/内置 94 个公式/)).toBeVisible();
-    await expect(page.getByText(/94 个公式、7 个家族/)).toBeVisible();
-
-    await context.close();
-  });
+    for (const viewport of [{ width: 1280, height: 800 }, { width: 390, height: 844 }]) {
+      test(`${locale}: workspace has no landing prose at ${viewport.width}px`, async ({ page }, testInfo) => {
+        test.setTimeout(90000);
+        await page.setViewportSize(viewport);
+        await page.goto(`/${locale}/explore`);
+        await expect(page.getByTestId('fractal-canvas')).toBeVisible();
+        await expect(page.locator('#explore-landing-heading')).toHaveCount(0);
+        await expect(page.locator('main > section')).toHaveCount(0);
+        const workspace = page.getByTestId('explore-root');
+        await expect(workspace).toBeVisible();
+        const box = await workspace.boundingBox();
+        expect(box).not.toBeNull();
+        expect(box!.height).toBeLessThanOrEqual(viewport.height);
+        const footer = page.getByRole('contentinfo');
+        await expect(footer).toBeAttached();
+        const footerBox = await footer.boundingBox();
+        expect(footerBox).not.toBeNull();
+        expect(Math.abs(footerBox!.y - (box!.y + box!.height))).toBeLessThanOrEqual(1);
+        expect(await page.evaluate(() => document.documentElement.scrollWidth)).toBeLessThanOrEqual(viewport.width);
+        await footer.scrollIntoViewIfNeeded();
+        await expect(footer.locator(`a[href="/${locale}/privacy"]`)).toBeVisible();
+        if (locale === 'en') {
+          await expect(page).toHaveURL(/[?&]z=/);
+          const beforeZoom = new URL(page.url()).searchParams.get('z');
+          await page.getByTestId('fractal-canvas').hover();
+          await page.mouse.wheel(0, -200);
+          await expect.poll(() => new URL(page.url()).searchParams.get('z')).not.toBe(beforeZoom);
+          await page.screenshot({ path: testInfo.outputPath('explore.png'), fullPage: true });
+        }
+      });
+    }
+  }
 });
 
 test.describe('Indexable surface files', () => {

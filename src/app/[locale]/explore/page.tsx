@@ -1,7 +1,6 @@
 import { Suspense } from 'react';
 import { getTranslations, setRequestLocale } from 'next-intl/server';
 import ExploreClient from './ExploreClient';
-import ExploreLanding from './ExploreLanding';
 import { buildSoftwareApplicationJsonLd, renderJsonLd } from '@/lib/json-ld';
 import { PUBLIC_PROJECT } from '@/content/public-project';
 
@@ -13,9 +12,7 @@ import { PUBLIC_PROJECT } from '@/content/public-project';
  *    facts from the public-project content contract);
  *  - the workspace is progressively enhanced: the initial HTML ships a
  *    fixed-size static poster with a descriptive alt, then the WebGL
- *    workspace takes over;
- *  - visible, bilingual SSR product content follows the workspace
- *    (<ExploreLanding />), readable without JavaScript.
+ *    workspace takes over.
  */
 export default async function ExplorePage({
   params,
@@ -59,7 +56,6 @@ export default async function ExplorePage({
       >
         <ExploreClient posterImage={poster.src} />
       </Suspense>
-      <ExploreLanding params={params} />
     </>
   );
 }

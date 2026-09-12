@@ -9,6 +9,7 @@ import {
   PUBLISHED_FORMULA_GUIDE_COUNT_V1,
 } from '@/content/published-formula-directory';
 import { SITE } from '@/lib/site';
+import { buildSoftwareApplicationJsonLd } from '@/lib/json-ld';
 
 interface PackageMetadata {
   version: string;
@@ -27,12 +28,14 @@ describe('release-candidate version facts', () => {
     const lock = readJson<LockMetadata>('package-lock.json');
     const changelog = readFileSync(join(process.cwd(), 'CHANGELOG.md'), 'utf8');
 
-    expect(pkg.version).toBe('0.4.19');
+    expect(pkg.version).toBe('0.4.20');
     expect(lock.version).toBe(pkg.version);
     expect(lock.packages['']?.version).toBe(pkg.version);
     expect(SITE.version).toBe(pkg.version);
-    expect(changelog).toMatch(
-      new RegExp(`^## ${pkg.version.replace(/\./g, '\\.')}(?: -|$)`, 'm'),
+    expect(PUBLIC_PROJECT.version).toBe(pkg.version);
+    expect(buildSoftwareApplicationJsonLd().softwareVersion).toBe(pkg.version);
+    expect(changelog.match(/^## ([^\n]+)/m)?.[1]).toMatch(
+      new RegExp(`^${pkg.version.replace(/\./g, '\\.')}(?: -|$)`),
     );
   });
 

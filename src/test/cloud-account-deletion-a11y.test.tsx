@@ -1,6 +1,6 @@
 import { fireEvent, render, screen } from '@testing-library/react';
 import { NextIntlClientProvider } from 'next-intl';
-import { describe, expect, it, vi } from 'vitest';
+import { beforeEach, describe, expect, it, vi } from 'vitest';
 import AccountDeletion from '@/components/gallery/AccountDeletion';
 import enMessages from '../../messages/en.json';
 
@@ -38,6 +38,11 @@ function renderDangerZone(): void {
     </NextIntlClientProvider>,
   );
 }
+
+beforeEach(() => {
+  window.__fractalparkAnalyticsConsent = true;
+  window.gtag = vi.fn();
+});
 
 describe('account deletion danger zone a11y', () => {
   it('opens with a real button and announces consequences before any action', () => {
@@ -79,6 +84,11 @@ describe('account deletion danger zone a11y', () => {
     fireEvent.change(codeInput, { target: { value: '123456' } });
     screen.getByRole('button', { name: /^verify$/i }).click();
     const emailInput = await screen.findByLabelText(/type your account email/i);
+    expect(window.gtag).toHaveBeenCalledWith(
+      'event',
+      'account_deletion_started',
+      expect.objectContaining({}),
+    );
     expect(emailInput).toHaveAttribute('id', 'account-delete-email');
     expect(screen.getByText(/cloud drafts are deleted permanently/i)).toBeTruthy();
     expect(screen.getByText(/attribution record/i)).toBeTruthy();

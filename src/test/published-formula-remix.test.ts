@@ -4,7 +4,11 @@ import { join } from 'node:path';
 import { describe, expect, it } from 'vitest';
 import runtimeIndexAsset from '../../public/formula-library/v1/runtime/published/index.json';
 
-import { hashFrmLikeV1, parseFrmLikeV1 } from '@/engine/frm/v1';
+import {
+  canonicalizeFrmLikeV1,
+  hashFrmLikeV1,
+  parseFrmLikeV1,
+} from '@/engine/frm/v1';
 import type { PublishedFormulaRuntimeIndexRowV1 } from '@/engine/formulas/v1';
 import {
   buildMineFormulaEditorHref,
@@ -22,6 +26,7 @@ import {
 } from '@/lib/published-formula-remix';
 
 const SUPPORTED_JULIA_PROFILE_ID = '5d0877c0-5f84-5c3b-9466-b9f9b417cb6a';
+const TOBEYWINEGLASS_ID = '3832742e-41f6-5d14-8749-a4955ab123fb';
 const PARENT_ID = '1cd7a16f-4745-5b8f-a974-e122ea893769';
 const MINE_ID = 'aaaaaaaa-bbbb-4ccc-8ddd-eeeeeeeeeeee';
 const SOURCE = `; @language: frm-like/1
@@ -110,6 +115,33 @@ function supportedJuliaFixture() {
   };
 }
 
+function publishedFixture(formulaId: string) {
+  const row = runtimeIndexAsset.rows.find(
+    (candidate) => candidate.formulaId === formulaId,
+  ) as unknown as PublishedFormulaRuntimeIndexRowV1 | undefined;
+  if (!row) throw new Error(`published-remix-row-missing:${formulaId}`);
+  const sourceText = readFileSync(
+    join(
+      process.cwd(),
+      'public/formula-library/v1/runtime/published',
+      row.definitionPath,
+    ),
+    'utf8',
+  );
+  return {
+    row,
+    source: {
+      formulaId: row.formulaId,
+      sourceRevision: row.sourceRevision,
+      semanticHash: row.semanticHash,
+      href: `/formula-library/v1/runtime/published/${row.definitionPath}`,
+      source: sourceText,
+      lineCount: sourceText.split('\n').length,
+      byteLength: new TextEncoder().encode(sourceText).byteLength,
+    },
+  };
+}
+
 describe('published Formula Remix handoff', () => {
   it('uses one exact editor handoff and strips only one-shot fields', () => {
     const href = buildPublishedFormulaRemixHref('en', PARENT_ID);
@@ -173,6 +205,7 @@ describe('frozen published Formula Remix lifecycle', () => {
     expect(fork.parentFormulaId).toBe(PARENT_ID);
     expect(fork.parentSourceRevision).toBe(row.sourceRevision);
     expect(fork.parentProfileRevision).toMatch(/^[0-9a-f]{64}$/);
+    expect(fork.source).toBe(SOURCE);
     expect(collectMineRemixEditorErrorsV1(source.source)).toEqual([]);
     const compiled = await compileMineRemixSourceV1({
       fork,
@@ -191,6 +224,57 @@ describe('frozen published Formula Remix lifecycle', () => {
         source: { ...source, semanticHash: 'b'.repeat(64) },
       }),
     ).rejects.toThrow(/authority/i);
+  });
+
+  it('canonicalizes the Mine editor copy without rewriting published lineage', async () => {
+    const { row, source } = publishedFixture(TOBEYWINEGLASS_ID);
+    expect(source.source.endsWith('\n')).toBe(true);
+    const parsed = parseFrmLikeV1(source.source);
+    if (!parsed.ok) throw new Error(parsed.reason);
+    const canonicalSource = canonicalizeFrmLikeV1(parsed.ir);
+    expect(canonicalSource).not.toBe(source.source);
+
+    const fork = await createFrozenPublishedFormulaRemixV1({
+      formulaId: MINE_ID,
+      row,
+      source,
+    });
+    expect(fork.source).toBe(canonicalSource);
+    expect(fork.parentSourceRevision).toBe(row.sourceRevision);
+    expect(await hashFrmLikeV1(source.source, parsed.ir)).toMatchObject({
+      sourceRevision: row.sourceRevision,
+      semanticHash: row.semanticHash,
+    });
+    await expect(
+      validateMineRemixApplyV1({ fork, source: fork.source }),
+    ).resolves.toEqual({ ok: true });
+  });
+
+  it('hands every published runtime Definition to Mine in canonical writer form', async () => {
+    const failures: string[] = [];
+    for (const candidate of runtimeIndexAsset.rows) {
+      const { row, source } = publishedFixture(candidate.formulaId);
+      try {
+        const parsed = parseFrmLikeV1(source.source);
+        if (!parsed.ok) throw new Error(parsed.reason);
+        const fork = await createFrozenPublishedFormulaRemixV1({
+          formulaId: MINE_ID,
+          row,
+          source,
+        });
+        if (fork.source !== canonicalizeFrmLikeV1(parsed.ir)) {
+          failures.push(`${row.formulaId}:source-not-canonical`);
+        }
+        if (fork.parentSourceRevision !== row.sourceRevision) {
+          failures.push(`${row.formulaId}:lineage-revision-changed`);
+        }
+      } catch (error) {
+        failures.push(
+          `${row.formulaId}:${error instanceof Error ? error.message : String(error)}`,
+        );
+      }
+    }
+    expect(failures).toEqual([]);
   });
 
   it('keeps the exact supported canonical Julia Profile in Remix lineage', async () => {

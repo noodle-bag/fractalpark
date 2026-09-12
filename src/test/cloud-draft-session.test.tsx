@@ -34,11 +34,17 @@ beforeEach(() => {
   createDraftMock.mockReset();
   updateDraftMock.mockReset();
   getDraftMock.mockReset();
+  window.__fractalparkAnalyticsConsent = true;
+  window.gtag = vi.fn();
 });
 
 describe('useCloudDraftSession (spec §17)', () => {
   it('creates a draft and adopts the new identity', async () => {
-    createDraftMock.mockResolvedValueOnce({ draftId: 'd-1', revision: 1 });
+    createDraftMock.mockResolvedValueOnce({
+      draftId: 'd-1',
+      revision: 1,
+      backupEmailStatus: 'sent',
+    });
     const { result } = renderHook(() => useCloudDraftSession());
     let outcome: { ok: boolean } | undefined;
     await act(async () => {
@@ -52,6 +58,16 @@ describe('useCloudDraftSession (spec §17)', () => {
       envelope: { document: { metadata?: { name?: string } } };
     };
     expect(createInput.envelope.document.metadata?.name).toBe('My draft');
+    expect(window.gtag).toHaveBeenCalledWith(
+      'event',
+      'cloud_draft_saved',
+      expect.objectContaining({ is_first_save: true }),
+    );
+    expect(window.gtag).toHaveBeenCalledWith(
+      'event',
+      'backup_email_result',
+      expect.objectContaining({ status: 'sent' }),
+    );
   });
 
   it('patches with expectedRevision and maps revision_conflict', async () => {
@@ -71,6 +87,11 @@ describe('useCloudDraftSession (spec §17)', () => {
     expect(result.current.savePhase).toBe('conflict');
     expect(updateDraftMock.mock.calls[0][0]).toBe('d-1');
     expect((updateDraftMock.mock.calls[0][1] as { expectedRevision: number }).expectedRevision).toBe(1);
+    expect(window.gtag).toHaveBeenCalledWith(
+      'event',
+      'cloud_draft_conflict',
+      expect.objectContaining({}),
+    );
   });
 
   it('maps quota, offline, and expired sessions to distinct phases', async () => {

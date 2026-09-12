@@ -10,11 +10,12 @@ export type ProjectFileSizeBucket =
   | 'over-1-mib';
 
 export function getArtworkAnalyticsContext(document: FractalDocument) {
+  const formulaId = document.formula.formulaId;
+  const isBuiltin = BUILTIN_FORMULA_IDS.has(formulaId);
   return {
     document_version: document.schemaVersion,
-    formula_kind: BUILTIN_FORMULA_IDS.has(document.formula.formulaId)
-      ? 'builtin'
-      : 'custom',
+    formula_kind: isBuiltin ? 'builtin' : 'custom',
+    ...(isBuiltin ? { formula: formulaId } : {}),
   } as const;
 }
 

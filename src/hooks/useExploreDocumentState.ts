@@ -1,7 +1,8 @@
 'use client';
 
-import { useCallback, useMemo, useState } from 'react';
-import { documentToRuntimeParams } from '@/engine/document-adapter';
+import { useCallback, useMemo, useState, useSyncExternalStore } from 'react';
+import { pluginRegistry } from '@/engine/plugins/registry';
+import { documentToRuntimeParams, projectDocumentToRuntimeParams } from '@/engine/document-adapter';
 import {
   DEFAULT_FRACTAL_DOCUMENT,
   type AnimationState,
@@ -16,6 +17,7 @@ import { migrateFractalDocument, normalizeFractalDocument } from '@/engine/docum
 import type { PublishedFormulaProfileV1 } from '@/engine/formulas/v1';
 import type { FractalParams, PluginParamRecord } from '@/engine/types';
 import { applyFormulaSelectionDefaults } from '@/lib/formula-documents';
+import { applyPublishedFormulaProfile } from '@/lib/published-formula-profile';
 import { applyRemixSource, parseRemixSource } from '@/lib/remix-source';
 import { decodeParams } from '@/lib/url-params';
 
@@ -195,7 +197,18 @@ export function useExploreDocumentState(
     }));
   }, [onBeforeDocumentMutation]);
 
-  const runtimeParams = useMemo(() => documentToRuntimeParams(document), [document]);
+  // Registration can finish after the initial document projection. Observe
+  // the selected plugin without mutating the saved document or undo history.
+  const selectedPlugin = useSyncExternalStore(
+    useCallback((notify) => pluginRegistry.subscribeToFormulaEvents(event => {
+      if (event.formulaId === document.formula.formulaId) notify();
+    }), [document.formula.formulaId]),
+    useCallback(() => pluginRegistry.getFormula(document.formula.formulaId), [document.formula.formulaId]),
+    () => undefined,
+  );
+  const runtimeParams = useMemo(() => selectedPlugin
+    ? documentToRuntimeParams(document)
+    : { ...projectDocumentToRuntimeParams(document), isJulia: false }, [document, selectedPlugin]);
 
   const updateBounds = useCallback((bounds: SceneState['bounds']) => {
     setDocument((prev) => mergeSceneState(prev, { bounds }));
@@ -266,33 +279,7 @@ export function useExploreDocumentState(
     (selection: PublishedFormulaDocumentSelection) => {
       setHistoryState((previous) => {
         const current = previous.document;
-        const formulaParams = cleanPluginParams(selection.formulaParams);
-        const juliaC: [number, number] = selection.profile.juliaC
-          ? [selection.profile.juliaC[0], selection.profile.juliaC[1]]
-          : current.formula.juliaC;
-        const next = normalizeFractalDocument({
-          ...current,
-          scene: {
-            ...current.scene,
-            bounds: {
-              centerX: selection.profile.center[0],
-              centerY: selection.profile.center[1],
-              zoom: selection.profile.zoom,
-              rotation: selection.profile.rotation,
-            },
-          },
-          formula: {
-            ...current.formula,
-            formulaId: selection.formulaId,
-            isJulia: selection.profile.mode === 'julia',
-            juliaC,
-            params: formulaParams ? { formula: formulaParams } : undefined,
-          },
-          render: {
-            ...current.render,
-            maxIterations: selection.profile.iterations,
-          },
-        });
+        const next = applyPublishedFormulaProfile(current, selection);
         return {
           document: next,
           publishedFormulaUndo: current,

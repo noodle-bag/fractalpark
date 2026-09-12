@@ -1,11 +1,30 @@
 import { act, renderHook } from '@testing-library/react';
 import { beforeAll, describe, expect, it, vi } from 'vitest';
 import { registerBuiltins } from '@/engine/plugins/builtins/index';
+import { pluginRegistry } from '@/engine/plugins/registry';
 import { useExploreDocumentState } from '@/hooks/useExploreDocumentState';
 
 describe('useExploreDocumentState', () => {
   beforeAll(() => {
     registerBuiltins();
+  });
+
+  it('reprojects Julia after late registration without changing the document', () => {
+    const plugin = pluginRegistry.getFormula('perpendicularCeltic')!;
+    pluginRegistry.unregister('formula', plugin.id);
+    const { result, unmount } = renderHook(() => useExploreDocumentState(
+      new URLSearchParams('fm=perpendicularCeltic&julia=1&jre=-0.7&jim=0.27'),
+    ));
+    const document = result.current.document;
+    expect(result.current.runtimeParams.isJulia).toBe(false);
+    act(() => pluginRegistry.register(plugin));
+    expect(result.current.runtimeParams.isJulia).toBe(true);
+    expect(result.current.document).toBe(document);
+    act(() => pluginRegistry.register({ ...plugin, glsl: plugin.glsl + '\n' }));
+    expect(result.current.runtimeParams.isJulia).toBe(false);
+    expect(result.current.document.formula.isJulia).toBe(true);
+    act(() => pluginRegistry.register(plugin));
+    unmount();
   });
 
   it('initializes canonical document state from URL params', () => {

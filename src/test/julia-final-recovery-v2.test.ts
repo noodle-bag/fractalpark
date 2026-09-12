@@ -9,6 +9,7 @@ import roleAsset from "../../resources/formula-library/v1/julia-pixel-role-censu
 import preGpuAsset from "../../resources/formula-library/v1/julia-pre-gpu-recovery-census.v2.json";
 import rendererAsset from "../../resources/formula-library/v1/julia-renderer-evidence.v2.json";
 import { readFileSync } from "node:fs";
+import { readHistoricalJuliaSourceInput } from "./fixtures/historical-julia-source-inputs";
 import { join } from "node:path";
 import { describe, expect, it } from "vitest";
 import {
@@ -36,7 +37,7 @@ const SOURCE_CONTENTS = Object.freeze(
   Object.fromEntries(
     JULIA_FINAL_RECOVERY_SOURCE_BINDING_PATHS_V1.map((path) => [
       path,
-      readFileSync(join(process.cwd(), path), "utf8"),
+      readHistoricalJuliaSourceInput(path),
     ]),
   ),
 );
@@ -162,10 +163,22 @@ describe("Julia final recovery v2", () => {
     expect(Object.isFrozen(parsed.value.sealedAttemptCounts)).toBe(true);
   });
 
-  it("rejects the current review-pending handoff as activation authority", () => {
+  it("rejects the historical review-pending handoff even with its exact package inputs", () => {
     expect(verify(baseClosure())).toEqual({
       ok: false,
       code: "julia-final-recovery-review-pending",
+    });
+  });
+
+  it("rejects the historical handoff against unmodified current release inputs", () => {
+    const currentSources = Object.fromEntries(
+      JULIA_FINAL_RECOVERY_SOURCE_BINDING_PATHS_V1.map((path) => [
+        path, readFileSync(join(process.cwd(), path), "utf8"),
+      ]),
+    );
+    expect(verify(baseClosure(), currentSources)).toEqual({
+      ok: false,
+      code: "julia-final-recovery-consumer-invalid",
     });
   });
 

@@ -24,7 +24,9 @@ export function useFractalRenderer(
 
       const renderer = new FractalRenderer(gl);
       rendererRef.current = renderer;
-      void renderer.precompileDefault();
+      void renderer.precompileDefault().catch((error) => {
+        if (rendererRef.current === renderer) console.error('Failed to precompile default shader:', error);
+      });
 
       return () => {
         renderer.dispose();

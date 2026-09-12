@@ -62,3 +62,58 @@ export function createFractalProgram(
   setupFullscreenQuad(gl, program);
   return { gl, program, uniforms };
 }
+
+export async function compileFractalProgramAsync(
+  gl: WebGLRenderingContext,
+  vertSource: string,
+  fragSource: string,
+  timeout: number,
+  signal: AbortSignal,
+): Promise<{ program: WebGLProgram; uniforms: Record<string, WebGLUniformLocation> }> {
+  const deadline = performance.now() + timeout;
+  const shaders: WebGLShader[] = [];
+  let program: WebGLProgram | null = null;
+  let completed = false;
+  const checkActive = () => {
+    if (signal.aborted) throw new Error('Shader compile cancelled');
+    if (gl.isContextLost()) throw new Error('WebGL context lost');
+    if (performance.now() >= deadline) throw new Error('Shader compile timeout');
+  };
+  try {
+    checkActive();
+    const parallel = gl.getExtension('KHR_parallel_shader_compile');
+    for (const [type, source] of [[gl.VERTEX_SHADER, vertSource], [gl.FRAGMENT_SHADER, fragSource]] as const) {
+      const shader = gl.createShader(type);
+      if (!shader) throw new Error(`Failed to create shader of type ${type}`);
+      shaders.push(shader);
+      gl.shaderSource(shader, source);
+      gl.compileShader(shader);
+    }
+    program = gl.createProgram();
+    if (!program) throw new Error('Failed to create WebGL program');
+    for (const shader of shaders) gl.attachShader(program, shader);
+    gl.linkProgram(program);
+
+    // Status and uniform queries can block until linking finishes. Only the
+    // extension's completion query is non-blocking; yield between polls.
+    do {
+      await new Promise<void>((resolve) => setTimeout(resolve, 16));
+      checkActive();
+    } while (parallel && !gl.getProgramParameter(program, parallel.COMPLETION_STATUS_KHR));
+
+    if (!gl.getProgramParameter(program, gl.LINK_STATUS)) {
+      const shaderLog = shaders
+        .filter((shader) => !gl.getShaderParameter(shader, gl.COMPILE_STATUS))
+        .map((shader) => gl.getShaderInfoLog(shader))
+        .filter(Boolean)
+        .join('\n');
+      throw new Error(`Program linking failed: ${shaderLog || gl.getProgramInfoLog(program) || 'Unknown error'}`);
+    }
+    const uniforms = discoverUniforms(gl, program);
+    completed = true;
+    return { program, uniforms };
+  } finally {
+    for (const shader of shaders) gl.deleteShader(shader);
+    if (!completed && program) gl.deleteProgram(program);
+  }
+}

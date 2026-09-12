@@ -1,5 +1,5 @@
 import type { ReactNode } from 'react';
-import { render, screen, waitFor } from '@testing-library/react';
+import { fireEvent, render, screen, waitFor } from '@testing-library/react';
 import { NextIntlClientProvider } from 'next-intl';
 import { beforeEach, describe, expect, it, vi } from 'vitest';
 
@@ -71,6 +71,8 @@ function renderWithMessages(children: ReactNode) {
 
 beforeEach(() => {
   vi.clearAllMocks();
+  window.__fractalparkAnalyticsConsent = true;
+  window.gtag = vi.fn();
   cloudMocks.getProfile.mockResolvedValue({ displayName: 'Creator', backupEmailMode: 'off' });
   cloudMocks.listDrafts.mockResolvedValue([
     {
@@ -116,6 +118,11 @@ beforeEach(() => {
     ],
     nextCursor: null,
   });
+  cloudMocks.withdrawPublication.mockResolvedValue({
+    publicationId: 'publication-1',
+    status: 'withdrawn',
+    withdrawnAt: '2026-08-10T00:00:00.000Z',
+  });
 });
 
 describe('cloud artwork cards', () => {
@@ -152,5 +159,21 @@ describe('cloud artwork cards', () => {
       '/gallery/community/publication-1',
     );
     expect(container.querySelector('[src="/images/community-placeholder.svg"]')).toBeNull();
+  });
+
+  it('records a withdrawal only after the server confirms it', async () => {
+    vi.spyOn(window, 'confirm').mockReturnValue(true);
+    renderWithMessages(<MyWorksCloud />);
+
+    fireEvent.click(await screen.findByRole('button', { name: 'Withdraw' }));
+
+    await waitFor(() => expect(cloudMocks.withdrawPublication).toHaveBeenCalledWith(
+      'publication-1',
+    ));
+    expect(window.gtag).toHaveBeenCalledWith(
+      'event',
+      'publication_withdrawn',
+      expect.objectContaining({}),
+    );
   });
 });
