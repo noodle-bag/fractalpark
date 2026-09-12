@@ -148,6 +148,14 @@ still rejects activation, and unmodified current inputs still fail its original
 source-binding check. These tests do not renew Record previews, performance,
 device measurements, or approval receipts for the current candidate.
 
+Release qualification MAY preserve the sealed pre-GPU authority only through a
+separate, version-specific verifier. That verifier MUST authenticate the complete
+current package/lock bytes, reconstruct and hash the three reviewed root-version
+fields, require every executable source binding to remain byte-exact, and reject
+unknown versions or any other change. It MUST NOT run the historical generator,
+rewrite the sealed asset, or claim renewed renderer, performance, or device
+evidence. Renderer evidence still has to run against the exact release candidate.
+
 Coverage: `historical-julia-source-inputs.test.ts` rejects dependency, lock
 integrity, scripts, engines, extra fields, mixed/unknown versions, and raw-byte
 tampering; `julia-final-recovery-v2.test.ts` retains both historical
