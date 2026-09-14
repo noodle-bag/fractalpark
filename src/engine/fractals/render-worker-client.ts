@@ -115,6 +115,8 @@ export class FractalRenderWorkerClient {
     worker.onmessage = (event) => this.handleMessage(event.data);
     worker.onerror = (event) => {
       event.preventDefault();
+      // A terminated worker can report an interrupted startup after its replacement exists.
+      if (this.worker !== worker) return;
       const error = new Error(event.message || 'Fractal render worker failed');
       this.failPending(error);
       worker.terminate();

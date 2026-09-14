@@ -157,4 +157,46 @@ describe('FractalRenderWorkerClient', () => {
     await expect(pending).resolves.toMatchObject({ generation: 7 });
     client.dispose();
   });
+
+  it('ignores a delayed startup error from a superseded worker', async () => {
+    const workers: FakeWorker[] = [];
+    const client = new FractalRenderWorkerClient(() => {
+      const worker = new FakeWorker();
+      workers.push(worker);
+      return worker;
+    });
+    const first = client.render({ generation: 1, width: 64, height: 64, params: params('mandelbrot') });
+    const cancelled = expect(first).rejects.toMatchObject({ name: 'AbortError' });
+    const second = client.render({ generation: 2, width: 64, height: 64, params: params('mandelbrot') });
+    // Observe rejection immediately so the regression cannot leak an unhandled promise.
+    const outcome = second.then(frame => frame.generation, error => error.message);
+    const preventDefault = vi.fn();
+    workers[0].onerror?.({ message: 'importScripts failed during termination', preventDefault } as unknown as ErrorEvent);
+    const message = workers[1].messages[0];
+    workers[1].emit({ type: 'frame', requestId: message.requestId, generation: 2, formulaId: 'mandelbrot', bitmap: bitmap() });
+    await cancelled;
+    expect(preventDefault).toHaveBeenCalledOnce();
+    await expect(outcome).resolves.toBe(2);
+    client.dispose();
+  });
+
+  it('rejects a current worker error and creates a replacement for retry', async () => {
+    const workers: FakeWorker[] = [];
+    const client = new FractalRenderWorkerClient(() => {
+      const worker = new FakeWorker();
+      workers.push(worker);
+      return worker;
+    });
+    const first = client.render({ generation: 1, width: 64, height: 64, params: params('mandelbrot') });
+    const failed = expect(first).rejects.toThrow('current startup failed');
+    workers[0].onerror?.({ message: 'current startup failed', preventDefault: vi.fn() } as unknown as ErrorEvent);
+    await failed;
+    expect(workers[0].terminate).toHaveBeenCalledOnce();
+    const retry = client.render({ generation: 2, width: 64, height: 64, params: params('mandelbrot') });
+    expect(workers).toHaveLength(2);
+    const message = workers[1].messages[0];
+    workers[1].emit({ type: 'frame', requestId: message.requestId, generation: 2, formulaId: 'mandelbrot', bitmap: bitmap() });
+    await expect(retry).resolves.toMatchObject({ generation: 2 });
+    client.dispose();
+  });
 });
