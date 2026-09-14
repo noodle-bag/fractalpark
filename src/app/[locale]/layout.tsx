@@ -6,7 +6,6 @@ import { Analytics } from '@vercel/analytics/next';
 import { SpeedInsights } from '@vercel/speed-insights/next';
 import { GoogleAnalytics } from '@/components/analytics/GoogleAnalytics';
 import { PageViewTracker } from '@/components/analytics/PageViewTracker';
-import { AnalyticsConsent } from '@/components/analytics/AnalyticsConsent';
 import { CloudSessionProvider } from '@/components/cloud/CloudSessionProvider';
 import { LayoutProvider } from '@/components/layout/LayoutContext';
 import LayoutShell from '@/components/layout/LayoutShell';
@@ -99,9 +98,6 @@ export default async function LocaleLayout({
             <CloudSessionProvider>
               <LayoutShell>{children}</LayoutShell>
             </CloudSessionProvider>
-            <AnalyticsConsent
-              enabled={Boolean(process.env.NEXT_PUBLIC_GA_MEASUREMENT_ID)}
-            />
           </LayoutProvider>
         </NextIntlClientProvider>
         <GoogleAnalytics />

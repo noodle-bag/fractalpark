@@ -44,15 +44,6 @@ describe('CreatorAnalyticsSession', () => {
           traffic_type: 'external',
         },
       },
-      {
-        name: 'creator_render_complete',
-        params: {
-          render_phase: 'initial',
-          surface: 'explore',
-          traffic_class: 'external',
-          traffic_type: 'external',
-        },
-      },
     ]);
   });
 
@@ -66,9 +57,6 @@ describe('CreatorAnalyticsSession', () => {
 
     expect(events.map(({ name }) => name)).toEqual([
       'first_render_complete',
-      'creator_render_complete',
-      'creator_change',
-      'creator_render_complete',
       'creator_loop_complete',
     ]);
     expect(events.at(-1)?.params).toEqual({
@@ -92,6 +80,35 @@ describe('CreatorAnalyticsSession', () => {
     session.renderComplete(laterChange);
 
     expect(events.filter(({ name }) => name === 'creator_loop_complete')).toHaveLength(1);
+  });
+
+  it('keeps continuous changes and rendered frames local after completing one loop', () => {
+    const { events, session } = createSession();
+    session.renderComplete(null);
+
+    for (let index = 0; index < 1000; index += 1) {
+      const change = session.noteChange('formula_parameter');
+      session.renderComplete(change);
+      session.renderComplete(change);
+      session.renderComplete(null);
+    }
+
+    expect(events.map(({ name }) => name)).toEqual([
+      'first_render_complete',
+      'creator_loop_complete',
+    ]);
+  });
+
+  it('counts only the latest successfully rendered change in a burst', () => {
+    const { events, session } = createSession();
+    session.renderComplete(null);
+    const changes = Array.from({ length: 1000 }, () => session.noteChange('viewport'));
+
+    for (const change of changes.slice(0, -1)) session.renderComplete(change);
+    expect(events.map(({ name }) => name)).toEqual(['first_render_complete']);
+
+    session.renderComplete(changes.at(-1)!);
+    expect(events.map(({ name }) => name)).toEqual(['first_render_complete', 'creator_loop_complete']);
   });
 
   it('requires all three steps to occur in the same Shanghai week', () => {

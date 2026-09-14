@@ -2128,13 +2128,6 @@
       "gallery": "Visit the Gallery"
     }
   },
-  "analyticsConsent": {
-    "title": "Optional usage analytics",
-    "description": "Allow privacy-limited Google Analytics to help us understand which FractalPark features are useful. We do not send account IDs, emails, titles, formula source, or artwork content. You can decline and still use every feature.",
-    "accept": "Allow analytics",
-    "decline": "Decline",
-    "settings": "Analytics settings"
-  },
   "legal": {
     "privacy": {
       "title": "Privacy Policy",
@@ -2145,9 +2138,9 @@
       "s2h": "What we never collect",
       "s2b": "No passwords — sign-in codes go to your email and expire.\n\nNo advertising trackers, no cross-site profiling, and no sale or sharing of personal data with data brokers.\n\nProduct analytics never carry your account ID, email, artwork titles, formula source, draft contents, or artwork content.",
       "s3h": "Cookies",
-      "s3b": "An encrypted, HttpOnly session cookie keeps you signed in, and a small NEXT_LOCALE cookie remembers your language. If you allow Google Analytics, it also sets first-party _ga cookies containing a pseudonymous browser identifier. Declining analytics prevents those cookies; withdrawing consent removes them.",
+      "s3b": "A secure HttpOnly session cookie keeps you signed in, and a small NEXT_LOCALE cookie remembers your language. Google Analytics uses first-party _ga cookies containing pseudonymous browser identifiers.",
       "s4h": "Analytics",
-      "s4b": "Vercel Analytics measures basic site traffic without cookies. Google Analytics is optional and loads only after you allow it. We use aggregate reports to understand whether features work (for example, whether a render, save, or publish completed). Events follow a fixed schema that excludes account IDs, emails, titles, formula source, private record IDs, and artwork content. These providers may process network and device data needed to provide analytics; advertising signals are disabled. You can change your Google Analytics choice from Analytics settings.",
+      "s4b": "Vercel Analytics measures basic site traffic without cookies. Google Analytics helps us understand feature usage through aggregate reports. FractalPark does not send account IDs, emails, titles, formula source, private record IDs, or artwork content, and does not set GA user_id. These providers may process network and device data needed for analytics. Advertising signals are disabled.",
       "s5h": "Email we send",
       "s5b": "Sign-in codes, always.\n\nArtwork backup emails, only if you turn them on. They are off by default. A backup email carries your artwork's complete configuration as an attachment; email is not encrypted storage, and we cannot retract an attachment once delivered. The setting page says this again before you enable it.",
       "s6h": "Private drafts, public works",

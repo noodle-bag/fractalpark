@@ -71,7 +71,6 @@ function renderWithMessages(children: ReactNode) {
 
 beforeEach(() => {
   vi.clearAllMocks();
-  window.__fractalparkAnalyticsConsent = true;
   window.gtag = vi.fn();
   cloudMocks.getProfile.mockResolvedValue({ displayName: 'Creator', backupEmailMode: 'off' });
   cloudMocks.listDrafts.mockResolvedValue([

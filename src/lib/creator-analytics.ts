@@ -48,8 +48,6 @@ export function resolveCreatorRemixSource(
 
 type CreatorAnalyticsEventName =
   | 'first_render_complete'
-  | 'creator_change'
-  | 'creator_render_complete'
   | 'creator_loop_complete'
   | 'remix_complete';
 
@@ -128,12 +126,6 @@ export class CreatorAnalyticsSession {
       weekKey: this.weekKey(),
     } satisfies CreatorChangeAttribution;
     this.latestChange = change;
-    this.tracker('creator_change', {
-      surface: 'explore',
-      change_id: change.changeId,
-      change_type: change.changeType,
-      ...trafficParams(this.trafficClass),
-    });
     return change;
   }
 
@@ -170,11 +162,6 @@ export class CreatorAnalyticsSession {
           ...trafficParams(this.trafficClass),
         });
       }
-      this.tracker('creator_render_complete', {
-        surface: 'explore',
-        render_phase: 'initial',
-        ...trafficParams(this.trafficClass),
-      });
       return;
     }
 
@@ -194,10 +181,6 @@ export class CreatorAnalyticsSession {
       change_type: attribution.changeType,
       ...trafficParams(this.trafficClass),
     } as const;
-    this.tracker('creator_render_complete', {
-      ...params,
-      render_phase: 'post_change',
-    });
     if (this.loopCompleteWeekKey !== renderWeekKey) {
       this.loopCompleteWeekKey = renderWeekKey;
       this.tracker('creator_loop_complete', params);

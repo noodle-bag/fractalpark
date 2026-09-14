@@ -40,7 +40,6 @@ function renderDangerZone(): void {
 }
 
 beforeEach(() => {
-  window.__fractalparkAnalyticsConsent = true;
   window.gtag = vi.fn();
 });
 
