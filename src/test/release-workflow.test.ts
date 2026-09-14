@@ -29,7 +29,10 @@ describe('release workflow boundaries', () => {
       'npm run test:run -- src/test/julia-renderer-evidence-v2.test.ts',
     );
     const juliaOwnedInputs = [
-      'src/test/julia-*.test.ts',
+      'src/test/julia-renderer-evidence-v2.test.ts',
+      'src/test/julia-activation-webgl1-release-gate.test.ts',
+      'src/engine/formulas/v1/**',
+      'scripts/verify-julia-*.ts',
       'scripts/lib/julia-*.ts',
       'src/test/setup.ts',
       'vitest.config.ts',
@@ -39,6 +42,7 @@ describe('release workflow boundaries', () => {
     for (const inputPath of juliaOwnedInputs) {
       expect(julia).toContain(`"${inputPath}"`);
     }
+    expect(julia).not.toContain('"src/test/julia-*.test.ts"');
   });
 
   it('runs heavyweight Record verification only in its path-filtered workflow', () => {
