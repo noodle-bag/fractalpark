@@ -18,7 +18,8 @@ govern FractalPark development.
   the durable artwork and portable project formats.
 - [Fractal Content and Creation Model](specs/fractal-content-and-creation-model.md)
   defines the cross-surface source-of-truth, projection, and evolution rules
-  for formulas, published presets, local artwork, and FRM authoring.
+  for formulas, published presets, local artwork, and FRM authoring, including
+  the rendering-consumer matrix and saved-state preservation requirements.
 - [Formula Content Manifest and FRM Surface Contract](specs/formula-content-manifest.md)
   freezes Formula Atlas identities, canonical formula state, FRM Guide
   compatibility language, and the standalone Editor boundary.
@@ -41,6 +42,12 @@ govern FractalPark development.
   freezes v0.4.19's formula assets, identity, source budget, rights evidence,
   reader-first migration, and rollback boundaries while delegating language
   semantics to the normative reference.
+
+## Development Validation
+
+- [Development Validation and CI Policy](testing/development-validation.md)
+  defines local checks, PR gates, and when cross-surface or full WebGL
+  verification is required. Select the scope before implementation.
 
 ## Manuals
 

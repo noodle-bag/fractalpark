@@ -39,6 +39,7 @@ default formula state, preset state, ordering rule, or custom-formula store.
 | Fact | Authoritative source | Derived consumers |
 |---|---|---|
 | Built-in formula identity, family, capabilities, and approved defaults | `src/engine/plugins/formula-catalog.ts` and the plugin registry | Explore, Formula Atlas, formula pages, canonical formula documents |
+| Published Standard formula identity, source, capabilities, and default Profile | Verified Definition/Profile artifacts and the application runtime bindings defined in [Unified Formula Library v1](unified-formula-library-v1.md) and [Formula Runtime Identity v1](formula-runtime-identity-v1.md) | Standard directory, Explore, preset playback, cloud artwork previews, Remix |
 | Formula editorial content, public slug, references, and relationships | `FormulaContentManifest` plus locale messages | Formula Atlas and formula pages |
 | Published preset identity, order, localized title, state query, animation input, and asset path | `public/gallery-presets.json` | Drift, Collection, artwork pages, playback, Remix, thumbnail generation |
 | Published artwork editorial content, public slug, license metadata, and relationships | `ArtworkContentManifest` plus locale messages | Collection, artwork pages, sitemap, structured data |
@@ -138,6 +139,61 @@ server-rendered content.
 is not the canonical model for new published preset or persistence work.
 
 ## Surface Contracts
+
+### Cross-surface rendering consistency
+
+The following matrix governs supported rendering and recovery paths. It is a
+contract for consumers, not a claim that all paths already share one resolver.
+Formula identity and execution qualification follow
+[Formula Runtime Identity v1](formula-runtime-identity-v1.md); durable state
+and snapshots follow [Document and Envelope v1](fractal-document-v2.md).
+
+| Consumer | State owner | Formula recovery | Required preservation and allowed presentation |
+|---|---|---|---|
+| Explore formula selection | Approved formula default document/Profile | Legacy built-in, verified published Definition, or supported custom authoring identity | Defaults apply to a new selection, not to reopening an existing artwork |
+| Explore artwork reopen and Remix | Artwork Document/Envelope or canonical preset document | Recover the referenced built-in, published identity, or custom snapshot before rendering | Preserve formula parameters, viewport, coloring, transform, Julia intent/constants, and animation; Remix may create a new authoring identity only at its documented boundary |
+| Collection card, artwork detail, and Drift | Shared published-preset projection | Reviewed native/published execution and the shared playback authority | Poster and frame zero use canonical static composition; unsupported playback keeps the declared static fallback |
+| My Works draft and published cards | Owner-authorized draft Envelope or immutable publication Envelope | Built-in, verified published identity, or hash-checked embedded custom snapshot | Preserve saved state; a missing source must not be replaced with current defaults or another formula |
+| Community card and detail | Immutable publication Envelope | The same supported identity classes as cloud artwork previews; published UUIDs do not require embedded custom source | Render the saved work with instance-local plugins; loading or failure may show the documented neutral fallback |
+| Formula Record preview | Verified Record preview Profile | Pinned published Definition and qualified rendering binding | An explicitly qualified preview Profile may differ from the formula selection default; editorial presentation cannot become saved-artwork state |
+| Generated preset poster/thumbnail | Canonical preset document and declared generation inputs | Qualified formula execution used by the preset | Dimensions/encoding may differ; source or execution changes require reviewing affected generated assets |
+| Export and portable reopen | Artwork Document/Envelope and its supported formula references/assets | Existing export/import qualification and snapshot boundaries | Preserve supported saved state and revisions; public rendering must never gain access to owner-only formula data |
+
+For every existing artwork:
+
+- New default Profiles must not overwrite saved parameter values, view,
+  coloring, transform, Julia constants, or keyframes. Default selection and
+  existing-artwork recovery are separate operations.
+- Saved Julia intent is lossless. Effective Julia execution is qualified
+  against the recovered formula instance; denial does not rewrite the saved
+  intent or silently substitute parameter-plane rendering.
+- Published source identity, source/semantic revisions, and reviewed execution
+  bindings must be checked before the recovered plugin is used. A shader cache
+  key or display name is not evidence of source compatibility.
+- Custom snapshots are hash-checked and instance-local in public previews.
+  A later custom-library edit must not change an immutable publication.
+- Consumers must not invent a second formula loader, capability rule, or
+  rendering override when the applicable shared boundary exists. A new identity
+  class must be reviewed against every affected row of this matrix.
+- Thumbnail availability and live artwork rendering are separate facts.
+  Community in-app previews recover the Envelope; they do not wait for the
+  server thumbnail job. See [Web Creation Loop v1](web-creation-loop-v1.md).
+
+Consistency does not require identical pixels across GPUs, dimensions, or
+encoding formats. Tests compare qualified identity and renderer inputs for
+equivalent states, then check meaningful rendered output. Deliberate Record
+preview Profiles, frame selection, resource limits, and static fallbacks must
+be declared rather than treated as accidental differences.
+
+Boundary changes require a small representative regression set: built-in and
+legacy identity, published UUID without portable source, portable custom
+snapshot, supported/denied Julia, and explicit animation keyframes. Exercise
+the affected card/detail/reopen/Remix/refresh chain. Invalid or unavailable
+sources must retain the documented failure behavior. This does not require
+rerendering the entire Standard library for an application loader fix.
+
+The verification scope is selected using
+[Development Validation and CI Policy](../testing/development-validation.md).
 
 ### Explore landing
 
