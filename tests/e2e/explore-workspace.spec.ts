@@ -77,7 +77,7 @@ for (const width of [1440, 1180]) {
   });
 }
 
-test('all locales keep complete Tab labels and fixed artwork actions reachable', async ({ page }) => {
+test('all locales show five desktop Tabs together without horizontal scrolling', async ({ page }) => {
   test.setTimeout(120_000);
   await page.setViewportSize({ width: 1180, height: 900 });
   for (const locale of SUPPORTED_LOCALES) {
@@ -85,6 +85,20 @@ test('all locales keep complete Tab labels and fixed artwork actions reachable',
     await ready(page);
     const list = page.getByRole('tablist').first();
     const tabs = list.getByRole('tab');
+    await expect(tabs).toHaveCount(5);
+    for (const width of [1024, 1180, 1440]) {
+      await page.setViewportSize({ width, height: 900 });
+      await expect.poll(() => list.evaluate(element => element.scrollWidth <= element.clientWidth)).toBe(true);
+      const listRect = (await list.boundingBox())!;
+      for (let index = 0; index < 5; index++) {
+        const tab = tabs.nth(index);
+        const rect = (await tab.boundingBox())!;
+        expect(rect.x).toBeGreaterThanOrEqual(listRect.x);
+        expect(rect.x + rect.width).toBeLessThanOrEqual(listRect.x + listRect.width);
+        expect(rect.y).toBe((await tabs.first().boundingBox())!.y);
+        expect(await tab.evaluate(element => getComputedStyle(element).fontSize)).toBe('13px');
+      }
+    }
     for (let i = 0; i < 5; i++) {
       const tab = tabs.nth(i);
       await tab.click();
@@ -95,6 +109,11 @@ test('all locales keep complete Tab labels and fixed artwork actions reachable',
       await expect(page.getByRole('tabpanel').first()).toBeVisible();
       await expect(page.getByTestId('explore-artwork-bar')).toBeInViewport();
     }
+    await tabs.first().focus();
+    await page.keyboard.press('End');
+    await expect(tabs.last()).toBeFocused();
+    await expect(tabs.last()).toHaveAttribute('aria-selected', 'true');
+    expect(await list.evaluate(element => element.scrollLeft)).toBe(0);
     expect(await page.evaluate(() => document.documentElement.scrollWidth <= innerWidth)).toBe(true);
   }
 });

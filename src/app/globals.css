@@ -31,7 +31,7 @@
   .explore-inspector .formula-number-stepper button:first-child { border-bottom: 0; border-right: 1px solid var(--border); }
 }
 @media (min-width: 1024px), (min-width: 640px) and (max-height: 480px) {
-  .explore-inspector { inset: 0 0 0 auto; width: 400px; height: auto; max-height: none; }
+  .explore-inspector { inset: 0 0 0 auto; width: 544px; height: auto; max-height: none; }
   .explore-inspector-toggle { display: flex; }
   .explore-inspector-header { display: none; }
   .explore-inspector-body { border-top: 0; border-left: 1px solid var(--border); }

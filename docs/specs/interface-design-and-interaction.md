@@ -81,7 +81,7 @@ reduced-motion behavior. Color-role reuse does not add a Theme Toggle.
 ### Desktop Inspector
 
 The canvas fills the workspace below the navigation. The Inspector is a
-400px-wide right-side overlay, open by default, non-modal, and without a dimming
+544px-wide right-side overlay, open by default, non-modal, and without a dimming
 backdrop. The exposed canvas remains interactive; an outside click does not
 implicitly close the Inspector.
 
@@ -149,8 +149,12 @@ or leaving a child flow.
 ### Tabs, labels, and artwork actions
 
 Keep Formula / Coloring / Transform / Render / Animation and their existing
-semantics. Tab width follows the complete label plus padding; overflow scrolls
-horizontally instead of forced word-breaking, ellipsis, or equal tiny columns.
+semantics. Tab width follows the complete label plus padding. At ordinary text
+size, the desktop Inspector fits all five complete labels on one row without
+horizontal scrolling in every supported locale. Prefer sufficient panel width
+over smaller text or cropped labels. Portrait, short landscape, and enlarged
+text retain horizontal scrolling when needed instead of forced word-breaking,
+ellipsis, or equal tiny columns.
 Keep the selected Tab visible on selection and preserve Radix keyboard/focus
 semantics. Long form labels wrap naturally and grow the row, without clipping
 related controls or reducing action hit areas.
@@ -310,9 +314,10 @@ retain 16px text to avoid focus zoom. Explicit small/icon-small variants and
 instance overrides retain their existing density; their task-specific mobile
 adaptation belongs to the consuming surface, not a universal forced resize.
 Slider and Switch retain existing continuous-input geometry and semantics.
-Explore uses complete, naturally sized top-level Tab labels with horizontal
-overflow and retained Radix focus behavior. Its panels remain mounted while
-inactive so Tab changes do not recreate their local editing state; existing
+Explore uses complete, naturally sized top-level Tab labels, fitting together
+in the desktop Inspector and scrolling only when narrower layouts or enlarged
+text require it, with retained Radix focus behavior. Its panels remain mounted
+while inactive so Tab changes do not recreate their local editing state; existing
 precise-input commit/validation rules still apply.
 
 The Navbar brand link may shrink and visually truncate at narrow widths to
