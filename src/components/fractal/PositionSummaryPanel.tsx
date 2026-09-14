@@ -14,7 +14,7 @@ export function PositionSummaryPanel({ bounds }: PositionSummaryPanelProps) {
 
   return (
     <div
-      className="grid min-w-0 grid-cols-[auto_minmax(0,1fr)_auto] items-baseline gap-x-2 overflow-hidden whitespace-nowrap rounded-lg border bg-muted/30 p-3"
+      className="grid min-w-0 shrink-0 grid-cols-[auto_minmax(0,1fr)_auto] items-baseline gap-x-2 overflow-hidden whitespace-nowrap rounded-control border bg-muted/30 p-2"
       data-testid="position-summary"
     >
       <div className="shrink-0 text-xs font-medium leading-none sm:text-sm">

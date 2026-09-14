@@ -15,7 +15,14 @@ async function pixels(page: Page) {
   return page.getByTestId('fractal-canvas').evaluate((canvas: HTMLCanvasElement) => canvas.toDataURL());
 }
 
-test.beforeEach(async ({ page }) => {
+test.beforeEach(async ({ page, context }) => {
+  await context.route('**/*', async route => {
+    const url = new URL(route.request().url());
+    if (!['localhost', '127.0.0.1'].includes(url.hostname)) await route.abort();
+    else if (url.pathname.startsWith('/api/creation/')) await route.fulfill({ status: 401, json: { error: { code: 'unauthenticated' } } });
+    else if (url.pathname.startsWith('/_vercel/')) await route.fulfill({ status: 204 });
+    else await route.continue();
+  });
   await page.setViewportSize({ width: 1280, height: 900 });
   await page.addInitScript(() => {
     const probe: FrameProbe = { hold: false, release: () => {}, requests: [], painted: [] };
@@ -70,6 +77,8 @@ test(`Lucky keeps old pixels through loading, resize and supersession at ${width
     element.width === Math.round(element.getBoundingClientRect().width * window.devicePixelRatio)
   )).toBe(true);
   await expect(canvas).toHaveAttribute('data-render-status', 'ready');
+  const expand = page.getByRole('button', { name: 'Expand controls', exact: true });
+  if (await expand.isVisible()) await expand.click();
   const before = await pixels(page);
   await page.evaluate(() => {
     window.lastGoodFrameProbe.painted = [];

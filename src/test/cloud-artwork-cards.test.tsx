@@ -130,6 +130,9 @@ describe('cloud artwork cards', () => {
 
     expect(await screen.findByText('Draft Mosaic')).toBeVisible();
     expect(await screen.findByText('Published Mosaic')).toBeVisible();
+    expect(screen.getByText('Draft Mosaic')).toHaveClass('text-sm');
+    expect(screen.getByText('Published Mosaic')).toHaveClass('text-sm');
+    expect(screen.getByRole('button', { name: 'Refresh' })).toHaveClass('min-h-11');
 
     const previews = screen.getAllByTestId('mock-artwork-preview');
     expect(previews).toHaveLength(2);
@@ -150,6 +153,7 @@ describe('cloud artwork cards', () => {
     const { container } = renderWithMessages(<CommunityGrid />);
 
     await waitFor(() => expect(screen.getByText('Published Mosaic')).toBeVisible());
+    expect(screen.getByText('Published Mosaic')).toHaveClass('text-sm');
     const preview = screen.getByTestId('mock-artwork-preview');
     expect(preview).toHaveAttribute('data-preview-key', 'publication:publication-1');
     expect(preview.parentElement).toHaveClass('aspect-[16/10]');
@@ -174,5 +178,31 @@ describe('cloud artwork cards', () => {
       'publication_withdrawn',
       expect.objectContaining({}),
     );
+  });
+
+  it('keeps existing draft cards and links after a failed refresh', async () => {
+    renderWithMessages(<MyWorksCloud />);
+    await screen.findByText('Draft Mosaic');
+    cloudMocks.listDrafts.mockRejectedValueOnce(new Error('offline'));
+    fireEvent.click(screen.getByRole('button', { name: 'Refresh' }));
+    await waitFor(() => expect(cloudMocks.listDrafts).toHaveBeenCalledTimes(2));
+    expect(screen.getByText('Draft Mosaic')).toBeVisible();
+    expect(screen.getByRole('link', { name: /Published Mosaic/ })).toHaveAttribute('href', '/gallery/community/publication-1');
+  });
+
+  it('retains community cards and the disabled pager while another page loads', async () => {
+    const initial = await cloudMocks.listCommunity();
+    cloudMocks.listCommunity.mockClear();
+    cloudMocks.listCommunity.mockResolvedValueOnce({ ...initial, nextCursor: 'next-page' });
+    renderWithMessages(<CommunityGrid />);
+    await screen.findByText('Published Mosaic');
+    let reject: (reason: Error) => void = () => {};
+    cloudMocks.listCommunity.mockImplementationOnce(() => new Promise((_, fail) => { reject = fail; }));
+    fireEvent.click(screen.getByRole('button', { name: 'Load more' }));
+    expect(screen.getByText('Published Mosaic')).toBeVisible();
+    expect(screen.getByRole('button', { name: 'Loading…' })).toBeDisabled();
+    reject(new Error('offline'));
+    await waitFor(() => expect(screen.getByRole('button', { name: 'Load more' })).toBeEnabled());
+    expect(screen.getByRole('link', { name: /Published Mosaic/ })).toHaveAttribute('href', '/gallery/community/publication-1');
   });
 });

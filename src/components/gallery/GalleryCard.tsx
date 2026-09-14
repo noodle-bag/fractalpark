@@ -12,6 +12,7 @@ import {
 } from '@/lib/published-artworks';
 import {
   GALLERY_CARD_LINK_CLASS,
+  GALLERY_CARD_TITLE_CLASS,
   GALLERY_PREVIEW_FRAME_CLASS,
 } from './gallery-card-styles';
 
@@ -74,7 +75,7 @@ export function PublishedArtworkCard({
             </div>
           ) : null}
         </div>
-        <h2 className="mt-3 truncate font-medium group-hover:underline">
+        <h2 className={`${GALLERY_CARD_TITLE_CLASS} group-hover:underline`}>
           {artwork.name}
         </h2>
       </Link>

@@ -5,6 +5,16 @@ import { ARTWORK_CONTENT_MANIFEST } from '../../src/content/artwork-manifest';
 
 const slug = ARTWORK_CONTENT_MANIFEST.find(row => row.presetId === 'preset-magnet-julia-ember-reach')!.slug;
 
+test.beforeEach(async ({ context }) => {
+  await context.route('**/*', async route => {
+    const url = new URL(route.request().url());
+    if (!['localhost', '127.0.0.1'].includes(url.hostname)) await route.abort();
+    else if (url.pathname.startsWith('/api/creation/')) await route.fulfill({ status: 401, json: { error: { code: 'unauthenticated' } } });
+    else if (url.pathname.startsWith('/_vercel/')) await route.fulfill({ status: 204 });
+    else await route.continue();
+  });
+});
+
 for (const locale of ['en', 'zh', 'es', 'fr', 'pt', 'ru', 'ko']) {
   test(`unsupported Julia artwork keeps its image and explains playback in ${locale}`, async ({ page }, testInfo) => {
     const messages = JSON.parse(readFileSync(join(process.cwd(), 'messages', `${locale}.json`), 'utf8'));

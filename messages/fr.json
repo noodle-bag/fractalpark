@@ -1444,6 +1444,7 @@
         "session-expired": "Ta session a expiré. Reconnecte-toi pour continuer à enregistrer."
       },
       "save": {
+        "short": "Enregistrer",
         "label": "Enregistrer dans la galerie",
         "title": "Enregistrer la création",
         "name": "Nom",
@@ -1452,13 +1453,16 @@
         "pending": "Enregistrement en cours..."
       },
       "download": {
+        "short": "Télécharger",
         "label": "Télécharger le projet"
       },
       "import": {
+        "short": "Importer",
         "label": "Importer un projet",
         "dropHint": "Dépose un fichier .fractal.json ici"
       },
       "export": {
+        "short": "Exporter",
         "label": "Exporter en PNG",
         "title": "Exporter en PNG",
         "scale": "Taille",
@@ -1471,6 +1475,7 @@
         "pending": "Rendu en cours..."
       },
       "reset": {
+        "short": "Réinitialiser",
         "label": "Réinitialiser la création",
         "title": "Réinitialiser tous les paramètres ?",
         "description": "Cette création reviendra au préréglage par défaut, y compris ses paramètres de formule, de vue, de style, de rendu et d'animation. Les éléments enregistrés dans la galerie et ta bibliothèque de formules personnalisées ne seront pas supprimés.",
@@ -1610,6 +1615,15 @@
       }
     },
     "controls": {
+      "show": "Afficher les réglages",
+      "expand": "Développer les réglages",
+      "collapse": "Réduire les réglages",
+      "positions": {
+        "peek": "Réglages",
+        "half": "Ajuster",
+        "full": "Réglage précis"
+      },
+      "hide": "Masquer les réglages",
       "colorScheme": "Palette de couleurs",
       "iterations": "Itérations",
       "position": "Position",
@@ -1635,7 +1649,7 @@
         "firstTrigger": "Premier déclenchement",
         "secondTrigger": "Second déclenchement",
         "realOnly": "Seule la partie réelle affecte le résultat.",
-        "windowHint": "La plage sert à explorer. Tu peux saisir des valeurs exactes ci-dessous.",
+        "windowHint": "La plage sert à explorer. La saisie numérique exacte reste disponible.",
         "hints": {
           "feedback": "La partie réelle définit la constante ; la partie imaginaire définit la rétroaction.",
           "seedLimit": "Les deux composantes définissent la valeur initiale ; la partie réelle définit aussi le seuil d’échappement.",

@@ -1444,6 +1444,7 @@
         "session-expired": "Sua sessão expirou. Entre novamente para continuar salvando."
       },
       "save": {
+        "short": "Salvar",
         "label": "Salvar na Galeria",
         "title": "Salvar Obra",
         "name": "Nome",
@@ -1452,13 +1453,16 @@
         "pending": "Salvando…"
       },
       "download": {
+        "short": "Baixar",
         "label": "Baixar Projeto"
       },
       "import": {
+        "short": "Importar",
         "label": "Importar Projeto",
         "dropHint": "Solte um arquivo .fractal.json aqui"
       },
       "export": {
+        "short": "Exportar",
         "label": "Exportar PNG",
         "title": "Exportar PNG",
         "scale": "Tamanho",
@@ -1471,6 +1475,7 @@
         "pending": "Renderizando…"
       },
       "reset": {
+        "short": "Redefinir",
         "label": "Redefinir Obra",
         "title": "Redefinir todas as configurações?",
         "description": "Esta obra voltará ao preset padrão, incluindo as configurações de fórmula, visualização, estilo, renderização e animação. Os itens salvos na galeria e sua biblioteca de fórmulas personalizadas não serão excluídos.",
@@ -1610,6 +1615,15 @@
       }
     },
     "controls": {
+      "show": "Mostrar controles",
+      "expand": "Expandir controles",
+      "collapse": "Recolher controles",
+      "positions": {
+        "peek": "Controles",
+        "half": "Ajustar",
+        "full": "Ajuste fino"
+      },
+      "hide": "Ocultar controles",
       "colorScheme": "Esquema de Cores",
       "iterations": "Iterações",
       "position": "Posição",
@@ -1635,7 +1649,7 @@
         "firstTrigger": "Primeira ativação",
         "secondTrigger": "Segunda ativação",
         "realOnly": "Somente a parte real afeta o resultado.",
-        "windowHint": "O intervalo é uma janela de exploração. Você pode inserir valores exatos abaixo.",
+        "windowHint": "O intervalo é uma janela de exploração. A entrada numérica exata continua disponível.",
         "hints": {
           "feedback": "A parte real define a constante; a imaginária define a realimentação.",
           "seedLimit": "Ambas as componentes definem o valor inicial; a real também define o limite de escape.",

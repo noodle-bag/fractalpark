@@ -17,6 +17,7 @@ import { useCloudSession } from '@/components/cloud/CloudSessionProvider';
 import { ArtworkEnvelopePreview } from '@/components/gallery/ArtworkEnvelopePreview';
 import {
   GALLERY_CARD_LINK_CLASS,
+  GALLERY_CARD_TITLE_CLASS,
   GALLERY_PREVIEW_FRAME_CLASS,
 } from '@/components/gallery/gallery-card-styles';
 import { Link } from '@/i18n/routing';
@@ -178,7 +179,7 @@ export function MyWorksCloud() {
         <button
           type="button"
           onClick={() => openSignIn()}
-          className="mt-3 rounded-md border px-4 py-2 text-sm font-medium transition-colors hover:bg-muted"
+          className="mt-3 min-h-11 rounded-md border px-4 py-2 text-control font-medium transition-colors hover:bg-muted md:min-h-9"
         >
           {t('signIn')}
         </button>
@@ -207,7 +208,7 @@ export function MyWorksCloud() {
               type="button"
               disabled={busyId === 'backup'}
               onClick={() => void changeBackupMode(mode, false)}
-              className={`rounded-full px-3 py-1 text-xs font-medium transition-colors ${
+              className={`min-h-11 rounded-md px-3 py-1 text-control font-medium transition-colors md:min-h-9 ${
                 backupMode === mode
                   ? 'bg-foreground text-background'
                   : 'bg-muted text-muted-foreground hover:text-foreground'
@@ -220,18 +221,18 @@ export function MyWorksCloud() {
         {backupNotice && (
           <div className="mt-3 rounded-md border border-amber-500/40 bg-amber-500/10 p-3">
             <p className="text-xs leading-relaxed">{t('backupNotice')}</p>
-            <div className="mt-2 flex gap-2">
+            <div className="mt-2 flex flex-wrap gap-2">
               <button
                 type="button"
                 onClick={() => void changeBackupMode(backupNotice, true)}
-                className="rounded-md bg-primary px-3 py-1 text-xs font-medium text-primary-foreground"
+                className="min-h-11 rounded-md bg-primary px-3 py-1 text-control font-medium text-primary-foreground md:min-h-9"
               >
                 {t('backupConfirm')}
               </button>
               <button
                 type="button"
                 onClick={() => setBackupNotice(null)}
-                className="rounded-md border px-3 py-1 text-xs font-medium"
+                className="min-h-11 rounded-md border px-3 py-1 text-control font-medium md:min-h-9"
               >
                 {t('backupCancel')}
               </button>
@@ -239,13 +240,13 @@ export function MyWorksCloud() {
           </div>
         )}
       </div>
-      <div className="flex items-center justify-between">
+      <div className="flex flex-wrap items-center justify-between gap-2">
         <h2 className="text-xl font-semibold">{t('draftsTitle')}</h2>
         <div className="flex items-center gap-2">
           <button
             type="button"
             onClick={() => void refreshDrafts()}
-            className="inline-flex items-center gap-1.5 rounded-md border px-3 py-1.5 text-xs font-medium transition-colors hover:bg-muted"
+            className="inline-flex min-h-11 items-center gap-1.5 rounded-md border px-3 py-1.5 text-control font-medium transition-colors hover:bg-muted md:min-h-9"
           >
             <RefreshCw className="h-3.5 w-3.5" />
             {t('refresh')}
@@ -279,7 +280,7 @@ export function MyWorksCloud() {
                       loadEnvelope={async () => (await getDraft(draft.id)).envelope}
                     />
                   </span>
-                  <span className="mt-3 block truncate font-medium group-hover:underline">
+                  <span className={`${GALLERY_CARD_TITLE_CLASS} group-hover:underline`}>
                     {draft.title}
                   </span>
                   <span className="mt-1 block text-xs text-muted-foreground">
@@ -294,7 +295,7 @@ export function MyWorksCloud() {
                     type="button"
                     onClick={() => setPublishTarget(draft)}
                     disabled={busyId === draft.id}
-                    className="flex-1 rounded-md border px-3 py-1.5 text-xs font-medium transition-colors hover:bg-muted disabled:opacity-50"
+                    className="min-h-11 flex-1 rounded-md border px-3 py-1.5 text-control font-medium transition-colors hover:bg-muted disabled:opacity-50 md:min-h-9"
                   >
                     {t('publish')}
                   </button>
@@ -304,7 +305,7 @@ export function MyWorksCloud() {
                     title={t('delete')}
                     onClick={() => void removeDraft(draft.id)}
                     disabled={busyId === draft.id}
-                    className="rounded-md p-2 text-muted-foreground transition-colors hover:bg-destructive/10 hover:text-destructive disabled:opacity-50"
+                    className="flex min-h-11 min-w-11 items-center justify-center rounded-md p-2 text-muted-foreground transition-colors hover:bg-destructive/10 hover:text-destructive disabled:opacity-50 md:min-h-8 md:min-w-8"
                   >
                     <Trash2 className="h-4 w-4" />
                   </button>
@@ -341,7 +342,7 @@ export function MyWorksCloud() {
                           }
                         />
                       </div>
-                      <span className="mt-3 block truncate font-medium group-hover:underline">
+                      <span className={`${GALLERY_CARD_TITLE_CLASS} group-hover:underline`}>
                         {publication.title}
                       </span>
                     </Link>
@@ -350,7 +351,7 @@ export function MyWorksCloud() {
                       <div className={GALLERY_PREVIEW_FRAME_CLASS}>
                         <div className="h-full w-full bg-gradient-to-br from-slate-950 via-slate-800 to-slate-600 opacity-60" />
                       </div>
-                      <span className="mt-3 block truncate font-medium">{publication.title}</span>
+                      <span className={GALLERY_CARD_TITLE_CLASS}>{publication.title}</span>
                     </div>
                   )}
                   <span className="mt-1 block text-xs text-muted-foreground">
@@ -378,7 +379,7 @@ export function MyWorksCloud() {
                       type="button"
                       onClick={() => void withdraw(publication.id)}
                       disabled={busyId === publication.id}
-                      className="mt-3 w-full rounded-md border px-3 py-1.5 text-xs font-medium transition-colors hover:bg-muted disabled:opacity-50"
+                      className="mt-3 min-h-11 w-full rounded-md border px-3 py-1.5 text-control font-medium transition-colors hover:bg-muted disabled:opacity-50 md:min-h-9"
                     >
                       {t('withdraw')}
                     </button>

@@ -33,3 +33,25 @@ it('keeps import, reset and document download available while capture is blocked
   expect(screen.getByRole('button', { name: 'download.label' })).toBeEnabled();
   expect(screen.getByRole('button', { name: 'reset.label' })).toBeEnabled();
 });
+
+it('portals only the toolbar and retains the save draft when frame qualification changes', () => {
+  const target = document.createElement('div');
+  document.body.append(target);
+  const props = {
+    toolbarTarget: target,
+    status: { phase: 'idle' as const }, defaultSaveName: 'Initial',
+    onClearStatus: vi.fn(), onSave: vi.fn(), onDownload: vi.fn(),
+    onImport: vi.fn(), onExport: vi.fn(), onReset: vi.fn(),
+  };
+  const { container, rerender, unmount } = render(<ArtworkActions {...props} />);
+  expect(target.contains(screen.getByRole('button', { name: 'save.label' }))).toBe(true);
+  expect(container.querySelector('input[type="file"]')).not.toBeNull();
+  fireEvent.click(screen.getByRole('button', { name: 'save.label' }));
+  fireEvent.change(screen.getByLabelText('save.name'), { target: { value: 'Unsubmitted draft' } });
+  rerender(<ArtworkActions {...props} frameReady={false} />);
+  expect(screen.getByLabelText('save.name')).toHaveValue('Unsubmitted draft');
+  expect(screen.getByRole('button', { name: 'save.confirm' })).toBeDisabled();
+  expect(props.onSave).not.toHaveBeenCalled();
+  unmount();
+  target.remove();
+});

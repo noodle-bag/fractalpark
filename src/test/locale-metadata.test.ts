@@ -1,4 +1,4 @@
-import { describe, expect, it } from 'vitest';
+import { describe, expect, it, vi } from 'vitest';
 import { readFileSync } from 'node:fs';
 import { execSync } from 'node:child_process';
 import { join } from 'node:path';
@@ -14,6 +14,13 @@ import {
   htmlLangForLocale,
   isSupportedLocaleRoute,
 } from '@/app/[locale]/layout';
+
+// next/font is compiled by Next.js, not executed by the Vitest module loader.
+// Actual font loading and metrics are covered by the foundation browser tests.
+vi.mock('next/font/google', () => ({
+  Geist: () => ({ variable: 'test-geist-sans' }),
+  Geist_Mono: () => ({ variable: 'test-geist-mono' }),
+}));
 
 describe('locale metadata maps', () => {
   it('allows child route fallbacks while rejecting unsupported locale values', () => {

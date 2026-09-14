@@ -110,7 +110,7 @@ export function FormulaNumberDraftInput({
 
   return (
     <div className="space-y-1">
-      <div className="relative">
+      <div className="formula-number-field relative">
         <Input
           id={id}
           type="text"
@@ -149,7 +149,7 @@ export function FormulaNumberDraftInput({
           }}
           className={cn('pr-8 font-mono text-sm', className)}
         />
-        <span className="absolute inset-y-1 right-1 grid w-6 grid-rows-2 overflow-hidden rounded-sm border bg-background">
+        <span className="formula-number-stepper absolute inset-y-1 right-1 grid w-6 grid-rows-2 overflow-hidden rounded-sm border bg-background">
           <button
             type="button"
             tabIndex={-1}

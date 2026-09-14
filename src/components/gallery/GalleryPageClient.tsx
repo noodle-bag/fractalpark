@@ -42,7 +42,7 @@ export default function GalleryPageClient({
               : t('mine.description')}
         </p>
 
-        <nav className="mt-6 flex gap-2" aria-label={t('viewsLabel')}>
+        <nav className="mt-6 flex flex-wrap gap-2" aria-label={t('viewsLabel')}>
           <GalleryViewLink
             active={isCollection}
             href={`/${locale}/gallery`}
@@ -102,7 +102,7 @@ function GalleryViewLink({
       href={href}
       aria-current={active ? 'page' : undefined}
       className={cn(
-        'rounded-full px-4 py-2 text-sm font-medium transition-colors',
+        'inline-flex min-h-11 items-center rounded-md px-4 py-2 text-control font-medium transition-colors md:min-h-9',
         active
           ? 'bg-foreground text-background'
           : 'bg-muted text-muted-foreground hover:text-foreground'

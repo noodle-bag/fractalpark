@@ -1444,6 +1444,7 @@
         "session-expired": "세션이 만료됐어요. 계속 저장하려면 다시 로그인하세요."
       },
       "save": {
+        "short": "저장",
         "label": "갤러리에 저장",
         "title": "작품 저장",
         "name": "이름",
@@ -1452,13 +1453,16 @@
         "pending": "저장 중..."
       },
       "download": {
+        "short": "다운로드",
         "label": "프로젝트 다운로드"
       },
       "import": {
+        "short": "가져오기",
         "label": "프로젝트 가져오기",
         "dropHint": ".fractal.json 파일을 여기에 놓으세요"
       },
       "export": {
+        "short": "내보내기",
         "label": "PNG 내보내기",
         "title": "PNG 내보내기",
         "scale": "크기",
@@ -1471,6 +1475,7 @@
         "pending": "렌더링 중..."
       },
       "reset": {
+        "short": "초기화",
         "label": "작품 초기화",
         "title": "모든 설정을 초기화할까요?",
         "description": "이 작품은 수식, 뷰, 스타일, 렌더링, 애니메이션 설정을 포함해 기본 프리셋으로 돌아가요. 저장된 갤러리 항목과 커스텀 수식 라이브러리는 삭제되지 않아요.",
@@ -1610,6 +1615,15 @@
       }
     },
     "controls": {
+      "show": "컨트롤 표시",
+      "expand": "컨트롤 펼치기",
+      "collapse": "컨트롤 접기",
+      "positions": {
+        "peek": "컨트롤",
+        "half": "조정",
+        "full": "정밀 조정"
+      },
+      "hide": "컨트롤 숨기기",
       "colorScheme": "색상 구성",
       "iterations": "반복 횟수",
       "position": "위치",
@@ -1635,7 +1649,7 @@
         "firstTrigger": "첫 번째 실행",
         "secondTrigger": "두 번째 실행",
         "realOnly": "실수부만 결과에 영향을 줘요.",
-        "windowHint": "이 범위는 탐색용이에요. 아래에서 정확한 값을 입력할 수 있어요.",
+        "windowHint": "이 범위는 탐색용이에요. 정확한 숫자를 직접 입력할 수도 있어요.",
         "hints": {
           "feedback": "실수부는 상수를, 허수부는 피드백 계수를 정해요.",
           "seedLimit": "두 성분은 초깃값을 정하고, 실수부는 탈출 임계값도 정해요.",
