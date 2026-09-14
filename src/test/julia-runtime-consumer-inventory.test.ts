@@ -38,7 +38,7 @@ describe("Julia runtime consumer inventory", () => {
     ]);
   });
 
-  it("allows raw Julia intent reads only in classified persistence and mutation paths", () => {
+  it("allows raw Julia intent reads only in classified persistence, mutation, and isolated preview paths", () => {
     expect(filesMatching(/\.formula\.isJulia/)).toEqual([
       "src/cli/explore-commands.ts",
       "src/components/fractal/FrmEditorWorkspace.tsx",
@@ -46,8 +46,11 @@ describe("Julia runtime consumer inventory", () => {
       "src/engine/document-adapter.ts",
       "src/engine/document-migrate.ts",
       "src/engine/document-v3.ts",
+      "src/lib/artwork-preview.ts",
       "src/lib/frm-semantics-comparison.ts",
     ]);
+    const previewSource = readFileSync(join(ROOT, 'lib/artwork-preview.ts'), 'utf8');
+    expect(previewSource).toMatch(/params\.isJulia = document\.formula\.isJulia && resolveFormulaRuntimeCapabilityV1\(/);
     expect(filesMatching(/\.formula\.juliaC/)).toEqual([
       "src/cli/explore-commands.ts",
       "src/components/fractal/FrmEditorWorkspace.tsx",

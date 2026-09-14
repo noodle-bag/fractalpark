@@ -5,11 +5,16 @@ import {
 } from '@/engine/document-envelope';
 import { registerBuiltins } from '@/engine/plugins/builtins';
 import { getFormulaMetadata } from '@/engine/plugins/formula-catalog';
+import { pluginRegistry } from '@/engine/plugins/registry';
+import { bindPublishedRenderingSourceV1 } from '@/engine/formulas/v1/published-rendering-source-v1';
+import { resolveRecoveredPublishedRenderingPluginV1 } from '@/engine/formulas/v1/recovered-quantization-rendering-v1';
+import { resolveFormulaRuntimeCapabilityV1 } from '@/engine/formulas/v1/formula-runtime-capability-v1';
 import type { FormulaPlugin } from '@/engine/plugins/types';
 import type { FractalParams, Keyframe } from '@/engine/types';
 import { resolveRendererPipelineVersion } from '@/engine/frm/semantics-version';
 import { resolveCustomFormula, resolveFormulaReference } from '@/lib/formula-resolver';
 import { sha256Hex } from '@/lib/fractal-file';
+import { isPublishedFormulaId } from '@/lib/public-formula';
 
 const PREVIEW_MIN_BAILOUT = 1e-6;
 const PREVIEW_MAX_BAILOUT = 1_000_000;
@@ -17,7 +22,7 @@ const PREVIEW_MAX_BAILOUT = 1_000_000;
 export interface ArtworkPreviewData {
   params: FractalParams;
   keyframes: Keyframe[];
-  /** Compiled per-preview formula. Never registered in session-global state. */
+  /** Isolated published or custom formula. Never registered in session-global state. */
   customFormulaPlugin: FormulaPlugin | null;
 }
 
@@ -46,8 +51,29 @@ export async function prepareArtworkPreview(envelope: unknown): Promise<ArtworkP
   const formulaId = document.formula.formulaId;
   let customFormulaPlugin: FormulaPlugin | null = null;
   let customFormulaSemanticsVersion: 1 | 2 | undefined;
+  const params = documentToRuntimeParams(document);
 
-  if (getFormulaMetadata(formulaId)) {
+  if (isPublishedFormulaId(formulaId)) {
+    try {
+      const { getPublishedFormulaLibraryClient } = await import('@/lib/published-formula-library');
+      const library = await getPublishedFormulaLibraryClient();
+      if (!library.ok) return null;
+      const row = library.value.get(formulaId);
+      if (!row) return null;
+      const loaded = await library.value.load(formulaId);
+      if (!loaded.ok) return null;
+      customFormulaPlugin = resolveRecoveredPublishedRenderingPluginV1(
+        bindPublishedRenderingSourceV1(loaded.value),
+        pluginRegistry.getFormula(row.displayName),
+      );
+      params.isJulia = document.formula.isJulia && resolveFormulaRuntimeCapabilityV1(
+        formulaId,
+        customFormulaPlugin,
+      ).supportsRuntime;
+    } catch {
+      return null;
+    }
+  } else if (getFormulaMetadata(formulaId)) {
     const resolution = resolveFormulaReference(formulaId, []);
     if (!resolution.success) return null;
   } else {
@@ -89,7 +115,7 @@ export async function prepareArtworkPreview(envelope: unknown): Promise<ArtworkP
 
   return {
     params: {
-      ...documentToRuntimeParams(document),
+      ...params,
       pipelineVersion: resolveRendererPipelineVersion(
         customFormulaSemanticsVersion,
         document.coloring.pipelineVersion,

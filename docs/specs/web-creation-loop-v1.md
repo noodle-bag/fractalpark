@@ -745,6 +745,12 @@ record of v0.4.15).
   WebGL context per artwork. The server thumbnail pipeline remains the source
   of future stable external image URLs, not a blocker for truthful in-app
   previews.
+  Published Standard UUIDs load their selected Definition through the verified
+  public library rather than requiring an embedded custom-formula asset.
+  The preview retains saved parameters and keyframes, uses the same reviewed
+  rendering adaptation as Explore, and checks Julia capability against its
+  isolated plugin. Library/source validation failures keep the neutral fallback;
+  preview loading never registers a published plugin in the editing session.
 
 ### 17.1 Custom formulas (cloud)
 
