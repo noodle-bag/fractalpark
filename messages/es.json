@@ -2128,13 +2128,6 @@
       "gallery": "Visitar la Galería"
     }
   },
-  "analyticsConsent": {
-    "title": "Analítica de uso opcional",
-    "description": "Permite Google Analytics con recopilación limitada para ayudarnos a saber qué funciones de FractalPark son útiles. No enviamos identificadores de cuenta, correos, títulos, código fuente de fórmulas ni contenido de obras. Rechazar no limita ninguna función.",
-    "accept": "Permitir analítica",
-    "decline": "Rechazar",
-    "settings": "Ajustes de analítica"
-  },
   "legal": {
     "privacy": {
       "title": "Política de privacidad",
@@ -2145,9 +2138,9 @@
       "s2h": "Qué nunca recopilamos",
       "s2b": "Sin contraseñas: los códigos de inicio de sesión van a tu correo y caducan.\n\nSin rastreadores publicitarios ni perfiles entre sitios; no vendemos ni compartimos datos personales con intermediarios de datos.\n\nLos eventos de producto no incluyen identificadores de cuenta, correos, títulos, código fuente de fórmulas, borradores ni contenido de obras.",
       "s3h": "Cookies",
-      "s3b": "Una cookie de sesión cifrada y HttpOnly mantiene tu sesión, y una pequeña NEXT_LOCALE recuerda el idioma. Si permites Google Analytics, también crea cookies propias _ga con un identificador seudónimo del navegador. Rechazar evita esas cookies y retirar el consentimiento las elimina.",
+      "s3b": "Una cookie de sesión HttpOnly mantiene tu sesión y NEXT_LOCALE recuerda tu idioma. Google Analytics usa cookies propias _ga con identificadores seudónimos del navegador.",
       "s4h": "Analítica",
-      "s4b": "Vercel Analytics mide el tráfico básico del sitio sin cookies. Google Analytics es opcional y solo se carga tras tu permiso. Usamos informes agregados para saber si funciones como renderizar, guardar o publicar se completan. El esquema excluye identificadores de cuenta, correos, títulos, código fuente de fórmulas, identificadores privados y contenido de obras. Estos proveedores pueden procesar datos de red y dispositivo necesarios para la analítica; las señales publicitarias están desactivadas. Puedes cambiar la elección de Google Analytics en Ajustes de analítica.",
+      "s4b": "Vercel Analytics mide el tráfico básico sin cookies. Google Analytics nos ayuda a entender el uso de funciones mediante informes agregados. FractalPark no envía IDs de cuentas, correos, títulos, código de fórmulas, IDs de registros privados ni contenido de obras, y no establece GA user_id. Los proveedores pueden procesar datos de red y dispositivo necesarios para el análisis. Las señales publicitarias están desactivadas.",
       "s5h": "Correos que enviamos",
       "s5b": "Códigos de inicio de sesión, siempre.\n\nCorreos de respaldo de obras, solo si los activas. Están desactivados por defecto. Un correo de respaldo lleva la configuración completa de tu obra como adjunto; el correo no es almacenamiento cifrado y no podemos retractar un adjunto una vez entregado. La página de configuración lo dice de nuevo antes de que lo actives.",
       "s6h": "Borradores privados, obras públicas",

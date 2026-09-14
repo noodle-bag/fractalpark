@@ -2,11 +2,13 @@
 
 import { useEffect, useRef } from 'react';
 import { usePathname } from 'next/navigation';
-import {
-  ANALYTICS_CONSENT_EVENT,
-  isAnalyticsConsentGranted,
-} from '@/lib/analytics-consent';
 import { getAnalyticsTrafficParams } from '@/lib/analytics-traffic';
+
+declare global {
+  interface Window {
+    gtag?: (...args: unknown[]) => void;
+  }
+}
 
 /**
  * Sends one manual page_view per pathname change. Explore query-state updates
@@ -18,32 +20,25 @@ export function PageViewTracker() {
 
   useEffect(() => {
     const path = pathname?.split('?')[0] ?? '';
-    const send = () => {
-      if (path && path !== lastPathRef.current) {
-        const sent = trackEvent('page_view', {
-          page_path: path,
-          page_location: window.location.origin + path,
-        });
-        if (sent) lastPathRef.current = path;
-      }
-    };
-    const onConsent = () => send();
-    send();
-    window.addEventListener(ANALYTICS_CONSENT_EVENT, onConsent);
-    return () => window.removeEventListener(ANALYTICS_CONSENT_EVENT, onConsent);
+    if (path && path !== lastPathRef.current) {
+      const sent = trackEvent('page_view', {
+        page_path: path,
+        page_location: window.location.origin + path,
+      });
+      if (sent) lastPathRef.current = path;
+    }
   }, [pathname]);
 
   return null;
 }
 
-/** Sends a consented custom event without affecting the product action. */
+/** Sends a custom event without affecting the product action. */
 export function trackEvent(
   eventName: string,
   params?: Record<string, string | number | boolean>,
 ): boolean {
   if (
     typeof window === 'undefined' ||
-    !isAnalyticsConsentGranted() ||
     typeof window.gtag !== 'function'
   ) return false;
 

@@ -43,7 +43,6 @@ function renderMessages(children: ReactNode) {
 
 beforeEach(() => {
   vi.clearAllMocks();
-  window.__fractalparkAnalyticsConsent = true;
   window.gtag = vi.fn();
   cloudMocks.getSession.mockResolvedValue(null);
   cloudMocks.requestOtp.mockResolvedValue(undefined);

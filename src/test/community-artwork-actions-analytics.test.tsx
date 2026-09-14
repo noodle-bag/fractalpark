@@ -34,7 +34,6 @@ vi.mock('@/lib/cloud/client', async (importOriginal) => {
 describe('CommunityArtworkActions analytics', () => {
   beforeEach(() => {
     vi.clearAllMocks();
-    window.__fractalparkAnalyticsConsent = true;
     window.gtag = vi.fn();
     Object.defineProperty(navigator, 'clipboard', {
       configurable: true,

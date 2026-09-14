@@ -34,7 +34,6 @@ beforeEach(() => {
   createDraftMock.mockReset();
   updateDraftMock.mockReset();
   getDraftMock.mockReset();
-  window.__fractalparkAnalyticsConsent = true;
   window.gtag = vi.fn();
 });
 

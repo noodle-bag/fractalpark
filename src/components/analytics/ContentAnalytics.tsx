@@ -7,7 +7,6 @@ import {
   type AnchorHTMLAttributes,
 } from 'react';
 import { trackEvent } from './PageViewTracker';
-import { ANALYTICS_CONSENT_EVENT } from '@/lib/analytics-consent';
 
 type AnalyticsParams = Record<string, string | number | boolean>;
 
@@ -28,15 +27,10 @@ export function ContentViewTracker({
   const lastSentIdentityRef = useRef<string | null>(null);
 
   useEffect(() => {
-    const send = () => {
-      if (lastSentIdentityRef.current === identity) return;
-      if (trackEvent(eventName, eventParams)) {
-        lastSentIdentityRef.current = identity;
-      }
-    };
-    send();
-    window.addEventListener(ANALYTICS_CONSENT_EVENT, send);
-    return () => window.removeEventListener(ANALYTICS_CONSENT_EVENT, send);
+    if (lastSentIdentityRef.current === identity) return;
+    if (trackEvent(eventName, eventParams)) {
+      lastSentIdentityRef.current = identity;
+    }
   }, [eventName, eventParams, identity]);
 
   return null;

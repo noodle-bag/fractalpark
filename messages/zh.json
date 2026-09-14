@@ -2128,13 +2128,6 @@
       "gallery": "访问画廊"
     }
   },
-  "analyticsConsent": {
-    "title": "可选的使用情况分析",
-    "description": "允许使用克制的 Google Analytics，帮助我们了解 FractalPark 哪些功能真正有用。我们不会发送账号 ID、邮箱、标题、公式源码或作品内容。拒绝后仍可使用全部功能。",
-    "accept": "允许分析",
-    "decline": "拒绝",
-    "settings": "分析设置"
-  },
   "legal": {
     "privacy": {
       "title": "隐私政策",
@@ -2145,9 +2138,9 @@
       "s2h": "我们永远不收集什么",
       "s2b": "不收密码——登录码发到你的邮箱，用完即过期。\n\n没有广告跟踪器，不做跨站画像，也不会把个人数据出售或分享给数据经纪商。\n\n产品分析事件不会携带账号 ID、邮箱、作品标题、公式源码、草稿内容或作品内容。",
       "s3h": "Cookie",
-      "s3b": "一个加密的 HttpOnly 会话 cookie 用来保持登录，一个很小的 NEXT_LOCALE cookie 记住语言。如果你允许 Google Analytics，它还会设置包含假名浏览器标识的第一方 _ga cookie。拒绝分析不会设置这些 cookie；撤回同意时会将其删除。",
+      "s3b": "加密的 HttpOnly 会话 cookie 用于保持登录，NEXT_LOCALE cookie 记住语言。Google Analytics 使用包含假名浏览器标识的第一方 _ga cookie。",
       "s4h": "使用情况分析",
-      "s4b": "Vercel Analytics 不使用 cookie，只统计基础站点流量。Google Analytics 是可选的，只在你允许后加载。我们通过聚合报告了解功能是否真正完成（例如渲染、保存或发布是否成功）。事件遵循固定 schema，不包含账号 ID、邮箱、标题、公式源码、私有记录 ID 和作品内容。这些服务商可能处理提供分析所需的网络与设备数据；广告信号已关闭。你可以随时通过“分析设置”更改 Google Analytics 选择。",
+      "s4b": "Vercel Analytics 不使用 cookie，只统计基础站点流量。Google Analytics 通过聚合报告帮助我们了解功能使用情况。FractalPark 不发送账号 ID、邮箱、标题、公式源码、私有记录 ID 或作品内容，也不设置 GA user_id。这些服务商可能处理分析所需的网络与设备数据；广告信号已关闭。",
       "s5h": "我们会发什么邮件",
       "s5b": "登录验证码，一定有。\n\n作品备份邮件，只有你主动开启才会发，默认关闭。备份邮件把作品的完整配置作为附件发送；邮箱不是加密存储，附件一旦送达就无法收回。开启页面上会再提示一次。",
       "s6h": "私有草稿与公开作品",

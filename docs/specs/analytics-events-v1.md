@@ -30,9 +30,9 @@ and deduplication. Analytics never owns product state or provenance.
   not be added to new events.
 - Event helpers must be no-ops when analytics is unavailable and cannot block
   navigation, rendering, saving, copying, or export.
-- Google Analytics loads and events are sent only after explicit consent.
-  Declining analytics does not affect product behavior. Consent can be changed
-  from the persistent Analytics settings control.
+- Google Analytics loads when a measurement ID is configured, following the
+  v0.4.19 integration. Analytics is disclosed on Privacy; there is no consent
+  prompt or persistent settings control.
 - Analytics uses GA's pseudonymous browser/device identity only. FractalPark
   never sets GA `user_id` and never joins analytics to a cloud account.
 
@@ -171,7 +171,7 @@ retries and idempotent replays do not re-emit.
 
 ## v0.4.20 Weekly Active Creator Events
 
-A weekly active creator (WAC) is a unique consenting external browser/device
+A weekly active creator (WAC) is a unique external browser/device
 that completes this
 ordered sequence within one Asia/Shanghai natural week:
 
@@ -183,10 +183,13 @@ successful Explore render -> user-originated meaningful change
 Saving, exporting, sharing, publishing, or Remix is not required for WAC.
 Those actions remain independent downstream value signals.
 
+Change and render attribution stays in memory. `creator_change` and
+`creator_render_complete` are retired and must not be sent to GA4: continuous
+dragging and successful intermediate frames are not separate business events.
+Only the completed creator loop is reported, using the existing weekly gate.
+
 | Event | Trigger | Properties |
 |---|---|---|
-| `creator_change` | A supported user control makes a meaningful Explore change | `surface: 'explore'`, `change_id`, `change_type`, traffic properties |
-| `creator_render_complete` | A frame is successfully drawn to the visible Explore canvas | `surface: 'explore'`, `render_phase`; post-change renders also include `change_id` and `change_type`; traffic properties |
 | `creator_loop_complete` | The first post-baseline render attributable to the latest user change succeeds | `surface: 'explore'`, `change_id`, `change_type`, traffic properties |
 | `remix_complete` | A Remix produces an editable cloud draft or a frame drawn in Explore | `source_type`, `source_id`, `completion_surface`, traffic properties |
 
@@ -360,9 +363,8 @@ Automated or browser tests must prove:
 - successful and failed Copy link paths have the documented behavior;
 - removed Gallery star and fullscreen UI no longer sends deprecated events;
 - analytics unavailability does not change the user-visible action result;
-- no Google Analytics request or cookie is created before consent, declining
-  keeps all product behavior available, and withdrawing consent removes GA
-  cookies and stops later events;
+- no Google Analytics script is added without a configured measurement ID;
+- no consent prompt or persistent analytics settings control is rendered;
 - no new payload contains source code, a render-state query, or local
   identifiers;
 - no v0.4.15 payload contains an email, IP, cookie, token, envelope,
