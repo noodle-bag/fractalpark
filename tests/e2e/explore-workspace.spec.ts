@@ -214,6 +214,29 @@ for (const width of [390, 320]) {
   });
 }
 
+test.describe('mobile canvas control touch target', () => {
+  test.use({ hasTouch: true });
+
+  test('restores controls when the collapsed button edge is tapped', async ({ page }) => {
+    await page.setViewportSize({ width: 390, height: 844 });
+    await page.goto('/en/explore');
+    await ready(page);
+    await page.getByRole('button', { name: 'Hide controls', exact: true }).tap();
+    await expect(page.getByTestId('explore-inspector')).not.toBeVisible();
+    const showControls = page.getByRole('button', { name: 'Show controls', exact: true });
+    const box = (await showControls.boundingBox())!;
+    expect(box.width).toBeGreaterThanOrEqual(44);
+    expect(box.height).toBeGreaterThanOrEqual(44);
+    expect(await showControls.evaluate(element => {
+      const rect = element.getBoundingClientRect();
+      const edgeTarget = document.elementFromPoint(rect.left + 2, rect.top + 2);
+      return edgeTarget === element || element.contains(edgeTarget);
+    })).toBe(true);
+    await page.touchscreen.tap(box.x + 2, box.y + 2);
+    await expect(page.getByRole('tab', { name: 'Formula', exact: true })).toBeVisible();
+  });
+});
+
 test('short landscape uses the same vertical split and collapse interaction', async ({ page }) => {
   await page.setViewportSize({ width: 844, height: 390 });
   await page.goto('/en/explore');

@@ -1532,16 +1532,22 @@ function ExploreClient({ posterImage }: { posterImage?: string }) {
 
         <button
           type="button"
-          className="absolute bottom-4 right-4 z-10 rounded-full bg-black/60 p-2 text-white shadow-lg lg:hidden"
+          className="absolute z-10 flex size-11 touch-manipulation items-center justify-center text-white focus-visible:outline-2 focus-visible:outline-white lg:hidden"
+          style={{
+            bottom: 'max(0.75rem, calc(env(safe-area-inset-bottom) + 0.25rem))',
+            right: 'max(0.75rem, calc(env(safe-area-inset-right) + 0.25rem))',
+          }}
           onClick={() => setInspectorCollapsed(value => !value)}
           aria-label={inspectorCollapsed ? t('controls.show') : t('controls.hide')}
           aria-expanded={!inspectorCollapsed}
           aria-controls="explore-inspector-body"
         >
-          {inspectorCollapsed
-            ? <ChevronDown aria-hidden className="size-5" />
-            : <ChevronUp aria-hidden className="size-5" />
-          }
+          <span className="flex size-9 items-center justify-center rounded-full bg-black/60 shadow-lg">
+            {inspectorCollapsed
+              ? <ChevronDown aria-hidden className="size-5" />
+              : <ChevronUp aria-hidden className="size-5" />
+            }
+          </span>
         </button>
 
       </div>
