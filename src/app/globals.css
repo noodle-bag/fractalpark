@@ -7,6 +7,7 @@
 .explore-inspector-content { overflow-y: auto; overscroll-behavior: contain; }
 .explore-inspector[data-collapsed="true"] { display: none; }
 .explore-artwork-bar { padding-bottom: max(8px, env(safe-area-inset-bottom)); }
+.explore-canvas-stage [data-testid="fractal-canvas"] { border-radius: 0; }
 @media (max-width: 1023px) {
   .explore-inspector { --control-height: 2.25rem; --control-height-large: 2.5rem; }
   .explore-inspector-body { height: 100%; }

@@ -19,7 +19,7 @@ export function ExploreInspector({ children, summary, collapsed, onCollapsedChan
   const t = useTranslations('explore.controls');
   const ta = useTranslations('explore.artworkActions');
   const [desktop, setDesktop] = useState<boolean | null>(null);
-  const [artworkOpen, setArtworkOpen] = useState(false);
+  const [artworkOpen, setArtworkOpen] = useState(true);
   const [, setHistoryPosition] = useState<0 | 1 | 2>(0);
   const toggleRef = useRef<HTMLButtonElement>(null);
 

@@ -155,7 +155,7 @@ related controls or reducing action hit areas.
 
 On desktop, move artwork toolbar presentation to the fixed Inspector bottom
 bar. On mobile, keep the same action owner but place the toolbar in an explicit
-"Artwork actions" disclosure inside the control region, closed by default.
+"Artwork actions" disclosure inside the control region, open by default.
 Opening or closing the disclosure is presentation-only and must not reset an
 operation, dialog, draft, or action status. Do not move or duplicate its canvas
 dropzone, Document ownership, dialogs, or capture state. Use icons above short
@@ -328,19 +328,18 @@ The desktop Inspector and retained canvas share one parent-owned geometry state;
 the canvas fills the visible area while open and the full workspace while
 closed. Only artwork-toolbar presentation is portalled into its fixed bottom
 bar; the original component still owns canvas file dropping and save/export
-dialogs. The mobile panel uses Peek/Half/Full over that same canvas, with controls
-retained and inert in Peek. Short landscape uses the 320px sidebar. Panel height
-and bottom clearance follow the visual viewport, with safe-area bar padding.
-Numeric focus promotes Full; keyboard reduction locks the handle. Transient
-same-URL history preserves Next history fields, exits the existing Radix child
-modal first, then reduces the panel. It is not persisted artwork state or a
+dialogs. Mobile uses the same retained canvas above a control region that is
+expanded by default and can be hidden or restored with one canvas-side button.
+Short landscape keeps this vertical split rather than adding a sidebar. The
+canvas is square-cornered and fills its declared stage without inset rounding.
+Panel height and bottom clearance follow the visual viewport, with safe-area
+padding. This presentation state is not persisted artwork state or a
 formula/route resolver.
 UI Back uses the latest artwork URL/router snapshot rather than replaying a
 pre-edit parameter query. The panel consumes the existing qualified Explore
 URL writer's applied output; it does not encode a second artwork projection.
-Revisited same-page entries cannot strand page Back
-on obsolete panel positions. Switching to the sidebar drains portrait positions
-without changing the artwork. Actual page traversal remains with Next.
+Revisited same-page entries cannot strand page Back on obsolete panel state.
+Actual page traversal remains with Next.
 Dismissal requests at most one native Back while that traversal is pending.
 Completing an earlier dialog's dismissal must not dismiss a newly opened layer.
 Outgoing navigation closes the mobile menu when the route commits, rather than
@@ -413,8 +412,8 @@ merge, deployment and release actions remain separately authorized.
 
 - [Workspace interaction](../../tests/e2e/explore-workspace.spec.ts) compares
   retained canvas identity, declared state geometry, restored pixels and bounds
-  through Inspector changes; exercises
-  mobile positions, child-first Back, precise input and translated Tabs.
+  through Inspector changes; exercises mobile split/collapse, child-first Back,
+  precise input and translated Tabs.
   Root font-size scaling and visual-viewport keyboard fixtures are simulations,
   not evidence of native browser zoom or physical mobile keyboards.
 - [Pointer ownership](../../src/test/plane-pointer-ownership.test.tsx) and

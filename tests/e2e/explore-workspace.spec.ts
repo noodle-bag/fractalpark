@@ -16,16 +16,17 @@ test.beforeEach(async ({ context }) => {
 
 async function ready(page: Page) {
   await expect(page.getByRole('spinbutton', { name: 'power', exact: true, includeHidden: true })).toBeAttached({ timeout: 45_000 });
-  await expect(page.getByTestId('fractal-canvas')).toHaveAttribute('data-render-status', 'ready', { timeout: 45_000 });
+  const canvas = page.getByRole('main').getByTestId('fractal-canvas');
+  await expect(canvas).toHaveAttribute('data-render-status', 'ready', { timeout: 45_000 });
   const formulaId = await page.getByTestId('explore-root').getAttribute('data-formula-id');
-  await expect(page.getByTestId('fractal-canvas')).toHaveAttribute('data-rendered-formula-id', formulaId!);
+  await expect(canvas).toHaveAttribute('data-rendered-formula-id', formulaId!);
   await expect.poll(() => new URL(page.url()).searchParams.get('fm')).toBe(formulaId);
   await page.evaluate(() => document.fonts.ready);
   await expect(page.locator('[data-nextjs-dialog]')).toHaveCount(0);
 }
 
 async function canvasSnapshot(page: Page) {
-  return page.getByTestId('fractal-canvas').evaluate(async element => {
+  return page.getByRole('main').getByTestId('fractal-canvas').evaluate(async element => {
     const canvas = element as HTMLCanvasElement;
     const bytes = new Uint8Array(await crypto.subtle.digest('SHA-256', new TextEncoder().encode(canvas.toDataURL())));
     return { rect: canvas.getBoundingClientRect().toJSON(), width: canvas.width, height: canvas.height, dpr: devicePixelRatio, imageHash: [...bytes].map(b => b.toString(16).padStart(2, '0')).join('') };
@@ -33,7 +34,7 @@ async function canvasSnapshot(page: Page) {
 }
 
 async function expectCanvasSizeSettled(page: Page) {
-  await expect.poll(() => page.getByTestId('fractal-canvas').evaluate(element => {
+  await expect.poll(() => page.getByRole('main').getByTestId('fractal-canvas').evaluate(element => {
     const canvas = element as HTMLCanvasElement;
     const rect = canvas.getBoundingClientRect();
     return canvas.width === Math.round(rect.width * devicePixelRatio)
@@ -154,8 +155,9 @@ for (const width of [390, 320]) {
     await expect(panel).toHaveAttribute('data-layout', 'mobile');
     await expect(panel).not.toHaveAttribute('data-position');
     await expect(page.getByRole('tab', { name: 'Formula', exact: true })).toBeVisible();
-    await expect(page.getByTestId('explore-artwork-bar')).not.toBeVisible();
+    await expect(page.getByTestId('explore-artwork-bar')).toBeVisible();
     await expect(page.locator('footer')).toHaveCount(0);
+    expect(await canvas.evaluate(element => getComputedStyle(element).borderRadius)).toBe('0px');
     const expandedCanvas = (await canvas.boundingBox())!;
     expect(expandedCanvas.height).toBeGreaterThanOrEqual(390);
     const url = page.url();
@@ -166,8 +168,6 @@ for (const width of [390, 320]) {
     await page.getByRole('button', { name: 'Show controls', exact: true }).click();
     await expect(page.getByRole('tab', { name: 'Formula', exact: true })).toBeVisible();
     expect(page.url()).toBe(url);
-    await page.locator('.explore-artwork-disclosure > summary').click();
-    await expect(page.getByTestId('explore-artwork-bar')).toBeVisible();
     await page.locator('#julia-mode').click();
     const plane = page.locator('[data-plane-picker="complex"]').first();
     await plane.scrollIntoViewIfNeeded();
@@ -224,7 +224,7 @@ test('short landscape uses the same vertical split and collapse interaction', as
   await page.getByRole('button', { name: 'Hide controls', exact: true }).click();
   await expect(page.getByTestId('explore-inspector')).not.toBeVisible();
   await page.getByRole('button', { name: 'Show controls', exact: true }).click();
-  await expect(page.getByTestId('explore-artwork-bar')).not.toBeVisible();
+  await expect(page.getByTestId('explore-artwork-bar')).toBeVisible();
 });
 
 test('200 percent root text scaling keeps long Tabs and artwork actions reachable', async ({ page }) => {
@@ -258,8 +258,7 @@ test('seven locales retain complete mobile actions and all Tabs in the split pan
       await ready(page);
       const panel = page.getByTestId('explore-inspector');
       await expect(panel).toHaveAttribute('data-layout', 'mobile');
-      await expect(page.getByTestId('explore-artwork-bar')).not.toBeVisible();
-      await page.locator('.explore-artwork-disclosure > summary').click();
+      await expect(page.getByTestId('explore-artwork-bar')).toBeVisible();
       const actions = page.getByTestId('explore-artwork-bar').getByRole('button');
       await expect(actions).toHaveCount(5);
       for (const action of await actions.all()) {
