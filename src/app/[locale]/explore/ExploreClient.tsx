@@ -215,6 +215,7 @@ function ExploreClient({ posterImage }: { posterImage?: string }) {
   const [isPreviewPlaying, setIsPreviewPlaying] = useState(false);
   const [artworkToolbarTarget, setArtworkToolbarTarget] = useState<HTMLDivElement | null>(null);
   const [activeTab, setActiveTab] = useState('formula');
+  const [inspectorCollapsed, setInspectorCollapsed] = useState(false);
   const [formulaResolution, setFormulaResolution] =
     useState<ExploreFormulaResolution | null>(null);
   const [publishedDescriptor, setPublishedDescriptor] =
@@ -1322,10 +1323,11 @@ function ExploreClient({ posterImage }: { posterImage?: string }) {
     <div
       className="relative h-[calc(100dvh-3rem)] overflow-hidden"
       data-formula-id={document.formula.formulaId}
+      data-inspector-collapsed={inspectorCollapsed}
       data-testid="explore-root"
     >
       <div
-        className="absolute inset-0 bg-black"
+        className="explore-canvas-stage absolute inset-0 bg-black"
         style={posterImage ? {
           backgroundImage: `url("${posterImage}")`,
           backgroundPosition: 'center',
@@ -1523,7 +1525,13 @@ function ExploreClient({ posterImage }: { posterImage?: string }) {
 
       </div>
 
-      <ExploreInspector getProjectedArtworkHref={getProjectedArtworkHref} summary={<PositionSummaryPanel bounds={bounds} />} onToolbarMount={setArtworkToolbarTarget}>
+      <ExploreInspector
+        collapsed={inspectorCollapsed}
+        onCollapsedChange={setInspectorCollapsed}
+        getProjectedArtworkHref={getProjectedArtworkHref}
+        summary={<PositionSummaryPanel bounds={bounds} />}
+        onToolbarMount={setArtworkToolbarTarget}
+      >
 
           <Tabs value={activeTab} onValueChange={setActiveTab} className="min-h-0 w-full flex-1">
             <TabsList className="w-full shrink-0" onFocusCapture={event => {

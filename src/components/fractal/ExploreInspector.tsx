@@ -8,14 +8,15 @@ import { useExplorePanelNavigation, type ExplorePanelPosition } from '@/hooks/us
 interface ExploreInspectorProps {
   children: ReactNode;
   summary?: ReactNode;
+  collapsed: boolean;
+  onCollapsedChange: (collapsed: boolean) => void;
   onToolbarMount: (element: HTMLDivElement | null) => void;
   getProjectedArtworkHref?: () => string | null;
 }
 
-/** Retain controls and toolbar independently of the fixed canvas. */
-export function ExploreInspector({ children, summary, onToolbarMount, getProjectedArtworkHref }: ExploreInspectorProps) {
+/** Retain controls and toolbar while the parent owns the shared workspace geometry. */
+export function ExploreInspector({ children, summary, collapsed, onCollapsedChange, onToolbarMount, getProjectedArtworkHref }: ExploreInspectorProps) {
   const t = useTranslations('explore.controls');
-  const [collapsed, setCollapsed] = useState(false);
   const [desktop, setDesktop] = useState<boolean | null>(null);
   const [position, setPosition] = useState<ExplorePanelPosition>(0);
   const [viewport, setViewport] = useState({ height: 0, bottom: 0 });
@@ -82,7 +83,7 @@ export function ExploreInspector({ children, summary, onToolbarMount, getProject
       <button ref={toggleRef} type="button"
         className={`explore-inspector-toggle pointer-events-auto absolute inset-y-0 z-10 w-3 items-center justify-center border-x bg-muted text-muted-foreground hover:bg-accent focus-visible:outline-2 focus-visible:outline-ring ${collapsed ? 'right-0' : 'left-0'}`}
         aria-label={collapsed ? t('show') : t('hide')} aria-expanded={!collapsed} aria-controls="explore-inspector-body"
-        onClick={() => setCollapsed(value => !value)}>
+        onClick={() => onCollapsedChange(!collapsed)}>
         {collapsed ? <ChevronLeft className="size-3" /> : <ChevronRight className="size-3" />}
       </button>
       <div ref={bodyRef} id="explore-inspector-body" inert={desktop === true && collapsed}
@@ -95,7 +96,7 @@ export function ExploreInspector({ children, summary, onToolbarMount, getProject
         }}
         onKeyDown={event => {
           if (event.key !== 'Escape' || event.defaultPrevented || !event.currentTarget.contains(event.target as Node)) return;
-          if (desktop) { setCollapsed(true); toggleRef.current?.focus(); }
+          if (desktop) { onCollapsedChange(true); toggleRef.current?.focus(); }
           else if (position > 0) { navigate((position - 1) as ExplorePanelPosition); handleRef.current?.focus(); }
         }}>
         <div className="explore-inspector-header flex shrink-0 items-stretch border-b px-4">

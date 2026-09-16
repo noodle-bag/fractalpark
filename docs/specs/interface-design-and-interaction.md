@@ -80,10 +80,11 @@ reduced-motion behavior. Color-role reuse does not add a Theme Toggle.
 
 ### Desktop Inspector
 
-The canvas fills the workspace below the navigation. The Inspector is a
-544px-wide right-side overlay, open by default, non-modal, and without a dimming
-backdrop. The exposed canvas remains interactive; an outside click does not
-implicitly close the Inspector.
+The Inspector is a 532px-wide right-side workspace panel, open by default,
+non-modal, and without a dimming backdrop. While it is open, the retained canvas
+stage fills the visible workspace to the Inspector's left. Closing the Inspector
+expands that same stage across the full workspace. The exposed canvas remains
+interactive; an outside click does not implicitly close the Inspector.
 
 A flush, full-height 12px visual toggle strip sits at the Inspector's inner edge
 when open and at the window's right edge when closed. It is not a protruding
@@ -93,22 +94,23 @@ specific visual exception to ordinary mobile button sizing.
 
 Opening/closing the Inspector must preserve:
 
-- the canvas DOM node, renderer instance, rectangle, drawing size, and DPR for
-  the same viewport;
-- fractal bounds, center, zoom, rotation, and the screen position of a fixed
-  artwork anchor;
+- the canvas DOM node, renderer instance, and DPR; its rectangle and drawing
+  size follow the declared open/closed workspace geometry;
+- fractal bounds, center, zoom, and rotation; the bounds center remains the
+  actual canvas center in each state;
 - selected Tab, input drafts, relevant scrolling/focus, parameters, keyframes,
   animation state, and save/export state.
 
-Do not shrink a flex canvas or compensate an Inspector-induced shift with pan
-or changed bounds. Initial migration from a side-by-side layout may change the
-available aspect ratio; this invariant compares the new open/closed states,
-not the old layout with the new one. A genuine viewport resize still follows
-the existing rendering resize contract.
+Resize through the existing canvas/renderer resize contract. Do not compensate
+the geometry change with pan or changed bounds: the same artwork coordinates
+stay centered in the current canvas rectangle. Reopening must restore the open
+rectangle without recreating the canvas or losing editing state.
 
 Reference viewports are 1440×900 and 1180×900 with 48px navigation. Canvas
-rectangles are respectively `(0,48,1440,852)` and `(0,48,1180,852)`; these are
-comparison fixtures, not universal viewport constants.
+rectangles while open are respectively `(0,48,908,852)` and
+`(0,48,648,852)`; while closed they are `(0,48,1440,852)` and
+`(0,48,1180,852)`. These are comparison fixtures, not universal viewport
+constants.
 
 Inspector padding is 16px horizontally and 12px vertically, with 8px between
 fixed regions. Formula groups use the approved 8px rhythm. Tab contents scroll
@@ -131,8 +133,8 @@ For short landscape, use a right-side narrow Inspector rather than a tall
 portrait sheet consuming the short screen. The 844×390 reference has a 320px
 panel, approximately 288×166px content area, and an 844×342px canvas under the
 navigation. Responsive thresholds depend on available width/height, not locale
-or a screenshot coordinate. Preserve portrait behavior and the fixed-canvas
-invariant; validate narrow/short intermediate viewports too.
+or a screenshot coordinate. Preserve portrait behavior and its full-canvas
+overlay contract; validate narrow/short intermediate viewports too.
 
 Panel dragging starts only on its Handle/Header. Content scrolling, Picker and
 slider gestures, and canvas interaction retain their respective owners. With
@@ -258,7 +260,7 @@ The listed paths are existing ownership boundaries, not generated replacements.
 |---|---|---|
 | Text / space / radius foundations | `src/app/globals.css`, `src/app/[locale]/layout.tsx` | Font and semantic theme roles; explicit font loading and scoped density |
 | Action / selection / input variants | `src/components/ui/{button,tabs,label,input,select,slider,switch}.tsx` | Existing variants, Radix semantics, focus and hit areas |
-| Desktop open/closed and portrait positions | `src/app/[locale]/explore/ExploreClient.tsx`, `src/components/fractal/ExploreInspector.tsx` | Fixed canvas, Inspector UI state, Tab scrolling, viewport/keyboard |
+| Desktop open/closed and portrait positions | `src/app/[locale]/explore/ExploreClient.tsx`, `src/components/fractal/ExploreInspector.tsx` | Retained canvas with state-driven desktop geometry, Inspector UI state, Tab scrolling, viewport/keyboard |
 | Formula and coordinate editing | `src/components/fractal/{ComplexPlanePicker,ParameterExplorationControl,TransformPointPicker}.tsx` | Qualified ownership, separate axes, precise values; presentation versus gesture diagnosis |
 | Coloring / Transform / Render state boards | `src/components/fractal/{ColoringPanel,TransformPanel,RenderPanel}.tsx` | Existing plugin descriptors, conditional settings and ranges |
 | Keyframe state board | `src/components/fractal/KeyframeManager.tsx` | Existing limits, selection, preview/Stop conditions |
@@ -328,7 +330,8 @@ navigation or add/remove an entry.
 The navigation's 48px total height includes its bottom border; its inner row
 fills that height. This keeps the viewport-sized Explore workspace from
 overflowing the document by a border pixel and scrolling on full-height focus.
-The desktop Inspector overlays the fixed canvas and retains its controls while
+The desktop Inspector and retained canvas share one parent-owned geometry state;
+the canvas fills the visible area while open and the full workspace while
 closed. Only artwork-toolbar presentation is portalled into its fixed bottom
 bar; the original component still owns canvas file dropping and save/export
 dialogs. The mobile panel uses Peek/Half/Full over that same canvas, with controls
@@ -388,8 +391,9 @@ Follow the validation policy rather than duplicating commit/CI command lists:
   drafts, scrolling and propagation at 1440/1180, 390/320, short landscape,
   keyboard and safe-area conditions. Verify Tab overflow under long translations
   and user text/viewport scaling; Figma widths are not browser measurements.
-- Canvas/Inspector adoption compares rectangle, drawing size, bounds and fixed
-  artwork anchors in open/closed states and verifies latest-frame/capture gates.
+- Canvas/Inspector adoption compares the declared open/closed rectangles and
+  drawing sizes, retained canvas identity, unchanged bounds, centered artwork
+  coordinates, and latest-frame/capture gates.
 - Gesture changes exercise click, slow/fast drag, exit/reentry, normal release,
   cancel/lost capture, additional pointers and subsequent precise input.
 - Affected saved-state/recovery paths use the consumer matrix representative
@@ -414,7 +418,8 @@ merge, deployment and release actions remain separately authorized.
 ### Maintained regression coverage
 
 - [Workspace interaction](../../tests/e2e/explore-workspace.spec.ts) compares
-  canvas identity, geometry and pixels through Inspector changes; exercises
+  retained canvas identity, declared state geometry, restored pixels and bounds
+  through Inspector changes; exercises
   mobile positions, child-first Back, precise input and translated Tabs.
   Root font-size scaling and visual-viewport keyboard fixtures are simulations,
   not evidence of native browser zoom or physical mobile keyboards.

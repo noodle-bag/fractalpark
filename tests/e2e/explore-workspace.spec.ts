@@ -31,6 +31,16 @@ async function canvasSnapshot(page: Page) {
   });
 }
 
+async function expectCanvasSizeSettled(page: Page) {
+  await expect.poll(() => page.getByTestId('fractal-canvas').evaluate(element => {
+    const canvas = element as HTMLCanvasElement;
+    const rect = canvas.getBoundingClientRect();
+    return canvas.width === Math.round(rect.width * devicePixelRatio)
+      && canvas.height === Math.round(rect.height * devicePixelRatio);
+  })).toBe(true);
+  await ready(page);
+}
+
 for (const width of [1440, 1180]) {
   test(`Inspector toggling preserves the canvas, view and editing state at ${width}px`, async ({ page }, testInfo) => {
     await page.setViewportSize({ width, height: 900 });
@@ -41,16 +51,27 @@ for (const width of [1440, 1180]) {
     const canvas = page.getByTestId('fractal-canvas');
     const original = await canvas.elementHandle();
     const before = await canvasSnapshot(page);
-    expect(before.rect.width).toBe(width);
-    const summary = await page.getByTestId('position-summary').innerText();
+    expect(before.rect.width).toBe(width - 532);
+    expect(before.rect.x + before.rect.width / 2).toBe((width - 532) / 2);
+    await expect(page.getByTestId('explore-root')).toHaveAttribute('data-inspector-collapsed', 'false');
+    const summary = await page.getByTestId('position-summary').textContent();
     const url = page.url();
     await page.getByRole('button', { name: 'Hide controls', exact: true }).click();
     await expect(page.getByTestId('explore-artwork-bar')).not.toBeVisible();
+    await expect(page.getByTestId('explore-root')).toHaveAttribute('data-inspector-collapsed', 'true');
+    await expectCanvasSizeSettled(page);
+    const collapsed = await canvasSnapshot(page);
+    expect(collapsed.rect.width).toBe(width);
+    expect(collapsed.rect.x + collapsed.rect.width / 2).toBe(width / 2);
+    expect(collapsed.dpr).toBe(before.dpr);
+    expect(await page.getByTestId('position-summary').textContent()).toBe(summary);
+    expect(page.url()).toBe(url);
     await page.getByRole('button', { name: 'Show controls', exact: true }).click();
+    await expectCanvasSizeSettled(page);
     const after = await canvasSnapshot(page);
     expect(after).toEqual(before);
     expect(await original!.evaluate(element => element === document.querySelector('[data-testid="fractal-canvas"]'))).toBe(true);
-    expect(await page.getByTestId('position-summary').innerText()).toBe(summary);
+    expect(await page.getByTestId('position-summary').textContent()).toBe(summary);
     expect(page.url()).toBe(url);
     const power = page.getByRole('spinbutton', { name: 'power', exact: true });
     const tabBounds = await page.getByRole('tab', { name: 'Formula', exact: true }).boundingBox();

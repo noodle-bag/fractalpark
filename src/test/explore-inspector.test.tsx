@@ -11,10 +11,24 @@ function Draft() {
   return <input aria-label="Power draft" value={value} onChange={event => setValue(event.target.value)} />;
 }
 
+function InspectorHarness({ onToolbarMount = vi.fn() }: { onToolbarMount?: (element: HTMLDivElement | null) => void }) {
+  const [collapsed, setCollapsed] = useState(false);
+  return (
+    <ExploreInspector
+      collapsed={collapsed}
+      onCollapsedChange={setCollapsed}
+      onToolbarMount={onToolbarMount}
+    >
+      <Draft />
+    </ExploreInspector>
+  );
+}
+
 it('preserves the mounted draft and toolbar host while hiding controls', () => {
   vi.stubGlobal('matchMedia', () => ({ matches: true, addEventListener: vi.fn(), removeEventListener: vi.fn() }));
   const host = vi.fn();
-  render(<ExploreInspector onToolbarMount={host}><Draft /></ExploreInspector>);
+  render(<InspectorHarness onToolbarMount={host} />);
+  expect(screen.getByTestId('explore-inspector')).toHaveAttribute('data-collapsed', 'false');
   const input = screen.getByLabelText('Power draft');
   const toolbar = screen.getByTestId('explore-artwork-bar');
   fireEvent.change(input, { target: { value: '-0.' } });
@@ -35,7 +49,7 @@ it('uses same-URL mobile history while retaining drafts and existing history fie
   const previous = history.state;
   history.replaceState({ retainedRouterField: 'router-tree' }, '', location.href);
   const url = location.href;
-  const { unmount } = render(<ExploreInspector onToolbarMount={vi.fn()}><Draft /></ExploreInspector>);
+  const { unmount } = render(<InspectorHarness />);
   const input = screen.getByLabelText('Power draft');
   fireEvent.change(input, { target: { value: '1e-' } });
   // Model the router replacing the initial hydration entry.
