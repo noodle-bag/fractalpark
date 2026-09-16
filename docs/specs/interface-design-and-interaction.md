@@ -212,6 +212,13 @@ Required interaction behavior:
 - A delayed startup error from a superseded Worker must not fail its replacement.
   Errors from the current Worker still fail the request and retain the existing retry boundary.
 
+Explore keeps one Worker render in flight and one replaceable latest request.
+Intermediate parameter states may be discarded, but a completed stale frame is
+closed rather than painted and the final frame must use the latest valid state.
+The last good frame remains visible throughout this handoff. Canonical pending
+state, `aria-busy`, and frame-ready gates update immediately; only the visible
+loading badge has a 150ms grace period so short renders do not flash it.
+
 These are acceptance requirements, not evidence that the reported interruption
 or canvas-status stutter is fixed. Diagnose pointer events, capture, lifecycle,
 Document updates, main-thread work, and Worker completion before changing them.

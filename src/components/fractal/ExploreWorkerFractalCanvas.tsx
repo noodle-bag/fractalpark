@@ -13,6 +13,16 @@ import type { FractalCanvasProps } from './FractalCanvas';
 import type { FractalParams, PluginParamRecord } from '@/engine/types';
 
 const EMPTY_PLUGIN_PARAMS: PluginParamRecord = {};
+const LOADING_INDICATOR_DELAY_MS = 150;
+
+interface ScheduledRender {
+  generation: number;
+  width: number;
+  height: number;
+  params: FractalParams;
+  attribution: CreatorChangeAttribution | null;
+  remixSource: CreatorRemixSource | null;
+}
 
 interface ExploreWorkerFractalCanvasProps extends FractalCanvasProps {
   renderEnabled?: boolean;
@@ -59,9 +69,45 @@ export default function ExploreWorkerFractalCanvas({
   const renderRemixSourceRef = useRef<CreatorRemixSource | null>(null);
   const renderGenerationRef = useRef(0);
   const requestedSizeRef = useRef({ width: 0, height: 0 });
+  const inFlightGenerationRef = useRef<number | null>(null);
+  const queuedRenderRef = useRef<ScheduledRender | null>(null);
+  const loadingIndicatorTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
+  const startRenderRef = useRef<(request: ScheduledRender) => void>(() => {});
   const { render, cancel } = useFractalRenderWorker();
-  const cancelRender = useCallback(() => {
+
+  const hideLoadingIndicator = useCallback(() => {
+    if (loadingIndicatorTimerRef.current !== null) {
+      clearTimeout(loadingIndicatorTimerRef.current);
+      loadingIndicatorTimerRef.current = null;
+    }
+    if (canvasRef.current) canvasRef.current.dataset.loadingIndicator = 'hidden';
+  }, []);
+
+  const markPending = useCallback(() => {
+    const canvas = canvasRef.current;
+    if (!canvas) return;
+    canvas.dataset.renderStatus = 'pending';
+    canvas.setAttribute('aria-busy', 'true');
+    onFrameReadyChange?.(false);
+    if (
+      canvas.dataset.loadingIndicator !== 'visible' &&
+      loadingIndicatorTimerRef.current === null
+    ) {
+      canvas.dataset.loadingIndicator = 'hidden';
+      loadingIndicatorTimerRef.current = setTimeout(() => {
+        loadingIndicatorTimerRef.current = null;
+        const currentCanvas = canvasRef.current;
+        if (currentCanvas?.dataset.renderStatus === 'pending') {
+          currentCanvas.dataset.loadingIndicator = 'visible';
+        }
+      }, LOADING_INDICATOR_DELAY_MS);
+    }
+  }, [onFrameReadyChange]);
+
+  const cancelScheduledRender = useCallback(() => {
     ++renderGenerationRef.current;
+    queuedRenderRef.current = null;
+    inFlightGenerationRef.current = null;
     cancel();
   }, [cancel]);
 
@@ -96,28 +142,22 @@ export default function ExploreWorkerFractalCanvas({
     return { width, height, resized };
   }, []);
 
-  const renderLatest = useCallback((
-    params: FractalParams,
-    attribution: CreatorChangeAttribution | null,
-    remixSource: CreatorRemixSource | null,
-  ) => {
+  const startRender = useCallback((request: ScheduledRender) => {
     const canvas = canvasRef.current;
-    const size = resize();
-    if (!canvas || !size) return;
-
-    const generation = ++renderGenerationRef.current;
-    canvas.dataset.renderStatus = 'pending';
-    canvas.setAttribute('aria-busy', 'true');
-    onFrameReadyChange?.(false);
+    if (!canvas) return;
+    inFlightGenerationRef.current = request.generation;
 
     void render({
-      generation,
-      width: size.width,
-      height: size.height,
-      params,
+      generation: request.generation,
+      width: request.width,
+      height: request.height,
+      params: request.params,
     })
       .then((frame) => {
-        if (generation !== renderGenerationRef.current || !canvas.isConnected) {
+        if (
+          request.generation !== renderGenerationRef.current ||
+          !canvas.isConnected
+        ) {
           frame.bitmap.close();
           return;
         }
@@ -127,36 +167,68 @@ export default function ExploreWorkerFractalCanvas({
           throw new Error('2D canvas is not supported on this device');
         }
         try {
-          if (canvas.width !== size.width) canvas.width = size.width;
-          if (canvas.height !== size.height) canvas.height = size.height;
-          context.drawImage(frame.bitmap, 0, 0, size.width, size.height);
+          if (canvas.width !== request.width) canvas.width = request.width;
+          if (canvas.height !== request.height) canvas.height = request.height;
+          context.drawImage(frame.bitmap, 0, 0, request.width, request.height);
         } finally {
           frame.bitmap.close();
         }
+        hideLoadingIndicator();
         canvas.dataset.renderStatus = 'ready';
         canvas.dataset.renderedFormulaId = frame.formulaId;
         canvas.setAttribute('aria-busy', 'false');
         onFrameReadyChange?.(true);
-        onRenderComplete?.(attribution, remixSource);
+        onRenderComplete?.(request.attribution, request.remixSource);
       })
       .catch((error: unknown) => {
         if (
-          generation !== renderGenerationRef.current ||
+          request.generation !== renderGenerationRef.current ||
           (error instanceof Error && error.name === 'AbortError')
         ) return;
+        hideLoadingIndicator();
         canvas.dataset.renderStatus = 'error';
         canvas.setAttribute('aria-busy', 'false');
+      })
+      .finally(() => {
+        if (inFlightGenerationRef.current !== request.generation) return;
+        inFlightGenerationRef.current = null;
+        const queued = queuedRenderRef.current;
+        queuedRenderRef.current = null;
+        if (queued) startRenderRef.current(queued);
       });
-  }, [onFrameReadyChange, onRenderComplete, render, resize]);
+  }, [hideLoadingIndicator, onFrameReadyChange, onRenderComplete, render]);
+  startRenderRef.current = startRender;
+
+  const renderLatest = useCallback((
+    params: FractalParams,
+    attribution: CreatorChangeAttribution | null,
+    remixSource: CreatorRemixSource | null,
+  ) => {
+    const canvas = canvasRef.current;
+    const size = resize();
+    if (!canvas || !size) return;
+
+    const request: ScheduledRender = {
+      generation: ++renderGenerationRef.current,
+      width: size.width,
+      height: size.height,
+      params,
+      attribution,
+      remixSource,
+    };
+    markPending();
+    if (inFlightGenerationRef.current !== null) {
+      queuedRenderRef.current = request;
+      return;
+    }
+    startRender(request);
+  }, [markPending, resize, startRender]);
 
   useLayoutEffect(() => {
     if (!renderEnabled) {
       paramsRef.current = null;
-      if (canvasRef.current) {
-        canvasRef.current.dataset.renderStatus = 'pending';
-        canvasRef.current.setAttribute('aria-busy', 'true');
-      }
-      onFrameReadyChange?.(false);
+      cancelScheduledRender();
+      markPending();
       return;
     }
     const params: FractalParams = {
@@ -184,11 +256,10 @@ export default function ExploreWorkerFractalCanvas({
       renderAttributionRef.current,
       renderRemixSourceRef.current,
     );
-    return cancelRender;
   }, [
-    cancelRender,
+    cancelScheduledRender,
     renderEnabled,
-    onFrameReadyChange,
+    markPending,
     adaptiveIterations,
     bounds,
     customGradient,
@@ -208,6 +279,11 @@ export default function ExploreWorkerFractalCanvas({
     transformId,
     useSSAA,
   ]);
+
+  useEffect(() => () => {
+    cancelScheduledRender();
+    hideLoadingIndicator();
+  }, [cancelScheduledRender, hideLoadingIndicator]);
 
   useEffect(() => {
     const observer = new ResizeObserver(() => {
@@ -235,7 +311,7 @@ export default function ExploreWorkerFractalCanvas({
         style={{ touchAction: 'none' }}
       />
 
-      <div role="status" className="pointer-events-none absolute left-3 top-3 hidden items-center gap-2 rounded-md bg-background/90 px-3 py-2 text-sm peer-data-[render-status=pending]:flex">
+      <div role="status" className="pointer-events-none absolute left-3 top-3 hidden items-center gap-2 rounded-md bg-background/90 px-3 py-2 text-sm peer-data-[loading-indicator=visible]:flex">
         <Loader2 className="h-4 w-4 animate-spin" aria-hidden="true" />
         {t('loading')}
       </div>
