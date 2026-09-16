@@ -16,7 +16,6 @@ test.beforeEach(async ({ context }) => {
 async function openPlane(page: Page, kind: string) {
   await page.goto(kind === 'parameter' ? '/en/explore?fm=9e7250d0-f815-521a-9cf6-6c4d68598b2c' : '/en/explore');
   await expect(page.getByTestId('fractal-canvas')).toHaveAttribute('data-render-status', 'ready', { timeout: 45_000 });
-  await page.getByRole('button', { name: 'Expand controls', exact: true }).click();
   let plane: Locator;
   if (kind === 'julia') {
     await page.locator('#julia-mode').click();

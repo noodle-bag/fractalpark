@@ -1431,6 +1431,7 @@
       "animation": "Animação"
     },
     "artworkActions": {
+      "toolbar": "Ações da obra",
       "common": {
         "cancel": "Cancelar"
       },

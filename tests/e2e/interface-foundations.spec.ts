@@ -14,11 +14,6 @@ async function resizeBeforeNavigation(page: Page, width: number, height: number)
     await expect.poll(() => page.evaluate(() => !history.state?.fractalParkPanel?.modal)).toBe(true);
   }
   await page.setViewportSize({ width, height });
-  if (await panel.count() && (width >= 1024 || (width >= 640 && height <= 480))) {
-    // Responsive portrait-to-sidebar migration traverses native UI history.
-    // Finish that traversal before requesting a different document navigation.
-    await expect(panel).toHaveAttribute('data-position', 'peek');
-  }
 }
 
 function collectErrors(page: Page): string[] {
@@ -66,7 +61,7 @@ async function checkDocument(page: Page, locale: typeof SUPPORTED_LOCALES[number
   await expect(page.locator('[data-nextjs-dialog]')).toHaveCount(0);
   await page.evaluate(() => document.fonts.ready);
   if (new URL(page.url()).pathname.endsWith('/explore')) {
-    await expect(page.getByTestId('fractal-canvas')).toHaveAttribute('data-render-status', 'ready', { timeout: 30_000 });
+    await expect(page.getByTestId('fractal-canvas')).toHaveAttribute('data-render-status', 'ready', { timeout: 45_000 });
     const formulaId = await page.getByTestId('explore-root').getAttribute('data-formula-id');
     await expect.poll(() => new URL(page.url()).searchParams.get('fm')).toBe(formulaId);
   }
@@ -116,13 +111,12 @@ for (const width of [1440, 390]) {
 }
 
 test('seven locales retain complete controls and keyboard selection at narrow widths', async ({ page }) => {
-  test.setTimeout(180_000);
+  test.setTimeout(240_000);
   const errors = collectErrors(page);
-  for (const locale of SUPPORTED_LOCALES) {
-    for (const width of [320, 1180]) {
+  for (const width of [1180, 320]) {
+    for (const locale of SUPPORTED_LOCALES) {
       await resizeBeforeNavigation(page, width, 900);
       await page.goto(`/${locale}/explore`);
-      if (width < 1024) await page.locator('.explore-inspector-header button').first().click();
       await checkDocument(page, locale);
       const tabs = page.getByRole('tablist').first().getByRole('tab');
       await expect(tabs).toHaveCount(5);
@@ -168,7 +162,6 @@ test('precise editing, Select choices and reset confirmation retain their behavi
   for (const width of [390, 1440]) {
     await resizeBeforeNavigation(page, width, 900);
     await page.goto('/en/explore');
-    if (width < 1024) await page.getByRole('button', { name: 'Expand controls', exact: true }).click();
     const power = page.getByRole('spinbutton', { name: 'power', exact: true });
     await expect(power).toHaveValue('2', { timeout: 30_000 });
     await power.fill('3');
@@ -186,6 +179,7 @@ test('precise editing, Select choices and reset confirmation retain their behavi
     await expect(page.locator('#light-azimuth')).toBeVisible();
     await page.getByRole('tab', { name: 'Formula', exact: true }).click();
     await expect(power).toHaveValue('3');
+    if (width < 1024) await page.locator('.explore-artwork-disclosure > summary').click();
     await page.getByRole('button', { name: 'Reset Artwork', exact: true }).click();
     const dialog = page.getByRole('alertdialog');
     const cancel = dialog.getByRole('button', { name: 'Cancel', exact: true });

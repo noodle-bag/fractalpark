@@ -87,6 +87,7 @@ test.describe('coordinate parameters, separate from Julia', () => {
         await expect.poll(async () => Number(await real.inputValue())).toBeCloseTo(-0.69, 6);
         await expect(imaginary).toHaveValue('0.27');
       }
+      await page.locator('.explore-artwork-disclosure > summary').click();
       const downloaded = page.waitForEvent('download');
       await page.getByRole('button', { name: 'Download Project', exact: true }).click();
       const download = await downloaded;

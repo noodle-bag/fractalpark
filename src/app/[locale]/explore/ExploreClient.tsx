@@ -20,9 +20,10 @@ import { useArtworkActions } from '@/hooks/useArtworkActions';
 import { useCloudDraftSession } from '@/hooks/useCloudDraftSession';
 import { useCloudFormulaLibrary } from '@/hooks/useCloudFormulaLibrary';
 import { useCloudSession } from '@/components/cloud/CloudSessionProvider';
+import { useLayout } from '@/components/layout/LayoutContext';
 import { resolveCustomFormula } from '@/lib/formula-resolver';
 import AnimatedFractalCanvas from '@/components/fractal/AnimatedFractalCanvas';
-import { AlertTriangle } from 'lucide-react';
+import { AlertTriangle, ChevronDown, ChevronUp } from 'lucide-react';
 import {
   DEFAULT_FRACTAL_DOCUMENT,
   type FractalDocument,
@@ -114,6 +115,7 @@ function ExploreClient({ posterImage }: { posterImage?: string }) {
   const [resetFailed, setResetFailed] = useState(false);
   const searchParams = useSearchParams();
   const router = useRouter();
+  const { setConfig } = useLayout();
   const needsEntryDefaultRef = useRef(searchParams.size === 0);
   const initialHandoffIntentRef = useRef(
     parseEditorToExploreIntent(new URLSearchParams(searchParams.toString()))
@@ -243,6 +245,11 @@ function ExploreClient({ posterImage }: { posterImage?: string }) {
   const canvasElRef = useRef<HTMLCanvasElement | null>(null);
   const [isFrameReady, setIsFrameReady] = useState(false);
   const pickToastTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
+
+  useEffect(() => {
+    setConfig({ hideFooter: true });
+    return () => setConfig({ hideFooter: false });
+  }, [setConfig]);
 
   // Cloud surfaces hoist above every consumer effect (deps evaluate at
   // render time — declaring them later would be a TDZ crash).
@@ -1321,13 +1328,13 @@ function ExploreClient({ posterImage }: { posterImage?: string }) {
 
   return (
     <div
-      className="relative h-[calc(100dvh-3rem)] overflow-hidden"
+      className="relative flex h-[calc(100dvh-3rem)] flex-col overflow-hidden"
       data-formula-id={document.formula.formulaId}
       data-inspector-collapsed={inspectorCollapsed}
       data-testid="explore-root"
     >
       <div
-        className="explore-canvas-stage absolute inset-0 bg-black"
+        className={`explore-canvas-stage relative bg-black lg:absolute lg:inset-0 ${inspectorCollapsed ? 'min-h-0 flex-1' : 'min-h-[50vh] shrink-0 lg:min-h-0'}`}
         style={posterImage ? {
           backgroundImage: `url("${posterImage}")`,
           backgroundPosition: 'center',
@@ -1522,6 +1529,20 @@ function ExploreClient({ posterImage }: { posterImage?: string }) {
           }}
           conflictBusy={conflictBusy}
         />
+
+        <button
+          type="button"
+          className="absolute bottom-4 right-4 z-10 rounded-full bg-black/60 p-2 text-white shadow-lg lg:hidden"
+          onClick={() => setInspectorCollapsed(value => !value)}
+          aria-label={inspectorCollapsed ? t('controls.show') : t('controls.hide')}
+          aria-expanded={!inspectorCollapsed}
+          aria-controls="explore-inspector-body"
+        >
+          {inspectorCollapsed
+            ? <ChevronDown aria-hidden className="size-5" />
+            : <ChevronUp aria-hidden className="size-5" />
+          }
+        </button>
 
       </div>
 

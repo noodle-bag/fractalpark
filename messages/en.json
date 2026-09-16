@@ -1431,6 +1431,7 @@
       "animation": "Animation"
     },
     "artworkActions": {
+      "toolbar": "Artwork actions",
       "common": {
         "cancel": "Cancel"
       },

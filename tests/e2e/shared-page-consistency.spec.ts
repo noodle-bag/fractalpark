@@ -81,7 +81,6 @@ test('seven locales keep full Transform labels and mobile navigation targets', a
   for (const locale of SUPPORTED_LOCALES) {
     await page.goto(`/${locale}/explore`);
     await expect(page.getByTestId('fractal-canvas')).toHaveAttribute('data-render-status', 'ready', { timeout: 30_000 });
-    await page.locator('.explore-inspector-header button').first().click();
     await page.getByRole('tab').nth(2).click();
     const choices = page.getByRole('tabpanel').getByRole('button', { pressed: false }).or(page.getByRole('tabpanel').getByRole('button', { pressed: true }));
     await expect(choices).toHaveCount(7);

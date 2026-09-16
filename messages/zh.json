@@ -1431,6 +1431,7 @@
       "animation": "动画"
     },
     "artworkActions": {
+      "toolbar": "作品操作",
       "common": {
         "cancel": "取消"
       },

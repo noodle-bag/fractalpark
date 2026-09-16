@@ -1431,6 +1431,7 @@
       "animation": "Анимация"
     },
     "artworkActions": {
+      "toolbar": "Действия с работой",
       "common": {
         "cancel": "Отмена"
       },

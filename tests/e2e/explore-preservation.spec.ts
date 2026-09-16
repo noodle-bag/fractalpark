@@ -24,7 +24,14 @@ async function ready(page: Page, formulaId?: string) {
   await expect(canvas).toHaveAttribute('data-rendered-formula-id', id!);
 }
 
+async function showArtworkActions(page: Page, actionName: string) {
+  const action = page.getByRole('button', { name: actionName, exact: true });
+  if (!await action.isVisible()) await page.locator('.explore-artwork-disclosure > summary').click();
+  await expect(action).toBeVisible();
+}
+
 async function downloadEnvelope(page: Page) {
+  await showArtworkActions(page, 'Download Project');
   const downloading = page.waitForEvent('download');
   await page.getByRole('button', { name: 'Download Project', exact: true }).click();
   const download = await downloading;
@@ -59,7 +66,6 @@ async function verifyPublishedArtworkRoundTrip(page: Page, navigation: 'menu' | 
   await page.goto('/en/explore');
   await ready(page);
   const id = await page.getByTestId('explore-root').getAttribute('data-formula-id');
-  await page.getByRole('button', { name: 'Expand controls', exact: true }).click();
   const power = page.getByRole('spinbutton', { name: 'power', exact: true });
   await power.fill('3');
   await power.press('Enter');
@@ -72,6 +78,7 @@ async function verifyPublishedArtworkRoundTrip(page: Page, navigation: 'menu' | 
   await page.locator('#julia-im').fill('-0.345678901');
   await page.locator('#julia-im').press('Enter');
   await ready(page);
+  await showArtworkActions(page, 'Save to Gallery');
   await page.getByRole('button', { name: 'Save to Gallery', exact: true }).click();
   const dialog = page.getByRole('dialog');
   await dialog.getByRole('textbox').fill('Precise artwork');
@@ -94,16 +101,14 @@ async function verifyPublishedArtworkRoundTrip(page: Page, navigation: 'menu' | 
   await ready(page, id!);
   const refreshed = await downloadEnvelope(page);
   expect(refreshed.envelope.document.formula).toEqual(saved!.document.formula);
-  await page.getByRole('button', { name: 'Expand controls', exact: true }).click();
   await expect(page.locator('#julia-re')).toHaveValue('0.123456789');
-  await page.getByRole('button', { name: 'Expand controls', exact: true }).click();
-  await page.goBack();
-  await expect(page.getByTestId('explore-inspector')).toHaveAttribute('data-position', 'half');
+  await page.getByRole('button', { name: 'Hide controls', exact: true }).click();
+  await page.getByRole('button', { name: 'Show controls', exact: true }).click();
   await expect(page.locator('#julia-im')).toHaveValue('-0.345678901');
 }
 
 for (const navigation of ['menu', 'address'] as const) {
-  test(`mobile save, My Works reopen, refresh and Back preserve precise published artwork values via ${navigation}`, async ({ page }) => {
+  test(`mobile save, My Works reopen, refresh and collapse preserve precise published artwork values via ${navigation}`, async ({ page }) => {
     await verifyPublishedArtworkRoundTrip(page, navigation);
   });
 }
@@ -127,6 +132,7 @@ test('a frozen custom project preserves view, transform and keyframes across iso
   if (!result.success) throw new Error('invalid self-authored project fixture');
   await page.goto('/en/explore');
   await ready(page);
+  await showArtworkActions(page, 'Import Project');
   const choosing = page.waitForEvent('filechooser');
   await page.getByRole('button', { name: 'Import Project', exact: true }).click();
   await (await choosing).setFiles({ name: 'portable.fractal.json', mimeType: 'application/json', buffer: Buffer.from(JSON.stringify(result.value)) });
@@ -141,6 +147,7 @@ test('a frozen custom project preserves view, transform and keyframes across iso
     const imported = await destination.newPage();
     await imported.goto('/en/explore');
     await ready(imported);
+    await showArtworkActions(imported, 'Import Project');
     const chooser = imported.waitForEvent('filechooser');
     await imported.getByRole('button', { name: 'Import Project', exact: true }).click();
     await (await chooser).setFiles({ name: 'portable.fractal.json', mimeType: 'application/json', buffer: exported.buffer });
@@ -155,6 +162,7 @@ test('a malformed project leaves the qualified artwork and its saved values unch
   await page.goto('/en/explore');
   await ready(page);
   const before = await downloadEnvelope(page);
+  await showArtworkActions(page, 'Import Project');
   const choosing = page.waitForEvent('filechooser');
   await page.getByRole('button', { name: 'Import Project', exact: true }).click();
   await (await choosing).setFiles({ name: 'invalid.fractal.json', mimeType: 'application/json', buffer: Buffer.from('{ invalid') });

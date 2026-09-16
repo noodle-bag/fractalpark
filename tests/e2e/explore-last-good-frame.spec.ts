@@ -77,8 +77,8 @@ test(`Lucky keeps old pixels through loading, resize and supersession at ${width
     element.width === Math.round(element.getBoundingClientRect().width * window.devicePixelRatio)
   )).toBe(true);
   await expect(canvas).toHaveAttribute('data-render-status', 'ready');
-  const expand = page.getByRole('button', { name: 'Expand controls', exact: true });
-  if (await expand.isVisible()) await expand.click();
+  const artworkDisclosure = page.locator('.explore-artwork-disclosure > summary');
+  if (await artworkDisclosure.isVisible()) await artworkDisclosure.click();
   const before = await pixels(page);
   await page.evaluate(() => {
     window.lastGoodFrameProbe.painted = [];

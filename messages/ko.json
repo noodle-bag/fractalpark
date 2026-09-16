@@ -1431,6 +1431,7 @@
       "animation": "애니메이션"
     },
     "artworkActions": {
+      "toolbar": "작품 작업",
       "common": {
         "cancel": "취소"
       },

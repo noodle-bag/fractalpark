@@ -117,36 +117,28 @@ fixed regions. Formula groups use the approved 8px rhythm. Tab contents scroll
 independently; the artwork bar stays fixed. Closing hides the bar with the
 Inspector but leaves the reopen control and canvas project-file dropzone usable.
 
-### Portrait and short landscape
+### Mobile portrait and landscape
 
-Portrait retains Peek / Half / Full, defaulting to Peek. Sheet position is
-UI-only state and must not enter the Document or URL. Peek provides summary and
-artwork actions, Half supports frequent adjustment with scrolling, and Full
-supports long content and precise editing.
+Mobile retains the v0.4.20 split workspace instead of a multi-position sheet.
+Controls are expanded by default below the canvas. While expanded, the canvas
+occupies at least half of the Explore workspace and the control region uses the
+remaining height with its own vertical scrolling. One canvas-side button hides
+or restores the entire control region; hiding it expands the same canvas across
+the available workspace. The control DOM, selected Tab, drafts, scroll state,
+parameters, keyframes, and artwork-action state remain mounted while hidden.
 
-At 390×844, representative panel heights are 160 / 488 / 748px, with Half/Full
-content areas of approximately 312 / 572px. Derive actual dimensions from the
-visual viewport, safe-area insets, keyboard, and fixed regions; do not hardcode
-the frame measurements. Use 16px horizontal padding and 4px fixed-region gaps.
+Use the same split-and-collapse interaction below the 1024px desktop breakpoint,
+including short landscape. Do not introduce Peek / Half / Full positions,
+drag handles, position history entries, or a separate narrow landscape sidebar.
+Browser Back retains normal page behavior after closing any actual modal child
+flow. The split must still respect the navigation height, safe-area insets, and
+focused-input scrolling without turning the control region into a canvas overlay.
 
-For short landscape, use a right-side narrow Inspector rather than a tall
-portrait sheet consuming the short screen. The 844×390 reference has a 320px
-panel, approximately 288×166px content area, and an 844×342px canvas under the
-navigation. Responsive thresholds depend on available width/height, not locale
-or a screenshot coordinate. Preserve portrait behavior and its full-canvas
-overlay contract; validate narrow/short intermediate viewports too.
-
-Panel dragging starts only on its Handle/Header. Content scrolling, Picker and
-slider gestures, and canvas interaction retain their respective owners. With
-the soft keyboard open, keep the focused input visible, use sufficient expanded
-space, and lock panel dragging; short viewports may bypass an unusable middle
-position. Preserve drafts when the keyboard closes.
-
-Back first exits a child flow, then reduces Full → Half → Peek, then follows the
-page's existing return behavior. Modal focus isolation remains intact, with at
-most one blocking modal. A non-blocking adjustment state must not install a
-full-canvas blocking backdrop. Restore a predictable focus target after closing
-or leaving a child flow.
+The mobile Inspector uses 16px content padding and the compact v0.4.20 control
+density. Ordinary form controls may use the existing 32–36px compact geometry with
+16px text inputs retained where needed to avoid mobile-browser zoom. High-impact
+artwork actions keep usable touch targets. Preserve visible focus and do not use
+smaller geometry to truncate labels or make a control unreachable.
 
 ### Tabs, labels, and artwork actions
 
@@ -161,10 +153,13 @@ Keep the selected Tab visible on selection and preserve Radix keyboard/focus
 semantics. Long form labels wrap naturally and grow the row, without clipping
 related controls or reducing action hit areas.
 
-Move artwork toolbar presentation to the fixed Inspector bottom bar; do not
-move or duplicate its canvas dropzone, Document ownership, dialogs, or capture
-state. Use icons above short text, separate Reset, and place action feedback
-near the bar outside scrolling Tab contents.
+On desktop, move artwork toolbar presentation to the fixed Inspector bottom
+bar. On mobile, keep the same action owner but place the toolbar in an explicit
+"Artwork actions" disclosure inside the control region, closed by default.
+Opening or closing the disclosure is presentation-only and must not reset an
+operation, dialog, draft, or action status. Do not move or duplicate its canvas
+dropzone, Document ownership, dialogs, or capture state. Use icons above short
+text, separate Reset, and place action feedback with the action presentation.
 
 | Action | Existing meaning / handler |
 |---|---|
@@ -174,13 +169,12 @@ near the bar outside scrolling Tab contents.
 | Export | Export PNG using the existing scale/quality dialog / `onExport` |
 | Reset | Existing confirmed artwork reset / `onReset`; not deletion of the custom formula library or Gallery |
 
-The approximately 60px one-row bar is a reference, not a fixed height cap. At
-320px, long-language labels can require a complete 3+2 two-row layout; increase
-bar height and reduce available panel content accordingly. At 390px the reviewed
-labels fit one row, but actual fonts/text determine fit. Do not shrink text/hit
-areas, crop labels, or shift the canvas center to preserve a screenshot height.
-Responsive wrapping is based on measured available space, not a language allowlist.
-Keep every action reachable in each portrait position.
+The desktop approximately 60px one-row bar is a reference, not a fixed height
+cap. In the opened mobile disclosure, 320px or long-language labels may require
+a complete 3+2 two-row layout. Do not shrink text/hit areas, crop labels, or
+shift the canvas center to preserve a screenshot height. Responsive wrapping is
+based on measured available space, not a language allowlist. Keep every action
+reachable through the disclosure.
 
 Save/Export require the actual frame-ready qualification; project-file
 Download/Import are not PNG capture and do not acquire that gate merely by being
@@ -196,12 +190,12 @@ keeping their owners and labels separate. A `pixel` coordinate parameter is not
 automatically Julia. Follow the parameter semantics Spec for eligibility,
 window/domain, precision, and preservation of unedited components.
 
-The mobile plane uses full content width: reference sizes are 358×220px at 390px
-and 288×200px at 320px. Normalize horizontal and vertical axes independently;
-changing the rectangle must not change the complex exploration window or
-parameter precision. Place precise Re/Im inputs side by side below the plane
-with 44px target height, then Reset on its own 44px row, with 8px gaps. Half can
-scroll to the inputs; Full supports complete precise adjustment.
+Plane pickers remain square and preserve the component's declared size and
+aspect ratio on mobile; CSS must not independently stretch width and height.
+The qualified Julia picker and smaller parameter picker may intentionally use
+different declared square sizes. Place precise Re/Im inputs below the plane and
+keep them reachable by scrolling the split control region. Changing responsive
+layout must not change the exploration window, axes, or parameter precision.
 
 Required interaction behavior:
 
@@ -260,7 +254,7 @@ The listed paths are existing ownership boundaries, not generated replacements.
 |---|---|---|
 | Text / space / radius foundations | `src/app/globals.css`, `src/app/[locale]/layout.tsx` | Font and semantic theme roles; explicit font loading and scoped density |
 | Action / selection / input variants | `src/components/ui/{button,tabs,label,input,select,slider,switch}.tsx` | Existing variants, Radix semantics, focus and hit areas |
-| Desktop open/closed and portrait positions | `src/app/[locale]/explore/ExploreClient.tsx`, `src/components/fractal/ExploreInspector.tsx` | Retained canvas with state-driven desktop geometry, Inspector UI state, Tab scrolling, viewport/keyboard |
+| Desktop open/closed and mobile split/collapse | `src/app/[locale]/explore/ExploreClient.tsx`, `src/components/fractal/ExploreInspector.tsx` | Retained canvas with state-driven desktop geometry, mobile split state, Tab scrolling, viewport/keyboard |
 | Formula and coordinate editing | `src/components/fractal/{ComplexPlanePicker,ParameterExplorationControl,TransformPointPicker}.tsx` | Qualified ownership, separate axes, precise values; presentation versus gesture diagnosis |
 | Coloring / Transform / Render state boards | `src/components/fractal/{ColoringPanel,TransformPanel,RenderPanel}.tsx` | Existing plugin descriptors, conditional settings and ranges |
 | Keyframe state board | `src/components/fractal/KeyframeManager.tsx` | Existing limits, selection, preview/Stop conditions |

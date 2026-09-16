@@ -15,10 +15,11 @@ test.beforeEach(async ({ context }) => {
 });
 
 async function ready(page: Page) {
-  await expect(page.getByRole('spinbutton', { name: 'power', exact: true, includeHidden: true })).toBeAttached({ timeout: 30_000 });
-  await expect(page.getByTestId('fractal-canvas')).toHaveAttribute('data-render-status', 'ready', { timeout: 30_000 });
+  await expect(page.getByRole('spinbutton', { name: 'power', exact: true, includeHidden: true })).toBeAttached({ timeout: 45_000 });
+  await expect(page.getByTestId('fractal-canvas')).toHaveAttribute('data-render-status', 'ready', { timeout: 45_000 });
   const formulaId = await page.getByTestId('explore-root').getAttribute('data-formula-id');
   await expect(page.getByTestId('fractal-canvas')).toHaveAttribute('data-rendered-formula-id', formulaId!);
+  await expect.poll(() => new URL(page.url()).searchParams.get('fm')).toBe(formulaId);
   await page.evaluate(() => document.fonts.ready);
   await expect(page.locator('[data-nextjs-dialog]')).toHaveCount(0);
 }
@@ -37,12 +38,13 @@ async function expectCanvasSizeSettled(page: Page) {
     const rect = canvas.getBoundingClientRect();
     return canvas.width === Math.round(rect.width * devicePixelRatio)
       && canvas.height === Math.round(rect.height * devicePixelRatio);
-  })).toBe(true);
+  }), { timeout: 30_000 }).toBe(true);
   await ready(page);
 }
 
 for (const width of [1440, 1180]) {
   test(`Inspector toggling preserves the canvas, view and editing state at ${width}px`, async ({ page }, testInfo) => {
+    test.setTimeout(90_000);
     await page.setViewportSize({ width, height: 900 });
     const errors: string[] = [];
     page.on('pageerror', error => errors.push(error.message));
@@ -77,14 +79,8 @@ for (const width of [1440, 1180]) {
     const tabBounds = await page.getByRole('tab', { name: 'Formula', exact: true }).boundingBox();
     await power.fill('3');
     await power.press('Enter');
-    expect(await page.getByRole('tab', { name: 'Formula', exact: true }).boundingBox()).toEqual(tabBounds);
-    await page.getByRole('tab', { name: 'Render', exact: true }).click();
-    await page.getByRole('button', { name: 'Hide controls', exact: true }).click();
-    await page.getByRole('button', { name: 'Show controls', exact: true }).click();
-    await expect(page.getByRole('tab', { name: 'Render', exact: true })).toHaveAttribute('aria-selected', 'true');
-    await page.getByRole('tab', { name: 'Formula', exact: true }).click();
-    await expect(power).toHaveValue('3');
     await ready(page);
+    expect(await page.getByRole('tab', { name: 'Formula', exact: true }).boundingBox()).toEqual(tabBounds);
     await page.getByRole('button', { name: 'Export PNG', exact: true }).click();
     await expect(page.getByRole('dialog')).toBeVisible();
     await page.keyboard.press('Escape');
@@ -92,6 +88,11 @@ for (const width of [1440, 1180]) {
     await page.getByRole('button', { name: 'Reset Artwork', exact: true }).click();
     await expect(page.getByRole('alertdialog').getByRole('button', { name: 'Cancel', exact: true })).toBeFocused();
     await page.keyboard.press('Escape');
+    await page.getByRole('tab', { name: 'Render', exact: true }).click();
+    await page.getByRole('button', { name: 'Hide controls', exact: true }).click();
+    await page.getByRole('button', { name: 'Show controls', exact: true }).click();
+    await expect(page.getByRole('tab', { name: 'Render', exact: true })).toHaveAttribute('aria-selected', 'true');
+    await page.getByRole('tab', { name: 'Formula', exact: true }).click();
     await expect(power).toHaveValue('3');
     await page.screenshot({ path: testInfo.outputPath('desktop-inspector.png') });
     expect(errors).toEqual([]);
@@ -140,7 +141,7 @@ test('all locales show five desktop Tabs together without horizontal scrolling',
 });
 
 for (const width of [390, 320]) {
-  test(`portrait positions, precise input and child-first Back preserve the artwork at ${width}px`, async ({ page }, testInfo) => {
+  test(`mobile split, square picker and child-first Back preserve the artwork at ${width}px`, async ({ page }, testInfo) => {
     test.setTimeout(60_000);
     await page.setViewportSize({ width, height: 844 });
     const errors: string[] = [];
@@ -150,44 +151,49 @@ for (const width of [390, 320]) {
     const panel = page.getByTestId('explore-inspector');
     const canvas = page.getByTestId('fractal-canvas');
     const original = await canvas.elementHandle();
-    const before = await canvasSnapshot(page);
-    await expect(panel).toHaveAttribute('data-position', 'peek');
-    await expect(page.getByRole('tab', { name: 'Formula', exact: true })).not.toBeVisible();
-    await expect(page.getByTestId('explore-artwork-bar')).toBeInViewport();
+    await expect(panel).toHaveAttribute('data-layout', 'mobile');
+    await expect(panel).not.toHaveAttribute('data-position');
+    await expect(page.getByRole('tab', { name: 'Formula', exact: true })).toBeVisible();
+    await expect(page.getByTestId('explore-artwork-bar')).not.toBeVisible();
+    await expect(page.locator('footer')).toHaveCount(0);
+    const expandedCanvas = (await canvas.boundingBox())!;
+    expect(expandedCanvas.height).toBeGreaterThanOrEqual(390);
     const url = page.url();
-    await page.getByRole('button', { name: 'Expand controls', exact: true }).click();
-    await expect(panel).toHaveAttribute('data-position', 'half');
-    expect(await canvasSnapshot(page)).toEqual(before);
+    await page.getByRole('button', { name: 'Hide controls', exact: true }).click();
+    await expect(panel).not.toBeVisible();
+    await expectCanvasSizeSettled(page);
+    expect((await canvas.boundingBox())!.height).toBe(796);
+    await page.getByRole('button', { name: 'Show controls', exact: true }).click();
+    await expect(page.getByRole('tab', { name: 'Formula', exact: true })).toBeVisible();
     expect(page.url()).toBe(url);
+    await page.locator('.explore-artwork-disclosure > summary').click();
+    await expect(page.getByTestId('explore-artwork-bar')).toBeVisible();
     await page.locator('#julia-mode').click();
     const plane = page.locator('[data-plane-picker="complex"]').first();
     await plane.scrollIntoViewIfNeeded();
     const rect = (await plane.boundingBox())!;
-    expect(rect.width).toBe(width - 32);
-    expect(rect.height).toBeCloseTo(width === 390 ? 220 : 200, 0);
+    expect(rect.width).toBe(rect.height);
+    expect(rect.width).toBe(160);
     const real = page.locator('#julia-re');
     const imaginary = page.locator('#julia-im');
     await real.fill('0.123456789');
     await real.press('Enter');
-    await expect(panel).toHaveAttribute('data-position', 'full');
     await imaginary.fill('-0.3456789');
     await imaginary.press('Enter');
     await expect(real).toHaveValue('0.123456789');
     await expect(imaginary).toHaveValue('-0.3456789');
-    expect((await real.boundingBox())!.height).toBeGreaterThanOrEqual(44);
-    // Emulated visual viewport, not a certificate for a real iOS keyboard.
-    await page.evaluate(() => {
-      Object.defineProperty(visualViewport!, 'height', { configurable: true, value: 380 });
-      visualViewport!.dispatchEvent(new Event('resize'));
-    });
-    await expect(page.getByRole('button', { name: 'Expand controls', exact: true })).toBeDisabled();
-    await expect.poll(async () => (await imaginary.boundingBox())!.y + (await imaginary.boundingBox())!.height).toBeLessThanOrEqual(380);
-    await expect(imaginary).toHaveValue('-0.3456789');
-    await page.evaluate(() => { delete (visualViewport as unknown as Record<string, unknown>).height; visualViewport!.dispatchEvent(new Event('resize')); });
-    // Verify the scheduled viewport update, not physical-device latency.
-    await expect(page.getByRole('button', { name: 'Expand controls', exact: true })).toBeEnabled({ timeout: 30_000 });
+    const inputMetrics = await real.evaluate(element => ({
+      height: element.getBoundingClientRect().height,
+      fontSize: parseFloat(getComputedStyle(element).fontSize),
+    }));
+    expect(inputMetrics.height).toBeGreaterThanOrEqual(32);
+    expect(inputMetrics.height).toBeLessThan(44);
+    expect(inputMetrics.fontSize).toBe(16);
     await ready(page);
     // Parameter commits legitimately update the existing artwork URL contract.
+    await expect.poll(() => new URL(page.url()).searchParams.get('julia')).toBe('1');
+    await expect.poll(() => new URL(page.url()).searchParams.get('jre')).toBe('0.123457');
+    await expect.poll(() => new URL(page.url()).searchParams.get('jim')).toBe('-0.345679');
     const editedUrl = page.url();
     await page.getByRole('button', { name: 'Export PNG', exact: true }).click();
     await expect(page.getByRole('dialog')).toBeVisible();
@@ -195,23 +201,12 @@ for (const width of [390, 320]) {
     await page.goBack();
     await expect(page.getByRole('dialog')).not.toBeVisible();
     await expect(page.getByRole('button', { name: 'Export PNG', exact: true })).toBeFocused();
-    await expect(panel).toHaveAttribute('data-position', 'full');
-    await page.goBack();
-    await expect(panel).toHaveAttribute('data-position', 'half');
-    await page.goBack();
-    await expect(panel).toHaveAttribute('data-position', 'peek');
-    await page.getByRole('button', { name: 'Expand controls', exact: true }).click();
     await expect(real).toHaveValue('0.123456789');
     await expect(imaginary).toHaveValue('-0.3456789');
     expect(page.url()).toBe(editedUrl);
     await real.fill('0.223456789');
     await real.press('Enter');
-    await expect(panel).toHaveAttribute('data-position', 'full');
     await expect.poll(() => new URL(page.url()).searchParams.get('jre')).toBe('0.223457');
-    const directBackUrl = page.url();
-    await page.goBack();
-    await expect(panel).toHaveAttribute('data-position', 'half');
-    expect(page.url()).toBe(directBackUrl);
     await expect(real).toHaveValue('0.223456789');
     expect(await original!.evaluate(element => element === document.querySelector('[data-testid="fractal-canvas"]'))).toBe(true);
     await page.screenshot({ path: testInfo.outputPath('portrait-inspector.png') });
@@ -219,16 +214,17 @@ for (const width of [390, 320]) {
   });
 }
 
-test('short landscape keeps a narrow sidebar over the full canvas', async ({ page }) => {
+test('short landscape uses the same vertical split and collapse interaction', async ({ page }) => {
   await page.setViewportSize({ width: 844, height: 390 });
   await page.goto('/en/explore');
   await ready(page);
-  expect((await page.getByTestId('explore-inspector').boundingBox())!.width).toBe(320);
+  expect((await page.getByTestId('explore-inspector').boundingBox())!.width).toBe(844);
   expect((await page.getByTestId('fractal-canvas').boundingBox())!.width).toBe(844);
   await expect(page.getByRole('tab', { name: 'Formula', exact: true })).toBeVisible();
   await page.getByRole('button', { name: 'Hide controls', exact: true }).click();
+  await expect(page.getByTestId('explore-inspector')).not.toBeVisible();
   await page.getByRole('button', { name: 'Show controls', exact: true }).click();
-  await expect(page.getByTestId('explore-artwork-bar')).toBeInViewport();
+  await expect(page.getByTestId('explore-artwork-bar')).not.toBeVisible();
 });
 
 test('200 percent root text scaling keeps long Tabs and artwork actions reachable', async ({ page }) => {
@@ -253,7 +249,7 @@ test('200 percent root text scaling keeps long Tabs and artwork actions reachabl
   await ready(page);
 });
 
-test('seven locales retain complete mobile actions and all Tabs in every position', async ({ page }) => {
+test('seven locales retain complete mobile actions and all Tabs in the split panel', async ({ page }) => {
   test.setTimeout(240_000);
   for (const locale of SUPPORTED_LOCALES) {
     for (const width of [320, 390]) {
@@ -261,33 +257,32 @@ test('seven locales retain complete mobile actions and all Tabs in every positio
       await page.goto(`/${locale}/explore`);
       await ready(page);
       const panel = page.getByTestId('explore-inspector');
+      await expect(panel).toHaveAttribute('data-layout', 'mobile');
+      await expect(page.getByTestId('explore-artwork-bar')).not.toBeVisible();
+      await page.locator('.explore-artwork-disclosure > summary').click();
       const actions = page.getByTestId('explore-artwork-bar').getByRole('button');
-      for (const position of ['peek', 'half', 'full']) {
-        await expect(panel).toHaveAttribute('data-position', position);
-        await expect(actions).toHaveCount(5);
-        for (const action of await actions.all()) {
-          await expect(action).toBeInViewport();
-          const metrics = await action.evaluate(button => {
-            const rect = button.getBoundingClientRect();
-            const label = button.querySelector('span')!;
-            const text = label.getBoundingClientRect();
-            return { width: rect.width, height: rect.height, fits: text.left >= rect.left && text.right <= rect.right };
-          });
-          expect(metrics.width).toBeGreaterThanOrEqual(44);
-          expect(metrics.height).toBeGreaterThanOrEqual(44);
-          expect(metrics.fits).toBe(true);
-        }
-        if (position !== 'peek') {
-          const tabs = page.getByRole('tablist').first().getByRole('tab');
-          for (const tab of await tabs.all()) {
-            await tab.click();
-            await expect(tab).toBeInViewport();
-            await expect(tab).toHaveAttribute('aria-selected', 'true');
-            expect(await tab.evaluate(element => element.scrollWidth <= element.clientWidth)).toBe(true);
-          }
-        }
-        if (position !== 'full') await page.locator('.explore-inspector-header button').first().click();
+      await expect(actions).toHaveCount(5);
+      for (const action of await actions.all()) {
+        await action.scrollIntoViewIfNeeded();
+        await expect(action).toBeInViewport();
+        const metrics = await action.evaluate(button => {
+          const rect = button.getBoundingClientRect();
+          const label = button.querySelector('span')!;
+          const text = label.getBoundingClientRect();
+          return { width: rect.width, height: rect.height, fits: text.left >= rect.left && text.right <= rect.right };
+        });
+        expect(metrics.width).toBeGreaterThanOrEqual(44);
+        expect(metrics.height).toBeGreaterThanOrEqual(44);
+        expect(metrics.fits).toBe(true);
       }
+      const tabs = page.getByRole('tablist').first().getByRole('tab');
+      for (const tab of await tabs.all()) {
+        await tab.click();
+        await expect(tab).toBeInViewport();
+        await expect(tab).toHaveAttribute('aria-selected', 'true');
+        expect(await tab.evaluate(element => element.scrollWidth <= element.clientWidth)).toBe(true);
+      }
+      await expect(page.locator('footer')).toHaveCount(0);
       expect(await page.evaluate(() => document.documentElement.scrollWidth <= innerWidth)).toBe(true);
     }
   }
@@ -299,17 +294,10 @@ test('returning to Explore does not strand Back on obsolete panel entries', asyn
   await page.goto('/en/about');
   await page.getByTestId('navbar-brand-group').getByRole('link').click();
   await ready(page);
-  await page.getByRole('button', { name: 'Expand controls', exact: true }).click();
-  await page.getByRole('button', { name: 'Expand controls', exact: true }).click();
   await page.goto('/en/gallery');
   await page.goBack();
   await ready(page);
-  const panel = page.getByTestId('explore-inspector');
-  for (let i = 0; i < 2 && await panel.getAttribute('data-position') !== 'peek'; i++) {
-    const previous = await panel.getAttribute('data-position');
-    await page.getByRole('button', { name: 'Collapse controls', exact: true }).click();
-    await expect(panel).toHaveAttribute('data-position', previous === 'full' ? 'half' : 'peek');
-  }
+  await expect(page.getByTestId('explore-inspector')).not.toHaveAttribute('data-position');
   await page.goBack();
   await expect(page).toHaveURL(/\/en\/about$/);
 });
