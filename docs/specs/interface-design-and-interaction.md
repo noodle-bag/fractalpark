@@ -86,11 +86,14 @@ stage fills the visible workspace to the Inspector's left. Closing the Inspector
 expands that same stage across the full workspace. The exposed canvas remains
 interactive; an outside click does not implicitly close the Inspector.
 
-A flush, full-height 12px visual toggle strip sits at the Inspector's inner edge
-when open and at the window's right edge when closed. It is not a protruding
-floating button. Provide an accessible name, expanded state, keyboard operation,
-and a usable hit area without changing the flush visual strip. This strip is a
-specific visual exception to ordinary mobile button sizing.
+A compact page-fullscreen button sits over the canvas at its lower-right edge,
+matching the mobile workspace affordance. Activating it hides both the Inspector
+and Navbar and expands the same canvas stage across the full viewport; the button
+then changes to a restore affordance in the same corner. Restore by button or
+Escape returns the open Inspector and Navbar without recreating the canvas or
+discarding its view, active Tab, drafts, keyframes, or artwork state. This is an
+in-page focus mode, not the browser Fullscreen API. Its hit area remains at least
+44 by 44 CSS pixels even when the visible icon is smaller.
 
 Opening/closing the Inspector must preserve:
 
@@ -108,14 +111,14 @@ rectangle without recreating the canvas or losing editing state.
 
 Reference viewports are 1440×900 and 1180×900 with 48px navigation. Canvas
 rectangles while open are respectively `(0,48,908,852)` and
-`(0,48,648,852)`; while closed they are `(0,48,1440,852)` and
-`(0,48,1180,852)`. These are comparison fixtures, not universal viewport
-constants.
+`(0,48,648,852)`; in page-fullscreen mode, with navigation hidden, they are
+`(0,0,1440,900)` and `(0,0,1180,900)`. These are comparison fixtures, not
+universal viewport constants.
 
 Inspector padding is 16px horizontally and 12px vertically, with 8px between
 fixed regions. Formula groups use the approved 8px rhythm. Tab contents scroll
-independently; the artwork bar stays fixed. Closing hides the bar with the
-Inspector but leaves the reopen control and canvas project-file dropzone usable.
+independently; the artwork bar stays fixed. Page-fullscreen hides the bar with
+the Inspector but leaves the restore control and canvas project-file dropzone usable.
 
 ### Mobile portrait and landscape
 

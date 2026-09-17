@@ -218,7 +218,7 @@ function ExploreClient({ posterImage }: { posterImage?: string }) {
   const [artworkToolbarTarget, setArtworkToolbarTarget] = useState<HTMLDivElement | null>(null);
   const [activeTab, setActiveTab] = useState('formula');
   const [inspectorCollapsed, setInspectorCollapsed] = useState(false);
-  const [mobileFullscreen, setMobileFullscreen] = useState(false);
+  const [workspaceFullscreen, setWorkspaceFullscreen] = useState(false);
   const [formulaResolution, setFormulaResolution] =
     useState<ExploreFormulaResolution | null>(null);
   const [publishedDescriptor, setPublishedDescriptor] =
@@ -254,17 +254,27 @@ function ExploreClient({ posterImage }: { posterImage?: string }) {
 
   useEffect(() => () => setConfig({ hideNavbar: false }), [setConfig]);
 
-  const enterMobileFullscreen = useCallback(() => {
+  const enterWorkspaceFullscreen = useCallback(() => {
     setInspectorCollapsed(true);
-    setMobileFullscreen(true);
+    setWorkspaceFullscreen(true);
     setConfig({ hideNavbar: true });
   }, [setConfig]);
 
-  const exitMobileFullscreen = useCallback(() => {
+  const exitWorkspaceFullscreen = useCallback(() => {
     setInspectorCollapsed(false);
-    setMobileFullscreen(false);
+    setWorkspaceFullscreen(false);
     setConfig({ hideNavbar: false });
   }, [setConfig]);
+
+  useEffect(() => {
+    if (!workspaceFullscreen) return;
+    const handleKeyDown = (event: KeyboardEvent) => {
+      if (event.key !== 'Escape' || event.defaultPrevented) return;
+      exitWorkspaceFullscreen();
+    };
+    globalThis.document.addEventListener('keydown', handleKeyDown);
+    return () => globalThis.document.removeEventListener('keydown', handleKeyDown);
+  }, [exitWorkspaceFullscreen, workspaceFullscreen]);
 
   // Cloud surfaces hoist above every consumer effect (deps evaluate at
   // render time — declaring them later would be a TDZ crash).
@@ -1343,7 +1353,7 @@ function ExploreClient({ posterImage }: { posterImage?: string }) {
 
   return (
     <div
-      className={`relative flex flex-col overflow-hidden ${mobileFullscreen ? 'h-dvh' : 'h-[calc(100dvh-3rem)]'}`}
+      className={`relative flex flex-col overflow-hidden ${workspaceFullscreen ? 'h-dvh' : 'h-[calc(100dvh-3rem)]'}`}
       data-formula-id={document.formula.formulaId}
       data-inspector-collapsed={inspectorCollapsed}
       data-testid="explore-root"
@@ -1548,12 +1558,12 @@ function ExploreClient({ posterImage }: { posterImage?: string }) {
         {!inspectorCollapsed && (
           <button
             type="button"
-            className="absolute z-10 flex size-11 touch-manipulation items-center justify-center text-white focus-visible:outline-2 focus-visible:outline-white lg:hidden"
+            className="absolute z-10 flex size-11 touch-manipulation items-center justify-center text-white focus-visible:outline-2 focus-visible:outline-white"
             style={{
               bottom: 'max(0.75rem, calc(env(safe-area-inset-bottom) + 0.25rem))',
               right: 'max(0.75rem, calc(env(safe-area-inset-right) + 0.25rem))',
             }}
-            onClick={enterMobileFullscreen}
+            onClick={enterWorkspaceFullscreen}
             aria-label={t('controls.hide')}
             aria-expanded="true"
             aria-controls="explore-inspector-body"
@@ -1570,15 +1580,15 @@ function ExploreClient({ posterImage }: { posterImage?: string }) {
         <button
           type="button"
           data-testid="explore-controls-restore"
-          className="absolute z-30 flex size-11 touch-manipulation items-center justify-center text-white focus-visible:outline-2 focus-visible:outline-white lg:hidden"
+          className="absolute z-30 flex size-11 touch-manipulation items-center justify-center text-white focus-visible:outline-2 focus-visible:outline-white"
           style={{
             bottom: 'max(0.75rem, calc(env(safe-area-inset-bottom) + 0.25rem))',
             right: 'max(0.75rem, calc(env(safe-area-inset-right) + 0.25rem))',
           }}
           onPointerDown={(event) => {
-            if (event.pointerType !== 'mouse') exitMobileFullscreen();
+            if (event.pointerType !== 'mouse') exitWorkspaceFullscreen();
           }}
-          onClick={exitMobileFullscreen}
+          onClick={exitWorkspaceFullscreen}
           aria-label={t('controls.show')}
           aria-expanded="false"
           aria-controls="explore-inspector-body"
@@ -1591,7 +1601,6 @@ function ExploreClient({ posterImage }: { posterImage?: string }) {
 
       <ExploreInspector
         collapsed={inspectorCollapsed}
-        onCollapsedChange={setInspectorCollapsed}
         getProjectedArtworkHref={getProjectedArtworkHref}
         summary={<PositionSummaryPanel bounds={bounds} />}
         onToolbarMount={setArtworkToolbarTarget}

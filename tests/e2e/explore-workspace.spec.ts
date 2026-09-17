@@ -61,6 +61,7 @@ for (const width of [1440, 1180]) {
     const url = page.url();
     await page.getByRole('button', { name: 'Hide controls', exact: true }).click();
     await expect(page.getByTestId('explore-artwork-bar')).not.toBeVisible();
+    await expect(page.getByTestId('navbar-layout')).toHaveCount(0);
     await expect(page.getByTestId('explore-root')).toHaveAttribute('data-inspector-collapsed', 'true');
     await expectCanvasSizeSettled(page);
     const collapsed = await canvasSnapshot(page);
@@ -69,7 +70,11 @@ for (const width of [1440, 1180]) {
     expect(collapsed.dpr).toBe(before.dpr);
     expect(await page.getByTestId('position-summary').textContent()).toBe(summary);
     expect(page.url()).toBe(url);
-    await page.getByRole('button', { name: 'Show controls', exact: true }).click();
+    const restoreControls = page.getByTestId('explore-controls-restore');
+    await expect(restoreControls).toBeVisible();
+    if (width === 1440) await page.keyboard.press('Escape');
+    else await restoreControls.click();
+    await expect(page.getByTestId('navbar-layout')).toBeVisible();
     await expectCanvasSizeSettled(page);
     const after = await canvasSnapshot(page);
     expect(after).toEqual(before);

@@ -15,10 +15,9 @@ function InspectorHarness({ onToolbarMount = vi.fn(), externalToggle = false }: 
   const [collapsed, setCollapsed] = useState(false);
   return (
     <>
-      {externalToggle && <button type="button" onClick={() => setCollapsed(value => !value)}>Mobile toggle</button>}
+      {externalToggle && <button type="button" onClick={() => setCollapsed(value => !value)}>Workspace toggle</button>}
       <ExploreInspector
         collapsed={collapsed}
-        onCollapsedChange={setCollapsed}
         onToolbarMount={onToolbarMount}
       >
         <Draft />
@@ -30,20 +29,17 @@ function InspectorHarness({ onToolbarMount = vi.fn(), externalToggle = false }: 
 it('preserves the mounted draft and toolbar host while hiding controls', () => {
   vi.stubGlobal('matchMedia', () => ({ matches: true, addEventListener: vi.fn(), removeEventListener: vi.fn() }));
   const host = vi.fn();
-  render(<InspectorHarness onToolbarMount={host} />);
+  render(<InspectorHarness onToolbarMount={host} externalToggle />);
   expect(screen.getByTestId('explore-inspector')).toHaveAttribute('data-collapsed', 'false');
   const input = screen.getByLabelText('Power draft');
   const toolbar = screen.getByTestId('explore-artwork-bar');
   fireEvent.change(input, { target: { value: '-0.' } });
-  fireEvent.keyDown(input, { key: 'Escape' });
-  const toggle = screen.getByRole('button', { name: 'show' });
-  expect(toggle).toHaveFocus();
+  fireEvent.click(screen.getByRole('button', { name: 'Workspace toggle' }));
   expect(input.closest('[inert]')).not.toBeNull();
-  fireEvent.click(toggle);
+  fireEvent.click(screen.getByRole('button', { name: 'Workspace toggle' }));
   expect(screen.getByLabelText('Power draft')).toBe(input);
   expect(input).toHaveValue('-0.');
   expect(screen.getByTestId('explore-artwork-bar')).toBe(toolbar);
-  expect(screen.getByRole('button', { name: 'hide' })).toHaveAttribute('aria-expanded', 'true');
   expect(host.mock.calls.filter(([element]) => element !== null)).toHaveLength(1);
 });
 
@@ -62,9 +58,9 @@ it('opens the mobile artwork disclosure by default without panel-position histor
   expect(screen.getByTestId('explore-artwork-bar').closest('details')).not.toHaveAttribute('open');
   fireEvent.click(screen.getByText('toolbar'));
   expect(screen.getByTestId('explore-artwork-bar').closest('details')).toHaveAttribute('open');
-  fireEvent.click(screen.getByRole('button', { name: 'Mobile toggle' }));
+  fireEvent.click(screen.getByRole('button', { name: 'Workspace toggle' }));
   expect(screen.getByTestId('explore-inspector')).toHaveAttribute('data-collapsed', 'true');
-  fireEvent.click(screen.getByRole('button', { name: 'Mobile toggle' }));
+  fireEvent.click(screen.getByRole('button', { name: 'Workspace toggle' }));
   expect(screen.getByLabelText('Power draft')).toBe(input);
   expect(input).toHaveValue('1e-');
   expect(history.state.retainedRouterField).toBe('router-tree');

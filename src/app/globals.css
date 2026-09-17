@@ -3,7 +3,6 @@
 
 /* Explore keeps one canvas stage; desktop and mobile share one collapse owner. */
 .explore-inspector { position: relative; flex: 1; }
-.explore-inspector-toggle { display: none; }
 .explore-inspector-content { overflow-y: auto; overscroll-behavior: contain; }
 .explore-inspector[data-collapsed="true"] { display: none; }
 .explore-artwork-bar { padding-bottom: max(8px, env(safe-area-inset-bottom)); }
@@ -18,8 +17,6 @@
 }
 @media (min-width: 1024px) {
   .explore-inspector { inset: 0 0 0 auto; height: auto; max-height: none; }
-  .explore-inspector[data-collapsed="true"] { display: flex; }
-  .explore-inspector-toggle { display: flex; }
   .explore-inspector-body { border-top: 0; border-left: 1px solid var(--border); }
   .explore-inspector-content { overflow: hidden; }
   .explore-inspector { width: 532px; }

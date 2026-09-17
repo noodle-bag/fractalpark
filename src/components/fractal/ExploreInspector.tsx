@@ -1,27 +1,24 @@
 'use client';
 
-import { useEffect, useRef, useState, type ReactNode } from 'react';
+import { useEffect, useState, type ReactNode } from 'react';
 import { useTranslations } from 'next-intl';
-import { ChevronDown, ChevronLeft, ChevronRight, ChevronUp } from 'lucide-react';
+import { ChevronDown, ChevronUp } from 'lucide-react';
 import { useExplorePanelNavigation } from '@/hooks/useExplorePanelNavigation';
 
 interface ExploreInspectorProps {
   children: ReactNode;
   summary?: ReactNode;
   collapsed: boolean;
-  onCollapsedChange: (collapsed: boolean) => void;
   onToolbarMount: (element: HTMLDivElement | null) => void;
   getProjectedArtworkHref?: () => string | null;
 }
 
 /** Retain controls and toolbar while the parent owns the shared workspace geometry. */
-export function ExploreInspector({ children, summary, collapsed, onCollapsedChange, onToolbarMount, getProjectedArtworkHref }: ExploreInspectorProps) {
-  const t = useTranslations('explore.controls');
+export function ExploreInspector({ children, summary, collapsed, onToolbarMount, getProjectedArtworkHref }: ExploreInspectorProps) {
   const ta = useTranslations('explore.artworkActions');
   const [desktop, setDesktop] = useState<boolean | null>(null);
   const [artworkOpen, setArtworkOpen] = useState(true);
   const [, setHistoryPosition] = useState<0 | 1 | 2>(0);
-  const toggleRef = useRef<HTMLButtonElement>(null);
 
   // Keep the existing dialog-first Back and latest-URL bridge. Mobile layout
   // no longer creates history entries for visual panel positions.
@@ -44,26 +41,10 @@ export function ExploreInspector({ children, summary, collapsed, onCollapsedChan
       data-collapsed={collapsed}
       data-layout={desktop === true ? 'desktop' : 'mobile'}
     >
-      <button
-        ref={toggleRef}
-        type="button"
-        className={`explore-inspector-toggle pointer-events-auto absolute inset-y-0 z-10 w-3 items-center justify-center border-x bg-muted text-muted-foreground hover:bg-accent focus-visible:outline-2 focus-visible:outline-ring ${collapsed ? 'right-0' : 'left-0'}`}
-        aria-label={collapsed ? t('show') : t('hide')}
-        aria-expanded={!collapsed}
-        aria-controls="explore-inspector-body"
-        onClick={() => onCollapsedChange(!collapsed)}
-      >
-        {collapsed ? <ChevronLeft className="size-3" /> : <ChevronRight className="size-3" />}
-      </button>
       <div
         id="explore-inspector-body"
         inert={collapsed}
         className={`explore-inspector-body pointer-events-auto flex min-h-0 w-full flex-col border-t bg-background/95 backdrop-blur ${collapsed ? 'invisible' : ''}`}
-        onKeyDown={event => {
-          if (event.key !== 'Escape' || event.defaultPrevented || desktop !== true) return;
-          onCollapsedChange(true);
-          toggleRef.current?.focus();
-        }}
       >
         <div className="explore-inspector-content flex min-h-0 flex-1 flex-col gap-2 px-4 py-3" data-testid="explore-inspector-content">
           <div className="order-1 shrink-0">{summary}</div>
