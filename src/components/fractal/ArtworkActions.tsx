@@ -417,7 +417,7 @@ function ActionButton({
     <Button
       ref={buttonRef}
       type="button"
-      variant={compact && operation === 'save' ? 'default' : 'ghost'}
+      variant="ghost"
       size="icon"
       disabled={disabled || status.phase === 'pending'}
       className={compact ? 'h-auto min-h-11 w-full flex-col gap-1 whitespace-normal px-1 py-1 text-xs' : 'size-11 text-white hover:bg-white/15 hover:text-white'}

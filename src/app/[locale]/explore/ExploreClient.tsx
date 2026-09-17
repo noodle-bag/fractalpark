@@ -23,7 +23,7 @@ import { useCloudSession } from '@/components/cloud/CloudSessionProvider';
 import { useLayout } from '@/components/layout/LayoutContext';
 import { resolveCustomFormula } from '@/lib/formula-resolver';
 import AnimatedFractalCanvas from '@/components/fractal/AnimatedFractalCanvas';
-import { AlertTriangle, ChevronDown, ChevronUp } from 'lucide-react';
+import { AlertTriangle, Maximize2, Minimize2 } from 'lucide-react';
 import {
   DEFAULT_FRACTAL_DOCUMENT,
   type FractalDocument,
@@ -218,6 +218,7 @@ function ExploreClient({ posterImage }: { posterImage?: string }) {
   const [artworkToolbarTarget, setArtworkToolbarTarget] = useState<HTMLDivElement | null>(null);
   const [activeTab, setActiveTab] = useState('formula');
   const [inspectorCollapsed, setInspectorCollapsed] = useState(false);
+  const [mobileFullscreen, setMobileFullscreen] = useState(false);
   const [formulaResolution, setFormulaResolution] =
     useState<ExploreFormulaResolution | null>(null);
   const [publishedDescriptor, setPublishedDescriptor] =
@@ -249,6 +250,20 @@ function ExploreClient({ posterImage }: { posterImage?: string }) {
   useEffect(() => {
     setConfig({ hideFooter: true });
     return () => setConfig({ hideFooter: false });
+  }, [setConfig]);
+
+  useEffect(() => () => setConfig({ hideNavbar: false }), [setConfig]);
+
+  const enterMobileFullscreen = useCallback(() => {
+    setInspectorCollapsed(true);
+    setMobileFullscreen(true);
+    setConfig({ hideNavbar: true });
+  }, [setConfig]);
+
+  const exitMobileFullscreen = useCallback(() => {
+    setInspectorCollapsed(false);
+    setMobileFullscreen(false);
+    setConfig({ hideNavbar: false });
   }, [setConfig]);
 
   // Cloud surfaces hoist above every consumer effect (deps evaluate at
@@ -1328,13 +1343,13 @@ function ExploreClient({ posterImage }: { posterImage?: string }) {
 
   return (
     <div
-      className="relative flex h-[calc(100dvh-3rem)] flex-col overflow-hidden"
+      className={`relative flex flex-col overflow-hidden ${mobileFullscreen ? 'h-dvh' : 'h-[calc(100dvh-3rem)]'}`}
       data-formula-id={document.formula.formulaId}
       data-inspector-collapsed={inspectorCollapsed}
       data-testid="explore-root"
     >
       <div
-        className={`explore-canvas-stage relative bg-black lg:absolute lg:inset-0 ${inspectorCollapsed ? 'min-h-0 flex-1' : 'min-h-[50vh] shrink-0 lg:min-h-0'}`}
+        className={`explore-canvas-stage relative bg-black lg:absolute lg:inset-0 ${inspectorCollapsed ? 'min-h-0 flex-1' : 'h-1/2 min-h-0 shrink-0 lg:h-auto'}`}
         style={posterImage ? {
           backgroundImage: `url("${posterImage}")`,
           backgroundPosition: 'center',
@@ -1530,27 +1545,49 @@ function ExploreClient({ posterImage }: { posterImage?: string }) {
           conflictBusy={conflictBusy}
         />
 
+        {!inspectorCollapsed && (
+          <button
+            type="button"
+            className="absolute z-10 flex size-11 touch-manipulation items-center justify-center text-white focus-visible:outline-2 focus-visible:outline-white lg:hidden"
+            style={{
+              bottom: 'max(0.75rem, calc(env(safe-area-inset-bottom) + 0.25rem))',
+              right: 'max(0.75rem, calc(env(safe-area-inset-right) + 0.25rem))',
+            }}
+            onClick={enterMobileFullscreen}
+            aria-label={t('controls.hide')}
+            aria-expanded="true"
+            aria-controls="explore-inspector-body"
+          >
+            <span className="flex size-9 items-center justify-center rounded-full bg-black/60 shadow-lg">
+              <Maximize2 aria-hidden className="size-5" />
+            </span>
+          </button>
+        )}
+
+      </div>
+
+      {inspectorCollapsed && (
         <button
           type="button"
-          className="absolute z-10 flex size-11 touch-manipulation items-center justify-center text-white focus-visible:outline-2 focus-visible:outline-white lg:hidden"
+          data-testid="explore-controls-restore"
+          className="absolute z-30 flex size-11 touch-manipulation items-center justify-center text-white focus-visible:outline-2 focus-visible:outline-white lg:hidden"
           style={{
             bottom: 'max(0.75rem, calc(env(safe-area-inset-bottom) + 0.25rem))',
             right: 'max(0.75rem, calc(env(safe-area-inset-right) + 0.25rem))',
           }}
-          onClick={() => setInspectorCollapsed(value => !value)}
-          aria-label={inspectorCollapsed ? t('controls.show') : t('controls.hide')}
-          aria-expanded={!inspectorCollapsed}
+          onPointerDown={(event) => {
+            if (event.pointerType !== 'mouse') exitMobileFullscreen();
+          }}
+          onClick={exitMobileFullscreen}
+          aria-label={t('controls.show')}
+          aria-expanded="false"
           aria-controls="explore-inspector-body"
         >
           <span className="flex size-9 items-center justify-center rounded-full bg-black/60 shadow-lg">
-            {inspectorCollapsed
-              ? <ChevronDown aria-hidden className="size-5" />
-              : <ChevronUp aria-hidden className="size-5" />
-            }
+            <Minimize2 aria-hidden className="size-5" />
           </span>
         </button>
-
-      </div>
+      )}
 
       <ExploreInspector
         collapsed={inspectorCollapsed}

@@ -6,11 +6,11 @@ import { useLayout } from './LayoutContext';
 
 export default function LayoutShell({ children }: { children: React.ReactNode }) {
   const { config } = useLayout();
-  const { hideFooter } = config;
+  const { hideNavbar, hideFooter } = config;
 
   return (
     <div className="flex min-h-screen flex-col">
-      <Navbar />
+      {!hideNavbar && <Navbar />}
       <main className="flex-1">{children}</main>
       {!hideFooter && <Footer />}
     </div>

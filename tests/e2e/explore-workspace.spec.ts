@@ -156,6 +156,10 @@ for (const width of [390, 320]) {
     await expect(panel).not.toHaveAttribute('data-position');
     await expect(page.getByRole('tab', { name: 'Formula', exact: true })).toBeVisible();
     await expect(page.getByTestId('explore-artwork-bar')).toBeVisible();
+    const compactActions = page.getByTestId('explore-artwork-bar').getByRole('button');
+    for (const action of await compactActions.all()) {
+      await expect(action).toHaveAttribute('data-variant', 'ghost');
+    }
     await expect(page.locator('footer')).toHaveCount(0);
     expect(await canvas.evaluate(element => getComputedStyle(element).borderRadius)).toBe('0px');
     const expandedCanvas = (await canvas.boundingBox())!;
@@ -163,9 +167,11 @@ for (const width of [390, 320]) {
     const url = page.url();
     await page.getByRole('button', { name: 'Hide controls', exact: true }).click();
     await expect(panel).not.toBeVisible();
+    await expect(page.getByTestId('navbar-layout')).toHaveCount(0);
     await expectCanvasSizeSettled(page);
-    expect((await canvas.boundingBox())!.height).toBe(796);
+    expect((await canvas.boundingBox())!.height).toBe(844);
     await page.getByRole('button', { name: 'Show controls', exact: true }).click();
+    await expect(page.getByTestId('navbar-layout')).toBeVisible();
     await expect(page.getByRole('tab', { name: 'Formula', exact: true })).toBeVisible();
     expect(page.url()).toBe(url);
     await page.locator('#julia-mode').click();
@@ -217,10 +223,12 @@ for (const width of [390, 320]) {
 test.describe('mobile canvas control touch target', () => {
   test.use({ hasTouch: true });
 
-  test('restores controls when the collapsed button edge is tapped', async ({ page }) => {
+  test('restores controls outside the canvas layer on touch pointerdown and click', async ({ page }) => {
     await page.setViewportSize({ width: 390, height: 844 });
     await page.goto('/en/explore');
     await ready(page);
+    const canvas = page.getByTestId('fractal-canvas');
+    const original = await canvas.elementHandle();
     await page.getByRole('button', { name: 'Hide controls', exact: true }).tap();
     await expect(page.getByTestId('explore-inspector')).not.toBeVisible();
     const showControls = page.getByRole('button', { name: 'Show controls', exact: true });
@@ -232,8 +240,26 @@ test.describe('mobile canvas control touch target', () => {
       const edgeTarget = document.elementFromPoint(rect.left + 2, rect.top + 2);
       return edgeTarget === element || element.contains(edgeTarget);
     })).toBe(true);
-    await page.touchscreen.tap(box.x + 2, box.y + 2);
+    expect(await showControls.evaluate(element => element.closest('.explore-canvas-stage'))).toBeNull();
+    await showControls.dispatchEvent('pointerdown', {
+      pointerId: 1,
+      pointerType: 'touch',
+      isPrimary: true,
+    });
     await expect(page.getByRole('tab', { name: 'Formula', exact: true })).toBeVisible();
+    await expect(page.getByTestId('explore-artwork-bar')).toBeInViewport();
+    const rootBox = (await page.getByTestId('explore-root').boundingBox())!;
+    const restoredCanvasBox = (await canvas.boundingBox())!;
+    const restoredInspectorBox = (await page.getByTestId('explore-inspector').boundingBox())!;
+    expect(restoredCanvasBox.height).toBeLessThan(rootBox.height);
+    expect(restoredInspectorBox.height).toBeGreaterThan(0);
+    expect(await original!.evaluate(element => element === document.querySelector('[data-testid="fractal-canvas"]'))).toBe(true);
+
+    await page.getByRole('button', { name: 'Hide controls', exact: true }).tap();
+    await expect(page.getByTestId('navbar-layout')).toHaveCount(0);
+    await page.getByRole('button', { name: 'Show controls', exact: true }).click();
+    await expect(page.getByTestId('navbar-layout')).toBeVisible();
+    await expect(page.getByTestId('explore-artwork-bar')).toBeVisible();
   });
 });
 
@@ -246,7 +272,9 @@ test('short landscape uses the same vertical split and collapse interaction', as
   await expect(page.getByRole('tab', { name: 'Formula', exact: true })).toBeVisible();
   await page.getByRole('button', { name: 'Hide controls', exact: true }).click();
   await expect(page.getByTestId('explore-inspector')).not.toBeVisible();
+  await expect(page.getByTestId('navbar-layout')).toHaveCount(0);
   await page.getByRole('button', { name: 'Show controls', exact: true }).click();
+  await expect(page.getByTestId('navbar-layout')).toBeVisible();
   await expect(page.getByTestId('explore-artwork-bar')).toBeVisible();
 });
 
