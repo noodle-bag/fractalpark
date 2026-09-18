@@ -16,10 +16,9 @@
   .explore-inspector-controls [role="tabpanel"] { overflow: visible; }
 }
 @media (min-width: 1024px) {
-  .explore-inspector { inset: 0 0 0 auto; height: auto; max-height: none; }
+  .explore-inspector { position: absolute; inset: 0 0 0 auto; width: 532px; height: auto; max-height: none; }
   .explore-inspector-body { border-top: 0; border-left: 1px solid var(--border); }
   .explore-inspector-content { overflow: hidden; }
-  .explore-inspector { width: 532px; }
   [data-inspector-collapsed="false"] > .explore-canvas-stage { right: 532px; }
 }
 @import "tw-animate-css";

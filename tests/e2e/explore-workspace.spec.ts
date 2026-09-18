@@ -52,10 +52,14 @@ for (const width of [1440, 1180]) {
     await page.goto('/en/explore');
     await ready(page);
     const canvas = page.getByTestId('fractal-canvas');
+    const inspector = page.getByTestId('explore-inspector');
     const original = await canvas.elementHandle();
     const before = await canvasSnapshot(page);
+    const inspectorBefore = (await inspector.boundingBox())!;
     expect(before.rect.width).toBe(width - 532);
     expect(before.rect.x + before.rect.width / 2).toBe((width - 532) / 2);
+    expect(inspectorBefore.x).toBe(width - 532);
+    expect(inspectorBefore.width).toBe(532);
     await expect(page.getByTestId('explore-root')).toHaveAttribute('data-inspector-collapsed', 'false');
     const summary = await page.getByTestId('position-summary').textContent();
     const url = page.url();
@@ -77,7 +81,10 @@ for (const width of [1440, 1180]) {
     await expect(page.getByTestId('navbar-layout')).toBeVisible();
     await expectCanvasSizeSettled(page);
     const after = await canvasSnapshot(page);
+    const inspectorAfter = (await inspector.boundingBox())!;
     expect(after).toEqual(before);
+    expect(inspectorAfter.x).toBe(width - 532);
+    expect(inspectorAfter.width).toBe(532);
     expect(await original!.evaluate(element => element === document.querySelector('[data-testid="fractal-canvas"]'))).toBe(true);
     expect(await page.getByTestId('position-summary').textContent()).toBe(summary);
     expect(page.url()).toBe(url);
