@@ -5,6 +5,11 @@ govern FractalPark development.
 
 ## Specifications
 
+- [Interface Design and Interaction](specs/interface-design-and-interaction.md)
+  defines compact visual roles, canvas-first Explore layouts, precise controls,
+  state preservation, semantic design-to-code mapping, and retained exceptions.
+  It is a target design contract, not a claim of completed runtime adoption.
+
 - [Formula Parameters and Mode Semantics v1](specs/formula-parameters-and-mode-semantics-v1.md)
   governs parameter ownership, Julia versus coordinate controls, typed runtime
   bindings, precise input, and cross-surface verification. Read it alongside

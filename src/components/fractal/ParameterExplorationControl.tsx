@@ -1,12 +1,12 @@
 'use client';
 
-import { useId, useState } from 'react';
+import { useId, useState, type ReactNode } from 'react';
 import { useTranslations } from 'next-intl';
 import { ComplexPlanePicker } from './ComplexPlanePicker';
 import { explorationWindow, fromPolar, type ExplorationWindow } from '@/lib/parameter-exploration';
 import type { ParameterInteractionHint, ParameterInteractionKind } from '@/lib/published-parameter-interactions';
 
-const buttonClass = 'rounded border px-2 py-1 text-xs hover:bg-accent focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring';
+const buttonClass = 'parameter-window-button rounded-control border px-2 py-1 text-xs hover:bg-accent focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring';
 const format = (value: number) => Number(value.toPrecision(5)).toString();
 
 export function ParameterRangeControl({
@@ -69,7 +69,7 @@ export function ParameterRangeControl({
 }
 
 export function ParameterExplorationControl({
-  value, onChange, kind, hint, label, initiallyOpen = false, integer = false,
+  value, onChange, kind, hint, label, initiallyOpen = false, integer = false, children,
 }: {
   value: [number, number];
   onChange: (next: [number, number]) => void;
@@ -78,6 +78,7 @@ export function ParameterExplorationControl({
   label: string;
   initiallyOpen?: boolean;
   integer?: boolean;
+  children?: ReactNode;
 }) {
   const t = useTranslations('explore.controls.parameterInteraction');
   const tc = useTranslations('explore.controls');
@@ -101,31 +102,37 @@ export function ParameterExplorationControl({
   const realLabel = hint === 'feedback' ? t('constant') : kind === 'times' ? t('firstTrigger') : tc('complexReal');
   const imaginaryLabel = hint === 'feedback' ? t('feedback') : kind === 'times' ? t('secondTrigger') : tc('complexImaginary');
   const scalar = kind === 'real';
+  if (kind === 'plane') return (
+    <div className="space-y-2">
+      <details open={initiallyOpen || undefined} className="space-y-2">
+        <summary className="cursor-pointer text-xs font-medium">{t(kind)}</summary>
+        {hint && <p className="py-2 text-xs text-muted-foreground">{t(`hints.${hint}`)}</p>}
+        {real && imaginary && <ComplexPlanePicker value={value} onChange={emit}
+          realAxis={real} imaginaryAxis={imaginary}
+          keyboardStep={(real.max - real.min) / 400} pointerStep={(real.max - real.min) / 400}
+          constrainKeyboardToAxes={false} realLabel={tc('complexReal')} imaginaryLabel={tc('complexImaginary')}
+          ariaLabel={`${label} ${tc('complexPlane')}`}
+          resetLabel={children ? undefined : `${label} ${tc('resetComplex')}`} size={160} />}
+      </details>
+      {children}
+      {real && imaginary && <>
+        <div className="text-center font-mono text-xs text-muted-foreground">
+          Re {format(real.min)} … {format(real.max)}<br />
+          Im {format(imaginary.min)} … {format(imaginary.max)}
+        </div>
+        <div className="flex flex-wrap justify-center gap-1">
+          <button type="button" className={buttonClass} onClick={() => resize(0.5)}>{t('narrow')}</button>
+          <button type="button" className={buttonClass} onClick={() => resize(2)}>{t('widen')}</button>
+          <button type="button" className={buttonClass} onClick={() => resize(1)}>{t('showCurrent')}</button>
+        </div>
+      </>}
+      <p className="text-xs text-muted-foreground">{t('windowHint')}</p>
+    </div>
+  );
   const content = (
     <div className="space-y-3 pt-2">
       {hint && <p className="text-xs text-muted-foreground">{t(`hints.${hint}`)}</p>}
       {scalar && <p className="text-xs text-muted-foreground">{t('realOnly')}</p>}
-      {kind === 'plane' && real && imaginary && (
-        <>
-          <ComplexPlanePicker value={value} onChange={emit}
-            realAxis={real} imaginaryAxis={imaginary}
-            keyboardStep={(real.max - real.min) / 400}
-            pointerStep={(real.max - real.min) / 400}
-            constrainKeyboardToAxes={false}
-            realLabel={tc('complexReal')} imaginaryLabel={tc('complexImaginary')}
-            ariaLabel={`${label} ${tc('complexPlane')}`}
-            resetLabel={`${label} ${tc('resetComplex')}`} size={160} />
-          <div className="text-center font-mono text-xs text-muted-foreground">
-            Re {format(real.min)} … {format(real.max)}<br />
-            Im {format(imaginary.min)} … {format(imaginary.max)}
-          </div>
-          <div className="flex flex-wrap justify-center gap-1">
-            <button type="button" className={buttonClass} onClick={() => resize(0.5)}>{t('narrow')}</button>
-            <button type="button" className={buttonClass} onClick={() => resize(2)}>{t('widen')}</button>
-            <button type="button" className={buttonClass} onClick={() => resize(1)}>{t('showCurrent')}</button>
-          </div>
-        </>
-      )}
       {kind === 'polar' && (
         <>
           <ParameterRangeControl label={`${label} ${t('magnitude')}`} value={magnitude} nonNegative

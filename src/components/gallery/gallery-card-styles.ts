@@ -6,3 +6,5 @@ export const GALLERY_PREVIEW_MEDIA_CLASS =
 
 export const GALLERY_CARD_LINK_CLASS =
   'group block rounded-lg focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2';
+
+export const GALLERY_CARD_TITLE_CLASS = 'mt-3 block truncate text-sm font-medium';

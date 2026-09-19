@@ -77,6 +77,7 @@ export function ComplexPlanePicker({
   className,
 }: ComplexPlanePickerProps) {
   const svgRef = useRef<SVGSVGElement>(null);
+  const activePointerId = useRef<number | null>(null);
   const [isDragging, setIsDragging] = useState(false);
   const [hoverPos, setHoverPos] = useState<[number, number] | null>(null);
 
@@ -99,28 +100,37 @@ export function ComplexPlanePicker({
     ];
   }, [imaginaryAxis, imaginaryViewport, pointerStep, realAxis, realViewport]);
 
+  const finishPointer = useCallback((event: React.PointerEvent<SVGSVGElement>) => {
+    if (activePointerId.current !== event.pointerId) return;
+    activePointerId.current = null;
+    setIsDragging(false);
+    if (event.currentTarget.hasPointerCapture?.(event.pointerId)) {
+      event.currentTarget.releasePointerCapture?.(event.pointerId);
+    }
+  }, []);
+
   const handlePointerMove = useCallback((event: React.PointerEvent<SVGSVGElement>) => {
+    if (activePointerId.current !== null && activePointerId.current !== event.pointerId) return;
+    if (activePointerId.current === event.pointerId && event.buttons === 0) {
+      finishPointer(event);
+      return;
+    }
     const next = pointerToValue(event.clientX, event.clientY);
     if (!next) return;
     setHoverPos(next);
-    if (isDragging) emitChange(next);
-  }, [emitChange, isDragging, pointerToValue]);
+    if (activePointerId.current === event.pointerId) emitChange(next);
+  }, [emitChange, finishPointer, pointerToValue]);
 
   const handlePointerDown = useCallback((event: React.PointerEvent<SVGSVGElement>) => {
+    if (event.button > 0 || event.isPrimary === false || activePointerId.current !== null) return;
     event.preventDefault();
+    activePointerId.current = event.pointerId;
     event.currentTarget.parentElement?.focus({ preventScroll: true });
     setIsDragging(true);
     event.currentTarget.setPointerCapture?.(event.pointerId);
     const next = pointerToValue(event.clientX, event.clientY);
     if (next) emitChange(next);
   }, [emitChange, pointerToValue]);
-
-  const finishPointer = useCallback((event: React.PointerEvent<SVGSVGElement>) => {
-    setIsDragging(false);
-    if (event.currentTarget.hasPointerCapture?.(event.pointerId)) {
-      event.currentTarget.releasePointerCapture?.(event.pointerId);
-    }
-  }, []);
 
   const handleKeyDown = useCallback((event: React.KeyboardEvent<HTMLDivElement>) => {
     if (event.target !== event.currentTarget) return;
@@ -178,6 +188,8 @@ export function ComplexPlanePicker({
         width={size}
         height={size}
         viewBox={`0 0 ${size} ${size}`}
+        preserveAspectRatio="none"
+        data-plane-picker="complex"
         aria-hidden="true"
         focusable="false"
         className={cn(
@@ -188,6 +200,7 @@ export function ComplexPlanePicker({
         onPointerDown={handlePointerDown}
         onPointerUp={finishPointer}
         onPointerCancel={finishPointer}
+        onLostPointerCapture={finishPointer}
         onPointerLeave={() => setHoverPos(null)}
       >
         <rect x={0} y={0} width={size} height={size} fill="transparent" />

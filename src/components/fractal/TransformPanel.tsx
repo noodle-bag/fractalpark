@@ -72,7 +72,7 @@ export function TransformPanel({
       </div>
 
       {transformId && transformId !== 'none' && (
-        <div className="space-y-4 rounded-lg border p-3 bg-muted/30">
+        <div className="explore-parameter-group space-y-4 rounded-lg border p-3 bg-muted/30">
           <div className="flex items-center justify-between">
             <label className="text-sm font-medium leading-none">
               {t('explore.controls.transformParameters')}

@@ -25,6 +25,7 @@ for (const width of [390, 1000]) {
     await page.goto('/en/explore?fm=phoenix&julia=1&jre=-0.62&jim=0.41&oc=st');
     const canvas = page.getByTestId('fractal-canvas');
     await expect(canvas).toHaveAttribute('data-render-status', 'ready', { timeout: 45000 });
+    await page.locator('.explore-artwork-disclosure > summary').click();
     await page.getByRole('button', { name: 'Reset Artwork' }).click();
     await page.getByRole('button', { name: 'Reset', exact: true }).click();
     await expect(page.getByTestId('explore-root')).toHaveAttribute('data-formula-id', id);
@@ -41,6 +42,7 @@ for (const width of [390, 1000]) {
     await page.reload();
     await expect(power).toHaveValue('3');
     await expect(canvas).toHaveAttribute('data-render-status', 'ready', { timeout: 45000 });
+    await page.locator('.explore-artwork-disclosure > summary').click();
     await page.getByRole('button', { name: 'Reset Artwork' }).click();
     await page.getByRole('button', { name: 'Reset', exact: true }).click();
     await expect(power).toHaveValue('2');

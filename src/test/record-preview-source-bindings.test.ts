@@ -4,7 +4,7 @@ import { join } from 'node:path';
 import { describe, expect, it } from 'vitest';
 import profiles from '../../resources/formula-library/v1/record-preview-profiles.v1.json';
 import {
-  isReviewedRecordPreviewMetadataTransition,
+  isReviewedRecordPreviewReleaseTransition,
   matchesRecordPreviewSourceBindings,
 } from '../../scripts/lib/record-preview-source-bindings';
 
@@ -21,7 +21,7 @@ describe('Record preview source bindings', () => {
 
   it('accepts the sealed Profile map only under the exact reviewed package pair', () => {
     const before = JSON.stringify(profiles);
-    expect(isReviewedRecordPreviewMetadataTransition(packageJson, lockJson)).toBe(true);
+    expect(isReviewedRecordPreviewReleaseTransition(packageJson, lockJson)).toBe(true);
     expect(matchesRecordPreviewSourceBindings(profiles.sourceBindings, current)).toBe(true);
     expect(JSON.stringify(profiles)).toBe(before);
   });
@@ -46,13 +46,13 @@ describe('Record preview source bindings', () => {
 
   it('rejects mixed, unknown, whitespace and duplicate-key metadata changes', () => {
     for (const candidate of [
-      packageJson.replace('0.4.20', '0.4.19'),
-      packageJson.replace('0.4.20', '0.4.21'),
+      packageJson.replace('0.4.21', '0.4.20'),
+      packageJson.replace('0.4.21', '0.4.22'),
       `${packageJson} `,
-      packageJson.replace('"version": "0.4.20",', '"version": "forged", "version": "0.4.20",'),
-    ]) expect(isReviewedRecordPreviewMetadataTransition(candidate, lockJson)).toBe(false);
-    for (const candidate of [lockJson.replace('0.4.20', '0.4.19'), `${lockJson} `]) {
-      expect(isReviewedRecordPreviewMetadataTransition(packageJson, candidate)).toBe(false);
+      packageJson.replace('"version": "0.4.21",', '"version": "forged", "version": "0.4.21",'),
+    ]) expect(isReviewedRecordPreviewReleaseTransition(candidate, lockJson)).toBe(false);
+    for (const candidate of [lockJson.replace('0.4.21', '0.4.20'), `${lockJson} `]) {
+      expect(isReviewedRecordPreviewReleaseTransition(packageJson, candidate)).toBe(false);
     }
   });
 
@@ -64,13 +64,13 @@ describe('Record preview source bindings', () => {
       { ...JSON.parse(packageJson), engines: { node: '0' } },
       { ...JSON.parse(packageJson), extra: true },
     ];
-    for (const value of mutations) expect(isReviewedRecordPreviewMetadataTransition(
+    for (const value of mutations) expect(isReviewedRecordPreviewReleaseTransition(
       `${JSON.stringify(value, null, 2)}\n`, lockJson,
     )).toBe(false);
     for (const key of ['version', 'integrity', 'resolved']) {
       const lock = JSON.parse(lockJson);
       lock.packages['node_modules/next'][key] = 'changed';
-      expect(isReviewedRecordPreviewMetadataTransition(packageJson, `${JSON.stringify(lock, null, 2)}\n`)).toBe(false);
+      expect(isReviewedRecordPreviewReleaseTransition(packageJson, `${JSON.stringify(lock, null, 2)}\n`)).toBe(false);
     }
   });
 });

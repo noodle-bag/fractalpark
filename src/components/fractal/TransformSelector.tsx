@@ -42,7 +42,7 @@ export function TransformSelector({ currentTransform, onTransformChange }: Trans
         </label>
       </div>
 
-      <div className="grid grid-cols-4 gap-1.5">
+      <div className="grid grid-cols-[repeat(auto-fit,minmax(min(100%,6rem),1fr))] gap-2">
         {transforms.map((transform) => (
           <TransformButton
             key={transform.id}
@@ -69,10 +69,12 @@ function TransformButton({ transform, isActive, onClick, t }: TransformButtonPro
 
   return (
     <button
+      type="button"
+      aria-pressed={isActive}
       onClick={onClick}
       title={t(`controls.transform.${transform.id}`)}
       className={cn(
-        'flex flex-col items-center gap-1 p-2 rounded-md border transition-all duration-150',
+        'flex min-h-11 flex-col items-center justify-center gap-1 rounded-md border p-2 transition-all duration-150',
         'hover:bg-accent hover:border-accent-foreground/20',
         isActive && 'bg-primary/10 border-primary/50 ring-1 ring-primary/30'
       )}
@@ -80,7 +82,7 @@ function TransformButton({ transform, isActive, onClick, t }: TransformButtonPro
       <span className={cn('text-muted-foreground', isActive && 'text-primary')}>
         {icon}
       </span>
-      <span className="text-[10px] leading-tight text-center line-clamp-1">
+      <span className="whitespace-normal text-control text-center">
         {t(`controls.transform.${transform.id}`)}
       </span>
     </button>

@@ -31,6 +31,7 @@ export function TransformPointPicker({
   className,
 }: TransformPointPickerProps) {
   const svgRef = useRef<SVGSVGElement>(null);
+  const activePointerId = useRef<number | null>(null);
   const [isDragging, setIsDragging] = useState(false);
   const [hoverPos, setHoverPos] = useState<[number, number] | null>(null);
 
@@ -57,27 +58,43 @@ export function TransformPointPicker({
   );
 
   // Handle mouse/touch events
+  const handlePointerUp = useCallback((e: React.PointerEvent<SVGSVGElement>) => {
+    if (activePointerId.current !== e.pointerId) return;
+    activePointerId.current = null;
+    setIsDragging(false);
+    if (e.currentTarget.hasPointerCapture?.(e.pointerId)) {
+      e.currentTarget.releasePointerCapture?.(e.pointerId);
+    }
+  }, []);
+
   const handlePointerMove = useCallback(
     (e: React.PointerEvent<SVGSVGElement>) => {
+      if (activePointerId.current !== null && activePointerId.current !== e.pointerId) return;
+      if (activePointerId.current === e.pointerId && e.buttons === 0) {
+        handlePointerUp(e);
+        return;
+      }
       const pos = screenToValue(e.clientX, e.clientY);
       if (!pos) return;
 
       setHoverPos(pos);
 
-      if (isDragging) {
+      if (activePointerId.current === e.pointerId) {
         const clampedX = Math.max(minX, Math.min(maxX, pos[0]));
         const clampedY = Math.max(minY, Math.min(maxY, pos[1]));
         onChange(clampedX, clampedY);
       }
     },
-    [isDragging, onChange, screenToValue, minX, maxX, minY, maxY]
+    [handlePointerUp, onChange, screenToValue, minX, maxX, minY, maxY]
   );
 
   const handlePointerDown = useCallback(
     (e: React.PointerEvent<SVGSVGElement>) => {
+      if (e.button > 0 || e.isPrimary === false || activePointerId.current !== null) return;
       e.preventDefault();
+      activePointerId.current = e.pointerId;
       setIsDragging(true);
-      (e.target as Element).setPointerCapture(e.pointerId);
+      e.currentTarget.setPointerCapture?.(e.pointerId);
 
       const pos = screenToValue(e.clientX, e.clientY);
       if (pos) {
@@ -88,11 +105,6 @@ export function TransformPointPicker({
     },
     [onChange, screenToValue, minX, maxX, minY, maxY]
   );
-
-  const handlePointerUp = useCallback((e: React.PointerEvent<SVGSVGElement>) => {
-    setIsDragging(false);
-    (e.target as Element).releasePointerCapture(e.pointerId);
-  }, []);
 
   const handlePointerLeave = useCallback(() => {
     setHoverPos(null);
@@ -115,13 +127,17 @@ export function TransformPointPicker({
         width={size}
         height={size}
         viewBox={`0 0 ${size} ${size}`}
+        preserveAspectRatio="none"
+        data-plane-picker="transform"
         className={cn(
-          'cursor-crosshair select-none rounded-lg border bg-muted/30',
+          'cursor-crosshair touch-none select-none rounded-lg border bg-muted/30',
           isDragging ? 'cursor-grabbing' : 'cursor-crosshair'
         )}
         onPointerMove={handlePointerMove}
         onPointerDown={handlePointerDown}
         onPointerUp={handlePointerUp}
+        onPointerCancel={handlePointerUp}
+        onLostPointerCapture={handlePointerUp}
         onPointerLeave={handlePointerLeave}
       >
         {/* Background */}

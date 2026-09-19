@@ -1,6 +1,7 @@
 'use client';
 
-import { useEffect, useRef, useState } from 'react';
+import { useEffect, useRef, useState, type Ref } from 'react';
+import { createPortal } from 'react-dom';
 import { useTranslations } from 'next-intl';
 import {
   Download,
@@ -39,6 +40,8 @@ import {
 } from '@/hooks/useArtworkActions';
 
 interface ArtworkActionsProps {
+  /** Move only toolbar presentation; canvas dropzone and dialog state stay here. */
+  toolbarTarget?: HTMLElement | null;
   frameReady?: boolean;
   status: ArtworkActionStatus;
   cloudPhase?: CloudSyncPhase;
@@ -66,6 +69,7 @@ const ACTION_ICONS = {
 } satisfies Record<ArtworkOperation, typeof Save>;
 
 export function ArtworkActions({
+  toolbarTarget,
   frameReady = true,
   status,
   cloudPhase = 'idle',
@@ -83,13 +87,34 @@ export function ArtworkActions({
   const t = useTranslations('explore.artworkActions');
   const fileInputRef = useRef<HTMLInputElement>(null);
   const resetCancelRef = useRef<HTMLButtonElement>(null);
+  const saveButtonRef = useRef<HTMLButtonElement>(null);
+  const exportButtonRef = useRef<HTMLButtonElement>(null);
   const [saveOpen, setSaveOpen] = useState(false);
   const [saveName, setSaveName] = useState('');
   const [exportOpen, setExportOpen] = useState(false);
   const [exportScale, setExportScale] = useState(2);
   const [exportQuality, setExportQuality] = useState(9);
   const [dragging, setDragging] = useState(false);
+  const actionGridRef = useRef<HTMLDivElement>(null);
+  const [wrappedActions, setWrappedActions] = useState(false);
   const pending = status.phase === 'pending';
+
+  useEffect(() => {
+    if (!toolbarTarget || !actionGridRef.current) return;
+    const grid = actionGridRef.current;
+    let active = true;
+    const measure = () => {
+      if (!active) return;
+      const labels = [...grid.querySelectorAll('button > span')];
+      const width = labels.reduce((total, label) => total + Math.max(44, label.getBoundingClientRect().width + 8), 16);
+      setWrappedActions(width > grid.clientWidth);
+    };
+    measure();
+    const observer = typeof ResizeObserver === 'undefined' ? null : new ResizeObserver(measure);
+    observer?.observe(grid);
+    void document.fonts?.ready.then(measure);
+    return () => { active = false; observer?.disconnect(); };
+  }, [toolbarTarget, t]);
 
   useEffect(() => {
     if (status.phase === 'idle' || status.phase === 'pending') return;
@@ -135,13 +160,17 @@ export function ArtworkActions({
       ? t(`cloud.${cloudPhase}`)
       : null;
 
-  return (
-    <>
-      <div className="absolute right-3 top-3 z-20">
-        <div className="ml-auto flex w-fit max-w-full flex-wrap items-center gap-1 rounded-xl border border-white/15 bg-black/65 p-1.5 text-white shadow-lg backdrop-blur-md">
+  const toolbar = (
+      <div className={toolbarTarget ? 'w-full' : 'absolute right-3 top-3 z-20'}>
+        <div ref={actionGridRef} data-wrapped={wrappedActions}
+          style={toolbarTarget ? { gridTemplateColumns: wrappedActions ? 'repeat(3, minmax(0, 1fr))' : 'repeat(5, minmax(max-content, 1fr))' } : undefined}
+          className={toolbarTarget ? 'grid items-stretch gap-1' : 'ml-auto flex w-fit max-w-full flex-wrap items-center gap-1 rounded-xl border border-white/15 bg-black/65 p-1.5 text-white shadow-lg backdrop-blur-md'}>
           <ActionButton
+            compact={!!toolbarTarget}
+            shortLabel={t('save.short')}
             label={t('save.label')}
             operation="save"
+            buttonRef={saveButtonRef}
             disabled={!frameReady}
             status={status}
             onClick={() => {
@@ -151,20 +180,27 @@ export function ArtworkActions({
             }}
           />
           <ActionButton
+            compact={!!toolbarTarget}
+            shortLabel={t('download.short')}
             label={t('download.label')}
             operation="download"
             status={status}
             onClick={onDownload}
           />
           <ActionButton
+            compact={!!toolbarTarget}
+            shortLabel={t('import.short')}
             label={t('import.label')}
             operation="import"
             status={status}
             onClick={chooseFile}
           />
           <ActionButton
+            compact={!!toolbarTarget}
+            shortLabel={t('export.short')}
             label={t('export.label')}
             operation="export"
+            buttonRef={exportButtonRef}
             disabled={!frameReady}
             status={status}
             onClick={() => {
@@ -179,11 +215,12 @@ export function ArtworkActions({
                 variant="ghost"
                 size="icon"
                 disabled={pending}
-                className="size-11 text-white hover:bg-white/15 hover:text-white"
+                className={toolbarTarget ? 'h-auto min-h-11 w-full flex-col gap-1 whitespace-normal border-l px-1 py-1 text-xs' : 'size-11 text-white hover:bg-white/15 hover:text-white'}
                 aria-label={t('reset.label')}
                 title={t('reset.label')}
               >
                 <RotateCcw className="size-4" />
+                {toolbarTarget && <span className="whitespace-nowrap">{t('reset.short')}</span>}
               </Button>
             </AlertDialogTrigger>
             <AlertDialogContent
@@ -244,7 +281,11 @@ export function ArtworkActions({
           </div>
         )}
       </div>
+  );
 
+  return (
+    <>
+      {toolbarTarget ? createPortal(toolbar, toolbarTarget) : toolbar}
       <input
         ref={fileInputRef}
         type="file"
@@ -279,7 +320,8 @@ export function ArtworkActions({
       )}
 
       <Dialog open={saveOpen} onOpenChange={setSaveOpen}>
-        <DialogContent className="sm:max-w-md">
+        <DialogContent className="sm:max-w-md" aria-describedby={undefined}
+          onCloseAutoFocus={event => { event.preventDefault(); saveButtonRef.current?.focus({ preventScroll: true }); }}>
           <DialogHeader>
             <DialogTitle>{t('save.title')}</DialogTitle>
           </DialogHeader>
@@ -308,7 +350,8 @@ export function ArtworkActions({
       </Dialog>
 
       <Dialog open={exportOpen} onOpenChange={setExportOpen}>
-        <DialogContent className="sm:max-w-md">
+        <DialogContent className="sm:max-w-md" aria-describedby={undefined}
+          onCloseAutoFocus={event => { event.preventDefault(); exportButtonRef.current?.focus({ preventScroll: true }); }}>
           <DialogHeader>
             <DialogTitle>{t('export.title')}</DialogTitle>
           </DialogHeader>
@@ -349,12 +392,18 @@ export function ArtworkActions({
 }
 
 function ActionButton({
+  buttonRef,
+  compact = false,
+  shortLabel,
   disabled = false,
   label,
   operation,
   status,
   onClick,
 }: {
+  buttonRef?: Ref<HTMLButtonElement>;
+  compact?: boolean;
+  shortLabel?: string;
   disabled?: boolean;
   label: string;
   operation: ArtworkOperation;
@@ -366,11 +415,12 @@ function ActionButton({
 
   return (
     <Button
+      ref={buttonRef}
       type="button"
       variant="ghost"
       size="icon"
       disabled={disabled || status.phase === 'pending'}
-      className="size-11 text-white hover:bg-white/15 hover:text-white"
+      className={compact ? 'h-auto min-h-11 w-full flex-col gap-1 whitespace-normal px-1 py-1 text-xs' : 'size-11 text-white hover:bg-white/15 hover:text-white'}
       onClick={onClick}
       aria-label={label}
       title={label}
@@ -379,6 +429,7 @@ function ActionButton({
         ? <LoaderCircle className="size-4 animate-spin" />
         : <Icon className="size-4" />
       }
+      {compact && <span className="whitespace-nowrap">{shortLabel}</span>}
     </Button>
   );
 }

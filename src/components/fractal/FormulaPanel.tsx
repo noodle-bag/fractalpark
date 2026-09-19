@@ -96,7 +96,7 @@ export function FormulaPanel({
   return (
     <div className="space-y-4">
       {canEditJulia && (
-        <div className="space-y-3 rounded-lg border p-3 bg-muted/30">
+        <div className="explore-parameter-group space-y-3 rounded-lg border p-3 bg-muted/30">
           <div className="flex items-center justify-between">
           <Label htmlFor="julia-mode" className="text-sm font-medium leading-none">
             {t('controls.mode.label')}
@@ -153,7 +153,7 @@ export function FormulaPanel({
         onCustomFormulaSelect={onCustomFormulaSelect}
       />
 
-      <div className="space-y-4 rounded-lg border p-3 bg-muted/30">
+      <div className="explore-parameter-group space-y-4 rounded-lg border p-3 bg-muted/30">
         <div className="flex items-center justify-between">
           <label className="text-sm font-medium leading-none">
             {t('controls.formulaParameters')}
@@ -299,24 +299,26 @@ function FormulaComplexEditor({
   interaction?: NonNullable<ReturnType<typeof resolveParameterInteraction>>;
   initiallyOpen?: boolean;
 }) {
-  return (
-    <div className="space-y-2">
-      {interaction && (
-        <ParameterExplorationControl
-          value={inputs.value}
-          onChange={inputs.onCommit}
-          kind={interaction.kind}
-          hint={interaction.hint}
-          integer={interaction.integer}
-          label={inputs.slotName}
-          initiallyOpen={initiallyOpen}
-        />
-      )}
-      <div className={`grid gap-2 ${inputs.realOnly ? 'grid-cols-1' : 'grid-cols-2'}`}>
-        <FormulaComplexDraftInputs {...inputs} />
-      </div>
+  const preciseInputs = (
+    <div className={`grid gap-2 ${inputs.realOnly ? 'grid-cols-1' : 'grid-cols-2'}`}>
+      <FormulaComplexDraftInputs {...inputs} showCoordinateLabels={inputs.showCoordinateLabels || interaction?.kind === 'plane'} />
     </div>
   );
+  const exploration = interaction && (
+    <ParameterExplorationControl value={inputs.value} onChange={inputs.onCommit}
+      kind={interaction.kind} hint={interaction.hint} integer={interaction.integer}
+      label={inputs.slotName} initiallyOpen={initiallyOpen}>
+      {interaction.kind === 'plane' && <>
+        {preciseInputs}
+        <button type="button" className="min-h-11 w-full rounded-control border px-2 py-1 text-control hover:bg-accent focus-visible:outline-2 focus-visible:outline-ring"
+          aria-label={`${inputs.slotName} ${inputs.t('controls.resetComplex')}`}
+          onClick={() => inputs.onCommit([0, 0])}>
+          {inputs.t('controls.resetComplex')}
+        </button>
+      </>}
+    </ParameterExplorationControl>
+  );
+  return <div className="space-y-2">{exploration}{interaction?.kind !== 'plane' && preciseInputs}</div>;
 }
 
 function formulaComplexValuesEqual(

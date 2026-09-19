@@ -4,6 +4,16 @@ import { DEFAULT_FRACTAL_DOCUMENT } from '../../src/engine/document';
 const PUBLICATION_ID = '00000000-0000-4000-8000-000000000001';
 const MC_ID = 'cddc90de-e9bd-51ce-909b-b9b956bf419b';
 
+test.beforeEach(async ({ context }) => {
+  await context.route('**/*', async route => {
+    const url = new URL(route.request().url());
+    if (!['localhost', '127.0.0.1'].includes(url.hostname)) await route.abort();
+    else if (url.pathname.startsWith('/api/creation/')) await route.fulfill({ status: 401, json: { error: { code: 'unauthenticated' } } });
+    else if (url.pathname.startsWith('/_vercel/')) await route.fulfill({ status: 204 });
+    else await route.continue();
+  });
+});
+
 for (const locale of ['en', 'zh']) {
   test(`Community renders a published mc envelope without portable source (${locale})`, async ({ page }) => {
     const document = structuredClone(DEFAULT_FRACTAL_DOCUMENT);

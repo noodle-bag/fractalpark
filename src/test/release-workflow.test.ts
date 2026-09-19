@@ -34,6 +34,7 @@ describe('release workflow boundaries', () => {
       'src/engine/formulas/v1/**',
       'scripts/verify-julia-*.ts',
       'scripts/lib/julia-*.ts',
+      'scripts/lib/reviewed-release-package-inputs.ts',
       'src/test/setup.ts',
       'vitest.config.ts',
       '.github/workflows/ci.yml',
@@ -64,6 +65,8 @@ describe('release workflow boundaries', () => {
       'src/engine/**',
       'scripts/*formula-record-preview*',
       'scripts/*formula-record-masters*',
+      'scripts/lib/record-preview-source-bindings.ts',
+      'scripts/lib/reviewed-release-package-inputs.ts',
       'package-lock.json',
     ];
     for (const inputPath of requiredInputPaths) {

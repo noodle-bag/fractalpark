@@ -1431,6 +1431,7 @@
       "animation": "Animación"
     },
     "artworkActions": {
+      "toolbar": "Acciones de la obra",
       "common": {
         "cancel": "Cancelar"
       },
@@ -1444,6 +1445,7 @@
         "session-expired": "Tu sesión caducó. Inicia sesión de nuevo para seguir guardando."
       },
       "save": {
+        "short": "Guardar",
         "label": "Guardar en la Galería",
         "title": "Guardar obra",
         "name": "Nombre",
@@ -1452,13 +1454,16 @@
         "pending": "Guardando…"
       },
       "download": {
+        "short": "Descargar",
         "label": "Descargar proyecto"
       },
       "import": {
+        "short": "Importar",
         "label": "Importar proyecto",
         "dropHint": "Suelta un archivo .fractal.json aquí"
       },
       "export": {
+        "short": "Exportar",
         "label": "Exportar PNG",
         "title": "Exportar PNG",
         "scale": "Tamaño",
@@ -1471,6 +1476,7 @@
         "pending": "Renderizando…"
       },
       "reset": {
+        "short": "Restablecer",
         "label": "Restablecer obra",
         "title": "¿Restablecer todos los ajustes?",
         "description": "Esta obra volverá al preset predeterminado, incluidos su fórmula, vista, estilo, renderizado y ajustes de animación. Los elementos guardados en la galería y tu biblioteca de fórmulas personalizadas no se eliminarán.",
@@ -1610,6 +1616,15 @@
       }
     },
     "controls": {
+      "show": "Mostrar controles",
+      "expand": "Ampliar controles",
+      "collapse": "Contraer controles",
+      "positions": {
+        "peek": "Controles",
+        "half": "Ajustar",
+        "full": "Ajuste preciso"
+      },
+      "hide": "Ocultar controles",
       "colorScheme": "Esquema de color",
       "iterations": "Iteraciones",
       "position": "Posición",
@@ -1635,7 +1650,7 @@
         "firstTrigger": "Primera activación",
         "secondTrigger": "Segunda activación",
         "realOnly": "Solo la componente real afecta al resultado.",
-        "windowHint": "El rango es una ventana de exploración. Puedes introducir valores exactos abajo.",
+        "windowHint": "El rango es una ventana de exploración. La entrada numérica exacta sigue disponible.",
         "hints": {
           "feedback": "La componente real define la constante; la imaginaria define la realimentación.",
           "seedLimit": "Ambas componentes definen el valor inicial; la real también define el umbral de escape.",

@@ -44,7 +44,12 @@ beforeEach(() => {
     disconnect() {}
   });
 });
-afterEach(() => { cleanup(); vi.restoreAllMocks(); vi.unstubAllGlobals(); });
+afterEach(() => {
+  cleanup();
+  vi.useRealTimers();
+  vi.restoreAllMocks();
+  vi.unstubAllGlobals();
+});
 
 describe('Explore last-good-frame presentation', () => {
   it('does not request another frame on a readiness-only rerender without extra parameters', async () => {
@@ -79,6 +84,48 @@ describe('Explore last-good-frame presentation', () => {
     expect(canvas).toHaveAttribute('data-rendered-formula-id', 'tricorn');
     expect(drawImage).toHaveBeenCalledTimes(2);
     expect(onRenderComplete).toHaveBeenCalledTimes(2);
+  });
+
+  it('keeps one render in flight and replaces queued intermediate parameters with the latest', async () => {
+    const { rerender } = render(<ExploreWorkerFractalCanvas {...params} />);
+    const canvas = screen.getByTestId('fractal-canvas');
+    rerender(<ExploreWorkerFractalCanvas {...params} formula="burningShip" />);
+    rerender(<ExploreWorkerFractalCanvas {...params} formula="tricorn" />);
+
+    expect(worker.render).toHaveBeenCalledTimes(1);
+    expect(worker.cancel).not.toHaveBeenCalled();
+    expect(canvas).toHaveAttribute('data-render-status', 'pending');
+
+    const stale = await complete(0, 'mandelbrot');
+    expect(stale.close).toHaveBeenCalledOnce();
+    expect(drawImage).not.toHaveBeenCalled();
+    expect(worker.render).toHaveBeenCalledTimes(2);
+    expect(worker.render.mock.calls[1][0].params.formula).toBe('tricorn');
+
+    await complete(1, 'tricorn');
+    expect(drawImage).toHaveBeenCalledTimes(1);
+    expect(canvas).toHaveAttribute('data-rendered-formula-id', 'tricorn');
+    expect(canvas).toHaveAttribute('data-render-status', 'ready');
+    expect(worker.cancel).not.toHaveBeenCalled();
+  });
+
+  it('delays only the visible loading indicator while pending remains immediate', async () => {
+    vi.useFakeTimers();
+    render(<ExploreWorkerFractalCanvas {...params} />);
+    const canvas = screen.getByTestId('fractal-canvas');
+
+    expect(canvas).toHaveAttribute('data-render-status', 'pending');
+    expect(canvas).toHaveAttribute('aria-busy', 'true');
+    expect(canvas).toHaveAttribute('data-loading-indicator', 'hidden');
+    act(() => vi.advanceTimersByTime(149));
+    expect(canvas).toHaveAttribute('data-loading-indicator', 'hidden');
+    act(() => vi.advanceTimersByTime(1));
+    expect(canvas).toHaveAttribute('data-loading-indicator', 'visible');
+
+    await complete(0, 'mandelbrot');
+    expect(canvas).toHaveAttribute('data-render-status', 'ready');
+    expect(canvas).toHaveAttribute('aria-busy', 'false');
+    expect(canvas).toHaveAttribute('data-loading-indicator', 'hidden');
   });
 
   it('retains pixels and backing size during resize or failure and can recover', async () => {

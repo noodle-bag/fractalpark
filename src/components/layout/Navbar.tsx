@@ -40,6 +40,11 @@ export default function Navbar() {
   const t = useTranslations('common.nav');
   const pathname = usePathname();
   const [isOpen, setIsOpen] = React.useState(false);
+  const [menuPathname, setMenuPathname] = React.useState(pathname);
+  if (menuPathname !== pathname) {
+    setMenuPathname(pathname);
+    setIsOpen(false);
+  }
   const { config } = useLayout();
   const { navbarTransparent } = config;
 
@@ -57,13 +62,14 @@ export default function Navbar() {
     <header
       className={cn(
         'sticky top-0 z-50 w-full',
+        'h-12',
         navbarTransparent
           ? 'border-b border-white/10 bg-transparent'
           : 'border-b border-border bg-white/80 backdrop-blur-sm'
       )}
     >
       <div
-        className="flex h-12 w-full items-center px-4"
+        className="flex h-full w-full items-center px-4"
         data-testid="navbar-layout"
       >
         {/* Brand link goes to the canonical Explore landing; the tagline is
@@ -75,7 +81,7 @@ export default function Navbar() {
           <Link
             href="/explore"
             className={cn(
-              'shrink-0 text-xl font-bold tracking-tight',
+              'min-w-0 truncate text-xl font-bold tracking-tight',
               navbarTransparent ? 'text-white' : 'text-foreground'
             )}
           >
@@ -92,7 +98,7 @@ export default function Navbar() {
         </div>
 
         <div
-          className="ml-auto hidden shrink-0 justify-end lg:flex lg:items-center lg:gap-4"
+          className="ml-auto hidden shrink-0 justify-end lg:flex lg:items-center lg:gap-3"
           data-testid="navbar-desktop-actions"
         >
           <NavigationMenu>
@@ -102,6 +108,7 @@ export default function Navbar() {
                   <NavigationMenuLink asChild
                     className={cn(
                       navigationMenuTriggerStyle(),
+                      'px-3 text-control',
                       navbarTransparent && 'bg-transparent text-white hover:bg-white/10 hover:text-white',
                       isActive(link.href) && !navbarTransparent && 'bg-accent text-accent-foreground'
                     )}
@@ -155,19 +162,21 @@ export default function Navbar() {
                 <SheetTitle className="text-left pl-1">{SITE.name}</SheetTitle>
                 <p className="pl-1 text-left text-sm text-muted-foreground">{t('tagline')}</p>
               </SheetHeader>
-              <div className="mt-8 flex flex-col gap-4 pl-1">
+              <div className="mt-8 flex flex-col gap-1 pl-1">
                 {links.map((link) => (
                   <Link
                     key={link.href}
                     href={link.href}
                     className={cn(
-                      'text-lg font-medium transition-colors hover:text-primary pl-2',
+                      'flex min-h-11 items-center py-2 pl-2 text-control font-medium transition-colors hover:text-primary',
                       isActive(link.href)
                         ? 'text-primary'
                         : 'text-muted-foreground'
                     )}
                     aria-current={isActive(link.href) ? 'page' : undefined}
-                    onClick={() => setIsOpen(false)}
+                    // Keep the layer until navigation commits, so dismissing it
+                    // cannot start an Explore-only Back over the new route.
+                    onClick={() => { if (pathname === link.href) setIsOpen(false); }}
                   >
                     {link.rainbow ? (
                       <span className={rainbowTextClass}>{link.label}</span>

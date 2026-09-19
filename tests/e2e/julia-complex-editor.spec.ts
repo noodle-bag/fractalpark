@@ -13,7 +13,7 @@ test.describe('shared Julia complex editor', () => {
       const plane = page.getByRole('group', { name: 'Julia Parameter (c) Parameter plane' });
       await expect(real).toHaveValue('3.456789', { timeout: 45_000 });
       for (const name of ['Narrow', 'Widen', 'Show current value']) {
-        await plane.locator('..').getByRole('button', { name, exact: true }).click();
+        await page.getByRole('button', { name, exact: true }).click();
       }
       await expect(real).toHaveValue('3.456789');
       await expect(imaginary).toHaveValue('-4.56789');
@@ -21,10 +21,11 @@ test.describe('shared Julia complex editor', () => {
       await real.press('Enter');
       await expect(real).toHaveValue('3.456789');
       await expect(real).toHaveAttribute('aria-invalid', 'true');
+      await real.blur();
       await page.getByRole('button', { name: 'Julia Parameter (c) Reset to zero' }).click();
       await expect(real).toHaveValue('0');
       await expect(imaginary).toHaveValue('0');
-      await plane.locator('..').getByRole('button', { name: 'Show current value', exact: true }).click();
+      await page.getByRole('button', { name: 'Show current value', exact: true }).click();
       await plane.locator('svg').scrollIntoViewIfNeeded();
       const box = await plane.locator('svg').boundingBox();
       expect(box).not.toBeNull();
@@ -40,6 +41,7 @@ test.describe('shared Julia complex editor', () => {
       await real.fill('3.4567890123');
       await real.press('Enter');
       await expect(real).toHaveValue('3.4567890123');
+      await page.locator('.explore-artwork-disclosure > summary').click();
       const downloadEvent = page.waitForEvent('download');
       await page.getByRole('button', { name: 'Download Project', exact: true }).click();
       const download = await downloadEvent;

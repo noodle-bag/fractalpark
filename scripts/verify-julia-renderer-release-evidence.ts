@@ -167,5 +167,5 @@ for (const row of rows) {
 }
 
 console.log(
-  `PASS: ${rows.length} Julia renderer rows exact; reviewed 0.4.20 metadata transition only`,
+  `PASS: ${rows.length} Julia renderer rows exact; reviewed 0.4.21 release-input transition only`,
 );

@@ -20,7 +20,7 @@ const current = Object.freeze(
 );
 
 describe("Julia pre-GPU release source bindings", () => {
-  it("accepts only the reviewed 0.4.20 metadata transition", () => {
+  it("accepts only the reviewed 0.4.21 release-input transition", () => {
     expect(
       matchesJuliaPreGpuReleaseSourceBindings(
         preGpuAsset.sourceBindings,
@@ -35,7 +35,8 @@ describe("Julia pre-GPU release source bindings", () => {
     ["package dependency", packageJson.replace('"next": "16.1.6"', '"next": "16.1.7"'), lockJson],
     ["package script", packageJson.replace('"dev": "next dev"', '"dev": "next dev --turbo"'), lockJson],
     ["lock dependency", packageJson, lockJson.replace('"next": "16.1.6"', '"next": "16.1.7"')],
-    ["mixed release version", packageJson.replace('"version": "0.4.20"', '"version": "0.4.21"'), lockJson],
+    ["direct dependency", packageJson.replace('"sharp": "^0.34.5"', '"sharp": "0.0.0"'), lockJson],
+    ["mixed release version", packageJson.replace('"version": "0.4.21"', '"version": "0.4.22"'), lockJson],
   ])("rejects a changed %s", (_label, candidatePackage, candidateLock) => {
     expect(
       matchesJuliaPreGpuReleaseSourceBindings(

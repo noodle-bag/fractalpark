@@ -11,6 +11,7 @@ import { RenderPanel } from '@/components/fractal/RenderPanel';
 import { AnimationPanel } from '@/components/fractal/AnimationPanel';
 import { PositionSummaryPanel } from '@/components/fractal/PositionSummaryPanel';
 import { ArtworkActions } from '@/components/fractal/ArtworkActions';
+import { ExploreInspector } from '@/components/fractal/ExploreInspector';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { documentToExploreHref } from '@/lib/url-params';
 import { trackEvent } from '@/components/analytics/PageViewTracker';
@@ -19,9 +20,10 @@ import { useArtworkActions } from '@/hooks/useArtworkActions';
 import { useCloudDraftSession } from '@/hooks/useCloudDraftSession';
 import { useCloudFormulaLibrary } from '@/hooks/useCloudFormulaLibrary';
 import { useCloudSession } from '@/components/cloud/CloudSessionProvider';
+import { useLayout } from '@/components/layout/LayoutContext';
 import { resolveCustomFormula } from '@/lib/formula-resolver';
 import AnimatedFractalCanvas from '@/components/fractal/AnimatedFractalCanvas';
-import { AlertTriangle, ChevronDown, ChevronUp } from 'lucide-react';
+import { AlertTriangle, Maximize2, Minimize2 } from 'lucide-react';
 import {
   DEFAULT_FRACTAL_DOCUMENT,
   type FractalDocument,
@@ -113,6 +115,7 @@ function ExploreClient({ posterImage }: { posterImage?: string }) {
   const [resetFailed, setResetFailed] = useState(false);
   const searchParams = useSearchParams();
   const router = useRouter();
+  const { setConfig } = useLayout();
   const needsEntryDefaultRef = useRef(searchParams.size === 0);
   const initialHandoffIntentRef = useRef(
     parseEditorToExploreIntent(new URLSearchParams(searchParams.toString()))
@@ -127,6 +130,10 @@ function ExploreClient({ posterImage }: { posterImage?: string }) {
   const handoffConsumedRef = useRef<string | null>(null);
   const publishedHandoffConsumedRef = useRef<string | null>(null);
   const debounceRef = useRef<ReturnType<typeof setTimeout> | null>(null);
+  // Presentation consumes the existing URL writer's output, never re-encodes
+  // artwork state or applies its own identity/default qualification.
+  const projectedHrefRef = useRef<string | null>(null);
+  const getProjectedArtworkHref = useCallback(() => projectedHrefRef.current, []);
   const [publishedActionPendingCount, setPublishedActionPendingCount] = useState(0);
   const [publishedRestoreRevision, setPublishedRestoreRevision] = useState(0);
   const publishedPendingActionsRef = useRef(new Set<number>());
@@ -208,7 +215,10 @@ function ExploreClient({ posterImage }: { posterImage?: string }) {
     [document.animation?.viewKeyframes]
   );
   const [isPreviewPlaying, setIsPreviewPlaying] = useState(false);
-  const [isPanelCollapsed, setIsPanelCollapsed] = useState(false);
+  const [artworkToolbarTarget, setArtworkToolbarTarget] = useState<HTMLDivElement | null>(null);
+  const [activeTab, setActiveTab] = useState('formula');
+  const [inspectorCollapsed, setInspectorCollapsed] = useState(false);
+  const [workspaceFullscreen, setWorkspaceFullscreen] = useState(false);
   const [formulaResolution, setFormulaResolution] =
     useState<ExploreFormulaResolution | null>(null);
   const [publishedDescriptor, setPublishedDescriptor] =
@@ -236,6 +246,35 @@ function ExploreClient({ posterImage }: { posterImage?: string }) {
   const canvasElRef = useRef<HTMLCanvasElement | null>(null);
   const [isFrameReady, setIsFrameReady] = useState(false);
   const pickToastTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
+
+  useEffect(() => {
+    setConfig({ hideFooter: true });
+    return () => setConfig({ hideFooter: false });
+  }, [setConfig]);
+
+  useEffect(() => () => setConfig({ hideNavbar: false }), [setConfig]);
+
+  const enterWorkspaceFullscreen = useCallback(() => {
+    setInspectorCollapsed(true);
+    setWorkspaceFullscreen(true);
+    setConfig({ hideNavbar: true });
+  }, [setConfig]);
+
+  const exitWorkspaceFullscreen = useCallback(() => {
+    setInspectorCollapsed(false);
+    setWorkspaceFullscreen(false);
+    setConfig({ hideNavbar: false });
+  }, [setConfig]);
+
+  useEffect(() => {
+    if (!workspaceFullscreen) return;
+    const handleKeyDown = (event: KeyboardEvent) => {
+      if (event.key !== 'Escape' || event.defaultPrevented) return;
+      exitWorkspaceFullscreen();
+    };
+    globalThis.document.addEventListener('keydown', handleKeyDown);
+    return () => globalThis.document.removeEventListener('keydown', handleKeyDown);
+  }, [exitWorkspaceFullscreen, workspaceFullscreen]);
 
   // Cloud surfaces hoist above every consumer effect (deps evaluate at
   // render time — declaring them later would be a TDZ crash).
@@ -585,7 +624,9 @@ function ExploreClient({ posterImage }: { posterImage?: string }) {
         params.delete('draft');
       }
       const query = params.toString();
-      router.replace(`/${locale}/explore${query ? `?${query}` : ''}`, { scroll: false });
+      const href = `/${locale}/explore${query ? `?${query}` : ''}`;
+      projectedHrefRef.current = href;
+      router.replace(href, { scroll: false });
     },
     [locale, router],
   );
@@ -620,6 +661,7 @@ function ExploreClient({ posterImage }: { posterImage?: string }) {
       const withDraft = cloudDraft.identity
         ? `${newUrl}${newUrl.includes('?') ? '&' : '?'}draft=${cloudDraft.identity.id}`
         : newUrl;
+      projectedHrefRef.current = withDraft;
       router.replace(withDraft, { scroll: false });
     }, 500);
 
@@ -1311,12 +1353,13 @@ function ExploreClient({ posterImage }: { posterImage?: string }) {
 
   return (
     <div
-      className="flex h-[calc(100dvh-3rem)] flex-col overflow-hidden lg:flex-row"
+      className={`relative flex flex-col overflow-hidden ${workspaceFullscreen ? 'h-dvh' : 'h-[calc(100dvh-3rem)]'}`}
       data-formula-id={document.formula.formulaId}
+      data-inspector-collapsed={inspectorCollapsed}
       data-testid="explore-root"
     >
       <div
-        className={`relative bg-black lg:flex-1 ${isPanelCollapsed ? 'flex-1' : 'min-h-[50vh] lg:min-h-0'}`}
+        className={`explore-canvas-stage relative bg-black lg:absolute lg:inset-0 ${inspectorCollapsed ? 'min-h-0 flex-1' : 'h-1/2 min-h-0 shrink-0 lg:h-auto'}`}
         style={posterImage ? {
           backgroundImage: `url("${posterImage}")`,
           backgroundPosition: 'center',
@@ -1456,6 +1499,7 @@ function ExploreClient({ posterImage }: { posterImage?: string }) {
           </div>
         )}
         <ArtworkActions
+          toolbarTarget={artworkToolbarTarget}
           frameReady={isFormulaReady && publishedActionPendingCount === 0 && !isPreviewPlaying && isFrameReady}
           status={artworkActions.status}
           cloudPhase={artworkActions.cloudPhase}
@@ -1511,33 +1555,69 @@ function ExploreClient({ posterImage }: { posterImage?: string }) {
           conflictBusy={conflictBusy}
         />
 
-        {/* Mobile: toggle controls panel button */}
-        <button
-          className="lg:hidden absolute bottom-4 right-4 z-10 p-2 rounded-full bg-black/60 text-white shadow-lg"
-          onClick={() => setIsPanelCollapsed((v) => !v)}
-          aria-label={isPanelCollapsed ? 'Show controls' : 'Hide controls'}
-        >
-          {isPanelCollapsed
-            ? <ChevronDown className="h-5 w-5" />
-            : <ChevronUp className="h-5 w-5" />
-          }
-        </button>
+        {!inspectorCollapsed && (
+          <button
+            type="button"
+            className="absolute z-10 flex size-11 touch-manipulation items-center justify-center text-white focus-visible:outline-2 focus-visible:outline-white"
+            style={{
+              bottom: 'max(0.75rem, calc(env(safe-area-inset-bottom) + 0.25rem))',
+              right: 'max(0.75rem, calc(env(safe-area-inset-right) + 0.25rem))',
+            }}
+            onClick={enterWorkspaceFullscreen}
+            aria-label={t('controls.hide')}
+            aria-expanded="true"
+            aria-controls="explore-inspector-body"
+          >
+            <span className="flex size-9 items-center justify-center rounded-full bg-black/60 shadow-lg">
+              <Maximize2 aria-hidden className="size-5" />
+            </span>
+          </button>
+        )}
+
       </div>
 
-      <div className={`w-full lg:w-[30%] xl:w-[25%] border-t lg:border-t-0 lg:border-l bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60 overflow-y-auto ${isPanelCollapsed ? 'hidden lg:block' : ''}`}>
-        <div className="p-4">
-          <PositionSummaryPanel bounds={bounds} />
+      {inspectorCollapsed && (
+        <button
+          type="button"
+          data-testid="explore-controls-restore"
+          className="absolute z-30 flex size-11 touch-manipulation items-center justify-center text-white focus-visible:outline-2 focus-visible:outline-white"
+          style={{
+            bottom: 'max(0.75rem, calc(env(safe-area-inset-bottom) + 0.25rem))',
+            right: 'max(0.75rem, calc(env(safe-area-inset-right) + 0.25rem))',
+          }}
+          onPointerDown={(event) => {
+            if (event.pointerType !== 'mouse') exitWorkspaceFullscreen();
+          }}
+          onClick={exitWorkspaceFullscreen}
+          aria-label={t('controls.show')}
+          aria-expanded="false"
+          aria-controls="explore-inspector-body"
+        >
+          <span className="flex size-9 items-center justify-center rounded-full bg-black/60 shadow-lg">
+            <Minimize2 aria-hidden className="size-5" />
+          </span>
+        </button>
+      )}
 
-          <Tabs defaultValue="formula" className="w-full mt-4">
-            <TabsList className="w-full grid grid-cols-5 mb-4 h-auto!">
-              <TabsTrigger value="formula" className="h-auto! min-w-0 whitespace-normal wrap-anywhere hyphens-auto text-center leading-tight px-1 py-1.5 text-[11px]">{t('tabs.formula')}</TabsTrigger>
-              <TabsTrigger value="coloring" className="h-auto! min-w-0 whitespace-normal wrap-anywhere hyphens-auto text-center leading-tight px-1 py-1.5 text-[11px]">{t('tabs.coloring')}</TabsTrigger>
-              <TabsTrigger value="transform" className="h-auto! min-w-0 whitespace-normal wrap-anywhere hyphens-auto text-center leading-tight px-1 py-1.5 text-[11px]">{t('tabs.transform')}</TabsTrigger>
-              <TabsTrigger value="render" className="h-auto! min-w-0 whitespace-normal wrap-anywhere hyphens-auto text-center leading-tight px-1 py-1.5 text-[11px]">{t('tabs.render')}</TabsTrigger>
-              <TabsTrigger value="animation" className="h-auto! min-w-0 whitespace-normal wrap-anywhere hyphens-auto text-center leading-tight px-1 py-1.5 text-[11px]">{t('tabs.animation')}</TabsTrigger>
+      <ExploreInspector
+        collapsed={inspectorCollapsed}
+        getProjectedArtworkHref={getProjectedArtworkHref}
+        summary={<PositionSummaryPanel bounds={bounds} />}
+        onToolbarMount={setArtworkToolbarTarget}
+      >
+
+          <Tabs value={activeTab} onValueChange={setActiveTab} className="min-h-0 w-full flex-1">
+            <TabsList className="w-full shrink-0" onFocusCapture={event => {
+              (event.target as HTMLElement).scrollIntoView({ block: 'nearest', inline: 'nearest' });
+            }}>
+              <TabsTrigger value="formula">{t('tabs.formula')}</TabsTrigger>
+              <TabsTrigger value="coloring">{t('tabs.coloring')}</TabsTrigger>
+              <TabsTrigger value="transform">{t('tabs.transform')}</TabsTrigger>
+              <TabsTrigger value="render">{t('tabs.render')}</TabsTrigger>
+              <TabsTrigger value="animation">{t('tabs.animation')}</TabsTrigger>
             </TabsList>
             
-            <TabsContent value="formula" className="mt-0 space-y-4">
+            <TabsContent forceMount value="formula" className="mt-0 min-h-0 space-y-2 overflow-y-auto overscroll-contain data-[state=inactive]:hidden">
               <FormulaPanel
                 isJulia={isJulia}
                 juliaC={juliaC}
@@ -1560,7 +1640,7 @@ function ExploreClient({ posterImage }: { posterImage?: string }) {
               />
             </TabsContent>
 
-            <TabsContent value="coloring" className="mt-0 space-y-4">
+            <TabsContent forceMount value="coloring" className="mt-0 min-h-0 space-y-3 overflow-y-auto overscroll-contain data-[state=inactive]:hidden">
               <ColoringPanel
                 paletteIndex={paletteIndex}
                 outsideColoring={outsideColoring}
@@ -1578,7 +1658,7 @@ function ExploreClient({ posterImage }: { posterImage?: string }) {
               />
             </TabsContent>
 
-            <TabsContent value="transform" className="mt-0 space-y-4">
+            <TabsContent forceMount value="transform" className="mt-0 min-h-0 space-y-3 overflow-y-auto overscroll-contain data-[state=inactive]:hidden">
               <TransformPanel
                 transformId={transformId}
                 bounds={bounds}
@@ -1590,7 +1670,7 @@ function ExploreClient({ posterImage }: { posterImage?: string }) {
               />
             </TabsContent>
 
-            <TabsContent value="render" className="mt-0 space-y-4">
+            <TabsContent forceMount value="render" className="mt-0 min-h-0 space-y-3 overflow-y-auto overscroll-contain data-[state=inactive]:hidden">
               <RenderPanel
                 maxIterations={maxIterations}
                 useSSAA={useSSAA}
@@ -1603,7 +1683,7 @@ function ExploreClient({ posterImage }: { posterImage?: string }) {
               />
             </TabsContent>
 
-            <TabsContent value="animation" className="mt-0 space-y-4">
+            <TabsContent forceMount value="animation" className="mt-0 min-h-0 space-y-3 overflow-y-auto overscroll-contain data-[state=inactive]:hidden">
               <AnimationPanel
                 keyframes={keyframes}
                 bounds={bounds}
@@ -1614,8 +1694,7 @@ function ExploreClient({ posterImage }: { posterImage?: string }) {
               />
             </TabsContent>
           </Tabs>
-        </div>
-      </div>
+      </ExploreInspector>
     </div>
   );
 }

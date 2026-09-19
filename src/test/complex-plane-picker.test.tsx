@@ -45,7 +45,7 @@ describe('ComplexPlanePicker', () => {
       toJSON: () => ({}),
     });
 
-    fireEvent.pointerDown(picker, { clientX: 180, clientY: 100, pointerId: 1 });
+    fireEvent.pointerDown(picker, { clientX: 180, clientY: 100, pointerId: 1, isPrimary: true, button: 0 });
 
     expect(onChange).toHaveBeenCalledWith([1.6, 0]);
   });
@@ -94,6 +94,19 @@ describe('ComplexPlanePicker', () => {
     );
     fireEvent.click(screen.getByRole('button', { name: 'offset reset' }));
     expect(onChange).not.toHaveBeenCalled();
+  });
+
+  it('normalizes each axis independently on a rectangular mobile plane', () => {
+    const onChange = vi.fn();
+    renderPicker([0, 0], onChange);
+    const svg = screen.getByRole('group', { name: 'offset plane' }).querySelector('svg')!;
+    vi.spyOn(svg, 'getBoundingClientRect').mockReturnValue({
+      x: 16, y: 80, top: 80, right: 374, bottom: 300, left: 16,
+      width: 358, height: 220, toJSON: () => ({}),
+    });
+    fireEvent.pointerDown(svg, { clientX: 284.5, clientY: 135, pointerId: 1, isPrimary: true, button: 0 });
+    expect(onChange).toHaveBeenLastCalledWith([1, 1]);
+    expect(svg).toHaveAttribute('preserveAspectRatio', 'none');
   });
 
   it('displays an exact external value without mutating it into the picker range', () => {

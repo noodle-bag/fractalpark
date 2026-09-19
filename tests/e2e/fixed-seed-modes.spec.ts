@@ -100,6 +100,7 @@ for (const execution of executions.rows) {
     await expect(real).toHaveValue('0.2', { timeout: 45_000 });
     await expect(imaginary).toHaveValue('0.27');
     await expect(canvas).toHaveAttribute('data-render-status', 'ready', { timeout: 60_000 });
+    await page.locator('.explore-artwork-disclosure > summary').click();
     const downloadEvent = page.waitForEvent('download');
     await page.getByRole('button', { name: 'Download Project', exact: true }).click();
     const download = await downloadEvent;

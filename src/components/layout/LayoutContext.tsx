@@ -4,11 +4,13 @@ import { createContext, useContext, useState, useCallback } from 'react';
 
 export interface LayoutConfig {
   navbarTransparent: boolean;
+  hideNavbar: boolean;
   hideFooter: boolean;
 }
 
 const defaultConfig: LayoutConfig = {
   navbarTransparent: false,
+  hideNavbar: false,
   hideFooter: false,
 };
 

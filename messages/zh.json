@@ -1431,6 +1431,7 @@
       "animation": "动画"
     },
     "artworkActions": {
+      "toolbar": "作品操作",
       "common": {
         "cancel": "取消"
       },
@@ -1444,6 +1445,7 @@
         "session-expired": "会话已过期，请重新登录后再保存。"
       },
       "save": {
+        "short": "保存",
         "label": "保存到画廊",
         "title": "保存作品",
         "name": "名称",
@@ -1452,13 +1454,16 @@
         "pending": "保存中..."
       },
       "download": {
+        "short": "下载",
         "label": "下载项目"
       },
       "import": {
+        "short": "导入",
         "label": "导入项目",
         "dropHint": "将 .fractal.json 文件拖放到这里"
       },
       "export": {
+        "short": "导出",
         "label": "导出 PNG",
         "title": "导出 PNG",
         "scale": "尺寸",
@@ -1471,6 +1476,7 @@
         "pending": "渲染中..."
       },
       "reset": {
+        "short": "重置",
         "label": "重置作品",
         "title": "重置所有设置？",
         "description": "当前作品将恢复为默认预设，包括公式、视图、样式、渲染和动画设置。已保存到画廊的作品和自定义公式库不会被删除。",
@@ -1610,6 +1616,15 @@
       }
     },
     "controls": {
+      "show": "显示控制面板",
+      "expand": "展开控制面板",
+      "collapse": "收起控制面板",
+      "positions": {
+        "peek": "控制面板",
+        "half": "调参",
+        "full": "精调"
+      },
+      "hide": "隐藏控制面板",
       "colorScheme": "配色方案",
       "iterations": "迭代次数",
       "position": "位置信息",
@@ -1635,7 +1650,7 @@
         "firstTrigger": "第一次触发",
         "secondTrigger": "第二次触发",
         "realOnly": "只有实部影响结果。",
-        "windowHint": "此范围仅用于便捷探索，下方可精确输入。",
+        "windowHint": "此范围仅用于便捷探索，仍可精确输入数值。",
         "hints": {
           "feedback": "实部设置常量，虚部设置反馈系数。",
           "seedLimit": "两个分量共同设置初始值，实部还设置逃逸阈值。",

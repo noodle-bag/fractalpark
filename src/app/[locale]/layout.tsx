@@ -1,4 +1,5 @@
 import type { Metadata } from 'next';
+import { Geist, Geist_Mono } from 'next/font/google';
 import { notFound } from 'next/navigation';
 import { NextIntlClientProvider } from 'next-intl';
 import { getMessages, getTranslations, setRequestLocale } from 'next-intl/server';
@@ -12,6 +13,17 @@ import LayoutShell from '@/components/layout/LayoutShell';
 import { HTML_LANG, OG_LOCALE, SUPPORTED_LOCALES, type SupportedLocale } from '@/i18n/supported-locales';
 import { SITE } from '@/lib/site';
 import { websiteJsonLd, renderJsonLd } from '@/lib/json-ld';
+
+const geistSans = Geist({
+  subsets: ['latin'],
+  variable: '--font-geist-sans',
+  display: 'swap',
+});
+const geistMono = Geist_Mono({
+  subsets: ['latin'],
+  variable: '--font-geist-mono',
+  display: 'swap',
+});
 
 export const dynamicParams = true;
 
@@ -86,7 +98,7 @@ export default async function LocaleLayout({
   const messages = await getMessages();
 
   return (
-    <html lang={htmlLangForLocale(locale)}>
+    <html lang={htmlLangForLocale(locale)} className={`${geistSans.variable} ${geistMono.variable}`}>
       <body className="antialiased">
         {/* WebSite JSON-LD — site-wide entity declaration for AI crawlers & Google KG */}
         <script

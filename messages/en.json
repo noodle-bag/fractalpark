@@ -1431,6 +1431,7 @@
       "animation": "Animation"
     },
     "artworkActions": {
+      "toolbar": "Artwork actions",
       "common": {
         "cancel": "Cancel"
       },
@@ -1444,6 +1445,7 @@
         "session-expired": "Your session expired. Sign in again to keep saving."
       },
       "save": {
+        "short": "Save",
         "label": "Save to Gallery",
         "title": "Save Artwork",
         "name": "Name",
@@ -1452,13 +1454,16 @@
         "pending": "Saving..."
       },
       "download": {
+        "short": "Download",
         "label": "Download Project"
       },
       "import": {
+        "short": "Import",
         "label": "Import Project",
         "dropHint": "Drop a .fractal.json file here"
       },
       "export": {
+        "short": "Export",
         "label": "Export PNG",
         "title": "Export PNG",
         "scale": "Size",
@@ -1471,6 +1476,7 @@
         "pending": "Rendering..."
       },
       "reset": {
+        "short": "Reset",
         "label": "Reset Artwork",
         "title": "Reset all settings?",
         "description": "This artwork will return to the default preset, including its formula, view, style, render, and animation settings. Saved gallery items and your custom formula library will not be deleted.",
@@ -1610,6 +1616,15 @@
       }
     },
     "controls": {
+      "show": "Show controls",
+      "expand": "Expand controls",
+      "collapse": "Collapse controls",
+      "positions": {
+        "peek": "Controls",
+        "half": "Adjust",
+        "full": "Fine tune"
+      },
+      "hide": "Hide controls",
       "colorScheme": "Color Scheme",
       "iterations": "Iterations",
       "position": "Position",
@@ -1635,7 +1650,7 @@
         "firstTrigger": "First trigger",
         "secondTrigger": "Second trigger",
         "realOnly": "Only the real component affects the result.",
-        "windowHint": "The range is an exploration window. Exact input is available below.",
+        "windowHint": "The range is an exploration window. Exact numeric input remains available.",
         "hints": {
           "feedback": "The real component sets the constant; the imaginary component sets feedback.",
           "seedLimit": "Both components set the starting value; the real component also sets the escape threshold.",

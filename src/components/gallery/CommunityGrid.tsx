@@ -15,6 +15,7 @@ import { useCloudSession } from '@/components/cloud/CloudSessionProvider';
 import { ArtworkEnvelopePreview } from '@/components/gallery/ArtworkEnvelopePreview';
 import {
   GALLERY_CARD_LINK_CLASS,
+  GALLERY_CARD_TITLE_CLASS,
   GALLERY_PREVIEW_FRAME_CLASS,
 } from '@/components/gallery/gallery-card-styles';
 import {
@@ -82,7 +83,7 @@ export function CommunityGrid() {
                   loadEnvelope={async () => (await getCommunityPublication(item.id)).envelope}
                 />
               </div>
-              <h3 className="mt-3 truncate font-medium group-hover:underline">{item.title}</h3>
+              <h3 className={`${GALLERY_CARD_TITLE_CLASS} group-hover:underline`}>{item.title}</h3>
               <p className="mt-1 truncate text-sm text-muted-foreground">
                 {item.authorDisplayName}
               </p>
@@ -100,7 +101,7 @@ export function CommunityGrid() {
             type="button"
             onClick={() => void load(cursor)}
             disabled={loading}
-            className="rounded-md border px-4 py-2 text-sm font-medium transition-colors hover:bg-muted disabled:opacity-50"
+            className="min-h-11 min-w-11 rounded-md border px-4 py-2 text-control font-medium transition-colors hover:bg-muted disabled:opacity-50 md:min-h-9"
           >
             {loading ? t('loading') : t('loadMore')}
           </button>
