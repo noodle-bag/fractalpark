@@ -1,5 +1,35 @@
 # Changelog
 
+## 0.4.21 - Unreleased
+
+A more compact, canvas-first creation workspace with steadier parameter feedback and consistent desktop and mobile controls.
+
+### Added
+
+- Added an in-page Explore focus mode on desktop and mobile that expands the retained canvas, hides navigation and controls, and restores the same editing state by button or Escape where available.
+- Added a shared compact interface foundation with explicit typography, spacing, control, focus, and touch-target roles across Explore and related product surfaces.
+
+### Changed
+
+- Reworked Explore into a right-side desktop Inspector and a mobile split workspace, both open by default, while preserving the same canvas, renderer, active tab, drafts, keyframes, and artwork state.
+- Moved desktop artwork actions into the Inspector bar and mobile actions into an expanded-by-default disclosure; Save, project download/import, PNG export, and Reset retain their existing handlers and qualification gates.
+- Kept complete labels and all five tabs reachable across seven locales, narrow mobile widths, short landscape, and enlarged browser text.
+- Removed the persistent site footer from Explore so the canvas and controls own the creation workspace; legal pages remain available through the site navigation.
+
+### Fixed
+
+- Coalesced rapid parameter-render requests without throttling picker values, discarded stale frames, retained the last good canvas, and delayed the visible loading badge so short renders no longer flash it.
+- Fixed plane controls after pointer cancellation, lost capture, boundary exits, or additional touches while preserving precise numeric input and the final valid value.
+- Fixed delayed errors from superseded render workers interrupting the active render request.
+- Fixed mobile and desktop Explore fullscreen restoration, safe touch targets, canvas geometry, and the desktop Inspector returning on the correct side.
+- Fixed project imports with missing or invalid custom-formula sources replacing the current artwork; imports now complete validation and conflict preparation before registering formulas or loading a document.
+- Declared Sharp as a direct runtime dependency for CLI image scoring so clean installs provide the image decoder required by tests and production builds.
+
+### Compatibility notes
+
+- This release does not change Fractal Document or project Envelope schemas, formula mathematics, published formula assets, or cloud database migrations.
+- Existing artwork, formula identity, Julia qualification, animation, Gallery, Formula, and Drift source/rights contracts remain unchanged.
+
 ## 0.4.20 - 2026-09-12
 
 More reliable exploration and parameter editing, with clearer formula identities and consistent artwork playback.

@@ -22,7 +22,7 @@ function mutate(source: string, path: string[], value: unknown): string {
 }
 
 describe("historical Julia package input reconstruction", () => {
-  it("reconstructs exact sealed bytes with only the three reviewed root version changes", () => {
+  it("reconstructs exact sealed bytes from only the reviewed release-input changes", () => {
     const historical = reconstructHistoricalJuliaPackages(packageJson, lockJson);
     expect(Object.isFrozen(historical)).toBe(true);
     for (const path of ["package.json", "package-lock.json"] as const) {
@@ -34,9 +34,14 @@ describe("historical Julia package input reconstruction", () => {
     expect(historicalPackage.version).toBe("0.4.19");
     expect(historicalLock.version).toBe("0.4.19");
     expect(historicalLock.packages[""].version).toBe("0.4.19");
-    historicalPackage.version = "0.4.20";
-    historicalLock.version = "0.4.20";
-    historicalLock.packages[""].version = "0.4.20";
+    historicalPackage.version = "0.4.21";
+    historicalPackage.dependencies.sharp = "^0.34.5";
+    historicalLock.version = "0.4.21";
+    historicalLock.packages[""].version = "0.4.21";
+    historicalLock.packages[""].dependencies.sharp = "^0.34.5";
+    delete historicalLock.packages["node_modules/@img/colour"].optional;
+    delete historicalLock.packages["node_modules/sharp"].optional;
+    delete historicalLock.packages["node_modules/sharp/node_modules/semver"].optional;
     expect(historicalPackage).toEqual(JSON.parse(packageJson));
     expect(historicalLock).toEqual(JSON.parse(lockJson));
   });
@@ -54,8 +59,8 @@ describe("historical Julia package input reconstruction", () => {
     ["script", ["scripts", "build"], "echo changed"],
     ["engines", ["engines"], { node: "0" }],
     ["extra field", ["unreviewed"], true],
-    ["unknown version", ["version"], "0.4.21"],
-    ["mixed package version", ["version"], "0.4.19"],
+    ["unknown version", ["version"], "0.4.22"],
+    ["mixed package version", ["version"], "0.4.20"],
   ] as const)("rejects package %s changes", (_name, path, value) => {
     expect(() => reconstructHistoricalJuliaPackages(
       mutate(packageJson, [...path], value), lockJson,
@@ -69,8 +74,8 @@ describe("historical Julia package input reconstruction", () => {
     ["root dependency", ["packages", "", "dependencies", "next"], "0.0.0"],
     ["lock format", ["lockfileVersion"], 2],
     ["extra field", ["unreviewed"], true],
-    ["mixed top version", ["version"], "0.4.19"],
-    ["mixed root package version", ["packages", "", "version"], "0.4.19"],
+    ["mixed top version", ["version"], "0.4.20"],
+    ["mixed root package version", ["packages", "", "version"], "0.4.20"],
   ] as const)("rejects lock %s changes", (_name, path, value) => {
     expect(() => reconstructHistoricalJuliaPackages(
       packageJson, mutate(lockJson, [...path], value),
@@ -79,15 +84,15 @@ describe("historical Julia package input reconstruction", () => {
 
   it("rejects a coordinated but unreviewed application version bump", () => {
     expect(() => reconstructHistoricalJuliaPackages(
-      mutate(packageJson, ["version"], "0.4.21"),
-      mutate(mutate(lockJson, ["version"], "0.4.21"), ["packages", "", "version"], "0.4.21"),
+      mutate(packageJson, ["version"], "0.4.22"),
+      mutate(mutate(lockJson, ["version"], "0.4.22"), ["packages", "", "version"], "0.4.22"),
     )).toThrow("historical-julia-package-input-not-reviewed");
   });
 
   it("rejects whitespace and duplicate-key changes instead of normalizing JSON", () => {
     for (const changed of [
       `${packageJson} `,
-      packageJson.replace('"version": "0.4.20",', '"version": "forged", "version": "0.4.20",'),
+      packageJson.replace('"version": "0.4.21",', '"version": "forged", "version": "0.4.21",'),
     ]) expect(() => reconstructHistoricalJuliaPackages(changed, lockJson)).toThrow();
   });
 

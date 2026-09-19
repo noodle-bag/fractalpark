@@ -28,7 +28,7 @@ describe('release-candidate version facts', () => {
     const lock = readJson<LockMetadata>('package-lock.json');
     const changelog = readFileSync(join(process.cwd(), 'CHANGELOG.md'), 'utf8');
 
-    expect(pkg.version).toBe('0.4.20');
+    expect(pkg.version).toBe('0.4.21');
     expect(lock.version).toBe(pkg.version);
     expect(lock.packages['']?.version).toBe(pkg.version);
     expect(SITE.version).toBe(pkg.version);

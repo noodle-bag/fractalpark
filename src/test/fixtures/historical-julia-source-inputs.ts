@@ -2,15 +2,15 @@ import { createHash } from "node:crypto";
 import { readFileSync } from "node:fs";
 import { join } from "node:path";
 
+import {
+  reconstructReviewedReleasePackageInputs,
+  REVIEWED_0421_PACKAGE_HASHES,
+} from "../../../scripts/lib/reviewed-release-package-inputs";
+
 const HISTORICAL = Object.freeze({
   "package.json": "852c7b8eb594c0a4b54b947ed7712a32f69907234124ddccf7e2cce46cab268f",
   "package-lock.json": "c7fb57104902f454d6dc1c29e776eebab2c19a26d98dc2253fef84058a033168",
 });
-const METADATA_ONLY_0420 = Object.freeze({
-  "package.json": "b14572c91c20a150bf28b5b0bcffc431001577e38b62d57f2bf50ff682007350",
-  "package-lock.json": "476f0e862892ed77e4c14d0df1f0f86191a8ad131ae7165bf80c6c2922e03d9f",
-});
-
 function sha256(source: string): string {
   return createHash("sha256").update(source).digest("hex");
 }
@@ -30,27 +30,15 @@ export function reconstructHistoricalJuliaPackages(
   // Authenticate the complete pair before changing any bytes. In particular,
   // dependency versions, scripts, formatting and mixed root versions cannot pass.
   if (
-    packageHash !== METADATA_ONLY_0420["package.json"] ||
-    lockHash !== METADATA_ONLY_0420["package-lock.json"]
+    packageHash !== REVIEWED_0421_PACKAGE_HASHES["package.json"] ||
+    lockHash !== REVIEWED_0421_PACKAGE_HASHES["package-lock.json"]
   ) throw new Error("historical-julia-package-input-not-reviewed");
 
-  const historicalPackage = packageJson.replace(
-    '\n  "version": "0.4.20",', '\n  "version": "0.4.19",',
-  );
-  const historicalLock = lockJson.replace(
-    '\n  "version": "0.4.20",', '\n  "version": "0.4.19",',
-  ).replace(
-    '    "": {\n      "name": "fractalpark",\n      "version": "0.4.20",',
-    '    "": {\n      "name": "fractalpark",\n      "version": "0.4.19",',
-  );
-  if (
-    sha256(historicalPackage) !== HISTORICAL["package.json"] ||
-    sha256(historicalLock) !== HISTORICAL["package-lock.json"]
-  ) throw new Error("historical-julia-package-reconstruction-invalid");
-  return Object.freeze({
-    "package.json": historicalPackage,
-    "package-lock.json": historicalLock,
-  });
+  const historical = reconstructReviewedReleasePackageInputs(packageJson, lockJson);
+  if (historical === null) {
+    throw new Error("historical-julia-package-reconstruction-invalid");
+  }
+  return historical;
 }
 
 export function readHistoricalJuliaSourceInput(relativePath: string): string {
