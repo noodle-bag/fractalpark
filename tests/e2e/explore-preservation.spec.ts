@@ -17,7 +17,7 @@ async function isolate(context: BrowserContext) {
 test.beforeEach(async ({ context }) => isolate(context));
 
 async function ready(page: Page, formulaId?: string) {
-  const canvas = page.getByTestId('fractal-canvas');
+  const canvas = page.getByRole('main').getByTestId('fractal-canvas');
   if (formulaId) await expect(page.getByTestId('explore-root')).toHaveAttribute('data-formula-id', formulaId, { timeout: 45_000 });
   await expect(canvas).toHaveAttribute('data-render-status', 'ready', { timeout: 45_000 });
   const id = await page.getByTestId('explore-root').getAttribute('data-formula-id');
@@ -167,6 +167,30 @@ test('a malformed project leaves the qualified artwork and its saved values unch
   await page.getByRole('button', { name: 'Import Project', exact: true }).click();
   await (await choosing).setFiles({ name: 'invalid.fractal.json', mimeType: 'application/json', buffer: Buffer.from('{ invalid') });
   await expect(page.getByText('The selected file is not valid JSON.')).toBeVisible();
+  await ready(page, before.envelope.document.formula.formulaId);
+  const after = await downloadEnvelope(page);
+  expect(after.envelope).toEqual(before.envelope);
+});
+
+test('a project missing its custom formula source leaves the current artwork unchanged', async ({ page }) => {
+  await page.goto('/en/explore');
+  await ready(page);
+  const before = await downloadEnvelope(page);
+  const missingSource = structuredClone(before.envelope);
+  missingSource.document.formula.formulaId = 'custom-missing';
+  delete missingSource.document.assets;
+  delete missingSource.assets;
+
+  await showArtworkActions(page, 'Import Project');
+  const choosing = page.waitForEvent('filechooser');
+  await page.getByRole('button', { name: 'Import Project', exact: true }).click();
+  await (await choosing).setFiles({
+    name: 'missing-source.fractal.json',
+    mimeType: 'application/json',
+    buffer: Buffer.from(JSON.stringify(missingSource)),
+  });
+
+  await expect(page.getByText('The project is missing its custom formula source.')).toBeVisible();
   await ready(page, before.envelope.document.formula.formulaId);
   const after = await downloadEnvelope(page);
   expect(after.envelope).toEqual(before.envelope);

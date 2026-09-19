@@ -14,6 +14,7 @@ import {
 import { captureThumbnail } from '@/lib/capture-thumbnail';
 import {
   readEffectiveFormulaAssets,
+  readSessionFormulaAssets,
   resolveCustomFormula,
 } from '@/lib/formula-resolver';
 import { exportFractal } from '@/lib/export-fractal';
@@ -23,8 +24,8 @@ import {
   createFractalProjectFilename,
   downloadFractalProjectFile,
   parseFractalProjectJson,
+  prepareFractalProjectImport,
   serializeFractalProject,
-  sha256Hex,
   type FractalProjectErrorCode,
   type LocalFormulaAsset,
 } from '@/lib/fractal-file';
@@ -275,15 +276,27 @@ export function useArtworkActions({
         });
         return false;
       }
-      // Transient import (v0.4.16): formula assets register in memory for
-      // this session only — nothing touches local formula storage. Hashes
-      // are verified first (review follow-up): bytes must match the
-      // envelope's claim before anything registers.
-      for (const asset of parsed.value.envelope.assets?.formulas ?? []) {
-        if (asset.hash && asset.hash !== (await sha256Hex(asset.source))) {
-          fail('import', 'invalid-envelope');
-          return false;
-        }
+      // Prepare the complete transaction before registering a formula or
+      // replacing the current document. This rejects missing sources, hash
+      // mismatches, compile failures, and reference conflicts atomically.
+      const prepared = await prepareFractalProjectImport(
+        parsed.value.envelope,
+        readSessionFormulaAssets(),
+      );
+      if (!prepared.success) {
+        const code = prepared.errors[0]?.code ?? 'invalid-envelope';
+        fail('import', code);
+        trackEvent('project_import_failed', {
+          error_code: code,
+          file_size_bucket: getProjectFileSizeBucket(file.size),
+          ...getArtworkAnalyticsContext(document),
+        });
+        return false;
+      }
+      // Transient import (v0.4.16): prepared formula assets register in
+      // memory for this session only; no browser-persisted formula store is
+      // mutated. Preparation has already compiled every asset register:false.
+      for (const asset of prepared.value.formulasToAdd) {
         const resolved = resolveCustomFormula({
           id: asset.id,
           source: asset.source,
@@ -297,9 +310,9 @@ export function useArtworkActions({
       trackEvent('project_import', {
         custom_formula_count: parsed.value.envelope.assets?.formulas?.length ?? 0,
         file_size_bucket: getProjectFileSizeBucket(file.size),
-        ...getArtworkAnalyticsContext(parsed.value.envelope.document),
+        ...getArtworkAnalyticsContext(prepared.value.document),
       });
-      loadDocument(parsed.value.envelope.document);
+      loadDocument(prepared.value.document);
       succeed('import');
       return true;
     } catch {
