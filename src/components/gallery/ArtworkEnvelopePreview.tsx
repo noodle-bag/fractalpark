@@ -30,8 +30,13 @@ interface ArtworkEnvelopePreviewProps {
   className?: string;
 }
 
-const PREVIEW_WIDTH = 640;
-const PREVIEW_HEIGHT = 400;
+// Render static previews at 2x the 640x400 logical preview size. The browser
+// downsamples this image into the 16:10 card, which preserves fine fractal
+// edges on high-density displays without paying the additional 4-tap shader
+// SSAA cost for every near-viewport artwork.
+const PREVIEW_WIDTH = 1280;
+const PREVIEW_HEIGHT = 800;
+const PREVIEW_JPEG_QUALITY = 0.92;
 const MAX_PREVIEW_ITERATIONS = 600;
 const MAX_CACHED_PREVIEWS = 72;
 const PREVIEW_LOAD_TIMEOUT_MS = 20_000;
@@ -92,7 +97,7 @@ async function renderEnvelopePreview(
         useSSAA: false,
       });
       gl.finish();
-      return canvas.toDataURL('image/jpeg', 0.86);
+      return canvas.toDataURL('image/jpeg', PREVIEW_JPEG_QUALITY);
     } finally {
       renderer.dispose();
       gl.getExtension?.('WEBGL_lose_context')?.loseContext();

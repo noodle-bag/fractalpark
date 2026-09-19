@@ -53,11 +53,13 @@ class ImmediateIntersectionObserver implements IntersectionObserver {
 }
 
 const fakeGl = { finish: vi.fn() } as unknown as WebGLRenderingContext;
+let getContextMock: ReturnType<typeof vi.spyOn>;
+let toDataUrlMock: ReturnType<typeof vi.spyOn>;
 
 beforeEach(() => {
   vi.stubGlobal('IntersectionObserver', ImmediateIntersectionObserver);
-  vi.spyOn(HTMLCanvasElement.prototype, 'getContext').mockReturnValue(fakeGl);
-  vi.spyOn(HTMLCanvasElement.prototype, 'toDataURL').mockReturnValue(
+  getContextMock = vi.spyOn(HTMLCanvasElement.prototype, 'getContext').mockReturnValue(fakeGl);
+  toDataUrlMock = vi.spyOn(HTMLCanvasElement.prototype, 'toDataURL').mockReturnValue(
     'data:image/jpeg;base64,rendered-fractal',
   );
   rendererMocks.precompileDefault.mockClear();
@@ -98,6 +100,11 @@ describe('ArtworkEnvelopePreview', () => {
         useSSAA: false,
       }),
     );
+    const renderCanvas = getContextMock.mock.instances[0] as HTMLCanvasElement | undefined;
+    expect(renderCanvas).toBeDefined();
+    expect(renderCanvas?.width).toBe(1280);
+    expect(renderCanvas?.height).toBe(800);
+    expect(toDataUrlMock).toHaveBeenCalledWith('image/jpeg', 0.92);
     expect(rendererMocks.dispose).toHaveBeenCalledTimes(1);
     expect(container.querySelector('img')).toHaveAttribute(
       'src',

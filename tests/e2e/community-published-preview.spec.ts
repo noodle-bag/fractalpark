@@ -56,6 +56,9 @@ for (const locale of ['en', 'zh']) {
     await expect(preview).toHaveAttribute('data-preview-state', 'ready', { timeout: 30_000 });
     const img = preview.locator('img');
     await expect(img).toHaveAttribute('src', /^data:image\/jpeg;base64,/);
+    await expect
+      .poll(() => img.evaluate((element: HTMLImageElement) => [element.naturalWidth, element.naturalHeight]))
+      .toEqual([1280, 800]);
     const colors = await img.evaluate(async (element: HTMLImageElement) => {
       await element.decode();
       const canvas = window.document.createElement('canvas');
