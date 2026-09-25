@@ -4,7 +4,7 @@ import { join } from "node:path";
 
 import {
   reconstructReviewedReleasePackageInputs,
-  REVIEWED_0421_PACKAGE_HASHES,
+  REVIEWED_0422_PACKAGE_HASHES,
 } from "../../../scripts/lib/reviewed-release-package-inputs";
 
 const HISTORICAL = Object.freeze({
@@ -30,8 +30,8 @@ export function reconstructHistoricalJuliaPackages(
   // Authenticate the complete pair before changing any bytes. In particular,
   // dependency versions, scripts, formatting and mixed root versions cannot pass.
   if (
-    packageHash !== REVIEWED_0421_PACKAGE_HASHES["package.json"] ||
-    lockHash !== REVIEWED_0421_PACKAGE_HASHES["package-lock.json"]
+    packageHash !== REVIEWED_0422_PACKAGE_HASHES["package.json"] ||
+    lockHash !== REVIEWED_0422_PACKAGE_HASHES["package-lock.json"]
   ) throw new Error("historical-julia-package-input-not-reviewed");
 
   const historical = reconstructReviewedReleasePackageInputs(packageJson, lockJson);

@@ -1,4 +1,5 @@
 import { expect, test, type Page } from '@playwright/test';
+import { readFile } from 'node:fs/promises';
 import { SUPPORTED_LOCALES } from '../../src/i18n/supported-locales';
 
 test.beforeEach(async ({ context }) => {
@@ -134,6 +135,30 @@ test('animation speed snaps across pointer and keyboard input and restores from 
   await page.getByRole('tab', { name: 'Animation', exact: true }).last().click();
   await expect(page.getByRole('slider', { name: 'Playback speed', exact: true })).toHaveAttribute('aria-valuetext', '4×');
   expect(errors).toEqual([]);
+});
+
+test('Project download and import round-trip the animation speed without changing the media export entry', async ({ page }) => {
+  test.setTimeout(60_000);
+  await page.goto('/en/explore?spd=4');
+  await ready(page);
+  await page.getByRole('tab', { name: 'Animation', exact: true }).last().click();
+  const slider = page.getByRole('slider', { name: 'Playback speed', exact: true });
+  await expect(slider).toHaveAttribute('aria-valuetext', '4×');
+
+  const downloadPromise = page.waitForEvent('download');
+  await page.getByRole('button', { name: 'Download Project', exact: true }).click();
+  const download = await downloadPromise;
+  expect(download.suggestedFilename()).toMatch(/\.fractal\.json$/);
+  const path = await download.path();
+  expect(path).not.toBeNull();
+  const envelope = JSON.parse(await readFile(path!, 'utf8'));
+  expect(envelope.document.animation.speed).toBe(4);
+
+  await slider.press('Home');
+  await expect(slider).toHaveAttribute('aria-valuetext', '0.25×');
+  await page.locator('input[type="file"][accept*=".fractal.json"]').setInputFiles(path!);
+  await expect(slider).toHaveAttribute('aria-valuetext', '4×');
+  await expect(page.getByRole('button', { name: 'Export Media', exact: true })).toBeEnabled();
 });
 
 test('animation export workspace exposes approved profiles, summary and a real current-frame preview', async ({ page }) => {

@@ -1,6 +1,6 @@
 import {
   reconstructReviewedReleasePackageInputs,
-  REVIEWED_0421_PACKAGE_HASHES,
+  REVIEWED_0422_PACKAGE_HASHES,
   SEALED_RELEASE_PACKAGE_HASHES,
 } from "./reviewed-release-package-inputs";
 
@@ -39,9 +39,9 @@ export function matchesSealedJuliaReleaseSourceBindings(
       (key === "package.json" || key === "package-lock.json") &&
       digest === SEALED_RELEASE_PACKAGE_HASHES[key]
     ) ||
-    current["package.json"] !== REVIEWED_0421_PACKAGE_HASHES["package.json"] ||
+    current["package.json"] !== REVIEWED_0422_PACKAGE_HASHES["package.json"] ||
     current["package-lock.json"] !==
-      REVIEWED_0421_PACKAGE_HASHES["package-lock.json"]
+      REVIEWED_0422_PACKAGE_HASHES["package-lock.json"]
   ) return false;
 
   return reconstructReviewedReleasePackageInputs(packageJson, lockJson) !== null;

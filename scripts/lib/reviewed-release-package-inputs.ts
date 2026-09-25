@@ -10,6 +10,11 @@ export const REVIEWED_0421_PACKAGE_HASHES = Object.freeze({
   "package-lock.json": "0a7dac65199459ad6aebeefa56c659e1d99bab9d5c8bc2aca081c773cdae6615",
 });
 
+export const REVIEWED_0422_PACKAGE_HASHES = Object.freeze({
+  "package.json": "b1f60fa08eff17468b99d8a6502b5d280c326486526fa22ea21062e0498c5444",
+  "package-lock.json": "426e972ea83ae14ee26cc920de5c6f3f9e8a105cc63a62791b275bcefe60f125",
+});
+
 export function sha256ReleaseInput(source: string): string {
   return createHash("sha256").update(source).digest("hex");
 }
@@ -36,23 +41,73 @@ function restoreOptionalFlag(
   return `${lockJson.slice(0, start)}${restored}${lockJson.slice(end)}`;
 }
 
+function removeLockPackageBlock(lockJson: string, packagePath: string): string {
+  const header = `    "${packagePath}": {`;
+  const start = lockJson.indexOf(header);
+  if (start < 0) return lockJson;
+  const next = lockJson.indexOf('\n    "node_modules/', start + header.length);
+  const end = next < 0 ? lockJson.length : next + 1;
+  return `${lockJson.slice(0, start)}${lockJson.slice(end)}`;
+}
+
+/** Removes only the exact reviewed 0.4.22 media-export dependency transition. */
+export function reconstructReviewed0421PackageInputs(
+  packageJson: string,
+  lockJson: string,
+): Readonly<Record<"package.json" | "package-lock.json", string>> | null {
+  if (
+    sha256ReleaseInput(packageJson) !== REVIEWED_0422_PACKAGE_HASHES["package.json"] ||
+    sha256ReleaseInput(lockJson) !== REVIEWED_0422_PACKAGE_HASHES["package-lock.json"]
+  ) return null;
+
+  const reviewedPackage = packageJson.replace('    "mediabunny": "^1.59.1",\n', '');
+  let reviewedLock = lockJson.replace('        "mediabunny": "^1.59.1",\n', '');
+  for (const packagePath of [
+    "node_modules/@types/dom-mediacapture-transform",
+    "node_modules/@types/dom-webcodecs",
+    "node_modules/mediabunny",
+  ]) reviewedLock = removeLockPackageBlock(reviewedLock, packagePath);
+
+  if (
+    sha256ReleaseInput(reviewedPackage) !== REVIEWED_0421_PACKAGE_HASHES["package.json"] ||
+    sha256ReleaseInput(reviewedLock) !== REVIEWED_0421_PACKAGE_HASHES["package-lock.json"]
+  ) return null;
+  return Object.freeze({
+    "package.json": reviewedPackage,
+    "package-lock.json": reviewedLock,
+  });
+}
+
 /**
  * Reconstructs the sealed 0.4.19 package inputs from the exact reviewed
- * 0.4.21 pair. No generated authority or published asset is rewritten.
+ * 0.4.21 pair or its exact reviewed 0.4.22 media-export successor. No
+ * generated authority or published asset is rewritten.
  */
 export function reconstructReviewedReleasePackageInputs(
   packageJson: string,
   lockJson: string,
 ): Readonly<Record<keyof typeof SEALED_RELEASE_PACKAGE_HASHES, string>> | null {
+  const packageHash = sha256ReleaseInput(packageJson);
+  const lockHash = sha256ReleaseInput(lockJson);
+  let reviewedPackage = packageJson;
+  let reviewedLock = lockJson;
   if (
-    sha256ReleaseInput(packageJson) !== REVIEWED_0421_PACKAGE_HASHES["package.json"] ||
-    sha256ReleaseInput(lockJson) !== REVIEWED_0421_PACKAGE_HASHES["package-lock.json"]
+    packageHash === REVIEWED_0422_PACKAGE_HASHES["package.json"] &&
+    lockHash === REVIEWED_0422_PACKAGE_HASHES["package-lock.json"]
+  ) {
+    const reconstructed = reconstructReviewed0421PackageInputs(packageJson, lockJson);
+    if (!reconstructed) return null;
+    reviewedPackage = reconstructed["package.json"];
+    reviewedLock = reconstructed["package-lock.json"];
+  } else if (
+    packageHash !== REVIEWED_0421_PACKAGE_HASHES["package.json"] ||
+    lockHash !== REVIEWED_0421_PACKAGE_HASHES["package-lock.json"]
   ) return null;
 
-  const sealedPackage = packageJson
+  const sealedPackage = reviewedPackage
     .replace('\n  "version": "0.4.21",', '\n  "version": "0.4.19",')
     .replace('    "sharp": "^0.34.5",\n', '');
-  let sealedLock = lockJson
+  let sealedLock = reviewedLock
     .replace('\n  "version": "0.4.21",', '\n  "version": "0.4.19",')
     .replace('      "version": "0.4.21",', '      "version": "0.4.19",')
     .replace('        "sharp": "^0.34.5",\n', '');

@@ -20,7 +20,7 @@ const current = Object.freeze(
 );
 
 describe("Julia pre-GPU release source bindings", () => {
-  it("accepts only the reviewed 0.4.21 release-input transition", () => {
+  it("accepts only the reviewed 0.4.22 release-input transition", () => {
     expect(
       matchesJuliaPreGpuReleaseSourceBindings(
         preGpuAsset.sourceBindings,
