@@ -37,6 +37,7 @@ export type MediaExportJobPhase =
 export const MEDIA_EXPORT_LIMITS = Object.freeze({
   imageMaxSide: 8192,
   imageMaxPixels: 16_777_216,
+  imageMaxSampleWork: 150_994_944,
   animationMaxSide: 3840,
   animationMaxPixels: 8_294_400,
   animationMaxFps: 60,
@@ -175,6 +176,8 @@ function timestampForFilename(createdAt: number): string {
   return new Date(createdAt).toISOString().replace(/[:.]/g, '-').slice(0, 19);
 }
 
+const MEDIA_EXPORT_FILENAME_MAX_LENGTH = 140;
+
 export function createMediaExportFilename(
   input: Pick<MediaExportRequestInput, 'kind' | 'width' | 'height' | 'createdAt'> & {
     fps?: number;
@@ -182,10 +185,13 @@ export function createMediaExportFilename(
     name?: string;
   },
 ): string {
-  const base = sanitizeMediaExportBasename(input.name);
   const dimensions = `${input.width}x${input.height}`;
   const fps = input.kind === 'animation' ? `-${input.fps}fps` : '';
-  return `${base}-${dimensions}${fps}-${timestampForFilename(input.createdAt)}.${input.format === 'jpeg' ? 'jpg' : input.format}`;
+  const suffix = `-${dimensions}${fps}-${timestampForFilename(input.createdAt)}.${input.format === 'jpeg' ? 'jpg' : input.format}`;
+  const base = sanitizeMediaExportBasename(input.name)
+    .slice(0, Math.max(1, MEDIA_EXPORT_FILENAME_MAX_LENGTH - suffix.length))
+    .replace(TRAILING_DOTS_OR_SPACES, '') || 'fractalpark';
+  return `${base}${suffix}`;
 }
 
 export function createMediaExportRequest(
@@ -247,11 +253,12 @@ export function preflightMediaExportRequest(
       request.width > MEDIA_EXPORT_LIMITS.imageMaxSide
       || request.height > MEDIA_EXPORT_LIMITS.imageMaxSide
       || outputPixels > MEDIA_EXPORT_LIMITS.imageMaxPixels
+      || outputPixels * renderSamples > MEDIA_EXPORT_LIMITS.imageMaxSampleWork
     ) return { ok: false, code: 'resource-limit' };
   } else {
     const baseDuration = request.range.end - request.range.start;
     const effectiveDuration = baseDuration / request.speed;
-    const frameCount = Math.ceil(effectiveDuration * request.fps);
+    const frameCount = Math.max(1, Math.ceil(effectiveDuration * request.fps - Number.EPSILON));
     const rawQueueBytes = outputPixels * 4 * MEDIA_EXPORT_LIMITS.animationRawQueueDepth;
     const estimatedEncodedBytes = Math.ceil(request.bitrate * effectiveDuration / 8);
     if (

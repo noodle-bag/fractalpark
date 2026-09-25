@@ -59,7 +59,7 @@ An Export request is an immutable snapshot of:
 
 - the recovered artwork Document and supported formula assets;
 - selected kind and format;
-- exact width, height, and, for animation, frame rate and range;
+- exact width, height, and, for animation, frame rate and the resolved full-loop range;
 - render quality, format-specific encoding quality, and background;
 - normalized composition;
 - animation speed when applicable;
@@ -112,6 +112,10 @@ the dimension fields. Within those hard limits, v1 adds no soft size warning or
 second confirmation. Render sampling remains subject to a separate internal
 budget and must never reduce the confirmed output pixels silently.
 
+Both limits are inclusive and apply to presets and custom values. A computed
+`Current canvas` preset that exceeds either limit is disabled with its computed
+pixels and reason; it is not clamped to a different size.
+
 ### Render quality
 
 Render quality is independent from dimensions and lossy encoding quality:
@@ -125,6 +129,11 @@ Render quality is independent from dimensions and lossy encoding quality:
 
 `High` is the default. The existing artwork Render toggle corresponds to
 `Standard`; it does not redefine the Export request.
+
+Image preflight also requires `outputPixels * taps <= 150,994,944`
+(`4096^2 * 9`). A quality option that exceeds this budget is disabled in place;
+a request that becomes over-budget fails closed. Pixels, taps, and composition
+are never reduced silently.
 
 ## Animation contract
 
@@ -148,12 +157,13 @@ container. It must not change the requested container, dimensions, frame rate,
 duration, or composition.
 
 Animation v1 is opaque and composites onto the selected background before
-encoding. The Slice 0 prototype qualifies reference targets of `12 Mbps` for
-`1920x1080 / 60 FPS` and `40 Mbps` for `3840x2160 / 60 FPS`; it does not by
-itself qualify a user-facing quality ladder. Before runtime activation, every
-exposed video-quality preset must have a format/profile-specific bitrate or
-quality mapping and playback evidence. MP4 and WebM controls must not imply that
-the same numeric value produces equivalent compression in different codecs.
+encoding. Video quality exposes `Balanced`, `High`, and `Maximum`; `High` is
+the default. Target bitrates are `8 / 12 / 20 Mbps` at 1080p60 and
+`28 / 40 / 60 Mbps` at 4K60. Other dimensions and frame rates interpolate by
+pixel and frame-rate ratio between the reference profiles and remain bounded by
+the selected tier. A codec may adapt near the target but cannot switch tiers.
+MP4 and WebM labels do not imply byte-identical or numerically equivalent codec
+results; conformance uses playable output plus the expected size/quality trend.
 
 ### Fixed-step time
 
@@ -164,17 +174,18 @@ page frame delivery:
 effectiveDuration = baseDuration / speed
 outputTime = frameIndex / fps
 canonicalTime = outputTime * speed
-frameCount = ceil(effectiveDuration * fps)
+frameCount = max(1, ceil(effectiveDuration * fps - Number.EPSILON))
 ```
 
-The final sample may have a shorter duration so the declared media duration is
-exact. Encoding time is not media time. MP4 and WebM created from the same
-request use the same timestamps and canonical samples.
+Frame `i` starts at `i / fps`; its duration is
+`min(1 / fps, effectiveDuration - i / fps)`. The endpoint at
+`effectiveDuration` is not encoded as a duplicate first frame. Encoding time is
+not media time. MP4 and WebM created from the same request use the same
+timestamps and canonical samples.
 
-The full-loop range is the default. A custom range, when implemented, is
-expressed in canonical timeline time, validated before the job starts, and
-uses the same fixed-step mapping. It does not rewrite keyframes or segment
-durations.
+v1 exports exactly one complete canonical loop. A request may carry its
+resolved full-loop range as immutable data, but v1 has no user-facing custom
+range control. Custom ranges require a later contract.
 
 ### Playback speed and persistence
 
@@ -195,6 +206,11 @@ values normalize to `1`. New writers emit only a valid member. This field does
 not require a Document v2 or Envelope v1 version increment. Reader-first
 Document v3 inherits the v2 animation shape; its writer remains disabled until
 separately activated. No destructive storage migration is allowed.
+
+Existing Document v2 readers ignore the unknown optional field and therefore
+play at `1`; new readers normalize missing values to `1`. If any released
+consumer or storage constraint rejects this additive field, the writer remains
+disabled until a separate compatibility decision is approved.
 
 Save, project download/import, cloud reopen, published reopen, and Remix must
 preserve a valid speed. Legacy artwork without the field opens at `1`.
@@ -221,6 +237,15 @@ coordinates so preview and final pixels do not drift with resolution.
 - A failed or canceled preview keeps the last valid preview visible alongside
   the truthful new state. Superseded results must not paint.
 
+Rotation is a world/camera transform applied through render bounds and rendered
+directly at the target dimensions; an already rendered bitmap is never rotated
+and resampled. Request rotation is normalized to `[-pi, pi]` radians. Gestures
+are continuous, explicit/keyboard controls step by 15 degrees, and an advanced
+numeric input uses degrees. Preview's long edge is at most `720` pixels and
+updates use a `120 ms` debounce. Resolved normalized composition values must
+match within `1e-9`; visual center drift must remain below half a final-output
+pixel.
+
 Gestures require keyboard and explicit-control equivalents. Dialog scrolling
 must not steal an active composition gesture, and a composition gesture must
 not make the rest of the mobile dialog unreachable.
@@ -242,6 +267,19 @@ A positive API probe is necessary but not sufficient. A format/profile may be
 shown as unavailable when the complete route has not been qualified. An
 unsupported tuple fails closed before work where possible, or ends with an
 explicit capability error if the browser fails after a positive probe.
+
+Approved formats remain visible when unavailable; the exact option is disabled
+with a named reason and any qualified alternative. Release minimums are:
+
+| Environment | Minimum video route |
+|---|---|
+| Chromium desktop | MP4/AVC and WebM/VP9 at the exact 1080p60 and 4K60 reference profiles |
+| Firefox desktop | WebM/VP9 or VP8; unavailable MP4 remains visibly disabled |
+| Safari desktop | MP4/AVC; unavailable WebM remains visibly disabled |
+| Physical iOS Safari and Android Chrome | at least one exact 1080p route per device; 4K60 may be a named capability exception |
+
+An exception never permits a lower-resolution or lower-frame-rate file to be
+reported as the requested output.
 
 Allowed fallback is limited to another qualified codec inside the same selected
 container. The following silent fallbacks are prohibited:
@@ -266,7 +304,10 @@ module resolves later.
 The Slice 0 evidence selects a narrow Mediabunny bridge as the current
 WebCodecs/muxing candidate. Production adoption still requires MPL-2.0 notice
 review and a measured production chunk. The prototype's `59,851 B` gzip result
-is evidence, not a permanent product budget.
+is evidence. The product bridge budget is at most `250 KiB` raw / `75 KiB`
+gzip. On the recorded Linux reference desktop (i7-4700MQ, 15 GiB RAM, Chrome
+145), first module preparation is at most `2 s` and a cached preparation is at
+most `250 ms`. These local timings are not a network download SLA.
 
 ## Resource contract
 
@@ -282,12 +323,12 @@ queue is bounded to at most three full frames; implementations may use fewer.
 Frames, WebGL resources, encoder/muxer objects, workers, object URLs, and output
 buffers have explicit ownership and cleanup.
 
-v1 does not promise unlimited duration, frames, memory, or output bytes, and it
-does not freeze one universal device-memory number from the prototype's coarse
-heap readings. Before animation runtime activation, central duration/frame and
-estimated-memory limits must be defined, tested at their boundaries, and shown
-before submit. Exceeding a limit blocks the exact request; it never authorizes a
-lower resolution or FPS.
+Animation preflight limits effective duration to `30 s`, total frames to
+`1,800`, the application-owned raw queue to three frames and `128 MiB`, and
+estimated encoded output to `200 MiB`. Each limit is inclusive. Exceeding one
+blocks the exact request before encoding; it never authorizes a lower
+resolution, FPS, speed, duration, or quality tier. These deterministic limits
+do not claim to measure codec-internal or total device memory.
 
 ## Job lifecycle and cancellation
 
@@ -309,6 +350,12 @@ owned work, ignores all late results, and releases resources. Cancellation is
 not failure. It creates no download and no success event. A successful result
 means a valid media Blob was finalized and the download handoff was initiated;
 clicking Export alone is not success.
+
+Media time never depends on realtime `requestAnimationFrame`. If a hidden page
+is suspended, progress may pause and resume, but fixed timestamps do not change
+and frames are not duplicated. Closing the dialog cancels its active job;
+navigation or unload aborts and releases resources. v1 does not continue a job
+across navigation.
 
 ## Error contract
 
@@ -347,9 +394,15 @@ path separators, control and platform-reserved characters, unsafe trailing
 dots/spaces, and empty results while retaining safe Unicode and enforcing a
 bounded length. New media exports do not use `myfrac` as their default prefix.
 
-Analytics may record kind, format, coarse dimension/frame buckets, result, and
-stable error code. It must not record the complete filename, artwork state,
-formula source, Blob, media bytes, or high-cardinality artwork identifiers.
+The timestamp is UTC `YYYY-MM-DDTHH-mm-ss`. The safe basename is at most 96
+JavaScript code units and the complete generated filename is at most 140;
+artwork-name content is truncated first so dimensions, FPS, timestamp, and the
+validated extension remain intact.
+
+The existing `export_fractal` event may record kind, format, coarse
+dimension/frame buckets, render/encoding quality tier, result, and stable error
+code. It must not record the complete filename, artwork state, formula source,
+Blob, media bytes, or high-cardinality artwork identifiers.
 
 ## Accessibility and localization
 

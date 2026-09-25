@@ -44,6 +44,23 @@ describe('media export request and job core', () => {
     expect(sanitizeMediaExportBasename('  ...  ')).toBe('fractalpark');
   });
 
+  it('keeps generated filenames within the cross-platform total length limit', () => {
+    const result = createMediaExportRequest({
+      ...base,
+      kind: 'animation',
+      format: 'webm',
+      fps: 60,
+      speed: 1,
+      range: { start: 0, end: 1 },
+      bitrate: 12_000_000,
+      filename: '星'.repeat(200),
+    });
+    expect(result.ok).toBe(true);
+    if (!result.ok) return;
+    expect(result.value.filename.length).toBeLessThanOrEqual(140);
+    expect(result.value.filename).toMatch(/-1920x1080-60fps-2026-09-25T08-00-00\.webm$/);
+  });
+
   it('reports image work and rejects hard dimension limits', () => {
     const valid = createMediaExportRequest({ ...base, kind: 'image', format: 'png' });
     expect(valid.ok).toBe(true);
@@ -59,6 +76,26 @@ describe('media export request and job core', () => {
     });
     const oversized = createMediaExportRequest({ ...base, kind: 'image', format: 'png', width: 8192, height: 8192 });
     expect(oversized.ok && preflightMediaExportRequest(oversized.value, { qualified: true })).toEqual({ ok: false, code: 'resource-limit' });
+
+    const exactSampleBudget = createMediaExportRequest({
+      ...base,
+      kind: 'image',
+      format: 'png',
+      width: 4096,
+      height: 4096,
+      renderQuality: 'high',
+    });
+    expect(exactSampleBudget.ok && preflightMediaExportRequest(exactSampleBudget.value, { qualified: true })).toMatchObject({ ok: true });
+    const overSampleBudget = createMediaExportRequest({
+      ...base,
+      kind: 'image',
+      format: 'png',
+      width: 4096,
+      height: 4096,
+      renderQuality: 'ultra',
+    });
+    expect(overSampleBudget.ok && preflightMediaExportRequest(overSampleBudget.value, { qualified: true }))
+      .toEqual({ ok: false, code: 'resource-limit' });
   });
 
   it('freezes central animation duration, frame, queue, and byte budgets', () => {
