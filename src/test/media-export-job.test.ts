@@ -14,9 +14,10 @@ const base = {
   formulaAssets: [],
   width: 1920,
   height: 1080,
+  sourceViewport: { width: 1200, height: 800 },
   renderQuality: 'high' as const,
   background: '#000000',
-  composition: { mode: 'fit' as const, panX: 0, panY: 0, scale: 1, rotation: 0 },
+  composition: { mode: 'fit' as const, baseline: 'fit' as const, panX: 0, panY: 0, scale: 1, rotation: 0 },
   createdAt: Date.UTC(2026, 8, 25, 8, 0, 0),
 };
 

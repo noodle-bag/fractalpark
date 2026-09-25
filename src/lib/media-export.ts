@@ -69,6 +69,7 @@ export interface MediaExportFormulaAsset {
 
 export interface MediaExportComposition {
   mode: MediaExportCompositionMode;
+  baseline: 'fit' | 'fill';
   panX: number;
   panY: number;
   scale: number;
@@ -80,6 +81,7 @@ interface MediaExportRequestBase {
   formulaAssets: MediaExportFormulaAsset[];
   width: number;
   height: number;
+  sourceViewport: { width: number; height: number };
   renderQuality: MediaExportRenderQuality;
   background: string;
   composition: MediaExportComposition;
@@ -149,6 +151,7 @@ function validPositiveInteger(value: number): boolean {
 
 function validComposition(value: MediaExportComposition): boolean {
   return ['fit', 'fill', 'custom'].includes(value.mode)
+    && ['fit', 'fill'].includes(value.baseline)
     && Number.isFinite(value.panX)
     && Number.isFinite(value.panY)
     && Number.isFinite(value.rotation)
@@ -191,6 +194,8 @@ export function createMediaExportRequest(
   if (
     !validPositiveInteger(input.width)
     || !validPositiveInteger(input.height)
+    || !validPositiveInteger(input.sourceViewport.width)
+    || !validPositiveInteger(input.sourceViewport.height)
     || !Number.isFinite(input.createdAt)
     || !validComposition(input.composition)
     || !(input.renderQuality in MEDIA_EXPORT_RENDER_SAMPLES)
