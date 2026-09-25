@@ -3,6 +3,7 @@ import { createRenderSnapshot, type RenderSnapshot } from '@/engine/render-snaps
 import type { ViewBounds } from '@/engine/types';
 import {
   MEDIA_EXPORT_JPEG_QUALITY,
+  type AnimationExportRequest,
   type ImageExportRequest,
   type MediaExportErrorCode,
 } from '@/lib/media-export';
@@ -25,10 +26,12 @@ function positiveFinite(value: number): boolean {
   return Number.isFinite(value) && value > 0;
 }
 
-export function resolveImageExportBounds(request: ImageExportRequest): ViewBounds {
+export function resolveMediaExportBounds(
+  request: ImageExportRequest | AnimationExportRequest,
+  current: ViewBounds = request.document.scene.bounds,
+): ViewBounds {
   const source = request.sourceViewport;
   const target = { width: request.width, height: request.height };
-  const current = request.document.scene.bounds;
   if (![source.width, source.height, target.width, target.height, current.zoom].every(positiveFinite)) {
     throw 'invalid-request' satisfies MediaExportErrorCode;
   }
@@ -55,6 +58,10 @@ export function resolveImageExportBounds(request: ImageExportRequest): ViewBound
     zoom,
     rotation: (current.rotation ?? 0) + request.composition.rotation,
   };
+}
+
+export function resolveImageExportBounds(request: ImageExportRequest): ViewBounds {
+  return resolveMediaExportBounds(request);
 }
 
 function abortIfNeeded(signal: AbortSignal): void {
