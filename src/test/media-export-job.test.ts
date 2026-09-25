@@ -5,6 +5,7 @@ import {
   MEDIA_EXPORT_LIMITS,
   MediaExportJobController,
   createMediaExportRequest,
+  getMediaExportPreviewDimensions,
   preflightMediaExportRequest,
   sanitizeMediaExportBasename,
 } from '@/lib/media-export';
@@ -22,6 +23,14 @@ const base = {
 };
 
 describe('media export request and job core', () => {
+  it('caps previews at a 720px long edge without upscaling', () => {
+    expect(getMediaExportPreviewDimensions(1920, 1080)).toEqual({ width: 720, height: 405 });
+    expect(getMediaExportPreviewDimensions(2000, 3000)).toEqual({ width: 480, height: 720 });
+    expect(getMediaExportPreviewDimensions(1200, 628)).toEqual({ width: 600, height: 314 });
+    expect(getMediaExportPreviewDimensions(320, 180)).toEqual({ width: 320, height: 180 });
+    expect(() => getMediaExportPreviewDimensions(0, 180)).toThrow(TypeError);
+  });
+
   it('freezes an immutable image snapshot and resolves a safe filename', () => {
     const document = structuredClone(DEFAULT_FRACTAL_DOCUMENT);
     document.metadata = { name: 'Sea / Stars.' };

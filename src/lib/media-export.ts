@@ -61,6 +61,34 @@ export const MEDIA_EXPORT_JPEG_QUALITY = Object.freeze({
   maximum: 1,
 } satisfies Record<MediaExportJpegQuality, number>);
 
+export const MEDIA_EXPORT_PREVIEW_MAX_SIDE = 720;
+
+export function getMediaExportPreviewDimensions(
+  width: number,
+  height: number,
+): { width: number; height: number } {
+  if (!validPositiveInteger(width) || !validPositiveInteger(height)) {
+    throw new TypeError('Preview dimensions must be positive integers.');
+  }
+  if (Math.max(width, height) <= MEDIA_EXPORT_PREVIEW_MAX_SIDE) return { width, height };
+  let left = width;
+  let right = height;
+  while (right !== 0) [left, right] = [right, left % right];
+  const reducedWidth = width / left;
+  const reducedHeight = height / left;
+  const exactScale = Math.floor(
+    MEDIA_EXPORT_PREVIEW_MAX_SIDE / Math.max(reducedWidth, reducedHeight),
+  );
+  if (exactScale >= 1) {
+    return { width: reducedWidth * exactScale, height: reducedHeight * exactScale };
+  }
+  const scale = Math.min(1, MEDIA_EXPORT_PREVIEW_MAX_SIDE / Math.max(width, height));
+  return {
+    width: Math.max(1, Math.round(width * scale)),
+    height: Math.max(1, Math.round(height * scale)),
+  };
+}
+
 export interface MediaExportFormulaAsset {
   id: string;
   source: string;

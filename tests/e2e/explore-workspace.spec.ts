@@ -43,6 +43,62 @@ async function expectCanvasSizeSettled(page: Page) {
   await ready(page);
 }
 
+test('media export keeps a latest-only real preview and accessible composition controls', async ({ page }) => {
+  test.setTimeout(90_000);
+  await page.setViewportSize({ width: 390, height: 844 });
+  const errors: string[] = [];
+  page.on('pageerror', error => errors.push(error.message));
+  await page.goto('/en/explore');
+  await ready(page);
+  const exportButton = page.getByRole('button', { name: 'Export Media', exact: true });
+  await exportButton.click();
+  const dialog = page.getByRole('dialog');
+  await dialog.getByRole('combobox', { name: 'Render quality' }).selectOption('off');
+  const preview = dialog.getByTestId('media-export-preview');
+  const image = preview.getByRole('img', { name: 'Rendered export preview' });
+  await expect(image).toBeVisible({ timeout: 45_000 });
+  await expect.poll(() => image.evaluate(element => ({
+    width: (element as HTMLImageElement).naturalWidth,
+    height: (element as HTMLImageElement).naturalHeight,
+  }))).toEqual({ width: 720, height: 405 });
+  const firstUrl = await image.getAttribute('src');
+  const fill = dialog.getByRole('button', { name: 'Fill', exact: true });
+  await fill.click();
+  await expect(fill).toHaveAttribute('aria-pressed', 'true');
+  await expect(dialog.getByText(/Rendering latest preview…/)).toBeVisible();
+  await expect(image).toHaveAttribute('src', firstUrl!);
+  await expect.poll(() => image.getAttribute('src'), { timeout: 45_000 }).not.toBe(firstUrl);
+  await dialog.getByRole('spinbutton', { name: 'Zoom' }).fill('2');
+  await expect(dialog.getByRole('button', { name: 'Custom', exact: true })).toHaveAttribute('aria-pressed', 'true');
+  await expect(dialog.getByTestId('media-export-summary')).toContainText('1920 × 1080');
+  expect(await page.evaluate(() => document.documentElement.scrollWidth <= innerWidth)).toBe(true);
+  await dialog.getByRole('button', { name: 'Cancel', exact: true }).click();
+  await expect(exportButton).toBeFocused();
+  expect(errors).toEqual([]);
+});
+
+test('all locales keep the export preview, summary and actions reachable at 320px', async ({ page }) => {
+  test.setTimeout(180_000);
+  await page.setViewportSize({ width: 320, height: 700 });
+  for (const locale of SUPPORTED_LOCALES) {
+    await page.goto(`/${locale}/explore`);
+    await ready(page);
+    const exportButton = page.getByTestId('explore-artwork-bar').getByRole('button').nth(3);
+    await exportButton.click();
+    const dialog = page.getByRole('dialog');
+    await expect(dialog).toBeVisible();
+    await dialog.locator('select').nth(2).selectOption('off');
+    await expect(dialog.getByTestId('media-export-preview')).toBeVisible();
+    const summary = dialog.getByTestId('media-export-summary');
+    await summary.scrollIntoViewIfNeeded();
+    await expect(summary).toBeVisible();
+    expect((await summary.textContent())?.trim().length).toBeGreaterThan(0);
+    expect(await page.evaluate(() => document.documentElement.scrollWidth <= innerWidth)).toBe(true);
+    await page.keyboard.press('Escape');
+    await expect(exportButton).toBeFocused();
+  }
+});
+
 for (const width of [1440, 1180]) {
   test(`Inspector toggling preserves the canvas, view and editing state at ${width}px`, async ({ page }, testInfo) => {
     test.setTimeout(90_000);

@@ -55,6 +55,7 @@ interface ArtworkActionsProps {
   onSave: (name: string) => Promise<boolean>;
   onDownload: () => Promise<boolean>;
   onImport: (file: File) => Promise<boolean>;
+  onPreview?: (submission: ImageExportWorkspaceSubmission, signal: AbortSignal) => Promise<Blob>;
   onExport: (submission: ImageExportWorkspaceSubmission) => Promise<boolean>;
   onReset: () => void;
   /** Revision-conflict exits (spec §17): adopt the remote version, or keep
@@ -82,6 +83,7 @@ export function ArtworkActions({
   onSave,
   onDownload,
   onImport,
+  onPreview,
   onExport,
   onReset,
   onConflictReload,
@@ -352,6 +354,7 @@ export function ArtworkActions({
         frameReady={frameReady}
         onOpenChange={setExportOpen}
         onCloseAutoFocus={() => exportButtonRef.current?.focus({ preventScroll: true })}
+        onPreviewImage={onPreview}
         onExportImage={onExport}
       />
     </>

@@ -1508,6 +1508,7 @@ function ExploreClient({ posterImage }: { posterImage?: string }) {
           onSave={async (name) => getCanvas() ? artworkActions.save(name) : false}
           onDownload={artworkActions.download}
           onImport={artworkActions.importFile}
+          onPreview={artworkActions.previewImage}
           onExport={async submission => getCanvas() ? artworkActions.exportImage(submission) : false}
           onReset={handleResetView}
           onConflictReload={() => {

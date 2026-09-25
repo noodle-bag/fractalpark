@@ -19,7 +19,9 @@ import {
 } from '@/lib/formula-resolver';
 import {
   createMediaExportRequest,
+  getMediaExportPreviewDimensions,
   preflightMediaExportRequest,
+  type ImageExportRequest,
 } from '@/lib/media-export';
 import {
   exportImageBlob,
@@ -333,48 +335,55 @@ export function useArtworkActions({
     }
   }, [begin, document, fail, loadDocument, succeed]);
 
+  const createImageRequest = useCallback((
+    submission: ImageExportWorkspaceSubmission,
+    preview: boolean,
+  ): ImageExportRequest | null => {
+    const canvas = getCanvas();
+    if (!canvas) return null;
+    const dimensions = preview
+      ? getMediaExportPreviewDimensions(submission.width, submission.height)
+      : { width: submission.width, height: submission.height };
+    const exportDocument: FractalDocument = {
+      ...document,
+      render: { ...document.render, maxIterations: effectiveIterations },
+    };
+    const request = createMediaExportRequest({
+      ...submission,
+      ...dimensions,
+      kind: 'image',
+      document: exportDocument,
+      formulaAssets: readEffectiveFormulaAssets(document.formula.formulaId),
+      sourceViewport: {
+        width: Math.max(1, canvas.clientWidth || canvas.width),
+        height: Math.max(1, canvas.clientHeight || canvas.height),
+      },
+      createdAt: Date.now(),
+    });
+    if (!request.ok || request.value.kind !== 'image') return null;
+    const preflight = preflightMediaExportRequest(request.value, { qualified: true });
+    return preflight.ok ? request.value : null;
+  }, [document, effectiveIterations, getCanvas]);
+
+  const previewImage = useCallback(async (
+    submission: ImageExportWorkspaceSubmission,
+    signal: AbortSignal,
+  ) => {
+    const request = createImageRequest(submission, true);
+    if (!request) throw new Error('preview-unavailable');
+    return exportImageBlob(request, signal);
+  }, [createImageRequest]);
+
   const exportImage = useCallback(async (submission: ImageExportWorkspaceSubmission) => {
     if (!begin('export')) return false;
     try {
-      const canvas = getCanvas();
-      if (!canvas) {
+      const request = createImageRequest(submission, false);
+      if (!request) {
         fail('export', 'export-failed');
         return false;
       }
-      const exportDocument: FractalDocument = {
-        ...document,
-        render: { ...document.render, maxIterations: effectiveIterations },
-      };
-      const request = createMediaExportRequest({
-        ...submission,
-        kind: 'image',
-        document: exportDocument,
-        formulaAssets: readEffectiveFormulaAssets(document.formula.formulaId),
-        sourceViewport: {
-          width: Math.max(1, canvas.clientWidth || canvas.width),
-          height: Math.max(1, canvas.clientHeight || canvas.height),
-        },
-        composition: {
-          mode: 'fit',
-          baseline: 'fit',
-          panX: 0,
-          panY: 0,
-          scale: 1,
-          rotation: 0,
-        },
-        createdAt: Date.now(),
-      });
-      if (!request.ok || request.value.kind !== 'image') {
-        fail('export', 'export-failed');
-        return false;
-      }
-      const preflight = preflightMediaExportRequest(request.value, { qualified: true });
-      if (!preflight.ok) {
-        fail('export', 'export-failed');
-        return false;
-      }
-      const blob = await exportImageBlob(request.value, new AbortController().signal);
-      handoffMediaExportDownload(blob, request.value.filename);
+      const blob = await exportImageBlob(request, new AbortController().signal);
+      handoffMediaExportDownload(blob, request.filename);
       trackEvent('export_fractal', {
         format: submission.format,
         width: submission.width,
@@ -388,7 +397,7 @@ export function useArtworkActions({
       fail('export', 'export-failed');
       return false;
     }
-  }, [begin, document, effectiveIterations, fail, getCanvas, succeed]);
+  }, [begin, createImageRequest, document, fail, succeed]);
 
   return {
     status,
@@ -398,6 +407,7 @@ export function useArtworkActions({
     save,
     download,
     importFile,
+    previewImage,
     exportImage,
   };
 }
