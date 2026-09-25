@@ -5,6 +5,12 @@ govern FractalPark development.
 
 ## Specifications
 
+- [Media Export Contract v1](specs/media-export-v1.md) defines image and
+  animation formats, immutable Export requests, preview/composition parity,
+  capability and resource gates, job errors/cancellation, and the shared
+  animation-speed persistence boundary. It is a target contract, not a claim
+  of completed runtime adoption.
+
 - [Interface Design and Interaction](specs/interface-design-and-interaction.md)
   defines compact visual roles, canvas-first Explore layouts, precise controls,
   state preservation, semantic design-to-code mapping, and retained exceptions.

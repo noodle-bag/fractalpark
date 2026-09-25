@@ -24,6 +24,9 @@ palette images, and animation timings are fixtures, not product defaults.
 
 The following contracts remain authoritative:
 
+- [Media Export Contract v1](media-export-v1.md): responsive Export workspace,
+  media request, preview/composition, capability, error, and cancellation
+  semantics.
 - [Fractal Content and Creation Model](fractal-content-and-creation-model.md):
   consumer matrix, canonical state, and saved-artwork preservation.
 - [Fractal Document v2 and Envelope v1](fractal-document-v2.md): persistence.
@@ -171,6 +174,12 @@ text, separate Reset, and place action feedback with the action presentation.
 | Import | Import a project file / `onImport` |
 | Export | Export PNG using the existing scale/quality dialog / `onExport` |
 | Reset | Existing confirmed artwork reset / `onReset`; not deletion of the custom formula library or Gallery |
+
+The Export row above records the retained pre-v0.4.22 handler boundary. The
+target Image/Animation workspace adopts
+[Media Export Contract v1](media-export-v1.md) incrementally without changing
+the ownership of the artwork action or folding project Download into media
+Export.
 
 The desktop approximately 60px one-row bar is a reference, not a fixed height
 cap. In the opened mobile disclosure, 320px or long-language labels may require
