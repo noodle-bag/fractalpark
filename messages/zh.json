@@ -1486,7 +1486,7 @@
         "background": "背景",
         "filename": "文件名（可选）",
         "filenamePlaceholder": "根据作品名称自动生成",
-        "animation": { "title": "动画导出", "preparing": "精确配置通过能力检查后，将开放 MP4 和 WebM 设置。" },
+        "animation": { "title": "动画导出", "preparing": "正在准备动画导出。", "localOnly": "渲染与编码均在当前浏览器本地完成。", "unavailable": "请至少添加两个关键帧，以导出完整循环。", "overLimit": "当前速度会超过 30 秒或 1,800 帧，请选择更快的播放速度。", "fps": "帧率", "videoQuality": "视频质量", "summary": "{ratio} · {fps} FPS · {speed}× · {duration} 秒 · {frames} 帧", "memory": "有界原始帧队列：最多 {megabytes} MiB", "progress": { "rendering": "正在渲染帧", "encoding": "正在编码视频" }, "capability": { "checking": "正在检查当前精确编码配置…", "ready": "当前浏览器支持所选配置。", "profile-unavailable": "当前浏览器无法编码所选配置，请尝试另一格式、更小尺寸或更低帧率。", "dependency-load-failed": "本地编码器加载失败，请刷新页面后尝试另一格式。", "failed": "编码能力检查失败，请刷新页面后重试。" }, "failed": "当前精确配置的动画导出失败，请尝试其他格式或设置。", "cancelExport": "取消导出" },
         "cancel": "取消",
         "confirm": "导出",
         "pending": "渲染中..."

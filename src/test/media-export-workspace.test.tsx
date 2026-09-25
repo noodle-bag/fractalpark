@@ -10,6 +10,7 @@ vi.mock('next-intl', () => ({
 
 function setup(overrides: Partial<ComponentProps<typeof MediaExportWorkspace>> = {}) {
   const onExportImage = vi.fn(async () => true);
+  const onExportAnimation = vi.fn(async () => true);
   const props = {
     open: true,
     pending: false,
@@ -17,10 +18,11 @@ function setup(overrides: Partial<ComponentProps<typeof MediaExportWorkspace>> =
     onOpenChange: vi.fn(),
     onCloseAutoFocus: vi.fn(),
     onExportImage,
+    onExportAnimation,
     ...overrides,
   };
   const view = render(<MediaExportWorkspace {...props} />);
-  return { props, onExportImage, view };
+  return { props, onExportImage, onExportAnimation, view };
 }
 
 describe('MediaExportWorkspace', () => {
@@ -49,6 +51,68 @@ describe('MediaExportWorkspace', () => {
   it('keeps export disabled while the matching frame is not ready', () => {
     setup({ frameReady: false });
     expect(screen.getByRole('button', { name: 'confirm' })).toBeDisabled();
+  });
+
+  it('submits an approved animation profile with speed-derived summary and progress', async () => {
+    const { props, onExportAnimation } = setup({
+      animationAvailable: true,
+      animationSpeed: 4,
+      animationDuration: 18,
+    });
+    fireEvent.mouseDown(screen.getByRole('tab', { name: 'tabs.animation' }), { button: 0, ctrlKey: false });
+    await waitFor(() => expect(screen.getByTestId('media-export-animation-summary')).toBeVisible());
+    fireEvent.change(screen.getByDisplayValue('MP4'), { target: { value: 'webm' } });
+    fireEvent.change(screen.getByDisplayValue('1920 × 1080'), { target: { value: 'landscape-uhd' } });
+    fireEvent.change(screen.getByDisplayValue('60 FPS'), { target: { value: '30' } });
+    fireEvent.click(screen.getByRole('button', { name: 'confirm' }));
+    await waitFor(() => expect(onExportAnimation).toHaveBeenCalledWith(
+      expect.objectContaining({ format: 'webm', width: 3840, height: 2160, fps: 30, videoQuality: 'high' }),
+      expect.any(AbortSignal),
+      expect.any(Function),
+    ));
+    expect(props.onOpenChange).toHaveBeenCalledWith(false);
+  });
+
+  it('disables an unsupported exact animation profile and names the fallback path', async () => {
+    const onProbeAnimation = vi.fn(async () => ({
+      qualified: false as const,
+      reason: 'profile-unavailable' as const,
+    }));
+    const { onExportAnimation } = setup({
+      animationAvailable: true,
+      animationSpeed: 4,
+      animationDuration: 18,
+      onProbeAnimation,
+    });
+    fireEvent.mouseDown(screen.getByRole('tab', { name: 'tabs.animation' }), { button: 0, ctrlKey: false });
+    await waitFor(() => expect(onProbeAnimation).toHaveBeenCalledWith(
+      expect.objectContaining({ format: 'mp4', width: 1920, height: 1080, fps: 60 }),
+      expect.any(AbortSignal),
+    ));
+    await waitFor(() => expect(screen.getByText('animation.capability.profile-unavailable')).toBeVisible());
+    expect(screen.getByRole('button', { name: 'confirm' })).toBeDisabled();
+    expect(onExportAnimation).not.toHaveBeenCalled();
+  });
+
+  it('aborts active animation work without treating cancellation as dialog success', async () => {
+    let capturedSignal: AbortSignal | undefined;
+    const onExportAnimation = vi.fn((_submission, signal: AbortSignal) => {
+      capturedSignal = signal;
+      return new Promise<boolean>(resolve => signal.addEventListener('abort', () => resolve(false), { once: true }));
+    });
+    const { props } = setup({
+      animationAvailable: true,
+      animationSpeed: 4,
+      animationDuration: 18,
+      onExportAnimation,
+    });
+    fireEvent.mouseDown(screen.getByRole('tab', { name: 'tabs.animation' }), { button: 0, ctrlKey: false });
+    await waitFor(() => expect(screen.getByTestId('media-export-animation-summary')).toBeVisible());
+    fireEvent.click(screen.getByRole('button', { name: 'confirm' }));
+    await waitFor(() => expect(screen.getByRole('button', { name: 'animation.cancelExport' })).toBeEnabled());
+    fireEvent.click(screen.getByRole('button', { name: 'animation.cancelExport' }));
+    await waitFor(() => expect(capturedSignal?.aborted).toBe(true));
+    expect(props.onOpenChange).not.toHaveBeenCalledWith(false);
   });
 
   it('cancels stale preview work, keeps one composition contract, and revokes the object URL', async () => {

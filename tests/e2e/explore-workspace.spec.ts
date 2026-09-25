@@ -136,6 +136,32 @@ test('animation speed snaps across pointer and keyboard input and restores from 
   expect(errors).toEqual([]);
 });
 
+test('animation export workspace exposes approved profiles, summary and a real current-frame preview', async ({ page }) => {
+  test.setTimeout(90_000);
+  await page.setViewportSize({ width: 390, height: 844 });
+  await page.goto('/en/explore');
+  await ready(page);
+  await page.getByRole('tab', { name: 'Animation', exact: true }).last().click();
+  const addKeyframe = page.getByRole('button', { name: 'Add Keyframe', exact: true });
+  await addKeyframe.click();
+  await addKeyframe.click();
+
+  await page.getByRole('button', { name: 'Export Media', exact: true }).click();
+  const dialog = page.getByRole('dialog');
+  await dialog.getByRole('tab', { name: 'Animation', exact: true }).click();
+  await expect(dialog.getByRole('combobox', { name: 'Format' })).toHaveValue('mp4');
+  await expect(dialog.getByRole('combobox', { name: 'Size' })).toHaveValue('landscape-hd');
+  await expect(dialog.getByRole('combobox', { name: 'Frame rate' })).toHaveValue('60');
+  await expect(dialog.getByRole('combobox', { name: 'Video quality' })).toHaveValue('high');
+  await expect(dialog.getByTestId('media-export-animation-summary')).toContainText('1080 frames');
+  await expect(dialog.getByTestId('media-export-animation-preview').getByRole('img')).toBeVisible({ timeout: 45_000 });
+  await dialog.getByRole('combobox', { name: 'Size' }).selectOption('landscape-uhd');
+  await expect(dialog.getByTestId('media-export-animation-summary')).toContainText('3840 × 2160');
+  expect(await page.evaluate(() => document.documentElement.scrollWidth <= innerWidth)).toBe(true);
+  await page.keyboard.press('Escape');
+  await expect(page.getByRole('button', { name: 'Export Media', exact: true })).toBeFocused();
+});
+
 for (const width of [1440, 1180]) {
   test(`Inspector toggling preserves the canvas, view and editing state at ${width}px`, async ({ page }, testInfo) => {
     test.setTimeout(90_000);

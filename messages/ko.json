@@ -1476,7 +1476,7 @@
         "quality": { "off": "끄기", "standard": "표준", "high": "높음", "ultra": "울트라" },
         "jpegQuality": "JPEG 품질", "jpeg": { "balanced": "균형", "high": "높음", "maximum": "최대" },
         "background": "배경", "filename": "파일 이름(선택 사항)", "filenamePlaceholder": "작품 이름에서 자동 생성",
-        "animation": { "title": "애니메이션 내보내기", "preparing": "정확한 프로필이 기능 검사를 통과하면 MP4 및 WebM 설정을 사용할 수 있습니다." },
+        "animation": { "title": "애니메이션 내보내기", "preparing": "애니메이션 내보내기를 준비하고 있습니다.", "localOnly": "이 브라우저에서 로컬로 렌더링하고 인코딩합니다.", "unavailable": "전체 루프를 내보내려면 키프레임을 두 개 이상 추가하세요.", "overLimit": "이 속도에서는 30초 또는 1,800프레임을 초과합니다. 더 빠른 재생 속도를 선택하세요.", "fps": "프레임 속도", "videoQuality": "동영상 품질", "summary": "{ratio} · {fps} FPS · {speed}× · {duration}초 · {frames}프레임", "memory": "제한된 원시 프레임 대기열: 최대 {megabytes} MiB", "progress": { "rendering": "프레임 렌더링 중", "encoding": "동영상 인코딩 중" }, "capability": { "checking": "현재 인코딩 프로필을 확인하는 중…", "ready": "이 브라우저는 선택한 프로필을 지원합니다.", "profile-unavailable": "이 브라우저는 선택한 프로필을 인코딩할 수 없습니다. 다른 형식, 더 작은 크기 또는 낮은 프레임 속도를 사용하세요.", "dependency-load-failed": "로컬 인코더를 불러오지 못했습니다. 페이지를 새로 고친 후 다른 형식을 사용하세요.", "failed": "인코딩 기능 확인에 실패했습니다. 페이지를 새로 고친 후 다시 시도하세요." }, "failed": "이 정확한 프로필로 내보내지 못했습니다. 다른 형식이나 설정을 사용해 보세요.", "cancelExport": "내보내기 취소" },
         "cancel": "취소",
         "confirm": "내보내기",
         "pending": "렌더링 중..."

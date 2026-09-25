@@ -5,7 +5,14 @@ import { useCallback, useRef, useState } from 'react';
 import { trackEvent } from '@/components/analytics/PageViewTracker';
 import { useCloudSession } from '@/components/cloud/CloudSessionProvider';
 import type { FractalDocument } from '@/engine/document';
-import type { ImageExportWorkspaceSubmission } from '@/components/fractal/MediaExportWorkspace';
+import { buildTimeline, totalDuration } from '@/engine/animation/interpolate';
+import { normalizeAnimationPlaybackSpeed } from '@/engine/animation/playback';
+import type {
+  AnimationExportCapability,
+  AnimationExportWorkspaceSubmission,
+  ImageExportWorkspaceSubmission,
+} from '@/components/fractal/MediaExportWorkspace';
+import type { AnimationFramePipelineProgress } from '@/lib/media-export-animation';
 import type { CloudDraftIdentity } from '@/hooks/useCloudDraftSession';
 import {
   getArtworkAnalyticsContext,
@@ -21,6 +28,8 @@ import {
   createMediaExportRequest,
   getMediaExportPreviewDimensions,
   preflightMediaExportRequest,
+  resolveMediaExportVideoBitrate,
+  type AnimationExportRequest,
   type ImageExportRequest,
 } from '@/lib/media-export';
 import {
@@ -145,6 +154,7 @@ export function useArtworkActions({
   }, []);
 
   const clearStatus = useCallback(() => {
+    pendingRef.current = false;
     setStatus({ phase: 'idle' });
   }, []);
 
@@ -399,6 +409,133 @@ export function useArtworkActions({
     }
   }, [begin, createImageRequest, document, fail, succeed]);
 
+  const exportAnimation = useCallback(async (
+    submission: AnimationExportWorkspaceSubmission,
+    signal: AbortSignal,
+    onProgress: (progress: AnimationFramePipelineProgress) => void,
+  ) => {
+    if (!begin('export')) return false;
+    try {
+      const canvas = getCanvas();
+      const keyframes = document.animation?.viewKeyframes ?? [];
+      const baseDuration = totalDuration(buildTimeline(keyframes));
+      if (!canvas || keyframes.length < 2 || baseDuration <= 0) {
+        fail('export', 'export-failed');
+        return false;
+      }
+      const exportDocument: FractalDocument = {
+        ...document,
+        render: { ...document.render, maxIterations: effectiveIterations },
+      };
+      const request = createMediaExportRequest({
+        kind: 'animation',
+        format: submission.format,
+        width: submission.width,
+        height: submission.height,
+        fps: submission.fps,
+        speed: normalizeAnimationPlaybackSpeed(document.animation?.speed),
+        range: { start: 0, end: baseDuration },
+        bitrate: resolveMediaExportVideoBitrate(
+          submission.width,
+          submission.height,
+          submission.fps,
+          submission.videoQuality,
+        ),
+        renderQuality: submission.renderQuality,
+        background: submission.background,
+        composition: submission.composition,
+        filename: submission.filename,
+        document: exportDocument,
+        formulaAssets: readEffectiveFormulaAssets(document.formula.formulaId),
+        sourceViewport: {
+          width: Math.max(1, canvas.clientWidth || canvas.width),
+          height: Math.max(1, canvas.clientHeight || canvas.height),
+        },
+        createdAt: Date.now(),
+      });
+      if (!request.ok || request.value.kind !== 'animation') {
+        fail('export', 'export-failed');
+        return false;
+      }
+      const preflight = preflightMediaExportRequest(request.value, { qualified: true });
+      if (!preflight.ok) {
+        fail('export', 'export-failed');
+        return false;
+      }
+      const { exportAnimationBlob } = await import('@/lib/media-export-animation-encoder');
+      const encoded = await exportAnimationBlob(
+        request.value as AnimationExportRequest,
+        { signal, onProgress },
+      );
+      handoffMediaExportDownload(encoded.blob, request.value.filename);
+      trackEvent('export_fractal', {
+        format: submission.format,
+        width: submission.width,
+        height: submission.height,
+        fps: submission.fps,
+        render_quality: submission.renderQuality,
+        ...getArtworkAnalyticsContext(document),
+      });
+      succeed('export');
+      return true;
+    } catch (error) {
+      if (signal.aborted || (error instanceof DOMException && error.name === 'AbortError')) {
+        clearStatus();
+        return false;
+      }
+      fail('export', 'export-failed');
+      return false;
+    }
+  }, [begin, clearStatus, document, effectiveIterations, fail, getCanvas, succeed]);
+
+  const probeAnimation = useCallback(async (
+    submission: AnimationExportWorkspaceSubmission,
+    signal: AbortSignal,
+  ): Promise<AnimationExportCapability> => {
+    const canvas = getCanvas();
+    const keyframes = document.animation?.viewKeyframes ?? [];
+    const baseDuration = totalDuration(buildTimeline(keyframes));
+    if (!canvas || keyframes.length < 2 || baseDuration <= 0) {
+      return { qualified: false, reason: 'profile-unavailable' };
+    }
+    const exportDocument: FractalDocument = {
+      ...document,
+      render: { ...document.render, maxIterations: effectiveIterations },
+    };
+    const request = createMediaExportRequest({
+      kind: 'animation',
+      format: submission.format,
+      width: submission.width,
+      height: submission.height,
+      fps: submission.fps,
+      speed: normalizeAnimationPlaybackSpeed(document.animation?.speed),
+      range: { start: 0, end: baseDuration },
+      bitrate: resolveMediaExportVideoBitrate(
+        submission.width,
+        submission.height,
+        submission.fps,
+        submission.videoQuality,
+      ),
+      renderQuality: submission.renderQuality,
+      background: submission.background,
+      composition: submission.composition,
+      filename: submission.filename,
+      document: exportDocument,
+      formulaAssets: readEffectiveFormulaAssets(document.formula.formulaId),
+      sourceViewport: {
+        width: Math.max(1, canvas.clientWidth || canvas.width),
+        height: Math.max(1, canvas.clientHeight || canvas.height),
+      },
+      createdAt: Date.now(),
+    });
+    if (!request.ok || request.value.kind !== 'animation') {
+      return { qualified: false, reason: 'profile-unavailable' };
+    }
+    const { probeAnimationExportCapability } = await import('@/lib/media-export-animation-encoder');
+    const result = await probeAnimationExportCapability(request.value, signal);
+    return { qualified: result.qualified, reason: result.reason };
+  }, [document, effectiveIterations, getCanvas]);
+
   return {
     status,
     cloudPhase,
@@ -409,5 +546,7 @@ export function useArtworkActions({
     importFile,
     previewImage,
     exportImage,
+    exportAnimation,
+    probeAnimation,
   };
 }

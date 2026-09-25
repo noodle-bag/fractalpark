@@ -13,6 +13,7 @@ export type MediaExportAnimationFormat = (typeof MEDIA_EXPORT_ANIMATION_FORMATS)
 export type MediaExportSpeed = AnimationPlaybackSpeed;
 export type MediaExportRenderQuality = 'off' | 'standard' | 'high' | 'ultra';
 export type MediaExportJpegQuality = 'balanced' | 'high' | 'maximum';
+export type MediaExportVideoQuality = 'balanced' | 'high' | 'maximum';
 export type MediaExportCompositionMode = 'fit' | 'fill' | 'custom';
 
 export type MediaExportErrorCode =
@@ -64,6 +65,31 @@ export const MEDIA_EXPORT_JPEG_QUALITY = Object.freeze({
   high: 0.92,
   maximum: 1,
 } satisfies Record<MediaExportJpegQuality, number>);
+
+export const MEDIA_EXPORT_VIDEO_BITRATES = Object.freeze({
+  balanced: { hd: 8_000_000, uhd: 28_000_000 },
+  high: { hd: 12_000_000, uhd: 40_000_000 },
+  maximum: { hd: 20_000_000, uhd: 60_000_000 },
+} satisfies Record<MediaExportVideoQuality, { hd: number; uhd: number }>);
+
+export function resolveMediaExportVideoBitrate(
+  width: number,
+  height: number,
+  fps: number,
+  quality: MediaExportVideoQuality,
+): number {
+  if (!validPositiveInteger(width) || !validPositiveInteger(height) || ![24, 30, 60].includes(fps)) {
+    throw new TypeError('Video profile must use positive dimensions and an approved frame rate.');
+  }
+  const references = MEDIA_EXPORT_VIDEO_BITRATES[quality];
+  const work = width * height * fps;
+  const hdWork = 1920 * 1080 * 60;
+  const uhdWork = 3840 * 2160 * 60;
+  if (work <= hdWork) return Math.max(1_000_000, Math.round(references.hd * work / hdWork));
+  if (work >= uhdWork) return references.uhd;
+  const ratio = (work - hdWork) / (uhdWork - hdWork);
+  return Math.round(references.hd + (references.uhd - references.hd) * ratio);
+}
 
 export const MEDIA_EXPORT_PREVIEW_MAX_SIDE = 720;
 

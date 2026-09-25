@@ -32,6 +32,7 @@ import {
   normalizeAnimationPlaybackSpeed,
   type AnimationPlaybackSpeed,
 } from '@/engine/animation/playback';
+import { buildTimeline, totalDuration } from '@/engine/animation/interpolate';
 import type { FormulaSelectionRequest } from '@/engine/frm/authoring';
 import { getDefaultBounds } from '@/engine/plugins/formula-catalog';
 import type { PluginParamRecord, PluginParamValue } from '@/engine/types';
@@ -219,6 +220,10 @@ function ExploreClient({ posterImage }: { posterImage?: string }) {
     [document.animation?.viewKeyframes]
   );
   const animationSpeed = normalizeAnimationPlaybackSpeed(document.animation?.speed);
+  const animationDuration = useMemo(
+    () => keyframes.length >= 2 ? totalDuration(buildTimeline(keyframes)) : 0,
+    [keyframes],
+  );
   const [isPreviewPlaying, setIsPreviewPlaying] = useState(false);
   const [artworkToolbarTarget, setArtworkToolbarTarget] = useState<HTMLDivElement | null>(null);
   const [activeTab, setActiveTab] = useState('formula');
@@ -1522,6 +1527,11 @@ function ExploreClient({ posterImage }: { posterImage?: string }) {
           onImport={artworkActions.importFile}
           onPreview={artworkActions.previewImage}
           onExport={async submission => getCanvas() ? artworkActions.exportImage(submission) : false}
+          onExportAnimation={artworkActions.exportAnimation}
+          onProbeAnimation={artworkActions.probeAnimation}
+          animationAvailable={keyframes.length >= 2}
+          animationSpeed={animationSpeed}
+          animationDuration={animationDuration}
           onReset={handleResetView}
           onConflictReload={() => {
             // Reload discards the in-memory edits that conflicted — confirm

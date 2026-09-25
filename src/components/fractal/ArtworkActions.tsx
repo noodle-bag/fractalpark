@@ -35,8 +35,11 @@ import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import {
   MediaExportWorkspace,
+  type AnimationExportCapability,
+  type AnimationExportWorkspaceSubmission,
   type ImageExportWorkspaceSubmission,
 } from '@/components/fractal/MediaExportWorkspace';
+import type { AnimationFramePipelineProgress } from '@/lib/media-export-animation';
 import {
   ArtworkActionStatus,
   ArtworkOperation,
@@ -57,6 +60,18 @@ interface ArtworkActionsProps {
   onImport: (file: File) => Promise<boolean>;
   onPreview?: (submission: ImageExportWorkspaceSubmission, signal: AbortSignal) => Promise<Blob>;
   onExport: (submission: ImageExportWorkspaceSubmission) => Promise<boolean>;
+  onExportAnimation?: (
+    submission: AnimationExportWorkspaceSubmission,
+    signal: AbortSignal,
+    onProgress: (progress: AnimationFramePipelineProgress) => void,
+  ) => Promise<boolean>;
+  onProbeAnimation?: (
+    submission: AnimationExportWorkspaceSubmission,
+    signal: AbortSignal,
+  ) => Promise<AnimationExportCapability>;
+  animationAvailable?: boolean;
+  animationSpeed?: number;
+  animationDuration?: number;
   onReset: () => void;
   /** Revision-conflict exits (spec §17): adopt the remote version, or keep
    *  local edits as a brand-new draft. No silent overwrite either way. */
@@ -85,6 +100,11 @@ export function ArtworkActions({
   onImport,
   onPreview,
   onExport,
+  onExportAnimation,
+  onProbeAnimation,
+  animationAvailable = false,
+  animationSpeed = 1,
+  animationDuration = 0,
   onReset,
   onConflictReload,
   onConflictSaveAsNew,
@@ -356,6 +376,11 @@ export function ArtworkActions({
         onCloseAutoFocus={() => exportButtonRef.current?.focus({ preventScroll: true })}
         onPreviewImage={onPreview}
         onExportImage={onExport}
+        onExportAnimation={onExportAnimation ?? (async () => false)}
+        onProbeAnimation={onProbeAnimation}
+        animationAvailable={animationAvailable}
+        animationSpeed={animationSpeed}
+        animationDuration={animationDuration}
       />
     </>
   );

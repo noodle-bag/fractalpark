@@ -7,6 +7,7 @@ import {
   createMediaExportRequest,
   getMediaExportPreviewDimensions,
   preflightMediaExportRequest,
+  resolveMediaExportVideoBitrate,
   sanitizeMediaExportBasename,
 } from '@/lib/media-export';
 
@@ -134,6 +135,16 @@ describe('media export request and job core', () => {
       bitrate: 40_000_000,
     });
     expect(tooLong.ok && preflightMediaExportRequest(tooLong.value, { qualified: true })).toEqual({ ok: false, code: 'resource-limit' });
+  });
+
+  it('maps all three video quality tiers to frozen HD/UHD targets and scales lower frame rates', () => {
+    expect(resolveMediaExportVideoBitrate(1920, 1080, 60, 'balanced')).toBe(8_000_000);
+    expect(resolveMediaExportVideoBitrate(1920, 1080, 60, 'high')).toBe(12_000_000);
+    expect(resolveMediaExportVideoBitrate(1920, 1080, 60, 'maximum')).toBe(20_000_000);
+    expect(resolveMediaExportVideoBitrate(3840, 2160, 60, 'balanced')).toBe(28_000_000);
+    expect(resolveMediaExportVideoBitrate(3840, 2160, 60, 'high')).toBe(40_000_000);
+    expect(resolveMediaExportVideoBitrate(3840, 2160, 60, 'maximum')).toBe(60_000_000);
+    expect(resolveMediaExportVideoBitrate(1920, 1080, 30, 'high')).toBe(6_000_000);
   });
 
   it('fails closed for an unqualified exact capability tuple', () => {
