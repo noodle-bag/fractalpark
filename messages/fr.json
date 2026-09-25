@@ -1464,14 +1464,16 @@
       },
       "export": {
         "short": "Exporter",
-        "label": "Exporter en PNG",
-        "title": "Exporter en PNG",
-        "scale": "Taille",
-        "quality": "Qualité d'anticrénelage",
-        "qualityOff": "Désactivé",
-        "qualityLow": "Faible",
-        "qualityHigh": "Élevée",
-        "qualityUltra": "Ultra",
+        "label": "Exporter le média",
+        "title": "Exporter le média",
+        "description": "Créez une image ou une animation localement dans votre navigateur.",
+        "tabs": { "image": "Image", "animation": "Animation" },
+        "preview": "Aperçu de l’export", "format": "Format", "size": "Taille", "renderQuality": "Qualité de rendu",
+        "quality": { "off": "Désactivée", "standard": "Standard", "high": "Élevée", "ultra": "Ultra" },
+        "jpegQuality": "Qualité JPEG", "jpeg": { "balanced": "Équilibrée", "high": "Élevée", "maximum": "Maximale" },
+        "background": "Arrière-plan", "filename": "Nom de fichier (facultatif)", "filenamePlaceholder": "Généré depuis le nom de l’œuvre",
+        "animation": { "title": "Export d’animation", "preparing": "Les réglages MP4 et WebM seront disponibles après validation du profil exact." },
+        "cancel": "Annuler",
         "confirm": "Exporter",
         "pending": "Rendu en cours..."
       },
@@ -1494,7 +1496,7 @@
           "success": "Projet importé."
         },
         "export": {
-          "success": "PNG exporté."
+          "success": "Média exporté."
         }
       },
       "errors": {
@@ -1511,7 +1513,7 @@
         "formula-commit-failed": "La formule personnalisée n'a pas pu être installée. Aucune modification n'a été conservée.",
         "save-failed": "La création n'a pas pu être enregistrée.",
         "download-failed": "Le projet n'a pas pu être téléchargé.",
-        "export-failed": "Le PNG n'a pas pu être exporté.",
+        "export-failed": "Le média n’a pas pu être exporté.",
         "cloud-unavailable": "La synchronisation cloud est indisponible pour le moment — tes modifications n'ont pas été enregistrées."
       },
       "conflict": {

@@ -1464,14 +1464,22 @@
       },
       "export": {
         "short": "导出",
-        "label": "导出 PNG",
-        "title": "导出 PNG",
-        "scale": "尺寸",
-        "quality": "抗锯齿质量",
-        "qualityOff": "关闭",
-        "qualityLow": "低",
-        "qualityHigh": "高",
-        "qualityUltra": "极致",
+        "label": "导出媒体",
+        "title": "导出媒体",
+        "description": "在浏览器本地生成图片或动画。",
+        "tabs": { "image": "图片", "animation": "动画" },
+        "preview": "导出预览",
+        "format": "格式",
+        "size": "尺寸",
+        "renderQuality": "渲染质量",
+        "quality": { "off": "关闭", "standard": "标准", "high": "高", "ultra": "极致" },
+        "jpegQuality": "JPEG 质量",
+        "jpeg": { "balanced": "均衡", "high": "高", "maximum": "最高" },
+        "background": "背景",
+        "filename": "文件名（可选）",
+        "filenamePlaceholder": "根据作品名称自动生成",
+        "animation": { "title": "动画导出", "preparing": "精确配置通过能力检查后，将开放 MP4 和 WebM 设置。" },
+        "cancel": "取消",
         "confirm": "导出",
         "pending": "渲染中..."
       },
@@ -1494,7 +1502,7 @@
           "success": "项目已导入。"
         },
         "export": {
-          "success": "PNG 已导出。"
+          "success": "媒体已导出。"
         }
       },
       "errors": {
@@ -1511,7 +1519,7 @@
         "formula-commit-failed": "无法安装自定义公式，所有更改均已撤销。",
         "save-failed": "无法保存作品。",
         "download-failed": "无法下载项目。",
-        "export-failed": "无法导出 PNG。",
+        "export-failed": "无法导出媒体。",
         "cloud-unavailable": "云服务暂不可用——你的修改未被保存。"
       },
       "conflict": {

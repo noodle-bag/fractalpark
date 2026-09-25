@@ -1464,14 +1464,17 @@
       },
       "export": {
         "short": "Exportar",
-        "label": "Exportar PNG",
-        "title": "Exportar PNG",
-        "scale": "Tamaño",
-        "quality": "Calidad de suavizado",
-        "qualityOff": "Desactivado",
-        "qualityLow": "Baja",
-        "qualityHigh": "Alta",
-        "qualityUltra": "Ultra",
+        "label": "Exportar medios",
+        "title": "Exportar medios",
+        "description": "Crea una imagen o animación localmente en tu navegador.",
+        "tabs": { "image": "Imagen", "animation": "Animación" },
+        "preview": "Vista previa de exportación",
+        "format": "Formato", "size": "Tamaño", "renderQuality": "Calidad de renderizado",
+        "quality": { "off": "Desactivada", "standard": "Estándar", "high": "Alta", "ultra": "Ultra" },
+        "jpegQuality": "Calidad JPEG", "jpeg": { "balanced": "Equilibrada", "high": "Alta", "maximum": "Máxima" },
+        "background": "Fondo", "filename": "Nombre de archivo (opcional)", "filenamePlaceholder": "Generado a partir del nombre de la obra",
+        "animation": { "title": "Exportar animación", "preparing": "Los ajustes MP4 y WebM estarán disponibles cuando el perfil exacto supere las comprobaciones de capacidad." },
+        "cancel": "Cancelar",
         "confirm": "Exportar",
         "pending": "Renderizando…"
       },
@@ -1494,7 +1497,7 @@
           "success": "Proyecto importado."
         },
         "export": {
-          "success": "PNG exportado."
+          "success": "Medio exportado."
         }
       },
       "errors": {
@@ -1511,7 +1514,7 @@
         "formula-commit-failed": "La fórmula personalizada no se pudo instalar. No se conservaron cambios.",
         "save-failed": "La obra no se pudo guardar.",
         "download-failed": "El proyecto no se pudo descargar.",
-        "export-failed": "El PNG no se pudo exportar.",
+        "export-failed": "No se pudo exportar el medio.",
         "cloud-unavailable": "La sincronización en la nube no está disponible en este momento — tus cambios no se guardaron."
       },
       "conflict": {

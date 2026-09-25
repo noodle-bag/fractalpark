@@ -1508,7 +1508,7 @@ function ExploreClient({ posterImage }: { posterImage?: string }) {
           onSave={async (name) => getCanvas() ? artworkActions.save(name) : false}
           onDownload={artworkActions.download}
           onImport={artworkActions.importFile}
-          onExport={async (scale, ssaa) => getCanvas() ? artworkActions.exportPng(scale, ssaa) : false}
+          onExport={async submission => getCanvas() ? artworkActions.exportImage(submission) : false}
           onReset={handleResetView}
           onConflictReload={() => {
             // Reload discards the in-memory edits that conflicted — confirm

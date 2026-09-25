@@ -1464,14 +1464,16 @@
       },
       "export": {
         "short": "Exportar",
-        "label": "Exportar PNG",
-        "title": "Exportar PNG",
-        "scale": "Tamanho",
-        "quality": "Qualidade de anti-aliasing",
-        "qualityOff": "Desativado",
-        "qualityLow": "Baixa",
-        "qualityHigh": "Alta",
-        "qualityUltra": "Ultra",
+        "label": "Exportar mídia",
+        "title": "Exportar mídia",
+        "description": "Crie uma imagem ou animação localmente no navegador.",
+        "tabs": { "image": "Imagem", "animation": "Animação" },
+        "preview": "Prévia da exportação", "format": "Formato", "size": "Tamanho", "renderQuality": "Qualidade de renderização",
+        "quality": { "off": "Desativada", "standard": "Padrão", "high": "Alta", "ultra": "Ultra" },
+        "jpegQuality": "Qualidade JPEG", "jpeg": { "balanced": "Equilibrada", "high": "Alta", "maximum": "Máxima" },
+        "background": "Fundo", "filename": "Nome do arquivo (opcional)", "filenamePlaceholder": "Gerado a partir do nome da obra",
+        "animation": { "title": "Exportar animação", "preparing": "As opções MP4 e WebM serão liberadas após a verificação do perfil exato." },
+        "cancel": "Cancelar",
         "confirm": "Exportar",
         "pending": "Renderizando…"
       },
@@ -1494,7 +1496,7 @@
           "success": "Projeto importado."
         },
         "export": {
-          "success": "PNG exportado."
+          "success": "Mídia exportada."
         }
       },
       "errors": {
@@ -1511,7 +1513,7 @@
         "formula-commit-failed": "A fórmula personalizada não pôde ser instalada. Nenhuma alteração foi mantida.",
         "save-failed": "A obra não pôde ser salva.",
         "download-failed": "O projeto não pôde ser baixado.",
-        "export-failed": "O PNG não pôde ser exportado.",
+        "export-failed": "Não foi possível exportar a mídia.",
         "cloud-unavailable": "A sincronização na nuvem está indisponível no momento — suas alterações não foram salvas."
       },
       "conflict": {

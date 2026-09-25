@@ -5,7 +5,7 @@ import { useCallback, useRef, useState } from 'react';
 import { trackEvent } from '@/components/analytics/PageViewTracker';
 import { useCloudSession } from '@/components/cloud/CloudSessionProvider';
 import type { FractalDocument } from '@/engine/document';
-import { createRenderSnapshot } from '@/engine/render-snapshot';
+import type { ImageExportWorkspaceSubmission } from '@/components/fractal/MediaExportWorkspace';
 import type { CloudDraftIdentity } from '@/hooks/useCloudDraftSession';
 import {
   getArtworkAnalyticsContext,
@@ -17,7 +17,14 @@ import {
   readSessionFormulaAssets,
   resolveCustomFormula,
 } from '@/lib/formula-resolver';
-import { exportFractal } from '@/lib/export-fractal';
+import {
+  createMediaExportRequest,
+  preflightMediaExportRequest,
+} from '@/lib/media-export';
+import {
+  exportImageBlob,
+  handoffMediaExportDownload,
+} from '@/lib/media-export-image';
 import {
   FRACTAL_PROJECT_FILE_MAX_BYTES,
   createFractalDocumentEnvelope,
@@ -326,21 +333,53 @@ export function useArtworkActions({
     }
   }, [begin, document, fail, loadDocument, succeed]);
 
-  const exportPng = useCallback(async (scale: number, ssaaLevel: number) => {
+  const exportImage = useCallback(async (submission: ImageExportWorkspaceSubmission) => {
     if (!begin('export')) return false;
     try {
       const canvas = getCanvas();
-      const width = canvas?.clientWidth ?? 1200;
-      const height = canvas?.clientHeight ?? 800;
-      const snapshot = createRenderSnapshot(document, {
-        maxIterations: effectiveIterations,
-        useSSAA: ssaaLevel > 0,
-        ssaaLevel,
+      if (!canvas) {
+        fail('export', 'export-failed');
+        return false;
+      }
+      const exportDocument: FractalDocument = {
+        ...document,
+        render: { ...document.render, maxIterations: effectiveIterations },
+      };
+      const request = createMediaExportRequest({
+        ...submission,
+        kind: 'image',
+        document: exportDocument,
+        formulaAssets: readEffectiveFormulaAssets(document.formula.formulaId),
+        sourceViewport: {
+          width: Math.max(1, canvas.clientWidth || canvas.width),
+          height: Math.max(1, canvas.clientHeight || canvas.height),
+        },
+        composition: {
+          mode: 'fit',
+          baseline: 'fit',
+          panX: 0,
+          panY: 0,
+          scale: 1,
+          rotation: 0,
+        },
+        createdAt: Date.now(),
       });
-      await exportFractal(snapshot, width, height, scale);
+      if (!request.ok || request.value.kind !== 'image') {
+        fail('export', 'export-failed');
+        return false;
+      }
+      const preflight = preflightMediaExportRequest(request.value, { qualified: true });
+      if (!preflight.ok) {
+        fail('export', 'export-failed');
+        return false;
+      }
+      const blob = await exportImageBlob(request.value, new AbortController().signal);
+      handoffMediaExportDownload(blob, request.value.filename);
       trackEvent('export_fractal', {
-        scale,
-        ssaa: ssaaLevel,
+        format: submission.format,
+        width: submission.width,
+        height: submission.height,
+        render_quality: submission.renderQuality,
         ...getArtworkAnalyticsContext(document),
       });
       succeed('export');
@@ -359,6 +398,6 @@ export function useArtworkActions({
     save,
     download,
     importFile,
-    exportPng,
+    exportImage,
   };
 }

@@ -1464,14 +1464,22 @@
       },
       "export": {
         "short": "Export",
-        "label": "Export PNG",
-        "title": "Export PNG",
-        "scale": "Size",
-        "quality": "Anti-aliasing Quality",
-        "qualityOff": "Off",
-        "qualityLow": "Low",
-        "qualityHigh": "High",
-        "qualityUltra": "Ultra",
+        "label": "Export Media",
+        "title": "Export Media",
+        "description": "Create an image or animation locally in your browser.",
+        "tabs": { "image": "Image", "animation": "Animation" },
+        "preview": "Export preview",
+        "format": "Format",
+        "size": "Size",
+        "renderQuality": "Render quality",
+        "quality": { "off": "Off", "standard": "Standard", "high": "High", "ultra": "Ultra" },
+        "jpegQuality": "JPEG quality",
+        "jpeg": { "balanced": "Balanced", "high": "High", "maximum": "Maximum" },
+        "background": "Background",
+        "filename": "Filename (optional)",
+        "filenamePlaceholder": "Generated from artwork name",
+        "animation": { "title": "Animation export", "preparing": "MP4 and WebM settings will become available after the exact profile passes capability checks." },
+        "cancel": "Cancel",
         "confirm": "Export",
         "pending": "Rendering..."
       },
@@ -1494,7 +1502,7 @@
           "success": "Project imported."
         },
         "export": {
-          "success": "PNG exported."
+          "success": "Media exported."
         }
       },
       "errors": {
@@ -1511,7 +1519,7 @@
         "formula-commit-failed": "The custom formula could not be installed. No changes were kept.",
         "save-failed": "The artwork could not be saved.",
         "download-failed": "The project could not be downloaded.",
-        "export-failed": "The PNG could not be exported.",
+        "export-failed": "The media could not be exported.",
         "cloud-unavailable": "Cloud sync is unavailable right now — your changes were not saved."
       },
       "conflict": {
