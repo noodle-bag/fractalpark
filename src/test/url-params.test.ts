@@ -112,6 +112,14 @@ bailout:
     expect(params.has('lgi')).toBe(false);
   });
 
+  it('round-trips approved animation speed and rejects non-grid URL values', () => {
+    expect(decodeParams(encodeParams({ animationSpeed: 0.25 })).animationSpeed).toBe(0.25);
+    expect(decodeParams(encodeParams({ animationSpeed: 4 })).animationSpeed).toBe(4);
+    expect(encodeParams({ animationSpeed: 1 }).has('spd')).toBe(false);
+    expect(decodeParams(new URLSearchParams('spd=0.3')).animationSpeed).toBeUndefined();
+    expect(decodeParams(new URLSearchParams('spd=Infinity')).animationSpeed).toBeUndefined();
+  });
+
   it('decodes plugin formula IDs without registry validation', () => {
     // This test verifies the fix for the bug where plugin formulas
     // (like buffalo) were not decoded correctly when decodeParams
@@ -252,6 +260,7 @@ bailout:
           { id: 'k1', bounds: { centerX: 0, centerY: 0, zoom: 1, rotation: 0 } },
           { id: 'k2', bounds: { centerX: 1, centerY: 1, zoom: 2, rotation: 0.1 } },
         ],
+        speed: 3,
       },
     });
 
@@ -270,6 +279,8 @@ bailout:
     });
     expect(urlState.transformId).toBe('kaleidoscope');
     expect(urlState.keyframes).toHaveLength(2);
+    expect(urlState.animationSpeed).toBe(3);
+    expect(new URL(href, 'https://fractalpark.invalid').searchParams.get('spd')).toBe('3');
     expect(href.startsWith('/zh/explore?')).toBe(true);
   });
 

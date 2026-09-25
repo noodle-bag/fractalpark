@@ -7,6 +7,7 @@ import type {
   PluginParamValue,
   ViewBounds,
 } from './types';
+import type { AnimationPlaybackSpeed } from './animation/playback';
 
 export const FRACTAL_DOCUMENT_SCHEMA_VERSION = 2 as const;
 
@@ -100,6 +101,7 @@ export interface RenderState {
 export interface AnimationState {
   viewKeyframes?: Keyframe[];
   tracks?: AnimationTrack[];
+  speed?: AnimationPlaybackSpeed;
 }
 
 export interface AnimationTrackKeyframe {

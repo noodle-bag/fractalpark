@@ -1,12 +1,16 @@
 import type { FractalDocument } from '@/engine/document';
+import {
+  ANIMATION_PLAYBACK_SPEEDS,
+  type AnimationPlaybackSpeed,
+} from '@/engine/animation/playback';
 
 export const MEDIA_EXPORT_IMAGE_FORMATS = ['png', 'jpeg'] as const;
 export const MEDIA_EXPORT_ANIMATION_FORMATS = ['mp4', 'webm'] as const;
-export const MEDIA_EXPORT_SPEEDS = [0.25, 0.5, 0.75, 1, 1.25, 1.5, 2, 3, 4] as const;
+export const MEDIA_EXPORT_SPEEDS = ANIMATION_PLAYBACK_SPEEDS;
 
 export type MediaExportImageFormat = (typeof MEDIA_EXPORT_IMAGE_FORMATS)[number];
 export type MediaExportAnimationFormat = (typeof MEDIA_EXPORT_ANIMATION_FORMATS)[number];
-export type MediaExportSpeed = (typeof MEDIA_EXPORT_SPEEDS)[number];
+export type MediaExportSpeed = AnimationPlaybackSpeed;
 export type MediaExportRenderQuality = 'off' | 'standard' | 'high' | 'ultra';
 export type MediaExportJpegQuality = 'balanced' | 'high' | 'maximum';
 export type MediaExportCompositionMode = 'fit' | 'fill' | 'custom';

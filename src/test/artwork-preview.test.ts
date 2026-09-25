@@ -47,6 +47,7 @@ describe('cloud artwork preview projection', () => {
         { id: 'start', bounds: { centerX: -0.5, centerY: 0, zoom: 1, rotation: 0 } },
         { id: 'end', bounds: { centerX: -0.7, centerY: 0.2, zoom: 8, rotation: 0.1 } },
       ],
+      speed: 2,
     };
 
     const preview = await prepareArtworkPreview(await envelopeFor(document));
@@ -55,6 +56,7 @@ describe('cloud artwork preview projection', () => {
     expect(preview?.params.formula).toBe(document.formula.formulaId);
     expect(preview?.params.bounds).toEqual(document.scene.bounds);
     expect(preview?.keyframes).toEqual(document.animation.viewKeyframes);
+    expect(preview?.speed).toBe(2);
     expect(preview?.customFormulaPlugin).toBeNull();
   });
 

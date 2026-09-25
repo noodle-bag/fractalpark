@@ -107,6 +107,7 @@ export function ArtworkViewer({
               <PublishedArtworkCanvas
                 artwork={artwork}
                 keyframes={artwork.animation.keyframes}
+                speed={artwork.animation.speed}
                 dprScale={0.75}
                 className="h-full w-full"
                 onUnavailable={onUnavailable}
@@ -147,6 +148,7 @@ export function ArtworkViewer({
             <PublishedArtworkCanvas
               artwork={artwork}
               keyframes={artwork.animation.keyframes}
+              speed={artwork.animation.speed}
               dprScale={0.75}
               paused={isPaused}
               resetOnStop={false}

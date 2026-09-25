@@ -74,6 +74,7 @@ describe('published artwork pages', () => {
       expect(playback.params.formula).toBe(artwork!.formulaId);
       expect(playback.params.bounds).toEqual(artwork!.document.scene.bounds);
       expect(playback.animation.keyframes.length).toBeGreaterThanOrEqual(2);
+      expect(playback.animation.speed).toBe(1);
     }
   });
 

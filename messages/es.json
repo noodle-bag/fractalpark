@@ -1870,6 +1870,8 @@
         "stopPreview": "Detener",
         "noKeyframes": "Aún no hay fotogramas clave",
         "duration": "Bucle: {seconds}s",
+        "speed": "Velocidad de reproducción",
+        "speedHint": "Cambia el tiempo de la vista previa y la exportación sin modificar fotogramas clave.",
         "keyframeLabel": "Fotograma clave {number} (zoom: {zoom})"
       },
       "gradient": {

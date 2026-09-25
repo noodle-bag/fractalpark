@@ -30,6 +30,19 @@ describe('document reader', () => {
     expect(result.document.metadata?.sourceId).toBe('fixture-v2');
   });
 
+  it('reads additive speed from schema v2 and keeps old speed-less documents compatible', () => {
+    const withSpeed = readFractalDocument({
+      ...documentV2,
+      animation: { speed: 4 },
+    });
+    expect(withSpeed.mode).toBe('editable');
+    if (withSpeed.mode === 'editable') expect(withSpeed.document.animation?.speed).toBe(4);
+
+    const withoutSpeed = readFractalDocument(documentV2);
+    expect(withoutSpeed.mode).toBe('editable');
+    if (withoutSpeed.mode === 'editable') expect(withoutSpeed.document.animation?.speed).toBeUndefined();
+  });
+
   it('projects a future document for preview while preserving the original', () => {
     const result = readFractalDocument(documentV3Future);
 

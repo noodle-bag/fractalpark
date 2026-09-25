@@ -1865,6 +1865,8 @@
         "stopPreview": "Arrêter",
         "noKeyframes": "Aucune image clé pour l'instant",
         "duration": "Boucle : {seconds}s",
+        "speed": "Vitesse de lecture",
+        "speedHint": "Modifie le rythme de l’aperçu et de l’export sans changer les images clés.",
         "keyframeLabel": "Image clé {number} (zoom : {zoom})"
       },
       "gradient": {

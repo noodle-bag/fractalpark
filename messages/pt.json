@@ -1865,6 +1865,8 @@
         "stopPreview": "Parar",
         "noKeyframes": "Nenhum keyframe ainda",
         "duration": "Loop: {seconds}s",
+        "speed": "Velocidade de reprodução",
+        "speedHint": "Altera o tempo da prévia e da exportação sem mudar os keyframes.",
         "keyframeLabel": "Keyframe {number} (zoom: {zoom})"
       },
       "gradient": {

@@ -10,6 +10,10 @@ import {
 } from '@/engine/document-adapter';
 import type { FractalParams, Keyframe } from '@/engine/types';
 import {
+  normalizeAnimationPlaybackSpeed,
+  type AnimationPlaybackSpeed,
+} from '@/engine/animation/playback';
+import {
   buildCanonicalPresetDocument,
   buildPresetPlaybackKeyframes,
   parseGalleryPresetsFile,
@@ -36,7 +40,7 @@ export interface PublishedArtworkPlayback {
   runtimeFormula?: {
     runtimeId: string;
   };
-  animation: { keyframes: Keyframe[] };
+  animation: { keyframes: Keyframe[]; speed: AnimationPlaybackSpeed };
 }
 
 export function buildPublishedArtwork(
@@ -85,6 +89,7 @@ export function buildPublishedArtworkPlayback(
         artwork.document,
         artwork.presetId
       ),
+      speed: normalizeAnimationPlaybackSpeed(artwork.document.animation?.speed),
     },
   };
 }

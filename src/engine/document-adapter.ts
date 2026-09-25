@@ -106,13 +106,16 @@ function flattenPluginParams(doc: FractalDocument): PluginParamRecord | undefine
 
 export function runtimeParamsToDocument(
   params: FractalParams,
-  extras?: { animation?: AnimationState | KeyframeAnimation; metadata?: FractalDocumentMetadata }
+  extras?: {
+    animation?: AnimationState | (KeyframeAnimation & Pick<AnimationState, 'speed'>);
+    metadata?: FractalDocumentMetadata;
+  }
 ): FractalDocument {
   const split = splitPluginParams(params);
   const animation = extras?.animation;
   const normalizedAnimation = animation
     ? 'keyframes' in animation
-      ? { viewKeyframes: animation.keyframes }
+      ? { viewKeyframes: animation.keyframes, speed: animation.speed }
       : animation
     : undefined;
 
@@ -294,7 +297,9 @@ export function urlStateToDocument(
       useSSAA: state.useSSAA ?? DEFAULT_FRACTAL_DOCUMENT.render.useSSAA,
       adaptiveIterations: state.adaptiveIterations ?? DEFAULT_FRACTAL_DOCUMENT.render.adaptiveIterations,
     },
-    animation: state.keyframes && state.keyframes.length > 0 ? { viewKeyframes: state.keyframes } : undefined,
+    animation: state.keyframes && state.keyframes.length > 0 || state.animationSpeed !== undefined
+      ? { viewKeyframes: state.keyframes, speed: state.animationSpeed }
+      : undefined,
     metadata: extras?.metadata,
   };
 }

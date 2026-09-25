@@ -1865,6 +1865,8 @@
         "stopPreview": "중지",
         "noKeyframes": "아직 키프레임이 없어요",
         "duration": "반복: {seconds}초",
+        "speed": "재생 속도",
+        "speedHint": "키프레임은 바꾸지 않고 미리보기와 내보내기 시간만 변경합니다.",
         "keyframeLabel": "키프레임 {number} (줌: {zoom})"
       },
       "gradient": {

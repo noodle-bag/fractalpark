@@ -127,6 +127,12 @@ describe("Document v3 and Envelope v2 reader-first contracts", () => {
     expect(FRACTAL_DOCUMENT_ENVELOPE_VERSION).toBe(1);
   });
 
+  it("accepts the additive schema-v2 animation speed in the reader-first v3 seam", async () => {
+    const input = await documentV3();
+    input.animation = { speed: 2 };
+    await expect(readFractalDocumentV3(input)).resolves.toMatchObject({ mode: "readable-v3" });
+  });
+
   it("dual-reads legacy Envelope v1 through the released reader", async () => {
     const result = await readPortableFractalDocumentEnvelope(envelopeV1Fixture);
     expect(result.mode).toBe("editable");

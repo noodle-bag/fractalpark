@@ -139,7 +139,9 @@ describe('useCloudDraftSession (spec §17)', () => {
   });
 
   it('loads a draft and parses the envelope; not_found maps distinctly', async () => {
-    const envelope = (await createFractalDocumentEnvelope(DEFAULT_FRACTAL_DOCUMENT, []));
+    const document = structuredClone(DEFAULT_FRACTAL_DOCUMENT);
+    document.animation = { speed: 2 };
+    const envelope = (await createFractalDocumentEnvelope(document, []));
     if (!envelope.success) throw new Error('fixture envelope failed');
     getDraftMock.mockResolvedValueOnce({
       id: 'd-9',
@@ -157,6 +159,7 @@ describe('useCloudDraftSession (spec §17)', () => {
     await act(async () => {
       const loaded = await result.current.loadDraft('d-9');
       expect(loaded?.title).toBe('Loaded');
+      expect(loaded?.document.animation?.speed).toBe(2);
     });
     expect(result.current.identity).toEqual({ id: 'd-9', revision: 3 });
     expect(result.current.loadState).toBe('ready');

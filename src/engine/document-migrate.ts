@@ -14,6 +14,7 @@ import {
   type ColoringStyleState,
   type FractalDocument,
 } from './document';
+import { normalizeAnimationPlaybackSpeed } from './animation/playback';
 import {
   projectDocumentToRuntimeParams,
   runtimeParamsToDocument,
@@ -84,7 +85,8 @@ function looksLikeUrlState(value: unknown): value is FractalUrlState {
       'lighting' in value ||
       'gradient' in value ||
       'palette' in value ||
-      'keyframes' in value)
+      'keyframes' in value ||
+      'animationSpeed' in value)
   );
 }
 
@@ -317,6 +319,7 @@ export function normalizeFractalDocument(doc: DeepPartial<FractalDocument>): Fra
     : Array.isArray(animation?.keyframes)
       ? animation.keyframes
       : undefined;
+  const hasAnimationSpeed = animation !== undefined && Object.hasOwn(animation, 'speed');
 
   return {
     schemaVersion: FRACTAL_DOCUMENT_SCHEMA_VERSION,
@@ -415,10 +418,13 @@ export function normalizeFractalDocument(doc: DeepPartial<FractalDocument>): Fra
           : DEFAULT_FRACTAL_DOCUMENT.render.adaptiveIterations,
     },
     animation:
-      viewKeyframes || animation?.tracks
+      viewKeyframes || animation?.tracks || hasAnimationSpeed
         ? {
             viewKeyframes: viewKeyframes ? [...viewKeyframes] as Keyframe[] : undefined,
             tracks: normalizeAnimationTracks(animation?.tracks),
+            speed: hasAnimationSpeed
+              ? normalizeAnimationPlaybackSpeed(animation?.speed)
+              : undefined,
           }
         : undefined,
     assets: legacyAssets

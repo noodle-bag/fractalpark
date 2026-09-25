@@ -15,12 +15,15 @@ test.beforeEach(async ({ context }) => {
 });
 
 async function ready(page: Page) {
-  await expect(page.getByRole('spinbutton', { name: 'power', exact: true, includeHidden: true })).toBeAttached({ timeout: 45_000 });
+  await readyCanvas(page);
+}
+
+async function readyCanvas(page: Page) {
   const canvas = page.getByRole('main').getByTestId('fractal-canvas');
   await expect(canvas).toHaveAttribute('data-render-status', 'ready', { timeout: 45_000 });
   const formulaId = await page.getByTestId('explore-root').getAttribute('data-formula-id');
   await expect(canvas).toHaveAttribute('data-rendered-formula-id', formulaId!);
-  await expect.poll(() => new URL(page.url()).searchParams.get('fm')).toBe(formulaId);
+  await expect.poll(() => new URL(page.url()).searchParams.get('fm') ?? 'mandelbrot').toBe(formulaId);
   await page.evaluate(() => document.fonts.ready);
   await expect(page.locator('[data-nextjs-dialog]')).toHaveCount(0);
 }
@@ -40,7 +43,7 @@ async function expectCanvasSizeSettled(page: Page) {
     return canvas.width === Math.round(rect.width * devicePixelRatio)
       && canvas.height === Math.round(rect.height * devicePixelRatio);
   }), { timeout: 30_000 }).toBe(true);
-  await ready(page);
+  await readyCanvas(page);
 }
 
 test('media export keeps a latest-only real preview and accessible composition controls', async ({ page }) => {
@@ -49,7 +52,7 @@ test('media export keeps a latest-only real preview and accessible composition c
   const errors: string[] = [];
   page.on('pageerror', error => errors.push(error.message));
   await page.goto('/en/explore');
-  await ready(page);
+  await readyCanvas(page);
   const exportButton = page.getByRole('button', { name: 'Export Media', exact: true });
   await exportButton.click();
   const dialog = page.getByRole('dialog');
@@ -97,6 +100,40 @@ test('all locales keep the export preview, summary and actions reachable at 320p
     await page.keyboard.press('Escape');
     await expect(exportButton).toBeFocused();
   }
+});
+
+test('animation speed snaps across pointer and keyboard input and restores from the URL', async ({ page }) => {
+  test.setTimeout(60_000);
+  await page.setViewportSize({ width: 390, height: 844 });
+  const errors: string[] = [];
+  page.on('pageerror', error => errors.push(error.message));
+  await page.goto('/en/explore?spd=3');
+  await ready(page);
+  await page.getByRole('tab', { name: 'Animation', exact: true }).last().click();
+  const slider = page.getByRole('slider', { name: 'Playback speed', exact: true });
+  await expect(slider).toHaveValue('7');
+  await expect(slider).toHaveAttribute('aria-valuetext', '3×');
+
+  await slider.press('Home');
+  await expect(slider).toHaveValue('0');
+  await expect(slider).toHaveAttribute('aria-valuetext', '0.25×');
+  await expect.poll(() => new URL(page.url()).searchParams.get('spd')).toBe('0.25');
+  await slider.press('ArrowRight');
+  await expect(slider).toHaveValue('1');
+  await expect(slider).toHaveAttribute('aria-valuetext', '0.5×');
+
+  const box = (await slider.boundingBox())!;
+  await page.mouse.click(box.x + box.width - 2, box.y + box.height / 2);
+  await expect(slider).toHaveValue('8');
+  await expect(slider).toHaveAttribute('aria-valuetext', '4×');
+  await expect.poll(() => new URL(page.url()).searchParams.get('spd')).toBe('4');
+  expect(await page.evaluate(() => document.documentElement.scrollWidth <= innerWidth)).toBe(true);
+
+  await page.reload();
+  await ready(page);
+  await page.getByRole('tab', { name: 'Animation', exact: true }).last().click();
+  await expect(page.getByRole('slider', { name: 'Playback speed', exact: true })).toHaveAttribute('aria-valuetext', '4×');
+  expect(errors).toEqual([]);
 });
 
 for (const width of [1440, 1180]) {

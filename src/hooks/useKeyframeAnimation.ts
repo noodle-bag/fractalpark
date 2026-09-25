@@ -3,6 +3,13 @@
 import { useRef, useEffect, useMemo } from 'react';
 import type { ViewBounds, Keyframe } from '@/engine/types';
 import { buildTimeline, totalDuration, interpolateAtTime } from '@/engine/animation/interpolate';
+import {
+  DEFAULT_ANIMATION_PLAYBACK_SPEED,
+  getEffectiveAnimationDuration,
+  mapOutputTimeToCanonicalTime,
+  normalizeAnimationPlaybackSpeed,
+  type AnimationPlaybackSpeed,
+} from '@/engine/animation/playback';
 
 export interface UseKeyframeAnimationOptions {
   keyframes: Keyframe[];
@@ -10,6 +17,7 @@ export interface UseKeyframeAnimationOptions {
   onLoopComplete?: () => void;
   active: boolean;  // Controls whether animation is running
   resetOnStop?: boolean; // If true (default), reset elapsed time when stopped. Set false to resume from current position.
+  speed?: AnimationPlaybackSpeed;
 }
 
 export interface UseKeyframeAnimationReturn {
@@ -31,6 +39,7 @@ export function useKeyframeAnimation(
   options: UseKeyframeAnimationOptions
 ): UseKeyframeAnimationReturn {
   const { keyframes, onFrame, onLoopComplete, active, resetOnStop = true } = options;
+  const speed = normalizeAnimationPlaybackSpeed(options.speed ?? DEFAULT_ANIMATION_PLAYBACK_SPEED);
 
   // Refs for animation state (don't trigger re-renders)
   const rafIdRef = useRef<number | null>(null);
@@ -38,6 +47,7 @@ export function useKeyframeAnimation(
   const elapsedTimeRef = useRef<number>(0);
   const segmentsRef = useRef<ReturnType<typeof buildTimeline>>([]);
   const totalDurRef = useRef<number>(0);
+  const speedRef = useRef<AnimationPlaybackSpeed>(speed);
   const animateRef = useRef<(timestamp: number) => void>(() => {});
 
   // Build timeline when keyframes change
@@ -45,6 +55,16 @@ export function useKeyframeAnimation(
     segmentsRef.current = buildTimeline(keyframes);
     totalDurRef.current = totalDuration(segmentsRef.current);
   }, [keyframes]);
+
+  useEffect(() => {
+    const previousSpeed = speedRef.current;
+    if (previousSpeed !== speed) {
+      const canonicalTime = mapOutputTimeToCanonicalTime(elapsedTimeRef.current, previousSpeed);
+      elapsedTimeRef.current = canonicalTime / speed;
+      speedRef.current = speed;
+      lastTimestampRef.current = null;
+    }
+  }, [speed]);
 
   // Keep animation callback fresh without mutating refs during render
   useEffect(() => {
@@ -56,8 +76,9 @@ export function useKeyframeAnimation(
         return;
       }
 
-      const totalDur = totalDurRef.current;
-      if (totalDur <= 0 || keyframes.length < 2) {
+      const baseDuration = totalDurRef.current;
+      const effectiveDuration = getEffectiveAnimationDuration(baseDuration, speedRef.current);
+      if (effectiveDuration <= 0 || keyframes.length < 2) {
         // Not enough keyframes to animate
         rafIdRef.current = null;
         return;
@@ -74,16 +95,16 @@ export function useKeyframeAnimation(
       elapsedTimeRef.current += delta;
 
       // Check for loop completion
-      if (elapsedTimeRef.current >= totalDur) {
-        elapsedTimeRef.current = elapsedTimeRef.current % totalDur;
+      if (elapsedTimeRef.current >= effectiveDuration) {
+        elapsedTimeRef.current = elapsedTimeRef.current % effectiveDuration;
         onLoopComplete?.();
       }
 
       // Interpolate bounds at current time
       const bounds = interpolateAtTime(
         segmentsRef.current,
-        totalDur,
-        elapsedTimeRef.current
+        baseDuration,
+        mapOutputTimeToCanonicalTime(elapsedTimeRef.current, speedRef.current)
       );
 
       // Call frame callback (imperative, no setState)
@@ -153,8 +174,8 @@ export function useKeyframeAnimation(
   // Static return values for callers that want metadata
   const totalDur = useMemo(() => {
     if (keyframes.length < 2) return 0;
-    return totalDuration(buildTimeline(keyframes));
-  }, [keyframes]);
+    return getEffectiveAnimationDuration(totalDuration(buildTimeline(keyframes)), speed);
+  }, [keyframes, speed]);
 
   return {
     elapsedTime: 0,

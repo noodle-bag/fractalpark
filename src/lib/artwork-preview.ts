@@ -11,6 +11,10 @@ import { resolveRecoveredPublishedRenderingPluginV1 } from '@/engine/formulas/v1
 import { resolveFormulaRuntimeCapabilityV1 } from '@/engine/formulas/v1/formula-runtime-capability-v1';
 import type { FormulaPlugin } from '@/engine/plugins/types';
 import type { FractalParams, Keyframe } from '@/engine/types';
+import {
+  normalizeAnimationPlaybackSpeed,
+  type AnimationPlaybackSpeed,
+} from '@/engine/animation/playback';
 import { resolveRendererPipelineVersion } from '@/engine/frm/semantics-version';
 import { resolveCustomFormula, resolveFormulaReference } from '@/lib/formula-resolver';
 import { sha256Hex } from '@/lib/fractal-file';
@@ -22,6 +26,7 @@ const PREVIEW_MAX_BAILOUT = 1_000_000;
 export interface ArtworkPreviewData {
   params: FractalParams;
   keyframes: Keyframe[];
+  speed: AnimationPlaybackSpeed;
   /** Isolated published or custom formula. Never registered in session-global state. */
   customFormulaPlugin: FormulaPlugin | null;
 }
@@ -122,6 +127,7 @@ export async function prepareArtworkPreview(envelope: unknown): Promise<ArtworkP
       ),
     },
     keyframes: document.animation?.viewKeyframes ?? [],
+    speed: normalizeAnimationPlaybackSpeed(document.animation?.speed),
     customFormulaPlugin,
   };
 }

@@ -221,6 +221,24 @@ describe('fractal project files', () => {
     });
   });
 
+  it('round-trips animation speed through the existing schema-v2 project envelope', async () => {
+    const document: FractalDocument = {
+      ...CURRENT_DOCUMENT,
+      animation: { speed: 0.5 },
+    };
+    const envelope = await createFractalDocumentEnvelope(document, []);
+    expect(envelope.success).toBe(true);
+    if (!envelope.success) return;
+    const serialized = serializeFractalProject(envelope.value);
+    expect(serialized.success).toBe(true);
+    if (!serialized.success) return;
+    const parsed = parseFractalProjectJson(serialized.value);
+    expect(parsed).toMatchObject({
+      success: true,
+      value: { mode: 'editable', envelope: { document: { schemaVersion: 2, animation: { speed: 0.5 } } } },
+    });
+  });
+
   it('collects a custom formula with its exact SHA-256 hash', async () => {
     const document = {
       ...documentV2,
