@@ -142,42 +142,41 @@ describe('MediaExportWorkspace', () => {
     expect(props.onOpenChange).not.toHaveBeenCalledWith(false);
   });
 
-  it('cancels stale preview work, keeps one composition contract, and revokes the object URL', async () => {
+  it('coalesces preview changes without interrupting the active render and revokes object URLs', async () => {
     const createObjectURL = vi.fn(() => 'blob:latest-preview');
     const revokeObjectURL = vi.fn();
     Object.defineProperty(URL, 'createObjectURL', { configurable: true, value: createObjectURL });
     Object.defineProperty(URL, 'revokeObjectURL', { configurable: true, value: revokeObjectURL });
     const signals: AbortSignal[] = [];
+    let resolveFirst: ((blob: Blob) => void) | undefined;
     const onPreviewImage = vi.fn((_submission: unknown, signal: AbortSignal) => {
       signals.push(signal);
-      if (signals.length === 1) return new Promise<Blob>(() => undefined);
-      if (signals.length === 3) return Promise.reject(new Error('preview failed'));
+      if (signals.length === 1) return new Promise<Blob>(resolve => { resolveFirst = resolve; });
       return Promise.resolve(new Blob(['preview'], { type: 'image/png' }));
     });
     const { onExportImage, view } = setup({ onPreviewImage });
 
     await waitFor(() => expect(onPreviewImage).toHaveBeenCalledTimes(1));
     fireEvent.click(screen.getByRole('button', { name: 'composition.fill' }));
-    expect(signals[0]?.aborted).toBe(true);
-    await waitFor(() => expect(screen.getByRole('img', { name: 'previewImageAlt' })).toHaveAttribute('src', 'blob:latest-preview'));
     fireEvent.change(screen.getByLabelText('composition.zoom'), { target: { value: '2' } });
-    await waitFor(() => expect(onPreviewImage).toHaveBeenCalledTimes(3));
-    await waitFor(() => expect(screen.getByText(/previewState.failed/)).toBeVisible());
-    expect(screen.getByRole('img', { name: 'previewImageAlt' })).toHaveAttribute('src', 'blob:latest-preview');
+    expect(signals[0]?.aborted).toBe(false);
+    expect(onPreviewImage).toHaveBeenCalledTimes(1);
+    resolveFirst?.(new Blob(['first'], { type: 'image/png' }));
+    await waitFor(() => expect(screen.getByRole('img', { name: 'previewImageAlt' })).toHaveAttribute('src', 'blob:latest-preview'));
+    await waitFor(() => expect(onPreviewImage).toHaveBeenCalledTimes(2));
+    expect(onPreviewImage.mock.calls[1]?.[0]).toEqual(expect.objectContaining({
+      composition: expect.objectContaining({ mode: 'custom', baseline: 'fill', scale: 2 }),
+    }));
     fireEvent.click(screen.getByRole('button', { name: 'confirm' }));
     await waitFor(() => expect(onExportImage).toHaveBeenCalledWith(expect.objectContaining({
       composition: expect.objectContaining({ mode: 'custom', baseline: 'fill', scale: 2 }),
     })));
-    expect(onPreviewImage.mock.calls[1]?.[0]).toEqual(expect.objectContaining({
-      composition: expect.objectContaining({ mode: 'fill', baseline: 'fill' }),
-    }));
-
     view.unmount();
     expect(revokeObjectURL).toHaveBeenCalledWith('blob:latest-preview');
   });
 
-  it('matches Explore vertical drag direction and exposes an always-on touch scrollbar', async () => {
-    setup();
+  it('matches Explore vertical drag direction and exposes a constrained always-on scroll viewport', async () => {
+    setup({ onPreviewImage: async () => new Blob(['preview'], { type: 'image/png' }) });
     const preview = screen.getByTestId('media-export-preview');
     Object.defineProperty(preview, 'setPointerCapture', { configurable: true, value: vi.fn() });
     Object.defineProperty(preview, 'getBoundingClientRect', {
@@ -188,6 +187,28 @@ describe('MediaExportWorkspace', () => {
     fireEvent.pointerMove(preview, { pointerId: 1, clientX: 50, clientY: 60 });
     fireEvent.pointerUp(preview, { pointerId: 1, clientX: 50, clientY: 60 });
     await waitFor(() => expect(screen.getByLabelText('composition.panY')).toHaveValue(0.2));
+    expect(screen.getByTestId('media-export-scroll-area')).toHaveClass('h-0');
     expect(document.querySelector('[data-slot="scroll-area-scrollbar"]')).toBeInTheDocument();
+    await waitFor(() => expect(screen.getByRole('img', { name: 'previewImageAlt' })).toHaveClass('object-contain'));
+  });
+
+  it('keeps portrait preview geometry proportional and shows progress outside the scroll viewport immediately', async () => {
+    let finishExport: ((value: boolean) => void) | undefined;
+    setup({
+      animationAvailable: true,
+      animationDuration: 18,
+      onExportAnimation: vi.fn(() => new Promise<boolean>(resolve => { finishExport = resolve; })),
+    });
+    fireEvent.mouseDown(screen.getByRole('tab', { name: 'tabs.animation' }), { button: 0, ctrlKey: false });
+    await waitFor(() => expect(screen.getByTestId('media-export-animation-summary')).toBeVisible());
+    fireEvent.change(screen.getByDisplayValue('1920 × 1080'), { target: { value: 'portrait-uhd' } });
+    const preview = screen.getByTestId('media-export-animation-preview');
+    expect(preview).toHaveStyle({ aspectRatio: '2160 / 3840' });
+    fireEvent.click(screen.getByRole('button', { name: 'confirm' }));
+    await waitFor(() => expect(screen.getByTestId('media-export-animation-progress')).toBeVisible());
+    expect(screen.getByText('animation.preparing')).toBeVisible();
+    expect(screen.getByTestId('media-export-animation-progress').parentElement).toBe(screen.getByRole('dialog'));
+    finishExport?.(true);
+    await waitFor(() => expect(screen.getByText('animation.completed')).toBeVisible());
   });
 });

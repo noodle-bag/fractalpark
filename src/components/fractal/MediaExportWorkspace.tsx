@@ -1,10 +1,12 @@
 'use client';
 
 import {
+  useCallback,
   useEffect,
   useMemo,
   useRef,
   useState,
+  type CSSProperties,
   type PointerEvent as ReactPointerEvent,
   type ReactNode,
   type WheelEvent as ReactWheelEvent,
@@ -133,6 +135,13 @@ function greatestCommonDivisor(left: number, right: number): number {
   return a;
 }
 
+function previewFrameStyle(width: number, height: number): CSSProperties {
+  return {
+    aspectRatio: `${width} / ${height}`,
+    width: `min(100%, 42rem, ${58 * width / height}dvh)`,
+  };
+}
+
 type GestureSnapshot = {
   composition: MediaExportComposition;
   centroidX: number;
@@ -180,12 +189,12 @@ export function MediaExportWorkspace({
   const [previewUrl, setPreviewUrl] = useState<string>();
   const [previewState, setPreviewState] = useState<'idle' | 'rendering' | 'ready' | 'failed'>('idle');
   const previewUrlRef = useRef<string | undefined>(undefined);
-  const generationRef = useRef(0);
+  const previewSubmissionRef = useRef<ImageExportWorkspaceSubmission | undefined>(undefined);
+  const previewRequestVersionRef = useRef(0);
+  const previewLoopRunningRef = useRef(false);
+  const previewAbortRef = useRef<AbortController | null>(null);
   const pointersRef = useRef(new Map<number, { x: number; y: number }>());
   const gestureRef = useRef<GestureSnapshot | undefined>(undefined);
-  const gestureAnimationFrameRef = useRef<number | null>(null);
-  const pendingCompositionRef = useRef<MediaExportComposition | null>(null);
-  const lastPreviewStartedAtRef = useRef(0);
   const animationAbortRef = useRef<AbortController | null>(null);
 
   const submission = useMemo<ImageExportWorkspaceSubmission>(() => ({
@@ -221,6 +230,7 @@ export function MediaExportWorkspace({
         background: animationSubmission.background,
         composition: animationSubmission.composition,
       }, [animationSubmission, submission, tab]);
+  previewSubmissionRef.current = previewSubmission;
 
   const effectiveAnimationDuration = animationDuration > 0 ? animationDuration / animationSpeed : 0;
   const animationFrameCount = effectiveAnimationDuration > 0
@@ -263,40 +273,54 @@ export function MediaExportWorkspace({
     };
   }, [animationAvailable, animationCapabilityKey, animationSubmission, animationWithinLimits, onProbeAnimation, open, tab]);
 
+  const runPreviewLoop = useCallback(async () => {
+    if (!onPreviewImage || previewLoopRunningRef.current) return;
+    previewLoopRunningRef.current = true;
+    try {
+      while (previewSubmissionRef.current) {
+        const requestVersion = previewRequestVersionRef.current;
+        const request = previewSubmissionRef.current;
+        const controller = new AbortController();
+        previewAbortRef.current = controller;
+        setPreviewState('rendering');
+        try {
+          const blob = await onPreviewImage(request, controller.signal);
+          if (controller.signal.aborted) return;
+          const nextUrl = URL.createObjectURL(blob);
+          const previousUrl = previewUrlRef.current;
+          previewUrlRef.current = nextUrl;
+          setPreviewUrl(nextUrl);
+          setPreviewState('ready');
+          if (previousUrl) URL.revokeObjectURL(previousUrl);
+        } catch (error) {
+          if (controller.signal.aborted) return;
+          if (requestVersion === previewRequestVersionRef.current) {
+            setPreviewState('failed');
+            if (process.env.NODE_ENV === 'development') console.warn('Media export preview failed.', error);
+          }
+        } finally {
+          if (previewAbortRef.current === controller) previewAbortRef.current = null;
+        }
+        if (requestVersion === previewRequestVersionRef.current) return;
+      }
+    } finally {
+      previewLoopRunningRef.current = false;
+    }
+  }, [onPreviewImage]);
+
   useEffect(() => {
     if (!open || !frameReady || !onPreviewImage) return;
-    const generation = ++generationRef.current;
-    const controller = new AbortController();
-    const elapsed = performance.now() - lastPreviewStartedAtRef.current;
-    const delay = lastPreviewStartedAtRef.current === 0 ? 120 : Math.max(0, 120 - elapsed);
-    const timer = window.setTimeout(() => {
-      lastPreviewStartedAtRef.current = performance.now();
-      setPreviewState('rendering');
-      void onPreviewImage(previewSubmission, controller.signal).then(blob => {
-        if (controller.signal.aborted || generation !== generationRef.current) return;
-        const nextUrl = URL.createObjectURL(blob);
-        const previousUrl = previewUrlRef.current;
-        previewUrlRef.current = nextUrl;
-        setPreviewUrl(nextUrl);
-        setPreviewState('ready');
-        if (previousUrl) URL.revokeObjectURL(previousUrl);
-      }).catch(error => {
-        if (controller.signal.aborted || generation !== generationRef.current) return;
-        setPreviewState('failed');
-        if (process.env.NODE_ENV === 'development') console.warn('Media export preview failed.', error);
-      });
-    }, delay);
-    return () => {
-      window.clearTimeout(timer);
-      controller.abort();
-    };
-  }, [frameReady, onPreviewImage, open, previewSubmission]);
+    previewRequestVersionRef.current += 1;
+    void runPreviewLoop();
+  }, [frameReady, onPreviewImage, open, previewSubmission, runPreviewLoop]);
 
   useEffect(() => {
     if (open) return;
     animationAbortRef.current?.abort();
     animationAbortRef.current = null;
-    generationRef.current += 1;
+    previewRequestVersionRef.current += 1;
+    previewAbortRef.current?.abort();
+    previewAbortRef.current = null;
     const url = previewUrlRef.current;
     previewUrlRef.current = undefined;
     if (url) URL.revokeObjectURL(url);
@@ -310,7 +334,7 @@ export function MediaExportWorkspace({
 
   useEffect(() => () => {
     animationAbortRef.current?.abort();
-    if (gestureAnimationFrameRef.current !== null) cancelAnimationFrame(gestureAnimationFrameRef.current);
+    previewAbortRef.current?.abort();
     if (previewUrlRef.current) URL.revokeObjectURL(previewUrlRef.current);
   }, []);
 
@@ -394,24 +418,12 @@ export function MediaExportWorkspace({
       updates.scale = clamp(base.composition.scale * distance / base.distance, 0.25, 8);
       updates.rotation = normalizedRotation(base.composition.rotation + angle - base.angle);
     }
-    pendingCompositionRef.current = customComposition(base.composition, updates);
-    if (gestureAnimationFrameRef.current === null) {
-      gestureAnimationFrameRef.current = requestAnimationFrame(() => {
-        gestureAnimationFrameRef.current = null;
-        if (pendingCompositionRef.current) setComposition(pendingCompositionRef.current);
-        pendingCompositionRef.current = null;
-      });
-    }
+    const nextComposition = customComposition(base.composition, updates);
+    setComposition(nextComposition);
   };
 
   const onPointerEnd = (event: ReactPointerEvent<HTMLDivElement>) => {
     pointersRef.current.delete(event.pointerId);
-    if (pointersRef.current.size === 0 && pendingCompositionRef.current) {
-      if (gestureAnimationFrameRef.current !== null) cancelAnimationFrame(gestureAnimationFrameRef.current);
-      gestureAnimationFrameRef.current = null;
-      setComposition(pendingCompositionRef.current);
-      pendingCompositionRef.current = null;
-    }
     startGesture(event.currentTarget);
     if (pointersRef.current.size === 0) event.currentTarget.style.cursor = '';
   };
@@ -448,7 +460,7 @@ export function MediaExportWorkspace({
       onOpenChange(next);
     }}>
       <DialogContent
-        className="flex max-h-[min(92dvh,880px)] w-[min(1180px,calc(100%-1rem))] max-w-none flex-col gap-0 overflow-hidden p-0 sm:max-w-none"
+        className="flex h-[min(92dvh,880px)] w-[min(1180px,calc(100%-1rem))] max-w-none flex-col gap-0 overflow-hidden p-0 sm:max-w-none"
         onCloseAutoFocus={(event) => { event.preventDefault(); onCloseAutoFocus(); }}
       >
         <DialogHeader className="shrink-0 border-b px-4 py-4 pr-12 sm:px-6">
@@ -462,13 +474,13 @@ export function MediaExportWorkspace({
               <TabsTrigger value="animation" className="flex-1">{t('tabs.animation')}</TabsTrigger>
             </TabsList>
           </div>
-          <ScrollArea type="always" className="min-h-0 flex-1 overflow-hidden [&_[data-slot=scroll-area-scrollbar]]:w-4 lg:[&_[data-slot=scroll-area-scrollbar]]:w-2.5 [&_[data-slot=scroll-area-thumb]]:bg-foreground/35">
-            <TabsContent value="image" className="grid min-h-full lg:grid-cols-[minmax(0,1.2fr)_minmax(320px,0.8fr)]">
+          <ScrollArea data-testid="media-export-scroll-area" type="always" className="h-0 min-h-0 flex-1 overflow-hidden [&_[data-slot=scroll-area-viewport]]:absolute [&_[data-slot=scroll-area-viewport]]:inset-0 [&_[data-slot=scroll-area-viewport]]:overscroll-contain [&_[data-slot=scroll-area-viewport]]:touch-pan-y [&_[data-slot=scroll-area-scrollbar]]:w-4 lg:[&_[data-slot=scroll-area-scrollbar]]:w-2.5 [&_[data-slot=scroll-area-thumb]]:bg-foreground/35">
+            <TabsContent value="image" className="grid h-max min-h-full lg:grid-cols-[minmax(0,1.2fr)_minmax(320px,0.8fr)]">
               <div className="flex min-h-64 flex-col items-center justify-start gap-3 p-4 sm:p-6 lg:sticky lg:top-0 lg:self-start" aria-label={t('preview')}>
                 <div
                   data-testid="media-export-preview"
-                  className="relative max-h-[58dvh] w-full max-w-2xl touch-none select-none overflow-hidden bg-transparent"
-                  style={{ aspectRatio: `${preset.width} / ${preset.height}` }}
+                  className="relative touch-none select-none overflow-hidden bg-transparent"
+                  style={previewFrameStyle(preset.width, preset.height)}
                   onPointerDown={onPointerDown}
                   onPointerMove={onPointerMove}
                   onPointerUp={onPointerEnd}
@@ -477,7 +489,7 @@ export function MediaExportWorkspace({
                 >
                   {/* Blob URLs are local render results and cannot use Next image optimization. */}
                   {/* eslint-disable-next-line @next/next/no-img-element */}
-                  {previewUrl && <img src={previewUrl} alt={t('previewImageAlt')} draggable={false} className="h-full w-full object-fill" />}
+                  {previewUrl && <img src={previewUrl} alt={t('previewImageAlt')} draggable={false} className="h-full w-full object-contain" />}
                   {!previewUrl && <div className="grid h-full place-items-center px-4 text-center text-sm text-white/75">{t(previewState === 'failed' ? 'previewFailed' : 'previewPreparing')}</div>}
                   {previewState === 'rendering' && previewUrl && <div className="absolute right-2 top-2 rounded bg-black/65 px-2 py-1 text-xs text-white">{t('previewUpdating')}</div>}
                 </div>
@@ -532,12 +544,12 @@ export function MediaExportWorkspace({
                 </div>
               </div>
             </TabsContent>
-            <TabsContent value="animation" className="grid min-h-full lg:grid-cols-[minmax(0,1.2fr)_minmax(320px,0.8fr)]">
+            <TabsContent value="animation" className="grid h-max min-h-full lg:grid-cols-[minmax(0,1.2fr)_minmax(320px,0.8fr)]">
               <div className="flex min-h-64 flex-col items-center justify-start gap-3 p-4 sm:p-6 lg:sticky lg:top-0 lg:self-start" aria-label={t('preview')}>
                 <div
                   data-testid="media-export-animation-preview"
-                  className="relative max-h-[58dvh] w-full max-w-2xl touch-none select-none overflow-hidden rounded-md border bg-black shadow-xl"
-                  style={{ aspectRatio: `${animationPreset.width} / ${animationPreset.height}` }}
+                  className="relative touch-none select-none overflow-hidden rounded-md border bg-black shadow-xl"
+                  style={previewFrameStyle(animationPreset.width, animationPreset.height)}
                   onPointerDown={onPointerDown}
                   onPointerMove={onPointerMove}
                   onPointerUp={onPointerEnd}
@@ -546,7 +558,7 @@ export function MediaExportWorkspace({
                 >
                   {/* Blob URLs are local render results and cannot use Next image optimization. */}
                   {/* eslint-disable-next-line @next/next/no-img-element */}
-                  {previewUrl && <img src={previewUrl} alt={t('previewImageAlt')} draggable={false} className="h-full w-full object-fill" />}
+                  {previewUrl && <img src={previewUrl} alt={t('previewImageAlt')} draggable={false} className="h-full w-full object-contain" />}
                   {!previewUrl && <div className="grid h-full place-items-center px-4 text-center text-sm text-white/75">{t(previewState === 'failed' ? 'previewFailed' : 'previewPreparing')}</div>}
                   {previewState === 'rendering' && previewUrl && <div className="absolute right-2 top-2 rounded bg-black/65 px-2 py-1 text-xs text-white">{t('previewUpdating')}</div>}
                 </div>
@@ -611,19 +623,24 @@ export function MediaExportWorkspace({
                   <p>{t('animation.summary', { ratio: animationRatio, fps: animationFps, speed: animationSpeed, duration: effectiveAnimationDuration.toFixed(2), frames: animationFrameCount })}</p>
                   <p className="text-muted-foreground">{t('animation.memory', { megabytes: animationRawMegabytes.toFixed(1) })}</p>
                 </div>
-                {(animationExporting || animationCompleted) && animationProgress && <div className="space-y-2" role="status" aria-live="polite">
-                  <div className="flex justify-between gap-3 text-sm"><span>{t(`animation.progress.${animationProgress.phase}`)} · {animationProgress.completed} / {animationProgress.total}</span><span>{animationProgressPercent}%</span></div>
-                  <progress className="h-2 w-full" max={100} value={animationProgressPercent} />
-                </div>}
-                {animationCompleted && <div className="flex flex-wrap items-center justify-between gap-2">
-                  <p role="status" aria-live="polite" className="text-sm text-emerald-700 dark:text-emerald-400">{t('animation.completed')}</p>
-                  {repeatAnimationDownload && <Button type="button" variant="outline" size="sm" onClick={repeatAnimationDownload}>{t('downloadAgain')}</Button>}
-                </div>}
-                {animationFailed && <p role="alert" className="text-sm text-destructive">{t('animation.failed')}</p>}
               </div>
             </TabsContent>
           </ScrollArea>
         </Tabs>
+        {tab === 'animation' && (animationExporting || animationCompleted || animationFailed) && <div className="relative z-10 shrink-0 space-y-2 border-t bg-background px-4 py-3 sm:px-6" data-testid="media-export-animation-progress">
+          {(animationExporting || animationCompleted) && <div className="space-y-2" role="status" aria-live="polite">
+            <div className="flex justify-between gap-3 text-sm">
+              <span>{animationProgress ? `${t(`animation.progress.${animationProgress.phase}`)} · ${animationProgress.completed} / ${animationProgress.total}` : t('animation.preparing')}</span>
+              <span>{animationProgressPercent}%</span>
+            </div>
+            <progress className="h-2 w-full" max={100} value={animationProgressPercent} />
+          </div>}
+          {animationCompleted && <div className="flex flex-wrap items-center justify-between gap-2">
+            <p role="status" aria-live="polite" className="text-sm text-emerald-700 dark:text-emerald-400">{t('animation.completed')}</p>
+            {repeatAnimationDownload && <Button type="button" variant="outline" size="sm" onClick={repeatAnimationDownload}>{t('downloadAgain')}</Button>}
+          </div>}
+          {animationFailed && <p role="alert" className="text-sm text-destructive">{t('animation.failed')}</p>}
+        </div>}
         <DialogFooter className="relative z-10 shrink-0 border-t bg-background p-4 sm:px-6">
           <Button variant="outline" onClick={closeOrCancel}>{animationExporting ? t('animation.cancelExport') : t('cancel')}</Button>
           <Button disabled={pending || !frameReady || animationExporting || (tab === 'animation' && (!animationAvailable || !animationWithinLimits || effectiveAnimationCapability !== 'ready'))} onClick={submit}>{pending || animationExporting ? t('pending') : t('confirm')}</Button>

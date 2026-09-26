@@ -59,6 +59,11 @@ test('media export keeps a latest-only real preview and accessible composition c
   const dialog = page.getByRole('dialog');
   await dialog.getByRole('combobox', { name: 'Render quality' }).selectOption('off');
   await expect(dialog.locator('[data-slot="scroll-area-scrollbar"]')).toBeVisible();
+  const scrollViewport = dialog.locator('[data-slot="scroll-area-viewport"]');
+  await expect.poll(() => scrollViewport.evaluate(element => element.scrollHeight > element.clientHeight)).toBe(true);
+  await scrollViewport.evaluate(element => { element.scrollTop = 120; });
+  await expect.poll(() => scrollViewport.evaluate(element => element.scrollTop)).toBeGreaterThan(0);
+  await scrollViewport.evaluate(element => { element.scrollTop = 0; });
   await expect(dialog.locator('input[type="color"]')).toHaveCount(0);
   const preview = dialog.getByTestId('media-export-preview');
   const image = preview.getByRole('img', { name: 'Rendered export preview' });
@@ -68,9 +73,11 @@ test('media export keeps a latest-only real preview and accessible composition c
     height: (element as HTMLImageElement).naturalHeight,
   }))).toEqual({ width: 720, height: 405 });
   const previewBox = (await preview.boundingBox())!;
+  const preDragUrl = await image.getAttribute('src');
   await page.mouse.move(previewBox.x + previewBox.width / 2, previewBox.y + previewBox.height / 2);
   await page.mouse.down();
   await page.mouse.move(previewBox.x + previewBox.width / 2, previewBox.y + previewBox.height / 2 + 24);
+  await expect.poll(() => image.getAttribute('src'), { timeout: 45_000 }).not.toBe(preDragUrl);
   await page.mouse.up();
   await expect.poll(async () => Number(await dialog.getByRole('spinbutton', { name: 'Vertical pan' }).inputValue())).toBeGreaterThan(0);
   const firstUrl = await image.getAttribute('src');
@@ -187,9 +194,16 @@ test('animation export workspace exposes approved profiles, summary and a real c
   await expect(dialog.getByRole('combobox', { name: 'Frame rate' })).toHaveValue('60');
   await expect(dialog.getByRole('combobox', { name: 'Video quality' })).toHaveValue('high');
   await expect(dialog.getByTestId('media-export-animation-summary')).toContainText('1080 frames');
-  await expect(dialog.getByTestId('media-export-animation-preview').getByRole('img')).toBeVisible({ timeout: 45_000 });
-  await dialog.getByRole('combobox', { name: 'Size' }).selectOption('landscape-uhd');
-  await expect(dialog.getByTestId('media-export-animation-summary')).toContainText('3840 × 2160');
+  const animationPreview = dialog.getByTestId('media-export-animation-preview');
+  const animationImage = animationPreview.getByRole('img');
+  await expect(animationImage).toBeVisible({ timeout: 45_000 });
+  await dialog.getByRole('combobox', { name: 'Size' }).selectOption('portrait-uhd');
+  await expect(dialog.getByTestId('media-export-animation-summary')).toContainText('2160 × 3840');
+  await expect.poll(async () => {
+    const box = await animationPreview.boundingBox();
+    return box ? box.width / box.height : 0;
+  }).toBeCloseTo(2160 / 3840, 2);
+  await expect(animationImage).toHaveCSS('object-fit', 'contain');
   expect(await page.evaluate(() => document.documentElement.scrollWidth <= innerWidth)).toBe(true);
   await page.keyboard.press('Escape');
   await expect(page.getByRole('button', { name: 'Export Media', exact: true })).toBeFocused();

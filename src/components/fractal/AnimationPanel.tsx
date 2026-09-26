@@ -53,7 +53,7 @@ export function AnimationPanel({
           className="min-h-11 w-full accent-primary"
         />
         <div className="flex justify-between text-xs text-muted-foreground" aria-hidden="true">
-          <span>0.25×</span><span>1×</span><span>4×</span>
+          <span>{ANIMATION_PLAYBACK_SPEEDS[0]}×</span><span>1×</span><span>{ANIMATION_PLAYBACK_SPEEDS.at(-1)}×</span>
         </div>
         <p className="text-xs text-muted-foreground">{t('speedHint')}</p>
       </div>

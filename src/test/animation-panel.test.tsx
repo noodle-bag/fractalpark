@@ -28,4 +28,18 @@ describe('AnimationPanel playback speed', () => {
     fireEvent.change(slider, { target: { value: '12' } });
     expect(onSpeedChange.mock.calls).toEqual([[0.25], [10]]);
   });
+
+  it('labels the full slider range through 10×', () => {
+    render(<AnimationPanel
+      keyframes={[]}
+      bounds={{ centerX: 0, centerY: 0, zoom: 1, rotation: 0 }}
+      onKeyframesChange={vi.fn()}
+      onPreviewToggle={vi.fn()}
+      isPreviewPlaying={false}
+      speed={1}
+      onSpeedChange={vi.fn()}
+    />);
+
+    expect(screen.getByText('10×')).toBeInTheDocument();
+  });
 });
