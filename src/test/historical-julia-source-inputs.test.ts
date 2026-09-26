@@ -8,6 +8,7 @@ import {
   readHistoricalJuliaSourceInput,
   reconstructHistoricalJuliaPackages,
 } from "./fixtures/historical-julia-source-inputs";
+import { reconstructReviewed0421PackageInputs } from "../../scripts/lib/reviewed-release-package-inputs";
 
 const packageJson = readFileSync(join(process.cwd(), "package.json"), "utf8");
 const lockJson = readFileSync(join(process.cwd(), "package-lock.json"), "utf8");
@@ -42,8 +43,10 @@ describe("historical Julia package input reconstruction", () => {
     delete historicalLock.packages["node_modules/@img/colour"].optional;
     delete historicalLock.packages["node_modules/sharp"].optional;
     delete historicalLock.packages["node_modules/sharp/node_modules/semver"].optional;
-    expect(historicalPackage).toEqual(JSON.parse(packageJson));
-    expect(historicalLock).toEqual(JSON.parse(lockJson));
+    const reviewed0421 = reconstructReviewed0421PackageInputs(packageJson, lockJson);
+    expect(reviewed0421).not.toBeNull();
+    expect(historicalPackage).toEqual(JSON.parse(reviewed0421!["package.json"]));
+    expect(historicalLock).toEqual(JSON.parse(reviewed0421!["package-lock.json"]));
   });
 
   it("also accepts the exact historical pair without changing it", () => {
@@ -55,11 +58,12 @@ describe("historical Julia package input reconstruction", () => {
 
   it.each([
     ["dependency", ["dependencies", "next"], "0.0.0"],
+    ["reviewed media dependency", ["devDependencies", "mediabunny"], "0.0.0"],
     ["dev dependency", ["devDependencies", "vitest"], "0.0.0"],
     ["script", ["scripts", "build"], "echo changed"],
     ["engines", ["engines"], { node: "0" }],
     ["extra field", ["unreviewed"], true],
-    ["unknown version", ["version"], "0.4.22"],
+    ["unknown version", ["version"], "0.4.23"],
     ["mixed package version", ["version"], "0.4.20"],
   ] as const)("rejects package %s changes", (_name, path, value) => {
     expect(() => reconstructHistoricalJuliaPackages(
@@ -70,6 +74,7 @@ describe("historical Julia package input reconstruction", () => {
   it.each([
     ["package version", ["packages", "node_modules/next", "version"], "0.0.0"],
     ["integrity", ["packages", "node_modules/next", "integrity"], "sha512-forged"],
+    ["reviewed media integrity", ["packages", "node_modules/mediabunny", "integrity"], "sha512-forged"],
     ["resolved", ["packages", "node_modules/next", "resolved"], "https://example.invalid/next.tgz"],
     ["root dependency", ["packages", "", "dependencies", "next"], "0.0.0"],
     ["lock format", ["lockfileVersion"], 2],
@@ -84,15 +89,15 @@ describe("historical Julia package input reconstruction", () => {
 
   it("rejects a coordinated but unreviewed application version bump", () => {
     expect(() => reconstructHistoricalJuliaPackages(
-      mutate(packageJson, ["version"], "0.4.22"),
-      mutate(mutate(lockJson, ["version"], "0.4.22"), ["packages", "", "version"], "0.4.22"),
+      mutate(packageJson, ["version"], "0.4.23"),
+      mutate(mutate(lockJson, ["version"], "0.4.23"), ["packages", "", "version"], "0.4.23"),
     )).toThrow("historical-julia-package-input-not-reviewed");
   });
 
   it("rejects whitespace and duplicate-key changes instead of normalizing JSON", () => {
     for (const changed of [
       `${packageJson} `,
-      packageJson.replace('"version": "0.4.21",', '"version": "forged", "version": "0.4.21",'),
+      packageJson.replace('"version": "0.4.22",', '"version": "forged", "version": "0.4.22",'),
     ]) expect(() => reconstructHistoricalJuliaPackages(changed, lockJson)).toThrow();
   });
 

@@ -1464,14 +1464,21 @@
       },
       "export": {
         "short": "Exporter",
-        "label": "Exporter en PNG",
-        "title": "Exporter en PNG",
-        "scale": "Taille",
-        "quality": "Qualité d'anticrénelage",
-        "qualityOff": "Désactivé",
-        "qualityLow": "Faible",
-        "qualityHigh": "Élevée",
-        "qualityUltra": "Ultra",
+        "label": "Exporter le média",
+        "title": "Exporter le média",
+        "description": "Créez une image ou une animation localement dans votre navigateur.",
+        "tabs": { "image": "Image", "animation": "Animation" },
+        "preview": "Aperçu de l’export", "previewImageAlt": "Aperçu d’export rendu", "previewCurrentFrame": "Image actuelle", "previewPreparing": "Préparation de l’aperçu…", "previewUpdating": "Mise à jour…", "previewFailed": "Aperçu indisponible ; le dernier aperçu réussi est conservé.",
+        "previewState": { "idle": "Aperçu en attente.", "rendering": "Rendu du dernier aperçu…", "ready": "L’aperçu est à jour.", "failed": "Impossible de mettre à jour l’aperçu." },
+        "composition": { "title": "Composition", "fit": "Ajuster", "fill": "Remplir", "custom": "Personnalisée", "gestureHint": "Faites glisser pour déplacer. Molette ou pincement pour zoomer ; deux doigts font aussi pivoter.", "panX": "Déplacement horizontal", "panY": "Déplacement vertical", "zoom": "Zoom", "rotation": "Rotation (°)", "rotateLeft": "Pivoter de 15 degrés à gauche", "rotateRight": "Pivoter de 15 degrés à droite", "reset": "Réinitialiser" },
+        "summary": { "title": "Résumé de l’exportation", "details": "{format} · {width} × {height} · {megapixels} MP", "settings": "{ratio} · Anticrénelage {antialiasing} · {encoding}", "lossless": "Sans perte", "memory": "Mémoire brute estimée : {megabytes} Mio" },
+        "format": "Format", "size": "Taille", "renderQuality": "Qualité de rendu",
+        "quality": { "off": "Désactivée", "standard": "Standard", "high": "Élevée", "ultra": "Ultra" },
+        "jpegQuality": "Qualité JPEG", "jpeg": { "balanced": "Équilibrée", "high": "Élevée", "maximum": "Maximale" },
+        "filename": "Nom de fichier (facultatif)", "filenamePlaceholder": "Généré depuis le nom de l’œuvre",
+        "downloadAgain": "Télécharger à nouveau",
+        "animation": { "title": "Export d’animation", "preparing": "Préparation de l’export d’animation.", "localOnly": "Rendu et encodé localement dans ce navigateur.", "unavailable": "Ajoutez au moins deux images clés pour exporter une boucle complète.", "overLimit": "La durée effective dépasse 60 secondes. Choisissez une vitesse plus rapide.", "fps": "Fréquence d’images", "videoQuality": "Qualité vidéo", "summary": "{ratio} · {fps} FPS · {speed}× · {duration}s · {frames} images", "memory": "File d’images brutes limitée : jusqu’à {megabytes} Mio", "progress": { "rendering": "Rendu des images", "encoding": "Encodage de la vidéo" }, "capability": { "checking": "Vérification de ce profil d’encodage…", "ready": "Ce navigateur prend en charge le profil sélectionné.", "profile-unavailable": "Ce navigateur ne peut pas encoder ce profil. Essayez l’autre format, une taille plus petite ou moins d’images/s.", "dependency-load-failed": "L’encodeur local n’a pas pu être chargé. Rechargez la page puis essayez l’autre format.", "failed": "La vérification d’encodage a échoué. Rechargez la page et réessayez." }, "completed": "Export terminé. Le téléchargement a démarré automatiquement.", "failed": "L’export a échoué pour ce profil exact. Essayez un autre format ou réglage.", "cancelExport": "Annuler l’export" },
+        "cancel": "Annuler",
         "confirm": "Exporter",
         "pending": "Rendu en cours..."
       },
@@ -1494,7 +1501,7 @@
           "success": "Projet importé."
         },
         "export": {
-          "success": "PNG exporté."
+          "success": "Média exporté."
         }
       },
       "errors": {
@@ -1511,7 +1518,7 @@
         "formula-commit-failed": "La formule personnalisée n'a pas pu être installée. Aucune modification n'a été conservée.",
         "save-failed": "La création n'a pas pu être enregistrée.",
         "download-failed": "Le projet n'a pas pu être téléchargé.",
-        "export-failed": "Le PNG n'a pas pu être exporté.",
+        "export-failed": "Le média n’a pas pu être exporté.",
         "cloud-unavailable": "La synchronisation cloud est indisponible pour le moment — tes modifications n'ont pas été enregistrées."
       },
       "conflict": {
@@ -1859,6 +1866,8 @@
         "stopPreview": "Arrêter",
         "noKeyframes": "Aucune image clé pour l'instant",
         "duration": "Boucle : {seconds}s",
+        "speed": "Vitesse de lecture",
+        "speedHint": "Modifie le rythme de l’aperçu et de l’export sans changer les images clés.",
         "keyframeLabel": "Image clé {number} (zoom : {zoom})"
       },
       "gradient": {

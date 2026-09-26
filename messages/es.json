@@ -1464,14 +1464,26 @@
       },
       "export": {
         "short": "Exportar",
-        "label": "Exportar PNG",
-        "title": "Exportar PNG",
-        "scale": "Tamaño",
-        "quality": "Calidad de suavizado",
-        "qualityOff": "Desactivado",
-        "qualityLow": "Baja",
-        "qualityHigh": "Alta",
-        "qualityUltra": "Ultra",
+        "label": "Exportar medios",
+        "title": "Exportar medios",
+        "description": "Crea una imagen o animación localmente en tu navegador.",
+        "tabs": { "image": "Imagen", "animation": "Animación" },
+        "preview": "Vista previa de exportación",
+        "previewImageAlt": "Vista previa renderizada",
+        "previewCurrentFrame": "Fotograma actual",
+        "previewPreparing": "Preparando vista previa…",
+        "previewUpdating": "Actualizando…",
+        "previewFailed": "La vista previa no está disponible; se conserva la última correcta.",
+        "previewState": { "idle": "Vista previa en espera.", "rendering": "Renderizando la vista más reciente…", "ready": "La vista previa está actualizada.", "failed": "No se pudo actualizar la vista previa." },
+        "composition": { "title": "Composición", "fit": "Ajustar", "fill": "Rellenar", "custom": "Personalizada", "gestureHint": "Arrastra para mover. Usa la rueda o pellizca para ampliar; dos dedos también giran.", "panX": "Desplazamiento horizontal", "panY": "Desplazamiento vertical", "zoom": "Zoom", "rotation": "Rotación (°)", "rotateLeft": "Girar 15 grados a la izquierda", "rotateRight": "Girar 15 grados a la derecha", "reset": "Restablecer" },
+        "summary": { "title": "Resumen de exportación", "details": "{format} · {width} × {height} · {megapixels} MP", "settings": "{ratio} · Antialiasing {antialiasing} · {encoding}", "lossless": "Sin pérdida", "memory": "Memoria bruta estimada: {megabytes} MiB" },
+        "format": "Formato", "size": "Tamaño", "renderQuality": "Calidad de renderizado",
+        "quality": { "off": "Desactivada", "standard": "Estándar", "high": "Alta", "ultra": "Ultra" },
+        "jpegQuality": "Calidad JPEG", "jpeg": { "balanced": "Equilibrada", "high": "Alta", "maximum": "Máxima" },
+        "filename": "Nombre de archivo (opcional)", "filenamePlaceholder": "Generado a partir del nombre de la obra",
+        "downloadAgain": "Descargar de nuevo",
+        "animation": { "title": "Exportar animación", "preparing": "Preparando la exportación de animación.", "localOnly": "Se renderiza y codifica localmente en este navegador.", "unavailable": "Añade al menos dos fotogramas clave para exportar un ciclo completo.", "overLimit": "La duración efectiva supera los 60 segundos. Elige una velocidad mayor.", "fps": "Frecuencia de fotogramas", "videoQuality": "Calidad de vídeo", "summary": "{ratio} · {fps} FPS · {speed}× · {duration}s · {frames} fotogramas", "memory": "Cola limitada de fotogramas sin comprimir: hasta {megabytes} MiB", "progress": { "rendering": "Renderizando fotogramas", "encoding": "Codificando vídeo" }, "capability": { "checking": "Comprobando este perfil de codificación…", "ready": "Este navegador admite el perfil seleccionado.", "profile-unavailable": "Este navegador no puede codificar el perfil seleccionado. Prueba otro formato, un tamaño menor o menos FPS.", "dependency-load-failed": "No se pudo cargar el codificador local. Recarga la página y prueba el otro formato.", "failed": "Falló la comprobación de codificación. Recarga la página e inténtalo de nuevo." }, "completed": "Exportación completada. La descarga comenzó automáticamente.", "failed": "La exportación falló para este perfil exacto. Prueba otro formato o ajuste.", "cancelExport": "Cancelar exportación" },
+        "cancel": "Cancelar",
         "confirm": "Exportar",
         "pending": "Renderizando…"
       },
@@ -1494,7 +1506,7 @@
           "success": "Proyecto importado."
         },
         "export": {
-          "success": "PNG exportado."
+          "success": "Medio exportado."
         }
       },
       "errors": {
@@ -1511,7 +1523,7 @@
         "formula-commit-failed": "La fórmula personalizada no se pudo instalar. No se conservaron cambios.",
         "save-failed": "La obra no se pudo guardar.",
         "download-failed": "El proyecto no se pudo descargar.",
-        "export-failed": "El PNG no se pudo exportar.",
+        "export-failed": "No se pudo exportar el medio.",
         "cloud-unavailable": "La sincronización en la nube no está disponible en este momento — tus cambios no se guardaron."
       },
       "conflict": {
@@ -1859,6 +1871,8 @@
         "stopPreview": "Detener",
         "noKeyframes": "Aún no hay fotogramas clave",
         "duration": "Bucle: {seconds}s",
+        "speed": "Velocidad de reproducción",
+        "speedHint": "Cambia el tiempo de la vista previa y la exportación sin modificar fotogramas clave.",
         "keyframeLabel": "Fotograma clave {number} (zoom: {zoom})"
       },
       "gradient": {

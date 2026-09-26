@@ -68,6 +68,7 @@ export function PublishedArtworkCard({
               <PublishedArtworkCanvas
                 artwork={playback}
                 keyframes={playback.animation.keyframes}
+                speed={playback.animation.speed}
                 dprScale={0.5}
                 className="h-full w-full"
                 onUnavailable={onUnavailable}

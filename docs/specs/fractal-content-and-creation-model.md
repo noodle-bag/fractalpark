@@ -157,7 +157,8 @@ and snapshots follow [Document and Envelope v1](fractal-document-v2.md).
 | Community card and detail | Immutable publication Envelope | The same supported identity classes as cloud artwork previews; published UUIDs do not require embedded custom source | Render the saved work with instance-local plugins; loading or failure may show the documented neutral fallback |
 | Formula Record preview | Verified Record preview Profile | Pinned published Definition and qualified rendering binding | An explicitly qualified preview Profile may differ from the formula selection default; editorial presentation cannot become saved-artwork state |
 | Generated preset poster/thumbnail | Canonical preset document and declared generation inputs | Qualified formula execution used by the preset | Dimensions/encoding may differ; source or execution changes require reviewing affected generated assets |
-| Export and portable reopen | Artwork Document/Envelope and its supported formula references/assets | Existing export/import qualification and snapshot boundaries | Preserve supported saved state and revisions; public rendering must never gain access to owner-only formula data |
+| Media export | Recovered artwork Document/Envelope plus an immutable, transient Export request | Existing formula recovery and rendering qualification; media capability follows [Media Export Contract v1](media-export-v1.md) | Preserve supported artwork state and revisions; preview and final output share composition/time semantics; the request does not mutate the Document and reads speed from the separately persisted animation state |
+| Project download and portable reopen | Artwork Document/Envelope and its supported formula references/assets | Existing export/import qualification and snapshot boundaries | Preserve supported saved state and revisions; public rendering must never gain access to owner-only formula data |
 
 For every existing artwork:
 

@@ -1,4 +1,5 @@
 import { expect, test, type Page } from '@playwright/test';
+import { readFile } from 'node:fs/promises';
 import { SUPPORTED_LOCALES } from '../../src/i18n/supported-locales';
 
 test.beforeEach(async ({ context }) => {
@@ -15,12 +16,15 @@ test.beforeEach(async ({ context }) => {
 });
 
 async function ready(page: Page) {
-  await expect(page.getByRole('spinbutton', { name: 'power', exact: true, includeHidden: true })).toBeAttached({ timeout: 45_000 });
+  await readyCanvas(page);
+}
+
+async function readyCanvas(page: Page) {
   const canvas = page.getByRole('main').getByTestId('fractal-canvas');
   await expect(canvas).toHaveAttribute('data-render-status', 'ready', { timeout: 45_000 });
   const formulaId = await page.getByTestId('explore-root').getAttribute('data-formula-id');
   await expect(canvas).toHaveAttribute('data-rendered-formula-id', formulaId!);
-  await expect.poll(() => new URL(page.url()).searchParams.get('fm')).toBe(formulaId);
+  await expect.poll(() => new URL(page.url()).searchParams.get('fm') ?? 'mandelbrot').toBe(formulaId);
   await page.evaluate(() => document.fonts.ready);
   await expect(page.locator('[data-nextjs-dialog]')).toHaveCount(0);
 }
@@ -40,8 +44,209 @@ async function expectCanvasSizeSettled(page: Page) {
     return canvas.width === Math.round(rect.width * devicePixelRatio)
       && canvas.height === Math.round(rect.height * devicePixelRatio);
   }), { timeout: 30_000 }).toBe(true);
-  await ready(page);
+  await readyCanvas(page);
 }
+
+test('media export keeps a latest-only real preview and accessible composition controls', async ({ page }) => {
+  test.setTimeout(90_000);
+  await page.setViewportSize({ width: 390, height: 844 });
+  const errors: string[] = [];
+  page.on('pageerror', error => errors.push(error.message));
+  await page.goto('/en/explore');
+  await readyCanvas(page);
+  const exportButton = page.getByRole('button', { name: 'Export Media', exact: true });
+  await exportButton.click();
+  const dialog = page.getByRole('dialog');
+  await dialog.getByRole('combobox', { name: 'Render quality' }).selectOption('off');
+  await expect(dialog.locator('[data-slot="scroll-area-scrollbar"]')).toBeVisible();
+  const scrollViewport = dialog.locator('[data-slot="scroll-area-viewport"]');
+  await expect.poll(() => scrollViewport.evaluate(element => element.scrollHeight > element.clientHeight)).toBe(true);
+  await scrollViewport.evaluate(element => { element.scrollTop = 120; });
+  await expect.poll(() => scrollViewport.evaluate(element => element.scrollTop)).toBeGreaterThan(0);
+  await scrollViewport.evaluate(element => { element.scrollTop = 0; });
+  await expect(dialog.locator('input[type="color"]')).toHaveCount(0);
+  const preview = dialog.getByTestId('media-export-preview');
+  const image = preview.getByRole('img', { name: 'Rendered export preview' });
+  await expect(image).toBeVisible({ timeout: 45_000 });
+  await expect.poll(() => image.evaluate(element => ({
+    width: (element as HTMLImageElement).naturalWidth,
+    height: (element as HTMLImageElement).naturalHeight,
+  }))).toEqual({ width: 720, height: 405 });
+  const previewBox = (await preview.boundingBox())!;
+  const preDragUrl = await image.getAttribute('src');
+  await page.mouse.move(previewBox.x + previewBox.width / 2, previewBox.y + previewBox.height / 2);
+  await page.mouse.down();
+  await page.mouse.move(previewBox.x + previewBox.width / 2, previewBox.y + previewBox.height / 2 + 24);
+  await expect.poll(() => image.getAttribute('src'), { timeout: 45_000 }).not.toBe(preDragUrl);
+  await page.mouse.up();
+  await expect.poll(async () => Number(await dialog.getByRole('spinbutton', { name: 'Vertical pan' }).inputValue())).toBeGreaterThan(0);
+  const firstUrl = await image.getAttribute('src');
+  const fill = dialog.getByRole('button', { name: 'Fill', exact: true });
+  await fill.click();
+  await expect(fill).toHaveAttribute('aria-pressed', 'true');
+  await expect(dialog.getByText(/Rendering latest preview…/)).toBeVisible();
+  await expect(image).toHaveAttribute('src', firstUrl!);
+  await expect.poll(() => image.getAttribute('src'), { timeout: 45_000 }).not.toBe(firstUrl);
+  await dialog.getByRole('spinbutton', { name: 'Zoom' }).fill('2');
+  await expect(dialog.getByRole('button', { name: 'Custom', exact: true })).toHaveAttribute('aria-pressed', 'true');
+  await expect(dialog.getByTestId('media-export-summary')).toContainText('1920 × 1080');
+  expect(await page.evaluate(() => document.documentElement.scrollWidth <= innerWidth)).toBe(true);
+  await dialog.getByRole('button', { name: 'Cancel', exact: true }).click();
+  await expect(exportButton).toBeFocused();
+  expect(errors).toEqual([]);
+});
+
+test('rotated canvas export drag stays aligned with the displayed image', async ({ page }) => {
+  test.setTimeout(90_000);
+  await page.setViewportSize({ width: 390, height: 844 });
+  await page.goto(`/en/explore?rot=${Math.PI / 2}`);
+  await readyCanvas(page);
+  await page.getByRole('button', { name: 'Export Media', exact: true }).click();
+  const dialog = page.getByRole('dialog');
+  await dialog.getByRole('combobox', { name: 'Render quality' }).selectOption('off');
+  const preview = dialog.getByTestId('media-export-preview');
+  const image = preview.getByRole('img', { name: 'Rendered export preview' });
+  await expect(image).toBeVisible({ timeout: 45_000 });
+  const blueCentroid = () => image.evaluate(element => {
+    const source = element as HTMLImageElement;
+    const canvas = document.createElement('canvas');
+    canvas.width = source.naturalWidth;
+    canvas.height = source.naturalHeight;
+    const context = canvas.getContext('2d', { willReadFrequently: true })!;
+    context.drawImage(source, 0, 0);
+    const pixels = context.getImageData(0, 0, canvas.width, canvas.height).data;
+    let weightedX = 0;
+    let totalWeight = 0;
+    for (let index = 0; index < pixels.length; index += 4) {
+      const weight = Math.max(0, pixels[index + 2] - (pixels[index] + pixels[index + 1]) / 2);
+      weightedX += (index / 4 % canvas.width) * weight;
+      totalWeight += weight;
+    }
+    return weightedX / totalWeight;
+  });
+  const before = await blueCentroid();
+  const beforeUrl = await image.getAttribute('src');
+  const box = (await preview.boundingBox())!;
+  await page.mouse.move(box.x + box.width / 2, box.y + box.height / 2);
+  await page.mouse.down();
+  await page.mouse.move(box.x + box.width / 2 + 32, box.y + box.height / 2);
+  await page.mouse.up();
+  await expect.poll(() => image.getAttribute('src'), { timeout: 45_000 }).not.toBe(beforeUrl);
+  await expect.poll(blueCentroid).toBeGreaterThan(before + 20);
+});
+
+test('all locales keep the export preview, summary and actions reachable at 320px', async ({ page }) => {
+  test.setTimeout(180_000);
+  await page.setViewportSize({ width: 320, height: 700 });
+  for (const locale of SUPPORTED_LOCALES) {
+    await page.goto(`/${locale}/explore`);
+    await ready(page);
+    const exportButton = page.getByTestId('explore-artwork-bar').getByRole('button').nth(3);
+    await exportButton.click();
+    const dialog = page.getByRole('dialog');
+    await expect(dialog).toBeVisible();
+    await dialog.locator('select').nth(2).selectOption('off');
+    await expect(dialog.getByTestId('media-export-preview')).toBeVisible();
+    const summary = dialog.getByTestId('media-export-summary');
+    await summary.scrollIntoViewIfNeeded();
+    await expect(summary).toBeVisible();
+    expect((await summary.textContent())?.trim().length).toBeGreaterThan(0);
+    expect(await page.evaluate(() => document.documentElement.scrollWidth <= innerWidth)).toBe(true);
+    await page.keyboard.press('Escape');
+    await expect(exportButton).toBeFocused();
+  }
+});
+
+test('animation speed snaps across pointer and keyboard input and restores from the URL', async ({ page }) => {
+  test.setTimeout(60_000);
+  await page.setViewportSize({ width: 390, height: 844 });
+  const errors: string[] = [];
+  page.on('pageerror', error => errors.push(error.message));
+  await page.goto('/en/explore?spd=3');
+  await ready(page);
+  await page.getByRole('tab', { name: 'Animation', exact: true }).last().click();
+  const slider = page.getByRole('slider', { name: 'Playback speed', exact: true });
+  await expect(slider).toHaveValue('5');
+  await expect(slider).toHaveAttribute('aria-valuetext', '3×');
+
+  await slider.press('Home');
+  await expect(slider).toHaveValue('0');
+  await expect(slider).toHaveAttribute('aria-valuetext', '0.25×');
+  await expect.poll(() => new URL(page.url()).searchParams.get('spd')).toBe('0.25');
+  await slider.press('ArrowRight');
+  await expect(slider).toHaveValue('1');
+  await expect(slider).toHaveAttribute('aria-valuetext', '0.5×');
+
+  const box = (await slider.boundingBox())!;
+  await page.mouse.click(box.x + box.width - 2, box.y + box.height / 2);
+  await expect(slider).toHaveValue('12');
+  await expect(slider).toHaveAttribute('aria-valuetext', '10×');
+  await expect.poll(() => new URL(page.url()).searchParams.get('spd')).toBe('10');
+  expect(await page.evaluate(() => document.documentElement.scrollWidth <= innerWidth)).toBe(true);
+
+  await page.reload();
+  await ready(page);
+  await page.getByRole('tab', { name: 'Animation', exact: true }).last().click();
+  await expect(page.getByRole('slider', { name: 'Playback speed', exact: true })).toHaveAttribute('aria-valuetext', '10×');
+  expect(errors).toEqual([]);
+});
+
+test('Project download and import round-trip the animation speed without changing the media export entry', async ({ page }) => {
+  test.setTimeout(60_000);
+  await page.goto('/en/explore?spd=10');
+  await ready(page);
+  await page.getByRole('tab', { name: 'Animation', exact: true }).last().click();
+  const slider = page.getByRole('slider', { name: 'Playback speed', exact: true });
+  await expect(slider).toHaveAttribute('aria-valuetext', '10×');
+
+  const downloadPromise = page.waitForEvent('download');
+  await page.getByRole('button', { name: 'Download Project', exact: true }).click();
+  const download = await downloadPromise;
+  expect(download.suggestedFilename()).toMatch(/\.fractal\.json$/);
+  const path = await download.path();
+  expect(path).not.toBeNull();
+  const envelope = JSON.parse(await readFile(path!, 'utf8'));
+  expect(envelope.document.animation.speed).toBe(10);
+
+  await slider.press('Home');
+  await expect(slider).toHaveAttribute('aria-valuetext', '0.25×');
+  await page.locator('input[type="file"][accept*=".fractal.json"]').setInputFiles(path!);
+  await expect(slider).toHaveAttribute('aria-valuetext', '10×');
+  await expect(page.getByRole('button', { name: 'Export Media', exact: true })).toBeEnabled();
+});
+
+test('animation export workspace exposes approved profiles, summary and a real current-frame preview', async ({ page }) => {
+  test.setTimeout(90_000);
+  await page.setViewportSize({ width: 390, height: 844 });
+  await page.goto('/en/explore');
+  await ready(page);
+  await page.getByRole('tab', { name: 'Animation', exact: true }).last().click();
+  const addKeyframe = page.getByRole('button', { name: 'Add Keyframe', exact: true });
+  await addKeyframe.click();
+  await addKeyframe.click();
+
+  await page.getByRole('button', { name: 'Export Media', exact: true }).click();
+  const dialog = page.getByRole('dialog');
+  await dialog.getByRole('tab', { name: 'Animation', exact: true }).click();
+  await expect(dialog.getByRole('combobox', { name: 'Format' })).toHaveValue('mp4');
+  await expect(dialog.getByRole('combobox', { name: 'Size' })).toHaveValue('landscape-hd');
+  await expect(dialog.getByRole('combobox', { name: 'Frame rate' })).toHaveValue('60');
+  await expect(dialog.getByRole('combobox', { name: 'Video quality' })).toHaveValue('high');
+  await expect(dialog.getByTestId('media-export-animation-summary')).toContainText('1080 frames');
+  const animationPreview = dialog.getByTestId('media-export-animation-preview');
+  const animationImage = animationPreview.getByRole('img');
+  await expect(animationImage).toBeVisible({ timeout: 45_000 });
+  await dialog.getByRole('combobox', { name: 'Size' }).selectOption('portrait-uhd');
+  await expect(dialog.getByTestId('media-export-animation-summary')).toContainText('2160 × 3840');
+  await expect.poll(async () => {
+    const box = await animationPreview.boundingBox();
+    return box ? box.width / box.height : 0;
+  }).toBeCloseTo(2160 / 3840, 2);
+  await expect(animationImage).toHaveCSS('object-fit', 'contain');
+  expect(await page.evaluate(() => document.documentElement.scrollWidth <= innerWidth)).toBe(true);
+  await page.keyboard.press('Escape');
+  await expect(page.getByRole('button', { name: 'Export Media', exact: true })).toBeFocused();
+});
 
 for (const width of [1440, 1180]) {
   test(`Inspector toggling preserves the canvas, view and editing state at ${width}px`, async ({ page }, testInfo) => {

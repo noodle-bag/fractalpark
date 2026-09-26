@@ -27,6 +27,7 @@ describe('Remix source navigation', () => {
 
   it('accepts published preset sources and writes provenance only to metadata', () => {
     const document = buildFormulaDefaultDocument('newton3');
+    document.animation = { speed: 3 };
     const source = parseRemixSource(
       new URLSearchParams('remix=preset%3Apreset-newton-deep-spiral')
     );
@@ -42,6 +43,7 @@ describe('Remix source navigation', () => {
     });
     expect(remixed.formula).toEqual(document.formula);
     expect(remixed.scene).toEqual(document.scene);
+    expect(remixed.animation?.speed).toBe(3);
   });
 
   it.each([

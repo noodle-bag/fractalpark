@@ -1,11 +1,11 @@
 import {
   reconstructReviewedReleasePackageInputs,
-  REVIEWED_0421_PACKAGE_HASHES,
+  REVIEWED_0422_PACKAGE_HASHES,
   SEALED_RELEASE_PACKAGE_HASHES,
 } from "./reviewed-release-package-inputs";
 
 /**
- * Qualifies the exact 0.4.21 release-input transition for a sealed pre-GPU
+ * Qualifies the exact 0.4.22 release-input transition for a sealed pre-GPU
  * authority. This does not regenerate or renew the historical asset.
  */
 export function matchesSealedJuliaReleaseSourceBindings(
@@ -39,9 +39,9 @@ export function matchesSealedJuliaReleaseSourceBindings(
       (key === "package.json" || key === "package-lock.json") &&
       digest === SEALED_RELEASE_PACKAGE_HASHES[key]
     ) ||
-    current["package.json"] !== REVIEWED_0421_PACKAGE_HASHES["package.json"] ||
+    current["package.json"] !== REVIEWED_0422_PACKAGE_HASHES["package.json"] ||
     current["package-lock.json"] !==
-      REVIEWED_0421_PACKAGE_HASHES["package-lock.json"]
+      REVIEWED_0422_PACKAGE_HASHES["package-lock.json"]
   ) return false;
 
   return reconstructReviewedReleasePackageInputs(packageJson, lockJson) !== null;

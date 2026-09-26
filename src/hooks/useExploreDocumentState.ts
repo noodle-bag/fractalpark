@@ -115,7 +115,7 @@ function mergeRenderState(prev: FractalDocument, patch: Partial<RenderState>): F
 }
 
 function mergeAnimationState(prev: FractalDocument, patch: Partial<AnimationState>): FractalDocument {
-  if (!prev.animation && !patch.viewKeyframes && !patch.tracks) {
+  if (!prev.animation && !patch.viewKeyframes && !patch.tracks && patch.speed === undefined) {
     return prev;
   }
 
@@ -126,6 +126,7 @@ function mergeAnimationState(prev: FractalDocument, patch: Partial<AnimationStat
       ...patch,
       viewKeyframes: patch.viewKeyframes ?? prev.animation?.viewKeyframes,
       tracks: patch.tracks ?? prev.animation?.tracks,
+      speed: patch.speed ?? prev.animation?.speed,
     },
   });
 }

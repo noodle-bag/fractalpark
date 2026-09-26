@@ -7,6 +7,7 @@ import { useKeyframeAnimation } from '@/hooks/useKeyframeAnimation';
 import { cn } from '@/lib/utils';
 import type { FormulaPlugin } from '@/engine/plugins/types';
 import type { FractalParams, ViewBounds, Keyframe } from '@/engine/types';
+import type { AnimationPlaybackSpeed } from '@/engine/animation/playback';
 
 // Singleton plugin registration
 let builtinsRegistered = false;
@@ -18,6 +19,7 @@ export interface AnimatedFractalCanvasProps {
   active?: boolean;                // Whether to render (default: true)
   paused?: boolean;                // Pause animation without disposing the renderer
   resetOnStop?: boolean;           // Reset progress when stopped (default: true). Set false to resume from current position.
+  speed?: AnimationPlaybackSpeed;
   maxIterationsClamp?: number;     // Cap maxIterations (e.g. 300 for homepage)
   formulaPlugin?: FormulaPlugin;   // Instance-local formula for isolated previews
   className?: string;
@@ -42,6 +44,7 @@ export default function AnimatedFractalCanvas({
   active = true,
   paused = false,
   resetOnStop = true,
+  speed,
   maxIterationsClamp,
   formulaPlugin,
   className,
@@ -156,6 +159,7 @@ export default function AnimatedFractalCanvas({
     onLoopComplete,
     active: active && !paused && keyframes.length >= 2,
     resetOnStop,
+    speed,
   });
 
   // Static render when no keyframes or not active

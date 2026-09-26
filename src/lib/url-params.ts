@@ -1,5 +1,9 @@
 import type { FractalDocument } from '@/engine/document';
 import {
+  ANIMATION_PLAYBACK_SPEEDS,
+  type AnimationPlaybackSpeed,
+} from '@/engine/animation/playback';
+import {
   projectDocumentToRuntimeParams,
   runtimeParamsToDocument,
 } from '@/engine/document-adapter';
@@ -120,6 +124,7 @@ export interface FractalUrlState {
   gradient?: GradientStop[];
   palette?: number;
   keyframes?: Keyframe[];
+  animationSpeed?: AnimationPlaybackSpeed;
 }
 
 function clonePluginParamValue(value: PluginParamValue): PluginParamValue {
@@ -280,6 +285,9 @@ export function encodeParams(state: FractalUrlState): URLSearchParams {
       .join('|');
     params.set('kf', encoded);
   }
+  if (state.animationSpeed !== undefined && state.animationSpeed !== 1) {
+    params.set('spd', String(state.animationSpeed));
+  }
 
   return params;
 }
@@ -316,6 +324,7 @@ export function decodeParams(searchParams: URLSearchParams): FractalUrlState {
   const pal = searchParams.get('pal');
   const grad = searchParams.get('grad');
   const kf = searchParams.get('kf');
+  const speed = searchParams.get('spd');
 
   if (cx !== null) { const v = parseFloat(cx); if (!isNaN(v)) state.centerX = v; }
   if (cy !== null) { const v = parseFloat(cy); if (!isNaN(v)) state.centerY = v; }
@@ -458,6 +467,12 @@ export function decodeParams(searchParams: URLSearchParams): FractalUrlState {
       // Invalid keyframe data, ignore
     }
   }
+  if (speed !== null) {
+    const parsed = Number(speed);
+    if (ANIMATION_PLAYBACK_SPEEDS.includes(parsed as AnimationPlaybackSpeed)) {
+      state.animationSpeed = parsed as AnimationPlaybackSpeed;
+    }
+  }
 
   return state;
 }
@@ -487,6 +502,7 @@ export function documentToUrlState(doc: FractalDocument): FractalUrlState {
     palette: runtime.customGradient ? undefined : runtime.paletteIndex,
     gradient: runtime.customGradient ?? undefined,
     keyframes: doc.animation?.viewKeyframes,
+    animationSpeed: doc.animation?.speed,
   };
 }
 

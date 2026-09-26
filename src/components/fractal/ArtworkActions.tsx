@@ -34,6 +34,14 @@ import {
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import {
+  MediaExportWorkspace,
+  type AnimationExportCapability,
+  type AnimationExportWorkspaceOutcome,
+  type AnimationExportWorkspaceSubmission,
+  type ImageExportWorkspaceSubmission,
+} from '@/components/fractal/MediaExportWorkspace';
+import type { AnimationFramePipelineProgress } from '@/lib/media-export-animation';
+import {
   ArtworkActionStatus,
   ArtworkOperation,
   CloudSyncPhase,
@@ -51,7 +59,20 @@ interface ArtworkActionsProps {
   onSave: (name: string) => Promise<boolean>;
   onDownload: () => Promise<boolean>;
   onImport: (file: File) => Promise<boolean>;
-  onExport: (scale: number, ssaaLevel: number) => Promise<boolean>;
+  onPreview?: (submission: ImageExportWorkspaceSubmission, signal: AbortSignal) => Promise<Blob>;
+  onExport: (submission: ImageExportWorkspaceSubmission) => Promise<boolean>;
+  onExportAnimation?: (
+    submission: AnimationExportWorkspaceSubmission,
+    signal: AbortSignal,
+    onProgress: (progress: AnimationFramePipelineProgress) => void,
+  ) => Promise<boolean | AnimationExportWorkspaceOutcome>;
+  onProbeAnimation?: (
+    submission: AnimationExportWorkspaceSubmission,
+    signal: AbortSignal,
+  ) => Promise<AnimationExportCapability>;
+  animationAvailable?: boolean;
+  animationSpeed?: number;
+  animationDuration?: number;
   onReset: () => void;
   /** Revision-conflict exits (spec §17): adopt the remote version, or keep
    *  local edits as a brand-new draft. No silent overwrite either way. */
@@ -78,7 +99,13 @@ export function ArtworkActions({
   onSave,
   onDownload,
   onImport,
+  onPreview,
   onExport,
+  onExportAnimation,
+  onProbeAnimation,
+  animationAvailable = false,
+  animationSpeed = 1,
+  animationDuration = 0,
   onReset,
   onConflictReload,
   onConflictSaveAsNew,
@@ -92,8 +119,6 @@ export function ArtworkActions({
   const [saveOpen, setSaveOpen] = useState(false);
   const [saveName, setSaveName] = useState('');
   const [exportOpen, setExportOpen] = useState(false);
-  const [exportScale, setExportScale] = useState(2);
-  const [exportQuality, setExportQuality] = useState(9);
   const [dragging, setDragging] = useState(false);
   const actionGridRef = useRef<HTMLDivElement>(null);
   const [wrappedActions, setWrappedActions] = useState(false);
@@ -142,11 +167,6 @@ export function ArtworkActions({
   const submitSave = async () => {
     if (!saveName.trim() || pending || !frameReady) return;
     if (await onSave(saveName.trim())) setSaveOpen(false);
-  };
-
-  const submitExport = async () => {
-    if (pending || !frameReady) return;
-    if (await onExport(exportScale, exportQuality)) setExportOpen(false);
   };
 
   const statusText =
@@ -349,44 +369,20 @@ export function ArtworkActions({
         </DialogContent>
       </Dialog>
 
-      <Dialog open={exportOpen} onOpenChange={setExportOpen}>
-        <DialogContent className="sm:max-w-md" aria-describedby={undefined}
-          onCloseAutoFocus={event => { event.preventDefault(); exportButtonRef.current?.focus({ preventScroll: true }); }}>
-          <DialogHeader>
-            <DialogTitle>{t('export.title')}</DialogTitle>
-          </DialogHeader>
-          <div className="space-y-4">
-            <OptionGroup
-              label={t('export.scale')}
-              options={[1, 2, 3, 4].map((value) => ({
-                value,
-                label: `${value}x`,
-              }))}
-              value={exportScale}
-              onChange={setExportScale}
-            />
-            <OptionGroup
-              label={t('export.quality')}
-              options={[
-                { value: 0, label: t('export.qualityOff') },
-                { value: 4, label: t('export.qualityLow') },
-                { value: 9, label: t('export.qualityHigh') },
-                { value: 16, label: t('export.qualityUltra') },
-              ]}
-              value={exportQuality}
-              onChange={setExportQuality}
-            />
-          </div>
-          <DialogFooter>
-            <Button variant="outline" onClick={() => setExportOpen(false)}>
-              {t('common.cancel')}
-            </Button>
-            <Button disabled={pending || !frameReady} onClick={submitExport}>
-              {pending ? t('export.pending') : t('export.confirm')}
-            </Button>
-          </DialogFooter>
-        </DialogContent>
-      </Dialog>
+      <MediaExportWorkspace
+        open={exportOpen}
+        pending={pending}
+        frameReady={frameReady}
+        onOpenChange={setExportOpen}
+        onCloseAutoFocus={() => exportButtonRef.current?.focus({ preventScroll: true })}
+        onPreviewImage={onPreview}
+        onExportImage={onExport}
+        onExportAnimation={onExportAnimation ?? (async () => false)}
+        onProbeAnimation={onProbeAnimation}
+        animationAvailable={animationAvailable}
+        animationSpeed={animationSpeed}
+        animationDuration={animationDuration}
+      />
     </>
   );
 }
@@ -431,40 +427,5 @@ function ActionButton({
       }
       {compact && <span className="whitespace-nowrap">{shortLabel}</span>}
     </Button>
-  );
-}
-
-function OptionGroup({
-  label,
-  options,
-  value,
-  onChange,
-}: {
-  label: string;
-  options: { value: number; label: string }[];
-  value: number;
-  onChange: (value: number) => void;
-}) {
-  return (
-    <fieldset className="space-y-2">
-      <legend className="text-sm font-medium">{label}</legend>
-      <div className="flex overflow-hidden rounded-md border">
-        {options.map((option) => (
-          <button
-            key={option.value}
-            type="button"
-            className={`min-h-10 flex-1 px-2 text-xs transition-colors ${
-              value === option.value
-                ? 'bg-primary text-primary-foreground'
-                : 'hover:bg-muted'
-            }`}
-            onClick={() => onChange(option.value)}
-            aria-pressed={value === option.value}
-          >
-            {option.label}
-          </button>
-        ))}
-      </div>
-    </fieldset>
   );
 }

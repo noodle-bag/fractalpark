@@ -39,6 +39,7 @@ interface FractalDocumentV2 {
   animation?: {
     viewKeyframes?: Keyframe[];
     tracks?: AnimationTrack[];
+    speed?: 0.25 | 0.5 | 0.75 | 1 | 2 | 3 | 4 | 5 | 6 | 7 | 8 | 9 | 10;
   };
   assets?: {
     formula?: AssetReference;
@@ -63,6 +64,11 @@ interface FractalDocumentV2 {
 - v1 `animation.keyframes` migrates to `animation.viewKeyframes`.
 - `animation.tracks` reserves the container and stable target-ID boundary. It
   does not enable parameter animation in v0.4.12.
+- `animation.speed` is an additive v0.4.22 playback field governed by
+  [Media Export Contract v1](media-export-v1.md). Missing or invalid values read
+  as `1`; new writers emit only one of the thirteen declared values. It does not
+  require a Document v2 or Envelope v1 version increment or a destructive
+  migration.
 - `coloring.style.detail` and `coloring.style.post` accept only explicitly
   supported fields. Unknown fields are not copied into editable v2 documents.
 - Normalization applies only to known current or older versions. It must never

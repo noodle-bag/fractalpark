@@ -3,12 +3,12 @@ import { join } from 'node:path';
 
 import {
   reconstructReviewedReleasePackageInputs,
-  REVIEWED_0421_PACKAGE_HASHES,
+  REVIEWED_0422_PACKAGE_HASHES,
   SEALED_RELEASE_PACKAGE_HASHES,
 } from './reviewed-release-package-inputs';
 
 const OLD_LOCK = SEALED_RELEASE_PACKAGE_HASHES['package-lock.json'];
-const CURRENT_LOCK = REVIEWED_0421_PACKAGE_HASHES['package-lock.json'];
+const CURRENT_LOCK = REVIEWED_0422_PACKAGE_HASHES['package-lock.json'];
 
 // This Record-only proof does not renew historical Julia or performance evidence.
 export function isReviewedRecordPreviewReleaseTransition(
@@ -36,6 +36,6 @@ export function matchesRecordPreviewSourceBindings(
     readFileSync(join(process.cwd(), 'package.json'), 'utf8'),
     readFileSync(join(process.cwd(), 'package-lock.json'), 'utf8'),
   );
-  if (reviewed) console.log('[record-preview:bindings] verified release inputs 0.4.19 -> 0.4.21; all other source bytes exact');
+  if (reviewed) console.log('[record-preview:bindings] verified release inputs 0.4.19 -> 0.4.22; all other source bytes exact');
   return reviewed;
 }

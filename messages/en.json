@@ -1464,14 +1464,30 @@
       },
       "export": {
         "short": "Export",
-        "label": "Export PNG",
-        "title": "Export PNG",
-        "scale": "Size",
-        "quality": "Anti-aliasing Quality",
-        "qualityOff": "Off",
-        "qualityLow": "Low",
-        "qualityHigh": "High",
-        "qualityUltra": "Ultra",
+        "label": "Export Media",
+        "title": "Export Media",
+        "description": "Create an image or animation locally in your browser.",
+        "tabs": { "image": "Image", "animation": "Animation" },
+        "preview": "Export preview",
+        "previewImageAlt": "Rendered export preview",
+        "previewCurrentFrame": "Current frame",
+        "previewPreparing": "Preparing preview…",
+        "previewUpdating": "Updating…",
+        "previewFailed": "Preview unavailable. Your last successful preview is kept when possible.",
+        "previewState": { "idle": "Preview is waiting.", "rendering": "Rendering latest preview…", "ready": "Preview is up to date.", "failed": "Preview could not be updated." },
+        "composition": { "title": "Composition", "fit": "Fit", "fill": "Fill", "custom": "Custom", "gestureHint": "Drag to pan. Scroll or pinch to zoom; two fingers also rotate.", "panX": "Horizontal pan", "panY": "Vertical pan", "zoom": "Zoom", "rotation": "Rotation (°)", "rotateLeft": "Rotate left 15 degrees", "rotateRight": "Rotate right 15 degrees", "reset": "Reset" },
+        "summary": { "title": "Export summary", "details": "{format} · {width} × {height} · {megapixels} MP", "settings": "{ratio} · {antialiasing} antialiasing · {encoding}", "lossless": "Lossless", "memory": "Estimated raw frame memory: {megabytes} MiB" },
+        "format": "Format",
+        "size": "Size",
+        "renderQuality": "Render quality",
+        "quality": { "off": "Off", "standard": "Standard", "high": "High", "ultra": "Ultra" },
+        "jpegQuality": "JPEG quality",
+        "jpeg": { "balanced": "Balanced", "high": "High", "maximum": "Maximum" },
+        "filename": "Filename (optional)",
+        "filenamePlaceholder": "Generated from artwork name",
+        "downloadAgain": "Download again",
+        "animation": { "title": "Animation export", "preparing": "Preparing animation export.", "localOnly": "Rendered and encoded locally in this browser.", "unavailable": "Add at least two keyframes to export a complete loop.", "overLimit": "The effective duration exceeds 60 seconds. Choose a faster playback speed.", "fps": "Frame rate", "videoQuality": "Video quality", "summary": "{ratio} · {fps} FPS · {speed}× · {duration}s · {frames} frames", "memory": "Bounded raw frame queue: up to {megabytes} MiB", "progress": { "rendering": "Rendering frames", "encoding": "Encoding video" }, "capability": { "checking": "Checking this exact encoding profile…", "ready": "This browser supports the selected profile.", "profile-unavailable": "This browser cannot encode the selected profile. Try the other format, a smaller size, or a lower frame rate.", "dependency-load-failed": "The local encoder could not load. Reload the page, then try the other format.", "failed": "The encoding capability check failed. Reload the page and try again." }, "completed": "Export complete. Your download started automatically.", "failed": "Animation export failed for this exact profile. Try another format or setting.", "cancelExport": "Cancel export" },
+        "cancel": "Cancel",
         "confirm": "Export",
         "pending": "Rendering..."
       },
@@ -1494,7 +1510,7 @@
           "success": "Project imported."
         },
         "export": {
-          "success": "PNG exported."
+          "success": "Media exported."
         }
       },
       "errors": {
@@ -1511,7 +1527,7 @@
         "formula-commit-failed": "The custom formula could not be installed. No changes were kept.",
         "save-failed": "The artwork could not be saved.",
         "download-failed": "The project could not be downloaded.",
-        "export-failed": "The PNG could not be exported.",
+        "export-failed": "The media could not be exported.",
         "cloud-unavailable": "Cloud sync is unavailable right now — your changes were not saved."
       },
       "conflict": {
@@ -1859,6 +1875,8 @@
         "stopPreview": "Stop",
         "noKeyframes": "No keyframes yet",
         "duration": "Loop: {seconds}s",
+        "speed": "Playback speed",
+        "speedHint": "Changes preview and export timing without changing keyframes.",
         "keyframeLabel": "Keyframe {number} (zoom: {zoom})"
       },
       "gradient": {

@@ -28,6 +28,11 @@ import {
   DEFAULT_FRACTAL_DOCUMENT,
   type FractalDocument,
 } from '@/engine/document';
+import {
+  normalizeAnimationPlaybackSpeed,
+  type AnimationPlaybackSpeed,
+} from '@/engine/animation/playback';
+import { buildTimeline, totalDuration } from '@/engine/animation/interpolate';
 import type { FormulaSelectionRequest } from '@/engine/frm/authoring';
 import { getDefaultBounds } from '@/engine/plugins/formula-catalog';
 import type { PluginParamRecord, PluginParamValue } from '@/engine/types';
@@ -213,6 +218,11 @@ function ExploreClient({ posterImage }: { posterImage?: string }) {
   const keyframes = useMemo(
     () => document.animation?.viewKeyframes ?? [],
     [document.animation?.viewKeyframes]
+  );
+  const animationSpeed = normalizeAnimationPlaybackSpeed(document.animation?.speed);
+  const animationDuration = useMemo(
+    () => keyframes.length >= 2 ? totalDuration(buildTimeline(keyframes)) : 0,
+    [keyframes],
   );
   const [isPreviewPlaying, setIsPreviewPlaying] = useState(false);
   const [artworkToolbarTarget, setArtworkToolbarTarget] = useState<HTMLDivElement | null>(null);
@@ -1299,6 +1309,12 @@ function ExploreClient({ posterImage }: { posterImage?: string }) {
     updateAnimation({ viewKeyframes: nextKeyframes });
   }, [keyframes, markCreatorChange, updateAnimation]);
 
+  const handleAnimationSpeedChange = useCallback((speed: AnimationPlaybackSpeed) => {
+    if (speed === animationSpeed) return;
+    markCreatorChange('keyframe');
+    updateAnimation({ speed });
+  }, [animationSpeed, markCreatorChange, updateAnimation]);
+
   const activeResolution = handoffError ?? formulaResolution;
   const isHandoffPending = Boolean(handoffTargetId);
   const formulaResolutionMatches =
@@ -1481,6 +1497,7 @@ function ExploreClient({ posterImage }: { posterImage?: string }) {
               customGradient,
             }}
             keyframes={keyframes}
+            speed={animationSpeed}
           />
         )}
         {!isFormulaReady && (
@@ -1508,7 +1525,13 @@ function ExploreClient({ posterImage }: { posterImage?: string }) {
           onSave={async (name) => getCanvas() ? artworkActions.save(name) : false}
           onDownload={artworkActions.download}
           onImport={artworkActions.importFile}
-          onExport={async (scale, ssaa) => getCanvas() ? artworkActions.exportPng(scale, ssaa) : false}
+          onPreview={artworkActions.previewImage}
+          onExport={async submission => getCanvas() ? artworkActions.exportImage(submission) : false}
+          onExportAnimation={artworkActions.exportAnimation}
+          onProbeAnimation={artworkActions.probeAnimation}
+          animationAvailable={keyframes.length >= 2}
+          animationSpeed={animationSpeed}
+          animationDuration={animationDuration}
           onReset={handleResetView}
           onConflictReload={() => {
             // Reload discards the in-memory edits that conflicted — confirm
@@ -1690,6 +1713,8 @@ function ExploreClient({ posterImage }: { posterImage?: string }) {
                 onKeyframesChange={handleKeyframesChange}
                 onPreviewToggle={setIsPreviewPlaying}
                 isPreviewPlaying={isPreviewPlaying}
+                speed={animationSpeed}
+                onSpeedChange={handleAnimationSpeedChange}
                 onBoundsChange={handleUserBoundsChange}
               />
             </TabsContent>

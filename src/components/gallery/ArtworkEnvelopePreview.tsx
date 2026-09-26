@@ -288,6 +288,7 @@ export function ArtworkEnvelopePreview({
             <AnimatedFractalCanvas
               params={currentPreview.params}
               keyframes={currentPreview.keyframes}
+              speed={currentPreview.speed}
               formulaPlugin={currentPreview.customFormulaPlugin ?? undefined}
               dprScale={autoplay ? 0.75 : 0.5}
               maxIterationsClamp={MAX_PREVIEW_ITERATIONS}

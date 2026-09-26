@@ -1,6 +1,6 @@
 import type { FractalDocument } from './document';
 import { documentToRuntimeParams } from './document-adapter';
-import type { FractalParams } from './types';
+import type { FractalParams, ViewBounds } from './types';
 
 declare const renderSnapshotBrand: unique symbol;
 
@@ -9,6 +9,7 @@ export type RenderSnapshot = FractalParams & {
 };
 
 export interface RenderSnapshotOverrides {
+  bounds?: ViewBounds;
   maxIterations?: number;
   useSSAA?: boolean;
   ssaaLevel?: number;

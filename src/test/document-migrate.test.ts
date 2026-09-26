@@ -6,6 +6,14 @@ import { migrateFractalDocument, normalizeFractalDocument, normalizeRuntimeFract
 import type { SavedFractal } from '@/engine/types';
 
 describe('document migrate / normalize', () => {
+  it('keeps schema v2 while normalizing the additive animation speed field', () => {
+    expect(normalizeFractalDocument({ animation: { speed: 10 } }).animation?.speed).toBe(10);
+    expect(normalizeFractalDocument({ animation: { speed: 0.3 as never } }).animation?.speed).toBe(1);
+    expect(normalizeFractalDocument({ animation: { speed: Number.NaN as never } }).animation?.speed).toBe(1);
+    expect(normalizeFractalDocument({ animation: { viewKeyframes: [] } }).animation?.speed).toBeUndefined();
+    expect(normalizeFractalDocument({ animation: { speed: 2 } }).schemaVersion).toBe(2);
+  });
+
   it('canonicalizes historical cloud UUID references without touching other custom IDs', () => {
     const storageId = '44444444-4444-4444-8444-444444444444';
     const runtimeId = `custom-${storageId}`;
@@ -158,10 +166,17 @@ describe('document migrate / normalize', () => {
     expect(runtime.paletteIndex).toBe(16);
   });
 
+  it('recognizes an animation-speed-only decoded URL state', () => {
+    const decoded = decodeParams(new URLSearchParams('spd=3'));
+    const document = migrateFractalDocument(decoded, 0);
+    expect(document.animation?.speed).toBe(3);
+    expect(document.metadata?.source).toBe('shared');
+  });
+
   it.each([
-    ['outside coloring', 'oc=st', (runtime) => runtime.outsideColoring, 'stripe'],
-    ['transform', 'tr=mobius', (runtime) => runtime.transformId, 'mobius'],
-    ['gradient', 'grad=0.00:000004,1.00:fcfdbf', (runtime) => runtime.customGradient?.length, 2],
+    ['outside coloring', 'oc=st', (runtime: ReturnType<typeof documentToRuntimeParams>) => runtime.outsideColoring, 'stripe'],
+    ['transform', 'tr=mobius', (runtime: ReturnType<typeof documentToRuntimeParams>) => runtime.transformId, 'mobius'],
+    ['gradient', 'grad=0.00:000004,1.00:fcfdbf', (runtime: ReturnType<typeof documentToRuntimeParams>) => runtime.customGradient?.length, 2],
   ] as const)('recognizes a %s-only decoded URL state', (_label, query, select, expected) => {
     const decoded = decodeParams(new URLSearchParams(query));
     const runtime = documentToRuntimeParams(migrateFractalDocument(decoded, 0));

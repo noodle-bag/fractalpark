@@ -6,6 +6,10 @@ import { Button } from '@/components/ui/button';
 import { ChevronDown, Plus, X, Play, Square } from 'lucide-react';
 import type { ViewBounds, Keyframe } from '@/engine/types';
 import { buildTimeline, totalDuration } from '@/engine/animation/interpolate';
+import {
+  getEffectiveAnimationDuration,
+  type AnimationPlaybackSpeed,
+} from '@/engine/animation/playback';
 
 interface KeyframeManagerProps {
   keyframes: Keyframe[];
@@ -13,6 +17,7 @@ interface KeyframeManagerProps {
   onKeyframesChange: (keyframes: Keyframe[]) => void;
   onPreviewToggle: (playing: boolean) => void;
   isPreviewPlaying: boolean;
+  speed: AnimationPlaybackSpeed;
   onBoundsChange?: (bounds: ViewBounds) => void;
 }
 
@@ -41,6 +46,7 @@ export default function KeyframeManager({
   onKeyframesChange,
   onPreviewToggle,
   isPreviewPlaying,
+  speed,
   onBoundsChange,
 }: KeyframeManagerProps) {
   const t = useTranslations('explore.controls.animation');
@@ -53,8 +59,8 @@ export default function KeyframeManager({
   const loopDuration = useMemo(() => {
     if (keyframes.length < 2) return 0;
     const timeline = buildTimeline(keyframes);
-    return Math.round(totalDuration(timeline));
-  }, [keyframes]);
+    return Math.round(getEffectiveAnimationDuration(totalDuration(timeline), speed));
+  }, [keyframes, speed]);
 
   const handleAddKeyframe = () => {
     if (!canAddMore) return;
