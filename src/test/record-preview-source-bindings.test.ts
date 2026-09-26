@@ -46,12 +46,12 @@ describe('Record preview source bindings', () => {
 
   it('rejects mixed, unknown, whitespace and duplicate-key metadata changes', () => {
     for (const candidate of [
-      packageJson.replace('0.4.21', '0.4.20'),
-      packageJson.replace('0.4.21', '0.4.22'),
+      packageJson.replace('0.4.22', '0.4.20'),
+      packageJson.replace('0.4.22', '0.4.23'),
       `${packageJson} `,
-      packageJson.replace('"version": "0.4.21",', '"version": "forged", "version": "0.4.21",'),
+      packageJson.replace('"version": "0.4.22",', '"version": "forged", "version": "0.4.22",'),
     ]) expect(isReviewedRecordPreviewReleaseTransition(candidate, lockJson)).toBe(false);
-    for (const candidate of [lockJson.replace('0.4.21', '0.4.20'), `${lockJson} `]) {
+    for (const candidate of [lockJson.replace('0.4.22', '0.4.20'), `${lockJson} `]) {
       expect(isReviewedRecordPreviewReleaseTransition(packageJson, candidate)).toBe(false);
     }
   });

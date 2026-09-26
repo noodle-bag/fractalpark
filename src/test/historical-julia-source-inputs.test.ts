@@ -63,7 +63,7 @@ describe("historical Julia package input reconstruction", () => {
     ["script", ["scripts", "build"], "echo changed"],
     ["engines", ["engines"], { node: "0" }],
     ["extra field", ["unreviewed"], true],
-    ["unknown version", ["version"], "0.4.22"],
+    ["unknown version", ["version"], "0.4.23"],
     ["mixed package version", ["version"], "0.4.20"],
   ] as const)("rejects package %s changes", (_name, path, value) => {
     expect(() => reconstructHistoricalJuliaPackages(
@@ -89,15 +89,15 @@ describe("historical Julia package input reconstruction", () => {
 
   it("rejects a coordinated but unreviewed application version bump", () => {
     expect(() => reconstructHistoricalJuliaPackages(
-      mutate(packageJson, ["version"], "0.4.22"),
-      mutate(mutate(lockJson, ["version"], "0.4.22"), ["packages", "", "version"], "0.4.22"),
+      mutate(packageJson, ["version"], "0.4.23"),
+      mutate(mutate(lockJson, ["version"], "0.4.23"), ["packages", "", "version"], "0.4.23"),
     )).toThrow("historical-julia-package-input-not-reviewed");
   });
 
   it("rejects whitespace and duplicate-key changes instead of normalizing JSON", () => {
     for (const changed of [
       `${packageJson} `,
-      packageJson.replace('"version": "0.4.21",', '"version": "forged", "version": "0.4.21",'),
+      packageJson.replace('"version": "0.4.22",', '"version": "forged", "version": "0.4.22",'),
     ]) expect(() => reconstructHistoricalJuliaPackages(changed, lockJson)).toThrow();
   });
 

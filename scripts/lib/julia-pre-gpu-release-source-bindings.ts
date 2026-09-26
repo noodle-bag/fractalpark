@@ -5,7 +5,7 @@ import {
 } from "./reviewed-release-package-inputs";
 
 /**
- * Qualifies the exact 0.4.21 release-input transition for a sealed pre-GPU
+ * Qualifies the exact 0.4.22 release-input transition for a sealed pre-GPU
  * authority. This does not regenerate or renew the historical asset.
  */
 export function matchesSealedJuliaReleaseSourceBindings(

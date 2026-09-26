@@ -1,6 +1,30 @@
 # Changelog
 
-## 0.4.21 - Unreleased
+## 0.4.22 - Unreleased
+
+Complete local media export for finished fractal images and keyframe animation, with a shared preview and composition workflow.
+
+### Added
+
+- Added one responsive Image/Animation export workspace with real current-frame previews, Fit/Fill/Custom composition, pan, zoom, world-coordinate rotation, background, quality, size, filename, and output summaries across all seven locales.
+- Added exact-size PNG and JPEG export with explicit alpha/background handling, fixed sampling budgets, MIME verification, automatic safe filenames, and cancellable latest-only previews.
+- Added local MP4/AVC and WebM/VP9 animation export through an on-demand Mediabunny bridge, fixed-time frame scheduling, bounded backpressure, exact capability checks, progress, cancellation, and resource cleanup.
+- Added nine persistent animation playback speeds from 0.25× to 4×, shared by preview and export and preserved through URLs, Project download/import, cloud drafts, Gallery/Community, published artwork, and Remix consumers.
+
+### Changed
+
+- Replaced the former fixed media-export action with approved image and animation profiles, including 1080p/4K landscape and portrait video, 24/30/60 FPS, and Balanced/High/Maximum bitrate tiers.
+- Kept video formats visible when an exact browser profile is unavailable; unsupported combinations fail closed with a named reason and alternatives instead of silently changing format, size, frame rate, or quality.
+- Kept the video encoder and muxer out of the initial/static path through nested dynamic chunks; all rendering and encoding remains local to the browser.
+
+### Compatibility notes
+
+- The Fractal Document remains schema version 2. `animation.speed` is additive and optional; missing, invalid, or unsupported values normalize to 1×, and older readers may ignore it.
+- This release adds no database migration and does not change formula mathematics, published formula assets, or the Project envelope version.
+- Chromium desktop is the locally verified video environment. Firefox, Safari, physical iOS, and physical Android remain named release-matrix exceptions until separately exercised; no untested platform is claimed as passing.
+- Mediabunny 1.59.1 is distributed under MPL-2.0; source and license references are recorded in `THIRD_PARTY_NOTICES.md`.
+
+## 0.4.21 - 2026-09-19
 
 A more compact, canvas-first creation workspace with steadier parameter feedback and consistent desktop and mobile controls.
 

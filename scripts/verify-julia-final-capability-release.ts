@@ -170,5 +170,5 @@ invariant(
 );
 
 console.log(
-  `PASS: ${expectedRows.length} Julia final capability rows exact; reviewed 0.4.21 release-input transition only`,
+  `PASS: ${expectedRows.length} Julia final capability rows exact; reviewed 0.4.22 release-input transition only`,
 );

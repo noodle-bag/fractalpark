@@ -11,8 +11,8 @@ export const REVIEWED_0421_PACKAGE_HASHES = Object.freeze({
 });
 
 export const REVIEWED_0422_PACKAGE_HASHES = Object.freeze({
-  "package.json": "b1f60fa08eff17468b99d8a6502b5d280c326486526fa22ea21062e0498c5444",
-  "package-lock.json": "426e972ea83ae14ee26cc920de5c6f3f9e8a105cc63a62791b275bcefe60f125",
+  "package.json": "7dc543f2d181b6fbb8ea8fbc122a484b1629e193318bfc3008b6047076b882fb",
+  "package-lock.json": "2803d81f3e5cc522e25e70246f69f775c2bb499c8453c80d5026d1d802b09e48",
 });
 
 export function sha256ReleaseInput(source: string): string {
@@ -60,8 +60,13 @@ export function reconstructReviewed0421PackageInputs(
     sha256ReleaseInput(lockJson) !== REVIEWED_0422_PACKAGE_HASHES["package-lock.json"]
   ) return null;
 
-  const reviewedPackage = packageJson.replace('    "mediabunny": "^1.59.1",\n', '');
-  let reviewedLock = lockJson.replace('        "mediabunny": "^1.59.1",\n', '');
+  const reviewedPackage = packageJson
+    .replace('\n  "version": "0.4.22",', '\n  "version": "0.4.21",')
+    .replace('    "mediabunny": "^1.59.1",\n', '');
+  let reviewedLock = lockJson
+    .replace('\n  "version": "0.4.22",', '\n  "version": "0.4.21",')
+    .replace('      "version": "0.4.22",', '      "version": "0.4.21",')
+    .replace('        "mediabunny": "^1.59.1",\n', '');
   for (const packagePath of [
     "node_modules/@types/dom-mediacapture-transform",
     "node_modules/@types/dom-webcodecs",

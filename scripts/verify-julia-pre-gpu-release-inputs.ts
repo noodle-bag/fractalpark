@@ -33,5 +33,5 @@ if (
 ) throw new Error("julia-pre-gpu-release-source-binding-invalid");
 
 console.log(
-  "PASS: sealed Julia pre-GPU authority; exact 0.4.21 release-input transition; all executable inputs byte-exact",
+  "PASS: sealed Julia pre-GPU authority; exact 0.4.22 release-input transition; all executable inputs byte-exact",
 );
