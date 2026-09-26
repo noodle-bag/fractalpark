@@ -227,7 +227,10 @@ second Export state store.
 The target frame is fixed while content is adjusted inside it. `Fit` is the
 default; `Fill` is the alternative starting preset. Pan, zoom, or rotation
 changes the mode to `Custom`. The transform is stored in normalized target-frame
-coordinates so preview and final pixels do not drift with resolution.
+coordinates so preview and final pixels do not drift with resolution. Pan is
+resolved in the displayed target-frame axes, then rotated into world coordinates
+by the combined recovered-canvas and Export composition rotation; dragging must
+therefore remain screen-aligned even when either rotation is non-zero.
 
 - `Fit` preserves the complete current visible world range and reveals more
   world area along the necessary axis.

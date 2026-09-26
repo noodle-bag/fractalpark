@@ -112,6 +112,37 @@ describe('animation export frame pipeline', () => {
     expect(loseContext).toHaveBeenCalledTimes(1);
   });
 
+  it('maps animation pan through each sampled frame rotation', async () => {
+    const document = structuredClone(DEFAULT_FRACTAL_DOCUMENT);
+    document.animation = {
+      speed: 1,
+      viewKeyframes: [
+        { id: 'a', bounds: { centerX: 0, centerY: 0, zoom: 1, rotation: Math.PI / 2 } },
+        { id: 'b', bounds: { centerX: 1, centerY: 0, zoom: 1, rotation: Math.PI / 2 } },
+      ],
+    };
+    const request = animationRequest({
+      document,
+      composition: { mode: 'custom', baseline: 'fit', panX: 0.25, panY: 0, scale: 1, rotation: 0 },
+    });
+    const snapshots: RenderSnapshot[] = [];
+    const session = createAnimationFrameRenderSession(request, {
+      createCanvas: () => ({
+        width: 0,
+        height: 0,
+        getContext: () => ({ getExtension: () => ({ loseContext: vi.fn() }) }) as unknown as WebGLRenderingContext,
+      }),
+      createRenderer: () => ({ render: async snapshot => { snapshots.push(snapshot); return true; }, dispose: vi.fn() }),
+      createBitmap: async () => ({ close: vi.fn() }) as unknown as ImageBitmap,
+    });
+
+    const frame = await session.render(session.schedule.frames[0], new AbortController().signal);
+    expect(snapshots[0].bounds.centerX).toBeCloseTo(0, 5);
+    expect(snapshots[0].bounds.centerY).toBeCloseTo(4 / 9, 5);
+    frame.close();
+    session.dispose();
+  });
+
   it('preserves order and applies bounded backpressure while render and encode overlap', async () => {
     let retained = 0;
     let maximumRetained = 0;

@@ -52,11 +52,16 @@ export function resolveMediaExportBounds(
   const zoom = baseZoom * request.composition.scale;
   const worldWidth = targetWidthUnits / zoom;
   const worldHeight = targetHeightUnits / zoom;
+  const rotation = (current.rotation ?? 0) + request.composition.rotation;
+  const panX = request.composition.panX * worldWidth;
+  const panY = request.composition.panY * worldHeight;
+  const cosine = Math.cos(rotation);
+  const sine = Math.sin(rotation);
   return {
-    centerX: current.centerX + request.composition.panX * worldWidth,
-    centerY: current.centerY + request.composition.panY * worldHeight,
+    centerX: current.centerX + panX * cosine - panY * sine,
+    centerY: current.centerY + panX * sine + panY * cosine,
     zoom,
-    rotation: (current.rotation ?? 0) + request.composition.rotation,
+    rotation,
   };
 }
 

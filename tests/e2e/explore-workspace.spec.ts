@@ -96,6 +96,45 @@ test('media export keeps a latest-only real preview and accessible composition c
   expect(errors).toEqual([]);
 });
 
+test('rotated canvas export drag stays aligned with the displayed image', async ({ page }) => {
+  test.setTimeout(90_000);
+  await page.setViewportSize({ width: 390, height: 844 });
+  await page.goto(`/en/explore?rot=${Math.PI / 2}`);
+  await readyCanvas(page);
+  await page.getByRole('button', { name: 'Export Media', exact: true }).click();
+  const dialog = page.getByRole('dialog');
+  await dialog.getByRole('combobox', { name: 'Render quality' }).selectOption('off');
+  const preview = dialog.getByTestId('media-export-preview');
+  const image = preview.getByRole('img', { name: 'Rendered export preview' });
+  await expect(image).toBeVisible({ timeout: 45_000 });
+  const blueCentroid = () => image.evaluate(element => {
+    const source = element as HTMLImageElement;
+    const canvas = document.createElement('canvas');
+    canvas.width = source.naturalWidth;
+    canvas.height = source.naturalHeight;
+    const context = canvas.getContext('2d', { willReadFrequently: true })!;
+    context.drawImage(source, 0, 0);
+    const pixels = context.getImageData(0, 0, canvas.width, canvas.height).data;
+    let weightedX = 0;
+    let totalWeight = 0;
+    for (let index = 0; index < pixels.length; index += 4) {
+      const weight = Math.max(0, pixels[index + 2] - (pixels[index] + pixels[index + 1]) / 2);
+      weightedX += (index / 4 % canvas.width) * weight;
+      totalWeight += weight;
+    }
+    return weightedX / totalWeight;
+  });
+  const before = await blueCentroid();
+  const beforeUrl = await image.getAttribute('src');
+  const box = (await preview.boundingBox())!;
+  await page.mouse.move(box.x + box.width / 2, box.y + box.height / 2);
+  await page.mouse.down();
+  await page.mouse.move(box.x + box.width / 2 + 32, box.y + box.height / 2);
+  await page.mouse.up();
+  await expect.poll(() => image.getAttribute('src'), { timeout: 45_000 }).not.toBe(beforeUrl);
+  await expect.poll(blueCentroid).toBeGreaterThan(before + 20);
+});
+
 test('all locales keep the export preview, summary and actions reachable at 320px', async ({ page }) => {
   test.setTimeout(180_000);
   await page.setViewportSize({ width: 320, height: 700 });

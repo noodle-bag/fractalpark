@@ -64,9 +64,22 @@ describe('image media export', () => {
       composition: { mode: 'custom', baseline: 'fit', panX: 0.25, panY: -0.5, scale: 2, rotation: 0.2 },
     }));
     expect(bounds.zoom).toBeCloseTo(0.8);
-    expect(bounds.centerX).toBeCloseTo(0.055555, 5);
-    expect(bounds.centerY).toBeCloseTo(-0.625);
+    expect(bounds.centerX).toBeCloseTo(0.16865, 5);
+    expect(bounds.centerY).toBeCloseTo(-0.502166, 5);
     expect(bounds.rotation).toBeCloseTo(0.2);
+  });
+
+  it('maps target-frame pan through the combined canvas and composition rotation', () => {
+    const document = structuredClone(DEFAULT_FRACTAL_DOCUMENT);
+    document.scene.bounds.rotation = Math.PI / 2;
+    const bounds = resolveImageExportBounds(request({
+      document,
+      composition: { mode: 'custom', baseline: 'fit', panX: 0.25, panY: 0, scale: 1, rotation: Math.PI / 2 },
+    }));
+
+    expect(bounds.rotation).toBeCloseTo(Math.PI);
+    expect(bounds.centerX).toBeCloseTo(-0.5 - 1.111111, 5);
+    expect(bounds.centerY).toBeCloseTo(0, 5);
   });
 
   it('encodes PNG with exact MIME and decoded dimensions', async () => {
