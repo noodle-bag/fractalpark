@@ -1,12 +1,24 @@
 import { fireEvent, render, screen, waitFor } from '@testing-library/react';
 import type { ComponentProps } from 'react';
-import { describe, expect, it, vi } from 'vitest';
+import { beforeAll, describe, expect, it, vi } from 'vitest';
 
-import { MediaExportWorkspace } from '@/components/fractal/MediaExportWorkspace';
+import {
+  MediaExportWorkspace,
+  type AnimationExportWorkspaceSubmission,
+} from '@/components/fractal/MediaExportWorkspace';
+import type { AnimationFramePipelineProgress } from '@/lib/media-export-animation';
 
 vi.mock('next-intl', () => ({
   useTranslations: () => (key: string) => key,
 }));
+
+beforeAll(() => {
+  vi.stubGlobal('ResizeObserver', class {
+    observe() {}
+    unobserve() {}
+    disconnect() {}
+  });
+});
 
 function setup(overrides: Partial<ComponentProps<typeof MediaExportWorkspace>> = {}) {
   const onExportImage = vi.fn(async () => true);
@@ -43,8 +55,9 @@ describe('MediaExportWorkspace', () => {
     fireEvent.change(screen.getByDisplayValue('1920 × 1080'), { target: { value: 'square-default' } });
     fireEvent.click(screen.getByRole('button', { name: 'confirm' }));
     await waitFor(() => expect(onExportImage).toHaveBeenCalledWith(expect.objectContaining({
-      format: 'jpeg', width: 2048, height: 2048, renderQuality: 'high', jpegQuality: 'high',
+      format: 'jpeg', width: 2048, height: 2048, renderQuality: 'high', jpegQuality: 'high', background: '#ffffff',
     })));
+    expect(screen.queryByText('background')).not.toBeInTheDocument();
     expect(props.onOpenChange).toHaveBeenCalledWith(false);
   });
 
@@ -53,11 +66,21 @@ describe('MediaExportWorkspace', () => {
     expect(screen.getByRole('button', { name: 'confirm' })).toBeDisabled();
   });
 
-  it('submits an approved animation profile with speed-derived summary and progress', async () => {
-    const { props, onExportAnimation } = setup({
+  it('submits an approved animation profile, keeps the completed state visible, and uses fixed black', async () => {
+    const repeatDownload = vi.fn();
+    const onExportAnimation = vi.fn(async (
+      _submission: AnimationExportWorkspaceSubmission,
+      _signal: AbortSignal,
+      onProgress: (progress: AnimationFramePipelineProgress) => void,
+    ) => {
+      onProgress({ phase: 'encoding', completed: 120, total: 120, rendered: 120, encoded: 120, queued: 0 });
+      return { succeeded: true, repeatDownload };
+    });
+    const { props } = setup({
       animationAvailable: true,
       animationSpeed: 4,
       animationDuration: 18,
+      onExportAnimation,
     });
     fireEvent.mouseDown(screen.getByRole('tab', { name: 'tabs.animation' }), { button: 0, ctrlKey: false });
     await waitFor(() => expect(screen.getByTestId('media-export-animation-summary')).toBeVisible());
@@ -66,11 +89,15 @@ describe('MediaExportWorkspace', () => {
     fireEvent.change(screen.getByDisplayValue('60 FPS'), { target: { value: '30' } });
     fireEvent.click(screen.getByRole('button', { name: 'confirm' }));
     await waitFor(() => expect(onExportAnimation).toHaveBeenCalledWith(
-      expect.objectContaining({ format: 'webm', width: 3840, height: 2160, fps: 30, videoQuality: 'high' }),
+      expect.objectContaining({ format: 'webm', width: 3840, height: 2160, fps: 30, videoQuality: 'high', background: '#000000' }),
       expect.any(AbortSignal),
       expect.any(Function),
     ));
-    expect(props.onOpenChange).toHaveBeenCalledWith(false);
+    expect(props.onOpenChange).not.toHaveBeenCalledWith(false);
+    expect(screen.getByText('animation.completed')).toBeVisible();
+    expect(screen.getByText('100%')).toBeVisible();
+    fireEvent.click(screen.getByRole('button', { name: 'downloadAgain' }));
+    expect(repeatDownload).toHaveBeenCalledOnce();
   });
 
   it('disables an unsupported exact animation profile and names the fallback path', async () => {
@@ -147,5 +174,20 @@ describe('MediaExportWorkspace', () => {
 
     view.unmount();
     expect(revokeObjectURL).toHaveBeenCalledWith('blob:latest-preview');
+  });
+
+  it('matches Explore vertical drag direction and exposes an always-on touch scrollbar', async () => {
+    setup();
+    const preview = screen.getByTestId('media-export-preview');
+    Object.defineProperty(preview, 'setPointerCapture', { configurable: true, value: vi.fn() });
+    Object.defineProperty(preview, 'getBoundingClientRect', {
+      configurable: true,
+      value: () => ({ width: 200, height: 100, x: 0, y: 0, top: 0, left: 0, right: 200, bottom: 100, toJSON: () => ({}) }),
+    });
+    fireEvent.pointerDown(preview, { pointerId: 1, clientX: 50, clientY: 40 });
+    fireEvent.pointerMove(preview, { pointerId: 1, clientX: 50, clientY: 60 });
+    fireEvent.pointerUp(preview, { pointerId: 1, clientX: 50, clientY: 60 });
+    await waitFor(() => expect(screen.getByLabelText('composition.panY')).toHaveValue(0.2));
+    expect(document.querySelector('[data-slot="scroll-area-scrollbar"]')).toBeInTheDocument();
   });
 });

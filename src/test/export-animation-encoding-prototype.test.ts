@@ -12,7 +12,7 @@ import {
 describe('v0.4.22 Slice 0b animation encoding prototype', () => {
   it('freezes the approved containers, speed values, and 1080p60/4K60 profiles', () => {
     expect(ANIMATION_SPEEDS_PROTOTYPE).toEqual([
-      0.25, 0.5, 0.75, 1, 1.25, 1.5, 2, 3, 4,
+      0.25, 0.5, 0.75, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10,
     ]);
     expect(ANIMATION_CONTAINERS_PROTOTYPE.mp4).toMatchObject({
       mimeType: 'video/mp4',

@@ -1,5 +1,5 @@
 export const ANIMATION_PLAYBACK_SPEEDS = [
-  0.25, 0.5, 0.75, 1, 1.25, 1.5, 2, 3, 4,
+  0.25, 0.5, 0.75, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10,
 ] as const;
 
 export type AnimationPlaybackSpeed = (typeof ANIMATION_PLAYBACK_SPEEDS)[number];

@@ -33,10 +33,10 @@ describe('document reader', () => {
   it('reads additive speed from schema v2 and keeps old speed-less documents compatible', () => {
     const withSpeed = readFractalDocument({
       ...documentV2,
-      animation: { speed: 4 },
+      animation: { speed: 10 },
     });
     expect(withSpeed.mode).toBe('editable');
-    if (withSpeed.mode === 'editable') expect(withSpeed.document.animation?.speed).toBe(4);
+    if (withSpeed.mode === 'editable') expect(withSpeed.document.animation?.speed).toBe(10);
 
     const withoutSpeed = readFractalDocument(documentV2);
     expect(withoutSpeed.mode).toBe('editable');

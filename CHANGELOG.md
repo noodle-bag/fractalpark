@@ -6,14 +6,17 @@ Complete local media export for finished fractal images and keyframe animation, 
 
 ### Added
 
-- Added one responsive Image/Animation export workspace with real current-frame previews, Fit/Fill/Custom composition, pan, zoom, world-coordinate rotation, background, quality, size, filename, and output summaries across all seven locales.
-- Added exact-size PNG and JPEG export with explicit alpha/background handling, fixed sampling budgets, MIME verification, automatic safe filenames, and cancellable latest-only previews.
-- Added local MP4/AVC and WebM/VP9 animation export through an on-demand Mediabunny bridge, fixed-time frame scheduling, bounded backpressure, exact capability checks, progress, cancellation, and resource cleanup.
-- Added nine persistent animation playback speeds from 0.25× to 4×, shared by preview and export and preserved through URLs, Project download/import, cloud drafts, Gallery/Community, published artwork, and Remix consumers.
+- Added one responsive Image/Animation export workspace with real current-frame previews, Fit/Fill/Custom composition, pan, zoom, world-coordinate rotation, quality, size, filename, output summaries, and a touch-draggable mobile scrollbar across all seven locales.
+- Added exact-size PNG and JPEG export with fixed transparent/white image semantics, fixed sampling budgets, MIME verification, automatic safe filenames, and cancellable latest-only previews.
+- Added local MP4/AVC and WebM/VP9 animation export through an on-demand Mediabunny bridge, fixed-time frame scheduling, bounded backpressure, exact capability checks, monotonic progress, automatic download, completion feedback, cancellation, and resource cleanup.
+- Added thirteen persistent animation playback speeds from 0.25× to 10×, shared by preview and export and preserved through URLs, Project download/import, cloud drafts, Gallery/Community, published artwork, and Remix consumers.
 
 ### Changed
 
 - Replaced the former fixed media-export action with approved image and animation profiles, including 1080p/4K landscape and portrait video, 24/30/60 FPS, and Balanced/High/Maximum bitrate tiers.
+- Increased the animation duration ceiling to 60 seconds and removed the independent total-frame ceiling while retaining queue and encoded-output resource budgets.
+- Removed image and animation background selectors; image preview stays transparent, JPEG composites onto fixed white, and video preview/output uses fixed black.
+- Matched export-preview drag direction to Explore and coalesced gesture updates for smoother composition control.
 - Kept video formats visible when an exact browser profile is unavailable; unsupported combinations fail closed with a named reason and alternatives instead of silently changing format, size, frame rate, or quality.
 - Kept the video encoder and muxer out of the initial/static path through nested dynamic chunks; all rendering and encoding remains local to the browser.
 

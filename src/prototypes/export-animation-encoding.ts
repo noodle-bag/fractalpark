@@ -13,11 +13,15 @@ export const ANIMATION_SPEEDS_PROTOTYPE = [
   0.5,
   0.75,
   1,
-  1.25,
-  1.5,
   2,
   3,
   4,
+  5,
+  6,
+  7,
+  8,
+  9,
+  10,
 ] as const;
 
 export type AnimationSpeedPrototype = (typeof ANIMATION_SPEEDS_PROTOTYPE)[number];

@@ -22,6 +22,7 @@ import {
 } from '@/components/ui/dialog';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
+import { ScrollArea } from '@/components/ui/scroll-area';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import {
   MEDIA_EXPORT_LIMITS,
@@ -62,6 +63,11 @@ export interface AnimationExportCapability {
   reason?: 'profile-unavailable' | 'dependency-load-failed';
 }
 
+export interface AnimationExportWorkspaceOutcome {
+  succeeded: boolean;
+  repeatDownload?: () => void;
+}
+
 interface MediaExportWorkspaceProps {
   open: boolean;
   pending: boolean;
@@ -74,7 +80,7 @@ interface MediaExportWorkspaceProps {
     submission: AnimationExportWorkspaceSubmission,
     signal: AbortSignal,
     onProgress: (progress: AnimationFramePipelineProgress) => void,
-  ) => Promise<boolean>;
+  ) => Promise<boolean | AnimationExportWorkspaceOutcome>;
   onProbeAnimation?: (
     submission: AnimationExportWorkspaceSubmission,
     signal: AbortSignal,
@@ -101,6 +107,8 @@ const ANIMATION_PRESETS = [
 const DEFAULT_COMPOSITION: MediaExportComposition = {
   mode: 'fit', baseline: 'fit', panX: 0, panY: 0, scale: 1, rotation: 0,
 };
+const IMAGE_EXPORT_BACKGROUND = '#ffffff';
+const ANIMATION_EXPORT_BACKGROUND = '#000000';
 
 function clamp(value: number, minimum: number, maximum: number): number {
   return Math.min(maximum, Math.max(minimum, value));
@@ -153,7 +161,6 @@ export function MediaExportWorkspace({
   const [preset, setPreset] = useState<(typeof IMAGE_PRESETS)[number]>(IMAGE_PRESETS[2]);
   const [renderQuality, setRenderQuality] = useState<MediaExportRenderQuality>('high');
   const [jpegQuality, setJpegQuality] = useState<MediaExportJpegQuality>('high');
-  const [background, setBackground] = useState('#10131a');
   const [filename, setFilename] = useState('');
   const [composition, setComposition] = useState<MediaExportComposition>(DEFAULT_COMPOSITION);
   const [animationFormat, setAnimationFormat] = useState<MediaExportAnimationFormat>('mp4');
@@ -162,18 +169,23 @@ export function MediaExportWorkspace({
   const [videoQuality, setVideoQuality] = useState<MediaExportVideoQuality>('high');
   const [animationProgress, setAnimationProgress] = useState<AnimationFramePipelineProgress>();
   const [animationExporting, setAnimationExporting] = useState(false);
+  const [animationCompleted, setAnimationCompleted] = useState(false);
   const [animationFailed, setAnimationFailed] = useState(false);
   type CapabilityState = 'checking' | 'ready' | 'profile-unavailable' | 'dependency-load-failed' | 'failed';
   const [animationCapability, setAnimationCapability] = useState<{
     key: string;
     state: CapabilityState;
   }>({ key: '', state: 'checking' });
+  const [repeatAnimationDownload, setRepeatAnimationDownload] = useState<(() => void) | undefined>();
   const [previewUrl, setPreviewUrl] = useState<string>();
   const [previewState, setPreviewState] = useState<'idle' | 'rendering' | 'ready' | 'failed'>('idle');
   const previewUrlRef = useRef<string | undefined>(undefined);
   const generationRef = useRef(0);
   const pointersRef = useRef(new Map<number, { x: number; y: number }>());
   const gestureRef = useRef<GestureSnapshot | undefined>(undefined);
+  const gestureAnimationFrameRef = useRef<number | null>(null);
+  const pendingCompositionRef = useRef<MediaExportComposition | null>(null);
+  const lastPreviewStartedAtRef = useRef(0);
   const animationAbortRef = useRef<AbortController | null>(null);
 
   const submission = useMemo<ImageExportWorkspaceSubmission>(() => ({
@@ -182,10 +194,10 @@ export function MediaExportWorkspace({
     height: preset.height,
     renderQuality,
     jpegQuality: format === 'jpeg' ? jpegQuality : undefined,
-    background,
+    background: IMAGE_EXPORT_BACKGROUND,
     filename: filename.trim() || undefined,
     composition,
-  }), [background, composition, filename, format, jpegQuality, preset, renderQuality]);
+  }), [composition, filename, format, jpegQuality, preset, renderQuality]);
 
   const animationSubmission = useMemo<AnimationExportWorkspaceSubmission>(() => ({
     format: animationFormat,
@@ -194,10 +206,10 @@ export function MediaExportWorkspace({
     fps: animationFps,
     videoQuality,
     renderQuality,
-    background,
+    background: ANIMATION_EXPORT_BACKGROUND,
     filename: filename.trim() || undefined,
     composition,
-  }), [animationFormat, animationFps, animationPreset, background, composition, filename, renderQuality, videoQuality]);
+  }), [animationFormat, animationFps, animationPreset, composition, filename, renderQuality, videoQuality]);
 
   const previewSubmission = useMemo<ImageExportWorkspaceSubmission>(() => tab === 'image'
     ? submission
@@ -215,8 +227,7 @@ export function MediaExportWorkspace({
     ? Math.max(1, Math.ceil(effectiveAnimationDuration * animationFps - Number.EPSILON))
     : 0;
   const animationWithinLimits = effectiveAnimationDuration > 0
-    && effectiveAnimationDuration <= MEDIA_EXPORT_LIMITS.animationMaxDurationSeconds
-    && animationFrameCount <= MEDIA_EXPORT_LIMITS.animationMaxFrames;
+    && effectiveAnimationDuration <= MEDIA_EXPORT_LIMITS.animationMaxDurationSeconds;
   const animationCapabilityKey = [
     animationSubmission.format,
     animationSubmission.width,
@@ -256,7 +267,10 @@ export function MediaExportWorkspace({
     if (!open || !frameReady || !onPreviewImage) return;
     const generation = ++generationRef.current;
     const controller = new AbortController();
+    const elapsed = performance.now() - lastPreviewStartedAtRef.current;
+    const delay = lastPreviewStartedAtRef.current === 0 ? 120 : Math.max(0, 120 - elapsed);
     const timer = window.setTimeout(() => {
+      lastPreviewStartedAtRef.current = performance.now();
       setPreviewState('rendering');
       void onPreviewImage(previewSubmission, controller.signal).then(blob => {
         if (controller.signal.aborted || generation !== generationRef.current) return;
@@ -271,7 +285,7 @@ export function MediaExportWorkspace({
         setPreviewState('failed');
         if (process.env.NODE_ENV === 'development') console.warn('Media export preview failed.', error);
       });
-    }, 120);
+    }, delay);
     return () => {
       window.clearTimeout(timer);
       controller.abort();
@@ -289,12 +303,14 @@ export function MediaExportWorkspace({
     const timer = window.setTimeout(() => {
       setPreviewUrl(undefined);
       setPreviewState('idle');
+      setRepeatAnimationDownload(undefined);
     }, 0);
     return () => window.clearTimeout(timer);
   }, [open]);
 
   useEffect(() => () => {
     animationAbortRef.current?.abort();
+    if (gestureAnimationFrameRef.current !== null) cancelAnimationFrame(gestureAnimationFrameRef.current);
     if (previewUrlRef.current) URL.revokeObjectURL(previewUrlRef.current);
   }, []);
 
@@ -310,15 +326,21 @@ export function MediaExportWorkspace({
     animationAbortRef.current = controller;
     setAnimationProgress(undefined);
     setAnimationFailed(false);
+    setAnimationCompleted(false);
+    setRepeatAnimationDownload(undefined);
     setAnimationExporting(true);
-    const succeeded = await onExportAnimation(
+    const outcome = await onExportAnimation(
       animationSubmission,
       controller.signal,
       setAnimationProgress,
     );
+    const succeeded = typeof outcome === 'boolean' ? outcome : outcome.succeeded;
     if (animationAbortRef.current === controller) animationAbortRef.current = null;
     setAnimationExporting(false);
-    if (succeeded) onOpenChange(false);
+    if (succeeded) {
+      setAnimationCompleted(true);
+      if (typeof outcome !== 'boolean') setRepeatAnimationDownload(() => outcome.repeatDownload);
+    }
     else if (!controller.signal.aborted) setAnimationFailed(true);
   };
 
@@ -364,7 +386,7 @@ export function MediaExportWorkspace({
     const base = gestureRef.current;
     const updates: Partial<MediaExportComposition> = {
       panX: base.composition.panX - (centroidX - base.centroidX) / Math.max(1, rect.width),
-      panY: base.composition.panY - (centroidY - base.centroidY) / Math.max(1, rect.height),
+      panY: base.composition.panY + (centroidY - base.centroidY) / Math.max(1, rect.height),
     };
     if (points.length > 1) {
       const distance = Math.max(1, Math.hypot(second.x - first.x, second.y - first.y));
@@ -372,11 +394,24 @@ export function MediaExportWorkspace({
       updates.scale = clamp(base.composition.scale * distance / base.distance, 0.25, 8);
       updates.rotation = normalizedRotation(base.composition.rotation + angle - base.angle);
     }
-    setComposition(customComposition(base.composition, updates));
+    pendingCompositionRef.current = customComposition(base.composition, updates);
+    if (gestureAnimationFrameRef.current === null) {
+      gestureAnimationFrameRef.current = requestAnimationFrame(() => {
+        gestureAnimationFrameRef.current = null;
+        if (pendingCompositionRef.current) setComposition(pendingCompositionRef.current);
+        pendingCompositionRef.current = null;
+      });
+    }
   };
 
   const onPointerEnd = (event: ReactPointerEvent<HTMLDivElement>) => {
     pointersRef.current.delete(event.pointerId);
+    if (pointersRef.current.size === 0 && pendingCompositionRef.current) {
+      if (gestureAnimationFrameRef.current !== null) cancelAnimationFrame(gestureAnimationFrameRef.current);
+      gestureAnimationFrameRef.current = null;
+      setComposition(pendingCompositionRef.current);
+      pendingCompositionRef.current = null;
+    }
     startGesture(event.currentTarget);
     if (pointersRef.current.size === 0) event.currentTarget.style.cursor = '';
   };
@@ -394,6 +429,11 @@ export function MediaExportWorkspace({
   const animationRatioDivisor = greatestCommonDivisor(animationPreset.width, animationPreset.height);
   const animationRatio = `${animationPreset.width / animationRatioDivisor}:${animationPreset.height / animationRatioDivisor}`;
   const animationRawMegabytes = animationPreset.width * animationPreset.height * 4 * 3 / (1024 * 1024);
+  const animationProgressPercent = animationProgress
+    ? animationCompleted
+      ? 100
+      : Math.min(99, Math.round((animationProgress.rendered + animationProgress.encoded) / Math.max(1, animationProgress.total * 2) * 100))
+    : 0;
   const closeOrCancel = () => {
     if (animationExporting) {
       animationAbortRef.current?.abort();
@@ -408,27 +448,27 @@ export function MediaExportWorkspace({
       onOpenChange(next);
     }}>
       <DialogContent
-        className="flex max-h-[min(92dvh,880px)] w-[min(1180px,calc(100%-1rem))] max-w-none flex-col overflow-hidden p-0 sm:max-w-none"
+        className="flex max-h-[min(92dvh,880px)] w-[min(1180px,calc(100%-1rem))] max-w-none flex-col gap-0 overflow-hidden p-0 sm:max-w-none"
         onCloseAutoFocus={(event) => { event.preventDefault(); onCloseAutoFocus(); }}
       >
-        <DialogHeader className="border-b px-4 py-4 pr-12 sm:px-6">
+        <DialogHeader className="shrink-0 border-b px-4 py-4 pr-12 sm:px-6">
           <DialogTitle>{t('title')}</DialogTitle>
           <DialogDescription>{t('description')}</DialogDescription>
         </DialogHeader>
-        <Tabs value={tab} onValueChange={value => setTab(value as 'image' | 'animation')} className="min-h-0 flex-1 gap-0">
-          <div className="border-b px-4 sm:px-6">
+        <Tabs value={tab} onValueChange={value => setTab(value as 'image' | 'animation')} className="min-h-0 flex-1 gap-0 overflow-hidden">
+          <div className="shrink-0 border-b px-4 sm:px-6">
             <TabsList variant="line" className="w-full">
               <TabsTrigger value="image" className="flex-1">{t('tabs.image')}</TabsTrigger>
               <TabsTrigger value="animation" className="flex-1">{t('tabs.animation')}</TabsTrigger>
             </TabsList>
           </div>
-          <div className="min-h-0 flex-1 overflow-y-auto">
+          <ScrollArea type="always" className="min-h-0 flex-1 overflow-hidden [&_[data-slot=scroll-area-scrollbar]]:w-4 lg:[&_[data-slot=scroll-area-scrollbar]]:w-2.5 [&_[data-slot=scroll-area-thumb]]:bg-foreground/35">
             <TabsContent value="image" className="grid min-h-full lg:grid-cols-[minmax(0,1.2fr)_minmax(320px,0.8fr)]">
-              <div className="flex min-h-64 flex-col items-center justify-start gap-3 bg-[linear-gradient(45deg,#ddd_25%,transparent_25%),linear-gradient(-45deg,#ddd_25%,transparent_25%),linear-gradient(45deg,transparent_75%,#ddd_75%),linear-gradient(-45deg,transparent_75%,#ddd_75%)] bg-[length:24px_24px] bg-[position:0_0,0_12px,12px_-12px,-12px_0] p-4 dark:bg-neutral-950 sm:p-6 lg:sticky lg:top-0 lg:self-start" aria-label={t('preview')}>
+              <div className="flex min-h-64 flex-col items-center justify-start gap-3 p-4 sm:p-6 lg:sticky lg:top-0 lg:self-start" aria-label={t('preview')}>
                 <div
                   data-testid="media-export-preview"
-                  className={`relative max-h-[58dvh] w-full max-w-2xl touch-none select-none overflow-hidden rounded-md border shadow-xl ${format === 'png' ? 'bg-[linear-gradient(45deg,#bbb_25%,transparent_25%),linear-gradient(-45deg,#bbb_25%,transparent_25%),linear-gradient(45deg,transparent_75%,#bbb_75%),linear-gradient(-45deg,transparent_75%,#bbb_75%)] bg-[length:20px_20px] bg-[position:0_0,0_10px,10px_-10px,-10px_0]' : ''}`}
-                  style={{ aspectRatio: `${preset.width} / ${preset.height}`, backgroundColor: format === 'jpeg' ? background : undefined }}
+                  className="relative max-h-[58dvh] w-full max-w-2xl touch-none select-none overflow-hidden bg-transparent"
+                  style={{ aspectRatio: `${preset.width} / ${preset.height}` }}
                   onPointerDown={onPointerDown}
                   onPointerMove={onPointerMove}
                   onPointerUp={onPointerEnd}
@@ -483,7 +523,6 @@ export function MediaExportWorkspace({
                     {(['balanced', 'high', 'maximum'] as const).map(value => <option key={value} value={value}>{t(`jpeg.${value}`)}</option>)}
                   </select>
                 </Field>}
-                <Field label={t('background')}><Input type="color" value={background} onChange={event => setBackground(event.target.value)} className="min-h-11" /></Field>
                 <Field label={t('filename')}><Input value={filename} onChange={event => setFilename(event.target.value)} placeholder={t('filenamePlaceholder')} /></Field>
                 <div className="rounded-md border bg-muted/35 p-3 text-sm" data-testid="media-export-summary">
                   <p className="font-medium">{t('summary.title')}</p>
@@ -494,11 +533,11 @@ export function MediaExportWorkspace({
               </div>
             </TabsContent>
             <TabsContent value="animation" className="grid min-h-full lg:grid-cols-[minmax(0,1.2fr)_minmax(320px,0.8fr)]">
-              <div className="flex min-h-64 flex-col items-center justify-start gap-3 bg-neutral-950 p-4 sm:p-6 lg:sticky lg:top-0 lg:self-start" aria-label={t('preview')}>
+              <div className="flex min-h-64 flex-col items-center justify-start gap-3 p-4 sm:p-6 lg:sticky lg:top-0 lg:self-start" aria-label={t('preview')}>
                 <div
                   data-testid="media-export-animation-preview"
                   className="relative max-h-[58dvh] w-full max-w-2xl touch-none select-none overflow-hidden rounded-md border bg-black shadow-xl"
-                  style={{ aspectRatio: `${animationPreset.width} / ${animationPreset.height}`, backgroundColor: background }}
+                  style={{ aspectRatio: `${animationPreset.width} / ${animationPreset.height}` }}
                   onPointerDown={onPointerDown}
                   onPointerMove={onPointerMove}
                   onPointerUp={onPointerEnd}
@@ -565,7 +604,6 @@ export function MediaExportWorkspace({
                     {(['off', 'standard', 'high', 'ultra'] as const).map(value => <option key={value} value={value}>{t(`quality.${value}`)}</option>)}
                   </select>
                 </Field>
-                <Field label={t('background')}><Input type="color" value={background} onChange={event => setBackground(event.target.value)} className="min-h-11" /></Field>
                 <Field label={t('filename')}><Input value={filename} onChange={event => setFilename(event.target.value)} placeholder={t('filenamePlaceholder')} /></Field>
                 <div className="rounded-md border bg-muted/35 p-3 text-sm" data-testid="media-export-animation-summary">
                   <p className="font-medium">{t('summary.title')}</p>
@@ -573,16 +611,20 @@ export function MediaExportWorkspace({
                   <p>{t('animation.summary', { ratio: animationRatio, fps: animationFps, speed: animationSpeed, duration: effectiveAnimationDuration.toFixed(2), frames: animationFrameCount })}</p>
                   <p className="text-muted-foreground">{t('animation.memory', { megabytes: animationRawMegabytes.toFixed(1) })}</p>
                 </div>
-                {animationExporting && animationProgress && <div className="space-y-2" role="status" aria-live="polite">
-                  <div className="flex justify-between text-sm"><span>{t(`animation.progress.${animationProgress.phase}`)}</span><span>{animationProgress.completed} / {animationProgress.total}</span></div>
-                  <progress className="h-2 w-full" max={animationProgress.total} value={animationProgress.completed} />
+                {(animationExporting || animationCompleted) && animationProgress && <div className="space-y-2" role="status" aria-live="polite">
+                  <div className="flex justify-between gap-3 text-sm"><span>{t(`animation.progress.${animationProgress.phase}`)} · {animationProgress.completed} / {animationProgress.total}</span><span>{animationProgressPercent}%</span></div>
+                  <progress className="h-2 w-full" max={100} value={animationProgressPercent} />
+                </div>}
+                {animationCompleted && <div className="flex flex-wrap items-center justify-between gap-2">
+                  <p role="status" aria-live="polite" className="text-sm text-emerald-700 dark:text-emerald-400">{t('animation.completed')}</p>
+                  {repeatAnimationDownload && <Button type="button" variant="outline" size="sm" onClick={repeatAnimationDownload}>{t('downloadAgain')}</Button>}
                 </div>}
                 {animationFailed && <p role="alert" className="text-sm text-destructive">{t('animation.failed')}</p>}
               </div>
             </TabsContent>
-          </div>
+          </ScrollArea>
         </Tabs>
-        <DialogFooter className="border-t p-4 sm:px-6">
+        <DialogFooter className="relative z-10 shrink-0 border-t bg-background p-4 sm:px-6">
           <Button variant="outline" onClick={closeOrCancel}>{animationExporting ? t('animation.cancelExport') : t('cancel')}</Button>
           <Button disabled={pending || !frameReady || animationExporting || (tab === 'animation' && (!animationAvailable || !animationWithinLimits || effectiveAnimationCapability !== 'ready'))} onClick={submit}>{pending || animationExporting ? t('pending') : t('confirm')}</Button>
         </DialogFooter>

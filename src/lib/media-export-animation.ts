@@ -58,7 +58,6 @@ export function buildAnimationFrameSchedule(request: AnimationExportRequest): An
   );
   if (
     effectiveDuration > MEDIA_EXPORT_LIMITS.animationMaxDurationSeconds
-    || frameCount > MEDIA_EXPORT_LIMITS.animationMaxFrames
   ) {
     throw 'resource-limit' satisfies MediaExportErrorCode;
   }

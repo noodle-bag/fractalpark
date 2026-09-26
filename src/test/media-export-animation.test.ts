@@ -70,7 +70,7 @@ describe('animation export frame pipeline', () => {
     expect((schedule.frames.at(-1)?.canonicalTime ?? 18) < schedule.baseDuration).toBe(true);
   });
 
-  it('rejects partial ranges and schedules beyond the frozen duration/frame limits', () => {
+  it('rejects partial ranges and schedules beyond the sixty-second duration limit', () => {
     expect(() => buildAnimationFrameSchedule(animationRequest({ range: { start: 1, end: 18 } })))
       .toThrow('invalid-request');
     expect(() => buildAnimationFrameSchedule(animationRequest({ speed: 0.25, range: { start: 0, end: 18 } })))

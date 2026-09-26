@@ -58,6 +58,8 @@ test('media export keeps a latest-only real preview and accessible composition c
   await exportButton.click();
   const dialog = page.getByRole('dialog');
   await dialog.getByRole('combobox', { name: 'Render quality' }).selectOption('off');
+  await expect(dialog.locator('[data-slot="scroll-area-scrollbar"]')).toBeVisible();
+  await expect(dialog.locator('input[type="color"]')).toHaveCount(0);
   const preview = dialog.getByTestId('media-export-preview');
   const image = preview.getByRole('img', { name: 'Rendered export preview' });
   await expect(image).toBeVisible({ timeout: 45_000 });
@@ -65,6 +67,12 @@ test('media export keeps a latest-only real preview and accessible composition c
     width: (element as HTMLImageElement).naturalWidth,
     height: (element as HTMLImageElement).naturalHeight,
   }))).toEqual({ width: 720, height: 405 });
+  const previewBox = (await preview.boundingBox())!;
+  await page.mouse.move(previewBox.x + previewBox.width / 2, previewBox.y + previewBox.height / 2);
+  await page.mouse.down();
+  await page.mouse.move(previewBox.x + previewBox.width / 2, previewBox.y + previewBox.height / 2 + 24);
+  await page.mouse.up();
+  await expect.poll(async () => Number(await dialog.getByRole('spinbutton', { name: 'Vertical pan' }).inputValue())).toBeGreaterThan(0);
   const firstUrl = await image.getAttribute('src');
   const fill = dialog.getByRole('button', { name: 'Fill', exact: true });
   await fill.click();
@@ -112,7 +120,7 @@ test('animation speed snaps across pointer and keyboard input and restores from 
   await ready(page);
   await page.getByRole('tab', { name: 'Animation', exact: true }).last().click();
   const slider = page.getByRole('slider', { name: 'Playback speed', exact: true });
-  await expect(slider).toHaveValue('7');
+  await expect(slider).toHaveValue('5');
   await expect(slider).toHaveAttribute('aria-valuetext', '3×');
 
   await slider.press('Home');
@@ -125,25 +133,25 @@ test('animation speed snaps across pointer and keyboard input and restores from 
 
   const box = (await slider.boundingBox())!;
   await page.mouse.click(box.x + box.width - 2, box.y + box.height / 2);
-  await expect(slider).toHaveValue('8');
-  await expect(slider).toHaveAttribute('aria-valuetext', '4×');
-  await expect.poll(() => new URL(page.url()).searchParams.get('spd')).toBe('4');
+  await expect(slider).toHaveValue('12');
+  await expect(slider).toHaveAttribute('aria-valuetext', '10×');
+  await expect.poll(() => new URL(page.url()).searchParams.get('spd')).toBe('10');
   expect(await page.evaluate(() => document.documentElement.scrollWidth <= innerWidth)).toBe(true);
 
   await page.reload();
   await ready(page);
   await page.getByRole('tab', { name: 'Animation', exact: true }).last().click();
-  await expect(page.getByRole('slider', { name: 'Playback speed', exact: true })).toHaveAttribute('aria-valuetext', '4×');
+  await expect(page.getByRole('slider', { name: 'Playback speed', exact: true })).toHaveAttribute('aria-valuetext', '10×');
   expect(errors).toEqual([]);
 });
 
 test('Project download and import round-trip the animation speed without changing the media export entry', async ({ page }) => {
   test.setTimeout(60_000);
-  await page.goto('/en/explore?spd=4');
+  await page.goto('/en/explore?spd=10');
   await ready(page);
   await page.getByRole('tab', { name: 'Animation', exact: true }).last().click();
   const slider = page.getByRole('slider', { name: 'Playback speed', exact: true });
-  await expect(slider).toHaveAttribute('aria-valuetext', '4×');
+  await expect(slider).toHaveAttribute('aria-valuetext', '10×');
 
   const downloadPromise = page.waitForEvent('download');
   await page.getByRole('button', { name: 'Download Project', exact: true }).click();
@@ -152,12 +160,12 @@ test('Project download and import round-trip the animation speed without changin
   const path = await download.path();
   expect(path).not.toBeNull();
   const envelope = JSON.parse(await readFile(path!, 'utf8'));
-  expect(envelope.document.animation.speed).toBe(4);
+  expect(envelope.document.animation.speed).toBe(10);
 
   await slider.press('Home');
   await expect(slider).toHaveAttribute('aria-valuetext', '0.25×');
   await page.locator('input[type="file"][accept*=".fractal.json"]').setInputFiles(path!);
-  await expect(slider).toHaveAttribute('aria-valuetext', '4×');
+  await expect(slider).toHaveAttribute('aria-valuetext', '10×');
   await expect(page.getByRole('button', { name: 'Export Media', exact: true })).toBeEnabled();
 });
 

@@ -39,7 +39,7 @@ interface FractalDocumentV2 {
   animation?: {
     viewKeyframes?: Keyframe[];
     tracks?: AnimationTrack[];
-    speed?: 0.25 | 0.5 | 0.75 | 1 | 1.25 | 1.5 | 2 | 3 | 4;
+    speed?: 0.25 | 0.5 | 0.75 | 1 | 2 | 3 | 4 | 5 | 6 | 7 | 8 | 9 | 10;
   };
   assets?: {
     formula?: AssetReference;
@@ -66,7 +66,7 @@ interface FractalDocumentV2 {
   does not enable parameter animation in v0.4.12.
 - `animation.speed` is an additive v0.4.22 playback field governed by
   [Media Export Contract v1](media-export-v1.md). Missing or invalid values read
-  as `1`; new writers emit only one of the nine declared values. It does not
+  as `1`; new writers emit only one of the thirteen declared values. It does not
   require a Document v2 or Envelope v1 version increment or a destructive
   migration.
 - `coloring.style.detail` and `coloring.style.post` accept only explicitly

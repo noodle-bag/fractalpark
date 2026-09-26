@@ -6,7 +6,7 @@ import { AnimationPanel } from '@/components/fractal/AnimationPanel';
 vi.mock('next-intl', () => ({ useTranslations: () => (key: string) => key }));
 
 describe('AnimationPanel playback speed', () => {
-  it('uses an index-snapped native range for the nine approved speeds', () => {
+  it('uses an index-snapped native range for the thirteen approved speeds', () => {
     const onSpeedChange = vi.fn();
     render(<AnimationPanel
       keyframes={[]}
@@ -20,12 +20,12 @@ describe('AnimationPanel playback speed', () => {
 
     const slider = screen.getByRole('slider', { name: 'speed' });
     expect(slider).toHaveAttribute('min', '0');
-    expect(slider).toHaveAttribute('max', '8');
+    expect(slider).toHaveAttribute('max', '12');
     expect(slider).toHaveAttribute('step', '1');
     expect(slider).toHaveValue('3');
     expect(slider).toHaveAttribute('aria-valuetext', '1×');
     fireEvent.change(slider, { target: { value: '0' } });
-    fireEvent.change(slider, { target: { value: '8' } });
-    expect(onSpeedChange.mock.calls).toEqual([[0.25], [4]]);
+    fireEvent.change(slider, { target: { value: '12' } });
+    expect(onSpeedChange.mock.calls).toEqual([[0.25], [10]]);
   });
 });

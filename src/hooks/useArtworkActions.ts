@@ -477,7 +477,10 @@ export function useArtworkActions({
         ...getArtworkAnalyticsContext(document),
       });
       succeed('export');
-      return true;
+      return {
+        succeeded: true,
+        repeatDownload: () => handoffMediaExportDownload(encoded.blob, request.value.filename),
+      };
     } catch (error) {
       if (signal.aborted || (error instanceof DOMException && error.name === 'AbortError')) {
         clearStatus();

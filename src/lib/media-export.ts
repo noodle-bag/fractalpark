@@ -46,8 +46,7 @@ export const MEDIA_EXPORT_LIMITS = Object.freeze({
   animationMaxSide: 3840,
   animationMaxPixels: 8_294_400,
   animationMaxFps: 60,
-  animationMaxDurationSeconds: 30,
-  animationMaxFrames: 1_800,
+  animationMaxDurationSeconds: 60,
   animationRawQueueDepth: 3,
   animationMaxRawQueueBytes: 128 * 1024 * 1024,
   animationMaxEstimatedBytes: 200 * 1024 * 1024,
@@ -324,7 +323,6 @@ export function preflightMediaExportRequest(
       || outputPixels > MEDIA_EXPORT_LIMITS.animationMaxPixels
       || request.fps > MEDIA_EXPORT_LIMITS.animationMaxFps
       || effectiveDuration > MEDIA_EXPORT_LIMITS.animationMaxDurationSeconds
-      || frameCount > MEDIA_EXPORT_LIMITS.animationMaxFrames
       || rawQueueBytes > MEDIA_EXPORT_LIMITS.animationMaxRawQueueBytes
       || estimatedEncodedBytes > MEDIA_EXPORT_LIMITS.animationMaxEstimatedBytes
     ) return { ok: false, code: 'resource-limit' };

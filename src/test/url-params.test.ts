@@ -114,7 +114,7 @@ bailout:
 
   it('round-trips approved animation speed and rejects non-grid URL values', () => {
     expect(decodeParams(encodeParams({ animationSpeed: 0.25 })).animationSpeed).toBe(0.25);
-    expect(decodeParams(encodeParams({ animationSpeed: 4 })).animationSpeed).toBe(4);
+    expect(decodeParams(encodeParams({ animationSpeed: 10 })).animationSpeed).toBe(10);
     expect(encodeParams({ animationSpeed: 1 }).has('spd')).toBe(false);
     expect(decodeParams(new URLSearchParams('spd=0.3')).animationSpeed).toBeUndefined();
     expect(decodeParams(new URLSearchParams('spd=Infinity')).animationSpeed).toBeUndefined();

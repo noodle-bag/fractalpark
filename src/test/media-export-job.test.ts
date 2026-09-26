@@ -2,7 +2,6 @@ import { describe, expect, it } from 'vitest';
 
 import { DEFAULT_FRACTAL_DOCUMENT } from '@/engine/document';
 import {
-  MEDIA_EXPORT_LIMITS,
   MediaExportJobController,
   createMediaExportRequest,
   getMediaExportPreviewDimensions,
@@ -108,22 +107,22 @@ describe('media export request and job core', () => {
       .toEqual({ ok: false, code: 'resource-limit' });
   });
 
-  it('freezes central animation duration, frame, queue, and byte budgets', () => {
+  it('allows up to sixty seconds without an independent frame cap while retaining byte budgets', () => {
     const request = createMediaExportRequest({
       ...base,
       kind: 'animation',
       format: 'mp4',
       fps: 60,
       speed: 1,
-      range: { start: 0, end: 30 },
-      bitrate: 40_000_000,
+      range: { start: 0, end: 60 },
+      bitrate: 12_000_000,
     });
     expect(request.ok).toBe(true);
     if (!request.ok) return;
     const result = preflightMediaExportRequest(request.value, { qualified: true });
     expect(result.ok).toBe(true);
     if (!result.ok) return;
-    expect(result.value.frameCount).toBe(MEDIA_EXPORT_LIMITS.animationMaxFrames);
+    expect(result.value.frameCount).toBe(3_600);
     expect(result.value.rawQueueBytes).toBe(1920 * 1080 * 4 * 3);
     const tooLong = createMediaExportRequest({
       ...base,
@@ -131,8 +130,8 @@ describe('media export request and job core', () => {
       format: 'mp4',
       fps: 60,
       speed: 1,
-      range: { start: 0, end: 30.01 },
-      bitrate: 40_000_000,
+      range: { start: 0, end: 60.01 },
+      bitrate: 12_000_000,
     });
     expect(tooLong.ok && preflightMediaExportRequest(tooLong.value, { qualified: true })).toEqual({ ok: false, code: 'resource-limit' });
   });

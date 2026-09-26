@@ -7,7 +7,7 @@ import type { SavedFractal } from '@/engine/types';
 
 describe('document migrate / normalize', () => {
   it('keeps schema v2 while normalizing the additive animation speed field', () => {
-    expect(normalizeFractalDocument({ animation: { speed: 4 } }).animation?.speed).toBe(4);
+    expect(normalizeFractalDocument({ animation: { speed: 10 } }).animation?.speed).toBe(10);
     expect(normalizeFractalDocument({ animation: { speed: 0.3 as never } }).animation?.speed).toBe(1);
     expect(normalizeFractalDocument({ animation: { speed: Number.NaN as never } }).animation?.speed).toBe(1);
     expect(normalizeFractalDocument({ animation: { viewKeyframes: [] } }).animation?.speed).toBeUndefined();

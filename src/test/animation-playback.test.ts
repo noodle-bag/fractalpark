@@ -8,11 +8,11 @@ import {
 } from '@/engine/animation/playback';
 
 describe('animation playback speed contract', () => {
-  it('accepts only the nine approved speeds and defaults every other value to 1x', () => {
+  it('accepts only the thirteen approved speeds and defaults every other value to 1x', () => {
     for (const speed of ANIMATION_PLAYBACK_SPEEDS) {
       expect(normalizeAnimationPlaybackSpeed(speed)).toBe(speed);
     }
-    for (const invalid of [undefined, null, NaN, Infinity, -1, 0, 0.3, 5, '2']) {
+    for (const invalid of [undefined, null, NaN, Infinity, -1, 0, 0.3, 1.25, 1.5, 11, '2']) {
       expect(normalizeAnimationPlaybackSpeed(invalid)).toBe(1);
     }
   });

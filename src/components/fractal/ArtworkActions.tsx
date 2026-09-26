@@ -36,6 +36,7 @@ import { Label } from '@/components/ui/label';
 import {
   MediaExportWorkspace,
   type AnimationExportCapability,
+  type AnimationExportWorkspaceOutcome,
   type AnimationExportWorkspaceSubmission,
   type ImageExportWorkspaceSubmission,
 } from '@/components/fractal/MediaExportWorkspace';
@@ -64,7 +65,7 @@ interface ArtworkActionsProps {
     submission: AnimationExportWorkspaceSubmission,
     signal: AbortSignal,
     onProgress: (progress: AnimationFramePipelineProgress) => void,
-  ) => Promise<boolean>;
+  ) => Promise<boolean | AnimationExportWorkspaceOutcome>;
   onProbeAnimation?: (
     submission: AnimationExportWorkspaceSubmission,
     signal: AbortSignal,

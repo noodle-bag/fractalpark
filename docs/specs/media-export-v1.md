@@ -60,7 +60,7 @@ An Export request is an immutable snapshot of:
 - the recovered artwork Document and supported formula assets;
 - selected kind and format;
 - exact width, height, and, for animation, frame rate and the resolved full-loop range;
-- render quality, format-specific encoding quality, and background;
+- render quality, format-specific encoding quality, and the format-owned fixed background;
 - normalized composition;
 - animation speed when applicable;
 - the resolved safe filename.
@@ -80,8 +80,9 @@ governs normal playback.
 ### Formats and encoding
 
 - PNG is lossless and may preserve alpha.
-- JPEG is opaque. Transparent input is composited onto the explicitly selected
-  background before encoding; changing only the alpha channel is insufficient.
+- JPEG is opaque. Transparent input is composited onto fixed white before
+  encoding; changing only the alpha channel is insufficient. Image export has
+  no user-configurable background control.
 - The returned Blob MIME is authoritative. A requested MIME that produces a
   different MIME is an error; changing only the extension is prohibited.
 - PNG has no compression-quality control.
@@ -156,8 +157,9 @@ codec. Codec selection is an implementation detail within the selected
 container. It must not change the requested container, dimensions, frame rate,
 duration, or composition.
 
-Animation v1 is opaque and composites onto the selected background before
-encoding. Video quality exposes `Balanced`, `High`, and `Maximum`; `High` is
+Animation v1 is opaque and composites onto fixed black before encoding. It has
+no user-configurable background control. Video quality exposes `Balanced`,
+`High`, and `Maximum`; `High` is
 the default. Target bitrates are `8 / 12 / 20 Mbps` at 1080p60 and
 `28 / 40 / 60 Mbps` at 4K60. Other dimensions and frame rates interpolate by
 pixel and frame-rate ratio between the reference profiles and remain bounded by
@@ -192,16 +194,16 @@ range control. Custom ranges require a later contract.
 The only valid speeds are:
 
 ```text
-0.25, 0.5, 0.75, 1, 1.25, 1.5, 2, 3, 4
+0.25, 0.5, 0.75, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10
 ```
 
 `1` is the default. Pointer, touch, arrow-key, Home, and End interactions move
-through these nine ordered values. Speed changes time advancement only; they do
+through these thirteen ordered values. Speed changes time advancement only; they do
 not alter keyframes, keyframe order, canonical segment durations, or the base
 timeline.
 
 `FractalDocument.animation.speed` is an optional additive field whose value is
-one of the nine values above. Missing, non-finite, out-of-range, or non-member
+one of the thirteen values above. Missing, non-finite, out-of-range, or non-member
 values normalize to `1`. New writers emit only a valid member. This field does
 not require a Document v2 or Envelope v1 version increment. Reader-first
 Document v3 inherits the v2 animation shape; its writer remains disabled until
@@ -233,7 +235,9 @@ coordinates so preview and final pixels do not drift with resolution.
   edges.
 - Reset returns exactly to the selected Fit or Fill baseline.
 - Animation applies one composition transform to every sampled frame.
-- PNG alpha is previewed over a checkerboard; JPEG shows its actual background.
+- The image preview region has no additional designed background layer. PNG
+  keeps transparent pixels; JPEG shows its fixed white composite. Animation
+  preview and output use fixed black.
 - A failed or canceled preview keeps the last valid preview visible alongside
   the truthful new state. Superseded results must not paint.
 
@@ -242,13 +246,15 @@ directly at the target dimensions; an already rendered bitmap is never rotated
 and resampled. Request rotation is normalized to `[-pi, pi]` radians. Gestures
 are continuous, explicit/keyboard controls step by 15 degrees, and an advanced
 numeric input uses degrees. Preview's long edge is at most `720` pixels and
-updates use a `120 ms` debounce. Resolved normalized composition values must
+updates are coalesced to at most one launch per `120 ms` while dragging.
+Resolved normalized composition values must
 match within `1e-9`; visual center drift must remain below half a final-output
 pixel.
 
 Gestures require keyboard and explicit-control equivalents. Dialog scrolling
 must not steal an active composition gesture, and a composition gesture must
-not make the rest of the mobile dialog unreachable.
+not make the rest of the mobile dialog unreachable. Mobile exposes an
+always-visible, touch-draggable vertical scrollbar for both tabs.
 
 ## Capability contract
 
@@ -285,7 +291,7 @@ Allowed fallback is limited to another qualified codec inside the same selected
 container. The following silent fallbacks are prohibited:
 
 - changing PNG to JPEG or MP4 to WebM;
-- changing dimensions, orientation, frame rate, duration, speed, background,
+- changing dimensions, orientation, frame rate, duration, speed,
   composition, or render quality;
 - returning a file whose extension disagrees with its actual media type;
 - duplicating frames to label a lower-rate result as the requested FPS.
@@ -323,9 +329,10 @@ queue is bounded to at most three full frames; implementations may use fewer.
 Frames, WebGL resources, encoder/muxer objects, workers, object URLs, and output
 buffers have explicit ownership and cleanup.
 
-Animation preflight limits effective duration to `30 s`, total frames to
-`1,800`, the application-owned raw queue to three frames and `128 MiB`, and
-estimated encoded output to `200 MiB`. Each limit is inclusive. Exceeding one
+Animation preflight limits effective duration to `60 s`, with no independent
+total-frame limit. The application-owned raw queue remains limited to three
+frames and `128 MiB`, and estimated encoded output remains limited to `200 MiB`.
+Each limit is inclusive. Exceeding one
 blocks the exact request before encoding; it never authorizes a lower
 resolution, FPS, speed, duration, or quality tier. These deterministic limits
 do not claim to measure codec-internal or total device memory.
@@ -348,8 +355,11 @@ percentage.
 One user intent owns one active job. A replacement or cancellation aborts
 owned work, ignores all late results, and releases resources. Cancellation is
 not failure. It creates no download and no success event. A successful result
-means a valid media Blob was finalized and the download handoff was initiated;
-clicking Export alone is not success.
+means a valid media Blob was finalized and the download handoff was initiated
+automatically. Animation export keeps a determinate, monotonic combined
+render/encode percentage visible, reaches `100%` only after all frames are
+encoded, and then presents an explicit completion message; clicking Export
+alone is not success.
 
 Media time never depends on realtime `requestAnimationFrame`. If a hidden page
 is suspended, progress may pause and resume, but fixed timestamps do not change
