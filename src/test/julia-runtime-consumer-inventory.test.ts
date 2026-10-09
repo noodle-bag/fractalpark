@@ -78,6 +78,7 @@ describe("Julia runtime consumer inventory", () => {
     expect(filesMatching(/resolveApplicationPublishedDefaultProfileV1/)).toEqual([
       "src/app/[locale]/explore/ExploreClient.tsx",
       "src/engine/formulas/v1/published-default-profile-corrections-v1.ts",
+      "src/lib/explore-default-formula.ts",
       "src/lib/formula-records.ts",
       "src/lib/published-formula-remix.ts",
     ]);

@@ -25,6 +25,7 @@ import type {
 } from '@/lib/published-formula-selection';
 import { resolvePublishedFormulaPlanarControl } from '@/lib/published-formula-planar-controls';
 import { resolveParameterInteraction } from '@/lib/published-parameter-interactions';
+import type { ExploreDefaultFormula } from '@/lib/explore-default-formula';
 import {
   COORDINATE_SOURCE_UNIFORM,
   COORDINATE_VALUE_UNIFORM,
@@ -33,6 +34,8 @@ import {
 } from '@/engine/formulas/v1/published-coordinate-parameters-v1';
 
 interface FormulaPanelProps {
+  deferPublishedLibraryLoad?: boolean;
+  publishedDefaultBootstrap?: ExploreDefaultFormula | null;
   isJulia: boolean;
   juliaC: [number, number];
   onJuliaModeChange: (enabled: boolean) => void;
@@ -57,6 +60,8 @@ interface FormulaPanelProps {
 }
 
 export function FormulaPanel({
+  deferPublishedLibraryLoad = false,
+  publishedDefaultBootstrap,
   isJulia,
   juliaC,
   onJuliaModeChange,
@@ -140,6 +145,8 @@ export function FormulaPanel({
       )}
 
       <FormulaTab
+        deferPublishedLibraryLoad={deferPublishedLibraryLoad}
+        publishedDefaultBootstrap={publishedDefaultBootstrap}
         currentFormula={currentFormula}
         currentBounds={currentBounds}
         onFormulaChange={onFormulaChange}

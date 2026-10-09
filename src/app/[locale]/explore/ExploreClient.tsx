@@ -72,7 +72,8 @@ import {
   isStandardFormulaIdV1,
   type PublishedFormulaDescriptorV1,
 } from '@/engine/formulas/v1';
-import { getPublishedFormulaLibraryClient } from '@/lib/published-formula-library';
+import { getPublishedFormulaLibraryClient, resetPublishedFormulaLibraryClient } from '@/lib/published-formula-library';
+import { getExploreDefaultDocument, getExploreDefaultFormula, type ExploreDefaultFormula } from '@/lib/explore-default-formula';
 import { partitionPublishedFormulaParams } from '@/lib/published-formula-params';
 import { resolveRecoveredPublishedRenderingPluginV1 } from '@/engine/formulas/v1/recovered-quantization-rendering-v1';
 import {
@@ -121,7 +122,16 @@ function ExploreClient({ posterImage }: { posterImage?: string }) {
   const searchParams = useSearchParams();
   const router = useRouter();
   const { setConfig } = useLayout();
-  const needsEntryDefaultRef = useRef(searchParams.size === 0);
+  const initialEmptyEntryRef = useRef(searchParams.size === 0);
+  const [initialEntryDocument] = useState(() => initialEmptyEntryRef.current ? getExploreDefaultDocument() : undefined);
+  const needsEntryDefaultRef = useRef(initialEmptyEntryRef.current);
+  const entryDefaultStartedRef = useRef(false);
+  const [entryDefaultBootstrap] = useState<ExploreDefaultFormula | null>(() =>
+    initialEmptyEntryRef.current ? getExploreDefaultFormula() : null
+  );
+  const [entryDefaultRetryRevision, setEntryDefaultRetryRevision] = useState(0);
+  const [entryDefaultFailed, setEntryDefaultFailed] = useState(false);
+  const [entryDefaultReady, setEntryDefaultReady] = useState(false);
   const initialHandoffIntentRef = useRef(
     parseEditorToExploreIntent(new URLSearchParams(searchParams.toString()))
   );
@@ -141,6 +151,8 @@ function ExploreClient({ posterImage }: { posterImage?: string }) {
   const getProjectedArtworkHref = useCallback(() => projectedHrefRef.current, []);
   const [publishedActionPendingCount, setPublishedActionPendingCount] = useState(0);
   const [publishedRestoreRevision, setPublishedRestoreRevision] = useState(0);
+  const [publishedRestoreFailed, setPublishedRestoreFailed] = useState<string | null>(null);
+  const failedRestoreKeyRef = useRef<string | null>(null);
   const publishedPendingActionsRef = useRef(new Set<number>());
   const isExploreMountedRef = useRef(true);
   const publishedActionRef = useRef(new PublishedFormulaActionCoordinator());
@@ -160,6 +172,7 @@ function ExploreClient({ posterImage }: { posterImage?: string }) {
     setRenderAttribution(null);
   }, []);
   const cancelPublishedFormulaActions = useCallback(() => {
+    needsEntryDefaultRef.current = false;
     setResetFailed(false);
     publishedActionRef.current.cancel();
     publishedSelectionRef.current.cancel();
@@ -189,6 +202,7 @@ function ExploreClient({ posterImage }: { posterImage?: string }) {
   } = useExploreDocumentState(
     new URLSearchParams(searchParams.toString()),
     cancelPublishedFormulaActions,
+    initialEntryDocument,
   );
 
   const {
@@ -500,23 +514,44 @@ function ExploreClient({ posterImage }: { posterImage?: string }) {
   useEffect(() => {
     if (!isStandardFormulaIdV1(formula)) return;
     if (publishedDescriptor?.formulaId === formula) return;
+    // The empty entry owns its in-bundle default Definition. Restoring this
+    // UUID through the full index would reintroduce a first-load dependency.
+    if (needsEntryDefaultRef.current && formula === entryDefaultBootstrap?.row.formulaId) return;
     if (publishedActionPendingCount > 0) return;
 
     const target = formula;
+    const attemptKey = `${target}:${publishedRestoreRevision}`;
+    if (failedRestoreKeyRef.current === attemptKey) return;
     let active = true;
     const publishedRestoreAction = publishedRestoreActionRef.current;
     const restoreGeneration = publishedRestoreAction.begin();
     const publishedRestore = publishedRestoreRef.current;
+    const timeout = setTimeout(() => {
+      if (!active || !publishedRestoreAction.isCurrent(restoreGeneration)) return;
+      failedRestoreKeyRef.current = attemptKey;
+      setPublishedRestoreFailed(target);
+      publishedRestore.cancel();
+      publishedRestoreAction.cancel();
+      resetPublishedFormulaLibraryClient();
+    }, 10000);
     void getPublishedFormulaLibraryClient().then(async (clientResult) => {
       if (
         !active ||
-        !publishedRestoreAction.isCurrent(restoreGeneration) ||
-        !clientResult.ok
+        !publishedRestoreAction.isCurrent(restoreGeneration)
       ) return;
+      if (!clientResult.ok) {
+        failedRestoreKeyRef.current = attemptKey;
+        setPublishedRestoreFailed(target);
+        return;
+      }
       const row = clientResult.value.get(target);
-      if (!row) return;
+      if (!row) {
+        failedRestoreKeyRef.current = attemptKey;
+        setPublishedRestoreFailed(target);
+        return;
+      }
 
-      await publishedRestore.select(
+      const result = await publishedRestore.select(
         target,
         clientResult.value,
         (artifact) => {
@@ -553,15 +588,26 @@ function ExploreClient({ posterImage }: { posterImage?: string }) {
           );
           replacePluginParamDomains(restoredParams);
           setPublishedDescriptor(artifact.descriptor);
+          setPublishedRestoreFailed(null);
           setFormulaResolution(
             resolveFormulaReference(target, readSessionFormulaAssets()),
           );
         },
       );
-    });
+      if (active && !result.ok && result.code !== 'selection-superseded') {
+        failedRestoreKeyRef.current = attemptKey;
+        setPublishedRestoreFailed(target);
+      }
+    }).catch(() => {
+      if (active && publishedRestoreAction.isCurrent(restoreGeneration)) {
+        failedRestoreKeyRef.current = attemptKey;
+        setPublishedRestoreFailed(target);
+      }
+    }).finally(() => clearTimeout(timeout));
 
     return () => {
       active = false;
+      clearTimeout(timeout);
       publishedRestoreAction.cancel();
       publishedRestore.cancel();
     };
@@ -573,6 +619,7 @@ function ExploreClient({ posterImage }: { posterImage?: string }) {
     document.formula.params?.formula,
     document.transform.params?.transform,
     document.transform.transformId,
+    entryDefaultBootstrap?.row.formulaId,
     formula,
     publishedActionPendingCount,
     publishedDescriptor,
@@ -651,7 +698,7 @@ function ExploreClient({ posterImage }: { posterImage?: string }) {
       // A published selection owns the next URL projection. Canonicalizing
       // the previous document while its index/Definition is still loading
       // can remount Explore and cancel the action before its atomic apply.
-      if (publishedActionPendingCount > 0) return;
+      if (publishedActionPendingCount > 0 || needsEntryDefaultRef.current) return;
       // Never project while a ?draft= load is unresolved: rebuilding the
       // URL from the canvas would erase the param before identity lands
       // and the draft would silently never load (review N1).
@@ -687,6 +734,7 @@ function ExploreClient({ posterImage }: { posterImage?: string }) {
     formulaResolution,
     publishedDescriptor,
     publishedActionPendingCount,
+    entryDefaultReady,
   ]);
 
   // Anonymous remix handoff consumption (spec §17 transient): a one-shot
@@ -935,6 +983,7 @@ function ExploreClient({ posterImage }: { posterImage?: string }) {
     options: {
       forceProfile?: boolean;
       source: 'published-library' | 'feeling-lucky' | 'profile-reset' | 'entry-default' | 'artwork-reset';
+      bootstrap?: ExploreDefaultFormula;
     },
     generation: number,
   ): Promise<PublishedFormulaSelectionResult> => {
@@ -951,17 +1000,20 @@ function ExploreClient({ posterImage }: { posterImage?: string }) {
       return { ok: true };
     }
 
-    const clientResult = await getPublishedFormulaLibraryClient();
+    const clientResult = options.bootstrap ? undefined : await getPublishedFormulaLibraryClient();
     if (!publishedActionRef.current.isCurrent(generation)) {
       return { ok: false, code: 'selection-superseded' };
     }
-    if (!clientResult.ok) return clientResult;
-    const row = clientResult.value.get(formulaId);
-    if (!row) return { ok: false, code: 'formula-not-published' };
+    if (clientResult && !clientResult.ok) return clientResult;
+    const row = options.bootstrap?.row ?? (clientResult?.ok ? clientResult.value.get(formulaId) : undefined);
+    const selectionClient = options.bootstrap?.client ?? (clientResult?.ok ? clientResult.value : undefined);
+    if (!row || !selectionClient || row.formulaId !== formulaId) {
+      return { ok: false, code: 'formula-not-published' };
+    }
 
     return publishedSelectionRef.current.select(
       formulaId,
-      clientResult.value,
+      selectionClient,
       (artifact) => {
         clearHandoffFailure();
         registerBuiltins({ quiet: true });
@@ -993,6 +1045,8 @@ function ExploreClient({ posterImage }: { posterImage?: string }) {
           profile: resolveApplicationPublishedDefaultProfileV1(row),
         });
         if (options.source === 'entry-default') {
+          needsEntryDefaultRef.current = false;
+          setEntryDefaultReady(true);
           clearPublishedFormulaSelectionUndo();
         } else {
           trackEvent('change_formula', {
@@ -1015,6 +1069,8 @@ function ExploreClient({ posterImage }: { posterImage?: string }) {
     markCreatorChange,
     publishedDescriptor,
   ]);
+  const selectPublishedFormulaRef = useRef(selectPublishedFormula);
+  selectPublishedFormulaRef.current = selectPublishedFormula;
 
   const handlePublishedFormulaSelect = useCallback((
     formulaId: string,
@@ -1030,39 +1086,50 @@ function ExploreClient({ posterImage }: { posterImage?: string }) {
   const handleResetView = useCallback(() => {
     needsEntryDefaultRef.current = false;
     void runPublishedFormulaAction(async (generation) => {
-      const client = await getPublishedFormulaLibraryClient();
-      if (!client.ok) return client;
-      const row = client.value.resolveRuntimeAlias('mandelbrot');
-      if (!row) return { ok: false, code: 'formula-not-published' };
-      return selectPublishedFormula(row.formulaId, undefined, {
-        source: 'artwork-reset', forceProfile: true,
+      const bootstrap = entryDefaultBootstrap ?? getExploreDefaultFormula();
+      return selectPublishedFormula(bootstrap.row.formulaId, undefined, {
+        source: 'artwork-reset', forceProfile: true, bootstrap,
       }, generation);
     }).then(result => {
       if (!result.ok && result.code !== 'selection-superseded') {
         setResetFailed(true);
       }
     }).catch(() => setResetFailed(true));
-  }, [runPublishedFormulaAction, selectPublishedFormula]);
+  }, [entryDefaultBootstrap, runPublishedFormulaAction, selectPublishedFormula]);
 
   useEffect(() => {
-    if (!needsEntryDefaultRef.current) return;
+    if (!needsEntryDefaultRef.current || entryDefaultStartedRef.current) return;
     let active = true;
     // Defer ownership until after the Strict Mode setup/cleanup probe.
     queueMicrotask(() => {
-      if (!active || !needsEntryDefaultRef.current) return;
-      needsEntryDefaultRef.current = false;
-      void runPublishedFormulaAction(async (generation) => {
-        const clientResult = await getPublishedFormulaLibraryClient();
-        if (!clientResult.ok) return clientResult;
-        const row = clientResult.value.resolveRuntimeAlias('mandelbrot');
-        if (!row) return { ok: false, code: 'formula-not-published' };
-        return selectPublishedFormula(row.formulaId, undefined, {
-          source: 'entry-default',
-        }, generation);
+      if (!active || !needsEntryDefaultRef.current || entryDefaultStartedRef.current) return;
+      entryDefaultStartedRef.current = true;
+      const generation = publishedActionRef.current.begin();
+      const bootstrap = getExploreDefaultFormula();
+      const timeout = setTimeout(() => {
+        if (!active || !needsEntryDefaultRef.current || !publishedActionRef.current.isCurrent(generation)) return;
+        publishedActionRef.current.cancel();
+        publishedSelectionRef.current.cancel();
+        setEntryDefaultFailed(true);
+      }, 10000);
+      void selectPublishedFormulaRef.current(bootstrap.row.formulaId, undefined, {
+        source: 'entry-default', bootstrap,
+      }, generation).then((result) => {
+        clearTimeout(timeout);
+        if (!active || !needsEntryDefaultRef.current || !publishedActionRef.current.isCurrent(generation)) return;
+        if (result.ok) {
+          needsEntryDefaultRef.current = false;
+          setEntryDefaultFailed(false);
+        } else if (result.code !== 'selection-superseded') {
+          setEntryDefaultFailed(true);
+        }
+      }).catch(() => {
+        clearTimeout(timeout);
+        if (active && needsEntryDefaultRef.current) setEntryDefaultFailed(true);
       });
     });
     return () => { active = false; };
-  }, [runPublishedFormulaAction, selectPublishedFormula]);
+  }, [entryDefaultRetryRevision]);
 
   useEffect(() => {
     const currentParams = new URLSearchParams(searchParams.toString());
@@ -1341,9 +1408,11 @@ function ExploreClient({ posterImage }: { posterImage?: string }) {
   ) {
     switch (activeResolution.code) {
       case 'formula-not-found':
-        formulaResolutionMessage = t('formula.resolution.notFound', {
-          formula: activeResolution.formulaId,
-        });
+        formulaResolutionMessage = isStandardFormulaIdV1(activeResolution.formulaId)
+          ? publishedRestoreFailed === activeResolution.formulaId
+            ? t('formula.resolution.unavailable', { formula: activeResolution.formulaId })
+            : t('formula.resolution.loading')
+          : t('formula.resolution.notFound', { formula: activeResolution.formulaId });
         break;
       case 'storage-invalid':
         formulaResolutionMessage = t('formula.resolution.storageInvalid');
@@ -1366,6 +1435,8 @@ function ExploreClient({ posterImage }: { posterImage?: string }) {
         break;
     }
   }
+  const initialDefaultFailed = entryDefaultFailed && needsEntryDefaultRef.current;
+  if (initialDefaultFailed) formulaResolutionMessage = t('formula.library.selectionFailed');
 
   return (
     <div
@@ -1501,12 +1572,26 @@ function ExploreClient({ posterImage }: { posterImage?: string }) {
           />
         )}
         {!isFormulaReady && (
-          <div role="status" className="pointer-events-none absolute bottom-3 left-3 right-3 flex justify-center rounded-md bg-neutral-950/85 p-3 text-center text-neutral-200">
+          <div role={initialDefaultFailed ? 'alert' : 'status'} className="absolute bottom-3 left-3 right-3 flex justify-center rounded-md bg-neutral-950/85 p-3 text-center text-neutral-200">
             <div className="max-w-md">
-              {activeResolution && !activeResolution.success && (
+              {(initialDefaultFailed || (activeResolution && !activeResolution.success)) && (
                 <AlertTriangle className="mx-auto mb-3 h-6 w-6 text-amber-400" />
               )}
               <p>{formulaResolutionMessage}</p>
+              {initialDefaultFailed && (
+                <button type="button" className="mt-2 underline underline-offset-2" onClick={() => {
+                  entryDefaultStartedRef.current = false;
+                  setEntryDefaultFailed(false);
+                  setEntryDefaultRetryRevision((revision) => revision + 1);
+                }}>{t('draft.retry')}</button>
+              )}
+              {publishedRestoreFailed === formula && isStandardFormulaIdV1(formula) && (
+                <button type="button" className="mt-2 underline underline-offset-2" onClick={() => {
+                  resetPublishedFormulaLibraryClient();
+                  setPublishedRestoreFailed(null);
+                  setPublishedRestoreRevision((revision) => revision + 1);
+                }}>{t('draft.retry')}</button>
+              )}
             </div>
           </div>
         )}
@@ -1642,6 +1727,10 @@ function ExploreClient({ posterImage }: { posterImage?: string }) {
             
             <TabsContent forceMount value="formula" className="mt-0 min-h-0 space-y-2 overflow-y-auto overscroll-contain data-[state=inactive]:hidden">
               <FormulaPanel
+                deferPublishedLibraryLoad={initialEmptyEntryRef.current && (
+                  !isStandardFormulaIdV1(formula) || formula === entryDefaultBootstrap?.row.formulaId
+                )}
+                publishedDefaultBootstrap={entryDefaultBootstrap}
                 isJulia={isJulia}
                 juliaC={juliaC}
                 currentBounds={bounds}
