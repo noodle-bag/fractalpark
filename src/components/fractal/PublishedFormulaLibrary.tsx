@@ -6,6 +6,10 @@ import { useLocale, useTranslations } from 'next-intl';
 
 import { Button } from '@/components/ui/button';
 import { ExploreCanonicalSourceWorkspace } from '@/components/formulas/ExploreCanonicalSourceWorkspace';
+import { CanonicalSourceWorkspace } from '@/components/formulas/CanonicalSourceWorkspace';
+import type { ExploreDefaultFormula } from '@/lib/explore-default-formula';
+import { buildPublishedFormulaSourceReferenceV1 } from '@/lib/published-formula-source';
+import { buildPublishedFormulaRemixHref } from '@/lib/published-formula-remix';
 import {
   Sheet,
   SheetContent,
@@ -35,6 +39,8 @@ import type {
 import { cn } from '@/lib/utils';
 
 interface PublishedFormulaLibraryProps {
+  deferInitialLoad?: boolean;
+  defaultBootstrap?: ExploreDefaultFormula | null;
   currentFormula: string;
   onSelect: (
     formulaId: string,
@@ -62,12 +68,15 @@ export function PublishedFormulaLibrary({
   onSelect,
   onCancel,
   onFeelingLucky,
+  deferInitialLoad = false,
+  defaultBootstrap,
   loadClient = getPublishedFormulaLibraryClient,
 }: PublishedFormulaLibraryProps) {
   const t = useTranslations('explore');
   const locale = useLocale();
   const [identityClient, setIdentityClient] = useState<PublishedFormulaLibraryClient>();
   useEffect(() => {
+    if (deferInitialLoad) return;
     let active = true;
     void loadClient().then(result => {
       if (active) setIdentityClient(result.ok ? result.value : undefined);
@@ -75,7 +84,7 @@ export function PublishedFormulaLibrary({
       if (active) setIdentityClient(undefined);
     });
     return () => { active = false; };
-  }, [loadClient]);
+  }, [deferInitialLoad, loadClient]);
   const [open, setOpen] = useState(false);
   const [rows, setRows] = useState<readonly PublishedFormulaDirectoryRowV1[]>([]);
   const [loading, setLoading] = useState(false);
@@ -100,7 +109,32 @@ export function PublishedFormulaLibrary({
     [rows, selectedCategory],
   );
   const visibleRows = filteredRows.slice(0, visibleCount);
-  const identity = identityClient && resolveExploreFormulaIdentity(currentFormula, identityClient);
+  const bootstrapIsCurrent = Boolean(defaultBootstrap && (
+    currentFormula === 'mandelbrot' || currentFormula === defaultBootstrap.row.formulaId
+  ));
+  const identity = identityClient
+    ? resolveExploreFormulaIdentity(currentFormula, identityClient)
+    : bootstrapIsCurrent && defaultBootstrap
+      ? { displayName: `classic-${defaultBootstrap.row.displayName}`, canonicalPath: `/formulas/${defaultBootstrap.row.formulaId}` }
+      : undefined;
+  const bootstrapSource = useMemo(() => {
+    if (!bootstrapIsCurrent || !defaultBootstrap) return undefined;
+    const reference = buildPublishedFormulaSourceReferenceV1(defaultBootstrap.row);
+    if (!reference) return undefined;
+    const source = defaultBootstrap.source;
+    return {
+      reference,
+      loadSource: async () => ({
+        ok: true as const,
+        value: {
+          ...reference,
+          source,
+          byteLength: new TextEncoder().encode(source).length,
+          lineCount: source.split(/\r\n?|\n/).length,
+        },
+      }),
+    };
+  }, [bootstrapIsCurrent, defaultBootstrap]);
   const activeFormulaName = identity?.displayName ?? currentFormulaName(currentFormula, t);
 
   const changeCategory = (
@@ -132,6 +166,7 @@ export function PublishedFormulaLibrary({
             setLibraryError(true);
             return;
           }
+          setIdentityClient(result.value);
           setRows(result.value.directory.rows);
         });
       }
@@ -210,11 +245,22 @@ export function PublishedFormulaLibrary({
         </div>
       </div>
 
-      <ExploreCanonicalSourceWorkspace
-        currentFormula={currentFormula}
-        displayName={activeFormulaName}
-        loadClient={loadClient}
-      />
+      {identityClient && (
+        <ExploreCanonicalSourceWorkspace
+          currentFormula={currentFormula}
+          displayName={activeFormulaName}
+          loadClient={loadClient}
+        />
+      )}
+      {!identityClient && bootstrapSource && (
+        <CanonicalSourceWorkspace
+          displayName={activeFormulaName}
+          reference={bootstrapSource.reference}
+          remixHref={buildPublishedFormulaRemixHref(locale, bootstrapSource.reference.formulaId)}
+          variant="explore"
+          loadSource={bootstrapSource.loadSource}
+        />
+      )}
 
       {actionError && (
         <p role="alert" className="rounded-md border border-destructive/30 p-3 text-sm text-destructive">

@@ -405,10 +405,15 @@ let sharedClient: Promise<PublishedFormulaLibraryClientResult> | undefined;
 
 export function getPublishedFormulaLibraryClient(): Promise<PublishedFormulaLibraryClientResult> {
   if (!sharedClient) {
-    sharedClient = createPublishedFormulaLibraryClient().then((result) => {
-      if (!result.ok) sharedClient = undefined;
+    const request = createPublishedFormulaLibraryClient().then((result) => {
+      if (!result.ok && sharedClient === request) sharedClient = undefined;
       return result;
     });
+    sharedClient = request;
   }
   return sharedClient;
+}
+
+export function resetPublishedFormulaLibraryClient(): void {
+  sharedClient = undefined;
 }

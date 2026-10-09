@@ -14,12 +14,15 @@ import { PublishedFormulaLibrary } from './PublishedFormulaLibrary';
 import type { FormulaPlugin } from '@/engine/plugins/types';
 import type { FormulaExperienceHint, FormulaSelectionRequest } from '@/engine/frm/authoring';
 import type { ViewBounds } from '@/engine/types';
+import type { ExploreDefaultFormula } from '@/lib/explore-default-formula';
 import type {
   PublishedFormulaBeforeApply,
   PublishedFormulaSelectionResult,
 } from '@/lib/published-formula-selection';
 
 interface FormulaTabProps {
+  deferPublishedLibraryLoad?: boolean;
+  publishedDefaultBootstrap?: ExploreDefaultFormula | null;
   currentFormula: string;
   currentBounds?: ViewBounds;
   onFormulaChange: (formula: string) => void;
@@ -37,6 +40,8 @@ interface FormulaTabProps {
 }
 
 export function FormulaTab({
+  deferPublishedLibraryLoad = false,
+  publishedDefaultBootstrap,
   currentFormula,
   currentBounds,
   onPublishedFormulaSelect,
@@ -78,6 +83,8 @@ export function FormulaTab({
 
         <TabsContent value="standard" className="mt-4">
           <PublishedFormulaLibrary
+            deferInitialLoad={deferPublishedLibraryLoad}
+            defaultBootstrap={publishedDefaultBootstrap}
             currentFormula={currentFormula}
             onSelect={onPublishedFormulaSelect}
             onCancel={onPublishedFormulaCancel}
