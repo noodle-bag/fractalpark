@@ -21,7 +21,11 @@ import { applyPublishedFormulaProfile } from '@/lib/published-formula-profile';
 import { applyRemixSource, parseRemixSource } from '@/lib/remix-source';
 import { decodeParams } from '@/lib/url-params';
 
-function createInitialDocument(searchParams: URLSearchParams): FractalDocument {
+function createInitialDocument(
+  searchParams: URLSearchParams,
+  emptyEntryDocument?: FractalDocument,
+): FractalDocument {
+  if (searchParams.size === 0 && emptyEntryDocument) return emptyEntryDocument;
   // v0.4.16: the `?artwork=` local handoff is gone — Explore initializes
   // from URL params, `?draft=` (cloud), or the one-shot remix handoff only.
   const document = migrateFractalDocument(decodeParams(searchParams), 0);
@@ -181,9 +185,10 @@ export interface ExploreDocumentState {
 export function useExploreDocumentState(
   initialSearchParams: URLSearchParams,
   onBeforeDocumentMutation?: () => void,
+  emptyEntryDocument?: FractalDocument,
 ): ExploreDocumentState {
   const [historyState, setHistoryState] = useState<ExploreDocumentHistoryState>(() => ({
-    document: createInitialDocument(initialSearchParams),
+    document: createInitialDocument(initialSearchParams, emptyEntryDocument),
     publishedFormulaUndo: null,
   }));
   const document = historyState.document;

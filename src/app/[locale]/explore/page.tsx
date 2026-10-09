@@ -24,7 +24,13 @@ export default async function ExplorePage({
   const tProduct = await getTranslations({ locale, namespace: 'publicProject' });
   const tLanding = await getTranslations({ locale, namespace: 'explore.landing' });
   const facts = PUBLIC_PROJECT.facts;
-  const poster = PUBLIC_PROJECT.heroImage;
+  // The workspace placeholder uses the same published Definition and default
+  // Profile as the first live frame, not the separate marketing hero crop.
+  const poster = {
+    src: '/images/formulas/explore-default.webp',
+    width: 512,
+    height: 320,
+  };
 
   return (
     <>

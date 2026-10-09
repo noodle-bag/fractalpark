@@ -73,7 +73,7 @@ import {
   type PublishedFormulaDescriptorV1,
 } from '@/engine/formulas/v1';
 import { getPublishedFormulaLibraryClient, resetPublishedFormulaLibraryClient } from '@/lib/published-formula-library';
-import { loadExploreDefaultFormula, type ExploreDefaultFormula } from '@/lib/explore-default-formula';
+import { getExploreDefaultDocument, getExploreDefaultFormula, type ExploreDefaultFormula } from '@/lib/explore-default-formula';
 import { partitionPublishedFormulaParams } from '@/lib/published-formula-params';
 import { resolveRecoveredPublishedRenderingPluginV1 } from '@/engine/formulas/v1/recovered-quantization-rendering-v1';
 import {
@@ -123,11 +123,15 @@ function ExploreClient({ posterImage }: { posterImage?: string }) {
   const router = useRouter();
   const { setConfig } = useLayout();
   const initialEmptyEntryRef = useRef(searchParams.size === 0);
+  const [initialEntryDocument] = useState(() => initialEmptyEntryRef.current ? getExploreDefaultDocument() : undefined);
   const needsEntryDefaultRef = useRef(initialEmptyEntryRef.current);
   const entryDefaultStartedRef = useRef(false);
-  const [entryDefaultBootstrap, setEntryDefaultBootstrap] = useState<ExploreDefaultFormula | null>(null);
+  const [entryDefaultBootstrap] = useState<ExploreDefaultFormula | null>(() =>
+    initialEmptyEntryRef.current ? getExploreDefaultFormula() : null
+  );
   const [entryDefaultRetryRevision, setEntryDefaultRetryRevision] = useState(0);
   const [entryDefaultFailed, setEntryDefaultFailed] = useState(false);
+  const [entryDefaultReady, setEntryDefaultReady] = useState(false);
   const initialHandoffIntentRef = useRef(
     parseEditorToExploreIntent(new URLSearchParams(searchParams.toString()))
   );
@@ -198,6 +202,7 @@ function ExploreClient({ posterImage }: { posterImage?: string }) {
   } = useExploreDocumentState(
     new URLSearchParams(searchParams.toString()),
     cancelPublishedFormulaActions,
+    initialEntryDocument,
   );
 
   const {
@@ -509,6 +514,9 @@ function ExploreClient({ posterImage }: { posterImage?: string }) {
   useEffect(() => {
     if (!isStandardFormulaIdV1(formula)) return;
     if (publishedDescriptor?.formulaId === formula) return;
+    // The empty entry owns its in-bundle default Definition. Restoring this
+    // UUID through the full index would reintroduce a first-load dependency.
+    if (needsEntryDefaultRef.current && formula === entryDefaultBootstrap?.row.formulaId) return;
     if (publishedActionPendingCount > 0) return;
 
     const target = formula;
@@ -611,6 +619,7 @@ function ExploreClient({ posterImage }: { posterImage?: string }) {
     document.formula.params?.formula,
     document.transform.params?.transform,
     document.transform.transformId,
+    entryDefaultBootstrap?.row.formulaId,
     formula,
     publishedActionPendingCount,
     publishedDescriptor,
@@ -725,6 +734,7 @@ function ExploreClient({ posterImage }: { posterImage?: string }) {
     formulaResolution,
     publishedDescriptor,
     publishedActionPendingCount,
+    entryDefaultReady,
   ]);
 
   // Anonymous remix handoff consumption (spec §17 transient): a one-shot
@@ -1035,8 +1045,8 @@ function ExploreClient({ posterImage }: { posterImage?: string }) {
           profile: resolveApplicationPublishedDefaultProfileV1(row),
         });
         if (options.source === 'entry-default') {
-          setEntryDefaultBootstrap(options.bootstrap ?? null);
           needsEntryDefaultRef.current = false;
+          setEntryDefaultReady(true);
           clearPublishedFormulaSelectionUndo();
         } else {
           trackEvent('change_formula', {
@@ -1076,8 +1086,7 @@ function ExploreClient({ posterImage }: { posterImage?: string }) {
   const handleResetView = useCallback(() => {
     needsEntryDefaultRef.current = false;
     void runPublishedFormulaAction(async (generation) => {
-      const bootstrap = entryDefaultBootstrap ?? await loadExploreDefaultFormula();
-      if (!bootstrap) return { ok: false, code: 'library-unavailable' };
+      const bootstrap = entryDefaultBootstrap ?? getExploreDefaultFormula();
       return selectPublishedFormula(bootstrap.row.formulaId, undefined, {
         source: 'artwork-reset', forceProfile: true, bootstrap,
       }, generation);
@@ -1096,16 +1105,17 @@ function ExploreClient({ posterImage }: { posterImage?: string }) {
       if (!active || !needsEntryDefaultRef.current || entryDefaultStartedRef.current) return;
       entryDefaultStartedRef.current = true;
       const generation = publishedActionRef.current.begin();
-      const controller = new AbortController();
-      const timeout = setTimeout(() => controller.abort(), 10000);
-      void loadExploreDefaultFormula(controller.signal).then(async (bootstrap) => {
-        clearTimeout(timeout);
+      const bootstrap = getExploreDefaultFormula();
+      const timeout = setTimeout(() => {
         if (!active || !needsEntryDefaultRef.current || !publishedActionRef.current.isCurrent(generation)) return;
-        const result = bootstrap
-          ? await selectPublishedFormulaRef.current(bootstrap.row.formulaId, undefined, {
-              source: 'entry-default', bootstrap,
-            }, generation)
-          : { ok: false as const, code: 'library-unavailable' as const };
+        publishedActionRef.current.cancel();
+        publishedSelectionRef.current.cancel();
+        setEntryDefaultFailed(true);
+      }, 10000);
+      void selectPublishedFormulaRef.current(bootstrap.row.formulaId, undefined, {
+        source: 'entry-default', bootstrap,
+      }, generation).then((result) => {
+        clearTimeout(timeout);
         if (!active || !needsEntryDefaultRef.current || !publishedActionRef.current.isCurrent(generation)) return;
         if (result.ok) {
           needsEntryDefaultRef.current = false;
@@ -1425,6 +1435,8 @@ function ExploreClient({ posterImage }: { posterImage?: string }) {
         break;
     }
   }
+  const initialDefaultFailed = entryDefaultFailed && needsEntryDefaultRef.current;
+  if (initialDefaultFailed) formulaResolutionMessage = t('formula.library.selectionFailed');
 
   return (
     <div
@@ -1450,16 +1462,6 @@ function ExploreClient({ posterImage }: { posterImage?: string }) {
         {resetFailed && (
           <div role="alert" className="absolute bottom-3 left-3 z-30 max-w-sm rounded-md border border-amber-400/40 bg-amber-950/85 px-3 py-2 text-xs text-amber-100">
             {t('formula.library.selectionFailed')}
-          </div>
-        )}
-        {entryDefaultFailed && needsEntryDefaultRef.current && (
-          <div role="alert" className="absolute bottom-3 left-3 z-30 max-w-sm rounded-md border border-amber-400/40 bg-amber-950/85 px-3 py-2 text-xs text-amber-100">
-            {t('formula.library.selectionFailed')}
-            <button type="button" className="ml-2 underline underline-offset-2" onClick={() => {
-              entryDefaultStartedRef.current = false;
-              setEntryDefaultFailed(false);
-              setEntryDefaultRetryRevision((revision) => revision + 1);
-            }}>{t('draft.retry')}</button>
           </div>
         )}
         {(cloudDraft.loadState === 'loading' ||
@@ -1570,12 +1572,19 @@ function ExploreClient({ posterImage }: { posterImage?: string }) {
           />
         )}
         {!isFormulaReady && (
-          <div role="status" className="absolute bottom-3 left-3 right-3 flex justify-center rounded-md bg-neutral-950/85 p-3 text-center text-neutral-200">
+          <div role={initialDefaultFailed ? 'alert' : 'status'} className="absolute bottom-3 left-3 right-3 flex justify-center rounded-md bg-neutral-950/85 p-3 text-center text-neutral-200">
             <div className="max-w-md">
-              {activeResolution && !activeResolution.success && (
+              {(initialDefaultFailed || (activeResolution && !activeResolution.success)) && (
                 <AlertTriangle className="mx-auto mb-3 h-6 w-6 text-amber-400" />
               )}
               <p>{formulaResolutionMessage}</p>
+              {initialDefaultFailed && (
+                <button type="button" className="mt-2 underline underline-offset-2" onClick={() => {
+                  entryDefaultStartedRef.current = false;
+                  setEntryDefaultFailed(false);
+                  setEntryDefaultRetryRevision((revision) => revision + 1);
+                }}>{t('draft.retry')}</button>
+              )}
               {publishedRestoreFailed === formula && isStandardFormulaIdV1(formula) && (
                 <button type="button" className="mt-2 underline underline-offset-2" onClick={() => {
                   resetPublishedFormulaLibraryClient();

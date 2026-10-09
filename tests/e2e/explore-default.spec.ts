@@ -65,70 +65,57 @@ test.describe('Explore entry default', () => {
     await expect(page.getByTestId('explore-root')).toHaveAttribute('data-formula-id', CLASSIC_MANDELBROT);
   });
 
-  test('a delayed default cannot overwrite an imported document', async ({ page }) => {
+  test('an imported document supersedes the initial published default', async ({ page }) => {
     test.setTimeout(90000);
-    let releaseDefault!: () => void;
-    const defaultGate = new Promise<void>((resolve) => { releaseDefault = resolve; });
-    let requested = false;
-    await page.route(DEFAULT_PATH, async (route) => {
-      requested = true;
-      await defaultGate;
-      await route.continue();
+    await page.goto('/en/explore', { waitUntil: 'domcontentloaded' });
+    await expect(page.getByTestId('explore-root')).toHaveAttribute('data-formula-id', CLASSIC_MANDELBROT);
+    const imported = structuredClone(DEFAULT_FRACTAL_DOCUMENT);
+    imported.formula.formulaId = 'tricorn';
+    imported.scene.bounds.zoom = 8;
+    const chooserPromise = page.waitForEvent('filechooser');
+    await page.getByRole('button', { name: /import project/i }).click();
+    await (await chooserPromise).setFiles({
+      name: 'saved.fractal.json',
+      mimeType: 'application/json',
+      buffer: Buffer.from(JSON.stringify({ envelopeVersion: 1, document: imported })),
     });
-    try {
-      await page.goto('/en/explore', { waitUntil: 'domcontentloaded' });
-      await expect.poll(() => requested).toBe(true);
-      await expect(page.getByTestId('fractal-canvas')).toBeVisible();
-      const imported = structuredClone(DEFAULT_FRACTAL_DOCUMENT);
-      imported.formula.formulaId = 'tricorn';
-      imported.scene.bounds.zoom = 8;
-      const chooserPromise = page.waitForEvent('filechooser');
-      await page.getByRole('button', { name: /import project/i }).click();
-      await (await chooserPromise).setFiles({
-        name: 'saved.fractal.json',
-        mimeType: 'application/json',
-        buffer: Buffer.from(JSON.stringify({ envelopeVersion: 1, document: imported })),
-      });
-      await expect(page.getByTestId('explore-root')).toHaveAttribute('data-formula-id', 'tricorn');
-      const defaultResponse = page.waitForResponse(/explore-default-formula.json/);
-      releaseDefault();
-      await defaultResponse;
-      await expect(page).toHaveURL(/[?&]fm=tr(?:&|$)/);
-      await expect(page.getByTestId('explore-root')).toHaveAttribute('data-formula-id', 'tricorn');
-      expect(Number(new URL(page.url()).searchParams.get('z'))).toBe(8);
-    } finally {
-      releaseDefault();
-    }
+    await expect(page).toHaveURL(/[?&]fm=tr(?:&|$)/);
+    await expect(page.getByTestId('explore-root')).toHaveAttribute('data-formula-id', 'tricorn');
+    expect(Number(new URL(page.url()).searchParams.get('z'))).toBe(8);
   });
 
-  test('default entry does not fetch the full formula index', async ({ page }) => {
+  test('first formula identity is published and needs no default fetch or full index', async ({ page }) => {
+    await page.addInitScript(() => {
+      const seen: string[] = [];
+      Object.defineProperty(window, '__exploreFormulaIds', { value: seen });
+      const record = () => {
+        const value = document.querySelector('[data-testid="explore-root"]')?.getAttribute('data-formula-id');
+        if (value && seen.at(-1) !== value) seen.push(value);
+      };
+      new MutationObserver(record).observe(document, { subtree: true, childList: true, attributes: true, attributeFilter: ['data-formula-id'] });
+    });
     let indexRequests = 0;
+    let defaultRequests = 0;
     await page.route(INDEX_PATH, async (route) => {
       indexRequests += 1;
       await route.continue();
     });
+    await page.route(DEFAULT_PATH, async (route) => {
+      defaultRequests += 1;
+      await route.abort();
+    });
     await page.goto('/en/explore');
     await expect(page.getByTestId('explore-root').last()).toHaveAttribute('data-formula-id', CLASSIC_MANDELBROT, { timeout: 30000 });
+    await expect(page.locator('.explore-canvas-stage')).toHaveCSS('background-image', /explore-default\.webp/);
+    await expect(page.getByTestId('fractal-canvas')).toHaveAttribute('data-render-status', 'ready', { timeout: 45000 });
+    expect(await page.evaluate(() => (window as typeof window & { __exploreFormulaIds: string[] }).__exploreFormulaIds)).toEqual([CLASSIC_MANDELBROT]);
     const current = page.getByTestId('published-formula-current').last();
     await expect(current).toHaveText('classic-mandelbrot');
     await expect(current.locator('..').getByRole('link')).toHaveAttribute(
       'href', `/en/formulas/${CLASSIC_MANDELBROT}`,
     );
     expect(indexRequests).toBe(0);
-  });
-
-  test('failed default keeps the built-in canvas usable and offers retry', async ({ page }) => {
-    let requests = 0;
-    await page.route(DEFAULT_PATH, async (route) => {
-      requests += 1;
-      if (requests === 1) await route.fulfill({ status: 503 });
-      else await route.continue();
-    });
-    await page.goto('/en/explore');
-    await expect(page.getByTestId('fractal-canvas')).toBeVisible();
-    await expect(page.getByTestId('explore-root')).toHaveAttribute('data-formula-id', 'mandelbrot');
-    await page.getByRole('alert').getByRole('button', { name: /retry/i }).click();
-    await expect(page.getByTestId('explore-root')).toHaveAttribute('data-formula-id', CLASSIC_MANDELBROT);
+    expect(defaultRequests).toBe(0);
   });
 
   test('failed explicit Standard UUID does not silently become Mandelbrot', async ({ page }) => {
